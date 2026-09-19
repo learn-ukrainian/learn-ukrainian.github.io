@@ -1,0 +1,3399 @@
+{
+  "schema_version": "1.0",
+  "title": "Практикум: Глибока механіка числівника (Відмінювання, керування, автентичний час)",
+  "card_count": 75,
+  "categories": [
+    "cardinal_50_80_inflection",
+    "cardinal_200_900_genitive",
+    "cardinal_200_900_dative_locative",
+    "cardinal_200_900_instrumental",
+    "cardinal_40_90_100_paradigm",
+    "government_2_3_4_nominative_plural",
+    "government_5_plus_genitive_plural",
+    "government_compound_last_digit",
+    "collective_masculine_animate",
+    "collective_restriction_feminine",
+    "collective_pluralia_tantum_neuter",
+    "fractional_pivtora_government",
+    "ordinal_compound_declension",
+    "time_expressions_anti_calque",
+    "approximate_numerical_constructions"
+  ],
+  "cards": [
+    {
+      "card_id": "numeral_01",
+      "category": "cardinal_50_80_inflection",
+      "cefr_level": "A2",
+      "prompt_sentence": "У конференції взяли участь понад _______ делегатів із різних країн Європи.",
+      "blank_target": "п'ятдесят",
+      "correct_answer": "п'ятдесят",
+      "options": [
+        "п'ятдесят",
+        "п'ятидесяти",
+        "п'ятьдесят",
+        "п'ятидесят"
+      ],
+      "distractors": [
+        {
+          "text": "п'ятидесят",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "У числівнику 50 перша частина 'п'ят-' ніколи не відмінюється; форма *п'ятидесят* є грубою помилкою.",
+            "en": "In numeral 50, the first root 'п'ят-' never inflects; *п'ятидесят* is an erroneous form."
+          }
+        },
+        {
+          "text": "п'ятидесяти",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Форма *п'ятидесяти* є калькою з російської мови; після прийменника понад вживається знахідний відмінок 'п'ятдесят'.",
+            "en": "The form *п'ятидесяти* is a Russian calque; after preposition 'понад', Accusative 'п'ятдесят' is required."
+          }
+        },
+        {
+          "text": "п'ятьдесят",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Написання *п'ятьдесят* із м'яким знаком у середині слова суперечить правопису (§ 107).",
+            "en": "Spelling *п'ятьдесят* with a soft sign in the middle violates orthography rules."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 107",
+      "rule_summary": {
+        "ua": "У числівниках на позначення десятків 50–80 (п'ятдесят — вісімдесят) відмінюється лише друга частина (-десят); перша частина ніколи не змінюється: п'ятдесяти (не *п'ятидесяти*), шістдесятьма (не *шестидесятьма*).",
+        "en": "In numerals 50–80 (п'ятдесят — вісімдесят), only the second root declines (-десят); the first root remains invariant: п'ятдесяти (not *п'ятидесяти*), шістдесятьма (not *шестидесятьма*)."
+      }
+    },
+    {
+      "card_id": "numeral_02",
+      "category": "cardinal_50_80_inflection",
+      "cefr_level": "B1",
+      "prompt_sentence": "Директор звернувся до _______ працівників підприємства зі словами подяки.",
+      "blank_target": "шістдесятьох",
+      "correct_answer": "шістдесятьох",
+      "options": [
+        "шестидесяти",
+        "шістдесятьох",
+        "шестидесятьох",
+        "шістдесят"
+      ],
+      "distractors": [
+        {
+          "text": "шестидесятьох",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Перша частина 'шіст-' не змінюється: правильно 'шістдесятьох', а не суржикове *шестидесятьох*.",
+            "en": "The first root 'шіст-' does not decline: correctly 'шістдесятьох', not calqued *шестидесятьох*."
+          }
+        },
+        {
+          "text": "шістдесят",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Після прийменника 'до' обов'язковий родовий відмінок: 'шістдесятьох' або 'шістдесяти'.",
+            "en": "Preposition 'до' requires the Genitive case: 'шістдесятьох' or 'шістдесяти'."
+          }
+        },
+        {
+          "text": "шестидесяти",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Форма *шестидесяти* містить відмінювання першої частини, що неприпустимо в українській мові.",
+            "en": "*шестидесяти* erroneously declines the first root, which is prohibited in Ukrainian."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 107",
+      "rule_summary": {
+        "ua": "У числівниках на позначення десятків 50–80 (п'ятдесят — вісімдесят) відмінюється лише друга частина (-десят); перша частина ніколи не змінюється: п'ятдесяти (не *п'ятидесяти*), шістдесятьма (не *шестидесятьма*).",
+        "en": "In numerals 50–80 (п'ятдесят — вісімдесят), only the second root declines (-десят); the first root remains invariant: п'ятдесяти (not *п'ятидесяти*), шістдесятьма (not *шестидесятьма*)."
+      }
+    },
+    {
+      "card_id": "numeral_03",
+      "category": "cardinal_50_80_inflection",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми пишаємося нашими _______ випускниками, які вступили до вишів.",
+      "blank_target": "сімдесятьма",
+      "correct_answer": "сімдесятьма",
+      "options": [
+        "семидесятьома",
+        "семидесятьма",
+        "сімдесят",
+        "сімдесятьма"
+      ],
+      "distractors": [
+        {
+          "text": "семидесятьма",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "У числівнику 70 перша частина не відмінюється: правильно 'сімдесятьма', а не *семидесятьма*.",
+            "en": "In numeral 70, the first root is invariant: correctly 'сімдесятьма', not *семидесятьма*."
+          }
+        },
+        {
+          "text": "сімдесят",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "З прийменником 'з/нашими' потрібен орудний відмінок 'сімдесятьма', а не називний 'сімдесят'.",
+            "en": "Instrumental case 'сімдесятьма' is required here, not the Nominative base form 'сімдесят'."
+          }
+        },
+        {
+          "text": "семидесятьома",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Перша основа числівника 70 не набуває форми 'семи-': правильно 'сімдесятьома' або 'сімдесятьма'.",
+            "en": "First root never takes the form 'семи-': standard forms are 'сімдесятьома' or 'сімдесятьма'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 107",
+      "rule_summary": {
+        "ua": "У числівниках на позначення десятків 50–80 (п'ятдесят — вісімдесят) відмінюється лише друга частина (-десят); перша частина ніколи не змінюється: п'ятдесяти (не *п'ятидесяти*), шістдесятьма (не *шестидесятьма*).",
+        "en": "In numerals 50–80 (п'ятдесят — вісімдесят), only the second root declines (-десят); the first root remains invariant: п'ятдесяти (not *п'ятидесяти*), шістдесятьма (not *шестидесятьма*)."
+      }
+    },
+    {
+      "card_id": "numeral_04",
+      "category": "cardinal_50_80_inflection",
+      "cefr_level": "B1",
+      "prompt_sentence": "Завдяки допомозі _______ волонтерів вдалося відновити будівлю лікарні.",
+      "blank_target": "вісімдесяти",
+      "correct_answer": "вісімдесяти",
+      "options": [
+        "восьмидесятьох",
+        "вісімдесяти",
+        "восьмидесяти",
+        "вісімдесят"
+      ],
+      "distractors": [
+        {
+          "text": "восьмидесяти",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Перша частина 'вісім-' залишається незмінною: правильно 'вісімдесяти', а не суржикове *восьмидесяти*.",
+            "en": "First root 'вісім-' is invariant: correctly 'вісімдесяти', not *восьмидесяти*."
+          }
+        },
+        {
+          "text": "вісімдесят",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Іменник 'волонтерів' стоїть у родовому відмінку, тому числівник вимагає форми 'вісімдесяти'.",
+            "en": "Context requires the Genitive case 'вісімдесяти', not base form 'вісімдесят'."
+          }
+        },
+        {
+          "text": "восьмидесятьох",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Форма *восьмидесятьох* помилково відмінює першу основу; літературна форма — 'вісімдесятьох'.",
+            "en": "*восьмидесятьох* improperly inflects the initial root; standard form is 'вісімдесятьох'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 107",
+      "rule_summary": {
+        "ua": "У числівниках на позначення десятків 50–80 (п'ятдесят — вісімдесят) відмінюється лише друга частина (-десят); перша частина ніколи не змінюється: п'ятдесяти (не *п'ятидесяти*), шістдесятьма (не *шестидесятьма*).",
+        "en": "In numerals 50–80 (п'ятдесят — вісімдесят), only the second root declines (-десят); the first root remains invariant: п'ятдесяти (not *п'ятидесяти*), шістдесятьма (not *шестидесятьма*)."
+      }
+    },
+    {
+      "card_id": "numeral_05",
+      "category": "cardinal_50_80_inflection",
+      "cefr_level": "B2",
+      "prompt_sentence": "Організатори надали практичні рекомендації _______ учасникам наукової конференції.",
+      "blank_target": "п'ятдесятьом",
+      "correct_answer": "п'ятдесятьом",
+      "options": [
+        "п'ятдесят",
+        "п'ятидесятьом",
+        "п'ятьомдесятьом",
+        "п'ятдесятьом"
+      ],
+      "distractors": [
+        {
+          "text": "п'ятидесятьом",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Перша основа не відмінюється: правильно 'п'ятдесятьом', а не *п'ятидесятьом*.",
+            "en": "Initial stem never inflects: standard Ukrainian is 'п'ятдесятьом', not *п'ятидесятьом*."
+          }
+        },
+        {
+          "text": "п'ятдесят",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "У давальному відмінку потрібна форма 'п'ятдесятьом' або 'п'ятдесяти', а не називний.",
+            "en": "Dative case requires 'п'ятдесятьом' or 'п'ятдесяти', not uninflected Nominative."
+          }
+        },
+        {
+          "text": "п'ятьомдесятьом",
+          "interference_type": "inflected_first_root_50_80",
+          "explanation": {
+            "ua": "Подвійне відмінювання обох частин у числівниках 50–80 є грубою граматичною помилкою.",
+            "en": "Declining both stems in numerals 50–80 is a severe grammatical error."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 107",
+      "rule_summary": {
+        "ua": "У числівниках на позначення десятків 50–80 (п'ятдесят — вісімдесят) відмінюється лише друга частина (-десят); перша частина ніколи не змінюється: п'ятдесяти (не *п'ятидесяти*), шістдесятьма (не *шестидесятьма*).",
+        "en": "In numerals 50–80 (п'ятдесят — вісімдесят), only the second root declines (-десят); the first root remains invariant: п'ятдесяти (not *п'ятидесяти*), шістдесятьма (not *шестидесятьма*)."
+      }
+    },
+    {
+      "card_id": "numeral_06",
+      "category": "cardinal_200_900_genitive",
+      "cefr_level": "A2",
+      "prompt_sentence": "У залі не вистачало близько _______ місць для всіх зареєстрованих гостей.",
+      "blank_target": "двохсот",
+      "correct_answer": "двохсот",
+      "options": [
+        "двохсотів",
+        "двохста",
+        "двохсот",
+        "двісті"
+      ],
+      "distractors": [
+        {
+          "text": "двісті",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Після прийменника 'близько' обов'язковий родовий відмінок 'двохсот', а не називний 'двісті'.",
+            "en": "After preposition 'близько', Genitive 'двохсот' is required, not base form 'двісті'."
+          }
+        },
+        {
+          "text": "двохста",
+          "interference_type": "russianism_genitive_hundreds",
+          "explanation": {
+            "ua": "Закінчення *-ста* у родовому відмінку — це калька з російської мови; в українській мові норма — 'двохсот'.",
+            "en": "Ending *-ста* in Genitive is a Russian calque; Ukrainian norm is 'двохсот'."
+          }
+        },
+        {
+          "text": "двохсотів",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Закінчення *-сотів* не існує в парадигмі числівників; нормативна форма — 'двохсот'.",
+            "en": "Ending *-сотів* is corrupted and non-existent; standard form is 'двохсот'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У числівниках на позначення сотень 200–900 у родовому відмінку відмінюються обидві частини, і друга частина має закінчення -сот: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот (не *п'ятиста*).",
+        "en": "In numerals 200–900 in the Genitive case, both roots decline and the second root ends in -сот: двохсот, трьохсот, п'ятисот, шестисот (not *п'ятиста*)."
+      }
+    },
+    {
+      "card_id": "numeral_07",
+      "category": "cardinal_200_900_genitive",
+      "cefr_level": "B1",
+      "prompt_sentence": "На придбання підручників витратили менше _______ гривень із бюджету школи.",
+      "blank_target": "трьохсот",
+      "correct_answer": "трьохсот",
+      "options": [
+        "трьохсот",
+        "триста",
+        "трьохста",
+        "трисот"
+      ],
+      "distractors": [
+        {
+          "text": "триста",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Слово 'менше' керує родовим відмінком: правильно 'трьохсот', а не називний 'триста'.",
+            "en": "Comparative 'менше' governs Genitive case: correctly 'трьохсот', not Nominative 'триста'."
+          }
+        },
+        {
+          "text": "трьохста",
+          "interference_type": "russianism_genitive_hundreds",
+          "explanation": {
+            "ua": "Форма *трьохста* є ненормативною російською калькою; друга основа має закінчення '-сот'.",
+            "en": "Form *трьохста* is an ungrammatical calque; second root must have ending '-сот'."
+          }
+        },
+        {
+          "text": "трисот",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "У числівнику 300 відмінюються обидві частини: перша частина в родовому відмінку — 'трьох-', а не 'три-'.",
+            "en": "In numeral 300 both roots decline: first root in Genitive is 'трьох-', not 'три-'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У числівниках на позначення сотень 200–900 у родовому відмінку відмінюються обидві частини, і друга частина має закінчення -сот: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот (не *п'ятиста*).",
+        "en": "In numerals 200–900 in the Genitive case, both roots decline and the second root ends in -сот: двохсот, трьохсот, п'ятисот, шестисот (not *п'ятиста*)."
+      }
+    },
+    {
+      "card_id": "numeral_08",
+      "category": "cardinal_200_900_genitive",
+      "cefr_level": "B1",
+      "prompt_sentence": "У сховищі музею налічується понад _______ старовинних рукописів і грамот.",
+      "blank_target": "п'ятсот",
+      "correct_answer": "п'ятсот",
+      "options": [
+        "п'ятьсот",
+        "п'ятисот",
+        "п'ятсот",
+        "п'ятиста"
+      ],
+      "distractors": [
+        {
+          "text": "п'ятисот",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Після прийменника 'понад' числівники вживаються у знахідному відмінку, тотожному називному: 'понад п'ятсот', а не в родовому.",
+            "en": "After preposition 'понад', numerals take Accusative identical to Nominative ('понад п'ятсот'), not Genitive."
+          }
+        },
+        {
+          "text": "п'ятиста",
+          "interference_type": "russianism_genitive_hundreds",
+          "explanation": {
+            "ua": "Форма *п'ятиста* є помилковою суржиковою калькою; такої форми в українській мові немає.",
+            "en": "*п'ятиста* is an erroneous calqued form non-existent in Ukrainian."
+          }
+        },
+        {
+          "text": "п'ятьсот",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "У середині числівника 500 перед суфіксом м'який знак не пишеться: правильно 'п'ятсот'.",
+            "en": "Soft sign is not written inside numeral 500: standard spelling is 'п'ятсот'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У числівниках на позначення сотень 200–900 у родовому відмінку відмінюються обидві частини, і друга частина має закінчення -сот: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот (не *п'ятиста*).",
+        "en": "In numerals 200–900 in the Genitive case, both roots decline and the second root ends in -сот: двохсот, трьохсот, п'ятисот, шестисот (not *п'ятиста*)."
+      }
+    },
+    {
+      "card_id": "numeral_09",
+      "category": "cardinal_200_900_genitive",
+      "cefr_level": "B2",
+      "prompt_sentence": "Площа нового заповідника сягає понад _______ гектарів незайманого лісу.",
+      "blank_target": "шістсот",
+      "correct_answer": "шістсот",
+      "options": [
+        "шестисот",
+        "шестиста",
+        "шістьсот",
+        "шістсот"
+      ],
+      "distractors": [
+        {
+          "text": "шестисот",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Прийменник 'понад' вимагає знахідного відмінка ('понад шістсот'), а не родового.",
+            "en": "Preposition 'понад' requires Accusative case ('понад шістсот'), not Genitive."
+          }
+        },
+        {
+          "text": "шестиста",
+          "interference_type": "russianism_genitive_hundreds",
+          "explanation": {
+            "ua": "Форма *шестиста* є ненормативною калькою; числівники на -сот не мають закінчення -ста.",
+            "en": "*шестиста* is an ungrammatical calque; numerals in -сот never take ending -ста."
+          }
+        },
+        {
+          "text": "шістьсот",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "У числівнику 'шістсот' спрощення відбувається на письмі, м'який знак не вживається.",
+            "en": "In numeral 'шістсот', simplification is orthographically fixed without a soft sign."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У числівниках на позначення сотень 200–900 у родовому відмінку відмінюються обидві частини, і друга частина має закінчення -сот: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот (не *п'ятиста*).",
+        "en": "In numerals 200–900 in the Genitive case, both roots decline and the second root ends in -сот: двохсот, трьохсот, п'ятисот, шестисот (not *п'ятиста*)."
+      }
+    },
+    {
+      "card_id": "numeral_10",
+      "category": "cardinal_200_900_genitive",
+      "cefr_level": "B2",
+      "prompt_sentence": "У місті проживає близько _______ тисяч жителів, зайнятих у промисловості.",
+      "blank_target": "восьмисот",
+      "correct_answer": "восьмисот",
+      "options": [
+        "вісьмисот",
+        "восьмиста",
+        "восьмисот",
+        "вісімсот"
+      ],
+      "distractors": [
+        {
+          "text": "вісімсот",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Після прийменника 'близько' обов'язковий родовий відмінок: правильно 'восьмисот', а не 'вісімсот'.",
+            "en": "Preposition 'близько' requires Genitive case: correctly 'восьмисот', not base form 'вісімсот'."
+          }
+        },
+        {
+          "text": "восьмиста",
+          "interference_type": "russianism_genitive_hundreds",
+          "explanation": {
+            "ua": "Форма *восьмиста* — суржикова калька; друга частина числівника у родовому відмінку має вигляд '-сот'.",
+            "en": "*восьмиста* is an erroneous calque; Genitive of hundreds strictly ends in '-сот'."
+          }
+        },
+        {
+          "text": "вісьмисот",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "У непрямих відмінках числівника 800 у першій основі чергування 'і' переходить в 'о': 'восьмисот', а не *вісьмисот*.",
+            "en": "In oblique cases of 800, vowel alternation changes 'і' to 'о': 'восьмисот', not *вісьмисот*."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У числівниках на позначення сотень 200–900 у родовому відмінку відмінюються обидві частини, і друга частина має закінчення -сот: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот (не *п'ятиста*).",
+        "en": "In numerals 200–900 in the Genitive case, both roots decline and the second root ends in -сот: двохсот, трьохсот, п'ятисот, шестисот (not *п'ятиста*)."
+      }
+    },
+    {
+      "card_id": "numeral_11",
+      "category": "cardinal_200_900_dative_locative",
+      "cefr_level": "B1",
+      "prompt_sentence": "Університет надав гуртожиток _______ іногороднім першокурсникам факультету.",
+      "blank_target": "двомстам",
+      "correct_answer": "двомстам",
+      "options": [
+        "двохстам",
+        "двісті",
+        "двомстам",
+        "двомста"
+      ],
+      "distractors": [
+        {
+          "text": "двісті",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Дієслово 'надати' керує давальним відмінком адресата: 'двомстам', а не називним 'двісті'.",
+            "en": "Verb 'надати' governs Dative case for recipient: 'двомстам', not Nominative 'двісті'."
+          }
+        },
+        {
+          "text": "двомста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "У давальному відмінку друга основа закінчується на '-стам': правильно 'двомстам', а не *двомста*.",
+            "en": "Dative ending of hundreds is strictly '-стам': correctly 'двомстам', not *двомста*."
+          }
+        },
+        {
+          "text": "двохстам",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Перша частина числівника 200 у давальному відмінку має форму 'двом-', а не родову 'двох-'.",
+            "en": "First stem in Dative is 'двом-', not the Genitive form 'двох-'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У давальному відмінку числівники 200–900 мають закінчення -стам (двомстам, трьомстам, п'ятистам), а в місцевому — -стах (на двохстах, на трьохстах, на п'ятистах).",
+        "en": "In the Dative case, numerals 200–900 end in -стам (двомстам, п'ятистам); in the Locative case, they end in -стах (на двохстах, на п'ятистах)."
+      }
+    },
+    {
+      "card_id": "numeral_12",
+      "category": "cardinal_200_900_dative_locative",
+      "cefr_level": "B1",
+      "prompt_sentence": "Премію виплатили _______ науковцям за визначні досягнення.",
+      "blank_target": "трьомстам",
+      "correct_answer": "трьомстам",
+      "options": [
+        "трьомста",
+        "трьомстам",
+        "трьохстам",
+        "триста"
+      ],
+      "distractors": [
+        {
+          "text": "триста",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Контекст вимагає давального відмінка: правильно 'трьомстам', а не початкова форма 'триста'.",
+            "en": "Context demands Dative case: standard Ukrainian is 'трьомстам', not base form 'триста'."
+          }
+        },
+        {
+          "text": "трьомста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Закінчення давального відмінка сотень — '-стам': 'трьомстам', а не усічене *трьомста*.",
+            "en": "Standard Dative ending of hundreds is '-стам': 'трьомстам', not truncated *трьомста*."
+          }
+        },
+        {
+          "text": "трьохстам",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "У давальному відмінку перша частина має форму 'трьом-', а не родову 'трьох-'.",
+            "en": "First root takes Dative form 'трьом-', not Genitive 'трьох-'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У давальному відмінку числівники 200–900 мають закінчення -стам (двомстам, трьомстам, п'ятистам), а в місцевому — -стах (на двохстах, на трьохстах, на п'ятистах).",
+        "en": "In the Dative case, numerals 200–900 end in -стам (двомстам, п'ятистам); in the Locative case, they end in -стах (на двохстах, на п'ятистах)."
+      }
+    },
+    {
+      "card_id": "numeral_13",
+      "category": "cardinal_200_900_dative_locative",
+      "cefr_level": "B2",
+      "prompt_sentence": "Фонд надав фінансову допомогу _______ малозабезпеченим родинам області.",
+      "blank_target": "п'ятистам",
+      "correct_answer": "п'ятистам",
+      "options": [
+        "п'ятиста",
+        "п'ятсот",
+        "п'ятьомстам",
+        "п'ятистам"
+      ],
+      "distractors": [
+        {
+          "text": "п'ятсот",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "У давальному відмінку числівник 500 змінюється на 'п'ятистам', основа 'п'ятсот' неприпустима.",
+            "en": "In Dative case, numeral 500 inflects to 'п'ятистам', base form 'п'ятсот' is incorrect."
+          }
+        },
+        {
+          "text": "п'ятиста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Форма *п'ятиста* є усіченою або калькованою; нормативна форма давального відмінка — 'п'ятистам'.",
+            "en": "*п'ятиста* is a corrupted form; standard Dative is 'п'ятистам'."
+          }
+        },
+        {
+          "text": "п'ятьомстам",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Перша частина числівника 500 у давальному відмінку має вигляд 'п'яти-', а не 'п'ятьом-'.",
+            "en": "Initial stem of 500 in Dative is 'п'яти-', not 'п'ятьом-'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У давальному відмінку числівники 200–900 мають закінчення -стам (двомстам, трьомстам, п'ятистам), а в місцевому — -стах (на двохстах, на трьохстах, на п'ятистах).",
+        "en": "In the Dative case, numerals 200–900 end in -стам (двомстам, п'ятистам); in the Locative case, they end in -стах (на двохстах, на п'ятистах)."
+      }
+    },
+    {
+      "card_id": "numeral_14",
+      "category": "cardinal_200_900_dative_locative",
+      "cefr_level": "B2",
+      "prompt_sentence": "На _______ сторінках цієї монографії викладено історію краю.",
+      "blank_target": "чотирьохстах",
+      "correct_answer": "чотирьохстах",
+      "options": [
+        "чотириста",
+        "чотирьохстах",
+        "чотирьохстам",
+        "чотирьохста"
+      ],
+      "distractors": [
+        {
+          "text": "чотириста",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "З прийменником 'на' у значенні розташування вживається місцевий відмінок: 'чотирьохстах'.",
+            "en": "Preposition 'на' requires Locative case: correctly 'чотирьохстах', not base form 'чотириста'."
+          }
+        },
+        {
+          "text": "чотирьохстам",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Закінчення '-стам' є ознакою давального відмінка, а в місцевому відмінку обов'язкове закінчення '-стах'.",
+            "en": "Ending '-стам' marks Dative; Locative strictly requires ending '-стах'."
+          }
+        },
+        {
+          "text": "чотирьохста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Форма *чотирьохста* є грубою помилкою; у місцевому відмінку норма — 'чотирьохстах'.",
+            "en": "*чотирьохста* is an invalid ending; Locative standard form is 'чотирьохстах'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У давальному відмінку числівники 200–900 мають закінчення -стам (двомстам, трьомстам, п'ятистам), а в місцевому — -стах (на двохстах, на трьохстах, на п'ятистах).",
+        "en": "In the Dative case, numerals 200–900 end in -стам (двомстам, п'ятистам); in the Locative case, they end in -стах (на двохстах, на п'ятистах)."
+      }
+    },
+    {
+      "card_id": "numeral_15",
+      "category": "cardinal_200_900_dative_locative",
+      "cefr_level": "B2",
+      "prompt_sentence": "На _______ гектарах фермерського господарства висіяли пшеницю.",
+      "blank_target": "шестистах",
+      "correct_answer": "шестистах",
+      "options": [
+        "шестистам",
+        "шестиста",
+        "шестистах",
+        "шістсот"
+      ],
+      "distractors": [
+        {
+          "text": "шістсот",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "У місцевому відмінку числівник 600 має форму 'шестистах', а не початкову 'шістсот'.",
+            "en": "In Locative case, numeral 600 takes form 'шестистах', not Nominative 'шістсот'."
+          }
+        },
+        {
+          "text": "шестистам",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма 'шестистам' належить до давального відмінка; у місцевому відмінку норма — 'шестистах'.",
+            "en": "Form 'шестистам' is Dative; Locative case strictly demands 'шестистах'."
+          }
+        },
+        {
+          "text": "шестиста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Закінчення *-ста* не властиве місцевому відмінку числівників на позначення сотень.",
+            "en": "Ending *-ста* is not an admissible Locative ending for hundreds."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "У давальному відмінку числівники 200–900 мають закінчення -стам (двомстам, трьомстам, п'ятистам), а в місцевому — -стах (на двохстах, на трьохстах, на п'ятистах).",
+        "en": "In the Dative case, numerals 200–900 end in -стам (двомстам, п'ятистам); in the Locative case, they end in -стах (на двохстах, на п'ятистах)."
+      }
+    },
+    {
+      "card_id": "numeral_16",
+      "category": "cardinal_200_900_instrumental",
+      "cefr_level": "B1",
+      "prompt_sentence": "Командир пишався своїми _______ бійцями, які стримали наступ ворога.",
+      "blank_target": "двомастами",
+      "correct_answer": "двомастами",
+      "options": [
+        "двумастами",
+        "двомаста",
+        "двомастами",
+        "двісті"
+      ],
+      "distractors": [
+        {
+          "text": "двісті",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' вимагає орудного відмінка: правильно 'двомастами', а не називний 'двісті'.",
+            "en": "Verb 'пишатися' governs Instrumental case: correctly 'двомастами', not Nominative 'двісті'."
+          }
+        },
+        {
+          "text": "двомаста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "В орудному відмінку друга основа має закінчення '-стами': 'двомастами', а не усічене *двомаста*.",
+            "en": "In Instrumental case, second root ends in '-стами': 'двомастами', not truncated *двомаста*."
+          }
+        },
+        {
+          "text": "двумастами",
+          "interference_type": "russianism_instrumental_hundreds",
+          "explanation": {
+            "ua": "Форма *двумастами* є фонетичною калькою з російської мови; українська норма — 'двомастами'.",
+            "en": "*двумастами* is a Russian phonetic calque; Ukrainian norm is strictly 'двомастами'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку числівники 200–900 мають закінчення -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (не *п'ятистами*).",
+        "en": "In the Instrumental case, numerals 200–900 end in -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (not *п'ятистами*)."
+      }
+    },
+    {
+      "card_id": "numeral_17",
+      "category": "cardinal_200_900_instrumental",
+      "cefr_level": "B1",
+      "prompt_sentence": "Автобус вирушив у рейс із _______ пасажирами на борту.",
+      "blank_target": "трьомастами",
+      "correct_answer": "трьомастами",
+      "options": [
+        "трьохстами",
+        "трьомастами",
+        "триста",
+        "трьомаста"
+      ],
+      "distractors": [
+        {
+          "text": "триста",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "З прийменником 'із' вживається орудний відмінок: правильно 'трьомастами', а не 'триста'.",
+            "en": "Preposition 'із' takes Instrumental case: standard form is 'трьомастами', not 'триста'."
+          }
+        },
+        {
+          "text": "трьомаста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Усічена форма *трьомаста* суперечить літературній нормі орудного відмінка ('трьомастами').",
+            "en": "Truncated form *трьомаста* violates standard Ukrainian Instrumental morphology ('трьомастами')."
+          }
+        },
+        {
+          "text": "трьохстами",
+          "interference_type": "russianism_instrumental_hundreds",
+          "explanation": {
+            "ua": "Перша частина в орудному відмінку має форму 'трьома-', а не родову 'трьох-' (*трехстами*).",
+            "en": "First stem in Instrumental takes 'трьома-', not Genitive calqued 'трьох-'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку числівники 200–900 мають закінчення -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (не *п'ятистами*).",
+        "en": "In the Instrumental case, numerals 200–900 end in -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (not *п'ятистами*)."
+      }
+    },
+    {
+      "card_id": "numeral_18",
+      "category": "cardinal_200_900_instrumental",
+      "cefr_level": "B2",
+      "prompt_sentence": "Перед _______ слухачами виступив провідний професор університету.",
+      "blank_target": "чотирмастами",
+      "correct_answer": "чотирмастами",
+      "options": [
+        "чотириста",
+        "чотирмаста",
+        "чотирьохстами",
+        "чотирмастами"
+      ],
+      "distractors": [
+        {
+          "text": "чотириста",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Прийменник 'перед' вимагає орудного відмінка: правильно 'чотирмастами', а не початкова форма 'чотириста'.",
+            "en": "Preposition 'перед' governs Instrumental case: correctly 'чотирмастами', not 'чотириста'."
+          }
+        },
+        {
+          "text": "чотирмаста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Закінчення орудного відмінка сотень — обов'язково '-стами': 'чотирмастами', а не *чотирмаста*.",
+            "en": "Instrumental ending of hundreds must be '-стами': 'чотирмастами', not *чотирмаста*."
+          }
+        },
+        {
+          "text": "чотирьохстами",
+          "interference_type": "russianism_instrumental_hundreds",
+          "explanation": {
+            "ua": "Форма *чотирьохстами* містить основу родового відмінка; в орудному відмінку вживається 'чотирмастами'.",
+            "en": "*чотирьохстами* erroneously uses the Genitive root; standard Instrumental is 'чотирмастами'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку числівники 200–900 мають закінчення -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (не *п'ятистами*).",
+        "en": "In the Instrumental case, numerals 200–900 end in -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (not *п'ятистами*)."
+      }
+    },
+    {
+      "card_id": "numeral_19",
+      "category": "cardinal_200_900_instrumental",
+      "cefr_level": "B2",
+      "prompt_sentence": "Завод забезпечив регіон _______ одиницями нової спеціальної техніки.",
+      "blank_target": "п'ятьмастами",
+      "correct_answer": "п'ятьмастами",
+      "options": [
+        "п'ятьмаста",
+        "п'ятьмастами",
+        "п'ятсот",
+        "п'ятистами"
+      ],
+      "distractors": [
+        {
+          "text": "п'ятсот",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Дієслово 'забезпечити' вимагає форми орудного відмінка: 'п'ятьмастами', а не називного 'п'ятсот'.",
+            "en": "Verb 'забезпечити' requires Instrumental case: 'п'ятьмастами', not base form 'п'ятсот'."
+          }
+        },
+        {
+          "text": "п'ятистами",
+          "interference_type": "russianism_instrumental_hundreds",
+          "explanation": {
+            "ua": "Форма *п'ятистами* є калькою з російської мови (*пятистами*); українська норма — 'п'ятьмастами'.",
+            "en": "*п'ятистами* is a Russian calque (*пятистами*); standard Ukrainian form is 'п'ятьмастами'."
+          }
+        },
+        {
+          "text": "п'ятьмаста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Усічена форма *п'ятьмаста* не відповідає літературній морфологічній нормі ('п'ятьмастами').",
+            "en": "Truncated form *п'ятьмаста* violates standard Ukrainian morphology ('п'ятьмастами')."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку числівники 200–900 мають закінчення -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (не *п'ятистами*).",
+        "en": "In the Instrumental case, numerals 200–900 end in -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (not *п'ятистами*)."
+      }
+    },
+    {
+      "card_id": "numeral_20",
+      "category": "cardinal_200_900_instrumental",
+      "cefr_level": "B2",
+      "prompt_sentence": "Керівництво експедиції опікувалося _______ дослідниками в базовому таборі.",
+      "blank_target": "сьомастами",
+      "correct_answer": "сьомастами",
+      "options": [
+        "сьомаста",
+        "сімсот",
+        "сьомастами",
+        "семистами"
+      ],
+      "distractors": [
+        {
+          "text": "сімсот",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Дієслово 'опікуватися' керує орудним відмінком: нормативна форма — 'сьомастами' (або 'сіммастами').",
+            "en": "Verb 'опікуватися' governs Instrumental case: standard form is 'сьомастами' (or 'сіммастами')."
+          }
+        },
+        {
+          "text": "семистами",
+          "interference_type": "russianism_instrumental_hundreds",
+          "explanation": {
+            "ua": "Форма *семистами* є прямою калькою з російської мови; в українській мові перша частина має чергування — 'сьомастами'.",
+            "en": "*семистами* is a direct Russian calque; Ukrainian norm exhibits vowel alternation: 'сьомастами'."
+          }
+        },
+        {
+          "text": "сьомаста",
+          "interference_type": "corrupted_ending_200_900",
+          "explanation": {
+            "ua": "Усічене закінчення *-ста* замість нормативного '-стами' є граматичною помилкою.",
+            "en": "Truncated ending *-ста* instead of standard '-стами' is a grammatical error."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку числівники 200–900 мають закінчення -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (не *п'ятистами*).",
+        "en": "In the Instrumental case, numerals 200–900 end in -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (not *п'ятистами*)."
+      }
+    },
+    {
+      "card_id": "numeral_21",
+      "category": "cardinal_40_90_100_paradigm",
+      "cefr_level": "A2",
+      "prompt_sentence": "У круглому столі взяли участь близько _______ провідних експертів галузі.",
+      "blank_target": "сорока",
+      "correct_answer": "сорока",
+      "options": [
+        "сорок",
+        "сорока",
+        "сороку",
+        "сороком"
+      ],
+      "distractors": [
+        {
+          "text": "сорок",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Після прийменника 'близько' числівник вимагає форми родового відмінка на '-а': 'сорока'.",
+            "en": "After preposition 'близько', numeral requires Genitive ending in '-а': 'сорока'."
+          }
+        },
+        {
+          "text": "сороку",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Числівник 40 у непрямих відмінках має винятково закінчення '-а', форма *сороку* не існує.",
+            "en": "Numeral 40 in oblique cases strictly takes ending '-а', form *сороку* does not exist."
+          }
+        },
+        {
+          "text": "сороком",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Числівник 40 не має закінчення *-ом*; правильна форма для всіх непрямих відмінків — 'сорока'.",
+            "en": "Numeral 40 never takes ending *-ом*; standard oblique form is strictly 'сорока'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 106",
+      "rule_summary": {
+        "ua": "Числівники сорок, дев'яносто, сто мають лише дві форми: закінчення -о в називному й знахідному відмінках та закінчення -а в усіх непрямих відмінках (сорока, дев'яноста, ста).",
+        "en": "Numerals сорок, дев'яносто, сто have only two forms: ending -о in Nominative/Accusative and ending -а in all oblique cases (сорока, дев'яноста, ста)."
+      }
+    },
+    {
+      "card_id": "numeral_22",
+      "category": "cardinal_40_90_100_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "Учитель роздав індивідуальні завдання _______ учням випускного класу.",
+      "blank_target": "сорока",
+      "correct_answer": "сорока",
+      "options": [
+        "сорок",
+        "сорока",
+        "сороком",
+        "сорокам"
+      ],
+      "distractors": [
+        {
+          "text": "сорок",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "У давальному відмінку числівник 40 набуває закінчення '-а': 'сорока', а не початкової форми.",
+            "en": "In Dative case, numeral 40 takes ending '-а': 'сорока', not base form 'сорок'."
+          }
+        },
+        {
+          "text": "сорокам",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Форма *сорокам* помилково утворена за зразком іменників; числівник 40 має форму 'сорока'.",
+            "en": "*сорокам* is erroneously modeled after noun declension; standard Dative is 'сорока'."
+          }
+        },
+        {
+          "text": "сороком",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Закінчення *-ом* не існує в парадигмі числівника 40: правильна форма — 'сорока'.",
+            "en": "Ending *-ом* does not exist in numeral 40 paradigm: standard form is 'сорока'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 106",
+      "rule_summary": {
+        "ua": "Числівники сорок, дев'яносто, сто мають лише дві форми: закінчення -о в називному й знахідному відмінках та закінчення -а в усіх непрямих відмінках (сорока, дев'яноста, ста).",
+        "en": "Numerals сорок, дев'яносто, сто have only two forms: ending -о in Nominative/Accusative and ending -а in all oblique cases (сорока, дев'яноста, ста)."
+      }
+    },
+    {
+      "card_id": "numeral_23",
+      "category": "cardinal_40_90_100_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "Експедиція повернулася з _______ новими зразками рідкісних мінералів.",
+      "blank_target": "дев'яноста",
+      "correct_answer": "дев'яноста",
+      "options": [
+        "дев'яностами",
+        "дев'яноста",
+        "дев'яносто",
+        "дев'яностом"
+      ],
+      "distractors": [
+        {
+          "text": "дев'яносто",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "В орудному відмінку числівник 90 змінює закінчення '-о' на '-а': 'дев'яноста'.",
+            "en": "In Instrumental case, numeral 90 replaces ending '-о' with '-а': 'дев'яноста'."
+          }
+        },
+        {
+          "text": "дев'яностом",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Форма *дев'яностом* є помилковою; числівник 90 в усіх непрямих відмінках має форму 'дев'яноста'.",
+            "en": "*дев'яностом* is incorrect; numeral 90 across all oblique cases strictly takes 'дев'яноста'."
+          }
+        },
+        {
+          "text": "дев'яностами",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Закінчення множини *-ами* не приєднується до числівника 90; нормативна форма — 'дев'яноста'.",
+            "en": "Plural ending *-ами* is invalid for numeral 90; standard form is strictly 'дев'яноста'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 106",
+      "rule_summary": {
+        "ua": "Числівники сорок, дев'яносто, сто мають лише дві форми: закінчення -о в називному й знахідному відмінках та закінчення -а в усіх непрямих відмінках (сорока, дев'яноста, ста).",
+        "en": "Numerals сорок, дев'яносто, сто have only two forms: ending -о in Nominative/Accusative and ending -а in all oblique cases (сорока, дев'яноста, ста)."
+      }
+    },
+    {
+      "card_id": "numeral_24",
+      "category": "cardinal_40_90_100_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "Школа пишається своїми _______ призерами всеукраїнських олімпіад.",
+      "blank_target": "ста",
+      "correct_answer": "ста",
+      "options": [
+        "ста",
+        "стами",
+        "сто",
+        "стом"
+      ],
+      "distractors": [
+        {
+          "text": "сто",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "З прикметником 'своїми' у формі орудного відмінка числівник набуває форми 'ста', а не 'сто'.",
+            "en": "In Instrumental case, numeral 100 takes form 'ста', not base form 'сто'."
+          }
+        },
+        {
+          "text": "стом",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Форма *стом* не існує в українській мові; в орудному відмінку вживається лише 'ста'.",
+            "en": "Form *стом* does not exist in Ukrainian; Instrumental case is strictly 'ста'."
+          }
+        },
+        {
+          "text": "стами",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Форма *стами* — калька з російської мови; український числівник 100 має форму 'ста'.",
+            "en": "Form *стами* is a Russian calque; standard Ukrainian form is 'ста'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 106",
+      "rule_summary": {
+        "ua": "Числівники сорок, дев'яносто, сто мають лише дві форми: закінчення -о в називному й знахідному відмінках та закінчення -а в усіх непрямих відмінках (сорока, дев'яноста, ста).",
+        "en": "Numerals сорок, дев'яносто, сто have only two forms: ending -о in Nominative/Accusative and ending -а in all oblique cases (сорока, дев'яноста, ста)."
+      }
+    },
+    {
+      "card_id": "numeral_25",
+      "category": "cardinal_40_90_100_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "На _______ сторінках ювілейного альбому вміщено рідкісні світлини.",
+      "blank_target": "ста",
+      "correct_answer": "ста",
+      "options": [
+        "ста",
+        "стах",
+        "сто",
+        "стом"
+      ],
+      "distractors": [
+        {
+          "text": "сто",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "У місцевому відмінку числівник 100 має закінчення '-а': 'на ста сторінках'.",
+            "en": "In Locative case, numeral 100 takes ending '-а': 'на ста сторінках'."
+          }
+        },
+        {
+          "text": "стах",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Закінчення *-ах* не приєднується до числівника 100; літературна норма — 'ста'.",
+            "en": "Ending *-ах* is invalid for numeral 100; literary standard is strictly 'ста'."
+          }
+        },
+        {
+          "text": "стом",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Числівник 100 має лише дві форми: 'сто' та 'ста'; форми *стом* не існує.",
+            "en": "Numeral 100 has only two forms: 'сто' and 'ста'; form *стом* is invalid."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 106",
+      "rule_summary": {
+        "ua": "Числівники сорок, дев'яносто, сто мають лише дві форми: закінчення -о в називному й знахідному відмінках та закінчення -а в усіх непрямих відмінках (сорока, дев'яноста, ста).",
+        "en": "Numerals сорок, дев'яносто, сто have only two forms: ending -о in Nominative/Accusative and ending -а in all oblique cases (сорока, дев'яноста, ста)."
+      }
+    },
+    {
+      "card_id": "numeral_26",
+      "category": "government_2_3_4_nominative_plural",
+      "cefr_level": "A1",
+      "prompt_sentence": "У моєму дворі ростуть три високі _______ і милують око зеленню.",
+      "blank_target": "дуби",
+      "correct_answer": "дуби",
+      "options": [
+        "дубові",
+        "дубів",
+        "дуби",
+        "дуба"
+      ],
+      "distractors": [
+        {
+          "text": "дуба",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Числівники 2, 3, 4 керують називним множини ('три дуби'); форма родового однини *три дуба* є російською калькою.",
+            "en": "Numerals 2, 3, 4 govern Nominative plural ('три дуби'); Genitive singular *три дуба* is a Russian calque."
+          }
+        },
+        {
+          "text": "дубів",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Родовий відмінок множини 'дубів' вживається з числівниками від 5, а не з числівником 3.",
+            "en": "Genitive plural 'дубів' is governed by numerals 5+, not by numeral 3."
+          }
+        },
+        {
+          "text": "дубові",
+          "interference_type": "wrong_stem_40_90_100",
+          "explanation": {
+            "ua": "Форма 'дубові' є давальним відмінком однини або прикметником, а не формою називного множини.",
+            "en": "Form 'дубові' is Dative singular or adjective, not Nominative plural."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови / Правопис 2019",
+      "rule_summary": {
+        "ua": "Числівники два, три, чотири керують іменниками у формі називного відмінка множини: два брати, три олівці, чотири студенти (калька родового відмінка *два брата* неприпустима).",
+        "en": "Numerals два, три, чотири govern nouns in the Nominative plural: два брати, три олівці, чотири студенти (calque *два брата* is incorrect)."
+      }
+    },
+    {
+      "card_id": "numeral_27",
+      "category": "government_2_3_4_nominative_plural",
+      "cefr_level": "A1",
+      "prompt_sentence": "На столі лежали чотири новенькі _______ і зошити для практичних робіт.",
+      "blank_target": "підручники",
+      "correct_answer": "підручники",
+      "options": [
+        "підручника",
+        "підручників",
+        "підручнику",
+        "підручники"
+      ],
+      "distractors": [
+        {
+          "text": "підручника",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Числівник 4 вимагає називного відмінка множини ('чотири підручники'); *чотири підручника* — калька.",
+            "en": "Numeral 4 requires Nominative plural ('чотири підручники'); *чотири підручника* is a Russian calque."
+          }
+        },
+        {
+          "text": "підручників",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Форма 'підручників' (родовий множини) поєднується з числівниками 5 і більше, а не з 4.",
+            "en": "Genitive plural 'підручників' is used with 5+, not with numeral 4."
+          }
+        },
+        {
+          "text": "підручнику",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма давального чи місцевого відмінка однини не поєднується з числівником чотири.",
+            "en": "Dative/Locative singular form cannot agree with numeral 4."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови / Правопис 2019",
+      "rule_summary": {
+        "ua": "Числівники два, три, чотири керують іменниками у формі називного відмінка множини: два брати, три олівці, чотири студенти (калька родового відмінка *два брата* неприпустима).",
+        "en": "Numerals два, три, чотири govern nouns in the Nominative plural: два брати, три олівці, чотири студенти (calque *два брата* is incorrect)."
+      }
+    },
+    {
+      "card_id": "numeral_28",
+      "category": "government_2_3_4_nominative_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "До аудиторії зайшли два нові _______ і привіталися з викладачем.",
+      "blank_target": "студенти",
+      "correct_answer": "студенти",
+      "options": [
+        "студенти",
+        "студента",
+        "студентів",
+        "студентові"
+      ],
+      "distractors": [
+        {
+          "text": "студента",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "В українській мові числівник 2 керує називним множини: 'два студенти', а не калькою *два студента*.",
+            "en": "In Ukrainian, numeral 2 governs Nominative plural: 'два студенти', not calqued *два студента*."
+          }
+        },
+        {
+          "text": "студентів",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Родовий відмінок множини 'студентів' вживається з числівниками від 5 (п'ять студентів).",
+            "en": "Genitive plural 'студентів' is governed by numerals 5+ (e.g. п'ять студентів)."
+          }
+        },
+        {
+          "text": "студентові",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Закінчення '-ові' належить давальному відмінку однини і не вживається в ролі підмета у множині.",
+            "en": "Ending '-ові' marks Dative singular and cannot function as a plural subject."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови / Правопис 2019",
+      "rule_summary": {
+        "ua": "Числівники два, три, чотири керують іменниками у формі називного відмінка множини: два брати, три олівці, чотири студенти (калька родового відмінка *два брата* неприпустима).",
+        "en": "Numerals два, три, чотири govern nouns in the Nominative plural: два брати, три олівці, чотири студенти (calque *два брата* is incorrect)."
+      }
+    },
+    {
+      "card_id": "numeral_29",
+      "category": "government_2_3_4_nominative_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "У бібліотеці ми обрали три цікаві _______ із сучасної української літератури.",
+      "blank_target": "журнали",
+      "correct_answer": "журнали",
+      "options": [
+        "журналі",
+        "журнали",
+        "журналів",
+        "журнала"
+      ],
+      "distractors": [
+        {
+          "text": "журнала",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Після числівника 3 іменник має стояти в називному множини ('три журнали'); *три журнала* — типова калька.",
+            "en": "After numeral 3, noun must be in Nominative plural ('три журнали'); *три журнала* is a typical calque."
+          }
+        },
+        {
+          "text": "журналів",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Форма родового множини 'журналів' узгоджується з числівниками від 5, а не з числівником 3.",
+            "en": "Genitive plural 'журналів' agrees with numerals 5+, not with numeral 3."
+          }
+        },
+        {
+          "text": "журналі",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма 'журналі' є місцевим відмінком однини і граматично не узгоджується з числівником.",
+            "en": "Form 'журналі' is Locative singular and does not grammatically agree with the numeral."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови / Правопис 2019",
+      "rule_summary": {
+        "ua": "Числівники два, три, чотири керують іменниками у формі називного відмінка множини: два брати, три олівці, чотири студенти (калька родового відмінка *два брата* неприпустима).",
+        "en": "Numerals два, три, чотири govern nouns in the Nominative plural: два брати, три олівці, чотири студенти (calque *два брата* is incorrect)."
+      }
+    },
+    {
+      "card_id": "numeral_30",
+      "category": "government_2_3_4_nominative_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "На святковому столі стояли чотири порцелянові _______ з ароматним чаєм.",
+      "blank_target": "чашки",
+      "correct_answer": "чашки",
+      "options": [
+        "чашкою",
+        "чашок",
+        "чашку",
+        "чашки"
+      ],
+      "distractors": [
+        {
+          "text": "чашок",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Числівник 4 поєднується з називним відмінком множини ('чотири чашки'); 'чашок' — форма для 5+.",
+            "en": "Numeral 4 combines with Nominative plural ('чотири чашки'); 'чашок' is used with 5+."
+          }
+        },
+        {
+          "text": "чашку",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма знахідного відмінка однини 'чашку' не узгоджується з підметом у множині.",
+            "en": "Accusative singular form 'чашку' cannot agree with a plural subject."
+          }
+        },
+        {
+          "text": "чашкою",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма орудного відмінка однини не може поєднуватися з числівником у ролі підмета.",
+            "en": "Instrumental singular form cannot combine with numeral in subject position."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови / Правопис 2019",
+      "rule_summary": {
+        "ua": "Числівники два, три, чотири керують іменниками у формі називного відмінка множини: два брати, три олівці, чотири студенти (калька родового відмінка *два брата* неприпустима).",
+        "en": "Numerals два, три, чотири govern nouns in the Nominative plural: два брати, три олівці, чотири студенти (calque *два брата* is incorrect)."
+      }
+    },
+    {
+      "card_id": "numeral_31",
+      "category": "government_5_plus_genitive_plural",
+      "cefr_level": "A1",
+      "prompt_sentence": "У нашому шкільному саду росте сім яблуневих _______ і багато квітів.",
+      "blank_target": "дерев",
+      "correct_answer": "дерев",
+      "options": [
+        "деревам",
+        "дерева",
+        "дерев",
+        "дерево"
+      ],
+      "distractors": [
+        {
+          "text": "дерева",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Числівник 7 вимагає родового відмінка множини: 'сім дерев', а не форми називного множини 'дерева'.",
+            "en": "Numeral 7 requires Genitive plural: 'сім дерев', not Nominative plural 'дерева'."
+          }
+        },
+        {
+          "text": "дерево",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Числівник 7 поєднується з іменником у множині, форма однини 'дерево' неприпустима.",
+            "en": "Numeral 7 combines with plural noun, singular form 'дерево' is invalid."
+          }
+        },
+        {
+          "text": "деревам",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Форма давального відмінка множини 'деревам' не відповідає синтаксичному керуванню числівника.",
+            "en": "Dative plural form 'деревам' does not match syntactic government of numeral 7."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "Числівники від п'яти й більше (п'ять, шість, десять, двадцять тощо) у називному відмінку керують іменниками у формі родового відмінка множини: п'ять братів, десять рулонів, сім книжок.",
+        "en": "Numerals from five onwards (п'ять, шість, десять...) in the Nominative govern nouns in the Genitive plural: п'ять братів, десять рулонів, сім книжок."
+      }
+    },
+    {
+      "card_id": "numeral_32",
+      "category": "government_5_plus_genitive_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "Для ремонту кімнати майстри придбали десять _______ якісних шпалер.",
+      "blank_target": "рулонів",
+      "correct_answer": "рулонів",
+      "options": [
+        "рулонів",
+        "рулон",
+        "рулони",
+        "рулона"
+      ],
+      "distractors": [
+        {
+          "text": "рулони",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Числівник 10 керує родовим відмінком множини: 'десять рулонів', а не називним 'рулони'.",
+            "en": "Numeral 10 governs Genitive plural: 'десять рулонів', not Nominative 'рулони'."
+          }
+        },
+        {
+          "text": "рулона",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Форма родового відмінка однини 'рулона' не вживається з числівником 10.",
+            "en": "Genitive singular form 'рулона' is never governed by numeral 10."
+          }
+        },
+        {
+          "text": "рулон",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Числівник 10 поєднується з формою множини, форма однини 'рулон' неприпустима.",
+            "en": "Numeral 10 agrees with plural form, singular 'рулон' is inadmissible."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "Числівники від п'яти й більше (п'ять, шість, десять, двадцять тощо) у називному відмінку керують іменниками у формі родового відмінка множини: п'ять братів, десять рулонів, сім книжок.",
+        "en": "Numerals from five onwards (п'ять, шість, десять...) in the Nominative govern nouns in the Genitive plural: п'ять братів, десять рулонів, сім книжок."
+      }
+    },
+    {
+      "card_id": "numeral_33",
+      "category": "government_5_plus_genitive_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "На обласну конференцію приїхали вісім _______ із різних районів міста.",
+      "blank_target": "вчителів",
+      "correct_answer": "вчителів",
+      "options": [
+        "вчителів",
+        "вчителі",
+        "вчитель",
+        "вчителя"
+      ],
+      "distractors": [
+        {
+          "text": "вчителі",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Числівник 8 вимагає форми родового відмінка множини: 'вісім вчителів', а не 'вчителі'.",
+            "en": "Numeral 8 requires Genitive plural: 'вісім вчителів', not 'вчителі'."
+          }
+        },
+        {
+          "text": "вчителя",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Форма родового однини 'вчителя' не узгоджується з числівником 8.",
+            "en": "Genitive singular 'вчителя' does not agree with numeral 8."
+          }
+        },
+        {
+          "text": "вчитель",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Числівник 8 не поєднується з формою називного відмінка однини 'вчитель'.",
+            "en": "Numeral 8 cannot combine with Nominative singular form 'вчитель'."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "Числівники від п'яти й більше (п'ять, шість, десять, двадцять тощо) у називному відмінку керують іменниками у формі родового відмінка множини: п'ять братів, десять рулонів, сім книжок.",
+        "en": "Numerals from five onwards (п'ять, шість, десять...) in the Nominative govern nouns in the Genitive plural: п'ять братів, десять рулонів, сім книжок."
+      }
+    },
+    {
+      "card_id": "numeral_34",
+      "category": "government_5_plus_genitive_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "У легкоатлетичних змаганнях взяли участь двадцять _______ із нашої спортивної школи.",
+      "blank_target": "спортсменів",
+      "correct_answer": "спортсменів",
+      "options": [
+        "спортсмен",
+        "спортсмени",
+        "спортсменів",
+        "спортсмена"
+      ],
+      "distractors": [
+        {
+          "text": "спортсмени",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Після числівника 20 вживається родовий відмінок множини: 'двадцять спортсменів'.",
+            "en": "After numeral 20, Genitive plural is required: 'двадцять спортсменів'."
+          }
+        },
+        {
+          "text": "спортсмена",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Форма родового однини 'спортсмена' не може узгоджуватися з числівником 20.",
+            "en": "Genitive singular form 'спортсмена' cannot agree with numeral 20."
+          }
+        },
+        {
+          "text": "спортсмен",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма однини 'спортсмен' не відповідає числівникові 20.",
+            "en": "Singular form 'спортсмен' does not match numeral 20."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "Числівники від п'яти й більше (п'ять, шість, десять, двадцять тощо) у називному відмінку керують іменниками у формі родового відмінка множини: п'ять братів, десять рулонів, сім книжок.",
+        "en": "Numerals from five onwards (п'ять, шість, десять...) in the Nominative govern nouns in the Genitive plural: п'ять братів, десять рулонів, сім книжок."
+      }
+    },
+    {
+      "card_id": "numeral_35",
+      "category": "government_5_plus_genitive_plural",
+      "cefr_level": "A2",
+      "prompt_sentence": "Для сервірування столу офіціант приніс шість _______ із вишуканим візерунком.",
+      "blank_target": "тарілок",
+      "correct_answer": "тарілок",
+      "options": [
+        "тарілка",
+        "тарілку",
+        "тарілок",
+        "тарілки"
+      ],
+      "distractors": [
+        {
+          "text": "тарілки",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Числівник 6 вимагає форми родового відмінка множини: 'шість тарілок', а не називного 'тарілки'.",
+            "en": "Numeral 6 requires Genitive plural: 'шість тарілок', not Nominative plural 'тарілки'."
+          }
+        },
+        {
+          "text": "тарілку",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма знахідного відмінка однини не узгоджується з числівником 6.",
+            "en": "Accusative singular form does not agree with numeral 6."
+          }
+        },
+        {
+          "text": "тарілка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма називного відмінка однини суперечить кількісному значенню числівника 6.",
+            "en": "Nominative singular form contradicts the plural quantity of numeral 6."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "Числівники від п'яти й більше (п'ять, шість, десять, двадцять тощо) у називному відмінку керують іменниками у формі родового відмінка множини: п'ять братів, десять рулонів, сім книжок.",
+        "en": "Numerals from five onwards (п'ять, шість, десять...) in the Nominative govern nouns in the Genitive plural: п'ять братів, десять рулонів, сім книжок."
+      }
+    },
+    {
+      "card_id": "numeral_36",
+      "category": "government_compound_last_digit",
+      "cefr_level": "B1",
+      "prompt_sentence": "До завершення міжнародного проєкту залишився двадцять один _______ напруженої праці.",
+      "blank_target": "день",
+      "correct_answer": "день",
+      "options": [
+        "днів",
+        "дня",
+        "дні",
+        "день"
+      ],
+      "distractors": [
+        {
+          "text": "дні",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "У складених числівниках, що закінчуються на 'один', іменник ставиться в називному однини: 'двадцять один день'.",
+            "en": "In compound numerals ending in 'один', noun takes Nominative singular: 'двадцять один день'."
+          }
+        },
+        {
+          "text": "днів",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Форма родового множини 'днів' суперечить останньому слову числівника 'один'.",
+            "en": "Genitive plural 'днів' violates agreement with the final numeral 'один'."
+          }
+        },
+        {
+          "text": "дня",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Форма родового відмінка однини 'дня' є помилковою; правильна форма — називний відмінок 'день'.",
+            "en": "Genitive singular 'дня' is invalid; correct form is Nominative 'день'."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "У складених числівниках форма іменника визначається винятково останнім словом: на один — називний однини (двадцять один день), на два, три, чотири — називний множини (тридцять два дні), на п'ять і більше — родовий множини (сорок п'ять днів).",
+        "en": "In compound numerals, noun agreement is determined strictly by the last numeral: ending in один -> Nom sing, ending in два/три/чотири -> Nom plur, ending in 5+ -> Gen plur."
+      }
+    },
+    {
+      "card_id": "numeral_37",
+      "category": "government_compound_last_digit",
+      "cefr_level": "B1",
+      "prompt_sentence": "У з'їзді асоціації взяли участь тридцять два _______ із різних областей України.",
+      "blank_target": "делегати",
+      "correct_answer": "делегати",
+      "options": [
+        "делегатів",
+        "делегат",
+        "делегати",
+        "делегата"
+      ],
+      "distractors": [
+        {
+          "text": "делегатів",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Останнє слово числівника — 'два', тому іменник має стояти в називному множини: 'делегати', а не 'делегатів'.",
+            "en": "Final numeral is 'два', so the noun takes Nominative plural: 'делегати', not 'делегатів'."
+          }
+        },
+        {
+          "text": "делегата",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Форма *делегата* є калькою з російської мови; українська норма — називний множини 'делегати'.",
+            "en": "Form *делегата* is a Russian calque; Ukrainian standard demands Nominative plural 'делегати'."
+          }
+        },
+        {
+          "text": "делегат",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма однини не узгоджується з числівником, що закінчується на 'два'.",
+            "en": "Singular form cannot agree with a numeral ending in 'два'."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "У складених числівниках форма іменника визначається винятково останнім словом: на один — називний однини (двадцять один день), на два, три, чотири — називний множини (тридцять два дні), на п'ять і більше — родовий множини (сорок п'ять днів).",
+        "en": "In compound numerals, noun agreement is determined strictly by the last numeral: ending in один -> Nom sing, ending in два/три/чотири -> Nom plur, ending in 5+ -> Gen plur."
+      }
+    },
+    {
+      "card_id": "numeral_38",
+      "category": "government_compound_last_digit",
+      "cefr_level": "B1",
+      "prompt_sentence": "В експозиції галереї було представлено сорок чотири _______ сучасних художників.",
+      "blank_target": "картини",
+      "correct_answer": "картини",
+      "options": [
+        "картин",
+        "картину",
+        "картиною",
+        "картини"
+      ],
+      "distractors": [
+        {
+          "text": "картин",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Останнє слово — 'чотири', тому іменник ставиться у формі називного множини: 'сорок чотири картини'.",
+            "en": "Last word is 'чотири', requiring Nominative plural: 'сорок чотири картини'."
+          }
+        },
+        {
+          "text": "картину",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма знахідного відмінка однини не відповідає числівникові 'чотири' в підметі.",
+            "en": "Accusative singular form does not agree with numeral 'чотири' in subject position."
+          }
+        },
+        {
+          "text": "картиною",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма орудного відмінка однини є граматично некоректною в цьому контексті.",
+            "en": "Instrumental singular form is grammatically invalid in this context."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "У складених числівниках форма іменника визначається винятково останнім словом: на один — називний однини (двадцять один день), на два, три, чотири — називний множини (тридцять два дні), на п'ять і більше — родовий множини (сорок п'ять днів).",
+        "en": "In compound numerals, noun agreement is determined strictly by the last numeral: ending in один -> Nom sing, ending in два/три/чотири -> Nom plur, ending in 5+ -> Gen plur."
+      }
+    },
+    {
+      "card_id": "numeral_39",
+      "category": "government_compound_last_digit",
+      "cefr_level": "B1",
+      "prompt_sentence": "У новому житловому комплексі налічується п'ятдесят п'ять _______ покращеного планування.",
+      "blank_target": "квартир",
+      "correct_answer": "квартир",
+      "options": [
+        "квартира",
+        "квартиру",
+        "квартири",
+        "квартир"
+      ],
+      "distractors": [
+        {
+          "text": "квартири",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Останнє слово 'п'ять' вимагає родового відмінка множини: 'квартир', а не називного 'квартири'.",
+            "en": "Final word 'п'ять' governs Genitive plural: 'квартир', not Nominative 'квартири'."
+          }
+        },
+        {
+          "text": "квартиру",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма однини 'квартиру' суперечить числівникові 'п'ять'.",
+            "en": "Singular form 'квартиру' contradicts the numeral 'п'ять'."
+          }
+        },
+        {
+          "text": "квартира",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Початкова форма називного відмінка однини не може поєднуватися з числівником 'п'ять'.",
+            "en": "Nominative singular base form cannot combine with numeral 'п'ять'."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "У складених числівниках форма іменника визначається винятково останнім словом: на один — називний однини (двадцять один день), на два, три, чотири — називний множини (тридцять два дні), на п'ять і більше — родовий множини (сорок п'ять днів).",
+        "en": "In compound numerals, noun agreement is determined strictly by the last numeral: ending in один -> Nom sing, ending in два/три/чотири -> Nom plur, ending in 5+ -> Gen plur."
+      }
+    },
+    {
+      "card_id": "numeral_40",
+      "category": "government_compound_last_digit",
+      "cefr_level": "B2",
+      "prompt_sentence": "В експедицію вирушив шістдесят один _______ із науково-дослідного інституту.",
+      "blank_target": "науковець",
+      "correct_answer": "науковець",
+      "options": [
+        "науковця",
+        "науковець",
+        "науковців",
+        "науковці"
+      ],
+      "distractors": [
+        {
+          "text": "науковці",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Якщо числівник закінчується на 'один', підмет ставиться в однині: 'шістдесят один науковець'.",
+            "en": "When a numeral ends in 'один', the subject is singular: 'шістдесят один науковець'."
+          }
+        },
+        {
+          "text": "науковців",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Форма родового множини 'науковців' суперечить останньому компонентові числівника 'один'.",
+            "en": "Genitive plural 'науковців' conflicts with the final numeral component 'один'."
+          }
+        },
+        {
+          "text": "науковця",
+          "interference_type": "russianism_genitive_singular_calque",
+          "explanation": {
+            "ua": "Форма родового однини не вживається в називному підметі після складеного числівника на 'один'.",
+            "en": "Genitive singular is not used in Nominative subject position after numeral ending in 'один'."
+          }
+        }
+      ],
+      "pravopys_section": "Синтаксичні норми української мови",
+      "rule_summary": {
+        "ua": "У складених числівниках форма іменника визначається винятково останнім словом: на один — називний однини (двадцять один день), на два, три, чотири — називний множини (тридцять два дні), на п'ять і більше — родовий множини (сорок п'ять днів).",
+        "en": "In compound numerals, noun agreement is determined strictly by the last numeral: ending in один -> Nom sing, ending in два/три/чотири -> Nom plur, ending in 5+ -> Gen plur."
+      }
+    },
+    {
+      "card_id": "numeral_41",
+      "category": "collective_masculine_animate",
+      "cefr_level": "B1",
+      "prompt_sentence": "У дворі весело гралися _______ хлопців із сусіднього під'їзду.",
+      "blank_target": "троє",
+      "correct_answer": "троє",
+      "options": [
+        "три",
+        "трійко",
+        "трійка",
+        "троє"
+      ],
+      "distractors": [
+        {
+          "text": "три",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "З формою родового відмінка множини 'хлопців' на позначення групи вживається збірний числівник 'троє', а 'три' вимагає називного відмінка 'три хлопці'.",
+            "en": "With Genitive plural 'хлопців' denoting a group, collective 'троє' is used; cardinal 'три' governs Nominative 'три хлопці'."
+          }
+        },
+        {
+          "text": "трійка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Слово 'трійка' є іменником, а не числівником, і має інше граматичне значення.",
+            "en": "'трійка' is a noun, not a numeral, and carries a different grammatical meaning."
+          }
+        },
+        {
+          "text": "трійко",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Трійко' — це іменник зі зменшувально-пестливим значенням, ненормативний для офіційного контексту.",
+            "en": "'Трійко' is a diminutive noun form, non-standard as a core numeral."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців.",
+        "en": "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
+      }
+    },
+    {
+      "card_id": "numeral_42",
+      "category": "collective_masculine_animate",
+      "cefr_level": "B1",
+      "prompt_sentence": "На автобусній зупинці стояли _______ друзів і жваво обговорювали плани.",
+      "blank_target": "двоє",
+      "correct_answer": "двоє",
+      "options": [
+        "двоє",
+        "два",
+        "двійко",
+        "двійка"
+      ],
+      "distractors": [
+        {
+          "text": "два",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "Числівник 'два' вимагає називного множини 'два друзі', тоді як перед формою 'друзів' виступає збірний числівник 'двоє'.",
+            "en": "Cardinal 'два' requires Nominative 'два друзі', whereas Genitive 'друзів' requires collective 'двоє'."
+          }
+        },
+        {
+          "text": "двійка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Двійка' є іменником на позначення оцінки або групи, а не числівником.",
+            "en": "'Двійка' is a noun denoting a grade or pair, not a grammatical numeral."
+          }
+        },
+        {
+          "text": "двійко",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Двійко' є розмовно-пестливим іменником, а не нормативним числівником.",
+            "en": "'Двійко' is a colloquial diminutive noun, not standard numeral syntax."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців.",
+        "en": "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
+      }
+    },
+    {
+      "card_id": "numeral_43",
+      "category": "collective_masculine_animate",
+      "cefr_level": "B1",
+      "prompt_sentence": "До кабінету зайшли _______ студентів для складання іспиту.",
+      "blank_target": "четверо",
+      "correct_answer": "четверо",
+      "options": [
+        "четверо",
+        "чотири",
+        "четвірка",
+        "чотирьох"
+      ],
+      "distractors": [
+        {
+          "text": "чотири",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "Числівник 'чотири' поєднується з називним відмінком 'чотири студенти', а з формою 'студентів' — збірний 'четверо'.",
+            "en": "Cardinal 'чотири' combines with Nominative 'чотири студенти'; Genitive 'студентів' requires collective 'четверо'."
+          }
+        },
+        {
+          "text": "четвірка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Четвірка' є іменником, що означає оцінку або групу, а не числівником.",
+            "en": "'Четвірка' is a noun denoting an evaluation grade or group, not a numeral."
+          }
+        },
+        {
+          "text": "чотирьох",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма родового відмінка 'чотирьох' не може виконувати функцію називного підмета.",
+            "en": "Genitive form 'чотирьох' cannot function as a Nominative subject."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців.",
+        "en": "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
+      }
+    },
+    {
+      "card_id": "numeral_44",
+      "category": "collective_masculine_animate",
+      "cefr_level": "B2",
+      "prompt_sentence": "У родині підростало _______ синів, які допомагали батькам по господарству.",
+      "blank_target": "п'ятеро",
+      "correct_answer": "п'ятеро",
+      "options": [
+        "п'ятеро",
+        "п'ятірка",
+        "п'яти",
+        "п'ять"
+      ],
+      "distractors": [
+        {
+          "text": "п'ять",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "На позначення сукупності осіб чоловічого роду найприроднішим є вживання збірного числівника 'п'ятеро'.",
+            "en": "To denote a close male personal group, collective numeral 'п'ятеро' is the natural stylistic choice."
+          }
+        },
+        {
+          "text": "п'ятірка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'П'ятірка' є іменником і не функціонує як власне числівник у цьому реченні.",
+            "en": "'П'ятірка' is a noun and cannot function as a core numeral in this sentence."
+          }
+        },
+        {
+          "text": "п'яти",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма родового відмінка числівника 'п'яти' не може виступати підметом без контексту керування.",
+            "en": "Genitive numeral form 'п'яти' cannot serve as subject without governing context."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців.",
+        "en": "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
+      }
+    },
+    {
+      "card_id": "numeral_45",
+      "category": "collective_masculine_animate",
+      "cefr_level": "B2",
+      "prompt_sentence": "На нараду прибули _______ директорів провідних підприємств регіону.",
+      "blank_target": "шестеро",
+      "correct_answer": "шестеро",
+      "options": [
+        "шість",
+        "шестеро",
+        "шести",
+        "шістка"
+      ],
+      "distractors": [
+        {
+          "text": "шість",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "Для підкреслення цілісності особистісної групи вживається збірний числівник 'шестеро'.",
+            "en": "To emphasize collective group unity among persons, collective 'шестеро' is preferred."
+          }
+        },
+        {
+          "text": "шістка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Слово 'шістка' — це іменник, а не кількісний чи збірний числівник.",
+            "en": "Word 'шістка' is a noun, not a quantitative or collective numeral."
+          }
+        },
+        {
+          "text": "шести",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма 'шести' є непрямим відмінком і не вживається в ролі називного підмета.",
+            "en": "Form 'шести' is an oblique case and cannot function as a Nominative subject."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців.",
+        "en": "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
+      }
+    },
+    {
+      "card_id": "numeral_46",
+      "category": "collective_restriction_feminine",
+      "cefr_level": "B1",
+      "prompt_sentence": "До магазину зайшли три _______ і почали уважно роздивлятися нові сукні.",
+      "blank_target": "жінки",
+      "correct_answer": "жінки",
+      "options": [
+        "жінки",
+        "троє жінок",
+        "жінці",
+        "жінок"
+      ],
+      "distractors": [
+        {
+          "text": "троє жінок",
+          "interference_type": "collective_with_adult_female",
+          "explanation": {
+            "ua": "Збірні числівники не вживаються з іменниками жіночого роду на позначення дорослих осіб (*троє жінок* — груба помилка; норма — 'три жінки').",
+            "en": "Collective numerals are never used with feminine nouns for adult persons (*троє жінок* is invalid; norm is 'три жінки')."
+          }
+        },
+        {
+          "text": "жінок",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Числівник 3 керує називним відмінком множини ('три жінки'), а не родовим 'жінок'.",
+            "en": "Numeral 3 governs Nominative plural ('три жінки'), not Genitive 'жінок'."
+          }
+        },
+        {
+          "text": "жінці",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма давального чи місцевого відмінка однини не узгоджується з числівником 'три'.",
+            "en": "Dative/Locative singular form cannot agree with numeral 'три'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*).",
+        "en": "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
+      }
+    },
+    {
+      "card_id": "numeral_47",
+      "category": "collective_restriction_feminine",
+      "cefr_level": "B1",
+      "prompt_sentence": "У затишному сквері розмовляли дві _______ і згадували шкільні роки.",
+      "blank_target": "подруги",
+      "correct_answer": "подруги",
+      "options": [
+        "подруги",
+        "двоє подруг",
+        "подрузі",
+        "подруг"
+      ],
+      "distractors": [
+        {
+          "text": "двоє подруг",
+          "interference_type": "collective_with_adult_female",
+          "explanation": {
+            "ua": "Вживання збірного числівника з особою жіночого роду (*двоє подруг*) є ненормативним; правильно — 'дві подруги'.",
+            "en": "Using a collective numeral with female persons (*двоє подруг*) is incorrect; norm is 'дві подруги'."
+          }
+        },
+        {
+          "text": "подруг",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Числівник 'дві' вимагає називного відмінка множини: 'дві подруги', а не родового 'подруг'.",
+            "en": "Numeral 'дві' requires Nominative plural: 'дві подруги', not Genitive 'подруг'."
+          }
+        },
+        {
+          "text": "подрузі",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма однини 'подрузі' не узгоджується з числівником у функції множинного підмета.",
+            "en": "Singular form 'подрузі' cannot agree with numeral in plural subject position."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*).",
+        "en": "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
+      }
+    },
+    {
+      "card_id": "numeral_48",
+      "category": "collective_restriction_feminine",
+      "cefr_level": "B1",
+      "prompt_sentence": "У міському конкурсі перемогли чотири _______ із нашого університету.",
+      "blank_target": "дівчини",
+      "correct_answer": "дівчини",
+      "options": [
+        "четверо дівчат",
+        "дівчині",
+        "дівчини",
+        "дівчат"
+      ],
+      "distractors": [
+        {
+          "text": "четверо дівчат",
+          "interference_type": "collective_with_adult_female",
+          "explanation": {
+            "ua": "Збірний числівник *четверо дівчат* суперечить літературній нормі; правильна сполука — 'чотири дівчини'.",
+            "en": "Collective numeral *четверо дівчат* violates standard grammar; correct combination is 'чотири дівчини'."
+          }
+        },
+        {
+          "text": "дівчат",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Числівник 4 вимагає називного множини ('чотири дівчини'), форма 'дівчат' призначена для 5+.",
+            "en": "Numeral 4 takes Nominative plural ('чотири дівчини'), form 'дівчат' is reserved for 5+."
+          }
+        },
+        {
+          "text": "дівчині",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма однини 'дівчині' не може виступати підметом при числівнику 'чотири'.",
+            "en": "Singular form 'дівчині' cannot serve as subject with numeral 'чотири'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*).",
+        "en": "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
+      }
+    },
+    {
+      "card_id": "numeral_49",
+      "category": "collective_restriction_feminine",
+      "cefr_level": "B1",
+      "prompt_sentence": "У дружній родині підростали дві _______ які завжди підтримували одна одну.",
+      "blank_target": "сестри",
+      "correct_answer": "сестри",
+      "options": [
+        "сестри",
+        "двоє сестер",
+        "сестрою",
+        "сестер"
+      ],
+      "distractors": [
+        {
+          "text": "двоє сестер",
+          "interference_type": "collective_with_adult_female",
+          "explanation": {
+            "ua": "З іменниками жіночого роду збірні числівники не вживаються: правильно 'дві сестри', а не *двоє сестер*.",
+            "en": "Collective numerals are prohibited with feminine nouns: correctly 'дві сестри', not *двоє сестер*."
+          }
+        },
+        {
+          "text": "сестер",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Числівник 'дві' сполучається з формою називного відмінка множини: 'дві сестри'.",
+            "en": "Numeral 'дві' combines with Nominative plural: 'дві сестри'."
+          }
+        },
+        {
+          "text": "сестрою",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма орудного відмінка однини граматично не узгоджується з числівником 'дві'.",
+            "en": "Instrumental singular form is grammatically incompatible with numeral 'дві'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*).",
+        "en": "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
+      }
+    },
+    {
+      "card_id": "numeral_50",
+      "category": "collective_restriction_feminine",
+      "cefr_level": "B2",
+      "prompt_sentence": "На конференції виступили три _______ із доповідями про сучасні технології.",
+      "blank_target": "студентки",
+      "correct_answer": "студентки",
+      "options": [
+        "троє студенток",
+        "студентки",
+        "студенток",
+        "студентці"
+      ],
+      "distractors": [
+        {
+          "text": "троє студенток",
+          "interference_type": "collective_with_adult_female",
+          "explanation": {
+            "ua": "Збірний числівник *троє студенток* є помилковим для жіночих назв осіб; правильно — 'три студентки'.",
+            "en": "Collective *троє студенток* is invalid for feminine personal nouns; standard is 'три студентки'."
+          }
+        },
+        {
+          "text": "студенток",
+          "interference_type": "wrong_case_government_5_plus",
+          "explanation": {
+            "ua": "Числівник 3 вимагає називного відмінка множини: 'три студентки', а не родового 'студенток'.",
+            "en": "Numeral 3 demands Nominative plural: 'три студентки', not Genitive 'студенток'."
+          }
+        },
+        {
+          "text": "студентці",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма давального відмінка однини не може узгоджуватися з числівником у функції підмета.",
+            "en": "Dative singular form cannot agree with numeral in subject role."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*).",
+        "en": "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
+      }
+    },
+    {
+      "card_id": "numeral_51",
+      "category": "collective_pluralia_tantum_neuter",
+      "cefr_level": "B1",
+      "prompt_sentence": "У новенькому коридорі встановили _______ дубових дверей із надійними замками.",
+      "blank_target": "двоє",
+      "correct_answer": "двоє",
+      "options": [
+        "двоє",
+        "дві",
+        "двійка",
+        "два"
+      ],
+      "distractors": [
+        {
+          "text": "дві",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "З іменниками, що вживаються лише у множині (двері), обов'язково вживається збірний числівник 'двоє' (не *дві двері*).",
+            "en": "With pluralia tantum nouns (двері), collective numeral 'двоє' is compulsory (not *дві двері*)."
+          }
+        },
+        {
+          "text": "два",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "Числівник 'два' чоловічого роду не може поєднуватися з іменником pluralia tantum 'двері'.",
+            "en": "Masculine numeral 'два' cannot combine with pluralia tantum noun 'двері'."
+          }
+        },
+        {
+          "text": "двійка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Двійка' — це іменник, а не числівник, і не вживається в цій синтаксичній конструкції.",
+            "en": "'Двійка' is a noun, not a numeral, and is inappropriate in this syntactic frame."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят).",
+        "en": "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
+      }
+    },
+    {
+      "card_id": "numeral_52",
+      "category": "collective_pluralia_tantum_neuter",
+      "cefr_level": "B1",
+      "prompt_sentence": "Для майстерні кравець придбав _______ гострих кравецьких ножиць.",
+      "blank_target": "троє",
+      "correct_answer": "троє",
+      "options": [
+        "три",
+        "троє",
+        "трьох",
+        "трійка"
+      ],
+      "distractors": [
+        {
+          "text": "три",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "З іменником pluralia tantum 'ножиці' вживається винятково збірний числівник 'троє' (не *три ножиці*).",
+            "en": "With pluralia tantum 'ножиці', collective numeral 'троє' is strictly required (not *три ножиці*)."
+          }
+        },
+        {
+          "text": "трійка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Слово 'трійка' є іменником і не виражає кількісного числівникового значення предметів.",
+            "en": "'Трійка' is a noun and cannot express quantitative numeral count of objects."
+          }
+        },
+        {
+          "text": "трьох",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма родового відмінка 'трьох' без прийменника не може виступати прямим додатком неістот.",
+            "en": "Genitive form 'трьох' without preposition cannot serve as direct object for inanimate nouns."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят).",
+        "en": "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
+      }
+    },
+    {
+      "card_id": "numeral_53",
+      "category": "collective_pluralia_tantum_neuter",
+      "cefr_level": "B1",
+      "prompt_sentence": "Біля ставка плавало _______ жовтеньких пухнастих каченят.",
+      "blank_target": "четверо",
+      "correct_answer": "четверо",
+      "options": [
+        "чотирьох",
+        "четверо",
+        "чотири",
+        "четвірка"
+      ],
+      "distractors": [
+        {
+          "text": "чотири",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "З назвами малят (середній рід IV відміни: каченята) зазвичай уживаються збірні числівники: 'четверо каченят'.",
+            "en": "With names of young beings (neuter declension IV: каченята), collective numerals are standard: 'четверо каченят'."
+          }
+        },
+        {
+          "text": "четвірка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Четвірка' є іменником, що означає оцінку або групу, а не власне кількісним словом.",
+            "en": "'Четвірка' is a noun denoting an evaluation mark or group, not a count numeral."
+          }
+        },
+        {
+          "text": "чотирьох",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма родового відмінка числівника 'чотирьох' не узгоджується як називний підмет речення.",
+            "en": "Genitive numeral form 'чотирьох' cannot function as a Nominative subject."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят).",
+        "en": "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
+      }
+    },
+    {
+      "card_id": "numeral_54",
+      "category": "collective_pluralia_tantum_neuter",
+      "cefr_level": "B2",
+      "prompt_sentence": "Дідусь змайстрував для онуків _______ дерев'яних саней для зимових розваг.",
+      "blank_target": "двоє",
+      "correct_answer": "двоє",
+      "options": [
+        "двійко",
+        "два",
+        "двоє",
+        "дві"
+      ],
+      "distractors": [
+        {
+          "text": "два",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "З іменником pluralia tantum 'сани' поєднуються лише збірні числівники: 'двоє саней', а не *два сани*.",
+            "en": "With pluralia tantum 'сани', only collective numerals are admissible: 'двоє саней', not *два сани*."
+          }
+        },
+        {
+          "text": "дві",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "Форма жіночого роду 'дві' не поєднується з іменниками, що мають лише множину (*дві сани* — помилка).",
+            "en": "Feminine 'дві' cannot combine with nouns existing only in the plural (*дві сани* is invalid)."
+          }
+        },
+        {
+          "text": "двійко",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'Двійко' є розмовно-пестливим утворенням, ненормативним для нейтрального висловлювання.",
+            "en": "'Двійко' is a colloquial diminutive form, not standard in neutral style."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят).",
+        "en": "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
+      }
+    },
+    {
+      "card_id": "numeral_55",
+      "category": "collective_pluralia_tantum_neuter",
+      "cefr_level": "B2",
+      "prompt_sentence": "На вітрині оптики лежало _______ стильних сонцезахисних окулярів.",
+      "blank_target": "п'ятеро",
+      "correct_answer": "п'ятеро",
+      "options": [
+        "п'ятеро",
+        "п'ятірка",
+        "п'яти",
+        "п'ять"
+      ],
+      "distractors": [
+        {
+          "text": "п'ять",
+          "interference_type": "cardinal_with_pluralia_tantum",
+          "explanation": {
+            "ua": "З іменниками pluralia tantum (окуляри) норма вимагає збірного числівника: 'п'ятеро окулярів'.",
+            "en": "With pluralia tantum nouns (окуляри), standard syntax demands collective numeral: 'п'ятеро окулярів'."
+          }
+        },
+        {
+          "text": "п'ятірка",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "'П'ятірка' є іменником зі значенням оцінки або предметної групи, а не числівником.",
+            "en": "'П'ятірка' is a noun denoting an evaluation grade or group, not a numeral."
+          }
+        },
+        {
+          "text": "п'яти",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Форма родового відмінка числівника не може замінити називну форму підмета.",
+            "en": "Genitive form of numeral cannot substitute for Nominative subject."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят).",
+        "en": "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
+      }
+    },
+    {
+      "card_id": "numeral_56",
+      "category": "fractional_pivtora_government",
+      "cefr_level": "A2",
+      "prompt_sentence": "Будівництво нового спортивного комплексу тривало півтора _______ без зупинки робіт.",
+      "blank_target": "року",
+      "correct_answer": "року",
+      "options": [
+        "роком",
+        "року",
+        "роки",
+        "років"
+      ],
+      "distractors": [
+        {
+          "text": "роки",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Числівник 'півтора' керує родовим відмінком ОДНИНИ ('півтора року'), а не називним множини 'роки'.",
+            "en": "Numeral 'півтора' governs Genitive SINGULAR ('півтора року'), not Nominative plural 'роки'."
+          }
+        },
+        {
+          "text": "років",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Форма родового відмінка множини 'років' неприпустима після числівника півтора (тільки однина: 'року').",
+            "en": "Genitive plural 'років' is invalid after півтора (strictly singular: 'року')."
+          }
+        },
+        {
+          "text": "роком",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма орудного відмінка однини не відповідає синтаксичному керуванню числівника півтора.",
+            "en": "Instrumental singular form does not match the syntactic government of півтора."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 105",
+      "rule_summary": {
+        "ua": "Дробові числівники півтора (для чоловічого та середнього роду) і півтори (для жіночого роду) завжди керують іменниками у формі родового відмінка ОДНИНИ: півтора року, півтори доби, півтора місяця.",
+        "en": "Fractional numerals півтора (masc/neut) and півтори (fem) always govern nouns in the Genitive SINGULAR: півтора року, півтори доби, півтора місяця."
+      }
+    },
+    {
+      "card_id": "numeral_57",
+      "category": "fractional_pivtora_government",
+      "cefr_level": "A2",
+      "prompt_sentence": "Швидкісний поїзд запізнився на півтори _______ через аварію на колії.",
+      "blank_target": "години",
+      "correct_answer": "години",
+      "options": [
+        "годину",
+        "годин",
+        "годинами",
+        "години"
+      ],
+      "distractors": [
+        {
+          "text": "годин",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Числівник 'півтори' (жіночий рід) керує родовим відмінком однини: 'півтори години' (не *півтори годин*).",
+            "en": "Feminine 'півтори' governs Genitive singular: 'півтори години' (not *півтори годин*)."
+          }
+        },
+        {
+          "text": "годину",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма знахідного відмінка однини 'годину' не узгоджується з числівником півтори.",
+            "en": "Accusative singular 'годину' does not agree with numeral півтори."
+          }
+        },
+        {
+          "text": "годинами",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Орудний відмінок множини 'годинами' є граматично некоректним після числівника півтори.",
+            "en": "Instrumental plural 'годинами' is grammatically incorrect after півтори."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 105",
+      "rule_summary": {
+        "ua": "Дробові числівники півтора (для чоловічого та середнього роду) і півтори (для жіночого роду) завжди керують іменниками у формі родового відмінка ОДНИНИ: півтора року, півтори доби, півтора місяця.",
+        "en": "Fractional numerals півтора (masc/neut) and півтори (fem) always govern nouns in the Genitive SINGULAR: півтора року, півтори доби, півтора місяця."
+      }
+    },
+    {
+      "card_id": "numeral_58",
+      "category": "fractional_pivtora_government",
+      "cefr_level": "B1",
+      "prompt_sentence": "Складна рятувальна операція тривала півтори _______ в екстремальних погодних умовах.",
+      "blank_target": "доби",
+      "correct_answer": "доби",
+      "options": [
+        "доби",
+        "діб",
+        "добою",
+        "добу"
+      ],
+      "distractors": [
+        {
+          "text": "діб",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Числівник 'півтори' вимагає родового відмінка однини: 'доби', а не форми множини 'діб'.",
+            "en": "Numeral 'півтори' demands Genitive singular: 'доби', not plural form 'діб'."
+          }
+        },
+        {
+          "text": "добу",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма знахідного відмінка однини не відповідає правилам керування дробового числівника.",
+            "en": "Accusative singular form does not comply with fractional numeral government."
+          }
+        },
+        {
+          "text": "добою",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Орудний відмінок однини не вживається після числівника півтори.",
+            "en": "Instrumental singular is never governed by numeral півтори."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 105",
+      "rule_summary": {
+        "ua": "Дробові числівники півтора (для чоловічого та середнього роду) і півтори (для жіночого роду) завжди керують іменниками у формі родового відмінка ОДНИНИ: півтора року, півтори доби, півтора місяця.",
+        "en": "Fractional numerals півтора (masc/neut) and півтори (fem) always govern nouns in the Genitive SINGULAR: півтора року, півтори доби, півтора місяця."
+      }
+    },
+    {
+      "card_id": "numeral_59",
+      "category": "fractional_pivtora_government",
+      "cefr_level": "B1",
+      "prompt_sentence": "Для приготування полуничного варення потрібно півтора _______ цукру.",
+      "blank_target": "кілограма",
+      "correct_answer": "кілограма",
+      "options": [
+        "кілограмом",
+        "кілограма",
+        "кілограми",
+        "кілограмів"
+      ],
+      "distractors": [
+        {
+          "text": "кілограми",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Іменник чоловічого роду після числівника 'півтора' ставиться в родовому однини: 'кілограма'.",
+            "en": "Masculine noun after 'півтора' takes Genitive singular: 'кілограма'."
+          }
+        },
+        {
+          "text": "кілограмів",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Форма родового множини 'кілограмів' після півтора є помилковою; норма вимагає однини.",
+            "en": "Genitive plural 'кілограмів' is erroneous after півтора; standard demands singular."
+          }
+        },
+        {
+          "text": "кілограмом",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма орудного відмінка однини не узгоджується з числівником півтора.",
+            "en": "Instrumental singular form cannot agree with numeral півтора."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 105",
+      "rule_summary": {
+        "ua": "Дробові числівники півтора (для чоловічого та середнього роду) і півтори (для жіночого роду) завжди керують іменниками у формі родового відмінка ОДНИНИ: півтора року, півтори доби, півтора місяця.",
+        "en": "Fractional numerals півтора (masc/neut) and півтори (fem) always govern nouns in the Genitive SINGULAR: півтора року, півтори доби, півтора місяця."
+      }
+    },
+    {
+      "card_id": "numeral_60",
+      "category": "fractional_pivtora_government",
+      "cefr_level": "B1",
+      "prompt_sentence": "Аспірант перебував на закордонному стажуванні півтора _______ і зібрав цінний матеріал.",
+      "blank_target": "місяця",
+      "correct_answer": "місяця",
+      "options": [
+        "місяцем",
+        "місяця",
+        "місяці",
+        "місяців"
+      ],
+      "distractors": [
+        {
+          "text": "місяці",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Числівник 'півтора' керує родовим відмінком однини: 'півтора місяця', а не формою називного множини 'місяці'.",
+            "en": "Numeral 'півтора' governs Genitive singular: 'півтора місяця', not Nominative plural 'місяці'."
+          }
+        },
+        {
+          "text": "місяців",
+          "interference_type": "fractional_plural_government",
+          "explanation": {
+            "ua": "Форма родового множини 'місяців' є типовою помилкою; після півтора вживається лише однина 'місяця'.",
+            "en": "Genitive plural 'місяців' is a frequent error; after півтора only singular 'місяця' is valid."
+          }
+        },
+        {
+          "text": "місяцем",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Форма орудного відмінка однини граматично не узгоджується з числівником півтора.",
+            "en": "Instrumental singular form is grammatically incompatible with numeral півтора."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 105",
+      "rule_summary": {
+        "ua": "Дробові числівники півтора (для чоловічого та середнього роду) і півтори (для жіночого роду) завжди керують іменниками у формі родового відмінка ОДНИНИ: півтора року, півтори доби, півтора місяця.",
+        "en": "Fractional numerals півтора (masc/neut) and півтори (fem) always govern nouns in the Genitive SINGULAR: півтора року, півтори доби, півтора місяця."
+      }
+    },
+    {
+      "card_id": "numeral_61",
+      "category": "ordinal_compound_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Україна відновила свою державну незалежність у _______ році.",
+      "blank_target": "тисяча дев'ятсот дев'яносто першому",
+      "correct_answer": "тисяча дев'ятсот дев'яносто першому",
+      "options": [
+        "тисяча дев'ятсот дев'яносто першому",
+        "тисячі дев'ятисот дев'яносто першому",
+        "тисяча дев'ятсот дев'яностих першому",
+        "тисячу дев'ятсот дев'яносто першому"
+      ],
+      "distractors": [
+        {
+          "text": "тисячі дев'ятисот дев'яносто першому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "У складених порядкових числівниках відмінюється ЛИШЕ останнє слово; відмінювання 'тисячі дев'ятисот' є помилкою.",
+            "en": "In compound ordinals, ONLY the final word inflects; inflecting 'тисячі дев'ятисот' is an error."
+          }
+        },
+        {
+          "text": "тисячу дев'ятсот дев'яносто першому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Слово 'тисяча' має залишатися у формі називного відмінка, а не знахідного *тисячу*.",
+            "en": "Word 'тисяча' must stay in Nominative, not Accusative *тисячу*."
+          }
+        },
+        {
+          "text": "тисяча дев'ятсот дев'яностих першому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Десятки мають залишатися незмінними ('дев'яносто'), а не набувати форми місцевого множини *дев'яностих*.",
+            "en": "Tens component must remain invariant ('дев'яносто'), not inflected into plural *дев'яностих*."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово; усі попередні слова зберігають початкову форму називного відмінка: у дві тисячі двадцять четвертому році (не *у двох тисячах*).",
+        "en": "In compound ordinal numerals, ONLY the last word inflects; all preceding words remain in the Nominative: у дві тисячі двадцять четвертому році (not *у двох тисячах*)."
+      }
+    },
+    {
+      "card_id": "numeral_62",
+      "category": "ordinal_compound_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Олімпійські ігри в Парижі відбулися у _______ році.",
+      "blank_target": "дві тисячі двадцять четвертому",
+      "correct_answer": "дві тисячі двадцять четвертому",
+      "options": [
+        "двох тисячах двадцятому четвертому",
+        "дві тисячі двадцять четвертому",
+        "двох тисячах двадцять четвертому",
+        "дві тисячі двадцятому четвертому"
+      ],
+      "distractors": [
+        {
+          "text": "двох тисячах двадцять четвертому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "У складеному порядковому числівнику перша частина не відмінюється: правильно 'дві тисячі', а не *двох тисячах*.",
+            "en": "In compound ordinal, previous words do not decline: correctly 'дві тисячі', not *двох тисячах*."
+          }
+        },
+        {
+          "text": "двох тисячах двадцятому четвертому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Відмінювання всіх слів складеного числівника суперечить українському правопису (§ 110).",
+            "en": "Declining all components of a compound ordinal numeral violates Ukrainian orthography (§ 110)."
+          }
+        },
+        {
+          "text": "дві тисячі двадцятому четвертому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Слово 'двадцять' не повинно відмінюватися; змінюється лише останнє слово — 'четвертому'.",
+            "en": "Word 'двадцять' must not inflect; only the final word inflects to 'четвертому'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово; усі попередні слова зберігають початкову форму називного відмінка: у дві тисячі двадцять четвертому році (не *у двох тисячах*).",
+        "en": "In compound ordinal numerals, ONLY the last word inflects; all preceding words remain in the Nominative: у дві тисячі двадцять четвертому році (not *у двох тисячах*)."
+      }
+    },
+    {
+      "card_id": "numeral_63",
+      "category": "ordinal_compound_declension",
+      "cefr_level": "B2",
+      "prompt_sentence": "Перше видання 'Кобзаря' Тараса Шевченка побачило світ у _______ році.",
+      "blank_target": "тисяча вісімсот сороковому",
+      "correct_answer": "тисяча вісімсот сороковому",
+      "options": [
+        "тисяча вісімсот сороковому",
+        "тисячі вісімсот сороковому",
+        "тисяча вісімсотому сороковому",
+        "тисячі восьмисотому сороковому"
+      ],
+      "distractors": [
+        {
+          "text": "тисячі восьмисотому сороковому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Відмінювання попередніх слів є грубою помилкою: попередні компоненти мають форму 'тисяча вісімсот'.",
+            "en": "Declining preceding elements is an error: initial components must be 'тисяча вісімсот'."
+          }
+        },
+        {
+          "text": "тисячі вісімсот сороковому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Слово 'тисяча' має зберігати форму називного відмінка, форма *тисячі* — помилкова.",
+            "en": "Component 'тисяча' must retain Nominative form, inflected *тисячі* is incorrect."
+          }
+        },
+        {
+          "text": "тисяча вісімсотому сороковому",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Сотні не відмінюються, якщо вони не є останнім словом: правильно 'вісімсот', а не *вісімсотому*.",
+            "en": "Hundreds do not inflect unless they form the final component: correctly 'вісімсот', not *вісімсотому*."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово; усі попередні слова зберігають початкову форму називного відмінка: у дві тисячі двадцять четвертому році (не *у двох тисячах*).",
+        "en": "In compound ordinal numerals, ONLY the last word inflects; all preceding words remain in the Nominative: у дві тисячі двадцять четвертому році (not *у двох тисячах*)."
+      }
+    },
+    {
+      "card_id": "numeral_64",
+      "category": "ordinal_compound_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Урочистий останній дзвінок у школі пролунає _______ травня.",
+      "blank_target": "двадцять п'ятого",
+      "correct_answer": "двадцять п'ятого",
+      "options": [
+        "двадцяти п'ятого",
+        "двадцять п'ятим",
+        "двадцять п'ятого",
+        "двадцятого п'ятого"
+      ],
+      "distractors": [
+        {
+          "text": "двадцятого п'ятого",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "У датах відмінюється лише останнє слово: правильно 'двадцять п'ятого', а не *двадцятого п'ятого*.",
+            "en": "In dates, only the final numeral declines: correctly 'двадцять п'ятого', not *двадцятого п'ятого*."
+          }
+        },
+        {
+          "text": "двадцяти п'ятого",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Слово 'двадцять' не набуває форми родового відмінка; попередні слова залишаються у формі називного.",
+            "en": "Word 'двадцять' does not take Genitive; preceding words remain in Nominative."
+          }
+        },
+        {
+          "text": "двадцять п'ятим",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "На позначення дати у відповіді на питання 'коли?' вживається родовий відмінок ('п'ятого'), а не орудний.",
+            "en": "To denote dates answering 'when?', Genitive case is used ('п'ятого'), not Instrumental."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово; усі попередні слова зберігають початкову форму називного відмінка: у дві тисячі двадцять четвертому році (не *у двох тисячах*).",
+        "en": "In compound ordinal numerals, ONLY the last word inflects; all preceding words remain in the Nominative: у дві тисячі двадцять четвертому році (not *у двох тисячах*)."
+      }
+    },
+    {
+      "card_id": "numeral_65",
+      "category": "ordinal_compound_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Звітну конференцію трудового колективу призначено на _______ березня.",
+      "blank_target": "тридцять перше",
+      "correct_answer": "тридцять перше",
+      "options": [
+        "тридцять перше",
+        "тридцяти перше",
+        "тридцяте перше",
+        "тридцять першого"
+      ],
+      "distractors": [
+        {
+          "text": "тридцяте перше",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Перше слово 'тридцять' залишається незмінним: правильно 'тридцять перше', а не *тридцяте перше*.",
+            "en": "First word 'тридцять' remains uninflected: correctly 'тридцять перше', not *тридцяте перше*."
+          }
+        },
+        {
+          "text": "тридцяти перше",
+          "interference_type": "declining_previous_ordinal_components",
+          "explanation": {
+            "ua": "Попередній компонент не повинен приймати відмінкове закінчення: норма — 'тридцять'.",
+            "en": "Preceding component must not accept case inflections: standard is 'тридцять'."
+          }
+        },
+        {
+          "text": "тридцять першого",
+          "interference_type": "case_confusion_dative_locative",
+          "explanation": {
+            "ua": "Конструкція 'призначити на...' вимагає знахідного відмінка середнього роду: 'на тридцять перше' (число).",
+            "en": "Construction 'призначити на...' governs Accusative neuter: 'на тридцять перше' (число)."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово; усі попередні слова зберігають початкову форму називного відмінка: у дві тисячі двадцять четвертому році (не *у двох тисячах*).",
+        "en": "In compound ordinal numerals, ONLY the last word inflects; all preceding words remain in the Nominative: у дві тисячі двадцять четвертому році (not *у двох тисячах*)."
+      }
+    },
+    {
+      "card_id": "numeral_66",
+      "category": "time_expressions_anti_calque",
+      "cefr_level": "A1",
+      "prompt_sentence": "Пленарне засідання наукової ради розпочнеться _______ в головній актовій залі.",
+      "blank_target": "о десятій годині",
+      "correct_answer": "о десятій годині",
+      "options": [
+        "о десятьох годинах",
+        "в десять годин",
+        "у десять годин",
+        "о десятій годині"
+      ],
+      "distractors": [
+        {
+          "text": "в десять годин",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Конструкція *в десять годин* є російською калькою; в українській мові точний час позначають: 'о десятій годині'.",
+            "en": "Construction *в десять годин* is a Russian calque; Ukrainian uses: 'о десятій годині'."
+          }
+        },
+        {
+          "text": "у десять годин",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Поєднання 'у' з кількісним числівником для вказівки на час є ненормативним (правильно — 'о десятій').",
+            "en": "Combining 'у' with a cardinal numeral for time is ungrammatical (correctly 'о десятій')."
+          }
+        },
+        {
+          "text": "о десятьох годинах",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вказівка на час потребує порядкового числівника однини ('о десятій'), а не кількісного числівника множини.",
+            "en": "Time designation requires singular ordinal numeral ('о десятій'), not plural cardinal."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Автентичні синтаксичні норми",
+      "rule_summary": {
+        "ua": "Для позначення точного часу в українській мові вживають прийменник 'о' / 'об' із порядковим числівником (о десятій годині), форми 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (кальки *в десять годин*, *без двадцяти* неприпустимі).",
+        "en": "Authentic Ukrainian time expressions use 'о' + ordinal numeral (о десятій годині), 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (calques *в десять годин*, *без двадцяти* are errors)."
+      }
+    },
+    {
+      "card_id": "numeral_67",
+      "category": "time_expressions_anti_calque",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ранковий швидкісний поїзд вирушає рівно о _______ з першої платформи.",
+      "blank_target": "чверть на одинадцяту",
+      "correct_answer": "чверть на одинадцяту",
+      "options": [
+        "чверть одинадцятого",
+        "чверть на одинадцяту",
+        "без п'ятнадцяти одинадцять",
+        "п'ятнадцять хвилин одинадцятого"
+      ],
+      "distractors": [
+        {
+          "text": "п'ятнадцять хвилин одинадцятого",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вислів *п'ятнадцять хвилин одинадцятого* є калькою з російської; українська норма — 'чверть на одинадцяту' або 'п'ятнадцять хвилин по десятій'.",
+            "en": "*п'ятнадцять хвилин одинадцятого* is a calque; standard Ukrainian is 'чверть на одинадцяту' or 'по десятій'."
+          }
+        },
+        {
+          "text": "без п'ятнадцяти одинадцять",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Конструкція *без п'ятнадцяти* не властива українській мові; на позначення нестачі часу вживають прийменник 'за'.",
+            "en": "Construction *без п'ятнадцяти* is foreign to Ukrainian; preposition 'за' is used instead."
+          }
+        },
+        {
+          "text": "чверть одинадцятого",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Уживання родового відмінка без прийменника (*чверть одинадцятого*) є помилковим; обов'язковий прийменник 'на'.",
+            "en": "Using Genitive without preposition (*чверть одинадцятого*) is an error; preposition 'на' is required."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Автентичні синтаксичні норми",
+      "rule_summary": {
+        "ua": "Для позначення точного часу в українській мові вживають прийменник 'о' / 'об' із порядковим числівником (о десятій годині), форми 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (кальки *в десять годин*, *без двадцяти* неприпустимі).",
+        "en": "Authentic Ukrainian time expressions use 'о' + ordinal numeral (о десятій годині), 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (calques *в десять годин*, *без двадцяти* are errors)."
+      }
+    },
+    {
+      "card_id": "numeral_68",
+      "category": "time_expressions_anti_calque",
+      "cefr_level": "A2",
+      "prompt_sentence": "Поглянь на годинник: зараз уже _______ і нам час поспішати.",
+      "blank_target": "пів на дванадцяту",
+      "correct_answer": "пів на дванадцяту",
+      "options": [
+        "пів на дванадцяту",
+        "половина дванадцятого",
+        "пів дванадцять",
+        "пів дванадцятого"
+      ],
+      "distractors": [
+        {
+          "text": "половина дванадцятого",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вислів *половина дванадцятого* — російська калька; літературна українська форма — 'пів на дванадцяту'.",
+            "en": "*половина дванадцятого* is a Russian calque; literary Ukrainian norm is 'пів на дванадцяту'."
+          }
+        },
+        {
+          "text": "пів дванадцятого",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Форма без прийменника 'на' (*пів дванадцятого*) є суржиковою; норма вимагає конструкції 'пів на + знахідний'.",
+            "en": "Form lacking preposition 'на' (*пів дванадцятого*) is non-standard; norm requires 'пів на + Accusative'."
+          }
+        },
+        {
+          "text": "пів дванадцять",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Сполука *пів дванадцять* є спотвореною розмовною калькою, неприпустимою в літературній мові.",
+            "en": "*пів дванадцять* is a corrupted colloquial calque unacceptable in standard Ukrainian."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Автентичні синтаксичні норми",
+      "rule_summary": {
+        "ua": "Для позначення точного часу в українській мові вживають прийменник 'о' / 'об' із порядковим числівником (о десятій годині), форми 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (кальки *в десять годин*, *без двадцяти* неприпустимі).",
+        "en": "Authentic Ukrainian time expressions use 'о' + ordinal numeral (о десятій годині), 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (calques *в десять годин*, *без двадцяти* are errors)."
+      }
+    },
+    {
+      "card_id": "numeral_69",
+      "category": "time_expressions_anti_calque",
+      "cefr_level": "B1",
+      "prompt_sentence": "Усі уроки в школі завершуються _______ і діти йдуть додому.",
+      "blank_target": "за двадцять третя",
+      "correct_answer": "за двадцять третя",
+      "options": [
+        "двадцять до трьох",
+        "без двадцяти три",
+        "за двадцять третя",
+        "без двадцяти третя"
+      ],
+      "distractors": [
+        {
+          "text": "без двадцяти три",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Конструкція *без двадцяти три* є прямою калькою з російської мови; українська норма — 'за двадцять третя'.",
+            "en": "Construction *без двадцяти три* is a direct Russian calque; standard Ukrainian is 'за двадцять третя'."
+          }
+        },
+        {
+          "text": "двадцять до трьох",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вислів *двадцять до трьох* є ненормативною калькою з англійської чи польської мови; в українській вживають 'за'.",
+            "en": "*двадцять до трьох* is a foreign calque; standard Ukrainian uses preposition 'за'."
+          }
+        },
+        {
+          "text": "без двадцяти третя",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Прийменник 'без' не вживається в українських часових конструкціях; правильно — 'за двадцять третя'.",
+            "en": "Preposition 'без' is not used in Ukrainian time constructions; standard form is 'за двадцять третя'."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Автентичні синтаксичні норми",
+      "rule_summary": {
+        "ua": "Для позначення точного часу в українській мові вживають прийменник 'о' / 'об' із порядковим числівником (о десятій годині), форми 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (кальки *в десять годин*, *без двадцяти* неприпустимі).",
+        "en": "Authentic Ukrainian time expressions use 'о' + ordinal numeral (о десятій годині), 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (calques *в десять годин*, *без двадцяти* are errors)."
+      }
+    },
+    {
+      "card_id": "numeral_70",
+      "category": "time_expressions_anti_calque",
+      "cefr_level": "B1",
+      "prompt_sentence": "Гості зібралися на святкову вечерю о _______ вечора.",
+      "blank_target": "десять хвилин по шостій",
+      "correct_answer": "десять хвилин по шостій",
+      "options": [
+        "десять хвилин сьомого",
+        "десять хвилин по шостій",
+        "в шість десять",
+        "по шостій десять"
+      ],
+      "distractors": [
+        {
+          "text": "десять хвилин сьомого",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вислів *десять хвилин сьомого* є російською калькою; правильно говорити: 'десять хвилин по шостій' або 'на сьому'.",
+            "en": "*десять хвилин сьомого* is a Russian calque; correct Ukrainian is 'десять хвилин по шостій' or 'на сьому'."
+          }
+        },
+        {
+          "text": "в шість десять",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Конструкція *в шість десять* є суржиковим відтворенням російського мовлення; літературна норма — 'по шостій'.",
+            "en": "*в шість десять* is a calqued colloquialism; literary standard requires preposition 'по' or 'на'."
+          }
+        },
+        {
+          "text": "по шостій десять",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Порушено порядок слів: правильна послідовність компонентів — 'десять хвилин по шостій'.",
+            "en": "Word order is distorted: standard syntax is 'десять хвилин по шостій'."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Автентичні синтаксичні норми",
+      "rule_summary": {
+        "ua": "Для позначення точного часу в українській мові вживають прийменник 'о' / 'об' із порядковим числівником (о десятій годині), форми 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (кальки *в десять годин*, *без двадцяти* неприпустимі).",
+        "en": "Authentic Ukrainian time expressions use 'о' + ordinal numeral (о десятій годині), 'чверть на одинадцяту', 'пів на дванадцяту', 'за двадцять третя' (calques *в десять годин*, *без двадцяти* are errors)."
+      }
+    },
+    {
+      "card_id": "numeral_71",
+      "category": "approximate_numerical_constructions",
+      "cefr_level": "B1",
+      "prompt_sentence": "На центральній площі зібралося _______ громадян, які вимагали реформ.",
+      "blank_target": "близько ста",
+      "correct_answer": "близько ста",
+      "options": [
+        "близько сто",
+        "в районі ста",
+        "близько ста",
+        "біля ста"
+      ],
+      "distractors": [
+        {
+          "text": "біля ста",
+          "interference_type": "improper_approximation_preposition",
+          "explanation": {
+            "ua": "Прийменник 'біля' в українській мові позначає просторову близькість (біля хати); для приблизної кількості вживають 'близько'.",
+            "en": "Preposition 'біля' strictly denotes spatial proximity (біля хати); for approximate quantity 'близько' is used."
+          }
+        },
+        {
+          "text": "в районі ста",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Канцелярський вислів *в районі ста* є калькою з російської мови; нормативне позначення — 'близько ста'.",
+            "en": "Bureaucratic *в районі ста* is a Russian calque; standard expression is 'близько ста'."
+          }
+        },
+        {
+          "text": "близько сто",
+          "interference_type": "uninflected_base_form",
+          "explanation": {
+            "ua": "Прийменник 'близько' вимагає родового відмінка: правильно 'близько ста', а не називний 'сто'.",
+            "en": "Preposition 'близько' governs Genitive case: correctly 'близько ста', not base form 'сто'."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Синтаксис",
+      "rule_summary": {
+        "ua": "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість).",
+        "en": "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity)."
+      }
+    },
+    {
+      "card_id": "numeral_72",
+      "category": "approximate_numerical_constructions",
+      "cefr_level": "B1",
+      "prompt_sentence": "Пасажири чекали на прибуття поїзда _______ на засніженому пероні.",
+      "blank_target": "хвилин двадцять",
+      "correct_answer": "хвилин двадцять",
+      "options": [
+        "десь біля двадцяти хвилин",
+        "двадцять близько хвилин",
+        "в районі двадцяти хвилин",
+        "хвилин двадцять"
+      ],
+      "distractors": [
+        {
+          "text": "в районі двадцяти хвилин",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вислів *в районі двадцяти хвилин* є канцелярською калькою; природна українська норма передає приблизність інверсією: 'хвилин двадцять'.",
+            "en": "*в районі двадцяти хвилин* is a bureaucratic calque; authentic Ukrainian uses noun-numeral inversion: 'хвилин двадцять'."
+          }
+        },
+        {
+          "text": "десь біля двадцяти хвилин",
+          "interference_type": "improper_approximation_preposition",
+          "explanation": {
+            "ua": "Поєднання 'біля' з часовими проміжками є калькованим плеоназмом; норма — інверсія або 'близько двадцяти хвилин'.",
+            "en": "Using 'біля' for time spans is an erroneous pleonasm; norm is inversion or 'близько двадцяти хвилин'."
+          }
+        },
+        {
+          "text": "двадцять близько хвилин",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Порядок слів спотворено: прийменник не може розривати числівник та іменник у такий спосіб.",
+            "en": "Word order is corrupted: preposition cannot disrupt numeral and noun in this manner."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Синтаксис",
+      "rule_summary": {
+        "ua": "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість).",
+        "en": "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity)."
+      }
+    },
+    {
+      "card_id": "numeral_73",
+      "category": "approximate_numerical_constructions",
+      "cefr_level": "B2",
+      "prompt_sentence": "У Всеукраїнській олімпіаді взяли участь _______ талановитих учнів із різних областей.",
+      "blank_target": "понад двісті",
+      "correct_answer": "понад двісті",
+      "options": [
+        "вище двохсот",
+        "понад двохсот",
+        "понад двісті",
+        "понад двохста"
+      ],
+      "distractors": [
+        {
+          "text": "вище двохсот",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Вислів *вище двохсот* є калькою з російської мови (*выше двухсот*); в українській вживають 'понад двісті' або 'більше як двісті'.",
+            "en": "*вище двохсот* is a Russian calque (*выше двухсот*); standard Ukrainian uses 'понад двісті'."
+          }
+        },
+        {
+          "text": "понад двохсот",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Прийменник 'понад' керує знахідним відмінком ('понад двісті'), а не родовим 'двохсот'.",
+            "en": "Preposition 'понад' governs Accusative ('понад двісті'), not Genitive 'двохсот'."
+          }
+        },
+        {
+          "text": "понад двохста",
+          "interference_type": "russianism_genitive_hundreds",
+          "explanation": {
+            "ua": "Форма *двохста* є подвійною помилкою: хибне закінчення та неправильний відмінок після прийменника понад.",
+            "en": "*двохста* is a double error: corrupted suffix and incorrect case after 'понад'."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Синтаксис",
+      "rule_summary": {
+        "ua": "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість).",
+        "en": "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity)."
+      }
+    },
+    {
+      "card_id": "numeral_74",
+      "category": "approximate_numerical_constructions",
+      "cefr_level": "B2",
+      "prompt_sentence": "У фондах рідкісної книги залишилося _______ унікальних стародруків XVI століття.",
+      "blank_target": "з десяток",
+      "correct_answer": "з десяток",
+      "options": [
+        "з десятка",
+        "в районі десятка",
+        "десь біля десяти",
+        "з десяток"
+      ],
+      "distractors": [
+        {
+          "text": "в районі десятка",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Канцелярський зворот *в районі десятка* не відповідає нормам української мови; природна ідіома — 'з десяток'.",
+            "en": "Bureaucratic phrase *в районі десятка* violates Ukrainian norms; natural idiom is 'з десяток'."
+          }
+        },
+        {
+          "text": "десь біля десяти",
+          "interference_type": "improper_approximation_preposition",
+          "explanation": {
+            "ua": "Сполука *десь біля десяти* є розмовним плеоназмом із калькованим прийменником 'біля'.",
+            "en": "*десь біля десяти* is a colloquial pleonasm with inappropriately calqued preposition 'біля'."
+          }
+        },
+        {
+          "text": "з десятка",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Прийменник 'з' у значенні приблизності керує знахідним відмінком: правильно 'з десяток', а не *з десятка*.",
+            "en": "Preposition 'з' for approximation governs Accusative: correctly 'з десяток', not *з десятка*."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Синтаксис",
+      "rule_summary": {
+        "ua": "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість).",
+        "en": "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity)."
+      }
+    },
+    {
+      "card_id": "numeral_75",
+      "category": "approximate_numerical_constructions",
+      "cefr_level": "B2",
+      "prompt_sentence": "Реставраційні роботи в старовинному замку триватимуть _______ за попередніми оцінками архітекторів.",
+      "blank_target": "роки три",
+      "correct_answer": "роки три",
+      "options": [
+        "три близько роки",
+        "в районі трьох років",
+        "біля трьох років",
+        "роки три"
+      ],
+      "distractors": [
+        {
+          "text": "біля трьох років",
+          "interference_type": "improper_approximation_preposition",
+          "explanation": {
+            "ua": "Прийменник 'біля' вказує на просторову близькість; приблизний час позначають інверсією ('роки три') або 'близько трьох років'.",
+            "en": "Preposition 'біля' marks spatial distance; approximate time is expressed by inversion ('роки три') or 'близько трьох років'."
+          }
+        },
+        {
+          "text": "в районі трьох років",
+          "interference_type": "time_expression_russian_calque",
+          "explanation": {
+            "ua": "Суржиковий вислів *в районі трьох років* не вживається в літературній українській мові.",
+            "en": "Calqued expression *в районі трьох років* is inadmissible in standard literary Ukrainian."
+          }
+        },
+        {
+          "text": "три близько роки",
+          "interference_type": "compound_global_misagreement",
+          "explanation": {
+            "ua": "Порушено порядок слів: прийменник 'близько' має передувати числівно-іменниковій групі.",
+            "en": "Word order is violated: preposition 'близько' must precede the numeral-noun phrase."
+          }
+        }
+      ],
+      "pravopys_section": "Культура мовлення / Синтаксис",
+      "rule_summary": {
+        "ua": "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість).",
+        "en": "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity)."
+      }
+    }
+  ]
+}
