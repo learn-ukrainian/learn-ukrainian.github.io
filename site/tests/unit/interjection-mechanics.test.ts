@@ -27,11 +27,15 @@ describe('interjection-mechanics', () => {
     expect(INTERJECTION_MECHANICS_INTERFERENCE_KEYS).toHaveLength(15);
     expect(INTERJECTION_MECHANICS_CATEGORY_KEYS).toContain('interjection_emotional_positive');
     expect(INTERJECTION_MECHANICS_CATEGORY_KEYS).toContain('interjection_volitional_animal');
-    expect(INTERJECTION_MECHANICS_CATEGORY_KEYS).toContain('interjection_spelling_multiword_separate');
-    expect(INTERJECTION_MECHANICS_CATEGORY_KEYS).toContain('interjection_syntax_punctuation_particle');
+    expect(INTERJECTION_MECHANICS_CATEGORY_KEYS).toContain(
+      'interjection_spelling_multiword_separate',
+    );
+    expect(INTERJECTION_MECHANICS_CATEGORY_KEYS).toContain(
+      'interjection_syntax_punctuation_particle',
+    );
   });
 
-  it('resolves interjection rules accurately per Правопис 2019 § 46', () => {
+  it('resolves interjection rules accurately per Правопис 2019', () => {
     const rules = [
       resolveEmotionalPositiveRule(),
       resolveEmotionalNegativeRule(),
@@ -49,15 +53,15 @@ describe('interjection-mechanics', () => {
 
     expect(rules).toHaveLength(12);
     for (const r of rules) {
-      expect(r.citation).toContain('Правопис');
-      expect(r.citation).toContain('§ 46');
+      expect(r.citation.length).toBeGreaterThan(5);
       expect(r.ruleUa.length).toBeGreaterThan(20);
       expect(r.ruleEn.length).toBeGreaterThan(20);
     }
 
-    expect(resolveSpellingHyphenRepeatedRule().citation).toContain('§ 46, п. 1, а)');
-    expect(resolveSpellingParticlesHyphenRule().citation).toContain('§ 46, п. 1, б), в)');
-    expect(resolveSpellingMultiwordSeparateRule().citation).toContain('§ 46, п. 2');
+    expect(resolveSpellingHyphenRepeatedRule().citation).toContain('§ 35, п. 5, 4)');
+    expect(resolveSpellingParticlesHyphenRule().citation).toContain('§ 44, п. 3, 1)');
+    expect(resolveSpellingMultiwordSeparateRule().citation).toContain('§ 41, п. 2');
+    expect(resolveSyntaxPunctuationParticleRule().citation).toContain('§ 158, п. 9');
   });
 
   it('correctly provides feedback for correct selections', () => {
@@ -78,7 +82,7 @@ describe('interjection-mechanics', () => {
           },
         },
       ],
-      rule_citation: 'Правопис 2019 § 46; Академічна граматика; СУМ-20',
+      rule_citation: 'Академічна граматика; СУМ-20; Правопис 2019 § 157, п. 3, § 158, п. 9',
       rule_summary: {
         ua: 'Емоційні вигуки виражають почуття радості або захоплення.',
         en: 'Emotional interjections express feelings of joy or admiration.',
@@ -89,7 +93,9 @@ describe('interjection-mechanics', () => {
     expect(evalResult.isCorrect).toBe(true);
     expect(evalResult.feedbackUa).toContain('Чудово! Правильно: «Ура»');
     expect(evalResult.feedbackEn).toContain('Excellent! Correct: "Ура"');
-    expect(evalResult.ruleCitation).toBe('Правопис 2019 § 46; Академічна граматика; СУМ-20');
+    expect(evalResult.ruleCitation).toBe(
+      'Академічна граматика; СУМ-20; Правопис 2019 § 157, п. 3, § 158, п. 9',
+    );
   });
 
   it('correctly provides feedback for distractors with misconception explanations', () => {
@@ -105,12 +111,12 @@ describe('interjection-mechanics', () => {
           text: 'будь-ласка',
           interference_key: 'UNWARRANTED_HYPHEN',
           explanation: {
-            ua: 'Слова «будь ласка» пишуться строго окремо без дефіса per § 46, п. 2.',
-            en: "Words 'будь ласка' are spelled strictly separately without hyphen per § 46, p. 2.",
+            ua: 'Слова «будь ласка» пишуться строго окремо без дефіса per § 41, п. 2.',
+            en: "Words 'будь ласка' are spelled strictly separately without hyphen per § 41, p. 2.",
           },
         },
       ],
-      rule_citation: 'Правопис 2019 § 46, п. 2; СУМ-20',
+      rule_citation: 'Правопис 2019 § 41, п. 2, § 53; СУМ-20; Авраменко § 88',
       rule_summary: {
         ua: 'Етикетний зворот «будь ласка» пишеться окремо.',
         en: "Etiquette phrase 'будь ласка' is written separately.",
@@ -126,7 +132,10 @@ describe('interjection-mechanics', () => {
   });
 
   it('evaluates all 60 committed cards across all 4 options without throwing', () => {
-    const deckPath = path.resolve(__dirname, '../../../data/practice/interjection_mechanics_deck.json');
+    const deckPath = path.resolve(
+      __dirname,
+      '../../../data/practice/interjection_mechanics_deck.json',
+    );
     expect(fs.existsSync(deckPath)).toBe(true);
 
     const rawData = fs.readFileSync(deckPath, 'utf-8');

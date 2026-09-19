@@ -1,17 +1,19 @@
 """Unit tests for the Interjection and Onomatopoeia Deep Mechanics Practice Engine (Issue #8275).
 
 Covers:
-- 12 category rule resolutions and citations (Правопис 2019 § 46)
+- 12 category rule resolutions and citations (Правопис 2019 § 35, § 41, § 44, § 46, § 157, § 158)
 - 60 canonical cards count, distribution, uniqueness, and option balance
 - Emotional valence and volitional animal call discrimination
-- Orthography rules (§ 46, п. 1 repeated/particles hyphenation vs § 46, п. 2 separate phrases)
+- Orthography rules (§ 35, § 44 repeated/particles hyphenation vs § 41 separate phrases)
 - Syntax & punctuation: vocative particle О/Ой without comma vs independent interjection with comma
+- VESUM token validation: rejection of malformed tokens and bad tags, acceptance of compounds
 - VESUM verification with CI skip guard
 - JSON export parity with committed data/practice/interjection_mechanics_deck.json
 - CLI --verify-vesum and --export flags
 """
 
 import json
+import sqlite3
 from collections import Counter
 from pathlib import Path
 
@@ -22,6 +24,7 @@ from scripts.practice.interjection_mechanics_engine import (
     InterjectionInterferenceKey,
     build_canonical_interjection_cards,
     export_deck,
+    is_valid_vesum_token,
     main,
     resolve_emotional_negative_rule,
     resolve_emotional_positive_rule,
@@ -59,20 +62,26 @@ def test_resolve_interjection_rules():
     assert len(resolvers) == 12
     for r in resolvers:
         cit, ua, en = r()
-        assert "Правопис" in cit
-        assert "§ 46" in cit
+        assert len(cit) > 5
         assert len(ua) > 30
         assert len(en) > 30
 
     # Specific subsection verification
     cit_rep, _, _ = resolve_spelling_hyphen_repeated_rule()
-    assert "§ 46, п. 1, а)" in cit_rep
+    assert "§ 35, п. 5, 4)" in cit_rep
 
     cit_part, _, _ = resolve_spelling_particles_hyphen_rule()
-    assert "§ 46, п. 1, б), в)" in cit_part
+    assert "§ 35, п. 5, 4)" in cit_part
+    assert "§ 44, п. 3, 1)" in cit_part
 
     cit_sep, _, _ = resolve_spelling_multiword_separate_rule()
-    assert "§ 46, п. 2" in cit_sep
+    assert "§ 41, п. 2" in cit_sep
+    assert "§ 53" in cit_sep
+
+    cit_syn, _, _ = resolve_syntax_punctuation_particle_rule()
+    assert "§ 158, п. 9" in cit_syn
+    assert "§ 157, п. 3" in cit_syn
+    assert "§ 46, п. 2" in cit_syn
 
 
 def test_build_canonical_interjection_cards_count_and_distribution():
@@ -316,9 +325,70 @@ def test_interjection_deck_json_export_and_file_parity(tmp_path: Path):
         assert c["options"] == comm_card["options"]
 
 
-def test_cli_verify_vesum_and_export(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path):
-    """Verify CLI flags --verify-vesum, --export, and --json."""
-    export_target = str(tmp_path / "cli_deck.json")
+def test_is_valid_vesum_token_rejections_and_compounds():
+    """Verify is_valid_vesum_token rejects malformed tokens/bad tags and validates compounds."""
+    db_path = Path(__file__).resolve().parents[1] / "data/vesum.db"
+    if not db_path.exists():
+        pytest.skip(f"VESUM db not available at {db_path}")
+
+    conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+    cursor = conn.cursor()
+
+    # Rejection of malformed tokens
+    assert is_valid_vesum_token(cursor, "") is False
+    assert is_valid_vesum_token(cursor, "---") is False
+    assert is_valid_vesum_token(cursor, "ура--ура") is False
+    assert is_valid_vesum_token(cursor, "-ура") is False
+    assert is_valid_vesum_token(cursor, "ура-") is False
+
+    # Rejection of bad tag entries (e.g. будь-ласка with tag noninfl:insert:bad)
+    assert is_valid_vesum_token(cursor, "будь-ласка") is False
+
+    # Rejection of non-existent words
+    assert is_valid_vesum_token(cursor, "неіснуючеслововигукxyz") is False
+
+    # Acceptance of standard simple words
+    assert is_valid_vesum_token(cursor, "ура") is True
+    assert is_valid_vesum_token(cursor, "ой") is True
+    assert is_valid_vesum_token(cursor, "гайда") is True
+
+    # Acceptance of valid enclitic particle compounds (§ 44, п. 3, 1))
+    assert is_valid_vesum_token(cursor, "годі-бо") is True
+    assert is_valid_vesum_token(cursor, "ну-бо") is True
+    assert is_valid_vesum_token(cursor, "давай-но") is True
+
+    # Acceptance of valid reduplications (§ 35, п. 5, 4))
+    assert is_valid_vesum_token(cursor, "гав-гав") is True
+    assert is_valid_vesum_token(cursor, "крап-крап") is True
+    assert is_valid_vesum_token(cursor, "хлюп-хлюп") is True
+
+    # Acceptance of attested fixed idioms
+    assert is_valid_vesum_token(cursor, "їй-богу") is True
+    assert is_valid_vesum_token(cursor, "дзень-дзелень") is True
+
+    conn.close()
+
+
+def test_cli_export_only(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path):
+    """Verify CLI --export operates cleanly without requiring VESUM."""
+    export_target = str(tmp_path / "cli_deck_only.json")
+    monkeypatch.setattr(
+        "sys.argv",
+        ["interjection_mechanics_engine.py", "--export", "--output", export_target],
+    )
+    main()
+    out = capsys.readouterr().out
+    assert "Successfully exported 60 cards" in out
+    assert Path(export_target).exists()
+
+
+def test_cli_verify_vesum_present(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path):
+    """Verify CLI --verify-vesum and --export succeed when VESUM db is present."""
+    db_path = Path(__file__).resolve().parents[1] / "data/vesum.db"
+    if not db_path.exists():
+        pytest.skip(f"VESUM db not available at {db_path}")
+
+    export_target = str(tmp_path / "cli_deck_present.json")
     monkeypatch.setattr(
         "sys.argv",
         ["interjection_mechanics_engine.py", "--verify-vesum", "--export", "--output", export_target],
@@ -326,6 +396,26 @@ def test_cli_verify_vesum_and_export(monkeypatch: pytest.MonkeyPatch, capsys: py
     main()
     out = capsys.readouterr().out
     assert "Cards: 60" in out
-    assert "VESUM verification: PASSED" in out or "VESUM verification: SKIPPED" in out
+    assert "VESUM verification: PASSED" in out
     assert "Successfully exported 60 cards" in out
     assert Path(export_target).exists()
+
+
+def test_cli_verify_vesum_missing_exit_1(
+    monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture, tmp_path: Path
+):
+    """Verify CLI --verify-vesum exits with code 1 when VESUM db is absent."""
+    fake_root = tmp_path / "fake_repo"
+    fake_root.mkdir()
+    monkeypatch.setattr("scripts.practice.interjection_mechanics_engine.PROJECT_ROOT", fake_root)
+
+    monkeypatch.setattr(
+        "sys.argv",
+        ["interjection_mechanics_engine.py", "--verify-vesum"],
+    )
+    with pytest.raises(SystemExit) as exc_info:
+        main()
+    assert exc_info.value.code == 1
+
+    out = capsys.readouterr().out
+    assert "VESUM verification: SKIPPED" in out

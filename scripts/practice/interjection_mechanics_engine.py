@@ -5,18 +5,18 @@ Epic #8241: 10 Parts of Speech Deep Mechanics & Practice Hub Re-architecture.
 Issue #8275: Interjection & Onomatopoeia Deep Mechanics Practice Engine (Phase 8).
 
 Categories (12 categories x 5 cards = 60 canonical practice cards):
- 1. interjection_emotional_positive         - Joy, Delight, Surprise, Admiration (ура, ах, ох, леле, овва) [Правопис 2019 § 46]
- 2. interjection_emotional_negative         - Sorrow, Grief, Fear, Indignation (ой, ай, лишенько, пхе, тьху) [Правопис 2019 § 46]
- 3. interjection_volitional_imperative      - Command, Call to Action, Silence (гайда, марш, годі, геть, цить) [Правопис 2019 § 46]
- 4. interjection_volitional_animal          - Animal Calls and Driving (киць-киць, киш, тпру, но, вйо) [Правопис 2019 § 46]
- 5. interjection_etiquette_greeting_farewell- Greeting and Farewell (добрий день, добрий вечір, до побачення, на добраніч, бувайте) [Правопис 2019 § 46, п. 2]
- 6. interjection_etiquette_gratitude_apology- Gratitude, Apology, Politeness (будь ласка, дякую, пробачте, перепрошую, вибачте) [Правопис 2019 § 46, п. 2]
- 7. interjection_onomatopoeia_nature_mechanics - Nature, Clocks, Bells, Water (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок) [Правопис 2019 § 46, п. 1, а)]
- 8. interjection_onomatopoeia_animal_sounds - Animal and Bird Sounds (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква) [Правопис 2019 § 46, п. 1, а)]
- 9. interjection_spelling_hyphen_repeated   - Repeated & Echoed Interjections (ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук) [Правопис 2019 § 46, п. 1, а)]
-10. interjection_spelling_particles_hyphen  - Enclitic Particles -бо, -но, -то & Idioms (годі-бо, ну-бо, давай-но, їй-богу, їй-право) [Правопис 2019 § 46, п. 1, б), в)]
-11. interjection_spelling_multiword_separate- Multi-word Phrases Spelled Separately (будь ласка, до побачення, на добраніч, о господи, от тобі й маєш) [Правопис 2019 § 46, п. 2]
-12. interjection_syntax_punctuation_particle- Syntax: Interjection vs Vocative Particle О/Ой, Comma vs Exclamation Mark [Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88]
+ 1. interjection_emotional_positive         - Joy, Delight, Surprise, Admiration (ура, ах, ох, леле, овва) [Академічна граматика; Правопис 2019 § 157, п. 3, § 158, п. 9]
+ 2. interjection_emotional_negative         - Sorrow, Grief, Fear, Indignation (ой, ай, лишенько, пхе, тьху) [Академічна граматика; Правопис 2019 § 157, п. 3, § 158, п. 9]
+ 3. interjection_volitional_imperative      - Command, Call to Action, Silence (гайда, марш, годі, геть, цить) [Академічна граматика; Правопис 2019 § 157, п. 3]
+ 4. interjection_volitional_animal          - Animal Calls and Driving (киць-киць, киш, тпру, но, вйо) [Академічна граматика; СУМ-20]
+ 5. interjection_etiquette_greeting_farewell- Greeting and Farewell (добрий день, добрий вечір, до побачення, на добраніч, бувайте) [Правопис 2019 § 41, п. 2]
+ 6. interjection_etiquette_gratitude_apology- Gratitude, Apology, Politeness (будь ласка, дякую, пробачте, перепрошую, вибачте) [Правопис 2019 § 41, п. 2]
+ 7. interjection_onomatopoeia_nature_mechanics - Nature, Clocks, Bells, Water (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок) [Правопис 2019 § 35, п. 5, 4)]
+ 8. interjection_onomatopoeia_animal_sounds - Animal and Bird Sounds (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква) [Правопис 2019 § 35, п. 5, 4)]
+ 9. interjection_spelling_hyphen_repeated   - Repeated & Echoed Interjections (ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук) [Правопис 2019 § 35, п. 5, 4)]
+10. interjection_spelling_particles_hyphen  - Enclitic Particles -бо, -но, -то & Idioms (годі-бо, ну-бо, давай-но, їй-богу, їй-право) [Правопис 2019 § 35, п. 5, 4), § 44, п. 3, 1)]
+11. interjection_spelling_multiword_separate- Multi-word Phrases Spelled Separately (будь ласка, до побачення, на добраніч, о господи, от тобі й маєш) [Правопис 2019 § 41, п. 2, § 53; Авраменко § 88]
+12. interjection_syntax_punctuation_particle- Syntax: Interjection vs Vocative Particle О/Ой, Comma vs Exclamation Mark [Правопис 2019 § 46, п. 2, § 157, п. 3, § 158, п. 9, прим. 1]
 """
 
 from __future__ import annotations
@@ -33,6 +33,8 @@ from pathlib import Path
 from typing import Any
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
+
+ENCLITIC_PARTICLES: frozenset[str] = frozenset({"бо", "но", "то", "от", "таки"})
 
 
 class InterjectionCategory(StrEnum):
@@ -100,86 +102,86 @@ class InterjectionCard:
 
 
 def resolve_emotional_positive_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46; Академічна граматика; СУМ-20"
-    ua = "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва, слава богу, чудово). Вони не називають почуттів, а лише безпосередньо сигналізують про емоційний стан мовця."
-    en = "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва, слава богу, чудово). They do not name emotions but directly signal the speaker's emotional state."
+    cit = "Академічна граматика; СУМ-20; Правопис 2019 § 157, п. 3, § 158, п. 9"
+    ua = "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва). Вони не називають почуттів, а безпосередньо сигналізують про емоційний стан мовця per § 157, п. 3, § 158, п. 9."
+    en = "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва). They do not name emotions but directly signal the speaker's emotional state per § 157, p. 3, § 158, p. 9."
     return cit, ua, en
 
 
 def resolve_emotional_negative_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46; Академічна граматика; СУМ-20"
-    ua = "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху, жаль). На письмі вони виділяються комами або знаком оклику."
-    en = "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху, жаль). In writing, they are set off by commas or an exclamation mark."
+    cit = "Академічна граматика; СУМ-20; Правопис 2019 § 157, п. 3, § 158, п. 9"
+    ua = "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху). На письмі вони виділяються комами per § 158, п. 9 або знаком оклику per § 157, п. 3."
+    en = "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху). In writing, they are set off by commas per § 158, p. 9 or an exclamation mark per § 157, p. 3."
     return cit, ua, en
 
 
 def resolve_volitional_imperative_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46; Академічна граматика; СУМ-20"
-    ua = "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить, ша, агов, вйо). Вони спонукають адресата до певної реакції."
-    en = "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить, ша, агов, вйо). They prompt the addressee into a specific action."
+    cit = "Академічна граматика; СУМ-20; Правопис 2019 § 157, п. 3"
+    ua = "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить). Вони спонукають адресата до певної реакції."
+    en = "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить). They prompt the addressee into a specific action."
     return cit, ua, en
 
 
 def resolve_volitional_animal_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46; Академічна граматика; СУМ-20"
+    cit = "Академічна граматика; СУМ-20"
     ua = "Волевиявні вигуки для тварин слугують для підкликання або відгону свійських тварин і птахів (киць-киць — підкликання котів, киш — відгін птахів, тпру — зупинка коней, но — рух коней уперед, вйо — поганяння упряжі)."
     en = "Volitional animal interjections serve to call or drive domestic animals and birds (киць-киць for cats, киш for driving birds, тпру to halt horses, но to urge horses forward, вйо to urge draught animals)."
     return cit, ua, en
 
 
 def resolve_etiquette_greeting_farewell_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 2; СУМ-20"
-    ua = "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 46, п. 2."
-    en = "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) function as interjections. Multi-word etiquette phrases are spelled separately per § 46, p. 2."
+    cit = "Правопис 2019 § 41, п. 2; Академічна граматика; СУМ-20"
+    ua = "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 41, п. 2."
+    en = "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте) function as interjections. Multi-word etiquette phrases are spelled separately per § 41, p. 2."
     return cit, ua, en
 
 
 def resolve_etiquette_gratitude_apology_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 2; СУМ-20"
-    ua = "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 46, п. 2."
-    en = "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 46, p. 2."
+    cit = "Правопис 2019 § 41, п. 2; Академічна граматика; СУМ-20"
+    ua = "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 41, п. 2."
+    en = "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 41, p. 2."
     return cit, ua, en
 
 
 def resolve_onomatopoeia_nature_mechanics_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 1, а); СУМ-20"
-    ua = "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 46, п. 1, а)."
-    en = "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 46, p. 1, a)."
+    cit = "Правопис 2019 § 35, п. 5, 4); СУМ-20"
+    ua = "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 35, п. 5, 4)."
+    en = "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 35, p. 5, 4)."
     return cit, ua, en
 
 
 def resolve_onomatopoeia_animal_sounds_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 1, а); СУМ-20"
-    ua = "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 46, п. 1, а)."
-    en = "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 46, p. 1, a)."
+    cit = "Правопис 2019 § 35, п. 5, 4); СУМ-20"
+    ua = "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 35, п. 5, 4)."
+    en = "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 35, p. 5, 4)."
     return cit, ua, en
 
 
 def resolve_spelling_hyphen_repeated_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 1, а); СУМ-20"
-    ua = "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 46, п. 1, а)."
-    en = "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 46, p. 1, a): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
+    cit = "Правопис 2019 § 35, п. 5, 4); СУМ-20"
+    ua = "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 35, п. 5, 4)."
+    en = "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 35, p. 5, 4): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
     return cit, ua, en
 
 
 def resolve_spelling_particles_hyphen_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 1, б), в); СУМ-20"
-    ua = "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 46, п. 1, б), а також усталені вигукові ідіоми їй-богу, їй-право per § 46, п. 1, в)."
-    en = "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 46, p. 1, b), as are fixed interjection idioms їй-богу, їй-право per § 46, p. 1, c)."
+    cit = "Правопис 2019 § 35, п. 5, 4), § 44, п. 3, 1); СУМ-20"
+    ua = "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 44, п. 3, 1), а також усталені вигукові ідіоми їй-богу, їй-право per § 35, п. 5, 4)."
+    en = "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 44, p. 3, 1), as are fixed interjection idioms їй-богу, їй-право per § 35, p. 5, 4)."
     return cit, ua, en
 
 
 def resolve_spelling_multiword_separate_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46, п. 2; СУМ-20"
-    ua = "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, п. 2. Написання через дефіс або разом є грубою орфографічною помилкою."
-    en = "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, p. 2. Writing them with hyphens or fused is an orthographic error."
+    cit = "Правопис 2019 § 41, п. 2, § 53; СУМ-20; Авраменко § 88"
+    ua = "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 41, п. 2, § 53; Авраменко § 88. Написання через дефіс або разом є грубою орфографічною помилкою."
+    en = "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 41, p. 2, § 53; Avramenko § 88. Writing them with hyphens or fused is an orthographic error."
     return cit, ua, en
 
 
 def resolve_syntax_punctuation_particle_rule() -> tuple[str, str, str]:
-    cit = "Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88"
-    ua = "Вигуки відокремлюються комами або знаком оклику. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні або кличні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!». Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!»."
-    en = "Interjections are set off by commas or an exclamation mark. However, words 'о', 'ой' used before an address as intensifying or vocative particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!'. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій, як довго...'."
+    cit = "Правопис 2019 § 46, п. 2, § 157, п. 3, § 158, п. 9, прим. 1"
+    ua = "Вигуки відокремлюються комами per § 158, п. 9 або знаком оклику per § 157, п. 3. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!» per § 158, п. 9, прим. 1. Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!». Якщо вигук на початку речення має знак оклику, наступне слово пишеться з великої букви per § 46, п. 2."
+    en = "Interjections are set off by commas per § 158, p. 9 or an exclamation mark per § 157, p. 3. However, words 'о', 'ой' used before an address as intensifying particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!' per § 158, p. 9, note 1. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій...'. If an interjection at sentence start has an exclamation mark, the following word is capitalized per § 46, p. 2."
     return cit, ua, en
 
 
@@ -852,8 +854,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Добрийдень",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Етикетне вітання «добрий день» пишеться строго окремо per § 46, п. 2.",
-                    explanation_en="Etiquette greeting 'добрий день' is spelled strictly separately per § 46, p. 2.",
+                    explanation_ua="Етикетне вітання «добрий день» пишеться строго окремо per § 41, п. 2.",
+                    explanation_en="Etiquette greeting 'добрий день' is spelled strictly separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="Добрий-день",
@@ -884,8 +886,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Добрийвечір",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Формула ввічливого привітання «добрий вечір» складається з двох слів і пишеться окремо.",
-                    explanation_en="Polite greeting formula 'добрий вечір' consists of two words and is spelled separately.",
+                    explanation_ua="Формула ввічливого привітання «добрий вечір» складається з двох слів і пишеться окремо per § 41, п. 2.",
+                    explanation_en="Polite greeting formula 'добрий вечір' consists of two words and is spelled separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="Добрий-вечір",
@@ -916,8 +918,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Допобачення",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Етикетний зворот «до побачення» пишеться строго окремо per § 46, п. 2.",
-                    explanation_en="Etiquette formula 'до побачення' is spelled strictly separately per § 46, p. 2.",
+                    explanation_ua="Етикетний зворот «до побачення» пишеться строго окремо per § 41, п. 2.",
+                    explanation_en="Etiquette formula 'до побачення' is spelled strictly separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="До-побачення",
@@ -948,8 +950,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Надобраніч",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Етикетне побажання спокійного сну «на добраніч» пишеться строго окремо per § 46, п. 2.",
-                    explanation_en="Etiquette wish for good night 'на добраніч' is spelled strictly separately per § 46, p. 2.",
+                    explanation_ua="Етикетне побажання спокійного сну «на добраніч» пишеться строго окремо per § 41, п. 2.",
+                    explanation_en="Etiquette wish for good night 'на добраніч' is spelled strictly separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="На-добраніч",
@@ -1015,8 +1017,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="будь-ласка",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_HYPHEN,
-                    explanation_ua="Етикетний зворот ввічливості «будь ласка» пишеться строго окремо без дефіса per § 46, п. 2.",
-                    explanation_en="Etiquette polite phrase 'будь ласка' is spelled strictly separately without hyphen per § 46, p. 2.",
+                    explanation_ua="Етикетний зворот ввічливості «будь ласка» пишеться строго окремо без дефіса per § 41, п. 2.",
+                    explanation_en="Etiquette polite phrase 'будь ласка' is spelled strictly separately without hyphen per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="будьласка",
@@ -1178,8 +1180,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Дзеньдзелень",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування передзвону дзвоника «дзень-дзелень» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Bell-ringing onomatopoeia 'дзень-дзелень' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування передзвону дзвоника «дзень-дзелень» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Bell-ringing onomatopoeia 'дзень-дзелень' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Дзень дзелень",
@@ -1210,8 +1212,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Тіктак",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування цокання годинника «тік-так» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Clock-ticking onomatopoeia 'тік-так' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування цокання годинника «тік-так» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Clock-ticking onomatopoeia 'тік-так' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Тік так",
@@ -1242,8 +1244,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Крапкрап",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Повторювані звуконаслідувальні слова «крап-крап» пишуться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Repeated onomatopoeic elements 'крап-крап' are hyphenated per § 46, p. 1, a).",
+                    explanation_ua="Повторювані звуконаслідувальні слова «крап-крап» пишуться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Repeated onomatopoeic elements 'крап-крап' are hyphenated per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Крап крап",
@@ -1252,10 +1254,10 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                     explanation_en="Writing parts of repetition separately is an error; sound repetitions are hyphenated.",
                 ),
                 InterjectionDistractor(
-                    text="Кап-кап",
-                    interference_key=InterjectionInterferenceKey.RUSSIANISM_CALQUE,
-                    explanation_ua="В українській мові питомим звуконаслідуванням падіння крапель є «крап-крап» (від «крапати»).",
-                    explanation_en="In Ukrainian, native onomatopoeia for falling drops is 'крап-крап' (from 'крапати').",
+                    text="Буль-буль",
+                    interference_key=InterjectionInterferenceKey.INCORRECT_SOUND_SOURCE,
+                    explanation_ua="«Буль-буль» імітує булькання води або рідини, тоді як падіння перших дощових крапель на підвіконня передає «крап-крап».",
+                    explanation_en="'Буль-буль' imitates bubbling liquid, whereas raindrops falling on a windowsill are described by 'крап-крап'.",
                 ),
             ),
             rule_citation=cit7,
@@ -1274,8 +1276,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Хлюпхлюп",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування плескоту хвиль «хлюп-хлюп» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Wave-splashing onomatopoeia 'хлюп-хлюп' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування плескоту хвиль «хлюп-хлюп» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Wave-splashing onomatopoeia 'хлюп-хлюп' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Хлюп хлюп",
@@ -1306,8 +1308,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Цокцок",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування стукоту копит «цок-цок» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Hoof-clattering onomatopoeia 'цок-цок' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування стукоту копит «цок-цок» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Hoof-clattering onomatopoeia 'цок-цок' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Цок цок",
@@ -1341,8 +1343,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Гавгав",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування гавкоту собаки «гав-гав» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Dog barking onomatopoeia 'гав-гав' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування гавкоту собаки «гав-гав» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Dog barking onomatopoeia 'гав-гав' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Гав гав",
@@ -1373,8 +1375,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Нявняв",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування нявкання кота «няв-няв» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Cat meowing onomatopoeia 'няв-няв' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування нявкання кота «няв-няв» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Cat meowing onomatopoeia 'няв-няв' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Няв няв",
@@ -1405,8 +1407,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Куку",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування кування зозулі «ку-ку» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Cuckoo call onomatopoeia 'ку-ку' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування кування зозулі «ку-ку» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Cuckoo call onomatopoeia 'ку-ку' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Ку ку",
@@ -1437,8 +1439,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Каркар",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування каркання ворони «кар-кар» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Crow cawing onomatopoeia 'кар-кар' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування каркання ворони «кар-кар» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Crow cawing onomatopoeia 'кар-кар' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Кар кар",
@@ -1469,8 +1471,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Кваква",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування кумкання жаб «ква-ква» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Frog croaking onomatopoeia 'ква-ква' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування кумкання жаб «ква-ква» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Frog croaking onomatopoeia 'ква-ква' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Ква ква",
@@ -1504,8 +1506,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Ойойой",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Повторюваний вигук розгубленості й жалю «ой-ой-ой» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Repeated interjection of perplexity 'ой-ой-ой' is hyphenated per § 46, p. 1, a).",
+                    explanation_ua="Повторюваний вигук розгубленості й жалю «ой-ой-ой» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Repeated interjection of perplexity 'ой-ой-ой' is hyphenated per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Ой ой ой",
@@ -1536,8 +1538,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Хахаха",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування сміху «ха-ха-ха» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Laughter onomatopoeia 'ха-ха-ха' is spelled with hyphens per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування сміху «ха-ха-ха» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Laughter onomatopoeia 'ха-ха-ха' is spelled with hyphens per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Ха ха ха",
@@ -1568,8 +1570,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Айяйяй",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Вигук докору та осуду «ай-яй-яй» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Interjection of reproach 'ай-яй-яй' is spelled with hyphens per § 46, p. 1, a).",
+                    explanation_ua="Вигук докору та осуду «ай-яй-яй» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Interjection of reproach 'ай-яй-яй' is spelled with hyphens per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Ай яй яй",
@@ -1600,8 +1602,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Дзеньдзелень",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Відлунне звуконаслідування кришталевого дзвону «дзень-дзелень» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Echoic crystal clinking onomatopoeia 'дзень-дзелень' is hyphenated per § 46, p. 1, a).",
+                    explanation_ua="Відлунне звуконаслідування кришталевого дзвону «дзень-дзелень» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Echoic crystal clinking onomatopoeia 'дзень-дзелень' is hyphenated per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Дзень дзелень",
@@ -1632,8 +1634,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Туктук",
                     interference_key=InterjectionInterferenceKey.HYPHEN_OMISSION,
-                    explanation_ua="Звуконаслідування стуку «тук-тук» пишеться через дефіс per § 46, п. 1, а).",
-                    explanation_en="Knocking onomatopoeia 'тук-тук' is spelled with a hyphen per § 46, p. 1, a).",
+                    explanation_ua="Звуконаслідування стуку «тук-тук» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Knocking onomatopoeia 'тук-тук' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Тук тук",
@@ -1667,8 +1669,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Годі бо",
                     interference_key=InterjectionInterferenceKey.PARTICLE_HYPHEN_OMISSION,
-                    explanation_ua="Вигук із постпозитивною часткою -бо пишеться через дефіс: «годі-бо» per § 46, п. 1, б).",
-                    explanation_en="Interjection with postpositive particle -бо is hyphenated: 'годі-бо' per § 46, p. 1, b).",
+                    explanation_ua="Вигук із постпозитивною часткою -бо пишеться через дефіс: «годі-бо» per § 44, п. 3, 1).",
+                    explanation_en="Interjection with postpositive particle -бо is hyphenated: 'годі-бо' per § 44, p. 3, 1).",
                 ),
                 InterjectionDistractor(
                     text="Годібо",
@@ -1699,8 +1701,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Ну бо",
                     interference_key=InterjectionInterferenceKey.PARTICLE_HYPHEN_OMISSION,
-                    explanation_ua="Спонукальний вигук із часткою -бо пишеться через дефіс: «ну-бо» per § 46, п. 1, б).",
-                    explanation_en="Imperative interjection with particle -бо is hyphenated: 'ну-бо' per § 46, p. 1, b).",
+                    explanation_ua="Спонукальний вигук із часткою -бо пишеться через дефіс: «ну-бо» per § 44, п. 3, 1).",
+                    explanation_en="Imperative interjection with particle -бо is hyphenated: 'ну-бо' per § 44, p. 3, 1).",
                 ),
                 InterjectionDistractor(
                     text="Нубо",
@@ -1731,8 +1733,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Давай но",
                     interference_key=InterjectionInterferenceKey.PARTICLE_HYPHEN_OMISSION,
-                    explanation_ua="Спонукальна форма з підсилювальною часткою -но пишеться через дефіс: «давай-но» per § 46, п. 1, б).",
-                    explanation_en="Urging form with intensifying particle -но is hyphenated: 'давай-но' per § 46, p. 1, b).",
+                    explanation_ua="Спонукальна форма з підсилювальною часткою -но пишеться через дефіс: «давай-но» per § 44, п. 3, 1).",
+                    explanation_en="Urging form with intensifying particle -но is hyphenated: 'давай-но' per § 44, p. 3, 1).",
                 ),
                 InterjectionDistractor(
                     text="Давайно",
@@ -1763,8 +1765,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Їй богу",
                     interference_key=InterjectionInterferenceKey.IDIOM_HYPHEN_OMISSION,
-                    explanation_ua="Усталений вигуковий вираз «їй-богу» пишеться через дефіс per § 46, п. 1, в).",
-                    explanation_en="Fixed interjection idiom 'їй-богу' is spelled with a hyphen per § 46, p. 1, c).",
+                    explanation_ua="Усталений вигуковий вираз «їй-богу» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Fixed interjection idiom 'їй-богу' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Їйбогу",
@@ -1795,8 +1797,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Їй право",
                     interference_key=InterjectionInterferenceKey.IDIOM_HYPHEN_OMISSION,
-                    explanation_ua="Усталений вигук запевнення «їй-право» пишеться через дефіс per § 46, п. 1, в).",
-                    explanation_en="Fixed interjection of assurance 'їй-право' is spelled with a hyphen per § 46, p. 1, c).",
+                    explanation_ua="Усталений вигук запевнення «їй-право» пишеться через дефіс per § 35, п. 5, 4).",
+                    explanation_en="Fixed interjection of assurance 'їй-право' is spelled with a hyphen per § 35, p. 5, 4).",
                 ),
                 InterjectionDistractor(
                     text="Їйправо",
@@ -1830,8 +1832,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="будь-ласка",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_HYPHEN,
-                    explanation_ua="Слова «будь ласка» пишуться строго окремо без дефіса per § 46, п. 2.",
-                    explanation_en="Words 'будь ласка' are written strictly separately without hyphen per § 46, p. 2.",
+                    explanation_ua="Слова «будь ласка» пишуться строго окремо без дефіса per § 41, п. 2.",
+                    explanation_en="Words 'будь ласка' are written strictly separately without hyphen per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="будьласка",
@@ -1862,8 +1864,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Допобачення",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Вираз «до побачення» пишеться окремо per § 46, п. 2.",
-                    explanation_en="Phrase 'до побачення' is spelled separately per § 46, p. 2.",
+                    explanation_ua="Вираз «до побачення» пишеться окремо per § 41, п. 2.",
+                    explanation_en="Phrase 'до побачення' is spelled separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="До-побачення",
@@ -1894,8 +1896,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Надобраніч",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Формула побажання сну «на добраніч» пишеться виключно окремо per § 46, п. 2.",
-                    explanation_en="Good night formula 'на добраніч' is spelled exclusively separately per § 46, p. 2.",
+                    explanation_ua="Формула побажання сну «на добраніч» пишеться виключно окремо per § 41, п. 2.",
+                    explanation_en="Good night formula 'на добраніч' is spelled exclusively separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="На-добраніч",
@@ -1926,8 +1928,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Огосподи",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_FUSION,
-                    explanation_ua="Вигуковий зворот «о господи» пишеться окремо per § 46, п. 2.",
-                    explanation_en="Interjection phrase 'о господи' is spelled separately per § 46, p. 2.",
+                    explanation_ua="Вигуковий зворот «о господи» пишеться окремо per § 41, п. 2, § 53.",
+                    explanation_en="Interjection phrase 'о господи' is spelled separately per § 41, p. 2, § 53.",
                 ),
                 InterjectionDistractor(
                     text="О-господи",
@@ -1958,8 +1960,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="От-тобі й маєш",
                     interference_key=InterjectionInterferenceKey.UNWARRANTED_HYPHEN,
-                    explanation_ua="Багатослівний фразеологічний вигук «от тобі й маєш» пишеться всіма словами окремо per § 46, п. 2.",
-                    explanation_en="Multi-word phraseological interjection 'от тобі й маєш' is written with all words separately per § 46, p. 2.",
+                    explanation_ua="Багатослівний фразеологічний вигук «от тобі й маєш» пишеться всіма словами окремо per § 41, п. 2.",
+                    explanation_en="Multi-word phraseological interjection 'от тобі й маєш' is written with all words separately per § 41, p. 2.",
                 ),
                 InterjectionDistractor(
                     text="От тобі-й маєш",
@@ -1993,8 +1995,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="О, краю",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_UNWARRANTED_COMMA_PARTICLE,
-                    explanation_ua="Коли «о» виступає в ролі підсилювальної або кличної частки при звертанні, кома між ними НЕ ставиться: «О краю мій!» per § 46.",
-                    explanation_en="When 'о' serves as an intensifying or vocative particle before an address, NO comma is placed between them: 'О краю мій!' per § 46.",
+                    explanation_ua="Коли «о» виступає в ролі підсилювальної частки при звертанні, кома між ними НЕ ставиться: «О краю мій!» per § 158, п. 9, прим. 1.",
+                    explanation_en="When 'о' serves as an intensifying particle before an address, NO comma is placed between them: 'О краю мій!' per § 158, p. 9, note 1.",
                 ),
                 InterjectionDistractor(
                     text="О! Краю",
@@ -2025,8 +2027,8 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Ой, Дніпре",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_UNWARRANTED_COMMA_PARTICLE,
-                    explanation_ua="Слово «ой» перед звертанням є підсилювальною часткою, тому кома між часткою «ой» та звертанням «Дніпре» не ставиться.",
-                    explanation_en="Word 'ой' before an address is an intensifying particle, so no comma is placed between particle 'ой' and address 'Дніпре'.",
+                    explanation_ua="Слово «ой» перед звертанням є підсилювальною часткою, тому кома між часткою «ой» та звертанням «Дніпре» не ставиться per § 158, п. 9, прим. 1.",
+                    explanation_en="Word 'ой' before an address is an intensifying particle, so no comma is placed between particle 'ой' and address 'Дніпре' per § 158, p. 9, note 1.",
                 ),
                 InterjectionDistractor(
                     text="Ой! Дніпре",
@@ -2057,14 +2059,14 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="О краю мій",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_COMMA_OMISSION,
-                    explanation_ua="Тут «о» є самостійним емоційним вигуком суму й замилування, що вимовляється з паузою перед звертанням, тому вимагає коми: «О, краю мій...».",
-                    explanation_en="Here 'о' is an independent emotional interjection of longing pronounced with a pause before the address, requiring a comma: 'О, краю мій...'.",
+                    explanation_ua="Тут «о» є самостійним емоційним вигуком суму й замилування, що вимовляється з паузою перед звертанням, тому вимагає коми: «О, краю мій...» per § 158, п. 9.",
+                    explanation_en="Here 'о' is an independent emotional interjection of longing pronounced with a pause before the address, requiring a comma: 'О, краю мій...' per § 158, p. 9.",
                 ),
                 InterjectionDistractor(
                     text="О! краю мій",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_EXCLAMATION_OMISSION,
-                    explanation_ua="Після знаку оклику наступне слово обов'язково починається з великої літери; тут наступне слово «краю» з малої.",
-                    explanation_en="After an exclamation mark the next word must be capitalized; here 'краю' is lowercase.",
+                    explanation_ua="Після знаку оклику наступне слово обов'язково починається з великої літери per § 46, п. 2; тут наступне слово «краю» з малої.",
+                    explanation_en="After an exclamation mark the next word must be capitalized per § 46, p. 2; here 'краю' is lowercase.",
                 ),
                 InterjectionDistractor(
                     text="О-краю мій",
@@ -2089,14 +2091,14 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Леле,",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_EXCLAMATION_OMISSION,
-                    explanation_ua="Оскільки наступне речення починається з великої літери («Що»), а вигук вимовляється з сильною окличною інтонацією, після нього ставиться знак оклику, а не кома.",
-                    explanation_en="Since the following sentence begins with a capital letter ('Що') and the interjection is uttered with strong exclamation intonation, it requires an exclamation mark, not a comma.",
+                    explanation_ua="Оскільки наступне речення починається з великої літери («Що») per § 46, п. 2, а вигук вимовляється з сильною окличною інтонацією, після нього ставиться знак оклику per § 157, п. 3, а не кома.",
+                    explanation_en="Since the following sentence begins with a capital letter ('Що') per § 46, p. 2 and the interjection is uttered with strong exclamation intonation, it requires an exclamation mark per § 157, p. 3, not a comma.",
                 ),
                 InterjectionDistractor(
                     text="Леле—",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_WRONG_DELIMITER,
-                    explanation_ua="Тире після вигуку на початку речення не ставиться; емоційне відокремлення позначається знаком оклику.",
-                    explanation_en="A dash after an interjection at the beginning of a sentence is incorrect; emotional isolation is marked by an exclamation mark.",
+                    explanation_ua="Тире після вигуку на початку речення не ставиться; емоційне відокремлення позначається знаком оклику per § 157, п. 3.",
+                    explanation_en="A dash after an interjection at the beginning of a sentence is incorrect; emotional isolation is marked by an exclamation mark per § 157, p. 3.",
                 ),
                 InterjectionDistractor(
                     text="Леле",
@@ -2121,20 +2123,20 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
                 InterjectionDistractor(
                     text="Ох!",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_EXCLAMATION_OMISSION,
-                    explanation_ua="Наступне слово «як» написане з малої літери, а вигук вимовляється з повільною розповідною інтонацією, тому він відокремлюється комою, а не знаком оклику.",
-                    explanation_en="The following word 'як' is lowercase and the interjection is uttered with gentle narrative intonation, so it is set off by a comma, not an exclamation mark.",
+                    explanation_ua="Наступне слово «як» написане з малої літери, а вигук вимовляється з повільною розповідною інтонацією, тому він відокремлюється комою per § 158, п. 9, а не знаком оклику.",
+                    explanation_en="The following word 'як' is lowercase and the interjection is uttered with gentle narrative intonation, so it is set off by a comma per § 158, p. 9, not an exclamation mark.",
                 ),
                 InterjectionDistractor(
                     text="Ох—",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_WRONG_DELIMITER,
-                    explanation_ua="Тире не використовується на початку речення після вигуку; потрібна кома: «Ох, як солодко...».",
-                    explanation_en="A dash is not used at sentence start after an interjection; a comma is required: 'Ох, як солодко...'.",
+                    explanation_ua="Тире не використовується на початку речення після вигуку; потрібна кома: «Ох, як солодко...» per § 158, п. 9.",
+                    explanation_en="A dash is not used at sentence start after an interjection; a comma is required: 'Ох, як солодко...' per § 158, p. 9.",
                 ),
                 InterjectionDistractor(
                     text="Ох",
                     interference_key=InterjectionInterferenceKey.PUNCTUATION_COMMA_OMISSION,
-                    explanation_ua="Вигук на початку речення не можна залишати без розділового знака; потрібна кома.",
-                    explanation_en="An interjection at the beginning of a sentence cannot be left unpunctuated; a comma is required.",
+                    explanation_ua="Вигук на початку речення не можна залишати без розділового знака; потрібна кома per § 158, п. 9.",
+                    explanation_en="An interjection at the beginning of a sentence cannot be left unpunctuated; a comma is required per § 158, p. 9.",
                 ),
             ),
             rule_citation=cit12,
@@ -2144,6 +2146,55 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
     )
 
     return cards
+
+
+def is_valid_vesum_token(cursor: sqlite3.Cursor, raw_token: str) -> bool:
+    """Validates an individual token or compound against VESUM dictionary.
+
+    Rejects malformed strings (consecutive hyphens, leading/trailing hyphens, empty parts),
+    verifies standard attestation without :bad tags, and supports rule-backed compounds:
+    - Exact reduplication (e.g. гав-гав, крап-крап, хлюп-хлюп)
+    - Enclitic particle combinations (e.g. годі-бо, ну-бо, давай-но per § 44, п. 3, 1))
+    """
+    strip_punctuation = ".,!?:;—…\"'«»`()[]"
+    clean = raw_token.strip(strip_punctuation).lower().replace("’", "'").replace("`", "'")
+    if not clean or clean.startswith("-") or clean.endswith("-") or "--" in clean:
+        return False
+
+    # 1. Direct lookup in forms_all excluding :bad tags
+    cursor.execute(
+        "SELECT 1 FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%' LIMIT 1",
+        (clean, clean.capitalize(), clean.lower()),
+    )
+    if cursor.fetchone():
+        return True
+
+    # 2. Rule-backed compound validation if hyphenated
+    if "-" in clean:
+        parts = clean.split("-")
+        word_re = re.compile(r"^[а-яіїєґ']+$")
+        if not all(p and word_re.match(p) for p in parts):
+            return False
+
+        # Case A: Exact reduplication (e.g. гав-гав, крап-крап, хлюп-хлюп, цок-цок)
+        if len(set(parts)) == 1:
+            base = parts[0]
+            cursor.execute(
+                "SELECT 1 FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%' LIMIT 1",
+                (base, base.capitalize(), base.lower()),
+            )
+            return cursor.fetchone() is not None
+
+        # Case B: Stem + recognized enclitic particle (e.g. годі-бо, ну-бо, давай-но) per § 44, п. 3, 1)
+        if len(parts) == 2 and parts[1] in ENCLITIC_PARTICLES:
+            stem = parts[0]
+            cursor.execute(
+                "SELECT 1 FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%' LIMIT 1",
+                (stem, stem.capitalize(), stem.lower()),
+            )
+            return cursor.fetchone() is not None
+
+    return False
 
 
 def verify_deck_with_vesum(
@@ -2184,7 +2235,6 @@ def verify_deck_with_vesum(
             "message": f"forms_all table not found in VESUM database at {resolved_path}",
         }
 
-    word_pattern = re.compile(r"^[а-яіїєґА-ЯІЇЄҐ'\-]+$")
     strip_punctuation = ".,!?:;—…\"'«»`()[]"
 
     all_target_tokens: set[str] = set()
@@ -2199,9 +2249,6 @@ def verify_deck_with_vesum(
             clean = w.strip(strip_punctuation).lower().replace("’", "'").replace("`", "'")
             if not clean:
                 continue
-            if not word_pattern.match(clean):
-                missing_targets.append(f"{card.card_id}: malformed token '{clean}'")
-                continue
             valid_tokens_for_card.append(clean)
             all_target_tokens.add(clean)
 
@@ -2211,33 +2258,11 @@ def verify_deck_with_vesum(
         else:
             card_tokens_map[card.card_id] = valid_tokens_for_card
 
-    # Verify each unique valid token in VESUM
+    # Verify each unique valid token in VESUM using strict is_valid_vesum_token
     unattested_tokens: set[str] = set()
     for token in sorted(all_target_tokens):
-        # 1. Direct lookup (exact lowercase, capitalized, or titlecase)
-        cursor.execute(
-            "SELECT 1 FROM forms_all WHERE word_form = ? OR word_form = ? OR word_form = ? LIMIT 1",
-            (token, token.capitalize(), token.lower()),
-        )
-        if cursor.fetchone():
-            continue
-
-        # 2. Hyphenated compound component fallback (e.g. годі-бо, давай-но, гав-гав, крап-крап)
-        if "-" in token:
-            parts = [p for p in token.split("-") if p]
-            parts_valid = True
-            for part in parts:
-                cursor.execute(
-                    "SELECT 1 FROM forms_all WHERE word_form = ? OR word_form = ? OR word_form = ? LIMIT 1",
-                    (part, part.capitalize(), part.lower()),
-                )
-                if not cursor.fetchone():
-                    parts_valid = False
-                    break
-            if parts_valid:
-                continue
-
-        unattested_tokens.add(token)
+        if not is_valid_vesum_token(cursor, token):
+            unattested_tokens.add(token)
 
     conn.close()
 
