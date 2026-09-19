@@ -230,8 +230,20 @@ def resolve_collective_feminine_restriction_rule() -> tuple[str, str, str]:
 
 def resolve_collective_pluralia_neuter_rule() -> tuple[str, str, str]:
     citation = "Синтаксичні норми української мови / Правопис 2019 § 105 (пп. 8–10)"
-    ua = "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят)."
-    en = "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
+    ua = (
+        "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини "
+        "(pluralia tantum: двоє дверей, троє ножиць, двоє саней). З іменниками середнього роду "
+        "на позначення малят (IV відміна) збірні числівники є природними й поширеними, проте не обов'язковими: "
+        "нормативними є як збірні числівники з родовим множини (четверо каченят, троє телят), "
+        "так і кількісні числівники з називним множини (чотири каченяти, три теляти)."
+    )
+    en = (
+        "Collective numerals are mandatory with pluralia tantum nouns "
+        "(двоє дверей, троє ножиць, двоє саней). With neuter nouns denoting young animals/beings (IV declension), "
+        "collective numerals are natural and frequent but not strictly mandatory: both collective numerals "
+        "with Genitive plural (четверо каченят, троє телят) and cardinal numerals with Nominative plural "
+        "(чотири каченяти, три теляти) are standard."
+    )
     return citation, ua, en
 
 
@@ -1938,8 +1950,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="чотири",
                     interference_type=NumeralInterferenceType.CARDINAL_WITH_PLURALIA_TANTUM,
-                    explanation_ua="З назвами малят (середній рід IV відміни: каченята) зазвичай уживаються збірні числівники: 'четверо каченят'.",
-                    explanation_en="With names of young beings (neuter declension IV: каченята), collective numerals are standard: 'четверо каченят'.",
+                    explanation_ua="Числівник 'чотири' вимагає називного відмінка множини ('чотири каченяти'); форма родового відмінка множини 'каченят' у цій позиції сполучається зі збірним числівником: 'четверо каченят' (обидва варіанти 'чотири каченяти' і 'четверо каченят' є нормативними в українській мові).",
+                    explanation_en="Cardinal 'чотири' governs Nominative plural ('чотири каченяти'); the Genitive plural form 'каченят' here combines with collective 'четверо каченят' (both 'чотири каченяти' and 'четверо каченят' are fully normative in Ukrainian).",
                 ),
                 NumeralDistractor(
                     text="четвірка",

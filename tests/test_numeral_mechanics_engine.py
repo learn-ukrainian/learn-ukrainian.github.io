@@ -301,3 +301,22 @@ def test_card_48_subject_clarity_and_collective_distractor():
     d48 = [d.text for d in card48.distractors]
     assert "четверо дівчат" not in d48, "Card 48 must not use contested 'четверо дівчат'"
     assert "четверо аспіранток" in d48, "Card 48 must test collective adult female restriction with 'четверо аспіранток'"
+
+
+def test_collective_young_animals_optional_guidance():
+    """Regression test for Category 11 rule and Card 53 (Astra review finding):
+    - Collective numerals are taught as mandatory for pluralia tantum, but optional for young animals.
+    - Accurately cites both variants ('чотири каченяти' and 'четверо каченят') as normative.
+    """
+    _cit, ua, en = resolve_collective_pluralia_neuter_rule()
+    assert "двоє дверей" in ua
+    assert "не обов'язковими" in ua
+    assert "not strictly mandatory" in en
+    assert "чотири каченяти" in ua
+
+    cards = {c.card_id: c for c in build_canonical_numeral_cards()}
+    card53 = cards["numeral_53"]
+    assert card53.correct_answer == "четверо"
+    d_cho = next(d for d in card53.distractors if d.text == "чотири")
+    assert "чотири каченяти" in d_cho.explanation_ua
+    assert "нормативними" in d_cho.explanation_ua

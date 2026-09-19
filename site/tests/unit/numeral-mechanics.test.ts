@@ -283,4 +283,22 @@ describe('numeral-mechanics', () => {
     expect(d48).not.toContain('четверо дівчат');
     expect(d48).toContain('четверо аспіранток');
   });
+
+  it('ensures collective numerals with young animals are correctly scoped as non-mandatory', () => {
+    const cPlur = resolveCollectivePluraliaNeuterRule();
+    expect(cPlur.ruleUa).toContain('двоє дверей');
+    expect(cPlur.ruleUa).toContain("не обов'язковими");
+    expect(cPlur.ruleEn).toContain('not strictly mandatory');
+    expect(cPlur.ruleUa).toContain('чотири каченяти');
+
+    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const content = readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(content);
+
+    const card53 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_53');
+    expect(card53.correct_answer).toBe('четверо');
+    const dCho = card53.distractors.find((d: { text: string }) => d.text === 'чотири');
+    expect(dCho.explanation.ua).toContain('чотири каченяти');
+    expect(dCho.explanation.ua).toContain('нормативними');
+  });
 });
