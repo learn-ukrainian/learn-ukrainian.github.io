@@ -121,7 +121,7 @@ INTERFERENCE_EXPLANATIONS: dict[VerbInterferenceType, dict[str, str]] = {
     },
     VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT: {
         "ua": "Помилка у чергуванні голосних при вторинній імперфективації (Правопис 2019 § 115): при утворенні дієслів недоконаного виду за допомогою суфіксів -а- / -ува- кореневий голосний [о] чергується з [а] (допомогти -> допомагати, перемогти -> перемагати, зламати -> зламувати). Вживання форми без чергування (*допомогати, *перемогати) є грубим суржиком.",
-        "en": "Missing root vowel ablaut in imperfectivation (Pravopys 2019 § 115). In secondary imperfective formation with suffixes -a- / -uva-, root vowel [o] alternates with [a] (dopomohty -> dopomahaty, peremohty -> peremahaty). Forms without alternation (*dopomahaty) are non-standard surzhyk.",
+        "en": "Missing root vowel ablaut in imperfectivation (Pravopys 2019 § 115). In secondary imperfective formation with suffixes -a- / -uva-, root vowel [o] alternates with [a] (dopomohty -> dopomahaty, peremohty -> peremahaty). Forms without alternation (*dopomohaty, *peremohaty) are non-standard surzhyk.",
     },
     VerbInterferenceType.FALSE_ASPECT_SUPPLETIVE_REGULARIZED: {
         "ua": "Помилка у суплетивній видовій парі: дієслова цієї групи творять видові пари від різних коренів (брати <-> взяти, говорити <-> сказати, ловити <-> піймати, класти <-> покласти). Спроба утворити доконаний вид суфіксами чи префіксами від початкового кореня (*збрати, *поговорити у значенні сказати) порушує нормативне співвідношення нейтральної видової пари.",
@@ -156,8 +156,8 @@ INTERFERENCE_EXPLANATIONS: dict[VerbInterferenceType, dict[str, str]] = {
         "en": "Active present participle calque. While Ukrainian recognizes lexicalized adjectival forms in -achy/-uchy (kvituchyi, zhyvuchyi per Pravopys 2019 § 119), using them as verbal active participles (*bazhaiuchyi, *diiuchyi) is an alien calque. Replace with proper adjectives, agent nouns, or relative clauses: okhochyi, chynnyi, pochatkivets.",
     },
     VerbInterferenceType.FALSE_IMPERSONAL_FORMS_AGREEMENT: {
-        "ua": "Помилка у вживанні безособової форми на -но / -то (Правопис 2019 § 119): у безособових реченнях присудок передається незмінюваною формою на -но / -то з прямим додатком у знахідному відмінку (роботу виконано, закон прийнято, двері відчинено). Вживання узгодженого дієприкметника зі зв'язкою (*була виконана робота) є калькою з пасивних конструкцій російської мови.",
-        "en": "Impersonal -no / -to form error (Pravopys 2019 § 119). Impersonal state constructions require invariant verbal forms in -no / -to with the direct object in the accusative (robotu vykonano, zakon pryiniato). Using personal agreeing participles (*bula vykonana robota) is a calque of Russian passive syntax.",
+        "ua": "Помилка у вживанні безособової форми на -но / -то (Правопис 2019 § 119): у безособових предикативних реченнях присудок передається незмінюваною формою на -но / -то із прямим додатком у знахідному відмінку (роботу виконано, закон прийнято, двері відчинено). Узгоджені форми дієприкметників (прийнятий, підписана) виступають означеннями або елементами двоскладних пасивних конструкцій, а не присудком безособового односкладного речення.",
+        "en": "Impersonal -no / -to form error (Pravopys 2019 § 119). In impersonal predicate constructions, the action is expressed by invariant verbal forms in -no / -to governing a direct object in the accusative (robotu vykonano, zakon pryiniato). Agreeing participle forms (pryiniatyi, pidpysana) function as attributes or within personal passive clauses, not as predicates of impersonal sentences.",
     },
     VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX: {
         "ua": "Помилка у творенні дієприслівника (Правопис 2019 § 120): для вираження одночасної дії (недоконаний вид) вживаються суфікси -учи/-ючи (I дієвідміна) та -ачи/-ячи (II дієвідміна) (читаючи, сидячи). Для вираження передуючої дії (доконаний вид) вживається суфікс -вши/-ши (прочитавши, принісши). Не можна вживати -вши для одночасної дії або -ючи для завершеної.",
@@ -1107,10 +1107,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             },
             {
                 "text": "написив",
-                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
                 "explanation": {
-                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ав: правильно «написав», а не «*написив» (Правопис 2019 § 115).",
-                    "en": "Erroneous use of Class II suffix -yv instead of -av: standard is 'napysav', not '*napysiv' (Pravopys 2019 § 115).",
+                    "ua": "Помилкове утворення минулого часу: від інфінітивної основи на -а- (написа-ти) твориться форма «написав», а не «*написив» (Правопис 2019 § 115).",
+                    "en": "Erroneous past tense derivation: from infinitive stem in -a- (napysa-ty) the past tense is 'napysav', not '*napysiv' (Pravopys 2019 § 115).",
                 },
             },
             {
@@ -1181,10 +1181,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             },
             {
                 "text": "прочитив",
-                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
                 "explanation": {
-                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ав: правильно «прочитав», а не «*прочитив» (Правопис 2019 § 115).",
-                    "en": "Erroneous use of Class II suffix -yv instead of -av: standard is 'prochytav', not '*prochytiv' (Pravopys 2019 § 115).",
+                    "ua": "Помилкове утворення минулого часу: від інфінітивної основи на -а- (прочита-ти) утворюється форма «прочитав», а не «*прочитив» (Правопис 2019 § 115).",
+                    "en": "Erroneous past tense derivation: from infinitive stem in -a- (prochyta-ty) the past tense is 'prochytav', not '*prochytiv' (Pravopys 2019 § 115).",
                 },
             },
         ],
@@ -1245,10 +1245,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             },
             {
                 "text": "намалювив",
-                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
                 "explanation": {
-                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ав: правильно «намалював», а не «*намалювив» (Правопис 2019 § 115).",
-                    "en": "Erroneous use of Class II suffix -yv instead of -av: standard is 'namaliuvav', not '*namaliuvyv' (Pravopys 2019 § 115).",
+                    "ua": "Помилкове утворення минулого часу: від інфінітивної основи на -а- (намалюва-ти) утворюється форма «намалював», а не «*намалювив» (Правопис 2019 § 115).",
+                    "en": "Erroneous past tense derivation: from infinitive stem in -a- (namaliuva-ty) the past tense is 'namaliuvav', not '*namaliuvyv' (Pravopys 2019 § 115).",
                 },
             },
             {
@@ -1345,10 +1345,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             },
             {
                 "text": "переписив",
-                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
                 "explanation": {
-                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ував: правильно «переписував», а не «*переписив» (Правопис 2019 § 115).",
-                    "en": "Erroneous use of Class II suffix -yv instead of -uvav: standard is 'perepysuvav', not '*perepysiv' (Pravopys 2019 § 115).",
+                    "ua": "Помилковий суфікс у формі минулого часу недоконаного виду: суфікс імперфективації -ува- дає основу «переписува-», від якої твориться «переписував», а не усічена форма «*переписив» (Правопис 2019 § 115).",
+                    "en": "Erroneous imperfective past tense: imperfective suffix -uva- gives stem 'perepysuva-', forming 'perepysuvav', not '*perepysiv' (Pravopys 2019 § 115).",
                 },
             },
             {
@@ -1408,8 +1408,8 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "text": "зламавала",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
                 "explanation": {
-                    "ua": "Помилкове утворення недоконаного виду: суфікс -ува- вимагає чергування кореневого голосного [о] на [а], правильно «зламувала», а не «*зламавала».",
-                    "en": "Erroneous imperfective: standard is 'zlamuvala' with suffix -uva-, not '*zlamavala'.",
+                    "ua": "Помилковий суфікс недоконаного виду: дієслово твориться за допомогою суфікса -ува- («зламувала»), а не помилкового суфікса -ава- («*зламавала») (Правопис 2019 § 115).",
+                    "en": "Erroneous imperfective suffix: standard derivation uses suffix -uva- ('zlamuvala'), not '*zlamavala' with -ava- (Pravopys 2019 § 115).",
                 },
             },
             {
@@ -2400,7 +2400,7 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_impersonal_pryiniato",
         "category": VerbCategory.PARTICIPLE_IMPERSONAL_NO_TO,
         "cefr_level": "B1",
-        "prompt_sentence": "Верховною Радою України одноголосно ___ новий демократичний закон.",
+        "prompt_sentence": "Верховною Радою України одноголосно було ___ новий демократичний закон (виберіть безособову предикативну форму на -но/-то).",
         "blank_target": "прийнято",
         "correct_answer": "прийнято",
         "distractors": [
@@ -2422,8 +2422,8 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         ],
         "pravopys_section": "Правопис 2019 § 119",
         "rule_summary": {
-            "ua": "Безособова присудкова конструкція із прямим додатком у знахідному відмінку вимагає форми на -то: «прийнято новий закон» (Правопис 2019 § 119).",
-            "en": "Impersonal verbal predicate with direct accusative object takes -to form: 'pryiniato novyi zakon' (Pravopys 2019 § 119).",
+            "ua": "Безособова присудкова конструкція з дієслівною зв'язкою «було» та прямим додатком вимагає форми на -то: «було прийнято новий закон» (Правопис 2019 § 119).",
+            "en": "Impersonal predicate with auxiliary 'bulo' and direct object strictly takes -to form: 'bulo pryiniato novyi zakon' (Pravopys 2019 § 119).",
         },
     },
     {
