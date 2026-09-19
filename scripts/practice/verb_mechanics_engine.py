@@ -1169,7 +1169,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "прочитавав",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилкове утворення минулого часу з надлишковим нарощенням суфікса: правильно «прочитав», а не «*прочитавав».",
+                    "en": "Erroneous past tense derivation with spurious suffix lengthening: standard is 'prochytav', not '*prochytavav'.",
+                },
             },
             {
                 "text": "почитав",
@@ -1209,8 +1212,11 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             },
             {
                 "text": "збудовували",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
+                "explanation": {
+                    "ua": "«Збудовували» — форма недоконаного виду (тривалий процес або повторюваність), тоді як у реченні потрібна нейтральна доконана пара «збудували» (завершений результат).",
+                    "en": "'Zbudovuvaly' is an imperfective form denoting process or repetition, whereas the sentence requires the neutral perfective completed action 'zbuduvaly'.",
+                },
             },
             {
                 "text": "збудувавали",
@@ -1286,12 +1292,18 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "допоможують",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилкове поєднання відсутності чергування [о] → [а] та неправильного суфікса -ують: нормативною формою є «допомагають» (Правопис 2019 § 115).",
+                    "en": "Erroneous combination of missing root ablaut [o] -> [a] and incorrect suffix -uiut: standard is 'dopomahaiut' (Pravopys 2019 § 115).",
+                },
             },
             {
                 "text": "допомагують",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилковий суфікс дієслова: дієслово недоконаного виду має основу на -а- («допомагають»), а не суфікс -ува-/-ують («*допомагують»).",
+                    "en": "Erroneous suffix: imperfective stem ends in -a- ('dopomahaiut'), not -uva-/-uiut ('*dopomahuiut').",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
@@ -1316,12 +1328,18 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "переможують",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилкове поєднання відсутності чергування [о] → [а] та неправильного суфікса -ують: нормативною формою є «перемагають» (Правопис 2019 § 115).",
+                    "en": "Erroneous combination of missing root ablaut [o] -> [a] and incorrect suffix -uiut: standard is 'peremahaiut' (Pravopys 2019 § 115).",
+                },
             },
             {
                 "text": "перемагують",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилковий суфікс дієслова: дієслово недоконаного виду має основу на -а- («перемагають»), а не суфікс -ува-/-ують («*перемагують»).",
+                    "en": "Erroneous suffix: imperfective stem ends in -a- ('peremahaiut'), not -uva-/-uiut ('*peremahuiut').",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
@@ -1341,7 +1359,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "переписавав",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилковий суфікс імперфективації: дієслово твориться суфіксом -ува- («переписував»), а не надлишковим нарощенням -ава- («*переписавав») (Правопис 2019 § 115).",
+                    "en": "Erroneous imperfective suffix: standard derivation uses suffix -uva- ('perepysuvav'), not spurious -ava- ('*perepysavav') (Pravopys 2019 § 115).",
+                },
             },
             {
                 "text": "переписив",
@@ -1387,7 +1408,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "відкривують",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилкова заміна суфікса: дієслово недоконаного виду утворюється за допомогою суфікса -ва- («відкривати» / «відкривають»), а не -ува- («*відкривують») (Правопис 2019 § 115).",
+                    "en": "Erroneous suffix substitution: imperfective is formed with suffix -va- ('vidkryvaty' / 'vidkryvaiut'), not -uva- ('*vidkryvuiut') (Pravopys 2019 § 115).",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
@@ -1420,7 +1444,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "зломовувала",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "Помилкове поєднання відсутності чергування [о] → [а] та надлишкового розширення суфікса: правильно «зламувала», а не «*зломовувала».",
+                    "en": "Erroneous combination of missing ablaut [o] -> [a] and excessive suffix expansion: standard is 'zlamuvala', not '*zlomovuvala'.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
@@ -1504,7 +1531,10 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
             {
                 "text": "половлював",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "explanation": {
+                    "ua": "«Половлював» — помилкова форма недоконаного виду з ітеративним нарощенням суфікса, тоді як у реченні потрібна нормативна доконана форма суплетивної пари «піймав» (завершений результат).",
+                    "en": "'Polovliuvav' is an erroneous imperfective form with spurious iterative suffixation, whereas the sentence requires the standard perfective suppletive partner 'piimav' (completed result).",
+                },
             },
             {
                 "text": "ловлявав",

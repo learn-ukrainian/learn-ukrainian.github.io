@@ -188,4 +188,31 @@ describe('verb-mechanics', () => {
     }
     expect(categoriesInDeck.size).toBe(15);
   });
+
+  it('provides specific non-ablaut feedback for suffixation and aspectual distractors', () => {
+    const deckPath = resolve(__dirname, '../../../data/practice/verb_mechanics_deck.json');
+    const payload = JSON.parse(readFileSync(deckPath, 'utf-8'));
+
+    const chytatyCard = payload.cards.find(
+      (c: any) => c.card_id === 'verb_aspect_pref_chytaty_perf',
+    );
+    expect(chytatyCard).toBeDefined();
+    const fbProchytavavUa = verbMechanicsFeedbackFor(chytatyCard, 'прочитавав', 'ua');
+    const fbProchytavavEn = verbMechanicsFeedbackFor(chytatyCard, 'прочитавав', 'en');
+    expect(fbProchytavavUa.isCorrect).toBe(false);
+    expect(fbProchytavavUa.feedback).toContain('нарощенням суфікса');
+    expect(fbProchytavavEn.feedback).toContain('spurious suffix lengthening');
+    expect(fbProchytavavEn.feedback).not.toContain('Missing root vowel ablaut');
+
+    const buduvatyCard = payload.cards.find(
+      (c: any) => c.card_id === 'verb_aspect_pref_buduvaty_perf',
+    );
+    expect(buduvatyCard).toBeDefined();
+    const fbZbudovuvalyUa = verbMechanicsFeedbackFor(buduvatyCard, 'збудовували', 'ua');
+    const fbZbudovuvalyEn = verbMechanicsFeedbackFor(buduvatyCard, 'збудовували', 'en');
+    expect(fbZbudovuvalyUa.isCorrect).toBe(false);
+    expect(fbZbudovuvalyUa.feedback).toContain('недоконаного виду');
+    expect(fbZbudovuvalyEn.feedback).toContain('imperfective form');
+    expect(fbZbudovuvalyEn.feedback).not.toContain('Missing root vowel ablaut');
+  });
 });

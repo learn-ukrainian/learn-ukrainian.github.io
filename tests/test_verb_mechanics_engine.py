@@ -226,3 +226,31 @@ def test_vesum_verification():
         f"Corruption distractors matched valid standard words in VESUM: {dist_report.get('invalid_distractors', [])}"
     )
     assert dist_report["checked_distractor_count"] >= 100
+
+
+def test_non_ablaut_distractors_feedback():
+    """Verify that non-ablaut distractors (e.g. прочитавав, збудовували, переписавав, відкривують)
+    do not receive the generic root vowel ablaut explanation."""
+    cards = {c.card_id: c for c in build_canonical_verb_cards()}
+
+    chytaty_card = cards["verb_aspect_pref_chytaty_perf"]
+    prochytavav = next(d for d in chytaty_card.distractors if d.text == "прочитавав")
+    assert "ablaut" not in prochytavav.explanation["en"].lower()
+    assert "чергуван" not in prochytavav.explanation["ua"].lower()
+    assert "нарощенням суфікса" in prochytavav.explanation["ua"]
+
+    buduvaty_card = cards["verb_aspect_pref_buduvaty_perf"]
+    zbudovuvaly = next(d for d in buduvaty_card.distractors if d.text == "збудовували")
+    assert "ablaut" not in zbudovuvaly.explanation["en"].lower()
+    assert "чергуван" not in zbudovuvaly.explanation["ua"].lower()
+    assert "недоконаного виду" in zbudovuvaly.explanation["ua"]
+
+    pysaty_card = cards["verb_aspect_suff_pysaty_impersuff"]
+    perepysavav = next(d for d in pysaty_card.distractors if d.text == "переписавав")
+    assert "ablaut" not in perepysavav.explanation["en"].lower()
+    assert "-ава-" in perepysavav.explanation["ua"]
+
+    vidkryvaty_card = cards["verb_aspect_suff_vidkryvaty"]
+    vidkryvuiut = next(d for d in vidkryvaty_card.distractors if d.text == "відкривують")
+    assert "ablaut" not in vidkryvuiut.explanation["en"].lower()
+    assert "-ува-" in vidkryvuiut.explanation["ua"]
