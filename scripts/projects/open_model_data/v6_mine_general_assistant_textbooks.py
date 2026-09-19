@@ -1154,21 +1154,23 @@ def has_space_split_ocr_word(snippet: str, cur_ves: sqlite3.Cursor | None = None
         return False
     if has_spliced_sentence_ocr(snippet, cur):
         return True
-    words = re.findall(r"[а-яіїєґ']+", snippet.lower())
-    for i in range(len(words) - 1):
-        w1, w2 = words[i], words[i + 1]
-        if len(w1) >= 2 and len(w2) >= 2:
-            combined = w1 + w2
-            if not is_vesum_attested(w2, cur) and is_vesum_attested(combined, cur):
-                return True
-            if not is_vesum_attested(w1, cur) and is_vesum_attested(combined, cur):
-                return True
+    for m in re.finditer(r"\b([а-яіїєґА-ЯІЇЄҐ']{2,})\s+([а-яіїєґ']{2,})\b", snippet.lower()):
+        w1, w2 = m.group(1), m.group(2)
+        combined = w1 + w2
+        if not is_vesum_attested(w2, cur) and is_vesum_attested(combined, cur):
+            return True
+        if not is_vesum_attested(w1, cur) and is_vesum_attested(combined, cur):
+            return True
     return False
 
 
 def has_spliced_sentence_ocr(text: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
-    """Detect OCR column fusion where a second capitalized clause begins mid-sentence without punctuation."""
+    """Detect OCR column fusion, page number splices, or punctuation artifacts."""
     if re.search(r"[а-яіїєґ][А-ЯІЇЄҐ]", text):
+        return True
+    if re.search(r"(?:\.|\?|!)\s+\d{1,4}\s+[А-ЯІЇЄҐ]", text):
+        return True
+    if re.search(r"[!?][.!?]", text):
         return True
     cur = cur_ves or get_vesum_cursor()
     if not cur:
@@ -1628,6 +1630,31 @@ _DEFINITIONAL_QUICK_FILTER_RE = re.compile(
 )
 
 
+def is_appositive_double_dash(snippet: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
+    """Check if the snippet has an appositive clause before a finite verb: Subject — Apposition — [adv*] Verb ..."""
+    m = re.search(r"^[«„“\"'\s]*([А-ЯІЇЄҐ][^—–-]{1,60})\s+[—–-]\s+([^—–-]{2,140})\s+[—–-]\s+(.+)", snippet)
+    if not m:
+        return False
+    rest = m.group(3).strip()
+    words = [w.strip(".,;:?!\"«»„“—–()'") for w in rest.split()[:8]]
+    words = [w.lower() for w in words if len(w) >= 2]
+    cur = cur_ves or get_vesum_cursor()
+    for w in words:
+        info = get_vesum_word_info(w, cur)
+        is_indicative_verb = any(
+            r[1] == "verb" and any(t in r[2] for t in (":past", ":pres:s:3", ":pres:p:3", ":futr:s:3", ":futr:p:3"))
+            for r in info
+        )
+        if is_indicative_verb:
+            return True
+        is_modifier = any(r[1] in ("adv", "part", "conj") for r in info) or w in (
+            "не", "теж", "також", "вже", "ще", "і", "й", "але", "проте", "однак", "швидко"
+        )
+        if not is_modifier:
+            break
+    return False
+
+
 def is_definitional_for_concept(
     snippet: str,
     concept: str,
@@ -1655,7 +1682,7 @@ def is_definitional_for_concept(
     if DANGLING_STARTER_RE.search(snippet) or has_unresolved_anaphora(snippet):
         return False
 
-    # Snippet syntax & truncation gates
+    # Snippet syntax, artifacts, and page-number / section splices
     if snippet.count("(") != snippet.count(")") or snippet.count("[") != snippet.count("]") or snippet.count("«") != snippet.count("»"):
         return False
     if re.search(r"\([А-ЯІЇЄҐ]\.?$|\b[А-ЯІЇЄҐ]\.$|\(\s*[А-ЯІЇЄҐ]\s*$", snippet):
@@ -1668,43 +1695,62 @@ def is_definitional_for_concept(
         return False
     if re.search(r"\([А-ЯІЇЄҐ][а-яіїєґ]*(?:ськ|ньк|зьк)[а-яіїєґ]*\)", snippet):
         return False
+    if re.search(r"[!?][.!?]", snippet):
+        return False
+    if re.search(r"(?:\.|\?|!)\s+\d{1,4}\s+[А-ЯІЇЄҐ]", snippet):
+        return False
+    if re.search(r"\.\s+[а-яіїєґ][^.!?]*\.\s*$", snippet):
+        return False
 
-    # 2. Metaphors
+    # Quoted proverb or quotation starter (e.g. '„Зміни місце – зміни щастя“ – це єврейське прислів\'я...')
+    if re.match(r"^[«„“\"']{1,2}[^»”\"'\n]+[»”\"'«„“]{1,2}\s+[—–-]", snippet):
+        return False
+
+    # 2. Metaphors and figurative tropes
     if re.search(
         r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b|"
         r"\b(?:важливим\s+кроком|кроком\s+уперед|першим\s+кроком)\b|"
-        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|важливий\s+крок|крок\s+уперед|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для)\b",
+        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|важливий\s+крок|крок\s+уперед|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для|сторінка\s+історії|частинка\s+(?:нашої\s+)?душі|душа|скарбниця|візитна\s+картка|колиска|оплот|центр\s+тяжіння|перша\s+лінія|осередок|окраса|безсмертя|усе\s+одно,\s*що)\b|"
+        r"\b(?:сторінка\s+історії|частинка\s+(?:нашої\s+)?душі|скарбниця|візитна\s+картка|колиска|оплот|центр\s+тяжіння)\b",
         snippet,
         re.IGNORECASE,
     ):
         return False
 
-    # Appositive clause with double dash (e.g. 'Єдина надія - студенти факультету... - теж не виправдовують...')
-    if re.search(r"^[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45}\s+[—–-]\s+[^—–-]{3,120}\s+[—–-]\s+(?:теж|також|не|вже|ще|і|й|але|проте|[а-яіїєґ]+ть|[а-яіїєґ]+ють|[а-яіїєґ]+є|[а-яіїєґ]+в|[а-яіїєґ]+ла|[а-яіїєґ]+ло|[а-яіїєґ]+ли)\b", snippet):
+    # Appositive clause with double dash (e.g. 'Верхня палата – сенат – складалася...', 'Нові силуети — ... — швидко ставали...')
+    if is_appositive_double_dash(snippet, cur):
         return False
 
-    # 3. Evaluative commentary and non-definitions
+    # 3. Evaluative commentary, superlatives, and non-definitions
     if re.search(
         r"\b(?:один|одна|одне|одні)\s+(?:з|із)\s+най\w+|"
         r"[—–-]\s*(?:це\s+)?(?:один|одна|одне|одні)\s+(?:з|із)\s+най\w+|"
         r"[—–-]\s*(?:це\s+)?якщо\b|"
         r"[—–-]\s*(?:це\s+)?така\s+сама\s+\w+,\s+як\b|"
-        r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)|"
+        r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*|обов'язков\w*|необхідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник|складник)|"
         r"[—–-]\s*(?:це\s+)?(?:ефективн\w*|унікальн\w*|чудов\w*|важлив\w*|цікав\w*|зручн\w*|найкращ\w*|найважливіш\w*|головн\w*)\b|"
-        r"\b(?:найважливішим\s+досягненням|найважливішою\s+сировиною|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
+        r"[—–-]\s*(?:це\s+)?(?:усе\s+те,\s*звідки|результат|можливість|шанс|нагода|розмаїття|ті\s+самі\s+гроші|школа,\s*клас|єдина\s+природна\s+зона)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:дуже|вкрай|надзвичайно)\s+[а-яіїєґ]+|"
+        r"[—–-]\s*(?:це\s*)?,?\s*(?:наприклад|зокрема)\b|"
+        r"\b(?:ви\s+будете|ви\s+дізнаєтеся|ми\s+розглянемо|ви\s+навчитеся)\b|"
+        r"\b(?:найважливішим\s+досягненням|найважливішою\s+сировиною|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b|"
+        r"\b(?:про\s+як\w*\s+(?:часто\s+)?згадують|нічого\s+принципово\s+нового|що\s+вважаєте\s+за\s+потрібне|є\s+різними\s+й\s+залежать|є\s+основами\s+свободи|дитячою\s+конституцією|як-от:)\b|"
+        r"^[^—–-]+є\s+різновидом\s+[а-яіїєґ\s'-]+\.?$",
         snippet,
         re.IGNORECASE,
     ):
         return False
 
-    # Negative assertions & rhetorical negation (e.g. 'Харчові добавки не є ліками', 'Культура — це не лише...', 'Криптовалюти — це ще не кінець...')
+    # Negative assertions, rhetorical negation, and contrastive copulas
     if re.search(
         r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b|"
-        r"[—–-]\s*(?:це\s+)?(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не|не\s+кінець)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:не\b|ще\s+не|теж\b|також\b|лише\b|тільки\b|просто\b)|"
         r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
         snippet,
         re.IGNORECASE,
     ):
+        return False
+    if re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", snippet, re.IGNORECASE) or re.search(r"[—–-]\s*[^,.:;]+,\s*(?:однак|проте|але)\b", snippet, re.IGNORECASE):
         return False
 
     # 4. Narrative / biography
@@ -1733,7 +1779,7 @@ def is_definitional_for_concept(
     ):
         return False
     if re.match(
-        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*)\b",
+        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|особлив\w*|цікав\w*|важлив\w*)\b",
         concept,
         re.IGNORECASE,
     ):
@@ -2185,7 +2231,7 @@ def clean_and_validate_candidate(cand: str, cur_ves: sqlite3.Cursor | None = Non
     if re.match(
         r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b|"
         r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*)\b|"
-        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*)\b|"
+        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|особлив\w*|цікав\w*|важлив\w*)\b|"
         r"^(?:виділення\s+окремих|окремі\s+елементи|окремий\s+|окремі\s+|крапка\s+в\s+центрі)\b",
         c,
         re.IGNORECASE,
@@ -3222,6 +3268,7 @@ def generate_evaluation_benchmark(
     idx = 1
 
     seen_concept_chunks: set[tuple[str, str]] = set()
+    seen_normalized_snippets: set[str] = set()
     candidate_chunks: list[TextbookChunk] = []
     max_len = max(len(all_stem_chunks), len(all_hum_chunks))
     for i in range(max_len):
@@ -3238,6 +3285,12 @@ def generate_evaluation_benchmark(
         concept = chunk.concept or extract_key_concept(chunk)
         if not concept:
             continue
+        snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
+        if not snippet:
+            continue
+        norm_snip = re.sub(r"\s+", " ", snippet.strip().lower())
+        if norm_snip in seen_normalized_snippets:
+            continue
         key = (concept.lower(), chunk.chunk_id)
         if key in seen_concept_chunks:
             continue
@@ -3245,6 +3298,7 @@ def generate_evaluation_benchmark(
         validator.validate(rec)
         records.append(rec)
         seen_concept_chunks.add(key)
+        seen_normalized_snippets.add(norm_snip)
         subj_dist[rec["subject"]] += 1
         domain_dist[rec["track_domain"]] += 1
         idx += 1
@@ -3255,10 +3309,11 @@ def generate_evaluation_benchmark(
     print(
         f"[EVAL BENCHMARK] Total cases: {len(records)} | Unique queries: {len(unique_queries)} | "
         f"Unique chunks: {len(unique_chunks)} | Unique concepts: {len(unique_concepts)} | "
-        f"Duplicates: {len(records) - len(seen_concept_chunks)}"
+        f"Unique snippets: {len(seen_normalized_snippets)}"
     )
     assert len(unique_queries) == len(records), f"Duplicate queries detected: {len(records) - len(unique_queries)}"
     assert len(seen_concept_chunks) == len(records), "Duplicate (concept, chunk_id) detected in eval benchmark"
+    assert len(seen_normalized_snippets) == len(records), f"Duplicate snippets detected: {len(records) - len(seen_normalized_snippets)}"
 
     actual_shards_count = max(1, min(shards_count, 5))
     cases_per_shard = len(records) // actual_shards_count

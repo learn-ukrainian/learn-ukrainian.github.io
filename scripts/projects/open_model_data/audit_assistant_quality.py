@@ -274,7 +274,7 @@ def audit_citation_form(concept: str, cur: sqlite3.Cursor) -> bool:
         r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b|"
         r"^(?:най|якнай|щонай)\w+|"
         r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*)\b|"
-        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*)\b|"
+        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|особлив\w*|цікав\w*|важлив\w*)\b|"
         r"^(?:перш\w*|друг\w*|трет\w*|четверт\w*|п['ʼ’]?ят\w*|шост\w*|сьом\w*|восьм\w*|дев['ʼ’]?ят\w*|десят\w*|наступн\w*|останн\w*)\b|"
         r"^(?:якщо|коли|та|і|й|або|чи)\b",
         c,
@@ -458,6 +458,31 @@ def get_phrase_std_lemmas(phrase: str, cur: sqlite3.Cursor) -> set[str]:
     return res
 
 
+def is_appositive_double_dash(snippet: str, cur: sqlite3.Cursor) -> bool:
+    """Check if the snippet has an appositive clause before a finite verb: Subject — Apposition — [adv*] Verb ..."""
+    m = re.search(r"^[«„“\"'\s]*([А-ЯІЇЄҐ][^—–-]{1,60})\s+[—–-]\s+([^—–-]{2,140})\s+[—–-]\s+(.+)", snippet)
+    if not m:
+        return False
+    rest = m.group(3).strip()
+    words = [w.strip(".,;:?!\"«»„“—–()'") for w in rest.split()[:8]]
+    words = [w.lower() for w in words if len(w) >= 2]
+    for w in words:
+        cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ? OR word_form = ?", (w, w.capitalize()))
+        info = cur.fetchall()
+        is_indicative_verb = any(
+            r[1] == "verb" and any(t in r[2] for t in (":past", ":pres:s:3", ":pres:p:3", ":futr:s:3", ":futr:p:3"))
+            for r in info
+        )
+        if is_indicative_verb:
+            return True
+        is_modifier = any(r[1] in ("adv", "part", "conj") for r in info) or w in (
+            "не", "теж", "також", "вже", "ще", "і", "й", "але", "проте", "однак", "швидко"
+        )
+        if not is_modifier:
+            break
+    return False
+
+
 def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor) -> bool:
     """Audit definitional alignment: defined subject matches concept, no evaluatives or metaphors."""
     s = snippet.strip()
@@ -471,17 +496,19 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
     if re.search(r"^[«„“\"'\s]*(?:але|проте|однак|і|та|й|а)\b", s, re.IGNORECASE):
         return False
 
-    # Negative assertions & rhetorical negation (e.g. 'Харчові добавки не є ліками', 'Культура — це не лише...', 'Криптовалюти — це ще не кінець...')
+    # Negative assertions, rhetorical negation, and contrastive copulas
     if re.search(
         r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b|"
-        r"[—–-]\s*(?:це\s+)?(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не|не\s+кінець)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:не\b|ще\s+не|теж\b|також\b|лише\b|тільки\b|просто\b)|"
         r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
         s,
         re.IGNORECASE,
     ):
         return False
+    if re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", s, re.IGNORECASE):
+        return False
 
-    # Syntax balance, truncation, and exercise fragment check
+    # Syntax balance, truncation, artifacts, and page-number / section splices
     if s.count("(") != s.count(")") or s.count("[") != s.count("]") or s.count("«") != s.count("»"):
         return False
     if re.search(r"\([А-ЯІЇЄҐ]\.?$|\b[А-ЯІЇЄҐ]\.$|\(\s*[А-ЯІЇЄҐ]\s*$", s):
@@ -494,19 +521,30 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         return False
     if re.search(r"\([А-ЯІЇЄҐ][а-яіїєґ]*(?:ськ|ньк|зьк)[а-яіїєґ]*\)", s):
         return False
+    if re.search(r"[!?][.!?]", s):
+        return False
+    if re.search(r"(?:\.|\?|!)\s+\d{1,4}\s+[А-ЯІЇЄҐ]", s):
+        return False
+    if re.search(r"\.\s+[а-яіїєґ][^.!?]*\.\s*$", s):
+        return False
 
-    # Reject metaphors
+    # Quoted proverb or quotation starter (e.g. '„Зміни місце – зміни щастя“ – це єврейське прислів\'я...')
+    if re.match(r"^[«„“\"']{1,2}[^»”\"'\n]+[»”\"'«„“]{1,2}\s+[—–-]", s):
+        return False
+
+    # Reject metaphors and figurative tropes
     if re.search(
         r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b|"
         r"\b(?:важливим\s+кроком|кроком\s+уперед|першим\s+кроком)\b|"
-        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|важливий\s+крок|крок\s+уперед|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для)\b",
+        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|важливий\s+крок|крок\s+уперед|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для|сторінка\s+історії|частинка\s+(?:нашої\s+)?душі|душа|скарбниця|візитна\s+картка|колиска|оплот|центр\s+тяжіння|перша\s+лінія|осередок|окраса|безсмертя|усе\s+одно,\s*що)\b|"
+        r"\b(?:сторінка\s+історії|частинка\s+(?:нашої\s+)?душі|скарбниця|візитна\s+картка|колиска|оплот|центр\s+тяжіння)\b",
         s,
         re.IGNORECASE,
     ):
         return False
 
     # Appositive clause with double dash
-    if re.search(r"^[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45}\s+[—–-]\s+[^—–-]{3,120}\s+[—–-]\s+(?:теж|також|не|вже|ще|і|й|але|проте|[а-яіїєґ]+ть|[а-яіїєґ]+ють|[а-яіїєґ]+є|[а-яіїєґ]+в|[а-яіїєґ]+ла|[а-яіїєґ]+ло|[а-яіїєґ]+ли)\b", s):
+    if is_appositive_double_dash(s, cur):
         return False
 
     # Reject evaluatives and superlatives in definition
@@ -515,12 +553,20 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         r"[—–-]\s*(?:це\s+)?(?:один|одна|одне|одні)\s+(?:з|із)\s+най\w+|"
         r"[—–-]\s*(?:це\s+)?якщо\b|"
         r"[—–-]\s*(?:це\s+)?така\s+сама\s+\w+,\s+як\b|"
-        r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)|"
+        r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*|обов'язков\w*|необхідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник|складник)|"
         r"[—–-]\s*(?:це\s+)?(?:ефективн\w*|унікальн\w*|чудов\w*|важлив\w*|цікав\w*|зручн\w*|найкращ\w*|найважливіш\w*|головн\w*)\b|"
-        r"\b(?:найважливішим\s+досягненням|найважливішою\s+сировиною|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
+        r"[—–-]\s*(?:це\s+)?(?:усе\s+те,\s*звідки|результат|можливість|шанс|нагода|розмаїття|ті\s+самі\s+гроші|школа,\s*клас|єдина\s+природна\s+зона)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:дуже|вкрай|надзвичайно)\s+[а-яіїєґ]+|"
+        r"[—–-]\s*(?:це\s*)?,?\s*(?:наприклад|зокрема)\b|"
+        r"\b(?:ви\s+будете|ви\s+дізнаєтеся|ми\s+розглянемо|ви\s+навчитеся)\b|"
+        r"\b(?:найважливішим\s+досягненням|найважливішою\s+сировиною|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b|"
+        r"\b(?:про\s+як\w*\s+(?:часто\s+)?згадують|нічого\s+принципово\s+нового|що\s+вважаєте\s+за\s+потрібне|є\s+різними\s+й\s+залежать|є\s+основами\s+свободи|дитячою\s+конституцією|як-от:)\b|"
+        r"^[^—–-]+є\s+різновидом\s+[а-яіїєґ\s'-]+\.?$",
         s,
         re.IGNORECASE,
     ):
+        return False
+    if re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", s, re.IGNORECASE) or re.search(r"[—–-]\s*[^,.:;]+,\s*(?:однак|проте|але)\b", s, re.IGNORECASE):
         return False
 
     def _get_std_lemmas(phrase: str) -> set[str]:
@@ -784,7 +830,7 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
             return False
         if not any(c in "аеєиіїоуюя" for c in t_clean):
             return False
-        if t_clean in AUDIT_STOPWORD_TERMS or t_clean.endswith(("е", "є")):
+        if t_clean in AUDIT_STOPWORD_TERMS:
             return False
 
         # Query VESUM for term validity
@@ -836,6 +882,8 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
         "query_framing_mismatch": 0,
         "ellipsis_and_conjunction_starters": 0,
         "rhetorical_and_negated_definitions": 0,
+        "appositive_double_dash_clauses": 0,
+        "page_number_and_artifacts": 0,
     }
 
     all_files = sorted(RELEASE_DIR.glob("eval/eval_shard_*.jsonl")) + sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
@@ -880,14 +928,27 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                     defect_counts["ellipsis_and_conjunction_starters"] += 1
 
                 # Defect: Rhetorical & negated assertions
-                if re.search(
-                    r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b|"
-                    r"[—–-]\s*(?:це\s+)?(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не|не\s+кінець)\b|"
-                    r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
-                    snip,
-                    re.IGNORECASE,
+                if (
+                    re.search(r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b", snip, re.IGNORECASE)
+                    or re.search(r"[—–-]\s*(?:це\s+)?(?:не\b|ще\s+не|теж\b|також\b|лише\b|тільки\b|просто\b)", snip, re.IGNORECASE)
+                    or re.search(r"[—–-]\s*це\s+[^,.:;]+,\s*але\b", snip, re.IGNORECASE)
+                    or re.search(r"[—–-]\s*[^,.:;]+,\s*(?:однак|проте|але)\b", snip, re.IGNORECASE)
+                    or re.search(r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b", snip, re.IGNORECASE)
                 ):
                     defect_counts["rhetorical_and_negated_definitions"] += 1
+
+                # Defect: Appositive double dash clauses
+                if is_appositive_double_dash(snip, cur):
+                    defect_counts["appositive_double_dash_clauses"] += 1
+
+                # Defect: Page number splices & punctuation artifacts
+                if (
+                    re.search(r"(?:\.|\?|!)\s+\d{1,4}\s+[А-ЯІЇЄҐ]", snip)
+                    or re.search(r"\.\s+[а-яіїєґ][^.!?]*\.\s*$", snip)
+                    or re.search(r"[!?][.!?]", snip)
+                    or re.match(r"^[«„“\"']{1,2}[^»”\"'\n]+[»”\"'«„“]{1,2}\s+[—–-]", snip)
+                ):
+                    defect_counts["page_number_and_artifacts"] += 1
 
                 # Defect 2: Inverted definitions
                 m_naz = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snip)
@@ -974,7 +1035,7 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                 # Defect 7: Descriptive non-concepts
                 if (
                     re.match(r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b", concept, re.IGNORECASE)
-                    or re.match(r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|окрем\w*)\b", concept, re.IGNORECASE)
+                    or re.match(r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|окрем\w*|особлив\w*|цікав\w*|важлив\w*)\b", concept, re.IGNORECASE)
                     or concept.lower() in ("виділення окремих", "окремі елементи", "крапка в центрі", "волосся")
                 ):
                     defect_counts["descriptive_non_concepts"] += 1
@@ -982,12 +1043,18 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                 # Defect 8: Metaphors and evaluatives
                 if re.search(
                     r"\b(?:важливим\s+кроком|кроком\s+уперед|першим\s+кроком)\b|"
-                    r"[—–-]\s*(?:це\s+)?(?:символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|перший\s+крок|важливий\s+крок|крок\s+уперед|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для)\b",
+                    r"[—–-]\s*(?:це\s+)?(?:символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|перший\s+крок|важливий\s+крок|крок\s+уперед|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для|сторінка\s+історії|частинка\s+(?:нашої\s+)?душі|душа|скарбниця|візитна\s+картка|колиска|оплот|центр\s+тяжіння|перша\s+лінія|осередок|окраса|безсмертя|усе\s+одно,\s*що)\b|"
+                    r"[—–-]\s*(?:це\s+)?(?:результат|можливість|шанс|нагода|розмаїття|ті\s+самі\s+гроші|школа,\s*клас|єдина\s+природна\s+зона)\b|"
+                    r"[—–-]\s*(?:це\s+)?(?:дуже|вкрай|надзвичайно)\s+[а-яіїєґ]+|"
+                    r"[—–-]\s*(?:це\s*)?,?\s*(?:наприклад|зокрема)\b|"
+                    r"\b(?:ви\s+будете|ви\s+дізнаєтеся|ми\s+розглянемо|ви\s+навчитеся)\b|"
+                    r"\b(?:про\s+як\w*\s+(?:часто\s+)?згадують|нічого\s+принципово\s+нового|що\s+вважаєте\s+за\s+потрібне|є\s+різними\s+й\s+залежать|є\s+основами\s+свободи|дитячою\s+конституцією|як-от:)\b|"
+                    r"^[^—–-]+є\s+різновидом\s+[а-яіїєґ\s'-]+\.?$",
                     snip,
                     re.IGNORECASE,
                 ):
                     defect_counts["metaphors_and_evaluatives"] += 1
-                if re.search(r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)", snip, re.IGNORECASE):
+                if re.search(r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*|обов'язков\w*|необхідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник|складник)", snip, re.IGNORECASE):
                     defect_counts["metaphors_and_evaluatives"] += 1
 
                 # Defect 9: Query framing mismatch

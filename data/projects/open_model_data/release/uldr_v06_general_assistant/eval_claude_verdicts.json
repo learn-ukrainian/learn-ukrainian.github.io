@@ -1,0 +1,997 @@
+{
+  "eval_textbook_asst_00000001": {
+    "eval_id": "eval_textbook_asst_00000001",
+    "verdict": "YES",
+    "reason": "Genus (вартість одиниці товару) + clarifying examples of units; genuine definition."
+  },
+  "eval_textbook_asst_00000002": {
+    "eval_id": "eval_textbook_asst_00000002",
+    "verdict": "YES",
+    "reason": "Defines frontier via genus (територія на межі) + differentia (перехідна зона, взаємодія культур)."
+  },
+  "eval_textbook_asst_00000003": {
+    "eval_id": "eval_textbook_asst_00000003",
+    "verdict": "YES",
+    "reason": "Copula definition stating what order of operations is and its purpose."
+  },
+  "eval_textbook_asst_00000004": {
+    "eval_id": "eval_textbook_asst_00000004",
+    "verdict": "YES",
+    "reason": "Defines the historical labor obligation with genus + differentia."
+  },
+  "eval_textbook_asst_00000005": {
+    "eval_id": "eval_textbook_asst_00000005",
+    "verdict": "YES",
+    "reason": "Standard math definition: equivalence condition (same solution set) for inequalities."
+  },
+  "eval_textbook_asst_00000006": {
+    "eval_id": "eval_textbook_asst_00000006",
+    "verdict": "YES",
+    "reason": "Classifies Renaissance as an art style with a specific time frame; genus + differentia."
+  },
+  "eval_textbook_asst_00000007": {
+    "eval_id": "eval_textbook_asst_00000007",
+    "verdict": "YES",
+    "reason": "Defines flow capacity as mass of water per unit time through cross-section."
+  },
+  "eval_textbook_asst_00000008": {
+    "eval_id": "eval_textbook_asst_00000008",
+    "verdict": "YES",
+    "reason": "Explains what a Cossack rada is (assembly for deciding matters); genuine definition."
+  },
+  "eval_textbook_asst_00000009": {
+    "eval_id": "eval_textbook_asst_00000009",
+    "verdict": "YES",
+    "reason": "Formal geometric definition via equal moduli and same direction."
+  },
+  "eval_textbook_asst_0000000a": {
+    "eval_id": "eval_textbook_asst_0000000a",
+    "verdict": "YES",
+    "reason": "Defines the General Council as the highest representative authority body."
+  },
+  "eval_textbook_asst_0000000b": {
+    "eval_id": "eval_textbook_asst_0000000b",
+    "verdict": "YES",
+    "reason": "Formal geometric definition via equal moduli and opposite direction."
+  },
+  "eval_textbook_asst_0000000c": {
+    "eval_id": "eval_textbook_asst_0000000c",
+    "verdict": "YES",
+    "reason": "Explains essential nature of revolution (radical change in power/society) plus generalized sense."
+  },
+  "eval_textbook_asst_0000000d": {
+    "eval_id": "eval_textbook_asst_0000000d",
+    "verdict": "YES",
+    "reason": "Formal geometric definition via existence of an isometry mapping one figure to the other."
+  },
+  "eval_textbook_asst_0000000e": {
+    "eval_id": "eval_textbook_asst_0000000e",
+    "verdict": "YES",
+    "reason": "Defines secularization as transfer of church property to secular ownership."
+  },
+  "eval_textbook_asst_0000000f": {
+    "eval_id": "eval_textbook_asst_0000000f",
+    "verdict": "YES",
+    "reason": "Defines mercantilism as an economic policy with stated aim of state wealth accumulation."
+  },
+  "eval_textbook_asst_00000010": {
+    "eval_id": "eval_textbook_asst_00000010",
+    "verdict": "YES",
+    "reason": "Defines a block as a simple machine (wheel with groove) with stated function."
+  },
+  "eval_textbook_asst_00000011": {
+    "eval_id": "eval_textbook_asst_00000011",
+    "verdict": "YES",
+    "reason": "Defines colonialism via genus (subjugation) + differentia (purpose: resource/labor exploitation, assimilation, control)."
+  },
+  "eval_textbook_asst_00000012": {
+    "eval_id": "eval_textbook_asst_00000012",
+    "verdict": "YES",
+    "reason": "Physics definition with formula (½mv²) included."
+  },
+  "eval_textbook_asst_00000013": {
+    "eval_id": "eval_textbook_asst_00000013",
+    "verdict": "YES",
+    "reason": "Defines encyclopedia as a scholarly reference work organized alphabetically/thematically."
+  },
+  "eval_textbook_asst_00000014": {
+    "eval_id": "eval_textbook_asst_00000014",
+    "verdict": "YES",
+    "reason": "Defines mechanical energy as a physical quantity measuring motion and interaction."
+  },
+  "eval_textbook_asst_00000015": {
+    "eval_id": "eval_textbook_asst_00000015",
+    "verdict": "YES",
+    "reason": "Classifies Baroque as a dominant art style with defined time span."
+  },
+  "eval_textbook_asst_00000016": {
+    "eval_id": "eval_textbook_asst_00000016",
+    "verdict": "YES",
+    "reason": "Defines viscosity as the property of fluids resisting layer displacement."
+  },
+  "eval_textbook_asst_00000017": {
+    "eval_id": "eval_textbook_asst_00000017",
+    "verdict": "YES",
+    "reason": "Defines agrarian revolution as agricultural reform aimed at increased marketability/profitability."
+  },
+  "eval_textbook_asst_00000018": {
+    "eval_id": "eval_textbook_asst_00000018",
+    "verdict": "YES",
+    "reason": "Defines melting as the process of solid-to-liquid transition."
+  },
+  "eval_textbook_asst_00000019": {
+    "eval_id": "eval_textbook_asst_00000019",
+    "verdict": "YES",
+    "reason": "Defines melting point as the temperature at which a solid crystalline substance melts."
+  },
+  "eval_textbook_asst_0000001a": {
+    "eval_id": "eval_textbook_asst_0000001a",
+    "verdict": "YES",
+    "reason": "Defines parliamentary monarchy via limitation of monarch's power by parliament."
+  },
+  "eval_textbook_asst_0000001b": {
+    "eval_id": "eval_textbook_asst_0000001b",
+    "verdict": "YES",
+    "reason": "Defines electric field as a form of matter existing around charged bodies with stated effect."
+  },
+  "eval_textbook_asst_0000001c": {
+    "eval_id": "eval_textbook_asst_0000001c",
+    "verdict": "YES",
+    "reason": "Defines rheostat as a variable-resistance device with stated function."
+  },
+  "eval_textbook_asst_0000001d": {
+    "eval_id": "eval_textbook_asst_0000001d",
+    "verdict": "YES",
+    "reason": "Defines society as an organized set of people united by social relations at a historical stage."
+  },
+  "eval_textbook_asst_0000001e": {
+    "eval_id": "eval_textbook_asst_0000001e",
+    "verdict": "YES",
+    "reason": "Defines electricity meter as a device for direct measurement of current's work."
+  },
+  "eval_textbook_asst_0000001f": {
+    "eval_id": "eval_textbook_asst_0000001f",
+    "verdict": "YES",
+    "reason": "Defines mononorms via genus (rules of behavior) + differentia (customary character, encoding beneficial models)."
+  },
+  "eval_textbook_asst_00000020": {
+    "eval_id": "eval_textbook_asst_00000020",
+    "verdict": "YES",
+    "reason": "Explains why electron charge is called elementary (smallest known, used as unit) — genuine explanatory definition."
+  },
+  "eval_textbook_asst_00000021": {
+    "eval_id": "eval_textbook_asst_00000021",
+    "verdict": "YES",
+    "reason": "Fuller variant defining society with genus + differentia (self-sufficient system based on relations for personal needs)."
+  },
+  "eval_textbook_asst_00000022": {
+    "eval_id": "eval_textbook_asst_00000022",
+    "verdict": "YES",
+    "reason": "Defines the state as the organization of political power maintaining societal integrity."
+  },
+  "eval_textbook_asst_00000023": {
+    "eval_id": "eval_textbook_asst_00000023",
+    "verdict": "YES",
+    "reason": "Defines isotopes as different nuclides of the same chemical element."
+  },
+  "eval_textbook_asst_00000024": {
+    "eval_id": "eval_textbook_asst_00000024",
+    "verdict": "YES",
+    "reason": "Defines orbital via probability region (>90%) for electron location."
+  },
+  "eval_textbook_asst_00000025": {
+    "eval_id": "eval_textbook_asst_00000025",
+    "verdict": "YES",
+    "reason": "Defines sovereignty as a politico-legal property enabling independent decision-making."
+  },
+  "eval_textbook_asst_00000026": {
+    "eval_id": "eval_textbook_asst_00000026",
+    "verdict": "YES",
+    "reason": "Defines a family of chemical elements as a group sharing similar properties."
+  },
+  "eval_textbook_asst_00000027": {
+    "eval_id": "eval_textbook_asst_00000027",
+    "verdict": "YES",
+    "reason": "Defines form of state via organization of structure and mode of exercising power."
+  },
+  "eval_textbook_asst_00000028": {
+    "eval_id": "eval_textbook_asst_00000028",
+    "verdict": "YES",
+    "reason": "Defines chemical bond as atomic interaction causing stability of multi-atomic particles."
+  },
+  "eval_textbook_asst_00000029": {
+    "eval_id": "eval_textbook_asst_00000029",
+    "verdict": "YES",
+    "reason": "Defines absolute monarchy via unlimited monarchical power over all branches of government."
+  },
+  "eval_textbook_asst_0000002a": {
+    "eval_id": "eval_textbook_asst_0000002a",
+    "verdict": "YES",
+    "reason": "Defines electrolysis as decomposition of substances under electric current."
+  },
+  "eval_textbook_asst_0000002b": {
+    "eval_id": "eval_textbook_asst_0000002b",
+    "verdict": "YES",
+    "reason": "Genus (форма державного правління) + differentia (влада монарха обмежена парламентом/конституцією)."
+  },
+  "eval_textbook_asst_0000002c": {
+    "eval_id": "eval_textbook_asst_0000002c",
+    "verdict": "YES",
+    "reason": "Genus (складник організму) + full set of differentiae (форма, будова, тканини, функції)."
+  },
+  "eval_textbook_asst_0000002d": {
+    "eval_id": "eval_textbook_asst_0000002d",
+    "verdict": "YES",
+    "reason": "Genus (форма державного правління) + differentia (широкі повноваження президента)."
+  },
+  "eval_textbook_asst_0000002e": {
+    "eval_id": "eval_textbook_asst_0000002e",
+    "verdict": "YES",
+    "reason": "Genus (циліндричний тяж) + measurable/positional differentia."
+  },
+  "eval_textbook_asst_0000002f": {
+    "eval_id": "eval_textbook_asst_0000002f",
+    "verdict": "YES",
+    "reason": "Genus (елемент форми держави) + differentia (територіальний поділ, співвідношення частин)."
+  },
+  "eval_textbook_asst_00000030": {
+    "eval_id": "eval_textbook_asst_00000030",
+    "verdict": "YES",
+    "reason": "Genus (сукупність галузей знань) + differentia (вивчення нервової системи, лікування)."
+  },
+  "eval_textbook_asst_00000031": {
+    "eval_id": "eval_textbook_asst_00000031",
+    "verdict": "YES",
+    "reason": "Genus (держава) + differentia (складається з відокремлених утворень із самостійністю)."
+  },
+  "eval_textbook_asst_00000032": {
+    "eval_id": "eval_textbook_asst_00000032",
+    "verdict": "YES",
+    "reason": "Naming-definition pattern ('X називають Y') with substantive physiological differentia (oxygen saturation)."
+  },
+  "eval_textbook_asst_00000033": {
+    "eval_id": "eval_textbook_asst_00000033",
+    "verdict": "YES",
+    "reason": "Genus (форма організації суспільно-політичного життя) + differentia (рівноправність, виборність, воля більшості)."
+  },
+  "eval_textbook_asst_00000034": {
+    "eval_id": "eval_textbook_asst_00000034",
+    "verdict": "YES",
+    "reason": "Genus (показник) + differentia (свідчить про ритмічність і силу серцевих скорочень)."
+  },
+  "eval_textbook_asst_00000035": {
+    "eval_id": "eval_textbook_asst_00000035",
+    "verdict": "YES",
+    "reason": "Genus (загальні правила поведінки) + differentia (регулюють відносини в суспільстві)."
+  },
+  "eval_textbook_asst_00000036": {
+    "eval_id": "eval_textbook_asst_00000036",
+    "verdict": "YES",
+    "reason": "Genus (зроговілі пластинки) + descriptive/positional differentia."
+  },
+  "eval_textbook_asst_00000037": {
+    "eval_id": "eval_textbook_asst_00000037",
+    "verdict": "YES",
+    "reason": "Genus (система норм) elaborated via 'тобто' clause specifying interconnection and hierarchical subordination."
+  },
+  "eval_textbook_asst_00000038": {
+    "eval_id": "eval_textbook_asst_00000038",
+    "verdict": "YES",
+    "reason": "Naming-definition pattern ('X називають Y') with clear anatomical-location differentia."
+  },
+  "eval_textbook_asst_00000039": {
+    "eval_id": "eval_textbook_asst_00000039",
+    "verdict": "YES",
+    "reason": "Genus (загальне правило поведінки) + differentia (прийняте органом держави, обов'язкова сила, відповідальність)."
+  },
+  "eval_textbook_asst_0000003a": {
+    "eval_id": "eval_textbook_asst_0000003a",
+    "verdict": "YES",
+    "reason": "Genus (набуті реакції) + differentia (набуті протягом життя, реакція на чинники)."
+  },
+  "eval_textbook_asst_0000003b": {
+    "eval_id": "eval_textbook_asst_0000003b",
+    "verdict": "YES",
+    "reason": "Genus (внутрішнє відображення) + multi-part differentia (усвідомлення себе, розуміння закономірностей)."
+  },
+  "eval_textbook_asst_0000003c": {
+    "eval_id": "eval_textbook_asst_0000003c",
+    "verdict": "YES",
+    "reason": "Genus (суспільні відносини) + differentia (виникають на основі норм права, суб'єктивні права/обов'язки)."
+  },
+  "eval_textbook_asst_0000003d": {
+    "eval_id": "eval_textbook_asst_0000003d",
+    "verdict": "YES",
+    "reason": "Naming-definition ('X називають Y') identifying droblennya as the first stage of embryonic development."
+  },
+  "eval_textbook_asst_0000003e": {
+    "eval_id": "eval_textbook_asst_0000003e",
+    "verdict": "YES",
+    "reason": "Enumerative genus+differentia defining who qualifies as a legal-relations subject."
+  },
+  "eval_textbook_asst_0000003f": {
+    "eval_id": "eval_textbook_asst_0000003f",
+    "verdict": "YES",
+    "reason": "Genus (комп'ютер) + differentia (забезпечує роботу е-пошти через спеціальне ПЗ)."
+  },
+  "eval_textbook_asst_00000040": {
+    "eval_id": "eval_textbook_asst_00000040",
+    "verdict": "YES",
+    "reason": "Genus (поведінка) + differentia (відповідає правовим нормам, охороняється державою)."
+  },
+  "eval_textbook_asst_00000041": {
+    "eval_id": "eval_textbook_asst_00000041",
+    "verdict": "YES",
+    "reason": "Genus (сервіси) + differentia (постійний доступ до віддалених ресурсів)."
+  },
+  "eval_textbook_asst_00000042": {
+    "eval_id": "eval_textbook_asst_00000042",
+    "verdict": "YES",
+    "reason": "Genus (протиправна винна дія/бездіяльність) + differentia (порушує норми, тягне відповідальність)."
+  },
+  "eval_textbook_asst_00000043": {
+    "eval_id": "eval_textbook_asst_00000043",
+    "verdict": "YES",
+    "reason": "Genus (зображення на тлі) + differentia (прокручується під час анімації)."
+  },
+  "eval_textbook_asst_00000044": {
+    "eval_id": "eval_textbook_asst_00000044",
+    "verdict": "YES",
+    "reason": "Genus (сукупність ознак) + differentia (об'єктивні/суб'єктивні ознаки, відповідальність)."
+  },
+  "eval_textbook_asst_00000045": {
+    "eval_id": "eval_textbook_asst_00000045",
+    "verdict": "YES",
+    "reason": "Genus (спосіб створення анімації) + differentia (художник малює кожен кадр)."
+  },
+  "eval_textbook_asst_00000046": {
+    "eval_id": "eval_textbook_asst_00000046",
+    "verdict": "YES",
+    "reason": "Genus (акт поведінки) + differentia (активна дія чи пасивна бездіяльність)."
+  },
+  "eval_textbook_asst_00000047": {
+    "eval_id": "eval_textbook_asst_00000047",
+    "verdict": "YES",
+    "reason": "Genus (програма/комплекс програм) + differentia (реалізує алгоритм функціонування об'єкта)."
+  },
+  "eval_textbook_asst_00000048": {
+    "eval_id": "eval_textbook_asst_00000048",
+    "verdict": "YES",
+    "reason": "Genus (повторення текстового фрагмента) + differentia (задана кількість разів)."
+  },
+  "eval_textbook_asst_00000049": {
+    "eval_id": "eval_textbook_asst_00000049",
+    "verdict": "YES",
+    "reason": "Genus (застосування заходів примусу) + differentia (до винної особи за правопорушення)."
+  },
+  "eval_textbook_asst_0000004a": {
+    "eval_id": "eval_textbook_asst_0000004a",
+    "verdict": "YES",
+    "reason": "Genus (проміжок часу) + precise astronomical differentia."
+  },
+  "eval_textbook_asst_0000004b": {
+    "eval_id": "eval_textbook_asst_0000004b",
+    "verdict": "YES",
+    "reason": "Genus (картографічне зображення) + differentia (на основі цифрових даних, візуалізоване на екрані)."
+  },
+  "eval_textbook_asst_0000004c": {
+    "eval_id": "eval_textbook_asst_0000004c",
+    "verdict": "YES",
+    "reason": "Genus (акт) + differentia (видається на підставі закону для конкретизації норм)."
+  },
+  "eval_textbook_asst_0000004d": {
+    "eval_id": "eval_textbook_asst_0000004d",
+    "verdict": "YES",
+    "reason": "Genus (карта) + differentia (пошарове оцифровування географічної інформації)."
+  },
+  "eval_textbook_asst_0000004e": {
+    "eval_id": "eval_textbook_asst_0000004e",
+    "verdict": "YES",
+    "reason": "Genus (діяльність) + differentia (упорядкування, узгодженість через нові документи/збірники)."
+  },
+  "eval_textbook_asst_0000004f": {
+    "eval_id": "eval_textbook_asst_0000004f",
+    "verdict": "YES",
+    "reason": "Genus (система координат) + precise technical differentia (осі X/Y визначення)."
+  },
+  "eval_textbook_asst_00000050": {
+    "eval_id": "eval_textbook_asst_00000050",
+    "verdict": "YES",
+    "reason": "Genus (власні можливості) + differentia (щодо захисту прав, свобод, інтересів)."
+  },
+  "eval_textbook_asst_00000051": {
+    "eval_id": "eval_textbook_asst_00000051",
+    "verdict": "YES",
+    "reason": "Genus (підрозділ геохронологічної шкали) + differentia (відповідає часу утворення порід)."
+  },
+  "eval_textbook_asst_00000052": {
+    "eval_id": "eval_textbook_asst_00000052",
+    "verdict": "YES",
+    "reason": "Genus (державно-правові заходи) + differentia (забезпечують здійснення/охорону прав)."
+  },
+  "eval_textbook_asst_00000053": {
+    "eval_id": "eval_textbook_asst_00000053",
+    "verdict": "YES",
+    "reason": "Genus (перехідна зона) + differentia (між повітряними масами, нахил до поверхні)."
+  },
+  "eval_textbook_asst_00000054": {
+    "eval_id": "eval_textbook_asst_00000054",
+    "verdict": "YES",
+    "reason": "Genus (особливий правовий режим) + differentia (умови запровадження — надзвичайні ситуації, захоплення влади)."
+  },
+  "eval_textbook_asst_00000055": {
+    "eval_id": "eval_textbook_asst_00000055",
+    "verdict": "YES",
+    "reason": "Genus+differentia ratio definition (precipitation vs evaporation)."
+  },
+  "eval_textbook_asst_00000056": {
+    "eval_id": "eval_textbook_asst_00000056",
+    "verdict": "YES",
+    "reason": "Standard legal definition of refugee status."
+  },
+  "eval_textbook_asst_00000057": {
+    "eval_id": "eval_textbook_asst_00000057",
+    "verdict": "YES",
+    "reason": "Scientific definition of ice formation conditions."
+  },
+  "eval_textbook_asst_00000058": {
+    "eval_id": "eval_textbook_asst_00000058",
+    "verdict": "YES",
+    "reason": "Genus (possibilities) + differentia (necessary for existence/development); standard legal-studies definition."
+  },
+  "eval_textbook_asst_00000059": {
+    "eval_id": "eval_textbook_asst_00000059",
+    "verdict": "YES",
+    "reason": "Full scientific definition with causal consequence clause."
+  },
+  "eval_textbook_asst_0000005a": {
+    "eval_id": "eval_textbook_asst_0000005a",
+    "verdict": "YES",
+    "reason": "Genus (посадова особа) + differentia (functions of a judge)."
+  },
+  "eval_textbook_asst_0000005b": {
+    "eval_id": "eval_textbook_asst_0000005b",
+    "verdict": "YES",
+    "reason": "Defines the term with clarifying apposition, not circular or rhetorical."
+  },
+  "eval_textbook_asst_0000005c": {
+    "eval_id": "eval_textbook_asst_0000005c",
+    "verdict": "YES",
+    "reason": "Minimal but valid genus+differentia legal definition."
+  },
+  "eval_textbook_asst_0000005d": {
+    "eval_id": "eval_textbook_asst_0000005d",
+    "verdict": "YES",
+    "reason": "Defines the trait itself (genus: особливість організму; differentia: adaptation difficulty)."
+  },
+  "eval_textbook_asst_0000005e": {
+    "eval_id": "eval_textbook_asst_0000005e",
+    "verdict": "YES",
+    "reason": "Standard legal definition of a claim/suit."
+  },
+  "eval_textbook_asst_0000005f": {
+    "eval_id": "eval_textbook_asst_0000005f",
+    "verdict": "YES",
+    "reason": "Geological definition with depth and structural details."
+  },
+  "eval_textbook_asst_00000060": {
+    "eval_id": "eval_textbook_asst_00000060",
+    "verdict": "YES",
+    "reason": "Duplicate valid legal definition of a claim/suit."
+  },
+  "eval_textbook_asst_00000061": {
+    "eval_id": "eval_textbook_asst_00000061",
+    "verdict": "YES",
+    "reason": "Clear structural definition of soil profile."
+  },
+  "eval_textbook_asst_00000062": {
+    "eval_id": "eval_textbook_asst_00000062",
+    "verdict": "YES",
+    "reason": "Standard branch-of-law definition."
+  },
+  "eval_textbook_asst_00000063": {
+    "eval_id": "eval_textbook_asst_00000063",
+    "verdict": "YES",
+    "reason": "Genus (targeted actions) + differentia (improving soil fertility)."
+  },
+  "eval_textbook_asst_00000064": {
+    "eval_id": "eval_textbook_asst_00000064",
+    "verdict": "YES",
+    "reason": "Ecological definition distinguishing agro-phytocenoses from natural ones."
+  },
+  "eval_textbook_asst_00000065": {
+    "eval_id": "eval_textbook_asst_00000065",
+    "verdict": "YES",
+    "reason": "Legal definition of marriage-entry conditions."
+  },
+  "eval_textbook_asst_00000066": {
+    "eval_id": "eval_textbook_asst_00000066",
+    "verdict": "YES",
+    "reason": "Genus (process of adaptation) + differentia (to temperature/climate change)."
+  },
+  "eval_textbook_asst_00000067": {
+    "eval_id": "eval_textbook_asst_00000067",
+    "verdict": "YES",
+    "reason": "Standard legal definition of marriage."
+  },
+  "eval_textbook_asst_00000068": {
+    "eval_id": "eval_textbook_asst_00000068",
+    "verdict": "YES",
+    "reason": "Genus (type of PTK) + differentia (formed by human activity)."
+  },
+  "eval_textbook_asst_00000069": {
+    "eval_id": "eval_textbook_asst_00000069",
+    "verdict": "YES",
+    "reason": "Core definition (concise info on qualifications) stated literally; the 'visitivka' phrase is supplementary elaboration, not the whole definition."
+  },
+  "eval_textbook_asst_0000006a": {
+    "eval_id": "eval_textbook_asst_0000006a",
+    "verdict": "YES",
+    "reason": "Geological definition of a laccolith's formation and shape."
+  },
+  "eval_textbook_asst_0000006b": {
+    "eval_id": "eval_textbook_asst_0000006b",
+    "verdict": "YES",
+    "reason": "Institutional definition with functions listed as differentia."
+  },
+  "eval_textbook_asst_0000006c": {
+    "eval_id": "eval_textbook_asst_0000006c",
+    "verdict": "YES",
+    "reason": "Standard geography-textbook distinction (conditions vs. resources), not a self-undermining concession."
+  },
+  "eval_textbook_asst_0000006d": {
+    "eval_id": "eval_textbook_asst_0000006d",
+    "verdict": "YES",
+    "reason": "Standard branch-of-law definition."
+  },
+  "eval_textbook_asst_0000006e": {
+    "eval_id": "eval_textbook_asst_0000006e",
+    "verdict": "YES",
+    "reason": "Genus (components of nature) + differentia (used economically)."
+  },
+  "eval_textbook_asst_0000006f": {
+    "eval_id": "eval_textbook_asst_0000006f",
+    "verdict": "YES",
+    "reason": "Legal definition with cause and effect components."
+  },
+  "eval_textbook_asst_00000070": {
+    "eval_id": "eval_textbook_asst_00000070",
+    "verdict": "YES",
+    "reason": "Genus (resources) + differentia (depletion through use)."
+  },
+  "eval_textbook_asst_00000071": {
+    "eval_id": "eval_textbook_asst_00000071",
+    "verdict": "YES",
+    "reason": "Genus (set of conditions/factors) + differentia (fuel/energy supply)."
+  },
+  "eval_textbook_asst_00000072": {
+    "eval_id": "eval_textbook_asst_00000072",
+    "verdict": "YES",
+    "reason": "Standard branch-of-law definition (system of norms)."
+  },
+  "eval_textbook_asst_00000073": {
+    "eval_id": "eval_textbook_asst_00000073",
+    "verdict": "YES",
+    "reason": "Genus (aggregate energy) + differentia (from water flow)."
+  },
+  "eval_textbook_asst_00000074": {
+    "eval_id": "eval_textbook_asst_00000074",
+    "verdict": "YES",
+    "reason": "Legal definition via necessary elements (corpus delicti)."
+  },
+  "eval_textbook_asst_00000075": {
+    "eval_id": "eval_textbook_asst_00000075",
+    "verdict": "YES",
+    "reason": "Genus (set of relations) + differentia (spatial/temporal development)."
+  },
+  "eval_textbook_asst_00000076": {
+    "eval_id": "eval_textbook_asst_00000076",
+    "verdict": "YES",
+    "reason": "Genus (punishment) + differentia (state-imposed for a crime); genuine definitional attempt, not rhetorical."
+  },
+  "eval_textbook_asst_00000077": {
+    "eval_id": "eval_textbook_asst_00000077",
+    "verdict": "YES",
+    "reason": "Genus (land fragment) + differentia (claimed by multiple states)."
+  },
+  "eval_textbook_asst_00000078": {
+    "eval_id": "eval_textbook_asst_00000078",
+    "verdict": "YES",
+    "reason": "Genus (human activity) + differentia (acquiring new knowledge)."
+  },
+  "eval_textbook_asst_00000079": {
+    "eval_id": "eval_textbook_asst_00000079",
+    "verdict": "YES",
+    "reason": "Sociological definition of shared societal beliefs/goals."
+  },
+  "eval_textbook_asst_0000007a": {
+    "eval_id": "eval_textbook_asst_0000007a",
+    "verdict": "YES",
+    "reason": "Standard physics definition using 'called' construction in place of copula."
+  },
+  "eval_textbook_asst_0000007b": {
+    "eval_id": "eval_textbook_asst_0000007b",
+    "verdict": "YES",
+    "reason": "Genus (behavior model) + differentia (oriented to a status)."
+  },
+  "eval_textbook_asst_0000007c": {
+    "eval_id": "eval_textbook_asst_0000007c",
+    "verdict": "YES",
+    "reason": "Genus (large sections of lithosphere) + differentia (constantly moving)."
+  },
+  "eval_textbook_asst_0000007d": {
+    "eval_id": "eval_textbook_asst_0000007d",
+    "verdict": "YES",
+    "reason": "Genus (process of assimilation) + differentia (becoming a capable social participant)."
+  },
+  "eval_textbook_asst_0000007e": {
+    "eval_id": "eval_textbook_asst_0000007e",
+    "verdict": "YES",
+    "reason": "Genus (people) + differentia (helping assimilate culture); parenthetical is clarifying, not an example-list substitute for a definition."
+  },
+  "eval_textbook_asst_0000007f": {
+    "eval_id": "eval_textbook_asst_0000007f",
+    "verdict": "YES",
+    "reason": "Genus (індивідуальні особливості) + differentia (визначають схильність до діяльності) — valid definition."
+  },
+  "eval_textbook_asst_00000080": {
+    "eval_id": "eval_textbook_asst_00000080",
+    "verdict": "YES",
+    "reason": "Defines the concept via attitude toward the state plus participation in self-organization forms."
+  },
+  "eval_textbook_asst_00000081": {
+    "eval_id": "eval_textbook_asst_00000081",
+    "verdict": "YES",
+    "reason": "Genus+differentia structure (obligation held by all citizens per law/moral norms), despite mild circularity."
+  },
+  "eval_textbook_asst_00000082": {
+    "eval_id": "eval_textbook_asst_00000082",
+    "verdict": "YES",
+    "reason": "Genus (упередження) with clear differentia describing belief in unseen forces."
+  },
+  "eval_textbook_asst_00000083": {
+    "eval_id": "eval_textbook_asst_00000083",
+    "verdict": "YES",
+    "reason": "Genus (здатність) + differentia describing cross-cultural interaction and respect."
+  },
+  "eval_textbook_asst_00000084": {
+    "eval_id": "eval_textbook_asst_00000084",
+    "verdict": "YES",
+    "reason": "Genus (зіткнення держав) + differentia (mutually exclusive goals) — valid definition."
+  },
+  "eval_textbook_asst_00000085": {
+    "eval_id": "eval_textbook_asst_00000085",
+    "verdict": "YES",
+    "reason": "Genus (війна) + differentia (purpose of expanding sphere of influence)."
+  },
+  "eval_textbook_asst_00000086": {
+    "eval_id": "eval_textbook_asst_00000086",
+    "verdict": "YES",
+    "reason": "Genus (правовий зв'язок) + differentia (mutual rights/duties between person and state)."
+  },
+  "eval_textbook_asst_00000087": {
+    "eval_id": "eval_textbook_asst_00000087",
+    "verdict": "YES",
+    "reason": "Defines via genus (ключові ідеї) + differentia (characterize democracy's essence, enacted under democratic regime)."
+  },
+  "eval_textbook_asst_00000088": {
+    "eval_id": "eval_textbook_asst_00000088",
+    "verdict": "YES",
+    "reason": "Genus (форма прямого голосування) + differentia (citizens decide important issues directly)."
+  },
+  "eval_textbook_asst_00000089": {
+    "eval_id": "eval_textbook_asst_00000089",
+    "verdict": "YES",
+    "reason": "Classic legal genus+differentia definition of law."
+  },
+  "eval_textbook_asst_0000008a": {
+    "eval_id": "eval_textbook_asst_0000008a",
+    "verdict": "YES",
+    "reason": "Classic legal genus+differentia definition of law (alternate phrasing)."
+  },
+  "eval_textbook_asst_0000008b": {
+    "eval_id": "eval_textbook_asst_0000008b",
+    "verdict": "YES",
+    "reason": "Genus (держава) + differentia (rule of law prevails) — valid, if simple, definition."
+  },
+  "eval_textbook_asst_0000008c": {
+    "eval_id": "eval_textbook_asst_0000008c",
+    "verdict": "YES",
+    "reason": "Genus (правовий режим) + differentia (introduced under armed aggression/threat conditions)."
+  },
+  "eval_textbook_asst_0000008d": {
+    "eval_id": "eval_textbook_asst_0000008d",
+    "verdict": "YES",
+    "reason": "Defines via means used (gestures, mimicry, body movement) excluding verbal means."
+  },
+  "eval_textbook_asst_0000008e": {
+    "eval_id": "eval_textbook_asst_0000008e",
+    "verdict": "YES",
+    "reason": "Genus (право людини) + differentia (expressing views orally/in writing, via media)."
+  },
+  "eval_textbook_asst_0000008f": {
+    "eval_id": "eval_textbook_asst_0000008f",
+    "verdict": "YES",
+    "reason": "Genus (приховане програмування) + differentia (of thoughts, intentions, feelings, attitudes)."
+  },
+  "eval_textbook_asst_00000090": {
+    "eval_id": "eval_textbook_asst_00000090",
+    "verdict": "YES",
+    "reason": "Genus (сукупність знань, умінь і навичок) + differentia (understanding/analyzing/evaluating media)."
+  },
+  "eval_textbook_asst_00000091": {
+    "eval_id": "eval_textbook_asst_00000091",
+    "verdict": "YES",
+    "reason": "Genus (рух товарів) + differentia (from one owner to another) — valid economic definition."
+  },
+  "eval_textbook_asst_00000092": {
+    "eval_id": "eval_textbook_asst_00000092",
+    "verdict": "YES",
+    "reason": "Genus (засіб) + differentia (used to satisfy needs) — valid economic definition."
+  },
+  "eval_textbook_asst_00000093": {
+    "eval_id": "eval_textbook_asst_00000093",
+    "verdict": "YES",
+    "reason": "Genus (ринкова ситуація) + differentia (few firms dominate the industry) — valid, despite 'називають' phrasing."
+  },
+  "eval_textbook_asst_00000094": {
+    "eval_id": "eval_textbook_asst_00000094",
+    "verdict": "YES",
+    "reason": "Genus (державна допомога) + differentia (for families unable to afford utilities)."
+  },
+  "eval_textbook_asst_00000095": {
+    "eval_id": "eval_textbook_asst_00000095",
+    "verdict": "YES",
+    "reason": "Genus (вірш) + differentia (no rhyme, variable line length/stress count)."
+  },
+  "eval_textbook_asst_00000096": {
+    "eval_id": "eval_textbook_asst_00000096",
+    "verdict": "YES",
+    "reason": "Genus (спосіб комунікації) + differentia (uses symbols/drawings to convey a message)."
+  },
+  "eval_textbook_asst_00000097": {
+    "eval_id": "eval_textbook_asst_00000097",
+    "verdict": "YES",
+    "reason": "Genus (штучні водойми) + differentia (created for water accumulation and year-round use)."
+  },
+  "eval_textbook_asst_00000098": {
+    "eval_id": "eval_textbook_asst_00000098",
+    "verdict": "YES",
+    "reason": "Genus (словесне зображення) + differentia (of basic features of a place); examples merely scope the subject type."
+  },
+  "eval_textbook_asst_00000099": {
+    "eval_id": "eval_textbook_asst_00000099",
+    "verdict": "YES",
+    "reason": "Genus (художньо-публіцистичний твір) + differentia (political, exposes negative social phenomena)."
+  },
+  "eval_textbook_asst_0000009a": {
+    "eval_id": "eval_textbook_asst_0000009a",
+    "verdict": "YES",
+    "reason": "Genus (наймання суден) + differentia (for cargo transport) — concise valid definition."
+  },
+  "eval_textbook_asst_0000009b": {
+    "eval_id": "eval_textbook_asst_0000009b",
+    "verdict": "YES",
+    "reason": "Genus (літературний прийом) + differentia (introduces ethnographic elements into a work)."
+  },
+  "eval_textbook_asst_0000009c": {
+    "eval_id": "eval_textbook_asst_0000009c",
+    "verdict": "YES",
+    "reason": "Genus (твори різних жанрів) + differentia (legendary depiction of people's struggle against enemies/evil)."
+  },
+  "eval_textbook_asst_0000009d": {
+    "eval_id": "eval_textbook_asst_0000009d",
+    "verdict": "YES",
+    "reason": "Genus (різновид мозаїки) + differentia (decoration using colored pieces of hard material)."
+  },
+  "eval_textbook_asst_0000009e": {
+    "eval_id": "eval_textbook_asst_0000009e",
+    "verdict": "YES",
+    "reason": "Genus (музика) + differentia (rooted in an ethnos's musical folklore)."
+  },
+  "eval_textbook_asst_0000009f": {
+    "eval_id": "eval_textbook_asst_0000009f",
+    "verdict": "YES",
+    "reason": "Genus (пісня урочистого характеру) + differentia (for glorifying a deity) — valid, if narrow, definition."
+  },
+  "eval_textbook_asst_000000a0": {
+    "eval_id": "eval_textbook_asst_000000a0",
+    "verdict": "YES",
+    "reason": "Genus (кольорове напівпрозоре скло) + differentia (cube/plate form, for mosaics)."
+  },
+  "eval_textbook_asst_000000a1": {
+    "eval_id": "eval_textbook_asst_000000a1",
+    "verdict": "YES",
+    "reason": "Genus (твір духовної музики) + differentia (performed a cappella per Byzantine tradition)."
+  },
+  "eval_textbook_asst_000000a2": {
+    "eval_id": "eval_textbook_asst_000000a2",
+    "verdict": "YES",
+    "reason": "Genus (ударний інструмент) + differentia (rich timbral coloring)."
+  },
+  "eval_textbook_asst_000000a3": {
+    "eval_id": "eval_textbook_asst_000000a3",
+    "verdict": "YES",
+    "reason": "Genus (стіна з ікон) + differentia (separates altar from nave in Eastern-rite church)."
+  },
+  "eval_textbook_asst_000000a4": {
+    "eval_id": "eval_textbook_asst_000000a4",
+    "verdict": "YES",
+    "reason": "Genus (різновид гравюри на металі) + differentia (acid-etched printing plates)."
+  },
+  "eval_textbook_asst_000000a5": {
+    "eval_id": "eval_textbook_asst_000000a5",
+    "verdict": "YES",
+    "reason": "Genus (одночастинний симфонічний твір) + differentia (with literary/historical/philosophical/pictorial program)."
+  },
+  "eval_textbook_asst_000000a6": {
+    "eval_id": "eval_textbook_asst_000000a6",
+    "verdict": "YES",
+    "reason": "Genus (інструментальний твір) + differentia (fantasy character, on folk themes)."
+  },
+  "eval_textbook_asst_000000a7": {
+    "eval_id": "eval_textbook_asst_000000a7",
+    "verdict": "YES",
+    "reason": "Genus (художник) + differentia (creates seascapes depicting the sea and maritime events)."
+  },
+  "eval_textbook_asst_000000a8": {
+    "eval_id": "eval_textbook_asst_000000a8",
+    "verdict": "YES",
+    "reason": "Genus (художній метод) + differentia (базується на достовірному відтворенні дійсності)."
+  },
+  "eval_textbook_asst_000000a9": {
+    "eval_id": "eval_textbook_asst_000000a9",
+    "verdict": "YES",
+    "reason": "Genus (стратегічна практика) + differentia (участь у розв'язанні соціальних проблем)."
+  },
+  "eval_textbook_asst_000000aa": {
+    "eval_id": "eval_textbook_asst_000000aa",
+    "verdict": "YES",
+    "reason": "Genus (різновид булінгу) + differentia (дискримінація через зовнішність)."
+  },
+  "eval_textbook_asst_000000ab": {
+    "eval_id": "eval_textbook_asst_000000ab",
+    "verdict": "YES",
+    "reason": "Genus (спеціальне харчування) + differentia (обов'язкова частина лікування)."
+  },
+  "eval_textbook_asst_000000ac": {
+    "eval_id": "eval_textbook_asst_000000ac",
+    "verdict": "YES",
+    "reason": "Genus (цілісна система знань, навичок, звичок) + differentia (формування та зміцнення здоров'я)."
+  },
+  "eval_textbook_asst_000000ad": {
+    "eval_id": "eval_textbook_asst_000000ad",
+    "verdict": "YES",
+    "reason": "Genus (здатність оцінити рішення) elaborated with concrete differentiae (аналіз, переосмислення, визначення перспектив)."
+  },
+  "eval_textbook_asst_000000ae": {
+    "eval_id": "eval_textbook_asst_000000ae",
+    "verdict": "YES",
+    "reason": "Genus (інструмент) + differentia (зберігання й систематизація ідей)."
+  },
+  "eval_textbook_asst_000000af": {
+    "eval_id": "eval_textbook_asst_000000af",
+    "verdict": "YES",
+    "reason": "Genus (дії) + differentia (вдаються в процесі проєктування для створення об'єкта)."
+  },
+  "eval_textbook_asst_000000b0": {
+    "eval_id": "eval_textbook_asst_000000b0",
+    "verdict": "YES",
+    "reason": "Genus (вид мистецтва) + differentia (художнє відображення за допомогою фототехніки)."
+  },
+  "eval_textbook_asst_000000b1": {
+    "eval_id": "eval_textbook_asst_000000b1",
+    "verdict": "YES",
+    "reason": "Genus (художня система, сукупність елементів) + differentia (без практичного призначення, естетична функція) — a defining contrast, not a hedge on the definition's validity."
+  },
+  "eval_textbook_asst_000000b2": {
+    "eval_id": "eval_textbook_asst_000000b2",
+    "verdict": "YES",
+    "reason": "Genus (сукупність механізмів, приладів) + differentia (діють автоматично)."
+  },
+  "eval_textbook_asst_000000b3": {
+    "eval_id": "eval_textbook_asst_000000b3",
+    "verdict": "YES",
+    "reason": "Genus (пристрій) + differentia (керований електронікою, програмований)."
+  },
+  "eval_textbook_asst_000000b4": {
+    "eval_id": "eval_textbook_asst_000000b4",
+    "verdict": "YES",
+    "reason": "Genus (шлях розвитку) + differentia (покращує якість життя й зберігає природне різноманіття)."
+  },
+  "eval_textbook_asst_000000b5": {
+    "eval_id": "eval_textbook_asst_000000b5",
+    "verdict": "YES",
+    "reason": "Genus (майданчик) + differentia (уступ на схилі)."
+  },
+  "eval_textbook_asst_000000b6": {
+    "eval_id": "eval_textbook_asst_000000b6",
+    "verdict": "YES",
+    "reason": "Genus (метод впливу) + differentia (механічний, дозований, рефлекторний вплив на тканини й органи)."
+  },
+  "eval_textbook_asst_000000b7": {
+    "eval_id": "eval_textbook_asst_000000b7",
+    "verdict": "YES",
+    "reason": "Genus (основа) clarified via 'тобто' with differentia (обов'язкові процедури будь-якого манікюру)."
+  },
+  "eval_textbook_asst_000000b8": {
+    "eval_id": "eval_textbook_asst_000000b8",
+    "verdict": "YES",
+    "reason": "Genus (різьблення по овочах і фруктах) + differentia (регіон походження); trailing enumeration supplements rather than replaces the definition."
+  },
+  "eval_textbook_asst_000000b9": {
+    "eval_id": "eval_textbook_asst_000000b9",
+    "verdict": "YES",
+    "reason": "Inverted naming construction ('X називають Y') still supplies genus (рівень сприйняття норм моралі) as the definition of моральність."
+  },
+  "eval_textbook_asst_000000ba": {
+    "eval_id": "eval_textbook_asst_000000ba",
+    "verdict": "YES",
+    "reason": "Genus (моральні зразки та вимоги) + differentia (орієнтування в дійсності)."
+  },
+  "eval_textbook_asst_000000bb": {
+    "eval_id": "eval_textbook_asst_000000bb",
+    "verdict": "YES",
+    "reason": "Genus (ряд дій) + differentia (закріплений правовими нормами, обов'язкове виконання)."
+  },
+  "eval_textbook_asst_000000bc": {
+    "eval_id": "eval_textbook_asst_000000bc",
+    "verdict": "YES",
+    "reason": "Genus (група людей) + differentia (спільні інтереси, спільні дії)."
+  },
+  "eval_textbook_asst_000000bd": {
+    "eval_id": "eval_textbook_asst_000000bd",
+    "verdict": "YES",
+    "reason": "Genus (розуміння) + differentia (узгодженість дій та вчинків)."
+  },
+  "eval_textbook_asst_000000be": {
+    "eval_id": "eval_textbook_asst_000000be",
+    "verdict": "YES",
+    "reason": "Genus (почуття шани, прихильне ставлення) + differentia (визнання заслуг і якостей)."
+  },
+  "eval_textbook_asst_000000bf": {
+    "eval_id": "eval_textbook_asst_000000bf",
+    "verdict": "YES",
+    "reason": "Genus (сукупність людей) + differentia (характерні відносини на етапі історичного розвитку)."
+  },
+  "eval_textbook_asst_000000c0": {
+    "eval_id": "eval_textbook_asst_000000c0",
+    "verdict": "YES",
+    "reason": "Genus (прояви здатності) + differentia (реагування на подразники)."
+  },
+  "eval_textbook_asst_000000c1": {
+    "eval_id": "eval_textbook_asst_000000c1",
+    "verdict": "YES",
+    "reason": "Genus (умисне примушення) + differentia (суперечить інтересам людини)."
+  },
+  "eval_textbook_asst_000000c2": {
+    "eval_id": "eval_textbook_asst_000000c2",
+    "verdict": "YES",
+    "reason": "Genus (виявлення поваги) + differentia (ґрунтується на взаємності)."
+  },
+  "eval_textbook_asst_000000c3": {
+    "eval_id": "eval_textbook_asst_000000c3",
+    "verdict": "YES",
+    "reason": "Genus (пристосування) + differentia (до соціального середовища, взаємодія з ним)."
+  },
+  "eval_textbook_asst_000000c4": {
+    "eval_id": "eval_textbook_asst_000000c4",
+    "verdict": "YES",
+    "reason": "Genus (зіткнення) + differentia (протилежні інтереси, погляди, оцінки, цінності)."
+  },
+  "eval_textbook_asst_000000c5": {
+    "eval_id": "eval_textbook_asst_000000c5",
+    "verdict": "YES",
+    "reason": "Genus (виявлення турботи) + differentia (людині у скрутному становищі, у формі допомоги)."
+  },
+  "eval_textbook_asst_000000c6": {
+    "eval_id": "eval_textbook_asst_000000c6",
+    "verdict": "YES",
+    "reason": "Genus (загальновизнаний вплив) + differentia (на переконання й поведінку людей)."
+  },
+  "eval_textbook_asst_000000c7": {
+    "eval_id": "eval_textbook_asst_000000c7",
+    "verdict": "YES",
+    "reason": "Genus (любов до людей, благодійність) + differentia (жертвування часом, грошима, репутацією для допомоги нужденним)."
+  }
+}

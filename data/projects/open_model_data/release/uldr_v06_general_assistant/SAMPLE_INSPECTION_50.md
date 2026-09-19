@@ -4,405 +4,405 @@
 
 | # | Origin | Concept | Subject | Grade | Terms | Citation | Anaphora-Free | OCR-Clean | Def-Aligned | Terms Valid | Verdict |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `eval_shard_001_of_005.jsonl:line_30` | **Аграрна революція** | vsesvitnia | 8 | революція, реформування, господарство, збільшення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 2 | `eval_shard_001_of_005.jsonl:line_24` | **Верхня палата** | vsesvitnia | 8 | палата, сенат, представник, духовенство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 3 | `eval_shard_001_of_005.jsonl:line_25` | **Плавлення** | fizyka | 8 | перехід, речовина | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 4 | `eval_shard_001_of_005.jsonl:line_11` | **Протилежні вектори** | heometriya | 9 | вектор, модуль | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 5 | `eval_shard_001_of_005.jsonl:line_10` | **Генеральна рада** | istoriya | 8 | орган, військо | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 6 | `eval_shard_002_of_005.jsonl:line_10` | **Нейронауки** | biolohiya | 8 | галузь, знання, вивчення, система | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 7 | `eval_shard_002_of_005.jsonl:line_11` | **Складна держава** | pravoznavstvo | 9 | держава, утворення, самостійність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 8 | `eval_shard_002_of_005.jsonl:line_43` | **Підзаконний нормативно-правовий акт** | pravoznavstvo | 9 | закон, акт, підстава, конкретизація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 9 | `eval_shard_002_of_005.jsonl:line_2` | **Звичайне скло** | khimiya | 8 | оксид, скло, речовина, силіцій | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 10 | `eval_shard_002_of_005.jsonl:line_1` | **Форма держави** | pravoznavstvo | 9 | держава, організація, структура, орган | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 11 | `eval_shard_003_of_005.jsonl:line_42` | **Кримінальна відповідальність** | pravoznavstvo | 9 | відповідальність, покарання, держава, особа | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 12 | `eval_shard_003_of_005.jsonl:line_24` | **Умови укладення шлюбу** | pravoznavstvo | 9 | закон, укладення, шлюб, вимога | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 13 | `eval_shard_003_of_005.jsonl:line_46` | **Цінності** | hromadianska | 8 | переконання, суспільство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 14 | `eval_shard_003_of_005.jsonl:line_15` | **Артезіанська вода** | heohrafiya | 8 | вода, глибина, шар, структура | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 15 | `eval_shard_003_of_005.jsonl:line_25` | **Антропогенний ландшафт** | heohrafiya | 8 | ландшафт, вплив | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 16 | `eval_shard_004_of_005.jsonl:line_47` | **Етнічна музика** | mystetstvo | 8 | витік, фольклор, етнос | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 17 | `eval_shard_004_of_005.jsonl:line_27` | **Гончарні вироби** | ekonomika | 10 | результат, професіоналізм | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 18 | `eval_shard_004_of_005.jsonl:line_6` | **Формальні групи** | hromadianska | 8 | організація, гурток, секція, колектив | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 19 | `eval_shard_004_of_005.jsonl:line_14` | **Завойовницька війна** | hromadianska | 8 | війна, розширення, сфера, територія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 20 | `eval_shard_004_of_005.jsonl:line_36` | **Водосховища** | ukrmova | 8 | водойма, нагромадження | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 21 | `eval_shard_005_of_005.jsonl:line_27` | **Автоматика** | tekhnolohiyi | 8 | механізм, прилад | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 22 | `eval_shard_005_of_005.jsonl:line_31` | **Масаж** | tekhnolohiyi | 8 | тканина, орган, рука, апарат | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 23 | `eval_shard_005_of_005.jsonl:line_24` | **Художня фотографія** | tekhnolohiyi | 8 | фотографія, мистецтво, відображення, дійсність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 24 | `eval_shard_005_of_005.jsonl:line_19` | **Оздоровча система** | zdorovia | 8 | система, знання, навичка, звичка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 25 | `eval_shard_005_of_005.jsonl:line_39` | **Повага** | etyka | 6 | почуття, шана, ставлення, підстава | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 26 | `sft_shard_135_of_150.jsonl:line_93` | **Принципат** | istoriya | 7 | правління, особа, принцепс | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 27 | `sft_shard_015_of_150.jsonl:line_369` | **Друкований текст** | zarlit | 5 | засіб, друк, папір | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 28 | `sft_shard_058_of_150.jsonl:line_349` | **Марикультура** | heohrafiya | 9 | вирощування, морепродукт | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 29 | `sft_shard_074_of_150.jsonl:line_211` | **Вуглеводи** | khimiya | 9 | природа, сполука, представник, глюкоза | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 30 | `sft_shard_103_of_150.jsonl:line_460` | **Діатомові водорості** | pryroda | 6 | водорість, рослина | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 31 | `sft_shard_003_of_150.jsonl:line_37` | **Тотальна війна** | vsesvitnia | 10 | війна, засіб, знищення, противник | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 32 | `sft_shard_048_of_150.jsonl:line_54` | **Археї** | biolohiya | 7 | учасник, кругообіг, речовина | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 33 | `sft_shard_012_of_150.jsonl:line_387` | **Модернізм** | istoriya | 10 | течія, мистецтво, змішування, елемент | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 34 | `sft_shard_134_of_150.jsonl:line_384` | **Грант** | finansova | 9 | особа, організація, бізнес, реалізація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 35 | `sft_shard_046_of_150.jsonl:line_17` | **Дана ситуація** | matematyka | 6 | ситуація, задача, рівність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 36 | `sft_shard_002_of_150.jsonl:line_255` | **Мехатроніка** | fizyka | 9 | галузь, інженерія, механіка, електроніка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 37 | `sft_shard_079_of_150.jsonl:line_273` | **Правопорушення** | ya_doslidzhuiu_svit | 4 | вчинок, відповідальність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 38 | `sft_shard_044_of_150.jsonl:line_277` | **Цифровий слід** | hromadianska | 9 | пам'ять, інтернет, дія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 39 | `sft_shard_150_of_150.jsonl:line_131` | **Запозичена іншомовна лексика** | ukrmova | university | лексика, словозміна, специфіка, мюзикл | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 40 | `sft_shard_131_of_150.jsonl:line_477` | **Авторство** | ukrmova | 5 | належність, твір, проєкт, винахід | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 41 | `sft_shard_121_of_150.jsonl:line_171` | **Похідні способи набуття права власності** | pravoznavstvo | 11 | набуття, власність, отримання, річ | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 42 | `sft_shard_053_of_150.jsonl:line_255` | **Раціональне рівняння** | algebra | 8 | рівняння, вираз | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 43 | `sft_shard_039_of_150.jsonl:line_210` | **Поміркованість суду** | zarlit | 9 | поміркованість, суд | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 44 | `sft_shard_076_of_150.jsonl:line_314` | **Безпека особистого самовираження** | etyka | 5 | безпека, самовираження, сприйняття, зміст | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 45 | `sft_shard_141_of_150.jsonl:line_141` | **Символи хімічних елементів** | pryroda | 6 | символ, елемент, абетка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 46 | `sft_shard_010_of_150.jsonl:line_451` | **Система колективної безпеки** | vsesvitnia | 10 | система, безпека, здійснення, захист | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 47 | `sft_shard_142_of_150.jsonl:line_75` | **Сузір'я** | astronomiya | 11 | ділянка, сфера, зручність, орієнтування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 48 | `sft_shard_108_of_150.jsonl:line_289` | **Хореографічна поема** | mystetstvo | 9 | поема, твір, жанр | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 49 | `sft_shard_018_of_150.jsonl:line_201` | **Нейромедіатори** | biolohiya | 9 | речовина, передача, імпульс, нейрон | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 50 | `sft_shard_071_of_150.jsonl:line_432` | **Мода** | matematyka | 11 | елемент, вибірка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 1 | `eval_shard_001_of_005.jsonl:line_24` | **Плавлення** | fizyka | 8 | перехід, речовина | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 2 | `eval_shard_001_of_005.jsonl:line_34` | **Ізотопи** | khimiya | 8 | нуклід, елемент | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 3 | `eval_shard_001_of_005.jsonl:line_4` | **Панщина** | istoriya | 8 | виконання, селянин, обсяг, господарство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 4 | `eval_shard_001_of_005.jsonl:line_12` | **Революція** | vsesvitnia | 8 | переворот, суспільство, зміна, перетворення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 5 | `eval_shard_001_of_005.jsonl:line_11` | **Протилежні вектори** | heometriya | 9 | вектор, модуль | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 6 | `eval_shard_002_of_005.jsonl:line_15` | **Нігті** | biolohiya | 8 | пластинка, фаланга, палець, рука | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 7 | `eval_shard_002_of_005.jsonl:line_16` | **Право** | pravoznavstvo | 9 | система, норма, припис, підпорядкування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 8 | `eval_shard_002_of_005.jsonl:line_14` | **Соціальні норми** | pravoznavstvo | 9 | норма, поведінка, суспільство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 9 | `eval_shard_002_of_005.jsonl:line_1` | **Хімічний зв'язок** | khimiya | 8 | взаємодія, атом, стійкість, частинка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 10 | `eval_shard_002_of_005.jsonl:line_24` | **Поштовий сервер** | informatyka | 7 | сервер, комп'ютер, пошта, забезпечення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 11 | `eval_shard_003_of_005.jsonl:line_10` | **Права людини** | pravoznavstvo | 9 | існування, розвиток | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 12 | `eval_shard_003_of_005.jsonl:line_1` | **Прямокутні координати** | heohrafiya | 8 | координата, система, вісь, меридіан | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 13 | `eval_shard_003_of_005.jsonl:line_26` | **Антропогенний ландшафт** | heohrafiya | 8 | ландшафт, вплив | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 14 | `eval_shard_003_of_005.jsonl:line_34` | **Вичерпні природні ресурси** | heohrafiya | 8 | ресурс, зменшення, зникнення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 15 | `eval_shard_003_of_005.jsonl:line_23` | **Умови укладення шлюбу** | pravoznavstvo | 9 | закон, укладення, шлюб, вимога | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 16 | `eval_shard_004_of_005.jsonl:line_25` | **Свобода слова** | hromadianska | 8 | право, засіб | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 17 | `eval_shard_004_of_005.jsonl:line_24` | **Невербальна комунікація** | hromadianska | 8 | комунікація, спілкування, жест, міміка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 18 | `eval_shard_004_of_005.jsonl:line_36` | **Памфлет** | zarlit | 8 | обсяг, твір, спрямування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 19 | `eval_shard_004_of_005.jsonl:line_23` | **Воєнний стан** | hromadianska | 8 | режим, місцевість, агресія, небезпека | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 20 | `eval_shard_004_of_005.jsonl:line_16` | **Завойовницька війна** | hromadianska | 8 | війна, розширення, сфера, територія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 21 | `eval_shard_005_of_005.jsonl:line_40` | **Конфлікт** | etyka | 6 | зіткнення, інтерес, оцінка, цінність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 22 | `eval_shard_005_of_005.jsonl:line_31` | **Громадянські обов'язки** | etyka | 6 | обов'язок, норма, держава, ряд | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 23 | `eval_shard_005_of_005.jsonl:line_30` | **Моральні цінності** | etyka | 6 | цінність, зразок, вимога, дійсність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 24 | `eval_shard_005_of_005.jsonl:line_12` | **Реалізм** | mystetstvo | 8 | відтворення, дійсність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 25 | `eval_shard_005_of_005.jsonl:line_23` | **Робот** | tekhnolohiyi | 8 | пристрій, комп'ютер, виконання, операція | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 26 | `sft_shard_054_of_150.jsonl:line_203` | **Троп** | ukrlit | 10 | метафора, характеристика, іронія, гіпербола | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 27 | `sft_shard_067_of_150.jsonl:line_473` | **Витік перший** | zarlit | 10 | наука, мистецтво, більшість, цінність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 28 | `sft_shard_041_of_150.jsonl:line_361` | **Ілюстративний матеріал** | zarlit | 9 | матеріал, кадр, фільм | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 29 | `sft_shard_089_of_150.jsonl:line_380` | **Проектуюча пряма** | heometriya | 10 | площина, проекція | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 30 | `sft_shard_099_of_150.jsonl:line_175` | **Фіскальний простір** | ekonomika | 11 | простір, показник, відношення, загроза | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 31 | `sft_shard_139_of_150.jsonl:line_463` | **План проєкту** | fizyka | 7 | план, проєкт, документ | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 32 | `sft_shard_030_of_150.jsonl:line_332` | **Викопне паливо** | pryroda | 8 | паливо, ресурс, залишок, тварина | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 33 | `sft_shard_119_of_150.jsonl:line_312` | **Потерпілий** | pravoznavstvo | 11 | правопорушення, особа | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 34 | `sft_shard_081_of_150.jsonl:line_319` | **Вулканічні блискавки** | heohrafiya | 6 | атмосфера, літосфера, блискавка, взаємодія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 35 | `sft_shard_090_of_150.jsonl:line_90` | **Механічна хвиля** | fizyka | 11 | хвиля, поширення, коливання, плин | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 36 | `sft_shard_015_of_150.jsonl:line_339` | **Судноплавний шлюз** | fizyka | 7 | шлюз, споруда, забезпечення, перехід | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 37 | `sft_shard_105_of_150.jsonl:line_119` | **Південний океан** | ya_doslidzhuiu_svit | 4 | океан, площа, планета | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 38 | `sft_shard_039_of_150.jsonl:line_78` | **Фосфорні боєприпаси** | zakhyst | 10 | боєприпас, снаряд, фосфор, температура | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 39 | `sft_shard_091_of_150.jsonl:line_80` | **Бісектриса кута** | heometriya | 7 | кут, бісектриса | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 40 | `sft_shard_027_of_150.jsonl:line_382` | **Фільтрування** | informatyka | 10 | відбір, таблиця | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 41 | `sft_shard_136_of_150.jsonl:line_170` | **Видатки державного бюджету** | pravoznavstvo | 11 | закон, видаток, бюджет, кошт | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 42 | `sft_shard_042_of_150.jsonl:line_255` | **Мале коло кровообігу** | biolohiya | 7 | орган, кровообіг, рух, кров | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 43 | `sft_shard_147_of_150.jsonl:line_210` | **Освітлення** | informatyka | 9 | установка, настройка, джерело, сцена | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 44 | `sft_shard_149_of_150.jsonl:line_314` | **Ренатурація** | biolohiya | 9 | відновлення, структура, макромолекула, денатурація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 45 | `sft_shard_003_of_150.jsonl:line_141` | **Авторитарний стиль** | ekonomika | 11 | стиль, поведінка, керівник, вказівка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 46 | `sft_shard_023_of_150.jsonl:line_451` | **Повість** | zarlit | 5 | твір, оповідання, обсяг | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 47 | `sft_shard_079_of_150.jsonl:line_75` | **Підприємництво** | finansova | 9 | навичка, компетенція | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 48 | `sft_shard_020_of_150.jsonl:line_289` | **Державні символи** | etyka | 5 | символ, закон, держава | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 49 | `sft_shard_026_of_150.jsonl:line_201` | **Грант** | finansova | 9 | особа, організація, бізнес, реалізація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 50 | `sft_shard_029_of_150.jsonl:line_432` | **Дисциплінарне стягнення** | pravoznavstvo | 11 | стягнення, акт, захід, орган | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
 
 ## Detailed Record Inspection (Full Text)
 
-### Record 1: Аграрна революція (eval_shard_001_of_005.jsonl:line_30)
-- **Subject / Grade:** vsesvitnia (Grade 8)
-- **Concept:** `Аграрна революція` (Citation form: ✅)
-- **Scientific Terminology:** `['революція', 'реформування', 'господарство', 'збільшення', 'товарність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Аграрна революція – реформування сільського господарства з метою збільшення його товарності й прибутковості.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 2: Верхня палата (eval_shard_001_of_005.jsonl:line_24)
-- **Subject / Grade:** vsesvitnia (Grade 8)
-- **Concept:** `Верхня палата` (Citation form: ✅)
-- **Scientific Terminology:** `['палата', 'сенат', 'представник', 'духовенство', 'магнат']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Верхня палата – сенат – складалася з представників вищого духовенства та магнатів, зайнятих на високих державних посадах.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 3: Плавлення (eval_shard_001_of_005.jsonl:line_25)
+### Record 1: Плавлення (eval_shard_001_of_005.jsonl:line_24)
 - **Subject / Grade:** fizyka (Grade 8)
 - **Concept:** `Плавлення` (Citation form: ✅)
 - **Scientific Terminology:** `['перехід', 'речовина']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Плавлення — це процес переходу речовини з твердого стану в рідкий.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 4: Протилежні вектори (eval_shard_001_of_005.jsonl:line_11)
+### Record 2: Ізотопи (eval_shard_001_of_005.jsonl:line_34)
+- **Subject / Grade:** khimiya (Grade 8)
+- **Concept:** `Ізотопи` (Citation form: ✅)
+- **Scientific Terminology:** `['нуклід', 'елемент']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Ізотопи — це різні нукліди одного хімічного елемента.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 3: Панщина (eval_shard_001_of_005.jsonl:line_4)
+- **Subject / Grade:** istoriya (Grade 8)
+- **Concept:** `Панщина` (Citation form: ✅)
+- **Scientific Terminology:** `['виконання', 'селянин', 'обсяг', 'господарство', 'землевласник']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Панщина — виконання селянами певного обсягу робіт у господарстві землевласника за користування його землею.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 4: Революція (eval_shard_001_of_005.jsonl:line_12)
+- **Subject / Grade:** vsesvitnia (Grade 8)
+- **Concept:** `Революція` (Citation form: ✅)
+- **Scientific Terminology:** `['переворот', 'суспільство', 'зміна', 'перетворення', 'удосконалення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Революція – докорінний переворот у житті суспільства, який супроводжується зміною влади; різкі зміни в якій-небудь галузі, що приводить до істотних перетворень, удосконалення чого-небудь.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 5: Протилежні вектори (eval_shard_001_of_005.jsonl:line_11)
 - **Subject / Grade:** heometriya (Grade 9)
 - **Concept:** `Протилежні вектори` (Citation form: ✅)
 - **Scientific Terminology:** `['вектор', 'модуль']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Два ненульових вектори називають протилежними, якщо їхні модулі рівні й вектори протилежно напрямлені.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 5: Генеральна рада (eval_shard_001_of_005.jsonl:line_10)
-- **Subject / Grade:** istoriya (Grade 8)
-- **Concept:** `Генеральна рада` (Citation form: ✅)
-- **Scientific Terminology:** `['орган', 'військо']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Генеральна рада — вищий представницький орган влади у Війську Запорозькому.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 6: Нейронауки (eval_shard_002_of_005.jsonl:line_10)
+### Record 6: Нігті (eval_shard_002_of_005.jsonl:line_15)
 - **Subject / Grade:** biolohiya (Grade 8)
-- **Concept:** `Нейронауки` (Citation form: ✅)
-- **Scientific Terminology:** `['галузь', 'знання', 'вивчення', 'система', 'пошук']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Нейронауки — це сукупність галузей знань, що стосуються вивчення нервової системи та пошуку шляхів лікування неврологічних і психіатричних захворювань.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Нігті` (Citation form: ✅)
+- **Scientific Terminology:** `['пластинка', 'фаланга', 'палець', 'рука', 'нога']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Нігті — це тонкі, опуклі зроговілі пластинки на кінцях фаланг пальців рук і ніг.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 7: Складна держава (eval_shard_002_of_005.jsonl:line_11)
+### Record 7: Право (eval_shard_002_of_005.jsonl:line_16)
 - **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Складна держава` (Citation form: ✅)
-- **Scientific Terminology:** `['держава', 'утворення', 'самостійність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Складна держава — держава, що формується з відокремлених державних утворень, які мають певну самостійність.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Право` (Citation form: ✅)
+- **Scientific Terminology:** `['система', 'норма', 'припис', 'підпорядкування']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Право є системою норм, тобто всі правові приписи взаємодіють між собою та мають чітке підпорядкування.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 8: Підзаконний нормативно-правовий акт (eval_shard_002_of_005.jsonl:line_43)
+### Record 8: Соціальні норми (eval_shard_002_of_005.jsonl:line_14)
 - **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Підзаконний нормативно-правовий акт` (Citation form: ✅)
-- **Scientific Terminology:** `['закон', 'акт', 'підстава', 'конкретизація', 'розпорядження']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Підзаконний нормативно-правовий акт — акт, який видається відповідно до закону та на підставі закону для конкретизації законодавчих розпоряджень і їхнього трактування або встановлення первинних норм.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Соціальні норми` (Citation form: ✅)
+- **Scientific Terminology:** `['норма', 'поведінка', 'суспільство']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Соціальні норми — загальні правила поведінки, що регулюють відносини між людьми в суспільстві.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 9: Звичайне скло (eval_shard_002_of_005.jsonl:line_2)
+### Record 9: Хімічний зв'язок (eval_shard_002_of_005.jsonl:line_1)
 - **Subject / Grade:** khimiya (Grade 8)
-- **Concept:** `Звичайне скло` (Citation form: ✅)
-- **Scientific Terminology:** `['оксид', 'скло', 'речовина', 'силіцій', 'склад']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Звичайне скло — аморфна речовина, але із часом силіцій(IV) оксид у його складі стає кристалічним.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Хімічний зв'язок` (Citation form: ✅)
+- **Scientific Terminology:** `['взаємодія', 'атом', 'стійкість', 'частинка', 'молекула']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Хімічний зв'язок — це взаємодія атомів, що зумовлює стійкість багатоатомних частинок (молекул, йонів, кристалів).» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 10: Форма держави (eval_shard_002_of_005.jsonl:line_1)
+### Record 10: Поштовий сервер (eval_shard_002_of_005.jsonl:line_24)
+- **Subject / Grade:** informatyka (Grade 7)
+- **Concept:** `Поштовий сервер` (Citation form: ✅)
+- **Scientific Terminology:** `['сервер', "комп'ютер", 'пошта', 'забезпечення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Поштовий сервер — це комп'ютер, який забезпечує роботу електронної пошти завдяки встановленому на ньому спеціальному програмному забезпеченню.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 11: Права людини (eval_shard_003_of_005.jsonl:line_10)
 - **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Форма держави` (Citation form: ✅)
-- **Scientific Terminology:** `['держава', 'організація', 'структура', 'орган', 'здійснення']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Форма держави — спосіб організації структури держави та її органів, а також спосіб здійснення державної влади, що виражається у формі правління, формі державного устрою і політичному режимі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Права людини` (Citation form: ✅)
+- **Scientific Terminology:** `['існування', 'розвиток']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Права людини — можливості, необхідні людині для існування та розвитку.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 11: Кримінальна відповідальність (eval_shard_003_of_005.jsonl:line_42)
-- **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Кримінальна відповідальність` (Citation form: ✅)
-- **Scientific Terminology:** `['відповідальність', 'покарання', 'держава', 'особа', 'злочин']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Кримінальна відповідальність — покарання, що застосовує держава до особи, яка вчинила злочин.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 12: Умови укладення шлюбу (eval_shard_003_of_005.jsonl:line_24)
-- **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Умови укладення шлюбу` (Citation form: ✅)
-- **Scientific Terminology:** `['закон', 'укладення', 'шлюб', 'вимога', 'особа']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Умови укладення шлюбу — передбачені законом вимоги до осіб, які забезпечують дійсність їхнього шлюбу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 13: Цінності (eval_shard_003_of_005.jsonl:line_46)
-- **Subject / Grade:** hromadianska (Grade 8)
-- **Concept:** `Цінності` (Citation form: ✅)
-- **Scientific Terminology:** `['переконання', 'суспільство']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Цінності – це загальновизнані переконання щодо цілей, до яких суспільство, усі його члени повинні прагнути, якими вони керуються у своєму повсякденному житті.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 14: Артезіанська вода (eval_shard_003_of_005.jsonl:line_15)
+### Record 12: Прямокутні координати (eval_shard_003_of_005.jsonl:line_1)
 - **Subject / Grade:** heohrafiya (Grade 8)
-- **Concept:** `Артезіанська вода` (Citation form: ✅)
-- **Scientific Terminology:** `['вода', 'глибина', 'шар', 'структура', 'басейн']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Артезіанська вода – вода, що залягає на глибині 25–1000 м між водотривкими шарами в межах великих геологічних структур, утворюючи артезіанські басейни.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Прямокутні координати` (Citation form: ✅)
+- **Scientific Terminology:** `['координата', 'система', 'вісь', 'меридіан', 'зона']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Прямокутні координати – це система координат, у якій за вісь X прийнято центральний меридіан 6-градусної зони, а за вісь Y – екватор.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 15: Антропогенний ландшафт (eval_shard_003_of_005.jsonl:line_25)
+### Record 13: Антропогенний ландшафт (eval_shard_003_of_005.jsonl:line_26)
 - **Subject / Grade:** heohrafiya (Grade 8)
 - **Concept:** `Антропогенний ландшафт` (Citation form: ✅)
 - **Scientific Terminology:** `['ландшафт', 'вплив']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Антропогенний ландшафт – це тип ПТК, який сформувався під впливом діяльності людини.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 16: Етнічна музика (eval_shard_004_of_005.jsonl:line_47)
-- **Subject / Grade:** mystetstvo (Grade 8)
-- **Concept:** `Етнічна музика` (Citation form: ✅)
-- **Scientific Terminology:** `['витік', 'фольклор', 'етнос']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Етнічна музика — музика, витоки якої полягають у музичному фольклорі певного етносу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 14: Вичерпні природні ресурси (eval_shard_003_of_005.jsonl:line_34)
+- **Subject / Grade:** heohrafiya (Grade 8)
+- **Concept:** `Вичерпні природні ресурси` (Citation form: ✅)
+- **Scientific Terminology:** `['ресурс', 'зменшення', 'зникнення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Вичерпні природні ресурси – це ресурси, використання яких призводить до їх зменшення або повного зникнення.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 17: Гончарні вироби (eval_shard_004_of_005.jsonl:line_27)
-- **Subject / Grade:** ekonomika (Grade 10)
-- **Concept:** `Гончарні вироби` (Citation form: ✅)
-- **Scientific Terminology:** `['результат', 'професіоналізм']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Гончарні вироби — це результат високого професіоналізму майстрів.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 15: Умови укладення шлюбу (eval_shard_003_of_005.jsonl:line_23)
+- **Subject / Grade:** pravoznavstvo (Grade 9)
+- **Concept:** `Умови укладення шлюбу` (Citation form: ✅)
+- **Scientific Terminology:** `['закон', 'укладення', 'шлюб', 'вимога', 'особа']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Умови укладення шлюбу — передбачені законом вимоги до осіб, які забезпечують дійсність їхнього шлюбу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 18: Формальні групи (eval_shard_004_of_005.jsonl:line_6)
+### Record 16: Свобода слова (eval_shard_004_of_005.jsonl:line_25)
 - **Subject / Grade:** hromadianska (Grade 8)
-- **Concept:** `Формальні групи` (Citation form: ✅)
-- **Scientific Terminology:** `['організація', 'гурток', 'секція', 'колектив']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Формальні групи – це школа, клас, різноманітні шкільні та позашкільні організації, як-от: гуртки, спортивні секції, мистецькі колективи тощо.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Свобода слова` (Citation form: ✅)
+- **Scientific Terminology:** `['право', 'засіб']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Свобода слова – це право людини висловлювати свої погляди в усній і письмовій формах, зокрема через засоби масової інформації.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 19: Завойовницька війна (eval_shard_004_of_005.jsonl:line_14)
+### Record 17: Невербальна комунікація (eval_shard_004_of_005.jsonl:line_24)
+- **Subject / Grade:** hromadianska (Grade 8)
+- **Concept:** `Невербальна комунікація` (Citation form: ✅)
+- **Scientific Terminology:** `['комунікація', 'спілкування', 'жест', 'міміка', 'рух']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Невербальна комунікація – спілкування за допомогою жестів, міміки, рухів тіла й деяких інших засобів, за винятком мовних.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 18: Памфлет (eval_shard_004_of_005.jsonl:line_36)
+- **Subject / Grade:** zarlit (Grade 8)
+- **Concept:** `Памфлет` (Citation form: ✅)
+- **Scientific Terminology:** `['обсяг', 'твір', 'спрямування']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Памфлет – невеликий за обсягом художньо-публіцистичний твір політичного спрямування, який різко викриває негативні явища суспільного життя.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 19: Воєнний стан (eval_shard_004_of_005.jsonl:line_23)
+- **Subject / Grade:** hromadianska (Grade 8)
+- **Concept:** `Воєнний стан` (Citation form: ✅)
+- **Scientific Terminology:** `['режим', 'місцевість', 'агресія', 'небезпека', 'незалежність']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Воєнний стан – це особливий правовий режим, що вводиться в Україні або в окремих її місцевостях у разі збройної агресії чи загрози нападу, небезпеки державній незалежності України, її територіальній цілісності.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 20: Завойовницька війна (eval_shard_004_of_005.jsonl:line_16)
 - **Subject / Grade:** hromadianska (Grade 8)
 - **Concept:** `Завойовницька війна` (Citation form: ✅)
 - **Scientific Terminology:** `['війна', 'розширення', 'сфера', 'територія', 'держава']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Завойовницька війна – війна, що ведеться для розширення власної сфери впливу на території іншої держави.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 20: Водосховища (eval_shard_004_of_005.jsonl:line_36)
-- **Subject / Grade:** ukrmova (Grade 8)
-- **Concept:** `Водосховища` (Citation form: ✅)
-- **Scientific Terminology:** `['водойма', 'нагромадження']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Водосховища – це великі штучні водойми, які створено для нагромадження води й подальшого її використання протягом року.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 21: Автоматика (eval_shard_005_of_005.jsonl:line_27)
-- **Subject / Grade:** tekhnolohiyi (Grade 8)
-- **Concept:** `Автоматика` (Citation form: ✅)
-- **Scientific Terminology:** `['механізм', 'прилад']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Автоматика — сукупність механізмів, приладів, що діють автоматично.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 22: Масаж (eval_shard_005_of_005.jsonl:line_31)
-- **Subject / Grade:** tekhnolohiyi (Grade 8)
-- **Concept:** `Масаж` (Citation form: ✅)
-- **Scientific Terminology:** `['тканина', 'орган', 'рука', 'апарат']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Масаж — метод механічного дозованого і рефлекторного впливу на тканини й органи людини руками або спеціальними апаратами.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 23: Художня фотографія (eval_shard_005_of_005.jsonl:line_24)
-- **Subject / Grade:** tekhnolohiyi (Grade 8)
-- **Concept:** `Художня фотографія` (Citation form: ✅)
-- **Scientific Terminology:** `['фотографія', 'мистецтво', 'відображення', 'дійсність', 'площина']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Художня фотографія – це вид мистецтва, в якому художнє відображення дійсності на двовимірній площині здійснюють за допомогою фотографічної техніки.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 24: Оздоровча система (eval_shard_005_of_005.jsonl:line_19)
-- **Subject / Grade:** zdorovia (Grade 8)
-- **Concept:** `Оздоровча система` (Citation form: ✅)
-- **Scientific Terminology:** `['система', 'знання', 'навичка', 'звичка', 'формування']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Оздоровча система — це цілісна система знань, навичок і звичок, що сприяють формуванню та зміцненню здоров'я.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 25: Повага (eval_shard_005_of_005.jsonl:line_39)
+### Record 21: Конфлікт (eval_shard_005_of_005.jsonl:line_40)
 - **Subject / Grade:** etyka (Grade 6)
-- **Concept:** `Повага` (Citation form: ✅)
-- **Scientific Terminology:** `['почуття', 'шана', 'ставлення', 'підстава', 'визнання']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Повага — почуття шани, прихильне ставлення, що з'являється на підставі визнання чиїх-небудь заслуг і позитивних якостей.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Конфлікт` (Citation form: ✅)
+- **Scientific Terminology:** `['зіткнення', 'інтерес', 'оцінка', 'цінність']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Конфлікт — зіткнення протилежних інтересів, поглядів, оцінок, цінностей.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 26: Принципат (sft_shard_135_of_150.jsonl:line_93)
-- **Subject / Grade:** istoriya (Grade 7)
-- **Concept:** `Принципат` (Citation form: ✅)
-- **Scientific Terminology:** `['правління', 'особа', 'принцепс']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Принципат — форма правління, за якої формально зберігаються республіканські установи, але фактична влада належить одній особі — принцепсу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 22: Громадянські обов'язки (eval_shard_005_of_005.jsonl:line_31)
+- **Subject / Grade:** etyka (Grade 6)
+- **Concept:** `Громадянські обов'язки` (Citation form: ✅)
+- **Scientific Terminology:** `["обов'язок", 'норма', 'держава', 'ряд', 'громадянин']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Громадянські обов'язки — закріплений правовими нормами держави ряд дій, які громадяни мають безумовно виконувати.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 27: Друкований текст (sft_shard_015_of_150.jsonl:line_369)
-- **Subject / Grade:** zarlit (Grade 5)
-- **Concept:** `Друкований текст` (Citation form: ✅)
-- **Scientific Terminology:** `['засіб', 'друк', 'папір']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Друкований текст – текст, відтворений засобами друку на папері.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 23: Моральні цінності (eval_shard_005_of_005.jsonl:line_30)
+- **Subject / Grade:** etyka (Grade 6)
+- **Concept:** `Моральні цінності` (Citation form: ✅)
+- **Scientific Terminology:** `['цінність', 'зразок', 'вимога', 'дійсність']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Моральні цінності — моральні зразки та вимоги, що допомагають людині орієнтуватися в навколишній дійсності.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 28: Марикультура (sft_shard_058_of_150.jsonl:line_349)
-- **Subject / Grade:** heohrafiya (Grade 9)
-- **Concept:** `Марикультура` (Citation form: ✅)
-- **Scientific Terminology:** `['вирощування', 'морепродукт']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Марикультура – це вирощування риби і морепродуктів людьми у природному середовищі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 24: Реалізм (eval_shard_005_of_005.jsonl:line_12)
+- **Subject / Grade:** mystetstvo (Grade 8)
+- **Concept:** `Реалізм` (Citation form: ✅)
+- **Scientific Terminology:** `['відтворення', 'дійсність']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Реалізм — художній метод, який базується на достовірному відтворенні дійсності.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 29: Вуглеводи (sft_shard_074_of_150.jsonl:line_211)
-- **Subject / Grade:** khimiya (Grade 9)
-- **Concept:** `Вуглеводи` (Citation form: ✅)
-- **Scientific Terminology:** `['природа', 'сполука', 'представник', 'глюкоза', 'сахароза']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Вуглеводи — найпоширеніший у природі клас оксигеновмісних органічних сполук, представниками якого є глюкоза, сахароза, крохмаль, целюлоза та інші.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 25: Робот (eval_shard_005_of_005.jsonl:line_23)
+- **Subject / Grade:** tekhnolohiyi (Grade 8)
+- **Concept:** `Робот` (Citation form: ✅)
+- **Scientific Terminology:** `['пристрій', "комп'ютер", 'виконання', 'операція']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Робот — пристрій, який керований за допомогою електронної плати або комп'ютера і який можна запрограмувати на виконання певних операцій.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 30: Діатомові водорості (sft_shard_103_of_150.jsonl:line_460)
-- **Subject / Grade:** pryroda (Grade 6)
-- **Concept:** `Діатомові водорості` (Citation form: ✅)
-- **Scientific Terminology:** `['водорість', 'рослина']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Діатомові водорості — одноклітинні рослини з твердим панциром, який набуває різних форм.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 26: Троп (sft_shard_054_of_150.jsonl:line_203)
+- **Subject / Grade:** ukrlit (Grade 10)
+- **Concept:** `Троп` (Citation form: ✅)
+- **Scientific Terminology:** `['метафора', 'характеристика', 'іронія', 'гіпербола', 'епітет']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Троп — слово, ужите в переносному значенні для характеристики певного явища; до тропів належать метафора, іронія, гіпербола, епітет, порівняння та ін.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 31: Тотальна війна (sft_shard_003_of_150.jsonl:line_37)
-- **Subject / Grade:** vsesvitnia (Grade 10)
-- **Concept:** `Тотальна війна` (Citation form: ✅)
-- **Scientific Terminology:** `['війна', 'засіб', 'знищення', 'противник', 'населення']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Тотальна війна — війна, де використовуються всі засоби для знищення противника, у тому числі мирного населення.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 27: Витік перший (sft_shard_067_of_150.jsonl:line_473)
+- **Subject / Grade:** zarlit (Grade 10)
+- **Concept:** `Витік перший` (Citation form: ✅)
+- **Scientific Terminology:** `['наука', 'мистецтво', 'більшість', 'цінність']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Витік перший – антична культура, яка подарувала нам основи наук і мистецтв, більшість загальновизнаних цінностей і цілей.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 32: Археї (sft_shard_048_of_150.jsonl:line_54)
+### Record 28: Ілюстративний матеріал (sft_shard_041_of_150.jsonl:line_361)
+- **Subject / Grade:** zarlit (Grade 9)
+- **Concept:** `Ілюстративний матеріал` (Citation form: ✅)
+- **Scientific Terminology:** `['матеріал', 'кадр', 'фільм']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Ілюстративний матеріал – кадри з фільму „Пігмаліон“.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 29: Проектуюча пряма (sft_shard_089_of_150.jsonl:line_380)
+- **Subject / Grade:** heometriya (Grade 10)
+- **Concept:** `Проектуюча пряма` (Citation form: ✅)
+- **Scientific Terminology:** `['площина', 'проекція']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Пряму І називають проектуючою прямою, а площину а - площиною проекції.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 30: Фіскальний простір (sft_shard_099_of_150.jsonl:line_175)
+- **Subject / Grade:** ekonomika (Grade 11)
+- **Concept:** `Фіскальний простір` (Citation form: ✅)
+- **Scientific Terminology:** `['простір', 'показник', 'відношення', 'загроза', 'дефолт']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Фіскальний простір — відстань від показника відношення боргу до ВВП до „верхньої межі“, вище якої не виникає загроза дефолту.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 31: План проєкту (sft_shard_139_of_150.jsonl:line_463)
+- **Subject / Grade:** fizyka (Grade 7)
+- **Concept:** `План проєкту` (Citation form: ✅)
+- **Scientific Terminology:** `['план', 'проєкт', 'документ']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «План проєкту — це документ, який містить заздалегідь намічений порядок дій, необхідних для досягнення мети проєкту.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 32: Викопне паливо (sft_shard_030_of_150.jsonl:line_332)
+- **Subject / Grade:** pryroda (Grade 8)
+- **Concept:** `Викопне паливо` (Citation form: ✅)
+- **Scientific Terminology:** `['паливо', 'ресурс', 'залишок', 'тварина', 'рослина']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Викопне паливо — це невідновлювані ресурси, яке утворилося, на думку вчених, із залишків мертвих тварин, рослин.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 33: Потерпілий (sft_shard_119_of_150.jsonl:line_312)
+- **Subject / Grade:** pravoznavstvo (Grade 11)
+- **Concept:** `Потерпілий` (Citation form: ✅)
+- **Scientific Terminology:** `['правопорушення', 'особа']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Потерпілий — фізична особа, якій кримінальним правопорушенням завдано моральної, фізичної або майнової шкоди, а також юридична особа, якій кримінальним правопорушенням завдано майнової шкоди.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 34: Вулканічні блискавки (sft_shard_081_of_150.jsonl:line_319)
+- **Subject / Grade:** heohrafiya (Grade 6)
+- **Concept:** `Вулканічні блискавки` (Citation form: ✅)
+- **Scientific Terminology:** `['атмосфера', 'літосфера', 'блискавка', 'взаємодія']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Вулканічні блискавки є яскравим прикладом взаємодії літосфери й атмосфери.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 35: Механічна хвиля (sft_shard_090_of_150.jsonl:line_90)
+- **Subject / Grade:** fizyka (Grade 11)
+- **Concept:** `Механічна хвиля` (Citation form: ✅)
+- **Scientific Terminology:** `['хвиля', 'поширення', 'коливання', 'плин']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Механічна хвиля — процес поширення коливань у пружному середовищі з плином часу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 36: Судноплавний шлюз (sft_shard_015_of_150.jsonl:line_339)
+- **Subject / Grade:** fizyka (Grade 7)
+- **Concept:** `Судноплавний шлюз` (Citation form: ✅)
+- **Scientific Terminology:** `['шлюз', 'споруда', 'забезпечення', 'перехід', 'водойма']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Судноплавний шлюз — гідротехнічна споруда для забезпечення переходу судна на плаву з однієї водойми в іншу з різними рівнями води.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 37: Південний океан (sft_shard_105_of_150.jsonl:line_119)
+- **Subject / Grade:** ya_doslidzhuiu_svit (Grade 4)
+- **Concept:** `Південний океан` (Citation form: ✅)
+- **Scientific Terminology:** `['океан', 'площа', 'планета']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Південний океан — четвертий за площею океан планети.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 38: Фосфорні боєприпаси (sft_shard_039_of_150.jsonl:line_78)
+- **Subject / Grade:** zakhyst (Grade 10)
+- **Concept:** `Фосфорні боєприпаси` (Citation form: ✅)
+- **Scientific Terminology:** `['боєприпас', 'снаряд', 'фосфор', 'температура', 'горіння']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Фосфорні боєприпаси — це снаряди начинені самозапальним білим фосфором, що має високу температуру горіння (від 800°C). 24 березня 2022 року повідомлялося, що російські війська скинули кілька фосфорних бомб в Луганській області.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 39: Бісектриса кута (sft_shard_091_of_150.jsonl:line_80)
+- **Subject / Grade:** heometriya (Grade 7)
+- **Concept:** `Бісектриса кута` (Citation form: ✅)
+- **Scientific Terminology:** `['кут', 'бісектриса']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Бісектрисою кута називають промінь з початком у вершині кута, який ділить цей кут на два рівних кути.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 40: Фільтрування (sft_shard_027_of_150.jsonl:line_382)
+- **Subject / Grade:** informatyka (Grade 10)
+- **Concept:** `Фільтрування` (Citation form: ✅)
+- **Scientific Terminology:** `['відбір', 'таблиця']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Фільтрування — це відбір із таблиці записів, які містять задане значення в обраних полях.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 41: Видатки державного бюджету (sft_shard_136_of_150.jsonl:line_170)
+- **Subject / Grade:** pravoznavstvo (Grade 11)
+- **Concept:** `Видатки державного бюджету` (Citation form: ✅)
+- **Scientific Terminology:** `['закон', 'видаток', 'бюджет', 'кошт', 'здійснення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Видатки державного бюджету — це кошти, які спрямовують на здійснення програм і заходів, що передбачені законом про бюджет на поточний рік.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 42: Мале коло кровообігу (sft_shard_042_of_150.jsonl:line_255)
 - **Subject / Grade:** biolohiya (Grade 7)
-- **Concept:** `Археї` (Citation form: ✅)
-- **Scientific Terminology:** `['учасник', 'кругообіг', 'речовина']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Археї – учасники багатьох важливих природних явищ, пов'язаних з кругообігом хімічних речовин на Землі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Мале коло кровообігу` (Citation form: ✅)
+- **Scientific Terminology:** `['орган', 'кровообіг', 'рух', 'кров', 'легінь']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Мале коло кровообігу – це рух крові через легені, де вона насичується киснем і перетворюється в артеріальну, а велике коло кровообігу – це рух артеріальної крові через органи, де перетворюється у венозну, насичену вуглекислим газом.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 33: Модернізм (sft_shard_012_of_150.jsonl:line_387)
-- **Subject / Grade:** istoriya (Grade 10)
-- **Concept:** `Модернізм` (Citation form: ✅)
-- **Scientific Terminology:** `['течія', 'мистецтво', 'змішування', 'елемент', 'стиль']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Модернізм — сукупність течій у мистецтві XX ст., якій притаманні змішування елементів різних стилів і революційні перетворення засобів виразності.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 43: Освітлення (sft_shard_147_of_150.jsonl:line_210)
+- **Subject / Grade:** informatyka (Grade 9)
+- **Concept:** `Освітлення` (Citation form: ✅)
+- **Scientific Terminology:** `['установка', 'настройка', 'джерело', 'сцена']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Освітлення — створення, установка напрямків й настройка джерел освітлення на створеній сцені.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 34: Грант (sft_shard_134_of_150.jsonl:line_384)
+### Record 44: Ренатурація (sft_shard_149_of_150.jsonl:line_314)
+- **Subject / Grade:** biolohiya (Grade 9)
+- **Concept:** `Ренатурація` (Citation form: ✅)
+- **Scientific Terminology:** `['відновлення', 'структура', 'макромолекула', 'денатурація']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Ренатурація — відновлення просторової структури макромолекул після денатурації.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 45: Авторитарний стиль (sft_shard_003_of_150.jsonl:line_141)
+- **Subject / Grade:** ekonomika (Grade 11)
+- **Concept:** `Авторитарний стиль` (Citation form: ✅)
+- **Scientific Terminology:** `['стиль', 'поведінка', 'керівник', 'вказівка', 'ініціатива']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Авторитарний стиль — це поведінка керівника, який схильний давати чіткі вказівки, домагатися певної ініціативи від персоналу та постійно контролювати дії підлеглих.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 46: Повість (sft_shard_023_of_150.jsonl:line_451)
+- **Subject / Grade:** zarlit (Grade 5)
+- **Concept:** `Повість` (Citation form: ✅)
+- **Scientific Terminology:** `['твір', 'оповідання', 'обсяг']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Повість – прозовий твір, який має більший, ніж оповідання, обсяг.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 47: Підприємництво (sft_shard_079_of_150.jsonl:line_75)
+- **Subject / Grade:** finansova (Grade 9)
+- **Concept:** `Підприємництво` (Citation form: ✅)
+- **Scientific Terminology:** `['навичка', 'компетенція']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Підприємництво — складна та багатогранна діяльність, яка потребує різноманітних навичок і компетенцій.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 48: Державні символи (sft_shard_020_of_150.jsonl:line_289)
+- **Subject / Grade:** etyka (Grade 5)
+- **Concept:** `Державні символи` (Citation form: ✅)
+- **Scientific Terminology:** `['символ', 'закон', 'держава']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Державні символи — закріплені в законах знаки держави.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 49: Грант (sft_shard_026_of_150.jsonl:line_201)
 - **Subject / Grade:** finansova (Grade 9)
 - **Concept:** `Грант` (Citation form: ✅)
 - **Scientific Terminology:** `['особа', 'організація', 'бізнес', 'реалізація', 'проєкт']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Грант — це гроші, які надають фізичним особам, організаціям чи бізнесам для реалізації певного проєкту, і їх не потрібно повертати.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 35: Дана ситуація (sft_shard_046_of_150.jsonl:line_17)
-- **Subject / Grade:** matematyka (Grade 6)
-- **Concept:** `Дана ситуація` (Citation form: ✅)
-- **Scientific Terminology:** `['ситуація', 'задача', 'рівність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Дана ситуація — це задача на рівність двох величин.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 36: Мехатроніка (sft_shard_002_of_150.jsonl:line_255)
-- **Subject / Grade:** fizyka (Grade 9)
-- **Concept:** `Мехатроніка` (Citation form: ✅)
-- **Scientific Terminology:** `['галузь', 'інженерія', 'механіка', 'електроніка', 'система']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Мехатроніка — це галузь інженерії, що поєднує механіку, електроніку, системи керування та програмування для створення керованих, адаптивних і інтелектуальних технічних систем.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 37: Правопорушення (sft_shard_079_of_150.jsonl:line_273)
-- **Subject / Grade:** ya_doslidzhuiu_svit (Grade 4)
-- **Concept:** `Правопорушення` (Citation form: ✅)
-- **Scientific Terminology:** `['вчинок', 'відповідальність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Правопорушення — це протиправні небезпечні вчинки, за які можуть притягнути до юридичної відповідальності.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 38: Цифровий слід (sft_shard_044_of_150.jsonl:line_277)
-- **Subject / Grade:** hromadianska (Grade 9)
-- **Concept:** `Цифровий слід` (Citation form: ✅)
-- **Scientific Terminology:** `["пам'ять", 'інтернет', 'дія']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Цифровий слід — це пам'ять інтернету про наші дії.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 39: Запозичена іншомовна лексика (sft_shard_150_of_150.jsonl:line_131)
-- **Subject / Grade:** ukrmova (Grade university)
-- **Concept:** `Запозичена іншомовна лексика` (Citation form: ✅)
-- **Scientific Terminology:** `['лексика', 'словозміна', 'специфіка', 'мюзикл']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Запозичена іншомовна лексика – це іноніми, які не набули словозміни, властивої українським словам, зберегли виразну фонетичну й семантичну специфіку мови-джерела: шосе, кафе, пюре, мюзикл, журі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 40: Авторство (sft_shard_131_of_150.jsonl:line_477)
-- **Subject / Grade:** ukrmova (Grade 5)
-- **Concept:** `Авторство` (Citation form: ✅)
-- **Scientific Terminology:** `['належність', 'твір', 'проєкт', 'винахід', 'авторка']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Авторство — належність твору, проєкту, винаходу певному/певній автору/авторці.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 41: Похідні способи набуття права власності (sft_shard_121_of_150.jsonl:line_171)
+### Record 50: Дисциплінарне стягнення (sft_shard_029_of_150.jsonl:line_432)
 - **Subject / Grade:** pravoznavstvo (Grade 11)
-- **Concept:** `Похідні способи набуття права власності` (Citation form: ✅)
-- **Scientific Terminology:** `['набуття', 'власність', 'отримання', 'річ', 'підстава']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Похідні способи набуття права власності — це отримання речі на підставі цивільно-правових договорів (купівля–продаж, міна, дарування тощо), односторонніх правочинів особи (наприклад, за заповітом), актів органів державної влади чи місцевого самоврядування.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 42: Раціональне рівняння (sft_shard_053_of_150.jsonl:line_255)
-- **Subject / Grade:** algebra (Grade 8)
-- **Concept:** `Раціональне рівняння` (Citation form: ✅)
-- **Scientific Terminology:** `['рівняння', 'вираз']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Раціональне рівняння називається дробовим раціональним рівнянням, якщо принаймні одна з його частин містить дробовий вираз.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 43: Поміркованість суду (sft_shard_039_of_150.jsonl:line_210)
-- **Subject / Grade:** zarlit (Grade 9)
-- **Concept:** `Поміркованість суду` (Citation form: ✅)
-- **Scientific Terminology:** `['поміркованість', 'суд']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Поміркованість суду – це поміркованість присяжних, поміркованість присяжних в цілому – це поміркованість кожного зокрема.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 44: Безпека особистого самовираження (sft_shard_076_of_150.jsonl:line_314)
-- **Subject / Grade:** etyka (Grade 5)
-- **Concept:** `Безпека особистого самовираження` (Citation form: ✅)
-- **Scientific Terminology:** `['безпека', 'самовираження', 'сприйняття', 'зміст', 'передача']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Безпека особистого самовираження — суспільне сприйняття права на зміст і спосіб передачі інформації.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 45: Символи хімічних елементів (sft_shard_141_of_150.jsonl:line_141)
-- **Subject / Grade:** pryroda (Grade 6)
-- **Concept:** `Символи хімічних елементів` (Citation form: ✅)
-- **Scientific Terminology:** `['символ', 'елемент', 'абетка']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Символи хімічних елементів — це абетка хімічної мови.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 46: Система колективної безпеки (sft_shard_010_of_150.jsonl:line_451)
-- **Subject / Grade:** vsesvitnia (Grade 10)
-- **Concept:** `Система колективної безпеки` (Citation form: ✅)
-- **Scientific Terminology:** `['система', 'безпека', 'здійснення', 'захист', 'загроза']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Система колективної безпеки — сукупність спільних дій держав із метою здійснення захисту від внутрішніх та зовнішніх загроз.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 47: Сузір'я (sft_shard_142_of_150.jsonl:line_75)
-- **Subject / Grade:** astronomiya (Grade 11)
-- **Concept:** `Сузір'я` (Citation form: ✅)
-- **Scientific Terminology:** `['ділянка', 'сфера', 'зручність', 'орієнтування', 'небо']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Сузір'я — ділянки, на які поділена небесна сфера для зручності орієнтування на зоряному небі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 48: Хореографічна поема (sft_shard_108_of_150.jsonl:line_289)
-- **Subject / Grade:** mystetstvo (Grade 9)
-- **Concept:** `Хореографічна поема` (Citation form: ✅)
-- **Scientific Terminology:** `['поема', 'твір', 'жанр']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Хореографічна поема — великий одночастинний оркестровий програмний твір, в основі якого — хореографічний жанр.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 49: Нейромедіатори (sft_shard_018_of_150.jsonl:line_201)
-- **Subject / Grade:** biolohiya (Grade 9)
-- **Concept:** `Нейромедіатори` (Citation form: ✅)
-- **Scientific Terminology:** `['речовина', 'передача', 'імпульс', 'нейрон', 'синапс']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Нейромедіатори — речовини, що здійснюють передачу імпульсів між нейронами у синапсах.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 50: Мода (sft_shard_071_of_150.jsonl:line_432)
-- **Subject / Grade:** matematyka (Grade 11)
-- **Concept:** `Мода` (Citation form: ✅)
-- **Scientific Terminology:** `['елемент', 'вибірка']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Мода — це те значення елемента вибірки, яке зустрічається частіше за інші.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Дисциплінарне стягнення` (Citation form: ✅)
+- **Scientific Terminology:** `['стягнення', 'акт', 'захід', 'орган', 'право']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Дисциплінарне стягнення — передбачений у нормативно-правовому акті захід примусового впливу, що застосовується органом, якому надано право прийняття на роботу працівника відповідно до його компетенції, за скоєний дисциплінарний проступок.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**

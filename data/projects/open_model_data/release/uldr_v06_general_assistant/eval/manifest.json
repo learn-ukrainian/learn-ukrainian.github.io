@@ -1,41 +1,41 @@
 {
   "dataset_name": "uldr_v06_general_assistant_eval",
-  "total_cases": 237,
-  "unique_concepts_count": 219,
-  "unique_chunks_count": 237,
+  "total_cases": 199,
+  "unique_concepts_count": 193,
+  "unique_chunks_count": 199,
   "duplicate_pairs_count": 0,
   "shards_count": 5,
-  "max_shard_size_kb": 120.17,
+  "max_shard_size_kb": 100.72,
   "shards": [
     {
       "shard_file": "eval_shard_001_of_005.jsonl",
-      "cases_count": 47,
-      "size_kb": 115.56,
-      "sha256": "fd3496ff870db471f7b5158010b6b01b92e94d5e572338e2c3b8b597c052c08f"
+      "cases_count": 39,
+      "size_kb": 96.34,
+      "sha256": "bfd1fb98873d2ffe82391680f341bcccc9160a4d41e0c97b8abfafdf2102618d"
     },
     {
       "shard_file": "eval_shard_002_of_005.jsonl",
-      "cases_count": 47,
-      "size_kb": 120.17,
-      "sha256": "08346a038affde39701b6aef8045be2714da1202801e0842efd8846a665bc9b5"
+      "cases_count": 39,
+      "size_kb": 100.72,
+      "sha256": "e3b38f8866d5d5e82e0dcee078201f903f9e7f9cb51d22590d4a336ce4470d70"
     },
     {
       "shard_file": "eval_shard_003_of_005.jsonl",
-      "cases_count": 47,
-      "size_kb": 117.47,
-      "sha256": "b053caf4a74d9818d547e0cf526e12e3ad099b416e7953701f4dcaa1f2218e35"
+      "cases_count": 39,
+      "size_kb": 99.04,
+      "sha256": "8ccc7e6b37b8f9f7f1be120b3b8bd86d79f7f5a448a259a3b7eb759d08ac1b1a"
     },
     {
       "shard_file": "eval_shard_004_of_005.jsonl",
-      "cases_count": 47,
-      "size_kb": 115.26,
-      "sha256": "15f93ac3a5b9a0e5e2db325d052504ebd00ebdce22c05db79230a918fb5dff7d"
+      "cases_count": 39,
+      "size_kb": 95.29,
+      "sha256": "fde4a535623335b38ec15fd9aded4209f4248346d15b2ba8c3e3a6b5797c90a4"
     },
     {
       "shard_file": "eval_shard_005_of_005.jsonl",
-      "cases_count": 49,
-      "size_kb": 113.95,
-      "sha256": "a2d1e36ba6df3b40c49d859580311f864f1103a87cfb576027b47ac90b3dd21f"
+      "cases_count": 43,
+      "size_kb": 100.11,
+      "sha256": "893f338996bd907f2c491e2f09a78fd3d287f0d7e7cbc419f3cf3a6c572e21d3"
     }
   ]
 }
