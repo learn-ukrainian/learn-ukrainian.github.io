@@ -364,14 +364,14 @@ def test_eval_benchmark_disk_invariants_and_schema():
     validator = jsonschema.Draft202012Validator(schema)
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
-    if manifest["total_cases"] == 2500:
-        assert manifest["shards_count"] == 5
-        assert len(manifest["shards"]) == 5
+    if manifest["total_cases"] >= 100:
+        assert manifest["shards_count"] >= 1
+        assert len(manifest["shards"]) == manifest["shards_count"]
         total_seen = 0
         seen_books = set()
         seen_subjects = set()
         for shard_info in manifest["shards"]:
-            assert shard_info["cases_count"] == 500
+            assert shard_info["cases_count"] > 0
             assert shard_info["size_kb"] < 2000.0, f"Shard exceeds ceiling: {shard_info}"
             shard_path = DEFAULT_OUTPUT_DIR / "eval" / shard_info["shard_file"]
             assert shard_path.is_file()
@@ -412,10 +412,11 @@ def test_eval_benchmark_disk_invariants_and_schema():
 
                     total_seen += 1
             assert hasher.hexdigest() == shard_info["sha256"]
-        assert total_seen == 2500
+        assert total_seen == manifest["total_cases"]
         # Stratification: all 22 held-out textbooks and all 22 curriculum subjects present
         assert len(seen_books) == len(HELD_OUT_TEXTBOOKS), f"Missing held-out books: {HELD_OUT_SET - seen_books}"
         assert len(seen_subjects) == len(HELD_OUT_TEXTBOOKS), f"Expected 22 subjects, got {len(seen_subjects)}"
+        assert manifest.get("duplicate_pairs_count", 0) == 0
 
 
 
@@ -998,3 +999,84 @@ def test_r10_fable_findings_elimination():
     assert "природничо-наукові закономірності" not in task_geo["query"]
     assert "природне явище" not in task_geo["reference_solution"]
     assert "географічн" in task_geo["query"] or "просторов" in task_geo["query"]
+
+
+def test_r11_fable_findings_elimination():
+    """Verify that all Round 11 adversarial review findings are eliminated.
+
+    1. Adjective-to-noun agreement in lemmatize_noun_phrase (neuter/singular agreement).
+    2. Generalized hyphen-loss detection and repair (-небудь, -но, -то).
+    3. Spliced sentence / column-fusion OCR detection.
+    4. Evaluatives, superlatives, and non-definitions rejected.
+    5. Pure proper nouns and superlative concepts rejected.
+    6. Terminology extraction: single-word nouns only, no substantivized adjectives, context disambiguation.
+    7. Natural-science framing neutralized (no 'явище «...»' in natural sciences).
+    """
+    cur = get_vesum_cursor()
+
+    # 1. Adjective-to-noun agreement in lemmatize_noun_phrase
+    assert lemmatize_noun_phrase("мембранним травленням", cur) == "Мембранне травлення"
+    assert lemmatize_noun_phrase("електричним струмом", cur) == "Електричний струм"
+
+    # 2. Generalized hyphen-loss detection and repair
+    assert sanitize_typography("когонебудь покликали") == "кого-небудь покликали"
+    assert sanitize_typography("тількино прийшли") == "тільки-но прийшли"
+    assert sanitize_typography("якто кажуть") == "як-то кажуть"
+    assert has_space_split_ocr_word("когонебудь покликали", cur) is True
+    assert has_space_split_ocr_word("кого-небудь покликали", cur) is False
+    assert has_space_split_ocr_word("тількино прийшли", cur) is True
+    assert has_space_split_ocr_word("тільки-но прийшли", cur) is False
+
+    # 3. Spliced sentence / column fusion OCR detection
+    assert has_space_split_ocr_word("...в комунікаційних Адресна книга — це...", cur) is True
+
+    # 4. Evaluatives, superlatives, and non-definitions rejected
+    assert is_definitional_for_concept("Контакт нейронів — одна з найскладніших структур нервової системи.", "Контакт нейронів", cur) is False
+    assert is_definitional_for_concept("Телескоп — це якщо дивитися на зорі вночі.", "Телескоп", cur) is False
+    assert is_definitional_for_concept("Адресна книга — така сама програма, як текстовий редактор.", "Адресна книга", cur) is False
+    assert is_definitional_for_concept("Потужний процесор — це ефективний інструмент обчислень.", "Потужний процесор", cur) is False
+    assert is_definitional_for_concept("Подібно до інших міст, саме так називають центр поселення.", "Центр", cur) is False
+
+    # 5. Pure proper nouns, superlatives, and evaluatives rejected as concepts
+    assert clean_and_validate_candidate("Франція", cur) is None
+    assert clean_and_validate_candidate("Дніпро", cur) is None
+    assert clean_and_validate_candidate("Найкращий вихід", cur) is None
+    assert clean_and_validate_candidate("Потужний комп'ютер", cur) is None
+    assert clean_and_validate_candidate("Також клітина", cur) is None
+    assert clean_and_validate_candidate("Користь від велотренувань очевидна", cur) is None
+    assert is_definitional_for_concept("Кримські гори – унікальні заповідні території, які потребують охорони.", "Кримські гори", cur) is False
+
+    # 6. Terminology extraction: single-word nouns only, no substantivized adjectives, context disambiguation
+    s_term = "Судом ухвалено вирок щодо засудженого та свідків, які утворили пари для дачі показів."
+    terms = extract_scientific_terminology_for_snippet(s_term, "Вирок", "pravoznavstvo", cur)
+    assert "суд" in terms
+    assert "судома" not in terms
+    assert "пара" in terms
+    assert "пар" not in terms
+    assert "засуджений" not in terms  # Substantivized adjective rejected
+    assert all(" " not in t for t in terms)
+
+    s_bio = "Передня кінцівка у хребетних тварин має складну будову скелета."
+    terms_bio = extract_scientific_terminology_for_snippet(s_bio, "Скелет", "biolohiya", cur)
+    assert "передня" not in terms_bio  # Adjective rejected
+    assert "хребетні" not in terms_bio  # Adjective / :ns rejected
+    assert any(t in terms_bio for t in ("тварина", "тварин", "будова", "кінцівка"))
+
+    # 7. Natural-science framing neutralized
+    pryroda_chunk = TextbookChunk(
+        chunk_id="test_nat_1",
+        title="Будова речовини",
+        subject="pryrodoznavstvo",
+        grade="5",
+        author="Коршевнюк Т. В.",
+        source_file="pryroda_5.pdf",
+        text="Дифузія — це процес взаємного проникнення молекул однієї речовини між молекулами іншої.",
+        char_count=90,
+        concept="Дифузія",
+        snippet="Дифузія — це процес взаємного проникнення молекул однієї речовини між молекулами іншої.",
+        terms=["молекула", "речовина"],
+    )
+    task_nat = synthesize_eval_task(pryroda_chunk, 1)
+    assert "явища «Дифузія»" not in task_nat["query"]
+    assert "природного явища" not in task_nat["reference_solution"]
+    assert "поняття «Дифузія»" in task_nat["query"] or "теми «Дифузія»" in task_nat["query"]

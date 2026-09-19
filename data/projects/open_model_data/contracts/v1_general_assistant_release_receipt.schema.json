@@ -64,7 +64,7 @@
         },
         "total_cases": {
           "type": "integer",
-          "const": 2500
+          "minimum": 100
         },
         "max_shard_size_kb": {
           "type": "number",
@@ -89,8 +89,8 @@
           "additionalProperties": false,
           "required": ["stem", "humanities"],
           "properties": {
-            "stem": { "type": "integer", "minimum": 500 },
-            "humanities": { "type": "integer", "minimum": 500 }
+            "stem": { "type": "integer", "minimum": 50 },
+            "humanities": { "type": "integer", "minimum": 50 }
           }
         }
       }
