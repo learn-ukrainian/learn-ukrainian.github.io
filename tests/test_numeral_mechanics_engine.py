@@ -291,13 +291,13 @@ def test_approximate_cards_register_and_unambiguous_distractors():
 def test_card_48_subject_clarity_and_collective_distractor():
     """Regression test for Card 48 (Astra review finding):
     - Card 48 makes subject reading explicit ('здобули перемогу').
-    - Distractor rejects invalid collective numeral with feminine noun ('четверо дівчат').
-    - No ambiguous accusative distractor ('чотирьох дівчат').
+    - Uses unambiguous adult female noun ('аспірантки') avoiding contested juvenile collective nouns.
+    - Distractor rejects invalid collective numeral with adult female noun ('четверо аспіранток').
     """
     cards = {c.card_id: c for c in build_canonical_numeral_cards()}
     card48 = cards["numeral_48"]
     assert "здобули перемогу" in card48.sentence_before
-    assert card48.correct_answer == "чотири дівчини"
+    assert card48.correct_answer == "чотири аспірантки"
     d48 = [d.text for d in card48.distractors]
-    assert "чотирьох дівчат" not in d48, "Card 48 must not reject accusative 'чотирьох дівчат'"
-    assert "четверо дівчат" in d48, "Card 48 must test collective feminine restriction 'четверо дівчат'"
+    assert "четверо дівчат" not in d48, "Card 48 must not use contested 'четверо дівчат'"
+    assert "четверо аспіранток" in d48, "Card 48 must test collective adult female restriction with 'четверо аспіранток'"
