@@ -664,6 +664,41 @@ def test_writer_artifact_allows_original_inline_error_correction():
     })
 
 
+def _dump_lesson_resources(items):
+    import json
+
+    from scripts.build.linear_pipeline import _parse_and_dump_writer_json_artifact
+
+    return yaml.safe_load(_parse_and_dump_writer_json_artifact(
+        "resources.yaml", json.dumps(items, ensure_ascii=False), 1, lesson_mode=True,
+    ))
+
+
+def test_lesson_resource_source_ref_is_accepted_as_source():
+    dumped = _dump_lesson_resources([
+        {"title": "Буквар", "source_ref": "Захарійчук, 1 клас, с. 14"},
+        {"title": "Чанк", "chunk_id": "1-klas-bukvar_s0014"},
+        {"title": "Має source", "source": "оригінал", "source_ref": "інше"},
+    ])
+    assert dumped[0]["source"] == "Захарійчук, 1 клас, с. 14"
+    assert dumped[0]["source_ref"] == "Захарійчук, 1 клас, с. 14"
+    assert "source" not in dumped[1] and "url" not in dumped[1]
+    assert dumped[2]["source"] == "оригінал"
+
+
+@pytest.mark.parametrize("item", [
+    {"title": "", "source_ref": "Захарійчук, 1 клас, с. 14"},
+    {"title": "Буквар", "source_ref": "  "},
+    {"title": "Буквар", "source_ref": 14},
+    {"title": "Буквар"},
+])
+def test_lesson_resource_without_title_or_locator_still_fails(item):
+    from scripts.build.linear_pipeline import LinearPipelineError
+
+    with pytest.raises(LinearPipelineError, match="requires title and url/chunk_id/source"):
+        _dump_lesson_resources([item])
+
+
 def test_original_inline_error_correction_skips_workbook_only_placement(gold):
     module, source, plan = gold
     data = yaml.safe_load((source / "activities.yaml").read_text())

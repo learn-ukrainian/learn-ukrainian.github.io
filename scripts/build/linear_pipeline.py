@@ -9623,11 +9623,28 @@ def _parse_and_dump_writer_json_artifact(
         raise LinearPipelineError(f"{artifact} invalid JSON: {exc}") from exc
 
     if lesson_mode:
+        _normalize_lesson_writer_artifact(artifact, parsed)
         _validate_lesson_writer_artifact(artifact, parsed)
     else:
         _normalize_writer_json_artifact(artifact, parsed)
         _validate_writer_json_artifact(artifact, parsed)
     return yaml.safe_dump(parsed, allow_unicode=True, sort_keys=False)
+
+
+def _normalize_lesson_writer_artifact(artifact: str, parsed: Any) -> None:
+    """Normalize narrow, lossless lesson writer shapes before validation.
+
+    Writers label textbook locators as `source_ref`; the lesson resource
+    contract names that field `source`. Copy it across, never invent a URL.
+    """
+    if artifact != "resources.yaml" or not isinstance(parsed, list):
+        return
+    for item in parsed:
+        if not isinstance(item, dict) or item.get("source"):
+            continue
+        source_ref = item.get("source_ref")
+        if isinstance(source_ref, str) and source_ref.strip():
+            item["source"] = source_ref.strip()
 
 
 def _validate_lesson_writer_artifact(artifact: str, parsed: Any) -> None:
