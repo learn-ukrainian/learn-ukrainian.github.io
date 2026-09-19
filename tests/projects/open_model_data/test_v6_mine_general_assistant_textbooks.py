@@ -83,6 +83,44 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     verify_zero_train_eval_leakage,
 )
 
+
+def _has_textbooks() -> bool:
+    if not DEFAULT_SOURCES_DB.is_file() or DEFAULT_SOURCES_DB.stat().st_size < 1_000_000:
+        return False
+    try:
+        import sqlite3
+        with sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True) as conn:
+            r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='textbooks'").fetchone()
+            return r is not None
+    except Exception:
+        return False
+
+
+def _has_vesum() -> bool:
+    if not DEFAULT_VESUM_DB.is_file() or DEFAULT_VESUM_DB.stat().st_size < 1_000_000:
+        return False
+    try:
+        import sqlite3
+        with sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True) as conn:
+            r = conn.execute("SELECT 1 FROM sqlite_master WHERE type IN ('table', 'view') AND name='forms_all'").fetchone()
+            return r is not None
+    except Exception:
+        return False
+
+
+HAS_TEXTBOOKS = _has_textbooks()
+HAS_VESUM = _has_vesum()
+
+requires_textbooks = pytest.mark.skipif(
+    not HAS_TEXTBOOKS,
+    reason="Textbooks database not present or missing required tables in CI sandbox",
+)
+
+requires_vesum = pytest.mark.skipif(
+    not HAS_VESUM,
+    reason="VESUM database not present or missing required tables in CI sandbox",
+)
+
 _CHUNKS_CACHE: tuple[list[TextbookChunk], list[TextbookChunk]] | None = None
 
 
@@ -94,6 +132,7 @@ def get_cached_chunks() -> tuple[list[TextbookChunk], list[TextbookChunk]]:
 
 
 @pytest.mark.timeout(360)
+@requires_textbooks
 def test_held_out_firewall_zero_leakage():
     """Verify that held-out textbooks and training textbooks form strictly disjoint sets."""
     eval_chunks, train_chunks = get_cached_chunks()
@@ -115,6 +154,7 @@ def test_held_out_firewall_zero_leakage():
 
 
 @pytest.mark.timeout(360)
+@requires_textbooks
 def test_subject_and_grade_coverage():
     """Verify that all state curriculum subjects and grades 1-11 are covered."""
     eval_chunks, train_chunks = get_cached_chunks()
@@ -291,6 +331,8 @@ def test_concept_extraction_rejects_imperatives():
 
 
 @pytest.mark.timeout(360)
+@requires_textbooks
+@requires_vesum
 def test_synthetic_pipeline_hermetic_run():
     """Run a hermetic end-to-end dry run in a temp dir and validate contracts."""
     eval_chunks, train_chunks = get_cached_chunks()
@@ -532,12 +574,13 @@ def test_snippet_rejects_exercises_and_ocr():
     ex5 = "Які з фігур, зображених на рисунку 20.23, збігаються зі своїми образами при гомотетії із центром O та коефіцієнтом k < 0?"
     assert extract_meaningful_text_snippet(ex5) == ""
 
-    # Clean textbook exposition passes when grounded
-    clean = "Функція називається парною, якщо для будь-якого значення аргументу з області визначення значення функції залишаються однаковими."
-    res = extract_meaningful_text_snippet(clean, concept="парна функція", terms=["функція"])
-    assert len(res) >= 50
-    assert "парною" in res
-    assert not res.endswith("?.")
+    # Clean textbook exposition passes when grounded (requires VESUM in environment)
+    if HAS_VESUM:
+        clean = "Функція називається парною, якщо для будь-якого значення аргументу з області визначення значення функції залишаються однаковими."
+        res = extract_meaningful_text_snippet(clean, concept="парна функція", terms=["функція"])
+        assert len(res) >= 50
+        assert "парною" in res
+        assert not res.endswith("?.")
 
 
 def test_terminology_rejects_stopwords():
@@ -558,6 +601,7 @@ def test_terminology_rejects_stopwords():
             assert w not in STOPWORD_TERMS, f"Stopword '{w}' found in scientific terms: {terms}"
 
 
+@requires_vesum
 def test_trajectory_step3_grounding_no_fake_claims():
     """Verify that trajectory step 3 is grounded in concept terms and does not make fake discipline claims."""
     # Economics chunk on budget: should NOT claim "верховенство права" or "суверенітет"
@@ -584,6 +628,7 @@ def test_trajectory_step3_grounding_no_fake_claims():
             assert f"терміни: {w}" not in step3.lower(), f"Stopword '{w}' cited in vesum note: {step3}"
 
 
+@requires_vesum
 def test_terminology_no_bare_adjectives_or_subsets():
     """Verify that terminology extraction never produces bare adjectives or redundant subset terms."""
     dummy_chunk = TextbookChunk(
@@ -610,6 +655,7 @@ def test_terminology_no_bare_adjectives_or_subsets():
                 pytest.fail(f"Term '{t1}' is a subset of '{t2}' in terms: {terms}")
 
 
+@requires_vesum
 def test_concept_contradiction_rejection():
     """Verify that contradictory concepts and modifiers are strictly rejected."""
     # Arithmetic vs geometric
@@ -658,6 +704,7 @@ def test_dangling_starters_rejection():
     assert not DANGLING_STARTER_RE.search(good_sentence)
 
 
+@requires_vesum
 def test_terminology_containment_in_snippet_or_concept():
     """Verify that scientific terms are strictly present in the snippet or concept (no hallucinated chunk terms)."""
     # Vectors snippet with no triangles mentioned
@@ -681,6 +728,7 @@ def test_terminology_containment_in_snippet_or_concept():
         ), f"Term '{t}' not in snippet or concept"
 
 
+@requires_vesum
 def test_eval_query_solution_factual_alignment():
     """Verify that eval tasks have honest attribution, zero fake algorithm claims, and no ungrounded curriculum claims."""
     dummy_chunk = TextbookChunk(
@@ -713,6 +761,7 @@ def test_eval_query_solution_factual_alignment():
 
 
 @pytest.mark.timeout(300)
+@requires_vesum
 def test_dynamic_verification_functions_pass():
     """Verify that dynamic verification functions execute without error."""
     eval_dir = DEFAULT_OUTPUT_DIR / "eval"
@@ -780,6 +829,7 @@ def test_r6_fable_findings_rejection():
     assert "за програмою" not in all_text
 
 
+@requires_vesum
 def test_r7_fable_findings_rejection():
     """Verify rejection of all defects identified in Claude Fable Round 7 review."""
     cur = get_vesum_cursor()
@@ -864,16 +914,18 @@ def test_r8_mojibake_rejection_and_strict_concept_grounding():
     assert clean_and_validate_candidate("12345") is None
 
     # 2. Strict concept grounding: concept words in STOPWORD_TERMS (like Школа) must not bypass grounding
-    s_active = "Активність у шкільному житті — це реальна можливість впливати на свій освітній простір."
-    assert is_snippet_grounded_in_concept(s_active, "Школа", cur_ves=cur) is False
+    if HAS_VESUM:
+        s_active = "Активність у шкільному житті — це реальна можливість впливати на свій освітній простір."
+        assert is_snippet_grounded_in_concept(s_active, "Школа", cur_ves=cur) is False
 
-    s_shkola_rhetorical = "Школа — це не лише будівля для навчання, а спільнота, у якій щодня народжуються ідеї."
-    assert is_snippet_grounded_in_concept(s_shkola_rhetorical, "Школа", cur_ves=cur) is False
+        s_shkola_rhetorical = "Школа — це не лише будівля для навчання, а спільнота, у якій щодня народжуються ідеї."
+        assert is_snippet_grounded_in_concept(s_shkola_rhetorical, "Школа", cur_ves=cur) is False
 
-    s_shkola = "Школа — це заклад загальної середньої освіти для навчання дітей."
-    assert is_snippet_grounded_in_concept(s_shkola, "Школа", cur_ves=cur) is True
+        s_shkola = "Школа — це заклад загальної середньої освіти для навчання дітей."
+        assert is_snippet_grounded_in_concept(s_shkola, "Школа", cur_ves=cur) is True
 
 
+@requires_vesum
 def test_r9_fable_findings_elimination():
     """Verify systematic elimination of all 4 defect classes identified in Round 8 CF review."""
     cur = get_vesum_cursor()
@@ -933,6 +985,7 @@ def test_r9_fable_findings_elimination():
     assert len(terms_teplo) >= 3
 
 
+@requires_vesum
 def test_r10_fable_findings_elimination():
     """Verify systematic elimination of all 7 defect classes identified in Round 10 CF review."""
     cur = get_vesum_cursor()
@@ -1008,6 +1061,7 @@ def test_r10_fable_findings_elimination():
     assert "географічн" in task_geo["query"] or "просторов" in task_geo["query"]
 
 
+@requires_vesum
 def test_r11_fable_findings_elimination():
     """Verify that all Round 11 adversarial review findings are eliminated.
 
@@ -1089,6 +1143,7 @@ def test_r11_fable_findings_elimination():
     assert "поняття «Дифузія»" in task_nat["query"] or "теми «Дифузія»" in task_nat["query"]
 
 
+@requires_vesum
 def test_r13_fable_findings_elimination():
     """Verify that all Round 12 adversarial review findings are eliminated.
 
@@ -1186,6 +1241,7 @@ def test_r13_fable_findings_elimination():
     assert "плем'я" in get_vesum_lemmas("рід і племені та плем'я", cur)
 
 
+@requires_vesum
 def test_round_16_failing_examples_and_mechanisms():
     """Verify that all 18 real failing examples from Round 15 review are rejected and valid definitions are accepted."""
     cur = get_vesum_cursor(DEFAULT_VESUM_DB)
