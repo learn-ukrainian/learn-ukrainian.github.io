@@ -2143,18 +2143,18 @@
       "blank_target": "чотири дівчини",
       "correct_answer": "чотири дівчини",
       "options": [
-        "четверо дівчат",
+        "чотирьох дівчат",
         "чотири дівчині",
         "чотири дівчини",
         "чотири дівчат"
       ],
       "distractors": [
         {
-          "text": "четверо дівчат",
-          "interference_type": "collective_with_adult_female",
+          "text": "чотирьох дівчат",
+          "interference_type": "case_confusion_dative_locative",
           "explanation": {
-            "ua": "У нормативному літературному мовленні (зокрема в тестах ЗНО/НМТ) для осіб жіночого роду стандартом є власне кількісний числівник: 'чотири дівчини'; збірне сполучення 'четверо дівчат' має розмовний відтінок.",
-            "en": "In standard literary syntax (specifically ZNO/NMT tests), cardinal 'чотири дівчини' is the preferred norm for female persons; collective 'четверо дівчат' is stylistically marked."
+            "ua": "Форма родового/знахідного відмінка 'чотирьох дівчат' не може виступати підметом у називному контексті без прийменника чи керуючого слова; правильна форма називного відмінка — 'чотири дівчини'.",
+            "en": "Genitive/Accusative form 'чотирьох дівчат' cannot serve as the subject in a nominative context without governing context; correct nominative form is 'чотири дівчини'."
           }
         },
         {

@@ -1778,10 +1778,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             correct_answer="чотири дівчини",
             distractors=(
                 NumeralDistractor(
-                    text="четверо дівчат",
-                    interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
-                    explanation_ua="У нормативному літературному мовленні (зокрема в тестах ЗНО/НМТ) для осіб жіночого роду стандартом є власне кількісний числівник: 'чотири дівчини'; збірне сполучення 'четверо дівчат' має розмовний відтінок.",
-                    explanation_en="In standard literary syntax (specifically ZNO/NMT tests), cardinal 'чотири дівчини' is the preferred norm for female persons; collective 'четверо дівчат' is stylistically marked.",
+                    text="чотирьох дівчат",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма родового/знахідного відмінка 'чотирьох дівчат' не може виступати підметом у називному контексті без прийменника чи керуючого слова; правильна форма називного відмінка — 'чотири дівчини'.",
+                    explanation_en="Genitive/Accusative form 'чотирьох дівчат' cannot serve as the subject in a nominative context without governing context; correct nominative form is 'чотири дівчини'.",
                 ),
                 NumeralDistractor(
                     text="чотири дівчат",
