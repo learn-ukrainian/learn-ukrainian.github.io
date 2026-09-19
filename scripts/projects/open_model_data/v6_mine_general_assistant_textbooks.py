@@ -3832,6 +3832,7 @@ def main() -> int:
                 cwd=Path(__file__).resolve().parent,
                 text=True,
                 stderr=subprocess.DEVNULL,
+                timeout=30,
             ).strip()
         except Exception:
             git_commit = "unknown"

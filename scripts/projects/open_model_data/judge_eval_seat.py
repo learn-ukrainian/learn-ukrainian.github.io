@@ -112,6 +112,7 @@ def judge_batch_with_claude(batch: list[dict], batch_idx: int) -> list[dict]:
         text=True,
         capture_output=True,
         cwd=REPO_ROOT,
+        timeout=180,
     )
     if proc.returncode != 0:
         raise RuntimeError(f"ask-claude failed for batch {batch_idx}: {proc.stderr}")
