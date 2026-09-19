@@ -2144,6 +2144,10 @@ def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
     (weekly) and secondary_window=null. Do not default that to a fake 5h window."""
     from scripts.api import subscription_usage as su
 
+    # Freeze the pace clock: reset_at is derived from frozen now + reset_after_seconds
+    # so the window stays open no matter when the suite runs.
+    frozen = datetime(2026, 9, 15, 12, 0, tzinfo=UTC)
+    reset_after_seconds = 313014
     payload = {
         "rate_limit": {
             "allowed": True,
@@ -2151,8 +2155,8 @@ def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
             "primary_window": {
                 "used_percent": 40,
                 "limit_window_seconds": 604800,
-                "reset_after_seconds": 313014,
-                "reset_at": 1789805715,
+                "reset_after_seconds": reset_after_seconds,
+                "reset_at": int(frozen.timestamp()) + reset_after_seconds,
             },
             "secondary_window": None,
         }
@@ -2161,6 +2165,12 @@ def test_codex_wham_weekly_only_window_uses_limit_window_seconds(monkeypatch):
     def fake_http(method, url, headers=None, body=None, timeout_s=None):
         return 200, payload, None
 
+    real = su.compute_usage_pace
+
+    def _paced(used_pct, resets_at, *, window_minutes=None, now=None):
+        return real(used_pct, resets_at, window_minutes=window_minutes, now=now or frozen)
+
+    monkeypatch.setattr(su, "compute_usage_pace", _paced)
     monkeypatch.setattr(su, "_load_codex_oauth_token", lambda: "tok")
     monkeypatch.setattr(su, "_http_json_request", fake_http)
     res = su._probe_codex_native(timeout_s=5)
