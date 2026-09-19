@@ -847,6 +847,11 @@ class ActivityParser:
         for item_data in self._item_rows(data):
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
             answer = item_data.get('answer') or item_data.get('correct')
+            # A present "" is the contracted "no sign" choice (see lesson_gates
+            # fill_in_item_defects), not a missing answer.
+            if not answer and "" in (item_data.get('answer'), item_data.get('correct')):
+                items.append(FillInItem(sentence=sentence, answer="", options=item_data.get('options', []), explanation=item_data.get('explanation')))
+                continue
             if not answer:
                 blanks = item_data.get('blanks')
                 if isinstance(blanks, list) and blanks:
