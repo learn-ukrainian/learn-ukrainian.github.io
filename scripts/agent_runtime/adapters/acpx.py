@@ -76,7 +76,6 @@ import logging
 import os
 import re
 import shlex
-import shutil
 import stat
 import subprocess
 import sys
@@ -876,22 +875,31 @@ def _probe_node_semver(candidate: Path) -> tuple[int, int, int] | None:
 
 
 def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
-    """Resolve an absolute contract-matching ``node`` for ACPX shebang scripts.
+    """Resolve an absolute highest matching-major ``node`` for ACPX shebang scripts.
 
-    Prefer PATH when it already contains a usable ``node``, then fall back
-    through Homebrew keg-only ``node@<major>`` (from ``.nvmrc``) and the
-    fixed host install locations. Each candidate is validated once via
-    ``node --version`` (Node semver + major contract). Never invent a Node
-    runtime or consult an unreviewed global acpx install as a substitute.
+    Collect every ``node`` on PATH (each PATH directory, in order — not only
+    the first ``shutil.which`` hit), then Homebrew keg-only ``node@<major>``
+    (from ``.nvmrc``), then the fixed host install locations. A candidate
+    counts only when ``node --version`` reports a Node semver whose major
+    equals the ``.nvmrc`` major. Among those, return the highest semver;
+    equal versions keep the earlier candidate so ordering stays deterministic.
+
+    Highest matching-major is required because Node 22.14 lacks
+    ``zlib.createZstdDecompress``, which the Kimi ACP CLI imports (#8287).
+    Never invent a Node runtime or consult an unreviewed global acpx install
+    as a substitute.
     """
     required_major = _required_node_major(adapter_label=adapter_label)
     candidates: list[Path] = []
-    which = shutil.which("node")
-    if which:
-        candidates.append(Path(which))
+    for part in os.environ.get("PATH", "").split(os.pathsep):
+        if not part:
+            continue
+        candidates.append(Path(part) / "node")
     for root in (*_versioned_node_keg_dirs(required_major), *_NODE_HOST_BIN_DIRS):
         candidates.append(root / "node")
     seen: set[str] = set()
+    best: Path | None = None
+    best_version: tuple[int, int, int] | None = None
     for candidate in candidates:
         try:
             resolved = candidate.resolve(strict=True)
@@ -908,16 +916,20 @@ def _resolve_host_node_binary(*, adapter_label: str = "ACPX") -> Path:
             continue
         if version[0] != required_major:
             continue
-        return resolved
-    raise AcpxShadowRefusalError(
-        f"{adapter_label}: no Node {required_major}.x binary found on PATH or "
-        f"fixed host install locations (Homebrew node@{required_major} keg, "
-        "/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); each candidate "
-        "must report a Node semver via --version matching .nvmrc "
-        f"(required major {required_major}); required by the project-local acpx "
-        "``#!/usr/bin/env node`` shim (#6953)",
-        failure_code="node_runtime_unavailable",
-    )
+        if best_version is None or version > best_version:
+            best = resolved
+            best_version = version
+    if best is None:
+        raise AcpxShadowRefusalError(
+            f"{adapter_label}: no Node {required_major}.x binary found on PATH or "
+            f"fixed host install locations (Homebrew node@{required_major} keg, "
+            "/opt/homebrew/bin, /usr/local/bin, ~/.hermes/node/bin); each candidate "
+            "must report a Node semver via --version matching .nvmrc "
+            f"(required major {required_major}); required by the project-local acpx "
+            "``#!/usr/bin/env node`` shim (#6953)",
+            failure_code="node_runtime_unavailable",
+        )
+    return best
 
 
 def _shebang_uses_env_node(path: Path) -> bool:
