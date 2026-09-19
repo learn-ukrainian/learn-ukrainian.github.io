@@ -4,190 +4,190 @@
 
 | # | Origin | Concept | Subject | Grade | Terms | Citation | Anaphora-Free | OCR-Clean | Def-Aligned | Terms Valid | Verdict |
 |---|---|---|---|---|---|---|---|---|---|---|---|
-| 1 | `eval_shard_001_of_005.jsonl:line_26` | **Верхня палата** | vsesvitnia | 8 | палата, сенат, представник, духовенство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 2 | `eval_shard_001_of_005.jsonl:line_20` | **Меркантилізм** | vsesvitnia | 8 | політика, втручання, країна, накопичення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 3 | `eval_shard_001_of_005.jsonl:line_12` | **Козацьке бароко** | istoriya | 8 | стиль, земля, бароко | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 4 | `eval_shard_001_of_005.jsonl:line_5` | **Порядок дій** | matematyka | 5 | послідовність, виконання, вираз, результат | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 5 | `eval_shard_001_of_005.jsonl:line_46` | **Держава** | pravoznavstvo | 9 | організація, суспільство, цілісність, безпека | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 6 | `eval_shard_002_of_005.jsonl:line_43` | **Покадрова анімація** | informatyka | 7 | анімація, кадр, фільм | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 7 | `eval_shard_002_of_005.jsonl:line_42` | **Юридичні гарантії** | pravoznavstvo | 9 | гарантія, захід, здійснення, охорона | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 8 | `eval_shard_002_of_005.jsonl:line_14` | **Норма права** | pravoznavstvo | 9 | норма, поведінка, орган, держава | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 9 | `eval_shard_002_of_005.jsonl:line_10` | **Соціальні норми** | pravoznavstvo | 9 | норма, сфера | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 10 | `eval_shard_002_of_005.jsonl:line_20` | **Правомірна поведінка** | pravoznavstvo | 9 | поведінка, припис, норма, держава | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 11 | `eval_shard_003_of_005.jsonl:line_23` | **Ґрунтовий профіль** | heohrafiya | 8 | профіль, ґрунт, поверхня, порода | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 12 | `eval_shard_003_of_005.jsonl:line_19` | **Метеочутливість** | heohrafiya | 8 | організм, зміна | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 13 | `eval_shard_003_of_005.jsonl:line_11` | **Атмосферний фронт** | heohrafiya | 8 | фронт, зона, маса, кут | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 14 | `eval_shard_003_of_005.jsonl:line_15` | **Ожеледиця** | heohrafiya | 8 | крига, поверхня, відлига, температура | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 15 | `eval_shard_003_of_005.jsonl:line_18` | **Адміністративне стягнення** | pravoznavstvo | 9 | стягнення, порушення, невиконання, заборона | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 16 | `eval_shard_004_of_005.jsonl:line_49` | **Інкрустація** | mystetstvo | 8 | різновид, мозаїка, оздоблення, інтер'єр | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 17 | `eval_shard_004_of_005.jsonl:line_29` | **Корпоративна власність** | ekonomika | 10 | власність, особа, формування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 18 | `eval_shard_004_of_005.jsonl:line_6` | **Завойовницька війна** | hromadianska | 8 | війна, розширення, сфера, територія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 19 | `eval_shard_004_of_005.jsonl:line_14` | **Право** | hromadianska | 8 | взаємоповага, суспільство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 1 | `eval_shard_001_of_005.jsonl:line_26` | **Навіть одяг** | vsesvitnia | 8 | вбрання, тварина, убір, пояс | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 2 | `eval_shard_001_of_005.jsonl:line_24` | **Верхня палата** | vsesvitnia | 8 | палата, сенат, представник, духовенство | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 3 | `eval_shard_001_of_005.jsonl:line_20` | **Колоніалізм** | vsesvitnia | 8 | підкорення, країна, ресурс, праця | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 4 | `eval_shard_001_of_005.jsonl:line_12` | **Революція** | vsesvitnia | 8 | переворот, суспільство, зміна, перетворення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 5 | `eval_shard_001_of_005.jsonl:line_5` | **Рівносильні нерівності** | algebra | 9 | нерівність, множина, розв'язок | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 6 | `eval_shard_002_of_005.jsonl:line_45` | **Систематизація нормативних актів** | pravoznavstvo | 9 | систематизація, акт, упорядкування, вдосконалення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 7 | `eval_shard_002_of_005.jsonl:line_33` | **Правомірна поведінка** | pravoznavstvo | 9 | поведінка, припис, норма, держава | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 8 | `eval_shard_002_of_005.jsonl:line_14` | **Пульс** | biolohiya | 8 | показник, ритмічність, скорочення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 9 | `eval_shard_002_of_005.jsonl:line_10` | **Нейронауки** | biolohiya | 8 | галузь, знання, вивчення, система | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 10 | `eval_shard_002_of_005.jsonl:line_20` | **Передня камера** | biolohiya | 8 | простір, оболонка, камера, райдужка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 11 | `eval_shard_003_of_005.jsonl:line_45` | **Географічний простір** | heohrafiya | 8 | простір, об'єкт, територія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 12 | `eval_shard_003_of_005.jsonl:line_31` | **Степ** | heohrafiya | 8 | зона, держава, підзона | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 13 | `eval_shard_003_of_005.jsonl:line_41` | **Кліматичні ресурси** | heohrafiya | 8 | ресурс, енергетика | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 14 | `eval_shard_003_of_005.jsonl:line_12` | **Позов** | pravoznavstvo | 9 | закон, звернення, особа, суд | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 15 | `eval_shard_003_of_005.jsonl:line_19` | **Меліорація** | heohrafiya | 8 | дія, покращення, родючість, ґрунт | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 16 | `eval_shard_004_of_005.jsonl:line_50` | **Гімн** | mystetstvo | 8 | характер, прославлення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 17 | `eval_shard_004_of_005.jsonl:line_29` | **Обмін** | ekonomika | 10 | рух, товар, власник | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 18 | `eval_shard_004_of_005.jsonl:line_6` | **Громадянський обов'язок** | hromadianska | 8 | обов'язок, громадянин, країна, закон | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 19 | `eval_shard_004_of_005.jsonl:line_14` | **Демократія** | hromadianska | 8 | крок, розвиток, система | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
 | 20 | `eval_shard_004_of_005.jsonl:line_38` | **Піктографічне письмо** | ukrmova | 8 | письмо, комунікація, значок, малюнок | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 21 | `eval_shard_005_of_005.jsonl:line_10` | **Симфонічна поема** | mystetstvo | 8 | поема, твір, програма | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 22 | `eval_shard_005_of_005.jsonl:line_26` | **Методи проєктування** | tekhnolohiyi | 8 | проєктування, дія, об'єкт | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 23 | `eval_shard_005_of_005.jsonl:line_13` | **Реалізм** | mystetstvo | 8 | відтворення, дійсність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 24 | `eval_shard_005_of_005.jsonl:line_37` | **Базисний манікюр** | tekhnolohiyi | 8 | манікюр, процедура | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 25 | `eval_shard_005_of_005.jsonl:line_35` | **Жирність волосся** | tekhnolohiyi | 8 | жирність, волосся, результат, активність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 26 | `sft_shard_057_of_150.jsonl:line_93` | **Ізотермічний процес** | fizyka | 10 | змінювання, маса, температура | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 27 | `sft_shard_102_of_150.jsonl:line_369` | **Співчуття** | ukrmova | 10 | крок, людяність | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 28 | `sft_shard_106_of_150.jsonl:line_349` | **Довжина перпендикуляра** | matematyka | 10 | площина, відстань, довжина, перпендикуляр | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 29 | `sft_shard_078_of_150.jsonl:line_211` | **Виділення окремих типів** | astronomiya | 11 | виділення, зміна, уявлення, масштаб | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 30 | `sft_shard_012_of_150.jsonl:line_460` | **Погода** | pryroda | 8 | атмосфера, територія, проміжок | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 21 | `eval_shard_005_of_005.jsonl:line_49` | **Авторитет** | etyka | 6 | переконання, поведінка, особа, організація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 22 | `eval_shard_005_of_005.jsonl:line_30` | **Культура** | tekhnolohiyi | 8 | частота, відвідування, постановка, виставка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 23 | `eval_shard_005_of_005.jsonl:line_26` | **Декор** | tekhnolohiyi | 8 | система, елемент, призначення, функція | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 24 | `eval_shard_005_of_005.jsonl:line_21` | **Методи проєктування** | tekhnolohiyi | 8 | проєктування, дія, об'єкт | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 25 | `eval_shard_005_of_005.jsonl:line_37` | **Громадянські обов'язки** | etyka | 6 | обов'язок, норма, держава, ряд | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 26 | `sft_shard_135_of_150.jsonl:line_93` | **Монети** | istoriya | 5 | змога, розвиток, торгівля, зв'язка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 27 | `sft_shard_015_of_150.jsonl:line_369` | **Основний принцип життя аристократів** | zarlit | 10 | принцип, аристократ, лицемірство, шанування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 28 | `sft_shard_058_of_150.jsonl:line_349` | **Державний устрій** | heohrafiya | 9 | устрій, організація, держава | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 29 | `sft_shard_074_of_150.jsonl:line_211` | **Гідроліз солей** | khimiya | 11 | кислота, сіль, гідроліз, взаємодія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 30 | `sft_shard_103_of_150.jsonl:line_460` | **Аеробне дихання** | pryroda | 8 | дихання, участь, кисень, окиснення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
 | 31 | `sft_shard_003_of_150.jsonl:line_37` | **Ідеологія** | vsesvitnia | 9 | ідея, переконання, цінність, бачення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 32 | `sft_shard_091_of_150.jsonl:line_54` | **Паралельне проектування** | matematyka | 10 | перетворення, фігура, проектування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 33 | `sft_shard_149_of_150.jsonl:line_387` | **Об'єм** | matematyka | 11 | відповідність, тіло | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 34 | `sft_shard_139_of_150.jsonl:line_384` | **Ліси** | ya_doslidzhuiu_svit | 4 | відпочинок, повітря | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 35 | `sft_shard_145_of_150.jsonl:line_17` | **Лайка** | etyka | 5 | гідність, неповага | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 36 | `sft_shard_129_of_150.jsonl:line_255` | **Літосферні плити** | heohrafiya | 6 | літосфера, розлом, астеносфера | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 37 | `sft_shard_002_of_150.jsonl:line_273` | **Причина появи вугрів** | zdorovia | 7 | причина, поява, вугор, закупорювання | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 38 | `sft_shard_117_of_150.jsonl:line_277` | **Гроші** | finansova | 9 | інструмент, їжа, освіта, відпочинок | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 39 | `sft_shard_116_of_150.jsonl:line_131` | **Мовлення** | ukrmova | 10 | спілкування, засіб | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 40 | `sft_shard_015_of_150.jsonl:line_477` | **Спілкування** | ukrmova | 10 | взаємодія, учасник, комунікація, реалізація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 41 | `sft_shard_134_of_150.jsonl:line_171` | **Кредитна історія** | finansova | 9 | кредит, звіт, позичальник, заборгованість | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 42 | `sft_shard_045_of_150.jsonl:line_255` | **Запит з параметрами** | informatyka | 10 | запит, параметр, виконання | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 43 | `sft_shard_080_of_150.jsonl:line_210` | **Переміщення** | heometriya | 10 | перетворення, фігура, рух | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 44 | `sft_shard_108_of_150.jsonl:line_314` | **Пейзажна лірика** | zarlit | 5 | лірика, зображення, природа | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 45 | `sft_shard_127_of_150.jsonl:line_141` | **Посадова особа місцевого самоврядування** | pravoznavstvo | 11 | особа, самоврядування, орган, повноваження | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 46 | `sft_shard_042_of_150.jsonl:line_451` | **Кастинг** | mystetstvo | 7 | визначення, виконавець, кіно, театр | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 47 | `sft_shard_107_of_150.jsonl:line_75` | **Амортизація** | ekonomika | 11 | перенесення, вартість, засіб, продукція | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 48 | `sft_shard_056_of_150.jsonl:line_289` | **Дружба** | etyka | 5 | стосунок, довіра, щирість, симпатія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 49 | `sft_shard_010_of_150.jsonl:line_201` | **Міфологізм** | ukrlit | 11 | реалізація, твір, література | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
-| 50 | `sft_shard_131_of_150.jsonl:line_432` | **Відкритий перелом** | zakhyst | 11 | перелом, пошкодження, цілісність, кістка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 32 | `sft_shard_048_of_150.jsonl:line_54` | **Головоногі** | biolohiya | 7 | молюск, тіло, голова | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 33 | `sft_shard_012_of_150.jsonl:line_387` | **Жерці** | istoriya | 7 | особа, ритуал, богослужіння, релігія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 34 | `sft_shard_134_of_150.jsonl:line_384` | **Грант** | finansova | 9 | особа, організація, бізнес, реалізація | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 35 | `sft_shard_046_of_150.jsonl:line_17` | **Комбінаторика** | matematyka | 11 | вибір, розміщення, елемент, множина | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 36 | `sft_shard_002_of_150.jsonl:line_255` | **Ядерні реакції** | fizyka | 11 | реакція, перетворення, ядро, взаємодія | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 37 | `sft_shard_079_of_150.jsonl:line_273` | **Материки** | ya_doslidzhuiu_svit | 4 | ділянка, суходіл, вода | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 38 | `sft_shard_044_of_150.jsonl:line_277` | **Волонтерство** | hromadianska | 9 | дія, енергія, вміння | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 39 | `sft_shard_150_of_150.jsonl:line_131` | **Вигуки** | ukrmova | university | розряд, функція, емоція, волевиявлення | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 40 | `sft_shard_131_of_150.jsonl:line_477` | **Небо** | ukrmova | 6 | атмосфера, поверхня, загал, об'єкт | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 41 | `sft_shard_121_of_150.jsonl:line_171` | **Податок** | pravoznavstvo | 11 | закон, орган, платіж, бюджет | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 42 | `sft_shard_053_of_150.jsonl:line_255` | **Мода вибірки** | algebra | 8 | мода, вибірка, ряд | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 43 | `sft_shard_039_of_150.jsonl:line_210` | **Образ царя** | zarlit | 9 | образ, алегорія, душа, злам | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 44 | `sft_shard_076_of_150.jsonl:line_314` | **Покарання** | etyka | 5 | уникнення, спілкування, небажання | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 45 | `sft_shard_141_of_150.jsonl:line_141` | **Сталий розвиток** | pryroda | 8 | розвиток, концепція, змога, баланс | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 46 | `sft_shard_010_of_150.jsonl:line_451` | **Авторитаризм** | vsesvitnia | 10 | лад, режим, управління, апарат | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 47 | `sft_shard_142_of_150.jsonl:line_75` | **Сузір'я** | astronomiya | 11 | ділянка, сфера, зручність, орієнтування | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 48 | `sft_shard_108_of_150.jsonl:line_289` | **Сучасний танець** | mystetstvo | 5 | танець, рух, ритм, образ | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 49 | `sft_shard_018_of_150.jsonl:line_201` | **Вегетативні пагони** | biolohiya | 7 | пагін, гілка | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
+| 50 | `sft_shard_071_of_150.jsonl:line_432` | **Основа піраміди** | matematyka | 11 | піраміда, трикутник, катет | ✅ | ✅ | ✅ | ✅ | ✅ | **PASS** |
 
 ## Detailed Record Inspection (Full Text)
 
-### Record 1: Верхня палата (eval_shard_001_of_005.jsonl:line_26)
+### Record 1: Навіть одяг (eval_shard_001_of_005.jsonl:line_26)
+- **Subject / Grade:** vsesvitnia (Grade 8)
+- **Concept:** `Навіть одяг` (Citation form: ✅)
+- **Scientific Terminology:** `['вбрання', 'тварина', 'убір', 'пояс']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Навіть одяг – вишиті на вбранні квіти чи тварини, головний убір чи пояс – мав підкреслювати становище людини.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 2: Верхня палата (eval_shard_001_of_005.jsonl:line_24)
 - **Subject / Grade:** vsesvitnia (Grade 8)
 - **Concept:** `Верхня палата` (Citation form: ✅)
 - **Scientific Terminology:** `['палата', 'сенат', 'представник', 'духовенство', 'магнат']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Верхня палата – сенат – складалася з представників вищого духовенства та магнатів, зайнятих на високих державних посадах.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 2: Меркантилізм (eval_shard_001_of_005.jsonl:line_20)
+### Record 3: Колоніалізм (eval_shard_001_of_005.jsonl:line_20)
 - **Subject / Grade:** vsesvitnia (Grade 8)
-- **Concept:** `Меркантилізм` (Citation form: ✅)
-- **Scientific Terminology:** `['політика', 'втручання', 'країна', 'накопичення', 'багатство']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Меркантилізм – економічна політика, що полягає в активному втручанні державної влади в господарське життя країни з метою накопичення грошей як основного багатства держави.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Колоніалізм` (Citation form: ✅)
+- **Scientific Terminology:** `['підкорення', 'країна', 'ресурс', 'праця', 'населення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Колоніалізм – підкорення однією країною іншої з метою використання її ресурсів, праці місцевого населення та його культурної асиміляції, а також політичного контролю.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 3: Козацьке бароко (eval_shard_001_of_005.jsonl:line_12)
-- **Subject / Grade:** istoriya (Grade 8)
-- **Concept:** `Козацьке бароко` (Citation form: ✅)
-- **Scientific Terminology:** `['стиль', 'земля', 'бароко']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Провідним архітектурним стилем на українських землях був стиль українського бароко , який ще називають козацьким бароко.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 4: Революція (eval_shard_001_of_005.jsonl:line_12)
+- **Subject / Grade:** vsesvitnia (Grade 8)
+- **Concept:** `Революція` (Citation form: ✅)
+- **Scientific Terminology:** `['переворот', 'суспільство', 'зміна', 'перетворення', 'удосконалення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Революція – докорінний переворот у житті суспільства, який супроводжується зміною влади; різкі зміни в якій-небудь галузі, що приводить до істотних перетворень, удосконалення чого-небудь.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 4: Порядок дій (eval_shard_001_of_005.jsonl:line_5)
-- **Subject / Grade:** matematyka (Grade 5)
-- **Concept:** `Порядок дій` (Citation form: ✅)
-- **Scientific Terminology:** `['послідовність', 'виконання', 'вираз', 'результат']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Порядок дій — це така послідовність виконання арифметичних дій у виразах, щоб отримати правильний результат.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 5: Рівносильні нерівності (eval_shard_001_of_005.jsonl:line_5)
+- **Subject / Grade:** algebra (Grade 9)
+- **Concept:** `Рівносильні нерівності` (Citation form: ✅)
+- **Scientific Terminology:** `['нерівність', 'множина', "розв'язок"]` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Нерівності називають рівносильними, якщо вони мають одну й ту саму множину розв'язків.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 5: Держава (eval_shard_001_of_005.jsonl:line_46)
+### Record 6: Систематизація нормативних актів (eval_shard_002_of_005.jsonl:line_45)
 - **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Держава` (Citation form: ✅)
-- **Scientific Terminology:** `['організація', 'суспільство', 'цілісність', 'безпека', 'управління']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Держава — організація політичної влади в суспільстві, що підтримує його цілісність і безпеку та здійснює управління суспільними справами.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Систематизація нормативних актів` (Citation form: ✅)
+- **Scientific Terminology:** `['систематизація', 'акт', 'упорядкування', 'вдосконалення', 'приведення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Систематизація нормативних актів — це діяльність з їх упорядкування та вдосконалення, приведення до певної внутрішньої узгодженості через створення нових документів або збірників.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 6: Покадрова анімація (eval_shard_002_of_005.jsonl:line_43)
-- **Subject / Grade:** informatyka (Grade 7)
-- **Concept:** `Покадрова анімація` (Citation form: ✅)
-- **Scientific Terminology:** `['анімація', 'кадр', 'фільм']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Покадрова анімація — спосіб створення анімації, за якого художник малює кожен кадр майбутнього фільму.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 7: Юридичні гарантії (eval_shard_002_of_005.jsonl:line_42)
-- **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Юридичні гарантії` (Citation form: ✅)
-- **Scientific Terminology:** `['гарантія', 'захід', 'здійснення', 'охорона', 'свобода']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Юридичні гарантії — державно-правові заходи, що забезпечують здійснення та охорону права, свобод і обов'язків людини й громадянина.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 8: Норма права (eval_shard_002_of_005.jsonl:line_14)
-- **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Норма права` (Citation form: ✅)
-- **Scientific Terminology:** `['норма', 'поведінка', 'орган', 'держава', 'відповідальність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Норма права — загальне правило поведінки, прийняте органом держави, яке має загальнообов'язкову силу й передбачає відповідальність перед державою в разі його порушення.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 9: Соціальні норми (eval_shard_002_of_005.jsonl:line_10)
-- **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Соціальні норми` (Citation form: ✅)
-- **Scientific Terminology:** `['норма', 'сфера']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Соціальні норми є різними й залежать від того, ким і як вони встановлюються та яку сферу суспільного життя регулюють.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 10: Правомірна поведінка (eval_shard_002_of_005.jsonl:line_20)
+### Record 7: Правомірна поведінка (eval_shard_002_of_005.jsonl:line_33)
 - **Subject / Grade:** pravoznavstvo (Grade 9)
 - **Concept:** `Правомірна поведінка` (Citation form: ✅)
 - **Scientific Terminology:** `['поведінка', 'припис', 'норма', 'держава']` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Правомірна поведінка — поведінка, яка відповідає приписам правових норм та охороняється державою.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 11: Ґрунтовий профіль (eval_shard_003_of_005.jsonl:line_23)
-- **Subject / Grade:** heohrafiya (Grade 8)
-- **Concept:** `Ґрунтовий профіль` (Citation form: ✅)
-- **Scientific Terminology:** `['профіль', 'ґрунт', 'поверхня', 'порода']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Ґрунтовий профіль – вертикальна будова ґрунту від поверхні до материнської породи.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 8: Пульс (eval_shard_002_of_005.jsonl:line_14)
+- **Subject / Grade:** biolohiya (Grade 8)
+- **Concept:** `Пульс` (Citation form: ✅)
+- **Scientific Terminology:** `['показник', 'ритмічність', 'скорочення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Пульс — це показник, який свідчить про ритмічність серцевих скорочень та їхню силу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 12: Метеочутливість (eval_shard_003_of_005.jsonl:line_19)
-- **Subject / Grade:** heohrafiya (Grade 8)
-- **Concept:** `Метеочутливість` (Citation form: ✅)
-- **Scientific Terminology:** `['організм', 'зміна']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Метеочутливість – це особливість організму людини, коли вона недостатньо добре може адаптуватися до погодних змін.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 9: Нейронауки (eval_shard_002_of_005.jsonl:line_10)
+- **Subject / Grade:** biolohiya (Grade 8)
+- **Concept:** `Нейронауки` (Citation form: ✅)
+- **Scientific Terminology:** `['галузь', 'знання', 'вивчення', 'система', 'пошук']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Нейронауки — це сукупність галузей знань, що стосуються вивчення нервової системи та пошуку шляхів лікування неврологічних і психіатричних захворювань.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 13: Атмосферний фронт (eval_shard_003_of_005.jsonl:line_11)
-- **Subject / Grade:** heohrafiya (Grade 8)
-- **Concept:** `Атмосферний фронт` (Citation form: ✅)
-- **Scientific Terminology:** `['фронт', 'зона', 'маса', 'кут', 'поверхня']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Атмосферний фронт – перехідна зона між теплими і холодними повітряними масами, яка під невеликим кутом нахилена до земної поверхні в бік холодного повітря.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 10: Передня камера (eval_shard_002_of_005.jsonl:line_20)
+- **Subject / Grade:** biolohiya (Grade 8)
+- **Concept:** `Передня камера` (Citation form: ✅)
+- **Scientific Terminology:** `['простір', 'оболонка', 'камера', 'райдужка', 'кришталик']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Простір між рогівкою та райдужною оболонкою називають передньою камерою, а простір між райдужкою та кришталиком — задньою камерою.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 14: Ожеледиця (eval_shard_003_of_005.jsonl:line_15)
+### Record 11: Географічний простір (eval_shard_003_of_005.jsonl:line_45)
 - **Subject / Grade:** heohrafiya (Grade 8)
-- **Concept:** `Ожеледиця` (Citation form: ✅)
-- **Scientific Terminology:** `['крига', 'поверхня', 'відлига', 'температура', 'повітря']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Ожеледиця – крига, що утворюється на земній поверхні після відлиги за від'ємної температури повітря, але додатної на поверхнях.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Географічний простір` (Citation form: ✅)
+- **Scientific Terminology:** `['простір', "об'єкт", 'територія']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Географічний простір – сукупність зв'язків між різними географічними об'єктами, які розміщені на конкретній території і розвиваються у просторі й часі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 15: Адміністративне стягнення (eval_shard_003_of_005.jsonl:line_18)
+### Record 12: Степ (eval_shard_003_of_005.jsonl:line_31)
+- **Subject / Grade:** heohrafiya (Grade 8)
+- **Concept:** `Степ` (Citation form: ✅)
+- **Scientific Terminology:** `['зона', 'держава', 'підзона']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Степ – це єдина природна зона держави, яка поділяється на три підзони: північностепову, середньостепову та південностепову.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 13: Кліматичні ресурси (eval_shard_003_of_005.jsonl:line_41)
+- **Subject / Grade:** heohrafiya (Grade 8)
+- **Concept:** `Кліматичні ресурси` (Citation form: ✅)
+- **Scientific Terminology:** `['ресурс', 'енергетика']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Кліматичні ресурси – основа відновлюваної енергетики.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 14: Позов (eval_shard_003_of_005.jsonl:line_12)
 - **Subject / Grade:** pravoznavstvo (Grade 9)
-- **Concept:** `Адміністративне стягнення` (Citation form: ✅)
-- **Scientific Terminology:** `['стягнення', 'порушення', 'невиконання', 'заборона', 'осуд']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Адміністративне стягнення — правовий наслідок порушення або невиконання адміністративних заборон, що полягає в осуді поведінки порушника та обмеженні його особистих матеріальних благ й інших правових інтересів.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Позов` (Citation form: ✅)
+- **Scientific Terminology:** `['закон', 'звернення', 'особа', 'суд', 'прохання']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Позов — звернення особи до суду з проханням про розгляд спору та захист її прав, що охороняються законом.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 16: Інкрустація (eval_shard_004_of_005.jsonl:line_49)
+### Record 15: Меліорація (eval_shard_003_of_005.jsonl:line_19)
+- **Subject / Grade:** heohrafiya (Grade 8)
+- **Concept:** `Меліорація` (Citation form: ✅)
+- **Scientific Terminology:** `['дія', 'покращення', 'родючість', 'ґрунт']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Меліорація – цілеспрямовані дії, направлені на покращення родючості ґрунтів.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 16: Гімн (eval_shard_004_of_005.jsonl:line_50)
 - **Subject / Grade:** mystetstvo (Grade 8)
-- **Concept:** `Інкрустація` (Citation form: ✅)
-- **Scientific Terminology:** `['різновид', 'мозаїка', 'оздоблення', "інтер'єр", 'фасад']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Інкрустація — різновид мозаїки, оздоблення художніх виробів, інтер'єрів, фасадів будівель кольоровими шматочками твердих матеріалів.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Гімн` (Citation form: ✅)
+- **Scientific Terminology:** `['характер', 'прославлення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Гімн — пісня урочистого характеру для прославлення божества.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 17: Корпоративна власність (eval_shard_004_of_005.jsonl:line_29)
+### Record 17: Обмін (eval_shard_004_of_005.jsonl:line_29)
 - **Subject / Grade:** ekonomika (Grade 10)
-- **Concept:** `Корпоративна власність` (Citation form: ✅)
-- **Scientific Terminology:** `['власність', 'особа', 'формування']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Корпоративна власність — власність групи осіб, однак умови її формування своєрідні.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Обмін` (Citation form: ✅)
+- **Scientific Terminology:** `['рух', 'товар', 'власник']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Обмін — це рух товарів від одного власника до іншого.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 18: Завойовницька війна (eval_shard_004_of_005.jsonl:line_6)
+### Record 18: Громадянський обов'язок (eval_shard_004_of_005.jsonl:line_6)
 - **Subject / Grade:** hromadianska (Grade 8)
-- **Concept:** `Завойовницька війна` (Citation form: ✅)
-- **Scientific Terminology:** `['війна', 'розширення', 'сфера', 'територія', 'держава']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Завойовницька війна – війна, що ведеться для розширення власної сфери впливу на території іншої держави.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Громадянський обов'язок` (Citation form: ✅)
+- **Scientific Terminology:** `["обов'язок", 'громадянин', 'країна', 'закон', 'норма']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Громадянський обов'язок – це обов'язок, який мають всі громадяни країни відповідно до законів і моральних норм.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 19: Право (eval_shard_004_of_005.jsonl:line_14)
+### Record 19: Демократія (eval_shard_004_of_005.jsonl:line_14)
 - **Subject / Grade:** hromadianska (Grade 8)
-- **Concept:** `Право` (Citation form: ✅)
-- **Scientific Terminology:** `['взаємоповага', 'суспільство']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Право — це не просто правила, а основа, на якій будується взаємоповага і порядок у суспільстві.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Демократія` (Citation form: ✅)
+- **Scientific Terminology:** `['крок', 'розвиток', 'система']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Партисипативна демократія є важливим кроком уперед у розвитку демократичних систем.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
 ### Record 20: Піктографічне письмо (eval_shard_004_of_005.jsonl:line_38)
@@ -197,74 +197,74 @@
 - **Textbook Snippet:** «Піктографічне письмо – це старовинний спосіб комунікації, який використовує значки або малюнки для передачі повідомлення.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 21: Симфонічна поема (eval_shard_005_of_005.jsonl:line_10)
-- **Subject / Grade:** mystetstvo (Grade 8)
-- **Concept:** `Симфонічна поема` (Citation form: ✅)
-- **Scientific Terminology:** `['поема', 'твір', 'програма']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Симфонічна поема — одночастинний симфонічний твір із літературною, історичною, філософською або живописною програмою.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 21: Авторитет (eval_shard_005_of_005.jsonl:line_49)
+- **Subject / Grade:** etyka (Grade 6)
+- **Concept:** `Авторитет` (Citation form: ✅)
+- **Scientific Terminology:** `['переконання', 'поведінка', 'особа', 'організація']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Авторитет — загальновизнаний вплив, який здійснюють на переконання та поведінку людей інші особи або організації.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 22: Методи проєктування (eval_shard_005_of_005.jsonl:line_26)
+### Record 22: Культура (eval_shard_005_of_005.jsonl:line_30)
+- **Subject / Grade:** tekhnolohiyi (Grade 8)
+- **Concept:** `Культура` (Citation form: ✅)
+- **Scientific Terminology:** `['частота', 'відвідування', 'постановка', 'виставка', 'оболонка']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Культура – це не лише частота відвідування театральних постановок і виставок, не просто гарна оболонка.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 23: Декор (eval_shard_005_of_005.jsonl:line_26)
+- **Subject / Grade:** tekhnolohiyi (Grade 8)
+- **Concept:** `Декор` (Citation form: ✅)
+- **Scientific Terminology:** `['система', 'елемент', 'призначення', 'функція']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Декор — художня система, сукупність оздоблювальних елементів, які не мають практичного призначення, однак виконують естетичну функцію.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 24: Методи проєктування (eval_shard_005_of_005.jsonl:line_21)
 - **Subject / Grade:** tekhnolohiyi (Grade 8)
 - **Concept:** `Методи проєктування` (Citation form: ✅)
 - **Scientific Terminology:** `['проєктування', 'дія', "об'єкт"]` (Terms >= 2 & non-generic: ✅)
 - **Textbook Snippet:** «Методи проєктування — це дії, до яких вдаються в процесі проєктування для створення нового об'єкта.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 23: Реалізм (eval_shard_005_of_005.jsonl:line_13)
-- **Subject / Grade:** mystetstvo (Grade 8)
-- **Concept:** `Реалізм` (Citation form: ✅)
-- **Scientific Terminology:** `['відтворення', 'дійсність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Реалізм — художній метод, який базується на достовірному відтворенні дійсності.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 25: Громадянські обов'язки (eval_shard_005_of_005.jsonl:line_37)
+- **Subject / Grade:** etyka (Grade 6)
+- **Concept:** `Громадянські обов'язки` (Citation form: ✅)
+- **Scientific Terminology:** `["обов'язок", 'норма', 'держава', 'ряд', 'громадянин']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Громадянські обов'язки — закріплений правовими нормами держави ряд дій, які громадяни мають безумовно виконувати.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 24: Базисний манікюр (eval_shard_005_of_005.jsonl:line_37)
-- **Subject / Grade:** tekhnolohiyi (Grade 8)
-- **Concept:** `Базисний манікюр` (Citation form: ✅)
-- **Scientific Terminology:** `['манікюр', 'процедура']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Базисний манікюр – це основа, тобто ті процедури, які мають бути присутні за будь-якого виду манікюру.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 26: Монети (sft_shard_135_of_150.jsonl:line_93)
+- **Subject / Grade:** istoriya (Grade 5)
+- **Concept:** `Монети` (Citation form: ✅)
+- **Scientific Terminology:** `['змога', 'розвиток', 'торгівля', "зв'язка", 'народ']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Монети — це особливі речові джерела, які дають змогу дізнатися про розвиток торгівлі та торговельні зв'язки між різними народами.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 25: Жирність волосся (eval_shard_005_of_005.jsonl:line_35)
-- **Subject / Grade:** tekhnolohiyi (Grade 8)
-- **Concept:** `Жирність волосся` (Citation form: ✅)
-- **Scientific Terminology:** `['жирність', 'волосся', 'результат', 'активність', 'залоза']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Жирність волосся – результат підвищеної активності сальних залоз шкіри голови.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 27: Основний принцип життя аристократів (sft_shard_015_of_150.jsonl:line_369)
+- **Subject / Grade:** zarlit (Grade 10)
+- **Concept:** `Основний принцип життя аристократів` (Citation form: ✅)
+- **Scientific Terminology:** `['принцип', 'аристократ', 'лицемірство', 'шанування', 'традиція']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Основний принцип життя аристократів – лицемірство: нещире шанування традицій, монархії, удавані побожність і пристойність.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 26: Ізотермічний процес (sft_shard_057_of_150.jsonl:line_93)
-- **Subject / Grade:** fizyka (Grade 10)
-- **Concept:** `Ізотермічний процес` (Citation form: ✅)
-- **Scientific Terminology:** `['змінювання', 'маса', 'температура']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Ізотермічний процес — процес змінювання стану даного газу деякої маси, що відбувається за незмінної температури.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 28: Державний устрій (sft_shard_058_of_150.jsonl:line_349)
+- **Subject / Grade:** heohrafiya (Grade 9)
+- **Concept:** `Державний устрій` (Citation form: ✅)
+- **Scientific Terminology:** `['устрій', 'організація', 'держава']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Державний устрій – це адміністративно-територіальна організація держави.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 27: Співчуття (sft_shard_102_of_150.jsonl:line_369)
-- **Subject / Grade:** ukrmova (Grade 10)
-- **Concept:** `Співчуття` (Citation form: ✅)
-- **Scientific Terminology:** `['крок', 'людяність']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Співчуття — перший крок до (людяність) (Угорське). 2.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 29: Гідроліз солей (sft_shard_074_of_150.jsonl:line_211)
+- **Subject / Grade:** khimiya (Grade 11)
+- **Concept:** `Гідроліз солей` (Citation form: ✅)
+- **Scientific Terminology:** `['кислота', 'сіль', 'гідроліз', 'взаємодія', 'йон']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Гідроліз солей — це хімічна взаємодія йонів солі з водою, у результаті якої утворюється слабкий електроліт (кислота або основа).» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 28: Довжина перпендикуляра (sft_shard_106_of_150.jsonl:line_349)
-- **Subject / Grade:** matematyka (Grade 10)
-- **Concept:** `Довжина перпендикуляра` (Citation form: ✅)
-- **Scientific Terminology:** `['площина', 'відстань', 'довжина', 'перпендикуляр']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Якщо точка не належить площині, то відстанню від точки до площини називають довжину перпендикуляра, опущеного з точки на площину.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 29: Виділення окремих типів (sft_shard_078_of_150.jsonl:line_211)
-- **Subject / Grade:** astronomiya (Grade 11)
-- **Concept:** `Виділення окремих типів` (Citation form: ✅)
-- **Scientific Terminology:** `['виділення', 'зміна', 'уявлення', 'масштаб', 'галактика']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Виділення окремих типів — лірид і віргінід — супроводжувалося змінами в наукових уявленнях щодо масштабів галактики і галактичного світу в цілому.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 30: Погода (sft_shard_012_of_150.jsonl:line_460)
+### Record 30: Аеробне дихання (sft_shard_103_of_150.jsonl:line_460)
 - **Subject / Grade:** pryroda (Grade 8)
-- **Concept:** `Погода` (Citation form: ✅)
-- **Scientific Terminology:** `['атмосфера', 'територія', 'проміжок']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Погода — це стан нижнього шару атмосфери на певній території Землі у той чи інший проміжок часу.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Аеробне дихання` (Citation form: ✅)
+- **Scientific Terminology:** `['дихання', 'участь', 'кисень', 'окиснення', 'речовина']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Аеробне дихання — це процес, під час якого за участі кисню відбувається окиснення органічних речовин з виділенням енергії.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
 ### Record 31: Ідеологія (sft_shard_003_of_150.jsonl:line_37)
@@ -274,135 +274,135 @@
 - **Textbook Snippet:** «Ідеологія — сукупність ідей, поглядів, переконань та цінностей, які пояснюють світ, пропонують бачення бажаного суспільного устрою й визначають цілі та шляхи для колективних дій.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 32: Паралельне проектування (sft_shard_091_of_150.jsonl:line_54)
-- **Subject / Grade:** matematyka (Grade 10)
-- **Concept:** `Паралельне проектування` (Citation form: ✅)
-- **Scientific Terminology:** `['перетворення', 'фігура', 'проектування']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Описане перетворення фігури F називають паралельним проектуванням.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 32: Головоногі (sft_shard_048_of_150.jsonl:line_54)
+- **Subject / Grade:** biolohiya (Grade 7)
+- **Concept:** `Головоногі` (Citation form: ✅)
+- **Scientific Terminology:** `['молюск', 'тіло', 'голова']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Головоногі – група молюсків, які мають симетричне тіло з добре розвиненими головою, тулубом і щупальцями.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 33: Об'єм (sft_shard_149_of_150.jsonl:line_387)
+### Record 33: Жерці (sft_shard_012_of_150.jsonl:line_387)
+- **Subject / Grade:** istoriya (Grade 7)
+- **Concept:** `Жерці` (Citation form: ✅)
+- **Scientific Terminology:** `['особа', 'ритуал', 'богослужіння', 'релігія']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Жерці — особи, що здійснювали ритуали богослужіння у ранніх релігіях.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 34: Грант (sft_shard_134_of_150.jsonl:line_384)
+- **Subject / Grade:** finansova (Grade 9)
+- **Concept:** `Грант` (Citation form: ✅)
+- **Scientific Terminology:** `['особа', 'організація', 'бізнес', 'реалізація', 'проєкт']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Грант — це гроші, які надають фізичним особам, організаціям чи бізнесам для реалізації певного проєкту, і їх не потрібно повертати.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 35: Комбінаторика (sft_shard_046_of_150.jsonl:line_17)
 - **Subject / Grade:** matematyka (Grade 11)
-- **Concept:** `Об'єм` (Citation form: ✅)
-- **Scientific Terminology:** `['відповідність', 'тіло']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Об'єм — величина, що ставить у відповідність тілам у просторі невід'ємні дійсні числа.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Комбінаторика` (Citation form: ✅)
+- **Scientific Terminology:** `['вибір', 'розміщення', 'елемент', 'множина']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Комбінаторика — розділ математики, у якому вивчають способи вибору та розміщення елементів деякої скінченної множини на основі певних умов.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 34: Ліси (sft_shard_139_of_150.jsonl:line_384)
+### Record 36: Ядерні реакції (sft_shard_002_of_150.jsonl:line_255)
+- **Subject / Grade:** fizyka (Grade 11)
+- **Concept:** `Ядерні реакції` (Citation form: ✅)
+- **Scientific Terminology:** `['реакція', 'перетворення', 'ядро', 'взаємодія', 'частинка']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Ядерні реакції — процес перетворення атомних ядер унаслідок їх взаємодії з елементарними частинками або з іншими ядрами.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 37: Материки (sft_shard_079_of_150.jsonl:line_273)
 - **Subject / Grade:** ya_doslidzhuiu_svit (Grade 4)
-- **Concept:** `Ліси` (Citation form: ✅)
-- **Scientific Terminology:** `['відпочинок', 'повітря']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Ліси — це не лише джерело деревини, а й чудове місце відпочинку з чистим повітрям.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Материки` (Citation form: ✅)
+- **Scientific Terminology:** `['ділянка', 'суходіл', 'вода']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Материки — це великі ділянки суходолу, з усіх сторін оточені водою.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 35: Лайка (sft_shard_145_of_150.jsonl:line_17)
-- **Subject / Grade:** etyka (Grade 5)
-- **Concept:** `Лайка` (Citation form: ✅)
-- **Scientific Terminology:** `['гідність', 'неповага']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Лайка — це одна з грубих форм неповаги до людини, яка ображає людську гідність.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 38: Волонтерство (sft_shard_044_of_150.jsonl:line_277)
+- **Subject / Grade:** hromadianska (Grade 9)
+- **Concept:** `Волонтерство` (Citation form: ✅)
+- **Scientific Terminology:** `['дія', 'енергія', 'вміння']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Волонтерство — це дія, коли ти даруєш свій час, енергію та вміння.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 36: Літосферні плити (sft_shard_129_of_150.jsonl:line_255)
-- **Subject / Grade:** heohrafiya (Grade 6)
-- **Concept:** `Літосферні плити` (Citation form: ✅)
-- **Scientific Terminology:** `['літосфера', 'розлом', 'астеносфера']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Літосферні плити — великі частини літосфери, розділені глибокими розломами, що повільно переміщуються по астеносфері.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 39: Вигуки (sft_shard_150_of_150.jsonl:line_131)
+- **Subject / Grade:** ukrmova (Grade university)
+- **Concept:** `Вигуки` (Citation form: ✅)
+- **Scientific Terminology:** `['розряд', 'функція', 'емоція', 'волевиявлення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Вигуки – це особливий розряд слів, що не мають номінативної функції, не служать для граматичного зв'язку між словами, а безпосередньо виражають різні емоції й волевиявлення.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 37: Причина появи вугрів (sft_shard_002_of_150.jsonl:line_273)
-- **Subject / Grade:** zdorovia (Grade 7)
-- **Concept:** `Причина появи вугрів` (Citation form: ✅)
-- **Scientific Terminology:** `['причина', 'поява', 'вугор', 'закупорювання', 'протока']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Причина появи вугрів — закупорювання проток сальних залоз.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 40: Небо (sft_shard_131_of_150.jsonl:line_477)
+- **Subject / Grade:** ukrmova (Grade 6)
+- **Concept:** `Небо` (Citation form: ✅)
+- **Scientific Terminology:** `['атмосфера', 'поверхня', 'загал', "об'єкт"]` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Небо — частина атмосфери космічного простору, видима з поверхні Землі або загалом будь-якого астрономічного об'єкта.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 38: Гроші (sft_shard_117_of_150.jsonl:line_277)
-- **Subject / Grade:** finansova (Grade 9)
-- **Concept:** `Гроші` (Citation form: ✅)
-- **Scientific Terminology:** `['інструмент', 'їжа', 'освіта', 'відпочинок']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Гроші — це інструмент, що допомагає людині задовольнити будь-які потреби: купити їжу, одяг, оплатити освіту, відпочинок тощо.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 39: Мовлення (sft_shard_116_of_150.jsonl:line_131)
-- **Subject / Grade:** ukrmova (Grade 10)
-- **Concept:** `Мовлення` (Citation form: ✅)
-- **Scientific Terminology:** `['спілкування', 'засіб']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Мовлення — це процес спілкування, здійснюваний засобами мови.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 40: Спілкування (sft_shard_015_of_150.jsonl:line_477)
-- **Subject / Grade:** ukrmova (Grade 10)
-- **Concept:** `Спілкування` (Citation form: ✅)
-- **Scientific Terminology:** `['взаємодія', 'учасник', 'комунікація', 'реалізація']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Спілкування — умотивований живий процес взаємодії між учасниками комунікації, спрямований на реалізацію конкретної цільової настанови.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 41: Кредитна історія (sft_shard_134_of_150.jsonl:line_171)
-- **Subject / Grade:** finansova (Grade 9)
-- **Concept:** `Кредитна історія` (Citation form: ✅)
-- **Scientific Terminology:** `['кредит', 'звіт', 'позичальник', 'заборгованість']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Кредитна історія — це звіт про всі поточні та сплачені кредити позичальника, який містить інформацію, наскільки сумлінно та вчасно погашалася заборгованість. § 5.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 42: Запит з параметрами (sft_shard_045_of_150.jsonl:line_255)
-- **Subject / Grade:** informatyka (Grade 10)
-- **Concept:** `Запит з параметрами` (Citation form: ✅)
-- **Scientific Terminology:** `['запит', 'параметр', 'виконання']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Запит з параметрами — це запит, у процесі кожного виконання якого пропонується ввести деякі дані, наприклад, умову.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 43: Переміщення (sft_shard_080_of_150.jsonl:line_210)
-- **Subject / Grade:** heometriya (Grade 10)
-- **Concept:** `Переміщення` (Citation form: ✅)
-- **Scientific Terminology:** `['перетворення', 'фігура', 'рух']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Перетворення однієї фігури в іншу називають переміщенням (рухом), якщо воно зберігає відстань між точками.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 44: Пейзажна лірика (sft_shard_108_of_150.jsonl:line_314)
-- **Subject / Grade:** zarlit (Grade 5)
-- **Concept:** `Пейзажна лірика` (Citation form: ✅)
-- **Scientific Terminology:** `['лірика', 'зображення', 'природа']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Пейзажна лірика – віршовані твори, присвячені зображенню природи.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
-- **Overall Record Verdict:** **PASS**
-
-### Record 45: Посадова особа місцевого самоврядування (sft_shard_127_of_150.jsonl:line_141)
+### Record 41: Податок (sft_shard_121_of_150.jsonl:line_171)
 - **Subject / Grade:** pravoznavstvo (Grade 11)
-- **Concept:** `Посадова особа місцевого самоврядування` (Citation form: ✅)
-- **Scientific Terminology:** `['особа', 'самоврядування', 'орган', 'повноваження', 'здійснення']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Посадова особа місцевого самоврядування — це особа, яка працює в органах місцевого самоврядування, має відповідні посадові повноваження щодо здійснення організаційно-розпорядчих і консультативнодорадчих функцій та отримує заробітну плату за рахунок місцевого бюджету.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Податок` (Citation form: ✅)
+- **Scientific Terminology:** `['закон', 'орган', 'платіж', 'бюджет', 'фонд']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Податок — це встановлений органом законодавчої влади обов'язковий платіж до бюджету відповідного рівня або державного цільового фонду, що здійснюється платниками в порядку й на умовах, які визначені законами України про оподаткування.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 46: Кастинг (sft_shard_042_of_150.jsonl:line_451)
-- **Subject / Grade:** mystetstvo (Grade 7)
-- **Concept:** `Кастинг` (Citation form: ✅)
-- **Scientific Terminology:** `['визначення', 'виконавець', 'кіно', 'театр', 'телебачення']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Кастинг — визначення складу виконавців для кіно, театру, телебачення, модельного бізнесу за конкурсом.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 42: Мода вибірки (sft_shard_053_of_150.jsonl:line_255)
+- **Subject / Grade:** algebra (Grade 8)
+- **Concept:** `Мода вибірки` (Citation form: ✅)
+- **Scientific Terminology:** `['мода', 'вибірка', 'ряд']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Мода вибірки — це значення вибірки, яке трапляється у варіаційному ряді найчастіше.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 47: Амортизація (sft_shard_107_of_150.jsonl:line_75)
-- **Subject / Grade:** ekonomika (Grade 11)
-- **Concept:** `Амортизація` (Citation form: ✅)
-- **Scientific Terminology:** `['перенесення', 'вартість', 'засіб', 'продукція', 'відшкодування']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Амортизація — це перенесення вартості основних засобів на вартість готової продукції, з метою відшкодування їх зношеної частини.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 43: Образ царя (sft_shard_039_of_150.jsonl:line_210)
+- **Subject / Grade:** zarlit (Grade 9)
+- **Concept:** `Образ царя` (Citation form: ✅)
+- **Scientific Terminology:** `['образ', 'алегорія', 'душа', 'злам', 'вибух']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Образ царя – це алегорія душі на межі зламу або емоційного вибуху, що страждає і прагне спокою та умиротворення.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 48: Дружба (sft_shard_056_of_150.jsonl:line_289)
+### Record 44: Покарання (sft_shard_076_of_150.jsonl:line_314)
 - **Subject / Grade:** etyka (Grade 5)
-- **Concept:** `Дружба` (Citation form: ✅)
-- **Scientific Terminology:** `['стосунок', 'довіра', 'щирість', 'симпатія', 'інтерес']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Дружба — безкорисливі стосунки між людьми, що засновані на довірі, щирості, взаємних симпатіях, спільних інтересах, захопленнях.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Concept:** `Покарання` (Citation form: ✅)
+- **Scientific Terminology:** `['уникнення', 'спілкування', 'небажання']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Покарання — уникнення спілкування з людиною, яка порушує правила, небажання з нею грати та працювати.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 49: Міфологізм (sft_shard_010_of_150.jsonl:line_201)
-- **Subject / Grade:** ukrlit (Grade 11)
-- **Concept:** `Міфологізм` (Citation form: ✅)
-- **Scientific Terminology:** `['реалізація', 'твір', 'література']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Міфологізм — спосіб поетичної реалізації міфу у творах оригінальної літератури.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 45: Сталий розвиток (sft_shard_141_of_150.jsonl:line_141)
+- **Subject / Grade:** pryroda (Grade 8)
+- **Concept:** `Сталий розвиток` (Citation form: ✅)
+- **Scientific Terminology:** `['розвиток', 'концепція', 'змога', 'баланс', 'задоволення']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Сталий розвиток — це концепція, що дає змогу знайти баланс між задоволенням потреб сучасності та захистом інтересів майбутніх поколінь, включаючи їх потребу в здоровому довкіллі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**
 
-### Record 50: Відкритий перелом (sft_shard_131_of_150.jsonl:line_432)
-- **Subject / Grade:** zakhyst (Grade 11)
-- **Concept:** `Відкритий перелом` (Citation form: ✅)
-- **Scientific Terminology:** `['перелом', 'пошкодження', 'цілісність', 'кістка', 'покрив']` (Terms >= 2 & non-generic: ✅)
-- **Textbook Snippet:** «Відкритий перелом — це пошкодження цілісності кістки з одночасним пошкодженням шкірних покривів (появою рани або декількох ран) у ділянці перелому.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+### Record 46: Авторитаризм (sft_shard_010_of_150.jsonl:line_451)
+- **Subject / Grade:** vsesvitnia (Grade 10)
+- **Concept:** `Авторитаризм` (Citation form: ✅)
+- **Scientific Terminology:** `['лад', 'режим', 'управління', 'апарат', 'демагогія']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Авторитаризм — державний лад, для якого характерні режим особистої влади, диктаторські методи управління за допомогою репресивного апарату й соціальної демагогії.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 47: Сузір'я (sft_shard_142_of_150.jsonl:line_75)
+- **Subject / Grade:** astronomiya (Grade 11)
+- **Concept:** `Сузір'я` (Citation form: ✅)
+- **Scientific Terminology:** `['ділянка', 'сфера', 'зручність', 'орієнтування', 'небо']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Сузір'я — ділянки, на які поділена небесна сфера для зручності орієнтування на зоряному небі.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 48: Сучасний танець (sft_shard_108_of_150.jsonl:line_289)
+- **Subject / Grade:** mystetstvo (Grade 5)
+- **Concept:** `Сучасний танець` (Citation form: ✅)
+- **Scientific Terminology:** `['танець', 'рух', 'ритм', 'образ']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Сучасний танець — це інші рухи, інша музика та ритми, інші образи.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 49: Вегетативні пагони (sft_shard_018_of_150.jsonl:line_201)
+- **Subject / Grade:** biolohiya (Grade 7)
+- **Concept:** `Вегетативні пагони` (Citation form: ✅)
+- **Scientific Terminology:** `['пагін', 'гілка']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Вегетативні пагони – зелені, з бічними гілками, розвиваються влітку й активно фотосинтезують.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
+- **Overall Record Verdict:** **PASS**
+
+### Record 50: Основа піраміди (sft_shard_071_of_150.jsonl:line_432)
+- **Subject / Grade:** matematyka (Grade 11)
+- **Concept:** `Основа піраміди` (Citation form: ✅)
+- **Scientific Terminology:** `['піраміда', 'трикутник', 'катет']` (Terms >= 2 & non-generic: ✅)
+- **Textbook Snippet:** «Основа піраміди — прямокутний трикутник із катетами 6 см і 8 см.» (Anaphora-free: ✅, OCR-Clean: ✅, Def-Aligned: ✅)
 - **Overall Record Verdict:** **PASS**

@@ -1,41 +1,41 @@
 {
   "dataset_name": "uldr_v06_general_assistant_eval",
-  "total_cases": 254,
-  "unique_concepts_count": 245,
-  "unique_chunks_count": 254,
+  "total_cases": 255,
+  "unique_concepts_count": 236,
+  "unique_chunks_count": 255,
   "duplicate_pairs_count": 0,
   "shards_count": 5,
-  "max_shard_size_kb": 127.23,
+  "max_shard_size_kb": 130.32,
   "shards": [
     {
       "shard_file": "eval_shard_001_of_005.jsonl",
-      "cases_count": 50,
-      "size_kb": 123.14,
-      "sha256": "9a396703407de4eaa3f47558bb20e1b1e08cc3066395261bb65c37cc8d8c8e69"
+      "cases_count": 51,
+      "size_kb": 125.52,
+      "sha256": "fa153331a6342bdc3c5229de505c236952691fdfa7bf59690d13535c00241b40"
     },
     {
       "shard_file": "eval_shard_002_of_005.jsonl",
-      "cases_count": 50,
-      "size_kb": 127.23,
-      "sha256": "b02371c15340750acd60bea2d7ff212427f93af3b66fb95f9c7f0b671f9665a7"
+      "cases_count": 51,
+      "size_kb": 130.32,
+      "sha256": "286525dfc6bb5e40ef6ffab49d64b0aa18d7ee75d23147d196335d75eead2419"
     },
     {
       "shard_file": "eval_shard_003_of_005.jsonl",
-      "cases_count": 50,
-      "size_kb": 126.97,
-      "sha256": "2de87ff479b62612203c95d20ec92b7404765f01ea0e1879093a6d5fc6542ef7"
+      "cases_count": 51,
+      "size_kb": 126.22,
+      "sha256": "849fc9bd88503cdf94db986393b093a9fe05eb9569db578059c552323de3b7fd"
     },
     {
       "shard_file": "eval_shard_004_of_005.jsonl",
-      "cases_count": 50,
-      "size_kb": 122.29,
-      "sha256": "cbaa26c04a406a03eefeaf94fa078a3921c765b2df574bd9776a001e2ad2d07c"
+      "cases_count": 51,
+      "size_kb": 123.33,
+      "sha256": "a6c4c11d41fbbc984e89d928ce85ff1e7db422b751b7477b1d6e4b3cadfd5399"
     },
     {
       "shard_file": "eval_shard_005_of_005.jsonl",
-      "cases_count": 54,
-      "size_kb": 126.47,
-      "sha256": "d247a722b1830d7f0ce6e47f1cc01b12a67a94e3481e2102570696365bce2b5a"
+      "cases_count": 51,
+      "size_kb": 119.98,
+      "sha256": "530c98b5471a75e37e918632678e39234f511f0a741b65ef32409746c6613c5d"
     }
   ]
 }

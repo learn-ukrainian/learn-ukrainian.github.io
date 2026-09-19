@@ -158,6 +158,7 @@ NON_CONCEPT_PREFIXES = (
     "домашнє", "від авторів", "сторінка", "рубрика", "інтелектуальний клуб",
     "перегляньте", "дізнайтеся", "електронний додаток", "додаток", "відео", "схема для",
     "розділ ", "параграф ", "тема уроку", "тема заняття", "зміст",
+    "виділення окремих", "окремі елементи", "окремий ", "окремі ", "золотаве волосся", "крапка в центрі",
 )
 
 FILLER_STARTS = (
@@ -268,8 +269,11 @@ CONTRADICTORY_MODIFIER_PAIRS = [
 ]
 
 DANGLING_STARTER_RE = re.compile(
-    r"^(?:"
-    r"її\b|його\b|їх\b|їхні[йяєхм]?\b|такі\b|такий\b|така\b|таке\b|ці\b|цей\b|ця\b|він\b|вона\b|воно\b|вони\b|"
+    r"^[«„“\"'\s]*(?:"
+    r"це\b|ці\b|цей\b|ця\b|цих\b|цього\b|цьому\b|цим\b|цією\b|цю\b|"
+    r"такі\b|такий\b|така\b|таке\b|таких\b|такому\b|таким\b|такою\b|таку\b|"
+    r"він\b|вона\b|воно\b|вони\b|його\b|її\b|їх\b|їхні[йяєхм]?\b|"
+    r"саме\s+це\b|ось\b|це\s+і\s+є\b|це\s+є\b|"
     r"натомість\b|на\s+відміну\s+від\b|проте\b|однак\b|разом\s+з\s+тим\b|водночас\b|також\b|до\s+того\s+ж\b|"
     r"крім\s+того\b|зокрема\b|аналогічн\w*|отже\b|оскільки\b|тому\b|тому\s+для\b|"
     r"записан\w*\s+рівність|цю\s+рівність|цю\s+формулу|цей\s+вираз|цей\s+малюнок|цей\s+рисунок|цей\s+графік|"
@@ -331,7 +335,7 @@ OBLIQUE_DEMONSTRATIVE_RE = re.compile(
 )
 
 NOM_DEMONSTRATIVE_START_RE = re.compile(
-    r"^(?:[^.!?«„—–-]{0,50}\b)(?:цей|ця|ці|це\s+(?:явище|процес|поняття|правило|закон)|такий|така|таке|такі)\s+[а-яіїєґ]+",
+    r"^(?:[^.!?«„—–-]{0,50}\b)(?:цей|ця|ці|це|такий|така|таке|такі)\s+[а-яіїєґ]+",
     re.IGNORECASE,
 )
 
@@ -368,7 +372,9 @@ TAKE_ANAPHORA_RE = re.compile(
 
 def has_unresolved_anaphora(s: str) -> bool:
     """Check if a snippet or opening clause contains dangling deictic openers, participles, or ungrounded demonstratives/anaphora."""
-    s_clean = s.strip().lstrip("«„\"")
+    s_clean = s.strip().lstrip("«„“\"' \t\n")
+    if DANGLING_STARTER_RE.search(s_clean):
+        return True
     if DEICTIC_OPENER_RE.search(s_clean):
         return True
     if RETROSPECTIVE_PARTICIPLE_RE.search(s_clean):
@@ -487,6 +493,7 @@ STOPWORD_TERMS = {
     "безліч", "безлічі", "безліччю", "кількості",
     "метод", "методи", "методів", "метода", "двері", "дверей", "дверима",
     "досягнення", "історія", "людство",
+    "прийом", "прийому", "прийоми", "п'ята", "п'яти",
     "життя", "світ", "світу", "рік", "року", "роки", "років",
     "день", "дня", "дні", "днів", "протилежне", "живе", "живий", "живим", "актиній",
     "житель", "жителі", "жителя", "жителів", "прихильник", "прихильники", "прихильника",
@@ -835,6 +842,22 @@ def _is_concept_in_citation_form_uncached(concept: str, cur_ves: sqlite3.Cursor 
     return True
 
 
+def is_phrase_instrumental(phrase: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
+    """Check if the phrase has an instrumental noun/adjective head without nominative reading."""
+    cur = cur_ves or get_vesum_cursor()
+    if not cur:
+        return False
+    punct = ".,;:?!'\"«»„“—–()"
+    words = [w.strip(punct).lower() for w in phrase.split() if w.strip(punct)]
+    if not words:
+        return False
+    for w in words[:2]:
+        info = get_vesum_word_info(w, cur)
+        if any("v_oru" in r[2] or ":oru" in r[2] for r in info) and not any("v_naz" in r[2] or ":naz" in r[2] for r in info):
+            return True
+    return False
+
+
 def lemmatize_noun_phrase(phrase: str, cur_ves: sqlite3.Cursor | None = None) -> str:
     """Convert an inflected Ukrainian noun or adjective-noun phrase to its nominative citation form."""
     cur = cur_ves or get_vesum_cursor()
@@ -932,11 +955,17 @@ def lemmatize_noun_phrase(phrase: str, cur_ves: sqlite3.Cursor | None = None) ->
             rest = (" " + " ".join(words[2:])) if len(words) > 2 else ""
             return f"{adj_naz.capitalize()} {noun_naz}{rest}"
 
-        # Pattern B: [Noun, Noun_gen] e.g. силою тяжіння -> Сила тяжіння
-        if noun0_cand and noun_cand:
-            noun0_lem = noun0_cand[0][0]
+        # Pattern B: [Noun, ...] e.g. силою тяжіння -> Сила тяжіння, відстанню від точки до площини -> Відстань від точки до площини
+        if noun0_cand:
+            is_w0_p = any(":p:" in r[2] for r in noun0_cand) and not any(":s:" in r[2] or ":v_naz" in r[2] for r in noun0_cand)
+            if is_w0_p:
+                cur.execute("SELECT word_form FROM forms_all WHERE lemma = ? AND pos = 'noun' AND tags LIKE '%:p:v_naz%'", (noun0_cand[0][0],))
+                p_rows = cur.fetchall()
+                noun0_naz = p_rows[0][0] if p_rows else noun0_cand[0][0]
+            else:
+                noun0_naz = noun0_cand[0][0]
             rest = " ".join(words[1:])
-            return f"{noun0_lem.capitalize()} {rest}"
+            return f"{noun0_naz.capitalize()} {rest}"
     except Exception:
         pass
 
@@ -1138,6 +1167,8 @@ def has_space_split_ocr_word(snippet: str, cur_ves: sqlite3.Cursor | None = None
 
 def has_spliced_sentence_ocr(text: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
     """Detect OCR column fusion where a second capitalized clause begins mid-sentence without punctuation."""
+    if re.search(r"[а-яіїєґ][А-ЯІЇЄҐ]", text):
+        return True
     cur = cur_ves or get_vesum_cursor()
     if not cur:
         return False
@@ -1392,16 +1423,18 @@ def is_clean_content_chunk(chunk: TextbookChunk, cur_ves: sqlite3.Cursor | None 
     if re.search(r"^\s*(?:зміст|table of contents)\b", t, re.IGNORECASE | re.MULTILINE):
         return False
     # Reject chunks starting with or dominated by exercises / problem sets
-    if re.search(r"^\s*(?:вправа|вправи|завдання|питання і завдання|практична робота|лабораторна робота|тестові завдання)\b", t, re.IGNORECASE | re.MULTILINE):
+    if re.match(r"\s*(?:вправа|вправи|завдання|питання і завдання|практична робота|лабораторна робота|тестові завдання)\b", t, re.IGNORECASE):
         return False
-    if len(EXERCISE_ITEM_RE.findall(t)) >= 2:
+    if re.search(r"\b(?:вставте|перепишіть|спишіть|розкрийте\s+дужки|поставте\s+у\s+формі)\b", t, re.IGNORECASE):
+        return False
+    if len(EXERCISE_ITEM_RE.findall(t)) >= 4 and len(t) < 1000:
         return False
     numbered_lines = re.findall(r"^\s*\d+[\.\)]\s+([^\n]+)", t, re.MULTILINE)
     numbered_exercises = [
         nl for nl in numbered_lines
         if any(w in EXERCISE_IMPERATIVES for w in re.findall(r"[а-яіїєґ']+", nl.lower())) or "?" in nl
     ]
-    if len(numbered_exercises) >= 2:
+    if len(numbered_exercises) >= 4 and len(t) < 1200:
         return False
     if len(FIGURE_REF_RE.findall(t)) >= 2 and len(t) < 800:
         return False
@@ -1602,6 +1635,8 @@ def is_definitional_for_concept(
 
     # Negative gates
     # 1. Anaphora / deictic starters
+    if re.search(r"^[«„“\"'\s]*(?:Це|Цей|Ця|Ці|Ось|Саме\s+це)\s+(?:і\s+)?є\b", snippet, re.IGNORECASE):
+        return False
     if re.search(r"\b(?:так|саме\s+так)\s+(?:називають|називається|називали|назвали)\b", snippet, re.IGNORECASE):
         return False
     if re.search(r"\bтаке\s+[а-яіїєґ]+", snippet, re.IGNORECASE):
@@ -1616,11 +1651,17 @@ def is_definitional_for_concept(
         return False
     if re.search(r"\([А-ЯІЇЄҐ]\.?\s*[А-ЯІЇЄҐ][а-яіїєґ'-]+\)\.?$", snippet):
         return False
+    if re.search(r"\([а-яіїєґ]{3,}\)", snippet):
+        return False
+    if re.search(r"(?:\.|\?|!)\s+\d+\.?\s*$", snippet) or re.search(r"\b\d+\.\s*$", snippet):
+        return False
+    if re.search(r"\([А-ЯІЇЄҐ][а-яіїєґ]*(?:ськ|ньк|зьк)[а-яіїєґ]*\)", snippet):
+        return False
 
     # 2. Metaphors
     if re.search(
         r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b|"
-        r"[—–-]\s*(?:це\s+)?(?:символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між)\b",
+        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя)\b",
         snippet,
         re.IGNORECASE,
     ):
@@ -1696,26 +1737,49 @@ def is_definitional_for_concept(
     if not conc_lemmas:
         return False
 
-    meta_terms = {"поняття", "термін", "явище", "процес", "величина", "графік", "графіка", "властивість", "закон", "правило", "формула"}
+    meta_terms = {
+        "поняття", "термін", "явище", "процес", "величина", "графік", "графіка", "властивість", "закон", "правило", "формула",
+        "два", "дві", "три", "чотири", "п'ять", "один", "одна", "одне", "кілька", "деякі",
+    }
+    conc_words = [w.strip(".,;:?!'\"«»„“—–()").lower() for w in concept.split() if w.strip(".,;:?!'\"«»„“—–()")]
+    cw_lemmas = [_extract_content_lemmas(w) or {w} for w in conc_words]
 
     def _matches_concept(target_lemmas: set[str]) -> bool:
         if not target_lemmas:
             return False
         if target_lemmas == conc_lemmas:
             return True
-        if len(target_lemmas) > len(conc_lemmas):
-            core = target_lemmas - meta_terms
-            if core == conc_lemmas:
+        if (target_lemmas - meta_terms) == conc_lemmas:
+            return True
+        if cw_lemmas and all(any(lem in target_lemmas for lem in word_lems) for word_lems in cw_lemmas):
+            residual = target_lemmas - meta_terms
+            if all(any(lem in residual for lem in word_lems) for word_lems in cw_lemmas) and len(residual) <= len(cw_lemmas) + 1:
                 return True
         return False
 
-    # 1. Copula: X — це ... or X — [noun] ...
-    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|([а-яіїєґ]{3,}))", snippet):
+    # 1. Copula: X — це ... or X — [noun phrase] ...
+    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|([а-яіїєґ\s'-]{3,}))", snippet):
         subj = m.group(1).strip()
-        after_w = m.group(2)
-        if after_w:
-            w_info = get_vesum_word_info(after_w.lower(), cur)
-            if any(r[1] == "verb" or "verb" in r[2] for r in w_info):
+        after_phrase = m.group(2)
+        if after_phrase:
+            words = [w.strip(".,;:?!'\"«»„“—–()") for w in after_phrase.split()[:4]]
+            words = [w.lower() for w in words if len(w) >= 3]
+            if not words:
+                continue
+            first_w = words[0]
+            if first_w in ("перший", "другий", "третій", "головний", "один", "одна", "одне", "найкращий"):
+                continue
+            first_info = get_vesum_word_info(first_w, cur)
+            is_first_nom = any((r[1] in ("noun", "adj")) and any(c in r[2] for c in (":v_naz", ":naz")) for r in first_info)
+            if not is_first_nom:
+                continue
+            has_nom_noun = False
+            for w in words:
+                w_info = get_vesum_word_info(w, cur)
+                if any(r[1] == "noun" and any(c in r[2] for c in (":v_naz", ":naz")) for r in w_info):
+                    has_nom_noun = True
+                    break
+            if not has_nom_noun:
                 continue
         subj_lemmas = _extract_content_lemmas(subj)
         if _matches_concept(subj_lemmas):
@@ -1744,13 +1808,44 @@ def is_definitional_for_concept(
             if _matches_concept(combined_lemmas) or _matches_concept(before_lemmas) or _matches_concept(after_lemmas):
                 return True
 
-    for m in re.finditer(r"\bназивають\s+([а-яіїєґ\s'-]{2,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snippet):
-        obj = m.group(1).strip()
-        rec = recover_named_noun_phrase(snippet, obj, cur)
-        cand_obj = rec or obj
-        obj_lemmas = _extract_content_lemmas(cand_obj)
-        if _matches_concept(obj_lemmas):
-            return True
+    # 3. Naming: X ... називають ... Y (bidirectional instrumental vs accusative genus disambiguation)
+    for m in re.finditer(
+        r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐа-яіїєґ\s'-]{2,45})\s+називають\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
+        snippet,
+    ):
+        before_phrase = m.group(1).strip()
+        after_phrase = m.group(2).strip()
+        is_before_inst = is_phrase_instrumental(before_phrase, cur)
+        is_after_inst = is_phrase_instrumental(after_phrase, cur)
+
+        if is_before_inst and not is_after_inst:
+            # Defined entity is before_phrase (e.g. «відстанню від точки до площини називають довжину перпендикуляра»)
+            # after_phrase (довжина перпендикуляра) is the accusative genus: REJECT if concept matches after_phrase!
+            after_lemmas = _extract_content_lemmas(after_phrase)
+            before_lemmas = _extract_content_lemmas(before_phrase)
+            if _matches_concept(after_lemmas) and not _matches_concept(before_lemmas):
+                return False
+            if _matches_concept(before_lemmas):
+                return True
+        elif is_after_inst and not is_before_inst:
+            # Defined entity is after_phrase (e.g. «...перпендикуляр називають висотою циліндра»)
+            # before_phrase (перпендикуляр) is the genus: REJECT if concept matches before_phrase!
+            before_lemmas = _extract_content_lemmas(before_phrase)
+            after_lemmas = _extract_content_lemmas(after_phrase)
+            if _matches_concept(before_lemmas) and not _matches_concept(after_lemmas):
+                return False
+            rec = recover_named_noun_phrase(snippet, after_phrase, cur)
+            cand_obj = rec or after_phrase
+            cand_lemmas = _extract_content_lemmas(cand_obj)
+            if _matches_concept(cand_lemmas) or _matches_concept(after_lemmas):
+                return True
+        else:
+            rec = recover_named_noun_phrase(snippet, after_phrase, cur)
+            cand_obj = rec or after_phrase
+            cand_lemmas = _extract_content_lemmas(cand_obj)
+            before_lemmas = _extract_content_lemmas(before_phrase)
+            if _matches_concept(cand_lemmas) or _matches_concept(before_lemmas):
+                return True
 
     # 3. Formal Означення. ... containing concept
     if re.search(r"(?:^|[.!?«„]\s*)(?:Означення|Визначення)\b(?:\s+\d+)?[\.:]", snippet):
@@ -1769,6 +1864,8 @@ def is_definitional_for_concept(
     for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40})\s+є\s+([а-яіїєґ\s'-]{3,40})", snippet, re.IGNORECASE):
         subj = m.group(1).strip()
         pred = m.group(2).strip()
+        if re.match(r"^(?:це|цей|ця|ці|воно|він|вона|вони|ось|саме\s+це)\b", subj.lower()):
+            continue
         if re.match(r"^(?:одним|однією|найбільш|найзначніш|найважливіш)\b", pred.lower()):
             continue
         first_w = subj.split()[0].lower().strip(".,;:?!'\"«»„“—–()")
@@ -1949,7 +2046,7 @@ def extract_meaningful_text_snippet(
         para = MULTISPACE_RE.sub(" ", para).strip()
         if len(para) < 50:
             continue
-        sents = re.split(r"(?<=[.!?])\s+(?=[«„\"А-ЯІЇЄҐ])", para)
+        sents = re.split(r"(?<=[.!?»”\"])[\s\n]+(?=[«„“\"А-ЯІЇЄҐ])", para)
         for s in sents:
             s = s.strip()
             if not s or not re.match(r"^[«„\"А-ЯІЇЄҐ]", s):
@@ -2055,10 +2152,13 @@ def clean_and_validate_candidate(cand: str, cur_ves: sqlite3.Cursor | None = Non
     # Reject evaluative and descriptive adjective starters
     if re.match(
         r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*)\b|"
-        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*)\b",
+        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*)\b|"
+        r"^(?:виділення\s+окремих|окремі\s+елементи|окремий\s+|окремі\s+|крапка\s+в\s+центрі)\b",
         c,
         re.IGNORECASE,
     ):
+        return None
+    if re.search(r"\bволосся\b", c, re.IGNORECASE):
         return None
 
     # Reject context-bound heads (unnamed referent genitive)
@@ -2163,19 +2263,38 @@ def extract_key_concept(
                 if val:
                     return val
 
-        # Check ... називають [Y]
-        m_def2 = re.search(
-            r"\bназивають\s+([а-яіїєґ\s'-]{3,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
+        # Check ... називають ... (with bidirectional instrumental case disambiguation)
+        m_call = re.search(
+            r"(?:^|[.!?«„●•*–-]\s*)([А-ЯІЇЄҐа-яіїєґ\s'-]{2,45})\s+називають\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
             line,
         )
-        if m_def2:
-            raw_val = m_def2.group(1).strip()
-            rec = recover_named_noun_phrase(line, raw_val, cur)
-            cand = rec or raw_val
-            norm_val = lemmatize_noun_phrase(cand, cur)
-            val = clean_and_validate_candidate(norm_val, cur_ves=cur)
-            if val:
-                return val
+        if m_call:
+            before_phrase = m_call.group(1).strip()
+            after_phrase = m_call.group(2).strip()
+            is_before_inst = is_phrase_instrumental(before_phrase, cur)
+            is_after_inst = is_phrase_instrumental(after_phrase, cur)
+
+            if is_before_inst and not is_after_inst:
+                # Defined entity is before_phrase (e.g. «відстанню від точки до площини називають довжину...»)
+                norm_val = lemmatize_noun_phrase(before_phrase, cur)
+                val = clean_and_validate_candidate(norm_val, cur_ves=cur)
+                if val:
+                    return val
+            elif is_after_inst:
+                # Defined entity is after_phrase (e.g. «...перпендикуляр називають висотою циліндра»)
+                rec = recover_named_noun_phrase(line, after_phrase, cur)
+                cand = rec or after_phrase
+                norm_val = lemmatize_noun_phrase(cand, cur)
+                val = clean_and_validate_candidate(norm_val, cur_ves=cur)
+                if val:
+                    return val
+            else:
+                rec = recover_named_noun_phrase(line, after_phrase, cur)
+                cand = rec or after_phrase
+                norm_val = lemmatize_noun_phrase(cand, cur)
+                val = clean_and_validate_candidate(norm_val, cur_ves=cur)
+                if val:
+                    return val
         m_def3 = re.search(
             r"(?:^|[.!?«„●•*–-]\s*)([А-ЯІЇЄҐ][а-яіїєґa-zA-Z\s'-]{2,45})\s+є\s+(?:однією|одним|частиною|наукою|процесом|явищем|речовиною|формою|способом|системою)\b",
             line,
@@ -2223,6 +2342,71 @@ def extract_key_concept(
     return ""
 
 
+ABBREVIATIONS: set[str] = {
+    "млрд", "млн", "тис", "см", "мм", "км", "кг", "мг", "га", "грн", "кв", "куб", "коп",
+    "дм", "л", "мл", "хв", "сек", "год", "стор", "табл", "мал", "рис", "р", "pp", "ст",
+}
+
+CANONICAL_HOMONYM_LEMMAS: dict[str, str] = {
+    "код": "код",
+    "коду": "код",
+    "кодом": "код",
+    "коді": "код",
+    "коди": "код",
+    "кодів": "код",
+    "кодам": "код",
+    "кодами": "код",
+    "кодах": "код",
+    "кола": "коло",
+    "колу": "коло",
+    "колом": "коло",
+    "колі": "коло",
+    "кіл": "коло",
+    "колах": "коло",
+    "колами": "коло",
+    "риски": "риска",
+    "рисок": "риска",
+    "рисці": "риска",
+    "риску": "риска",
+    "рискою": "риска",
+    "рискам": "риска",
+    "рисками": "риска",
+    "рисках": "риска",
+    "колон": "колона",
+    "колони": "колона",
+    "колоні": "колона",
+    "колону": "колона",
+    "колоною": "колона",
+    "колонам": "колона",
+    "колонами": "колона",
+    "колонах": "колона",
+    "точок": "точка",
+    "точки": "точка",
+    "точці": "точка",
+    "точку": "точка",
+    "точкою": "точка",
+    "точкам": "точка",
+    "точками": "точка",
+    "точках": "точка",
+    "появ": "поява",
+    "появи": "поява",
+    "появі": "поява",
+    "появу": "поява",
+    "появою": "поява",
+    "появам": "поява",
+    "появами": "поява",
+    "появах": "поява",
+    "пар": "пара",
+    "пари": "пара",
+    "парі": "пара",
+    "пару": "пара",
+    "парою": "пара",
+    "парам": "пара",
+    "парами": "пара",
+    "парах": "пара",
+}
+
+
 def extract_scientific_terminology_for_snippet(
     snippet: str,
     concept: str,
@@ -2257,7 +2441,7 @@ def extract_scientific_terminology_for_snippet(
             ct_lower = ct.lower()
             if " " in ct_lower:
                 continue
-            if ct_lower == conc_lower or ct_lower in STOPWORD_TERMS:
+            if ct_lower == conc_lower or ct_lower in STOPWORD_TERMS or ct_lower in ABBREVIATIONS:
                 continue
             ct_info = get_vesum_word_info(ct_lower, cur)
             if any(r[1] in ("adj", "verb", "pronoun") or "adj" in r[2] for r in ct_info):
@@ -2270,8 +2454,28 @@ def extract_scientific_terminology_for_snippet(
 
     # 2. Extract substantive domain NOUNS directly from definition text via VESUM with POS & context disambiguation
     for i, tok in enumerate(snip_tokens):
-        if len(tok) < 3 or tok in STOPWORD_TERMS:
+        tok_low = tok.lower()
+        if (
+            len(tok_low) < 3
+            or tok_low in STOPWORD_TERMS
+            or tok_low in ABBREVIATIONS
+            or not any(c in "аеєиіїоуюя" for c in tok_low)
+        ):
             continue
+
+        # Check canonical homonym dictionary first
+        if tok_low in CANONICAL_HOMONYM_LEMMAS:
+            canon_lem = CANONICAL_HOMONYM_LEMMAS[tok_low]
+            if (
+                canon_lem not in candidate_terms
+                and canon_lem != conc_lower
+                and canon_lem not in conc_lemmas
+                and canon_lem not in STOPWORD_TERMS
+                and canon_lem not in ABBREVIATIONS
+            ):
+                candidate_terms.append(canon_lem)
+            continue
+
         if "-" in tok:
             hyphen_rows = get_vesum_word_info(tok, cur)
             if not hyphen_rows or any(r[1] != "noun" for r in hyphen_rows):
@@ -2280,8 +2484,20 @@ def extract_scientific_terminology_for_snippet(
         rows = get_vesum_word_info(tok, cur)
         if not rows:
             continue
-        # Strictly reject adjectives, participles, verbs, pronouns, function words, substantivized adjectives
-        if any(r[1] in ("adj", "verb", "pronoun", "prep", "conj", "part", "intj") or "adj" in r[2] or "verb" in r[2] or ":ns" in r[2] for r in rows):
+        # Strictly reject adjectives, participles, verbs, pronouns, function words, numerals, abbreviations, and non-standard tags
+        if any(
+            r[1] in ("adj", "verb", "pronoun", "prep", "conj", "part", "intj", "numr")
+            or "adj" in r[2]
+            or "verb" in r[2]
+            or "numr" in r[2]
+            or ":ns" in r[2]
+            or ":abbr" in r[2]
+            or ":nv" in r[2]
+            or ":bad" in r[2]
+            or ":slang" in r[2]
+            or ":nonstd" in r[2]
+            for r in rows
+        ):
             continue
         # Skip proper nouns
         if any(":prop" in r[2] or ":fname" in r[2] or ":lname" in r[2] or ":geo" in r[2] for r in rows):
@@ -2291,7 +2507,7 @@ def extract_scientific_terminology_for_snippet(
         if not clean_rows:
             continue
         # Substantive scientific terms MUST be nouns
-        noun_rows = [r for r in clean_rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns"))]
+        noun_rows = [r for r in clean_rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv"))]
         if not noun_rows:
             continue
 
@@ -2332,15 +2548,15 @@ def extract_scientific_terminology_for_snippet(
                     chosen_row = rod_rows[0]
 
         # C. Disambiguate zero-ending genitive plurals vs obscure masculine homonyms:
-        # e.g. колон -> колона, точок -> точка, появ -> поява, пар -> пара
-        if chosen_row is None:
-            p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
-            m_naz_rows = [r for r in noun_rows if r[0].lower() == tok.lower() and ":v_naz" in r[2]]
-            if p_rod_rows and m_naz_rows:
-                chosen_row = p_rod_rows[0]
+        if chosen_row is None and prev_tok:
+            prev_low = prev_tok.lower()
+            if prev_low in ("рядів", "кількість", "число", "безліч", "шерег", "група", "сукупність", "багато", "кілька", "декілька"):
+                p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
+                if p_rod_rows:
+                    chosen_row = p_rod_rows[0]
 
         if chosen_row is None:
-            exact_rows = [r for r in noun_rows if r[0].lower() == tok.lower() and ":v_naz" in r[2]]
+            exact_rows = [r for r in noun_rows if r[0].lower() == tok_low and ":v_naz" in r[2]]
             if exact_rows:
                 chosen_row = exact_rows[0]
             else:
@@ -2352,9 +2568,32 @@ def extract_scientific_terminology_for_snippet(
                     chosen_row = sing_rows[0] if sing_rows else noun_rows[0]
 
         lem = chosen_row[0].lower()
+        if tok_low in CANONICAL_HOMONYM_LEMMAS:
+            lem = CANONICAL_HOMONYM_LEMMAS[tok_low]
+        elif lem == "кода" and tok_low == "код":
+            lem = "код"
+        elif lem == "кіл" and tok_low in ("кола", "колі", "колом"):
+            lem = "коло"
+        elif lem == "риск" and tok_low in ("риски", "рисок"):
+            lem = "риска"
+        elif lem == "колон" and tok_low in ("колон", "колони"):
+            lem = "колона"
+        elif lem == "точок" and tok_low in ("точок", "точки"):
+            lem = "точка"
+        elif lem == "появ" and tok_low in ("появ", "появи"):
+            lem = "поява"
+        elif lem == "пар" and tok_low in ("пар", "пари"):
+            lem = "пара"
 
         # Reject multi-word, stopwords, concept identity, substantivized neuter adjectives ending in -е/-є
-        if " " in lem or lem in STOPWORD_TERMS or lem == conc_lower or lem in candidate_terms:
+        if (
+            " " in lem
+            or lem in STOPWORD_TERMS
+            or lem in ABBREVIATIONS
+            or not any(c in "аеєиіїоуюя" for c in lem)
+            or lem == conc_lower
+            or lem in candidate_terms
+        ):
             continue
         if lem.endswith(("е", "є")):
             continue
@@ -3332,7 +3571,11 @@ def generate_release_receipt(
     invariants_verified: dict[str, bool] | None = None,
     validate_schema: bool = True,
 ) -> dict[str, Any]:
-    """Build, validate, and write the cryptographic release receipt."""
+    """Build, validate, and write the cryptographic release receipt.
+
+    Note: git_commit records the repository commit HEAD at generation time (the base
+    commit upon which release artifacts are mined and verified).
+    """
     schema = json.loads(SCHEMA_RECEIPT_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft202012Validator(schema)
 
@@ -3446,7 +3689,7 @@ def main() -> int:
         try:
             git_commit = subprocess.check_output(
                 ["git", "rev-parse", "HEAD"],
-                cwd=PROJECT_ROOT,
+                cwd=Path(__file__).resolve().parent,
                 text=True,
                 stderr=subprocess.DEVNULL,
             ).strip()
@@ -3463,7 +3706,7 @@ def main() -> int:
     if not eval_books.isdisjoint(train_books):
         raise ValueError(f"Book leakage detected: {eval_books & train_books}")
 
-    eval_count = 100 if args.dry_run else 2500
+    eval_target_count = 100 if args.dry_run else len(eval_chunks)
     eval_shards_count = 1 if args.dry_run else 5
     sft_count = 300 if args.dry_run else 75000
     shards_count = 3 if args.dry_run else 150
@@ -3479,7 +3722,7 @@ def main() -> int:
     eval_domain_dist: dict[str, int] = {}
     if not args.sft_only:
         eval_manifest_data, eval_manifest_sha256, eval_subj_dist, eval_domain_dist = generate_evaluation_benchmark(
-            eval_chunks, eval_dir, target_count=eval_count, shards_count=eval_shards_count
+            eval_chunks, eval_dir, target_count=eval_target_count, shards_count=eval_shards_count
         )
 
     manifest_sha256 = ""
@@ -3499,10 +3742,11 @@ def main() -> int:
         max_shard_size_kb = manifest_data["max_shard_size_kb"]
 
     if not args.eval_only and not args.sft_only and not args.dry_run:
+        actual_eval_count = eval_manifest_data.get("total_cases", len(eval_chunks))
         generate_release_receipt(
             eval_dir=eval_dir,
             eval_manifest_sha256=eval_manifest_sha256,
-            eval_count=eval_count,
+            eval_count=actual_eval_count,
             eval_shards_count=eval_manifest_data["shards_count"],
             eval_max_shard_size_kb=eval_manifest_data["max_shard_size_kb"],
             eval_subj_dist=eval_subj_dist,
