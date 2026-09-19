@@ -215,15 +215,13 @@ def test_vesum_verification_clean():
 
 def test_cli_verify_vesum_json_failure_exits_and_blocks_export(monkeypatch, tmp_path: Path):
     """Regression test for P2: --verify-vesum failure must exit 1 regardless of --json mode and block export."""
-    from scripts.practice import numeral_mechanics_engine
-
     fake_res = {
         "total_cards": 75,
         "target_tokens_count": 88,
         "missing_targets": ["вигаданеслово"],
         "vesum_verified": False,
     }
-    monkeypatch.setattr(numeral_mechanics_engine, "verify_deck_with_vesum", lambda cards, **kw: fake_res)
+    monkeypatch.setattr("scripts.practice.numeral_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
 
     out_file = tmp_path / "blocked_deck.json"
     monkeypatch.setattr(
@@ -240,15 +238,13 @@ def test_cli_verify_vesum_json_failure_exits_and_blocks_export(monkeypatch, tmp_
 
 def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
     """Verify that CLI --verify-vesum --json --export succeeds and writes deck on clean verification."""
-    from scripts.practice import numeral_mechanics_engine
-
     fake_res = {
         "total_cards": 75,
         "target_tokens_count": 88,
         "missing_targets": [],
         "vesum_verified": True,
     }
-    monkeypatch.setattr(numeral_mechanics_engine, "verify_deck_with_vesum", lambda cards, **kw: fake_res)
+    monkeypatch.setattr("scripts.practice.numeral_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
 
     out_file = tmp_path / "allowed_deck.json"
     monkeypatch.setattr(

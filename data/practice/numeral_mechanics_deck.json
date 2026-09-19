@@ -3084,7 +3084,7 @@
       "card_id": "numeral_69",
       "category": "time_expressions_anti_calque",
       "cefr_level": "B1",
-      "prompt_sentence": "Усі уроки в школі завершуються _______ і діти йдуть додому.",
+      "prompt_sentence": "Поглянь на шкільний годинник: зараз уже _______, і дзвінок на перерву пролунає за лічені хвилини.",
       "blank_target": "за двадцять третя",
       "correct_answer": "за двадцять третя",
       "options": [
@@ -3129,7 +3129,7 @@
       "card_id": "numeral_70",
       "category": "time_expressions_anti_calque",
       "cefr_level": "B1",
-      "prompt_sentence": "Гості зібралися на святкову вечерю _______ вечора.",
+      "prompt_sentence": "Поглянь на годинник у вітальні: зараз уже _______, тож перші гості мають ось-ось прийти.",
       "blank_target": "десять хвилин по шостій",
       "correct_answer": "десять хвилин по шостій",
       "options": [

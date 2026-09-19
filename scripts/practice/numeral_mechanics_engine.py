@@ -2436,8 +2436,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_69",
             category=NumeralCategory.TIME_EXPRESSIONS_ANTI_CALQUE,
             cefr_level="B1",
-            sentence_before="Усі уроки в школі завершуються",
-            sentence_after="і діти йдуть додому.",
+            sentence_before="Поглянь на шкільний годинник: зараз уже",
+            sentence_after=", і дзвінок на перерву пролунає за лічені хвилини.",
             correct_answer="за двадцять третя",
             distractors=(
                 NumeralDistractor(
@@ -2467,8 +2467,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_70",
             category=NumeralCategory.TIME_EXPRESSIONS_ANTI_CALQUE,
             cefr_level="B1",
-            sentence_before="Гості зібралися на святкову вечерю",
-            sentence_after="вечора.",
+            sentence_before="Поглянь на годинник у вітальні: зараз уже",
+            sentence_after=", тож перші гості мають ось-ось прийти.",
             correct_answer="десять хвилин по шостій",
             distractors=(
                 NumeralDistractor(
