@@ -1,0 +1,2661 @@
+{
+  "schema_version": "1.0",
+  "title": "Практикум: Глибока механіка вигуків та звуконаслідувань (Правопис, спонукання, етикет, звуки, пунктуація)",
+  "card_count": 60,
+  "categories": [
+    "interjection_emotional_positive",
+    "interjection_emotional_negative",
+    "interjection_volitional_imperative",
+    "interjection_volitional_animal",
+    "interjection_etiquette_greeting_farewell",
+    "interjection_etiquette_gratitude_apology",
+    "interjection_onomatopoeia_nature_mechanics",
+    "interjection_onomatopoeia_animal_sounds",
+    "interjection_spelling_hyphen_repeated",
+    "interjection_spelling_particles_hyphen",
+    "interjection_spelling_multiword_separate",
+    "interjection_syntax_punctuation_particle"
+  ],
+  "cards": [
+    {
+      "id": "interjection_card_01",
+      "category": "interjection_emotional_positive",
+      "prompt": "«_______! Наша футбольна збірна здобула блискучу перемогу!» — радісно вигукнули вболівальники на стадіоні.",
+      "target_token": "ура",
+      "correct_answer": "Ура",
+      "options": [
+        "Цить",
+        "Ой",
+        "Ура",
+        "Тьху"
+      ],
+      "distractors": [
+        {
+          "text": "Ой",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "Вигук «ой» виражає переляк, біль або сум, а не тріумф і радість перемоги.",
+            "en": "Interjection 'ой' expresses fear, pain, or grief, not triumph and joy of victory."
+          }
+        },
+        {
+          "text": "Тьху",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "Вигук «тьху» виражає презирство, огиду чи розчарування.",
+            "en": "Interjection 'тьху' expresses contempt, disgust, or disappointment."
+          }
+        },
+        {
+          "text": "Цить",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Цить» є спонукальним вигуком вимоги тиші, а не радісного захоплення.",
+            "en": "'Цить' is an imperative interjection demanding silence, not a joyful exclamation."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва, слава богу, чудово). Вони не називають почуттів, а лише безпосередньо сигналізують про емоційний стан мовця.",
+        "en": "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва, слава богу, чудово). They do not name emotions but directly signal the speaker's emotional state."
+      }
+    },
+    {
+      "id": "interjection_card_02",
+      "category": "interjection_emotional_positive",
+      "prompt": "«_______, яка чарівна й мелодійна пісня лине з квітучого вишневого саду!» — захоплено мовила Марія.",
+      "target_token": "ах",
+      "correct_answer": "Ах",
+      "options": [
+        "Геть",
+        "Ах",
+        "Тпру",
+        "Пхе"
+      ],
+      "distractors": [
+        {
+          "text": "Пхе",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "Вигук «пхе» виражає зневагу або гордовиту відразу, а не захоплення красою.",
+            "en": "Interjection 'пхе' expresses disdain or haughty disgust, not admiration of beauty."
+          }
+        },
+        {
+          "text": "Геть",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Геть» є спонукальним вигуком наказу відійти або зникнути.",
+            "en": "'Геть' is an imperative command to leave or go away."
+          }
+        },
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» є наказом для зупинки коней, а не виразом естетичного захоплення.",
+            "en": "'Тпру' is a command to halt horses, not an expression of aesthetic delight."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва, слава богу, чудово). Вони не називають почуттів, а лише безпосередньо сигналізують про емоційний стан мовця.",
+        "en": "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва, слава богу, чудово). They do not name emotions but directly signal the speaker's emotional state."
+      }
+    },
+    {
+      "id": "interjection_card_03",
+      "category": "interjection_emotional_positive",
+      "prompt": "«_______, як дивовижно виблискує вранішня роса під першими променями сонця!» — шепотів мандрівник.",
+      "target_token": "ох",
+      "correct_answer": "Ох",
+      "options": [
+        "Киш",
+        "Жаль",
+        "Ох",
+        "Марш"
+      ],
+      "distractors": [
+        {
+          "text": "Жаль",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "Слово «жаль» виражає смуток або співчуття, що суперечить радісному спогляданню краси.",
+            "en": "The word 'жаль' expresses sorrow or pity, contradicting joyful admiration of nature."
+          }
+        },
+        {
+          "text": "Марш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Марш» є суворим наказом негайно вирушати, а не емоційним вигуком милування.",
+            "en": "'Марш' is a strict command to move immediately, not an emotional interjection."
+          }
+        },
+        {
+          "text": "Киш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киш» слугує для відгону птахів, а не для вираження замилування росою.",
+            "en": "'Киш' is used to scare away birds, not to admire the morning dew."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва, слава богу, чудово). Вони не називають почуттів, а лише безпосередньо сигналізують про емоційний стан мовця.",
+        "en": "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва, слава богу, чудово). They do not name emotions but directly signal the speaker's emotional state."
+      }
+    },
+    {
+      "id": "interjection_card_04",
+      "category": "interjection_emotional_positive",
+      "prompt": "«_______, скільки ж смачних ягід уродило цього літа в лісі!» — радісно здивувалася бабуся.",
+      "target_token": "леле",
+      "correct_answer": "Леле",
+      "options": [
+        "Ша",
+        "Леле",
+        "Вйо",
+        "Тьху"
+      ],
+      "distractors": [
+        {
+          "text": "Тьху",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "Вигук «тьху» сигналізує про прикрість або зневагу, а не про приємне здивування багатим урожаєм.",
+            "en": "Interjection 'тьху' signals vexation or disdain, not pleasant surprise at a rich harvest."
+          }
+        },
+        {
+          "text": "Ша",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Ша» є наказом замовкнути й дотримуватися тиші.",
+            "en": "'Ша' is a command to be quiet and keep silence."
+          }
+        },
+        {
+          "text": "Вйо",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Вйо» є спонукальним вигуком для прискорення руху коней.",
+            "en": "'Вйо' is an imperative command urging horses to move faster."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва, слава богу, чудово). Вони не називають почуттів, а лише безпосередньо сигналізують про емоційний стан мовця.",
+        "en": "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва, слава богу, чудово). They do not name emotions but directly signal the speaker's emotional state."
+      }
+    },
+    {
+      "id": "interjection_card_05",
+      "category": "interjection_emotional_positive",
+      "prompt": "«_______, невже ти справді власноруч змайстрував такий чудовий вітрильник?» — вражено спитав дідусь.",
+      "target_token": "овва",
+      "correct_answer": "Овва",
+      "options": [
+        "Лишенько",
+        "Годі",
+        "Киць-киць",
+        "Овва"
+      ],
+      "distractors": [
+        {
+          "text": "Лишенько",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Лишенько» виражає біду, страх і тривогу, а «овва» передає щире здивування й подив.",
+            "en": "'Лишенько' expresses trouble, fear, and anxiety, whereas 'овва' conveys genuine surprise."
+          }
+        },
+        {
+          "text": "Годі",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Годі» виражає заборону або припинення дії, а не подив від майстерності.",
+            "en": "'Годі' expresses prohibition or cessation of action, not surprise at craftsmanship."
+          }
+        },
+        {
+          "text": "Киць-киць",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киць-киць» слугує виключно для підкликання котів.",
+            "en": "'Киць-киць' serves solely to call cats."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки виражають почуття радості, задоволення, здивування, захоплення або полегшення (ура, ах, ох, леле, овва, слава богу, чудово). Вони не називають почуттів, а лише безпосередньо сигналізують про емоційний стан мовця.",
+        "en": "Emotional interjections express feelings of joy, delight, surprise, admiration, or relief (ура, ах, ох, леле, овва, слава богу, чудово). They do not name emotions but directly signal the speaker's emotional state."
+      }
+    },
+    {
+      "id": "interjection_card_06",
+      "category": "interjection_emotional_negative",
+      "prompt": "«_______, як сильно ниє поранена нога після падіння на слизькій стежці!» — застогнав турист.",
+      "target_token": "ой",
+      "correct_answer": "Ой",
+      "options": [
+        "Ой",
+        "Чудово",
+        "Ура",
+        "Гайда"
+      ],
+      "distractors": [
+        {
+          "text": "Ура",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ура» є радісним вигуком тріумфу, що неприпустимо при сильному фізичному болю.",
+            "en": "'Ура' is a joyous cry of triumph, inappropriate for acute physical pain."
+          }
+        },
+        {
+          "text": "Чудово",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Чудово» виражає найвище схвалення, а не фізичні страждання від травми.",
+            "en": "'Чудово' expresses high approval, not physical suffering from an injury."
+          }
+        },
+        {
+          "text": "Гайда",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Гайда» спонукає вирушати в дорогу, що неможливо для людини з травмованою ногою.",
+            "en": "'Гайда' urges setting out on a journey, impossible for an injured person."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху, жаль). На письмі вони виділяються комами або знаком оклику.",
+        "en": "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху, жаль). In writing, they are set off by commas or an exclamation mark."
+      }
+    },
+    {
+      "id": "interjection_card_07",
+      "category": "interjection_emotional_negative",
+      "prompt": "«_______, як пече цей кропив'яний лист, коли торкнешся його голою рукою!» — зойкнув малюк.",
+      "target_token": "ай",
+      "correct_answer": "Ай",
+      "options": [
+        "Браво",
+        "Но",
+        "Ай",
+        "Овва"
+      ],
+      "distractors": [
+        {
+          "text": "Овва",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Овва» виражає здивування або іронію, а «ай» передає раптовий гострий фізичний біль.",
+            "en": "'Овва' expresses surprise or irony, whereas 'ай' conveys sudden sharp physical pain."
+          }
+        },
+        {
+          "text": "Браво",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Браво» є вигуком захоплення майстерністю, що абсурдно при опіку кропивою.",
+            "en": "'Браво' is an exclamation of acclaim for mastery, absurd when stung by nettles."
+          }
+        },
+        {
+          "text": "Но",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Но» є вигуком поганяння коней, а не реакцією на біль від опіку.",
+            "en": "'Но' is a call urging horses forward, not a reaction to burning pain."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху, жаль). На письмі вони виділяються комами або знаком оклику.",
+        "en": "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху, жаль). In writing, they are set off by commas or an exclamation mark."
+      }
+    },
+    {
+      "id": "interjection_card_08",
+      "category": "interjection_emotional_negative",
+      "prompt": "«Ой _______, що ж тепер нам робити серед темного дрімучого лісу?» — забідкалися заблукалі діти.",
+      "target_token": "лишенько",
+      "correct_answer": "лишенько",
+      "options": [
+        "лишенько",
+        "ура",
+        "радість",
+        "марш"
+      ],
+      "distractors": [
+        {
+          "text": "радість",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Радість» виражає позитивну емоцію, несумісну з панікою дітей, які заблукали в хащі.",
+            "en": "'Радість' expresses a positive emotion incompatible with panic in the dark woods."
+          }
+        },
+        {
+          "text": "ура",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ура» суперечить почуттю безпорадності та страху у вигуку «ой лишенько».",
+            "en": "'Ура' contradicts the sense of helplessness and fear in 'ой лишенько'."
+          }
+        },
+        {
+          "text": "марш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Марш» є військовою чи суворою командою, а не бідканням про лихо.",
+            "en": "'Марш' is a strict command, not a lamentation over misfortune."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху, жаль). На письмі вони виділяються комами або знаком оклику.",
+        "en": "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху, жаль). In writing, they are set off by commas or an exclamation mark."
+      }
+    },
+    {
+      "id": "interjection_card_09",
+      "category": "interjection_emotional_negative",
+      "prompt": "«_______, хіба цим простим фокусом можна когось насправді вразити?» — гордовито фиркнув скептик.",
+      "target_token": "пхе",
+      "correct_answer": "Пхе",
+      "options": [
+        "Пхе",
+        "Ах",
+        "Слава богу",
+        "Агов"
+      ],
+      "distractors": [
+        {
+          "text": "Ах",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ах» передає захоплення чи розчулення, а «пхе» виражає зневажливу зверхність.",
+            "en": "'Ах' conveys admiration, whereas 'пхе' expresses scornful contempt."
+          }
+        },
+        {
+          "text": "Слава богу",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Слава богу» виражає полегшення або вдячність, а не зневагу.",
+            "en": "'Слава богу' expresses relief or gratitude, not contempt."
+          }
+        },
+        {
+          "text": "Агов",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Агов» є вигуком для привертання уваги або оклику на відстані.",
+            "en": "'Агов' is an interjection for attracting attention or calling from a distance."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху, жаль). На письмі вони виділяються комами або знаком оклику.",
+        "en": "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху, жаль). In writing, they are set off by commas or an exclamation mark."
+      }
+    },
+    {
+      "id": "interjection_card_10",
+      "category": "interjection_emotional_negative",
+      "prompt": "«_______, знову через неуважність переплутав потрібні документи!» — з досадою пробурмотів працівник.",
+      "target_token": "тьху",
+      "correct_answer": "Тьху",
+      "options": [
+        "Чудово",
+        "Тьху",
+        "Тпру",
+        "Ура"
+      ],
+      "distractors": [
+        {
+          "text": "Ура",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ура» позначає радість перемоги, що цілком суперечить досаді від власної помилки.",
+            "en": "'Ура' denotes joy of victory, entirely contrary to vexation over one's own mistake."
+          }
+        },
+        {
+          "text": "Чудово",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Чудово» є позитивною оцінкою, несумісною з неприємною помилкою.",
+            "en": "'Чудово' is a positive assessment incompatible with an annoying mistake."
+          }
+        },
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» є командою зупинити коней, а не вигуком досади й роздратування.",
+            "en": "'Тпру' is a command to halt horses, not an interjection of vexation."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Емоційні вигуки негативного спектра передають сум, біль, жаль, переляк, обурення, огиду або досаду (ой, ай, лишенько, пхе, тьху, жаль). На письмі вони виділяються комами або знаком оклику.",
+        "en": "Negative emotional interjections convey sorrow, pain, grief, fear, indignation, disgust, or vexation (ой, ай, лишенько, пхе, тьху, жаль). In writing, they are set off by commas or an exclamation mark."
+      }
+    },
+    {
+      "id": "interjection_card_11",
+      "category": "interjection_volitional_imperative",
+      "prompt": "«_______, друзі, на річку купатися, поки сонце гріє!» — весело гукнув Тарас.",
+      "target_token": "гайда",
+      "correct_answer": "Гайда",
+      "options": [
+        "Тьху",
+        "Тпру",
+        "Гайда",
+        "Ой"
+      ],
+      "distractors": [
+        {
+          "text": "Ой",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ой» виражає емоційний біль чи острах, а «гайда» є закликом до спільного руху.",
+            "en": "'Ой' expresses pain or fear, whereas 'гайда' is a call to mutual action."
+          }
+        },
+        {
+          "text": "Тьху",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Тьху» передає огиду або досаду, а не радісний заклик піти купатися.",
+            "en": "'Тьху' conveys disgust or vexation, not an eager invitation to go swimming."
+          }
+        },
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» наказує коням зупинитися, що прямо протилежне заклику вирушати.",
+            "en": "'Тпру' orders horses to stop, which is opposite to an urging to set out."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить, ша, агов, вйо). Вони спонукають адресата до певної реакції.",
+        "en": "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить, ша, агов, вйо). They prompt the addressee into a specific action."
+      }
+    },
+    {
+      "id": "interjection_card_12",
+      "category": "interjection_volitional_imperative",
+      "prompt": "«Ану _______ негайно до кімнати вчити невивчені уроки!» — суворо звеліла мати.",
+      "target_token": "марш",
+      "correct_answer": "марш",
+      "options": [
+        "дякую",
+        "киць-киць",
+        "марш",
+        "леле"
+      ],
+      "distractors": [
+        {
+          "text": "леле",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Леле» виражає подив або тривогу, а не рішучу вимогу йти робити уроки.",
+            "en": "'Леле' expresses surprise or worry, not a decisive command to go study."
+          }
+        },
+        {
+          "text": "дякую",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Дякую» є формулою подяки й не сполучається з наказовою часткою «ану».",
+            "en": "'Дякую' is an expression of gratitude and does not combine with imperative 'ану'."
+          }
+        },
+        {
+          "text": "киць-киць",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киць-киць» слугує для підкликання котів, а не для наказу дитині.",
+            "en": "'Киць-киць' is used to call cats, not to command a child."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить, ша, агов, вйо). Вони спонукають адресата до певної реакції.",
+        "en": "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить, ша, агов, вйо). They prompt the addressee into a specific action."
+      }
+    },
+    {
+      "id": "interjection_card_13",
+      "category": "interjection_volitional_imperative",
+      "prompt": "«_______ вже марно сумувати за минулим, час діяти!» — підбадьорив товариша Андрій.",
+      "target_token": "годі",
+      "correct_answer": "Годі",
+      "options": [
+        "Киш",
+        "Годі",
+        "Ура",
+        "Ах"
+      ],
+      "distractors": [
+        {
+          "text": "Ура",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ура» є вигуком радості й не виражає спонукання припинити марний сум.",
+            "en": "'Ура' is a cry of joy and does not express an urging to cease vain grief."
+          }
+        },
+        {
+          "text": "Ах",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ах» передає зітхання й розчулення, а не рішучу вимогу облишити сумніви.",
+            "en": "'Ах' conveys a sigh, not a resolute imperative to stop doubting."
+          }
+        },
+        {
+          "text": "Киш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киш» є вигуком для відгону птахів, а не спонуканням людини припинити сумувати.",
+            "en": "'Киш' is used to shoo birds away, not an urging for a person to stop sorrowing."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить, ша, агов, вйо). Вони спонукають адресата до певної реакції.",
+        "en": "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить, ша, агов, вйо). They prompt the addressee into a specific action."
+      }
+    },
+    {
+      "id": "interjection_card_14",
+      "category": "interjection_volitional_imperative",
+      "prompt": "«_______ звідси, тривожні сумніви й лячні думки!» — подумки наказав собі юнак.",
+      "target_token": "геть",
+      "correct_answer": "Геть",
+      "options": [
+        "Киць-киць",
+        "Геть",
+        "Будь ласка",
+        "Чудово"
+      ],
+      "distractors": [
+        {
+          "text": "Будь ласка",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Будь ласка» є ввічливим проханням, а не рішучим наказом прогнати лихі думки.",
+            "en": "'Будь ласка' is a polite request, not a resolute command to banish bad thoughts."
+          }
+        },
+        {
+          "text": "Чудово",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Чудово» виражає схвалення, а «геть» рішуче проганяє небажане.",
+            "en": "'Чудово' expresses approval, whereas 'геть' decisively expels the unwanted."
+          }
+        },
+        {
+          "text": "Киць-киць",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киць-киць» приваблює котів, а не проганяє страхи й сумніви.",
+            "en": "'Киць-киць' attracts cats, rather than banishing fears and doubts."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить, ша, агов, вйо). Вони спонукають адресата до певної реакції.",
+        "en": "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить, ша, агов, вйо). They prompt the addressee into a specific action."
+      }
+    },
+    {
+      "id": "interjection_card_15",
+      "category": "interjection_volitional_imperative",
+      "prompt": "«_______, діти, заспокойтеся і не порушуйте тиші в читальній залі!» — попросила бібліотекарка.",
+      "target_token": "цить",
+      "correct_answer": "Цить",
+      "options": [
+        "Гайда",
+        "Вйо",
+        "Цить",
+        "Ура"
+      ],
+      "distractors": [
+        {
+          "text": "Ура",
+          "interference_key": "INCORRECT_EMOTIONAL_TONE",
+          "explanation": {
+            "ua": "«Ура» є гучним криком радості, що лише посилює шум замість вимоги тиші.",
+            "en": "'Ура' is a loud cheer of joy that increases noise instead of asking for silence."
+          }
+        },
+        {
+          "text": "Гайда",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Гайда» закликає бігти кудись разом, а не поводитися тихо в читальній залі.",
+            "en": "'Гайда' urges running somewhere together, not being quiet in a reading room."
+          }
+        },
+        {
+          "text": "Вйо",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Вйо» вигукують візники для прискорення коней, а не для тиші серед людей.",
+            "en": "'Вйо' is shouted by coachmen to speed up horses, not to request silence."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Спонукальні (волевиявні) вигуки виражають заклик до дії, наказ, заборону, вимогу тиші або привертання уваги (гайда, марш, годі, геть, цить, ша, агов, вйо). Вони спонукають адресата до певної реакції.",
+        "en": "Volitional (imperative) interjections express calls to action, commands, prohibitions, demands for silence, or attention calls (гайда, марш, годі, геть, цить, ша, агов, вйо). They prompt the addressee into a specific action."
+      }
+    },
+    {
+      "id": "interjection_card_16",
+      "category": "interjection_volitional_animal",
+      "prompt": "«_______, маленьке пухнасте кошеня, біжи скоріше куштувати тепле молоко!» — покликала Оленка.",
+      "target_token": "киць-киць",
+      "correct_answer": "Киць-киць",
+      "options": [
+        "Тпру",
+        "Но",
+        "Киш",
+        "Киць-киць"
+      ],
+      "distractors": [
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» наказує коню зупинитися, а не підкликає котів.",
+            "en": "'Тпру' commands a horse to halt, not calls a kitten."
+          }
+        },
+        {
+          "text": "Киш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киш» відганяє птахів і свійську птицю, а не запрошує кошеня підійти.",
+            "en": "'Киш' shoos birds away, rather than inviting a kitten to approach."
+          }
+        },
+        {
+          "text": "Но",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Но» слугує для поганяння коней або волів у дорогу.",
+            "en": "'Но' is used to urge horses or oxen forward."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Волевиявні вигуки для тварин слугують для підкликання або відгону свійських тварин і птахів (киць-киць — підкликання котів, киш — відгін птахів, тпру — зупинка коней, но — рух коней уперед, вйо — поганяння упряжі).",
+        "en": "Volitional animal interjections serve to call or drive domestic animals and birds (киць-киць for cats, киш for driving birds, тпру to halt horses, но to urge horses forward, вйо to urge draught animals)."
+      }
+    },
+    {
+      "id": "interjection_card_17",
+      "category": "interjection_volitional_animal",
+      "prompt": "«_______, настирливі горобці, не чіпайте стиглу солодку черешню!» — замахнувся на птахів садівник.",
+      "target_token": "киш",
+      "correct_answer": "Киш",
+      "options": [
+        "Вйо",
+        "Киць-киць",
+        "Киш",
+        "Тпру"
+      ],
+      "distractors": [
+        {
+          "text": "Киць-киць",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киць-киць» підкликає кота, а не проганяє птахів із фруктового дерева.",
+            "en": "'Киць-киць' calls a cat, rather than driving birds away from a fruit tree."
+          }
+        },
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» вживається лише для зупинки коней.",
+            "en": "'Тпру' is used exclusively to stop horses."
+          }
+        },
+        {
+          "text": "Вйо",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Вйо» наказує коням рушати або прискорюватися, а не відганяє горобців.",
+            "en": "'Вйо' urges horses to move or accelerate, not shoos sparrows away."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Волевиявні вигуки для тварин слугують для підкликання або відгону свійських тварин і птахів (киць-киць — підкликання котів, киш — відгін птахів, тпру — зупинка коней, но — рух коней уперед, вйо — поганяння упряжі).",
+        "en": "Volitional animal interjections serve to call or drive domestic animals and birds (киць-киць for cats, киш for driving birds, тпру to halt horses, но to urge horses forward, вйо to urge draught animals)."
+      }
+    },
+    {
+      "id": "interjection_card_18",
+      "category": "interjection_volitional_animal",
+      "prompt": "«_______, гнідий коню, постій трохи біля прохолодної криниці!» — тихо скомандував візник.",
+      "target_token": "тпру",
+      "correct_answer": "Тпру",
+      "options": [
+        "Тпру",
+        "Киць-киць",
+        "Киш",
+        "Агов"
+      ],
+      "distractors": [
+        {
+          "text": "Киш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киш» відганяє птахів і не вживається для зупинки коня.",
+            "en": "'Киш' shoos birds and is not used to halt a horse."
+          }
+        },
+        {
+          "text": "Киць-киць",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киць-киць» є вигуком підкликання котів, а не наказом постою для коня.",
+            "en": "'Киць-киць' is a call for cats, not a halt command for a horse."
+          }
+        },
+        {
+          "text": "Агов",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Агов» слугує для привертання уваги людини, а не для зупинки упряжі.",
+            "en": "'Агов' attracts human attention, not halts a carriage horse."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Волевиявні вигуки для тварин слугують для підкликання або відгону свійських тварин і птахів (киць-киць — підкликання котів, киш — відгін птахів, тпру — зупинка коней, но — рух коней уперед, вйо — поганяння упряжі).",
+        "en": "Volitional animal interjections serve to call or drive domestic animals and birds (киць-киць for cats, киш for driving birds, тпру to halt horses, но to urge horses forward, вйо to urge draught animals)."
+      }
+    },
+    {
+      "id": "interjection_card_19",
+      "category": "interjection_volitional_animal",
+      "prompt": "«_______, сивий конику, рушаймо хутчіше, бо вже насувається дощова хмара!» — гукнув селянин.",
+      "target_token": "но",
+      "correct_answer": "Но",
+      "options": [
+        "Цить",
+        "Но",
+        "Тпру",
+        "Киш"
+      ],
+      "distractors": [
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» наказує коневі стати, тоді як мовець спонукає його їхати швидше.",
+            "en": "'Тпру' commands a horse to halt, while the speaker urges it to hasten."
+          }
+        },
+        {
+          "text": "Киш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киш» відганяє птахів від городу чи саду.",
+            "en": "'Киш' drives birds away from gardens or orchards."
+          }
+        },
+        {
+          "text": "Цить",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Цить» вимагає мовчання від людей, а не спрямовує коня в рух.",
+            "en": "'Цить' demands silence from people, rather than urging a horse into motion."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Волевиявні вигуки для тварин слугують для підкликання або відгону свійських тварин і птахів (киць-киць — підкликання котів, киш — відгін птахів, тпру — зупинка коней, но — рух коней уперед, вйо — поганяння упряжі).",
+        "en": "Volitional animal interjections serve to call or drive domestic animals and birds (киць-киць for cats, киш for driving birds, тпру to halt horses, но to urge horses forward, вйо to urge draught animals)."
+      }
+    },
+    {
+      "id": "interjection_card_20",
+      "category": "interjection_volitional_animal",
+      "prompt": "«_______, гей, мої вірні коні, вивезіть воза на круту гору!» — підбадьорив упряж чумак.",
+      "target_token": "вйо",
+      "correct_answer": "Вйо",
+      "options": [
+        "Киць-киць",
+        "Тпру",
+        "Киш",
+        "Вйо"
+      ],
+      "distractors": [
+        {
+          "text": "Киць-киць",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киць-киць» підкликає кошенят, а не заохочує упряж долати крутий підйом.",
+            "en": "'Киць-киць' calls kittens, not encourages draft horses on a steep slope."
+          }
+        },
+        {
+          "text": "Тпру",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Тпру» зупиняє рух, що завадило б витягнути воза на гору.",
+            "en": "'Тпру' stops movement, preventing hauling the cart up the hill."
+          }
+        },
+        {
+          "text": "Киш",
+          "interference_key": "INCORRECT_VOLITIONAL_COMMAND",
+          "explanation": {
+            "ua": "«Киш» відлякує птахів і не керує кінською тягловою силою.",
+            "en": "'Киш' scares birds and cannot control equine draught power."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Волевиявні вигуки для тварин слугують для підкликання або відгону свійських тварин і птахів (киць-киць — підкликання котів, киш — відгін птахів, тпру — зупинка коней, но — рух коней уперед, вйо — поганяння упряжі).",
+        "en": "Volitional animal interjections serve to call or drive domestic animals and birds (киць-киць for cats, киш for driving birds, тпру to halt horses, но to urge horses forward, вйо to urge draught animals)."
+      }
+    },
+    {
+      "id": "interjection_card_21",
+      "category": "interjection_etiquette_greeting_farewell",
+      "prompt": "«_______, вельмишановні колеги, раді бачити вас на нашій щорічній конференції!» — розпочав доповідь декан.",
+      "target_token": "добрий день",
+      "correct_answer": "Добрий день",
+      "options": [
+        "Добрий-день",
+        "Добрий день",
+        "Здрастє",
+        "Добрийдень"
+      ],
+      "distractors": [
+        {
+          "text": "Добрийдень",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Етикетне вітання «добрий день» пишеться строго окремо per § 46, п. 2.",
+            "en": "Etiquette greeting 'добрий день' is spelled strictly separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "Добрий-день",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у виразі «добрий день» є грубою орфографічною помилкою; слова пишуться окремо.",
+            "en": "Hyphen in 'добрий день' is an orthographic error; words are written separately."
+          }
+        },
+        {
+          "text": "Здрастє",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Здрастє» є спотвореним суржиковим просторіччям; українською вітаються «добрий день».",
+            "en": "'Здрастє' is corrupted Surzhyk vernacular; standard Ukrainian greeting is 'добрий день'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 46, п. 2.",
+        "en": "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) function as interjections. Multi-word etiquette phrases are spelled separately per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_22",
+      "category": "interjection_etiquette_greeting_farewell",
+      "prompt": "«_______, дорогі друзі, щиро запрошуємо вас до нашого затишного святкового столу!» — привітала господарка.",
+      "target_token": "добрий вечір",
+      "correct_answer": "Добрий вечір",
+      "options": [
+        "Добрий ночі",
+        "Добрий вечір",
+        "Добрийвечір",
+        "Добрий-вечір"
+      ],
+      "distractors": [
+        {
+          "text": "Добрийвечір",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Формула ввічливого привітання «добрий вечір» складається з двох слів і пишеться окремо.",
+            "en": "Polite greeting formula 'добрий вечір' consists of two words and is spelled separately."
+          }
+        },
+        {
+          "text": "Добрий-вечір",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Написання «добрий вечір» через дефіс суперечить правилам українського правопису.",
+            "en": "Hyphenated spelling of 'добрий вечір' contradicts Ukrainian orthographic rules."
+          }
+        },
+        {
+          "text": "Добрий ночі",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «добрий ночі» граматично неузгоджена; для вітання ввечері кажуть «добрий вечір».",
+            "en": "The form 'добрий ночі' is ungrammatical; standard evening greeting is 'добрий вечір'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 46, п. 2.",
+        "en": "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) function as interjections. Multi-word etiquette phrases are spelled separately per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_23",
+      "category": "interjection_etiquette_greeting_farewell",
+      "prompt": "«_______, дорогі друзі, щиро зичимо успіхів і сподіваємося на нові приємні зустрічі!» — тепло попрощався вчитель.",
+      "target_token": "до побачення",
+      "correct_answer": "До побачення",
+      "options": [
+        "До-побачення",
+        "До побачення",
+        "Да пабачення",
+        "Допобачення"
+      ],
+      "distractors": [
+        {
+          "text": "Допобачення",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Етикетний зворот «до побачення» пишеться строго окремо per § 46, п. 2.",
+            "en": "Etiquette formula 'до побачення' is spelled strictly separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "До-побачення",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Написання виразу «до побачення» через дефіс є поширеною помилкою; пишеться окремо.",
+            "en": "Hyphenated 'до-побачення' is an error; it must be written as two separate words."
+          }
+        },
+        {
+          "text": "Да пабачення",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Да пабачення» є фонетичною калькою російського акання й неприпустиме в літературній мові.",
+            "en": "'Да пабачення' is an illicit phonetic calque of Russian 'akanye' in literary Ukrainian."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 46, п. 2.",
+        "en": "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) function as interjections. Multi-word etiquette phrases are spelled separately per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_24",
+      "category": "interjection_etiquette_greeting_farewell",
+      "prompt": "«_______, міцного й безтурботного вам сну до самого світанку!» — лагідно побажала мама дітям.",
+      "target_token": "на добраніч",
+      "correct_answer": "На добраніч",
+      "options": [
+        "Спокойної ночі",
+        "На добраніч",
+        "Надобраніч",
+        "На-добраніч"
+      ],
+      "distractors": [
+        {
+          "text": "Надобраніч",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Етикетне побажання спокійного сну «на добраніч» пишеться строго окремо per § 46, п. 2.",
+            "en": "Etiquette wish for good night 'на добраніч' is spelled strictly separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "На-добраніч",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Написання «на-добраніч» через дефіс помилкове; в українській мові слова пишуться окремо.",
+            "en": "Hyphenated 'на-добраніч' is incorrect; words are written separately in Ukrainian."
+          }
+        },
+        {
+          "text": "Спокойної ночі",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Спокойної ночі» є калькою з російської («спокойной ночи»); нормативні українські вислови — «на добраніч», «добраніч».",
+            "en": "'Спокойної ночі' is a calque of Russian 'спокойной ночи'; normative Ukrainian is 'на добраніч'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 46, п. 2.",
+        "en": "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) function as interjections. Multi-word etiquette phrases are spelled separately per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_25",
+      "category": "interjection_etiquette_greeting_farewell",
+      "prompt": "«_______ здорові, любі сусіди, щасливої вам дороги та легкої мандрівки!» — махнув рукою господар.",
+      "target_token": "бувайте",
+      "correct_answer": "Бувайте",
+      "options": [
+        "Бувайтє",
+        "Бувайте",
+        "Бувайте-бо",
+        "Пака"
+      ],
+      "distractors": [
+        {
+          "text": "Пака",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Пака» є російським жаргонним словом; літературна українська форма прощання — «бувайте».",
+            "en": "'Пака' is a Russian slang calque; normative Ukrainian farewell is 'бувайте'."
+          }
+        },
+        {
+          "text": "Бувайтє",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Бувайтє» містить чуже для української дієслівної парадигми пом'якшення кінцевого «те».",
+            "en": "'Бувайтє' shows an illicit Russianized softening of final 'те' in standard Ukrainian."
+          }
+        },
+        {
+          "text": "Бувайте-бо",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Етикетна формула прощання «бувайте» у сполученні зі звертанням не приєднує частку -бо.",
+            "en": "Farewell formula 'бувайте' combined with address does not take enclitic particle -бо."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Формули мовленнєвого етикету для привітання та прощання (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) функціонують як вигуки. Багатослівні етикетні сполуки пишуться окремо per § 46, п. 2.",
+        "en": "Speech etiquette formulas for greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте, ласкаво просимо) function as interjections. Multi-word etiquette phrases are spelled separately per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_26",
+      "category": "interjection_etiquette_gratitude_apology",
+      "prompt": "«Допоможіть мені, _______, підняти цю важку валізу на верхню полицю поїзда!» — звернулася пасажирка.",
+      "target_token": "будь ласка",
+      "correct_answer": "будь ласка",
+      "options": [
+        "пожалуста",
+        "будь ласка",
+        "будь-ласка",
+        "будьласка"
+      ],
+      "distractors": [
+        {
+          "text": "будь-ласка",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Етикетний зворот ввічливості «будь ласка» пишеться строго окремо без дефіса per § 46, п. 2.",
+            "en": "Etiquette polite phrase 'будь ласка' is spelled strictly separately without hyphen per § 46, p. 2."
+          }
+        },
+        {
+          "text": "будьласка",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Написання «будьласка» разом є грубою орфографічною помилкою; слова пишуться окремо.",
+            "en": "Spelling 'будьласка' as a single fused word is an orthographic error; write separately."
+          }
+        },
+        {
+          "text": "пожалуста",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Пожалуста» є суржиковим спотворенням російського «пожалуйста»; нормативна форма — «будь ласка».",
+            "en": "'Пожалуста' is a Surzhyk corruption of Russian 'пожалуйста'; standard form is 'будь ласка'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 46, п. 2.",
+        "en": "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_27",
+      "category": "interjection_etiquette_gratitude_apology",
+      "prompt": "«Щиро _______ вам за мудру пораду та своєчасну підтримку в біді!» — сказав вдячний юнак.",
+      "target_token": "дякую",
+      "correct_answer": "дякую",
+      "options": [
+        "спасібо",
+        "благодарю",
+        "дякуюю",
+        "дякую"
+      ],
+      "distractors": [
+        {
+          "text": "спасібо",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Спасібо» є ненормативним суржикізмом; в українській літературній мові вживається «дякую».",
+            "en": "'Спасібо' is non-standard Surzhyk; standard literary Ukrainian requires 'дякую'."
+          }
+        },
+        {
+          "text": "благодарю",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Благодарю» є застарілим калькованим канцеляризмом із російської; нормативна форма — «дякую».",
+            "en": "'Благодарю' is a calqued clericalism from Russian; normative Ukrainian expression is 'дякую'."
+          }
+        },
+        {
+          "text": "дякуюю",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Подвоєння кінцевого «ю» є орфографічною помилкою; нормативна форма — «дякую».",
+            "en": "Doubled final 'ю' is an orthographic error; normative form is 'дякую'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 46, п. 2.",
+        "en": "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_28",
+      "category": "interjection_etiquette_gratitude_apology",
+      "prompt": "«_______, я ненавмисно зачепив вашу парасольку біля виходу з вагону!» — вибачився перехожий.",
+      "target_token": "пробачте",
+      "correct_answer": "Пробачте",
+      "options": [
+        "Пробач-те",
+        "Ізвінітє",
+        "Пробачте",
+        "Пробачтє"
+      ],
+      "distractors": [
+        {
+          "text": "Ізвінітє",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Ізвінітє» є грубим суржикізмом із російської («извините»); нормативна українська форма — «пробачте».",
+            "en": "'Ізвінітє' is an illicit Surzhyk calque from Russian 'извините'; normative Ukrainian is 'пробачте'."
+          }
+        },
+        {
+          "text": "Пробачтє",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Пом'якшення кінцевого «те» в наказовому способі («пробачтє») є фонетичною помилкою.",
+            "en": "Softening the final 'те' in the imperative ('пробачтє') is an orthographic and phonetic error."
+          }
+        },
+        {
+          "text": "Пробач-те",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс усередині дієслівної форми наказового способу неприпустимий; пишеться «пробачте».",
+            "en": "A hyphen inside an imperative verbal form is illicit; write 'пробачте' as one word."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 46, п. 2.",
+        "en": "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_29",
+      "category": "interjection_etiquette_gratitude_apology",
+      "prompt": "«_______, котра зараз година, бо мій наручний годинник раптово зупинився?» — чемно поцікавився дідусь.",
+      "target_token": "перепрошую",
+      "correct_answer": "Перепрошую",
+      "options": [
+        "Перепрашую",
+        "Перепрошую",
+        "Ізвиняюсь",
+        "Пере-прошую"
+      ],
+      "distractors": [
+        {
+          "text": "Ізвиняюсь",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Ізвиняюсь» є ненормативним суржикізмом; ввічлива українська форма звертання — «перепрошую».",
+            "en": "'Ізвиняюсь' is non-standard Surzhyk; polite Ukrainian formula of address is 'перепрошую'."
+          }
+        },
+        {
+          "text": "Пере-прошую",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Префікс пере- в дієсловах і вигукових формулах пишеться разом, без дефіса.",
+            "en": "Prefix пере- in verbs and etiquette formulas is written fused without hyphen."
+          }
+        },
+        {
+          "text": "Перепрашую",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма з літерою «а» в корені є помилковою; нормативний корінь — «-прош-» («перепрошую»).",
+            "en": "The form with 'а' in the root is an error; normative root is '-прош-' ('перепрошую')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 46, п. 2.",
+        "en": "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_30",
+      "category": "interjection_etiquette_gratitude_apology",
+      "prompt": "«_______, ви не підкажете, де розташована найближча станція міського метро?» — запитав гість міста.",
+      "target_token": "вибачте",
+      "correct_answer": "Вибачте",
+      "options": [
+        "Вибачтє",
+        "Вибач-те",
+        "Вибачте",
+        "Ізвінітє"
+      ],
+      "distractors": [
+        {
+          "text": "Ізвінітє",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Ізвінітє» є суржиковим запозиченням; літературна форма ввічливого звертання — «вибачте».",
+            "en": "'Ізвінітє' is an illicit Surzhyk borrowing; standard literary expression is 'вибачте'."
+          }
+        },
+        {
+          "text": "Вибачтє",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Пом'якшення кінцевого складу («тє») порушує орфоепічні та граматичні норми української мови.",
+            "en": "Softening the final syllable ('-тє') violates Ukrainian orthoepic and grammatical norms."
+          }
+        },
+        {
+          "text": "Вибач-те",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Написання вигукової дієслівної форми через дефіс є орфографічною помилкою.",
+            "en": "Hyphenating an imperative verbal interjection is an orthographic error."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Етикетні вигуки вдячності, вибачення та ввічливості (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) регулюють соціальну взаємодію. Сполука «будь ласка» пишеться окремо без дефіса per § 46, п. 2.",
+        "en": "Etiquette interjections of gratitude, apology, and politeness (будь ласка, дякую, щиро дякую, пробачте, перепрошую, вибачте) regulate social interaction. The polite phrase 'будь ласка' is spelled separately without hyphen per § 46, p. 2."
+      }
+    },
+    {
+      "id": "interjection_card_31",
+      "category": "interjection_onomatopoeia_nature_mechanics",
+      "prompt": "«_______!» — весело й лунко задзвонив срібний шкільний дзвоник, скликаючи учнів на перший урок.",
+      "target_token": "дзень-дзелень",
+      "correct_answer": "Дзень-дзелень",
+      "options": [
+        "Дзень дзелень",
+        "Дзень-дзелень",
+        "Дзень-делень",
+        "Дзеньдзелень"
+      ],
+      "distractors": [
+        {
+          "text": "Дзеньдзелень",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування передзвону дзвоника «дзень-дзелень» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Bell-ringing onomatopoeia 'дзень-дзелень' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Дзень дзелень",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Написання окремо для парного звуконаслідування помилкове; частини поєднуються дефісом.",
+            "en": "Writing paired onomatopoeia separately is incorrect; parts are connected by hyphen."
+          }
+        },
+        {
+          "text": "Дзень-делень",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Втрата африкати дз («делень» замість «дзелень») спотворює дзвінку вимову звуконаслідування.",
+            "en": "Loss of affricate дз ('делень' instead of 'дзелень') corrupts onomatopoeic phonetics."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_32",
+      "category": "interjection_onomatopoeia_nature_mechanics",
+      "prompt": "«_______» — монотонно й розмірено відраховував кожну хвилину старовинний настінний годинник.",
+      "target_token": "тік-так",
+      "correct_answer": "Тік-так",
+      "options": [
+        "Тік-так",
+        "Тіктак",
+        "Тік так",
+        "Тик-так"
+      ],
+      "distractors": [
+        {
+          "text": "Тіктак",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування цокання годинника «тік-так» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Clock-ticking onomatopoeia 'тік-так' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Тік так",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання «тік так» суперечить правилу дефісного оформлення звуконаслідувань.",
+            "en": "Separate spelling 'тік так' contradicts the rule requiring hyphenated onomatopoeia."
+          }
+        },
+        {
+          "text": "Тик-так",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Написання з літерою «и» є калькою з російської мови; в українській нормі вживається «тік-так».",
+            "en": "Spelling with 'и' is a Russian calque; standard Ukrainian onomatopoeia is 'тік-так'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_33",
+      "category": "interjection_onomatopoeia_nature_mechanics",
+      "prompt": "«_______» — тихо падали на весняне підвіконня перші прозорі краплі травневого дощу.",
+      "target_token": "крап-крап",
+      "correct_answer": "Крап-крап",
+      "options": [
+        "Крап-крап",
+        "Крап крап",
+        "Крапкрап",
+        "Кап-кап"
+      ],
+      "distractors": [
+        {
+          "text": "Крапкрап",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Повторювані звуконаслідувальні слова «крап-крап» пишуться через дефіс per § 46, п. 1, а).",
+            "en": "Repeated onomatopoeic elements 'крап-крап' are hyphenated per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Крап крап",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Написання частин повтору окремо є помилкою; повтори звуків з'єднуються дефісом.",
+            "en": "Writing parts of repetition separately is an error; sound repetitions are hyphenated."
+          }
+        },
+        {
+          "text": "Кап-кап",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "В українській мові питомим звуконаслідуванням падіння крапель є «крап-крап» (від «крапати»).",
+            "en": "In Ukrainian, native onomatopoeia for falling drops is 'крап-крап' (from 'крапати')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_34",
+      "category": "interjection_onomatopoeia_nature_mechanics",
+      "prompt": "«_______» — м'яко хлюпали прохолодні річкові хвилі об дерев'яний борт старого рибальського човна.",
+      "target_token": "хлюп-хлюп",
+      "correct_answer": "Хлюп-хлюп",
+      "options": [
+        "Плюх-плюх",
+        "Хлюпхлюп",
+        "Хлюп-хлюп",
+        "Хлюп хлюп"
+      ],
+      "distractors": [
+        {
+          "text": "Хлюпхлюп",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування плескоту хвиль «хлюп-хлюп» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Wave-splashing onomatopoeia 'хлюп-хлюп' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Хлюп хлюп",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Окреме написання повторюваних елементів звуконаслідування суперечить правопису.",
+            "en": "Separate spelling of repeated onomatopoeic elements contradicts orthography."
+          }
+        },
+        {
+          "text": "Плюх-плюх",
+          "interference_key": "INCORRECT_SOUND_SOURCE",
+          "explanation": {
+            "ua": "«Плюх-плюх» імітує падіння важкого предмета у воду, а лагідні хвилі роблять «хлюп-хлюп».",
+            "en": "'Плюх-плюх' imitates a heavy object falling into water, whereas gentle waves go 'хлюп-хлюп'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_35",
+      "category": "interjection_onomatopoeia_nature_mechanics",
+      "prompt": "«_______» — лунко вистукували підковані копита коня по кам'яній старій міській бруківці.",
+      "target_token": "цок-цок",
+      "correct_answer": "Цок-цок",
+      "options": [
+        "Чок-чок",
+        "Цокцок",
+        "Цок-цок",
+        "Цок цок"
+      ],
+      "distractors": [
+        {
+          "text": "Цокцок",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування стукоту копит «цок-цок» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Hoof-clattering onomatopoeia 'цок-цок' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Цок цок",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Окреме написання повторюваного звуку копит є орфографічною помилкою.",
+            "en": "Writing the repeated hoof sound separately is an orthographic error."
+          }
+        },
+        {
+          "text": "Чок-чок",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Форма «чок-чок» є російським звуконаслідуванням; українською копитом цокають «цок-цок».",
+            "en": "The form 'чок-чок' is a Russianism; standard Ukrainian onomatopoeia is 'цок-цок'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_36",
+      "category": "interjection_onomatopoeia_animal_sounds",
+      "prompt": "«_______!» — дзвінко й радісно загавкало маленьке цуценя, побачивши господаря біля воріт.",
+      "target_token": "гав-гав",
+      "correct_answer": "Гав-гав",
+      "options": [
+        "Тяв-тяв",
+        "Гав-гав",
+        "Гавгав",
+        "Гав гав"
+      ],
+      "distractors": [
+        {
+          "text": "Гавгав",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування гавкоту собаки «гав-гав» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Dog barking onomatopoeia 'гав-гав' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Гав гав",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання «гав гав» суперечить нормі дефісного поєднання повторів.",
+            "en": "Separate writing 'гав гав' violates the rule requiring hyphenated sound repetitions."
+          }
+        },
+        {
+          "text": "Тяв-тяв",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Тяв-тяв» є калькою з російської мови; питомий український вигук гавкоту — «гав-гав».",
+            "en": "'Тяв-тяв' is a calque from Russian; authentic Ukrainian dog barking is 'гав-гав'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_37",
+      "category": "interjection_onomatopoeia_animal_sounds",
+      "prompt": "«_______!» — жалібно й тоненько просило їсти руде пухнасте кошеня біля кухонних дверей.",
+      "target_token": "няв-няв",
+      "correct_answer": "Няв-няв",
+      "options": [
+        "Няв няв",
+        "Няв-няв",
+        "Мяу-мяу",
+        "Нявняв"
+      ],
+      "distractors": [
+        {
+          "text": "Нявняв",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування нявкання кота «няв-няв» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Cat meowing onomatopoeia 'няв-няв' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Няв няв",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Окреме написання повторюваного звуку нявчання суперечить правилам правопису.",
+            "en": "Separate writing of repeated meowing sound contradicts orthographic rules."
+          }
+        },
+        {
+          "text": "Мяу-мяу",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Мяу-мяу» є калькою з російської орфографії; українська нормативна форма — «няв-няв».",
+            "en": "'Мяу-мяу' is an orthographic calque of Russian; standard Ukrainian form is 'няв-няв'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_38",
+      "category": "interjection_onomatopoeia_animal_sounds",
+      "prompt": "«_______!» — раз по раз лунало в зеленому березовому гаю, де кувала невтомна зозуля.",
+      "target_token": "ку-ку",
+      "correct_answer": "Ку-ку",
+      "options": [
+        "Куку",
+        "Кар-кар",
+        "Ку ку",
+        "Ку-ку"
+      ],
+      "distractors": [
+        {
+          "text": "Куку",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування кування зозулі «ку-ку» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Cuckoo call onomatopoeia 'ку-ку' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Ку ку",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Окреме написання повтору звуків «ку ку» є орфографічною помилкою.",
+            "en": "Writing sound repetitions 'ку ку' separately is an orthographic error."
+          }
+        },
+        {
+          "text": "Кар-кар",
+          "interference_key": "INCORRECT_SOUND_SOURCE",
+          "explanation": {
+            "ua": "«Кар-кар» видає ворона, а зозуля кує «ку-ку».",
+            "en": "'Кар-кар' is produced by a crow, whereas a cuckoo calls 'ку-ку'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_39",
+      "category": "interjection_onomatopoeia_animal_sounds",
+      "prompt": "«_______!» — хрипко прокричала стара чорна ворона, сівши на верхівку високої сухої сосни.",
+      "target_token": "кар-кар",
+      "correct_answer": "Кар-кар",
+      "options": [
+        "Ква-ква",
+        "Кар-кар",
+        "Каркар",
+        "Кар кар"
+      ],
+      "distractors": [
+        {
+          "text": "Каркар",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування каркання ворони «кар-кар» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Crow cawing onomatopoeia 'кар-кар' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Кар кар",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання «кар кар» є помилковим; повтори звуків з'єднуються дефісом.",
+            "en": "Separate spelling 'кар кар' is an error; sound repetitions are connected with a hyphen."
+          }
+        },
+        {
+          "text": "Ква-ква",
+          "interference_key": "INCORRECT_SOUND_SOURCE",
+          "explanation": {
+            "ua": "«Ква-ква» кумкають жаби на болоті, а ворона каркає «кар-кар».",
+            "en": "'Ква-ква' is croaked by frogs, whereas a crow caws 'кар-кар'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_40",
+      "category": "interjection_onomatopoeia_animal_sounds",
+      "prompt": "«_______!» — дружно й голосно озивалися зелені жаби у прибережному очереті тихого ставка.",
+      "target_token": "ква-ква",
+      "correct_answer": "Ква-ква",
+      "options": [
+        "Гав-гав",
+        "Ква-ква",
+        "Кваква",
+        "Ква ква"
+      ],
+      "distractors": [
+        {
+          "text": "Кваква",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування кумкання жаб «ква-ква» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Frog croaking onomatopoeia 'ква-ква' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Ква ква",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання повторюваного звуку «ква ква» суперечить нормі дефісного написання.",
+            "en": "Separate writing of repeated sound 'ква ква' violates the hyphenation rule."
+          }
+        },
+        {
+          "text": "Гав-гав",
+          "interference_key": "INCORRECT_SOUND_SOURCE",
+          "explanation": {
+            "ua": "«Гав-гав» гавкає собака, а жаби в очереті кумкають «ква-ква».",
+            "en": "'Гав-гав' is the bark of a dog, whereas frogs in reeds croak 'ква-ква'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Звуконаслідування голосів тварин і птахів імітують гавкіт, нявчання, кування зозулі, каркання, квакання (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Повторювані звуки пишуться через дефіс per § 46, п. 1, а).",
+        "en": "Animal and bird sound onomatopoeias imitate barking, meowing, cuckoo calls, croaking, or quacking (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква). Repeated sounds are hyphenated per § 46, p. 1, a)."
+      }
+    },
+    {
+      "id": "interjection_card_41",
+      "category": "interjection_spelling_hyphen_repeated",
+      "prompt": "«_______, як же тепер виправити цю прикру прикрість!» — розгублено схопився за голову студент.",
+      "target_token": "ой-ой-ой",
+      "correct_answer": "Ой-ой-ой",
+      "options": [
+        "Ой-ой-ой",
+        "Ой ой ой",
+        "Ойойой",
+        "Ой-ойой"
+      ],
+      "distractors": [
+        {
+          "text": "Ойойой",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Повторюваний вигук розгубленості й жалю «ой-ой-ой» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Repeated interjection of perplexity 'ой-ой-ой' is hyphenated per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Ой ой ой",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Написання вигукового повтору трьома окремими словами є помилкою; пишеться через дефіс.",
+            "en": "Writing the repeated interjection as three separate words is an error; write with hyphens."
+          }
+        },
+        {
+          "text": "Ой-ойой",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Усі повторювані компоненти вигуку повинні з'єднуватися дефісами: «ой-ой-ой».",
+            "en": "All repeated components of the interjection must be linked with hyphens: 'ой-ой-ой'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 46, п. 1, а).",
+        "en": "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 46, p. 1, a): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
+      }
+    },
+    {
+      "id": "interjection_card_42",
+      "category": "interjection_spelling_hyphen_repeated",
+      "prompt": "«_______!» — дружно й розкотисто розсміялися всі глядачі у глядацькій залі після вдалого жарту.",
+      "target_token": "ха-ха-ха",
+      "correct_answer": "Ха-ха-ха",
+      "options": [
+        "Ха-хаха",
+        "Хахаха",
+        "Ха-ха-ха",
+        "Ха ха ха"
+      ],
+      "distractors": [
+        {
+          "text": "Хахаха",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування сміху «ха-ха-ха» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Laughter onomatopoeia 'ха-ха-ха' is spelled with hyphens per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Ха ха ха",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання сміху як окремих слів суперечить нормам українського правопису.",
+            "en": "Separate writing of laughter as discrete words contradicts Ukrainian orthography."
+          }
+        },
+        {
+          "text": "Ха-хаха",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Кожен склад сміху у звуконаслідуванні відокремлюється дефісом: «ха-ха-ха».",
+            "en": "Each syllable of laughter in the onomatopoeia is separated by a hyphen: 'ха-ха-ха'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 46, п. 1, а).",
+        "en": "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 46, p. 1, a): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
+      }
+    },
+    {
+      "id": "interjection_card_43",
+      "category": "interjection_spelling_hyphen_repeated",
+      "prompt": "«_______, як не соромно кривдити меншого товариша!» — докірливо похитала головою вчителька.",
+      "target_token": "ай-яй-яй",
+      "correct_answer": "Ай-яй-яй",
+      "options": [
+        "Айяйяй",
+        "Ай яй яй",
+        "Ой-яй-яй",
+        "Ай-яй-яй"
+      ],
+      "distractors": [
+        {
+          "text": "Айяйяй",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Вигук докору та осуду «ай-яй-яй» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Interjection of reproach 'ай-яй-яй' is spelled with hyphens per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Ай яй яй",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Окреме написання частин вигуку «ай яй яй» є грубою орфографічною помилкою.",
+            "en": "Separate spelling of interjection parts 'ай яй яй' is an orthographic error."
+          }
+        },
+        {
+          "text": "Ой-яй-яй",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Нормативна форма вигуку докору має перший склад «ай-»: «ай-яй-яй».",
+            "en": "Normative form of reproach interjection begins with 'ай-': 'ай-яй-яй'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 46, п. 1, а).",
+        "en": "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 46, p. 1, a): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
+      }
+    },
+    {
+      "id": "interjection_card_44",
+      "category": "interjection_spelling_hyphen_repeated",
+      "prompt": "«_______!» — мелодійно й дзвінко відгукнувся кришталевий келих від легкого дотику срібної ложечки.",
+      "target_token": "дзень-дзелень",
+      "correct_answer": "Дзень-дзелень",
+      "options": [
+        "Дзень-зелень",
+        "Дзеньдзелень",
+        "Дзень-дзелень",
+        "Дзень дзелень"
+      ],
+      "distractors": [
+        {
+          "text": "Дзеньдзелень",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Відлунне звуконаслідування кришталевого дзвону «дзень-дзелень» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Echoic crystal clinking onomatopoeia 'дзень-дзелень' is hyphenated per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Дзень дзелень",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання компонентів відлуння без дефіса є порушенням орфографії.",
+            "en": "Separate writing of echoic components without hyphen violates orthography."
+          }
+        },
+        {
+          "text": "Дзень-зелень",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Звук дзвінкого дзвону відтворюється африкатою «дз»: «дзень-дзелень», а не «зелень».",
+            "en": "The clinking sound is produced with affricate 'дз': 'дзень-дзелень', not 'зелень'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 46, п. 1, а).",
+        "en": "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 46, p. 1, a): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
+      }
+    },
+    {
+      "id": "interjection_card_45",
+      "category": "interjection_spelling_hyphen_repeated",
+      "prompt": "«_______!» — хтось обережно й тихо постукав у шибку вікна старого сільського будинку.",
+      "target_token": "тук-тук",
+      "correct_answer": "Тук-тук",
+      "options": [
+        "Тук тук",
+        "Тук-тук",
+        "Стук-стук",
+        "Туктук"
+      ],
+      "distractors": [
+        {
+          "text": "Туктук",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Звуконаслідування стуку «тук-тук» пишеться через дефіс per § 46, п. 1, а).",
+            "en": "Knocking onomatopoeia 'тук-тук' is spelled with a hyphen per § 46, p. 1, a)."
+          }
+        },
+        {
+          "text": "Тук тук",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Роздільне написання повторюваного звуку стуку суперечить правилу дефісного оформлення.",
+            "en": "Writing repeated knocking sounds separately violates the hyphenation rule."
+          }
+        },
+        {
+          "text": "Стук-стук",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "«Стук» є іменником; звуконаслідувальним словом для стукання в двері чи вікно є «тук-тук».",
+            "en": "'Стук' is a noun; standard onomatopoeic interjection for knocking is 'тук-тук'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, а); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться повторювані або відлунні вигуки та звуконаслідувальні слова: ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук per § 46, п. 1, а).",
+        "en": "Repeated or echoic interjections and onomatopoeic words are spelled with a hyphen per § 46, p. 1, a): ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук."
+      }
+    },
+    {
+      "id": "interjection_card_46",
+      "category": "interjection_spelling_particles_hyphen",
+      "prompt": "«_______ сперечатися через порожні дрібниці, берімося краще разом до корисної справи!» — закликав староста.",
+      "target_token": "годі-бо",
+      "correct_answer": "Годі-бо",
+      "options": [
+        "Годібо",
+        "Годі-то",
+        "Годі-бо",
+        "Годі бо"
+      ],
+      "distractors": [
+        {
+          "text": "Годі бо",
+          "interference_key": "PARTICLE_HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Вигук із постпозитивною часткою -бо пишеться через дефіс: «годі-бо» per § 46, п. 1, б).",
+            "en": "Interjection with postpositive particle -бо is hyphenated: 'годі-бо' per § 46, p. 1, b)."
+          }
+        },
+        {
+          "text": "Годібо",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Разом вигуки з частками не пишуться; норма вимагає дефіса: «годі-бо».",
+            "en": "Interjections with particles are not fused; the rule requires a hyphen: 'годі-бо'."
+          }
+        },
+        {
+          "text": "Годі-то",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "З вигуком припинення дії «годі» нормативно вживається спонукальна частка «-бо» («годі-бо»).",
+            "en": "With the cessation interjection 'годі', normative urging particle is '-бо' ('годі-бо')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, б), в); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 46, п. 1, б), а також усталені вигукові ідіоми їй-богу, їй-право per § 46, п. 1, в).",
+        "en": "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 46, p. 1, b), as are fixed interjection idioms їй-богу, їй-право per § 46, p. 1, c)."
+      }
+    },
+    {
+      "id": "interjection_card_47",
+      "category": "interjection_spelling_particles_hyphen",
+      "prompt": "«_______, друже, розкажи нам докладніше про свою дивовижну подорож Карпатами!» — попросили однокласники.",
+      "target_token": "ну-бо",
+      "correct_answer": "Ну-бо",
+      "options": [
+        "Ну-бо",
+        "Ну бо",
+        "Нубо",
+        "Ну-ка"
+      ],
+      "distractors": [
+        {
+          "text": "Ну бо",
+          "interference_key": "PARTICLE_HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Спонукальний вигук із часткою -бо пишеться через дефіс: «ну-бо» per § 46, п. 1, б).",
+            "en": "Imperative interjection with particle -бо is hyphenated: 'ну-бо' per § 46, p. 1, b)."
+          }
+        },
+        {
+          "text": "Нубо",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Злите написання «нубо» є орфографічною помилкою; сполука пишеться через дефіс.",
+            "en": "Fused spelling 'нубо' is an orthographic error; the combination is hyphenated."
+          }
+        },
+        {
+          "text": "Ну-ка",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Ну-ка» є російською часткою; в українській літературній мові нормативною є частка «-бо» («ну-бо»).",
+            "en": "'Ну-ка' is a Russianism; in literary Ukrainian the normative form is 'ну-бо'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, б), в); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 46, п. 1, б), а також усталені вигукові ідіоми їй-богу, їй-право per § 46, п. 1, в).",
+        "en": "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 46, p. 1, b), as are fixed interjection idioms їй-богу, їй-право per § 46, p. 1, c)."
+      }
+    },
+    {
+      "id": "interjection_card_48",
+      "category": "interjection_spelling_particles_hyphen",
+      "prompt": "«_______ разом заспіваємо цю старовинну народну колядку біля ялинки!» — запропонувала сестра.",
+      "target_token": "давай-но",
+      "correct_answer": "Давай-но",
+      "options": [
+        "Давай-но",
+        "Давай но",
+        "Давайно",
+        "Давай-ка"
+      ],
+      "distractors": [
+        {
+          "text": "Давай но",
+          "interference_key": "PARTICLE_HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Спонукальна форма з підсилювальною часткою -но пишеться через дефіс: «давай-но» per § 46, п. 1, б).",
+            "en": "Urging form with intensifying particle -но is hyphenated: 'давай-но' per § 46, p. 1, b)."
+          }
+        },
+        {
+          "text": "Давайно",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Написання форми «давайно» разом є помилковим; частка -но приєднується дефісом.",
+            "en": "Spelling 'давайно' as one word is an error; particle -но is attached by hyphen."
+          }
+        },
+        {
+          "text": "Давай-ка",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Частка «-ка» є запозиченням із російської; українська норма вимагає частки «-но» («давай-но»).",
+            "en": "Particle '-ка' is borrowed from Russian; Ukrainian standard requires '-но' ('давай-но')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, б), в); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 46, п. 1, б), а також усталені вигукові ідіоми їй-богу, їй-право per § 46, п. 1, в).",
+        "en": "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 46, p. 1, b), as are fixed interjection idioms їй-богу, їй-право per § 46, p. 1, c)."
+      }
+    },
+    {
+      "id": "interjection_card_49",
+      "category": "interjection_spelling_particles_hyphen",
+      "prompt": "«_______, я кажу вам чистісіньку правду про все побачене на власні очі!» — палко запевняв свідок події.",
+      "target_token": "їй-богу",
+      "correct_answer": "Їй-богу",
+      "options": [
+        "Ей-богу",
+        "Їй богу",
+        "Їй-богу",
+        "Їйбогу"
+      ],
+      "distractors": [
+        {
+          "text": "Їй богу",
+          "interference_key": "IDIOM_HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Усталений вигуковий вираз «їй-богу» пишеться через дефіс per § 46, п. 1, в).",
+            "en": "Fixed interjection idiom 'їй-богу' is spelled with a hyphen per § 46, p. 1, c)."
+          }
+        },
+        {
+          "text": "Їйбогу",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Разом вираз «їй-богу» не пишеться; правописна норма закріплює дефісне написання.",
+            "en": "Fused spelling of 'їй-богу' is incorrect; orthographic rule prescribes hyphenation."
+          }
+        },
+        {
+          "text": "Ей-богу",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "«Ей-богу» з літерою «е» є російською калькою; українська форма починається на «їй-»: «їй-богу».",
+            "en": "'Ей-богу' with letter 'е' is a Russian calque; Ukrainian form is 'їй-богу'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, б), в); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 46, п. 1, б), а також усталені вигукові ідіоми їй-богу, їй-право per § 46, п. 1, в).",
+        "en": "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 46, p. 1, b), as are fixed interjection idioms їй-богу, їй-право per § 46, p. 1, c)."
+      }
+    },
+    {
+      "id": "interjection_card_50",
+      "category": "interjection_spelling_particles_hyphen",
+      "prompt": "«_______, я ніколи й гадки не мав нікого образити своїм щирим зауваженням!» — знітився хлопець.",
+      "target_token": "їй-право",
+      "correct_answer": "Їй-право",
+      "options": [
+        "Їй право",
+        "Їйправо",
+        "Ей-право",
+        "Їй-право"
+      ],
+      "distractors": [
+        {
+          "text": "Їй право",
+          "interference_key": "IDIOM_HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Усталений вигук запевнення «їй-право» пишеться через дефіс per § 46, п. 1, в).",
+            "en": "Fixed interjection of assurance 'їй-право' is spelled with a hyphen per § 46, p. 1, c)."
+          }
+        },
+        {
+          "text": "Їйправо",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Злите написання «їйправо» є орфографічною помилкою; норма вимагає дефіса.",
+            "en": "Fused spelling 'їйправо' is an orthographic error; standard requires hyphenation."
+          }
+        },
+        {
+          "text": "Ей-право",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Форма на «ей-» є калькою з російської мови; український правопис фіксує форму «їй-право».",
+            "en": "The form starting with 'ей-' is a Russianism; Ukrainian orthography establishes 'їй-право'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 1, б), в); СУМ-20",
+      "rule_summary": {
+        "ua": "Через дефіс пишуться вигуки з постпозитивними частками -бо, -но, -то (годі-бо, ну-бо, давай-но) per § 46, п. 1, б), а також усталені вигукові ідіоми їй-богу, їй-право per § 46, п. 1, в).",
+        "en": "Interjections with enclitic particles -бо, -но, -то (годі-бо, ну-бо, давай-но) are spelled with a hyphen per § 46, p. 1, b), as are fixed interjection idioms їй-богу, їй-право per § 46, p. 1, c)."
+      }
+    },
+    {
+      "id": "interjection_card_51",
+      "category": "interjection_spelling_multiword_separate",
+      "prompt": "«Передайте мені, _______, склянку джерельної води!» — ввічливо попросив стомлений подорожній.",
+      "target_token": "будь ласка",
+      "correct_answer": "будь ласка",
+      "options": [
+        "будьласка",
+        "будь ласка",
+        "буть ласка",
+        "будь-ласка"
+      ],
+      "distractors": [
+        {
+          "text": "будь-ласка",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Слова «будь ласка» пишуться строго окремо без дефіса per § 46, п. 2.",
+            "en": "Words 'будь ласка' are written strictly separately without hyphen per § 46, p. 2."
+          }
+        },
+        {
+          "text": "будьласка",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Злите написання «будьласка» є орфографічною помилкою; пишеться окремо.",
+            "en": "Fused 'будьласка' is an orthographic error; write as two words."
+          }
+        },
+        {
+          "text": "буть ласка",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Написання з літерою «т» («буть») спотворює основу дієслова «бути» («будь»).",
+            "en": "Spelling with 'т' ('буть') corrupts the imperative stem of 'бути' ('будь')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, п. 2. Написання через дефіс або разом є грубою орфографічною помилкою.",
+        "en": "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, p. 2. Writing them with hyphens or fused is an orthographic error."
+      }
+    },
+    {
+      "id": "interjection_card_52",
+      "category": "interjection_spelling_multiword_separate",
+      "prompt": "«_______, дорогі випускники, нехай ваше життєве майбутнє буде мирним і щасливим!» — сказав директор школи.",
+      "target_token": "до побачення",
+      "correct_answer": "До побачення",
+      "options": [
+        "Допобачення",
+        "До-побачення",
+        "До побаченняя",
+        "До побачення"
+      ],
+      "distractors": [
+        {
+          "text": "Допобачення",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Вираз «до побачення» пишеться окремо per § 46, п. 2.",
+            "en": "Phrase 'до побачення' is spelled separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "До-побачення",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у виразі «до побачення» є помилкою; прийменник «до» з іменником пишуться окремо.",
+            "en": "Hyphen in 'до побачення' is an error; preposition 'до' and noun are written separately."
+          }
+        },
+        {
+          "text": "До побаченняя",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Подвоєння кінцевого «я» є орфографічною помилкою; нормативне написання — «до побачення».",
+            "en": "Doubled final 'я' is an orthographic error; standard spelling is 'до побачення'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, п. 2. Написання через дефіс або разом є грубою орфографічною помилкою.",
+        "en": "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, p. 2. Writing them with hyphens or fused is an orthographic error."
+      }
+    },
+    {
+      "id": "interjection_card_53",
+      "category": "interjection_spelling_multiword_separate",
+      "prompt": "«_______, любі онучата, спіть солодко й набирайтеся сил до нового сонячного ранку!» — мовила лагідна бабуся.",
+      "target_token": "на добраніч",
+      "correct_answer": "На добраніч",
+      "options": [
+        "На добраніч",
+        "Надобраніч",
+        "На-добраніч",
+        "Надобранічь"
+      ],
+      "distractors": [
+        {
+          "text": "Надобраніч",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Формула побажання сну «на добраніч» пишеться виключно окремо per § 46, п. 2.",
+            "en": "Good night formula 'на добраніч' is spelled exclusively separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "На-добраніч",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Вживання дефіса у вислові «на добраніч» є грубою помилкою; слова пишуться окремо.",
+            "en": "Using a hyphen in 'на добраніч' is an error; words are written separately."
+          }
+        },
+        {
+          "text": "Надобранічь",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "В українській мові після шиплячих кінцевий м'який знак не пишеться: «ніч», а не «нічь».",
+            "en": "In Ukrainian, soft sign is not written after sibilants: 'ніч', not 'нічь'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, п. 2. Написання через дефіс або разом є грубою орфографічною помилкою.",
+        "en": "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, p. 2. Writing them with hyphens or fused is an orthographic error."
+      }
+    },
+    {
+      "id": "interjection_card_54",
+      "category": "interjection_spelling_multiword_separate",
+      "prompt": "«_______, як же несподівано вдарив оглушливий грім посеред ясного літнього дня!» — скрикнула перелякана дівчина.",
+      "target_token": "о господи",
+      "correct_answer": "О господи",
+      "options": [
+        "О-господи",
+        "А господи",
+        "О господи",
+        "Огосподи"
+      ],
+      "distractors": [
+        {
+          "text": "Огосподи",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Вигуковий зворот «о господи» пишеться окремо per § 46, п. 2.",
+            "en": "Interjection phrase 'о господи' is spelled separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "О-господи",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефісне написання «о-господи» є помилковим; вигук «о» та звертання пишуться окремо.",
+            "en": "Hyphenated 'о-господи' is incorrect; interjection 'о' and noun are written separately."
+          }
+        },
+        {
+          "text": "А господи",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Зворот заклику традиційно використовує вигук «о» («о господи»), а не сполучник «а».",
+            "en": "The exclamation traditionally uses interjection 'о' ('о господи'), not conjunction 'а'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, п. 2. Написання через дефіс або разом є грубою орфографічною помилкою.",
+        "en": "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, p. 2. Writing them with hyphens or fused is an orthographic error."
+      }
+    },
+    {
+      "id": "interjection_card_55",
+      "category": "interjection_spelling_multiword_separate",
+      "prompt": "«_______, знову напередодні довгоочікуваного вихідного зіпсувалася погода!» — розчаровано зітхнув рибалка.",
+      "target_token": "от тобі й маєш",
+      "correct_answer": "От тобі й маєш",
+      "options": [
+        "От тобі-й маєш",
+        "От тобі й маєшь",
+        "От тобі й маєш",
+        "От-тобі й маєш"
+      ],
+      "distractors": [
+        {
+          "text": "От-тобі й маєш",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Багатослівний фразеологічний вигук «от тобі й маєш» пишеться всіма словами окремо per § 46, п. 2.",
+            "en": "Multi-word phraseological interjection 'от тобі й маєш' is written with all words separately per § 46, p. 2."
+          }
+        },
+        {
+          "text": "От тобі-й маєш",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Частка «й» та займенник «тобі» пишуться окремо без жодних дефісів.",
+            "en": "Particle 'й' and pronoun 'тобі' are written separately without hyphens."
+          }
+        },
+        {
+          "text": "От тобі й маєшь",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "У 2-й особі теперішнього часу дієслова закінчуються на тверде «-ш» («маєш»), а не м'яке «-шь».",
+            "en": "In 2nd person present verbs end with hard '-ш' ('маєш'), not soft '-шь'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Окремо пишуться складні вигуки та мовленнєві етикетні звороти, що складаються з кількох слів: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, п. 2. Написання через дефіс або разом є грубою орфографічною помилкою.",
+        "en": "Multi-word interjections and speech etiquette phrases consisting of several words are spelled separately: будь ласка, до побачення, на добраніч, о господи, от тобі й маєш per § 46, p. 2. Writing them with hyphens or fused is an orthographic error."
+      }
+    },
+    {
+      "id": "interjection_card_56",
+      "category": "interjection_syntax_punctuation_particle",
+      "prompt": "«_______ мій, люблю тебе безтямно всім серцем і душею!» — палко продекламував поет.",
+      "target_token": "о краю",
+      "correct_answer": "О краю",
+      "options": [
+        "О-краю",
+        "О краю",
+        "О, краю",
+        "О! Краю"
+      ],
+      "distractors": [
+        {
+          "text": "О, краю",
+          "interference_key": "PUNCTUATION_UNWARRANTED_COMMA_PARTICLE",
+          "explanation": {
+            "ua": "Коли «о» виступає в ролі підсилювальної або кличної частки при звертанні, кома між ними НЕ ставиться: «О краю мій!» per § 46.",
+            "en": "When 'о' serves as an intensifying or vocative particle before an address, NO comma is placed between them: 'О краю мій!' per § 46."
+          }
+        },
+        {
+          "text": "О! Краю",
+          "interference_key": "PUNCTUATION_EXCLAMATION_OMISSION",
+          "explanation": {
+            "ua": "Знак оклику тут розриває цілісне поетичне звертання «О краю мій», перетворюючи частку на штучний вигук.",
+            "en": "An exclamation mark here tears apart the integral poetic address 'О краю мій', turning the particle into an unnatural interjection."
+          }
+        },
+        {
+          "text": "О-краю",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Частка «о» та іменник пишуться окремо без дефіса: «О краю мій».",
+            "en": "Particle 'о' and noun are written separately without a hyphen: 'О краю мій'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88",
+      "rule_summary": {
+        "ua": "Вигуки відокремлюються комами або знаком оклику. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні або кличні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!». Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!».",
+        "en": "Interjections are set off by commas or an exclamation mark. However, words 'о', 'ой' used before an address as intensifying or vocative particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!'. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій, як довго...'."
+      }
+    },
+    {
+      "id": "interjection_card_57",
+      "category": "interjection_syntax_punctuation_particle",
+      "prompt": "«_______, мій брате широкий, розлий же свої могутні весняні води!» — звернувся до річки козак.",
+      "target_token": "ой дніпре",
+      "correct_answer": "Ой Дніпре",
+      "options": [
+        "Ой-Дніпре",
+        "Ой Дніпре",
+        "Ой, Дніпре",
+        "Ой! Дніпре"
+      ],
+      "distractors": [
+        {
+          "text": "Ой, Дніпре",
+          "interference_key": "PUNCTUATION_UNWARRANTED_COMMA_PARTICLE",
+          "explanation": {
+            "ua": "Слово «ой» перед звертанням є підсилювальною часткою, тому кома між часткою «ой» та звертанням «Дніпре» не ставиться.",
+            "en": "Word 'ой' before an address is an intensifying particle, so no comma is placed between particle 'ой' and address 'Дніпре'."
+          }
+        },
+        {
+          "text": "Ой! Дніпре",
+          "interference_key": "PUNCTUATION_EXCLAMATION_OMISSION",
+          "explanation": {
+            "ua": "Знак оклику після частки «ой» руйнує нерозривний поетичний зв'язок частки зі звертанням.",
+            "en": "An exclamation mark after particle 'ой' breaks the uninterrupted poetic connection of particle and address."
+          }
+        },
+        {
+          "text": "Ой-Дніпре",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Частка «ой» ніколи не поєднується зі звертанням через дефіс; слова пишуться окремо.",
+            "en": "Particle 'ой' is never hyphenated with the address; words are spelled separately."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88",
+      "rule_summary": {
+        "ua": "Вигуки відокремлюються комами або знаком оклику. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні або кличні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!». Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!».",
+        "en": "Interjections are set off by commas or an exclamation mark. However, words 'о', 'ой' used before an address as intensifying or vocative particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!'. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій, як довго...'."
+      }
+    },
+    {
+      "id": "interjection_card_58",
+      "category": "interjection_syntax_punctuation_particle",
+      "prompt": "«_______, як довго я не бачив твоїх безкраїх золотих нив!» — зітхнув мандрівник, повернувшись із чужини.",
+      "target_token": "о краю мій",
+      "correct_answer": "О, краю мій",
+      "options": [
+        "О, краю мій",
+        "О краю мій",
+        "О! краю мій",
+        "О-краю мій"
+      ],
+      "distractors": [
+        {
+          "text": "О краю мій",
+          "interference_key": "PUNCTUATION_COMMA_OMISSION",
+          "explanation": {
+            "ua": "Тут «о» є самостійним емоційним вигуком суму й замилування, що вимовляється з паузою перед звертанням, тому вимагає коми: «О, краю мій...».",
+            "en": "Here 'о' is an independent emotional interjection of longing pronounced with a pause before the address, requiring a comma: 'О, краю мій...'."
+          }
+        },
+        {
+          "text": "О! краю мій",
+          "interference_key": "PUNCTUATION_EXCLAMATION_OMISSION",
+          "explanation": {
+            "ua": "Після знаку оклику наступне слово обов'язково починається з великої літери; тут наступне слово «краю» з малої.",
+            "en": "After an exclamation mark the next word must be capitalized; here 'краю' is lowercase."
+          }
+        },
+        {
+          "text": "О-краю мій",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Вигук «о» та іменник не з'єднуються дефісом; між ними ставиться кома.",
+            "en": "Interjection 'о' and the noun are not hyphenated; a comma is placed between them."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88",
+      "rule_summary": {
+        "ua": "Вигуки відокремлюються комами або знаком оклику. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні або кличні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!». Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!».",
+        "en": "Interjections are set off by commas or an exclamation mark. However, words 'о', 'ой' used before an address as intensifying or vocative particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!'. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій, як довго...'."
+      }
+    },
+    {
+      "id": "interjection_card_59",
+      "category": "interjection_syntax_punctuation_particle",
+      "prompt": "«_______ Що це за дивовижна веселка засяяла над високим лісом?» — вражено вигукнула дитина.",
+      "target_token": "леле",
+      "correct_answer": "Леле!",
+      "options": [
+        "Леле,",
+        "Леле",
+        "Леле—",
+        "Леле!"
+      ],
+      "distractors": [
+        {
+          "text": "Леле,",
+          "interference_key": "PUNCTUATION_EXCLAMATION_OMISSION",
+          "explanation": {
+            "ua": "Оскільки наступне речення починається з великої літери («Що»), а вигук вимовляється з сильною окличною інтонацією, після нього ставиться знак оклику, а не кома.",
+            "en": "Since the following sentence begins with a capital letter ('Що') and the interjection is uttered with strong exclamation intonation, it requires an exclamation mark, not a comma."
+          }
+        },
+        {
+          "text": "Леле—",
+          "interference_key": "PUNCTUATION_WRONG_DELIMITER",
+          "explanation": {
+            "ua": "Тире після вигуку на початку речення не ставиться; емоційне відокремлення позначається знаком оклику.",
+            "en": "A dash after an interjection at the beginning of a sentence is incorrect; emotional isolation is marked by an exclamation mark."
+          }
+        },
+        {
+          "text": "Леле",
+          "interference_key": "PUNCTUATION_COMMA_OMISSION",
+          "explanation": {
+            "ua": "Залишення вигуку без жодного розділового знака є грубою синтаксичною помилкою.",
+            "en": "Leaving an interjection without any punctuation mark is a syntactic error."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88",
+      "rule_summary": {
+        "ua": "Вигуки відокремлюються комами або знаком оклику. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні або кличні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!». Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!».",
+        "en": "Interjections are set off by commas or an exclamation mark. However, words 'о', 'ой' used before an address as intensifying or vocative particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!'. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій, як довго...'."
+      }
+    },
+    {
+      "id": "interjection_card_60",
+      "category": "interjection_syntax_punctuation_particle",
+      "prompt": "«_______ як солодко й п'янко пахне скошена лугова трава на світанку!» — замилувано прошепотіла дівчина.",
+      "target_token": "ох",
+      "correct_answer": "Ох,",
+      "options": [
+        "Ох",
+        "Ох,",
+        "Ох!",
+        "Ох—"
+      ],
+      "distractors": [
+        {
+          "text": "Ох!",
+          "interference_key": "PUNCTUATION_EXCLAMATION_OMISSION",
+          "explanation": {
+            "ua": "Наступне слово «як» написане з малої літери, а вигук вимовляється з повільною розповідною інтонацією, тому він відокремлюється комою, а не знаком оклику.",
+            "en": "The following word 'як' is lowercase and the interjection is uttered with gentle narrative intonation, so it is set off by a comma, not an exclamation mark."
+          }
+        },
+        {
+          "text": "Ох—",
+          "interference_key": "PUNCTUATION_WRONG_DELIMITER",
+          "explanation": {
+            "ua": "Тире не використовується на початку речення після вигуку; потрібна кома: «Ох, як солодко...».",
+            "en": "A dash is not used at sentence start after an interjection; a comma is required: 'Ох, як солодко...'."
+          }
+        },
+        {
+          "text": "Ох",
+          "interference_key": "PUNCTUATION_COMMA_OMISSION",
+          "explanation": {
+            "ua": "Вигук на початку речення не можна залишати без розділового знака; потрібна кома.",
+            "en": "An interjection at the beginning of a sentence cannot be left unpunctuated; a comma is required."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 46; Академічний синтаксис; Авраменко § 88",
+      "rule_summary": {
+        "ua": "Вигуки відокремлюються комами або знаком оклику. Проте слова «о», «ой», ужиті перед звертанням як підсилювальні або кличні частки, НЕ відокремлюються комою від наступного іменника: «О краю мій!», «Ой Дніпре мій!». Якщо ж «о», «ой» є самостійними емоційними вигуками, кома ставиться: «О, краю мій, як довго я тебе шукав!».",
+        "en": "Interjections are set off by commas or an exclamation mark. However, words 'о', 'ой' used before an address as intensifying or vocative particles are NOT separated by a comma from the following noun: 'О краю мій!', 'Ой Дніпре мій!'. If 'о', 'ой' are independent emotional interjections, a comma is required: 'О, краю мій, як довго...'."
+      }
+    }
+  ]
+}
