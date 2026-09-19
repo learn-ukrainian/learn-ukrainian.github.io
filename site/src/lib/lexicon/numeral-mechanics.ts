@@ -294,9 +294,9 @@ export function resolveCollectivePluraliaNeuterRule(): NumeralRuleResolution {
   return {
     citation: 'Синтаксичні норми української мови / Правопис 2019 § 105 (пп. 8–10)',
     ruleUa:
-      "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней). З іменниками середнього роду на позначення малят (IV відміна) збірні числівники є природними й поширеними, проте не обов'язковими: нормативними є як збірні числівники з родовим множини (четверо каченят, троє телят), так і кількісні числівники з називним множини (чотири каченяти, три теляти).",
+      "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней). З іменниками середнього роду на позначення малят (IV відміна) збірні числівники є природними й поширеними, проте не обов'язковими: нормативними є як збірні числівники з родовим відмінком множини (четверо каченят, троє телят), так і власне кількісні з родовим відмінком однини (чотири каченяти, три теляти).",
     ruleEn:
-      'Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней). With neuter nouns denoting young animals/beings (IV declension), collective numerals are natural and frequent but not strictly mandatory: both collective numerals with Genitive plural (четверо каченят, троє телят) and cardinal numerals with Nominative plural (чотири каченяти, три теляти) are standard.',
+      'Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней). With neuter nouns denoting young animals/beings (IV declension), collective numerals are natural and frequent but not strictly mandatory: both collective numerals with Genitive plural (четверо каченят, троє телят) and cardinal numerals with Genitive singular (чотири каченяти, три теляти) are standard.',
   };
 }
 

@@ -284,11 +284,15 @@ describe('numeral-mechanics', () => {
     expect(d48).toContain('четверо аспіранток');
   });
 
-  it('ensures collective numerals with young animals are correctly scoped as non-mandatory', () => {
+  it('ensures collective numerals with young animals are correctly scoped as non-mandatory and correctly case-labeled', () => {
     const cPlur = resolveCollectivePluraliaNeuterRule();
     expect(cPlur.ruleUa).toContain('двоє дверей');
     expect(cPlur.ruleUa).toContain("не обов'язковими");
     expect(cPlur.ruleEn).toContain('not strictly mandatory');
+    expect(cPlur.ruleUa).toContain('родовим відмінком однини');
+    expect(cPlur.ruleEn).toContain('Genitive singular');
+    expect(cPlur.ruleUa).toContain('родовим відмінком множини');
+    expect(cPlur.ruleEn).toContain('Genitive plural');
     expect(cPlur.ruleUa).toContain('чотири каченяти');
 
     const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
@@ -298,6 +302,8 @@ describe('numeral-mechanics', () => {
     const card53 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_53');
     expect(card53.correct_answer).toBe('четверо');
     const dCho = card53.distractors.find((d: { text: string }) => d.text === 'чотири');
+    expect(dCho.explanation.ua).toContain('родового відмінка однини');
+    expect(dCho.explanation.en).toContain('Genitive singular');
     expect(dCho.explanation.ua).toContain('чотири каченяти');
     expect(dCho.explanation.ua).toContain('нормативними');
   });

@@ -234,14 +234,14 @@ def resolve_collective_pluralia_neuter_rule() -> tuple[str, str, str]:
         "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини "
         "(pluralia tantum: двоє дверей, троє ножиць, двоє саней). З іменниками середнього роду "
         "на позначення малят (IV відміна) збірні числівники є природними й поширеними, проте не обов'язковими: "
-        "нормативними є як збірні числівники з родовим множини (четверо каченят, троє телят), "
-        "так і кількісні числівники з називним множини (чотири каченяти, три теляти)."
+        "нормативними є як збірні числівники з родовим відмінком множини (четверо каченят, троє телят), "
+        "так і власне кількісні з родовим відмінком однини (чотири каченяти, три теляти)."
     )
     en = (
         "Collective numerals are mandatory with pluralia tantum nouns "
         "(двоє дверей, троє ножиць, двоє саней). With neuter nouns denoting young animals/beings (IV declension), "
         "collective numerals are natural and frequent but not strictly mandatory: both collective numerals "
-        "with Genitive plural (четверо каченят, троє телят) and cardinal numerals with Nominative plural "
+        "with Genitive plural (четверо каченят, троє телят) and cardinal numerals with Genitive singular "
         "(чотири каченяти, три теляти) are standard."
     )
     return citation, ua, en
@@ -1950,8 +1950,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="чотири",
                     interference_type=NumeralInterferenceType.CARDINAL_WITH_PLURALIA_TANTUM,
-                    explanation_ua="Числівник 'чотири' вимагає називного відмінка множини ('чотири каченяти'); форма родового відмінка множини 'каченят' у цій позиції сполучається зі збірним числівником: 'четверо каченят' (обидва варіанти 'чотири каченяти' і 'четверо каченят' є нормативними в українській мові).",
-                    explanation_en="Cardinal 'чотири' governs Nominative plural ('чотири каченяти'); the Genitive plural form 'каченят' here combines with collective 'четверо каченят' (both 'чотири каченяти' and 'четверо каченят' are fully normative in Ukrainian).",
+                    explanation_ua="Числівник 'чотири' з іменниками IV відміни на позначення малят керує формою родового відмінка однини ('чотири каченяти'); форма родового відмінка множини 'каченят' у цій позиції сполучається зі збірним числівником: 'четверо каченят' (обидва варіанти 'чотири каченяти' і 'четверо каченят' є нормативними в українській мові).",
+                    explanation_en="Cardinal 'чотири' with IV declension young-being nouns governs the Genitive singular ('чотири каченяти'); the Genitive plural form 'каченят' here combines with collective 'четверо каченят' (both 'чотири каченяти' and 'четверо каченят' are fully normative in Ukrainian).",
                 ),
                 NumeralDistractor(
                     text="четвірка",
