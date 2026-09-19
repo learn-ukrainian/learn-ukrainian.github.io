@@ -53,6 +53,7 @@ def resolve_data_path(rel_path: str) -> Path:
 
 
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
+DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 
 DISALLOWED_VESUM_TAGS = (":alt", ":subst", ":nonstd", ":arch", ":bad", ":rare", ":dial", ":slang")
 GENITIVE_GOVERNING_PREPOSITIONS = {
@@ -66,6 +67,30 @@ ABBREVIATIONS: set[str] = {
     "млрд", "млн", "тис", "см", "мм", "км", "кг", "мг", "га", "грн", "кв", "куб", "коп",
     "дм", "л", "мл", "хв", "сек", "год", "стор", "табл", "мал", "рис", "р", "pp", "ст",
 }
+
+_TEXTBOOK_LEMMA_FREQ: dict[str, int] | None = None
+
+
+def get_textbook_lemma_freq(db_path: Path | None = None) -> dict[str, int]:
+    """Precompute or return cached textbook token frequencies for ranking ambiguous lemmas."""
+    global _TEXTBOOK_LEMMA_FREQ
+    if _TEXTBOOK_LEMMA_FREQ is not None:
+        return _TEXTBOOK_LEMMA_FREQ
+    db_p = db_path or DEFAULT_SOURCES_DB
+    counts: dict[str, int] = {}
+    try:
+        conn = sqlite3.connect(f"file:{db_p}?mode=ro", uri=True)
+        cur = conn.cursor()
+        cur.execute("SELECT text FROM textbooks")
+        for row in cur:
+            for word in re.findall(r"[а-яіїєґ'’ʼ]+", row[0].lower()):
+                counts[word] = counts.get(word, 0) + 1
+        conn.close()
+    except Exception:
+        pass
+    _TEXTBOOK_LEMMA_FREQ = counts
+    return _TEXTBOOK_LEMMA_FREQ
+
 
 CANONICAL_HOMONYM_LEMMAS: dict[str, str] = {
     "код": "код",
@@ -84,6 +109,16 @@ CANONICAL_HOMONYM_LEMMAS: dict[str, str] = {
     "кіл": "коло",
     "колах": "коло",
     "колами": "коло",
+    "морі": "море",
+    "моря": "море",
+    "морем": "море",
+    "морях": "море",
+    "морями": "море",
+    "зв'язки": "зв'язок",
+    "зв'язків": "зв'язок",
+    "зв'язками": "зв'язок",
+    "зв'язках": "зв'язок",
+    "зв'язком": "зв'язок",
     "риски": "риска",
     "рисок": "риска",
     "рисці": "риска",
@@ -221,7 +256,8 @@ AUDIT_STOPWORD_TERMS = {
     "кращий", "гірший", "найкращий", "найбільший", "найменший",
     "фізичний", "фізична", "фізичне", "фізичні", "фізичних", "фізичним",
     "питомий", "питома", "питоме", "питомі", "питомих",
-    "майбутнє", "середа", "раз",
+    "майбутнє", "середа", "раз", "точок",
+    "мор", "зв'язка", "кода", "кіл", "риск", "появ", "колон", "пар", "пол", "крок", "різка",
 }
 
 
@@ -233,8 +269,9 @@ def audit_citation_form(concept: str, cur: sqlite3.Cursor) -> bool:
     if not c[0].isupper():
         return False
 
-    # Reject superlatives, evaluatives, ordinals, conditionals, conjunctions at start
+    # Reject non-concepts, particles, conjunctions, evaluatives, ordinals, conditionals at start
     if re.match(
+        r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b|"
         r"^(?:най|якнай|щонай)\w+|"
         r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*)\b|"
         r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*)\b|"
@@ -261,6 +298,11 @@ def audit_citation_form(concept: str, cur: sqlite3.Cursor) -> bool:
 
     words = [w.strip(".,;:?!'\"«»„“—–()") for w in c.split() if w.strip(".,;:?!'\"«»„“—–()")]
     if not words or len(words) > 5:
+        return False
+
+    cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (words[0].lower(),))
+    w_poses = [r[0] for r in cur.fetchall()]
+    if w_poses and all(p in ("part", "conj", "prep", "intj", "adv") for p in w_poses):
         return False
 
     preps = {"від", "для", "до", "з", "із", "зі", "на", "по", "про", "за", "під", "над", "при", "без"}
@@ -424,6 +466,20 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         return False
     if not (s.endswith(".") or s.endswith("!") or s.endswith("?")):
         return False
+    if "..." in s or "…" in s:
+        return False
+    if re.search(r"^[«„“\"'\s]*(?:але|проте|однак|і|та|й|а)\b", s, re.IGNORECASE):
+        return False
+
+    # Negative assertions & rhetorical negation (e.g. 'Харчові добавки не є ліками', 'Культура — це не лише...', 'Криптовалюти — це ще не кінець...')
+    if re.search(
+        r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b|"
+        r"[—–-]\s*(?:це\s+)?(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не|не\s+кінець)\b|"
+        r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
+        s,
+        re.IGNORECASE,
+    ):
+        return False
 
     # Syntax balance, truncation, and exercise fragment check
     if s.count("(") != s.count(")") or s.count("[") != s.count("]") or s.count("«") != s.count("»"):
@@ -442,10 +498,15 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
     # Reject metaphors
     if re.search(
         r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b|"
-        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя)\b",
+        r"\b(?:важливим\s+кроком|кроком\s+уперед|першим\s+кроком)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|важливий\s+крок|крок\s+уперед|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для)\b",
         s,
         re.IGNORECASE,
     ):
+        return False
+
+    # Appositive clause with double dash
+    if re.search(r"^[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45}\s+[—–-]\s+[^—–-]{3,120}\s+[—–-]\s+(?:теж|також|не|вже|ще|і|й|але|проте|[а-яіїєґ]+ть|[а-яіїєґ]+ють|[а-яіїєґ]+є|[а-яіїєґ]+в|[а-яіїєґ]+ла|[а-яіїєґ]+ло|[а-яіїєґ]+ли)\b", s):
         return False
 
     # Reject evaluatives and superlatives in definition
@@ -455,7 +516,8 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         r"[—–-]\s*(?:це\s+)?якщо\b|"
         r"[—–-]\s*(?:це\s+)?така\s+сама\s+\w+,\s+як\b|"
         r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)|"
-        r"[—–-]\s*(?:це\s+)?(?:ефективн\w*|унікальн\w*|чудов\w*|важлив\w*|цікав\w*|зручн\w*|найкращ\w*|найважливіш\w*|головн\w*)\b",
+        r"[—–-]\s*(?:це\s+)?(?:ефективн\w*|унікальн\w*|чудов\w*|важлив\w*|цікав\w*|зручн\w*|найкращ\w*|найважливіш\w*|головн\w*)\b|"
+        r"\b(?:найважливішим\s+досягненням|найважливішою\s+сировиною|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
         s,
         re.IGNORECASE,
     ):
@@ -477,15 +539,10 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
             "поняття", "термін", "явище", "процес", "величина", "графік", "властивість", "закон", "правило",
             "два", "дві", "три", "чотири", "п'ять", "один", "одна", "одне", "кілька", "деякі",
         }
-        if target_lemmas == c_lemmas:
-            return True
-        if (target_lemmas - meta_terms) == c_lemmas:
-            return True
-        if cw_lemmas and all(any(lem in target_lemmas for lem in word_lems) for word_lems in cw_lemmas):
-            residual = target_lemmas - meta_terms
-            if all(any(lem in residual for lem in word_lems) for word_lems in cw_lemmas) and len(residual) <= len(cw_lemmas) + 1:
-                return True
-        return False
+        cleaned = target_lemmas - meta_terms
+        if not cleaned:
+            return False
+        return bool(all(any(lem in cleaned for lem in word_lemmas) for word_lemmas in cw_lemmas) and cleaned.issubset(c_lemmas))
 
     # 1. Copula: Subject [—–-] це / [noun phrase]
     m_cop = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|([а-яіїєґ\s'-]{3,}))", s)
@@ -493,13 +550,13 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         subj = m_cop.group(1).strip()
         after_phrase = m_cop.group(2)
         if after_phrase:
-            words = [w.strip(".,;:?!'\"«»„“—–()") for w in after_phrase.split()[:4]]
+            words = [w.strip(".,;:?!'\"«»„“—–()") for w in after_phrase.split()[:5]]
             words = [w.lower() for w in words if len(w) >= 3]
             if not words:
                 subj = ""
             else:
                 first_w = words[0]
-                if first_w in ("перший", "другий", "третій", "головний", "один", "одна", "одне", "найкращий"):
+                if first_w in ("перший", "другий", "третій", "головний", "один", "одна", "одне", "найкращий", "не"):
                     subj = ""
                 else:
                     cur.execute("SELECT tags, pos FROM forms_all WHERE word_form = ?", (first_w,))
@@ -507,14 +564,30 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
                     is_first_nom = any(r[1] in ("noun", "adj") and any(c in r[0] for c in (":v_naz", ":naz")) for r in first_rows)
                     if not is_first_nom:
                         subj = ""
+                    elif any(r[1] == "noun" and any(c in r[0] for c in (":v_naz", ":naz")) for r in first_rows):
+                        has_nom_noun = True
                     else:
                         has_nom_noun = False
-                        for w in words:
+                        prep_words = {"для", "від", "до", "з", "із", "зі", "на", "в", "у", "про", "за", "під", "над", "при", "без"}
+                        adj_cgns = {
+                            (next((p for p in r[0].split(":") if p.startswith("v_")), None), "p" if ":p:" in r[0] else "s", next((g for g in ("m", "f", "n") if f":{g}:" in r[0]), None))
+                            for r in first_rows if r[1] == "adj" and any(c in r[0] for c in (":v_naz", ":naz"))
+                        }
+                        prev_w = ""
+                        for w in words[1:]:
+                            if prev_w in prep_words:
+                                prev_w = w
+                                continue
                             cur.execute("SELECT tags, pos FROM forms_all WHERE word_form = ?", (w,))
                             w_rows = cur.fetchall()
-                            if any(r[1] == "noun" and any(c in r[0] for c in (":v_naz", ":naz")) for r in w_rows):
+                            noun_cgns = {
+                                (next((p for p in r[0].split(":") if p.startswith("v_")), None), "p" if ":p:" in r[0] else "s", next((g for g in ("m", "f", "n") if f":{g}:" in r[0]), None))
+                                for r in w_rows if r[1] == "noun" and any(c in r[0] for c in (":v_naz", ":naz"))
+                            }
+                            if any(ac[0] == nc[0] and ac[1] == nc[1] and (ac[1] == "p" or ac[2] == nc[2] or ac[2] is None or nc[2] is None) for ac in adj_cgns for nc in noun_cgns):
                                 has_nom_noun = True
                                 break
+                            prev_w = w
                         if not has_nom_noun:
                             subj = ""
         if subj:
@@ -581,7 +654,8 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
     m_ye = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40})\s+є\s+([а-яіїєґ\s'-]{3,40})", s)
     if m_ye:
         subj = m_ye.group(1).strip()
-        if _matches_concept(_get_std_lemmas(subj)):
+        pred = m_ye.group(2).strip()
+        if _matches_concept(_get_std_lemmas(subj)) or _matches_concept(_get_std_lemmas(pred)):
             return True
 
     # 5. Під X розуміють Y
@@ -613,6 +687,8 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
     norm_snip = normalize_ukrainian_apostrophes(snippet.lower())
     tokens = [m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_snip)]
 
+    lemma_freq = get_textbook_lemma_freq()
+
     # Build snippet standard lemmas set with contextual disambiguation
     snip_valid_lemmas: set[str] = set()
     for i, tok in enumerate(tokens):
@@ -628,7 +704,7 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
         raw_rows = cur.fetchall()
         std_rows = [r for r in raw_rows if not any(tag in r[2] for tag in DISALLOWED_VESUM_TAGS)]
         rows = std_rows if std_rows else raw_rows
-        noun_rows = [r for r in rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv"))]
+        noun_rows = [r for r in rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv", ":v_kly", ":kly"))]
         if not noun_rows:
             continue
 
@@ -648,8 +724,15 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
                 adj_cgns = {extract_cgn(t) for t in adj_tags}
                 matching_noun_rows = [r for r in noun_rows if extract_cgn(r[2]) in adj_cgns]
                 if matching_noun_rows:
-                    sing = [r for r in matching_noun_rows if ":p:" not in r[2]]
-                    chosen_lemma = (sing[0] if sing else matching_noun_rows[0])[0].lower()
+                    chosen_lemma = max(matching_noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
+
+            # Locative preposition context -> match :v_mis
+            if chosen_lemma is None:
+                LOC_PREPS = {"на", "в", "у", "по", "при", "про"}
+                if prev_low in LOC_PREPS:
+                    loc_rows = [r for r in noun_rows if ":v_mis" in r[2]]
+                    if loc_rows:
+                        chosen_lemma = max(loc_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
 
             if chosen_lemma is None:
                 is_gen_context = prev_low in GENITIVE_GOVERNING_PREPOSITIONS or prev_low in GENITIVE_QUANTIFIERS
@@ -660,26 +743,21 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
                 if is_gen_context:
                     rod_rows = [r for r in noun_rows if ":v_rod" in r[2]]
                     if rod_rows:
-                        chosen_lemma = rod_rows[0][0].lower()
+                        chosen_lemma = max(rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
 
         if chosen_lemma is None and prev_tok:
             prev_low = prev_tok.lower()
             if prev_low in ("рядів", "кількість", "число", "безліч", "шерег", "група", "сукупність", "багато", "кілька", "декілька"):
                 p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
                 if p_rod_rows:
-                    chosen_lemma = p_rod_rows[0][0].lower()
+                    chosen_lemma = max(p_rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
 
         if chosen_lemma is None:
             exact_rows = [r for r in noun_rows if r[0].lower() == tok_low and ":v_naz" in r[2]]
             if exact_rows:
                 chosen_lemma = exact_rows[0][0].lower()
             else:
-                v_naz_rows = [r for r in noun_rows if ":v_naz" in r[2] and ":p:" not in r[2]]
-                if v_naz_rows:
-                    chosen_lemma = v_naz_rows[0][0].lower()
-                else:
-                    sing_rows = [r for r in noun_rows if ":p:" not in r[2]]
-                    chosen_lemma = (sing_rows[0] if sing_rows else noun_rows[0])[0].lower()
+                chosen_lemma = max(noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))[0].lower()
 
         if chosen_lemma:
             if chosen_lemma == "кода" and tok_low == "код":
@@ -756,6 +834,8 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
         "descriptive_non_concepts": 0,
         "metaphors_and_evaluatives": 0,
         "query_framing_mismatch": 0,
+        "ellipsis_and_conjunction_starters": 0,
+        "rhetorical_and_negated_definitions": 0,
     }
 
     all_files = sorted(RELEASE_DIR.glob("eval/eval_shard_*.jsonl")) + sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
@@ -795,6 +875,20 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                 ):
                     defect_counts["truncated_snippets"] += 1
 
+                # Defect: Ellipsis & conjunction starters
+                if "..." in snip or "…" in snip or re.search(r"^[«„“\"'\s]*(?:але|проте|однак|і|та|й|а)\b", snip, re.IGNORECASE):
+                    defect_counts["ellipsis_and_conjunction_starters"] += 1
+
+                # Defect: Rhetorical & negated assertions
+                if re.search(
+                    r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b|"
+                    r"[—–-]\s*(?:це\s+)?(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не|не\s+кінець)\b|"
+                    r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
+                    snip,
+                    re.IGNORECASE,
+                ):
+                    defect_counts["rhetorical_and_negated_definitions"] += 1
+
                 # Defect 2: Inverted definitions
                 m_naz = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snip)
                 if m_naz:
@@ -830,7 +924,8 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                             defect_counts["inverted_definitions"] += 1
 
                 # Defect 3: Disallowed / wrong lemmas
-                if "циліндер" in terms or "кода" in terms or "кіл" in terms or "риск" in terms:
+                disallowed_set = {"циліндер", "кода", "кіл", "риск", "мор", "зв'язка", "появ", "колон", "пар", "пол", "прийом", "п'ята", "крок", "різка"}
+                if any(t in disallowed_set for t in terms):
                     defect_counts["disallowed_lemmas"] += 1
                 for t in terms:
                     t_low = t.lower()
@@ -878,13 +973,19 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
 
                 # Defect 7: Descriptive non-concepts
                 if (
-                    re.match(r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|окрем\w*)\b", concept, re.IGNORECASE)
+                    re.match(r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b", concept, re.IGNORECASE)
+                    or re.match(r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*|окрем\w*)\b", concept, re.IGNORECASE)
                     or concept.lower() in ("виділення окремих", "окремі елементи", "крапка в центрі", "волосся")
                 ):
                     defect_counts["descriptive_non_concepts"] += 1
 
                 # Defect 8: Metaphors and evaluatives
-                if re.search(r"[—–-]\s*(?:це\s+)?(?:символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|перший\s+крок|запорука|основа\s+життя)\b", snip, re.IGNORECASE):
+                if re.search(
+                    r"\b(?:важливим\s+кроком|кроком\s+уперед|першим\s+кроком)\b|"
+                    r"[—–-]\s*(?:це\s+)?(?:символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|перший\s+крок|важливий\s+крок|крок\s+уперед|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для)\b",
+                    snip,
+                    re.IGNORECASE,
+                ):
                     defect_counts["metaphors_and_evaluatives"] += 1
                 if re.search(r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)", snip, re.IGNORECASE):
                     defect_counts["metaphors_and_evaluatives"] += 1

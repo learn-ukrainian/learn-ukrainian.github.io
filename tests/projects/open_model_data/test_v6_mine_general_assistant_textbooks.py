@@ -863,7 +863,10 @@ def test_r8_mojibake_rejection_and_strict_concept_grounding():
     s_active = "Активність у шкільному житті — це реальна можливість впливати на свій освітній простір."
     assert is_snippet_grounded_in_concept(s_active, "Школа", cur_ves=cur) is False
 
-    s_shkola = "Школа — це не лише будівля для навчання, а спільнота, у якій щодня народжуються ідеї."
+    s_shkola_rhetorical = "Школа — це не лише будівля для навчання, а спільнота, у якій щодня народжуються ідеї."
+    assert is_snippet_grounded_in_concept(s_shkola_rhetorical, "Школа", cur_ves=cur) is False
+
+    s_shkola = "Школа — це заклад загальної середньої освіти для навчання дітей."
     assert is_snippet_grounded_in_concept(s_shkola, "Школа", cur_ves=cur) is True
 
 

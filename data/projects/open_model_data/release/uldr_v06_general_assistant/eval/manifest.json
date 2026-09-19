@@ -1,41 +1,41 @@
 {
   "dataset_name": "uldr_v06_general_assistant_eval",
-  "total_cases": 255,
-  "unique_concepts_count": 236,
-  "unique_chunks_count": 255,
+  "total_cases": 237,
+  "unique_concepts_count": 219,
+  "unique_chunks_count": 237,
   "duplicate_pairs_count": 0,
   "shards_count": 5,
-  "max_shard_size_kb": 130.32,
+  "max_shard_size_kb": 120.17,
   "shards": [
     {
       "shard_file": "eval_shard_001_of_005.jsonl",
-      "cases_count": 51,
-      "size_kb": 125.52,
-      "sha256": "fa153331a6342bdc3c5229de505c236952691fdfa7bf59690d13535c00241b40"
+      "cases_count": 47,
+      "size_kb": 115.56,
+      "sha256": "fd3496ff870db471f7b5158010b6b01b92e94d5e572338e2c3b8b597c052c08f"
     },
     {
       "shard_file": "eval_shard_002_of_005.jsonl",
-      "cases_count": 51,
-      "size_kb": 130.32,
-      "sha256": "286525dfc6bb5e40ef6ffab49d64b0aa18d7ee75d23147d196335d75eead2419"
+      "cases_count": 47,
+      "size_kb": 120.17,
+      "sha256": "08346a038affde39701b6aef8045be2714da1202801e0842efd8846a665bc9b5"
     },
     {
       "shard_file": "eval_shard_003_of_005.jsonl",
-      "cases_count": 51,
-      "size_kb": 126.22,
-      "sha256": "849fc9bd88503cdf94db986393b093a9fe05eb9569db578059c552323de3b7fd"
+      "cases_count": 47,
+      "size_kb": 117.47,
+      "sha256": "b053caf4a74d9818d547e0cf526e12e3ad099b416e7953701f4dcaa1f2218e35"
     },
     {
       "shard_file": "eval_shard_004_of_005.jsonl",
-      "cases_count": 51,
-      "size_kb": 123.33,
-      "sha256": "a6c4c11d41fbbc984e89d928ce85ff1e7db422b751b7477b1d6e4b3cadfd5399"
+      "cases_count": 47,
+      "size_kb": 115.26,
+      "sha256": "15f93ac3a5b9a0e5e2db325d052504ebd00ebdce22c05db79230a918fb5dff7d"
     },
     {
       "shard_file": "eval_shard_005_of_005.jsonl",
-      "cases_count": 51,
-      "size_kb": 119.98,
-      "sha256": "530c98b5471a75e37e918632678e39234f511f0a741b65ef32409746c6613c5d"
+      "cases_count": 49,
+      "size_kb": 113.95,
+      "sha256": "a2d1e36ba6df3b40c49d859580311f864f1103a87cfb576027b47ac90b3dd21f"
     }
   ]
 }

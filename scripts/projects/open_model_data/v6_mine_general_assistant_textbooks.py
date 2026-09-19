@@ -534,6 +534,7 @@ STOPWORD_TERMS = {
     "фізичний", "фізична", "фізичне", "фізичні", "фізичних", "фізичним",
     "питомий", "питома", "питоме", "питомі", "питомих",
     "майбутнє", "вика", "середа", "раз", "повня", "красий", "точок",
+    "мор", "зв'язка", "кода", "кіл", "риск", "появ", "колон", "пар", "пол", "крок", "різка",
 }
 
 OCR_DROPCAP_RE = re.compile(r"(?<!\b[а-яіїєґ])[\.!?]\s+[а-яіїєґ]")
@@ -1451,6 +1452,12 @@ def is_clean_content_chunk(chunk: TextbookChunk, cur_ves: sqlite3.Cursor | None 
     snippet = extract_meaningful_text_snippet(chunk.text, concept=concept)
     if not snippet or len(snippet) < 50:
         return False
+    if "..." in snippet or "…" in snippet:
+        return False
+    if not is_definitional_for_concept(snippet, concept, cur_ves=cur_ves):
+        return False
+    if not is_snippet_grounded_in_concept(snippet, concept, cur_ves=cur_ves):
+        return False
     if has_spliced_sentence_ocr(snippet, cur_ves=cur_ves) or has_space_split_ocr_word(snippet, cur_ves=cur_ves):
         return False
     terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
@@ -1634,8 +1641,12 @@ def is_definitional_for_concept(
     cur = cur_ves or get_vesum_cursor()
 
     # Negative gates
-    # 1. Anaphora / deictic starters
+    # 1. Anaphora / deictic starters & conjunction starters
     if re.search(r"^[«„“\"'\s]*(?:Це|Цей|Ця|Ці|Ось|Саме\s+це)\s+(?:і\s+)?є\b", snippet, re.IGNORECASE):
+        return False
+    if re.search(r"^[«„“\"'\s]*(?:але|проте|однак|і|та|й|а)\b", snippet, re.IGNORECASE):
+        return False
+    if "..." in snippet or "…" in snippet:
         return False
     if re.search(r"\b(?:так|саме\s+так)\s+(?:називають|називається|називали|назвали)\b", snippet, re.IGNORECASE):
         return False
@@ -1661,10 +1672,15 @@ def is_definitional_for_concept(
     # 2. Metaphors
     if re.search(
         r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b|"
-        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя)\b",
+        r"\b(?:важливим\s+кроком|кроком\s+уперед|першим\s+кроком)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:перший\s+крок|важливий\s+крок|крок\s+уперед|символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між|запорука|основа\s+життя|основа\s+відновлюваної|дім\s+для)\b",
         snippet,
         re.IGNORECASE,
     ):
+        return False
+
+    # Appositive clause with double dash (e.g. 'Єдина надія - студенти факультету... - теж не виправдовують...')
+    if re.search(r"^[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45}\s+[—–-]\s+[^—–-]{3,120}\s+[—–-]\s+(?:теж|також|не|вже|ще|і|й|але|проте|[а-яіїєґ]+ть|[а-яіїєґ]+ють|[а-яіїєґ]+є|[а-яіїєґ]+в|[а-яіїєґ]+ла|[а-яіїєґ]+ло|[а-яіїєґ]+ли)\b", snippet):
         return False
 
     # 3. Evaluative commentary and non-definitions
@@ -1675,14 +1691,20 @@ def is_definitional_for_concept(
         r"[—–-]\s*(?:це\s+)?така\s+сама\s+\w+,\s+як\b|"
         r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)|"
         r"[—–-]\s*(?:це\s+)?(?:ефективн\w*|унікальн\w*|чудов\w*|важлив\w*|цікав\w*|зручн\w*|найкращ\w*|найважливіш\w*|головн\w*)\b|"
-        r"\b(?:найважливішим\s+досягненням|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
+        r"\b(?:найважливішим\s+досягненням|найважливішою\s+сировиною|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
         snippet,
         re.IGNORECASE,
     ):
         return False
 
-    # Negative assertions (e.g. 'Харчові добавки не є ліками')
-    if re.search(r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b", snippet):
+    # Negative assertions & rhetorical negation (e.g. 'Харчові добавки не є ліками', 'Культура — це не лише...', 'Криптовалюти — це ще не кінець...')
+    if re.search(
+        r"(?:^|[.!?«„]\s*)[А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40}\s+не\s+є\b|"
+        r"[—–-]\s*(?:це\s+)?(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не|не\s+кінець)\b|"
+        r"\b(?:не\s+лише|не\s+тільки|не\s+просто|ще\s+не\s+кінець|не\s+кінець\s+історії)\b",
+        snippet,
+        re.IGNORECASE,
+    ):
         return False
 
     # 4. Narrative / biography
@@ -1747,38 +1769,50 @@ def is_definitional_for_concept(
     def _matches_concept(target_lemmas: set[str]) -> bool:
         if not target_lemmas:
             return False
-        if target_lemmas == conc_lemmas:
-            return True
-        if (target_lemmas - meta_terms) == conc_lemmas:
-            return True
-        if cw_lemmas and all(any(lem in target_lemmas for lem in word_lems) for word_lems in cw_lemmas):
-            residual = target_lemmas - meta_terms
-            if all(any(lem in residual for lem in word_lems) for word_lems in cw_lemmas) and len(residual) <= len(cw_lemmas) + 1:
-                return True
-        return False
+        cleaned = target_lemmas - meta_terms
+        if not cleaned:
+            return False
+        return bool(all(any(lem in cleaned for lem in word_lemmas) for word_lemmas in cw_lemmas) and cleaned.issubset(conc_lemmas))
 
     # 1. Copula: X — це ... or X — [noun phrase] ...
     for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|([а-яіїєґ\s'-]{3,}))", snippet):
         subj = m.group(1).strip()
         after_phrase = m.group(2)
         if after_phrase:
-            words = [w.strip(".,;:?!'\"«»„“—–()") for w in after_phrase.split()[:4]]
+            words = [w.strip(".,;:?!'\"«»„“—–()") for w in after_phrase.split()[:5]]
             words = [w.lower() for w in words if len(w) >= 3]
             if not words:
                 continue
             first_w = words[0]
-            if first_w in ("перший", "другий", "третій", "головний", "один", "одна", "одне", "найкращий"):
+            if first_w in ("перший", "другий", "третій", "головний", "один", "одна", "одне", "найкращий", "не"):
                 continue
             first_info = get_vesum_word_info(first_w, cur)
             is_first_nom = any((r[1] in ("noun", "adj")) and any(c in r[2] for c in (":v_naz", ":naz")) for r in first_info)
             if not is_first_nom:
                 continue
-            has_nom_noun = False
-            for w in words:
-                w_info = get_vesum_word_info(w, cur)
-                if any(r[1] == "noun" and any(c in r[2] for c in (":v_naz", ":naz")) for r in w_info):
-                    has_nom_noun = True
-                    break
+            if any(r[1] == "noun" and any(c in r[2] for c in (":v_naz", ":naz")) for r in first_info):
+                has_nom_noun = True
+            else:
+                has_nom_noun = False
+                prep_words = {"для", "від", "до", "з", "із", "зі", "на", "в", "у", "про", "за", "під", "над", "при", "без"}
+                adj_cgns = {
+                    (next((p for p in r[2].split(":") if p.startswith("v_")), None), "p" if ":p:" in r[2] else "s", next((g for g in ("m", "f", "n") if f":{g}:" in r[2]), None))
+                    for r in first_info if r[1] == "adj" and any(c in r[2] for c in (":v_naz", ":naz"))
+                }
+                prev_w = ""
+                for w in words[1:]:
+                    if prev_w in prep_words:
+                        prev_w = w
+                        continue
+                    w_info = get_vesum_word_info(w, cur)
+                    noun_cgns = {
+                        (next((p for p in r[2].split(":") if p.startswith("v_")), None), "p" if ":p:" in r[2] else "s", next((g for g in ("m", "f", "n") if f":{g}:" in r[2]), None))
+                        for r in w_info if r[1] == "noun" and any(c in r[2] for c in (":v_naz", ":naz"))
+                    }
+                    if any(ac[0] == nc[0] and ac[1] == nc[1] and (ac[1] == "p" or ac[2] == nc[2] or ac[2] is None or nc[2] is None) for ac in adj_cgns for nc in noun_cgns):
+                        has_nom_noun = True
+                        break
+                    prev_w = w
             if not has_nom_noun:
                 continue
         subj_lemmas = _extract_content_lemmas(subj)
@@ -1879,10 +1913,8 @@ def is_definitional_for_concept(
         if not has_pred_noun:
             continue
         subj_lemmas = _extract_content_lemmas(subj)
-        if _matches_concept(subj_lemmas):
-            return True
         pred_lemmas = _extract_content_lemmas(pred)
-        if _matches_concept(pred_lemmas):
+        if _matches_concept(subj_lemmas) or _matches_concept(pred_lemmas):
             return True
 
     return False
@@ -2149,8 +2181,9 @@ def clean_and_validate_candidate(cand: str, cur_ves: sqlite3.Cursor | None = Non
     if re.match(r"^(?:най|якнай|щонай)\w+", c, re.IGNORECASE):
         return None
 
-    # Reject evaluative and descriptive adjective starters
+    # Reject evaluative, particle, conjunction, and descriptive starters
     if re.match(
+        r"^(?:навіть|але|проте|однак|і|та|й|а|якщо|коли|де|куди|ось|лише|тільки|ще|вже|не|ні|головне|основне|образ|роль|значення|максимальне\s+значення|мінімальне\s+значення|середнє\s+значення|активність\s+у|основний\s+принцип|головний\s+принцип|єдина\s+надія|дім\s+для)\b|"
         r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*)\b|"
         r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*|золотав\w*)\b|"
         r"^(?:виділення\s+окремих|окремі\s+елементи|окремий\s+|окремі\s+|крапка\s+в\s+центрі)\b",
@@ -2174,6 +2207,13 @@ def clean_and_validate_candidate(cand: str, cur_ves: sqlite3.Cursor | None = Non
         return None
     if re.search(r"\b(?:очевидн\w*|зрозуміл\w*|незрозуміл\w*|безперечн\w*|помітн\w*)\b", c, re.IGNORECASE):
         return None
+
+    cur = cur_ves or get_vesum_cursor()
+    if cur and words:
+        first_w_low = words[0].lower()
+        first_w_info = get_vesum_word_info(first_w_low, cur)
+        if first_w_info and all(r[1] in ("part", "conj", "prep", "intj", "adv") for r in first_w_info):
+            return None
 
     preps = {"від", "для", "до", "з", "із", "зі", "на", "по", "про", "за", "під", "над", "при", "без"}
     if len(words) >= 3 and any(w.lower() in preps for w in words[1:-1]):
@@ -2347,6 +2387,30 @@ ABBREVIATIONS: set[str] = {
     "дм", "л", "мл", "хв", "сек", "год", "стор", "табл", "мал", "рис", "р", "pp", "ст",
 }
 
+_TEXTBOOK_LEMMA_FREQ: Counter | None = None
+
+
+def get_textbook_lemma_freq(db_path: Path | None = None) -> Counter:
+    """Precompute or return cached textbook token frequencies for ranking ambiguous lemmas."""
+    global _TEXTBOOK_LEMMA_FREQ
+    if _TEXTBOOK_LEMMA_FREQ is not None:
+        return _TEXTBOOK_LEMMA_FREQ
+    db_p = db_path or DEFAULT_SOURCES_DB
+    counts = Counter()
+    try:
+        conn = sqlite3.connect(f"file:{db_p}?mode=ro", uri=True)
+        cur = conn.cursor()
+        cur.execute("SELECT text FROM textbooks")
+        for row in cur:
+            for word in re.findall(r"[а-яіїєґ'’ʼ]+", row[0].lower()):
+                counts[word] += 1
+        conn.close()
+    except Exception as e:
+        logger.warning("Could not load textbook frequency counts: %s", e)
+    _TEXTBOOK_LEMMA_FREQ = counts
+    return _TEXTBOOK_LEMMA_FREQ
+
+
 CANONICAL_HOMONYM_LEMMAS: dict[str, str] = {
     "код": "код",
     "коду": "код",
@@ -2364,6 +2428,16 @@ CANONICAL_HOMONYM_LEMMAS: dict[str, str] = {
     "кіл": "коло",
     "колах": "коло",
     "колами": "коло",
+    "морі": "море",
+    "моря": "море",
+    "морем": "море",
+    "морях": "море",
+    "морями": "море",
+    "зв'язки": "зв'язок",
+    "зв'язків": "зв'язок",
+    "зв'язками": "зв'язок",
+    "зв'язках": "зв'язок",
+    "зв'язком": "зв'язок",
     "риски": "риска",
     "рисок": "риска",
     "рисці": "риска",
@@ -2418,6 +2492,7 @@ def extract_scientific_terminology_for_snippet(
     snip_lower = snippet.lower()
     conc_lower = concept.lower()
     conc_lemmas = get_vesum_lemmas(concept, cur)
+    lemma_freq = get_textbook_lemma_freq()
 
     # Focus candidate tokens on definitional sentence if snippet contains multiple sentences
     target_text = snip_lower
@@ -2457,7 +2532,6 @@ def extract_scientific_terminology_for_snippet(
         tok_low = tok.lower()
         if (
             len(tok_low) < 3
-            or tok_low in STOPWORD_TERMS
             or tok_low in ABBREVIATIONS
             or not any(c in "аеєиіїоуюя" for c in tok_low)
         ):
@@ -2474,6 +2548,9 @@ def extract_scientific_terminology_for_snippet(
                 and canon_lem not in ABBREVIATIONS
             ):
                 candidate_terms.append(canon_lem)
+            continue
+
+        if tok_low in STOPWORD_TERMS:
             continue
 
         if "-" in tok:
@@ -2507,7 +2584,7 @@ def extract_scientific_terminology_for_snippet(
         if not clean_rows:
             continue
         # Substantive scientific terms MUST be nouns
-        noun_rows = [r for r in clean_rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv"))]
+        noun_rows = [r for r in clean_rows if r[1] == "noun" and not any(p in r[2] for p in (":prop", ":fname", ":lname", ":geo", ":ns", ":abbr", ":nv", ":v_kly", ":kly"))]
         if not noun_rows:
             continue
 
@@ -2529,13 +2606,21 @@ def extract_scientific_terminology_for_snippet(
                 adj_cgns = {extract_cgn(t) for t in adj_tags}
                 matching_noun_rows = [r for r in noun_rows if extract_cgn(r[2]) in adj_cgns]
                 if matching_noun_rows:
-                    sing = [r for r in matching_noun_rows if ":p:" not in r[2]]
-                    chosen_row = sing[0] if sing else matching_noun_rows[0]
+                    chosen_row = max(matching_noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))
 
-        # B. Genitive context: preceded by a noun, genitive preposition, or quantifier -> noun is in genitive (e.g. рядів колон -> колона)
+        # B. Locative preposition context -> match :v_mis
         if chosen_row is None and prev_tok:
             prev_low = prev_tok.lower()
-            GEN_PREPS = {"до", "від", "з", "із", "зі", "для", "без", "після", "біля", "навколо", "серед", "проти", "замість", "внаслідок", "щодо", "поза", "поблизу", "крім", "окрім"}
+            LOC_PREPS = {"на", "в", "у", "по", "при", "про"}
+            if prev_low in LOC_PREPS:
+                loc_rows = [r for r in noun_rows if ":v_mis" in r[2]]
+                if loc_rows:
+                    chosen_row = max(loc_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))
+
+        # C. Genitive context: preceded by a noun, genitive preposition, or quantifier -> noun is in genitive (e.g. рядів колон -> колона)
+        if chosen_row is None and prev_tok:
+            prev_low = prev_tok.lower()
+            GEN_PREPS = {"до", "від", "з", "із", "зі", "для", "без", "після", "біля", "навколо", "серед", "проти", "замість", "внаслідок", "щодо", "поза", "поблизу", "крім", "окрім", "завдяки"}
             GEN_QUANTS = {"один", "одна", "одне", "кілька", "декілька", "багато", "мало", "чимало"}
             is_gen_context = prev_low in GEN_PREPS or prev_low in GEN_QUANTS
             if not is_gen_context:
@@ -2545,27 +2630,22 @@ def extract_scientific_terminology_for_snippet(
             if is_gen_context:
                 rod_rows = [r for r in noun_rows if ":v_rod" in r[2]]
                 if rod_rows:
-                    chosen_row = rod_rows[0]
+                    chosen_row = max(rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))
 
-        # C. Disambiguate zero-ending genitive plurals vs obscure masculine homonyms:
+        # D. Disambiguate zero-ending genitive plurals vs obscure masculine homonyms:
         if chosen_row is None and prev_tok:
             prev_low = prev_tok.lower()
             if prev_low in ("рядів", "кількість", "число", "безліч", "шерег", "група", "сукупність", "багато", "кілька", "декілька"):
                 p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
                 if p_rod_rows:
-                    chosen_row = p_rod_rows[0]
+                    chosen_row = max(p_rod_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))
 
         if chosen_row is None:
             exact_rows = [r for r in noun_rows if r[0].lower() == tok_low and ":v_naz" in r[2]]
             if exact_rows:
                 chosen_row = exact_rows[0]
             else:
-                v_naz_rows = [r for r in noun_rows if ":v_naz" in r[2] and ":p:" not in r[2]]
-                if v_naz_rows:
-                    chosen_row = v_naz_rows[0]
-                else:
-                    sing_rows = [r for r in noun_rows if ":p:" not in r[2]]
-                    chosen_row = sing_rows[0] if sing_rows else noun_rows[0]
+                chosen_row = max(noun_rows, key=lambda r: (lemma_freq.get(r[0].lower(), 0), 1 if ":v_naz" in r[2] else 0))
 
         lem = chosen_row[0].lower()
         if tok_low in CANONICAL_HOMONYM_LEMMAS:
@@ -2606,7 +2686,12 @@ def extract_scientific_terminology_for_snippet(
             continue
         candidate_terms.append(lem)
 
-    return candidate_terms[:5]
+    # Final attestation guard: every term MUST be a valid dictionary lemma of an actual whole token in the snippet
+    snip_all_lemmas: set[str] = set()
+    for tok in snip_tokens:
+        snip_all_lemmas.update(get_vesum_word_lemmas(tok, cur))
+    verified_terms = [t for t in candidate_terms if t in snip_all_lemmas and t not in STOPWORD_TERMS]
+    return verified_terms[:5]
 
 
 def extract_scientific_terminology(
