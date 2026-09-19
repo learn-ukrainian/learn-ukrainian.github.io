@@ -30,7 +30,7 @@ import sqlite3
 import subprocess
 import sys
 from collections import Counter
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -156,6 +156,7 @@ NON_CONCEPT_PREFIXES = (
     "запитання", "відповідь", "варіант", "тест", "самостійна", "контрольна", "підсумок",
     "домашнє", "від авторів", "сторінка", "рубрика", "інтелектуальний клуб",
     "перегляньте", "дізнайтеся", "електронний додаток", "додаток", "відео", "схема для",
+    "розділ ", "параграф ", "тема уроку", "тема заняття", "зміст",
 )
 
 FILLER_STARTS = (
@@ -229,12 +230,12 @@ UKRAINIAN_SUBJECT_NOMINATIVE = {
 
 CANONICAL_SUBJECT_TERMINOLOGY = {
     "algebra": ["дискримінант", "корінь рівняння", "квадратний тричлен", "функція", "графік", "арифметична прогресія", "геометрична прогресія", "похідна", "нерівність", "послідовність", "добуток", "квадрат", "знаменник", "степінь", "многочлен", "одночлен", "дробовий вираз"],
-    "heometriya": ["теорема Піфагора", "об'єм циліндра", "об'єм піраміди", "об'єм конуса", "об'єм кулі", "відношення площ", "відношення величин", "вектор", "трикутник", "паралелограм", "трапеція", "синус", "косинус", "тангенс", "координати", "відрізок", "кут"],
+    "heometriya": ["теорема Піфагора", "правильний многокутник", "протилежні вектори", "об'єм циліндра", "об'єм піраміди", "об'єм конуса", "об'єм кулі", "відношення площ", "відношення величин", "вектор", "трикутник", "паралелограм", "трапеція", "синус", "косинус", "тангенс", "координати", "відрізок", "кут"],
     "matematyka": ["числова множина", "десятковий дріб", "відсоток", "пропорція", "ділення", "множення", "відношення чисел", "координатна пряма", "натуральне число", "звичайний дріб"],
-    "fizyka": ["прискорювач", "заломлення", "відбиття", "густина", "сила тяжіння", "імпульс", "кінетична енергія", "електричний струм", "напруга", "опір", "тиск", "робота", "потужність", "теплота", "магнітне поле"],
-    "khimiya": ["водень", "кисень", "вуглець", "азот", "сірка", "залізо", "сульфатна кислота", "хлоридна кислота", "нітратна кислота", "періодичний закон", "електроліз", "оксид", "основа", "кислота", "сіль", "молярна маса", "розчин", "валентність"],
-    "biolohiya": ["клітина", "хромосома", "фотосинтез", "метаболізм", "генотип", "екосистема", "мембрана", "фермент", "біорізноманіття", "орган", "тканина", "розмноження", "спадковість", "мінливість"],
-    "informatyka": ["алгоритм", "масив", "цикл", "розгалуження", "база даних", "інтерфейс", "функція", "кодування інформації", "змінна", "програма", "оператор", "мережа", "файл"],
+    "fizyka": ["реостат", "електричний струм", "електричне коло", "прискорювач", "заломлення", "відбиття", "густина", "сила тяжіння", "імпульс", "кінетична енергія", "напруга", "опір", "тиск", "робота", "потужність", "теплота", "магнітне поле"],
+    "khimiya": ["чадний газ", "карбон", "водень", "кисень", "вуглець", "азот", "сірка", "залізо", "сульфатна кислота", "хлоридна кислота", "нітратна кислота", "періодичний закон", "електроліз", "оксид", "основа", "кислота", "сіль", "молярна маса", "розчин", "валентність"],
+    "biolohiya": ["клітина", "хромосома", "фотосинтез", "метаболізм", "генотип", "екосистема", "мембрана", "фермент", "біорізноманіття", "орган", "тканина", "розмноження", "спадковість", "мінливість", "біоритми", "нервова система"],
+    "informatyka": ["алгоритм", "масив", "цикл", "розгалуження", "база даних", "інтерфейс", "функція", "кодування інформації", "змінна", "програма", "оператор", "мережа", "файл", "вкладений файл"],
     "heohrafiya": ["атмосфера", "гідросфера", "літосфера", "клімат", "рельєф", "природні ресурси", "демографія", "корисні копалини", "географічна карта", "материк", "океан", "густота населення"],
     "pryroda": ["спостереження", "експеримент", "природне явище", "агрегатний стан", "сонячна система", "екологічна рівновага", "жива природа", "нежива природа"],
     "ya_doslidzhuiu_svit": ["довкілля", "природа", "суспільство", "людина", "безпека"],
@@ -266,12 +267,17 @@ CONTRADICTORY_MODIFIER_PAIRS = [
 ]
 
 DANGLING_STARTER_RE = re.compile(
-    r"^(?:записан\w*\s+рівність|цю\s+рівність|цю\s+формулу|цей\s+вираз|цей\s+малюнок|цей\s+рисунок|цей\s+графік|"
-    r"звідси\b|у\s+таких\s+випадках|аналогічн\w*|тому\s+для|тому\b|отже\b|тоді\s+маємо|тоді\s+як|оскільки\b|"
-    r"наприклад\b|позначимо\b|нехай\b|підставивши\b|помноживши\b|поділивши\b|доведемо\b|розв'язання\b|розглянемо\s+приклад|"
-    r"так\w*\s+рівність|так\w*\s+послідовність|так\w*\s+вираз|так\w*\s+чином\b|"
-    r"крім\s+того\b|зокрема\b|відповідно\b|проте\b|однак\b|"
-    r"як\s+бачимо\b|як\s+відомо\b|як\s+зазначалося\b|вони\b|він\b|вона\b|воно\b)\b",
+    r"^(?:"
+    r"її\b|його\b|їх\b|їхні[йяєхм]?\b|такі\b|такий\b|така\b|таке\b|ці\b|цей\b|ця\b|він\b|вона\b|воно\b|вони\b|"
+    r"натомість\b|на\s+відміну\s+від\b|проте\b|однак\b|разом\s+з\s+тим\b|водночас\b|також\b|до\s+того\s+ж\b|"
+    r"крім\s+того\b|зокрема\b|аналогічн\w*|отже\b|оскільки\b|тому\b|тому\s+для\b|"
+    r"записан\w*\s+рівність|цю\s+рівність|цю\s+формулу|цей\s+вираз|цей\s+малюнок|цей\s+рисунок|цей\s+графік|"
+    r"звідси\b|з\s+цього\s+випливає\b|у\s+зв'язку\s+з\s+цим\b|для\s+цього\b|через\s+це\b|при\s+цьому\b|"
+    r"у\s+таких\s+випадках\b|тоді\s+маємо\b|тоді\s+як\b|наприклад\b|позначимо\b|нехай\b|"
+    r"підставивши\b|помноживши\b|поділивши\b|доведемо\b|розв'язання\b|розглянемо\s+приклад\b|"
+    r"так\w*\s+рівність|так\w*\s+послідовність|так\w*\s+вираз|так\w*\s+чином\b|відповідно\b|"
+    r"як\s+бачимо\b|як\s+відомо\b|як\s+зазначалося\b"
+    r")\b",
     re.IGNORECASE,
 )
 
@@ -312,7 +318,7 @@ DEFINITIONAL_MARKER_RE = re.compile(
 
 # Typography & Calque Sanitation
 APOSTROPHE_RE = re.compile(r"['’ʼ´`]")
-HYPHEN_BREAK_RE = re.compile(r"([а-яіїєґА-ЯІЇЄҐa-zA-Z])-[\s\r\n]+([а-яіїєґА-ЯІЇЄҐa-zA-Z])")
+HYPHEN_BREAK_RE = re.compile(r"([а-яіїєґА-ЯІЇЄҐa-zA-Z])[\xad-][\s\r\n]*([а-яіїєґА-ЯІЇЄҐa-zA-Z])")
 DOUBLE_PUNCT_RE = re.compile(r"\.{2,}")
 PUNCT_DOT_RE = re.compile(r"([?!…])\.")
 MULTISPACE_RE = re.compile(r"[ \t]+")
@@ -368,6 +374,15 @@ STOPWORD_TERMS = {
     "урок", "уроку", "уроці", "поняття", "приклад", "прикладу", "значення",
     "автор", "автори", "авторів", "підсумок", "підсумки", "правило", "правила",
     "число", "числа", "чисел", "числу", "числом", "член", "члена", "членів",
+    "треба", "можна", "слід", "бути", "мати", "стати", "дати", "буде", "було",
+    "випадок", "випадку", "випадки", "вигляд", "вигляду", "спосіб", "способу",
+    "відміна", "відміну", "умова", "умови", "умовою", "початок", "початку",
+    "кінець", "кінця", "кінцем", "допомога", "допомогою", "основа", "основи", "основою",
+    "зв'язок", "зв'язку", "наслідок", "наслідку", "порядок", "порядку",
+    "запис", "запису", "записом", "форма", "форми", "формою", "тип", "типу", "типом",
+    "вид", "виду", "видом", "група", "групи", "групою", "рівень", "рівня", "рівнем",
+    "текст", "тексту", "рядок", "рядка", "знак", "знака", "знаком", "знаки",
+    "ознака", "ознаки", "ознакою", "додавання", "додаванні", "віднімання",
 }
 
 OCR_DROPCAP_RE = re.compile(r"(?<!\b[а-яіїєґ])[\.!?]\s+[а-яіїєґ]")
@@ -469,6 +484,77 @@ def is_vesum_attested(term: str, cur_ves: sqlite3.Cursor | None = None, use_defa
     return True
 
 
+_VESUM_LEMMA_CACHE: dict[str, set[str]] = {}
+_VESUM_WORD_INFO_CACHE: dict[str, list[tuple[str, str, str]]] = {}
+
+
+def get_vesum_word_lemmas(word: str, cur_ves: sqlite3.Cursor | None = None) -> set[str]:
+    """Extract dictionary lemmas for a single word form from VESUM forms_all with caching."""
+    w = word.lower()
+    if w in _VESUM_LEMMA_CACHE:
+        return _VESUM_LEMMA_CACHE[w]
+    cur = cur_ves or get_vesum_cursor()
+    if cur is None:
+        return set()
+    try:
+        cur.execute("SELECT lemma FROM forms_all WHERE word_form = ?", (w,))
+        res = {r[0].lower() for r in cur.fetchall()}
+    except Exception:
+        res = set()
+    _VESUM_LEMMA_CACHE[w] = res
+    return res
+
+
+def get_vesum_lemmas(text: str, cur_ves: sqlite3.Cursor | None = None) -> set[str]:
+    """Extract all dictionary lemmas for tokens in text from VESUM forms_all."""
+    if not text:
+        return set()
+    words = re.findall(r"[а-яіїєґ']+", text.lower())
+    lemmas: set[str] = set()
+    for w in words:
+        lemmas.update(get_vesum_word_lemmas(w, cur_ves))
+    return lemmas
+
+
+def get_vesum_word_info(word: str, cur_ves: sqlite3.Cursor | None = None) -> list[tuple[str, str, str]]:
+    """Extract (lemma, pos, tags) for a single word form from VESUM forms_all with caching."""
+    w = word.lower()
+    if w in _VESUM_WORD_INFO_CACHE:
+        return _VESUM_WORD_INFO_CACHE[w]
+    cur = cur_ves or get_vesum_cursor()
+    if cur is None:
+        return []
+    try:
+        cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ?", (w,))
+        rows = cur.fetchall()
+    except Exception:
+        rows = []
+    _VESUM_WORD_INFO_CACHE[w] = rows
+    return rows
+
+
+_PRONOUN_CACHE: dict[str, bool] = {}
+
+
+def is_vesum_pronoun(term: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
+    """Check if any reading of term or lemma in VESUM is a pronoun."""
+    t = term.lower().strip()
+    if t in _PRONOUN_CACHE:
+        return _PRONOUN_CACHE[t]
+    cur = cur_ves or get_vesum_cursor()
+    if cur is None:
+        return False
+    try:
+        cur.execute("SELECT tags, pos FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 10", (t, t))
+        rows = cur.fetchall()
+        is_pron = any("pron" in r[0] or r[1] == "pronoun" for r in rows)
+    except Exception:
+        is_pron = False
+    _PRONOUN_CACHE[t] = is_pron
+    return is_pron
+
+
+
 
 def normalize_apostrophes(text: str) -> str:
     """Standardize apostrophe variants to ASCII apostrophe."""
@@ -476,8 +562,9 @@ def normalize_apostrophes(text: str) -> str:
 
 
 def dehyphenate_text(text: str) -> str:
-    """Join line-broken hyphenated words."""
-    return HYPHEN_BREAK_RE.sub(r"\1\2", text)
+    """Join line-broken hyphenated words and eliminate soft hyphens."""
+    res = HYPHEN_BREAK_RE.sub(r"\1\2", text)
+    return res.replace("\xad", "")
 
 
 _IPV4_RE = re.compile(r"(?<!\d\.)\b(?P<ip>(?:[0-9]{1,3}\.){3}[0-9]{1,3})\b(?!\.\d)")
@@ -675,6 +762,9 @@ class TextbookChunk:
     author: str
     subject: str
     char_count: int
+    concept: str = ""
+    snippet: str = ""
+    terms: list[str] = field(default_factory=list)
 
     @property
     def domain(self) -> str:
@@ -689,7 +779,7 @@ class TextbookChunk:
         return UKRAINIAN_SUBJECT_NOMINATIVE.get(self.subject, self.subject.capitalize())
 
 
-def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
+def is_clean_content_chunk(chunk: TextbookChunk, cur_ves: sqlite3.Cursor | None = None) -> bool:
     """Filter out administrative frontmatter, tables of contents, exercise sections, and short fragments."""
     if chunk.char_count < 150:
         return False
@@ -732,18 +822,27 @@ def is_clean_content_chunk(chunk: TextbookChunk) -> bool:
         return False
     if any(m in t for m in frontmatter_markers):
         return False
-    concept = extract_key_concept(chunk)
+    # Reject font encoding corruptions / PDF mojibake
+    if re.search(r"[ÐÎÅÒÝÞßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ]", t):
+        return False
+    concept = extract_key_concept(chunk, cur_ves=cur_ves)
     if not concept:
         return False
     snippet = extract_meaningful_text_snippet(chunk.text, concept=concept)
     if not snippet or len(snippet) < 50:
         return False
-    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject)
-    return bool(terms)
+    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
+    if not terms:
+        return False
+    chunk.concept = concept
+    chunk.snippet = snippet
+    chunk.terms = terms
+    return True
 
 
 def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[TextbookChunk]]:
     """Load textbook chunks from sources.db, partitioned into eval pool and train pool with strict text firewall."""
+    cur_ves = get_vesum_cursor()
     conn = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     cur = conn.cursor()
     cur.execute("""
@@ -770,7 +869,7 @@ def load_textbook_chunks(db_path: Path) -> tuple[list[TextbookChunk], list[Textb
             subject=subj,
             char_count=char_count or len(text or ""),
         )
-        if not is_clean_content_chunk(chunk):
+        if not is_clean_content_chunk(chunk, cur_ves=cur_ves):
             continue
 
         if chunk.source_file in HELD_OUT_SET:
@@ -894,9 +993,87 @@ def check_concept_contradiction(snippet: str, concept: str) -> bool:
     return False
 
 
-def is_snippet_grounded_in_concept(snippet: str, concept: str) -> bool:
-    """Verify that the snippet is strictly grounded in the concept, without contradiction, dangling starter, or forward/backward pointer."""
+_DEFINITIONAL_QUICK_FILTER_RE = re.compile(
+    r"[—–-]\s*(?:це\b|[а-яіїєґ]{3,})|\b(?:називають|називається|названо|означення|визначення|розуміють)\b|\bє\b",
+    re.IGNORECASE,
+)
+
+
+def is_definitional_for_concept(
+    snippet: str,
+    concept: str,
+    cur_ves: sqlite3.Cursor | None = None,
+) -> bool:
+    """Verify that the snippet contains a genuine definitional pattern for the given concept."""
     if not snippet or not concept:
+        return False
+    if not _DEFINITIONAL_QUICK_FILTER_RE.search(snippet):
+        return False
+    cur = cur_ves or get_vesum_cursor()
+    conc_lemmas = get_vesum_lemmas(concept, cur)
+    if not conc_lemmas:
+        conc_lemmas = {w.lower() for w in re.findall(r"[а-яіїєґ']+", concept) if len(w) >= 3 and w.lower() not in STOPWORD_TERMS}
+    if not conc_lemmas:
+        return False
+
+    # 1. Copula: X — це ... or X — [noun] ...
+    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40})\s+[—–-]\s+(?:це\b|[а-яіїєґ]{3,})", snippet):
+        subj = m.group(1).strip()
+        subj_lemmas = get_vesum_lemmas(subj, cur)
+        if conc_lemmas & subj_lemmas:
+            return True
+
+    # 2. Naming: називають X / X називають
+    for m in re.finditer(r"\b(?:називають|називається|названо)\s+([а-яіїєґ\s'-]{2,40})[,\.]", snippet):
+        obj = m.group(1).strip()
+        obj_lemmas = get_vesum_lemmas(obj, cur)
+        if conc_lemmas & obj_lemmas:
+            return True
+
+    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40})\s+(?:називають|називається)\b", snippet):
+        subj = m.group(1).strip()
+        subj_lemmas = get_vesum_lemmas(subj, cur)
+        if conc_lemmas & subj_lemmas:
+            return True
+
+    # 3. Formal Означення. ... containing concept
+    if re.search(r"\b(?:означення|визначення)[\.:\s]+", snippet, re.IGNORECASE):
+        snip_lemmas = get_vesum_lemmas(snippet, cur)
+        if conc_lemmas.issubset(snip_lemmas) or (len(conc_lemmas) > 1 and len(conc_lemmas & snip_lemmas) >= 1):
+            return True
+
+    # 4. Під X розуміють ...
+    for m in re.finditer(r"\bпід\s+([а-яіїєґ\s'-]{2,35})\s+розуміють\b", snippet, re.IGNORECASE):
+        und = m.group(1).strip()
+        und_lemmas = get_vesum_lemmas(und, cur)
+        if conc_lemmas & und_lemmas:
+            return True
+
+    # 5. Copula with є: concept appears as subject or predicate of є
+    for m in re.finditer(r"\bє\s+([^,;.\n]{3,60})", snippet, re.IGNORECASE):
+        pred = m.group(1).strip()
+        pred_lemmas = get_vesum_lemmas(pred, cur)
+        if conc_lemmas & pred_lemmas:
+            return True
+
+    for m in re.finditer(r"([^,;.\n]{3,60})\s+є\b", snippet, re.IGNORECASE):
+        subj = m.group(1).strip()
+        subj_lemmas = get_vesum_lemmas(subj, cur)
+        if conc_lemmas & subj_lemmas:
+            return True
+
+    return False
+
+
+def is_snippet_grounded_in_concept(
+    snippet: str,
+    concept: str,
+    cur_ves: sqlite3.Cursor | None = None,
+) -> bool:
+    """Verify that the snippet is strictly grounded in the concept via lemma equality and definitional patterns."""
+    if not snippet or not concept:
+        return False
+    if not _DEFINITIONAL_QUICK_FILTER_RE.search(snippet):
         return False
     if check_concept_contradiction(snippet, concept):
         return False
@@ -905,43 +1082,51 @@ def is_snippet_grounded_in_concept(snippet: str, concept: str) -> bool:
     if FORWARD_BACKWARD_REF_RE.search(snippet):
         return False
 
-    snip_lower = snippet.lower()
-    conc_lower = concept.lower()
-    snip_words = set(re.findall(r"[а-яіїєґ']+", snip_lower))
-    conc_words = set(re.findall(r"[а-яіїєґ']+", conc_lower))
-
-    # Significant content words with len >= 3 (e.g. сон, рух, кут, газ, іон, світ, тіло)
-    words = [w for w in re.findall(r"[а-яіїєґ']+", conc_lower) if w not in STOPWORD_TERMS and len(w) >= 3]
-    if not words:
-        return True
-
-    # Primary entity check: the leading non-stopword of the concept (e.g. "сон" in "Сон як прояв біоритмів організму")
-    # MUST be present in the snippet
-    primary_word = words[0]
-    primary_stem = primary_word[:len(primary_word) - 1] if len(primary_word) > 3 else primary_word
-    primary_matched = any(sw.startswith(primary_stem) for sw in snip_words) or (primary_word in snip_lower)
-    if not primary_matched:
+    conc_words = [w for w in re.findall(r"[а-яіїєґa-zA-Z0-9']+", concept.lower()) if len(w) >= 2]
+    if not conc_words:
         return False
 
-    matched = 0
-    for w in words:
-        stem = w[:len(w) - 1] if len(w) > 3 else w
-        if stem in snip_lower or any(sw.startswith(stem) for sw in snip_words):
-            matched += 1
+    function_words = {
+        "та", "і", "й", "або", "чи", "а", "але", "це", "до", "від", "на", "в", "у",
+        "із", "зі", "за", "під", "над", "при", "про", "для", "без", "через", "з",
+        "як", "що", "де", "коли", "який", "яка", "яке", "які", "цей", "ця", "ці",
+    }
+    content_conc_words = [w for w in conc_words if w not in function_words and len(w) >= 3]
+    target_words = content_conc_words if content_conc_words else conc_words
 
-    if len(words) == 1:
-        return matched == 1
+    # Fast stem pre-filter: avoid expensive lemma parsing if primary word stem is absent
+    primary_word = target_words[0]
+    primary_stem = primary_word[:4] if len(primary_word) >= 5 else primary_word
+    snip_lower = snippet.lower()
+    if primary_stem not in snip_lower and primary_word not in snip_lower:
+        return False
 
+    cur = cur_ves or get_vesum_cursor()
+    # Primary entity check via VESUM lemma equality (not string prefixes!)
+    primary_lemmas = get_vesum_lemmas(primary_word, cur)
+    snip_lemmas = get_vesum_lemmas(snippet, cur)
+
+    if primary_lemmas and snip_lemmas:
+        if not (primary_lemmas & snip_lemmas):
+            return False
+    else:
+        snip_words = set(re.findall(r"[а-яіїєґa-zA-Z0-9']+", snip_lower))
+        if primary_word not in snip_words:
+            return False
+
+    # Check antonymous contradictory modifiers
+    snip_words = set(re.findall(r"[а-яіїєґ']+", snippet.lower()))
+    conc_word_set = set(conc_words)
     for m1, m2 in CONTRADICTORY_MODIFIER_PAIRS:
         def _has_ex(w_set: set[str], s1: str, s2: str) -> bool:
             return any(w.startswith(s1) and not w.startswith(s2) for w in w_set)
 
-        if _has_ex(conc_words, m1, m2) and not _has_ex(snip_words, m1, m2):
+        if _has_ex(conc_word_set, m1, m2) and not _has_ex(snip_words, m1, m2):
             return False
-        if any(w.startswith(m2) for w in conc_words) and not any(w.startswith(m2) for w in snip_words):
+        if any(w.startswith(m2) for w in conc_word_set) and not any(w.startswith(m2) for w in snip_words):
             return False
 
-    return matched >= 1
+    return is_definitional_for_concept(snippet, concept, cur)
 
 
 def extract_meaningful_text_snippet(
@@ -1066,11 +1251,41 @@ def clean_and_validate_candidate(cand: str) -> str | None:
     # Reject terminal dangling punctuation/apostrophes
     if c.endswith(("'", "’", "ʼ", "`", "-", "—", "–", "…", ".")):
         return None
-    for delim in [":", ";", "(", " - це", " — це", " – це"]:
-        if delim in c:
-            part = c.split(delim)[0].strip()
-            if len(part) >= 4:
-                c = part
+    # Handle 'Тема: ...' or 'Розділ 1: ...' before splitting on colon
+    m_colon_sec = re.match(r"^(?:розділ|тема|параграф|частина|урок)\s*(?:\d+|[ivxlcdm]+)?\s*[:—–-]\s*([^.\n?]+)", c, re.IGNORECASE)
+    if m_colon_sec:
+        sub = m_colon_sec.group(1).strip()
+        if len(sub) >= 4:
+            c = sub
+    else:
+        for delim in [":", ";", "(", " - це", " — це", " – це"]:
+            if delim in c:
+                part = c.split(delim)[0].strip()
+                if len(part) >= 4:
+                    c = part
+
+    # Strip chapter/section numbering prefixes if substantive content follows
+    m_ch = re.match(
+        r"^(?:розділ|тема|параграф|частина|урок)\s+(?:\d+|[ivxlcdm]+|перший|другий|третій|четвертий|п['ʼ’]ятий|шостий)[\.\s:—–-]+(?:\s*(?:частина|урок)\s*\d+[\.\s:—–-]+)?\s*([^.\n?]+)",
+        c,
+        re.IGNORECASE,
+    )
+    if m_ch:
+        sub = m_ch.group(1).strip()
+        if len(sub) >= 4:
+            c = sub
+
+    # Reject bare section / book structure labels
+    if re.match(r"^(?:розділ|тема|частина|параграф|урок)(?:\s+(?:\d+|[ivxlcdm]+))?$", c, re.IGNORECASE):
+        return None
+    if c.lower() in ("розділ", "тема", "частина", "параграф", "урок", "зміст", "вступ", "передмова", "післямова", "покажчик", "глосарій"):
+        return None
+
+    # Reject mojibake and non-Ukrainian character sets
+    if not re.match(r"^[А-ЯІЇЄҐа-яіїєґa-zA-Z0-9\s'ʼ’\-–—«»\"().,:;]+$", c):
+        return None
+    if not re.search(r"[А-ЯІЇЄҐа-яіїєґ]", c):
+        return None
     if len(c) > 50:
         c = c[:50].rsplit(" ", 1)[0].strip()
     words = [w.strip(".,;:?!'\"«»„“—–()") for w in c.split() if w.strip(".,;:?!'\"«»„“—–()")]
@@ -1093,7 +1308,12 @@ def clean_and_validate_candidate(cand: str) -> str | None:
     return c
 
 
-def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: str = "") -> str:
+def extract_key_concept(
+    chunk: TextbookChunk | str,
+    title: str = "",
+    subject: str = "",
+    cur_ves: sqlite3.Cursor | None = None,
+) -> str:
     """Extract the central concept grounded directly in chunk text without imperative exercise noise."""
     if isinstance(chunk, TextbookChunk):
         text = chunk.text
@@ -1104,7 +1324,28 @@ def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: st
         chunk_title = title
         subj = subject
 
+    cur = cur_ves or get_vesum_cursor()
     lines = [normalize_apostrophes(line.strip()) for line in text.splitlines() if line.strip()]
+
+    # 1. Definitional statements in chunk: highest priority concept extraction
+    for line in lines[:20]:
+        m_def = re.search(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґa-zA-Z\s'-]{2,35})\s+[—–-]\s+це\b", line)
+        if m_def:
+            val = clean_and_validate_candidate(m_def.group(1))
+            if val:
+                return val
+        m_def2 = re.search(r"\b(?:називають|називається)\s+([а-яіїєґ\s'-]{3,35})[,\.]", line)
+        if m_def2:
+            val = clean_and_validate_candidate(m_def2.group(1))
+            if val:
+                if cur:
+                    rows = get_vesum_word_info(val.lower(), cur)
+                    cand_lems = [r[0] for r in rows if r[1] in ("noun", "adj")]
+                    if cand_lems:
+                        return cand_lems[0].capitalize()
+                return val.capitalize()
+
+    # 2. Numbered sections
     for line in lines[:15]:
         m_num_sec = re.match(r"^\d+[\.\s]+([А-ЯІЇЄҐ][а-яіїєґ0-9\s'-]{3,40})", line)
         if m_num_sec:
@@ -1116,24 +1357,14 @@ def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: st
             val = clean_and_validate_candidate(m_sec.group(1))
             if val:
                 return val
-        m_tema = re.match(r"^(?:тема|розділ)\s*\d*[\.\s]+([^.\n?]+)", line, re.IGNORECASE)
-        if m_tema:
-            val = clean_and_validate_candidate(m_tema.group(1))
-            if val:
-                return val
-        m_def = re.match(r"^([А-ЯІЇЄҐ][а-яіїєґa-zA-Z\s'-]{2,35})\s+[—–-]\s+це\b", line)
-        if m_def:
-            val = clean_and_validate_candidate(m_def.group(1))
-            if val:
-                return val
 
-    # Try chunk title if meaningful
+    # 3. Try chunk title if meaningful and not "Сторінка"
     if chunk_title and not chunk_title.lower().startswith("сторінка"):
         val = clean_and_validate_candidate(chunk_title)
         if val:
             return val
 
-    # Try bold/heading line grounded in chunk
+    # 4. Try bold/heading line grounded in chunk
     for line in lines[:10]:
         m_bold = re.match(r"^([А-ЯІЇЄҐ][а-яіїєґ\s'-]{4,40})$", line)
         if m_bold:
@@ -1141,11 +1372,10 @@ def extract_key_concept(chunk: TextbookChunk | str, title: str = "", subject: st
             if val:
                 return val
 
-    # Try canonical terms present in chunk text
+    # 5. Try canonical terms present in chunk text
     text_lower = text.lower()
     for ct in CANONICAL_SUBJECT_TERMINOLOGY.get(subj, []):
-        stem = ct[:len(ct) - 1] if len(ct) > 4 else ct
-        if stem in text_lower:
+        if ct.lower() in text_lower:
             return ct.capitalize()
 
     return ""
@@ -1157,107 +1387,72 @@ def extract_scientific_terminology_for_snippet(
     subject: str,
     cur_ves: sqlite3.Cursor | None = None,
 ) -> list[str]:
-    """Extract terms strictly guaranteed to appear in snippet or concept."""
+    """Extract authentic scientific terms as dictionary lemmas, strictly excluding pronouns, function words, and concept circularity."""
     cur = cur_ves or get_vesum_cursor()
-
-    def _get_lemma(word: str) -> str:
-        if cur is None:
-            return word
-        try:
-            cur.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (word,))
-            row = cur.fetchone()
-            return row[0] if row else word
-        except Exception:
-            return word
-
-    def _has_noun_reading(word: str) -> bool:
-        if cur is None:
-            return not word.endswith(("ий", "ій", "а", "я", "е", "є", "их", "і", "им", "ій", "ою", "ими"))
-        try:
-            cur.execute("SELECT tags FROM forms_all WHERE word_form = ?", (word,))
-            rows = cur.fetchall()
-            if not rows:
-                return True
-            return any(r[0].startswith("noun") for r in rows)
-        except Exception:
-            return True
-
     snip_lower = snippet.lower()
     conc_lower = concept.lower()
+    conc_lemmas = get_vesum_lemmas(concept, cur)
+
+    canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(subject, [])
     candidate_terms: list[str] = []
 
-    # 1. Subject canonical terms present directly in snippet
-    canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(subject, [])
+    # 1. Subject canonical terms present directly in snippet (preserve compound terms!)
+    snip_lemmas = get_vesum_lemmas(snippet, cur)
     if isinstance(canonical_list, list):
         for ct in canonical_list:
-            ct_words = ct.split()
-            if len(ct_words) == 1:
-                stem = ct[:len(ct) - 1] if len(ct) > 4 else ct
-                for sw in re.findall(r"[а-яіїєґ']+", snip_lower):
-                    if sw.startswith(stem) and sw not in STOPWORD_TERMS and len(sw) >= 4 and sw not in candidate_terms:
-                        candidate_terms.append(sw)
-            else:
-                if ct in snip_lower and ct not in candidate_terms:
-                    candidate_terms.append(ct)
-
-    # 2. Extract substantive domain nouns directly from snippet
-    for w in re.findall(r"[а-яіїєґ']+", snip_lower):
-        if len(w) >= 4 and w not in STOPWORD_TERMS and w != conc_lower and _has_noun_reading(w) and w not in candidate_terms:
-            candidate_terms.append(w)
-
-    # Note: Do not append concept itself to candidate terms (eliminates circularity)
-
-    # 3. Filter candidate terms: reject bare adjectives and stopwords
-    filtered_terms: list[str] = []
-    for t in candidate_terms:
-        words = [w for w in re.findall(r"[а-яіїєґ']+", t.lower()) if w not in STOPWORD_TERMS and len(w) >= 4]
-        if not words:
-            continue
-        if len(words) == 1 and not _has_noun_reading(words[0]):
-            continue
-        head_word = words[-1]
-        if not _has_noun_reading(head_word):
-            continue
-        filtered_terms.append(t)
-
-    # 4. Strict subset deduplication
-    deduped_subset: list[str] = []
-    for t in filtered_terms:
-        t_words = set(re.findall(r"[а-яіїєґ']+", t.lower()))
-        is_sub = False
-        for other in filtered_terms:
-            if other == t:
+            ct_lower = ct.lower()
+            if ct_lower == conc_lower or ct_lower in conc_lemmas:
                 continue
-            other_words = set(re.findall(r"[а-яіїєґ']+", other.lower()))
-            if t_words.issubset(other_words) and len(t) < len(other):
-                is_sub = True
-                break
-            if t.lower() in other.lower() and len(t) < len(other):
-                is_sub = True
-                break
-        if not is_sub:
-            deduped_subset.append(t)
+            ct_words = ct_lower.split()
+            if len(ct_words) == 1:
+                if ct_lower in STOPWORD_TERMS:
+                    continue
+                ct_lemmas = get_vesum_lemmas(ct_lower, cur)
+                if ((ct_lemmas and ct_lemmas & snip_lemmas) or (ct_lower in snip_lower)) and ct_lower not in candidate_terms:
+                    candidate_terms.append(ct_lower)
+            else:
+                ct_w_lemmas = [get_vesum_lemmas(cw, cur) or {cw} for cw in ct_words]
+                has_compound = ct_lower in snip_lower or (bool(ct_w_lemmas) and all(bool(cw_lem & snip_lemmas) for cw_lem in ct_w_lemmas))
+                if has_compound and ct_lower not in candidate_terms:
+                    candidate_terms.append(ct_lower)
 
-    # 5. Deduplicate by head-word lemma
-    final_terms: list[str] = []
-    seen_lemmas: set[str] = set()
-    for t in deduped_subset:
-        words = [w for w in re.findall(r"[а-яіїєґ']+", t.lower()) if w not in STOPWORD_TERMS and len(w) >= 4]
-        if not words:
+    # 2. Extract substantive domain nouns directly from snippet via VESUM
+    tokens = re.findall(r"[а-яіїєґ']+", snip_lower)
+    for tok in tokens:
+        if len(tok) < 3 or tok in STOPWORD_TERMS:
             continue
-        head_word = words[-1]
-        lemma = _get_lemma(head_word)
-        if lemma in seen_lemmas:
+        rows = get_vesum_word_info(tok, cur)
+        if not rows:
             continue
-        seen_lemmas.add(lemma)
-        final_terms.append(t)
+        # Reject if ANY reading is a pronoun
+        if any("pron" in r[2] or r[1] == "pronoun" for r in rows):
+            continue
+        # Reject if only function word/predicative readings
+        if not any(r[1] in ("noun", "adj") for r in rows):
+            continue
+        # Extract noun/adj lemmas
+        tok_lemmas = {r[0].lower() for r in rows if r[1] in ("noun", "adj")}
+        for lem in tok_lemmas:
+            if lem in STOPWORD_TERMS or lem in conc_lemmas or lem == conc_lower:
+                continue
+            if is_vesum_pronoun(lem, cur):
+                continue
+            if len(lem) < 3:
+                continue
+            if lem not in candidate_terms:
+                candidate_terms.append(lem)
+                break
 
-    # 6. Strict containment verification: EVERY term must be in snippet and NOT identical to concept
-    verified_terms = [
-        t for t in final_terms
-        if t.lower() in snip_lower and t.lower().strip() != conc_lower.strip()
-    ]
-    return verified_terms[:4]
+    # 3. Subsumption: if multi-word compound present, drop isolated single-word parts
+    multi_word = [t for t in candidate_terms if " " in t]
+    filtered: list[str] = []
+    for t in candidate_terms:
+        if " " not in t and any(t in mw.split() for mw in multi_word):
+            continue
+        if t not in filtered:
+            filtered.append(t)
+
+    return filtered[:5]
 
 
 def extract_scientific_terminology(
@@ -1277,10 +1472,10 @@ def extract_scientific_terminology(
 
 def synthesize_eval_task(chunk: TextbookChunk, idx: int) -> dict[str, Any]:
     """Synthesize a structured held-out evaluation task tailored to subject discipline."""
-    concept = extract_key_concept(chunk)
-    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
+    concept = chunk.concept or extract_key_concept(chunk)
+    snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
     snippet = apply_calque_sanitation(snippet)
-    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject)
+    terms = chunk.terms or extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject)
     subj_gen = chunk.subject_genitive
     subj_nom = chunk.subject_nominative
     grade = chunk.grade
@@ -1445,10 +1640,10 @@ def synthesize_trajectory(
     cur_ves: sqlite3.Cursor | None = None,
 ) -> dict[str, Any]:
     """Synthesize a complete multi-turn instructional reasoning trajectory from a textbook chunk."""
-    concept = extract_key_concept(chunk)
-    snippet = extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
+    concept = chunk.concept or extract_key_concept(chunk)
+    snippet = chunk.snippet or extract_meaningful_text_snippet(chunk.text, concept=concept, max_len=260)
     snippet = apply_calque_sanitation(snippet)
-    terms = extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
+    terms = chunk.terms or extract_scientific_terminology_for_snippet(snippet, concept, chunk.subject, cur_ves=cur_ves)
 
     vesum_records: list[dict[str, Any]] = []
     attested_lemmas: list[str] = []
@@ -1611,6 +1806,8 @@ def generate_evaluation_benchmark(
 ) -> tuple[dict[str, Any], str, dict[str, int], dict[str, int]]:
     """Generate held-out evaluation tasks stratified across all 22 held-out textbooks."""
     eval_dir.mkdir(parents=True, exist_ok=True)
+    for f in eval_dir.glob("eval_shard_*.jsonl"):
+        f.unlink()
     schema = json.loads(SCHEMA_EVAL_PATH.read_text(encoding="utf-8"))
     validator = jsonschema.Draft202012Validator(schema)
 
@@ -1726,6 +1923,8 @@ def generate_sft_dataset(
 ) -> tuple[dict[str, Any], str, dict[str, int], dict[str, int], int]:
     """Generate multi-turn instructional trajectories balanced across curriculum subjects."""
     sft_dir.mkdir(parents=True, exist_ok=True)
+    for f in sft_dir.glob("sft_shard_*.jsonl"):
+        f.unlink()
     trajectories_per_shard = target_count // shards_count
     if trajectories_per_shard * shards_count != target_count:
         raise ValueError("Target count must divide evenly by shards")
@@ -1940,7 +2139,8 @@ def verify_snippet_concept_grounding(eval_dir: Path, sft_dir: Path) -> bool:
 
 
 def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
-    """Verify that 100% of scientific terms appear directly in the snippet and are non-circular."""
+    """Verify that 100% of scientific terms are valid non-pronoun lemmas present in the snippet and non-circular."""
+    cur = get_vesum_cursor()
     for p in list(eval_dir.glob("eval_shard_*.jsonl")) + list(sft_dir.glob("sft_shard_*.jsonl")):
         with p.open("r", encoding="utf-8") as f:
             for line in f:
@@ -1954,11 +2154,17 @@ def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
                     sol = d.get("reference_solution") or d.get("final_response") or ""
                     m = re.search(r"«([^»]{20,})»", sol)
                     snip = m.group(1).lower() if m else ""
+                snip_lemmas = get_vesum_lemmas(snip, cur)
                 for t in terms:
                     t_clean = t.strip().lower()
                     if t_clean == concept:
                         return False
-                    if snip and t_clean not in snip:
+                    if t_clean in STOPWORD_TERMS:
+                        return False
+                    if is_vesum_pronoun(t_clean, cur):
+                        return False
+                    t_lemmas = get_vesum_lemmas(t_clean, cur) or {t_clean}
+                    if not (t_clean in snip or (t_lemmas & snip_lemmas)):
                         return False
     return True
 
