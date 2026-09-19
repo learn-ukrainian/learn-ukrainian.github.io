@@ -258,6 +258,36 @@ def test_combining_mark_does_not_split_a_word_or_open_a_boundary():
     assert len(v.quote_word_tokens(f"{marked} s")) == 2
 
 
+def test_standalone_combining_marks_are_too_short_and_cannot_ground_a_match():
+    marks = "\u0301 \u0301 \u0301"
+    client = FakeClient()
+    receipt = v.verify_citation(_case(quote=marks, source=marks), client=client)
+    assert client.calls == []
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["reason"] == "quote_too_short"
+    assert receipt["decided_by"] == "deterministic"
+    assert receipt["accepted"] is False
+    assert v.quote_word_tokens(marks) == []
+    assert v.quote_occurs_in_source(marks, marks) is False
+
+    yes = "yes \u0301 \u0301"
+    padded = FakeClient()
+    review = v.verify_citation(_case(quote=yes, source=yes), client=padded)
+    assert padded.calls == []
+    assert review["verdict"] == "needs_human_review"
+    assert review["reason"] == "quote_too_short"
+    assert review["decided_by"] == "deterministic"
+    assert v.quote_word_tokens(yes) == ["yes"]
+
+    mixed = FakeClient()
+    quote = "one two three [...] \u0301"
+    source = "one two three \u0301"
+    miss = v.verify_citation(_case(quote=quote, source=source), client=mixed)
+    assert mixed.calls == []
+    assert miss["verdict"] == "fabricated"
+    assert miss["decided_by"] == "deterministic"
+
+
 def test_internal_apostrophe_is_one_word_and_a_prefix_does_not_match():
     assert v.quote_word_tokens("п'ять") == ["п'ять"]
     assert v.quote_word_tokens("м'який") == ["м'який"]

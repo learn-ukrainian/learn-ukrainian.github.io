@@ -11,11 +11,14 @@ Pipeline, per citation ``{id, claim, quote, source_text}``:
    ``…``) splits it; every segment must occur in the source, in order, and
    on a word boundary. An apostrophe is a word character only between two
    word characters (``п'ять``); at a word edge it is punctuation. A combining
-   mark stays inside the word, including one NFC cannot compose. No fuzzy
-   match. Checks, in order: a non-string or empty quote or source is
-   ``fabricated``; a quote with fewer than ``MIN_QUOTE_WORD_TOKENS`` word
-   tokens, including zero, is ``needs_human_review`` (``quote_too_short``)
-   and the model is not called; then a miss is ``fabricated``.
+   mark stays inside the word it follows, including one NFC cannot compose.
+   A token counts as a word only when it contains a letter or digit, so a
+   run of combining marks alone does not. No fuzzy match. Checks, in order:
+   a non-string or empty quote or source is ``fabricated``; a quote with
+   fewer than ``MIN_QUOTE_WORD_TOKENS`` word tokens, including zero, or whose
+   every elision segment lacks a letter or digit, is ``needs_human_review``
+   (``quote_too_short``) and the model is not called; a segment with no
+   letter or digit cannot ground a match; then a miss is ``fabricated``.
 2. **One System One request.** A single Choice — ``supports`` /
    ``contradicts`` / ``says_nothing`` — judged on the source passage versus
    the claim. Thresholds live in ``ACCEPT_CONFIDENCE``, not in the prompt.
@@ -60,7 +63,8 @@ from scripts.typesafe.client import (
 ACCEPT_CONFIDENCE = 0.80
 # A quote this short cannot show that the source says the claim. Count is
 # word tokens after ``normalize_for_match``. Zero tokens (``!!!``) are included.
-# An apostrophe counts only when it sits inside the word.
+# An apostrophe counts only when it sits inside the word. A token counts only
+# when it contains a letter or digit; combining marks alone do not.
 MIN_QUOTE_WORD_TOKENS = 3
 # Float noise only. A distribution that is off by a percentage point is malformed.
 PROBABILITY_SUM_TOLERANCE = 1e-6
@@ -168,11 +172,28 @@ def _is_word_char_at(text: str, index: int) -> bool:
     return _is_word_char(text[index - 1]) and _is_word_char(text[index + 1])
 
 
+def _has_letter_or_digit(text: str) -> bool:
+    """True when ``text`` contains a Unicode letter or digit.
+
+    ``str.isalnum`` is false for combining marks, so a token or segment of
+    marks alone fails this bar. Check each character: ``"п'ять".isalnum()``
+    is false because of the apostrophe, but the word still has letters.
+    """
+    return any(char.isalnum() for char in text)
+
+
+def _elision_segments(normalized_quote: str) -> list[str]:
+    """Non-empty pieces of an already normalised quote, split on elision markers."""
+    segments = [part.strip() for part in _ELISION.split(normalized_quote)]
+    return [part for part in segments if part]
+
+
 def quote_word_tokens(text: str) -> list[str]:
     """Word tokens of ``text`` after ``normalize_for_match``.
 
     An apostrophe between two word characters does not split the token.
-    A combining mark stays on the same token as the base letter.
+    A combining mark stays on the same token as the base letter. The token
+    counts only when it contains a letter or digit.
     """
     normalized = normalize_for_match(text)
     tokens: list[str] = []
@@ -185,7 +206,9 @@ def quote_word_tokens(text: str) -> list[str]:
         end = index + 1
         while end < length and _is_word_char_at(normalized, end):
             end += 1
-        tokens.append(normalized[index:end])
+        token = normalized[index:end]
+        if _has_letter_or_digit(token):
+            tokens.append(token)
         index = end
     return tokens
 
@@ -216,18 +239,21 @@ def quote_occurs_in_source(quote: str, source: str) -> bool:
 
     Empty quote or empty source is a miss. Matching is exact after
     ``normalize_for_match`` — not fuzzy and not token overlap. Each segment
-    must align to word boundaries in the normalised source.
+    must align to word boundaries in the normalised source. A segment with
+    no letter or digit cannot ground a match, even if those marks occur in
+    the source.
     """
     normalized_quote = normalize_for_match(quote)
     normalized_source = normalize_for_match(source)
     if not normalized_quote or not normalized_source:
         return False
-    segments = [part.strip() for part in _ELISION.split(normalized_quote)]
-    segments = [part for part in segments if part]
+    segments = _elision_segments(normalized_quote)
     if not segments:
         return False
     cursor = 0
     for segment in segments:
+        if not _has_letter_or_digit(segment):
+            return False
         found = _find_at_word_boundary(normalized_source, segment, cursor)
         if found < 0:
             return False
@@ -372,7 +398,11 @@ def verify_citation(
     ):
         return _base_receipt(case, verdict="fabricated", decided_by="deterministic")
     token_count = len(quote_word_tokens(quote))
-    if token_count < MIN_QUOTE_WORD_TOKENS:
+    segments = _elision_segments(normalize_for_match(quote))
+    # ``not any`` is also true when elision ate the whole quote. A quote whose
+    # every remaining segment lacks a letter or digit is too short, not a miss.
+    every_segment_lacks_letter = not any(_has_letter_or_digit(segment) for segment in segments)
+    if token_count < MIN_QUOTE_WORD_TOKENS or every_segment_lacks_letter:
         receipt = _base_receipt(case, verdict="needs_human_review", decided_by="deterministic")
         receipt["reason"] = "quote_too_short"
         return receipt
