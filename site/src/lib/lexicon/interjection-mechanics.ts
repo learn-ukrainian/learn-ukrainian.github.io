@@ -13,7 +13,7 @@
  *        * Greetings and farewells (добрий день, добрий вечір, до побачення, на добраніч, бувайте)
  *        * Gratitude, apology, politeness (будь ласка, дякую, пробачте, перепрошую, вибачте)
  *   2. Onomatopoeic Words (звуконаслідувальні слова per § 35, п. 5, 4)):
- *      - Inanimate nature, water, machinery, clocks, bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок)
+ *      - Inanimate nature, water, machinery, clocks, bells (дзень-дзелень, тік-так, кап-кап, хлюп-хлюп, цок-цок)
  *      - Animals and birds (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква)
  *   3. Orthography of Interjections:
  *      - Hyphenated spelling:
@@ -185,9 +185,9 @@ export function resolveOnomatopoeiaNatureMechanicsRule(): InterjectionRuleResolu
   return {
     citation: 'Правопис 2019 § 35, п. 5, 4); СУМ-20',
     ruleUa:
-      'Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 35, п. 5, 4).',
+      'Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, кап-кап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 35, п. 5, 4).',
     ruleEn:
-      'Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 35, p. 5, 4).',
+      'Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, кап-кап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 35, p. 5, 4).',
   };
 }
 

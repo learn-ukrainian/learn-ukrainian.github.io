@@ -11,7 +11,7 @@ Categories (12 categories x 5 cards = 60 canonical practice cards):
  4. interjection_volitional_animal          - Animal Calls and Driving (киць-киць, киш, тпру, но, вйо) [Академічна граматика; СУМ-20]
  5. interjection_etiquette_greeting_farewell- Greeting and Farewell (добрий день, добрий вечір, до побачення, на добраніч, бувайте) [Правопис 2019 § 41, п. 2]
  6. interjection_etiquette_gratitude_apology- Gratitude, Apology, Politeness (будь ласка, дякую, пробачте, перепрошую, вибачте) [Правопис 2019 § 41, п. 2]
- 7. interjection_onomatopoeia_nature_mechanics - Nature, Clocks, Bells, Water (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок) [Правопис 2019 § 35, п. 5, 4)]
+ 7. interjection_onomatopoeia_nature_mechanics - Nature, Clocks, Bells, Water (дзень-дзелень, тік-так, кап-кап, хлюп-хлюп, цок-цок) [Правопис 2019 § 35, п. 5, 4)]
  8. interjection_onomatopoeia_animal_sounds - Animal and Bird Sounds (гав-гав, няв-няв, ку-ку, кар-кар, ква-ква) [Правопис 2019 § 35, п. 5, 4)]
  9. interjection_spelling_hyphen_repeated   - Repeated & Echoed Interjections (ой-ой-ой, ха-ха-ха, ай-яй-яй, дзень-дзелень, тук-тук) [Правопис 2019 § 35, п. 5, 4)]
 10. interjection_spelling_particles_hyphen  - Enclitic Particles -бо, -но, -то & Idioms (годі-бо, ну-бо, давай-но, їй-богу, їй-право) [Правопис 2019 § 35, п. 5, 4), § 44, п. 3, 1)]
@@ -158,8 +158,8 @@ def resolve_etiquette_gratitude_apology_rule() -> tuple[str, str, str]:
 
 def resolve_onomatopoeia_nature_mechanics_rule() -> tuple[str, str, str]:
     cit = "Правопис 2019 § 35, п. 5, 4); СУМ-20"
-    ua = "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 35, п. 5, 4)."
-    en = "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, крап-крап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 35, p. 5, 4)."
+    ua = "Звуконаслідувальні слова відтворюють звуки неживої природи, води, механізмів, годинників чи дзвоників (дзень-дзелень, тік-так, кап-кап, хлюп-хлюп, цок-цок). Повторювані або відлунні звуконаслідування пишуться через дефіс per § 35, п. 5, 4)."
+    en = "Onomatopoeic words imitate sounds of inanimate nature, water, machinery, clocks, or bells (дзень-дзелень, тік-так, кап-кап, хлюп-хлюп, цок-цок). Repeated or echoic onomatopoeias are spelled with a hyphen per § 35, p. 5, 4)."
     return cit, ua, en
 
 
@@ -2198,7 +2198,7 @@ def is_valid_vesum_token(cursor: sqlite3.Cursor, raw_token: str) -> bool:
         if not all(p and word_re.match(p) for p in parts):
             return False
 
-        # Case A: Exact reduplication (e.g. гав-гав, крап-крап, хлюп-хлюп, цок-цок) per § 35, п. 5, 4)
+        # Case A: Exact reduplication (e.g. гав-гав, кап-кап, хлюп-хлюп, цок-цок) per § 35, п. 5, 4)
         if len(set(parts)) == 1:
             base = parts[0]
             cursor.execute(

@@ -247,6 +247,31 @@ def test_card_45_distractor_exclusivity_regression():
     assert "годинника" in d_tik_tak.explanation_ua
 
 
+def test_card_33_feedback_and_rule_summary_regression():
+    """Verify that Card 33 and Nature Mechanics category teach 'кап-кап' and not 'крап-крап' (Astra R5)."""
+    cit, ua, en = resolve_onomatopoeia_nature_mechanics_rule()
+    assert "§ 35" in cit
+    assert "кап-кап" in ua
+    assert "кап-кап" in en
+    assert "крап-крап" not in ua
+    assert "крап-крап" not in en
+
+    cards = build_canonical_interjection_cards()
+    nature_cards = [c for c in cards if c.category == InterjectionCategory.ONOMATOPOEIA_NATURE_MECHANICS]
+    assert len(nature_cards) == 5
+    for c in nature_cards:
+        assert "кап-кап" in c.rule_summary_ua
+        assert "кап-кап" in c.rule_summary_en
+        assert "крап-крап" not in c.rule_summary_ua
+        assert "крап-крап" not in c.rule_summary_en
+
+    c33 = next(c for c in cards if c.card_id == "interjection_card_33")
+    assert c33.target_token == "кап-кап"
+    assert c33.correct_answer == "Кап-кап"
+    assert "кап-кап" in c33.rule_summary_ua
+    assert "крап-крап" not in c33.rule_summary_ua
+
+
 def test_syntax_punctuation_particle_vs_interjection():
     """Verify syntax discrimination: vocative particle without comma vs interjection with comma."""
     cards = build_canonical_interjection_cards()

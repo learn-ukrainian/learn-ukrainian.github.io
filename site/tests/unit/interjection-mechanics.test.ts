@@ -196,4 +196,43 @@ describe('interjection-mechanics', () => {
     expect(evalResult.misconceptionType).toBe('INCORRECT_SOUND_SOURCE');
     expect(evalResult.feedbackUa).toContain('годинника');
   });
+
+  it('verifies Card 33 feedback and Nature Mechanics rule teach кап-кап and not stale крап-крап', () => {
+    const natureRule = resolveOnomatopoeiaNatureMechanicsRule();
+    expect(natureRule.ruleUa).toContain('кап-кап');
+    expect(natureRule.ruleEn).toContain('кап-кап');
+    expect(natureRule.ruleUa).not.toContain('крап-крап');
+    expect(natureRule.ruleEn).not.toContain('крап-крап');
+
+    const deckPath = path.resolve(
+      __dirname,
+      '../../../data/practice/interjection_mechanics_deck.json',
+    );
+    const rawData = fs.readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(rawData) as InterjectionMechanicsDeckPayload;
+
+    const card33 = deck.cards.find((c) => c.id === 'interjection_card_33');
+    expect(card33).toBeDefined();
+    expect(card33!.correct_answer).toBe('Кап-кап');
+    expect(card33!.target_token).toBe('кап-кап');
+    expect(card33!.rule_summary.ua).toContain('кап-кап');
+    expect(card33!.rule_summary.en).toContain('кап-кап');
+    expect(card33!.rule_summary.ua).not.toContain('крап-крап');
+    expect(card33!.rule_summary.en).not.toContain('крап-крап');
+
+    const evalResult = interjectionMechanicsFeedbackFor(card33!, 'Кап-кап');
+    expect(evalResult.isCorrect).toBe(true);
+    expect(evalResult.feedbackUa).toContain('Кап-кап');
+
+    const natureCards = deck.cards.filter(
+      (c) => c.category === 'interjection_onomatopoeia_nature_mechanics',
+    );
+    expect(natureCards).toHaveLength(5);
+    for (const card of natureCards) {
+      expect(card.rule_summary.ua).toContain('кап-кап');
+      expect(card.rule_summary.en).toContain('кап-кап');
+      expect(card.rule_summary.ua).not.toContain('крап-крап');
+      expect(card.rule_summary.en).not.toContain('крап-крап');
+    }
+  });
 });
