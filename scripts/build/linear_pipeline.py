@@ -52,13 +52,13 @@ from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.audit.module_size_policy_audit import markdown_module_evidence
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build.alphabet_modules import (
-    blank_empty_sign_choices,
+    filter_dropped_original_paragraphs,
     filter_line_break_activities,
     filter_line_break_lesson_map,
-    filter_line_break_paragraphs,
     filter_line_break_plan,
     filter_line_break_resources,
     is_alphabet_slug,
+    legal_original_activities,
     line_break_free_titles,
     line_break_original_keys,
 )
@@ -1127,14 +1127,19 @@ def _plan_content_for_prompt(plan: Mapping[str, Any], plan_content: str) -> str:
 
 
 def _original_artifact_for_prompt(plan: Mapping[str, Any], name: str, text: str) -> str:
-    """Original artifact text for the upgrade prompt; alphabet slugs lose line-break teaching and worded empty-sign choices."""
+    """Original artifact text for the upgrade prompt.
+
+    Alphabet slugs lose what the upgrade gates reject: line-break teaching,
+    banned learner phrases, worded empty-sign choices and error-token options.
+    The preservation gate compares against the same filtered original.
+    """
     if not is_alphabet_slug(plan.get("slug")):
         return text
     if name == "module.md":
-        return filter_line_break_paragraphs(text)
+        return filter_dropped_original_paragraphs(text)
     if name == "activities.yaml":
         data = yaml.safe_load(text)
-        data = blank_empty_sign_choices(filter_line_break_activities(data))
+        data = legal_original_activities(filter_line_break_activities(data))
         return yaml.safe_dump(data, allow_unicode=True, sort_keys=False)
     if name == "resources.yaml":
         data = yaml.safe_load(text)

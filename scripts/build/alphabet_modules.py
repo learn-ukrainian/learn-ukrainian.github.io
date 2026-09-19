@@ -73,6 +73,21 @@ def banned_phrases_in(text: str) -> list[str]:
     return [p for p in BANNED_LEARNER_PHRASES if p.casefold() in low]
 
 
+def mentions_banned_phrase(text: object) -> bool:
+    """True when ``text`` carries a banned learner phrase, hard-wrapped or not."""
+    return isinstance(text, str) and bool(banned_phrases_in(re.sub(r"\s+", " ", _plain(text))))
+
+
+def is_dropped_original_paragraph(text: object) -> bool:
+    """An original paragraph the upgrade must not carry forward.
+
+    It teaches line breaks or carries a banned learner phrase, so the lesson
+    gate rejects a verbatim copy; the prompt copy and the preservation baseline
+    both leave it out.
+    """
+    return mentions_line_breaks(text) or mentions_banned_phrase(text)
+
+
 def _has_match(value: Any) -> bool:
     if isinstance(value, str):
         return mentions_line_breaks(value)
@@ -239,6 +254,47 @@ def blank_empty_sign_choices(activities: Any) -> Any:
     ]
 
 
+def _choice_key(value: Any) -> str | None:
+    if isinstance(value, Mapping):
+        value = value.get("text")
+    return _plain(value).strip().casefold() if isinstance(value, str) else None
+
+
+def _drop_error_option(item: Any) -> Any:
+    if not isinstance(item, Mapping) or not isinstance(item.get("options"), list):
+        return item
+    error = next((_choice_key(item.get(k)) for k in ("error", "errorWord", "error_word") if item.get(k)), None)
+    if not error:
+        return item
+    return {**item, "options": [o for o in item["options"] if _choice_key(o) != error]}
+
+
+def legal_original_activity(activity: Any) -> Any:
+    """The part of an original activity an upgrade writer is allowed to keep.
+
+    The upgrade gates reject a worded empty-sign choice (the empty choice is
+    ``""``) and an error-correction option that repeats the ``error`` token.
+    The prompt copy and the preservation baseline both use this form, so a
+    writer who obeys those gates still preserves the original. ``sentence``,
+    ``error``, ``correction`` and every other option stay required.
+    """
+    if not isinstance(activity, Mapping) or not isinstance(activity.get("items"), list):
+        return activity
+    items = [_blank_empty_sign_item(i) for i in activity["items"]]
+    if activity.get("type") == "error-correction":
+        items = [_drop_error_option(i) for i in items]
+    return {**activity, "items": items}
+
+
+def legal_original_activities(activities: Any) -> Any:
+    """Apply ``legal_original_activity`` across a parsed ``activities.yaml``."""
+    if isinstance(activities, Mapping):
+        return {k: legal_original_activities(v) if isinstance(v, list) else v for k, v in activities.items()}
+    if not isinstance(activities, list):
+        return activities
+    return [legal_original_activity(a) for a in activities]
+
+
 def filter_line_break_resources(resources: Any) -> Any:
     """Drop line-break notes from a parsed ``resources.yaml``.
 
@@ -295,13 +351,13 @@ def filter_line_break_lesson_map(
     return out
 
 
-def filter_line_break_paragraphs(markdown: str) -> str:
-    """Drop paragraphs that teach line breaks, headings included.
+def filter_dropped_original_paragraphs(markdown: str) -> str:
+    """Drop paragraphs ``is_dropped_original_paragraph`` names, headings included.
 
     A kept ``## Перенос і письмо`` heading still orders the writer to build that
     lesson, so it goes too; its surviving paragraphs read on under the previous
     heading.
     """
     return "\n\n".join(
-        para for para in re.split(r"\n\s*\n", markdown) if not mentions_line_breaks(para)
+        para for para in re.split(r"\n\s*\n", markdown) if not is_dropped_original_paragraph(para)
     )

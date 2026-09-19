@@ -16,8 +16,11 @@ from scripts.audit.checks.activity_validation import check_error_correction_stem
 from scripts.build.alphabet_modules import (
     banned_phrases_in,
     contains_line_break_model,
+    filter_dropped_original_paragraphs,
     is_alphabet_slug,
+    is_dropped_original_paragraph,
     is_line_break_activity,
+    legal_original_activity,
     mentions_line_breaks,
 )
 
@@ -991,8 +994,12 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
         (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
-    base_secs = sections(base_md)
     alphabet = is_alphabet_slug(plan.get("slug"))
+    # The alphabet writer sees the filtered original, where a dropped heading
+    # (``## Перенос і письмо``) leaves its surviving paragraphs under the previous
+    # heading. Split the same text, so each paragraph is owed to the lesson the
+    # prompt shows it in (#8236).
+    base_secs = sections(filter_dropped_original_paragraphs(base_md) if alphabet else base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
     for title, body in base_secs.items():
         mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))
@@ -1002,11 +1009,12 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             if not (alphabet and mentions_line_breaks(title)):
                 block(f"baseline section {title!r} has no lesson mapping (checker config)")
             continue
-        # Alphabet modules must not teach line breaks, so original paragraphs that do
-        # are intentionally not carried forward (#8237).
+        # Alphabet modules must not teach line breaks or carry banned learner phrases,
+        # so original paragraphs that do are intentionally not carried forward
+        # (#8237, #8236).
         base_paras_by_lesson[mapped] += [
             p for p in paragraphs(body)
-            if len(p.split()) >= 8 and not (alphabet and mentions_line_breaks(p))
+            if len(p.split()) >= 8 and not (alphabet and is_dropped_original_paragraph(p))
         ]
     n_long = sum(len(v) for v in base_paras_by_lesson.values())
     report["facts"]["baseline"] = {"commit": ly.get("source_commit"), "prose_tokens": len(strip_comments(base_md).split()),
@@ -1267,7 +1275,10 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"provenance says {expected_id} in lesson {p.get('lesson')} but it lives in lesson {n}")
         if act.get("type") != a.get("type"):
             block(f"{expected_id}: type {a.get('type')} became {act.get('type')}")
-        payload = {k: v for k, v in a.items() if k in LIST_FIELDS}
+        # Compare against what the writer may legally keep: the archive's worded
+        # empty-sign chips and [correction, error] options fail the upgrade gates.
+        legal = legal_original_activity(a) if alphabet else a
+        payload = {k: v for k, v in legal.items() if k in LIST_FIELDS}
         if not payload:
             block(f"{expected_id}: original has no list payload to compare (checker config)")
         elif not contains(payload, {k: act.get(k) for k in payload}):
