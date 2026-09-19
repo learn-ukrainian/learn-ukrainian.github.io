@@ -1166,3 +1166,63 @@ def test_alphabet_preservation_baseline_drops_banned_phrase_paragraphs(gold):
     plan["slug"] = "things-have-gender"
     report = gates.run_lesson_gates(module, source, plan)
     assert report["facts"]["baseline"]["long_paragraphs"] == clean + 2
+
+
+# ── letter-module immersion floors (#7994) ───────────────────────────────────
+
+def _fail_letter_floors(monkeypatch, *, tab3=4, dialogue_short=False):
+    from scripts.build import linear_pipeline
+
+    def long_uk(*args, **kwargs):
+        return {"passed": False, "reason": "long_uk_without_gloss", "offending_runs": ["— Приві́т! Як спра́ви?"]}
+
+    def floor(*args, **kwargs):
+        required = {"uk_dialogue_lines": 10 if dialogue_short else 0, "uk_tab3_activities": 5}
+        return {"passed": False, "required": required,
+                "observed": {"uk_dialogue_lines": 3, "uk_tab3_activities": tab3}, "reason": "too_few"}
+
+    monkeypatch.setattr(linear_pipeline, "_long_uk_ceiling_gate", long_uk)
+    monkeypatch.setattr(linear_pipeline, "_l2_exposure_floor_gate", floor)
+
+
+def _floor_lines(lines):
+    return [d for d in lines if "long_uk_ceiling" in d or "l2_exposure_floor" in d]
+
+
+def test_alphabet_long_uk_and_four_tab3_activities_are_advisory(gold, monkeypatch):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _fail_letter_floors(monkeypatch)
+    report = gates.run_lesson_gates(module, source, plan)
+    assert _floor_lines(report["blocking"]) == []
+    assert len(_floor_lines(report["warnings"])) == 6  # both gates, three lessons
+    assert report["facts"]["immersion"][1]["long_uk_ceiling"]["passed"] is False  # still recorded
+
+
+def test_alphabet_floor_still_blocks_three_tab3_or_a_dialogue_shortfall(gold, monkeypatch):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _fail_letter_floors(monkeypatch, tab3=3)
+    blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
+    assert len([d for d in blocking if "l2_exposure_floor failed" in d]) == 3
+    _fail_letter_floors(monkeypatch, dialogue_short=True)
+    blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
+    assert len([d for d in blocking if "l2_exposure_floor failed" in d]) == 3
+
+
+def test_non_alphabet_a1_floors_stay_blocking(gold, monkeypatch):
+    module, source, plan = gold
+    _fail_letter_floors(monkeypatch)
+    report = gates.run_lesson_gates(module, source, plan)
+    assert len(_floor_lines(report["blocking"])) == 6
+    assert _floor_lines(report["warnings"]) == []
+
+
+def test_alphabet_preservation_does_not_require_original_ec_options(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_archive_originals(module, source, rewrite=True)
+    for path in module.glob("lesson-*/activities.yaml"):
+        data = yaml.safe_load(path.read_text())
+        for act in data.get("inline") or []:
+            if act.get("id") == "act-4":  # three distinct chips, none copied from a one-chip list
+                act["items"][0]["options"] = ["сімья", "сім'я́", "сім'йа"]
+        path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == []
