@@ -53,30 +53,30 @@ describe('numeral-mechanics', () => {
     expect(NUMERAL_MECHANICS_INTERFERENCE_KEYS).toContain('collective_with_adult_female');
   });
 
-  it('resolves cardinal declension rules accurately per §§ 106–108', () => {
+  it('resolves cardinal declension rules accurately per § 105', () => {
     const r50 = resolveCardinal5080Rule();
-    expect(r50.citation).toContain('§ 107');
+    expect(r50.citation).toContain('§ 105.4');
     expect(r50.ruleUa).toContain("п'ятдесяти");
     expect(r50.ruleEn).toContain('invariant');
 
     const r200g = resolveCardinal200900GenitiveRule();
-    expect(r200g.citation).toContain('§ 108');
+    expect(r200g.citation).toContain('§ 105.5');
     expect(r200g.ruleUa).toContain('двохсот');
     expect(r200g.ruleEn).toContain('Genitive');
 
     const r200d = resolveCardinal200900DativeLocativeRule();
-    expect(r200d.citation).toContain('§ 108');
+    expect(r200d.citation).toContain('§ 105.5');
     expect(r200d.ruleUa).toContain('-стам');
     expect(r200d.ruleEn).toContain('Locative');
 
     const r200i = resolveCardinal200900InstrumentalRule();
-    expect(r200i.citation).toContain('§ 108');
+    expect(r200i.citation).toContain('§ 105.5');
     expect(r200i.ruleUa).toContain('-стами');
     expect(r200i.ruleEn).toContain('Instrumental');
 
     const r40 = resolveCardinal4090100Rule();
-    expect(r40.citation).toContain('§ 106');
-    expect(r40.ruleUa).toContain('сорока, дев\'яноста, ста');
+    expect(r40.citation).toContain('§ 105.7');
+    expect(r40.ruleUa).toContain("сорока, дев'яноста, ста");
   });
 
   it('resolves government and collective rules accurately', () => {
@@ -92,18 +92,23 @@ describe('numeral-mechanics', () => {
     expect(gComp.ruleUa).toContain('останнім словом');
 
     const cMasc = resolveCollectiveMasculineRule();
+    expect(cMasc.citation).toContain('§ 105.6');
     expect(cMasc.ruleUa).toContain('троє друзів');
 
     const cFem = resolveCollectiveFeminineRestrictionRule();
+    expect(cFem.citation).toContain('§ 105.6');
     expect(cFem.ruleUa).toContain('НЕ вживаються');
 
     const cPlur = resolveCollectivePluraliaNeuterRule();
+    expect(cPlur.citation).toContain('§ 105.6');
     expect(cPlur.ruleUa).toContain('двоє дверей');
 
     const frac = resolveFractionalPivtoraRule();
+    expect(frac.citation).toContain('§ 107');
     expect(frac.ruleUa).toContain('родового відмінка ОДНИНИ');
 
     const ord = resolveOrdinalCompoundDeclensionRule();
+    expect(ord.citation).toContain('§ 106.2');
     expect(ord.ruleUa).toContain('ЛИШЕ ОСТАННЄ');
 
     const time = resolveTimeExpressionsRule();
@@ -204,10 +209,7 @@ describe('numeral-mechanics', () => {
   });
 
   it('evaluates all 75 committed cards across all 4 options without throwing', () => {
-    const deckPath = resolve(
-      __dirname,
-      '../../../data/practice/numeral_mechanics_deck.json',
-    );
+    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
     expect(existsSync(deckPath)).toBe(true);
 
     const content = readFileSync(deckPath, 'utf-8');

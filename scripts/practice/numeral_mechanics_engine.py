@@ -1,28 +1,30 @@
 """Ukrainian Numeral Deep Mechanics Practice Engine (Числівник).
 
 Implements Ukrainian Pravopys 2019 and Academic Grammar rules for:
-  - Part III, §§ 105–111: Морфологія — Числівник:
-    * § 105: Поділ числівників на кількісні (власне кількісні, дробові, збірні, неозначено-кількісні) та порядкові.
-    * § 106: Відмінювання числівників сорок, дев'яносто, сто:
-      - Мають лише дві відмінкові форми: закінчення -о в називному та знахідному (сорок, дев'яносто, сто)
-        і закінчення -а в усіх інших непрямих відмінках (сорока, дев'яноста, ста).
-    * § 107: Відмінювання числівників від 50 до 80 (п'ятдесят — вісімдесят):
-      - Відмінюється лише ДРУГА частина (-десят -> -десяти/-десятьох, -десятьом, -десятьма/-десятьома, на -десяти/-десятьох).
-      - Перша частина залишається незмінною (п'ят-, шіст-, сім-, вісім-).
-      - Викорінення суржикових кальок: *п'ятидесяти* ❌ -> п'ятдесяти ✅, *шестидесяти* ❌ -> шістдесяти ✅.
-    * § 108: Відмінювання числівників від 200 до 900 (двісті — дев'ятсот):
-      - Відмінюються ОБИДВІ частини:
-        * Родовий: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот, семисот, восьмисот, дев'ятисот (не *п'ятиста* ❌).
-        * Давальний: двомстам, трьомстам, чотирьомстам, п'ятистам, шістстам, семистам, вісімстам, дев'ятистам.
-        * Орудний: двомастами, трьомастами, чотирмастами, п'ятьмастами (п'ятьомастами), шістьмастами, сьомастами, восьмастами (вісьмастами), дев'ятьмастами.
-        * Місцевий: на двохстах, на трьохстах, на чотирьохстах, на п'ятистах, на шестистах.
-    * § 109: Відмінювання складених кількісних числівників (кожне слово відмінюється за своїм типом).
-    * § 110: Відмінювання порядкових числівників:
-      - У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово (у дві тисячі двадцять четвертому році).
-    * § 111: Збірні числівники (двоє, троє, четверо...):
-      - Сполучаються з іменниками чоловічого роду (назви істот: троє братів), іменниками середнього роду (четверо вікон, троє каченят)
-        та pluralia tantum (двоє дверей, троє саней).
-      - Не сполучаються з іменниками жіночого роду на позначення дорослих осіб (*двоє жінок* ❌ -> дві жінки ✅).
+  - Part III, §§ 105–107: Морфологія — Числівник:
+    * § 105: Кількісні числівники:
+      - § 105.4: Відмінювання числівників від 50 до 80 (п'ятдесят — вісімдесят):
+        * Відмінюється лише ДРУГА частина (-десят -> -десяти/-десятьох, -десятьом, -десятьма/-десятьома, на -десяти/-десятьох).
+        * Перша частина залишається незмінною (п'ят-, шіст-, сім-, вісім-).
+        * Викорінення суржикових кальок: *п'ятидесяти* ❌ -> п'ятдесяти ✅, *шестидесяти* ❌ -> шістдесяти ✅.
+      - § 105.5: Відмінювання числівників від 200 до 900 (двісті — дев'ятсот):
+        * Відмінюються ОБИДВІ частини:
+          - Родовий: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот, семисот, восьмисот, дев'ятисот (не *п'ятиста* ❌).
+          - Давальний: двомстам, трьомстам, чотирьомстам, п'ятистам, шістстам, семистам, вісімстам, дев'ятистам.
+          - Орудний: двомастами, трьомастами, чотирмастами, п'ятьмастами (п'ятьомастами), шістьмастами, сьомастами, восьмастами (вісьмастами), дев'ятьмастами.
+          - Місцевий: на двохстах, на трьохстах, на чотирьохстах, на п'ятистах, на шестистах.
+      - § 105.6: Збірні числівники (двоє, троє, четверо...):
+        * Сполучаються з іменниками чоловічого роду (назви істот: троє братів), іменниками середнього роду (четверо вікон, троє каченят)
+          та pluralia tantum (двоє дверей, троє саней).
+        * Не сполучаються з іменниками жіночого роду на позначення дорослих осіб (*двоє жінок* ❌ -> дві жінки ✅).
+      - § 105.7: Відмінювання числівників сорок, дев'яносто, сто:
+        * Мають лише дві відмінкові форми: закінчення -о в називному та знахідному (сорок, дев'яносто, сто)
+          і закінчення -а в усіх інших непрямих відмінках (сорока, дев'яноста, ста).
+    * § 106: Порядкові числівники:
+      - § 106.2: Відмінювання складених порядкових числівників:
+        * У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово (у дві тисячі двадцять четвертому році).
+    * § 107: Дробові числівники (півтора, півтори, дві третіх):
+      - Дробові числівники півтора, півтори керують родовим відмінком ОДНИНИ (півтора місяця, півтори доби).
   - Синтаксис керування числівників (Синтаксичні норми ЗНО/НМТ):
     * Числівники 2, 3, 4 керують називним відмінком множини (два брати, три олівці, чотири студенти; не *два брата* ❌).
     * Числівники 5+ керують родовим відмінком множини (п'ять братів, сім олівців).
@@ -157,35 +159,35 @@ class NumeralCard:
 
 
 def resolve_cardinal_50_80_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 107"
+    citation = "Правопис 2019 § 105.4"
     ua = "У числівниках на позначення десятків 50–80 (п'ятдесят — вісімдесят) відмінюється лише друга частина (-десят); перша частина ніколи не змінюється: п'ятдесяти (не *п'ятидесяти*), шістдесятьма (не *шестидесятьма*)."
     en = "In numerals 50–80 (п'ятдесят — вісімдесят), only the second root declines (-десят); the first root remains invariant: п'ятдесяти (not *п'ятидесяти*), шістдесятьма (not *шестидесятьма*)."
     return citation, ua, en
 
 
 def resolve_cardinal_200_900_genitive_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 108"
+    citation = "Правопис 2019 § 105.5"
     ua = "У числівниках на позначення сотень 200–900 у родовому відмінку відмінюються обидві частини, і друга частина має закінчення -сот: двохсот, трьохсот, чотирьохсот, п'ятисот, шестисот (не *п'ятиста*)."
     en = "In numerals 200–900 in the Genitive case, both roots decline and the second root ends in -сот: двохсот, трьохсот, п'ятисот, шестисот (not *п'ятиста*)."
     return citation, ua, en
 
 
 def resolve_cardinal_200_900_dative_locative_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 108"
+    citation = "Правопис 2019 § 105.5"
     ua = "У давальному відмінку числівники 200–900 мають закінчення -стам (двомстам, трьомстам, п'ятистам), а в місцевому — -стах (на двохстах, на трьохстах, на п'ятистах)."
     en = "In the Dative case, numerals 200–900 end in -стам (двомстам, п'ятистам); in the Locative case, they end in -стах (на двохстах, на п'ятистах)."
     return citation, ua, en
 
 
 def resolve_cardinal_200_900_instrumental_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 108"
+    citation = "Правопис 2019 § 105.5"
     ua = "В орудному відмінку числівники 200–900 мають закінчення -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (не *п'ятистами*)."
     en = "In the Instrumental case, numerals 200–900 end in -стами: двомастами, трьомастами, чотирмастами, п'ятьмастами (not *п'ятистами*)."
     return citation, ua, en
 
 
 def resolve_cardinal_40_90_100_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 106"
+    citation = "Правопис 2019 § 105.7"
     ua = "Числівники сорок, дев'яносто, сто мають лише дві форми: закінчення -о в називному й знахідному відмінках та закінчення -а в усіх непрямих відмінках (сорока, дев'яноста, ста)."
     en = "Numerals сорок, дев'яносто, сто have only two forms: ending -о in Nominative/Accusative and ending -а in all oblique cases (сорока, дев'яноста, ста)."
     return citation, ua, en
@@ -213,35 +215,35 @@ def resolve_government_compound_last_digit_rule() -> tuple[str, str, str]:
 
 
 def resolve_collective_masculine_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 111"
+    citation = "Правопис 2019 § 105.6"
     ua = "Збірні числівники (двоє, троє, четверо, п'ятеро тощо) природно вживаються з іменниками чоловічого роду — назвами осіб: двоє братів, троє друзів, четверо хлопців."
     en = "Collective numerals (двоє, троє, четверо...) naturally combine with masculine animate nouns denoting persons: двоє братів, троє друзів, четверо хлопців."
     return citation, ua, en
 
 
 def resolve_collective_feminine_restriction_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 111"
+    citation = "Правопис 2019 § 105.6"
     ua = "Збірні числівники НЕ вживаються з іменниками жіночого роду на позначення дорослих осіб: вживаються лише власне кількісні числівники — дві жінки (не *двоє жінок*), три сестри (не *троє сестер*)."
     en = "Collective numerals are NOT used with feminine nouns denoting adult persons: only cardinal numerals are admissible — дві жінки (not *двоє жінок*), три сестри (not *троє сестер*)."
     return citation, ua, en
 
 
 def resolve_collective_pluralia_neuter_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 111"
+    citation = "Правопис 2019 § 105.6"
     ua = "Збірні числівники обов'язково вживаються з іменниками, що мають лише форму множини (pluralia tantum: двоє дверей, троє ножиць, двоє саней), а також із назвами малят (четверо каченят)."
     en = "Collective numerals are mandatory with pluralia tantum nouns (двоє дверей, троє ножиць, двоє саней) and neuter nouns denoting young animals/beings (четверо каченят)."
     return citation, ua, en
 
 
 def resolve_fractional_pivtora_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 105"
+    citation = "Правопис 2019 § 107"
     ua = "Дробові числівники півтора (для чоловічого та середнього роду) і півтори (для жіночого роду) завжди керують іменниками у формі родового відмінка ОДНИНИ: півтора року, півтори доби, півтора місяця."
     en = "Fractional numerals півтора (masc/neut) and півтори (fem) always govern nouns in the Genitive SINGULAR: півтора року, півтори доби, півтора місяця."
     return citation, ua, en
 
 
 def resolve_ordinal_compound_declension_rule() -> tuple[str, str, str]:
-    citation = "Правопис 2019 § 110"
+    citation = "Правопис 2019 § 106.2"
     ua = "У складених порядкових числівниках відмінюється ЛИШЕ ОСТАННЄ слово; усі попередні слова зберігають початкову форму називного відмінка: у дві тисячі двадцять четвертому році (не *у двох тисячах*)."
     en = "In compound ordinal numerals, ONLY the last word inflects; all preceding words remain in the Nominative: у дві тисячі двадцять четвертому році (not *у двох тисячах*)."
     return citation, ua, en
@@ -306,8 +308,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="п'ятьдесят",
                     interference_type=NumeralInterferenceType.INFLECTED_FIRST_ROOT_50_80,
-                    explanation_ua="Написання *п'ятьдесят* із м'яким знаком у середині слова суперечить правопису (§ 107).",
-                    explanation_en="Spelling *п'ятьдесят* with a soft sign in the middle violates orthography rules.",
+                    explanation_ua="Написання *п'ятьдесят* із м'яким знаком у середині слова суперечить правопису (§ 105.4).",
+                    explanation_en="Spelling *п'ятьдесят* with a soft sign in the middle violates orthography rules (§ 105.4).",
                 ),
             ),
             rule_citation=cit_50_80,
@@ -1568,10 +1570,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                     explanation_en="'трійка' is a noun, not a numeral, and carries a different grammatical meaning.",
                 ),
                 NumeralDistractor(
-                    text="трійко",
-                    interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="'Трійко' — це іменник зі зменшувально-пестливим значенням, ненормативний для офіційного контексту.",
-                    explanation_en="'Трійко' is a diminutive noun form, non-standard as a core numeral.",
+                    text="трьома",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма орудного відмінка 'трьома' не може виступати частиною називного підмета.",
+                    explanation_en="Instrumental form 'трьома' cannot function as part of the nominative subject.",
                 ),
             ),
             rule_citation=cit_coll_masc,
@@ -1599,10 +1601,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                     explanation_en="'Двійка' is a noun denoting a grade or pair, not a grammatical numeral.",
                 ),
                 NumeralDistractor(
-                    text="двійко",
-                    interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="'Двійко' є розмовно-пестливим іменником, а не нормативним числівником.",
-                    explanation_en="'Двійко' is a colloquial diminutive noun, not standard numeral syntax.",
+                    text="двома",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма орудного відмінка 'двома' не може виступати частиною називного підмета.",
+                    explanation_en="Instrumental form 'двома' cannot function as part of the nominative subject.",
                 ),
             ),
             rule_citation=cit_coll_masc,
@@ -1649,10 +1651,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             correct_answer="п'ятеро",
             distractors=(
                 NumeralDistractor(
-                    text="п'ять",
-                    interference_type=NumeralInterferenceType.CARDINAL_WITH_PLURALIA_TANTUM,
-                    explanation_ua="На позначення сукупності осіб чоловічого роду найприроднішим є вживання збірного числівника 'п'ятеро'.",
-                    explanation_en="To denote a close male personal group, collective numeral 'п'ятеро' is the natural stylistic choice.",
+                    text="п'ятьма",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма орудного відмінка 'п'ятьма' не може виступати частиною називного підмета.",
+                    explanation_en="Instrumental form 'п'ятьма' cannot function as part of the nominative subject.",
                 ),
                 NumeralDistractor(
                     text="п'ятірка",
@@ -1680,10 +1682,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             correct_answer="шестеро",
             distractors=(
                 NumeralDistractor(
-                    text="шість",
-                    interference_type=NumeralInterferenceType.CARDINAL_WITH_PLURALIA_TANTUM,
-                    explanation_ua="Для підкреслення цілісності особистісної групи вживається збірний числівник 'шестеро'.",
-                    explanation_en="To emphasize collective group unity among persons, collective 'шестеро' is preferred.",
+                    text="шістьма",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма орудного відмінка 'шістьма' не може виступати частиною називного підмета.",
+                    explanation_en="Instrumental form 'шістьма' cannot function as part of the nominative subject.",
                 ),
                 NumeralDistractor(
                     text="шістка",
@@ -1709,27 +1711,27 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_46",
             category=NumeralCategory.COLLECTIVE_RESTRICTION_FEMININE,
             cefr_level="B1",
-            sentence_before="До магазину зайшли три",
+            sentence_before="До магазину зайшли",
             sentence_after="і почали уважно роздивлятися нові сукні.",
-            correct_answer="жінки",
+            correct_answer="три жінки",
             distractors=(
                 NumeralDistractor(
                     text="троє жінок",
                     interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
-                    explanation_ua="Збірні числівники не вживаються з іменниками жіночого роду на позначення дорослих осіб (*троє жінок* — груба помилка; норма — 'три жінки').",
-                    explanation_en="Collective numerals are never used with feminine nouns for adult persons (*троє жінок* is invalid; norm is 'три жінки').",
+                    explanation_ua="З іменниками жіночого роду на позначення осіб збірні числівники не вживаються (*троє жінок* — помилка; літературна норма — 'три жінки').",
+                    explanation_en="Collective numerals do not combine with feminine nouns denoting persons (*троє жінок* is invalid; standard norm is 'три жінки').",
                 ),
                 NumeralDistractor(
-                    text="жінок",
+                    text="три жінок",
                     interference_type=NumeralInterferenceType.WRONG_CASE_GOVERNMENT_5_PLUS,
-                    explanation_ua="Числівник 3 керує називним відмінком множини ('три жінки'), а не родовим 'жінок'.",
-                    explanation_en="Numeral 3 governs Nominative plural ('три жінки'), not Genitive 'жінок'.",
+                    explanation_ua="Числівник 3 вимагає називного відмінка множини ('три жінки'), а не родового (*три жінок*).",
+                    explanation_en="Numeral 3 governs Nominative plural ('три жінки'), not Genitive (*три жінок*).",
                 ),
                 NumeralDistractor(
-                    text="жінці",
+                    text="три жінці",
                     interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="Форма давального чи місцевого відмінка однини не узгоджується з числівником 'три'.",
-                    explanation_en="Dative/Locative singular form cannot agree with numeral 'три'.",
+                    explanation_ua="Форма однини 'жінці' не узгоджується з числівником 'три' у ролі підмета.",
+                    explanation_en="Singular form 'жінці' cannot agree with numeral 'три' in subject role.",
                 ),
             ),
             rule_citation=cit_coll_fem,
@@ -1740,24 +1742,24 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_47",
             category=NumeralCategory.COLLECTIVE_RESTRICTION_FEMININE,
             cefr_level="B1",
-            sentence_before="У затишному сквері розмовляли дві",
+            sentence_before="У затишному сквері розмовляли",
             sentence_after="і згадували шкільні роки.",
-            correct_answer="подруги",
+            correct_answer="дві подруги",
             distractors=(
                 NumeralDistractor(
                     text="двоє подруг",
                     interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
-                    explanation_ua="Вживання збірного числівника з особою жіночого роду (*двоє подруг*) є ненормативним; правильно — 'дві подруги'.",
-                    explanation_en="Using a collective numeral with female persons (*двоє подруг*) is incorrect; norm is 'дві подруги'.",
+                    explanation_ua="Вживання збірного числівника з особою жіночого роду (*двоє подруг*) є ненормативним; літературна норма — 'дві подруги'.",
+                    explanation_en="Using collective numerals with female persons (*двоє подруг*) is non-standard; literary norm is 'дві подруги'.",
                 ),
                 NumeralDistractor(
-                    text="подруг",
+                    text="дві подруг",
                     interference_type=NumeralInterferenceType.WRONG_CASE_GOVERNMENT_5_PLUS,
-                    explanation_ua="Числівник 'дві' вимагає називного відмінка множини: 'дві подруги', а не родового 'подруг'.",
-                    explanation_en="Numeral 'дві' requires Nominative plural: 'дві подруги', not Genitive 'подруг'.",
+                    explanation_ua="Числівник 'дві' вимагає називного відмінка множини: 'дві подруги', а не родового (*дві подруг*).",
+                    explanation_en="Numeral 'дві' requires Nominative plural: 'дві подруги', not Genitive (*дві подруг*).",
                 ),
                 NumeralDistractor(
-                    text="подрузі",
+                    text="дві подрузі",
                     interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
                     explanation_ua="Форма однини 'подрузі' не узгоджується з числівником у функції множинного підмета.",
                     explanation_en="Singular form 'подрузі' cannot agree with numeral in plural subject position.",
@@ -1771,27 +1773,27 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_48",
             category=NumeralCategory.COLLECTIVE_RESTRICTION_FEMININE,
             cefr_level="B1",
-            sentence_before="У міському конкурсі перемогли чотири",
+            sentence_before="У міському конкурсі перемогли",
             sentence_after="із нашого університету.",
-            correct_answer="дівчини",
+            correct_answer="чотири дівчини",
             distractors=(
                 NumeralDistractor(
                     text="четверо дівчат",
                     interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
-                    explanation_ua="Збірний числівник *четверо дівчат* суперечить літературній нормі; правильна сполука — 'чотири дівчини'.",
-                    explanation_en="Collective numeral *четверо дівчат* violates standard grammar; correct combination is 'чотири дівчини'.",
+                    explanation_ua="У нормативному літературному мовленні (зокрема в тестах ЗНО/НМТ) для осіб жіночого роду стандартом є власне кількісний числівник: 'чотири дівчини'; збірне сполучення 'четверо дівчат' має розмовний відтінок.",
+                    explanation_en="In standard literary syntax (specifically ZNO/NMT tests), cardinal 'чотири дівчини' is the preferred norm for female persons; collective 'четверо дівчат' is stylistically marked.",
                 ),
                 NumeralDistractor(
-                    text="дівчат",
+                    text="чотири дівчат",
                     interference_type=NumeralInterferenceType.WRONG_CASE_GOVERNMENT_5_PLUS,
-                    explanation_ua="Числівник 4 вимагає називного множини ('чотири дівчини'), форма 'дівчат' призначена для 5+.",
-                    explanation_en="Numeral 4 takes Nominative plural ('чотири дівчини'), form 'дівчат' is reserved for 5+.",
+                    explanation_ua="Числівник 4 вимагає називного множини ('чотири дівчини'), форма родового відмінка 'дівчат' вживається з 5+.",
+                    explanation_en="Numeral 4 takes Nominative plural ('чотири дівчини'); Genitive 'дівчат' is governed by 5+.",
                 ),
                 NumeralDistractor(
-                    text="дівчині",
+                    text="чотири дівчині",
                     interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="Форма однини 'дівчині' не може виступати підметом при числівнику 'чотири'.",
-                    explanation_en="Singular form 'дівчині' cannot serve as subject with numeral 'чотири'.",
+                    explanation_ua="Форма давального/місцевого відмінка однини не може узгоджуватися з числівником у ролі підмета.",
+                    explanation_en="Dative/Locative singular form cannot agree with numeral in subject position.",
                 ),
             ),
             rule_citation=cit_coll_fem,
@@ -1802,27 +1804,27 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_49",
             category=NumeralCategory.COLLECTIVE_RESTRICTION_FEMININE,
             cefr_level="B1",
-            sentence_before="У дружній родині підростали дві",
+            sentence_before="У дружній родині підростали",
             sentence_after="які завжди підтримували одна одну.",
-            correct_answer="сестри",
+            correct_answer="дві сестри",
             distractors=(
                 NumeralDistractor(
                     text="двоє сестер",
                     interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
-                    explanation_ua="З іменниками жіночого роду збірні числівники не вживаються: правильно 'дві сестри', а не *двоє сестер*.",
-                    explanation_en="Collective numerals are prohibited with feminine nouns: correctly 'дві сестри', not *двоє сестер*.",
+                    explanation_ua="З іменниками жіночого роду збірні числівники не вживаються: літературна норма — 'дві сестри', а не *двоє сестер*.",
+                    explanation_en="Collective numerals are avoided with feminine nouns: literary norm is 'дві сестри', not *двоє сестер*.",
                 ),
                 NumeralDistractor(
-                    text="сестер",
+                    text="дві сестер",
                     interference_type=NumeralInterferenceType.WRONG_CASE_GOVERNMENT_5_PLUS,
-                    explanation_ua="Числівник 'дві' сполучається з формою називного відмінка множини: 'дві сестри'.",
-                    explanation_en="Numeral 'дві' combines with Nominative plural: 'дві сестри'.",
+                    explanation_ua="Числівник 'дві' сполучається з формою називного відмінка множини: 'дві сестри', а не родового (*дві сестер*).",
+                    explanation_en="Numeral 'дві' combines with Nominative plural: 'дві сестри', not Genitive (*дві сестер*).",
                 ),
                 NumeralDistractor(
-                    text="сестрою",
+                    text="дві сестрою",
                     interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="Форма орудного відмінка однини граматично не узгоджується з числівником 'дві'.",
-                    explanation_en="Instrumental singular form is grammatically incompatible with numeral 'дві'.",
+                    explanation_ua="Форма орудного відмінка однини не узгоджується з числівником 'дві' у ролі підмета.",
+                    explanation_en="Instrumental singular form cannot agree with numeral 'дві' in subject position.",
                 ),
             ),
             rule_citation=cit_coll_fem,
@@ -1833,26 +1835,26 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_50",
             category=NumeralCategory.COLLECTIVE_RESTRICTION_FEMININE,
             cefr_level="B2",
-            sentence_before="На конференції виступили три",
+            sentence_before="На конференції виступили",
             sentence_after="із доповідями про сучасні технології.",
-            correct_answer="студентки",
+            correct_answer="три студентки",
             distractors=(
                 NumeralDistractor(
                     text="троє студенток",
                     interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
-                    explanation_ua="Збірний числівник *троє студенток* є помилковим для жіночих назв осіб; правильно — 'три студентки'.",
+                    explanation_ua="Збірний числівник *троє студенток* є помилковим для жіночих назв осіб; літературна норма — 'три студентки'.",
                     explanation_en="Collective *троє студенток* is invalid for feminine personal nouns; standard is 'три студентки'.",
                 ),
                 NumeralDistractor(
-                    text="студенток",
+                    text="три студенток",
                     interference_type=NumeralInterferenceType.WRONG_CASE_GOVERNMENT_5_PLUS,
-                    explanation_ua="Числівник 3 вимагає називного відмінка множини: 'три студентки', а не родового 'студенток'.",
-                    explanation_en="Numeral 3 demands Nominative plural: 'три студентки', not Genitive 'студенток'.",
+                    explanation_ua="Числівник 3 вимагає називного відмінка множини: 'три студентки', а не родового (*три студенток*).",
+                    explanation_en="Numeral 3 demands Nominative plural: 'три студентки', not Genitive (*три студенток*).",
                 ),
                 NumeralDistractor(
-                    text="студентці",
+                    text="три студентці",
                     interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="Форма давального відмінка однини не може узгоджуватися з числівником у функції підмета.",
+                    explanation_ua="Форма давального відмінка однини не узгоджується з числівником у функції підмета.",
                     explanation_en="Dative singular form cannot agree with numeral in subject role.",
                 ),
             ),
@@ -1977,10 +1979,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                     explanation_en="Feminine 'дві' cannot combine with nouns existing only in the plural (*дві сани* is invalid).",
                 ),
                 NumeralDistractor(
-                    text="двійко",
-                    interference_type=NumeralInterferenceType.UNINFLECTED_BASE_FORM,
-                    explanation_ua="'Двійко' є розмовно-пестливим утворенням, ненормативним для нейтрального висловлювання.",
-                    explanation_en="'Двійко' is a colloquial diminutive form, not standard in neutral style.",
+                    text="двома",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма орудного відмінка 'двома' не узгоджується як прямий додаток у цій синтаксичній позиції.",
+                    explanation_en="Instrumental form 'двома' cannot function as a direct object in this syntactic position.",
                 ),
             ),
             rule_citation=cit_coll_plur,
@@ -1996,10 +1998,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             correct_answer="п'ятеро",
             distractors=(
                 NumeralDistractor(
-                    text="п'ять",
-                    interference_type=NumeralInterferenceType.CARDINAL_WITH_PLURALIA_TANTUM,
-                    explanation_ua="З іменниками pluralia tantum (окуляри) норма вимагає збірного числівника: 'п'ятеро окулярів'.",
-                    explanation_en="With pluralia tantum nouns (окуляри), standard syntax demands collective numeral: 'п'ятеро окулярів'.",
+                    text="п'ятьма",
+                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
+                    explanation_ua="Форма орудного відмінка 'п'ятьма' не може виступати кількісним означенням підмета.",
+                    explanation_en="Instrumental form 'п'ятьма' cannot serve as a quantitative modifier of the subject.",
                 ),
                 NumeralDistractor(
                     text="п'ятірка",
@@ -2227,8 +2229,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="двох тисячах двадцятому четвертому",
                     interference_type=NumeralInterferenceType.DECLINING_PREVIOUS_ORDINAL_COMPONENTS,
-                    explanation_ua="Відмінювання всіх слів складеного числівника суперечить українському правопису (§ 110).",
-                    explanation_en="Declining all components of a compound ordinal numeral violates Ukrainian orthography (§ 110).",
+                    explanation_ua="Відмінювання всіх слів складеного числівника суперечить українському правопису (§ 106.2).",
+                    explanation_en="Declining all components of a compound ordinal numeral violates Ukrainian orthography (§ 106.2).",
                 ),
                 NumeralDistractor(
                     text="дві тисячі двадцятому четвертому",
@@ -2465,7 +2467,7 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_70",
             category=NumeralCategory.TIME_EXPRESSIONS_ANTI_CALQUE,
             cefr_level="B1",
-            sentence_before="Гості зібралися на святкову вечерю о",
+            sentence_before="Гості зібралися на святкову вечерю",
             sentence_after="вечора.",
             correct_answer="десять хвилин по шостій",
             distractors=(
@@ -2655,14 +2657,27 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
     return cards
 
 
+def find_vesum_db(specified: Path | None = None) -> Path:
+    """Finds vesum.db checking specified path, local tree, or primary checkout."""
+    if specified and specified.exists() and specified.stat().st_size > 0:
+        return specified
+    candidates = [
+        PROJECT_ROOT / "data" / "vesum.db",
+        PROJECT_ROOT.parent.parent.parent / "data" / "vesum.db",
+        Path("/home/ops/learn-ukrainian/data/vesum.db"),
+    ]
+    for c in candidates:
+        if c.exists() and c.stat().st_size > 0:
+            return c
+    return specified or (PROJECT_ROOT / "data" / "vesum.db")
+
+
 def verify_deck_with_vesum(cards: list[NumeralCard], vesum_db_path: Path | str | None = None) -> dict[str, Any]:
     """Verify that all target vocabulary and distractors exist in VESUM."""
     import re
 
-    if vesum_db_path is None:
-        vesum_db_path = PROJECT_ROOT / "data/vesum.db"
-
-    conn = sqlite3.connect(str(vesum_db_path))
+    resolved_path = find_vesum_db(Path(vesum_db_path) if vesum_db_path else None)
+    conn = sqlite3.connect(str(resolved_path))
     cursor = conn.cursor()
 
     word_pattern = re.compile(r"^[а-яіїєґА-ЯІЇЄҐ'\-]+$")
@@ -2685,14 +2700,14 @@ def verify_deck_with_vesum(cards: list[NumeralCard], vesum_db_path: Path | str |
 
     missing_targets: list[str] = []
     for token in sorted(all_target_tokens):
-        cursor.execute("SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (token,))
+        cursor.execute("SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1", (token,))
         if not cursor.fetchone():
             missing_targets.append(token)
 
     invalid_distractors: list[str] = []
     # Distractors can be intentional grammatical errors or valid words in incorrect case
     for token in sorted(all_distractor_tokens):
-        cursor.execute("SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (token,))
+        cursor.execute("SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1", (token,))
         if not cursor.fetchone():
             # Check if it's intentionally invalid morphology (e.g. п'ятидесят, шестиста, двохста)
             invalid_distractors.append(token)

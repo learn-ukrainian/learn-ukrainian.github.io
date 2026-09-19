@@ -1,14 +1,14 @@
 """Unit and integration tests for Ukrainian Numeral Deep Mechanics Practice Engine.
 
 Tests:
-  1. Decades 50–80 inflection rules [Правопис 2019 § 107].
-  2. Hundreds 200–900 Genitive, Dative, Locative, Instrumental rules [§ 108].
-  3. Paradigm rules for 40, 90, 100 [§ 106].
+  1. Decades 50–80 inflection rules [Правопис 2019 § 105.4].
+  2. Hundreds 200–900 Genitive, Dative, Locative, Instrumental rules [§ 105.5].
+  3. Paradigm rules for 40, 90, 100 [§ 105.7].
   4. Numeral + Noun case government: 2, 3, 4 (Nominative plural) vs 5+ (Genitive plural).
   5. Compound numeral last-digit agreement rules.
-  6. Collective numeral rules: masculine animate, pluralia tantum, neuter young beings, and female restriction [§ 111].
-  7. Fractional numeral rules: півтора vs півтори + Genitive singular [§ 105].
-  8. Ordinal compound declension: only last word inflects [§ 110].
+  6. Collective numeral rules: masculine animate, pluralia tantum, neuter young beings, and female restriction [§ 105.6].
+  7. Fractional numeral rules: півтора vs півтори + Genitive singular [§ 107].
+  8. Ordinal compound declension: only last word inflects [§ 106.2].
   9. Authentic time and approximate quantity constructions.
   10. Deck validation: exactly 75 cards, 15 categories, zero collisions, 4 unique options.
   11. Option shuffling balance across positions 0..3.
@@ -48,27 +48,27 @@ from scripts.practice.numeral_mechanics_engine import (
 def test_resolve_numeral_rules():
     """Verify all 15 category rule citations and bilingual summaries."""
     cit, ua, en = resolve_cardinal_50_80_rule()
-    assert "§ 107" in cit
+    assert "§ 105.4" in cit
     assert "п'ятдесяти" in ua
     assert "invariant" in en
 
     cit2, ua2, en2 = resolve_cardinal_200_900_genitive_rule()
-    assert "§ 108" in cit2
+    assert "§ 105.5" in cit2
     assert "двохсот" in ua2
     assert "Genitive" in en2
 
     cit3, ua3, en3 = resolve_cardinal_200_900_dative_locative_rule()
-    assert "§ 108" in cit3
+    assert "§ 105.5" in cit3
     assert "-стам" in ua3
     assert "Locative" in en3
 
     cit4, ua4, en4 = resolve_cardinal_200_900_instrumental_rule()
-    assert "§ 108" in cit4
+    assert "§ 105.5" in cit4
     assert "-стами" in ua4
     assert "Instrumental" in en4
 
     cit5, ua5, en5 = resolve_cardinal_40_90_100_rule()
-    assert "§ 106" in cit5
+    assert "§ 105.7" in cit5
     assert "сорока, дев'яноста, ста" in ua5
     assert "oblique" in en5
 
@@ -85,22 +85,27 @@ def test_resolve_numeral_rules():
     assert "last numeral" in en8
 
     _cit9, ua9, en9 = resolve_collective_masculine_rule()
+    assert "§ 105.6" in _cit9
     assert "троє друзів" in ua9
     assert "collective" in en9.lower()
 
     _cit10, ua10, en10 = resolve_collective_feminine_restriction_rule()
+    assert "§ 105.6" in _cit10
     assert "НЕ вживаються" in ua10
     assert "NOT used with feminine" in en10
 
     _cit11, ua11, en11 = resolve_collective_pluralia_neuter_rule()
+    assert "§ 105.6" in _cit11
     assert "двоє дверей" in ua11
     assert "pluralia tantum" in en11
 
     _cit12, ua12, en12 = resolve_fractional_pivtora_rule()
+    assert "§ 107" in _cit12
     assert "родового відмінка ОДНИНИ" in ua12
     assert "Genitive SINGULAR" in en12
 
     _cit13, ua13, en13 = resolve_ordinal_compound_declension_rule()
+    assert "§ 106.2" in _cit13
     assert "ЛИШЕ ОСТАННЄ" in ua13
     assert "ONLY the last word" in en13
 
