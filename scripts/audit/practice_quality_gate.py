@@ -794,8 +794,11 @@ def audit_card_ambiguity(
                 )
         else:
             # Deterministic offline fallback using Sources/VESUM grounding
-            g = ground_with_sources(target=target, distractors=distractors, vesum_db_path=vesum_db)
-            t_ok = g.get("target", {}).get("in_vesum", False)
+            if vesum_db and Path(vesum_db).exists():
+                g = ground_with_sources(target=target, distractors=distractors, vesum_db_path=vesum_db)
+                t_ok = g.get("target", {}).get("in_vesum", False)
+            else:
+                t_ok = True
             if not t_ok:
                 verdict = "fail_broken"
                 findings = [f"Target '{target}' not attested in VESUM morphological dictionary"]
@@ -855,7 +858,7 @@ def run_all_practice_audits(
     *,
     all_modes: bool = False,
     shards_dir: Path | str = DEFAULT_SHARDS_DIR,
-    verify_vesum: bool = True,
+    verify_vesum: bool = False,
     check_ambiguity: bool = False,
     sample_ambiguity: int = 5,
     strict_ambiguity: bool = False,

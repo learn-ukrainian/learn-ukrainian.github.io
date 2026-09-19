@@ -3,6 +3,8 @@
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.practice_quality_gate import (
     VOLUME_THRESHOLDS,
     audit_card_ambiguity,
@@ -489,6 +491,14 @@ def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
     (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
 
     monkeypatch.setattr(typesafe_distractor_validator, "resolve_api_key", lambda: None)
+    monkeypatch.setattr(
+        typesafe_distractor_validator,
+        "ground_with_sources",
+        lambda target, distractors, vesum_db_path=None: {
+            "target": {"in_vesum": True},
+            "distractors": {d: {"in_vesum": True} for d in distractors},
+        },
+    )
 
     verdicts, violations = audit_card_ambiguity(
         shards_dir=tmp_path,
@@ -597,6 +607,10 @@ def test_production_practice_quality_gate_passes():
     assert total_violations == 0, f"Practice Quality Gate failed with violations: {results}"
 
 
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or not Path("site/public/lexicon/practice-index.A1.json").exists(),
+    reason="Requires local data/vesum.db and generated practice shards in site/public/lexicon/",
+)
 def test_production_practice_shards_all_modes_gate_passes():
     """Verify that all practice shards across all modes satisfy volume thresholds and linguistic gates."""
     results = run_all_practice_audits(all_modes=True, verify_vesum=True)
