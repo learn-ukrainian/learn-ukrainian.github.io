@@ -54,7 +54,7 @@
   {
     "lemma": "аналогічно",
     "slug": "аналогічно",
-    "gloss": "Прислівник до аналогічний",
+    "gloss": "similarly, likewise",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
@@ -71,6 +71,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Similarly, in this same record of the Salary field we will select the Sum function.",
     "etymology": "From аналогі́чний + -о"
   },
   {
@@ -97,7 +98,7 @@
   {
     "lemma": "архаїка",
     "slug": "архаїка",
-    "gloss": "Старовина, старовинні речі, а також усе те, що характеризується рисами старовини",
+    "gloss": "antiquity, archaism, archaic elements",
     "k": "other",
     "weight": 3,
     "lessonTag": "b2",
@@ -237,7 +238,7 @@
   {
     "lemma": "безкоштовний",
     "slug": "безкоштовний",
-    "gloss": "який не потребує коштів, оплати; безплатний",
+    "gloss": "free of charge, complimentary",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -254,6 +255,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Usually, a company providing free hosting earns money by displaying ads on pages hosted on it.",
     "etymology": "From без- + ко́шт + -овний."
   },
   {
@@ -322,7 +324,7 @@
   {
     "lemma": "біб",
     "slug": "біб",
-    "gloss": "однорічна городня рослина, що має в стручках поживні плоди",
+    "gloss": "broad bean, fava bean",
     "k": "other",
     "weight": 3,
     "lessonTag": "folk",
@@ -338,7 +340,8 @@
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "exampleEn": "At the same time, the authorized archon took out of the boxes a bean and a tablet with the candidate's name."
   },
   {
     "lemma": "варта",
@@ -474,14 +477,13 @@
   {
     "lemma": "використовувати",
     "slug": "використовувати",
-    "gloss": "застосовувати кого-, що-небудь для якої-небудь справи, знаходити застосування кому-, чому-небудь",
+    "gloss": "to use, to utilize, to employ",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A2",
     "pos": "verb",
     "example": "Вивчила я її тоді, коли вперше почала використовувати англійську мову для конкретних цілей у моєму житті.",
-    "exampleEn": "I use my own materials in my lessons.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -504,7 +506,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Чому важливо вимикати електричну лампу, коли нею не користуєшся?",
-    "exampleEn": "I turn off my computer completely once a week.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -526,7 +527,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Які проблеми можуть виникати під час проведення штучного запліднення?",
-    "exampleEn": "I often have grammar questions (“Grammar questions often arise for me”).",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -548,7 +548,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Якось, реагуючи на людську нетерплячість, Блаженніший Любомир Гузар сказав: «Дайте людям вирости у свободі».",
-    "exampleEn": "A big tree grows from a small grain.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -592,7 +591,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Яку суму коштів із Вашого бюджету, Ви готові витратити протягом місяця на шкільні аксесуари?",
-    "exampleEn": "She often spends money on makeup.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -690,7 +688,6 @@
     "cefr": "A1",
     "pos": "adv",
     "example": "Виникає питання: що знижує температуру всередині плями?",
-    "exampleEn": "We are waiting inside.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -713,7 +710,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "90% студентів успішно А вчать Б будуть вчити В вчаться іспит!",
-    "exampleEn": "Now we are learning the accusative case.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -735,7 +731,6 @@
     "cefr": "A2",
     "pos": "verb:impf",
     "example": "Художник щоразу все мусить відкривати заново, все з самого початку.",
-    "exampleEn": "She is now opening a bank account.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -783,7 +778,7 @@
   {
     "lemma": "відстань",
     "slug": "відстань",
-    "gloss": "простір, який розділяє два пункти, предмети тощо; віддаль",
+    "gloss": "distance, gap",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -800,6 +795,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "What will the distance between them be after 35 minutes?",
     "etymology": "From від- + стан + -ь (-ʹ). See the etymology of the corresponding lemma form."
   },
   {
@@ -812,7 +808,6 @@
     "cefr": "A2",
     "pos": "verb:pf",
     "example": "Тому вирішив відчинити двері та перевірити, що сталося.",
-    "exampleEn": "Every day I open the windows in the apartment.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -849,7 +844,7 @@
   {
     "lemma": "відчуття",
     "slug": "відчуття",
-    "gloss": "здатність відчувати, сприймати явища навколишнього світу",
+    "gloss": "feeling, sensation, perception",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -866,6 +861,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Because of this, serotonin and dopamine accumulate in the synaptic cleft, causing a sensation of pleasure.",
     "etymology": "From відчу́ти pf + -я."
   },
   {
@@ -922,7 +918,6 @@
     "cefr": "A1",
     "pos": "numeral",
     "example": "І якщо ви з’їли порівну, то на кожну людину припадає по вісім часток.",
-    "exampleEn": "We will be in Kyiv for eight days.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -944,7 +939,6 @@
     "cefr": "A1",
     "pos": "numeral",
     "example": "Потреба кохання гостро спалахнула в ньому, як тільки минуло йому вісімнадцять років.",
-    "exampleEn": "She is eighteen years old.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1096,7 +1090,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Підбиваємо підсумки Офіційною грошовою одиницею в Україні є гривня.",
-    "exampleEn": "Where can I change dollars to hryvnias?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1183,7 +1176,6 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Не обов’язково дарувати дитині дорогі – Який сюрприз!",
-    "exampleEn": "We always give our mother flowers for her birthday.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1206,7 +1198,6 @@
     "cefr": "A1",
     "pos": "numeral",
     "example": "Антоніна плакала через те, що бандура зламалася, напевно або мабуть, місяців зо два, зо три.",
-    "exampleEn": "Two ice creams, please.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1222,7 +1213,7 @@
   {
     "lemma": "двигун",
     "slug": "двигун",
-    "gloss": "енергосилова машина, що перетворює яку-небудь енергію в механічну роботу, найповажніші за віком, справно служать на гідроелектростанціях",
+    "gloss": "engine, motor",
     "k": "other",
     "weight": 3,
     "lessonTag": "b1",
@@ -1239,6 +1230,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "A heat engine is a machine that operates cyclically and converts fuel energy into mechanical energy.",
     "etymology": "Дви́гати + -у́н"
   },
   {
@@ -1273,7 +1265,6 @@
     "cefr": "A2",
     "pos": "adj",
     "example": "Знання про хімічну рівновагу допомагає організувати більш дешевий і зручний технологічний процес одержання речовин.",
-    "exampleEn": "In this shop, everything is very cheap.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1359,7 +1350,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "А головне — не можна дозволяти, щоб багатший знущався з біднішого, сильніша держава тиснула на слабшу.",
-    "exampleEn": "She does not allow herself to eat sweets at night.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1446,7 +1436,6 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Функція театру в тому, щоб збуджувати людей, змушувати їх думати… Бернард Шоу  Бургтеатр у Відні, де у 1913 р.",
-    "exampleEn": "I think that is a lie.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1462,14 +1451,13 @@
   {
     "lemma": "дівчина",
     "slug": "дівчина",
-    "gloss": "молода неодружена особа жіночої статі",
+    "gloss": "girl, young woman",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
     "pos": "noun",
     "example": "Нарешті дівчина, задихавшись, зупинилася, і народ любовно почав їй плескати.",
-    "exampleEn": "This girl is my friend, not my girlfriend.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1492,7 +1480,6 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Ще дідусь і не отримав твого листа, а може, і не зразу відповість.",
-    "exampleEn": "My grandfather's name was Mykola.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1515,7 +1502,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Шевчука «Дім на горі» якраз і представляє життя людей у такому незвичайному поєднанні.",
-    "exampleEn": "This is my home.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1541,7 +1527,7 @@
   {
     "lemma": "етнічність",
     "slug": "етнічність",
-    "gloss": "ЕТНІ́ЧНІСТЬ, ності, ж. Абстр. ім. до етні́чний. З огляду на реальну або уявну загрозу асиміляції у нечисленних етносів етнічність здатна набувати характеру самоцінності (з наук.-попул. літ.); Етнічність відтворює якісні характеристики людини або групи людей, пов'язані з їхнім етнічним походженням і які виявляються у побуті, культурі, поведінці й у цілому в ментальності (із журн.).",
+    "gloss": "ethnicity, ethnic identity",
     "k": "other",
     "weight": 3,
     "lessonTag": "b2",
@@ -1558,7 +1544,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Іду в садік забирати малу.",
-    "exampleEn": "It takes a lot of time.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1705,7 +1690,7 @@
   {
     "lemma": "захист",
     "slug": "захист",
-    "gloss": "захистити, захищатися, захиститися",
+    "gloss": "defense, protection",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -1721,7 +1706,8 @@
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "exampleEn": "One of the most important tasks of the state is the protection of the rights of all people, including teenagers."
   },
   {
     "lemma": "зачісуватися",
@@ -1776,7 +1762,6 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Звичайно, їх є більше: це і каштан — символ Києва, і інші квіти, наприклад, волошки.",
-    "exampleEn": "Of course, I will be at the party.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1809,7 +1794,6 @@
     "cefr": "A1",
     "pos": "adj",
     "example": "Здоровий спосіб життя 78 Навіщо піклуватися про здоров’я?",
-    "exampleEn": "I like healthy food.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1874,7 +1858,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Новими в усіх редакторах є такі команди в меню Файл: Перейменувати — змінити ім’я файла безпосередньо в середовищі редактора.",
-    "exampleEn": "Do you often change your style?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -1930,7 +1913,6 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Радикали прагнули продовжити революцію та знищити самодержавство.",
-    "exampleEn": "Such government actions are destroying the economy.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2064,7 +2046,7 @@
   {
     "lemma": "клавіатура",
     "slug": "клавіатура",
-    "gloss": "весь ряд клавішів у клавішних музичних інструментів",
+    "gloss": "keyboard",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
@@ -2081,6 +2063,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Thus, the keyboard converts the notification of a particular key press into a set of electrical signals.",
     "etymology": "Possibly borrowed from Polish klawiatura, from German Klaviatur, from Latin clāvis."
   },
   {
@@ -2213,7 +2196,7 @@
   {
     "lemma": "контролювати",
     "slug": "контролювати",
-    "gloss": "здійснювати контроль або нагляд",
+    "gloss": "to control, to monitor, to supervise",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -2230,6 +2213,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Monitor for the onset of vomiting.",
     "etymology": "From контро́ль + -ювати."
   },
   {
@@ -2308,7 +2292,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Купатися можна у вбиральні, на кухні, в кабінеті чи в конторі – за вибором.",
-    "exampleEn": "We already bathed the children.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2331,7 +2314,6 @@
     "cefr": "B1",
     "pos": "numeral",
     "example": "Наступне, шосте речення: Ціни залежать від університету, переважно це кілька десятків тисяч гривень на рік.",
-    "exampleEn": "I have some questions.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2440,7 +2422,6 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Запалене лице було гарне, але дуже молоде.",
-    "exampleEn": "This is my favorite face cream.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2472,7 +2453,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Тобі знадобляться: помірно гаряча вода, чашка, секундомір, металева ложка.",
-    "exampleEn": "This soup is eaten with a spoon.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2515,7 +2495,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Потрібно одержати в одній із цих посудин 1 літр рідини.",
-    "exampleEn": "In this bottle, there is a liter of milk.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2551,7 +2530,7 @@
   {
     "lemma": "м'яз",
     "slug": "м-яз",
-    "gloss": "тканина живого організму, здатна скорочуватися, забезпечуючи функцію руху частин тіла; мускул",
+    "gloss": "muscle",
     "k": "other",
     "weight": 5,
     "lessonTag": "b2",
@@ -2568,6 +2547,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Which muscle must contract for the shin to move in the direction shown by the arrow?",
     "etymology": "From Proto-Slavic *męzъ. Cognate of Polish miąższ."
   },
   {
@@ -2622,7 +2602,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Мед любить їсти й ведмідь, а Шершень теж не проти того.",
-    "exampleEn": "I want tea with honey and lemon.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2644,7 +2623,6 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Що таке собаче мило?",
-    "exampleEn": "In the bathroom, there is no soap.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2723,7 +2701,7 @@
   {
     "lemma": "мох",
     "slug": "мох",
-    "gloss": "сланка спорова рослина без коріння та квітів, що росте у вогких місцях, на деревах, камінні",
+    "gloss": "moss",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
@@ -2739,7 +2717,8 @@
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "exampleEn": "Verbynka carefully lifted the moss."
   },
   {
     "lemma": "музей",
@@ -2772,7 +2751,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Шляхом тривалих спостережень вони визначили надійні одиниці часу: добу, рік, місяць.",
-    "exampleEn": "Now it is the full moon.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2794,7 +2772,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Заважати гратися – мішати слухати на уроці.",
-    "exampleEn": "A concrete mixer mixes concrete.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2956,7 +2933,6 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Який молочний продукт можна перетворити на злак, прочитавши його назву справа наліво?",
-    "exampleEn": "To the left of Olena is her son Nazar.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -2978,7 +2954,6 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Графи, які можна намалювати, не відриваючи олівця від паперу, називають ейлеровими.",
-    "exampleEn": "My granddaughter draws (or paints) well.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3184,7 +3159,6 @@
     "cefr": "A2",
     "pos": "negative pronoun",
     "example": "Я для неї зірву Оріон золотий, я — поет робітничої рані… Так ніхто не кохав.",
-    "exampleEn": "No one will stop me.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3222,7 +3196,7 @@
   {
     "lemma": "овес",
     "slug": "овес",
-    "gloss": "яра злакова культура з суцвіттям волоть і вкритим лускою (рідше голим) зерном",
+    "gloss": "oats, oat",
     "k": "other",
     "weight": 5,
     "lessonTag": "folk",
@@ -3239,6 +3213,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Green rye and oats too — here our whole kin has gathered.",
     "etymology": "From Proto-Slavic *ovьsъ."
   },
   {
@@ -3273,7 +3248,6 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Завоювавши Персію, Александр почав одягатися як перський шахиншах та одружився із двома персіянками.",
-    "exampleEn": "She wears this dress for special events.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3310,7 +3284,7 @@
   {
     "lemma": "ом",
     "slug": "ом",
-    "gloss": "міжнародна одиниця електричного опору (Ом)",
+    "gloss": "ohm (unit of electrical resistance)",
     "k": "other",
     "weight": 3,
     "lessonTag": "a2",
@@ -3326,7 +3300,8 @@
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "exampleEn": "The total resistance of two lamps and a rheostat connected in series is 65 ohms."
   },
   {
     "lemma": "омонім",
@@ -3425,7 +3400,6 @@
     "cefr": "A2",
     "pos": "adj",
     "example": "Це визначає основний метод правового регулювання, який використовує фінансове право, — імперативний метод, або метод субординації, владних приписів.",
-    "exampleEn": "This is my main place of work.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3448,7 +3422,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Тюрк заявив, що його офіс підтвердив 10 тис.",
-    "exampleEn": "Where is their office located?",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3548,7 +3521,6 @@
     "cefr": "B2",
     "pos": "verb",
     "example": "Петлюри було здійснено низку заходів, покликаних викорінити в Армії УНР отаманщину та перетворити її на регулярне військо.",
-    "exampleEn": "The girl turned her hobby into a business.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3712,7 +3684,6 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Поліція мала величезні повноваження, що дозволяли їй втручатися в усі сфери суспільного та особистого життя громадян.",
-    "exampleEn": "He has to go to the police.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3734,7 +3705,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Чи потрібно постійно порівнювати себе з іншими?",
-    "exampleEn": "Critics compare his film to Tarantino's movies.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3768,7 +3738,6 @@
     "cefr": "B1",
     "pos": "adv",
     "example": "Після евакуації пораненого в укриття потрібно постійно дбати про власну безпеку і безпеку пораненого.",
-    "exampleEn": "I constantly want to sleep.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3791,7 +3760,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Із метою відволікти населення від боротьби проти самодержавства царський уряд намагався поширити на українські землі антисемітські настрої.",
-    "exampleEn": "She spreads this information wherever she can.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -3952,7 +3920,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Які сувеніри привезти з України?",
-    "exampleEn": "They bring production materials from abroad.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4115,7 +4082,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Приєднати газову трубку.",
-    "exampleEn": "Railway workers attached additional cars to the train.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4138,7 +4104,6 @@
     "cefr": "A1",
     "pos": "verb",
     "example": "Приєднатися до такого народу — це гірше, ніж скочити живим у вогонь.",
-    "exampleEn": "Railway workers attached additional cars to the train.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4182,7 +4147,6 @@
     "cefr": "B1",
     "pos": "verb",
     "example": "Ті не перемагають, хто не вміють програвати.",
-    "exampleEn": "I often lose to him at chess.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4198,14 +4162,13 @@
   {
     "lemma": "продавати",
     "slug": "продавати",
-    "gloss": "віддавати який-небудь товар в обмін на гроші або на інший товар ( купувати)",
+    "gloss": "to sell",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A1",
     "pos": "verb",
     "example": "Її не можна було передавати в спадок, продавати тощо.",
-    "exampleEn": "The woman sells her vegetables at the market.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4227,7 +4190,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Адже навряд чи, перебуваючи в місцях позбавлення волі, злочинець зможе продовжувати свою злочинну діяльність.",
-    "exampleEn": "He continues to work, learn and develop.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4297,7 +4259,7 @@
   {
     "lemma": "простір",
     "slug": "простір",
-    "gloss": "одна з основних об'єктивних форм існування матерії, яка характеризується протяжністю та обсягом",
+    "gloss": "space, expanse",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -4314,6 +4276,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "What personal space is and what its components are.",
     "etymology": "From Proto-Slavic *prostorъ."
   },
   {
@@ -4444,7 +4407,6 @@
     "cefr": "A2",
     "pos": "adverb",
     "example": "Узимку світає пізно, темніє рано.",
-    "exampleEn": "Sashko came back home late at night.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4467,7 +4429,6 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Далі вона розповідає: Ми далі будемо рухатися по життю разом.",
-    "exampleEn": "We studied together at school.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4521,7 +4482,6 @@
     "cefr": "B2",
     "pos": "verb:impf",
     "example": "Аерозольні упаковки не можна розбирати чи розбивати, адже вони пожежота вибухонебезпечні.",
-    "exampleEn": "It breaks my heart.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4544,7 +4504,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Бо пора вже розповісти про дивну дружбу двох хлопців – Данила Ланового та Богдана Майстренка.",
-    "exampleEn": "The professor often tells interesting stories about famous Ukrainians.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4625,14 +4584,13 @@
   {
     "lemma": "рости",
     "slug": "рости",
-    "gloss": "ставати більшим на зріст, довшим, вищим, збільшуватися внаслідок життєвого процесу",
+    "gloss": "to grow, to increase",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
     "cefr": "A2",
     "pos": "verb",
     "example": "Маленький лискучий жолудь лягає в холодну землю, вкривається ковдрою з листя, а потім знімає шапку і починає рости.",
-    "exampleEn": "They say that other people's children grow up fast.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4691,14 +4649,13 @@
   {
     "lemma": "сад",
     "slug": "сад",
-    "gloss": "спеціально відведена значна площа землі, на якій вирощують плодові дерева, кущі тощо",
+    "gloss": "garden, orchard",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
     "cefr": "A1",
     "pos": "noun",
     "example": "Пагутяк «Потрапити в сад» за родовою ознакою — епічний.",
-    "exampleEn": "In the afternoon, we will work in the garden.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4776,7 +4733,7 @@
   {
     "lemma": "свідомість",
     "slug": "свідомість",
-    "gloss": "процес відображення дійсності мозком людини, який охоплює всі форми психічної діяльності й зумовлює цілеспрямовану діяльність людини",
+    "gloss": "consciousness, awareness",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
@@ -4792,7 +4749,8 @@
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "exampleEn": "Consciousness: the desire to know oneself is one of the main drivers of human development."
   },
   {
     "lemma": "свіжий",
@@ -4933,7 +4891,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Сипле, сипле, сипле сніг...",
-    "exampleEn": "Yesterday, it snowed all day.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -4976,7 +4933,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Передній ангел дивився прямо на Галю, ніби хотів спитати, чого вона прийшла.",
-    "exampleEn": "He often asks me how I am doing.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5036,7 +4992,7 @@
   {
     "lemma": "спостереження",
     "slug": "спостереження",
-    "gloss": "те, що виявили, помітили після уважного розглядання, вивчення, дослідження і т. ін. кого-, чого-небудь",
+    "gloss": "observation, monitoring",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -5053,6 +5009,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "A radiation and chemical observation post is set up on the facility's grounds near the control center.",
     "etymology": "From спостерегти́ + -ення."
   },
   {
@@ -5140,7 +5097,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Вона вже геть знесилилася й сіла на стілець, що невідомо звідки взявся в коридорі.",
-    "exampleEn": "This chair is very comfortable.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5165,7 +5121,7 @@
   {
     "lemma": "судома",
     "slug": "судома",
-    "gloss": "мимовільне скорочення м'язів усього тіла чи його частин, обличчя від болю, холоду, при деяких захворюваннях і т. ін",
+    "gloss": "cramp, spasm, convulsion",
     "k": "other",
     "weight": 3,
     "lessonTag": "folk",
@@ -5175,7 +5131,7 @@
   {
     "lemma": "сума",
     "slug": "сума",
-    "gloss": "результат додавання двох або кількох величин",
+    "gloss": "sum, total, amount",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
@@ -5191,7 +5147,8 @@
     "exampleLicense": {
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
-    }
+    },
+    "exampleEn": "How many terms of this progression need to be taken so that their sum equals 253?"
   },
   {
     "lemma": "сумка",
@@ -5203,7 +5160,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Омріяна сумка не з’явилася в її руках, Бондаренко зі своїми служками не вибігла з крамниці зі словами прокляття.",
-    "exampleEn": "My wallet is in the purse.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5225,7 +5181,6 @@
     "cefr": "A2",
     "pos": "verb",
     "example": "Стояти на розпутті — вагатися, сумніватися.",
-    "exampleEn": "I doubt he will come to the party.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5291,7 +5246,6 @@
     "cefr": "A1",
     "pos": "noun",
     "example": "Було тій Анні, може, десять рочків, її привів розлючений сусід.",
-    "exampleEn": "My neighbors are musicians.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5485,7 +5439,6 @@
     "cefr": "A2",
     "pos": "noun",
     "example": "Речення номер два: Ліворуч було поле, праворуч – лише трава та квіти.",
-    "exampleEn": "We are lying on the grass in the park.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5559,7 +5512,6 @@
     "cefr": "A1",
     "pos": "adverb",
     "example": "Під час рівняння військовослужбовці можуть трохи пересуватися вперед, назад або в той чи інший бік.",
-    "exampleEn": "And a little bit of sour cream, please.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5624,7 +5576,6 @@
     "cefr": "A2",
     "pos": "adv",
     "example": "Бояри та представники знаті винаймали для своїх дітей приватних учителів, які навчали їх удома.",
-    "exampleEn": "We are at home on the weekend.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
@@ -5639,7 +5590,7 @@
   {
     "lemma": "умовний",
     "slug": "умовний",
-    "gloss": "встановлений або визначений за домовленістю між ким-небудь; зрозумілий, відомий тільки тим, хто домовився",
+    "gloss": "conventional, conditional, symbolic",
     "k": "other",
     "weight": 3,
     "lessonTag": "a2",
@@ -5656,6 +5607,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Therefore, scholars made a conventional division of history into periods — the periodization of history.",
     "etymology": "From умо́ва + -ний."
   },
   {
@@ -5735,7 +5687,7 @@
   {
     "lemma": "цвісти",
     "slug": "цвісти",
-    "gloss": "розкриватися, розпускатися",
+    "gloss": "to bloom, to blossom, to flower",
     "k": "other",
     "weight": 5,
     "lessonTag": "b1",
@@ -5752,12 +5704,13 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "To bloom like this, to grow like this, to marry thus and walk ahead, without quarreling on the arduous road...",
     "etymology": "Inherited from Proto-Slavic *kvisti."
   },
   {
     "lemma": "цунамі",
     "slug": "цунамі",
-    "gloss": "гігантські хвилі, які виникають в океані внаслідок підводних землетрусів, виверження підводних або острівних вулканів і спричиняють руйнівні спустошення на низьких берегах",
+    "gloss": "tsunami",
     "k": "other",
     "weight": 3,
     "lessonTag": "b2",
@@ -5774,6 +5727,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "Tsunamis encompass the entire depth of water masses and move across the ocean.",
     "etymology": "Borrowed from Japanese 津(つ)波(なみ)."
   },
   {
@@ -5874,7 +5828,7 @@
   {
     "lemma": "шум",
     "slug": "шум",
-    "gloss": "сукупність різноманітних звуків, які швидко змінюються за частотою і силою; глухі звуки, що зливаються в одноманітне незлагоджене звучання",
+    "gloss": "noise, sound, rustle",
     "k": "other",
     "weight": 5,
     "lessonTag": "a2",
@@ -5891,6 +5845,7 @@
       "status": "not_openly_licensed",
       "useBasis": "short educational quotation with attribution"
     },
+    "exampleEn": "In ancient times, the word 'shum' also referred to the forest.",
     "etymology": "Inherited from Proto-Slavic *šumъ. Borrowed from Middle High German schūm, from Old High German scūm, from Proto-Germanic *skūmaz. Cognate with English scum,…"
   },
   {
@@ -6012,7 +5967,6 @@
     "cefr": "A1",
     "pos": "noun:m",
     "example": "Як функціонує мережа «Інтернет речей»?",
-    "exampleEn": "I spend too much time on the internet.",
     "exampleProvenance": {
       "source": "textbook",
       "label": "Ukrainian school textbook",
