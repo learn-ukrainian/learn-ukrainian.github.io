@@ -2,6 +2,8 @@ from __future__ import annotations
 
 from scripts.build import linear_pipeline
 from scripts.build.linear_pipeline import (
+    _UK_WORD_RE,
+    _WORD_RE,
     _advisory_immersion_pct,
     _component_density_gate,
     _l2_exposure_floor_gate,
@@ -240,6 +242,29 @@ def test_long_uk_ceiling_fail() -> None:
     assert result["passed"] is False
     assert result["reason"] == "long_uk_without_gloss"
     assert result["offending_runs"][0].startswith("Український студент")
+
+
+def test_long_uk_ceiling_keeps_stressed_words_whole() -> None:
+    # Combining acutes (U+0301) must not split a word: `Окса́на` is one token, not
+    # `Окса` + `на`. Split fragments doubled the run length of a normal stressed
+    # A1 dialogue and reported it as `long_uk_without_gloss` (#7994).
+    text = "\n".join(
+        [
+            "**Окса́на:** До́брий де́нь! Мене́ зва́ти Окса́на. (Good afternoon! My name is Oksana.)",
+            "",
+            "**Андрі́й:** До́брий де́нь, Окса́но! Ду́же приє́мно, я Андрі́й.",
+            "",
+            "Andrii answers: good afternoon, Oksana, very nice to meet you.",
+        ]
+    )
+
+    assert _WORD_RE.findall("Окса́на апо́строф") == ["Окса́на", "апо́строф"]
+    assert _UK_WORD_RE.findall("Окса́на апо́строф") == ["Окса́на", "апо́строф"]
+
+    result = _long_uk_ceiling_gate(text, A1_EARLY_PLAN)
+
+    assert result["passed"] is True
+    assert result["offending_runs"] == []
 
 
 def test_long_uk_ceiling_exempts_ukrainian_alphabet_sequence() -> None:

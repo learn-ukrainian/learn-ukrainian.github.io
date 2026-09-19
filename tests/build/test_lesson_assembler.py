@@ -229,6 +229,79 @@ def test_a1_opening_hygiene_four_shapes():
     assert "Questions turn the verbs" in questions
 
 
+def test_a1_landing_prose_rejects_previous_edition_banned_text(tmp_path):
+    from scripts.build.lesson_assembler import (
+        _clean_a1_landing_prose,
+        _original_intro,
+        _writer_landing_overview,
+    )
+
+    banned = (
+        "# Special Signs\n\nThis module completes your mastery of all 33 le\u0301tters "
+        "and gives you the soft sign and the apostrophe in real words.\n"
+    )
+    line_breaks = (
+        "# Special Signs\n\nYou read the soft sign and the apostrophe in real words, "
+        "then learn word hyphenation rules for dividing a word across lines.\n"
+    )
+    clean = "# Special Signs\n\nYou read the soft sign and the apostrophe in real Ukrainian words.\n"
+    assert _clean_a1_landing_prose(banned) is None
+    assert _clean_a1_landing_prose(line_breaks) is None
+    assert _clean_a1_landing_prose(clean) == clean.split("\n\n", 1)[1].strip()
+
+    # Neither source may republish it: not the writer overview, not the a1-v1 opening.
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
+    module_dir.mkdir(parents=True)
+    archive.mkdir(parents=True)
+    (module_dir / "landing-overview.md").write_text(banned, encoding="utf-8")
+    (archive / "module.md").write_text(line_breaks + "\n## Section\n\nBody.\n", encoding="utf-8")
+    assert _writer_landing_overview(module_dir) is None
+    assert _original_intro(module_dir, "special-signs") is None
+
+
+@pytest.mark.parametrize(
+    "sentence",
+    [
+        "This module completes your **mastery** of all 33 letters and introduces the soft sign.",
+        "This module completes your mastery of all 33 letters and introduces the soft sign.",
+        "This module completes your _mastery_ of `all 33` le\u0301tters and introduces the soft sign.",
+        "This module completes your mas**tery** of all 33 letters and introduces the soft sign.",
+        "You read the soft sign in real words, then learn **word** *hyphenation* rules for line ends.",
+    ],
+)
+def test_a1_landing_prose_rejects_banned_text_split_by_inline_markdown(tmp_path, sentence):
+    from scripts.build.lesson_assembler import _clean_a1_landing_prose, _original_intro
+
+    assert _clean_a1_landing_prose(f"# Special Signs\n\n{sentence}\n") is None
+
+    # The a1-v1 fallback must not republish it either, from module.md or the published mdx.
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
+    module_dir.mkdir(parents=True)
+    archive.mkdir(parents=True)
+    (archive / "module.md").write_text(
+        f"# Special Signs\n\n{sentence}\n\n## Section\n\nBody.\n", encoding="utf-8"
+    )
+    assert _original_intro(module_dir, "special-signs") is None
+
+    (archive / "module.md").unlink()
+    published = tmp_path / "site/src/content/docs/a1-v1/special-signs.mdx"
+    published.parent.mkdir(parents=True)
+    published.write_text(
+        f'<Tabs>\n<TabItem label="Lesson">\n\n{sentence}\n\n## Section\n\nBody.\n</TabItem>\n</Tabs>\n',
+        encoding="utf-8",
+    )
+    assert _original_intro(module_dir, "special-signs") is None
+
+
+def test_a1_landing_prose_keeps_clean_formatted_text():
+    from scripts.build.lesson_assembler import _clean_a1_landing_prose
+
+    clean = "You read the **soft sign** and the _apostrophe_ in real Ukrainian words."
+    assert _clean_a1_landing_prose(f"# Special Signs\n\n{clean}\n") == clean
+
+
 def test_a1_assembler_converts_text_fences_to_bilingual_bullets():
     from scripts.build.lesson_assembler import _normalize_a1_example_fences
 

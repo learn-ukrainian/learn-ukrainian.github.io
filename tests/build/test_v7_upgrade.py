@@ -314,6 +314,39 @@ def test_clear_previous_edition_refuses_targets_resolving_outside_the_worktree(t
     assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
 
 
+def test_clear_previous_edition_removes_the_previous_landing_overview(tmp_path, monkeypatch):
+    monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path)
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    _seed_previous_edition(module_dir)
+    landing = module_dir / "landing-overview.md"
+    landing.write_text("This module brings mastery of all 33 letters.\n", encoding="utf-8")
+
+    removed = v7_build._clear_previous_edition(module_dir)
+
+    assert landing in removed
+    assert not landing.exists()
+    assert (module_dir / "lessons.yaml").exists()
+
+
+def test_clear_previous_edition_refuses_a_symlinked_landing_overview(tmp_path, monkeypatch):
+    worktree = tmp_path / "worktree"
+    monkeypatch.setattr(v7_build, "PROJECT_ROOT", worktree)
+    primary_landing = tmp_path / "primary/curriculum/l2-uk-en/a1/special-signs/landing-overview.md"
+    primary_landing.parent.mkdir(parents=True)
+    primary_landing.write_text("primary checkout", encoding="utf-8")
+    module_dir = worktree / "curriculum/l2-uk-en/a1/special-signs"
+    _seed_previous_edition(module_dir)
+    (module_dir / "landing-overview.md").symlink_to(primary_landing)
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="symlink"):
+        v7_build._clear_previous_edition(module_dir)
+
+    assert primary_landing.read_text(encoding="utf-8") == "primary checkout"
+    assert (module_dir / "landing-overview.md").is_symlink()
+    # Checked before the first delete: the lesson artifacts are untouched too.
+    assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
+
+
 def test_clear_previous_edition_refuses_a_module_outside_the_worktree(tmp_path, monkeypatch):
     monkeypatch.setattr(v7_build, "PROJECT_ROOT", tmp_path / "worktree")
     primary = _primary_lesson(tmp_path)
