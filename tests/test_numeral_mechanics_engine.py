@@ -120,7 +120,7 @@ def test_resolve_numeral_rules():
 
     _cit15, ua15, en15 = resolve_approximate_constructions_rule()
     assert "інверсією" in ua15
-    assert "proximity" in en15
+    assert "colloquial" in en15.lower()
 
 
 def test_build_canonical_numeral_cards_count_and_distribution():

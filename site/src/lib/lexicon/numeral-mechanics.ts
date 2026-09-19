@@ -334,8 +334,8 @@ export function resolveApproximateConstructionsRule(): NumeralRuleResolution {
   return {
     citation: 'Культура мовлення / Синтаксис',
     ruleUa:
-      "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість).",
+      "Приблизну кількість у нормативному літературному мовленні позначають інверсією (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; конструкція 'біля ста' має розмовний характер, а не офіційно-літературний).",
     ruleEn:
-      "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity).",
+      "In standard literary Ukrainian, approximate quantity is expressed via inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля ста' is marked as colloquial).",
   };
 }

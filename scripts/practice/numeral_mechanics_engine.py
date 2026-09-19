@@ -258,8 +258,8 @@ def resolve_time_expressions_rule() -> tuple[str, str, str]:
 
 def resolve_approximate_constructions_rule() -> tuple[str, str, str]:
     citation = "Культура мовлення / Синтаксис"
-    ua = "Приблизну кількість в українській мові позначають інверсією іменника й числівника (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; прийменник 'біля' позначає просторову близькість, а не кількість)."
-    en = "Approximate quantities in Ukrainian are expressed via noun-numeral inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля' denotes physical proximity, not quantity)."
+    ua = "Приблизну кількість у нормативному літературному мовленні позначають інверсією (років п'ять, хвилин двадцять) або прийменниками близько, понад, з (близько ста; конструкція 'біля ста' має розмовний характер, а не офіційно-літературний)."
+    en = "In standard literary Ukrainian, approximate quantity is expressed via inversion (років п'ять, хвилин двадцять) or prepositions близько, понад, з (близько ста; 'біля ста' is marked as colloquial)."
     return citation, ua, en
 
 
@@ -2501,15 +2501,15 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_71",
             category=NumeralCategory.APPROXIMATE_NUMERICAL_CONSTRUCTIONS,
             cefr_level="B1",
-            sentence_before="На центральній площі зібралося",
+            sentence_before="В офіційному звіті зазначено, що на площі зібралося",
             sentence_after="громадян, які вимагали реформ.",
             correct_answer="близько ста",
             distractors=(
                 NumeralDistractor(
                     text="біля ста",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="Прийменник 'біля' в українській мові позначає просторову близькість (біля хати); для приблизної кількості вживають 'близько'.",
-                    explanation_en="Preposition 'біля' strictly denotes spatial proximity (біля хати); for approximate quantity 'близько' is used.",
+                    explanation_ua="У нормативному літературному та офіційно-діловому стилях для позначення приблизної кількості вживають 'близько ста'; прийменник 'біля' в кількісному значенні є розмовним (СУМ-20: розм.).",
+                    explanation_en="In standard literary and official register, approximate quantity is expressed with 'близько ста'; preposition 'біля' in quantitative sense is colloquial (SUM-20: розм.).",
                 ),
                 NumeralDistractor(
                     text="в районі ста",
@@ -2545,8 +2545,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="десь біля двадцяти хвилин",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="Поєднання 'біля' з часовими проміжками є калькованим плеоназмом; норма — інверсія або 'близько двадцяти хвилин'.",
-                    explanation_en="Using 'біля' for time spans is an erroneous pleonasm; norm is inversion or 'близько двадцяти хвилин'.",
+                    explanation_ua="Сполука *десь біля двадцяти хвилин* містить розмовний плеоназм; у літературній мові вживають інверсію ('хвилин двадцять') або нормативне 'близько двадцяти хвилин'.",
+                    explanation_en="Phrase *десь біля двадцяти хвилин* is a colloquial pleonasm; literary norm requires inversion ('хвилин двадцять') or standard 'близько двадцяти хвилин'.",
                 ),
                 NumeralDistractor(
                     text="двадцять близько хвилин",
@@ -2607,8 +2607,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="десь біля десяти",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="Сполука *десь біля десяти* є розмовним плеоназмом із калькованим прийменником 'біля'.",
-                    explanation_en="*десь біля десяти* is a colloquial pleonasm with inappropriately calqued preposition 'біля'.",
+                    explanation_ua="Сполука *десь біля десяти* є розмовним плеоназмом; у нормативному мовленні вживають питомий вислів 'з десяток' або 'близько десяти'.",
+                    explanation_en="Phrase *десь біля десяти* is a colloquial pleonasm; standard literary usage requires 'з десяток' or 'близько десяти'.",
                 ),
                 NumeralDistractor(
                     text="з десятка",
@@ -2632,8 +2632,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                 NumeralDistractor(
                     text="біля трьох років",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="Прийменник 'біля' вказує на просторову близькість; приблизний час позначають інверсією ('роки три') або 'близько трьох років'.",
-                    explanation_en="Preposition 'біля' marks spatial distance; approximate time is expressed by inversion ('роки три') or 'близько трьох років'.",
+                    explanation_ua="У нормативній літературній мові замість розмовного 'біля трьох років' приблизність виражають інверсією ('роки три') або прийменником 'близько' ('близько трьох років').",
+                    explanation_en="In standard literary usage, rather than colloquial 'біля трьох років', approximation is expressed via inversion ('роки три') or preposition 'близько' ('близько трьох років').",
                 ),
                 NumeralDistractor(
                     text="в районі трьох років",
