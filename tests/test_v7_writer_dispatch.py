@@ -71,7 +71,12 @@ def test_v7_writer_choices_resolve_to_runtime_adapters(
 
     def fake_invoker(agent: str, prompt: str, **kwargs: Any) -> SimpleNamespace:
         calls.append((agent, prompt, kwargs))
-        return SimpleNamespace(response="writer output")
+        # A -tools writer with an empty MCP trace now fails the runtime gate
+        # even when the prompt carries no module ref (#7994).
+        return SimpleNamespace(
+            response="writer output",
+            tool_calls=[{"name": "mcp__sources__verify_words", "arguments": {"words": ["ранок"]}}],
+        )
 
     response = linear_pipeline.invoke_writer(
         "Write the module.",
@@ -338,6 +343,123 @@ def test_positive_runtime_gate_fires_when_tools_writer_makes_zero_mcp_calls(
 
     summary = next(event for event in events if event["event"] == "phase_writer_summary")
     assert summary["tool_calls_total"] == 0
+
+
+UPGRADE_SHAPED_PROMPT = (
+    "# V7 UPGRADE writer — preserve and expand an existing module\n\n"
+    "Mode: upgrade. Base level: a1. Module: special-signs.\n"
+    "Your current published unit: lesson 1.\n"
+)
+
+
+def _invoke_upgrade_writer(
+    tmp_path: Path,
+    tool_calls: list[dict[str, Any]],
+    events: list[dict[str, Any]],
+    **kwargs: Any,
+) -> str:
+    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        return SimpleNamespace(response="writer output", tool_calls=tool_calls)
+
+    return linear_pipeline.invoke_writer(
+        UPGRADE_SHAPED_PROMPT,
+        writer="agy-tools",
+        cwd=tmp_path,
+        invoker=fake_invoker,
+        event_sink=lambda event, **fields: events.append({"event": event, **fields}),
+        **kwargs,
+    )
+
+
+def test_upgrade_prompt_header_resolves_module_ref() -> None:
+    assert linear_pipeline._prompt_module_ref(UPGRADE_SHAPED_PROMPT) == "a1/special-signs"
+    assert linear_pipeline._prompt_sections(UPGRADE_SHAPED_PROMPT) == []
+
+
+def test_upgrade_shaped_prompt_runs_runtime_gate_on_empty_agy_trace(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#7994: no `- Level:` list / Contract YAML must not skip the MCP gate."""
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    events: list[dict[str, Any]] = []
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
+        _invoke_upgrade_writer(tmp_path, [], events)
+
+    summary = next(event for event in events if event["event"] == "phase_writer_summary")
+    assert summary["module"] == "a1/special-signs"
+    assert summary["tool_calls_total"] == 0
+    failure = next(event for event in events if event["event"] == "writer_failure_class")
+    assert failure["failure_class"] == "mcp_tools_never_invoked"
+
+
+def test_tools_writer_without_any_module_ref_is_still_gated(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+
+    def fake_invoker(_agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        return SimpleNamespace(response="writer output", tool_calls=[])
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
+        linear_pipeline.invoke_writer(
+            "Write the module.",
+            writer="agy-tools",
+            cwd=tmp_path,
+            invoker=fake_invoker,
+            event_sink=lambda _event, **_fields: None,
+        )
+
+
+def test_shell_vesum_trace_does_not_satisfy_mcp_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Shell `python3 vesum.py`, curl and raw sqlite are not sources proofs."""
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    events: list[dict[str, Any]] = []
+    shell_calls = [
+        {"name": "run_shell_command", "arguments": {"command": "python3 scripts/verification/vesum.py ранок"}},
+        {"name": "run_shell_command", "arguments": {"command": "curl -s localhost:8765/verify_words?w=ранок"}},
+        {"name": "Bash", "arguments": {"command": "sqlite3 data/vesum.db 'select * from forms'"}},
+    ]
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
+        _invoke_upgrade_writer(
+            tmp_path, shell_calls, events, module="a1/special-signs", sections=["Апостроф"],
+        )
+
+    summary = next(event for event in events if event["event"] == "phase_writer_summary")
+    assert summary["tool_calls_total"] == 0
+
+
+def test_sources_search_text_and_verify_words_pass_never_invoked_gate(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    events: list[dict[str, Any]] = []
+    trace = tmp_path / "writer_tool_calls.json"
+    calls = [
+        {"name": "mcp__sources__search_text", "arguments": {"query": "апостроф після губних"}},
+        {"name": "mcp__sources__verify_words", "arguments": {"words": ["м'ята", "сім'я"]}},
+    ]
+
+    response = _invoke_upgrade_writer(
+        tmp_path, calls, events, module="a1/special-signs", sections=["Апостроф"],
+        tool_trace_path=trace,
+    )
+
+    summary = next(event for event in events if event["event"] == "phase_writer_summary")
+    assert response == "writer output"
+    assert summary["tool_calls_total"] == 2
+    assert summary["verify_words_calls"] == 1
+    assert [call["name"] for call in json.loads(trace.read_text("utf-8"))] == [
+        "mcp__sources__search_text",
+        "mcp__sources__verify_words",
+    ]
 
 
 def test_grok_unknown_tool_telemetry_is_not_treated_as_zero(

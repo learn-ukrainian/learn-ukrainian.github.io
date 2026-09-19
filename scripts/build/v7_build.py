@@ -2259,6 +2259,11 @@ def _run_upgrade(args: argparse.Namespace) -> int:
                     prompt, writer, cwd=PROJECT_ROOT if writer == "gemini-tools" else lesson_dir,
                     tool_trace_path=lesson_dir / "writer_tool_calls.json",
                     stdout_silence_timeout=args.writer_timeout, effort=args.effort,
+                    # Explicit refs: the upgrade prompt has no `- Level:` /
+                    # `## Contract YAML`, so the MCP runtime gate must not
+                    # depend on prompt parsing (#7994).
+                    module=f"a1/{args.slug}", sections=list(lesson["sections"]),
+                    event_sink=tracker.emit,
                 )
                 response_path.write_text(response, encoding="utf-8")
                 linear_pipeline.write_writer_artifacts(lesson_dir, linear_pipeline.parse_writer_output(response, lesson_mode=True))

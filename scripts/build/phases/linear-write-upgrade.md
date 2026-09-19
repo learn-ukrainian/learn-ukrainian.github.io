@@ -33,15 +33,49 @@ clone only its close/summary *shape*). Added Ukrainian passages of three or more
 sentences require side-by-side English support. Write dialogues as > blockquotes,
 never as code fences; put the English breakdown after.
 
-**Why you must call `sources` / VESUM — not as a ritual, as the reason this page is better Ukrainian.**
-A fluent model still mixes Russian calques, wrong gender, wrong government, and invented
-example sentences. VESUM is the dictionary of record for lemma, gender, aspect, and
-rections. Looking it up is what makes the line teachable. This run is also a **test of
-the sources tools**: we will check your tool trace. If you never call them, we cannot
-tell they work, and this corpus is the dataset for a Ukrainian LLM — guessed forms
-become the next model's errors. If a lookup misses, mark `<!-- VERIFY: … -->` and do
-not invent. Stress marks still come from the pipeline annotator after review; do not
-invent stressed spellings.
+## Prove what you write — named `sources` MCP tools (HARD, runtime-gated)
+
+**Why: this is the reason the page is better Ukrainian, not a ritual.** A fluent model
+still mixes Russian calques, wrong gender, wrong government, and invented rules and
+example sentences. Our corpus (textbooks, VESUM, Правопис) is the record. This run is
+also a **test of the sources tools**, and this corpus is the dataset for a Ukrainian
+LLM — guessed forms and guessed rules become the next model's errors.
+
+Call these MCP tools **by these exact names** (your harness may expose them as
+`call_mcp_tool` with ServerName `sources`, or as `mcp_sources_<tool>`; same tools):
+
+- `mcp__sources__search_text` — **probe every theory claim and every landing claim in
+  the textbook corpus BEFORE you emit the sentence.** Query the rule the way a textbook
+  states it, read the hits, and write what the corpus supports. If the corpus does not
+  support the claim, write `<!-- VERIFY: … -->` and do **not** invent.
+- `mcp__sources__verify_words` — every lemma you teach: all vocabulary entries plus
+  every new example word you add (batch them in one call).
+- Optional, same server: `mcp__sources__query_pravopys` for an orthography rule,
+  `mcp__sources__verify_lemma` / `mcp__sources__check_modern_form` for a single doubtful form.
+
+Required probes, checked against your recorded tool trace:
+
+1. **Theory probe (every lesson).** At least one `mcp__sources__search_text` (or other
+   `sources` corpus search) that probes a **theory claim in this lesson's presentation**
+   — the rule you explain, not a random word.
+2. **Landing probe (lesson 1 only).** When you return `landing-overview.md`, at least one
+   corpus search that probes the landing itself: each bilingual "By the end, you can"
+   bullet and each bold Ukrainian target must be corpus-true and actually taught in this
+   module. The landing is an executive orientation portal
+   (docs/epics/a1-upgrade-landing-contract.md) — not a theory dump, not a table, not YAML
+   objectives — but its claims are still claims, and you probe the landing like theory.
+3. **Vocabulary proof (every lesson).** At least one `mcp__sources__verify_words` covering
+   this lesson's vocabulary and new example words.
+
+**What does NOT count as proof.** Only `sources` MCP calls are recorded in the tool
+trace. Shell commands, Python scripts, `curl`/HTTP requests and direct SQLite reads of
+any dictionary database are invisible to the trace and are never a substitute — do not
+run them. A lesson whose trace holds zero `sources` MCP calls **fails the build**
+(`MCP_TOOLS_NEVER_INVOKED`) and the write is discarded. If the MCP tools are not
+visible in your session, stop and report that in one line instead of working around it.
+
+Stress marks come from the pipeline annotator after review. Do not invent stressed
+spellings, and do not look stress up by any other route.
 
 A1 landing overview (lesson 1 only): if the original module opening (text before the first `##`) has no "By the end, you can" after tables/tips/code fences are ignored, also return:
 

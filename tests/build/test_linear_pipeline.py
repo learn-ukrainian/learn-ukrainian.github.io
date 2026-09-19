@@ -244,6 +244,8 @@ def test_invoke_writer_routes_supported_writers(
 
     class Result:
         response = "writer output"
+        # -tools writers are always MCP-gated, even without a prompt module ref (#7994).
+        tool_calls = [{"name": "mcp__sources__verify_words", "arguments": {"words": ["ранок"]}}]  # noqa: RUF012
 
     def fake_invoker(agent: str, prompt: str, **kwargs: object) -> Result:
         calls.append((agent, prompt, kwargs))

@@ -46,6 +46,12 @@ def test_upgrade_dry_run_saves_full_prompt_without_writer(upgrade_root, monkeypa
     assert "NO named narrator" in prompt
     assert "side-by-side English support" in prompt
     assert "file=activities.yaml" in prompt
+    # #7994: named sources MCP probes, theory + landing; shell VESUM is no proof.
+    assert "mcp__sources__search_text" in prompt
+    assert "mcp__sources__verify_words" in prompt
+    assert "landing-overview.md" in prompt and "probe the landing" in prompt.lower()
+    assert "python3 scripts/verification/vesum.py" not in prompt
+    assert linear_pipeline._prompt_module_ref(prompt) == "a1/things-have-gender"
     for name in linear_pipeline.WRITER_ARTIFACTS:
         assert (upgrade_root / ORIGINAL / name).read_text() in prompt
     assert len(yaml.safe_load((output / "lessons.yaml").read_text())["lessons"]) == 3
@@ -74,6 +80,10 @@ def test_upgrade_invokes_existing_writer_per_lesson_then_review_then_annotation(
         n = len([e for e in events if e.startswith("writer")]) + 1
         assert selected_writer == writer
         assert f"Your current published unit: lesson {n}" in prompt
+        # #7994: the MCP runtime gate must not depend on prompt regexes.
+        assert kwargs["module"] == "a1/things-have-gender"
+        assert kwargs["sections"]
+        assert kwargs["tool_trace_path"].name == "writer_tool_calls.json"
         events.append(f"writer{n}")
         return _gold_response(n)
 
