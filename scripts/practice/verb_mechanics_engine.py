@@ -1093,37 +1093,46 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_pref_pysaty_perf",
         "category": VerbCategory.ASPECT_PREFIXATION,
         "cefr_level": "A1",
-        "prompt_sentence": "Письменник нарешті повністю ___ завершальний розділ свого роману.",
+        "prompt_sentence": "Письменник уперше від початку до кінця ___ новий розділ свого роману (виберіть нейтральну доконану пару до «писати»).",
         "blank_target": "написав",
         "correct_answer": "написав",
         "distractors": [
             {
                 "text": "пописав",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "explanation": {
+                    "ua": "Префікс по- позначає дію, обмежену в часі («пописав трохи»), а не повне завершення написання розділу.",
+                    "en": "The prefix po- denotes action limited in time ('wrote for a bit'), not full completion of the chapter.",
+                },
             },
             {
-                "text": "списав",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "написив",
+                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "explanation": {
+                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ав: правильно «написав», а не «*написив» (Правопис 2019 § 115).",
+                    "en": "Erroneous use of Class II suffix -yv instead of -av: standard is 'napysav', not '*napysiv' (Pravopys 2019 § 115).",
+                },
             },
             {
-                "text": "переписав",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "написавав",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
+                "explanation": {
+                    "ua": "Помилкове утворення минулого часу з надлишковим нарощенням суфікса: нормативною формою є «написав», а не «*написавав».",
+                    "en": "Erroneous past tense with spurious suffix lengthening: standard is 'napysav', not '*napysavav'.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
         "rule_summary": {
-            "ua": "Нейтральною видовою парою до «писати» для позначення завершеності дії є префікс на-: «написати» (префікс по- означає обмеженість дії в часі, с- — копіювання).",
-            "en": "The neutral perfective counterpart to 'pysaty' is 'napysaty'.",
+            "ua": "Нейтральною видовою парою до «писати» для позначення завершеності дії є «написати» з префіксом на- (Правопис 2019 § 115).",
+            "en": "The neutral perfective counterpart to 'pysaty' is 'napysaty' (Pravopys 2019 § 115).",
         },
     },
     {
         "card_id": "verb_aspect_pref_robyty_perf",
         "category": VerbCategory.ASPECT_PREFIXATION,
         "cefr_level": "A1",
-        "prompt_sentence": "Студент сумлінно та бездоганно ___ все домашнє завдання.",
+        "prompt_sentence": "Студент сумлінно та бездоганно ___ все нове домашнє завдання (виберіть нейтральну доконану пару до «робити»).",
         "blank_target": "зробив",
         "correct_answer": "зробив",
         "distractors": [
@@ -1189,7 +1198,7 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_pref_buduvaty_perf",
         "category": VerbCategory.ASPECT_PREFIXATION,
         "cefr_level": "A2",
-        "prompt_sentence": "Будівельники успішно та вчасно ___ новий міст через річку.",
+        "prompt_sentence": "Будівельники успішно та вчасно вперше з нуля ___ новий міст через річку (виберіть нейтральну доконану пару до «будувати»).",
         "blank_target": "збудували",
         "correct_answer": "збудували",
         "distractors": [
@@ -1219,30 +1228,39 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_pref_maliuvaty_perf",
         "category": VerbCategory.ASPECT_PREFIXATION,
         "cefr_level": "A1",
-        "prompt_sentence": "Художник за кілька годин натхненно ___ чудовий пейзаж.",
+        "prompt_sentence": "Художник за кілька годин натхненно з чистого полотна ___ чудовий новий пейзаж (виберіть нейтральну доконану пару до «малювати»).",
         "blank_target": "намалював",
         "correct_answer": "намалював",
         "distractors": [
             {
                 "text": "помалював",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "explanation": {
+                    "ua": "Префікс по- позначає дію, обмежену в часі («помалював трохи»), а не створення завершеної картини.",
+                    "en": "The prefix po- denotes action limited in time ('painted for a bit'), not full completion of the painting.",
+                },
             },
             {
-                "text": "змалював",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "намалювив",
+                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "explanation": {
+                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ав: правильно «намалював», а не «*намалювив» (Правопис 2019 § 115).",
+                    "en": "Erroneous use of Class II suffix -yv instead of -av: standard is 'namaliuvav', not '*namaliuvyv' (Pravopys 2019 § 115).",
+                },
             },
             {
-                "text": "розмалював",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "намалювавав",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
+                "explanation": {
+                    "ua": "Помилкове утворення минулого часу з надлишковим нарощенням суфікса: нормативною формою є «намалював», а не «*намалювавав».",
+                    "en": "Erroneous past tense with spurious suffix lengthening: standard is 'namaliuvav', not '*namaliuvavav'.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
         "rule_summary": {
-            "ua": "Нейтральною видовою парою до «малювати» для результату є «намалювати» (змалювати означає скопіювати).",
-            "en": "The neutral perfective counterpart to 'maliuvaty' is 'namaliuvaty'.",
+            "ua": "Нейтральною видовою парою до «малювати» для результату є «намалювати» (Правопис 2019 § 115).",
+            "en": "The neutral perfective counterpart to 'maliuvaty' is 'namaliuvaty' (Pravopys 2019 § 115).",
         },
     },
 
