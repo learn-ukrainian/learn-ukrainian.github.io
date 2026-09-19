@@ -230,6 +230,23 @@ def test_etiquette_separate_spelling_guardrails():
     )
 
 
+def test_card_45_distractor_exclusivity_regression():
+    """Verify Card 45 does not reject valid Ukrainian interjection 'Стук-стук' (СУМ-11)."""
+    cards = build_canonical_interjection_cards()
+    c45 = next(c for c in cards if c.card_id == "interjection_card_45")
+    assert c45.correct_answer == "Тук-тук"
+
+    distractor_texts = [d.text for d in c45.distractors]
+    # 'Стук-стук' is an authentic Ukrainian interjection for knocking (СУМ-11 СТУК¹),
+    # so it must NOT be marked as an incorrect distractor!
+    assert "Стук-стук" not in distractor_texts
+    assert "Тік-так" in distractor_texts
+
+    d_tik_tak = next(d for d in c45.distractors if d.text == "Тік-так")
+    assert d_tik_tak.interference_key == InterjectionInterferenceKey.INCORRECT_SOUND_SOURCE
+    assert "годинника" in d_tik_tak.explanation_ua
+
+
 def test_syntax_punctuation_particle_vs_interjection():
     """Verify syntax discrimination: vocative particle without comma vs interjection with comma."""
     cards = build_canonical_interjection_cards()

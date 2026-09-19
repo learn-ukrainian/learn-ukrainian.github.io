@@ -174,4 +174,26 @@ describe('interjection-mechanics', () => {
     expect(totalEvaluations).toBe(240);
     expect(correctCount).toBe(60);
   });
+
+  it('verifies Card 45 does not reject valid interjection Стук-стук and correctly evaluates Тік-так', () => {
+    const deckPath = path.resolve(
+      __dirname,
+      '../../../data/practice/interjection_mechanics_deck.json',
+    );
+    const rawData = fs.readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(rawData) as InterjectionMechanicsDeckPayload;
+
+    const card45 = deck.cards.find((c) => c.id === 'interjection_card_45');
+    expect(card45).toBeDefined();
+    expect(card45!.correct_answer).toBe('Тук-тук');
+
+    const distractorTexts = card45!.distractors.map((d) => d.text);
+    expect(distractorTexts).not.toContain('Стук-стук');
+    expect(distractorTexts).toContain('Тік-так');
+
+    const evalResult = interjectionMechanicsFeedbackFor(card45!, 'Тік-так');
+    expect(evalResult.isCorrect).toBe(false);
+    expect(evalResult.misconceptionType).toBe('INCORRECT_SOUND_SOURCE');
+    expect(evalResult.feedbackUa).toContain('годинника');
+  });
 });

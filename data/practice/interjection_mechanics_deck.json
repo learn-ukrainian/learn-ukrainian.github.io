@@ -1962,7 +1962,7 @@
       "options": [
         "Тук тук",
         "Тук-тук",
-        "Стук-стук",
+        "Тік-так",
         "Туктук"
       ],
       "distractors": [
@@ -1983,11 +1983,11 @@
           }
         },
         {
-          "text": "Стук-стук",
-          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "text": "Тік-так",
+          "interference_key": "INCORRECT_SOUND_SOURCE",
           "explanation": {
-            "ua": "«Стук» є іменником; звуконаслідувальним словом для стукання в двері чи вікно є «тук-тук».",
-            "en": "'Стук' is a noun; standard onomatopoeic interjection for knocking is 'тук-тук'."
+            "ua": "«Тік-так» є звуконаслідуванням ходу годинника, а обережний стукіт у шибку вікна відтворює «тук-тук».",
+            "en": "'Тік-так' is an onomatopoeia for clock ticking, whereas tapping on a window pane is conveyed by 'тук-тук'."
           }
         }
       ],
