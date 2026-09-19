@@ -1,0 +1,908 @@
+{
+  "dataset_name": "uldr_v06_general_assistant_sft",
+  "total_trajectories": 75000,
+  "shards_count": 150,
+  "max_shard_size_kb": 1453.59,
+  "shards": [
+    {
+      "shard_file": "sft_shard_001_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.97,
+      "sha256": "5bf483bde7a019b99a98deffcdc510f7e918323ccdea04136a16cc97ae624aa7"
+    },
+    {
+      "shard_file": "sft_shard_002_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.67,
+      "sha256": "a04aabb6fa6e20110c1d96ad94d1d66d5a625a20fe96da54a7f846ec1ff29c14"
+    },
+    {
+      "shard_file": "sft_shard_003_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1428.72,
+      "sha256": "e6814c30e3b1f90e5630127990d32208d2fdc91ef5b4aacdda4cd505c5af84a1"
+    },
+    {
+      "shard_file": "sft_shard_004_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.15,
+      "sha256": "ddb72cffa067b767984c7c5653ebd99c99bf05353f4ad4d1a556cc501bbc6403"
+    },
+    {
+      "shard_file": "sft_shard_005_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1445.56,
+      "sha256": "e711494589c6bfd93ffe1258716a4c76036a7f5e5e43bf555a9c53b9d85bdba2"
+    },
+    {
+      "shard_file": "sft_shard_006_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1440.05,
+      "sha256": "68a00a6a43fb3ad0bf279fb802697719cd619fc5f390b0ef7a469e67e2f9dde2"
+    },
+    {
+      "shard_file": "sft_shard_007_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.2,
+      "sha256": "db5b9c3315e5a75802e4847d205a4d29195917c54e0ab4306358fc98e8c84665"
+    },
+    {
+      "shard_file": "sft_shard_008_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.22,
+      "sha256": "176ae25e015716ce4c0519acba9a656d68b2473269f87eccfd1e59909d750452"
+    },
+    {
+      "shard_file": "sft_shard_009_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1425.74,
+      "sha256": "0afdc8fbbc0f6289e225c3a6e90f65d1c4ef4ee56aec6a0d711caffe227e69bb"
+    },
+    {
+      "shard_file": "sft_shard_010_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1447.0,
+      "sha256": "3f00e209afa4f4c8fb41a4a19a9edd6f9f5a64e8f270d5d6f0ed96f8bddbafd5"
+    },
+    {
+      "shard_file": "sft_shard_011_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.71,
+      "sha256": "06beb6e90d4d39564648342a7f4e4b3baa5eb5a1adc337ac26843f83c58dc2f6"
+    },
+    {
+      "shard_file": "sft_shard_012_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1429.56,
+      "sha256": "26ee75d3617844e3d347b4d0d7ef1b0853fef8163a6156a8cfb966177d6614d8"
+    },
+    {
+      "shard_file": "sft_shard_013_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.93,
+      "sha256": "8e3bcc0ffd4b689dcd09e7239be50a6c290f399aaf6cfcf8b159e35646814980"
+    },
+    {
+      "shard_file": "sft_shard_014_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1442.58,
+      "sha256": "17e7701eea3abcfe134df2be1b787b495e8112b0077d1c40936d0bad83ec8a25"
+    },
+    {
+      "shard_file": "sft_shard_015_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.94,
+      "sha256": "d699d15d8a206f7e6c3816006b281a52784207dcb19396fe855454c62b9881ed"
+    },
+    {
+      "shard_file": "sft_shard_016_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.11,
+      "sha256": "ca7847756617a2b65db788ee45411d585a9a3400c955bb5c9ad1212d892dd83c"
+    },
+    {
+      "shard_file": "sft_shard_017_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1440.87,
+      "sha256": "2be07b0cc026b36b8a649813f0b8be9e565b53e359e15be15c95c362d8cde557"
+    },
+    {
+      "shard_file": "sft_shard_018_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.21,
+      "sha256": "1d1d7ed173bc4cac94f6a8fa8dbae7a0e90649ba6a0e5e122e1046b489b81382"
+    },
+    {
+      "shard_file": "sft_shard_019_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.42,
+      "sha256": "fd7d8c145935e0b49d2f0c7636a926a2444fbf467f640575234b1fbda76325e9"
+    },
+    {
+      "shard_file": "sft_shard_020_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.08,
+      "sha256": "9fd0bdc6eb707691290c8002df62a1d3a0f797e533af93a5fcfd0069f4e33f88"
+    },
+    {
+      "shard_file": "sft_shard_021_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.19,
+      "sha256": "afecd7ecc59d9e0d17bac1c81de9cc1fe3d4539f7798e7edec7db65c92e65b7c"
+    },
+    {
+      "shard_file": "sft_shard_022_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.5,
+      "sha256": "aa2768af54eb8cbed94b1bda26d72d8610b908cf72e15fc6708afebe8cbc6aa5"
+    },
+    {
+      "shard_file": "sft_shard_023_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1448.3,
+      "sha256": "25c70caa8831f3c9f11af4a1f0d649d73f71e968db3d0acd80fd3516227e211a"
+    },
+    {
+      "shard_file": "sft_shard_024_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.97,
+      "sha256": "a64d062a897e63d8b4d31a1801f1fbc88227450936126cee120ba9594a2f6d36"
+    },
+    {
+      "shard_file": "sft_shard_025_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.83,
+      "sha256": "ad295c1bc1ff21d5b75030b4301bce891da8374d20a11f1a46e3b815587cacae"
+    },
+    {
+      "shard_file": "sft_shard_026_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.89,
+      "sha256": "87d1243746d0c6d6f541e81b6a1e75a125047c7e2ba24b849c27d5999e711bd7"
+    },
+    {
+      "shard_file": "sft_shard_027_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.74,
+      "sha256": "a9fb9f41a4e9336fa5842b3cc6cb4f26ae47e56b232f6a2979ad5e3548ed6f08"
+    },
+    {
+      "shard_file": "sft_shard_028_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1447.3,
+      "sha256": "1dcbbb44d40ce81588a913de37c95487050a89b8e967912a80367ebf7332f7d3"
+    },
+    {
+      "shard_file": "sft_shard_029_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.8,
+      "sha256": "8dd6a6e2d4d83652ec09adee3c14f72d852523f9e16c6050652c97b02306e474"
+    },
+    {
+      "shard_file": "sft_shard_030_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.14,
+      "sha256": "09b7adfb4ce111bdf2fc167a381bae36bcf5c20f745706e77e48b6469a9b3e80"
+    },
+    {
+      "shard_file": "sft_shard_031_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1442.64,
+      "sha256": "b4467fd60491bcc4c64040a331e68b37479bb01a13fb36436e2bfd313401fe3b"
+    },
+    {
+      "shard_file": "sft_shard_032_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1445.09,
+      "sha256": "a60b3c9bbb340d4511982d5ab93f999458c120b26629d0e64b5552d7b04f9f4e"
+    },
+    {
+      "shard_file": "sft_shard_033_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.16,
+      "sha256": "3b5bf10982f13ee8ada915969cc5cbcb7b17622e12197148a4b4b3e8d4d0ed1f"
+    },
+    {
+      "shard_file": "sft_shard_034_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.11,
+      "sha256": "074ddd016d4e3a69e240d81b797c31219d8fa08b214ffc7c5b9ff0d0627387c0"
+    },
+    {
+      "shard_file": "sft_shard_035_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.78,
+      "sha256": "835b22e677c9495b6f3289a84ea7f5a351186c0461099be18f7b1a8dd2f10038"
+    },
+    {
+      "shard_file": "sft_shard_036_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.3,
+      "sha256": "f6bec4d1c323059f1b3ba904f9e0d136bd16882529e0d635148a530d85f498c3"
+    },
+    {
+      "shard_file": "sft_shard_037_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1426.85,
+      "sha256": "3f01eb5f33a163ebb491efabeb2c06ff7b9116e3ba8ee97364b05b52e44ae330"
+    },
+    {
+      "shard_file": "sft_shard_038_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.68,
+      "sha256": "12f89f7b5dc6b9f884a362c022101ec72bfd1d7158084c2edbaea7f0145dd94d"
+    },
+    {
+      "shard_file": "sft_shard_039_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.6,
+      "sha256": "3e41938692225aade65528a5eb941ab794e5b082f577dd7c899f81e623d70158"
+    },
+    {
+      "shard_file": "sft_shard_040_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.55,
+      "sha256": "ae331dc6b4af67087019b870a93fa640852a1e3178c76d8dd664268387303265"
+    },
+    {
+      "shard_file": "sft_shard_041_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.96,
+      "sha256": "e9510a1ea7412124fb6abd34e9d0bfec769ee5517f4f2714512131df45bf93fd"
+    },
+    {
+      "shard_file": "sft_shard_042_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.65,
+      "sha256": "edb5b025c3c87987bf4d7c18d66f1541dacaba41443054e8159e9bc42df30d55"
+    },
+    {
+      "shard_file": "sft_shard_043_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1442.68,
+      "sha256": "dab4257e802ae9c40fdd6a016e389b7517ba1d889c5bd63fea316e1c5eaa4e45"
+    },
+    {
+      "shard_file": "sft_shard_044_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1427.89,
+      "sha256": "fc993c681962b268873e5b30c173e4654ed63794eb673153b2e3afee09c77e53"
+    },
+    {
+      "shard_file": "sft_shard_045_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.19,
+      "sha256": "74144bad3d8ceadfa5de87b7b289ebe78627b9cd5826c73bc3403ff6f9812399"
+    },
+    {
+      "shard_file": "sft_shard_046_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.42,
+      "sha256": "fb7c172f884f064d12c796447b41b4d76662463260b8cde7471098f8612cd25a"
+    },
+    {
+      "shard_file": "sft_shard_047_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.69,
+      "sha256": "c4baca3f8b01e83287616a9855e737642a0e3e0272abcf7d89a079034f21f870"
+    },
+    {
+      "shard_file": "sft_shard_048_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1442.52,
+      "sha256": "8492233f8e64809bdbf4e693ed4f5a184752e0e273e5cbf0415842bdaaede41b"
+    },
+    {
+      "shard_file": "sft_shard_049_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.67,
+      "sha256": "8d54db0a47b786c4c6e166cf344c2013a52b435ee29f324e342b12e4a4b3bd8c"
+    },
+    {
+      "shard_file": "sft_shard_050_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.61,
+      "sha256": "f4e7ed736638bc3961e2a9413f4d3afb1c14da6e6e67bd1542aaad54f4ecf894"
+    },
+    {
+      "shard_file": "sft_shard_051_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.34,
+      "sha256": "2ab91da7ae7184dbdf0be16968990b29b7aa72f66e4a6f921b8eeb429c719ba9"
+    },
+    {
+      "shard_file": "sft_shard_052_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.4,
+      "sha256": "62eb6203ef25b79c4c1d23439a8b6ab1185f9c6914c73d8e0e6cc90a91c4f3e0"
+    },
+    {
+      "shard_file": "sft_shard_053_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1440.05,
+      "sha256": "4d484bcb0382b917c9a37d074d484eb9b098fd23bd78c9f4854340695591aabb"
+    },
+    {
+      "shard_file": "sft_shard_054_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.3,
+      "sha256": "f8caa565de6f5e83db16d72b76d8ad7930e27c8c1bfdc95dada416d46fa5815f"
+    },
+    {
+      "shard_file": "sft_shard_055_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.22,
+      "sha256": "dde8b16c2dc87bd25c592827e2d883393c44778c42b306d4f685a55fb8a03392"
+    },
+    {
+      "shard_file": "sft_shard_056_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.1,
+      "sha256": "bcce18901afa0c9730618b77f156890f322d6d3e0ae92cdce1790554c012dacb"
+    },
+    {
+      "shard_file": "sft_shard_057_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.77,
+      "sha256": "a772b4fcb78676b7156db08d015ece331de9de21729c0e421256e2cce90b758f"
+    },
+    {
+      "shard_file": "sft_shard_058_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.18,
+      "sha256": "829f1718233acdf6abb6c03b12ebcf09217808098232d035820ff9ac9ae9ab86"
+    },
+    {
+      "shard_file": "sft_shard_059_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.2,
+      "sha256": "a249c47a90570072e69db91421b648543a2facaea93cfa265b2ff900d5d4f16c"
+    },
+    {
+      "shard_file": "sft_shard_060_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.64,
+      "sha256": "fb1dad606ba6ab4fc986209c0c4a7d54b0226dcdb66d17343517ebf76d7cb78d"
+    },
+    {
+      "shard_file": "sft_shard_061_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.26,
+      "sha256": "ce5eb31c0eef2a6dce30c67cf902710977ffee566f9854f17bb7c869d610ff24"
+    },
+    {
+      "shard_file": "sft_shard_062_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.21,
+      "sha256": "5723ef746abd92b1c959e9dd631773b935e3908bd1c8002e96f764256e00d810"
+    },
+    {
+      "shard_file": "sft_shard_063_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.26,
+      "sha256": "4d09e03b89a45670bd67c7b6a330403a21e0b8c45df5a10abeb76d10ca0974e7"
+    },
+    {
+      "shard_file": "sft_shard_064_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.08,
+      "sha256": "362667e10f92c2bed88cfd6a77975d8231653ce52d31c9272d65e894a066a27d"
+    },
+    {
+      "shard_file": "sft_shard_065_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.4,
+      "sha256": "5c1f48cf525d742a549a67e5ab560d00d033b5ae1bbd646cb61d94e4914efb16"
+    },
+    {
+      "shard_file": "sft_shard_066_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1446.41,
+      "sha256": "73909ed1acc0b6457ff23bcb24aceccd53dfd2d8b42fb118c060d053f971cedc"
+    },
+    {
+      "shard_file": "sft_shard_067_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.96,
+      "sha256": "310f3d6bbac9b0226cc4155cf6d3d115b9c2b97be0963a2d6423bdb39ab5a44b"
+    },
+    {
+      "shard_file": "sft_shard_068_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.17,
+      "sha256": "c2232f4c89b90d6750d03609cd9373fca27b83cf49ca990047d154e5ee953536"
+    },
+    {
+      "shard_file": "sft_shard_069_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.18,
+      "sha256": "b65770ca7db77993e39dcd856f3fbe81db0cc4b8fa4145567d4d47961b2eb0e7"
+    },
+    {
+      "shard_file": "sft_shard_070_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.28,
+      "sha256": "ea6443c28d2339d199982126800d8d91f93b24faadaf41c0f468c5d3eaa70d7c"
+    },
+    {
+      "shard_file": "sft_shard_071_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1424.29,
+      "sha256": "aea51ac03db545cc20f7c42324e5d1bc1fdba886d701debec8862e0e0fdb2f0c"
+    },
+    {
+      "shard_file": "sft_shard_072_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.41,
+      "sha256": "c00505b4c23e5b1c318298b4e8978f761555ad19263846fe6e95d174d2d1938d"
+    },
+    {
+      "shard_file": "sft_shard_073_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.21,
+      "sha256": "bc70c0dc852bdc0e8204983a51b73335bb2639dce796a060e5e0788c78ff8e40"
+    },
+    {
+      "shard_file": "sft_shard_074_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1435.31,
+      "sha256": "de5ba960527a7267c315e8813040f18e7798346917838b0888ec782e6d2523d5"
+    },
+    {
+      "shard_file": "sft_shard_075_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.25,
+      "sha256": "969c6e7e3b9c6ab722890c005b3656ddd0ad097805619481a76a057c43767215"
+    },
+    {
+      "shard_file": "sft_shard_076_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1445.05,
+      "sha256": "f806085787522cdfcba00daeb95678cfe6cfa93a18abbdeae07bc42ca9687bac"
+    },
+    {
+      "shard_file": "sft_shard_077_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.36,
+      "sha256": "6a2d9a0849c6d48ead43e1739a2900376c1865c3e8dce6e1f753b00cf4dc4838"
+    },
+    {
+      "shard_file": "sft_shard_078_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1426.0,
+      "sha256": "ef0efd9a55131e502c1cccf0012d97f28303b6b8a32e52ded42bf5b1f8ae0699"
+    },
+    {
+      "shard_file": "sft_shard_079_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1435.63,
+      "sha256": "5e59cede9800ad4f9db4653aab2040a521b3a8712e780da6dd2d1ac8192632df"
+    },
+    {
+      "shard_file": "sft_shard_080_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1430.17,
+      "sha256": "7d62c47376c069f5dc927bcd2195f2fc8f4fa28024f422ec596a835a0dd18c58"
+    },
+    {
+      "shard_file": "sft_shard_081_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.97,
+      "sha256": "bd4e2ce9a27cbf01e196609b72d5c70ac30183942570e9e86eaa145dbdd34b35"
+    },
+    {
+      "shard_file": "sft_shard_082_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.05,
+      "sha256": "1aa900d81146ef0b7ebcf3c337283db2ebf942ceedb8ccd4b61dd342cb8be5ec"
+    },
+    {
+      "shard_file": "sft_shard_083_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.05,
+      "sha256": "c25f56c45bcc3a05939386a0a102b8761b19cef0fb7d84ec85506fa17210196d"
+    },
+    {
+      "shard_file": "sft_shard_084_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.34,
+      "sha256": "ad4fcea31d59b0cf81038fa8ed62673dc4775aaa63cac79dc2ffcce0f626ca23"
+    },
+    {
+      "shard_file": "sft_shard_085_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.32,
+      "sha256": "76796e32c6926c308bbba1f5f6bbcc44c33cd2bab7729566e38d00b4797b793e"
+    },
+    {
+      "shard_file": "sft_shard_086_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.0,
+      "sha256": "b7825cc5679a613474f28d2f22fc3f111aecd6a2ae3c545c5540031bcc574fe9"
+    },
+    {
+      "shard_file": "sft_shard_087_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.34,
+      "sha256": "7a945a1c03a35a03a080afa8c0fcac876e8928df06374acf2a170e128caf0b27"
+    },
+    {
+      "shard_file": "sft_shard_088_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.68,
+      "sha256": "faf37169d647cdb76f71eb06c0f6a614eef9621d952d5e4fbce189963510a1a4"
+    },
+    {
+      "shard_file": "sft_shard_089_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.97,
+      "sha256": "593047a8014e34c33ad58695bb9a231cadf44cb1171f2a943f7cff45de8d76d5"
+    },
+    {
+      "shard_file": "sft_shard_090_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.23,
+      "sha256": "1b9c480087d489b25705b0f20ca53b737906db2cf115e863ec19231d36f67d9c"
+    },
+    {
+      "shard_file": "sft_shard_091_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1424.57,
+      "sha256": "728c18693b7eca4fe929682d3afbc81308c38ccf961d485195b2ac9835def06e"
+    },
+    {
+      "shard_file": "sft_shard_092_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.58,
+      "sha256": "176199f69828b3e427eebeec665bdd6e5304e208a50b460d4c4dbe2fa2fa0211"
+    },
+    {
+      "shard_file": "sft_shard_093_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1430.72,
+      "sha256": "6f69da07387076f1c5b2274f87a2df08f18bc512d4fd3db0ec84e4c27becc5de"
+    },
+    {
+      "shard_file": "sft_shard_094_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.11,
+      "sha256": "2e045ced4e3670c8407e91aa06549bfc5c4f027b0a0827066c1abd1ec7f6949a"
+    },
+    {
+      "shard_file": "sft_shard_095_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1445.2,
+      "sha256": "997c82c5279810010e63026d552ece723c99d97c8efa7c9b30bba3167cfacf0f"
+    },
+    {
+      "shard_file": "sft_shard_096_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.25,
+      "sha256": "9fcb93ca6dba71dea6df44bf85ff6427518ffa17ec76ec24c0898bd42ffde986"
+    },
+    {
+      "shard_file": "sft_shard_097_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.31,
+      "sha256": "595cf023756a076981c1e2cb8030ff7dc32bfb1e8c479fa63b58783ce4dfffc8"
+    },
+    {
+      "shard_file": "sft_shard_098_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.27,
+      "sha256": "3e9783877fbe53a3caaa86b209a71d475c256023dd7d6dd65b19f9b89eceab23"
+    },
+    {
+      "shard_file": "sft_shard_099_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.11,
+      "sha256": "d2941cfdef982493fad113f99483e4d2ad12bb71107a05f73183d28e074ecf86"
+    },
+    {
+      "shard_file": "sft_shard_100_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1438.65,
+      "sha256": "26a6db7bf3addb4bd5ce39c8c1a35b266e4e71c13153b68a857ddeeb3ae4efbd"
+    },
+    {
+      "shard_file": "sft_shard_101_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.5,
+      "sha256": "9790cc23697d84f5ec52e098b116a1dbd61bbee382a6b9f706605fcc61daba70"
+    },
+    {
+      "shard_file": "sft_shard_102_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.31,
+      "sha256": "b6e0ba820748e5ba6b0811b181011f6d60d5503b58b557a6f7535a546541c48b"
+    },
+    {
+      "shard_file": "sft_shard_103_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.33,
+      "sha256": "e4a69d4f155c3e413488779674f0d2fce61391ff25652c090cbf0e5ba4e2fd49"
+    },
+    {
+      "shard_file": "sft_shard_104_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1425.79,
+      "sha256": "ba6ac1094b78837d8a0a6cc3805aeb9a5a7a730b06987b697e491fd365841402"
+    },
+    {
+      "shard_file": "sft_shard_105_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1440.2,
+      "sha256": "dd230e0054a1605588c0ee5de265e958554ad7e04762e0eb437ea6115ce2a7ac"
+    },
+    {
+      "shard_file": "sft_shard_106_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1428.31,
+      "sha256": "d7fd68910531ba043a0db4a196cecd74aeeeaeda0c4e46a59d4b41aaa58f87ea"
+    },
+    {
+      "shard_file": "sft_shard_107_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.43,
+      "sha256": "a5366eeadbff3f2ef9de3736e5154e6cc8c6526407da3b5926efc25e3aa195ea"
+    },
+    {
+      "shard_file": "sft_shard_108_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.68,
+      "sha256": "e16b591bc76c17419b700cfe294064c27808875c9a2acb61c97839c30d070d7e"
+    },
+    {
+      "shard_file": "sft_shard_109_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1445.55,
+      "sha256": "382a9b9471526274d5bcb2ece7038655fd54bd653357cf226c484e90625d3675"
+    },
+    {
+      "shard_file": "sft_shard_110_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1453.59,
+      "sha256": "bef71deb58b3df40514d33bc63ade6dc425c34a83f866dcc120f07c33424ccd2"
+    },
+    {
+      "shard_file": "sft_shard_111_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.0,
+      "sha256": "f629ed0dca1bc211bed3f877cb1fb0455dfca5f8758fb2d9ad6244a180b5c782"
+    },
+    {
+      "shard_file": "sft_shard_112_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.68,
+      "sha256": "077136f26e1122b6e78e7baa8fa98b1ee43e49a041097d5cbb53e66f3ced100e"
+    },
+    {
+      "shard_file": "sft_shard_113_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.66,
+      "sha256": "8358878245c3dcc6bc2db813c56ff37ab1f817320c227a8b372d6e2351a7c8ca"
+    },
+    {
+      "shard_file": "sft_shard_114_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.79,
+      "sha256": "4d4ca2640337dba8f2eb6b4811c19fe58d6cc04471f131715842eb481184dc95"
+    },
+    {
+      "shard_file": "sft_shard_115_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.24,
+      "sha256": "03dd6d518555facb701459c4ff6cd748909997c526ce089c952ce186cee761f3"
+    },
+    {
+      "shard_file": "sft_shard_116_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.0,
+      "sha256": "09bd203be1a7d4508aff979b90e89029631836bb4271da568229aa0677ac6eae"
+    },
+    {
+      "shard_file": "sft_shard_117_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1447.45,
+      "sha256": "954c1076cc65843e690252af222f510da53545a9c25e21b4e4e1a03135511e6b"
+    },
+    {
+      "shard_file": "sft_shard_118_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1450.06,
+      "sha256": "10dedf341b72ce784dd9202606f36f6ec881fcb1bca2fe5a00c7290102e19021"
+    },
+    {
+      "shard_file": "sft_shard_119_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.23,
+      "sha256": "b89988efc96167efc07ce50191fb4a81d7e1508f8972ddb65aabdc96ca7cc1be"
+    },
+    {
+      "shard_file": "sft_shard_120_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.44,
+      "sha256": "012ea6f6eea945c8a6b56dfcae0e99befc89e2d62eedbf3a5e5206d561114ab5"
+    },
+    {
+      "shard_file": "sft_shard_121_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.13,
+      "sha256": "d463009715a3289dadb69b39931c8f6bca6111fa6887fad082495d9999b32f12"
+    },
+    {
+      "shard_file": "sft_shard_122_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.91,
+      "sha256": "48485e2238ca9760c9f55fc5720e0e11560d40af38bb2b99fe7dc3ff888e0a8d"
+    },
+    {
+      "shard_file": "sft_shard_123_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.17,
+      "sha256": "1abe9467bf1764edfb5eb031bdbc9079493516fa4a0addc88c4f90b6bda6e4ae"
+    },
+    {
+      "shard_file": "sft_shard_124_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.31,
+      "sha256": "b83e7441586161c79563b9a6c23799250a7b37509a87c89b9ef1bef675dc2848"
+    },
+    {
+      "shard_file": "sft_shard_125_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.51,
+      "sha256": "c623570a32dd5ea05b8b266c9467d15f20c385dafe1788f6160d2f4bc1662508"
+    },
+    {
+      "shard_file": "sft_shard_126_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.38,
+      "sha256": "15cdef3b7f519f8c21c22d03ba467419f25d98a1b80a9ac7882819634dc92953"
+    },
+    {
+      "shard_file": "sft_shard_127_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1443.88,
+      "sha256": "e6ff7d75677a905e82326b62737c87251d419c7b8a1fa0a0f4427017230efefc"
+    },
+    {
+      "shard_file": "sft_shard_128_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.55,
+      "sha256": "b9e2aac5174a84b914969281d14be3d38132f8e79916727e3e976aa753fb7103"
+    },
+    {
+      "shard_file": "sft_shard_129_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1447.01,
+      "sha256": "b9e1064ec445cf0ecdca848871aca56548418f460e1d19737131b94991d7bc99"
+    },
+    {
+      "shard_file": "sft_shard_130_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.31,
+      "sha256": "6e7ee61844e0fd63fd6715e41c4bfa5c077a3730e5ef68228eee389f458af90a"
+    },
+    {
+      "shard_file": "sft_shard_131_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.47,
+      "sha256": "dd9b1fc1b4fd1a5c7d8e67e27d33a640c8d48334a3618c1f6d6c4c05d407dcba"
+    },
+    {
+      "shard_file": "sft_shard_132_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.41,
+      "sha256": "cec759d598ee90f0c9f16926e9386486fcb97b927cbb52ddaa19baee522b071a"
+    },
+    {
+      "shard_file": "sft_shard_133_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1445.28,
+      "sha256": "25ed49495094eab6b04ce5362f002ff1bbed45a58e08cd9e6262f28eab608055"
+    },
+    {
+      "shard_file": "sft_shard_134_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.98,
+      "sha256": "4093bde4b34e581f8b5387de62858b73be5e0de7a0554d09a709fe84a0970a34"
+    },
+    {
+      "shard_file": "sft_shard_135_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1433.67,
+      "sha256": "e929a3f695be84d43c31972afb4ce69252cff39f98bc94fe0e686f2b23de1cba"
+    },
+    {
+      "shard_file": "sft_shard_136_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.75,
+      "sha256": "105c348e26a61f1bb996dcbcd26c0fe06390c85e7499bd3625101d6cee8759c9"
+    },
+    {
+      "shard_file": "sft_shard_137_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1431.1,
+      "sha256": "885b3c433ae16dc4a3834d82133299c99cdf5b547d2add0d9bb2fa59bdd9ee7d"
+    },
+    {
+      "shard_file": "sft_shard_138_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1448.85,
+      "sha256": "46939427328323f04ee7060df8faceaf7f2c784d84b5fd40e39d85ba64fcd2ba"
+    },
+    {
+      "shard_file": "sft_shard_139_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1441.83,
+      "sha256": "d46ce4cf884af16d4a7cede19d70f20dd73433f3ad1f65b062916ec6306f9723"
+    },
+    {
+      "shard_file": "sft_shard_140_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1427.38,
+      "sha256": "86427cc37812cf250a197fb3b98bbea2b823b90763e34b7cf571cd0d851c1a6a"
+    },
+    {
+      "shard_file": "sft_shard_141_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1434.72,
+      "sha256": "bb9385c1ba9d74beb7648ab635c2051ee074973d2ee42745f337c33027290e4a"
+    },
+    {
+      "shard_file": "sft_shard_142_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.69,
+      "sha256": "630ac86c0dc97ceeabb3df9873ef554228199c78f1ed7f9e2c99744c3867a1d6"
+    },
+    {
+      "shard_file": "sft_shard_143_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1437.16,
+      "sha256": "6ca8063361d2e49aa5d99fb7f2a355aa7daa0d491ab5bd6333482f677016b102"
+    },
+    {
+      "shard_file": "sft_shard_144_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1440.41,
+      "sha256": "4fb153678bd56986a35c63479cbf62e0b212c2330ec04805719a5dc8e5e2f9f7"
+    },
+    {
+      "shard_file": "sft_shard_145_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1430.06,
+      "sha256": "5655058c6434d4eb3d937704f4be0ef69a2f8b4ce2c438b1f5066be714db16d1"
+    },
+    {
+      "shard_file": "sft_shard_146_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1436.12,
+      "sha256": "098b4bc9c267a05aa9390e279ad6c143e6a9f2cfe49861173b1a7de454943b0b"
+    },
+    {
+      "shard_file": "sft_shard_147_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1442.19,
+      "sha256": "132257e501f8fd60fd7256eacae279715ccf392977309a467430171fee6f584d"
+    },
+    {
+      "shard_file": "sft_shard_148_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1444.33,
+      "sha256": "b33bc56ac131e70671896b3f817d748acbec67c5983e924082b94b736598abd9"
+    },
+    {
+      "shard_file": "sft_shard_149_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1439.51,
+      "sha256": "7c9acfecd5f1695912b8bebf20798a9c00ebf812178eeaab3f8ef019e8e88a5d"
+    },
+    {
+      "shard_file": "sft_shard_150_of_150.jsonl",
+      "trajectories_count": 500,
+      "size_kb": 1435.69,
+      "sha256": "5baae24b388e6d1aa2b87f72e00a02726d2180b0dbca547b98f60e81b173aabe"
+    }
+  ]
+}

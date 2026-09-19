@@ -1,0 +1,101 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_general_assistant_eval_record.schema.json",
+  "title": "v1_general_assistant_eval_record",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "eval_id",
+    "subject",
+    "grade",
+    "track_domain",
+    "concept",
+    "query",
+    "reference_reasoning",
+    "reference_solution",
+    "scientific_terminology",
+    "source_metadata"
+  ],
+  "properties": {
+    "eval_id": {
+      "type": "string",
+      "pattern": "^eval_textbook_asst_[a-f0-9]{8}$"
+    },
+    "subject": {
+      "type": "string",
+      "minLength": 2
+    },
+    "grade": {
+      "type": "string",
+      "minLength": 1
+    },
+    "track_domain": {
+      "type": "string",
+      "enum": ["stem", "humanities"]
+    },
+    "concept": {
+      "type": "string",
+      "minLength": 2
+    },
+    "query": {
+      "type": "string",
+      "minLength": 15
+    },
+    "reference_reasoning": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "string",
+        "minLength": 10
+      }
+    },
+    "reference_solution": {
+      "type": "string",
+      "minLength": 15
+    },
+    "scientific_terminology": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "source_metadata": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "source_book",
+        "author",
+        "grade",
+        "subject",
+        "chunk_id",
+        "char_length",
+        "partition"
+      ],
+      "properties": {
+        "source_book": {
+          "type": "string"
+        },
+        "author": {
+          "type": "string"
+        },
+        "grade": {
+          "type": "string"
+        },
+        "subject": {
+          "type": "string"
+        },
+        "chunk_id": {
+          "type": "string"
+        },
+        "char_length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "partition": {
+          "type": "string",
+          "const": "held_out_eval"
+        }
+      }
+    }
+  }
+}
