@@ -6440,12 +6440,16 @@ describe('LexiconPractice', () => {
       expect(await screen.findByRole('heading', { name: /Словниковий запас/i })).toBeInTheDocument();
       expect(screen.getByText(/Опанування слів, значень/i)).toBeInTheDocument();
 
+      // Recommended badge on mixed card
+      const mixedBtn = container.querySelector('[data-mode="mixed"]')!;
+      expect(within(mixedBtn as HTMLElement).getByText(/Рекомендовано/i)).toBeInTheDocument();
+
       // Track 2: Grammar & Parts of Speech
       const grammarTrack = screen.getByTestId('practice-track-grammar');
       expect(grammarTrack).toBeInTheDocument();
       expect(within(grammarTrack).getByRole('heading', { name: /Граматика та частини мови/i })).toBeInTheDocument();
 
-      // Verify POS badges on Track 2 cards
+      // Verify POS/grammar focus badges on Track 2 cards
       const paradigmBtn = container.querySelector('[data-mode="paradigm"]')!;
       expect(within(paradigmBtn as HTMLElement).getByText('Іменник')).toBeInTheDocument();
 
@@ -6453,7 +6457,7 @@ describe('LexiconPractice', () => {
       expect(within(imperativeBtn as HTMLElement).getByText('Дієслово')).toBeInTheDocument();
 
       const stressBtn = container.querySelector('[data-mode="stress"]')!;
-      expect(within(stressBtn as HTMLElement).getByText('Наголоси')).toBeInTheDocument();
+      expect(within(stressBtn as HTMLElement).getByText('Фонетика')).toBeInTheDocument();
 
       const classifyBtn = container.querySelector('[data-mode="classify"]')!;
       expect(within(classifyBtn as HTMLElement).getByText('Частини мови')).toBeInTheDocument();
@@ -6465,13 +6469,46 @@ describe('LexiconPractice', () => {
       expect(screen.getByRole('heading', { name: /Тематичні курси та ЗНО/i })).toBeInTheDocument();
     });
 
+    test('exposes all 12 modes across tracks and localizes track badges', async () => {
+      const { container, rerender } = render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      // All 12 modes must be present with data-mode
+      const expectedModes = [
+        'mixed', 'flashcards', 'cloze', 'matching', 'choice',
+        'synonym', 'paronym', 'heritage',
+        'paradigm', 'imperative', 'stress', 'classify',
+      ];
+      for (const mode of expectedModes) {
+        expect(container.querySelector(`[data-mode="${mode}"]`)).toBeInTheDocument();
+      }
+
+      // Ukrainian track badges
+      expect(screen.getByText('Трек 1')).toBeInTheDocument();
+      expect(screen.getByText('Трек 2')).toBeInTheDocument();
+      expect(screen.getByText('Трек 3')).toBeInTheDocument();
+
+      // Switch to English chrome locale
+      rerender(<LexiconPractice initialDeck={sampleDeck()} />);
+      document.documentElement.setAttribute('data-chrome-locale', 'en');
+      window.dispatchEvent(new Event('chrome-locale-change'));
+
+      // English track badges
+      expect(await screen.findByText('Track 1')).toBeInTheDocument();
+      expect(screen.getByText('Track 2')).toBeInTheDocument();
+      expect(screen.getByText('Track 3')).toBeInTheDocument();
+
+      // Reset
+      document.documentElement.setAttribute('data-chrome-locale', 'uk');
+      window.dispatchEvent(new Event('chrome-locale-change'));
+    });
+
     test('renders Google Drive privacy disclosure text in secondary tools when configured', async () => {
       localStorage.setItem('learn_uk_google_client_id', 'test-client-id.apps.googleusercontent.com');
       try {
         render(<LexiconPractice initialDeck={sampleDeck()} />);
         const secondaryTools = screen.getByTestId('practice-secondary-tools');
         expect(secondaryTools).toBeInTheDocument();
-        expect(within(secondaryTools).getByText(/Безпечна синхронізація через appDataFolder/i)).toBeInTheDocument();
+        expect(within(secondaryTools).getByText(/Синхронізація використовує лише приватний appDataFolder/i)).toBeInTheDocument();
       } finally {
         localStorage.removeItem('learn_uk_google_client_id');
       }

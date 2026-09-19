@@ -2135,6 +2135,11 @@ const frontmatter = {
     border: 1px solid var(--lu-border);
     background: var(--lu-surface, rgba(255, 255, 255, 0.03));
   }
+  @media (max-width: 640px) {
+    :global(.k3-track) {
+      padding: 0.85rem;
+    }
+  }
   :global(.k3-track-header) {
     margin-bottom: 1rem;
   }
@@ -2180,18 +2185,49 @@ const frontmatter = {
     border: 2px solid var(--lu-accent-blue, #2563eb);
     box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
   }
+  :global(.k3-mode-card-recommended-badge) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    background: var(--lu-primary, #2563eb);
+    color: var(--lu-on-primary-fill, #ffffff);
+    margin-bottom: 0.25rem;
+    width: fit-content;
+  }
   :global(.k3-mode-card-pos-badge) {
     display: inline-block;
-    font-size: 0.68rem;
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    padding: 0.1rem 0.4rem;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.12rem 0.45rem;
     border-radius: 4px;
-    background: var(--lu-state-active, rgba(255, 255, 255, 0.1));
+    background: var(--lu-state-active, rgba(255, 255, 255, 0.08));
     color: var(--lu-accent-blue, #3b82f6);
     margin-bottom: 0.2rem;
     width: fit-content;
+  }
+  :global(.k3-case-selector-container) {
+    margin-top: 1.25rem;
+  }
+  :global(.k3-case-selector-intro) {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  :global(.k3-case-selector-title) {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--lu-text-primary, inherit);
+  }
+  :global(.k3-case-selector-subtitle) {
+    font-size: 0.8rem;
+    color: var(--lu-text-muted, #64748b);
   }
 
   /* Chunk 5 — generalized form rail and N-vowel stress */

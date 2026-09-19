@@ -131,8 +131,10 @@ describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
     expect(lexiconPracticeSource).not.toContain('className="k3-focus"');
   });
 
-  test("mode chooser exposes all 11 modes with no icons", () => {
-    expect(lexiconPracticeSource).toContain('MODE_CARD_ORDER.map');
+  test("mode chooser exposes all modes with no icons across progressive disclosure tracks", () => {
+    expect(lexiconPracticeSource).toContain('MODE_CARD_ORDER');
+    expect(lexiconPracticeSource).toContain('VOCAB_MODE_ORDER');
+    expect(lexiconPracticeSource).toContain('GRAMMAR_MODE_ORDER');
     expect(lexiconPracticeSource).not.toContain('className="mode-card');
     expect(lexiconPracticeSource).not.toMatch(/mc-ico|ModeIcon|svg.*mode/i);
   });
