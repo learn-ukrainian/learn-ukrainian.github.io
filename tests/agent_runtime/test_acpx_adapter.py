@@ -440,7 +440,8 @@ def _fake_installed_claude_adapter(tmp_path: Path, *, version: str = "0.64.2") -
     adapter_bin.parent.mkdir(parents=True)
     binary.write_text("#!/bin/sh\n", encoding="utf-8")
     adapter_bin.write_text("#!/usr/bin/env node\n", encoding="utf-8")
-    (package_root / "package.json").write_text(
+    manifest = package_root / "package.json"
+    manifest.write_text(
         json.dumps(
             {
                 "name": "@agentclientprotocol/claude-agent-acp",
@@ -450,6 +451,20 @@ def _fake_installed_claude_adapter(tmp_path: Path, *, version: str = "0.64.2") -
         ),
         encoding="utf-8",
     )
+    # Pin explicit modes: the production preflight refuses group/world-writable
+    # packages (st_mode & 0o022), so the fixture must not inherit the process
+    # umask (#8289).
+    for directory in (
+        node_modules,
+        binary.parent,
+        package_root.parent,
+        package_root,
+        adapter_bin.parent,
+    ):
+        directory.chmod(0o755)
+    manifest.chmod(0o644)
+    binary.chmod(0o755)
+    adapter_bin.chmod(0o755)
     return binary
 
 
@@ -2102,6 +2117,26 @@ def test_builtin_discussion_seats_are_fixed_active_only_and_confined(
 
 def test_claude_adapter_preflight_accepts_installed_rolling_dependency(tmp_path):
     binary = _fake_installed_claude_adapter(tmp_path)
+
+    metadata = acpx_module._require_local_claude_acp_adapter(
+        str(binary),
+        adapter_label="AcpxClaudeShadowAdapter",
+    )
+
+    assert metadata == {
+        "claude_acp_adapter_version": "0.64.2",
+        "claude_acp_compatibility": "installed>=0.64.2<1",
+        "claude_acp_launch_source": "installed",
+    }
+
+
+def test_claude_adapter_preflight_fixture_is_independent_of_host_umask(tmp_path):
+    """#8289: pinned fixture modes keep the preflight green under umask 0002."""
+    previous_umask = os.umask(0o002)
+    try:
+        binary = _fake_installed_claude_adapter(tmp_path)
+    finally:
+        os.umask(previous_umask)
 
     metadata = acpx_module._require_local_claude_acp_adapter(
         str(binary),
