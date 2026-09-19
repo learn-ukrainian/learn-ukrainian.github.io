@@ -4176,6 +4176,21 @@ def _runtime_tool_config(
             f"but resolver returned none ({status}). Refusing to dispatch "
             "tool-less."
         )
+    if agent_label == "agy-tools":
+        # #7994: config-ok is not catalog-visible. A Claude-format `httpUrl`
+        # entry resolves above yet lists as a dead stdio server, and `agy -p`
+        # then writes the whole module with no mcp__sources__* tools. Register
+        # the HTTP shape the CLI reads (idempotent), then fail closed.
+        from scripts.agent_runtime.tool_config import AgyMcpCatalogError, ensure_agy_mcp_catalog
+
+        try:
+            catalog_result = ensure_agy_mcp_catalog(resolved)
+        except AgyMcpCatalogError as exc:
+            _emit(event_sink, "agy_mcp_catalog_preflight", writer=agent_label, ok=False, error=str(exc))
+            raise LinearPipelineError(
+                f"Writer {agent_label!r} refused before dispatch: {exc}"
+            ) from exc
+        _emit(event_sink, "agy_mcp_catalog_preflight", writer=agent_label, ok=True, **catalog_result)
     if mcp_dict:
         tool_config.update(mcp_dict)
     if codex_disable_features:
