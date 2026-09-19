@@ -1,27 +1,27 @@
 /**
  * Ukrainian Adverb Deep Mechanics Practice Engine (Прислівник).
  *
- * Implements Ukrainian Pravopys 2019 (§§ 40–45) and Academic Grammar rules for:
- *   1. Semantic Classification (§ 40):
+ * Implements Ukrainian Pravopys 2019 (§ 41, §§ 110–111) and Academic Grammar rules for:
+ *   1. Semantic Classification:
  *      - Manner & Qualitative (способу дії та якісно-означувальні: як? яким способом?)
  *      - Time (часу: коли? відколи? доки?)
  *      - Place & Direction (місця та напрямку: де? куди? звідки?)
  *      - Measure & Degree (міри й ступеня: скільки? наскільки? якою мірою?)
  *      - Cause & Purpose (причини й мети: чому? навіщо?)
  *   2. Orthography:
- *      - Hyphenated spelling (§ 44):
- *        * Prefix по- with suffixes -ому, -ему, -и, -ськи, -цьки (по-українськи, по-новому, по-батьківськи, по-моєму)
- *        * Particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то (будь-де, як-небудь, хтозна-як, казна-коли)
- *        * Reduplication, synonymous & paired compounds (віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно)
- *      - One-word fused spelling (§ 43):
+ *      - Hyphenated spelling (§ 41, п. 2):
+ *        * Prefix по- with suffixes -ому, -ему, -и, -ськи, -цьки (по-українськи, по-новому, по-батьківськи, по-моєму) per п. 2 а
+ *        * Particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то (будь-де, як-небудь, хтозна-як, казна-коли) per п. 2 б
+ *        * Reduplication, synonymous & paired compounds (віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно) per п. 2 в
+ *      - One-word fused spelling (§ 41, п. 1):
  *        * Preposition + noun/numeral/pronoun fusion (спочатку, вперше, спідлоба, навшпиньки, насторожі)
- *      - Homophone discrimination (§ 43 vs § 45):
+ *      - Homophone discrimination (§ 41, п. 1 vs п. 3):
  *        * Fused adverbs vs prepositional noun phrases (напам'ять vs на пам'ять, вдень vs в день, додому vs до дому, згори vs з гори, назустріч vs на зустріч)
- *      - Separate spelling (§ 45):
+ *      - Separate spelling (§ 41, п. 3):
  *        * Adverbial prepositional phrases (на жаль, до речі, без сумніву, день у день, до побачення)
- *   3. Degrees of Comparison (§ 41):
- *      - Synthetic comparative (-ше, -іше) and suppletive roots (швидше, тепліше, глибше; краще, гірше)
- *      - Superlative degree with prefix най- and intensifying prefixes як-, що- (найкраще, якнайшвидше, щонайдовше, найвище)
+ *   3. Degrees of Comparison (§§ 110–111):
+ *      - Synthetic comparative (-ше, -іше) and suppletive roots (швидше, тепліше, глибше; краще, гірше) per § 110
+ *      - Superlative degree with prefix най- and intensifying prefixes як-, що- (найкраще, якнайшвидше, щонайдовше, найвище) per § 111
  *      - Anti-calques: *самий краще* ❌ -> найкраще ✅, *більш краще* ❌ -> краще ✅
  *   4. Anti-Calques & Speech Culture:
  *      - насамперед (not *в першу чергу* ❌)
@@ -167,7 +167,7 @@ export interface AdverbRuleResolution {
 
 export function resolveMannerActionRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 40, § 43; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20',
     ruleUa:
       "Прислівники способу дії відповідають на питання 'як?', 'яким способом?' і характеризують якість або спосіб протікання дії (напам'ять, вголос, пішки, пошепки, навпомацки). Більшість таких прислівників, утворених від прийменників та іменників, пишуться разом.",
     ruleEn:
@@ -177,7 +177,7 @@ export function resolveMannerActionRule(): AdverbRuleResolution {
 
 export function resolveTimeRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 40, § 43; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20',
     ruleUa:
       "Прислівники часу відповідають на питання 'коли?', 'відколи?', 'доки?' (вдень, влітку, щодня, зранку, допізна). Складні прислівники з префіксами в-, з-, до- та часткою що- пишуться разом.",
     ruleEn:
@@ -187,7 +187,7 @@ export function resolveTimeRule(): AdverbRuleResolution {
 
 export function resolvePlaceDirectionRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 40, § 43; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20',
     ruleUa:
       "Прислівники місця та напрямку відповідають на питання 'де?', 'куди?', 'звідки?' (додому, вгору, донизу, вперед, ззаду). Вони пишуться разом, коли утворені злиттям прийменників з іменниковими основами без пояснювальних слів.",
     ruleEn:
@@ -197,7 +197,7 @@ export function resolvePlaceDirectionRule(): AdverbRuleResolution {
 
 export function resolveMeasureDegreeRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 40, § 43; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20',
     ruleUa:
       "Прислівники міри й ступеня відповідають на питання 'скільки?', 'наскільки?', 'якою мірою?' (наполовину, дощенту, зовсім, набагато, вкрай). Пишуться разом за правилом злиття прийменників з іменниками, числівниками або займенниками.",
     ruleEn:
@@ -207,7 +207,7 @@ export function resolveMeasureDegreeRule(): AdverbRuleResolution {
 
 export function resolveCausePurposeRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 40, § 43; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20',
     ruleUa:
       "Прислівники причини й мети відповідають на питання 'чому?', 'з якої причини?', 'навіщо?', 'з якою метою?' (зопалу, згарячу, навмисне, напоказ, наперекір). Зрощені префіксально-суфіксальні форми пишуться разом.",
     ruleEn:
@@ -217,7 +217,7 @@ export function resolveCausePurposeRule(): AdverbRuleResolution {
 
 export function resolvePrefixPoRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 44, п. 1; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 2 а; СУМ-20',
     ruleUa:
       'Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому.',
     ruleEn:
@@ -227,7 +227,7 @@ export function resolvePrefixPoRule(): AdverbRuleResolution {
 
 export function resolveParticlesHyphenRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 44, п. 2; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 2 б; СУМ-20',
     ruleUa:
       'Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс: будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.',
     ruleEn:
@@ -237,7 +237,7 @@ export function resolveParticlesHyphenRule(): AdverbRuleResolution {
 
 export function resolveReduplicationRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 44, п. 3; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 2 в; СУМ-20',
     ruleUa:
       'Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс: віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.',
     ruleEn:
@@ -247,7 +247,7 @@ export function resolveReduplicationRule(): AdverbRuleResolution {
 
 export function resolveTogetherFusedRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 43; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1; СУМ-20',
     ruleUa:
       'Складні прислівники, утворені злиттям прийменників з іменниками, числівниками чи займенниками, коли вони втратили значення окремих частин мови, пишуться разом: спочатку, вперше, спідлоба, навшпиньки, насторожі.',
     ruleEn:
@@ -257,7 +257,7 @@ export function resolveTogetherFusedRule(): AdverbRuleResolution {
 
 export function resolveHomophone1Rule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 43, § 45; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1, п. 3; СУМ-20',
     ruleUa:
       "Слід чітко розрізняти прислівники, що пишуться разом, та омонімічні іменникові сполуки з прийменниками, що пишуться окремо: вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?).",
     ruleEn:
@@ -267,7 +267,7 @@ export function resolveHomophone1Rule(): AdverbRuleResolution {
 
 export function resolveHomophone2Rule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 43, § 45; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 1, п. 3; СУМ-20',
     ruleUa:
       'Прислівники напрямку пишуться разом (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці).',
     ruleEn:
@@ -277,7 +277,7 @@ export function resolveHomophone2Rule(): AdverbRuleResolution {
 
 export function resolveSeparatePhrasesRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 45; СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 3; СУМ-20',
     ruleUa:
       'Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою.',
     ruleEn:
@@ -287,7 +287,7 @@ export function resolveSeparatePhrasesRule(): AdverbRuleResolution {
 
 export function resolveComparisonSyntheticRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 41; СУМ-20',
+    citation: 'Правопис 2019 § 110; СУМ-20',
     ruleUa:
       "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим.",
     ruleEn:
@@ -297,7 +297,7 @@ export function resolveComparisonSyntheticRule(): AdverbRuleResolution {
 
 export function resolveComparisonSuperlativeRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 41; СУМ-20',
+    citation: 'Правопис 2019 § 111; СУМ-20',
     ruleUa:
       "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити префіксами як-, що-, які пишуться разом: якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
     ruleEn:

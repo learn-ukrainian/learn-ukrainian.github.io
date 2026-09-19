@@ -34,7 +34,7 @@ describe('adverb-mechanics', () => {
     expect(ADVERB_MECHANICS_CATEGORY_KEYS).toContain('adverb_anti_calque');
   });
 
-  it('resolves adverb rules accurately per §§ 40–45', () => {
+  it('resolves adverb rules accurately per § 41, §§ 110–111', () => {
     const rules = [
       resolveMannerActionRule(),
       resolveTimeRule(),
@@ -79,7 +79,7 @@ describe('adverb-mechanics', () => {
           },
         },
       ],
-      rule_citation: 'Правопис 2019 § 43',
+      rule_citation: 'Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20',
       rule_summary: {
         ua: "Прислівник напам'ять пишеться разом.",
         en: "Adverb напам'ять is spelled as one word.",
@@ -90,7 +90,7 @@ describe('adverb-mechanics', () => {
     expect(evalResult.isCorrect).toBe(true);
     expect(evalResult.feedbackUa).toContain('Чудово! Правильно: «напам\'ять»');
     expect(evalResult.feedbackEn).toContain('Excellent! Correct: "напам\'ять"');
-    expect(evalResult.ruleCitation).toBe('Правопис 2019 § 43');
+    expect(evalResult.ruleCitation).toBe('Правопис 2019 § 41, п. 1; Академічна граматика; СУМ-20');
   });
 
   it('correctly provides feedback for distractors with misconception explanations', () => {
@@ -111,7 +111,7 @@ describe('adverb-mechanics', () => {
           },
         },
       ],
-      rule_citation: 'Правопис 2019 § 45',
+      rule_citation: 'Правопис 2019 § 41, п. 3; СУМ-20',
       rule_summary: {
         ua: 'Прислівникові сполучення пишуться окремо.',
         en: 'Adverbial phrases are written separately.',

@@ -17,6 +17,7 @@ from pathlib import Path
 import pytest
 
 from scripts.practice.adverb_mechanics_engine import (
+    AdverbCard,
     AdverbCategory,
     AdverbInterferenceKey,
     build_canonical_adverb_cards,
@@ -174,7 +175,9 @@ def test_cli_verify_vesum_json_failure_exits_and_blocks_export(monkeypatch, tmp_
         "missing_targets": ["неіснуючеслово"],
         "vesum_verified": False,
     }
-    monkeypatch.setattr("scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+    monkeypatch.setattr(
+        "scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res
+    )
 
     out_file = tmp_path / "blocked_deck.json"
     monkeypatch.setattr(
@@ -197,7 +200,9 @@ def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
         "missing_targets": [],
         "vesum_verified": True,
     }
-    monkeypatch.setattr("scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+    monkeypatch.setattr(
+        "scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res
+    )
 
     out_file = tmp_path / "allowed_deck.json"
     monkeypatch.setattr(
@@ -219,7 +224,9 @@ def test_cli_verify_vesum_skipped_reports_skip_and_exits_nonzero(capsys, monkeyp
         "status": "skipped",
         "message": "VESUM database not found or incomplete at /fake/path",
     }
-    monkeypatch.setattr("scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+    monkeypatch.setattr(
+        "scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res
+    )
 
     out_file = tmp_path / "blocked_deck.json"
     monkeypatch.setattr(
@@ -245,9 +252,15 @@ def test_homophone_discrimination_card_pairs():
     c46 = cards_by_id["adverb_card_46"]
     c47 = cards_by_id["adverb_card_47"]
     assert c46.correct_answer == "на пам'ять"
-    assert any(d.text == "напам'ять" and d.interference_key == AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION for d in c46.distractors)
+    assert any(
+        d.text == "напам'ять" and d.interference_key == AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION
+        for d in c46.distractors
+    )
     assert c47.correct_answer == "напам'ять"
-    assert any(d.text == "на пам'ять" and d.interference_key == AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION for d in c47.distractors)
+    assert any(
+        d.text == "на пам'ять" and d.interference_key == AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION
+        for d in c47.distractors
+    )
 
     # Card 48: в день (noun) vs Card 49: вдень (adverb)
     c48 = cards_by_id["adverb_card_48"]
@@ -297,3 +310,68 @@ def test_anti_calque_adverbials():
     c75 = cards_by_id["adverb_card_75"]
     assert c75.correct_answer == "у крайньому разі"
     assert any("в крайньому випадку" in d.text for d in c75.distractors)
+
+
+def test_distractor_exclusivity_and_no_valid_synonym_rejection():
+    """Verify that cards do not reject valid Ukrainian words (e.g. скорше) or valid phrases."""
+    cards_by_id = {c.card_id: c for c in build_canonical_adverb_cards()}
+
+    # Card 61: швидше must not reject valid 'скорше' (attested in VESUM as adv:compc)
+    c61 = cards_by_id["adverb_card_61"]
+    distractor_texts_61 = [d.text for d in c61.distractors]
+    assert "скорше" not in distractor_texts_61, "Valid Ukrainian word 'скорше' must not be used as distractor"
+    assert "більш швидше" in distractor_texts_61
+    assert "швидкіше" in distractor_texts_61
+
+    # Card 40: давним-давно must reject morphological corruption 'давнім-давно', not valid 'дуже давно'
+    c40 = cards_by_id["adverb_card_40"]
+    distractor_texts_40 = [d.text for d in c40.distractors]
+    assert "дуже давно" not in distractor_texts_40, "Valid phrase 'дуже давно' must not be marked as error"
+    assert "давнім-давно" in distractor_texts_40
+
+    # Card 74: принаймні must reject orthographic corruption 'принаймі'
+    c74 = cards_by_id["adverb_card_74"]
+    distractor_texts_74 = [d.text for d in c74.distractors]
+    assert "принаймі" in distractor_texts_74
+
+
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
+    reason="Requires full local data/vesum.db (>1MB); CI omits it",
+)
+def test_vesum_sanitization_and_malformed_token_detection():
+    """Verify that curly apostrophe is normalized and malformed tokens are rejected rather than skipped."""
+    base_cards = build_canonical_adverb_cards()
+    c1 = base_cards[0]
+
+    # Card with curly apostrophe in answer should pass verification
+    curly_card = AdverbCard(
+        card_id="test_curly",
+        category=c1.category,
+        prompt="Тест _______.",
+        target_token="напам’ять",
+        correct_answer="напам’ять",
+        distractors=c1.distractors,
+        rule_citation=c1.rule_citation,
+        rule_summary_ua=c1.rule_summary_ua,
+        rule_summary_en=c1.rule_summary_en,
+    )
+    res_curly = verify_deck_with_vesum([curly_card])
+    assert res_curly["vesum_verified"] is True
+    assert len(res_curly["missing_targets"]) == 0
+
+    # Card with malformed/non-Ukrainian token should fail and appear in missing_targets
+    malformed_card = AdverbCard(
+        card_id="test_malformed",
+        category=c1.category,
+        prompt="Тест _______.",
+        target_token="xyz123",
+        correct_answer="xyz123",
+        distractors=c1.distractors,
+        rule_citation=c1.rule_citation,
+        rule_summary_ua=c1.rule_summary_ua,
+        rule_summary_en=c1.rule_summary_en,
+    )
+    res_malformed = verify_deck_with_vesum([malformed_card])
+    assert res_malformed["vesum_verified"] is False
+    assert "xyz123" in res_malformed["missing_targets"]
