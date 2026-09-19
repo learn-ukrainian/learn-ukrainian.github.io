@@ -713,6 +713,28 @@ class TestParserEdgeCases:
         assert "[Я]" not in activities[0].items[0].sentence
         assert "___" in activities[0].items[0].sentence
 
+    def test_parse_fill_in_empty_string_answer(self, parser, tmp_path):
+        yaml_file = tmp_path / "fi-empty.yaml"
+        yaml_file.write_text(
+            "- type: fill-in\n"
+            "  title: Fill Empty\n"
+            "  items:\n"
+            "    - sentence: бур___як\n"
+            "      answer: ''\n"
+            "      options:\n"
+            "        - ''\n"
+            "        - \"'\"\n"
+            "        - ь\n"
+        )
+        activities = parser.parse(yaml_file)
+        assert activities[0].items[0].answer == ""
+        assert activities[0].items[0].options == ["", "'", "ь"]
+        assert activities[0].items[0].sentence == "бур___як"
+
+    def test_parse_fill_in_null_answer_still_raises(self, parser):
+        with pytest.raises(KeyError, match="fill-in item needs answer"):
+            parser._parse_fill_in({"items": [{"sentence": "бур___як", "answer": None, "options": ["", "ь"]}]})
+
 
     def test_parse_match_up(self, parser, tmp_path):
         yaml_file = tmp_path / "mu.yaml"
