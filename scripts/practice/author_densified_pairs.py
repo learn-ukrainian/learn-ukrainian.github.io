@@ -1728,7 +1728,7 @@ CURATED_HOMONYM_RECORDS: list[dict[str, Any]] = [
                 "origin": "authored-gemini-8276",
             },
             {
-                "sentence_with_slot": "У тиші кімнати чулася повільна й важка ___ господаря.",
+                "sentence_with_slot": "У тиші кімнати чувся повільний і важкий ___ господаря.",
                 "answer_form": "поступ",
                 "confusable_form": "поступ",
                 "origin": "authored-gemini-8276",

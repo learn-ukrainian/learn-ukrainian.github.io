@@ -385,6 +385,159 @@ def test_audit_card_ambiguity_mocked(tmp_path: Path):
     assert len(violations) == 0
 
 
+def test_audit_practice_shards_missing_vesum_db_fails_closed(tmp_path: Path):
+    """Finding 3: missing VESUM database must fail closed with VESUM_DB_MISSING violation."""
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_1",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Пояснення.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    nonexistent_db = tmp_path / "nonexistent_vesum.db"
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path,
+        vesum_db=nonexistent_db,
+        check_volume=False,
+        verify_vesum=True,
+        modes=["paronym"],
+    )
+    assert any(v["type"] == "VESUM_DB_MISSING" for v in violations)
+
+
+def test_audit_practice_shards_requires_prompt_and_options(tmp_path: Path):
+    """Finding 2: required card fields (prompt, options) and answer count must be enforced."""
+    # Card missing prompt
+    bad_prompt_data = {
+        "paronym": [
+            {
+                "paronymId": "p_no_prompt",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Пояснення.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(
+        json.dumps(bad_prompt_data, ensure_ascii=False), encoding="utf-8"
+    )
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    assert any(v["type"] == "MISSING_PROMPT" and "p_no_prompt" in v["item"] for v in violations)
+
+    # Card missing options list
+    bad_opt_data = {
+        "paronym": [
+            {
+                "paronymId": "p_no_opts",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "distinction_gloss_uk": "Пояснення.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(bad_opt_data, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    assert any(v["type"] == "MISSING_OPTIONS" and "p_no_opts" in v["item"] for v in violations)
+
+    # Card with marked options but zero correct answers
+    zero_ans_data = {
+        "cloze": [
+            {
+                "clozeId": "c_zero_ans",
+                "sentence": "Це гарне _____ речення.",
+                "form": "гарне",
+                "options": [
+                    {"label": "гарне", "kind": "distractor"},
+                    {"label": "погане", "kind": "distractor"},
+                ],
+                "caseRule": "правило",
+            }
+        ]
+    }
+    (tmp_path / "practice-cloze.A1.json").write_text(json.dumps(zero_ans_data, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["cloze"])
+    assert any(v["type"] == "WRONG_ANSWER_COUNT" and "c_zero_ans" in v["item"] for v in violations)
+
+
+def test_audit_card_ambiguity_offline_strict_fails(tmp_path: Path, monkeypatch):
+    """Finding 1: offline ambiguity validation in strict mode must report unavailable and not fabricate a pass."""
+    from scripts.practice import typesafe_distractor_validator
+
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_test",
+                "prompt": "Вранці він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    monkeypatch.setattr(typesafe_distractor_validator, "resolve_api_key", lambda: None)
+
+    verdicts, violations = audit_card_ambiguity(
+        shards_dir=tmp_path,
+        sample_size=1,
+        mock_response=None,
+        strict_ambiguity=True,
+        client=None,
+    )
+    assert len(verdicts) == 1
+    assert verdicts[0]["verdict"] == "unverified_offline"
+    assert verdicts[0]["unambiguous_prob"] is None
+    assert any(v["type"] == "AMBIGUITY_VALIDATION_UNAVAILABLE" for v in violations)
+
+
+def test_audit_card_ambiguity_honors_sample_size(tmp_path: Path):
+    """Finding 4: candidate sampling must collect requested sample_size cards across modes."""
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": f"p_{i}",
+                "prompt": f"Він ___ у парку {i}.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+            }
+            for i in range(10)
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    mock_resp = {
+        "model": "mock-jev",
+        "answers": {
+            "distractor_plausibility": {"score": 1.8, "confidence": 0.95},
+            "is_unambiguous": {"noul": 0.92},
+            "anti_calque_yield": {"noul": 0.10},
+            "card_quality": {"choice": "pass", "confidence": 0.95},
+        },
+    }
+
+    verdicts, violations = audit_card_ambiguity(
+        shards_dir=tmp_path,
+        sample_size=8,
+        mock_response=mock_resp,
+        strict_ambiguity=False,
+    )
+    assert len(verdicts) == 8
+    assert len(violations) == 0
+
+
 def test_production_practice_quality_gate_passes():
     """Verify that current repository practice datasets pass with 0 violations."""
     results = run_all_practice_audits()

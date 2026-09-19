@@ -14,7 +14,7 @@ Enforces:
 - Required pedagogical metadata (distinction gloss, rationale, case rule, grammatical notes)
 - Intentional error quarantine (no leaked contrastive tables/headers in positive cloze)
 - Error-correction drill integrity (substring containment, option validity, explanation)
-- 100% morphological attestation against VESUM
+- 100% morphological attestation against VESUM (with fail-closed validation on missing DB)
 - Thin-mode densification thresholds: paronym >= 250, homonym >= 150, heritage >= 250
 - TypeSafe System One (Jev 1.13) target exclusivity and distractor plausibility validation
 """
@@ -77,6 +77,7 @@ ALL_PRACTICE_MODES = (
 )
 
 BLANK_MODES = ("cloze", "paronym", "homonym", "heritage", "antonym", "imperative")
+OPTIONS_MODES = ("antonym", "cloze", "heritage", "homonym", "imperative", "paradigm", "paronym", "synonym")
 
 _BLANK_RE = re.compile(r"_{3,}")
 _INTENTIONAL_ERROR_PATTERNS = INTENTIONAL_ERROR_PATTERNS
@@ -123,6 +124,15 @@ def audit_teacher_cloze_deck(path: Path | str, vesum_db: Path | str | None = DEF
     p = Path(path)
     if not p.exists():
         return [{"type": "FILE_MISSING", "item": str(p), "message": f"File {p} does not exist"}]
+
+    if vesum_db and not Path(vesum_db).exists():
+        violations.append(
+            {
+                "type": "VESUM_DB_MISSING",
+                "item": str(vesum_db),
+                "message": f"VESUM database requested at {vesum_db} but file does not exist",
+            }
+        )
 
     with open(p, encoding="utf-8") as f:
         data = json.load(f)
@@ -225,6 +235,15 @@ def audit_error_correction_deck(
     p = Path(path)
     if not p.exists():
         return [{"type": "FILE_MISSING", "item": str(p), "message": f"File {p} does not exist"}]
+
+    if vesum_db and not Path(vesum_db).exists():
+        violations.append(
+            {
+                "type": "VESUM_DB_MISSING",
+                "item": str(vesum_db),
+                "message": f"VESUM database requested at {vesum_db} but file does not exist",
+            }
+        )
 
     with open(p, encoding="utf-8") as f:
         data = json.load(f)
@@ -367,11 +386,11 @@ def audit_practice_shards(
     """Audit all practice shard files across levels for structural integrity and volume thresholds.
 
     Validates:
-    - Blank syntax (exact 1-blank ___ in blank-based modes)
+    - Blank syntax (exact 1-blank ___ in blank-based modes; prompt required)
     - Option count (>= 2) and option uniqueness (no duplicate normalized labels, except homonyms)
-    - Target answer presence in options list
+    - Target answer presence in options list and exact 1-answer marking when markings exist
     - Required pedagogical metadata (distinction gloss, rationale, case rule, notes)
-    - 100% VESUM attestation for target answers/forms (when verify_vesum is True)
+    - 100% VESUM attestation for target answers/forms (with fail-closed check if vesum_db missing)
     - Volume thresholds: paronym >= 250, homonym >= 150, heritage >= 250 (when check_volume is True)
     """
     p_dir = Path(shards_dir)
@@ -381,6 +400,15 @@ def audit_practice_shards(
         return counts, [
             {"type": "DIR_MISSING", "item": str(p_dir), "message": f"Shards directory {p_dir} does not exist"}
         ]
+
+    if verify_vesum and (not vesum_db or not Path(vesum_db).exists()):
+        violations.append(
+            {
+                "type": "VESUM_DB_MISSING",
+                "item": str(vesum_db) if vesum_db else "None",
+                "message": f"VESUM database requested at {vesum_db} but file does not exist",
+            }
+        )
 
     shard_files = sorted(p_dir.glob("practice-*.json"))
     target_modes = set(modes) if modes else set(ALL_PRACTICE_MODES)
@@ -420,11 +448,19 @@ def audit_practice_shards(
                 )
             seen_ids.add(cid)
 
-            # 1. Blank syntax
+            # 1. Blank syntax & prompt presence
             if mode in BLANK_MODES:
                 field = "sentence" if mode == "cloze" else ("cueSentence" if mode == "imperative" else "prompt")
                 text = item.get(field, "")
-                if text:
+                if not text or not str(text).strip():
+                    violations.append(
+                        {
+                            "type": "MISSING_PROMPT",
+                            "item": f"{name}:{cid}",
+                            "message": f"Item is missing required {field!r} prompt/sentence field",
+                        }
+                    )
+                else:
                     blanks = _BLANK_RE.findall(text)
                     if len(blanks) != 1:
                         violations.append(
@@ -435,59 +471,79 @@ def audit_practice_shards(
                             }
                         )
 
-            # 2. Options validation
-            if "options" in item and mode not in ("classify", "stress"):
-                opts = item["options"]
-                if len(opts) < 2:
+            # 2. Options validation & target presence
+            if mode in OPTIONS_MODES:
+                if "options" not in item or not isinstance(item["options"], list) or len(item["options"]) == 0:
                     violations.append(
                         {
-                            "type": "TOO_FEW_OPTIONS",
+                            "type": "MISSING_OPTIONS",
                             "item": f"{name}:{cid}",
-                            "message": f"Item has fewer than 2 options (found {len(opts)})",
+                            "message": f"Item in mode {mode!r} is missing required options list",
                         }
                     )
-                labels: list[str] = []
-                correct_count = 0
-                for opt in opts:
-                    if isinstance(opt, dict):
-                        lbl = opt.get("label") or opt.get("text") or opt.get("word") or ""
-                        if opt.get("kind") == "answer" or opt.get("isCorrect") is True:
-                            correct_count += 1
-                    else:
-                        lbl = str(opt)
-                    labels.append(_normalize_plain(lbl))
-
-                if mode != "homonym" and len(set(labels)) != len(labels):
-                    violations.append(
-                        {
-                            "type": "DUPLICATE_OPTIONS",
-                            "item": f"{name}:{cid}",
-                            "message": f"Duplicate option labels in item: {labels}",
-                        }
-                    )
-
-                if correct_count > 1:
-                    violations.append(
-                        {
-                            "type": "MULTIPLE_ANSWERS_MARKED",
-                            "item": f"{name}:{cid}",
-                            "message": f"Expected at most 1 answer option, found {correct_count}",
-                        }
-                    )
-
-                # 3. Target answer presence in options
-                ans = item.get("answer") or item.get("form") or item.get("target") or item.get("correctForm")
-                if ans:
-                    ans_norm = _normalize_plain(ans)
-                    acc = [_normalize_plain(a) for a in item.get("acceptedAnswers", [])]
-                    if ans_norm not in labels and not any(a in labels for a in acc):
+                else:
+                    opts = item["options"]
+                    if len(opts) < 2:
                         violations.append(
                             {
-                                "type": "ANSWER_NOT_IN_OPTIONS",
+                                "type": "TOO_FEW_OPTIONS",
                                 "item": f"{name}:{cid}",
-                                "message": f"Answer {ans!r} not found in option labels: {labels}",
+                                "message": f"Item has fewer than 2 options (found {len(opts)})",
                             }
                         )
+                    labels: list[str] = []
+                    correct_count = 0
+                    has_markings = False
+                    for opt in opts:
+                        if isinstance(opt, dict):
+                            lbl = opt.get("label") or opt.get("text") or opt.get("word") or ""
+                            if "kind" in opt or "isCorrect" in opt:
+                                has_markings = True
+                            if opt.get("kind") == "answer" or opt.get("isCorrect") is True:
+                                correct_count += 1
+                        else:
+                            lbl = str(opt)
+                        labels.append(_normalize_plain(lbl))
+
+                    if mode != "homonym" and len(set(labels)) != len(labels):
+                        violations.append(
+                            {
+                                "type": "DUPLICATE_OPTIONS",
+                                "item": f"{name}:{cid}",
+                                "message": f"Duplicate option labels in item: {labels}",
+                            }
+                        )
+
+                    if has_markings and correct_count != 1:
+                        violations.append(
+                            {
+                                "type": "WRONG_ANSWER_COUNT",
+                                "item": f"{name}:{cid}",
+                                "message": f"Expected exactly 1 answer option when markings are present, found {correct_count}",
+                            }
+                        )
+
+                    # 3. Target answer presence in options
+                    ans = item.get("answer") or item.get("form") or item.get("target") or item.get("correctForm")
+                    if not ans or not str(ans).strip():
+                        violations.append(
+                            {
+                                "type": "MISSING_TARGET_ANSWER",
+                                "item": f"{name}:{cid}",
+                                "message": f"Item in mode {mode!r} is missing target answer form",
+                            }
+                        )
+                    else:
+                        ans_norm = _normalize_plain(ans)
+                        acc = [_normalize_plain(a) for a in item.get("acceptedAnswers", [])]
+                        if ans_norm not in labels and not any(a in labels for a in acc):
+                            violations.append(
+                                {
+                                    "type": "ANSWER_NOT_IN_OPTIONS",
+                                    "item": f"{name}:{cid}",
+                                    "message": f"Answer {ans!r} not found in option labels: {labels}",
+                                }
+                            )
 
             # 4. Explanation & Pedagogical Metadata
             if mode in ("paronym", "homonym", "antonym"):
@@ -572,7 +628,8 @@ def audit_card_ambiguity(
 ) -> tuple[list[dict[str, Any]], list[dict[str, Any]]]:
     """Validate sample practice cards for target exclusivity and distractor plausibility.
 
-    Uses TypeSafe System One (Jev 1.13) or deterministic Sources/VESUM fallback.
+    Uses TypeSafe System One (Jev 1.13) when available, or deterministic Sources/VESUM fallback.
+    Fails closed in strict mode if online semantic validation is unavailable.
     """
     p_dir = Path(shards_dir)
     violations: list[dict[str, Any]] = []
@@ -589,34 +646,43 @@ def audit_card_ambiguity(
     )
 
     candidate_cards: list[tuple[str, dict[str, Any]]] = []
-    for mode in ("cloze", "paronym", "heritage", "antonym"):
-        found = False
+    mode_cards: dict[str, list[tuple[str, dict[str, Any]]]] = {
+        m: [] for m in ("cloze", "paronym", "heritage", "antonym")
+    }
+    for mode in mode_cards:
         for lvl in ("A1", "A2", "B1", "B2", "C1"):
             shard_path = p_dir / f"practice-{mode}.{lvl}.json"
-            if shard_path.exists():
-                try:
-                    with open(shard_path, encoding="utf-8") as f:
-                        data = json.load(f)
-                    for item in data.get(mode, []):
-                        stem = item.get("prompt") or item.get("sentence") or item.get("cueSentence")
-                        target = item.get("answer") or item.get("form") or item.get("target")
-                        opts = item.get("options", [])
-                        if not stem or not target or len(opts) < 2:
-                            continue
-                        distractors = []
-                        for opt in opts:
-                            l = opt.get("label") or opt.get("text") if isinstance(opt, dict) else str(opt)
-                            if _normalize_plain(l) != _normalize_plain(target):
-                                distractors.append(l)
-                        if distractors:
-                            candidate_cards.append((mode, item))
-                            found = True
-                            break
-                except Exception:
-                    continue
-            if found:
-                break
-        if len(candidate_cards) >= sample_size:
+            if not shard_path.exists():
+                continue
+            try:
+                with open(shard_path, encoding="utf-8") as f:
+                    data = json.load(f)
+                for item in data.get(mode, []):
+                    stem = item.get("prompt") or item.get("sentence") or item.get("cueSentence")
+                    target = item.get("answer") or item.get("form") or item.get("target")
+                    opts = item.get("options", [])
+                    if not stem or not target or len(opts) < 2:
+                        continue
+                    distractors = []
+                    for opt in opts:
+                        l = opt.get("label") or opt.get("text") if isinstance(opt, dict) else str(opt)
+                        if _normalize_plain(l) != _normalize_plain(target):
+                            distractors.append(l)
+                    if distractors:
+                        mode_cards[mode].append((mode, item))
+            except Exception:
+                continue
+
+    # Round-robin across candidate modes until sample_size is reached
+    while len(candidate_cards) < sample_size:
+        added_in_round = 0
+        for mode in ("cloze", "paronym", "heritage", "antonym"):
+            if mode_cards[mode]:
+                candidate_cards.append(mode_cards[mode].pop(0))
+                added_in_round += 1
+                if len(candidate_cards) >= sample_size:
+                    break
+        if added_in_round == 0:
             break
 
     ts_client = client
@@ -691,23 +757,12 @@ def audit_card_ambiguity(
                     }
                 )
         else:
+            # Deterministic offline fallback using Sources/VESUM grounding
             g = ground_with_sources(target=target, distractors=distractors, vesum_db_path=vesum_db)
             t_ok = g.get("target", {}).get("in_vesum", False)
-            verdicts.append(
-                {
-                    "cardId": cid,
-                    "mode": mode,
-                    "stem": stem,
-                    "target": target,
-                    "distractors": distractors,
-                    "verdict": "pass" if t_ok else "fail_broken",
-                    "unambiguous_prob": 1.0,
-                    "plausibility_score": 1.5,
-                    "model": "deterministic-grounding",
-                    "findings": ["Deterministic Sources/VESUM grounding (offline fallback)"],
-                }
-            )
             if not t_ok:
+                verdict = "fail_broken"
+                findings = [f"Target '{target}' not attested in VESUM morphological dictionary"]
                 violations.append(
                     {
                         "type": "CARD_BROKEN",
@@ -715,6 +770,34 @@ def audit_card_ambiguity(
                         "message": f"Target '{target}' not attested in VESUM",
                     }
                 )
+            else:
+                verdict = "unverified_offline"
+                findings = [
+                    "Semantic ambiguity validation unavailable offline; morphological attestation verified via VESUM"
+                ]
+                if strict_ambiguity:
+                    violations.append(
+                        {
+                            "type": "AMBIGUITY_VALIDATION_UNAVAILABLE",
+                            "item": cid,
+                            "message": "Semantic ambiguity validation requires TypeSafe System One (unavailable offline in strict mode)",
+                        }
+                    )
+
+            verdicts.append(
+                {
+                    "cardId": cid,
+                    "mode": mode,
+                    "stem": stem,
+                    "target": target,
+                    "distractors": distractors,
+                    "verdict": verdict,
+                    "unambiguous_prob": None,
+                    "plausibility_score": None,
+                    "model": "deterministic-vesum-grounding",
+                    "findings": findings,
+                }
+            )
 
     return verdicts, violations
 
@@ -824,9 +907,11 @@ def main() -> int:
     if args.check_ambiguity and results.ambiguity_verdicts:
         print("\nTypeSafe System One Target Exclusivity & Distractor Evaluation:")
         for v in results.ambiguity_verdicts:
+            p_str = f"{v['unambiguous_prob']:.2f}" if v.get("unambiguous_prob") is not None else "N/A"
+            s_str = f"{v['plausibility_score']:.2f}" if v.get("plausibility_score") is not None else "N/A"
             print(
                 f"  - [{v['mode'].upper()}] {v['cardId']}: verdict={v['verdict']} "
-                f"(P_unambig={v['unambiguous_prob']:.2f}, plaus={v['plausibility_score']:.2f}, model={v['model']})"
+                f"(P_unambig={p_str}, plaus={s_str}, model={v['model']})"
             )
             print(f"    Stem  : {v['stem']}")
             print(f"    Target: {v['target']} | Distractors: {', '.join(v['distractors'])}")
