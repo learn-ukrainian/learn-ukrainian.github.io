@@ -59,6 +59,10 @@ describe('adverb-mechanics', () => {
       expect(r.ruleUa.length).toBeGreaterThan(20);
       expect(r.ruleEn.length).toBeGreaterThan(20);
     }
+
+    expect(resolvePrefixPoRule().citation).toContain('§ 41, п. 3, 1)');
+    expect(resolveParticlesHyphenRule().citation).toContain('§ 41, п. 3, 3)');
+    expect(resolveReduplicationRule().citation).toContain('§ 41, п. 3, 5)');
   });
 
   it('correctly provides feedback for correct selections', () => {

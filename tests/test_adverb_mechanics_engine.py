@@ -69,6 +69,16 @@ def test_resolve_adverb_rules():
         assert len(ua) > 30
         assert len(en) > 30
 
+    # Specific Правопис 2019 subsection citation verification
+    cit_po, _, _ = resolve_prefix_po_rule()
+    assert "§ 41, п. 3, 1)" in cit_po
+
+    cit_part, _, _ = resolve_particles_hyphen_rule()
+    assert "§ 41, п. 3, 3)" in cit_part
+
+    cit_red, _, _ = resolve_reduplication_rule()
+    assert "§ 41, п. 3, 5)" in cit_red
+
 
 def test_build_canonical_adverb_cards_count_and_distribution():
     """Verify that 75 cards are built with exactly 5 cards per category."""
@@ -316,6 +326,12 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     """Verify that cards do not reject valid Ukrainian words (e.g. скорше) or valid phrases."""
     cards_by_id = {c.card_id: c for c in build_canonical_adverb_cards()}
 
+    # Card 06: вдень must not penalize valid instrumental noun 'днем'
+    c6 = cards_by_id["adverb_card_06"]
+    distractor_texts_6 = [d.text for d in c6.distractors]
+    assert "днем" not in distractor_texts_6, "Instrumental noun 'днем' must not be used as distractor"
+    assert "по-вдень" in distractor_texts_6
+
     # Card 8: щодня must not penalize valid 'кожен день' as a calque
     c8 = cards_by_id["adverb_card_08"]
     distractor_texts_8 = [d.text for d in c8.distractors]
@@ -334,6 +350,20 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     distractor_texts_40 = [d.text for d in c40.distractors]
     assert "дуже давно" not in distractor_texts_40, "Valid phrase 'дуже давно' must not be marked as error"
     assert "давнім-давно" in distractor_texts_40
+
+    # Card 42: вперше must not penalize valid phrase 'перший раз'
+    c42 = cards_by_id["adverb_card_42"]
+    distractor_texts_42 = [d.text for d in c42.distractors]
+    assert "перший раз" not in distractor_texts_42, "Attested phrase 'перший раз' must not be marked as calque error"
+    assert "по-вперше" in distractor_texts_42
+
+    # Card 45: насторожі must not penalize valid 'на сторожі' in watchman contexts
+    c45 = cards_by_id["adverb_card_45"]
+    distractor_texts_45 = [d.text for d in c45.distractors]
+    assert "на сторожі" not in distractor_texts_45, "'на сторожі' must not be penalized in guard/watchman contexts"
+    assert "по-сторожі" in distractor_texts_45
+    assert "всторожі" in distractor_texts_45
+    assert "тримався" in c45.prompt, "Card 45 prompt must explicitly use 'тримався' (триматися насторожі)"
 
     # Card 49: вдень must not penalize valid instrumental noun 'днем'
     c49 = cards_by_id["adverb_card_49"]
@@ -359,6 +389,21 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     c74 = cards_by_id["adverb_card_74"]
     distractor_texts_74 = [d.text for d in c74.distractors]
     assert "принаймі" in distractor_texts_74
+
+    # Verify citation numbering for particles and reduplication across deck
+    particles_cards = [c for c in cards_by_id.values() if c.category == AdverbCategory.PARTICLES_HYPHEN]
+    for pc in particles_cards:
+        assert "§ 41, п. 3, 3)" in pc.rule_citation
+        for d in pc.distractors:
+            if "§ 41" in d.explanation_ua:
+                assert "§ 41, п. 3, 3)" in d.explanation_ua
+
+    reduplication_cards = [c for c in cards_by_id.values() if c.category == AdverbCategory.REDUPLICATION]
+    for rc in reduplication_cards:
+        assert "§ 41, п. 3, 5)" in rc.rule_citation
+        for d in rc.distractors:
+            if "§ 41" in d.explanation_ua:
+                assert "§ 41, п. 3, 5)" in d.explanation_ua
 
     # Comprehensive deck-wide exclusivity audit across all 75 cards
     for card in cards_by_id.values():

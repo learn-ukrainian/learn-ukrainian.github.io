@@ -227,7 +227,7 @@ export function resolvePrefixPoRule(): AdverbRuleResolution {
 
 export function resolveParticlesHyphenRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 41, п. 3, 2); СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 3, 3); СУМ-20',
     ruleUa:
       'Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс: будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.',
     ruleEn:
@@ -237,7 +237,7 @@ export function resolveParticlesHyphenRule(): AdverbRuleResolution {
 
 export function resolveReduplicationRule(): AdverbRuleResolution {
   return {
-    citation: 'Правопис 2019 § 41, п. 3, 3); СУМ-20',
+    citation: 'Правопис 2019 § 41, п. 3, 5); СУМ-20',
     ruleUa:
       'Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс: віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.',
     ruleEn:

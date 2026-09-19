@@ -249,7 +249,7 @@
       "options": [
         "в-день",
         "вдень",
-        "днем",
+        "по-вдень",
         "в день"
       ],
       "distractors": [
@@ -270,11 +270,11 @@
           }
         },
         {
-          "text": "днем",
-          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "text": "по-вдень",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "Основним часовим нормативним прислівником на позначення світлої пори доби є «вдень» (паралельно до «вночі»).",
-            "en": "The primary normative temporal adverb denoting daylight hours in Ukrainian is 'вдень' (parallel to 'вночі')."
+            "ua": "Форма «по-вдень» є штучною та неіснуючою в українській мові; правильний часовий прислівник — «вдень» per § 41, п. 1.",
+            "en": "The form 'по-вдень' is artificial and non-existent in Ukrainian; the correct temporal adverb is 'вдень' per § 41, p. 1."
           }
         }
       ],
@@ -1357,16 +1357,16 @@
           "text": "будь де",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка будь- у складі прислівників завжди пишеться через дефіс per § 41, п. 3, 2) (будь-де, будь-коли, будь-куди).",
-            "en": "Particle будь- in adverbs is always hyphenated per § 41, p. 3, 2) (будь-де, будь-коли)."
+            "ua": "Частка будь- у складі прислівників завжди пишеться через дефіс per § 41, п. 3, 3) (будь-де, будь-коли, будь-куди).",
+            "en": "Particle будь- in adverbs is always hyphenated per § 41, p. 3, 3) (будь-де, будь-коли)."
           }
         },
         {
           "text": "будьде",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Частка будь- не пишеться разом із прислівниками; правильне написання — через дефіс per § 41, п. 3, 2).",
-            "en": "Particle будь- is never fused with adverbs; correct spelling requires a hyphen per § 41, p. 3, 2)."
+            "ua": "Частка будь- не пишеться разом із прислівниками; правильне написання — через дефіс per § 41, п. 3, 3).",
+            "en": "Particle будь- is never fused with adverbs; correct spelling requires a hyphen per § 41, p. 3, 3)."
           }
         },
         {
@@ -1378,10 +1378,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 2); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
-        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
       }
     },
     {
@@ -1401,16 +1401,16 @@
           "text": "як небудь",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка -небудь у складі неозначених прислівників пишеться через дефіс per § 41, п. 3, 2) (як-небудь, де-небудь, коли-небудь).",
-            "en": "Particle -небудь in indefinite adverbs is hyphenated per § 41, p. 3, 2) (як-небудь, де-небудь)."
+            "ua": "Частка -небудь у складі неозначених прислівників пишеться через дефіс per § 41, п. 3, 3) (як-небудь, де-небудь, коли-небудь).",
+            "en": "Particle -небудь in indefinite adverbs is hyphenated per § 41, p. 3, 3) (як-небудь, де-небудь)."
           }
         },
         {
           "text": "якнебудь",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Частка -небудь не пишеться разом з основою; вона завжди приєднується дефісом per § 41, п. 3, 2).",
-            "en": "Particle -небудь is never written as one word; it is always attached with a hyphen per § 41, p. 3, 2)."
+            "ua": "Частка -небудь не пишеться разом з основою; вона завжди приєднується дефісом per § 41, п. 3, 3).",
+            "en": "Particle -небудь is never written as one word; it is always attached with a hyphen per § 41, p. 3, 3)."
           }
         },
         {
@@ -1422,10 +1422,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 2); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
-        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
       }
     },
     {
@@ -1445,16 +1445,16 @@
           "text": "хтозна як",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка хтозна- пишеться з прислівниками через дефіс per § 41, п. 3, 2) (хтозна-як, хтозна-де, хтозна-коли).",
-            "en": "Particle хтозна- is hyphenated with adverbs per § 41, p. 3, 2) (хтозна-як, хтозна-де)."
+            "ua": "Частка хтозна- пишеться з прислівниками через дефіс per § 41, п. 3, 3) (хтозна-як, хтозна-де, хтозна-коли).",
+            "en": "Particle хтозна- is hyphenated with adverbs per § 41, p. 3, 3) (хтозна-як, хтозна-де)."
           }
         },
         {
           "text": "хтознаяк",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Слово «хтозна-як» не пишеться разом; частка хтозна- вимагає написання через дефіс per § 41, п. 3, 2).",
-            "en": "'Хтозна-як' cannot be fused; particle хтозна- strictly requires a hyphen per § 41, p. 3, 2)."
+            "ua": "Слово «хтозна-як» не пишеться разом; частка хтозна- вимагає написання через дефіс per § 41, п. 3, 3).",
+            "en": "'Хтозна-як' cannot be fused; particle хтозна- strictly requires a hyphen per § 41, p. 3, 3)."
           }
         },
         {
@@ -1466,10 +1466,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 2); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
-        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
       }
     },
     {
@@ -1489,31 +1489,31 @@
           "text": "казна коли",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка казна- з прислівниками пишеться через дефіс per § 41, п. 3, 2).",
-            "en": "Particle казна- with adverbs is hyphenated per § 41, p. 3, 2)."
+            "ua": "Частка казна- з прислівниками пишеться через дефіс per § 41, п. 3, 3).",
+            "en": "Particle казна- with adverbs is hyphenated per § 41, p. 3, 3)."
           }
         },
         {
           "text": "казнаколи",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Написання разом є орфографічною помилкою; частка казна- приєднується через дефіс per § 41, п. 3, 2).",
-            "en": "Fused spelling is an orthographic error; particle казна- attaches via hyphen per § 41, p. 3, 2)."
+            "ua": "Написання разом є орфографічною помилкою; частка казна- приєднується через дефіс per § 41, п. 3, 3).",
+            "en": "Fused spelling is an orthographic error; particle казна- attaches via hyphen per § 41, p. 3, 3)."
           }
         },
         {
           "text": "бозна коли",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка бозна- так само вимагає дефіса (бозна-коли); роздільне написання помилкове per § 41, п. 3, 2).",
-            "en": "Particle бозна- likewise requires a hyphen (бозна-коли); separate writing is wrong per § 41, p. 3, 2)."
+            "ua": "Частка бозна- так само вимагає дефіса (бозна-коли); роздільне написання помилкове per § 41, п. 3, 3).",
+            "en": "Particle бозна- likewise requires a hyphen (бозна-коли); separate writing is wrong per § 41, p. 3, 3)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 2); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
-        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
       }
     },
     {
@@ -1533,16 +1533,16 @@
           "text": "бозна як",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Частка бозна- у складі неозначених прислівників завжди пишеться через дефіс per § 41, п. 3, 2).",
-            "en": "Particle бозна- in indefinite adverbs is always hyphenated per § 41, p. 3, 2)."
+            "ua": "Частка бозна- у складі неозначених прислівників завжди пишеться через дефіс per § 41, п. 3, 3).",
+            "en": "Particle бозна- in indefinite adverbs is always hyphenated per § 41, p. 3, 3)."
           }
         },
         {
           "text": "бознаяк",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Частка бозна- не пишеться разом; обов'язкове написання через дефіс per § 41, п. 3, 2).",
-            "en": "Particle бозна- is not written together; hyphenation is mandatory per § 41, p. 3, 2)."
+            "ua": "Частка бозна- не пишеться разом; обов'язкове написання через дефіс per § 41, п. 3, 3).",
+            "en": "Particle бозна- is not written together; hyphenation is mandatory per § 41, p. 3, 3)."
           }
         },
         {
@@ -1554,10 +1554,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 2); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
-        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 2): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
       }
     },
     {
@@ -1577,31 +1577,31 @@
           "text": "віч на віч",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Складний прислівник «віч-на-віч» пишеться з двома дефісами per § 41, п. 3, 3).",
-            "en": "Compound adverb 'віч-на-віч' is written with two hyphens per § 41, p. 3, 3)."
+            "ua": "Складний прислівник «віч-на-віч» пишеться з двома дефісами per § 41, п. 3, 5).",
+            "en": "Compound adverb 'віч-на-віч' is written with two hyphens per § 41, p. 3, 5)."
           }
         },
         {
           "text": "вічнавіч",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Слово «віч-на-віч» не пишеться разом; воно складається з двох однакових іменників, з'єднаних прийменником, і пишеться через дефіси per § 41, п. 3, 3).",
-            "en": "'Віч-на-віч' cannot be fused; identical nouns joined by preposition take hyphens per § 41, p. 3, 3)."
+            "ua": "Слово «віч-на-віч» не пишеться разом; воно складається з двох однакових іменників, з'єднаних прийменником, і пишеться через дефіси per § 41, п. 3, 5).",
+            "en": "'Віч-на-віч' cannot be fused; identical nouns joined by preposition take hyphens per § 41, p. 3, 5)."
           }
         },
         {
           "text": "віч на-віч",
           "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "У складному прислівнику «віч-на-віч» обидва з'єднання вимагають дефісів per § 41, п. 3, 3); односторонній дефіс неприпустимий.",
-            "en": "In compound adverb 'віч-на-віч' both junctures require hyphens per § 41, p. 3, 3); a single hyphen is incorrect."
+            "ua": "У складному прислівнику «віч-на-віч» обидва з'єднання вимагають дефісів per § 41, п. 3, 5); односторонній дефіс неприпустимий.",
+            "en": "In compound adverb 'віч-на-віч' both junctures require hyphens per § 41, p. 3, 5); a single hyphen is incorrect."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
-        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
       }
     },
     {
@@ -1621,31 +1621,31 @@
           "text": "пліч о пліч",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Прислівникове сполучення «пліч-о-пліч» пишеться з двома дефісами per § 41, п. 3, 3).",
-            "en": "Adverbial phrase 'пліч-о-пліч' is written with two hyphens per § 41, p. 3, 3)."
+            "ua": "Прислівникове сполучення «пліч-о-пліч» пишеться з двома дефісами per § 41, п. 3, 5).",
+            "en": "Adverbial phrase 'пліч-о-пліч' is written with two hyphens per § 41, p. 3, 5)."
           }
         },
         {
           "text": "плічопліч",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Написання разом помилкове; сполука «пліч-о-пліч» обов'язково оформлюється через дефіси per § 41, п. 3, 3).",
-            "en": "Writing together is wrong; 'пліч-о-пліч' strictly requires hyphens per § 41, p. 3, 3)."
+            "ua": "Написання разом помилкове; сполука «пліч-о-пліч» обов'язково оформлюється через дефіси per § 41, п. 3, 5).",
+            "en": "Writing together is wrong; 'пліч-о-пліч' strictly requires hyphens per § 41, p. 3, 5)."
           }
         },
         {
           "text": "пліч-на-пліч",
           "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "Усталений складний прислівник має сполучний голосний о: «пліч-о-пліч», а не прийменник на per § 41, п. 3, 3).",
-            "en": "The set compound adverb has linking vowel о: 'пліч-о-пліч', not preposition на per § 41, p. 3, 3)."
+            "ua": "Усталений складний прислівник має сполучний голосний о: «пліч-о-пліч», а не прийменник на per § 41, п. 3, 5).",
+            "en": "The set compound adverb has linking vowel о: 'пліч-о-пліч', not preposition на per § 41, p. 3, 5)."
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
-        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
       }
     },
     {
@@ -1665,16 +1665,16 @@
           "text": "тишком нишком",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Синонімічні парні прислівники пишуться через дефіс per § 41, п. 3, 3) (тишком-нишком, зроду-віку).",
-            "en": "Synonymous paired adverbs are hyphenated per § 41, p. 3, 3) (тишком-нишком)."
+            "ua": "Синонімічні парні прислівники пишуться через дефіс per § 41, п. 3, 5) (тишком-нишком, зроду-віку).",
+            "en": "Synonymous paired adverbs are hyphenated per § 41, p. 3, 5) (тишком-нишком)."
           }
         },
         {
           "text": "тишкомнишком",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Парне повторення близьких за значенням слів не пишеться разом; потрібен дефіс per § 41, п. 3, 3).",
-            "en": "Paired synonymous roots are not written together; a hyphen is required per § 41, p. 3, 3)."
+            "ua": "Парне повторення близьких за значенням слів не пишеться разом; потрібен дефіс per § 41, п. 3, 5).",
+            "en": "Paired synonymous roots are not written together; a hyphen is required per § 41, p. 3, 5)."
           }
         },
         {
@@ -1686,10 +1686,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
-        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
       }
     },
     {
@@ -1709,16 +1709,16 @@
           "text": "ледве ледве",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Повторення того самого слова для підсилення значення пишеться через дефіс per § 41, п. 3, 3).",
-            "en": "Reduplication of the same word for emphasis is hyphenated per § 41, p. 3, 3)."
+            "ua": "Повторення того самого слова для підсилення значення пишеться через дефіс per § 41, п. 3, 5).",
+            "en": "Reduplication of the same word for emphasis is hyphenated per § 41, p. 3, 5)."
           }
         },
         {
           "text": "ледвеледве",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Повторювані слова ніколи не зливаються в одне слово; дефіс обов'язковий per § 41, п. 3, 3).",
-            "en": "Reduplicated words never merge into a single word; hyphen is mandatory per § 41, p. 3, 3)."
+            "ua": "Повторювані слова ніколи не зливаються в одне слово; дефіс обов'язковий per § 41, п. 3, 5).",
+            "en": "Reduplicated words never merge into a single word; hyphen is mandatory per § 41, p. 3, 5)."
           }
         },
         {
@@ -1730,10 +1730,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
-        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
       }
     },
     {
@@ -1753,16 +1753,16 @@
           "text": "давним давно",
           "interference_key": "HYPHEN_SEPARATION",
           "explanation": {
-            "ua": "Підсилювальне сполучення однакових коренів різної форми пишеться через дефіс per § 41, п. 3, 3) (давним-давно, повік-віки).",
-            "en": "Emphatic combination of identical roots in different forms is hyphenated per § 41, p. 3, 3)."
+            "ua": "Підсилювальне сполучення однакових коренів різної форми пишеться через дефіс per § 41, п. 3, 5) (давним-давно, повік-віки).",
+            "en": "Emphatic combination of identical roots in different forms is hyphenated per § 41, p. 3, 5)."
           }
         },
         {
           "text": "давнимдавно",
           "interference_key": "HYPHEN_OMISSION",
           "explanation": {
-            "ua": "Слово «давним-давно» пишеться через дефіс, а не разом per § 41, п. 3, 3).",
-            "en": "Word 'давним-давно' is hyphenated, not written as one word per § 41, p. 3, 3)."
+            "ua": "Слово «давним-давно» пишеться через дефіс, а не разом per § 41, п. 3, 5).",
+            "en": "Word 'давним-давно' is hyphenated, not written as one word per § 41, p. 3, 5)."
           }
         },
         {
@@ -1774,10 +1774,10 @@
           }
         }
       ],
-      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
       "rule_summary": {
-        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
-        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 3): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
       }
     },
     {
@@ -1832,7 +1832,7 @@
       "correct_answer": "вперше",
       "options": [
         "в перше",
-        "перший раз",
+        "по-вперше",
         "в-перше",
         "вперше"
       ],
@@ -1854,11 +1854,11 @@
           }
         },
         {
-          "text": "перший раз",
-          "interference_key": "RUSSIANISM_CALQUE",
+          "text": "по-вперше",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "Сполука «перший раз» часто є синтаксичною калькою з російської («первый раз»); питоме українське прислівникове вираження — «вперше».",
-            "en": "'Перший раз' is often a Russian syntactic calque; authentic Ukrainian adverbial usage is 'вперше'."
+            "ua": "Форми «по-вперше» не існує; часовий прислівник «вперше» пишеться разом per § 41, п. 1 (не плутати зі вставним словом «по-перше» per § 41, п. 3, 2)).",
+            "en": "The form 'по-вперше' does not exist; temporal adverb 'вперше' is written together per § 41, p. 1 (not to be confused with introductory word 'по-перше' per § 41, p. 3, 2))."
           }
         }
       ],
@@ -1959,38 +1959,38 @@
     {
       "id": "adverb_card_45",
       "category": "adverb_spelling_together_fused",
-      "prompt": "Нічний дозорець уважно вслухався в темряву лісу й постійно стояв _______.",
+      "prompt": "Відчуваючи небезпеку в темному лісі, досвідчений мандрівник увесь час тримався _______, прислухаючись до кожного шурхоту.",
       "target_token": "насторожі",
       "correct_answer": "насторожі",
       "options": [
         "насторожі",
         "на-сторожі",
-        "на сторожі",
-        "в сторожі"
+        "по-сторожі",
+        "всторожі"
       ],
       "distractors": [
         {
-          "text": "на сторожі",
-          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "text": "по-сторожі",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "«На сторожі» окремо є іменником з прийменником (наприклад, стояти на сторожі кордонів), а стан пильності як прислівник пишеться разом: «насторожі» per § 41, п. 1.",
-            "en": "'На сторожі' separately is a noun + preposition (guarding borders); state of alert as an adverb is 'насторожі' per § 41, p. 1."
+            "ua": "Форма «по-сторожі» є штучною та ненормативною; стан пильності передається прислівником «насторожі», який пишеться разом per § 41, п. 1.",
+            "en": "The form 'по-сторожі' is artificial and non-normative; the state of alertness is expressed by the adverb 'насторожі', which is written as one word per § 41, p. 1."
           }
         },
         {
           "text": "на-сторожі",
           "interference_key": "UNWARRANTED_HYPHEN",
           "explanation": {
-            "ua": "Слово «насторожі» пишеться разом без дефіса per § 41, п. 1.",
-            "en": "Word 'насторожі' is written together without a hyphen per § 41, p. 1."
+            "ua": "Складний прислівник «насторожі» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "The compound adverb 'насторожі' is written together without a hyphen per § 41, p. 1."
           }
         },
         {
-          "text": "в сторожі",
+          "text": "всторожі",
           "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "Такої прислівникової форми немає; нормативне слово — «насторожі».",
-            "en": "Such an adverbial form does not exist; normative word is 'насторожі'."
+            "ua": "Такої прислівникової форми не існує; нормативне слово зі значенням пильності — «насторожі» per § 41, п. 1.",
+            "en": "Such an adverbial form does not exist; normative word for alertness is 'насторожі' per § 41, p. 1."
           }
         }
       ],
