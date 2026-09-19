@@ -141,6 +141,15 @@ import {
   type UkrainianCaseKey,
   type UkrainianNumberKey,
 } from '../lib/lexicon/case-filter';
+import MechanicsPractice from './practice/MechanicsPractice';
+import SettingsDrawer from './practice/SettingsDrawer';
+import {
+  ALL_MECHANICS_POS_KEYS,
+  MECHANICS_DECK_META,
+  loadMechanicsDeck,
+  type MechanicsPosKey,
+  type NormalizedMechanicsCard,
+} from '../lib/lexicon/mechanics-deck-loader';
 
 
 /**
@@ -2438,6 +2447,25 @@ function LexiconPracticeIsland({
     [customSets, selectedDeckFilter],
   );
 
+  const [activeMechanicsPos, setActiveMechanicsPos] = useState<MechanicsPosKey | null>(null);
+  const [activeMechanicsCards, setActiveMechanicsCards] = useState<NormalizedMechanicsCard[] | null>(null);
+  const [activeMechanicsLoading, setActiveMechanicsLoading] = useState(false);
+  const [hoveredMechanicsPos, setHoveredMechanicsPos] = useState<MechanicsPosKey | null>(null);
+  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+
+  const handleSelectMechanicsMode = useCallback(async (pos: MechanicsPosKey) => {
+    try {
+      setActiveMechanicsLoading(true);
+      const loaded = await loadMechanicsDeck(pos);
+      setActiveMechanicsCards(loaded);
+      setActiveMechanicsPos(pos);
+    } catch (err) {
+      console.error(`Failed to load mechanics deck for ${pos}:`, err);
+    } finally {
+      setActiveMechanicsLoading(false);
+    }
+  }, []);
+
   const handleGoogleDriveSync = useCallback(async () => {
     setIsDriveSyncing(true);
     setDriveSyncMsg('Авторизація через Google...');
@@ -2615,7 +2643,12 @@ function LexiconPracticeIsland({
     ? CULTURE_DECK_META
     : hoveredZnoDeckId
       ? ZNO_MODE_META[hoveredZnoDeckId]
-      : MODE_META[hoveredMode ?? 'mixed'];
+      : hoveredMechanicsPos
+        ? {
+            description: MECHANICS_DECK_META[hoveredMechanicsPos].descriptionUk,
+            descriptionEn: MECHANICS_DECK_META[hoveredMechanicsPos].descriptionEn,
+          }
+        : MODE_META[hoveredMode ?? 'mixed'];
 
   // #6544: compact above-fold chip label (keeps Drive/Manage folded per #6336).
   const activeDeckChipLabel = useMemo(() => {
@@ -4450,7 +4483,7 @@ function LexiconPracticeIsland({
         </p>
       )}
 
-      {sessionPhase === 'idle' && !activeZnoDeck && !activeZnoDeckLoading && !activeCulturePractice && !cultureLoading && (
+      {sessionPhase === 'idle' && !activeZnoDeck && !activeZnoDeckLoading && !activeCulturePractice && !cultureLoading && !activeMechanicsPos && !activeMechanicsLoading && (
         <>
           {focusedLemmaId && (
             <div
@@ -4493,8 +4526,32 @@ function LexiconPracticeIsland({
 
           <div className="k3-practice-dashboard">
             <div className="k3-hero" data-testid="practice-dashboard-hero">
-              <h1><ChromeText k="practice.heroTitle" /></h1>
-              <p className="k3-hero-subtitle"><ChromeText k="practice.heroSubtitle" /></p>
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', flexWrap: 'wrap', gap: '0.75rem' }}>
+                <div>
+                  <h1><ChromeText k="practice.heroTitle" /></h1>
+                  <p className="k3-hero-subtitle"><ChromeText k="practice.heroSubtitle" /></p>
+                </div>
+                <button
+                  type="button"
+                  className="btn btn-sm k3-settings-btn"
+                  data-testid="practice-settings-toggle"
+                  aria-label={chromeLocale === 'uk' ? 'Налаштування та синхронізація' : 'Settings and sync'}
+                  onClick={() => setIsSettingsOpen((prev) => !prev)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '0.4rem',
+                    padding: '0.4rem 0.8rem',
+                    borderRadius: '8px',
+                    border: '1px solid var(--lu-border, rgba(255,255,255,0.15))',
+                    background: 'var(--lu-bg-card, rgba(255,255,255,0.05))',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <span aria-hidden="true">⚙️</span>
+                  <span>{chromeLocale === 'uk' ? 'Налаштування' : 'Settings'}</span>
+                </button>
+              </div>
               <p className="k3-hero-epigraph" lang="uk">
                 «Мова — це серце народу: гине мова — гине народ» — Іван Огієнко
               </p>
@@ -4891,6 +4948,69 @@ function LexiconPracticeIsland({
                   </p>
                 </div>
 
+                {/* 10 Parts of Speech Deep Mechanics Interactive Cards */}
+                <div className="k3-pos-mechanics-section" style={{ marginBottom: '1.25rem' }}>
+                  <h4
+                    style={{
+                      fontSize: '1rem',
+                      fontWeight: 600,
+                      marginBottom: '0.75rem',
+                      color: 'var(--sl-color-gray-2)',
+                    }}
+                  >
+                    {chromeLocale === 'uk'
+                      ? '🎯 Тренажери 10 частин мови (Правопис 2019)'
+                      : '🎯 10 Parts of Speech Drills (Pravopys 2019)'}
+                  </h4>
+                  <div
+                    className="k3-mode-grid"
+                    role="group"
+                    aria-label={chromeLocale === 'uk' ? 'Частини мови' : 'Parts of speech drills'}
+                    data-testid="practice-pos-mechanics-grid"
+                  >
+                    {ALL_MECHANICS_POS_KEYS.map((posKey) => {
+                      const meta = MECHANICS_DECK_META[posKey];
+                      return (
+                        <button
+                          key={posKey}
+                          type="button"
+                          className="k3-mode-card"
+                          data-mechanics-mode={posKey}
+                          data-pos-mechanics={posKey}
+                          data-accent={meta.accent}
+                          data-mode-count={meta.itemCount}
+                          data-testid={`practice-card-mechanics-${posKey}`}
+                          aria-describedby="mode-detail-line"
+                          onMouseEnter={() => setHoveredMechanicsPos(posKey)}
+                          onMouseLeave={() => setHoveredMechanicsPos(null)}
+                          onFocus={() => setHoveredMechanicsPos(posKey)}
+                          onBlur={() => setHoveredMechanicsPos(null)}
+                          onClick={() => void handleSelectMechanicsMode(posKey)}
+                        >
+                          <span className="k3-mode-title">
+                            {chromeLocale === 'uk' ? meta.titleUk : meta.titleEn}
+                          </span>
+                          <span className="k3-mode-step">
+                            {chromeLocale === 'uk' ? 'Частина мови' : 'Part of Speech'}
+                          </span>
+                          <span className="k3-mode-desc">
+                            {chromeLocale === 'uk' ? meta.descriptionUk : meta.descriptionEn}
+                          </span>
+                          <span
+                            className="k3-mode-count"
+                            data-testid={`practice-mode-count-mechanics-${posKey}`}
+                          >
+                            <span aria-hidden="true">{meta.itemCount}</span>
+                            <span className="sr-only">
+                              {chromeLocale === 'uk' ? `${meta.itemCount} завдань` : `${meta.itemCount} items`}
+                            </span>
+                          </span>
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+
                 <div
                   className="k3-mode-grid"
                   role="group"
@@ -5035,110 +5155,40 @@ function LexiconPracticeIsland({
            * below the mode grid, behind the same disclosure pattern the page already
            * uses for secondary material.
            */}
-          <details
-            ref={secondaryToolsRef}
-            className="k3-practice-sources"
-            data-testid="practice-secondary-tools"
-          >
-            <summary><ChromeText k="practice.secondaryToolsTitle" /></summary>
-            <div className="k3-practice-sources-content">
-              {isGoogleSyncConfigured() ? (
-                <div className="k3-drive-sync-bar" style={{ display: 'flex', flexDirection: 'column', gap: '0.4rem' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
-                    <button
-                      type="button"
-                      className="btn btn-sm"
-                      style={{ background: 'var(--lu-accent-blue, #2563eb)', color: '#fff', borderRadius: '8px', padding: '0.4rem 0.8rem', fontWeight: 600, display: 'inline-flex', alignItems: 'center', gap: '0.4rem' }}
-                      onClick={handleGoogleDriveSync}
-                      disabled={isDriveSyncing}
-                    >
-                      <span>☁️</span>
-                      <span>{isDriveSyncing ? 'Синхронізація...' : 'Увійти та синхронізувати з Google Drive'}</span>
-                    </button>
-                    {driveSyncMsg ? <span style={{ fontSize: '0.85rem', color: 'var(--lu-text-muted)' }}>{driveSyncMsg}</span> : null}
-                  </div>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--lu-text-muted, #94a3b8)', margin: '0.2rem 0 0', lineHeight: 1.4 }}>
-                    {chromeLocale === 'uk'
-                      ? '🔒 Синхронізація використовує лише приватний appDataFolder вашого Google Drive. Без доступу до особистих файлів чи сторонніх баз даних.'
-                      : '🔒 Sync uses only your private Google Drive appDataFolder. No access to personal files or external databases.'}
-                  </p>
-                </div>
-              ) : null}
+          <SettingsDrawer
+            isOpen={isSettingsOpen}
+            onClose={() => setIsSettingsOpen(false)}
+            chromeLocale={chromeLocale}
+            isDriveConfigured={isGoogleSyncConfigured()}
+            isDriveSyncing={isDriveSyncing}
+            driveSyncMsg={driveSyncMsg}
+            onGoogleDriveSync={() => void handleGoogleDriveSync()}
+            selectedDeckFilter={selectedDeckFilter}
+            learnerLevel={learnerLevel}
+            customSets={customSets}
+            onRequestDeckSwitch={(id) => requestDeckSwitch(id)}
+            onOpenCustomDeckManager={() => setShowCreateModal(true)}
+            secondaryToolsRef={secondaryToolsRef}
+          />
 
-              <div className="k3-deck-filter-bar" style={{ margin: '1rem 0 0', padding: '0.75rem 1rem', background: 'var(--lu-bg-card, rgba(255,255,255,0.05))', borderRadius: '12px', border: '1px solid var(--lu-border, rgba(255,255,255,0.1))' }}>
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.5rem' }}>
-                  <span style={{ fontWeight: 'bold', fontSize: '0.95rem' }}>
-                    {chromeLocale === 'uk' ? '📚 Колоди та добірки слів' : '📚 Word Decks & Collections'}
-                  </span>
-                  <button
-                    type="button"
-                    className="btn btn-sm btn-accent"
-                    onClick={() => setShowCreateModal(true)}
-                    style={{ fontSize: '0.8rem', padding: '0.25rem 0.6rem' }}
-                  >
-                    ⚙️ {chromeLocale === 'uk' ? 'Менеджер колод / Імпорт' : 'Manage Decks / Import'}
-                  </button>
-                </div>
-                <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
-                  <button
-                    type="button"
-                    className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                    onClick={() => requestDeckSwitch('all')}
-                    style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                  >
-                    {selectedDeckFilter === 'all' ? '✓ ' : ''}🌐 {chromeLocale === 'uk' ? `Всі слова (${learnerLevel})` : `All Words (${learnerLevel})`}
-                  </button>
-                  <button
-                    type="button"
-                    className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                    onClick={() => requestDeckSwitch('virtual_teacher_lesson')}
-                    style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                  >
-                    {selectedDeckFilter === 'virtual_teacher_lesson' ? '✓ ' : ''}🎓 {chromeLocale === 'uk' ? 'Відібрана добірка' : 'Curated Deck'}
-                  </button>
-                  <button
-                    type="button"
-                    data-testid="practice-deck-teacher-table"
-                    className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_table' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                    onClick={() => requestDeckSwitch('virtual_teacher_table')}
-                    style={selectedDeckFilter === 'virtual_teacher_table' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                  >
-                    {selectedDeckFilter === 'virtual_teacher_table' ? '✓ ' : ''}📋 {chromeLocale === 'uk' ? getTeacherTableVirtualDeck().titleUk : getTeacherTableVirtualDeck().title}
-                  </button>
-                  {customSets.map((set) => (
-                    <button
-                      key={set.id}
-                      type="button"
-                      className={`btn btn-sm ${selectedDeckFilter === set.id ? 'btn-primary shadow-md' : 'btn-ghost'}`}
-                      onClick={() => requestDeckSwitch(set.id)}
-                      style={selectedDeckFilter === set.id ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
-                    >
-                      {selectedDeckFilter === set.id ? '✓ ' : ''}⭐ {set.title} ({set.lemma_keys.length})
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              {showCreateModal ? (
-                <LexiconCustomDeckManager
-                  chromeLocale={chromeLocale}
-                  activeDeckFilter={selectedDeckFilter}
-                  shardBaseUrl={shardBaseUrl}
-                  onSelectDeckFilter={(id) => {
-                    // F2 (PR #5837 review): route through the same guarded switch flow as the
-                    // deck-filter chips — the manager must offer a fresh session too, not
-                    // silently swap the deck under an active/resumable one.
-                    setCustomSets(readLocalCustomSets());
-                    requestDeckSwitch(id);
-                  }}
-                  onClose={() => {
-                    setShowCreateModal(false);
-                    setCustomSets(readLocalCustomSets());
-                  }}
-                />
-              ) : null}
-            </div>
-          </details>
+          {showCreateModal ? (
+            <LexiconCustomDeckManager
+              chromeLocale={chromeLocale}
+              activeDeckFilter={selectedDeckFilter}
+              shardBaseUrl={shardBaseUrl}
+              onSelectDeckFilter={(id) => {
+                // F2 (PR #5837 review): route through the same guarded switch flow as the
+                // deck-filter chips — the manager must offer a fresh session too, not
+                // silently swap the deck under an active/resumable one.
+                setCustomSets(readLocalCustomSets());
+                requestDeckSwitch(id);
+              }}
+              onClose={() => {
+                setShowCreateModal(false);
+                setCustomSets(readLocalCustomSets());
+              }}
+            />
+          ) : null}
         </>
       )}
       {loading && (
@@ -5258,6 +5308,24 @@ function LexiconPracticeIsland({
             />
           </div>
         </div>
+      )}
+
+      {activeMechanicsLoading && (
+        <p className="lexicon-practice-muted" role="status" data-testid="practice-mechanics-loading">
+          <PracticeChromeLabel k="practice.loading" />
+        </p>
+      )}
+
+      {activeMechanicsPos && activeMechanicsCards && (
+        <MechanicsPractice
+          meta={MECHANICS_DECK_META[activeMechanicsPos]}
+          cards={activeMechanicsCards}
+          chromeLocale={chromeLocale}
+          onBackToTracks={() => {
+            setActiveMechanicsPos(null);
+            setActiveMechanicsCards(null);
+          }}
+        />
       )}
 
       {sessionPhase === 'active' && (

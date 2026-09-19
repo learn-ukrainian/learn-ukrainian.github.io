@@ -1,0 +1,3399 @@
+{
+  "schema_version": "1.0",
+  "title": "Ukrainian Pronoun Deep Mechanics Practice (Займенник)",
+  "card_count": 75,
+  "categories": [
+    "epenthetic_n_prepositional",
+    "epenthetic_n_absence_direct",
+    "epenthetic_n_instrumental_omnipresent",
+    "epenthetic_n_derivative_prepositions",
+    "orthography_indefinite_together",
+    "orthography_indefinite_hyphen",
+    "orthography_indefinite_split_preposition",
+    "orthography_negative_together",
+    "orthography_negative_split_preposition",
+    "reflexive_sebe_paradigm",
+    "declension_ves_alternation",
+    "declension_tsyey_toy",
+    "interrogative_chyi_khto_shcho",
+    "semantic_sam_vs_samyi",
+    "possessive_yikhniy_vs_yikh"
+  ],
+  "cards": [
+    {
+      "card_id": "pron_epenth_prep_do_nyoho",
+      "category": "epenthetic_n_prepositional",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми давно не бачилися, тому я вирішив завітати _______ у гості.",
+      "blank_target": "до нього",
+      "correct_answer": "до нього",
+      "options": [
+        "до нему",
+        "до йому",
+        "до його",
+        "до нього"
+      ],
+      "distractors": [
+        {
+          "text": "до його",
+          "interference_type": "missing_epenthetic_n",
+          "explanation": {
+            "ua": "Після прийменника у формах непрямих відмінків 3-ї особи обов'язковий приставний н-: 'до нього'.",
+            "en": "After prepositions, 3rd-person pronouns compulsory take epenthetic n-: 'до нього'."
+          }
+        },
+        {
+          "text": "до йому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'до' вимагає родового відмінка ('до нього'), а не давального 'йому'.",
+            "en": "Preposition 'до' requires Genitive ('до нього'), not Dative 'йому'."
+          }
+        },
+        {
+          "text": "до нему",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Ненормативна форма закінчення; родовий відмінок чоловічого роду з прийменником — 'до нього'.",
+            "en": "Ungrammatical ending; Genitive masculine after preposition is 'до нього'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після прийменників у формах непрямих відмінків 3-ї особи обов'язково з'являється приставний [н-]: до нього, біля неї, про них, на ньому.",
+        "en": "After prepositions in oblique cases of 3rd-person pronouns, epenthetic [n-] is compulsory: до нього, біля неї, про них, на ньому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_prep_bilya_neyi",
+      "category": "epenthetic_n_prepositional",
+      "cefr_level": "A2",
+      "prompt_sentence": "Уся родина зібралася _______, щоб привітати з ювілеєм.",
+      "blank_target": "біля неї",
+      "correct_answer": "біля неї",
+      "options": [
+        "біля ній",
+        "біля неї",
+        "біля їй",
+        "біля її"
+      ],
+      "distractors": [
+        {
+          "text": "біля її",
+          "interference_type": "missing_epenthetic_n",
+          "explanation": {
+            "ua": "Після прийменника обов'язковий приставний н- у формах 3-ї особи жіночого роду: 'біля неї'.",
+            "en": "After prepositions, 3rd-person feminine pronouns require epenthetic n-: 'біля неї'."
+          }
+        },
+        {
+          "text": "біля їй",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'біля' вимагає родового відмінка ('біля неї'), а не давального 'їй'.",
+            "en": "Preposition 'біля' governs Genitive ('біля неї'), not Dative 'їй'."
+          }
+        },
+        {
+          "text": "біля ній",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'ній' є місцевим або давальним відмінком; з прийменником 'біля' вживається родовий 'біля неї'.",
+            "en": "'ній' is Locative/Dative; preposition 'біля' requires Genitive 'біля неї'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після прийменників у формах непрямих відмінків 3-ї особи обов'язково з'являється приставний [н-]: до нього, біля неї, про них, на ньому.",
+        "en": "After prepositions in oblique cases of 3rd-person pronouns, epenthetic [n-] is compulsory: до нього, біля неї, про них, на ньому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_prep_pro_nykh",
+      "category": "epenthetic_n_prepositional",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми щиро пишаємося нашими захисниками й завжди піклуємося _______.",
+      "blank_target": "про них",
+      "correct_answer": "про них",
+      "options": [
+        "про їхніх",
+        "про їх",
+        "про них",
+        "про їм"
+      ],
+      "distractors": [
+        {
+          "text": "про їх",
+          "interference_type": "missing_epenthetic_n",
+          "explanation": {
+            "ua": "Після прийменника у знахідному відмінку множини обов'язковий приставний н-: 'про них'.",
+            "en": "After prepositions in Accusative plural, epenthetic n- is compulsory: 'про них'."
+          }
+        },
+        {
+          "text": "про їм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'про' вимагає знахідного відмінка ('про них'), а не давального 'їм'.",
+            "en": "Preposition 'про' governs Accusative ('про них'), not Dative 'їм'."
+          }
+        },
+        {
+          "text": "про їхніх",
+          "interference_type": "confusion_possessive_vs_personal",
+          "explanation": {
+            "ua": "'Їхній' — це присвійний займенник; у ролі особового додатка після 'про' вживається 'про них'.",
+            "en": "'Їхній' is possessive; personal pronoun object after 'про' requires 'про них'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після прийменників у формах непрямих відмінків 3-ї особи обов'язково з'являється приставний [н-]: до нього, біля неї, про них, на ньому.",
+        "en": "After prepositions in oblique cases of 3rd-person pronouns, epenthetic [n-] is compulsory: до нього, біля неї, про них, на ньому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_prep_na_nyomu",
+      "category": "epenthetic_n_prepositional",
+      "cefr_level": "A2",
+      "prompt_sentence": "Цей старовинний годинник дорогий для мене, бо _______ викарбувано герб родини.",
+      "blank_target": "на ньому",
+      "correct_answer": "на ньому",
+      "options": [
+        "на ньому",
+        "на них",
+        "на його",
+        "на йому"
+      ],
+      "distractors": [
+        {
+          "text": "на йому",
+          "interference_type": "missing_epenthetic_n",
+          "explanation": {
+            "ua": "У місцевому відмінку після прийменника 'на' обов'язковий приставний н-: 'на ньому'.",
+            "en": "In Locative after preposition 'на', epenthetic n- is compulsory: 'на ньому'."
+          }
+        },
+        {
+          "text": "на його",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'на' у значенні місця вимагає місцевого відмінка ('на ньому'), а не знахідного 'його'.",
+            "en": "Preposition 'на' denoting location requires Locative ('на ньому'), not Accusative 'його'."
+          }
+        },
+        {
+          "text": "на них",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'годинник' — однина; форма множини 'на них' порушує узгодження за числом.",
+            "en": "'годинник' is singular; plural 'на них' violates number agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після прийменників у формах непрямих відмінків 3-ї особи обов'язково з'являється приставний [н-]: до нього, біля неї, про них, на ньому.",
+        "en": "After prepositions in oblique cases of 3rd-person pronouns, epenthetic [n-] is compulsory: до нього, біля неї, про них, на ньому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_prep_pid_nyoho",
+      "category": "epenthetic_n_prepositional",
+      "cefr_level": "B1",
+      "prompt_sentence": "Вона знайшла загублений зошит і поклала _______ святкову листівку.",
+      "blank_target": "під нього",
+      "correct_answer": "під нього",
+      "options": [
+        "під йому",
+        "під нього",
+        "під його",
+        "під ним"
+      ],
+      "distractors": [
+        {
+          "text": "під його",
+          "interference_type": "missing_epenthetic_n",
+          "explanation": {
+            "ua": "Після прийменників у непрямих відмінках 3-ї особи обов'язковий приставний н-: 'під нього'.",
+            "en": "After prepositions in oblique 3rd-person forms, epenthetic n- is compulsory: 'під нього'."
+          }
+        },
+        {
+          "text": "під йому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'під' не сполучається з давальним відмінком 'йому'.",
+            "en": "Preposition 'під' does not combine with Dative 'йому'."
+          }
+        },
+        {
+          "text": "під ним",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'покласти' позначає напрямок дії (куди?), що вимагає знахідного відмінка 'під нього' (орудний 'під ним' вказував би на статичне місце).",
+            "en": "'покласти' indicates direction of motion (куди?), requiring Accusative 'під нього' rather than static Instrumental 'під ним'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після прийменників у формах непрямих відмінків 3-ї особи обов'язково з'являється приставний [н-]: до нього, біля неї, про них, на ньому.",
+        "en": "After prepositions in oblique cases of 3rd-person pronouns, epenthetic [n-] is compulsory: до нього, біля неї, про них, на ньому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_abs_yoho",
+      "category": "epenthetic_n_absence_direct",
+      "cefr_level": "A2",
+      "prompt_sentence": "Я давно знаю цього фахівця і дуже ціную _______ за порядність.",
+      "blank_target": "його",
+      "correct_answer": "його",
+      "options": [
+        "його",
+        "їх",
+        "нього",
+        "йому"
+      ],
+      "distractors": [
+        {
+          "text": "нього",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Без прийменника у прямому знахідному відмінку приставний н- не вживається: правильно 'ціную його'.",
+            "en": "Without a preposition in direct Accusative, epenthetic n- is not used: 'ціную його'."
+          }
+        },
+        {
+          "text": "йому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'цінувати' керує знахідним відмінком прямого додатка (кого?), а не давальним 'йому'.",
+            "en": "'цінувати' governs direct Accusative (кого?), not Dative 'йому'."
+          }
+        },
+        {
+          "text": "їх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'фахівець' вжито в однині; форма множини 'їх' порушує узгодження за числом.",
+            "en": "'фахівець' is singular; plural 'їх' violates number agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Без прийменників у прямому керуванні (родовий, знахідний, давальний) приставний [н-] не вживається: бачу його, чую її, зустрів їх, дав йому.",
+        "en": "Without prepositions in direct case government (Gen/Acc/Dat), epenthetic [n-] is not used: бачу його, чую її, зустрів їх, дав йому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_abs_yiyi",
+      "category": "epenthetic_n_absence_direct",
+      "cefr_level": "A2",
+      "prompt_sentence": "Вона щиро усміхнулася, коли зустріла _______ на вокзалі.",
+      "blank_target": "її",
+      "correct_answer": "її",
+      "options": [
+        "неї",
+        "їй",
+        "її",
+        "ній"
+      ],
+      "distractors": [
+        {
+          "text": "неї",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Без прийменника у знахідному відмінку приставний н- не вживається: правильно 'зустріла її'.",
+            "en": "Without a preposition in Accusative, epenthetic n- is not used: 'зустріла її'."
+          }
+        },
+        {
+          "text": "їй",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'зустріти' вимагає знахідного відмінка прямого додатка (кого?), а не давального 'їй'.",
+            "en": "'зустріти' governs direct Accusative (кого?), not Dative 'їй'."
+          }
+        },
+        {
+          "text": "ній",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Форма 'ній' містить приставний н- і є формою давального/місцевого; прямий додаток вимагає 'її'.",
+            "en": "'ній' contains epenthetic n- and is Dative/Locative; direct object requires 'її'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Без прийменників у прямому керуванні (родовий, знахідний, давальний) приставний [н-] не вживається: бачу його, чую її, зустрів їх, дав йому.",
+        "en": "Without prepositions in direct case government (Gen/Acc/Dat), epenthetic [n-] is not used: бачу його, чую її, зустрів їх, дав йому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_abs_yikh",
+      "category": "epenthetic_n_absence_direct",
+      "cefr_level": "A2",
+      "prompt_sentence": "Учитель уважно вислухав учнів і похвалив _______ за старанність.",
+      "blank_target": "їх",
+      "correct_answer": "їх",
+      "options": [
+        "їм",
+        "їх",
+        "їхніх",
+        "них"
+      ],
+      "distractors": [
+        {
+          "text": "них",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Без прийменника у знахідному відмінку прямого додатка приставний н- не вживається: правильно 'похвалив їх'.",
+            "en": "Without a preposition in direct Accusative, epenthetic n- is not used: 'похвалив їх'."
+          }
+        },
+        {
+          "text": "їм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'похвалити' керує знахідним відмінком прямого додатка (кого?), а не давальним 'їм'.",
+            "en": "'похвалити' governs direct Accusative (кого?), not Dative 'їм'."
+          }
+        },
+        {
+          "text": "їхніх",
+          "interference_type": "confusion_possessive_vs_personal",
+          "explanation": {
+            "ua": "'Їхній' — присвійний займенник; у ролі особового додатка вживається форма 'їх'.",
+            "en": "'Їхній' is possessive; personal pronoun direct object is 'їх'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Без прийменників у прямому керуванні (родовий, знахідний, давальний) приставний [н-] не вживається: бачу його, чую її, зустрів їх, дав йому.",
+        "en": "Without prepositions in direct case government (Gen/Acc/Dat), epenthetic [n-] is not used: бачу його, чую її, зустрів їх, дав йому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_abs_yomu",
+      "category": "epenthetic_n_absence_direct",
+      "cefr_level": "A2",
+      "prompt_sentence": "Якщо ти побачиш нашого тренера, обов'язково передай _______ цей лист.",
+      "blank_target": "йому",
+      "correct_answer": "йому",
+      "options": [
+        "їм",
+        "його",
+        "ньому",
+        "йому"
+      ],
+      "distractors": [
+        {
+          "text": "ньому",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Без прийменника у давальному відмінку приставний н- не вживається: правильно 'передай йому'.",
+            "en": "Without a preposition in Dative, epenthetic n- is not used: 'передай йому'."
+          }
+        },
+        {
+          "text": "його",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'передати' керує давальним відмінком адресата (кому?), а не родовим/знахідним 'його'.",
+            "en": "'передати' governs Dative for recipient (кому?), not Genitive/Accusative 'його'."
+          }
+        },
+        {
+          "text": "їм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Адресат 'тренер' — в однині; форма множини 'їм' порушує числове узгодження.",
+            "en": "'тренер' is singular; plural 'їм' violates number agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Без прийменників у прямому керуванні (родовий, знахідний, давальний) приставний [н-] не вживається: бачу його, чую її, зустрів їх, дав йому.",
+        "en": "Without prepositions in direct case government (Gen/Acc/Dat), epenthetic [n-] is not used: бачу його, чую її, зустрів їх, дав йому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_abs_yiy",
+      "category": "epenthetic_n_absence_direct",
+      "cefr_level": "A2",
+      "prompt_sentence": "Сестра готувалася до виступу, тому ми допомогли _______ з презентацією.",
+      "blank_target": "їй",
+      "correct_answer": "їй",
+      "options": [
+        "ній",
+        "їй",
+        "неї",
+        "її"
+      ],
+      "distractors": [
+        {
+          "text": "ній",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Без прийменника у давальному відмінку приставний н- не вживається: правильно 'допомогли їй'.",
+            "en": "Without a preposition in Dative, epenthetic n- is not used: 'допомогли їй'."
+          }
+        },
+        {
+          "text": "неї",
+          "interference_type": "spurious_epenthetic_n",
+          "explanation": {
+            "ua": "Форма 'неї' містить приставний н- і вживається лише з прийменниками у родовому; тут потрібен давальний 'їй'.",
+            "en": "'неї' has epenthetic n- and is used with prepositions in Genitive; Dative without preposition is 'їй'."
+          }
+        },
+        {
+          "text": "її",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'допомогти' керує давальним відмінком адресата (кому?), а не родовим/знахідним 'її'.",
+            "en": "'допомогти' governs Dative (кому?), not Genitive/Accusative 'її'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Без прийменників у прямому керуванні (родовий, знахідний, давальний) приставний [н-] не вживається: бачу його, чую її, зустрів їх, дав йому.",
+        "en": "Without prepositions in direct case government (Gen/Acc/Dat), epenthetic [n-] is not used: бачу його, чую її, зустрів їх, дав йому."
+      }
+    },
+    {
+      "card_id": "pron_epenth_ins_nym",
+      "category": "epenthetic_n_instrumental_omnipresent",
+      "cefr_level": "B1",
+      "prompt_sentence": "Він досвідчений інженер, і весь колектив щиро пишається _______ за високий професіоналізм.",
+      "blank_target": "ним",
+      "correct_answer": "ним",
+      "options": [
+        "його",
+        "йому",
+        "ним",
+        "ім"
+      ],
+      "distractors": [
+        {
+          "text": "ім",
+          "interference_type": "corrupted_instrumental_form",
+          "explanation": {
+            "ua": "Орудний відмінок особового займенника 3-ї особи завжди має форму 'ним' (з початковим н-), форма *ім не існує.",
+            "en": "Instrumental 3rd-person pronoun always has initial n-: 'ним'; form *ім does not exist."
+          }
+        },
+        {
+          "text": "його",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' керує орудним відмінком (ким?), а не родовим/знахідним 'його'.",
+            "en": "'пишатися' governs Instrumental (ким?), not Genitive/Accusative 'його'."
+          }
+        },
+        {
+          "text": "йому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' вимагає орудного відмінка ('ним'), а не давального 'йому'.",
+            "en": "'пишатися' requires Instrumental ('ним'), not Dative 'йому'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку 3-ї особи звук [н] присутній завжди (як з прийменником, так і без нього): ним, нею, ними.",
+        "en": "In the Instrumental case of 3rd-person pronouns, [n-] is always present (both with and without prepositions): ним, нею, ними."
+      }
+    },
+    {
+      "card_id": "pron_epenth_ins_neyu",
+      "category": "epenthetic_n_instrumental_omnipresent",
+      "cefr_level": "B1",
+      "prompt_sentence": "Вона здобула блискучу перемогу, і глядачі захоплювалися _______ на змаганнях.",
+      "blank_target": "нею",
+      "correct_answer": "нею",
+      "options": [
+        "її",
+        "нею",
+        "їй",
+        "єю"
+      ],
+      "distractors": [
+        {
+          "text": "єю",
+          "interference_type": "corrupted_instrumental_form",
+          "explanation": {
+            "ua": "Орудний відмінок займенника 'вона' завжди має нормативну форму 'нею' (з початковим н-), форма *єю є спотворенням.",
+            "en": "Instrumental of 'вона' strictly requires initial n-: 'нею'; *єю is a corrupted form."
+          }
+        },
+        {
+          "text": "їй",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'захоплюватися' вимагає орудного відмінка (ким?), а не давального 'їй'.",
+            "en": "'захоплюватися' requires Instrumental (ким?), not Dative 'їй'."
+          }
+        },
+        {
+          "text": "її",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'захоплюватися' керує орудним відмінком ('нею'), а не знахідним 'її'.",
+            "en": "'захоплюватися' governs Instrumental ('нею'), not Accusative 'її'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку 3-ї особи звук [н] присутній завжди (як з прийменником, так і без нього): ним, нею, ними.",
+        "en": "In the Instrumental case of 3rd-person pronouns, [n-] is always present (both with and without prepositions): ним, нею, ними."
+      }
+    },
+    {
+      "card_id": "pron_epenth_ins_nymy",
+      "category": "epenthetic_n_instrumental_omnipresent",
+      "cefr_level": "B1",
+      "prompt_sentence": "Команда показала відмінний результат, і тренер пишається _______ перед усіма глядачами.",
+      "blank_target": "ними",
+      "correct_answer": "ними",
+      "options": [
+        "ними",
+        "їх",
+        "їми",
+        "їм"
+      ],
+      "distractors": [
+        {
+          "text": "їми",
+          "interference_type": "corrupted_instrumental_form",
+          "explanation": {
+            "ua": "Орудний відмінок множини 3-ї особи завжди має нормативну форму 'ними' (з початковим н-); форма *їми є застарілою або ненормативною.",
+            "en": "Instrumental plural 3rd-person pronoun always has initial n-: 'ними'; form *їми is ungrammatical in standard Ukrainian."
+          }
+        },
+        {
+          "text": "їх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' вимагає орудного відмінка ('ними'), а не родового/знахідного 'їх'.",
+            "en": "'пишатися' requires Instrumental ('ними'), not Genitive/Accusative 'їх'."
+          }
+        },
+        {
+          "text": "їм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' керує орудним відмінком (ким?), а не давальним 'їм'.",
+            "en": "'пишатися' governs Instrumental (ким?), not Dative 'їм'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку 3-ї особи звук [н] присутній завжди (як з прийменником, так і без нього): ним, нею, ними.",
+        "en": "In the Instrumental case of 3rd-person pronouns, [n-] is always present (both with and without prepositions): ним, нею, ними."
+      }
+    },
+    {
+      "card_id": "pron_epenth_ins_iz_nym",
+      "category": "epenthetic_n_instrumental_omnipresent",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми довго обговорювали новий план проєкту разом _______ в робочому кабінеті.",
+      "blank_target": "із ним",
+      "correct_answer": "із ним",
+      "options": [
+        "із ним",
+        "із йому",
+        "із його",
+        "із ім"
+      ],
+      "distractors": [
+        {
+          "text": "із ім",
+          "interference_type": "corrupted_instrumental_form",
+          "explanation": {
+            "ua": "Орудний відмінок 3-ї особи завжди має початковий звук [н]: 'із ним', форма *із ім неприпустима.",
+            "en": "Instrumental 3rd-person pronoun always has initial n-: 'із ним'; *із ім is ungrammatical."
+          }
+        },
+        {
+          "text": "із його",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'із' у значенні сумісності вимагає орудного відмінка ('із ним'), а не родового 'його'.",
+            "en": "Preposition 'із' expressing accompaniment governs Instrumental ('із ним'), not Genitive 'його'."
+          }
+        },
+        {
+          "text": "із йому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'із' не вживається з давальним відмінком 'йому'.",
+            "en": "Preposition 'із' does not combine with Dative 'йому'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку 3-ї особи звук [н] присутній завжди (як з прийменником, так і без нього): ним, нею, ними.",
+        "en": "In the Instrumental case of 3rd-person pronouns, [n-] is always present (both with and without prepositions): ним, нею, ними."
+      }
+    },
+    {
+      "card_id": "pron_epenth_ins_iz_neyu",
+      "category": "epenthetic_n_instrumental_omnipresent",
+      "cefr_level": "B1",
+      "prompt_sentence": "Мати вийшла в садок і довго розмовляла _______ про майбутній вступ до університету.",
+      "blank_target": "із нею",
+      "correct_answer": "із нею",
+      "options": [
+        "із нею",
+        "із єю",
+        "із їй",
+        "із неї"
+      ],
+      "distractors": [
+        {
+          "text": "із єю",
+          "interference_type": "corrupted_instrumental_form",
+          "explanation": {
+            "ua": "Орудний відмінок 3-ї особи жіночого роду завжди починається на н-: 'із нею', а не *із єю.",
+            "en": "Instrumental 3rd-person feminine always starts with n-: 'із нею', not *із єю."
+          }
+        },
+        {
+          "text": "із їй",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'із' у значенні спільної дії вимагає орудного відмінка ('із нею'), а не давального 'їй'.",
+            "en": "Preposition 'із' expressing interaction governs Instrumental ('із нею'), not Dative 'їй'."
+          }
+        },
+        {
+          "text": "із неї",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'неї' — це родовий відмінок; з прийменником сумісності 'із' вживається орудний 'із нею'.",
+            "en": "'неї' is Genitive; preposition 'із' of accompaniment takes Instrumental 'із нею'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "В орудному відмінку 3-ї особи звук [н] присутній завжди (як з прийменником, так і без нього): ним, нею, ними.",
+        "en": "In the Instrumental case of 3rd-person pronouns, [n-] is always present (both with and without prepositions): ним, нею, ними."
+      }
+    },
+    {
+      "card_id": "pron_epenth_der_zavdyaky_yomu",
+      "category": "epenthetic_n_derivative_prepositions",
+      "cefr_level": "B2",
+      "prompt_sentence": "Складний проєкт було успішно завершено лише _______ та його наполегливості.",
+      "blank_target": "завдяки йому",
+      "correct_answer": "завдяки йому",
+      "options": [
+        "завдяки його",
+        "завдяки їм",
+        "завдяки ньому",
+        "завдяки йому"
+      ],
+      "distractors": [
+        {
+          "text": "завдяки ньому",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Після прийменника 'завдяки', що походить від дієприслівника і керує давальним відмінком, приставний н- не додається: 'завдяки йому'.",
+            "en": "After derivative preposition 'завдяки' governing Dative, epenthetic n- is not attached: 'завдяки йому'."
+          }
+        },
+        {
+          "text": "завдяки його",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'завдяки' вимагає давального відмінка (кому?), а не родового 'його'.",
+            "en": "Preposition 'завдяки' requires Dative (кому?), not Genitive 'його'."
+          }
+        },
+        {
+          "text": "завдяки їм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Контекст узгоджується з одниною 'його наполегливості'; форма множини 'їм' порушує семантичне узгодження.",
+            "en": "Context agrees with singular 'його наполегливості'; plural 'їм' violates semantic agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після похідних прийменників, що керують давальним відмінком (завдяки, наперекір, всупереч), приставний [н-] не з'являється: завдяки йому, наперекір їй.",
+        "en": "After derivative prepositions governing Dative (завдяки, наперекір, всупереч), epenthetic [n-] is not attached: завдяки йому, наперекір їй."
+      }
+    },
+    {
+      "card_id": "pron_epenth_der_naperekir_yiy",
+      "category": "epenthetic_n_derivative_prepositions",
+      "cefr_level": "B2",
+      "prompt_sentence": "Студент успішно склав непростий іспит _______, показавши бездоганні знання предмета.",
+      "blank_target": "наперекір їй",
+      "correct_answer": "наперекір їй",
+      "options": [
+        "наперекір ній",
+        "наперекір її",
+        "наперекір неї",
+        "наперекір їй"
+      ],
+      "distractors": [
+        {
+          "text": "наперекір ній",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Після прийменника 'наперекір' з давальним відмінком приставний н- не вживається: правильно 'наперекір їй'.",
+            "en": "After preposition 'наперекір' governing Dative, epenthetic n- is not used: 'наперекір їй'."
+          }
+        },
+        {
+          "text": "наперекір неї",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'наперекір' вимагає давального відмінка (кому?), а не родового 'неї'.",
+            "en": "Preposition 'наперекір' requires Dative (кому?), not Genitive 'неї'."
+          }
+        },
+        {
+          "text": "наперекір її",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'наперекір' вимагає давального відмінка 'їй', а не знахідного 'її'.",
+            "en": "Preposition 'наперекір' requires Dative 'їй', not Accusative 'її'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після похідних прийменників, що керують давальним відмінком (завдяки, наперекір, всупереч), приставний [н-] не з'являється: завдяки йому, наперекір їй.",
+        "en": "After derivative prepositions governing Dative (завдяки, наперекір, всупереч), epenthetic [n-] is not attached: завдяки йому, наперекір їй."
+      }
+    },
+    {
+      "card_id": "pron_epenth_der_vsuperech_yim",
+      "category": "epenthetic_n_derivative_prepositions",
+      "cefr_level": "B2",
+      "prompt_sentence": "Важливе рішення було ухвалено _______ та їхнім постійним запереченням.",
+      "blank_target": "всупереч їм",
+      "correct_answer": "всупереч їм",
+      "options": [
+        "всупереч нім",
+        "всупереч їм",
+        "всупереч них",
+        "всупереч їх"
+      ],
+      "distractors": [
+        {
+          "text": "всупереч нім",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Після прийменника 'всупереч' з давальним відмінком приставний н- не додається: правильно 'всупереч їм'.",
+            "en": "After preposition 'всупереч' with Dative, epenthetic n- is not attached: 'всупереч їм'."
+          }
+        },
+        {
+          "text": "всупереч їх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'всупереч' вимагає давального відмінка (кому?), а не родового/знахідного 'їх'.",
+            "en": "Preposition 'всупереч' requires Dative (кому?), not Genitive/Accusative 'їх'."
+          }
+        },
+        {
+          "text": "всупереч них",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Прийменник 'всупереч' керує давальним відмінком без приставного н- ('їм'), а не родовим з н- 'них'.",
+            "en": "Preposition 'всупереч' governs Dative without n- ('їм'), not Genitive with n- 'них'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після похідних прийменників, що керують давальним відмінком (завдяки, наперекір, всупереч), приставний [н-] не з'являється: завдяки йому, наперекір їй.",
+        "en": "After derivative prepositions governing Dative (завдяки, наперекір, всупереч), epenthetic [n-] is not attached: завдяки йому, наперекір їй."
+      }
+    },
+    {
+      "card_id": "pron_epenth_der_zavdyaky_yiy",
+      "category": "epenthetic_n_derivative_prepositions",
+      "cefr_level": "B2",
+      "prompt_sentence": "Наша футбольна команда здобула блискучу перемогу _______, адже вона забила вирішальний гол.",
+      "blank_target": "завдяки їй",
+      "correct_answer": "завдяки їй",
+      "options": [
+        "завдяки неї",
+        "завдяки її",
+        "завдяки ній",
+        "завдяки їй"
+      ],
+      "distractors": [
+        {
+          "text": "завдяки ній",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Після похідного прийменника 'завдяки' у давальному відмінку приставний н- не з'являється: правильно 'завдяки їй'.",
+            "en": "After derivative preposition 'завдяки' in Dative, epenthetic n- does not appear: 'завдяки їй'."
+          }
+        },
+        {
+          "text": "завдяки неї",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'завдяки' керує давальним відмінком (кому?), а не родовим 'неї'.",
+            "en": "Preposition 'завдяки' governs Dative (кому?), not Genitive 'неї'."
+          }
+        },
+        {
+          "text": "завдяки її",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'завдяки' вимагає давального відмінка 'їй', а не знахідного 'її'.",
+            "en": "Preposition 'завдяки' requires Dative 'їй', not Accusative 'її'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після похідних прийменників, що керують давальним відмінком (завдяки, наперекір, всупереч), приставний [н-] не з'являється: завдяки йому, наперекір їй.",
+        "en": "After derivative prepositions governing Dative (завдяки, наперекір, всупереч), epenthetic [n-] is not attached: завдяки йому, наперекір їй."
+      }
+    },
+    {
+      "card_id": "pron_epenth_der_naperekir_yim",
+      "category": "epenthetic_n_derivative_prepositions",
+      "cefr_level": "B2",
+      "prompt_sentence": "Ми вирушили у важку дорогу _______, не зважаючи на численні застереження.",
+      "blank_target": "наперекір їм",
+      "correct_answer": "наперекір їм",
+      "options": [
+        "наперекір їх",
+        "наперекір нім",
+        "наперекір їм",
+        "наперекір них"
+      ],
+      "distractors": [
+        {
+          "text": "наперекір нім",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Після прийменника 'наперекір' приставний н- не вживається: правильно 'наперекір їм'.",
+            "en": "After preposition 'наперекір', epenthetic n- is not used: 'наперекір їм'."
+          }
+        },
+        {
+          "text": "наперекір них",
+          "interference_type": "wrongly_attached_derivative_n",
+          "explanation": {
+            "ua": "Прийменник 'наперекір' вимагає давального відмінка без н- ('їм'), а не родового з н- 'них'.",
+            "en": "Preposition 'наперекір' requires Dative without n- ('їм'), not Genitive with n- 'них'."
+          }
+        },
+        {
+          "text": "наперекір їх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'наперекір' вимагає давального відмінка (кому?), а не знахідного/родового 'їх'.",
+            "en": "Preposition 'наперекір' requires Dative (кому?), not Accusative/Genitive 'їх'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 108",
+      "rule_summary": {
+        "ua": "Після похідних прийменників, що керують давальним відмінком (завдяки, наперекір, всупереч), приставний [н-] не з'являється: завдяки йому, наперекір їй.",
+        "en": "After derivative prepositions governing Dative (завдяки, наперекір, всупереч), epenthetic [n-] is not attached: завдяки йому, наперекір їй."
+      }
+    },
+    {
+      "card_id": "pron_orth_tog_dekhto",
+      "category": "orthography_indefinite_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "У тихому коридорі почулися швидкі кроки, ніби _______ поспішав на лекцію.",
+      "blank_target": "дехто",
+      "correct_answer": "дехто",
+      "options": [
+        "де-хто",
+        "дехто",
+        "де хто",
+        "дехтось"
+      ],
+      "distractors": [
+        {
+          "text": "де-хто",
+          "interference_type": "hyphenated_indefinite_calque",
+          "explanation": {
+            "ua": "Префікс де- у неозначених займенниках пишеться разом: 'дехто'.",
+            "en": "Prefix де- in indefinite pronouns is written as a single word: 'дехто'."
+          }
+        },
+        {
+          "text": "де хто",
+          "interference_type": "separate_indefinite_calque",
+          "explanation": {
+            "ua": "Префікс де- без прийменника пишеться із займенником разом: 'дехто'.",
+            "en": "Prefix де- without a preposition is written together with the pronoun: 'дехто'."
+          }
+        },
+        {
+          "text": "дехтось",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Надлишкове нагромадження префікса де- та суфікса -сь: нормативною є форма 'дехто'.",
+            "en": "Redundant stacking of prefix де- and suffix -сь; standard form is 'дехто'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками-префіксами де-, аби-, ані- та суфіксом -сь пишуться разом: дехто, абихто, хтось, щось.",
+        "en": "Indefinite pronouns with prefixes де-, аби-, ані- and suffix -сь are written as a single word: дехто, абихто, хтось, щось."
+      }
+    },
+    {
+      "card_id": "pron_orth_tog_abykhto",
+      "category": "orthography_indefinite_together",
+      "cefr_level": "B1",
+      "prompt_sentence": "Не варто довіряти важливі таємниці першому зустрічному, бо _______ може скористатися цим.",
+      "blank_target": "абихто",
+      "correct_answer": "абихто",
+      "options": [
+        "абихто",
+        "аби хто",
+        "абикого",
+        "аби-хто"
+      ],
+      "distractors": [
+        {
+          "text": "аби-хто",
+          "interference_type": "hyphenated_indefinite_calque",
+          "explanation": {
+            "ua": "Префікс аби- з неозначеними займенниками пишеться разом: 'абихто'.",
+            "en": "Prefix аби- in indefinite pronouns is written as a single word: 'абихто'."
+          }
+        },
+        {
+          "text": "аби хто",
+          "interference_type": "separate_indefinite_calque",
+          "explanation": {
+            "ua": "Префікс аби- без прийменника пишеться разом із займенником: 'абихто'.",
+            "en": "Prefix аби- without a preposition is written together with the pronoun: 'абихто'."
+          }
+        },
+        {
+          "text": "абикого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У ролі граматичного підмета до присудка 'може скористатися' виступає називний відмінок 'абихто'; форма родового/знахідного відмінка 'абикого' порушує синтаксичну структуру речення.",
+            "en": "As grammatical subject for predicate 'може скористатися', Nominative 'абихто' is required; Genitive/Accusative 'абикого' violates syntactic agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками-префіксами де-, аби-, ані- та суфіксом -сь пишуться разом: дехто, абихто, хтось, щось.",
+        "en": "Indefinite pronouns with prefixes де-, аби-, ані- and suffix -сь are written as a single word: дехто, абихто, хтось, щось."
+      }
+    },
+    {
+      "card_id": "pron_orth_tog_khtos",
+      "category": "orthography_indefinite_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "За вікном пролунав дивний шум, наче _______ тихо стукав у шибку.",
+      "blank_target": "хтось",
+      "correct_answer": "хтось",
+      "options": [
+        "хтось",
+        "когось",
+        "хто сь",
+        "хто-сь"
+      ],
+      "distractors": [
+        {
+          "text": "хто-сь",
+          "interference_type": "hyphenated_indefinite_calque",
+          "explanation": {
+            "ua": "Суфікс -сь у неозначених займенниках завжди пишеться разом: 'хтось'.",
+            "en": "Suffix -сь in indefinite pronouns is always written as a single word: 'хтось'."
+          }
+        },
+        {
+          "text": "хто сь",
+          "interference_type": "separate_indefinite_calque",
+          "explanation": {
+            "ua": "Суфікс -сь є частиною слова і не відділяється пробілом: 'хтось'.",
+            "en": "Suffix -сь is part of the word morpheme and cannot be separated by a space: 'хтось'."
+          }
+        },
+        {
+          "text": "когось",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У підрядному реченні потрібен називний відмінок підмета 'хтось' (хто стукав?); форма родового/знахідного відмінка 'когось' порушує узгодження підмета з присудком.",
+            "en": "In the clause, Nominative subject 'хтось' is required; form 'когось' (Genitive/Accusative) violates subject-verb agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками-префіксами де-, аби-, ані- та суфіксом -сь пишуться разом: дехто, абихто, хтось, щось.",
+        "en": "Indefinite pronouns with prefixes де-, аби-, ані- and suffix -сь are written as a single word: дехто, абихто, хтось, щось."
+      }
+    },
+    {
+      "card_id": "pron_orth_tog_abyyaku",
+      "category": "orthography_indefinite_together",
+      "cefr_level": "B1",
+      "prompt_sentence": "Він не цурався труднощів і брався за _______ роботу, щоб забезпечити родину.",
+      "blank_target": "абияку",
+      "correct_answer": "абияку",
+      "options": [
+        "аби-яку",
+        "абияку",
+        "абияка",
+        "аби яку"
+      ],
+      "distractors": [
+        {
+          "text": "аби-яку",
+          "interference_type": "hyphenated_indefinite_calque",
+          "explanation": {
+            "ua": "Префікс аби- із займенниками пишеться разом: 'абияку'.",
+            "en": "Prefix аби- with pronouns is written as a single word: 'абияку'."
+          }
+        },
+        {
+          "text": "аби яку",
+          "interference_type": "separate_indefinite_calque",
+          "explanation": {
+            "ua": "Префікс аби- без прийменника пишеться разом із займенником: 'абияку'.",
+            "en": "Prefix аби- without a preposition is written together: 'абияку'."
+          }
+        },
+        {
+          "text": "абияка",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'за' у виразі 'братися за щось' вимагає знахідного відмінка жіночого роду: 'абияку'; форма називного відмінка 'абияка' порушує відмінкове узгодження з іменником 'роботу'.",
+            "en": "Preposition 'за' in 'братися за щось' governs Accusative: 'абияку'; Nominative form 'абияка' violates case agreement with 'роботу'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками-префіксами де-, аби-, ані- та суфіксом -сь пишуться разом: дехто, абихто, хтось, щось.",
+        "en": "Indefinite pronouns with prefixes де-, аби-, ані- and suffix -сь are written as a single word: дехто, абихто, хтось, щось."
+      }
+    },
+    {
+      "card_id": "pron_orth_tog_shchos",
+      "category": "orthography_indefinite_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "У кімнаті було темно, але я помітив _______ біля старої книжкової шафи.",
+      "blank_target": "щось",
+      "correct_answer": "щось",
+      "options": [
+        "чимось",
+        "що-сь",
+        "що сь",
+        "щось"
+      ],
+      "distractors": [
+        {
+          "text": "що-сь",
+          "interference_type": "hyphenated_indefinite_calque",
+          "explanation": {
+            "ua": "Суфікс -сь пишеться разом зі словами: 'щось'.",
+            "en": "Suffix -сь is written together: 'щось'."
+          }
+        },
+        {
+          "text": "що сь",
+          "interference_type": "separate_indefinite_calque",
+          "explanation": {
+            "ua": "Суфікс -сь є морфемою і пишеться разом: 'щось'.",
+            "en": "Suffix -сь is a morpheme written solidly: 'щось'."
+          }
+        },
+        {
+          "text": "чимось",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'помітити' є перехідним і керує знахідним відмінком прямого додатка: 'щось'; форма орудного відмінка 'чимось' порушує синтаксичне керування.",
+            "en": "Verb 'помітити' is transitive and governs Accusative direct object: 'щось'; Instrumental form 'чимось' violates verb government."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками-префіксами де-, аби-, ані- та суфіксом -сь пишуться разом: дехто, абихто, хтось, щось.",
+        "en": "Indefinite pronouns with prefixes де-, аби-, ані- and suffix -сь are written as a single word: дехто, абихто, хтось, щось."
+      }
+    },
+    {
+      "card_id": "pron_orth_hyph_bud_khto",
+      "category": "orthography_indefinite_hyphen",
+      "cefr_level": "A2",
+      "prompt_sentence": "Цю просту арифметичну задачу може розв'язати _______ із нашого класу.",
+      "blank_target": "будь-хто",
+      "correct_answer": "будь-хто",
+      "options": [
+        "будь хто",
+        "будьхто",
+        "будь-хто",
+        "будь-кого"
+      ],
+      "distractors": [
+        {
+          "text": "будьхто",
+          "interference_type": "solid_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка будь- із займенниками пишеться через дефіс: 'будь-хто'.",
+            "en": "Particle будь- with pronouns is written with a hyphen: 'будь-хто'."
+          }
+        },
+        {
+          "text": "будь хто",
+          "interference_type": "separate_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка будь- без прийменника пишеться через дефіс, а не окремо: 'будь-хто'.",
+            "en": "Particle будь- without a preposition is written with a hyphen, not separately: 'будь-хто'."
+          }
+        },
+        {
+          "text": "будь-кого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У ролі граматичного підмета при присудку 'може розв'язати' виступає називний відмінок 'будь-хто'; форма родового/знахідного відмінка 'будь-кого' порушує граматичну структуру речення.",
+            "en": "As grammatical subject for predicate 'може розв'язати', Nominative 'будь-хто' is required; form 'будь-кого' (Genitive/Accusative) violates syntactic agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками будь-, -небудь, казна-, хтозна-, бозна- пишуться через дефіс: будь-хто, хто-небудь, казна-що, хтозна-який.",
+        "en": "Indefinite pronouns with particles будь-, -небудь, казна-, хтозна-, бозна- are written with a hyphen: будь-хто, хто-небудь, казна-що, хтозна-який."
+      }
+    },
+    {
+      "card_id": "pron_orth_hyph_khto_nebud",
+      "category": "orthography_indefinite_hyphen",
+      "cefr_level": "A2",
+      "prompt_sentence": "Якщо _______ зателефонує, запиши номер і передай мені повідомлення.",
+      "blank_target": "хто-небудь",
+      "correct_answer": "хто-небудь",
+      "options": [
+        "хто небудь",
+        "хто-небудь",
+        "хтонебудь",
+        "кого-небудь"
+      ],
+      "distractors": [
+        {
+          "text": "хтонебудь",
+          "interference_type": "solid_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка -небудь із займенниками пишеться через дефіс: 'хто-небудь'.",
+            "en": "Particle -небудь with pronouns is written with a hyphen: 'хто-небудь'."
+          }
+        },
+        {
+          "text": "хто небудь",
+          "interference_type": "separate_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка -небудь без дефіса не вживається; окреме написання є орфографічною помилкою: 'хто-небудь'.",
+            "en": "Particle -небудь is written with a hyphen, never separately: 'хто-небудь'."
+          }
+        },
+        {
+          "text": "кого-небудь",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У підрядному реченні підмет до особового дієслова 'зателефонує' вимагає називного відмінка: 'хто-небудь'; форма родового/знахідного відмінка 'кого-небудь' порушує синтаксичний зв'язок.",
+            "en": "The subject of the finite verb 'зателефонує' requires Nominative: 'хто-небудь'; Genitive/Accusative form 'кого-небудь' violates syntactic agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками будь-, -небудь, казна-, хтозна-, бозна- пишуться через дефіс: будь-хто, хто-небудь, казна-що, хтозна-який.",
+        "en": "Indefinite pronouns with particles будь-, -небудь, казна-, хтозна-, бозна- are written with a hyphen: будь-хто, хто-небудь, казна-що, хтозна-який."
+      }
+    },
+    {
+      "card_id": "pron_orth_hyph_kazna_shcho",
+      "category": "orthography_indefinite_hyphen",
+      "cefr_level": "B1",
+      "prompt_sentence": "Не вір безпідставним чуткам, бо це _______, вигадане недоброзичливцями.",
+      "blank_target": "казна-що",
+      "correct_answer": "казна-що",
+      "options": [
+        "казна-що",
+        "казна-хто",
+        "казна що",
+        "казнащо"
+      ],
+      "distractors": [
+        {
+          "text": "казнащо",
+          "interference_type": "solid_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка казна- із займенниками пишеться через дефіс: 'казна-що'.",
+            "en": "Particle казна- with pronouns is written with a hyphen: 'казна-що'."
+          }
+        },
+        {
+          "text": "казна що",
+          "interference_type": "separate_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка казна- пишеться через дефіс, а не окремо: 'казна-що'.",
+            "en": "Particle казна- is written with a hyphen, not separately: 'казна-що'."
+          }
+        },
+        {
+          "text": "казна-хто",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Слово 'чутки' позначає інформацію (неістоту), тому вживається 'казна-що', а не особовий 'казна-хто'.",
+            "en": "'чутки' refers to inanimate information; 'казна-що' is required, not personal 'казна-хто'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками будь-, -небудь, казна-, хтозна-, бозна- пишуться через дефіс: будь-хто, хто-небудь, казна-що, хтозна-який.",
+        "en": "Indefinite pronouns with particles будь-, -небудь, казна-, хтозна-, бозна- are written with a hyphen: будь-хто, хто-небудь, казна-що, хтозна-який."
+      }
+    },
+    {
+      "card_id": "pron_orth_hyph_bud_yake",
+      "category": "orthography_indefinite_hyphen",
+      "cefr_level": "A2",
+      "prompt_sentence": "Він завжди відповідально ставиться до роботи й сумлінно виконує _______ доручення керівника.",
+      "blank_target": "будь-яке",
+      "correct_answer": "будь-яке",
+      "options": [
+        "будьяке",
+        "будь-який",
+        "будь-яке",
+        "будь яке"
+      ],
+      "distractors": [
+        {
+          "text": "будьяке",
+          "interference_type": "solid_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка будь- пишеться із займенниками через дефіс: 'будь-яке'.",
+            "en": "Particle будь- with pronouns is written with a hyphen: 'будь-яке'."
+          }
+        },
+        {
+          "text": "будь яке",
+          "interference_type": "separate_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка будь- без прийменника пишеться через дефіс: 'будь-яке'.",
+            "en": "Particle будь- without preposition is hyphenated: 'будь-яке'."
+          }
+        },
+        {
+          "text": "будь-який",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'доручення' належить до середнього роду, тому займенник узгоджується у формі середнього роду 'будь-яке'; форма чоловічого роду 'будь-який' порушує узгодження в роді.",
+            "en": "Noun 'доручення' is neuter; pronoun must agree in neuter form 'будь-яке'; masculine form 'будь-який' violates gender agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками будь-, -небудь, казна-, хтозна-, бозна- пишуться через дефіс: будь-хто, хто-небудь, казна-що, хтозна-який.",
+        "en": "Indefinite pronouns with particles будь-, -небудь, казна-, хтозна-, бозна- are written with a hyphen: будь-хто, хто-небудь, казна-що, хтозна-який."
+      }
+    },
+    {
+      "card_id": "pron_orth_hyph_khtozna_yakyi",
+      "category": "orthography_indefinite_hyphen",
+      "cefr_level": "B1",
+      "prompt_sentence": "На старій полиці лежав _______ пошарпаний підручник з математики.",
+      "blank_target": "хтозна-який",
+      "correct_answer": "хтозна-який",
+      "options": [
+        "хтозна який",
+        "хтозна-що",
+        "хтозна-який",
+        "хтознаякий"
+      ],
+      "distractors": [
+        {
+          "text": "хтознаякий",
+          "interference_type": "solid_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка хтозна- із займенниками пишеться через дефіс: 'хтозна-який'.",
+            "en": "Particle хтозна- with pronouns is written with a hyphen: 'хтозна-який'."
+          }
+        },
+        {
+          "text": "хтозна який",
+          "interference_type": "separate_written_hyphen_particle",
+          "explanation": {
+            "ua": "Частка хтозна- пишеться через дефіс; окремо вона пишеться лише за наявності прийменника між ними: 'хтозна-який'.",
+            "en": "Particle хтозна- is written with a hyphen; it is written separately only when split by a preposition: 'хтозна-який'."
+          }
+        },
+        {
+          "text": "хтозна-що",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Займенник узгоджується з іменником 'підручник' (чоловічий рід), тому вимагає означення 'хтозна-який'.",
+            "en": "Pronoun modifies masculine noun 'підручник', requiring adjectival pronoun 'хтозна-який'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Неозначені займенники з частками будь-, -небудь, казна-, хтозна-, бозна- пишуться через дефіс: будь-хто, хто-небудь, казна-що, хтозна-який.",
+        "en": "Indefinite pronouns with particles будь-, -небудь, казна-, хтозна-, бозна- are written with a hyphen: будь-хто, хто-небудь, казна-що, хтозна-який."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_bud_u_koho",
+      "category": "orthography_indefinite_split_preposition",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ти можеш сміливо запитати правильну дорогу _______ із перехожих на центральній вулиці.",
+      "blank_target": "будь у кого",
+      "correct_answer": "будь у кого",
+      "options": [
+        "будьукого",
+        "будь-у-кого",
+        "будь у кого",
+        "будь-ким"
+      ],
+      "distractors": [
+        {
+          "text": "будь-у-кого",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Якщо між часткою будь- та займенником стоїть прийменник, усі три слова пишуться окремо без дефісів: 'будь у кого'.",
+            "en": "When a preposition intervenes between particle будь- and pronoun, all three words are written separately without hyphens: 'будь у кого'."
+          }
+        },
+        {
+          "text": "будь-ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'запитати дорогу' не керує орудним відмінком особи ('будь-ким'); нормативною є прийменникова форма родового відмінка 'будь у кого'.",
+            "en": "Verb 'запитати дорогу' does not govern Instrumental ('будь-ким'); prepositional Genitive 'будь у кого' is required."
+          }
+        },
+        {
+          "text": "будьукого",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Написання разом є грубою орфографічною помилкою; слід писати окремо в три слова: 'будь у кого'.",
+            "en": "Writing solidly is an orthographic error; it must be three separate words: 'будь у кого'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Якщо між часткою (будь, хтозна, казна, бозна, аби, де) та займенником стоїть прийменник, уся сполука пишеться окремо трьома словами: будь у кого, будь з ким, хтозна з ким.",
+        "en": "When a preposition intervenes between the particle (будь, хтозна, казна, бозна, аби, де) and the pronoun, all three words are written separately: будь у кого, будь з ким, хтозна з ким."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_bud_z_kym",
+      "category": "orthography_indefinite_split_preposition",
+      "cefr_level": "B1",
+      "prompt_sentence": "Він не боявся вступати в суперечку _______, коли відстоював справедливість.",
+      "blank_target": "будь з ким",
+      "correct_answer": "будь з ким",
+      "options": [
+        "будь-з-ким",
+        "будь-ким",
+        "будь з ким",
+        "будьзким"
+      ],
+      "distractors": [
+        {
+          "text": "будь-з-ким",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "За наявності прийменника між часткою будь- та займенником дефіси зникають: 'будь з ким'.",
+            "en": "When a preposition intervenes between particle будь- and the pronoun, hyphens disappear: 'будь з ким'."
+          }
+        },
+        {
+          "text": "будь-ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслівне керування 'вступати в суперечку' обов'язково вимагає прийменника 'з' ('будь з ким'); вживання безприйменникового орудного 'будь-ким' порушує синтаксичний зв'язок.",
+            "en": "Verb government 'вступати в суперечку' requires preposition 'з' ('будь з ким'); form without preposition 'будь-ким' violates case government."
+          }
+        },
+        {
+          "text": "будьзким",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Сполука частки, прийменника та займенника пишеться окремо в три слова: 'будь з ким'.",
+            "en": "Sequence of particle, preposition, and pronoun is written as three separate words: 'будь з ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Якщо між часткою (будь, хтозна, казна, бозна, аби, де) та займенником стоїть прийменник, уся сполука пишеться окремо трьома словами: будь у кого, будь з ким, хтозна з ким.",
+        "en": "When a preposition intervenes between the particle (будь, хтозна, казна, бозна, аби, де) and the pronoun, all three words are written separately: будь у кого, будь з ким, хтозна з ким."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_khtozna_z_kym",
+      "category": "orthography_indefinite_split_preposition",
+      "cefr_level": "B1",
+      "prompt_sentence": "Він поводився легковажно й міг вирушити в далеку мандрівку _______.",
+      "blank_target": "хтозна з ким",
+      "correct_answer": "хтозна з ким",
+      "options": [
+        "хтозна з ким",
+        "хтозназким",
+        "хтозна-ким",
+        "хтозна-з-ким"
+      ],
+      "distractors": [
+        {
+          "text": "хтозна-з-ким",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Коли між часткою хтозна- і займенником стоїть прийменник, сполука пишеться окремо трьома словами: 'хтозна з ким'.",
+            "en": "When a preposition intervenes between particle хтозна- and pronoun, all three words are written separately: 'хтозна з ким'."
+          }
+        },
+        {
+          "text": "хтозна-ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'вирушити в мандрівку' у значенні супутника вимагає прийменника сумісності 'з' ('хтозна з ким'); вживання форми без прийменника 'хтозна-ким' порушує керування.",
+            "en": "Denoting accompaniment, 'вирушити в мандрівку' requires preposition 'з' ('хтозна з ким'); form without preposition 'хтозна-ким' violates government."
+          }
+        },
+        {
+          "text": "хтозназким",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Разом сполука з трьох слів не пишеться; нормативне написання: 'хтозна з ким'.",
+            "en": "The three-word phrase cannot be merged; standard spelling is 'хтозна з ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Якщо між часткою (будь, хтозна, казна, бозна, аби, де) та займенником стоїть прийменник, уся сполука пишеться окремо трьома словами: будь у кого, будь з ким, хтозна з ким.",
+        "en": "When a preposition intervenes between the particle (будь, хтозна, казна, бозна, аби, де) and the pronoun, all three words are written separately: будь у кого, будь з ким, хтозна з ким."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_aby_pered_kym",
+      "category": "orthography_indefinite_split_preposition",
+      "cefr_level": "B2",
+      "prompt_sentence": "Я не збираюся принижуватися й виправдовуватися _______, бо моє сумління чисте.",
+      "blank_target": "аби перед ким",
+      "correct_answer": "аби перед ким",
+      "options": [
+        "аби перед ким",
+        "аби-перед-ким",
+        "аби-ким",
+        "абипередким"
+      ],
+      "distractors": [
+        {
+          "text": "аби-перед-ким",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "За наявності прийменника сполука з часткою аби- пишеться окремо в три слова без дефісів: 'аби перед ким'.",
+            "en": "With a preposition, combination with particle аби- is written as three words without hyphens: 'аби перед ким'."
+          }
+        },
+        {
+          "text": "аби-ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'виправдовуватися' вимагає прийменника 'перед' ('аби перед ким'); форма без прийменника 'аби-ким' порушує синтаксичне керування.",
+            "en": "Verb 'виправдовуватися' requires preposition 'перед' ('аби перед ким'); form without preposition 'аби-ким' violates government."
+          }
+        },
+        {
+          "text": "абипередким",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Злиття частки, прийменника та займенника в одне слово ненормативне; правильно: 'аби перед ким'.",
+            "en": "Fusing particle, preposition, and pronoun is ungrammatical; write 'аби перед ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Якщо між часткою (будь, хтозна, казна, бозна, аби, де) та займенником стоїть прийменник, уся сполука пишеться окремо трьома словами: будь у кого, будь з ким, хтозна з ким.",
+        "en": "When a preposition intervenes between the particle (будь, хтозна, казна, бозна, аби, де) and the pronoun, all three words are written separately: будь у кого, будь з ким, хтозна з ким."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_de_z_kym",
+      "category": "orthography_indefinite_split_preposition",
+      "cefr_level": "B2",
+      "prompt_sentence": "Досвідчений майстер не стане радитися _______, адже знає тонкощі своєї справи досконало.",
+      "blank_target": "де з ким",
+      "correct_answer": "де з ким",
+      "options": [
+        "де з ким",
+        "дезким",
+        "де-з-ким",
+        "де-ким"
+      ],
+      "distractors": [
+        {
+          "text": "де-з-ким",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Коли між часткою де- і займенником стоїть прийменник, пишемо окремо трьома словами: 'де з ким'.",
+            "en": "When a preposition separates particle де- and pronoun, write as three separate words: 'де з ким'."
+          }
+        },
+        {
+          "text": "де-ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'радитися' керує орудним відмінком із прийменником 'з' ('де з ким'); форма без прийменника 'де-ким' порушує синтаксичне керування.",
+            "en": "Verb 'радитися' governs Instrumental with preposition 'з' ('де з ким'); form without preposition 'де-ким' violates government."
+          }
+        },
+        {
+          "text": "дезким",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Орфографічна норма вимагає роздільного написання в три слова: 'де з ким'.",
+            "en": "Standard spelling requires three separate words: 'де з ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Якщо між часткою (будь, хтозна, казна, бозна, аби, де) та займенником стоїть прийменник, уся сполука пишеться окремо трьома словами: будь у кого, будь з ким, хтозна з ким.",
+        "en": "When a preposition intervenes between the particle (будь, хтозна, казна, бозна, аби, де) and the pronoun, all three words are written separately: будь у кого, будь з ким, хтозна з ким."
+      }
+    },
+    {
+      "card_id": "pron_orth_neg_nikhto",
+      "category": "orthography_negative_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "У порожній університетській аудиторії вже _______ не чекав на початок консультації.",
+      "blank_target": "ніхто",
+      "correct_answer": "ніхто",
+      "options": [
+        "нікого",
+        "ні-хто",
+        "ніхто",
+        "ні хто"
+      ],
+      "distractors": [
+        {
+          "text": "ні хто",
+          "interference_type": "separate_negative_pronoun",
+          "explanation": {
+            "ua": "Заперечна частка ні- із займенниками без прийменника пишеться разом: 'ніхто'.",
+            "en": "Negative prefix ні- with pronouns without preposition is written solidly: 'ніхто'."
+          }
+        },
+        {
+          "text": "ні-хто",
+          "interference_type": "hyphenated_negative_pronoun",
+          "explanation": {
+            "ua": "Частка ні- із займенниками ніколи не пишеться через дефіс; нормативне написання — разом: 'ніхто'.",
+            "en": "Prefix ні- with pronouns is never hyphenated; write as a single word: 'ніхто'."
+          }
+        },
+        {
+          "text": "нікого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У ролі граматичного підмета в реченні виступає форма називного відмінка 'ніхто'.",
+            "en": "As grammatical subject of the sentence, Nominative 'ніхто' is required."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Заперечні займенники з префіксом ні- без прийменників пишуться разом: ніхто, ніщо, ніякий, нічий.",
+        "en": "Negative pronouns with prefix ні- without prepositions are written as a single word: ніхто, ніщо, ніякий, нічий."
+      }
+    },
+    {
+      "card_id": "pron_orth_neg_nichoho",
+      "category": "orthography_negative_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "Він уважно слухав лектора, але _______ не зміг зрозуміти зі складної доповіді.",
+      "blank_target": "нічого",
+      "correct_answer": "нічого",
+      "options": [
+        "ні-чого",
+        "ні чого",
+        "нічого",
+        "ніщо"
+      ],
+      "distractors": [
+        {
+          "text": "ні чого",
+          "interference_type": "separate_negative_pronoun",
+          "explanation": {
+            "ua": "Частка ні- із займенником 'що' у родовому відмінку пишеться разом: 'нічого'.",
+            "en": "Prefix ні- with Genitive pronoun 'нічого' is written as a single word: 'нічого'."
+          }
+        },
+        {
+          "text": "ні-чого",
+          "interference_type": "hyphenated_negative_pronoun",
+          "explanation": {
+            "ua": "Заперечний займенник пишеться разом без дефіса: 'нічого'.",
+            "en": "Negative pronoun is written solidly without a hyphen: 'нічого'."
+          }
+        },
+        {
+          "text": "ніщо",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "При дієслові з запереченням 'не зміг зрозуміти' прямий додаток стоїть у родовому відмінку: 'нічого'.",
+            "en": "With negated verb 'не зміг зрозуміти', direct object requires Genitive: 'нічого'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Заперечні займенники з префіксом ні- без прийменників пишуться разом: ніхто, ніщо, ніякий, нічий.",
+        "en": "Negative pronouns with prefix ні- without prepositions are written as a single word: ніхто, ніщо, ніякий, нічий."
+      }
+    },
+    {
+      "card_id": "pron_orth_neg_niyakyi",
+      "category": "orthography_negative_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "Він був непохитним у своєму намірі, і _______ сумнів не міг похитнути його впевненість.",
+      "blank_target": "ніякий",
+      "correct_answer": "ніякий",
+      "options": [
+        "ніякий",
+        "ні-який",
+        "ніякого",
+        "ні який"
+      ],
+      "distractors": [
+        {
+          "text": "ні який",
+          "interference_type": "separate_negative_pronoun",
+          "explanation": {
+            "ua": "Заперечний займенник 'ніякий' пишеться разом: 'ніякий'.",
+            "en": "Negative pronoun 'ніякий' is written solidly: 'ніякий'."
+          }
+        },
+        {
+          "text": "ні-який",
+          "interference_type": "hyphenated_negative_pronoun",
+          "explanation": {
+            "ua": "Частка ні- із займенниками не поєднується через дефіс; пишемо разом: 'ніякий'.",
+            "en": "Prefix ні- is never hyphenated with pronouns; write solidly: 'ніякий'."
+          }
+        },
+        {
+          "text": "ніякого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'сумнів' є підметом у називному відмінку, тому займенник узгоджується у формі 'ніякий'.",
+            "en": "'сумнів' is subject in Nominative, so the modifier must agree in Nominative: 'ніякий'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Заперечні займенники з префіксом ні- без прийменників пишуться разом: ніхто, ніщо, ніякий, нічий.",
+        "en": "Negative pronouns with prefix ні- without prepositions are written as a single word: ніхто, ніщо, ніякий, нічий."
+      }
+    },
+    {
+      "card_id": "pron_orth_neg_nichyi",
+      "category": "orthography_negative_together",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ця старовинна садиба здавалася покинутою, і _______ погляд на ній довго не затримувався.",
+      "blank_target": "нічий",
+      "correct_answer": "нічий",
+      "options": [
+        "нічия",
+        "ні-чий",
+        "нічий",
+        "ні чий"
+      ],
+      "distractors": [
+        {
+          "text": "ні чий",
+          "interference_type": "separate_negative_pronoun",
+          "explanation": {
+            "ua": "Заперечний присвійний займенник пишеться разом: 'нічий'.",
+            "en": "Negative possessive pronoun is written solidly: 'нічий'."
+          }
+        },
+        {
+          "text": "ні-чий",
+          "interference_type": "hyphenated_negative_pronoun",
+          "explanation": {
+            "ua": "Написання заперечного займенника через дефіс є помилковим; слід писати разом: 'нічий'.",
+            "en": "Hyphenating negative pronoun is incorrect; write solidly: 'нічий'."
+          }
+        },
+        {
+          "text": "нічия",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'погляд' чоловічого роду; займенник вимагає форми чоловічого роду 'нічий'.",
+            "en": "'погляд' is masculine; pronoun requires masculine form 'нічий'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Заперечні займенники з префіксом ні- без прийменників пишуться разом: ніхто, ніщо, ніякий, нічий.",
+        "en": "Negative pronouns with prefix ні- without prepositions are written as a single word: ніхто, ніщо, ніякий, нічий."
+      }
+    },
+    {
+      "card_id": "pron_orth_neg_nishcho",
+      "category": "orthography_negative_together",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми доклали всіх зусиль, але _______ не могло зарадити цій прикрій біді.",
+      "blank_target": "ніщо",
+      "correct_answer": "ніщо",
+      "options": [
+        "нічим",
+        "ніщо",
+        "ні-що",
+        "ні що"
+      ],
+      "distractors": [
+        {
+          "text": "ні що",
+          "interference_type": "separate_negative_pronoun",
+          "explanation": {
+            "ua": "Заперечний займенник 'ніщо' пишеться разом: 'ніщо'.",
+            "en": "Negative pronoun 'ніщо' is written solidly: 'ніщо'."
+          }
+        },
+        {
+          "text": "ні-що",
+          "interference_type": "hyphenated_negative_pronoun",
+          "explanation": {
+            "ua": "Дефіс у заперечних займенниках не вживається; пишемо разом: 'ніщо'.",
+            "en": "Hyphen is not used in negative pronouns; write solidly: 'ніщо'."
+          }
+        },
+        {
+          "text": "нічим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У ролі граматичного підмета виступає називний відмінок 'ніщо', а не орудний 'нічим'.",
+            "en": "As grammatical subject, Nominative 'ніщо' is required, not Instrumental 'нічим'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "Заперечні займенники з префіксом ні- без прийменників пишуться разом: ніхто, ніщо, ніякий, нічий.",
+        "en": "Negative pronouns with prefix ні- without prepositions are written as a single word: ніхто, ніщо, ніякий, нічий."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_neg_ni_pro_shcho",
+      "category": "orthography_negative_split_preposition",
+      "cefr_level": "A2",
+      "prompt_sentence": "Він мовчки дивився у вікно й цілий вечір _______ не хотів розмовляти.",
+      "blank_target": "ні про що",
+      "correct_answer": "ні про що",
+      "options": [
+        "ні про що",
+        "ні-про-що",
+        "ніпрощо",
+        "про ніщо"
+      ],
+      "distractors": [
+        {
+          "text": "про ніщо",
+          "interference_type": "external_preposition_russian_calque",
+          "explanation": {
+            "ua": "Російська калька порушує порядок слів: в українській мові прийменник ставиться всередині — 'ні про що'.",
+            "en": "Calqued word order: in Ukrainian, preposition stands inside the phrase — 'ні про що'."
+          }
+        },
+        {
+          "text": "ніпрощо",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Коли між часткою ні та займенником стоїть прийменник, уся сполука пишеться окремо трьома словами: 'ні про що'.",
+            "en": "When a preposition intervenes, the phrase is written as three separate words: 'ні про що'."
+          }
+        },
+        {
+          "text": "ні-про-що",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Дефіси у розірваних прийменником заперечних сполуках не вживаються: 'ні про що'.",
+            "en": "Hyphens are not used in split negative phrases: 'ні про що'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "За наявності прийменника заперечний займенник розпадається на три окремих слова (ні + прийменник + форма займенника): ні про що, ні з ким, ні до кого.",
+        "en": "When a preposition is present, negative pronouns split into three separate words (ні + preposition + pronoun): ні про що, ні з ким, ні до кого."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_neg_ni_z_kym",
+      "category": "orthography_negative_split_preposition",
+      "cefr_level": "A2",
+      "prompt_sentence": "Вона була принциповою людиною і _______ не йшла на сумнівні компроміси.",
+      "blank_target": "ні з ким",
+      "correct_answer": "ні з ким",
+      "options": [
+        "нізким",
+        "ні-з-ким",
+        "ні з ким",
+        "з ніким"
+      ],
+      "distractors": [
+        {
+          "text": "з ніким",
+          "interference_type": "external_preposition_russian_calque",
+          "explanation": {
+            "ua": "Російська калька: прийменник в українській мові обов'язково стоїть між ні та займенником: 'ні з ким'.",
+            "en": "Calqued word order: in Ukrainian, preposition strictly stands between ні and pronoun: 'ні з ким'."
+          }
+        },
+        {
+          "text": "нізким",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Прийменникова сполука пишеться окремо трьома словами: 'ні з ким'.",
+            "en": "Prepositional negative sequence is written as three separate words: 'ні з ким'."
+          }
+        },
+        {
+          "text": "ні-з-ким",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Написання через дефіси є помилковим; слід писати окремо: 'ні з ким'.",
+            "en": "Hyphenated spelling is ungrammatical; write separately: 'ні з ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "За наявності прийменника заперечний займенник розпадається на три окремих слова (ні + прийменник + форма займенника): ні про що, ні з ким, ні до кого.",
+        "en": "When a preposition is present, negative pronouns split into three separate words (ні + preposition + pronoun): ні про що, ні з ким, ні до кого."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_neg_ni_do_koho",
+      "category": "orthography_negative_split_preposition",
+      "cefr_level": "A2",
+      "prompt_sentence": "У важку хвилину хлопець вирішив упоратися сам і _______ не звертався по допомогу.",
+      "blank_target": "ні до кого",
+      "correct_answer": "ні до кого",
+      "options": [
+        "ні-до-кого",
+        "нідокого",
+        "ні до кого",
+        "до нікого"
+      ],
+      "distractors": [
+        {
+          "text": "до нікого",
+          "interference_type": "external_preposition_russian_calque",
+          "explanation": {
+            "ua": "Ненормативний порядок слів (калька): прийменник стоїть між часткою ні та займенником — 'ні до кого'.",
+            "en": "Calqued word order: preposition stands inside between particle ні and pronoun — 'ні до кого'."
+          }
+        },
+        {
+          "text": "нідокого",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Сполука з прийменником пишеться окремо трьома словами: 'ні до кого'.",
+            "en": "Sequence with preposition is written as three words: 'ні до кого'."
+          }
+        },
+        {
+          "text": "ні-до-кого",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "У розірваних заперечних займенниках дефіси не ставляться: 'ні до кого'.",
+            "en": "Hyphens are never placed in split negative pronouns: 'ні до кого'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "За наявності прийменника заперечний займенник розпадається на три окремих слова (ні + прийменник + форма займенника): ні про що, ні з ким, ні до кого.",
+        "en": "When a preposition is present, negative pronouns split into three separate words (ні + preposition + pronoun): ні про що, ні з ким, ні до кого."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_neg_ni_za_yakykh",
+      "category": "orthography_negative_split_preposition",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми не повинні відмовлятися від своїх переконань _______ обставин, хоч би якими важкими вони були.",
+      "blank_target": "ні за яких",
+      "correct_answer": "ні за яких",
+      "options": [
+        "ні за яких",
+        "нізаяких",
+        "за ніяких",
+        "ні-за-яких"
+      ],
+      "distractors": [
+        {
+          "text": "за ніяких",
+          "interference_type": "external_preposition_russian_calque",
+          "explanation": {
+            "ua": "Калька: в українській літературній мові прийменник ставиться всередині сполуки — 'ні за яких'.",
+            "en": "Calque: in standard Ukrainian, preposition is placed internally — 'ні за яких'."
+          }
+        },
+        {
+          "text": "нізаяких",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Сполука пишеться окремо трьома словами: 'ні за яких'.",
+            "en": "Phrase is written as three separate words: 'ні за яких'."
+          }
+        },
+        {
+          "text": "ні-за-яких",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Вживання дефісів тут є грубою орфографічною помилкою: 'ні за яких'.",
+            "en": "Using hyphens here is an orthographic error; write 'ні за яких'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "За наявності прийменника заперечний займенник розпадається на три окремих слова (ні + прийменник + форма займенника): ні про що, ні з ким, ні до кого.",
+        "en": "When a preposition is present, negative pronouns split into three separate words (ні + preposition + pronoun): ні про що, ні з ким, ні до кого."
+      }
+    },
+    {
+      "card_id": "pron_orth_split_neg_ni_na_shcho",
+      "category": "orthography_negative_split_preposition",
+      "cefr_level": "A2",
+      "prompt_sentence": "Він не зважав _______ і впевнено продовжував рухатися до поставленої мети.",
+      "blank_target": "ні на що",
+      "correct_answer": "ні на що",
+      "options": [
+        "ні на що",
+        "на ніщо",
+        "ні нащо",
+        "ні-на-що"
+      ],
+      "distractors": [
+        {
+          "text": "на ніщо",
+          "interference_type": "external_preposition_russian_calque",
+          "explanation": {
+            "ua": "Калькований порядок слів: в українській мові прийменник розриває заперечний займенник: 'ні на що'.",
+            "en": "Calqued word order: in Ukrainian, preposition splits negative pronoun: 'ні на що'."
+          }
+        },
+        {
+          "text": "ні нащо",
+          "interference_type": "solid_split_preposition",
+          "explanation": {
+            "ua": "Трикомпонентна сполука містить прийменник 'на' і форму займенника 'що', тому пишеться окремо в три слова: 'ні на що'.",
+            "en": "Three-component sequence contains preposition 'на' and pronoun 'що', written as three words: 'ні на що'."
+          }
+        },
+        {
+          "text": "ні-на-що",
+          "interference_type": "hyphenated_split_preposition",
+          "explanation": {
+            "ua": "Дефіси в таких конструкціях не вживаються; пишемо окремо: 'ні на що'.",
+            "en": "Hyphens are not used in such constructions; write separately: 'ні на що'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 39",
+      "rule_summary": {
+        "ua": "За наявності прийменника заперечний займенник розпадається на три окремих слова (ні + прийменник + форма займенника): ні про що, ні з ким, ні до кого.",
+        "en": "When a preposition is present, negative pronouns split into three separate words (ні + preposition + pronoun): ні про що, ні з ким, ні до кого."
+      }
+    },
+    {
+      "card_id": "pron_refl_sobi",
+      "category": "reflexive_sebe_paradigm",
+      "cefr_level": "A2",
+      "prompt_sentence": "Він замислився над своїми вчинками і дав _______ тверду обіцянку виправити ситуацію.",
+      "blank_target": "собі",
+      "correct_answer": "собі",
+      "options": [
+        "себі",
+        "собою",
+        "собі",
+        "себе"
+      ],
+      "distractors": [
+        {
+          "text": "себі",
+          "interference_type": "defective_refl_nominative",
+          "explanation": {
+            "ua": "Давальний відмінок зворотного займенника 'себе' має форму 'собі' (з голосним о), форма *себі не існує.",
+            "en": "Dative of reflexive 'себе' is 'собі' (with vowel o); *себі does not exist."
+          }
+        },
+        {
+          "text": "себе",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'дати' керує давальним відмінком адресата (кому?), а не родовим/знахідним 'себе'.",
+            "en": "'дати' governs Dative (кому?), not Genitive/Accusative 'себе'."
+          }
+        },
+        {
+          "text": "собою",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'собою' є орудним відмінком; у значенні адресата дії потрібен давальний 'собі'.",
+            "en": "'собою' is Instrumental; Dative 'собі' is required for recipient."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 109",
+      "rule_summary": {
+        "ua": "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі).",
+        "en": "Reflexive pronoun 'себе' lacks Nominative; Dative is собі, Instrumental is собою, Locative is на собі (при собі)."
+      }
+    },
+    {
+      "card_id": "pron_refl_na_sobi",
+      "category": "reflexive_sebe_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "Після тривалого підйому в гори турист відчував _______ вагу важкого наплічника.",
+      "blank_target": "на собі",
+      "correct_answer": "на собі",
+      "options": [
+        "на себе",
+        "на ним",
+        "на себі",
+        "на собі"
+      ],
+      "distractors": [
+        {
+          "text": "на себі",
+          "interference_type": "defective_refl_nominative",
+          "explanation": {
+            "ua": "Місцевий відмінок зворотного займенника має голосний [о]: 'на собі', форма *на себі помилкова.",
+            "en": "Locative of reflexive pronoun has vowel [о]: 'на собі'; *на себі is ungrammatical."
+          }
+        },
+        {
+          "text": "на себе",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У значенні локалізації відчуття (де?) вживається місцевий відмінок 'на собі' (знахідний 'на себе' означав би напрямок куди?).",
+            "en": "Denoting location of sensation (де?), Locative 'на собі' is required rather than directional Accusative 'на себе'."
+          }
+        },
+        {
+          "text": "на ним",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дія спрямована на самого суб'єкта (туриста), тому нормативно вживається зворотний займенник 'на собі'.",
+            "en": "Action relates back to subject itself; reflexive pronoun 'на собі' is required."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 109",
+      "rule_summary": {
+        "ua": "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі).",
+        "en": "Reflexive pronoun 'себе' lacks Nominative; Dative is собі, Instrumental is собою, Locative is на собі (при собі)."
+      }
+    },
+    {
+      "card_id": "pron_refl_soboyu",
+      "category": "reflexive_sebe_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "Вона була впевнена у власних знаннях і повністю володіла _______ під час виступу.",
+      "blank_target": "собою",
+      "correct_answer": "собою",
+      "options": [
+        "себою",
+        "собі",
+        "себе",
+        "собою"
+      ],
+      "distractors": [
+        {
+          "text": "себою",
+          "interference_type": "defective_refl_nominative",
+          "explanation": {
+            "ua": "Орудний відмінок зворотного займенника 'себе' має форму 'собою' (з голосним о), форми *себою не існує.",
+            "en": "Instrumental of reflexive 'себе' is 'собою' (with o); form *себою does not exist."
+          }
+        },
+        {
+          "text": "собі",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'володіти' керує орудним відмінком (ким? чим?), а не давальним 'собі'.",
+            "en": "'володіти' governs Instrumental (ким? чим?), not Dative 'собі'."
+          }
+        },
+        {
+          "text": "себе",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'володіти' вимагає орудного відмінка ('собою'), а не знахідного 'себе'.",
+            "en": "'володіти' requires Instrumental ('собою'), not Accusative 'себе'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 109",
+      "rule_summary": {
+        "ua": "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі).",
+        "en": "Reflexive pronoun 'себе' lacks Nominative; Dative is собі, Instrumental is собою, Locative is на собі (при собі)."
+      }
+    },
+    {
+      "card_id": "pron_refl_sebe",
+      "category": "reflexive_sebe_paradigm",
+      "cefr_level": "A2",
+      "prompt_sentence": "Кожен із нас має вміти об'єктивно критикувати _______ за допущені помилки.",
+      "blank_target": "себе",
+      "correct_answer": "себе",
+      "options": [
+        "собі",
+        "себя",
+        "себе",
+        "собою"
+      ],
+      "distractors": [
+        {
+          "text": "себя",
+          "interference_type": "defective_refl_nominative",
+          "explanation": {
+            "ua": "Російське закінчення-суржик: в українській літературній мові форма має вигляд 'себе'.",
+            "en": "Russianized ending; standard Ukrainian form is 'себе'."
+          }
+        },
+        {
+          "text": "собі",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'критикувати' керує прямим знахідним відмінком (кого?), а не давальним 'собі'.",
+            "en": "'критикувати' governs direct Accusative (кого?), not Dative 'собі'."
+          }
+        },
+        {
+          "text": "собою",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'критикувати' вимагає знахідного відмінка прямого додатка ('себе'), а не орудного 'собою'.",
+            "en": "'критикувати' requires direct Accusative ('себе'), not Instrumental 'собою'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 109",
+      "rule_summary": {
+        "ua": "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі).",
+        "en": "Reflexive pronoun 'себе' lacks Nominative; Dative is собі, Instrumental is собою, Locative is на собі (при собі)."
+      }
+    },
+    {
+      "card_id": "pron_refl_pry_sobi",
+      "category": "reflexive_sebe_paradigm",
+      "cefr_level": "B1",
+      "prompt_sentence": "Художник завжди носив _______ маленький блокнот для швидких ескізів.",
+      "blank_target": "при собі",
+      "correct_answer": "при собі",
+      "options": [
+        "при себі",
+        "при себе",
+        "при собі",
+        "при ньому"
+      ],
+      "distractors": [
+        {
+          "text": "при себі",
+          "interference_type": "defective_refl_nominative",
+          "explanation": {
+            "ua": "Місцевий відмінок зворотного займенника має нормативну форму 'при собі' (з голосним о).",
+            "en": "Locative of reflexive pronoun has standard vowel o: 'при собі'."
+          }
+        },
+        {
+          "text": "при себе",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'при' вимагає місцевого відмінка ('при собі'), а не родового/знахідного 'себе'.",
+            "en": "Preposition 'при' governs Locative ('при собі'), not Genitive/Accusative 'себе'."
+          }
+        },
+        {
+          "text": "при ньому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Коли дія стосується самого суб'єкта (художника), вживається зворотний займенник 'при собі'.",
+            "en": "When referring back to the subject (художник), reflexive 'при собі' is used."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 109",
+      "rule_summary": {
+        "ua": "Зворотний займенник 'себе' не має називного відмінка; давальний відмінок — собі, орудний — собою, місцевий — на собі (при собі).",
+        "en": "Reflexive pronoun 'себе' lacks Nominative; Dative is собі, Instrumental is собою, Locative is на собі (при собі)."
+      }
+    },
+    {
+      "card_id": "pron_ves_vsima",
+      "category": "declension_ves_alternation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Учні щиро привітали вчительку _______ квітами, які зібрали у шкільному саду.",
+      "blank_target": "всіма",
+      "correct_answer": "всіма",
+      "options": [
+        "всеми",
+        "всьома",
+        "всіма",
+        "всім"
+      ],
+      "distractors": [
+        {
+          "text": "всьома",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Орудний відмінок множини займенника 'весь' має нормативне закінчення -іма: 'всіма', форма *всьома є ненормативною.",
+            "en": "Instrumental plural of 'весь' has standard ending -іма: 'всіма'; *всьома is ungrammatical."
+          }
+        },
+        {
+          "text": "всеми",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Російська калька: в українській літературній мові орудний відмінок множини має закінчення -іма: 'всіма'.",
+            "en": "Calque; standard Ukrainian Instrumental plural has ending -іма: 'всіма'."
+          }
+        },
+        {
+          "text": "всім",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'всім' є давальним відмінком множини або орудним однини; з орудним множини 'квітами' узгоджується 'всіма'.",
+            "en": "'всім' is Dative plural or Instrumental singular; Instrumental plural 'квітами' agrees with 'всіма'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
+        "en": "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
+      }
+    },
+    {
+      "card_id": "pron_ves_vsim",
+      "category": "declension_ves_alternation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Організатори щиро побажали успіху _______ учасникам олімпіади з української мови.",
+      "blank_target": "всім",
+      "correct_answer": "всім",
+      "options": [
+        "всьому",
+        "всіх",
+        "всім",
+        "всему"
+      ],
+      "distractors": [
+        {
+          "text": "всьому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'учасникам' вжито у множині; форма однини 'всьому' порушує узгодження за числом.",
+            "en": "'учасникам' is plural; singular 'всьому' violates number agreement."
+          }
+        },
+        {
+          "text": "всему",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Суржикове спотворення основи; давальний відмінок множини — 'всім'.",
+            "en": "Corrupted stem; Dative plural is 'всім'."
+          }
+        },
+        {
+          "text": "всіх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'побажати' керує давальним відмінком адресата (кому?), форма 'всіх' є родовим/знахідним.",
+            "en": "'побажати' governs Dative for recipient (кому?), whereas 'всіх' is Genitive/Accusative."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
+        "en": "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
+      }
+    },
+    {
+      "card_id": "pron_ves_vsyoho",
+      "category": "declension_ves_alternation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми відчували втому після _______ робочого дня, сповненого клопотів.",
+      "blank_target": "всього",
+      "correct_answer": "всього",
+      "options": [
+        "всьому",
+        "всього",
+        "всьогось",
+        "всего"
+      ],
+      "distractors": [
+        {
+          "text": "всьогось",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Надлишковий суфікс -сь спотворює значення; нормативна форма родового відмінка — 'всього'.",
+            "en": "Redundant suffix -сь distorts the meaning; standard Genitive is 'всього'."
+          }
+        },
+        {
+          "text": "всего",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Російська калька з літерою е; в українській мові родовий відмінок однини має форму 'всього'.",
+            "en": "Russianized spelling with letter е; standard Ukrainian Genitive singular is 'всього'."
+          }
+        },
+        {
+          "text": "всьому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'після' вимагає родового відмінка ('всього'), а не давального 'всьому'.",
+            "en": "Preposition 'після' governs Genitive ('всього'), not Dative 'всьому'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
+        "en": "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
+      }
+    },
+    {
+      "card_id": "pron_ves_vsikh",
+      "category": "declension_ves_alternation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Директор звернувся до _______ присутніх у залі з важливою промовою.",
+      "blank_target": "всіх",
+      "correct_answer": "всіх",
+      "options": [
+        "всім",
+        "всіма",
+        "всіх",
+        "всех"
+      ],
+      "distractors": [
+        {
+          "text": "всех",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Російська калька; в українській мові родовий відмінок множини має форму 'всіх'.",
+            "en": "Russianism; standard Ukrainian Genitive plural is 'всіх'."
+          }
+        },
+        {
+          "text": "всім",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'до' вимагає родового відмінка ('всіх'), а не давального 'всім'.",
+            "en": "Preposition 'до' governs Genitive ('всіх'), not Dative 'всім'."
+          }
+        },
+        {
+          "text": "всіма",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'всіма' є орудним відмінком; після прийменника 'до' вживається родовий 'всіх'.",
+            "en": "'всіма' is Instrumental; after preposition 'до', Genitive 'всіх' is required."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
+        "en": "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
+      }
+    },
+    {
+      "card_id": "pron_ves_vsim_ins",
+      "category": "declension_ves_alternation",
+      "cefr_level": "B1",
+      "prompt_sentence": "Команда пишалася _______ досягнутим результатом наполегливої праці.",
+      "blank_target": "всім",
+      "correct_answer": "всім",
+      "options": [
+        "всім",
+        "всьому",
+        "всього",
+        "всим"
+      ],
+      "distractors": [
+        {
+          "text": "всим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "В орудному відмінку однини чоловічого/середнього роду пишеться літера і: 'всім', форма *всим ненормативна.",
+            "en": "In Instrumental singular masculine/neuter, letter і is written: 'всім'; *всим is ungrammatical."
+          }
+        },
+        {
+          "text": "всьому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' керує орудним відмінком ('всім'), а не давальним 'всьому'.",
+            "en": "'пишатися' governs Instrumental ('всім'), not Dative 'всьому'."
+          }
+        },
+        {
+          "text": "всього",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'пишатися' вимагає орудного відмінка (чим?), а не родового 'всього'.",
+            "en": "'пишатися' requires Instrumental (чим?), not Genitive 'всього'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "Займенник 'весь' в орудному відмінку множини має нормативне закінчення -іма: всіма (форми *всьома чи *всеми є ненормативними).",
+        "en": "The pronoun 'весь' in Instrumental plural takes ending -іма: всіма (forms *всьома and *всеми are ungrammatical)."
+      }
+    },
+    {
+      "card_id": "pron_dem_tsymy",
+      "category": "declension_tsyey_toy",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми довго гуляли _______ затишними старовинними вуличками міста.",
+      "blank_target": "цими",
+      "correct_answer": "цими",
+      "options": [
+        "цими",
+        "цим",
+        "цима",
+        "цих"
+      ],
+      "distractors": [
+        {
+          "text": "цима",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Орудний відмінок множини вказівного займенника 'цей' має нормативне закінчення -ими: 'цими', форма *цима є ненормативною.",
+            "en": "Instrumental plural of 'цей' takes ending -ими: 'цими'; *цима is non-standard."
+          }
+        },
+        {
+          "text": "цих",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'цих' є родовим/знахідним відмінком; з орудним відмінком 'вуличками' узгоджується 'цими'.",
+            "en": "'цих' is Genitive/Accusative; Instrumental noun 'вуличками' agrees with 'цими'."
+          }
+        },
+        {
+          "text": "цим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'цим' — це давальний множини або орудний однини; орудний множини вимагає 'цими'.",
+            "en": "'цим' is Dative plural or Instrumental singular; Instrumental plural requires 'цими'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому.",
+        "en": "Demonstrative pronouns 'цей' and 'той' decline according to hard/soft pronominal patterns: цими, тими, цього, тому."
+      }
+    },
+    {
+      "card_id": "pron_dem_tsoho",
+      "category": "declension_tsyey_toy",
+      "cefr_level": "A2",
+      "prompt_sentence": "Я не пам'ятаю назви _______ величного старовинного замку.",
+      "blank_target": "цього",
+      "correct_answer": "цього",
+      "options": [
+        "цего",
+        "цим",
+        "цьому",
+        "цього"
+      ],
+      "distractors": [
+        {
+          "text": "цего",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Родовий відмінок вказівного займенника 'цей' має нормативну форму 'цього' (з суфіксом -ього), форма *цего архаїчна чи ненормативна.",
+            "en": "Genitive of 'цей' has standard form 'цього'; form *цего is archaic/non-standard."
+          }
+        },
+        {
+          "text": "цьому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'назва' керує родовим відмінком (чого?), а не давальним 'цьому'.",
+            "en": "'назва' governs Genitive (чого?), not Dative 'цьому'."
+          }
+        },
+        {
+          "text": "цим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'цим' є орудним відмінком; у ролі неузгодженого означення потрібен родовий 'цього'.",
+            "en": "'цим' is Instrumental; modifier requires Genitive 'цього'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому.",
+        "en": "Demonstrative pronouns 'цей' and 'той' decline according to hard/soft pronominal patterns: цими, тими, цього, тому."
+      }
+    },
+    {
+      "card_id": "pron_dem_tomu",
+      "category": "declension_tsyey_toy",
+      "cefr_level": "A2",
+      "prompt_sentence": "Завдяки _______ мудрому рішенню ми змогли вчасно завершити проєкт.",
+      "blank_target": "тому",
+      "correct_answer": "тому",
+      "options": [
+        "тим",
+        "того",
+        "тоєму",
+        "тому"
+      ],
+      "distractors": [
+        {
+          "text": "тоєму",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Вказівний займенник 'той' у давальному відмінку чоловічого/середнього роду має форму 'тому', форма *тоєму спотворена.",
+            "en": "Demonstrative 'той' in Dative masculine/neuter is 'тому'; *тоєму is a corrupted form."
+          }
+        },
+        {
+          "text": "того",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'завдяки' керує давальним відмінком (чому?), а не родовим 'того'.",
+            "en": "Preposition 'завдяки' governs Dative (чому?), not Genitive 'того'."
+          }
+        },
+        {
+          "text": "тим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'тим' є орудним відмінком однини або давальним множини; з давальним однини 'рішенню' вживається 'тому'.",
+            "en": "'тим' is Instrumental singular or Dative plural; Dative singular 'рішенню' takes 'тому'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому.",
+        "en": "Demonstrative pronouns 'цей' and 'той' decline according to hard/soft pronominal patterns: цими, тими, цього, тому."
+      }
+    },
+    {
+      "card_id": "pron_dem_tymy",
+      "category": "declension_tsyey_toy",
+      "cefr_level": "A2",
+      "prompt_sentence": "Художник прикрасив картину _______ яскравими фарбами, які привіз із подорожі.",
+      "blank_target": "тими",
+      "correct_answer": "тими",
+      "options": [
+        "тим",
+        "тих",
+        "тими",
+        "тима"
+      ],
+      "distractors": [
+        {
+          "text": "тима",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Орудний відмінок множини вказівного займенника 'той' має закінчення -ими: 'тими', форма *тима є ненормативною.",
+            "en": "Instrumental plural of 'той' takes ending -ими: 'тими'; *тима is non-standard."
+          }
+        },
+        {
+          "text": "тих",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'тих' є родовим відмінком; з орудним множини 'фарбами' узгоджується 'тими'.",
+            "en": "'тих' is Genitive; Instrumental noun 'фарбами' agrees with 'тими'."
+          }
+        },
+        {
+          "text": "тим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'тим' є давальним множини; орудний відмінок вимагає закінчення -ими: 'тими'.",
+            "en": "'тим' is Dative plural; Instrumental case requires ending -ими: 'тими'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому.",
+        "en": "Demonstrative pronouns 'цей' and 'той' decline according to hard/soft pronominal patterns: цими, тими, цього, тому."
+      }
+    },
+    {
+      "card_id": "pron_dem_tsomu",
+      "category": "declension_tsyey_toy",
+      "cefr_level": "A2",
+      "prompt_sentence": "У _______ науковому розділі книги автор детально аналізує причини історичних подій.",
+      "blank_target": "цьому",
+      "correct_answer": "цьому",
+      "options": [
+        "цьому",
+        "цьом",
+        "цему",
+        "цього"
+      ],
+      "distractors": [
+        {
+          "text": "цьом",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Суржикове усічення закінчення; нормативна форма місцевого відмінка — 'цьому' (або поетичне 'цім').",
+            "en": "Corrupted truncated ending; standard Locative form is 'цьому'."
+          }
+        },
+        {
+          "text": "цему",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Порушення м'якої основи займенника; нормативна форма — 'цьому'.",
+            "en": "Violation of soft stem; standard form is 'цьому'."
+          }
+        },
+        {
+          "text": "цього",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'у' у значенні місця вимагає місцевого відмінка ('цьому'), а не родового 'цього'.",
+            "en": "Preposition 'у' denoting location requires Locative ('цьому'), not Genitive 'цього'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 111",
+      "rule_summary": {
+        "ua": "Вказівні займенники 'цей' та 'той' у формах множини та непрямих відмінків однини відмінюються за твердим чи м'яким типом: цими, тими, цього, тому.",
+        "en": "Demonstrative pronouns 'цей' and 'той' decline according to hard/soft pronominal patterns: цими, тими, цього, тому."
+      }
+    },
+    {
+      "card_id": "pron_int_chyyoho",
+      "category": "interrogative_chyi_khto_shcho",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ніхто в кімнаті не знав, _______ капелюха залишено на вішалці.",
+      "blank_target": "чийого",
+      "correct_answer": "чийого",
+      "options": [
+        "чийогось",
+        "чиїм",
+        "чийому",
+        "чийого"
+      ],
+      "distractors": [
+        {
+          "text": "чийому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Займенник узгоджується з іменником 'капелюха' у родовому відмінку: правильно 'чийого'. Форма 'чийому' є давальним відмінком і порушує синтаксичне керування.",
+            "en": "Pronoun agrees with noun 'капелюха' in Genitive: 'чийого'. Form 'чийому' is Dative/Locative and violates case government."
+          }
+        },
+        {
+          "text": "чиїм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'чиїм' є орудним відмінком однини або давальним множини; тут потрібен родовий 'чийого'.",
+            "en": "'чиїм' is Instrumental singular or Dative plural; Genitive 'чийого' is required."
+          }
+        },
+        {
+          "text": "чийогось",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У підрядному з'ясувальному реченні зв'язок здійснює питально-відносний займенник 'чийого', а не неозначений 'чийогось'.",
+            "en": "In indirect relative clause, interrogative-relative 'чийого' is used, not indefinite 'чийогось'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 112",
+      "rule_summary": {
+        "ua": "Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми).",
+        "en": "Interrogative-relative pronouns хто, що, чий decline according to pronominal paradigms (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
+      }
+    },
+    {
+      "card_id": "pron_int_komu",
+      "category": "interrogative_chyi_khto_shcho",
+      "cefr_level": "A2",
+      "prompt_sentence": "Вона поцікавилася, _______ з присутніх колег належить ця чудова ідея.",
+      "blank_target": "кому",
+      "correct_answer": "кому",
+      "options": [
+        "ким",
+        "кого",
+        "кому",
+        "кім"
+      ],
+      "distractors": [
+        {
+          "text": "кім",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'кім' є варіантом місцевого відмінка (на кім); дієслово 'належати' вимагає давального 'кому'.",
+            "en": "'кім' is Locative variant (на кім); verb 'належати' requires Dative 'кому'."
+          }
+        },
+        {
+          "text": "кого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'належати' керує давальним відмінком (кому?), а не родовим/знахідним 'кого'.",
+            "en": "'належати' governs Dative (кому?), not Genitive/Accusative 'кого'."
+          }
+        },
+        {
+          "text": "ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'належати' вимагає давального відмінка адресата ('кому'), а не орудного 'ким'.",
+            "en": "'належати' requires Dative ('кому'), not Instrumental 'ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 112",
+      "rule_summary": {
+        "ua": "Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми).",
+        "en": "Interrogative-relative pronouns хто, що, чий decline according to pronominal paradigms (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
+      }
+    },
+    {
+      "card_id": "pron_int_chym",
+      "category": "interrogative_chyi_khto_shcho",
+      "cefr_level": "B1",
+      "prompt_sentence": "Учень не міг зрозуміти, _______ зумовлені такі несподівані зміни в розкладі занять.",
+      "blank_target": "чим",
+      "correct_answer": "чим",
+      "options": [
+        "чому",
+        "чого",
+        "чим",
+        "чім"
+      ],
+      "distractors": [
+        {
+          "text": "чого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Пасивний дієприкметник 'зумовлені' вимагає орудного відмінка причини/чинника (чим?), а не родового 'чого'.",
+            "en": "Participle 'зумовлені' governs Instrumental of cause/agent (чим?), not Genitive 'чого'."
+          }
+        },
+        {
+          "text": "чому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'чому' є давальним відмінком; для позначення дійового чинника потрібен орудний відмінок 'чим'.",
+            "en": "'чому' is Dative; expressing causal factor requires Instrumental 'чим'."
+          }
+        },
+        {
+          "text": "чім",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'чім' є варіантом місцевого відмінка (у чім); тут потрібен орудний 'чим'.",
+            "en": "'чім' is Locative variant (у чім); Instrumental 'чим' is required."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 112",
+      "rule_summary": {
+        "ua": "Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми).",
+        "en": "Interrogative-relative pronouns хто, що, чий decline according to pronominal paradigms (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
+      }
+    },
+    {
+      "card_id": "pron_int_chyyimy",
+      "category": "interrogative_chyi_khto_shcho",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми довго з'ясовували, _______ зусиллями вдалося відновити цю пам'ятку архітектури.",
+      "blank_target": "чиїми",
+      "correct_answer": "чиїми",
+      "options": [
+        "чиїм",
+        "чиїма",
+        "чиїх",
+        "чиїми"
+      ],
+      "distractors": [
+        {
+          "text": "чиїма",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Орудний відмінок множини присвійного займенника 'чий' має закінчення -ими: 'чиїми', форма *чиїма ненормативна.",
+            "en": "Instrumental plural of 'чий' takes ending -ими: 'чиїми'; *чиїма is non-standard."
+          }
+        },
+        {
+          "text": "чиїх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'чиїх' є родовим відмінком; з орудним відмінком іменника 'зусиллями' узгоджується 'чиїми'.",
+            "en": "'чиїх' is Genitive; Instrumental noun 'зусиллями' requires 'чиїми'."
+          }
+        },
+        {
+          "text": "чиїм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'чиїм' є давальним множини; орудний відмінок вимагає закінчення -ими: 'чиїми'.",
+            "en": "'чиїм' is Dative plural; Instrumental case requires ending -ими: 'чиїми'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 112",
+      "rule_summary": {
+        "ua": "Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми).",
+        "en": "Interrogative-relative pronouns хто, що, чий decline according to pronominal paradigms (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
+      }
+    },
+    {
+      "card_id": "pron_int_koho",
+      "category": "interrogative_chyi_khto_shcho",
+      "cefr_level": "A2",
+      "prompt_sentence": "Слідчий уважно запитав свідка, _______ саме той бачив на місці події того вечора.",
+      "blank_target": "кого",
+      "correct_answer": "кого",
+      "options": [
+        "хто",
+        "кому",
+        "ким",
+        "кого"
+      ],
+      "distractors": [
+        {
+          "text": "хто",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'бачити' керує знахідним відмінком прямого додатка (кого?), називний відмінок 'хто' неприпустимий.",
+            "en": "'бачити' governs direct Accusative (кого?); Nominative 'хто' is ungrammatical."
+          }
+        },
+        {
+          "text": "кому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'бачити' вимагає знахідного відмінка ('кого'), а не давального 'кому'.",
+            "en": "'бачити' requires Accusative ('кого'), not Dative 'кому'."
+          }
+        },
+        {
+          "text": "ким",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Дієслово 'бачити' вимагає знахідного відмінка прямого додатка ('кого'), а не орудного 'ким'.",
+            "en": "'бачити' requires Accusative ('кого'), not Instrumental 'ким'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 112",
+      "rule_summary": {
+        "ua": "Питально-відносні займенники хто, що, чий змінюються за відмінками (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми).",
+        "en": "Interrogative-relative pronouns хто, що, чий decline according to pronominal paradigms (кого, чого; кому, чому; ким, чим; чийого, чиєму, чиїм, чиїми)."
+      }
+    },
+    {
+      "card_id": "pron_sem_sam",
+      "category": "semantic_sam_vs_samyi",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ніхто не підказував хлопцеві, він _______ зміг знайти правильне розв'язання задачі.",
+      "blank_target": "сам",
+      "correct_answer": "сам",
+      "options": [
+        "сама",
+        "самого",
+        "сам",
+        "найбільш"
+      ],
+      "distractors": [
+        {
+          "text": "сама",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма жіночого роду 'сама' порушує узгодження за родом із займенником чоловічого роду 'він' та іменником 'хлопцеві' (правильно 'сам').",
+            "en": "Feminine form 'сама' violates gender agreement with masculine pronoun 'він' and noun 'хлопцеві' (correct: 'сам')."
+          }
+        },
+        {
+          "text": "найбільш",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Слово 'найбільш' утворює аналітичний найвищий ступінь прикметників і не виражає самостійності дії суб'єкта.",
+            "en": "'найбільш' forms analytic superlatives and does not convey unassisted action."
+          }
+        },
+        {
+          "text": "самого",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У ролі підмета при особовому займеннику 'він' потрібен називний відмінок 'сам'.",
+            "en": "Modifying subject 'він' requires Nominative 'сам'."
+          }
+        }
+      ],
+      "pravopys_section": "Академічна стилістика та Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку).",
+        "en": "'Сам' expresses unassisted or personal action; 'самий' expresses identity (той самий) or spatial/temporal boundary (з самого ранку)."
+      }
+    },
+    {
+      "card_id": "pron_sem_toy_samyi",
+      "category": "semantic_sam_vs_samyi",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми домовилися про зустріч і прибули в _______ день, як і планували заздалегідь.",
+      "blank_target": "той самий",
+      "correct_answer": "той самий",
+      "options": [
+        "той самий",
+        "такий сам",
+        "той сам",
+        "самий той"
+      ],
+      "distractors": [
+        {
+          "text": "той сам",
+          "interference_type": "confusion_sam_vs_samyi",
+          "explanation": {
+            "ua": "Для вираження тотожності ('однаковий, ідентичний') вживається сполука 'той самий', а не 'той сам'.",
+            "en": "Expressing identity ('the very same') requires phrase 'той самий', not 'той сам'."
+          }
+        },
+        {
+          "text": "самий той",
+          "interference_type": "confusion_sam_vs_samyi",
+          "explanation": {
+            "ua": "Порушення усталеного порядку слів; значення тотожності передається конструкцією 'той самий'.",
+            "en": "Inverted word order; standard construction for identity is 'той самий'."
+          }
+        },
+        {
+          "text": "такий сам",
+          "interference_type": "confusion_sam_vs_samyi",
+          "explanation": {
+            "ua": "Сполука 'такий сам' означає подібність властивостей, а точний збіг у часі (ідентичний день) виражає 'той самий'.",
+            "en": "'такий сам' denotes qualitative resemblance, whereas temporal identity (the identical day) requires 'той самий'."
+          }
+        }
+      ],
+      "pravopys_section": "Академічна стилістика та Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку).",
+        "en": "'Сам' expresses unassisted or personal action; 'самий' expresses identity (той самий) or spatial/temporal boundary (з самого ранку)."
+      }
+    },
+    {
+      "card_id": "pron_sem_naykrashchyi_anti_calque",
+      "category": "semantic_sam_vs_samyi",
+      "cefr_level": "B1",
+      "prompt_sentence": "Цей талановитий архітектор створив _______ проєкт для нового театру в центрі міста.",
+      "blank_target": "найкращий",
+      "correct_answer": "найкращий",
+      "options": [
+        "самий добрий",
+        "самий кращий",
+        "більш кращий",
+        "найкращий"
+      ],
+      "distractors": [
+        {
+          "text": "самий кращий",
+          "interference_type": "confusion_sam_vs_samyi",
+          "explanation": {
+            "ua": "Груба калька: в українській мові слово 'самий' ніколи не утворює найвищого ступеня прикметників; правильно 'найкращий'.",
+            "en": "Gross calque: in Ukrainian, 'самий' never forms superlative adjectives; write synthetic 'найкращий'."
+          }
+        },
+        {
+          "text": "більш кращий",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Подвійний вищий ступінь є граматичною помилкою; слід уживати синтетичну форму 'найкращий'.",
+            "en": "Double comparative is ungrammatical; use synthetic form 'найкращий'."
+          }
+        },
+        {
+          "text": "самий добрий",
+          "interference_type": "confusion_sam_vs_samyi",
+          "explanation": {
+            "ua": "Кальковане використання 'самий' для найвищої якості; нормативною формою є 'найкращий' або 'найдобріший'.",
+            "en": "Calqued use of 'самий' for superlative; standard forms are 'найкращий' or 'найдобріший'."
+          }
+        }
+      ],
+      "pravopys_section": "Академічна стилістика та Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку).",
+        "en": "'Сам' expresses unassisted or personal action; 'самий' expresses identity (той самий) or spatial/temporal boundary (з самого ранку)."
+      }
+    },
+    {
+      "card_id": "pron_sem_z_samoho_ranku",
+      "category": "semantic_sam_vs_samyi",
+      "cefr_level": "B1",
+      "prompt_sentence": "Працьовиті господарі працювали в саду з _______ ранку і до пізнього вечора.",
+      "blank_target": "самого",
+      "correct_answer": "самого",
+      "options": [
+        "самої",
+        "самим",
+        "сам",
+        "самого"
+      ],
+      "distractors": [
+        {
+          "text": "сам",
+          "interference_type": "confusion_sam_vs_samyi",
+          "explanation": {
+            "ua": "Для позначення часової чи просторової межі вживається форма 'з самого ранку', а не займенник самостійності 'сам'.",
+            "en": "For temporal boundary, 'з самого ранку' is used, not pronoun 'сам'."
+          }
+        },
+        {
+          "text": "самої",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'ранок' належить до чоловічого роду (у родовому відмінку 'ранку'), тому узгоджений займенник має форму чоловічого роду 'самого'; форма жіночого роду 'самої' порушує узгодження за родом.",
+            "en": "Noun 'ранок' is masculine (Genitive 'ранку'); agreeing modifier must be masculine Genitive 'самого'; feminine 'самої' violates gender agreement."
+          }
+        },
+        {
+          "text": "самим",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'з' у часовому значенні початкової точки вимагає родового відмінка ('з самого'), а не орудного 'самим'.",
+            "en": "Preposition 'з' indicating starting point governs Genitive ('з самого'), not Instrumental 'самим'."
+          }
+        }
+      ],
+      "pravopys_section": "Академічна стилістика та Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку).",
+        "en": "'Сам' expresses unassisted or personal action; 'самий' expresses identity (той самий) or spatial/temporal boundary (з самого ранку)."
+      }
+    },
+    {
+      "card_id": "pron_sem_sama",
+      "category": "semantic_sam_vs_samyi",
+      "cefr_level": "A2",
+      "prompt_sentence": "Вона не хотіла нікого турбувати, тому вирішила _______ приготувати святковий обід для гостей.",
+      "blank_target": "сама",
+      "correct_answer": "сама",
+      "options": [
+        "сам",
+        "сама",
+        "саму",
+        "самій"
+      ],
+      "distractors": [
+        {
+          "text": "сам",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Займенник узгоджується з підметом жіночого роду 'вона', тому вимагає форми жіночого роду 'сама'; чоловічий рід 'сам' порушує узгодження за родом.",
+            "en": "Pronoun modifies feminine subject 'вона', requiring feminine 'сама'; masculine 'сам' violates gender agreement."
+          }
+        },
+        {
+          "text": "саму",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма знахідного відмінка жіночого роду 'саму' порушує узгодження з підметом у називному відмінку 'вона' (правильно 'сама').",
+            "en": "Feminine accusative 'саму' violates agreement with nominative subject 'вона' (correct: 'сама')."
+          }
+        },
+        {
+          "text": "самій",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У ролі узгодженого означення до суб'єкта 'вона' вимагається називний відмінок 'сама', а не давальний 'самій'.",
+            "en": "Agreement with subject 'вона' requires Nominative 'сама', not Dative 'самій'."
+          }
+        }
+      ],
+      "pravopys_section": "Академічна стилістика та Правопис 2019 § 113",
+      "rule_summary": {
+        "ua": "'Сам' означає дію суб'єкта без сторонньої допомоги або особисто; 'самий' вказує на тотожність (той самий) чи просторову/часову межу (з самого ранку).",
+        "en": "'Сам' expresses unassisted or personal action; 'самий' expresses identity (той самий) or spatial/temporal boundary (з самого ранку)."
+      }
+    },
+    {
+      "card_id": "pron_poss_yikhnim_ins",
+      "category": "possessive_yikhniy_vs_yikh",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми часто гостювали в цьому затишному селі й милувалися _______ квітучим яблуневим садом.",
+      "blank_target": "їхнім",
+      "correct_answer": "їхнім",
+      "options": [
+        "їхних",
+        "їхньому",
+        "їхнім",
+        "їхніми"
+      ],
+      "distractors": [
+        {
+          "text": "їхньому",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'садом' стоїть в орудному відмінку; форма давального 'їхньому' порушує узгодження.",
+            "en": "'садом' is in Instrumental; Dative 'їхньому' violates case agreement."
+          }
+        },
+        {
+          "text": "їхніми",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'сад' вжито в однині; форма множини 'їхніми' порушує числове узгодження.",
+            "en": "'сад' is singular; plural 'їхніми' violates number agreement."
+          }
+        },
+        {
+          "text": "їхних",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Присвійний займенник 'їхній' відмінюється за м'якою групою прикметників: 'їхнім', форма з твердим закінченням *їхних помилкова.",
+            "en": "'їхній' declines as a soft-group adjective: 'їхнім'; hard-stem ending *їхних is ungrammatical."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'.",
+        "en": "Possessive pronoun 'їхній' declines like soft-stem adjectives; after prepositions in personal reference, 3rd-person 'до них' is used."
+      }
+    },
+    {
+      "card_id": "pron_poss_yikhnye",
+      "category": "possessive_yikhniy_vs_yikh",
+      "cefr_level": "B1",
+      "prompt_sentence": "Учителі щиро подякували батькам за _______ активне сприяння розвитку шкільної громади.",
+      "blank_target": "їхнє",
+      "correct_answer": "їхнє",
+      "options": [
+        "їхній",
+        "їхнє",
+        "їхнього",
+        "їхне"
+      ],
+      "distractors": [
+        {
+          "text": "їхне",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Присвійний займенник 'їхній' належить до м'якої групи, тому в середньому роді пишеться літера є: 'їхнє', а не *їхне.",
+            "en": "'їхній' belongs to soft group; neuter singular is spelled with letter є: 'їхнє', not *їхне."
+          }
+        },
+        {
+          "text": "їхнього",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'сприяння' стоїть у знахідному відмінку неістоти (що?); форма родового відмінка 'їхнього' неприпустима.",
+            "en": "'сприяння' is inanimate Accusative (що?); Genitive 'їхнього' is ungrammatical here."
+          }
+        },
+        {
+          "text": "їхній",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'сприяння' середнього роду; форма чоловічого роду 'їхній' порушує узгодження за родом.",
+            "en": "'сприяння' is neuter; masculine 'їхній' violates gender agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'.",
+        "en": "Possessive pronoun 'їхній' declines like soft-stem adjectives; after prepositions in personal reference, 3rd-person 'до них' is used."
+      }
+    },
+    {
+      "card_id": "pron_poss_do_nykh",
+      "category": "possessive_yikhniy_vs_yikh",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми прийшли вчасно на зустріч і підійшли _______, щоб обговорити плани на вихідні.",
+      "blank_target": "до них",
+      "correct_answer": "до них",
+      "options": [
+        "до їм",
+        "до них",
+        "до їх",
+        "до їхніх"
+      ],
+      "distractors": [
+        {
+          "text": "до їхніх",
+          "interference_type": "confusion_possessive_vs_personal",
+          "explanation": {
+            "ua": "'Їхній' — присвійний займенник; після прийменника з особовим значенням вживається форма особового займенника 'до них'.",
+            "en": "'Їхній' is possessive; personal pronoun after preposition requires 'до них'."
+          }
+        },
+        {
+          "text": "до їх",
+          "interference_type": "missing_epenthetic_n",
+          "explanation": {
+            "ua": "Після прийменника у формі 3-ї особи множини обов'язковий приставний н-: 'до них'.",
+            "en": "After prepositions in 3rd-person plural, epenthetic n- is compulsory: 'до них'."
+          }
+        },
+        {
+          "text": "до їм",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Прийменник 'до' вимагає родового відмінка ('до них'), а не давального 'їм'.",
+            "en": "Preposition 'до' governs Genitive ('до них'), not Dative 'їм'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'.",
+        "en": "Possessive pronoun 'їхній' declines like soft-stem adjectives; after prepositions in personal reference, 3rd-person 'до них' is used."
+      }
+    },
+    {
+      "card_id": "pron_poss_yikhniy_nom",
+      "category": "possessive_yikhniy_vs_yikh",
+      "cefr_level": "A2",
+      "prompt_sentence": "У центрі міста постав новий театр, і це був _______ найбільший спільний успіх архітекторів.",
+      "blank_target": "їхній",
+      "correct_answer": "їхній",
+      "options": [
+        "їхнього",
+        "їхнім",
+        "їхний",
+        "їхній"
+      ],
+      "distractors": [
+        {
+          "text": "їхний",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Займенник 'їхній' відмінюється як прикметник м'якої групи із закінченням -ій: 'їхній', форма *їхний ненормативна.",
+            "en": "'їхній' declines as a soft-group adjective with ending -ій: 'їхній'; *їхний is ungrammatical."
+          }
+        },
+        {
+          "text": "їхнього",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'успіх' є частиною іменного присудка в називному відмінку; форма родового 'їхнього' помилкова.",
+            "en": "'успіх' is in Nominative predicate; Genitive 'їхнього' violates case agreement."
+          }
+        },
+        {
+          "text": "їхнім",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "У називному відмінку чоловічого роду потрібна форма 'їхній'; форма орудного 'їхнім' порушує відмінкове узгодження.",
+            "en": "Nominative masculine requires 'їхній'; Instrumental 'їхнім' violates agreement."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'.",
+        "en": "Possessive pronoun 'їхній' declines like soft-stem adjectives; after prepositions in personal reference, 3rd-person 'до них' is used."
+      }
+    },
+    {
+      "card_id": "pron_poss_yikhnim_dav",
+      "category": "possessive_yikhniy_vs_yikh",
+      "cefr_level": "B1",
+      "prompt_sentence": "Директор гімназії високо оцінив старання учнів і щиро подякував _______ батькам за постійну турботу.",
+      "blank_target": "їхнім",
+      "correct_answer": "їхнім",
+      "options": [
+        "їхніми",
+        "їхніх",
+        "їхним",
+        "їхнім"
+      ],
+      "distractors": [
+        {
+          "text": "їхним",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Присвійний займенник 'їхній' у давальному відмінку множини має м'яку основу: 'їхнім' (з літерою і), форма *їхним ненормативна.",
+            "en": "'їхній' in Dative plural has soft ending: 'їхнім' (with letter і); *їхним is ungrammatical."
+          }
+        },
+        {
+          "text": "їхніми",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Іменник 'батькам' стоїть у давальному відмінку; форма орудного 'їхніми' порушує узгодження за відмінком.",
+            "en": "'батькам' is Dative; Instrumental 'їхніми' violates case agreement."
+          }
+        },
+        {
+          "text": "їхніх",
+          "interference_type": "corrupted_declension_stem",
+          "explanation": {
+            "ua": "Форма 'їхніх' є родовим відмінком; з давальним відмінком адресата (кому?) узгоджується 'їхнім'.",
+            "en": "'їхніх' is Genitive; Dative recipient (кому?) requires 'їхнім'."
+          }
+        }
+      ],
+      "pravopys_section": "Правопис 2019 § 110",
+      "rule_summary": {
+        "ua": "Присвійний займенник 'їхній' узгоджується з іменником за зразком м'якої групи прикметників; після прийменників з особовим значенням вживається форма 'до них'.",
+        "en": "Possessive pronoun 'їхній' declines like soft-stem adjectives; after prepositions in personal reference, 3rd-person 'до них' is used."
+      }
+    }
+  ]
+}

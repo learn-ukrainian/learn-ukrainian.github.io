@@ -6514,4 +6514,78 @@ describe('LexiconPractice', () => {
       }
     });
   });
+
+  describe('#8277 Practice Hub UX 3-Track Overhaul & Deep Mechanics Integration', () => {
+    test('renders all 8 deep mechanics parts of speech cards in Track 2', async () => {
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+      const grammarTrack = await screen.findByTestId('practice-track-grammar');
+      expect(grammarTrack).toBeInTheDocument();
+
+      const posGrid = within(grammarTrack).getByTestId('practice-pos-mechanics-grid');
+      expect(posGrid).toBeInTheDocument();
+
+      const mechanicsPosKeys = [
+        'noun',
+        'adjective',
+        'verb',
+        'pronoun',
+        'numeral',
+        'adverb',
+        'function_words',
+        'interjection',
+      ];
+
+      for (const pos of mechanicsPosKeys) {
+        const card = within(posGrid).getByTestId(`practice-card-mechanics-${pos}`);
+        expect(card).toBeInTheDocument();
+        expect(card).toHaveAttribute('data-mechanics-mode', pos);
+        expect(card).toHaveAttribute('data-pos-mechanics', pos);
+        expect(within(posGrid).getByTestId(`practice-mode-count-mechanics-${pos}`)).toBeInTheDocument();
+      }
+    });
+
+    test('clicking a mechanics card launches mechanics drill session and allows returning to tracks', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const nounCard = await screen.findByTestId('practice-card-mechanics-noun');
+      await user.click(nounCard);
+
+      const session = await screen.findByTestId('practice-mechanics-session');
+      expect(session).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mechanics-prompt')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mechanics-blank')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mechanics-counter')).toBeInTheDocument();
+
+      // Return back to tracks
+      const backBtn = screen.getByTestId('practice-mechanics-back-button');
+      await user.click(backBtn);
+
+      expect(screen.queryByTestId('practice-mechanics-session')).not.toBeInTheDocument();
+      expect(await screen.findByTestId('practice-track-grammar')).toBeInTheDocument();
+    });
+
+    test('settings drawer opens and closes without disturbing idle dashboard', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      expect(settingsToggle).toBeInTheDocument();
+
+      // Open drawer
+      await user.click(settingsToggle);
+
+      const drawer = screen.getByTestId('practice-settings-drawer');
+      expect(drawer).toHaveClass('open');
+      expect(screen.getByTestId('practice-settings-backdrop')).toBeInTheDocument();
+
+      // Close drawer
+      const closeBtn = screen.getByTestId('settings-drawer-close');
+      await user.click(closeBtn);
+
+      expect(drawer).not.toHaveClass('open');
+      expect(screen.queryByTestId('practice-settings-backdrop')).not.toBeInTheDocument();
+      expect(screen.getByTestId('practice-track-grammar')).toBeInTheDocument();
+    });
+  });
 });

@@ -1,0 +1,3324 @@
+{
+  "schema_version": "1.0",
+  "title": "Практикум: Глибока механіка прислівника (Правопис, омоніми, ступені порівняння, антикальки)",
+  "card_count": 75,
+  "categories": [
+    "adverb_semantic_manner_action",
+    "adverb_semantic_time",
+    "adverb_semantic_place_direction",
+    "adverb_semantic_measure_degree",
+    "adverb_semantic_cause_purpose",
+    "adverb_spelling_prefix_po",
+    "adverb_spelling_particles_hyphen",
+    "adverb_spelling_reduplication",
+    "adverb_spelling_together_fused",
+    "adverb_homophone_napamyat_vden_dodomu",
+    "adverb_homophone_zgory_nazustrich_ubik",
+    "adverb_spelling_separate",
+    "adverb_comparison_synthetic",
+    "adverb_comparison_superlative",
+    "adverb_anti_calque"
+  ],
+  "cards": [
+    {
+      "id": "adverb_card_01",
+      "category": "adverb_semantic_manner_action",
+      "prompt": "Студент уважно прочитав вірш і вирішив вивчити його _______ перед іспитом.",
+      "target_token": "напам'ять",
+      "correct_answer": "напам'ять",
+      "options": [
+        "на пам'ять",
+        "по пам'яті",
+        "на-пам'ять",
+        "напам'ять"
+      ],
+      "distractors": [
+        {
+          "text": "на пам'ять",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«На пам'ять» окремо є іменником з прийменником (наприклад, «подарувати на добру пам'ять»), тоді як спосіб дії «вивчити як?» вимагає прислівника, що пишеться разом: «напам'ять» per § 41, п. 1.",
+            "en": "'На пам'ять' separately is a noun with a preposition (e.g. as a souvenir), whereas the adverb of manner 'how to memorize?' is written as one word: 'напам'ять' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по пам'яті",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «по пам'яті» є калькою з російської («по памяти»); природно сказати «напам'ять» або «з пам'яті».",
+            "en": "The phrase 'по пам'яті' is a Russian calque; authentic Ukrainian uses 'напам'ять' or 'з пам'яті'."
+          }
+        },
+        {
+          "text": "на-пам'ять",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівники, утворені злиттям прийменника з іменником, пишуться разом без дефіса per § 41, п. 1.",
+            "en": "Adverbs formed by fusing a preposition with a noun are written as one word without a hyphen per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники способу дії відповідають на питання 'як?', 'яким способом?' і характеризують якість або спосіб протікання дії (напам'ять, вголос, пішки, пошепки, навпомацки). Більшість таких прислівників, утворених від прийменників та іменників, пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of manner answer 'how?' or 'in what manner?' and describe how an action is performed (напам'ять, вголос, пішки, пошепки, навпомацки). Most formed by fusion of prepositions and nominal stems are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_02",
+      "category": "adverb_semantic_manner_action",
+      "prompt": "Учитель попросив школяра читати текст _______, щоб усі добре чули.",
+      "target_token": "вголос",
+      "correct_answer": "вголос",
+      "options": [
+        "по голосу",
+        "в-голос",
+        "вголос",
+        "в голос"
+      ],
+      "distractors": [
+        {
+          "text": "в голос",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "«Вголос» є складним прислівником способу дії і пишеться разом per § 41, п. 1; окремо «в голос» може бути лише рідкісною сполукою прийменника та іменника.",
+            "en": "'Вголос' is a compound adverb of manner written as one word per § 41, p. 1; separately 'в голос' is only an unusual preposition + noun sequence."
+          }
+        },
+        {
+          "text": "по голосу",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«По голосу» означає розпізнавання за ознакою (впізнати по голосу), а не спосіб читання (як? голосно/вголос).",
+            "en": "'По голосу' signifies recognition by timbre (recognize by voice), not the manner of reading aloud."
+          }
+        },
+        {
+          "text": "в-голос",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Складний прислівник «вголос» пишеться разом per § 41, п. 1, дефіс не вживається.",
+            "en": "Compound adverb 'вголос' is written as one word per § 41, p. 1; no hyphen is used."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники способу дії відповідають на питання 'як?', 'яким способом?' і характеризують якість або спосіб протікання дії (напам'ять, вголос, пішки, пошепки, навпомацки). Більшість таких прислівників, утворених від прийменників та іменників, пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of manner answer 'how?' or 'in what manner?' and describe how an action is performed (напам'ять, вголос, пішки, пошепки, навпомацки). Most formed by fusion of prepositions and nominal stems are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_03",
+      "category": "adverb_semantic_manner_action",
+      "prompt": "Погода була чудова, тому ми вирішили йти до парку _______.",
+      "target_token": "пішки",
+      "correct_answer": "пішки",
+      "options": [
+        "пішком",
+        "піши",
+        "на пішки",
+        "пішки"
+      ],
+      "distractors": [
+        {
+          "text": "пішком",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «пішком» є ненормативною або русизмом («пешком»); нормативне українське слово — «пішки».",
+            "en": "Form 'пішком' is non-standard Russian interference ('пешком'); standard Ukrainian is 'пішки'."
+          }
+        },
+        {
+          "text": "піши",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Такої форми в українській мові немає; правильна нормативна форма прислівника — «пішки».",
+            "en": "Such a form does not exist in standard Ukrainian; the correct adverb is 'пішки'."
+          }
+        },
+        {
+          "text": "на пішки",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «пішки» вживається самостійно без зайвих прийменників.",
+            "en": "The adverb 'пішки' is used independently without unnecessary prepositions."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники способу дії відповідають на питання 'як?', 'яким способом?' і характеризують якість або спосіб протікання дії (напам'ять, вголос, пішки, пошепки, навпомацки). Більшість таких прислівників, утворених від прийменників та іменників, пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of manner answer 'how?' or 'in what manner?' and describe how an action is performed (напам'ять, вголос, пішки, пошепки, навпомацки). Most formed by fusion of prepositions and nominal stems are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_04",
+      "category": "adverb_semantic_manner_action",
+      "prompt": "У бібліотеці потрібно дотримуватися тиші й розмовляти лише _______.",
+      "target_token": "пошепки",
+      "correct_answer": "пошепки",
+      "options": [
+        "пошепком",
+        "пошепки",
+        "по шепки",
+        "по-шепки"
+      ],
+      "distractors": [
+        {
+          "text": "по шепки",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "«Пошепки» — цілісний прислівник способу дії, утворений від префікса та основи; пишеться разом per § 41, п. 1.",
+            "en": "'Пошепки' is a fused adverb of manner written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по-шепки",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Префікс по- пишеться через дефіс лише перед суфіксами -ому, -ему, -и, -ськи, -цьки (по-українськи); у слові «пошепки» дефіс не ставиться.",
+            "en": "Prefix по- is hyphenated only with suffixes -ому, -ему, -и, -ськи, -цьки; 'пошепки' takes no hyphen."
+          }
+        },
+        {
+          "text": "пошепком",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Нормативною літературною формою прислівника способу дії є «пошепки».",
+            "en": "The normative literary form for the adverb of manner is 'пошепки'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники способу дії відповідають на питання 'як?', 'яким способом?' і характеризують якість або спосіб протікання дії (напам'ять, вголос, пішки, пошепки, навпомацки). Більшість таких прислівників, утворених від прийменників та іменників, пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of manner answer 'how?' or 'in what manner?' and describe how an action is performed (напам'ять, вголос, пішки, пошепки, навпомацки). Most formed by fusion of prepositions and nominal stems are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_05",
+      "category": "adverb_semantic_manner_action",
+      "prompt": "Коли згасло світло в кімнаті, хлопчик шукав ліхтарик _______.",
+      "target_token": "навпомацки",
+      "correct_answer": "навпомацки",
+      "options": [
+        "на впомацки",
+        "навпомацьки",
+        "на-впомацки",
+        "навпомацки"
+      ],
+      "distractors": [
+        {
+          "text": "на впомацки",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «навпомацки» зрощений з кількох морфем і пишеться строго разом per § 41, п. 1.",
+            "en": "Adverb 'навпомацки' is fused from multiple morphemes and is written strictly as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-впомацки",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "У слові «навпомацки» немає підстав для написання через дефіс; воно пишеться разом per § 41, п. 1.",
+            "en": "There is no grammatical basis for hyphenating 'навпомацки'; it is written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "навпомацьки",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Слово «навпомацки» закінчується твердим суфіксом -ки без м'якого знака.",
+            "en": "Word 'навпомацки' ends with hard suffix -ки without a soft sign."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники способу дії відповідають на питання 'як?', 'яким способом?' і характеризують якість або спосіб протікання дії (напам'ять, вголос, пішки, пошепки, навпомацки). Більшість таких прислівників, утворених від прийменників та іменників, пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of manner answer 'how?' or 'in what manner?' and describe how an action is performed (напам'ять, вголос, пішки, пошепки, навпомацки). Most formed by fusion of prepositions and nominal stems are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_06",
+      "category": "adverb_semantic_time",
+      "prompt": "Нічні хижаки зазвичай сплять _______, а полюють після заходу сонця.",
+      "target_token": "вдень",
+      "correct_answer": "вдень",
+      "options": [
+        "в-день",
+        "вдень",
+        "по-вдень",
+        "в день"
+      ],
+      "distractors": [
+        {
+          "text": "в день",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«В день» окремо пишеться лише коли є залежне слово (наприклад, «в день свята»), а часовий прислівник «коли? вдень» пишеться разом per § 41, п. 1.",
+            "en": "'В день' separately is used only with dependent words (e.g. on the day of the holiday), while time adverb 'when? вдень' is written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в-день",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівники часу, утворені злиттям прийменника з іменником, пишуться разом без дефіса per § 41, п. 1.",
+            "en": "Time adverbs formed by preposition + noun fusion are written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по-вдень",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «по-вдень» є штучною та неіснуючою в українській мові; правильний часовий прислівник — «вдень» per § 41, п. 1.",
+            "en": "The form 'по-вдень' is artificial and non-existent in Ukrainian; the correct temporal adverb is 'вдень' per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники часу відповідають на питання 'коли?', 'відколи?', 'доки?' (вдень, влітку, щодня, зранку, допізна). Складні прислівники з префіксами в-, з-, до- та часткою що- пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of time answer 'when?', 'since when?', 'until when?' (вдень, влітку, щодня, зранку, допізна). Compound adverbs formed with prefixes в-, з-, до- and particle що- are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_07",
+      "category": "adverb_semantic_time",
+      "prompt": "Школярі мають три місяці канікул _______, коли надворі тепло й сонячно.",
+      "target_token": "влітку",
+      "correct_answer": "влітку",
+      "options": [
+        "в-літку",
+        "влітку",
+        "по літньому",
+        "в літку"
+      ],
+      "distractors": [
+        {
+          "text": "в літку",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "«Влітку» — часовий прислівник (відповідає на питання «коли?»), утворений від прийменника та іменника; пишеться разом per § 41, п. 1.",
+            "en": "'Влітку' is a temporal adverb (answering 'when?') formed from preposition + noun; written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в-літку",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "У слові «влітку» дефіс не пишеться; злиття прийменника з іменником відбувається разом per § 41, п. 1.",
+            "en": "Hyphen is not used in 'влітку'; fusion of preposition and noun is written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по літньому",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«По-літньому» означає спосіб дії або якість (як? одягнений по-літньому), а не час (коли? влітку).",
+            "en": "'По-літньому' denotes manner or quality (how? dressed like in summer), not time (when? in summer)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники часу відповідають на питання 'коли?', 'відколи?', 'доки?' (вдень, влітку, щодня, зранку, допізна). Складні прислівники з префіксами в-, з-, до- та часткою що- пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of time answer 'when?', 'since when?', 'until when?' (вдень, влітку, щодня, зранку, допізна). Compound adverbs formed with prefixes в-, з-, до- and particle що- are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_08",
+      "category": "adverb_semantic_time",
+      "prompt": "Спортсмен тренується _______, не пропускаючи жодного ранкового заняття.",
+      "target_token": "щодня",
+      "correct_answer": "щодня",
+      "options": [
+        "по-щодня",
+        "що дня",
+        "щодня",
+        "що-дня"
+      ],
+      "distractors": [
+        {
+          "text": "що дня",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «щодня» утворений за допомогою частки що- та іменникової основи; пишеться разом per § 41, п. 1.",
+            "en": "Adverb 'щодня' is formed with particle що- and nominal base; written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "що-дня",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Частка що- у складі часових прислівників (щодня, щомісяця, щогодини) пишеться разом, без дефіса per § 41, п. 1.",
+            "en": "Particle що- in temporal adverbs (щодня, щомісяця) is attached without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по-щодня",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Префікс по- з часовим прислівником не вживається; нормативна форма — «щодня».",
+            "en": "Prefix по- is not used with temporal adverbs; standard form is 'щодня'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники часу відповідають на питання 'коли?', 'відколи?', 'доки?' (вдень, влітку, щодня, зранку, допізна). Складні прислівники з префіксами в-, з-, до- та часткою що- пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of time answer 'when?', 'since when?', 'until when?' (вдень, влітку, щодня, зранку, допізна). Compound adverbs formed with prefixes в-, з-, до- and particle що- are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_09",
+      "category": "adverb_semantic_time",
+      "prompt": "Ми прокинулися рано _______, щоб встигнути на перший потяг.",
+      "target_token": "зранку",
+      "correct_answer": "зранку",
+      "options": [
+        "від ранку",
+        "зранку",
+        "з ранку",
+        "з-ранку"
+      ],
+      "distractors": [
+        {
+          "text": "з ранку",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник часу «зранку» пишеться разом per § 41, п. 1; окремо «з ранку» пишеться лише в парній конструкції «з ранку до вечора».",
+            "en": "Temporal adverb 'зранку' is written together per § 41, p. 1; separately 'з ранку' appears only in paired phrase 'з ранку до вечора'."
+          }
+        },
+        {
+          "text": "з-ранку",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прийменник з- з основами іменників у складі прислівника пишеться разом per § 41, п. 1, дефіс не ставиться.",
+            "en": "Preposition з- merged into an adverb is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "від ранку",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "Сполука «від ранку» позначає часову межу тривалості (від ранку до полудня), а момент пробудження (коли?) позначає «зранку» або «вранці».",
+            "en": "'Від ранку' denotes starting boundary of duration; the moment of waking up is expressed by 'зранку'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники часу відповідають на питання 'коли?', 'відколи?', 'доки?' (вдень, влітку, щодня, зранку, допізна). Складні прислівники з префіксами в-, з-, до- та часткою що- пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of time answer 'when?', 'since when?', 'until when?' (вдень, влітку, щодня, зранку, допізна). Compound adverbs formed with prefixes в-, з-, до- and particle що- are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_10",
+      "category": "adverb_semantic_time",
+      "prompt": "Науковці затрималися в лабораторії _______, завершуючи важливий експеримент.",
+      "target_token": "допізна",
+      "correct_answer": "допізна",
+      "options": [
+        "до пізнього",
+        "до пізна",
+        "допізна",
+        "до-пізна"
+      ],
+      "distractors": [
+        {
+          "text": "до пізна",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "«Допізна» — прислівник часу, утворений від прийменника та короткої форми прикметника; пишеться разом per § 41, п. 1.",
+            "en": "'Допізна' is a time adverb formed from preposition + short adjective form; written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до-пізна",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у прислівнику «допізна» є орфографічною помилкою; слово пишеться разом per § 41, п. 1.",
+            "en": "Hyphen in 'допізна' is an error; the word is spelled together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до пізнього",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Словосполучення «до пізнього» є граматично неповним; правильний прислівник — «допізна».",
+            "en": "Phrase 'до пізнього' is grammatically incomplete; the correct adverb is 'допізна'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники часу відповідають на питання 'коли?', 'відколи?', 'доки?' (вдень, влітку, щодня, зранку, допізна). Складні прислівники з префіксами в-, з-, до- та часткою що- пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of time answer 'when?', 'since when?', 'until when?' (вдень, влітку, щодня, зранку, допізна). Compound adverbs formed with prefixes в-, з-, до- and particle що- are spelled as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_11",
+      "category": "adverb_semantic_place_direction",
+      "prompt": "Після тривалого робочого дня втомлені робітники повертаються _______.",
+      "target_token": "додому",
+      "correct_answer": "додому",
+      "options": [
+        "додому",
+        "до-дому",
+        "до дому",
+        "в дім"
+      ],
+      "distractors": [
+        {
+          "text": "до дому",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«До дому» окремо вживається тоді, коли йдеться про конкретну будівлю з означенням (наприклад, підійти до великого дому), а напрямок руху «куди?» позначає прислівник «додому» per § 41, п. 1.",
+            "en": "'До дому' separately refers to a physical building with modifiers; direction homeward ('where to?') is the fused adverb 'додому' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до-дому",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «додому» пишеться разом, дефіс заборонено per § 41, п. 1.",
+            "en": "Adverb 'додому' is written as one word; hyphens are prohibited per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в дім",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Конструкція «йти в дім» є невластивою українській мові для позначення повернення до свого житла; нормативно — «іти додому».",
+            "en": "'Йти в дім' is an unnatural calque for returning home; authentic Ukrainian is 'іти додому'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники місця та напрямку відповідають на питання 'де?', 'куди?', 'звідки?' (додому, вгору, донизу, вперед, ззаду). Вони пишуться разом per § 41, п. 1, коли утворені злиттям прийменників з іменниковими основами без пояснювальних слів.",
+        "en": "Adverbs of place and direction answer 'where?', 'where to?', 'where from?' (додому, вгору, донизу, вперед, ззаду). They are spelled as a single word per § 41, p. 1 when fused from prepositions and nominal stems without dependents."
+      }
+    },
+    {
+      "id": "adverb_card_12",
+      "category": "adverb_semantic_place_direction",
+      "prompt": "Дитина підняла очі й подивилася _______ на зоряне нічне небо.",
+      "target_token": "вгору",
+      "correct_answer": "вгору",
+      "options": [
+        "вгору",
+        "в гору",
+        "в-гору",
+        "на верх"
+      ],
+      "distractors": [
+        {
+          "text": "в гору",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«В гору» окремо вживається тоді, коли мова йде про географічну височину (врізатися в круту гору), а напрямок руху «куди? вгору» пишеться разом per § 41, п. 1.",
+            "en": "'В гору' separately refers to a physical mountain; upward direction ('where to? upwards') is the fused adverb 'вгору' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в-гору",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «вгору» пишеться разом per § 41, п. 1.",
+            "en": "Adverb 'вгору' is written as a single word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на верх",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Просторовий напрямок погляду вгору передається прислівником «вгору» (або «наверх» разом per § 41, п. 1, але не окремо «на верх»).",
+            "en": "Direction of gaze upwards is conveyed by 'вгору'; separate 'на верх' is incorrect here."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники місця та напрямку відповідають на питання 'де?', 'куди?', 'звідки?' (додому, вгору, донизу, вперед, ззаду). Вони пишуться разом per § 41, п. 1, коли утворені злиттям прийменників з іменниковими основами без пояснювальних слів.",
+        "en": "Adverbs of place and direction answer 'where?', 'where to?', 'where from?' (додому, вгору, донизу, вперед, ззаду). They are spelled as a single word per § 41, p. 1 when fused from prepositions and nominal stems without dependents."
+      }
+    },
+    {
+      "id": "adverb_card_13",
+      "category": "adverb_semantic_place_direction",
+      "prompt": "Стежка круто повертала й вела мандрівників _______ до гірської річки.",
+      "target_token": "донизу",
+      "correct_answer": "донизу",
+      "options": [
+        "до низу",
+        "до-низу",
+        "під низ",
+        "донизу"
+      ],
+      "distractors": [
+        {
+          "text": "до низу",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник напрямку «донизу» (куди?) утворений злиттям прийменника й іменника та пишеться разом per § 41, п. 1.",
+            "en": "Directional adverb 'донизу' ('where to? downwards') is formed by fusion and written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до-низу",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у прислівнику «донизу» є помилкою; слово пишеться разом per § 41, п. 1.",
+            "en": "Hyphen in adverb 'донизу' is an error; it is written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "під низ",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«Під низ» — це прийменниково-іменникова сполука місця (покласти під низ), а не напрямок спуску (донизу / вниз).",
+            "en": "'Під низ' is a prepositional phrase of location, not the directional adverb of descent ('донизу')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники місця та напрямку відповідають на питання 'де?', 'куди?', 'звідки?' (додому, вгору, донизу, вперед, ззаду). Вони пишуться разом per § 41, п. 1, коли утворені злиттям прийменників з іменниковими основами без пояснювальних слів.",
+        "en": "Adverbs of place and direction answer 'where?', 'where to?', 'where from?' (додому, вгору, донизу, вперед, ззаду). They are spelled as a single word per § 41, p. 1 when fused from prepositions and nominal stems without dependents."
+      }
+    },
+    {
+      "id": "adverb_card_14",
+      "category": "adverb_semantic_place_direction",
+      "prompt": "Незважаючи на труднощі, наша команда продовжує впевнено рухатися _______.",
+      "target_token": "вперед",
+      "correct_answer": "вперед",
+      "options": [
+        "в перед",
+        "вперід",
+        "в-перед",
+        "вперед"
+      ],
+      "distractors": [
+        {
+          "text": "в перед",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «вперед» є зрощеним і пишеться разом per § 41, п. 1; окремого написання «в перед» у сучасній мові не існує.",
+            "en": "Adverb 'вперед' is fused and written together per § 41, p. 1; separate 'в перед' does not exist in modern Ukrainian."
+          }
+        },
+        {
+          "text": "в-перед",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «вперед» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'вперед' is written as one word without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "вперід",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «вперід» є орфографічно помилковою (чергування е/і тут відсутнє); нормативне написання — «вперед» per § 41, п. 1.",
+            "en": "Form 'вперід' is an orthographic error; standard spelling is 'вперед' per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники місця та напрямку відповідають на питання 'де?', 'куди?', 'звідки?' (додому, вгору, донизу, вперед, ззаду). Вони пишуться разом per § 41, п. 1, коли утворені злиттям прийменників з іменниковими основами без пояснювальних слів.",
+        "en": "Adverbs of place and direction answer 'where?', 'where to?', 'where from?' (додому, вгору, донизу, вперед, ззаду). They are spelled as a single word per § 41, p. 1 when fused from prepositions and nominal stems without dependents."
+      }
+    },
+    {
+      "id": "adverb_card_15",
+      "category": "adverb_semantic_place_direction",
+      "prompt": "Охоронець стояв _______ за спинами гостей, пильно спостерігаючи за залою.",
+      "target_token": "ззаду",
+      "correct_answer": "ззаду",
+      "options": [
+        "ззаду",
+        "з-заду",
+        "з заду",
+        "сзаду"
+      ],
+      "distractors": [
+        {
+          "text": "з заду",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник місця «ззаду» пишеться разом per § 41, п. 1; подвоєння букв «з» виникає на стику прийменника з- та кореня зад-.",
+            "en": "Spatial adverb 'ззаду' is written together per § 41, p. 1; geminated 'зз' occurs at prefix з- + root зад- junction."
+          }
+        },
+        {
+          "text": "з-заду",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у слові «ззаду» не пишеться; це складний прислівник, який пишеться разом per § 41, п. 1.",
+            "en": "Hyphen is not written in 'ззаду'; it is a compound adverb written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "сзаду",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "В українській мові немає префікса с- перед дзвінкими приголосними; правильно — «ззаду» (з подвоєнням букв «з»).",
+            "en": "Ukrainian has no prefix с- before voiced consonants; the correct spelling is 'ззаду' with doubled 'з'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники місця та напрямку відповідають на питання 'де?', 'куди?', 'звідки?' (додому, вгору, донизу, вперед, ззаду). Вони пишуться разом per § 41, п. 1, коли утворені злиттям прийменників з іменниковими основами без пояснювальних слів.",
+        "en": "Adverbs of place and direction answer 'where?', 'where to?', 'where from?' (додому, вгору, донизу, вперед, ззаду). They are spelled as a single word per § 41, p. 1 when fused from prepositions and nominal stems without dependents."
+      }
+    },
+    {
+      "id": "adverb_card_16",
+      "category": "adverb_semantic_measure_degree",
+      "prompt": "Складний переклад наукової статті вже виконано _______.",
+      "target_token": "наполовину",
+      "correct_answer": "наполовину",
+      "options": [
+        "на половину",
+        "в половину",
+        "на-половину",
+        "наполовину"
+      ],
+      "distractors": [
+        {
+          "text": "на половину",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«На половину» окремо вживається як іменник з прийменником (наприклад, розділити пиріг на рівну половину), а міра виконання дії (наскільки?) виражається прислівником «наполовину» per § 41, п. 1.",
+            "en": "'На половину' separately is a noun with preposition; the adverb of measure ('to what degree?') is written as one word: 'наполовину' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-половину",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівники міри й ступеня, утворені злиттям прийменника з іменником, пишуться разом per § 41, п. 1.",
+            "en": "Adverbs of measure fused from preposition + noun are written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в половину",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Конструкція «в половину» є калькою з російської («вполовину»); нормативно українською — «наполовину».",
+            "en": "'В половину' is a Russian calque; authentic Ukrainian is 'наполовину'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники міри й ступеня відповідають на питання 'скільки?', 'наскільки?', 'якою мірою?' (наполовину, дощенту, зовсім, набагато, вкрай). Пишуться разом за правилом злиття прийменників з іменниками, числівниками або займенниками per § 41, п. 1.",
+        "en": "Adverbs of measure and degree answer 'how much?', 'to what extent?' (наполовину, дощенту, зовсім, набагато, вкрай). They are written as one word per the fusion rule of prepositions with nominal bases per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_17",
+      "category": "adverb_semantic_measure_degree",
+      "prompt": "Пожежа знищила дерев'яну старовинну споруду _______.",
+      "target_token": "дощенту",
+      "correct_answer": "дощенту",
+      "options": [
+        "дощенту",
+        "до щенту",
+        "до-щенту",
+        "до щента"
+      ],
+      "distractors": [
+        {
+          "text": "до щенту",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник міри «дощенту» утворений злиттям прийменника до- та іменника щент і пишеться разом per § 41, п. 1.",
+            "en": "Adverb of degree 'дощенту' is formed by fusion of до- and щент and is written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до-щенту",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "У слові «дощенту» дефіс не ставиться; воно пишеться разом per § 41, п. 1.",
+            "en": "No hyphen is used in 'дощенту'; it is spelled as a single word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до щента",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Закінченням прислівника є -у («дощенту»), форма «до щента» є ненормативною.",
+            "en": "The ending of this adverb is -у ('дощенту'); form 'до щента' is non-standard."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники міри й ступеня відповідають на питання 'скільки?', 'наскільки?', 'якою мірою?' (наполовину, дощенту, зовсім, набагато, вкрай). Пишуться разом за правилом злиття прийменників з іменниками, числівниками або займенниками per § 41, п. 1.",
+        "en": "Adverbs of measure and degree answer 'how much?', 'to what extent?' (наполовину, дощенту, зовсім, набагато, вкрай). They are written as one word per the fusion rule of prepositions with nominal bases per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_18",
+      "category": "adverb_semantic_measure_degree",
+      "prompt": "Після тривалої прогулянки лісом мандрівник _______ не відчував утоми.",
+      "target_token": "зовсім",
+      "correct_answer": "зовсім",
+      "options": [
+        "зо-всім",
+        "совсім",
+        "зовсім",
+        "зо всім"
+      ],
+      "distractors": [
+        {
+          "text": "зо всім",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«Зо всім» окремо є прийменником із займенником (наприклад, погодитися зо всім почутим), а міру заперечення «зовсім не» виражає прислівник «зовсім» per § 41, п. 1.",
+            "en": "'Зо всім' separately is preposition + pronoun; degree of negation ('not at all') is the fused adverb 'зовсім' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "зо-всім",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «зовсім» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'зовсім' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "совсім",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Слово «совсім» є русизмом; в українській літературній мові нормативним є прислівник «зовсім».",
+            "en": "'Совсім' is Russian interference; literary Ukrainian strictly uses 'зовсім'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники міри й ступеня відповідають на питання 'скільки?', 'наскільки?', 'якою мірою?' (наполовину, дощенту, зовсім, набагато, вкрай). Пишуться разом за правилом злиття прийменників з іменниками, числівниками або займенниками per § 41, п. 1.",
+        "en": "Adverbs of measure and degree answer 'how much?', 'to what extent?' (наполовину, дощенту, зовсім, набагато, вкрай). They are written as one word per the fusion rule of prepositions with nominal bases per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_19",
+      "category": "adverb_semantic_measure_degree",
+      "prompt": "Новий процесор працює _______ швидше за попередню модель.",
+      "target_token": "набагато",
+      "correct_answer": "набагато",
+      "options": [
+        "на багато",
+        "на-багато",
+        "куда",
+        "набагато"
+      ],
+      "distractors": [
+        {
+          "text": "на багато",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «набагато» пишеться разом per § 41, п. 1; окремо «на багато» вживається лише у сполуках з іменником (наприклад, на багато років).",
+            "en": "Adverb 'набагато' is written together per § 41, p. 1; separate 'на багато' is only used with nouns (for many years)."
+          }
+        },
+        {
+          "text": "на-багато",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «набагато» пишеться разом per § 41, п. 1, використання дефіса помилкове.",
+            "en": "Adverb 'набагато' is written as one word per § 41, p. 1; hyphenation is erroneous."
+          }
+        },
+        {
+          "text": "куда",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Використання частки «куда» для підсилення вищого ступеня («куда швидше») є російською калькою; нормативно українською — «набагато швидше» або «значно швидше».",
+            "en": "Using 'куда' to intensify comparatives ('куда швидше') is a Russianism; Ukrainian uses 'набагато швидше' or 'значно швидше'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники міри й ступеня відповідають на питання 'скільки?', 'наскільки?', 'якою мірою?' (наполовину, дощенту, зовсім, набагато, вкрай). Пишуться разом за правилом злиття прийменників з іменниками, числівниками або займенниками per § 41, п. 1.",
+        "en": "Adverbs of measure and degree answer 'how much?', 'to what extent?' (наполовину, дощенту, зовсім, набагато, вкрай). They are written as one word per the fusion rule of prepositions with nominal bases per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_20",
+      "category": "adverb_semantic_measure_degree",
+      "prompt": "Лікарі наголосили, що прийняти ці ліки вчасно є _______ необхідним для одужання.",
+      "target_token": "вкрай",
+      "correct_answer": "вкрай",
+      "options": [
+        "вкрай",
+        "в край",
+        "в-край",
+        "крайнє"
+      ],
+      "distractors": [
+        {
+          "text": "в край",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«В край» окремо означає рух до краю або географічної землі (поїхати в рідний край), а високий ступінь ознаки (якою мірою? надзвичайно) передає прислівник «вкрай» per § 41, п. 1.",
+            "en": "'В край' separately denotes spatial movement to an edge/region; high degree ('extremely') is the adverb 'вкрай' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в-край",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «вкрай» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'вкрай' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "крайнє",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Вживання форми «крайнє» у значенні прислівника міри («крайнє необхідним») є ненормативним суржиком; нормативно — «вкрай».",
+            "en": "Using 'крайнє' as an adverb of degree ('крайнє необхідним') is non-standard; authentic Ukrainian is 'вкрай'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники міри й ступеня відповідають на питання 'скільки?', 'наскільки?', 'якою мірою?' (наполовину, дощенту, зовсім, набагато, вкрай). Пишуться разом за правилом злиття прийменників з іменниками, числівниками або займенниками per § 41, п. 1.",
+        "en": "Adverbs of measure and degree answer 'how much?', 'to what extent?' (наполовину, дощенту, зовсім, набагато, вкрай). They are written as one word per the fusion rule of prepositions with nominal bases per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_21",
+      "category": "adverb_semantic_cause_purpose",
+      "prompt": "Він не хотів образити друга, а вигукнув ці різкі слова просто _______.",
+      "target_token": "зопалу",
+      "correct_answer": "зопалу",
+      "options": [
+        "з опалу",
+        "зо-палу",
+        "з гаряча",
+        "зопалу"
+      ],
+      "distractors": [
+        {
+          "text": "з опалу",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник причини «зопалу» утворений від прийменника зо- та кореня пал і пишеться разом per § 41, п. 1.",
+            "en": "Causal adverb 'зопалу' is fused from preposition зо- and root пал; written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "зо-палу",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Слово «зопалу» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Word 'зопалу' is spelled together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "з гаряча",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «з гаряча» є калькою з російської («сгоряча»); нормативні українські відповідники — «зопалу» або «згарячу».",
+            "en": "'З гаряча' is a Russian calque ('сгоряча'); authentic Ukrainian equivalents are 'зопалу' or 'згарячу'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники причини й мети відповідають на питання 'чому?', 'з якої причини?', 'навіщо?', 'з якою метою?' (зопалу, згарячу, навмисне, напоказ, наперекір). Зрощені префіксально-суфіксальні форми пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of cause and purpose answer 'why?', 'for what reason?', 'for what purpose?' (зопалу, згарячу, навмисне, напоказ, наперекір). Fused prefixal-suffixal derivatives are written as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_22",
+      "category": "adverb_semantic_cause_purpose",
+      "prompt": "Не варто приймати доленосні рішення _______, коли вирують емоції.",
+      "target_token": "згарячу",
+      "correct_answer": "згарячу",
+      "options": [
+        "згарячу",
+        "з-гарячу",
+        "з гарячу",
+        "згаряча"
+      ],
+      "distractors": [
+        {
+          "text": "з гарячу",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник причини «згарячу» пишеться разом per § 41, п. 1.",
+            "en": "Causal adverb 'згарячу' is written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "з-гарячу",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у слові «згарячу» є орфографічною помилкою; слово пишеться разом per § 41, п. 1.",
+            "en": "Hyphen in 'згарячу' is an error; it is spelled as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "згаряча",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Форма на -а («згаряча») є російським впливом; в українській літературній мові закріплена форма на -у: «згарячу».",
+            "en": "Ending -а ('згаряча') is Russian interference; Ukrainian standard maintains -у: 'згарячу'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники причини й мети відповідають на питання 'чому?', 'з якої причини?', 'навіщо?', 'з якою метою?' (зопалу, згарячу, навмисне, напоказ, наперекір). Зрощені префіксально-суфіксальні форми пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of cause and purpose answer 'why?', 'for what reason?', 'for what purpose?' (зопалу, згарячу, навмисне, напоказ, наперекір). Fused prefixal-suffixal derivatives are written as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_23",
+      "category": "adverb_semantic_cause_purpose",
+      "prompt": "Він не випадково запізнився на нараду, а зробив це цілком _______.",
+      "target_token": "навмисне",
+      "correct_answer": "навмисне",
+      "options": [
+        "на вмисне",
+        "нарошно",
+        "на-вмисне",
+        "навмисне"
+      ],
+      "distractors": [
+        {
+          "text": "на вмисне",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник мети «навмисне» є зрощеним словом і пишеться разом per § 41, п. 1.",
+            "en": "Purpose adverb 'навмисне' is fused and written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-вмисне",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Слово «навмисне» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Word 'навмисне' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "нарошно",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Слово «нарошно» є російським просторіччям («нарочно»); нормативні українські слова — «навмисне» або «навмисно».",
+            "en": "'Нарошно' is colloquial Russian interference ('нарочно'); standard Ukrainian uses 'навмисне' or 'навмисно'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники причини й мети відповідають на питання 'чому?', 'з якої причини?', 'навіщо?', 'з якою метою?' (зопалу, згарячу, навмисне, напоказ, наперекір). Зрощені префіксально-суфіксальні форми пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of cause and purpose answer 'why?', 'for what reason?', 'for what purpose?' (зопалу, згарячу, навмисне, напоказ, наперекір). Fused prefixal-suffixal derivatives are written as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_24",
+      "category": "adverb_semantic_cause_purpose",
+      "prompt": "Щедрий меценат допомагав людям скромно, не виставляючи свої благодіяння _______.",
+      "target_token": "напоказ",
+      "correct_answer": "напоказ",
+      "options": [
+        "на показ",
+        "на-показ",
+        "на показність",
+        "напоказ"
+      ],
+      "distractors": [
+        {
+          "text": "на показ",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«На показ» окремо вживається тоді, коли йдеться про сеанс чи виставу (піти на показ фільму), а мету дії «навіщо?» позначає прислівник «напоказ» per § 41, п. 1.",
+            "en": "'На показ' separately refers to a film screening or show; purpose adverb 'for show' is 'напоказ' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-показ",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник мети «напоказ» пишеться разом per § 41, п. 1.",
+            "en": "Adverb of purpose 'напоказ' is written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на показність",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Такої прислівникової форми не існує; правильне нормативне слово — «напоказ».",
+            "en": "Such an adverbial form does not exist; standard word is 'напоказ'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники причини й мети відповідають на питання 'чому?', 'з якої причини?', 'навіщо?', 'з якою метою?' (зопалу, згарячу, навмисне, напоказ, наперекір). Зрощені префіксально-суфіксальні форми пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of cause and purpose answer 'why?', 'for what reason?', 'for what purpose?' (зопалу, згарячу, навмисне, напоказ, наперекір). Fused prefixal-suffixal derivatives are written as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_25",
+      "category": "adverb_semantic_cause_purpose",
+      "prompt": "Він завжди мав норовливий характер і робив усе _______, не зважаючи на застереження друзів.",
+      "target_token": "наперекір",
+      "correct_answer": "наперекір",
+      "options": [
+        "наперекір",
+        "на перекір",
+        "на-перекір",
+        "на перекор"
+      ],
+      "distractors": [
+        {
+          "text": "на перекір",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник мети й наміру «наперекір» (у значенні «на зло, усупереч іншим») пишеться разом per § 41, п. 1.",
+            "en": "Adverb of intent/purpose 'наперекір' (meaning 'in defiance, spitefully') is written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-перекір",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «наперекір» пишеться разом, дефіс не вживається per § 41, п. 1.",
+            "en": "Adverb 'наперекір' is written together; no hyphen is used per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на перекор",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Форма «на перекор» з голосним [о] є русизмом; в українській літературній мові нормативним є прислівник «наперекір» з ікавізмом у закритому складі.",
+            "en": "Form 'на перекор' is Russian interference; standard Ukrainian uses adverb 'наперекір' with ikavism in a closed syllable."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники причини й мети відповідають на питання 'чому?', 'з якої причини?', 'навіщо?', 'з якою метою?' (зопалу, згарячу, навмисне, напоказ, наперекір). Зрощені префіксально-суфіксальні форми пишуться разом per § 41, п. 1.",
+        "en": "Adverbs of cause and purpose answer 'why?', 'for what reason?', 'for what purpose?' (зопалу, згарячу, навмисне, напоказ, наперекір). Fused prefixal-suffixal derivatives are written as one word per § 41, p. 1."
+      }
+    },
+    {
+      "id": "adverb_card_26",
+      "category": "adverb_spelling_prefix_po",
+      "prompt": "Іноземні гості щиро намагалися розмовляти _______ під час перебування у Львові.",
+      "target_token": "по-українськи",
+      "correct_answer": "по-українськи",
+      "options": [
+        "поукраїнськи",
+        "на українській",
+        "по-українськи",
+        "по українськи"
+      ],
+      "distractors": [
+        {
+          "text": "по українськи",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Прислівники з префіксом по- та суфіксами -ськи, -цьки пишуться через дефіс per § 41, п. 3, 1).",
+            "en": "Adverbs with prefix по- and suffixes -ськи, -цьки are hyphenated per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "поукраїнськи",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Написання разом є грубою орфографічною помилкою; за правилом § 41, п. 3, 1) префікс по- з суфіксом -ськи пишеться через дефіс.",
+            "en": "Writing as one word is a serious error; per § 41, p. 3, 1) prefix по- with suffix -ськи requires a hyphen."
+          }
+        },
+        {
+          "text": "на українській",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Конструкція «говорити на українській» є калькою з російської («говорить на украинском»); правильно — «говорити по-українськи» або «говорити українською мовою».",
+            "en": "'Говорити на українській' is a Russian calque; authentic Ukrainian is 'говорити по-українськи' or 'говорити українською мовою'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 1); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 3, 1).",
+        "en": "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 3, 1): по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
+      }
+    },
+    {
+      "id": "adverb_card_27",
+      "category": "adverb_spelling_prefix_po",
+      "prompt": "Після реформ колектив вирішив організувати виробничий процес цілком _______.",
+      "target_token": "по-новому",
+      "correct_answer": "по-новому",
+      "options": [
+        "поновому",
+        "за новим",
+        "по-новому",
+        "по новому"
+      ],
+      "distractors": [
+        {
+          "text": "по новому",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник способу дії «по-новому» пишеться через дефіс per § 41, п. 3, 1); окремо пишеться лише прийменник з прикметником: «по новому шляху».",
+            "en": "Adverb of manner 'по-новому' is hyphenated per § 41, p. 3, 1); separate 'по новому' is only preposition + adjective."
+          }
+        },
+        {
+          "text": "поновому",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Прислівники з префіксом по- та суфіксом -ому пишуться через дефіс, а не разом per § 41, п. 3, 1).",
+            "en": "Adverbs with prefix по- and suffix -ому are hyphenated, not written as one word per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "за новим",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "Вираз «за новим» вимагає узгоджуваного іменника (за новим розкладом); самостійний прислівник способу дії — «по-новому».",
+            "en": "'За новим' requires an agreeing noun; independent adverb of manner is 'по-новому'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 1); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 3, 1).",
+        "en": "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 3, 1): по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
+      }
+    },
+    {
+      "id": "adverb_card_28",
+      "category": "adverb_spelling_prefix_po",
+      "prompt": "Старий учитель тепло й _______ підбадьорив засмученого учня перед виступом.",
+      "target_token": "по-батьківськи",
+      "correct_answer": "по-батьківськи",
+      "options": [
+        "по-батьківськи",
+        "по батьківськи",
+        "побатьківськи",
+        "як по батькові"
+      ],
+      "distractors": [
+        {
+          "text": "по батьківськи",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Прислівники з префіксом по- та суфіксами -ськи/-цьки обов'язково пишуться через дефіс per § 41, п. 3, 1).",
+            "en": "Adverbs with prefix по- and suffixes -ськи/-цьки must be hyphenated per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "побатьківськи",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Префікс по- з суфіксом -ськи не пишеться разом; обов'язковий дефіс per § 41, п. 3, 1).",
+            "en": "Prefix по- with suffix -ськи cannot be written together; hyphen is mandatory per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "як по батькові",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "Вираз «по батькові» вказує на патронім (звертатися по батькові), а спосіб дії «з батьківською турботою» передає прислівник «по-батьківськи».",
+            "en": "'По батькові' refers to patronymics; manner with fatherly warmth is 'по-батьківськи'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 1); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 3, 1).",
+        "en": "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 3, 1): по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
+      }
+    },
+    {
+      "id": "adverb_card_29",
+      "category": "adverb_spelling_prefix_po",
+      "prompt": "Зробимо так, як ти пропонуєш, хоча все одно врешті-решт вийде _______.",
+      "target_token": "по-моєму",
+      "correct_answer": "по-моєму",
+      "options": [
+        "по-мойому",
+        "по моєму",
+        "по-моєму",
+        "помоєму"
+      ],
+      "distractors": [
+        {
+          "text": "по моєму",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «по-моєму» пишеться через дефіс per § 41, п. 3, 1); окремо «по моєму» пишеться лише тоді, коли «моєму» є означенням до іменника («по моєму сліду»).",
+            "en": "Adverb 'по-моєму' is hyphenated per § 41, p. 3, 1); separate 'по моєму' occurs only with an explicit noun ('по моєму сліду')."
+          }
+        },
+        {
+          "text": "помоєму",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Прислівники, утворені від займенників з префіксом по- та суфіксом -ему/-ому, пишуться через дефіс, а не разом per § 41, п. 3, 1).",
+            "en": "Pronominal adverbs with prefix по- and suffix -ему/-ому are hyphenated, not fused per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "по-мойому",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "В українській мові після м'яких приголосних пишеться літера є: «по-моєму», а не йо.",
+            "en": "In Ukrainian after soft consonants letter є is written: 'по-моєму', not йо."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 1); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 3, 1).",
+        "en": "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 3, 1): по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
+      }
+    },
+    {
+      "id": "adverb_card_30",
+      "category": "adverb_spelling_prefix_po",
+      "prompt": "Дідусь щиро й _______ радів несподіваному подарунку від онуків.",
+      "target_token": "по-дитячому",
+      "correct_answer": "по-дитячому",
+      "options": [
+        "подитячому",
+        "по-дитячому",
+        "по дитячи",
+        "по дитячому"
+      ],
+      "distractors": [
+        {
+          "text": "по дитячому",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Прислівники з префіксом по- та суфіксом -ому пишуться через дефіс per § 41, п. 3, 1).",
+            "en": "Adverbs with prefix по- and suffix -ому are hyphenated per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "подитячому",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Разом прислівник «по-дитячому» не пишеться; наявність префікса по- та суфікса -ому вимагає дефіса per § 41, п. 3, 1).",
+            "en": "'По-дитячому' cannot be written together; presence of по- and -ому requires a hyphen per § 41, p. 3, 1)."
+          }
+        },
+        {
+          "text": "по дитячи",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "В українській мові немає форми «по дитячи»; нормативними є «по-дитячому» або «по-дитячи» (через дефіс), проте з суфіксом -ому є найпоширенішим.",
+            "en": "Form 'по дитячи' is incorrect; normative forms require a hyphen ('по-дитячому')."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 1); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з префіксом по-, утворені від прикметників і займенників із суфіксами -ому, -ему, -и, -ськи, -цьки, пишуться через дефіс: по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому per § 41, п. 3, 1).",
+        "en": "Adverbs with prefix по- formed from adjectives and pronouns with suffixes -ому, -ему, -и, -ськи, -цьки are hyphenated per § 41, p. 3, 1): по-українськи, по-новому, по-батьківськи, по-моєму, по-дитячому."
+      }
+    },
+    {
+      "id": "adverb_card_31",
+      "category": "adverb_spelling_particles_hyphen",
+      "prompt": "Цю рідкісну книгу зараз важко відшукати _______ у міських книгарнях.",
+      "target_token": "будь-де",
+      "correct_answer": "будь-де",
+      "options": [
+        "будь-де",
+        "будь де",
+        "будьде",
+        "будь-куди"
+      ],
+      "distractors": [
+        {
+          "text": "будь де",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка будь- у складі прислівників завжди пишеться через дефіс per § 41, п. 3, 3) (будь-де, будь-коли, будь-куди).",
+            "en": "Particle будь- in adverbs is always hyphenated per § 41, p. 3, 3) (будь-де, будь-коли)."
+          }
+        },
+        {
+          "text": "будьде",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Частка будь- не пишеться разом із прислівниками; правильне написання — через дефіс per § 41, п. 3, 3).",
+            "en": "Particle будь- is never fused with adverbs; correct spelling requires a hyphen per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "будь-куди",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«Будь-куди» вказує на напрямок руху (куди?), тоді як у реченні запитується про місцезнаходження (де? шукати де? — будь-де).",
+            "en": "'Будь-куди' denotes direction of motion (where to?), whereas the sentence requires location (where? look where? — будь-де)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+      }
+    },
+    {
+      "id": "adverb_card_32",
+      "category": "adverb_spelling_particles_hyphen",
+      "prompt": "Справжній майстер ніколи не виконує важливу роботу _______, а дбає про кожну деталь.",
+      "target_token": "як-небудь",
+      "correct_answer": "як-небудь",
+      "options": [
+        "як-не-будь",
+        "як-небудь",
+        "як небудь",
+        "якнебудь"
+      ],
+      "distractors": [
+        {
+          "text": "як небудь",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка -небудь у складі неозначених прислівників пишеться через дефіс per § 41, п. 3, 3) (як-небудь, де-небудь, коли-небудь).",
+            "en": "Particle -небудь in indefinite adverbs is hyphenated per § 41, p. 3, 3) (як-небудь, де-небудь)."
+          }
+        },
+        {
+          "text": "якнебудь",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Частка -небудь не пишеться разом з основою; вона завжди приєднується дефісом per § 41, п. 3, 3).",
+            "en": "Particle -небудь is never written as one word; it is always attached with a hyphen per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "як-не-будь",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Частка -небудь утворює єдиний формант і приєднується одним дефісом: «як-небудь» per § 41, п. 3, 3); написання з двома дефісами («як-не-будь») є помилковим.",
+            "en": "The particle -небудь is a single formant attached with one hyphen: 'як-небудь' per § 41, p. 3, 3); writing with two hyphens ('як-не-будь') is incorrect."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+      }
+    },
+    {
+      "id": "adverb_card_33",
+      "category": "adverb_spelling_particles_hyphen",
+      "prompt": "Він зумів розв'язати цю заплутану задачу _______ хитро й нестандартно.",
+      "target_token": "хтозна-як",
+      "correct_answer": "хтозна-як",
+      "options": [
+        "хтозна-як",
+        "хтозна як",
+        "хтознаяк",
+        "хтозна-де"
+      ],
+      "distractors": [
+        {
+          "text": "хтозна як",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка хтозна- пишеться з прислівниками через дефіс per § 41, п. 3, 3) (хтозна-як, хтозна-де, хтозна-коли).",
+            "en": "Particle хтозна- is hyphenated with adverbs per § 41, p. 3, 3) (хтозна-як, хтозна-де)."
+          }
+        },
+        {
+          "text": "хтознаяк",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Слово «хтозна-як» не пишеться разом; частка хтозна- вимагає написання через дефіс per § 41, п. 3, 3).",
+            "en": "'Хтозна-як' cannot be fused; particle хтозна- strictly requires a hyphen per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "хтозна-де",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«Хтозна-де» вказує на невідоме місце (де?), тоді як для характеристики способу розв'язання задачі потрібен прислівник способу дії «хтозна-як» (як? — хтозна-як хитро).",
+            "en": "'Хтозна-де' indicates an unknown location (where?), whereas characterizing manner of action requires manner adverb 'хтозна-як' (how? — хтозна-як хитро)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+      }
+    },
+    {
+      "id": "adverb_card_34",
+      "category": "adverb_spelling_particles_hyphen",
+      "prompt": "Ця старовинна легенда зародилася в наших краях _______ в сиву давнину.",
+      "target_token": "казна-коли",
+      "correct_answer": "казна-коли",
+      "options": [
+        "казна коли",
+        "бозна коли",
+        "казнаколи",
+        "казна-коли"
+      ],
+      "distractors": [
+        {
+          "text": "казна коли",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка казна- з прислівниками пишеться через дефіс per § 41, п. 3, 3).",
+            "en": "Particle казна- with adverbs is hyphenated per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "казнаколи",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Написання разом є орфографічною помилкою; частка казна- приєднується через дефіс per § 41, п. 3, 3).",
+            "en": "Fused spelling is an orthographic error; particle казна- attaches via hyphen per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "бозна коли",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка бозна- так само вимагає дефіса (бозна-коли); роздільне написання помилкове per § 41, п. 3, 3).",
+            "en": "Particle бозна- likewise requires a hyphen (бозна-коли); separate writing is wrong per § 41, p. 3, 3)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+      }
+    },
+    {
+      "id": "adverb_card_35",
+      "category": "adverb_spelling_particles_hyphen",
+      "prompt": "Ніхто не міг збагнути, як їм вдалося вибратися з темного яру _______ швидко.",
+      "target_token": "бозна-як",
+      "correct_answer": "бозна-як",
+      "options": [
+        "бозна-як",
+        "бозна як",
+        "бознаяк",
+        "бозна-куди"
+      ],
+      "distractors": [
+        {
+          "text": "бозна як",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка бозна- у складі неозначених прислівників завжди пишеться через дефіс per § 41, п. 3, 3).",
+            "en": "Particle бозна- in indefinite adverbs is always hyphenated per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "бознаяк",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Частка бозна- не пишеться разом; обов'язкове написання через дефіс per § 41, п. 3, 3).",
+            "en": "Particle бозна- is not written together; hyphenation is mandatory per § 41, p. 3, 3)."
+          }
+        },
+        {
+          "text": "бозна-куди",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«Бозна-куди» вказує на невизначений напрямок чи місце (куди? де?), а не на міру чи спосіб швидкої дії (як? наскільки? — бозна-як швидко).",
+            "en": "'Бозна-куди' denotes indefinite direction or location (where to?), not manner or degree of swift action (how? — бозна-як)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 3); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники з частками будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то пишуться через дефіс per § 41, п. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки.",
+        "en": "Adverbs with particles будь-, -небудь, казна-, хтозна-, бозна-, -таки, -то are hyphenated per § 41, p. 3, 3): будь-де, як-небудь, хтозна-як, казна-коли, бозна-як, так-таки."
+      }
+    },
+    {
+      "id": "adverb_card_36",
+      "category": "adverb_spelling_reduplication",
+      "prompt": "Дипломати залишилися в кабінеті, щоб обговорити суперечливі питання _______.",
+      "target_token": "віч-на-віч",
+      "correct_answer": "віч-на-віч",
+      "options": [
+        "віч-на-віч",
+        "вічнавіч",
+        "віч на віч",
+        "віч на-віч"
+      ],
+      "distractors": [
+        {
+          "text": "віч на віч",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Складний прислівник «віч-на-віч» пишеться з двома дефісами per § 41, п. 3, 5).",
+            "en": "Compound adverb 'віч-на-віч' is written with two hyphens per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "вічнавіч",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Слово «віч-на-віч» не пишеться разом; воно складається з двох однакових іменників, з'єднаних прийменником, і пишеться через дефіси per § 41, п. 3, 5).",
+            "en": "'Віч-на-віч' cannot be fused; identical nouns joined by preposition take hyphens per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "віч на-віч",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "У складному прислівнику «віч-на-віч» обидва з'єднання вимагають дефісів per § 41, п. 3, 5); односторонній дефіс неприпустимий.",
+            "en": "In compound adverb 'віч-на-віч' both junctures require hyphens per § 41, p. 3, 5); a single hyphen is incorrect."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+      }
+    },
+    {
+      "id": "adverb_card_37",
+      "category": "adverb_spelling_reduplication",
+      "prompt": "Волонтери та рятувальники працювали _______, допомагаючи постраждалим мешканцям.",
+      "target_token": "пліч-о-пліч",
+      "correct_answer": "пліч-о-пліч",
+      "options": [
+        "пліч о пліч",
+        "пліч-на-пліч",
+        "плічопліч",
+        "пліч-о-пліч"
+      ],
+      "distractors": [
+        {
+          "text": "пліч о пліч",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Прислівникове сполучення «пліч-о-пліч» пишеться з двома дефісами per § 41, п. 3, 5).",
+            "en": "Adverbial phrase 'пліч-о-пліч' is written with two hyphens per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "плічопліч",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Написання разом помилкове; сполука «пліч-о-пліч» обов'язково оформлюється через дефіси per § 41, п. 3, 5).",
+            "en": "Writing together is wrong; 'пліч-о-пліч' strictly requires hyphens per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "пліч-на-пліч",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Усталений складний прислівник має сполучний голосний о: «пліч-о-пліч», а не прийменник на per § 41, п. 3, 5).",
+            "en": "The set compound adverb has linking vowel о: 'пліч-о-пліч', not preposition на per § 41, p. 3, 5)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+      }
+    },
+    {
+      "id": "adverb_card_38",
+      "category": "adverb_spelling_reduplication",
+      "prompt": "Кіт _______ підкрався до миски й спритно схопив шматочок риби.",
+      "target_token": "тишком-нишком",
+      "correct_answer": "тишком-нишком",
+      "options": [
+        "тихо-нишком",
+        "тишком-нишком",
+        "тишком нишком",
+        "тишкомнишком"
+      ],
+      "distractors": [
+        {
+          "text": "тишком нишком",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Синонімічні парні прислівники пишуться через дефіс per § 41, п. 3, 5) (тишком-нишком, зроду-віку).",
+            "en": "Synonymous paired adverbs are hyphenated per § 41, p. 3, 5) (тишком-нишком)."
+          }
+        },
+        {
+          "text": "тишкомнишком",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Парне повторення близьких за значенням слів не пишеться разом; потрібен дефіс per § 41, п. 3, 5).",
+            "en": "Paired synonymous roots are not written together; a hyphen is required per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "тихо-нишком",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Обидві частини стійкого парного прислівника мають однакове закінчення: «тишком-нишком».",
+            "en": "Both parts of this set paired adverb have matching endings: 'тишком-нишком'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+      }
+    },
+    {
+      "id": "adverb_card_39",
+      "category": "adverb_spelling_reduplication",
+      "prompt": "Після виснажливого марафону бігун _______ переставляв стомлені ноги.",
+      "target_token": "ледве-ледве",
+      "correct_answer": "ледве-ледве",
+      "options": [
+        "ледвеледве",
+        "чуть-чуть",
+        "ледве-ледве",
+        "ледве ледве"
+      ],
+      "distractors": [
+        {
+          "text": "ледве ледве",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Повторення того самого слова для підсилення значення пишеться через дефіс per § 41, п. 3, 5).",
+            "en": "Reduplication of the same word for emphasis is hyphenated per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "ледвеледве",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Повторювані слова ніколи не зливаються в одне слово; дефіс обов'язковий per § 41, п. 3, 5).",
+            "en": "Reduplicated words never merge into a single word; hyphen is mandatory per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "чуть-чуть",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Слово «чуть-чуть» є прямим запозиченням з російської мови; літературні українські відповідники — «ледве-ледве», «ледь-ледь» або «трохи».",
+            "en": "'Чуть-чуть' is a direct Russianism; literary Ukrainian uses 'ледве-ледве', 'ледь-ледь', or 'трохи'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+      }
+    },
+    {
+      "id": "adverb_card_40",
+      "category": "adverb_spelling_reduplication",
+      "prompt": "Ці величні замкові мури були зведені _______ хоробрими лицарями.",
+      "target_token": "давним-давно",
+      "correct_answer": "давним-давно",
+      "options": [
+        "давнім-давно",
+        "давним давно",
+        "давним-давно",
+        "давнимдавно"
+      ],
+      "distractors": [
+        {
+          "text": "давним давно",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Підсилювальне сполучення однакових коренів різної форми пишеться через дефіс per § 41, п. 3, 5) (давним-давно, повік-віки).",
+            "en": "Emphatic combination of identical roots in different forms is hyphenated per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "давнимдавно",
+          "interference_key": "HYPHEN_OMISSION",
+          "explanation": {
+            "ua": "Слово «давним-давно» пишеться через дефіс, а не разом per § 41, п. 3, 5).",
+            "en": "Word 'давним-давно' is hyphenated, not written as one word per § 41, p. 3, 5)."
+          }
+        },
+        {
+          "text": "давнім-давно",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Перша частина підсилювального прислівника має суфікс орудного відмінка -им («давним-давно»), а не прикметникову форму «давнім».",
+            "en": "The first part of reduplicative adverb давним-давно takes instrumental ending -им ('давним-давно'), not adjective form 'давнім'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 3, 5); СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники, утворені повторенням того самого слова, поєднанням синонімів або антонімів, а також парних слів з прийменником між ними, пишуться через дефіс per § 41, п. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно.",
+        "en": "Adverbs formed by reduplication of identical words, synonymous pairs, or identical roots connected by a preposition are hyphenated per § 41, p. 3, 5): віч-на-віч, пліч-о-пліч, тишком-нишком, ледве-ледве, давним-давно."
+      }
+    },
+    {
+      "id": "adverb_card_41",
+      "category": "adverb_spelling_together_fused",
+      "prompt": "Коли експеримент зазнав невдачі, вчені вирішили розпочати дослідження _______.",
+      "target_token": "спочатку",
+      "correct_answer": "спочатку",
+      "options": [
+        "з початку",
+        "с початку",
+        "с-початку",
+        "спочатку"
+      ],
+      "distractors": [
+        {
+          "text": "з початку",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«З початку» окремо вживається тоді, коли є залежне слово (наприклад, з початку місяця), а часовий прислівник «спочатку» (заново, спершу) пишеться разом per § 41, п. 1.",
+            "en": "'З початку' separately is used with dependent words (from the beginning of the month); adverb 'anew/initially' is 'спочатку' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "с початку",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Префікс с- перед глухими приголосними пишеться разом у складі прислівника «спочатку» per § 41, п. 1.",
+            "en": "Prefix с- before voiceless consonants is fused in adverb 'спочатку' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "с-початку",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «спочатку» пишеться разом per § 41, п. 1, дефіс помилковий.",
+            "en": "Adverb 'спочатку' is written together per § 41, p. 1; hyphens are erroneous."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Складні прислівники, утворені злиттям прийменників з іменниками, числівниками чи займенниками, коли вони втратили значення окремих частин мови, пишуться разом per § 41, п. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі.",
+        "en": "Compound adverbs formed by complete fusion of prepositions with nominal bases, where individual syntactic independence is lost, are spelled as one word per § 41, p. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі."
+      }
+    },
+    {
+      "id": "adverb_card_42",
+      "category": "adverb_spelling_together_fused",
+      "prompt": "Молоді поети _______ познайомилися на літературному вечорі в Києві.",
+      "target_token": "вперше",
+      "correct_answer": "вперше",
+      "options": [
+        "в перше",
+        "по-вперше",
+        "в-перше",
+        "вперше"
+      ],
+      "distractors": [
+        {
+          "text": "в перше",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«В перше» окремо вживається з числівником (поглянути в перше вікно), а часовий прислівник «вперше» пишеться разом per § 41, п. 1.",
+            "en": "'В перше' separately is used with numerals (look into the first window); time adverb 'for the first time' is 'вперше' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в-перше",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «вперше» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'вперше' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по-вперше",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форми «по-вперше» не існує; часовий прислівник «вперше» пишеться разом per § 41, п. 1 (не плутати зі вставним словом «по-перше» per § 41, п. 3, 2)).",
+            "en": "The form 'по-вперше' does not exist; temporal adverb 'вперше' is written together per § 41, p. 1 (not to be confused with introductory word 'по-перше' per § 41, p. 3, 2))."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Складні прислівники, утворені злиттям прийменників з іменниками, числівниками чи займенниками, коли вони втратили значення окремих частин мови, пишуться разом per § 41, п. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі.",
+        "en": "Compound adverbs formed by complete fusion of prepositions with nominal bases, where individual syntactic independence is lost, are spelled as one word per § 41, p. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі."
+      }
+    },
+    {
+      "id": "adverb_card_43",
+      "category": "adverb_spelling_together_fused",
+      "prompt": "Ображений хлопчик насупився й сердито подивився на перехожого _______.",
+      "target_token": "спідлоба",
+      "correct_answer": "спідлоба",
+      "options": [
+        "зпід лоба",
+        "спідлоба",
+        "спід лоба",
+        "спід-лоба"
+      ],
+      "distractors": [
+        {
+          "text": "спід-лоба",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник способу погляду «спідлоба» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb of gaze 'спідлоба' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "зпід лоба",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник способу дії пишеться разом: «спідлоба» per § 41, п. 1.",
+            "en": "Adverb of manner is written together: 'спідлоба' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "спід лоба",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Слово «спідлоба» пишеться разом як єдиний прислівник per § 41, п. 1.",
+            "en": "Word 'спідлоба' is spelled together as a single adverb per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Складні прислівники, утворені злиттям прийменників з іменниками, числівниками чи займенниками, коли вони втратили значення окремих частин мови, пишуться разом per § 41, п. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі.",
+        "en": "Compound adverbs formed by complete fusion of prepositions with nominal bases, where individual syntactic independence is lost, are spelled as one word per § 41, p. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі."
+      }
+    },
+    {
+      "id": "adverb_card_44",
+      "category": "adverb_spelling_together_fused",
+      "prompt": "Маленька дівчинка стала _______, намагаючись дістати улюблену іграшку з полиці.",
+      "target_token": "навшпиньки",
+      "correct_answer": "навшпиньки",
+      "options": [
+        "на вшпиньки",
+        "на-вшпиньки",
+        "на ципочки",
+        "навшпиньки"
+      ],
+      "distractors": [
+        {
+          "text": "на вшпиньки",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «навшпиньки» утворений від префіксів на-, в- та кореня шпинька і пишеться разом per § 41, п. 1.",
+            "en": "Adverb 'навшпиньки' is formed from prefixes на-, в- and base шпинька; written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-вшпиньки",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у слові «навшпиньки» не пишеться; це складний прислівник, який пишеться разом per § 41, п. 1.",
+            "en": "No hyphen is used in 'навшпиньки'; it is a fused adverb written together per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на ципочки",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «стати на ципочки» є грубим русизмом («на цыпочки»); нормативний український вислів — «стати навшпиньки».",
+            "en": "'Стати на ципочки' is Russian interference; authentic Ukrainian is 'стати навшпиньки'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Складні прислівники, утворені злиттям прийменників з іменниками, числівниками чи займенниками, коли вони втратили значення окремих частин мови, пишуться разом per § 41, п. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі.",
+        "en": "Compound adverbs formed by complete fusion of prepositions with nominal bases, where individual syntactic independence is lost, are spelled as one word per § 41, p. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі."
+      }
+    },
+    {
+      "id": "adverb_card_45",
+      "category": "adverb_spelling_together_fused",
+      "prompt": "Відчуваючи небезпеку в темному лісі, досвідчений мандрівник увесь час тримався _______, прислухаючись до кожного шурхоту.",
+      "target_token": "насторожі",
+      "correct_answer": "насторожі",
+      "options": [
+        "насторожі",
+        "на-сторожі",
+        "по-сторожі",
+        "всторожі"
+      ],
+      "distractors": [
+        {
+          "text": "по-сторожі",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «по-сторожі» є штучною та ненормативною; стан пильності передається прислівником «насторожі», який пишеться разом per § 41, п. 1.",
+            "en": "The form 'по-сторожі' is artificial and non-normative; the state of alertness is expressed by the adverb 'насторожі', which is written as one word per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-сторожі",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Складний прислівник «насторожі» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "The compound adverb 'насторожі' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "всторожі",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Такої прислівникової форми не існує; нормативне слово зі значенням пильності — «насторожі» per § 41, п. 1.",
+            "en": "Such an adverbial form does not exist; normative word for alertness is 'насторожі' per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1; СУМ-20",
+      "rule_summary": {
+        "ua": "Складні прислівники, утворені злиттям прийменників з іменниками, числівниками чи займенниками, коли вони втратили значення окремих частин мови, пишуться разом per § 41, п. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі.",
+        "en": "Compound adverbs formed by complete fusion of prepositions with nominal bases, where individual syntactic independence is lost, are spelled as one word per § 41, p. 1: спочатку, вперше, спідлоба, навшпиньки, насторожі."
+      }
+    },
+    {
+      "id": "adverb_card_46",
+      "category": "adverb_homophone_napamyat_vden_dodomu",
+      "prompt": "Друзі подарували випускникові пам'ятний годинник _______ про шкільні роки.",
+      "target_token": "на пам'ять",
+      "correct_answer": "на пам'ять",
+      "options": [
+        "напам'ять",
+        "на-пам'ять",
+        "для пам'яті",
+        "на пам'ять"
+      ],
+      "distractors": [
+        {
+          "text": "напам'ять",
+          "interference_key": "HOMOPHONE_ADVERB_CONFUSION",
+          "explanation": {
+            "ua": "Тут вжито іменник «пам'ять» у значенні спогаду (подарувати на пам'ять про подію), тому прийменник пишеться окремо per § 41, п. 2; разом «напам'ять» пишеться лише про запам'ятовування тексту напам'ять.",
+            "en": "Here noun 'пам'ять' is used meaning keepsake/remembrance; preposition is written separately ('на пам'ять') per § 41, p. 2. Fused 'напам'ять' means reciting by heart."
+          }
+        },
+        {
+          "text": "на-пам'ять",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Дефіс у сполуці «на пам'ять» не вживається.",
+            "en": "Hyphens are never used in prepositional phrase 'на пам'ять'."
+          }
+        },
+        {
+          "text": "для пам'яті",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "Усталений український вираз для пам'ятного дарунку — «подарувати на пам'ять» (окремо).",
+            "en": "Established Ukrainian idiom for a keepsake gift is 'подарувати на пам'ять' (written separately)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 2): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?).",
+        "en": "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 2): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
+      }
+    },
+    {
+      "id": "adverb_card_47",
+      "category": "adverb_homophone_napamyat_vden_dodomu",
+      "prompt": "Актор за один вечір вивчив усю свою роль у п'єсі _______.",
+      "target_token": "напам'ять",
+      "correct_answer": "напам'ять",
+      "options": [
+        "на пам'ять",
+        "в пам'ять",
+        "на-пам'ять",
+        "напам'ять"
+      ],
+      "distractors": [
+        {
+          "text": "на пам'ять",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "Спосіб засвоєння тексту (як? напам'ять) виражається прислівником, що пишеться разом per § 41, п. 1; окремо «на пам'ять» пишеться тільки як іменникова сполука (подарувати на пам'ять).",
+            "en": "Manner of memorization ('by heart') is expressed by the fused adverb 'напам'ять' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-пам'ять",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «напам'ять» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'напам'ять' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "в пам'ять",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "«В пам'ять» пишеться окремо у значеннях вшанування («в пам'ять загиблих»), а не для способу вивчення тексту.",
+            "en": "'В пам'ять' is used in memorial contexts (in honor of), not for memorization."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 2): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?).",
+        "en": "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 2): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
+      }
+    },
+    {
+      "id": "adverb_card_48",
+      "category": "adverb_homophone_napamyat_vden_dodomu",
+      "prompt": "Усі родичі та друзі прийшли привітати ювіляра _______ його народження.",
+      "target_token": "в день",
+      "correct_answer": "в день",
+      "options": [
+        "в-день",
+        "в день",
+        "удень",
+        "вдень"
+      ],
+      "distractors": [
+        {
+          "text": "вдень",
+          "interference_key": "HOMOPHONE_ADVERB_CONFUSION",
+          "explanation": {
+            "ua": "Тут є конкретний іменник «день» із залежним родовим відмінком («день народження»), тому прийменник пишеться окремо per § 41, п. 2; разом «вдень» пишеться тільки прислівник на позначення світлої частини доби.",
+            "en": "Here noun 'день' has dependent Genitive ('день народження'), so preposition is written separately per § 41, p. 2; fused 'вдень' is strictly the temporal adverb for daytime."
+          }
+        },
+        {
+          "text": "в-день",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Іменник з прийменником «в день» пишеться окремо без дефіса.",
+            "en": "Noun with preposition 'в день' is written separately without a hyphen."
+          }
+        },
+        {
+          "text": "удень",
+          "interference_key": "HOMOPHONE_ADVERB_CONFUSION",
+          "explanation": {
+            "ua": "Форма «удень» є варіантом прислівника і не може керувати іменником «народження».",
+            "en": "'Удень' is an adverbial variant and cannot govern the genitive noun 'народження'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 2): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?).",
+        "en": "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 2): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
+      }
+    },
+    {
+      "id": "adverb_card_49",
+      "category": "adverb_homophone_napamyat_vden_dodomu",
+      "prompt": "Будівельники активно працювали _______, поки світило яскраве сонце.",
+      "target_token": "вдень",
+      "correct_answer": "вдень",
+      "options": [
+        "в-день",
+        "вдень",
+        "у день",
+        "в день"
+      ],
+      "distractors": [
+        {
+          "text": "в день",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "Часовий прислівник (коли? вдень) пишеться разом per § 41, п. 1; окремо пишеться лише за наявності залежних слів (в день свята).",
+            "en": "Time adverb (when? in daytime) is written together per § 41, p. 1; separately only when modifying words are present."
+          }
+        },
+        {
+          "text": "в-день",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «вдень» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'вдень' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "у день",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "Сполука «у день» з прийменником пишеться окремо per § 41, п. 2, тоді як часовий прислівник «вдень» пишеться разом per § 41, п. 1.",
+            "en": "Prepositional phrase 'у день' is written separately per § 41, p. 2, while temporal adverb 'вдень' is written together per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 2): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?).",
+        "en": "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 2): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
+      }
+    },
+    {
+      "id": "adverb_card_50",
+      "category": "adverb_homophone_napamyat_vden_dodomu",
+      "prompt": "Мандрівники пройшли крізь сад і підійшли _______ старовинної садиби.",
+      "target_token": "до дому",
+      "correct_answer": "до дому",
+      "options": [
+        "в дім",
+        "додому",
+        "до дому",
+        "до-дому"
+      ],
+      "distractors": [
+        {
+          "text": "додому",
+          "interference_key": "HOMOPHONE_ADVERB_CONFUSION",
+          "explanation": {
+            "ua": "Тут «до дому» вжито як прийменник з конкретним іменником чоловічого роду (будівлею), що має означення («старовинної садиби»), тому пишеться окремо per § 41, п. 2; прислівник «додому» означає своє помешкання й не має залежних іменників.",
+            "en": "Here 'до дому' is a preposition with a specific modified noun ('house of the estate'); fused 'додому' means one's own home without dependents per § 41, p. 1."
+          }
+        },
+        {
+          "text": "до-дому",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прийменник з іменником пишеться окремо без дефіса.",
+            "en": "Preposition with noun is written separately without a hyphen."
+          }
+        },
+        {
+          "text": "в дім",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "З дієсловом «підійти» нормативно вживається прийменник «до» («до дому»), а не «в».",
+            "en": "With verb 'підійти' the normative preposition is 'до' ('до дому'), not 'в'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід чітко розрізняти прислівники, що пишуться разом (§ 41, п. 1), та омонімічні іменникові сполуки з прийменниками, що пишуться окремо (§ 41, п. 2): вивчити напам'ять (як?) vs подарувати на пам'ять (на що? на пам'ять про подію); спати вдень (коли?) vs у цей пам'ятний день (у що?); іти додому (куди?) vs підійти до дому лісника (до якої споруди?).",
+        "en": "Distinguish fused adverbs (spelled as one word per § 41, p. 1) from homophonous prepositional phrases with nouns (spelled separately per § 41, p. 2): вивчити напам'ять (manner) vs на пам'ять (as a keepsake); спати вдень (time) vs в день народження (on the day of); іти додому (direction) vs підійти до дому (to the house of)."
+      }
+    },
+    {
+      "id": "adverb_card_51",
+      "category": "adverb_homophone_zgory_nazustrich_ubik",
+      "prompt": "Учні радісно закінчили уроки й поспішили _______ обідати.",
+      "target_token": "додому",
+      "correct_answer": "додому",
+      "options": [
+        "до дому",
+        "до-дому",
+        "на дім",
+        "додому"
+      ],
+      "distractors": [
+        {
+          "text": "до дому",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "Прислівник напрямку «куди? додому» (до свого житла) пишеться разом per § 41, п. 1; окремо «до дому» пишеться лише тоді, коли йдеться про конкретний будинок з означенням per § 41, п. 2.",
+            "en": "Directional adverb 'homewards' is written together per § 41, p. 1; separate 'до дому' applies only to a concrete building with modifiers per § 41, p. 2."
+          }
+        },
+        {
+          "text": "до-дому",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «додому» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'додому' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на дім",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «на дім» (наприклад, взяти завдання на дім) є русизмом; правильно — «додому».",
+            "en": "'На дім' is Russian interference; standard Ukrainian is 'додому'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 2 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці).",
+        "en": "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 2 (з гори, на зустріч, у бік)."
+      }
+    },
+    {
+      "id": "adverb_card_52",
+      "category": "adverb_homophone_zgory_nazustrich_ubik",
+      "prompt": "Сноубордисти на великій швидкості спускалися _______ Говерли.",
+      "target_token": "з гори",
+      "correct_answer": "з гори",
+      "options": [
+        "згори",
+        "ізгори",
+        "з-гори",
+        "з гори"
+      ],
+      "distractors": [
+        {
+          "text": "згори",
+          "interference_key": "HOMOPHONE_ADVERB_CONFUSION",
+          "explanation": {
+            "ua": "Тут є конкретний географічний об'єкт — гора («з гори Говерли»), тому прийменник «з» пишеться окремо від іменника per § 41, п. 2; разом «згори» пишеться тільки прислівник напрямку (дивитися згори вниз).",
+            "en": "Here is a concrete mountain ('from Mount Hoverla'), so preposition 'з' is separate per § 41, p. 2; fused 'згори' is strictly the directional adverb."
+          }
+        },
+        {
+          "text": "з-гори",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Іменник з прийменником «з гори» пишеться окремо без жодного дефіса.",
+            "en": "Noun with preposition 'з гори' is written separately without any hyphen."
+          }
+        },
+        {
+          "text": "ізгори",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Такої форми в українській мові немає; прислівник пишеться «згори» per § 41, п. 1, а іменник з прийменником — «з гори» або «із гори» окремо.",
+            "en": "Such a fused form does not exist; write adverb 'згори' or prepositional phrase 'із гори' separately."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 2 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці).",
+        "en": "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 2 (з гори, на зустріч, у бік)."
+      }
+    },
+    {
+      "id": "adverb_card_53",
+      "category": "adverb_homophone_zgory_nazustrich_ubik",
+      "prompt": "Орел кружляв у небі й пильно спостерігав за здобиччю _______ вниз.",
+      "target_token": "згори",
+      "correct_answer": "згори",
+      "options": [
+        "зверхньо",
+        "з гори",
+        "згори",
+        "з-гори"
+      ],
+      "distractors": [
+        {
+          "text": "з гори",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "Прислівник напрямку «звідки? згори» пишеться разом per § 41, п. 1, коли немає конкретного іменника (гори); окремо «з гори» пишеться лише про реальну височину per § 41, п. 2.",
+            "en": "Directional adverb 'from above' is written together per § 41, p. 1 when no physical mountain is referenced."
+          }
+        },
+        {
+          "text": "з-гори",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Прислівник «згори» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Adverb 'згори' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "зверхньо",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "Слово «зверхньо» означає зневажливе ставлення (як? гордовито), тоді як просторовий напрямок згори вниз передає «згори».",
+            "en": "'Зверхньо' means condescendingly/arrogantly, whereas spatial direction downwards is 'згори'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 2 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці).",
+        "en": "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 2 (з гори, на зустріч, у бік)."
+      }
+    },
+    {
+      "id": "adverb_card_54",
+      "category": "adverb_homophone_zgory_nazustrich_ubik",
+      "prompt": "Письменник прийшов у книгарню _______ зі своїми юними читачами.",
+      "target_token": "на зустріч",
+      "correct_answer": "на зустріч",
+      "options": [
+        "назустріч",
+        "на-зустріч",
+        "до зустрічі",
+        "на зустріч"
+      ],
+      "distractors": [
+        {
+          "text": "назустріч",
+          "interference_key": "HOMOPHONE_ADVERB_CONFUSION",
+          "explanation": {
+            "ua": "Тут маємо іменник «зустріч» (подія, захід) з означенням («зі своїми читачами»), тому прийменник пишеться окремо: «на зустріч» per § 41, п. 2; разом «назустріч» пишеться прислівник руху (йти назустріч вітру) per § 41, п. 1.",
+            "en": "Here noun 'зустріч' refers to an event with readers, so preposition is separate ('на зустріч') per § 41, p. 2; fused 'назустріч' is the directional adverb per § 41, p. 1."
+          }
+        },
+        {
+          "text": "на-зустріч",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Сполука прийменника з іменником «на зустріч» пишеться окремо без дефіса.",
+            "en": "Prepositional phrase 'на зустріч' is written separately without a hyphen."
+          }
+        },
+        {
+          "text": "до зустрічі",
+          "interference_key": "INCORRECT_QUESTION_CATEGORY",
+          "explanation": {
+            "ua": "«До зустрічі» — це формула прощання, а не мета руху на запланований захід.",
+            "en": "'До зустрічі' is a parting farewell phrase, not a purpose of attending an event."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 2 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці).",
+        "en": "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 2 (з гори, на зустріч, у бік)."
+      }
+    },
+    {
+      "id": "adverb_card_55",
+      "category": "adverb_homophone_zgory_nazustrich_ubik",
+      "prompt": "Маленьке цуценя радісно замахало хвостом і побігло _______ господарю.",
+      "target_token": "назустріч",
+      "correct_answer": "назустріч",
+      "options": [
+        "на-зустріч",
+        "встріч",
+        "назустріч",
+        "на зустріч"
+      ],
+      "distractors": [
+        {
+          "text": "на зустріч",
+          "interference_key": "HOMOPHONE_NOUN_PREP_CONFUSION",
+          "explanation": {
+            "ua": "Прислівник/прийменниковий прислівник напрямку руху (куди? назустріч) пишеться разом per § 41, п. 1; окремо пишеться лише іменник події (іти на зустріч випускників) per § 41, п. 2.",
+            "en": "Directional adverb 'towards' is written together per § 41, p. 1; separate 'на зустріч' refers to an event/meeting per § 41, p. 2."
+          }
+        },
+        {
+          "text": "на-зустріч",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Слово «назустріч» пишеться разом без дефіса per § 41, п. 1.",
+            "en": "Word 'назустріч' is written together without a hyphen per § 41, p. 1."
+          }
+        },
+        {
+          "text": "встріч",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Слово «встріч» є архаїчним або діалектним; у сучасній літературній мові нормативним є «назустріч».",
+            "en": "'Встріч' is dialectal/archaic; standard literary Ukrainian uses 'назустріч'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, пп. 1, 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівники напрямку пишуться разом per § 41, п. 1 (згори вниз, бігти назустріч, відійти вбік), тоді як сполуки прийменника з іменником за наявності залежних слів пишуться окремо per § 41, п. 2 (спускатися з високої гори, вирушити на зустріч із друзями, поглянути у правий бік вулиці).",
+        "en": "Directional adverbs are written as one word per § 41, p. 1 (згори, назустріч, вбік), whereas preposition + noun phrases with dependent words are written separately per § 41, p. 2 (з гори, на зустріч, у бік)."
+      }
+    },
+    {
+      "id": "adverb_card_56",
+      "category": "adverb_spelling_separate",
+      "prompt": "Ми, _______, не зможемо взяти участь у завтрашньому семінарі.",
+      "target_token": "на жаль",
+      "correct_answer": "на жаль",
+      "options": [
+        "на-жаль",
+        "к жалю",
+        "на жаль",
+        "нажаль"
+      ],
+      "distractors": [
+        {
+          "text": "нажаль",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Прислівникове сполучення «на жаль» складається з прийменника та іменника й пишеться строго ОКРЕМО per § 41, п. 2; написання разом є поширеною помилкою.",
+            "en": "Phrase 'на жаль' consists of preposition + noun and is written strictly SEPARATELY per § 41, p. 2; fusing is a common error."
+          }
+        },
+        {
+          "text": "на-жаль",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "У сполуці «на жаль» дефіс заборонено; слова пишуться окремо per § 41, п. 2.",
+            "en": "Hyphen is prohibited in 'на жаль'; words are written separately per § 41, p. 2."
+          }
+        },
+        {
+          "text": "к жалю",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «к жалю» є грубою калькою з російської («к сожалению»); нормативне українське вставне сполучення — «на жаль».",
+            "en": "'К жалю' is a Russian calque ('к сожалению'); standard Ukrainian parenthetical phrase is 'на жаль'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 2: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою.",
+        "en": "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 2: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
+      }
+    },
+    {
+      "id": "adverb_card_57",
+      "category": "adverb_spelling_separate",
+      "prompt": "Ця нова інформація, _______, виявилася надзвичайно корисною для нашого звіту.",
+      "target_token": "до речі",
+      "correct_answer": "до речі",
+      "options": [
+        "к речі",
+        "доречі",
+        "до речі",
+        "до-речі"
+      ],
+      "distractors": [
+        {
+          "text": "доречі",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Прислівникове сполучення «до речі» пишеться завжди ОКРЕМО per § 41, п. 2; написання разом є грубою орфографічною помилкою.",
+            "en": "Adverbial phrase 'до речі' is always written SEPARATELY per § 41, p. 2; fusing is an orthographic error."
+          }
+        },
+        {
+          "text": "до-речі",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Сполучення «до речі» пишеться окремо без дефіса per § 41, п. 2.",
+            "en": "Phrase 'до речі' is written separately without a hyphen per § 41, p. 2."
+          }
+        },
+        {
+          "text": "к речі",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «к речі» є калькою з російської («кстати / к слову»); літературна українська норма — «до речі».",
+            "en": "'К речі' is a Russian calque; literary Ukrainian standard is 'до речі'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 2: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою.",
+        "en": "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 2: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
+      }
+    },
+    {
+      "id": "adverb_card_58",
+      "category": "adverb_spelling_separate",
+      "prompt": "Це відкриття, _______, здійснить справжній прорив у сучасній медицині.",
+      "target_token": "без сумніву",
+      "correct_answer": "без сумніву",
+      "options": [
+        "безсумніву",
+        "без-сумніву",
+        "безспорно",
+        "без сумніву"
+      ],
+      "distractors": [
+        {
+          "text": "безсумніву",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Прислівникове сполучення з прийменником «без сумніву» пишеться ОКРЕМО per § 41, п. 2.",
+            "en": "Adverbial prepositional phrase 'без сумніву' is written SEPARATELY per § 41, p. 2."
+          }
+        },
+        {
+          "text": "без-сумніву",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "У сполуці «без сумніву» дефіс не ставиться; слова пишуться окремо per § 41, п. 2.",
+            "en": "No hyphen in 'без сумніву'; words are spelled separately per § 41, p. 2."
+          }
+        },
+        {
+          "text": "безспорно",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Слово «безспорно» є калькою з російської («бесспорно»); нормативні українські вирази — «без сумніву» або «безперечно».",
+            "en": "'Безспорно' is a Russian calque; standard Ukrainian uses 'без сумніву' or 'безперечно'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 2: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою.",
+        "en": "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 2: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
+      }
+    },
+    {
+      "id": "adverb_card_59",
+      "category": "adverb_spelling_separate",
+      "prompt": "Він наполегливо працював над картиною _______ протягом багатьох місяців.",
+      "target_token": "день у день",
+      "correct_answer": "день у день",
+      "options": [
+        "день-у-день",
+        "день удень",
+        "день в день",
+        "день у день"
+      ],
+      "distractors": [
+        {
+          "text": "день-у-день",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Сполучення двох однакових іменників з прийменником між ними пишуться ОКРЕМО per § 41, п. 2 (день у день, раз у раз, сам на сам).",
+            "en": "Repetitions of identical nouns with preposition between them are written SEPARATELY per § 41, p. 2 (день у день, раз у раз)."
+          }
+        },
+        {
+          "text": "день удень",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Обидва іменники пишуться окремо від прийменника: «день у день» per § 41, п. 2.",
+            "en": "Both nouns are written separately from preposition: 'день у день' per § 41, p. 2."
+          }
+        },
+        {
+          "text": "день в день",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Використання прийменника «в» замість «у» між приголосними є порушенням милозвучності та калькою («день в день»); правильно — «день у день».",
+            "en": "Using 'в' instead of 'у' between consonants violates euphony; standard is 'день у день'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 2: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою.",
+        "en": "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 2: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
+      }
+    },
+    {
+      "id": "adverb_card_60",
+      "category": "adverb_spelling_separate",
+      "prompt": "Наприкінці уроку вчитель усміхнувся учням і промовив: «_______!».",
+      "target_token": "до побачення",
+      "correct_answer": "до побачення",
+      "options": [
+        "до-побачення",
+        "до побачення",
+        "давай до побачення",
+        "допобачення"
+      ],
+      "distractors": [
+        {
+          "text": "допобачення",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Етикетний вираз «до побачення» складається з прийменника та віддієслівного іменника й пишеться ОКРЕМО per § 41, п. 2.",
+            "en": "Etiquette formula 'до побачення' consists of preposition + verbal noun and is written SEPARATELY per § 41, p. 2."
+          }
+        },
+        {
+          "text": "до-побачення",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "У виразі «до побачення» дефіс не вживається; слова пишуться окремо per § 41, п. 2.",
+            "en": "Hyphens are not used in 'до побачення'; words are written separately per § 41, p. 2."
+          }
+        },
+        {
+          "text": "давай до побачення",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Зворот «давай до побачення» є розмовним суржиком; нормативна формула прощання — «до побачення» або «на все добре».",
+            "en": "'Давай до побачення' is colloquial Surzhyk; standard farewell is 'до побачення'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 2; СУМ-20",
+      "rule_summary": {
+        "ua": "Прислівникові сполучення, утворені з прийменника та іменника, що зберігають відмінкову самостійність, пишуться окремо per § 41, п. 2: на жаль, до речі, без сумніву, день у день, до побачення. Написання їх разом (*нажаль, *доречі, *допобачення) є грубою помилкою.",
+        "en": "Adverbial expressions consisting of a preposition and a noun that retain grammatical independence are spelled separately per § 41, p. 2: на жаль, до речі, без сумніву, день у день, до побачення. Writing them as single words (*нажаль, *доречі) is an error."
+      }
+    },
+    {
+      "id": "adverb_card_61",
+      "category": "adverb_comparison_synthetic",
+      "prompt": "Новий швидкісний потяг мчить значно _______ за старий приміський автобус.",
+      "target_token": "швидше",
+      "correct_answer": "швидше",
+      "options": [
+        "більш швидше",
+        "самий швидко",
+        "швидкіше",
+        "швидше"
+      ],
+      "distractors": [
+        {
+          "text": "більш швидше",
+          "interference_key": "COMPARATIVE_COMPOUND_CALQUE",
+          "explanation": {
+            "ua": "Поєднання слова «більш» із простою формою вищого ступеня («більш швидше») є грубою граматичною помилкою; слід уживати або просту форму «швидше», або складену «більш швидко» per § 20.",
+            "en": "Combining 'більш' with simple comparative ('більш швидше') is a grammatical error; use either simple 'швидше' or compound 'більш швидко' per § 20."
+          }
+        },
+        {
+          "text": "швидкіше",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Від прикметника «швидкий» нормативна проста форма вищого ступеня утворюється за допомогою суфікса -ше: «швидше», а не -іше per § 20.",
+            "en": "From 'швидкий' standard comparative takes suffix -ше: 'швидше', not -іше per § 20."
+          }
+        },
+        {
+          "text": "самий швидко",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Слово «самий» є калькою з російської; в українській мові ступені порівняння утворюються суфіксами або префіксом най-.",
+            "en": "Word 'самий' is a Russian calque; Ukrainian degrees of comparison are formed via suffixes or prefix най-."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) з чергуванням приголосних per § 20 або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим.",
+        "en": "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) with consonant changes per § 20 or suppletively (краще, гірше). Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
+      }
+    },
+    {
+      "id": "adverb_card_62",
+      "category": "adverb_comparison_synthetic",
+      "prompt": "Завдяки щоденним репетиціям актор зіграв прем'єрну виставу значно _______.",
+      "target_token": "краще",
+      "correct_answer": "краще",
+      "options": [
+        "більш краще",
+        "самий краще",
+        "лучче",
+        "краще"
+      ],
+      "distractors": [
+        {
+          "text": "більш краще",
+          "interference_key": "COMPARATIVE_COMPOUND_CALQUE",
+          "explanation": {
+            "ua": "Поєднання слова «більш» із простою формою вищого ступеня («більш краще») є грубою граматичною помилкою; слід уживати або просту форму «краще», або «більш якісно» per § 20.",
+            "en": "Combining 'більш' with synthetic comparative ('більш краще') is a gross error; use simple 'краще' or 'більш якісно' per § 20."
+          }
+        },
+        {
+          "text": "самий краще",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Конструкція зі словом «самий» є суржиком і калькою з російської («самый лучше»); в українській мові вживають суплетивну форму «краще» або «найкраще».",
+            "en": "Using 'самий' is Russian calque ('самый лучше'); Ukrainian uses suppletive 'краще' or superlative 'найкраще'."
+          }
+        },
+        {
+          "text": "лучче",
+          "interference_key": "COMPARATIVE_RUSSIAN_SUFFIX",
+          "explanation": {
+            "ua": "Форма «лучче» є ненормативним просторіччям або суржиком; літературна суплетивна форма — «краще».",
+            "en": "Form 'лучче' is dialectal/Surzhyk; standard literary form is 'краще'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) з чергуванням приголосних per § 20 або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим.",
+        "en": "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) with consonant changes per § 20 or suppletively (краще, гірше). Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
+      }
+    },
+    {
+      "id": "adverb_card_63",
+      "category": "adverb_comparison_synthetic",
+      "prompt": "Хворий проігнорував поради лікаря, тому наступного ранку почувався ще _______.",
+      "target_token": "гірше",
+      "correct_answer": "гірше",
+      "options": [
+        "хужче",
+        "більш гірше",
+        "гірше",
+        "самий гірше"
+      ],
+      "distractors": [
+        {
+          "text": "більш гірше",
+          "interference_key": "COMPARATIVE_COMPOUND_CALQUE",
+          "explanation": {
+            "ua": "Змішування аналітичної та синтетичної форм («більш гірше») суворо заборонено граматикою; правильно — «гірше» per § 20.",
+            "en": "Mixing analytic and synthetic comparative forms ('більш гірше') is prohibited; correct is 'гірше' per § 20."
+          }
+        },
+        {
+          "text": "самий гірше",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Слово «самий» не вживається для ступенювання українських прислівників.",
+            "en": "Word 'самий' is not used for Ukrainian adverb degree comparison."
+          }
+        },
+        {
+          "text": "хужче",
+          "interference_key": "COMPARATIVE_RUSSIAN_SUFFIX",
+          "explanation": {
+            "ua": "Форма «хужче» є суржиком від російського «хуже»; літературний суплетивний вищий ступінь від «погано» — «гірше».",
+            "en": "'Хужче' is Russian interference ('хуже'); literary suppletive comparative from 'погано' is 'гірше'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) з чергуванням приголосних per § 20 або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим.",
+        "en": "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) with consonant changes per § 20 or suppletively (краще, гірше). Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
+      }
+    },
+    {
+      "id": "adverb_card_64",
+      "category": "adverb_comparison_synthetic",
+      "prompt": "Досвідчений аквалангіст обережно занурився _______ у морські глибини.",
+      "target_token": "глибше",
+      "correct_answer": "глибше",
+      "options": [
+        "глибокіше",
+        "самий глибоко",
+        "більш глибше",
+        "глибше"
+      ],
+      "distractors": [
+        {
+          "text": "глибокіше",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "При утворенні вищого ступеня суфікс -ок- випадає: глибокий -> глибше (а не «глибокіше») per § 20.",
+            "en": "In forming the comparative suffix -ок- drops: глибокий -> глибше (not 'глибокіше') per § 20."
+          }
+        },
+        {
+          "text": "більш глибше",
+          "interference_key": "COMPARATIVE_COMPOUND_CALQUE",
+          "explanation": {
+            "ua": "Поєднання «більш» з синтетичною формою «глибше» є плеонастичною граматичною помилкою.",
+            "en": "Combining 'більш' with synthetic 'глибше' is a redundant grammatical error."
+          }
+        },
+        {
+          "text": "самий глибоко",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Кальковане поєднання «самий глибоко» є неприпустимим; нормативна форма — «глибше».",
+            "en": "Calque 'самий глибоко' is unacceptable in Ukrainian; standard comparative is 'глибше'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) з чергуванням приголосних per § 20 або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим.",
+        "en": "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) with consonant changes per § 20 or suppletively (краще, гірше). Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
+      }
+    },
+    {
+      "id": "adverb_card_65",
+      "category": "adverb_comparison_synthetic",
+      "prompt": "Коли засяяло весняне сонце, надворі стало значно _______.",
+      "target_token": "тепліше",
+      "correct_answer": "тепліше",
+      "options": [
+        "тепліше",
+        "більш тепліше",
+        "теплійо",
+        "самий тепліше"
+      ],
+      "distractors": [
+        {
+          "text": "більш тепліше",
+          "interference_key": "COMPARATIVE_COMPOUND_CALQUE",
+          "explanation": {
+            "ua": "Змішування слова «більш» з формою вищого ступеня («більш тепліше») є помилкою; правильно — «тепліше» per § 20.",
+            "en": "Mixing 'більш' with comparative form ('більш тепліше') is an error; correct is 'тепліше' per § 20."
+          }
+        },
+        {
+          "text": "теплійо",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Такої форми в українській мові немає; вищий ступінь від «тепло» утворюється суфіксом -іше: «тепліше» per § 20.",
+            "en": "Such a form does not exist; comparative from 'тепло' takes suffix -іше: 'тепліше' per § 20."
+          }
+        },
+        {
+          "text": "самий тепліше",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Калька з російської; слово «самий» для вираження порівняння не вживається.",
+            "en": "Russian calque; word 'самий' is not used for comparison."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 20; Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Вищий ступінь порівняння якісних прислівників на -о, -е утворюється за допомогою суфіксів -ше, -іше (швидко -> швидше, тепло -> тепліше, глибоко -> глибше) з чергуванням приголосних per § 20 або суплетивно (добре/гарно -> краще, погано -> гірше). Змішування слів 'більш' із синтетичною формою (*більш краще) є неприпустимим.",
+        "en": "The comparative degree of qualitative adverbs ending in -о, -е is formed synthetically with suffixes -ше, -іше (швидше, тепліше, глибше) with consonant changes per § 20 or suppletively (краще, гірше). Mixing 'більш' with synthetic forms (*більш краще) is grammatically invalid."
+      }
+    },
+    {
+      "id": "adverb_card_66",
+      "category": "adverb_comparison_superlative",
+      "prompt": "Серед усіх конкурсантів вона виконала складну фортепіанну сонату _______.",
+      "target_token": "найкраще",
+      "correct_answer": "найкраще",
+      "options": [
+        "самий краще",
+        "най краще",
+        "най-краще",
+        "найкраще"
+      ],
+      "distractors": [
+        {
+          "text": "самий краще",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Формування найвищого ступеня за допомогою частки «самий» («самий краще») є грубим суржиком; нормативна українська форма має префікс най-: «найкраще» per § 41, п. 1, 9).",
+            "en": "Forming the superlative with 'самий' is Surzhyk; standard Ukrainian uses prefix най-: 'найкраще' per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "най краще",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Префікс най- у найвищому ступені прислівників завжди пишеться РАЗОМ із словом per § 41, п. 1, 9) (найкраще, найшвидше).",
+            "en": "Prefix най- in superlative adverbs is always written TOGETHER per § 41, p. 1, 9) (найкраще)."
+          }
+        },
+        {
+          "text": "най-краще",
+          "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
+          "explanation": {
+            "ua": "Префікс най- приєднується без дефіса; написання разом є обов'язковим per § 41, п. 1, 9).",
+            "en": "Prefix най- attaches without a hyphen; fused spelling is mandatory per § 41, p. 1, 9)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+      }
+    },
+    {
+      "id": "adverb_card_67",
+      "category": "adverb_comparison_superlative",
+      "prompt": "Керівник попросив команду передати термінові документи замовнику _______.",
+      "target_token": "якнайшвидше",
+      "correct_answer": "якнайшвидше",
+      "options": [
+        "як-найшвидше",
+        "якнайшвидше",
+        "самий швидше",
+        "як найшвидше"
+      ],
+      "distractors": [
+        {
+          "text": "як найшвидше",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Підсилювальні частки як- та що- у складі найвищого ступеня порівняння пишуться РАЗОМ per § 41, п. 1, 9) (якнайшвидше, щонайдовше).",
+            "en": "Intensifying particles як- and що- in superlatives are written TOGETHER per § 41, p. 1, 9) (якнайшвидше)."
+          }
+        },
+        {
+          "text": "як-найшвидше",
+          "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
+          "explanation": {
+            "ua": "Дефіс між часткою як- і префіксом най- не ставиться; слово пишеться повністю разом per § 41, п. 1, 9).",
+            "en": "No hyphen between particle як- and prefix най-; the word is spelled completely together per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "самий швидше",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Слово «самий» є російською калькою; в українській мові найвищий ступінь утворюється за допомогою префікса най- та підсилення як-: «якнайшвидше» per § 41, п. 1, 9).",
+            "en": "Word 'самий' is a Russian calque; Ukrainian superlatives are formed with prefix най- and intensifier як-: 'якнайшвидше' per § 41, p. 1, 9)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+      }
+    },
+    {
+      "id": "adverb_card_68",
+      "category": "adverb_comparison_superlative",
+      "prompt": "Музейні реставратори намагалися зберегти стародавній манускрипт _______.",
+      "target_token": "щонайдовше",
+      "correct_answer": "щонайдовше",
+      "options": [
+        "щонайдовше",
+        "що найдовше",
+        "що-найдовше",
+        "самий довше"
+      ],
+      "distractors": [
+        {
+          "text": "що найдовше",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Підсилювальна частка що- з формою найвищого ступеня пишеться разом per § 41, п. 1, 9): «щонайдовше».",
+            "en": "Intensifying particle що- with superlative form is written together per § 41, p. 1, 9): 'щонайдовше'."
+          }
+        },
+        {
+          "text": "що-найдовше",
+          "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
+          "explanation": {
+            "ua": "Дефіс після частки що- є помилкою; слово пишеться разом per § 41, п. 1, 9).",
+            "en": "Hyphen after particle що- is an error; the word is spelled together per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "самий довше",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Калька з російської («самый дольше»); нормативна українська мова вимагає префікса най- з підсиленням що-: «щонайдовше» per § 41, п. 1, 9).",
+            "en": "Russian calque ('самый дольше'); standard Ukrainian requires prefix най- with що-: 'щонайдовше' per § 41, p. 1, 9)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+      }
+    },
+    {
+      "id": "adverb_card_69",
+      "category": "adverb_comparison_superlative",
+      "prompt": "Гірський беркут змахнув могутніми крилами й піднявся _______ серед усіх птахів.",
+      "target_token": "найвище",
+      "correct_answer": "найвище",
+      "options": [
+        "найвище",
+        "най вище",
+        "самий вище",
+        "най-вище"
+      ],
+      "distractors": [
+        {
+          "text": "самий вище",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Слово «самий» не використовується для утворення найвищого ступеня; правильно — «найвище» per § 41, п. 1, 9).",
+            "en": "Word 'самий' is not used for superlative formation; correct is 'найвище' per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "най вище",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Префікс най- пишеться разом із прислівником per § 41, п. 1, 9).",
+            "en": "Prefix най- is written together with the adverb per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "най-вище",
+          "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
+          "explanation": {
+            "ua": "Дефіс у префіксі най- заборонений; слово пишеться разом per § 41, п. 1, 9).",
+            "en": "Hyphen in prefix най- is prohibited; it is written as one word per § 41, p. 1, 9)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+      }
+    },
+    {
+      "id": "adverb_card_70",
+      "category": "adverb_comparison_superlative",
+      "prompt": "Перед запуском ракети інженери перевірили кожну деталь двигуна _______.",
+      "target_token": "якнайретельніше",
+      "correct_answer": "якнайретельніше",
+      "options": [
+        "як-найретельніше",
+        "самий ретельно",
+        "якнайретельніше",
+        "як найретельніше"
+      ],
+      "distractors": [
+        {
+          "text": "як найретельніше",
+          "interference_key": "HYPHEN_SEPARATION",
+          "explanation": {
+            "ua": "Частка як- із префіксом най- пишеться разом: «якнайретельніше» per § 41, п. 1, 9).",
+            "en": "Particle як- with prefix най- is written together: 'якнайретельніше' per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "як-найретельніше",
+          "interference_key": "SUPERLATIVE_HYPHEN_ERROR",
+          "explanation": {
+            "ua": "Написання через дефіс є орфографічною помилкою; слово пишеться разом per § 41, п. 1, 9).",
+            "en": "Hyphenated spelling is an orthographic error; the word is written together per § 41, p. 1, 9)."
+          }
+        },
+        {
+          "text": "самий ретельно",
+          "interference_key": "SUPERLATIVE_CALQUE_SAMYI",
+          "explanation": {
+            "ua": "Кальковане поєднання «самий ретельно» є неприпустимим в українській мові; норма — «якнайретельніше» per § 41, п. 1, 9).",
+            "en": "'Самий ретельно' is an unacceptable calque; standard Ukrainian is 'якнайретельніше' per § 41, p. 1, 9)."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019 § 41, п. 1, 9); Академічна граматика; СУМ-20",
+      "rule_summary": {
+        "ua": "Найвищий ступінь порівняння утворюється додаванням префікса най- до форми вищого ступеня (найкраще, найвище). Значення можна посилити частками як-, що-, які пишуться разом per § 41, п. 1, 9): якнайшвидше, щонайдовше. Використання частки 'самий' (*самий краще) є російською калькою.",
+        "en": "The superlative degree is formed by prefixing най- to the comparative form (найкраще, найвище). Intensifying particles як-, що- are attached as single words per § 41, p. 1, 9) (якнайшвидше, щонайдовше). Using 'самий' (*самий краще) is an ungrammatical calque."
+      }
+    },
+    {
+      "id": "adverb_card_71",
+      "category": "adverb_anti_calque",
+      "prompt": "Перед початком зборів слід _______ узгодити порядок денний і регламент.",
+      "target_token": "насамперед",
+      "correct_answer": "насамперед",
+      "options": [
+        "в першу чергу",
+        "на сам перед",
+        "першим ділом",
+        "насамперед"
+      ],
+      "distractors": [
+        {
+          "text": "в першу чергу",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «в першу чергу» є типовою калькою з російської («в первую очередь»); нормативні українські відповідники — «насамперед», «передусім», «найперше».",
+            "en": "'В першу чергу' is a Russian calque ('в первую очередь'); standard Ukrainian equivalents are 'насамперед', 'передусім'."
+          }
+        },
+        {
+          "text": "першим ділом",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Калька з російського «первым делом»; літературною нормою є прислівник «насамперед».",
+            "en": "Calque of Russian 'первым делом'; literary norm is adverb 'насамперед'."
+          }
+        },
+        {
+          "text": "на сам перед",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Прислівник «насамперед» є зрощеним і пишеться разом per § 41, п. 1.",
+            "en": "Adverb 'насамперед' is fused and written together per § 41, p. 1."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019; Антоненко-Давидович «Як ми говоримо»; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'по більшій мірі'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'.",
+        "en": "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *по більшій мірі*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
+      }
+    },
+    {
+      "id": "adverb_card_72",
+      "category": "adverb_anti_calque",
+      "prompt": "Він _______ погодиться на цю невигідну й ризиковану пропозицію.",
+      "target_token": "навряд чи",
+      "correct_answer": "навряд чи",
+      "options": [
+        "навряд чи",
+        "наврядчи",
+        "вряд ли",
+        "навряд-чи"
+      ],
+      "distractors": [
+        {
+          "text": "вряд ли",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Сполука «вряд ли» є прямим російським виразом; нормативний український відповідник — «навряд чи».",
+            "en": "'Вряд ли' is direct Russian vocabulary; standard Ukrainian equivalent is 'навряд чи'."
+          }
+        },
+        {
+          "text": "наврядчи",
+          "interference_key": "UNWARRANTED_FUSION",
+          "explanation": {
+            "ua": "Частка «чи» після прислівника «навряд» пишеться ОКРЕМО: «навряд чи».",
+            "en": "Particle 'чи' after adverb 'навряд' is written SEPARATELY: 'навряд чи'."
+          }
+        },
+        {
+          "text": "навряд-чи",
+          "interference_key": "UNWARRANTED_HYPHEN",
+          "explanation": {
+            "ua": "Частка «чи» не приєднується через дефіс; вона пишеться окремо.",
+            "en": "Particle 'чи' does not attach via hyphen; it is written separately."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019; Антоненко-Давидович «Як ми говоримо»; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'по більшій мірі'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'.",
+        "en": "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *по більшій мірі*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
+      }
+    },
+    {
+      "id": "adverb_card_73",
+      "category": "adverb_anti_calque",
+      "prompt": "Учасники наукового круглого столу спілкувалися _______ українською мовою.",
+      "target_token": "переважно",
+      "correct_answer": "переважно",
+      "options": [
+        "по більшій мірі",
+        "главним образом",
+        "переважно",
+        "по-переважно"
+      ],
+      "distractors": [
+        {
+          "text": "по-переважно",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «по-переважно» є штучною та ненормативною; якісно-означальний прислівник вживається без префікса: «переважно» per § 41, п. 1.",
+            "en": "The form 'по-переважно' is artificial and non-normative; the qualitative adverb is used without a prefix: 'переважно' per § 41, p. 1."
+          }
+        },
+        {
+          "text": "по більшій мірі",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Калька з російського «по большей части / мере»; правильно — «переважно» або «здебільшого».",
+            "en": "Calque of Russian 'по большей части'; correct is 'переважно' or 'здебільшого'."
+          }
+        },
+        {
+          "text": "главним образом",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Грубий суржик від російського «главным образом»; нормативне слово — «переважно».",
+            "en": "Gross Surzhyk from Russian 'главным образом'; standard Ukrainian word is 'переважно'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019; Антоненко-Давидович «Як ми говоримо»; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'по більшій мірі'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'.",
+        "en": "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *по більшій мірі*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
+      }
+    },
+    {
+      "id": "adverb_card_74",
+      "category": "adverb_anti_calque",
+      "prompt": "Ти повинен уважно прочитати й законспектувати _______ перший розділ підручника.",
+      "target_token": "принаймні",
+      "correct_answer": "принаймні",
+      "options": [
+        "по крайній мірі",
+        "принаймі",
+        "при наймні",
+        "принаймні"
+      ],
+      "distractors": [
+        {
+          "text": "по крайній мірі",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «по крайній мірі» є поширеною калькою з російської («по крайней мере»); нормативні українські слова — «принаймні», «щонайменше», «хоча б».",
+            "en": "'По крайній мірі' is a common Russian calque ('по крайней мере'); standard Ukrainian words are 'принаймні', 'щонайменше'."
+          }
+        },
+        {
+          "text": "при наймні",
+          "interference_key": "UNWARRANTED_SEPARATION",
+          "explanation": {
+            "ua": "Слово «принаймні» є цілісним прислівником і пишеться разом.",
+            "en": "Word 'принаймні' is an integral adverb and is written as one word."
+          }
+        },
+        {
+          "text": "принаймі",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Форма «принаймі» без літери «н» є орфографічною помилкою; правильне написання — «принаймні».",
+            "en": "Form 'принаймі' lacking letter 'н' is an orthographic error; correct spelling is 'принаймні'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019; Антоненко-Давидович «Як ми говоримо»; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'по більшій мірі'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'.",
+        "en": "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *по більшій мірі*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
+      }
+    },
+    {
+      "id": "adverb_card_75",
+      "category": "adverb_anti_calque",
+      "prompt": "Якщо потяг затримається, _______ ми візьмемо таксі на вокзалі.",
+      "target_token": "у крайньому разі",
+      "correct_answer": "у крайньому разі",
+      "options": [
+        "по-крайньому",
+        "в крайньому випадку",
+        "у крайньому разі",
+        "на крайній случай"
+      ],
+      "distractors": [
+        {
+          "text": "в крайньому випадку",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Словосполучення «в крайньому випадку» є калькою з російської («в крайнем случае»); літературною нормою для вираження вибору за крайніх обставин є «у крайньому разі».",
+            "en": "'В крайньому випадку' is a Russian calque ('в крайнем случае'); the literary standard for last-resort choice is 'у крайньому разі'."
+          }
+        },
+        {
+          "text": "на крайній случай",
+          "interference_key": "RUSSIANISM_CALQUE",
+          "explanation": {
+            "ua": "Вираз «на крайній случай» є суржиком із російським коренем «случай»; нормативний український зворот — «у крайньому разі».",
+            "en": "'На крайній случай' is Surzhyk with the Russian root 'случай'; standard Ukrainian uses 'у крайньому разі'."
+          }
+        },
+        {
+          "text": "по-крайньому",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
+          "explanation": {
+            "ua": "Штучна форма «по-крайньому» не існує в українській мові; прислівниковий зворот крайньої можливості вживається окремо: «у крайньому разі».",
+            "en": "The artificial form 'по-крайньому' does not exist in Ukrainian; the adverbial phrase of last resort is 'у крайньому разі'."
+          }
+        }
+      ],
+      "rule_citation": "Правопис 2019; Антоненко-Давидович «Як ми говоримо»; СУМ-20",
+      "rule_summary": {
+        "ua": "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'по більшій мірі'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'.",
+        "en": "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *по більшій мірі*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
+      }
+    }
+  ]
+}

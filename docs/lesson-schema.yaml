@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 68859923105fbf46b7b9b7e93b9c9120ee9cb992cdd5aa4076ef9433b943eb9c
+  components_sha256: 9988014c029a04333f60f46b9d8fa3d5f33992cc8311fd382b071641f4236de1
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -289,6 +289,54 @@ components:
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
+  CoursesTrack:
+    tab: lesson
+    level_scope: &id001
+    - a1
+    - a2
+    - b1
+    - b2
+    - c1
+    - c2
+    - hist
+    - bio
+    - istorio
+    - lit
+    - folk
+    - oes
+    - ruth
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      - name: onSelectZnoDeck
+        type: '(deckId: string) => void'
+        description: onSelectZnoDeck prop.
+        ukrainian_text: 'false'
+      - name: onSelectCulturePractice
+        type: () => void
+        description: onSelectCulturePractice prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: onHoverZnoDeck
+        type: '(deckId: string | null) => void'
+        description: onHoverZnoDeck prop.
+        ukrainian_text: 'false'
+      - name: onHoverCultureDeck
+        type: '(hovered: boolean) => void'
+        description: onHoverCultureDeck prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      chromeLocale: <'uk' | 'en'>
+      onSelectZnoDeck: '<(deckId: string) => void>'
+      onSelectCulturePractice: <() => void>
+    deprecated: false
+    deprecation_reason: null
   CriticalAnalysis:
     tab: activities
     level_scope:
@@ -488,20 +536,7 @@ components:
     deprecation_reason: null
   DialogueBox:
     tab: lesson
-    level_scope: &id001
-    - a1
-    - a2
-    - b1
-    - b2
-    - c1
-    - c2
-    - hist
-    - bio
-    - istorio
-    - lit
-    - folk
-    - oes
-    - ruth
+    level_scope: *id001
     activity_type: null
     placement: n/a
     props:
@@ -915,6 +950,36 @@ components:
       instruction: Приклад
     deprecated: false
     deprecation_reason: null
+  GrammarTrack:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      - name: onSelectMechanicsMode
+        type: '(pos: MechanicsPosKey) => void'
+        description: onSelectMechanicsMode prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: renderBaseModeCard
+        type: '(mode: PracticeModeFilter) => ReactNode'
+        description: renderBaseModeCard prop.
+        ukrainian_text: 'false'
+      - name: caseSelectorNode
+        type: ReactNode
+        description: caseSelectorNode prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      chromeLocale: <'uk' | 'en'>
+      onSelectMechanicsMode: '<(pos: MechanicsPosKey) => void>'
+    deprecated: false
+    deprecation_reason: null
   GroupSort:
     tab: activities
     level_scope:
@@ -1277,6 +1342,38 @@ components:
       pairs:
       - <MatchPair>
       instruction: <ReactNode>
+    deprecated: false
+    deprecation_reason: null
+  MechanicsPractice:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: meta
+        type: MechanicsDeckMeta
+        description: meta prop.
+        ukrainian_text: 'false'
+      - name: cards
+        type: NormalizedMechanicsCard[]
+        description: cards prop.
+        ukrainian_text: 'false'
+      - name: onBackToTracks
+        type: () => void
+        description: onBackToTracks prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      meta: <MechanicsDeckMeta>
+      cards:
+      - <NormalizedMechanicsCard>
+      onBackToTracks: <() => void>
     deprecated: false
     deprecation_reason: null
   MotifFormula:
@@ -1827,6 +1924,84 @@ components:
       chromeLocale: <ChromeLocale>
     deprecated: false
     deprecation_reason: null
+  PracticeHeader:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: currentLevel
+        type: CefrLevel
+        description: currentLevel prop.
+        ukrainian_text: 'false'
+      - name: onSelectLevel
+        type: '(level: CefrLevel) => void'
+        description: onSelectLevel prop.
+        ukrainian_text: 'false'
+      - name: streakDays
+        type: number
+        description: streakDays prop.
+        ukrainian_text: 'false'
+      - name: dueTodayCount
+        type: number
+        description: dueTodayCount prop.
+        ukrainian_text: 'false'
+      - name: newCardsDueCount
+        type: number
+        description: newCardsDueCount prop.
+        ukrainian_text: 'false'
+      - name: hasActiveSnapshot
+        type: boolean
+        description: hasActiveSnapshot prop.
+        ukrainian_text: 'false'
+      - name: onStartSession
+        type: () => void
+        description: onStartSession prop.
+        ukrainian_text: 'false'
+      - name: onRestartSession
+        type: () => void
+        description: onRestartSession prop.
+        ukrainian_text: 'false'
+      - name: onOpenSettings
+        type: () => void
+        description: onOpenSettings prop.
+        ukrainian_text: 'false'
+      - name: activeDeckLabel
+        type: string
+        description: activeDeckLabel prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: activeDeckItemCount
+        type: number
+        description: activeDeckItemCount prop.
+        ukrainian_text: 'false'
+      - name: dailyDeckNode
+        type: ReactNode
+        description: dailyDeckNode prop.
+        ukrainian_text: 'false'
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      - name: loading
+        type: boolean
+        description: loading prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      currentLevel: <CefrLevel>
+      onSelectLevel: '<(level: CefrLevel) => void>'
+      streakDays: 1
+      dueTodayCount: 1
+      newCardsDueCount: 1
+      hasActiveSnapshot: false
+      onStartSession: <() => void>
+      onRestartSession: <() => void>
+      onOpenSettings: <() => void>
+      activeDeckLabel: Приклад
+    deprecated: false
+    deprecation_reason: null
   PracticeSessionSummary:
     tab: lesson
     level_scope: *id001
@@ -2216,6 +2391,83 @@ components:
       instruction: Приклад
     deprecated: true
     deprecation_reason: Deprecated; subsumed by mark-the-words.
+  SettingsDrawer:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: isOpen
+        type: boolean
+        description: isOpen prop.
+        ukrainian_text: 'false'
+      - name: onClose
+        type: () => void
+        description: onClose prop.
+        ukrainian_text: 'false'
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      - name: isDriveConfigured
+        type: boolean
+        description: isDriveConfigured prop.
+        ukrainian_text: 'false'
+      - name: isDriveSyncing
+        type: boolean
+        description: isDriveSyncing prop.
+        ukrainian_text: 'false'
+      - name: driveSyncMsg
+        type: string | null
+        description: driveSyncMsg prop.
+        ukrainian_text: 'false'
+      - name: onGoogleDriveSync
+        type: () => void
+        description: onGoogleDriveSync prop.
+        ukrainian_text: 'false'
+      - name: selectedDeckFilter
+        type: string
+        description: selectedDeckFilter prop.
+        ukrainian_text: 'false'
+      - name: learnerLevel
+        type: string
+        description: learnerLevel prop.
+        ukrainian_text: 'false'
+      - name: customSets
+        type: CustomSet[]
+        description: customSets prop.
+        ukrainian_text: 'false'
+      - name: onRequestDeckSwitch
+        type: '(id: string) => void'
+        description: onRequestDeckSwitch prop.
+        ukrainian_text: 'false'
+      - name: onOpenCustomDeckManager
+        type: () => void
+        description: onOpenCustomDeckManager prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: secondaryToolsRef
+        type: RefObject<HTMLDetailsElement | null>
+        description: secondaryToolsRef prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      isOpen: false
+      onClose: <() => void>
+      chromeLocale: <'uk' | 'en'>
+      isDriveConfigured: false
+      isDriveSyncing: false
+      driveSyncMsg: <string | null>
+      onGoogleDriveSync: <() => void>
+      selectedDeckFilter: Приклад
+      learnerLevel: Приклад
+      customSets:
+      - <CustomSet>
+      onRequestDeckSwitch: '<(id: string) => void>'
+      onOpenCustomDeckManager: <() => void>
+    deprecated: false
+    deprecation_reason: null
   SourceBox:
     tab: resources
     level_scope: *id001
@@ -2704,6 +2956,39 @@ components:
       words:
       - <VocabEntry>
       title: Приклад
+    deprecated: false
+    deprecation_reason: null
+  VocabularyTrack:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+      - name: weakChips
+        type: WeakArea[]
+        description: weakChips prop.
+        ukrainian_text: 'false'
+      - name: onStartWeakAreaFocus
+        type: '(weakness: WeakArea) => void'
+        description: onStartWeakAreaFocus prop.
+        ukrainian_text: 'false'
+      - name: renderModeCard
+        type: '(mode: PracticeModeFilter, isRecommended?: boolean) => ReactNode'
+        description: renderModeCard prop.
+        ukrainian_text: 'false'
+      optional: []
+    nested_types: {}
+    example:
+      chromeLocale: <'uk' | 'en'>
+      weakChips:
+      - <WeakArea>
+      onStartWeakAreaFocus: '<(weakness: WeakArea) => void>'
+      renderModeCard: '<(mode: PracticeModeFilter, isRecommended?: boolean) => ReactNode>'
     deprecated: false
     deprecation_reason: null
   WatchAndRepeat:

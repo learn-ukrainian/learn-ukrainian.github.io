@@ -1,0 +1,3518 @@
+{
+  "version": "1.0.0",
+  "title": "Ukrainian Adjective Deep Mechanics Deck (Прикметник)",
+  "description": "Comprehensive practice deck for degrees of comparison, soft/hard declension, and possessive formation grounded in Ukrainian Pravopys 2019 §§ 22, 106–114.",
+  "card_count": 78,
+  "cards": [
+    {
+      "card_id": "adj_comp_zhch_dorohyi_nom",
+      "category": "comp_synthetic_mutation_zhch",
+      "cefr_level": "B1",
+      "prompt_sentence": "Цей сучасний ноутбук виявився набагато ___, ніж ми розраховували.",
+      "blank_target": "дорожчим",
+      "correct_answer": "дорожчим",
+      "options": [
+        "дорогшим",
+        "дорожчим",
+        "дорожійшим",
+        "дорожшим"
+      ],
+      "distractors": [
+        {
+          "text": "дорогшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "дорожшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "дорожійшим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Приголосний г разом із суфіксом -ш- чергується на -жч-: дорогий -> дорожчий (в орудному: дорожчим).",
+        "en": "Stem consonant h fuses with suffix -sh- into -zhch-: dorohyi -> dorozhchyi (instrumental: dorozhchym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_zhch_duzhyi_nom",
+      "category": "comp_synthetic_mutation_zhch",
+      "cefr_level": "B1",
+      "prompt_sentence": "Спортсмен повернувся на арену ще ___ та витривалішим.",
+      "blank_target": "дужчим",
+      "correct_answer": "дужчим",
+      "options": [
+        "дужчим",
+        "дужнішим",
+        "дужшим",
+        "дужішим"
+      ],
+      "distractors": [
+        {
+          "text": "дужшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "дужнішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "дужішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Приголосний ж разом із суфіксом -ш- чергується на -жч-: дужий -> дужчий (в орудному: дужчим).",
+        "en": "Stem consonant zh fuses with suffix -sh- into -zhch-: duzhyi -> duzhchyi (instrumental: duzhchym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_zhch_nyzkyi_nom",
+      "category": "comp_synthetic_mutation_zhch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Новий паркан був значно ___, ніж сусідський кам'яний мур.",
+      "blank_target": "нижчий",
+      "correct_answer": "нижчий",
+      "options": [
+        "низькіший",
+        "нижчий",
+        "низший",
+        "нижійшим"
+      ],
+      "distractors": [
+        {
+          "text": "низший",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "низькіший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "нижійшим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику низький суфікс -к- випадає, а з разом із -ш- чергується на -жч-: нижчий.",
+        "en": "In nyzkyi, suffix -k- drops and z + -sh- mutates into -zhch-: nyzhchyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_zhch_vuzkyi_nom",
+      "category": "comp_synthetic_mutation_zhch",
+      "cefr_level": "B1",
+      "prompt_sentence": "Гірська стежка ставала дедалі ___, доки не перетворилася на карниз.",
+      "blank_target": "вужчою",
+      "correct_answer": "вужчою",
+      "options": [
+        "вузшою",
+        "вузькішою",
+        "вужнішою",
+        "вужчою"
+      ],
+      "distractors": [
+        {
+          "text": "вузшою",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "вузькішою",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "вужнішою",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику вузький суфікс -к- випадає, а з + -ш- переходить у -жч-: вужча (в орудному: вужчою).",
+        "en": "In vuzkyi, suffix -k- drops and z + -sh- becomes -zhch-: vuzhcha (instrumental: vuzhchoyu)."
+      }
+    },
+    {
+      "card_id": "adj_comp_zhch_blyzkyi_nom",
+      "category": "comp_synthetic_mutation_zhch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Цей шлях до річки був значно ___, ніж обхідна лісова дорога.",
+      "blank_target": "ближчий",
+      "correct_answer": "ближчий",
+      "options": [
+        "близший",
+        "близькіший",
+        "ближчий",
+        "ближійший"
+      ],
+      "distractors": [
+        {
+          "text": "близший",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "близькіший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "ближійший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику близький суфікс -к- випадає, а з + -ш- чергується на -жч-: ближчий.",
+        "en": "In blyzkyi, suffix -k- drops and z + -sh- mutates into -zhch-: blyzhchyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_zhch_vazhkyi_nom",
+      "category": "comp_synthetic_mutation_zhch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Другий розділ підручника виявився набагато ___, ніж перший.",
+      "blank_target": "важчим",
+      "correct_answer": "важчим",
+      "options": [
+        "важійшим",
+        "важчим",
+        "важкіший",
+        "важшим"
+      ],
+      "distractors": [
+        {
+          "text": "важшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "важкіший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "важійшим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику важкий суфікс -к- випадає, а ж + -ш- переходить у -жч-: важчий (в орудному: важчим).",
+        "en": "In vazhkyi, suffix -k- drops and zh + -sh- becomes -zhch-: vazhchyi (instrumental: vazhchym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_vysokyi_nom",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ця нова вежа значно ___, ніж дзвіниця старого монастиря.",
+      "blank_target": "вища",
+      "correct_answer": "вища",
+      "options": [
+        "вишча",
+        "високіша",
+        "високша",
+        "вища"
+      ],
+      "distractors": [
+        {
+          "text": "високша",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "високіша",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "вишча",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У слові високий суфікс -ок- випадає, а с разом із суфіксом -ш- переходить у -щ- [шч]: вищий, вища.",
+        "en": "In vysokyi, suffix -ok- drops and s + -sh- mutates into -shch-: vyshchyi, vyshcha."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_vysokyi_masc",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Хлопець хотів здаватися значно ___, ніж був насправді.",
+      "blank_target": "вищим",
+      "correct_answer": "вищим",
+      "options": [
+        "високішим",
+        "вишчим",
+        "високшим",
+        "вищим"
+      ],
+      "distractors": [
+        {
+          "text": "високшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "високішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "вишчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику високий кінцевий приголосний с разом із суфіксом -ш- чергується на -щ-: вищий (в орудному: вищим).",
+        "en": "In vysokyi, root consonant s + -sh- mutates into -shch-: vyshchyi (instrumental: vyshchym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_tovstyi_nom",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "B1",
+      "prompt_sentence": "Цей том енциклопедії був набагато ___, ніж академічний довідник.",
+      "blank_target": "товщий",
+      "correct_answer": "товщий",
+      "options": [
+        "товжчий",
+        "товщий",
+        "товщійший",
+        "товстший"
+      ],
+      "distractors": [
+        {
+          "text": "товстший",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "товжчий",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "товщійший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- чергуються на -щ-: товщий.",
+        "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshchyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_tovstyi_fem",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "B1",
+      "prompt_sentence": "Зимова куртка виявилася значно ___, ніж легкий плащ.",
+      "blank_target": "товща",
+      "correct_answer": "товща",
+      "options": [
+        "товстша",
+        "товща",
+        "товщійша",
+        "товжча"
+      ],
+      "distractors": [
+        {
+          "text": "товстша",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "товжча",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "товщійша",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "У прикметнику товстий кінцеві ст разом із суфіксом -ш- переходять у -щ-: товща (жіночий рід).",
+        "en": "In tovstyi, final st + -sh- mutates into -shch-: tovshcha (feminine)."
+      }
+    },
+    {
+      "card_id": "adj_comp_shch_krashchyi_inst",
+      "category": "comp_synthetic_mutation_shch",
+      "cefr_level": "A2",
+      "prompt_sentence": "Кожен новий проєкт ставав значно ___ результатом тривалої праці.",
+      "blank_target": "кращим",
+      "correct_answer": "кращим",
+      "options": [
+        "красшим",
+        "красішим",
+        "кращим",
+        "кражчим"
+      ],
+      "distractors": [
+        {
+          "text": "красшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "красішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "кражчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Форма вищого ступеня кращий містить історичне чергування з суфіксом -ш-, що перейшов у -щ-: кращий (в орудному: кращим).",
+        "en": "The comparative form krashchyi features historical mutation yielding -shch-: krashchyi (instrumental: krashchym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_dropk_shvydkyi_inst",
+      "category": "comp_synthetic_sh_dropping_k",
+      "cefr_level": "A2",
+      "prompt_sentence": "Сучасний експрес є значно ___ транспортом, ніж звичайний автобус.",
+      "blank_target": "швидшим",
+      "correct_answer": "швидшим",
+      "options": [
+        "швидкшим",
+        "швидшим",
+        "швидкішим",
+        "швиджчим"
+      ],
+      "distractors": [
+        {
+          "text": "швидкшим",
+          "interference_type": "false_sh_dropping_k_missing_drop",
+          "explanation": {
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
+          }
+        },
+        {
+          "text": "швидкішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "швиджчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "У слові швидкий випадає суфікс -к- і додається суфікс -ш-: швидший (в орудному: швидшим, а не *швидкшим).",
+        "en": "In shvydkyi, suffix -k- drops before comparative suffix -sh-: shvydshyi (instrumental: shvydshym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_dropk_shyrokyi_inst",
+      "category": "comp_synthetic_sh_dropping_k",
+      "cefr_level": "A2",
+      "prompt_sentence": "Внизу за поворотом річище ставало набагато ___.",
+      "blank_target": "ширшим",
+      "correct_answer": "ширшим",
+      "options": [
+        "ширшим",
+        "широкшим",
+        "ширжчим",
+        "широкішим"
+      ],
+      "distractors": [
+        {
+          "text": "широкшим",
+          "interference_type": "false_sh_dropping_k_missing_drop",
+          "explanation": {
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
+          }
+        },
+        {
+          "text": "широкішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "ширжчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "У слові широкий випадає суфікс -ок- і додається суфікс -ш-: ширший (в орудному: ширшим, а не *широкшим).",
+        "en": "In shyrokyi, suffix -ok- drops before suffix -sh-: shyrshyi (instrumental: shyrshym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_dropk_hlybokyi_inst",
+      "category": "comp_synthetic_sh_dropping_k",
+      "cefr_level": "B1",
+      "prompt_sentence": "У центрі затоки озеро виявилося значно ___.",
+      "blank_target": "глибшим",
+      "correct_answer": "глибшим",
+      "options": [
+        "глибокшим",
+        "глибшим",
+        "глибжчим",
+        "глибокішим"
+      ],
+      "distractors": [
+        {
+          "text": "глибокшим",
+          "interference_type": "false_sh_dropping_k_missing_drop",
+          "explanation": {
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
+          }
+        },
+        {
+          "text": "глибокішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "глибжчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "У слові глибокий суфікс -ок- випадає перед суфіксом -ш-: глибший (в орудному: глибшим, а не *глибокшим).",
+        "en": "In hlybokyi, suffix -ok- drops before suffix -sh-: hlybshyi (instrumental: hlybshym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_dropk_korotkyi_nom",
+      "category": "comp_synthetic_sh_dropping_k",
+      "cefr_level": "A2",
+      "prompt_sentence": "У грудні світловий день стає значно ___, ніж у листопаді.",
+      "blank_target": "коротший",
+      "correct_answer": "коротший",
+      "options": [
+        "короткший",
+        "коротший",
+        "корожчий",
+        "короткіший"
+      ],
+      "distractors": [
+        {
+          "text": "короткший",
+          "interference_type": "false_sh_dropping_k_missing_drop",
+          "explanation": {
+            "ua": "Помилка при творенні вищого ступеня за допомогою суфікса -ш-. Суфікси -к-, -ок- при цьому обов'язково випадають (Правопис 2019 § 110, п. 1 а: швидкий -> швидший, широкий -> ширший, глибокий -> глибший, а не *швидкший чи *широкший).",
+            "en": "Suffix dropping error: suffixes -k- and -ok- strictly drop before comparative suffix -sh- (Pravopys 2019 § 110, item 1 a: shvydkyi -> shvydshyi, shyrokyi -> shyrshyi, not *shvydkshyi)."
+          }
+        },
+        {
+          "text": "короткіший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "корожчий",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "У прикметнику короткий суфікс -к- випадає перед суфіксом -ш-: коротший (а не *короткший).",
+        "en": "In korotkyi, suffix -k- drops before suffix -sh-: korotshyi (not *korotkshyi)."
+      }
+    },
+    {
+      "card_id": "adj_comp_ish_novyi_nom",
+      "category": "comp_synthetic_ish",
+      "cefr_level": "A1",
+      "prompt_sentence": "Ця модель смартфона є значно ___, ніж попередня серія.",
+      "blank_target": "новішою",
+      "correct_answer": "новішою",
+      "options": [
+        "новжчою",
+        "новшою",
+        "новішою",
+        "новішньою"
+      ],
+      "distractors": [
+        {
+          "text": "новшою",
+          "interference_type": "false_comparative_sh_for_ish",
+          "explanation": {
+            "ua": "Помилкове приєднання суфікса -ш- безпосередньо до основи, яка вимагає нормативного суфікса -іш- (новий -> новіший, теплий -> тепліший).",
+            "en": "Erroneous suffix -sh- attached directly where standard grammar requires -ish- (novishyi, teplishyi)."
+          }
+        },
+        {
+          "text": "новжчою",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "новішньою",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "Прикметник новий утворює вищий ступінь за допомогою суфікса -іш-: новіший (в орудному: новішою).",
+        "en": "The adjective novyi forms the comparative with suffix -ish-: novishyi (instrumental: novishoyu)."
+      }
+    },
+    {
+      "card_id": "adj_comp_ish_teplyi_nom",
+      "category": "comp_synthetic_ish",
+      "cefr_level": "A1",
+      "prompt_sentence": "Сьогоднішній весняний день був набагато ___, ніж учорашній.",
+      "blank_target": "тепліший",
+      "correct_answer": "тепліший",
+      "options": [
+        "тепший",
+        "теплішний",
+        "теплячий",
+        "тепліший"
+      ],
+      "distractors": [
+        {
+          "text": "тепший",
+          "interference_type": "false_comparative_sh_for_ish",
+          "explanation": {
+            "ua": "Помилкове приєднання суфікса -ш- безпосередньо до основи, яка вимагає нормативного суфікса -іш- (новий -> новіший, теплий -> тепліший).",
+            "en": "Erroneous suffix -sh- attached directly where standard grammar requires -ish- (novishyi, teplishyi)."
+          }
+        },
+        {
+          "text": "теплячий",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "теплішний",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "Прикметник теплий приєднує суфікс -іш-: тепліший.",
+        "en": "The adjective teplyi attaches suffix -ish-: teplishyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_ish_rozumnyi_nom",
+      "category": "comp_synthetic_ish",
+      "cefr_level": "B1",
+      "prompt_sentence": "Колеги запропонували значно ___ підхід до автоматизації завдань.",
+      "blank_target": "розумніший",
+      "correct_answer": "розумніший",
+      "options": [
+        "розумнійший",
+        "розумший",
+        "розумніший",
+        "розумнішний"
+      ],
+      "distractors": [
+        {
+          "text": "розумший",
+          "interference_type": "false_comparative_sh_for_ish",
+          "explanation": {
+            "ua": "Помилкове приєднання суфікса -ш- безпосередньо до основи, яка вимагає нормативного суфікса -іш- (новий -> новіший, теплий -> тепліший).",
+            "en": "Erroneous suffix -sh- attached directly where standard grammar requires -ish- (novishyi, teplishyi)."
+          }
+        },
+        {
+          "text": "розумнішний",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "розумнійший",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "Прикметники з основою на групу приголосних утворюють вищий ступінь лише на -іш-: розумніший.",
+        "en": "Adjectives with stems ending in consonant clusters form comparatives strictly with -ish-: rozumnishyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_ish_harnyi_nom",
+      "category": "comp_synthetic_ish",
+      "cefr_level": "A2",
+      "prompt_sentence": "Вишитий рушник здався мені ще ___, коли я роздивився візерунок.",
+      "blank_target": "гарнішим",
+      "correct_answer": "гарнішим",
+      "options": [
+        "гарнійшим",
+        "гарнішим",
+        "гарнішним",
+        "гарншим"
+      ],
+      "distractors": [
+        {
+          "text": "гарншим",
+          "interference_type": "false_comparative_sh_for_ish",
+          "explanation": {
+            "ua": "Помилкове приєднання суфікса -ш- безпосередньо до основи, яка вимагає нормативного суфікса -іш- (новий -> новіший, теплий -> тепліший).",
+            "en": "Erroneous suffix -sh- attached directly where standard grammar requires -ish- (novishyi, teplishyi)."
+          }
+        },
+        {
+          "text": "гарнійшим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "гарнішним",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "Прикметник гарний утворює вищий ступінь за допомогою суфікса -іш-: гарніший (в орудному: гарнішим).",
+        "en": "The adjective harnyi forms comparative with suffix -ish-: harnishyi (instrumental: harnishym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_ish_sylnyi_nom",
+      "category": "comp_synthetic_ish",
+      "cefr_level": "A2",
+      "prompt_sentence": "Порив вітру в степу став ще ___ та різкішим.",
+      "blank_target": "сильнішим",
+      "correct_answer": "сильнішим",
+      "options": [
+        "сильнійшим",
+        "сильнішним",
+        "сильншим",
+        "сильнішим"
+      ],
+      "distractors": [
+        {
+          "text": "сильншим",
+          "interference_type": "false_comparative_sh_for_ish",
+          "explanation": {
+            "ua": "Помилкове приєднання суфікса -ш- безпосередньо до основи, яка вимагає нормативного суфікса -іш- (новий -> новіший, теплий -> тепліший).",
+            "en": "Erroneous suffix -sh- attached directly where standard grammar requires -ish- (novishyi, teplishyi)."
+          }
+        },
+        {
+          "text": "сильнійшим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        },
+        {
+          "text": "сильнішним",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "Прикметник сильний утворює форму вищого ступеня за допомогою суфікса -іш-: сильніший.",
+        "en": "The adjective sylnyi attaches suffix -ish- for the comparative: sylnishyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_ish_svizhyi_nom",
+      "category": "comp_synthetic_ish",
+      "cefr_level": "B1",
+      "prompt_sentence": "Після нічної грози повітря в лісі стало набагато ___.",
+      "blank_target": "свіжішим",
+      "correct_answer": "свіжішим",
+      "options": [
+        "свіжнішим",
+        "свіжчим",
+        "свіжшим",
+        "свіжішим"
+      ],
+      "distractors": [
+        {
+          "text": "свіжшим",
+          "interference_type": "false_comparative_sh_for_ish",
+          "explanation": {
+            "ua": "Помилкове приєднання суфікса -ш- безпосередньо до основи, яка вимагає нормативного суфікса -іш- (новий -> новіший, теплий -> тепліший).",
+            "en": "Erroneous suffix -sh- attached directly where standard grammar requires -ish- (novishyi, teplishyi)."
+          }
+        },
+        {
+          "text": "свіжчим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        },
+        {
+          "text": "свіжнішим",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (а)",
+      "rule_summary": {
+        "ua": "Прикметник свіжий утворює вищий ступінь за допомогою суфікса -іш-: свіжіший (в орудному: свіжішим).",
+        "en": "The adjective svizhyi forms the comparative with suffix -ish-: svizhishyi (instrumental: svizhishym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_supp_velykyi_nom",
+      "category": "comp_suppletive",
+      "cefr_level": "A1",
+      "prompt_sentence": "Нова квартира виявилася значно ___, ніж стара однокімнатна.",
+      "blank_target": "більшою",
+      "correct_answer": "більшою",
+      "options": [
+        "більшою",
+        "найвеликішою",
+        "великішою",
+        "великшою"
+      ],
+      "distractors": [
+        {
+          "text": "великішою",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "великшою",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "найвеликішою",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (в)",
+      "rule_summary": {
+        "ua": "Прикметник великий має суплетивну форму вищого ступеня більший (ж.р. більша, в орудному: більшою).",
+        "en": "The adjective velykyi forms comparative from suppletive stem bilshyi (fem. instrumental: bilshoyu)."
+      }
+    },
+    {
+      "card_id": "adj_comp_supp_malyi_nom",
+      "category": "comp_suppletive",
+      "cefr_level": "A1",
+      "prompt_sentence": "Діаметр цього гвинта був на кілька міліметрів ___ за потрібний.",
+      "blank_target": "меншим",
+      "correct_answer": "меншим",
+      "options": [
+        "маленькішим",
+        "малішим",
+        "малішним",
+        "меншим"
+      ],
+      "distractors": [
+        {
+          "text": "малішим",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "маленькішим",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "малішним",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (в)",
+      "rule_summary": {
+        "ua": "Прикметник малий має суплетивну форму вищого ступеня менший (в орудному: меншим).",
+        "en": "The adjective malyi forms comparative from suppletive stem menshyi (instrumental: menshym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_supp_pohanyi_nom",
+      "category": "comp_suppletive",
+      "cefr_level": "A2",
+      "prompt_sentence": "Погода восени стала ще ___, ніж була минулого тижня.",
+      "blank_target": "гіршою",
+      "correct_answer": "гіршою",
+      "options": [
+        "гіршішою",
+        "гіршою",
+        "поганішною",
+        "поганійшою"
+      ],
+      "distractors": [
+        {
+          "text": "поганішною",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "поганійшою",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "гіршішою",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (в)",
+      "rule_summary": {
+        "ua": "Прикметник поганий утворює вищий ступінь від іншої основи: гірший (ж.р. гірша, в орудному: гіршою).",
+        "en": "The adjective pohanyi forms comparative suppletively: hirshyi (fem. instrumental: hirshoyu)."
+      }
+    },
+    {
+      "card_id": "adj_comp_supp_dobryi_nom",
+      "category": "comp_suppletive",
+      "cefr_level": "A1",
+      "prompt_sentence": "Новий запропонований варіант видається нам набагато ___.",
+      "blank_target": "кращим",
+      "correct_answer": "кращим",
+      "options": [
+        "добрішним",
+        "кращим",
+        "добршим",
+        "хорошішим"
+      ],
+      "distractors": [
+        {
+          "text": "добршим",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "хорошішим",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "добрішним",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (в)",
+      "rule_summary": {
+        "ua": "Прикметники добрий і хороший мають суплетивні форми вищого ступеня кращий та ліпший.",
+        "en": "Adjectives dobryi and khoroshyi form suppletive comparatives: krashchyi and lipshyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_supp_lipshyi_gen",
+      "category": "comp_suppletive",
+      "cefr_level": "B1",
+      "prompt_sentence": "У цій складній ситуації годі було знайти ___ порадника, ніж дідусь.",
+      "blank_target": "ліпшого",
+      "correct_answer": "ліпшого",
+      "options": [
+        "хорошішого",
+        "добршого",
+        "ліпшого",
+        "ліпнішого"
+      ],
+      "distractors": [
+        {
+          "text": "добршого",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "хорошішого",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        },
+        {
+          "text": "ліпнішого",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 1 (в)",
+      "rule_summary": {
+        "ua": "Суплетивна форма ліпший у родовому відмінку однини має закінчення -ого: ліпшого.",
+        "en": "The suppletive comparative lipshyi takes genitive singular ending -oho: lipshoho."
+      }
+    },
+    {
+      "card_id": "adj_comp_anal_zruchnyi",
+      "category": "comp_analytic_formation",
+      "cefr_level": "B1",
+      "prompt_sentence": "Новий графік руху поїздів є ___ для більшості пасажирів.",
+      "blank_target": "більш зручним",
+      "correct_answer": "більш зручним",
+      "options": [
+        "найбільш зручнішим",
+        "більш зручним",
+        "більш зручнішим",
+        "саме зручним"
+      ],
+      "distractors": [
+        {
+          "text": "більш зручнішим",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        },
+        {
+          "text": "саме зручним",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найбільш зручнішим",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 2",
+      "rule_summary": {
+        "ua": "Складена форма вищого ступеня утворюється за допомогою слів більш/менш і початкової форми прикметника.",
+        "en": "The analytic comparative is formed using 'bilsh/mensh' + the positive base form of the adjective."
+      }
+    },
+    {
+      "card_id": "adj_comp_anal_dostupnyi",
+      "category": "comp_analytic_formation",
+      "cefr_level": "B1",
+      "prompt_sentence": "У віддалених селах цей вид медичних послуг є ___ для населення.",
+      "blank_target": "менш доступним",
+      "correct_answer": "менш доступним",
+      "options": [
+        "менш доступним",
+        "менш доступнішим",
+        "самим доступним",
+        "найменш доступнішим"
+      ],
+      "distractors": [
+        {
+          "text": "менш доступнішим",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        },
+        {
+          "text": "найменш доступнішим",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        },
+        {
+          "text": "самим доступним",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 2",
+      "rule_summary": {
+        "ua": "Складена форма з 'менш' вимагає початкової форми прикметника: менш доступний (в орудному: менш доступним).",
+        "en": "Analytic form with 'mensh' requires positive degree: mensh dostupnyi (instrumental: mensh dostupnym)."
+      }
+    },
+    {
+      "card_id": "adj_comp_anal_dosvidchenyi",
+      "category": "comp_analytic_formation",
+      "cefr_level": "B2",
+      "prompt_sentence": "Керівником проєкту призначили ___ інженера нашого відділу.",
+      "blank_target": "більш досвідченого",
+      "correct_answer": "більш досвідченого",
+      "options": [
+        "більш досвідченішого",
+        "більш досвідченого",
+        "найбільш досвідченішого",
+        "самого досвідченого"
+      ],
+      "distractors": [
+        {
+          "text": "більш досвідченішого",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        },
+        {
+          "text": "самого досвідченого",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найбільш досвідченішого",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 2",
+      "rule_summary": {
+        "ua": "Складена форма утворюється додаванням слова більш до звичайного прикметника: більш досвідчений.",
+        "en": "Analytic comparative is formed by adding 'bilsh' to the positive adjective: bilsh dosvidchenyi."
+      }
+    },
+    {
+      "card_id": "adj_comp_anal_skladnyi",
+      "category": "comp_analytic_formation",
+      "cefr_level": "B1",
+      "prompt_sentence": "Друге математичне завдання виявилося ___ за попереднє.",
+      "blank_target": "менш складним",
+      "correct_answer": "менш складним",
+      "options": [
+        "менш складним",
+        "саме складним",
+        "менш складнішим",
+        "найменш складнішим"
+      ],
+      "distractors": [
+        {
+          "text": "менш складнішим",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        },
+        {
+          "text": "саме складним",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найменш складнішим",
+          "interference_type": "false_double_comparative",
+          "explanation": {
+            "ua": "Плеоназм (подвійний вищий ступінь). Не можна поєднувати слова «більш/менш» із простою формою вищого ступеня. Правильно: «більш зручний» або «зручніший», але не «*більш зручніший».",
+            "en": "Pleonastic double comparative error. Do not combine 'bilsh/mensh' with a synthetic comparative. Use either 'bilsh zruchnyi' or 'zruchnishyi', never '*bilsh zruchnishyi'."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110, п. 2",
+      "rule_summary": {
+        "ua": "Слово менш поєднується з початковою формою (складним), а не з вищим ступенем (*складнішим).",
+        "en": "The word 'mensh' combines with the base adjective (skladnym), not a synthetic comparative (*skladnishym)."
+      }
+    },
+    {
+      "card_id": "adj_super_synth_krashchyi_nom",
+      "category": "super_synthetic_prefix",
+      "cefr_level": "A1",
+      "prompt_sentence": "Він здобув звання ___ знавця української історії.",
+      "blank_target": "найкращого",
+      "correct_answer": "найкращого",
+      "options": [
+        "найкраснішого",
+        "самого кращого",
+        "самого доброго",
+        "найкращого"
+      ],
+      "distractors": [
+        {
+          "text": "самого кращого",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "самого доброго",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найкраснішого",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1",
+      "rule_summary": {
+        "ua": "Найвищий ступінь утворюється додаванням префікса най- до форми вищого ступеня: найкращий (родов. відм.: найкращого). Калька зі словом «самий» є ненормативною.",
+        "en": "Superlative is formed by prefixing nay- to comparative: naykrashchyi (genitive: naykrashchoho). Using 'samyi' is an incorrect calque."
+      }
+    },
+    {
+      "card_id": "adj_super_synth_vysokyi_nom",
+      "category": "super_synthetic_prefix",
+      "cefr_level": "A2",
+      "prompt_sentence": "Говерла — це ___ вершина Українських Карпат.",
+      "blank_target": "найвища",
+      "correct_answer": "найвища",
+      "options": [
+        "сама вища",
+        "сама висока",
+        "найвища",
+        "найвисокіша"
+      ],
+      "distractors": [
+        {
+          "text": "сама висока",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "сама вища",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найвисокіша",
+          "interference_type": "false_comparative_ish_for_sh",
+          "explanation": {
+            "ua": "Помилкове вживання суфікса -іш- замість чергування основи з суфіксом -ш-. Суфікс -к- випадає, а кінцевий приголосний зазнає чергування (низький -> нижчий, вузький -> вужчий, високий -> вищий).",
+            "en": "Erroneous suffix -ish- used where suffix -k- drops and stem fuses with -sh- (nyzhchyi, vuzhchyi, vyshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1",
+      "rule_summary": {
+        "ua": "Префікс най- приєднується до форми вищого ступеня (вища): найвища. Конструкції «сама висока/вища» — росіянізми.",
+        "en": "Prefix nay- attaches to comparative (vyshcha): nayvyshcha. Phrases like 'sama vysoka' are calques."
+      }
+    },
+    {
+      "card_id": "adj_super_synth_dorohyi_nom",
+      "category": "super_synthetic_prefix",
+      "cefr_level": "B1",
+      "prompt_sentence": "Спогади дитинства залишилися ___ скарбом у моїй душі.",
+      "blank_target": "найдорожчим",
+      "correct_answer": "найдорожчим",
+      "options": [
+        "найдорогшим",
+        "найдорожчим",
+        "самим дорогим",
+        "самим дорожчим"
+      ],
+      "distractors": [
+        {
+          "text": "самим дорогим",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "самим дорожчим",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найдорогшим",
+          "interference_type": "false_synthetic_missing_mutation",
+          "explanation": {
+            "ua": "Помилка у чергуванні приголосних при творенні вищого ступеня. За Правописом 2019 § 110, приголосні г, ж, з разом із суфіксом -ш- переходять у -жч- (дорожчий, нижчий), а к, с, ст разом із -ш- переходять у -щ- (вищий, товщий).",
+            "en": "Consonant mutation error in comparative formation. Under Pravopys 2019 § 110, stems in h, zh, z + -sh- fuse into -zhch- (dorozhchyi, nyzhchyi), and k, s, st + -sh- fuse into -shch- (vyshchyi, tovshchyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1",
+      "rule_summary": {
+        "ua": "Форма найдорожчий твориться префіксом най- від вищого ступеня дорожчий.",
+        "en": "The form naydorozhchyi is built by adding prefix nay- to the comparative dorozhchyi."
+      }
+    },
+    {
+      "card_id": "adj_super_synth_velykyi_nom",
+      "category": "super_synthetic_prefix",
+      "cefr_level": "A1",
+      "prompt_sentence": "Це був ___ успіх вітчизняних науковців за останнє десятиліття.",
+      "blank_target": "найбільший",
+      "correct_answer": "найбільший",
+      "options": [
+        "самий більший",
+        "самий великий",
+        "найвеликіший",
+        "найбільший"
+      ],
+      "distractors": [
+        {
+          "text": "самий великий",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "самий більший",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найвеликіший",
+          "interference_type": "false_suppletive_regularized",
+          "explanation": {
+            "ua": "Помилкова спроба утворити ступінь порівняння від початкової основи замість нормативної суплетивної (великий -> більший, малий -> менший, поганий -> гірший, хороший/добрий -> кращий).",
+            "en": "Attempting regular formation on suppletive adjectives. Ukrainian uses distinct historical stems: velykyi -> bilshyi, malyi -> menshyi, pohanyi -> hirshyi, dobryi/khoroshyi -> krashchyi."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1",
+      "rule_summary": {
+        "ua": "Префікс най- додається до суплетивного вищого ступеня більший: найбільший.",
+        "en": "Prefix nay- attaches to the suppletive comparative bilshyi: naybilshyi."
+      }
+    },
+    {
+      "card_id": "adj_super_synth_vazhlyvyi_inst",
+      "category": "super_synthetic_prefix",
+      "cefr_level": "B1",
+      "prompt_sentence": "Охорона довкілля залишається ___ пріоритетом для громади.",
+      "blank_target": "найважливішим",
+      "correct_answer": "найважливішим",
+      "options": [
+        "найважливішим",
+        "самим важливим",
+        "самим важливішим",
+        "найбільш важливішим"
+      ],
+      "distractors": [
+        {
+          "text": "самим важливим",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "самим важливішим",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найбільш важливішим",
+          "interference_type": "false_superlative_analytic_double",
+          "explanation": {
+            "ua": "Помилкове поєднання слів «найбільш/найменш» із вищим ступенем замість початкової форми прикметника (правильно: найбільш важливий, а не *найбільш важливіший).",
+            "en": "Double superlative error: 'naybilsh/naymensh' must be followed by the positive base form, not the comparative."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1",
+      "rule_summary": {
+        "ua": "Префікс най- у поєднанні з формою важливіший утворює синтетичний найвищий ступінь: найважливіший.",
+        "en": "Prefix nay- combined with vazhlyvishyi forms synthetic superlative: nayvazhlyvishyi."
+      }
+    },
+    {
+      "card_id": "adj_super_synth_menshyi_inst",
+      "category": "super_synthetic_prefix",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми вирішили обрати шлях із ___ опором і перешкодами.",
+      "blank_target": "найменшим",
+      "correct_answer": "найменшим",
+      "options": [
+        "найменш меншим",
+        "самим меншим",
+        "найменшим",
+        "самим малим"
+      ],
+      "distractors": [
+        {
+          "text": "самим меншим",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "самим малим",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        },
+        {
+          "text": "найменш меншим",
+          "interference_type": "false_superlative_analytic_double",
+          "explanation": {
+            "ua": "Помилкове поєднання слів «найбільш/найменш» із вищим ступенем замість початкової форми прикметника (правильно: найбільш важливий, а не *найбільш важливіший).",
+            "en": "Double superlative error: 'naybilsh/naymensh' must be followed by the positive base form, not the comparative."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1",
+      "rule_summary": {
+        "ua": "Префікс най- додається до суплетивного ступеня менший: найменший (в орудному: найменшим).",
+        "en": "Prefix nay- attaches to suppletive comparative menshyi: naymenshyi (instrumental: naymenshym)."
+      }
+    },
+    {
+      "card_id": "adj_super_emph_yaknaishvydshyi",
+      "category": "super_emphatic_prefix",
+      "cefr_level": "B1",
+      "prompt_sentence": "Команда повинна знайти ___ вихід зі скрутного становища.",
+      "blank_target": "якнайшвидший",
+      "correct_answer": "якнайшвидший",
+      "options": [
+        "як-найшвидший",
+        "як найшвидший",
+        "самий найшвидший",
+        "якнайшвидший"
+      ],
+      "distractors": [
+        {
+          "text": "як найшвидший",
+          "interference_type": "false_superlative_prefix_separated",
+          "explanation": {
+            "ua": "Орфографічна помилка: підсилювальні префікси якнай- та щонай- пишуться з прикметниками разом (якнайшвидший, щонайкращий), а не окремо чи через дефіс.",
+            "en": "Orthographic error: emphatic superlative prefixes yaknay- and shchonay- are written solid as one word (yaknayshvydshyi, shchonaykrashchyi)."
+          }
+        },
+        {
+          "text": "як-найшвидший",
+          "interference_type": "false_superlative_prefix_separated",
+          "explanation": {
+            "ua": "Орфографічна помилка: підсилювальні префікси якнай- та щонай- пишуться з прикметниками разом (якнайшвидший, щонайкращий), а не окремо чи через дефіс.",
+            "en": "Orthographic error: emphatic superlative prefixes yaknay- and shchonay- are written solid as one word (yaknayshvydshyi, shchonaykrashchyi)."
+          }
+        },
+        {
+          "text": "самий найшвидший",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Підсилювальні префікси якнай- та щонай- пишуться з формами найвищого ступеня разом: якнайшвидший.",
+        "en": "Emphatic prefixes yaknay- and shchonay- are written solid with superlative forms: yaknayshvydshyi."
+      }
+    },
+    {
+      "card_id": "adj_super_emph_shchonakrashchyi",
+      "category": "super_emphatic_prefix",
+      "cefr_level": "B2",
+      "prompt_sentence": "Студенти доклали всіх зусиль, аби показати ___ результати на олімпіаді.",
+      "blank_target": "щонайкращі",
+      "correct_answer": "щонайкращі",
+      "options": [
+        "що найкращі",
+        "щонайкращі",
+        "самі щонайкращі",
+        "що-найкращі"
+      ],
+      "distractors": [
+        {
+          "text": "що найкращі",
+          "interference_type": "false_superlative_prefix_separated",
+          "explanation": {
+            "ua": "Орфографічна помилка: підсилювальні префікси якнай- та щонай- пишуться з прикметниками разом (якнайшвидший, щонайкращий), а не окремо чи через дефіс.",
+            "en": "Orthographic error: emphatic superlative prefixes yaknay- and shchonay- are written solid as one word (yaknayshvydshyi, shchonaykrashchyi)."
+          }
+        },
+        {
+          "text": "що-найкращі",
+          "interference_type": "false_superlative_prefix_separated",
+          "explanation": {
+            "ua": "Орфографічна помилка: підсилювальні префікси якнай- та щонай- пишуться з прикметниками разом (якнайшвидший, щонайкращий), а не окремо чи через дефіс.",
+            "en": "Orthographic error: emphatic superlative prefixes yaknay- and shchonay- are written solid as one word (yaknayshvydshyi, shchonaykrashchyi)."
+          }
+        },
+        {
+          "text": "самі щонайкращі",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Префікс щонай- пишеться разом: щонайкращий (у множині: щонайкращі).",
+        "en": "Prefix shchonay- is written solid as a single word: shchonaykrashchyi (plural: shchonaykrashchi)."
+      }
+    },
+    {
+      "card_id": "adj_super_emph_yaknaibilshyi",
+      "category": "super_emphatic_prefix",
+      "cefr_level": "B1",
+      "prompt_sentence": "Організатори свята подбали про ___ зручності для відвідувачів.",
+      "blank_target": "якнайбільші",
+      "correct_answer": "якнайбільші",
+      "options": [
+        "самі найбільші",
+        "якнайбільші",
+        "як найбільші",
+        "як-найбільші"
+      ],
+      "distractors": [
+        {
+          "text": "як найбільші",
+          "interference_type": "false_superlative_prefix_separated",
+          "explanation": {
+            "ua": "Орфографічна помилка: підсилювальні префікси якнай- та щонай- пишуться з прикметниками разом (якнайшвидший, щонайкращий), а не окремо чи через дефіс.",
+            "en": "Orthographic error: emphatic superlative prefixes yaknay- and shchonay- are written solid as one word (yaknayshvydshyi, shchonaykrashchyi)."
+          }
+        },
+        {
+          "text": "як-найбільші",
+          "interference_type": "false_superlative_prefix_separated",
+          "explanation": {
+            "ua": "Орфографічна помилка: підсилювальні префікси якнай- та щонай- пишуться з прикметниками разом (якнайшвидший, щонайкращий), а не окремо чи через дефіс.",
+            "en": "Orthographic error: emphatic superlative prefixes yaknay- and shchonay- are written solid as one word (yaknayshvydshyi, shchonaykrashchyi)."
+          }
+        },
+        {
+          "text": "самі найбільші",
+          "interference_type": "russian_calque_samyi",
+          "explanation": {
+            "ua": "Груба калька з російської мови. Слово «самий» ніколи не вживається в українській мові для творення найвищого ступеня порівняння. Правильно: префікс най- («найкращий», «найбільший») або складена форма («найбільш важливий»).",
+            "en": "Severe Russian calque. The word 'samyi' is never used in Ukrainian to form superlatives. Use the prefix nay- (naykrashchyi) or analytic naybilsh + base adjective."
+          }
+        }
+      ],
+      "pravopys_section": "§ 111, п. 1 (б)",
+      "rule_summary": {
+        "ua": "Префікс якнай- пишеться разом з прикметником: якнайбільший (у множині: якнайбільші).",
+        "en": "Prefix yaknay- is written solid with the adjective: yaknaybilshyi (plural: yaknaybilshi)."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_synii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "A2",
+      "prompt_sentence": "Художник зафарбував небо глибоким ___ кольором.",
+      "blank_target": "синім",
+      "correct_answer": "синім",
+      "options": [
+        "синьовим",
+        "синім",
+        "синим",
+        "синьми"
+      ],
+      "distractors": [
+        {
+          "text": "синим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "синьовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "синьми",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметники м'якої групи чоловічого та середнього роду в орудному відмінку однини мають закінчення -ім (синім), а не тверде -им.",
+        "en": "Soft masculine/neuter adjectives in the instrumental singular strictly take -im (synim), not hard -ym."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_litnii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "A2",
+      "prompt_sentence": "Земля була зігріта ласкавим ___ сонцем.",
+      "blank_target": "літнім",
+      "correct_answer": "літнім",
+      "options": [
+        "літнем",
+        "літним",
+        "літнім",
+        "літньовим"
+      ],
+      "distractors": [
+        {
+          "text": "літним",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "літньовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "літнем",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметник м'якої групи літній в орудному відмінку середнього роду має закінчення -ім: літнім.",
+        "en": "Soft neuter adjective litnii in instrumental singular takes ending -im: litnim."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_osinnii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "A2",
+      "prompt_sentence": "Алея була огорнута сивим ___ туманом.",
+      "blank_target": "осіннім",
+      "correct_answer": "осіннім",
+      "options": [
+        "осінним",
+        "осінньовим",
+        "осіннім",
+        "осінневим"
+      ],
+      "distractors": [
+        {
+          "text": "осінним",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "осінневим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "осінньовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметник осінній належить до м'якої групи й утворює орудний відмінок однини на -ім: осіннім.",
+        "en": "Adjective osinnii is soft group and forms instrumental singular with ending -im: osinnim."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_rannii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "B1",
+      "prompt_sentence": "Мандрівники вирушили в дорогу найпершим ___ потягом.",
+      "blank_target": "раннім",
+      "correct_answer": "раннім",
+      "options": [
+        "ранневим",
+        "ранньовим",
+        "раннім",
+        "ранним"
+      ],
+      "distractors": [
+        {
+          "text": "ранним",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "ранневим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "ранньовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметник ранній в орудному відмінку чоловічого роду однини має закінчення -ім: раннім.",
+        "en": "Adjective rannii in masculine instrumental singular takes ending -im: rannim."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_vechirnii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "A2",
+      "prompt_sentence": "Вулиці міста освітилися м'яким ___ сяйвом ліхтарів.",
+      "blank_target": "вечірнім",
+      "correct_answer": "вечірнім",
+      "options": [
+        "вечірним",
+        "вечірневим",
+        "вечірнім",
+        "вечірньовим"
+      ],
+      "distractors": [
+        {
+          "text": "вечірним",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "вечірневим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "вечірньовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметник вечірній має м'яку основу й закінчення -ім в орудному відмінку: вечірнім.",
+        "en": "Adjective vechirnii has a soft stem and takes -im in instrumental: vechirnim."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_davnii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми зустрілися з моїм ___ шкільним товаришем.",
+      "blank_target": "давнім",
+      "correct_answer": "давнім",
+      "options": [
+        "давнім",
+        "давним",
+        "давньовим",
+        "давневим"
+      ],
+      "distractors": [
+        {
+          "text": "давним",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "давневим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "давньовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметник давній утворює орудний відмінок однини на -ім: давнім.",
+        "en": "Adjective davnii takes instrumental singular ending -im: davnim."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_krainii_inst",
+      "category": "decl_soft_instrumental_im",
+      "cefr_level": "B1",
+      "prompt_sentence": "Він зупинився перед ___ під'їздом висотного будинку.",
+      "blank_target": "крайнім",
+      "correct_answer": "крайнім",
+      "options": [
+        "крайневим",
+        "крайним",
+        "крайнім",
+        "крайньовим"
+      ],
+      "distractors": [
+        {
+          "text": "крайним",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "крайневим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        },
+        {
+          "text": "крайньовим",
+          "interference_type": "false_soft_instrumental_ym",
+          "explanation": {
+            "ua": "Помилка у відмінковому закінченні прикметників м'якої групи. В орудному відмінку однини чоловічого та середнього роду прикметники м'якої групи мають закінчення -ім (синім, літнім, осіннім, раннім), а не тверде -им.",
+            "en": "Ending error in soft group adjectives. Soft group masculine and neuter instrumental singular strictly takes -im (synim, litnim, osinnim, rannim), not hard -ym."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108, п. 1",
+      "rule_summary": {
+        "ua": "Прикметник крайній (м'яка група) в орудному відмінку чоловічого роду має закінчення -ім: крайнім.",
+        "en": "Soft adjective krainii in masculine instrumental singular takes -im: krainim."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_synii_gen",
+      "category": "decl_soft_genitive_dative",
+      "cefr_level": "A2",
+      "prompt_sentence": "Для оздоблення картини не вистачало темно-___ барвника.",
+      "blank_target": "синього",
+      "correct_answer": "синього",
+      "options": [
+        "синого",
+        "синійого",
+        "синього",
+        "синьго"
+      ],
+      "distractors": [
+        {
+          "text": "синого",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "синьго",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "синійого",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108",
+      "rule_summary": {
+        "ua": "Прикметники м'якої групи в родовому відмінку однини мають закінчення -ього: синього (а не тверде -ого).",
+        "en": "Soft group adjectives in genitive singular take ending -yoho: synyoho (not hard -oho)."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_litnii_gen",
+      "category": "decl_soft_genitive_dative",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми з нетерпінням очікували початку чергового ___ сезону.",
+      "blank_target": "літнього",
+      "correct_answer": "літнього",
+      "options": [
+        "літного",
+        "літнього",
+        "літнійого",
+        "літньго"
+      ],
+      "distractors": [
+        {
+          "text": "літного",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "літньго",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "літнійого",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108",
+      "rule_summary": {
+        "ua": "Прикметник літній у родовому відмінку чоловічого роду має закінчення -ього: літнього.",
+        "en": "Adjective litnii takes genitive singular ending -yoho: litnyoho."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_davnii_gen",
+      "category": "decl_soft_genitive_dative",
+      "cefr_level": "B1",
+      "prompt_sentence": "В архіві збереглася точна копія ___ рукописного тексту.",
+      "blank_target": "давнього",
+      "correct_answer": "давнього",
+      "options": [
+        "давного",
+        "давнійого",
+        "давньго",
+        "давнього"
+      ],
+      "distractors": [
+        {
+          "text": "давного",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "давньго",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "давнійого",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108",
+      "rule_summary": {
+        "ua": "Прикметник давній у родовому відмінку має закінчення -ього: давнього.",
+        "en": "Adjective davnii takes genitive singular ending -yoho: davnyoho."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_synii_dat",
+      "category": "decl_soft_genitive_dative",
+      "cefr_level": "A2",
+      "prompt_sentence": "Дизайнер надав перевагу насиченому ___ відтінку полотна.",
+      "blank_target": "синьому",
+      "correct_answer": "синьому",
+      "options": [
+        "синьому",
+        "синьму",
+        "синійому",
+        "синому"
+      ],
+      "distractors": [
+        {
+          "text": "синому",
+          "interference_type": "false_soft_dative_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У давальному відмінку чоловічого роду вони мають закінчення -ьому (синьому, літньому), а не тверде -ому.",
+            "en": "Soft adjective dative error. Soft masculine adjectives take -yomu (synyomu, litnyomu), not hard -omu."
+          }
+        },
+        {
+          "text": "синьму",
+          "interference_type": "false_soft_dative_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У давальному відмінку чоловічого роду вони мають закінчення -ьому (синьому, літньому), а не тверде -ому.",
+            "en": "Soft adjective dative error. Soft masculine adjectives take -yomu (synyomu, litnyomu), not hard -omu."
+          }
+        },
+        {
+          "text": "синійому",
+          "interference_type": "false_soft_dative_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У давальному відмінку чоловічого роду вони мають закінчення -ьому (синьому, літньому), а не тверде -ому.",
+            "en": "Soft adjective dative error. Soft masculine adjectives take -yomu (synyomu, litnyomu), not hard -omu."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108",
+      "rule_summary": {
+        "ua": "Прикметники м'якої групи в давальному відмінку чоловічого роду мають закінчення -ьому: синьому.",
+        "en": "Soft group adjectives in masculine dative singular take ending -yomu: synyomu."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_litnii_dat",
+      "category": "decl_soft_genitive_dative",
+      "cefr_level": "A2",
+      "prompt_sentence": "Усі рослини в саду раділи теплому ___ дощу.",
+      "blank_target": "літньому",
+      "correct_answer": "літньому",
+      "options": [
+        "літньму",
+        "літньому",
+        "літнійому",
+        "літному"
+      ],
+      "distractors": [
+        {
+          "text": "літному",
+          "interference_type": "false_soft_dative_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У давальному відмінку чоловічого роду вони мають закінчення -ьому (синьому, літньому), а не тверде -ому.",
+            "en": "Soft adjective dative error. Soft masculine adjectives take -yomu (synyomu, litnyomu), not hard -omu."
+          }
+        },
+        {
+          "text": "літньму",
+          "interference_type": "false_soft_dative_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У давальному відмінку чоловічого роду вони мають закінчення -ьому (синьому, літньому), а не тверде -ому.",
+            "en": "Soft adjective dative error. Soft masculine adjectives take -yomu (synyomu, litnyomu), not hard -omu."
+          }
+        },
+        {
+          "text": "літнійому",
+          "interference_type": "false_soft_dative_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У давальному відмінку чоловічого роду вони мають закінчення -ьому (синьому, літньому), а не тверде -ому.",
+            "en": "Soft adjective dative error. Soft masculine adjectives take -yomu (synyomu, litnyomu), not hard -omu."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108",
+      "rule_summary": {
+        "ua": "Прикметник літній у давальному відмінку однини має закінчення -ьому: літньому.",
+        "en": "Adjective litnii in dative singular takes ending -yomu: litnyomu."
+      }
+    },
+    {
+      "card_id": "adj_decl_soft_vechirnii_gen",
+      "category": "decl_soft_genitive_dative",
+      "cefr_level": "A2",
+      "prompt_sentence": "Ми залюбки чекали настання тихого ___ часу для читання.",
+      "blank_target": "вечірнього",
+      "correct_answer": "вечірнього",
+      "options": [
+        "вечірного",
+        "вечірньго",
+        "вечірнього",
+        "вечірнійого"
+      ],
+      "distractors": [
+        {
+          "text": "вечірного",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "вечірньго",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        },
+        {
+          "text": "вечірнійого",
+          "interference_type": "false_soft_genitive_hard_ending",
+          "explanation": {
+            "ua": "Помилка у відмінюванні м'якої групи прикметників. У родовому відмінку чоловічого роду вони мають закінчення -ього (синього, літнього, давнього), а не тверде -ого.",
+            "en": "Soft adjective genitive error. Soft masculine adjectives take -yoho (synyoho, litnyoho), not hard -oho."
+          }
+        }
+      ],
+      "pravopys_section": "§ 108",
+      "rule_summary": {
+        "ua": "Прикметники м'якої групи в родовому відмінку чоловічого роду однини мають закінчення -ього: вечірнього (а не тверде -ого).",
+        "en": "Soft-group adjectives in masculine genitive singular take ending -yoho: vechirnyoho (not hard -oho)."
+      }
+    },
+    {
+      "card_id": "adj_poss_batkiv_nom",
+      "category": "possessive_iv_declension",
+      "cefr_level": "A2",
+      "prompt_sentence": "На письмовому столі цокав старовинний ___ годинник.",
+      "blank_target": "батьків",
+      "correct_answer": "батьків",
+      "options": [
+        "батьков",
+        "батьковий",
+        "батьківський",
+        "батьків"
+      ],
+      "distractors": [
+        {
+          "text": "батьковий",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "батьківський",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "батьков",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Присвійний прикметник від іменника II відміни батько твориться суфіксом -ів у називному відмінку чоловічого роду: батьків.",
+        "en": "Possessive adjective from 2nd declension batko takes suffix -iv in masculine nominative: batkiv."
+      }
+    },
+    {
+      "card_id": "adj_poss_batkiv_gen",
+      "category": "possessive_iv_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми неухильно дотримувалися суворого ___ наказу.",
+      "blank_target": "батькового",
+      "correct_answer": "батькового",
+      "options": [
+        "батьківого",
+        "батькового",
+        "батьківського",
+        "батькового-ж"
+      ],
+      "distractors": [
+        {
+          "text": "батьківого",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "батьківського",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "батькового-ж",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Суфікс -ів чергується з -ов- у відкритих складах перед закінченням: батьків -> батькового.",
+        "en": "Suffix -iv alternates with -ov- in open syllables before endings: batkiv -> batkovoho."
+      }
+    },
+    {
+      "card_id": "adj_poss_shevchenkiv_nom",
+      "category": "possessive_iv_declension",
+      "cefr_level": "A2",
+      "prompt_sentence": "На святі лунало полум'яне й вічне ___ слово.",
+      "blank_target": "Шевченкове",
+      "correct_answer": "Шевченкове",
+      "options": [
+        "Шевченківе",
+        "Шевченкове",
+        "Шевченківське",
+        "Шевченково"
+      ],
+      "distractors": [
+        {
+          "text": "Шевченківське",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "Шевченківе",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "Шевченково",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Від прізвища Шевченко присвійний прикметник середнього роду твориться суфіксом -ове: Шевченкове слово (а не відносне шевченківське).",
+        "en": "From Shevchenko, neuter possessive takes suffix -ove: Shevchenkove slovo (not relational shevchenkivske)."
+      }
+    },
+    {
+      "card_id": "adj_poss_shevchenkiv_gen",
+      "category": "possessive_iv_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Ми зібралися в парку біля підніжжя столітнього ___ дуба.",
+      "blank_target": "Шевченкового",
+      "correct_answer": "Шевченкового",
+      "options": [
+        "Шевченкового-ж",
+        "Шевченківого",
+        "Шевченкового",
+        "Шевченківського"
+      ],
+      "distractors": [
+        {
+          "text": "Шевченківого",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "Шевченківського",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "Шевченкового-ж",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Присвійний прикметник у родовому відмінку однини має суфікс -ов- і закінчення -ого: Шевченкового.",
+        "en": "Possessive adjective in genitive singular takes suffix -ov- and ending -oho: Shevchenkovoho."
+      }
+    },
+    {
+      "card_id": "adj_poss_frankiv_nom",
+      "category": "possessive_iv_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "У пам'яті виринула відома крилата ___ фраза про працю.",
+      "blank_target": "Франкова",
+      "correct_answer": "Франкова",
+      "options": [
+        "Франковська",
+        "Франківа",
+        "Франкова",
+        "Франківська"
+      ],
+      "distractors": [
+        {
+          "text": "Франківа",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "Франківська",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "Франковська",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Від імені Франко присвійний прикметник жіночого роду твориться як Франкова (а не Франківська чи Франківа).",
+        "en": "From Franko, feminine possessive is Frankova (not relational Frankivska or non-standard Frankiva)."
+      }
+    },
+    {
+      "card_id": "adj_poss_brativ_nom",
+      "category": "possessive_iv_declension",
+      "cefr_level": "A2",
+      "prompt_sentence": "У передпокої стояла новенька дорожня ___ валіза.",
+      "blank_target": "братова",
+      "correct_answer": "братова",
+      "options": [
+        "братова",
+        "братіва",
+        "братська",
+        "братовська"
+      ],
+      "distractors": [
+        {
+          "text": "братіва",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "братська",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "братовська",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Присвійний прикметник жіночого роду від брат має суфікс -ов-: братова (а не відносне братська).",
+        "en": "Feminine possessive from brat takes suffix -ov-: bratova (not relational bratska)."
+      }
+    },
+    {
+      "card_id": "adj_poss_vasyliv_nom",
+      "category": "possessive_iv_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "На журнальному столику лежала улюблена ___ книга.",
+      "blank_target": "Василева",
+      "correct_answer": "Василева",
+      "options": [
+        "Васильова",
+        "Василева",
+        "Василіва",
+        "Василівська"
+      ],
+      "distractors": [
+        {
+          "text": "Васильова",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "Василіва",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "Василівська",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Від іменників м'якої групи суфікс -ів у відкритому складі чергується на -ев-: Василь -> Василева (а не Васильова).",
+        "en": "From soft stem nouns, suffix -iv in open syllables alternates with -ev-: Vasyl -> Vasyleva (not Vasyliova)."
+      }
+    },
+    {
+      "card_id": "adj_poss_serhiiv_nom",
+      "category": "possessive_iv_declension",
+      "cefr_level": "B1",
+      "prompt_sentence": "Перед поїздкою знайшлося забуте службове ___ посвідчення.",
+      "blank_target": "Сергієве",
+      "correct_answer": "Сергієве",
+      "options": [
+        "Сергієве",
+        "Сергіїве",
+        "Сергійове",
+        "Сергієвське"
+      ],
+      "distractors": [
+        {
+          "text": "Сергійове",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        },
+        {
+          "text": "Сергієвське",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "Сергіїве",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Від іменників з основою на [j] у відкритому складі вживається суфікс -єв-: Сергій -> Сергієве посвідчення.",
+        "en": "From stems in /j/, suffix -yev- is used in open syllables: Serhiy -> Serhiyeve posvidchennya."
+      }
+    },
+    {
+      "card_id": "adj_poss_olzhyn_nom",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "A2",
+      "prompt_sentence": "На полиці шафи стояв новенький ___ щоденник.",
+      "blank_target": "Ольжин",
+      "correct_answer": "Ольжин",
+      "options": [
+        "Ольгин",
+        "Ольгів",
+        "Ольжчин",
+        "Ольжин"
+      ],
+      "distractors": [
+        {
+          "text": "Ольгин",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "Ольжчин",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "Ольгів",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22, 107",
+      "rule_summary": {
+        "ua": "Перед суфіксом -ин приголосний г чергується на ж: Ольга -> Ольжин щоденник (а не *Ольгин).",
+        "en": "Before suffix -yn, consonant h mutates into zh: Olha -> Olzhyn (not *Olhyn)."
+      }
+    },
+    {
+      "card_id": "adj_poss_dochchyn_acc",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Мати дбайливо прасувала святкову ___ сукню.",
+      "blank_target": "доччину",
+      "correct_answer": "доччину",
+      "options": [
+        "дочкин",
+        "дочечну",
+        "доччину",
+        "дочкину"
+      ],
+      "distractors": [
+        {
+          "text": "дочкину",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "дочкин",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "дочечну",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22, 107",
+      "rule_summary": {
+        "ua": "Перед суфіксом -ин кінцевий к чергується на ч: дочка -> доччин (знах. відм.: доччину).",
+        "en": "Before suffix -yn, stem k mutates to ch: dochka -> dochchyn (accusative: dochchynu)."
+      }
+    },
+    {
+      "card_id": "adj_poss_titchyn_acc",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Малюки залюбки слухали повчальну ___ казку.",
+      "blank_target": "тітчину",
+      "correct_answer": "тітчину",
+      "options": [
+        "тіткину",
+        "тітчену",
+        "тітчинську",
+        "тітчину"
+      ],
+      "distractors": [
+        {
+          "text": "тіткину",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "тітчену",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "тітчинську",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22, 107",
+      "rule_summary": {
+        "ua": "Перед суфіксом -ин кінцевий к основи чергується на ч: тітка -> тітчин (знах. відм.: тітчину).",
+        "en": "Before suffix -yn, stem k mutates to ch: titka -> titchyn (accusative: titchynu)."
+      }
+    },
+    {
+      "card_id": "adj_poss_kachchyn_nom",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "B1",
+      "prompt_sentence": "У високій траві біліло маленьке ___ крильце.",
+      "blank_target": "каччине",
+      "correct_answer": "каччине",
+      "options": [
+        "каччине",
+        "каччене",
+        "каччинське",
+        "качкине"
+      ],
+      "distractors": [
+        {
+          "text": "качкине",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "каччене",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "каччинське",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22, 107",
+      "rule_summary": {
+        "ua": "Перед суфіксом -ин приголосний к основи чергується на ч: качка -> каччин (середній рід: каччине).",
+        "en": "Before suffix -yn, stem k mutates to ch: kachka -> kachchyn (neuter: kachchyne)."
+      }
+    },
+    {
+      "card_id": "adj_poss_soloshyn_nom",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "B2",
+      "prompt_sentence": "У фольклорній виставі з'явився колоритний ___ образ.",
+      "blank_target": "Солошин",
+      "correct_answer": "Солошин",
+      "options": [
+        "Солохів",
+        "Солошин",
+        "Солошинський",
+        "Солохин"
+      ],
+      "distractors": [
+        {
+          "text": "Солохин",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "Солошинський",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "Солохів",
+          "interference_type": "false_possessive_iv_suffix_vowel",
+          "explanation": {
+            "ua": "Помилка у голосному суфікса присвійних прикметників. Після м'яких приголосних та [j] виступає суфікс -ев- / -єв- (Василів -> Василева, Сергіїв -> Сергієве), а після твердих — -ов- (батьків -> батькова).",
+            "en": "Possessive suffix vowel error. After soft consonants and /j/, suffix -ev- / -yev- is used in open syllables (Vasyleva, Serhiyeva); after hard consonants, -ov- is used (batkova)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22, 107",
+      "rule_summary": {
+        "ua": "Перед суфіксом -ин кінцевий х чергується на ш: Солоха -> Солошин (а не *Солохин).",
+        "en": "Before suffix -yn, stem kh mutates to sh: Solokha -> Soloshyn (not *Solokhyn)."
+      }
+    },
+    {
+      "card_id": "adj_poss_svekrushyn_nom",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "B1",
+      "prompt_sentence": "У родині завжди шанували розважливий ___ голос.",
+      "blank_target": "свекрушин",
+      "correct_answer": "свекрушин",
+      "options": [
+        "свекрушин",
+        "свекрушинський",
+        "свекрухин",
+        "свекрушен"
+      ],
+      "distractors": [
+        {
+          "text": "свекрухин",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "свекрушен",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "свекрушинський",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22, 107",
+      "rule_summary": {
+        "ua": "Перед суфіксом -ин кінцевий приголосний х чергується на ш: свекруха -> свекрушин (а не *свекрухин).",
+        "en": "Before suffix -yn, stem kh mutates to sh: svekrukha -> svekrushyn (not *svekrukhyn)."
+      }
+    },
+    {
+      "card_id": "adj_poss_mariin_nom",
+      "category": "possessive_yn_mutation",
+      "cefr_level": "A2",
+      "prompt_sentence": "У кімнаті несподівано пролунав дзвінкий ___ сміх.",
+      "blank_target": "Маріїн",
+      "correct_answer": "Маріїн",
+      "options": [
+        "Маріїн",
+        "Марійн",
+        "Маріївський",
+        "Марієвий"
+      ],
+      "distractors": [
+        {
+          "text": "Марійн",
+          "interference_type": "false_possessive_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил чергування приголосних при творенні присвійних прикметників із суфіксом -ин. Перед -ин приголосні г, к, х чергуються на ж, ч, ш (Ольга -> Ольжин, дочка -> доччин, тітка -> тітчин, Солоха -> Солошин).",
+            "en": "Missing consonant alternation before possessive suffix -yn. Consonants h, k, kh mutate to zh, ch, sh (Olha -> Olzhyn, dochka -> dochchyn, Solokha -> Soloshyn)."
+          }
+        },
+        {
+          "text": "Марієвий",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        },
+        {
+          "text": "Маріївський",
+          "interference_type": "false_relational_for_possessive",
+          "explanation": {
+            "ua": "Змішування присвійних і відносних прикметників. Для індивідуальної належності одній особі вживаються суфікси -ів, -ин (батьків годинник, Шевченкове слово), тоді як суфікс -ськ- творить відносний прикметник загальної властивості (батьківський, шевченківський).",
+            "en": "Confusion between individual possessive (-iv, -yn: batkiv, Shevchenkove) and general relational adjectives (-skyi: batkivskyi, shevchenkivskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 107",
+      "rule_summary": {
+        "ua": "Після голосного [j] суфікс -ин позначається літерою ї: Марія -> Маріїн сміх.",
+        "en": "After vowel /j/, suffix -yn is spelled with letter yi: Mariya -> Mariyin."
+      }
+    },
+    {
+      "card_id": "adj_deriv_prazkyi_gen",
+      "category": "suffix_derivation_mutation",
+      "cefr_level": "B1",
+      "prompt_sentence": "У галереї триває виставка робіт відомих ___ художників.",
+      "blank_target": "празьких",
+      "correct_answer": "празьких",
+      "options": [
+        "празьких",
+        "прагських",
+        "пражських",
+        "працьких"
+      ],
+      "distractors": [
+        {
+          "text": "прагських",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "пражських",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "працьких",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22",
+      "rule_summary": {
+        "ua": "Приголосний г разом із -ськ- чергується на -зьк-: Прага -> празький (родов. множ.: празьких).",
+        "en": "Stem h + -sk- mutates into -zk-: Praha -> prazkyi (genitive plural: prazkykh)."
+      }
+    },
+    {
+      "card_id": "adj_deriv_zaporizkyi_gen",
+      "category": "suffix_derivation_mutation",
+      "cefr_level": "B1",
+      "prompt_sentence": "Студенти докладно вивчали героїчну добу ___ козацтва.",
+      "blank_target": "запорізького",
+      "correct_answer": "запорізького",
+      "options": [
+        "запорізького",
+        "запоріжжського",
+        "запоріжського",
+        "запоріцького"
+      ],
+      "distractors": [
+        {
+          "text": "запоріжського",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "запоріжжського",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "запоріцького",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22",
+      "rule_summary": {
+        "ua": "Приголосний ж разом із -ськ- чергується на -зьк-: Запоріжжя -> запорізький.",
+        "en": "Stem zh + -sk- mutates into -zk-: Zaporizhzhya -> zaporizkyi."
+      }
+    },
+    {
+      "card_id": "adj_deriv_kozatskyi_nom",
+      "category": "suffix_derivation_mutation",
+      "cefr_level": "A2",
+      "prompt_sentence": "Над широким Дніпром лунала відважна ___ пісня.",
+      "blank_target": "козацька",
+      "correct_answer": "козацька",
+      "options": [
+        "козазька",
+        "козакська",
+        "козажська",
+        "козацька"
+      ],
+      "distractors": [
+        {
+          "text": "козакська",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "козажська",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "козазька",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22",
+      "rule_summary": {
+        "ua": "Приголосний к разом із -ськ- чергується на -цьк-: козак -> козацький, козацька.",
+        "en": "Stem k + -sk- mutates into -tsk-: kozak -> kozatskyi, kozatska."
+      }
+    },
+    {
+      "card_id": "adj_deriv_tkatskyi_nom",
+      "category": "suffix_derivation_mutation",
+      "cefr_level": "B1",
+      "prompt_sentence": "У старому музеї ремесел зберігся справжній ___ верстат.",
+      "blank_target": "ткацький",
+      "correct_answer": "ткацький",
+      "options": [
+        "тказький",
+        "ткачський",
+        "ткацький",
+        "ткажський"
+      ],
+      "distractors": [
+        {
+          "text": "ткачський",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "ткажський",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "тказький",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22",
+      "rule_summary": {
+        "ua": "Приголосний ч разом із -ськ- чергується на -цьк-: ткач -> ткацький.",
+        "en": "Stem ch + -sk- mutates into -tsk-: tkach -> tkatskyi."
+      }
+    },
+    {
+      "card_id": "adj_deriv_cheskyi_nom",
+      "category": "suffix_derivation_mutation",
+      "cefr_level": "A2",
+      "prompt_sentence": "В університеті відкрили відділення ___ філології.",
+      "blank_target": "чеської",
+      "correct_answer": "чеської",
+      "options": [
+        "чешської",
+        "чехської",
+        "чеської",
+        "чезької"
+      ],
+      "distractors": [
+        {
+          "text": "чехської",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "чешської",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "чезької",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22",
+      "rule_summary": {
+        "ua": "Приголосний х разом із -ськ- дає -ськ-: чех -> чеський (родов. відм. ж.р.: чеської).",
+        "en": "Stem kh + -sk- yields -sk-: chekh -> cheskyi (fem. genitive: cheskoyi)."
+      }
+    },
+    {
+      "card_id": "adj_deriv_tovaryskyi_nom",
+      "category": "suffix_derivation_mutation",
+      "cefr_level": "B1",
+      "prompt_sentence": "У новому колективі панували щирі ___ взаємини.",
+      "blank_target": "товариські",
+      "correct_answer": "товариські",
+      "options": [
+        "товариські",
+        "товаризькі",
+        "товарижські",
+        "товаришські"
+      ],
+      "distractors": [
+        {
+          "text": "товаришські",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "товарижські",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        },
+        {
+          "text": "товаризькі",
+          "interference_type": "false_derivation_missing_mutation",
+          "explanation": {
+            "ua": "Порушення правил буквосполучень при творенні прикметників за допомогою суфікса -ськ- (Правопис 2019 § 22): г, ж, з + -ськ- -> -зьк- (Прага -> празький); к, ч, ц + -ськ- -> -цьк- (козак -> козацький); х, ш, с + -ськ- -> -ськ- (чех -> чеський).",
+            "en": "Consonant group mutation error with suffix -sk- (Pravopys 2019 § 22): h, zh, z + -sk- -> -zk- (prazkyi); k, ch, ts + -sk- -> -tsk- (kozatskyi); kh, sh, s + -sk- -> -skyi (cheskyi)."
+          }
+        }
+      ],
+      "pravopys_section": "§ 22",
+      "rule_summary": {
+        "ua": "Приголосний ш разом із -ськ- переходить у -ськ-: товариш -> товариський.",
+        "en": "Stem sh + -sk- yields -sk-: tovarysh -> tovaryskyi."
+      }
+    },
+    {
+      "card_id": "adj_uncomp_derevianyj",
+      "category": "anti_calque_uncomparable",
+      "cefr_level": "B1",
+      "prompt_sentence": "Оберіть правильне твердження щодо прикметника «дерев'яний» (стіл):",
+      "blank_target": "не має ступенів порівняння",
+      "correct_answer": "Не має ступенів порівняння, оскільки виражає абсолютну ознаку матеріалу",
+      "options": [
+        "Утворює аналітичну форму «більш дерев'яний»",
+        "Утворює найвищий ступінь «найдерев'яніший»",
+        "Не має ступенів порівняння, оскільки виражає абсолютну ознаку матеріалу",
+        "Утворює синтетичну форму «дерев'яніший»"
+      ],
+      "distractors": [
+        {
+          "text": "Утворює синтетичну форму «дерев'яніший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Утворює аналітичну форму «більш дерев'яний»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Утворює найвищий ступінь «найдерев'яніший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110",
+      "rule_summary": {
+        "ua": "Відносні прикметники, які називають матеріал (дерев'яний, залізний), не мають ступенів порівняння.",
+        "en": "Relational adjectives denoting material (derev'yanyi, zaliznyi) do not form comparative degrees."
+      }
+    },
+    {
+      "card_id": "adj_uncomp_bosyi",
+      "category": "anti_calque_uncomparable",
+      "cefr_level": "B1",
+      "prompt_sentence": "Оберіть нормативне твердження щодо прикметника «босий»:",
+      "blank_target": "не утворює ступенів порівняння",
+      "correct_answer": "Не утворює ступенів порівняння, бо виражає абсолютний фізичний стан",
+      "options": [
+        "Нормативною є форма найвищого ступеня «найбосіший»",
+        "Нормативною є форма вищого ступеня «босіший»",
+        "Не утворює ступенів порівняння, бо виражає абсолютний фізичний стан",
+        "Нормативною є складена форма «більш босий»"
+      ],
+      "distractors": [
+        {
+          "text": "Нормативною є форма вищого ступеня «босіший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Нормативною є складена форма «більш босий»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Нормативною є форма найвищого ступеня «найбосіший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110",
+      "rule_summary": {
+        "ua": "Якісні прикметники з абсолютною ознакою або станом (босий, голий, сліпий, мертвий) не підлягають градуюванню.",
+        "en": "Qualitative adjectives denoting absolute states (bosyi, slipyi, mertvyi) cannot be graded."
+      }
+    },
+    {
+      "card_id": "adj_uncomp_slipyi",
+      "category": "anti_calque_uncomparable",
+      "cefr_level": "B2",
+      "prompt_sentence": "Чи можна утворити ступінь порівняння від прикметника «сліпий» у прямому значенні?",
+      "blank_target": "ні, це абсолютна ознака",
+      "correct_answer": "Ні, бо це абсолютна фізіологічна ознака, яка не виявляється більшою чи меншою мірою",
+      "options": [
+        "Ні, бо це абсолютна фізіологічна ознака, яка не виявляється більшою чи меншою мірою",
+        "Так, правильною є форма найвищого ступеня «найсліпіший»",
+        "Так, правильною є синтетична форма «сліпіший»",
+        "Так, правильною є аналітична форма «більш сліпий»"
+      ],
+      "distractors": [
+        {
+          "text": "Так, правильною є синтетична форма «сліпіший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Так, правильною є аналітична форма «більш сліпий»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Так, правильною є форма найвищого ступеня «найсліпіший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110",
+      "rule_summary": {
+        "ua": "Прикметники на позначення абсолютної фізіологічної якості не утворюють ступенів порівняння.",
+        "en": "Adjectives expressing absolute physiological conditions do not form degrees of comparison."
+      }
+    },
+    {
+      "card_id": "adj_uncomp_vchorashnii",
+      "category": "anti_calque_uncomparable",
+      "cefr_level": "B1",
+      "prompt_sentence": "Оберіть правильну граматичну характеристику прикметника «вчорашній»:",
+      "blank_target": "відносний часовий прикметник",
+      "correct_answer": "Це відносний часовий прикметник, який не має ступенів порівняння",
+      "options": [
+        "Має форму найвищого ступеня «найвчорашніший»",
+        "Має складену форму «більш вчорашній»",
+        "Це відносний часовий прикметник, який не має ступенів порівняння",
+        "Має форму вищого ступеня «вчорашніший»"
+      ],
+      "distractors": [
+        {
+          "text": "Має форму вищого ступеня «вчорашніший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Має складену форму «більш вчорашній»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Має форму найвищого ступеня «найвчорашніший»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110",
+      "rule_summary": {
+        "ua": "Відносні часові прикметники (вчорашній, торішній, ранковий) не мають ступенів порівняння.",
+        "en": "Temporal relational adjectives (vchorashnii, torishnii, rankovyi) do not have degrees of comparison."
+      }
+    },
+    {
+      "card_id": "adj_uncomp_zaliznyi",
+      "category": "anti_calque_uncomparable",
+      "cefr_level": "B1",
+      "prompt_sentence": "Чому прикметник «залізний» (паркан) не утворює форми «залізніший»?",
+      "blank_target": "відносний прикметник на позначення матеріалу",
+      "correct_answer": "Тому що це відносний прикметник на позначення матеріалу",
+      "options": [
+        "Тому що це відносний прикметник на позначення матеріалу",
+        "Тому що основа закінчується на групу приголосних -зн-",
+        "Тому що це прикметник м'якої групи",
+        "Тому що він вимагає складеної форми «більш залізний»"
+      ],
+      "distractors": [
+        {
+          "text": "Тому що основа закінчується на групу приголосних -зн-",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Тому що він вимагає складеної форми «більш залізний»",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        },
+        {
+          "text": "Тому що це прикметник м'якої групи",
+          "interference_type": "false_comparison_of_uncomparable",
+          "explanation": {
+            "ua": "Помилкове утворення ступенів порівняння від відносного чи якісного прикметника з абсолютною ознакою (матеріал, фізичний стан, час). Такі прикметники не мають ступенів порівняння (дерев'яний, босий, сліпий, вчорашній).",
+            "en": "Erroneous degree formation on non-gradable adjectives. Adjectives expressing material, absolute physical state, or time do not form comparative or superlative degrees."
+          }
+        }
+      ],
+      "pravopys_section": "§ 110",
+      "rule_summary": {
+        "ua": "Прикметники, що вказують на матеріал предмета, належать до розряду відносних і не утворюють ступенів порівняння.",
+        "en": "Adjectives indicating material belong to the relational category and cannot form degrees of comparison."
+      }
+    }
+  ]
+}
