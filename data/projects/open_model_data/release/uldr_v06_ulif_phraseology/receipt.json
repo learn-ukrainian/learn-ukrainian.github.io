@@ -2,40 +2,47 @@
   "schema_version": "v1_ulif_phraseology_release_receipt",
   "issue": 8140,
   "parent_epic": 6321,
-  "created_at": "2026-09-19T22:33:43.130507+00:00",
-  "git_commit": "380e649937af786f93abb9bbe96458e7141362de",
+  "created_at": "2026-09-19T22:44:26.288526+00:00",
+  "git_commit": "675b6ea73262a947ef8020bca720954cad291b75",
   "evaluation_benchmark": {
-    "directory_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
-    "manifest_file": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
-    "manifest_sha256": "9edef6d6c01efce36783ffa575e84dc9722590413497dddc37433b0f2592ede3",
+    "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
+    "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
+    "manifest_sha256": "60e56a3781809603155ce751e9082ee03cc36b845ba6bd3a58219d9a4e545513",
     "shards_count": 3,
     "total_cases": 1500,
-    "max_shard_size_kb": 1140.88,
+    "max_shard_size_kb": 1109.94,
     "held_out_categories": {
       "anti_calque_decolonization": 3,
+      "authentic_idiom_usage": 499,
       "figurative_reasoning": 499,
-      "synonymic_register_distinction": 499,
-      "authentic_idiom_usage": 499
+      "synonymic_register_distinction": 499
     },
-    "held_out_authors_count": 8,
+    "held_out_authors_count": 45,
     "held_out_authors": [
+      "Є. Гуцало",
       "І. Гончаренко",
+      "І. Ле",
+      "І. Нечуй-Левицький",
+      "І. Франко",
+      "І. Цюпа",
+      "А. Головко",
       "А. Дімаров",
+      "А. Кащенко",
+      "А. Крижанівський",
+      "А. Свидницький",
+      "А. Тесленко",
+      "А. Хорунжий",
       "Антоненко-Давидович",
-      "Б. Антоненко-Давидович",
-      "М. Стельмах",
-      "МОН України",
-      "О. Гончар",
-      "Ю. Яновський"
+      "Б. Антоненко-Давидович"
     ]
   },
   "sft_training_dataset": {
-    "directory_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
-    "manifest_file": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
-    "manifest_sha256": "63e4594d46ec2fd2c17aa824b2c85fc72c19dd59eda60d7b415283e6e27f34ee",
+    "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
+    "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
+    "manifest_sha256": "b6c613387d9f7a1e9e6a163e0464b121bf26595396e7771c15f2df2cb21ab169",
     "shards_count": 90,
     "total_trajectories": 45000,
-    "max_shard_size_kb": 1012.26,
+    "max_shard_size_kb": 1004.73,
     "task_distribution": {
       "anti_calque_decolonization": 15000,
       "idiom_interpretation_literary": 15000,
@@ -44,17 +51,17 @@
     }
   },
   "dpo_preference_dataset": {
-    "directory_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
-    "manifest_file": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
-    "manifest_sha256": "1317d919718375e0ea96fa689a8868a8a78d4afc921b74fec73d8465032c07df",
+    "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
+    "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
+    "manifest_sha256": "e92854a6f280603ca1c00fbd7c5470ded98c7f34da3b37a553bd61dc3a8b2620",
     "shards_count": 40,
     "total_pairs": 20000,
-    "max_shard_size_kb": 902.95,
+    "max_shard_size_kb": 839.66,
     "flaw_distribution": {
-      "lack_of_morphemic_reasoning": 13889,
-      "soviet_lexicography_acceptance": 5000,
-      "mechanical_wordnet_synset": 556,
-      "unvetted_purism_hallucination": 555
+      "lack_of_morphemic_reasoning": 16779,
+      "soviet_lexicography_acceptance": 60,
+      "unvetted_purism_hallucination": 10,
+      "mechanical_wordnet_synset": 3151
     }
   },
   "invariants_verified": {
