@@ -261,4 +261,35 @@ describe('pronoun-mechanics', () => {
       }
     }
   });
+
+  it('regression: ensures zero valid alternative collisions across Cards 24, 26, 29, 32', () => {
+    const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
+    const raw = readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(raw);
+    const cardMap = new Map<string, any>(deck.cards.map((c: any) => [c.card_id, c]));
+
+    // Card 24
+    const c24 = cardMap.get('pron_orth_tog_abyyaku')!;
+    expect(c24.options).not.toContain('будь-яку');
+    expect(c24.options).toContain('абияка');
+    expect(c24.correct_answer).toBe('абияку');
+
+    // Card 26
+    const c26 = cardMap.get('pron_orth_hyph_bud_khto')!;
+    expect(c26.options).not.toContain('абихто');
+    expect(c26.options).toContain('будь-кого');
+    expect(c26.correct_answer).toBe('будь-хто');
+
+    // Card 29
+    const c29 = cardMap.get('pron_orth_hyph_bud_yake')!;
+    expect(c29.options).not.toContain('абияке');
+    expect(c29.options).toContain('будь-який');
+    expect(c29.correct_answer).toBe('будь-яке');
+
+    // Card 32
+    const c32 = cardMap.get('pron_orth_split_bud_z_kym')!;
+    expect(c32.options).not.toContain('з будь-ким');
+    expect(c32.options).toContain('будь-ким');
+    expect(c32.correct_answer).toBe('будь з ким');
+  });
 });

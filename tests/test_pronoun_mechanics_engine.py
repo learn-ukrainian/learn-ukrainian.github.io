@@ -216,3 +216,32 @@ def test_vesum_distractor_validation():
     assert dist_report["verified"] is True
     assert dist_report["status"] == "passed"
     assert dist_report["invalid_distractors"] == []
+
+
+def test_regression_zero_valid_distractor_collisions():
+    """Regression test ensuring valid alternatives (будь-яку, абихто, абияке, з будь-ким) are never distractors."""
+    cards_by_id = {c.card_id: c for c in build_canonical_pronoun_cards()}
+
+    # Card 24: "брався за _______ роботу"
+    c24 = cards_by_id["pron_orth_tog_abyyaku"]
+    assert "будь-яку" not in c24.all_options()
+    assert any(d.text == "абияка" for d in c24.distractors)
+    assert c24.correct_answer == "абияку"
+
+    # Card 26: "може розв'язати _______ із нашого класу"
+    c26 = cards_by_id["pron_orth_hyph_bud_khto"]
+    assert "абихто" not in c26.all_options()
+    assert any(d.text == "будь-кого" for d in c26.distractors)
+    assert c26.correct_answer == "будь-хто"
+
+    # Card 29: "виконує _______ доручення керівника"
+    c29 = cards_by_id["pron_orth_hyph_bud_yake"]
+    assert "абияке" not in c29.all_options()
+    assert any(d.text == "будь-який" for d in c29.distractors)
+    assert c29.correct_answer == "будь-яке"
+
+    # Card 32: "вступати в суперечку _______"
+    c32 = cards_by_id["pron_orth_split_bud_z_kym"]
+    assert "з будь-ким" not in c32.all_options()
+    assert any(d.text == "будь-ким" for d in c32.distractors)
+    assert c32.correct_answer == "будь з ким"

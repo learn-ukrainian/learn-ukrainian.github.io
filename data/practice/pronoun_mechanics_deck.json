@@ -975,7 +975,7 @@
       "options": [
         "абихто",
         "аби хто",
-        "аби-що",
+        "абикого",
         "аби-хто"
       ],
       "distractors": [
@@ -996,11 +996,11 @@
           }
         },
         {
-          "text": "аби-що",
+          "text": "абикого",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "Контекст стосується особи (істоти), тому вживається 'абихто', а не предметний неозначений 'аби-що'.",
-            "en": "Context refers to a person (animate); 'абихто' is required, not inanimate 'аби-що'."
+            "ua": "У ролі граматичного підмета до присудка 'може скористатися' виступає називний відмінок 'абихто'; форма родового/знахідного відмінка 'абикого' порушує синтаксичну структуру речення.",
+            "en": "As grammatical subject for predicate 'може скористатися', Nominative 'абихто' is required; Genitive/Accusative 'абикого' violates syntactic agreement."
           }
         }
       ],
@@ -1019,7 +1019,7 @@
       "correct_answer": "хтось",
       "options": [
         "хтось",
-        "хто-будь",
+        "когось",
         "хто сь",
         "хто-сь"
       ],
@@ -1041,11 +1041,11 @@
           }
         },
         {
-          "text": "хто-будь",
+          "text": "когось",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "Частка будь- є префіксом і стоїть перед словом ('будь-хто'), постфікса *-будь не існує.",
-            "en": "Particle будь- is a prefix ('будь-хто'); postfix *-будь does not exist in Ukrainian."
+            "ua": "У підрядному реченні потрібен називний відмінок підмета 'хтось' (хто стукав?); форма родового/знахідного відмінка 'когось' порушує узгодження підмета з присудком.",
+            "en": "In the clause, Nominative subject 'хтось' is required; form 'когось' (Genitive/Accusative) violates subject-verb agreement."
           }
         }
       ],
@@ -1065,7 +1065,7 @@
       "options": [
         "аби-яку",
         "абияку",
-        "будь-яку",
+        "абияка",
         "аби яку"
       ],
       "distractors": [
@@ -1086,11 +1086,11 @@
           }
         },
         {
-          "text": "будь-яку",
+          "text": "абияка",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "У значенні 'невибагливу, будь-якої невисокої якості' вживається саме 'абияку'; префікс аби- несе відповідне семантичне забарвлення.",
-            "en": "In the sense of 'unpretentious, of any modest quality', 'абияку' is used; prefix аби- carries that nuance."
+            "ua": "Прийменник 'за' у виразі 'братися за щось' вимагає знахідного відмінка жіночого роду: 'абияку'; форма називного відмінка 'абияка' порушує відмінкове узгодження з іменником 'роботу'.",
+            "en": "Preposition 'за' in 'братися за щось' governs Accusative: 'абияку'; Nominative form 'абияка' violates case agreement with 'роботу'."
           }
         }
       ],
@@ -1108,7 +1108,7 @@
       "blank_target": "щось",
       "correct_answer": "щось",
       "options": [
-        "що-небудь",
+        "чимось",
         "що-сь",
         "що сь",
         "щось"
@@ -1131,11 +1131,11 @@
           }
         },
         {
-          "text": "що-небудь",
+          "text": "чимось",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "Суфікс -небудь позначає цілковиту байдужість вибору, тоді як для впевненого спостереження невідомого предмета вживається 'щось'.",
-            "en": "Suffix -небудь indicates indifference of choice, whereas noticing an unidentified object requires 'щось'."
+            "ua": "Дієслово 'помітити' є перехідним і керує знахідним відмінком прямого додатка: 'щось'; форма орудного відмінка 'чимось' порушує синтаксичне керування.",
+            "en": "Verb 'помітити' is transitive and governs Accusative direct object: 'щось'; Instrumental form 'чимось' violates verb government."
           }
         }
       ],
@@ -1156,7 +1156,7 @@
         "будь хто",
         "будьхто",
         "будь-хто",
-        "абихто"
+        "будь-кого"
       ],
       "distractors": [
         {
@@ -1176,11 +1176,11 @@
           }
         },
         {
-          "text": "абихто",
+          "text": "будь-кого",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "'Абихто' має зневажливе значення ('перший-ліпший, не вартий уваги'), тоді як для довільного позитивного вибору вживається 'будь-хто'.",
-            "en": "'Абихто' has a depreciatory nuance ('anyone indifferent'), whereas arbitrary positive choice requires 'будь-хто'."
+            "ua": "У ролі граматичного підмета при присудку 'може розв'язати' виступає називний відмінок 'будь-хто'; форма родового/знахідного відмінка 'будь-кого' порушує граматичну структуру речення.",
+            "en": "As grammatical subject for predicate 'може розв'язати', Nominative 'будь-хто' is required; form 'будь-кого' (Genitive/Accusative) violates syntactic agreement."
           }
         }
       ],
@@ -1289,7 +1289,7 @@
       "correct_answer": "будь-яке",
       "options": [
         "будьяке",
-        "абияке",
+        "будь-який",
         "будь-яке",
         "будь яке"
       ],
@@ -1311,11 +1311,11 @@
           }
         },
         {
-          "text": "абияке",
+          "text": "будь-який",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "'Абияке' означає погане або недбало зроблене; позитивне значення довільного доручення передає 'будь-яке'.",
-            "en": "'Абияке' means shoddy or substandard; positive sense of any assignment requires 'будь-яке'."
+            "ua": "Іменник 'доручення' належить до середнього роду, тому займенник узгоджується у формі середнього роду 'будь-яке'; форма чоловічого роду 'будь-який' порушує узгодження в роді.",
+            "en": "Noun 'доручення' is neuter; pronoun must agree in neuter form 'будь-яке'; masculine form 'будь-який' violates gender agreement."
           }
         }
       ],
