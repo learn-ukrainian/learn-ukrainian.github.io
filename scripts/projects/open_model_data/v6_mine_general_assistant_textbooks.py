@@ -391,6 +391,17 @@ def has_unresolved_anaphora(s: str) -> bool:
 
 # Typography & Calque Sanitation
 APOSTROPHE_RE = re.compile(r"['’ʼ´`]")
+UKRAINIAN_WORD_TOKEN_RE = re.compile(
+    r"\b[а-яіїєґ]+(?:['\u2019\u02bc][а-яіїєґ]+)*(?:-[а-яіїєґ]+(?:['\u2019\u02bc][а-яіїєґ]+)*)*\b",
+    re.IGNORECASE,
+)
+
+
+def normalize_ukrainian_apostrophes(text: str) -> str:
+    """Normalize typographical apostrophes (’, ʼ) to standard ASCII apostrophe (')."""
+    return text.replace("\u2019", "'").replace("\u02bc", "'")
+
+
 HYPHEN_BREAK_RE = re.compile(r"([а-яіїєґА-ЯІЇЄҐa-zA-Z])(?:-[\s\t]*[\r\n]+[\s\t]*|\xad[\s\r\n]*|- +)([а-яіїєґА-ЯІЇЄҐa-zA-Z])")
 DOUBLE_PUNCT_RE = re.compile(r"\.{2,}")
 PUNCT_DOT_RE = re.compile(r"([?!…])\.")
@@ -646,7 +657,8 @@ def get_vesum_lemmas(text: str, cur_ves: sqlite3.Cursor | None = None) -> set[st
     """Extract all dictionary lemmas for tokens in text from VESUM forms_all."""
     if not text:
         return set()
-    words = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", text.lower())]
+    norm = normalize_ukrainian_apostrophes(text.lower())
+    words = [m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm)]
     lemmas: set[str] = set()
     for w in words:
         lemmas.update(get_vesum_word_lemmas(w, cur_ves))
@@ -1665,7 +1677,8 @@ def is_definitional_for_concept(
         return False
 
     def _extract_content_lemmas(phrase: str) -> set[str]:
-        words = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", phrase.lower())]
+        norm_p = normalize_ukrainian_apostrophes(phrase.lower())
+        words = [m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_p)]
         func_words = {
             "та", "і", "й", "або", "чи", "а", "але", "це", "до", "від", "на", "в", "у",
             "із", "зі", "за", "під", "над", "при", "про", "для", "без", "через", "з",
@@ -1726,7 +1739,9 @@ def is_definitional_for_concept(
                 return True
         else:
             before_lemmas = _extract_content_lemmas(before_phrase)
-            if _matches_concept(before_lemmas):
+            after_lemmas = _extract_content_lemmas(after_phrase)
+            combined_lemmas = before_lemmas | after_lemmas
+            if _matches_concept(combined_lemmas) or _matches_concept(before_lemmas) or _matches_concept(after_lemmas):
                 return True
 
     for m in re.finditer(r"\bназивають\s+([а-яіїєґ\s'-]{2,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snippet):
@@ -2231,8 +2246,8 @@ def extract_scientific_terminology_for_snippet(
     canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(subject, [])
     candidate_terms: list[str] = []
 
-    # 1. Subject canonical terms present directly in target definition (only single-word noun lemmas!)
-    snip_tokens = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", target_text)]
+    norm_target = normalize_ukrainian_apostrophes(target_text)
+    snip_tokens = [m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_target)]
     snip_lemmas: set[str] = set()
     for tok in snip_tokens:
         snip_lemmas.update(get_vesum_word_lemmas(tok, cur))
@@ -3230,8 +3245,6 @@ def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
                         return False
                     if is_vesum_pronoun(t_clean, cur):
                         return False
-                    if t_clean in snip:
-                        continue
                     if snip_lemmas is None:
                         snip_lemmas = get_vesum_lemmas(snip, cur)
                     t_lemmas = get_vesum_lemmas(t_clean, cur) or {t_clean}

@@ -1,41 +1,41 @@
 {
   "dataset_name": "uldr_v06_general_assistant_eval",
-  "total_cases": 261,
-  "unique_concepts_count": 252,
-  "unique_chunks_count": 261,
+  "total_cases": 254,
+  "unique_concepts_count": 245,
+  "unique_chunks_count": 254,
   "duplicate_pairs_count": 0,
   "shards_count": 5,
-  "max_shard_size_kb": 132.4,
+  "max_shard_size_kb": 127.23,
   "shards": [
     {
       "shard_file": "eval_shard_001_of_005.jsonl",
-      "cases_count": 52,
-      "size_kb": 128.19,
-      "sha256": "63320448d300cb86226f1da8c628f1674669c58dca5534bc07701512e7d50462"
+      "cases_count": 50,
+      "size_kb": 123.14,
+      "sha256": "9a396703407de4eaa3f47558bb20e1b1e08cc3066395261bb65c37cc8d8c8e69"
     },
     {
       "shard_file": "eval_shard_002_of_005.jsonl",
-      "cases_count": 52,
-      "size_kb": 131.91,
-      "sha256": "d7531e0bc91f53c31868a99930fff87a6aa33d2338ffd1422425458474f999ef"
+      "cases_count": 50,
+      "size_kb": 127.23,
+      "sha256": "b02371c15340750acd60bea2d7ff212427f93af3b66fb95f9c7f0b671f9665a7"
     },
     {
       "shard_file": "eval_shard_003_of_005.jsonl",
-      "cases_count": 52,
-      "size_kb": 132.4,
-      "sha256": "01764db881a94b5473a5f6394e068b667ed100c4f7bcbf38d873647c7d67ef04"
+      "cases_count": 50,
+      "size_kb": 126.97,
+      "sha256": "2de87ff479b62612203c95d20ec92b7404765f01ea0e1879093a6d5fc6542ef7"
     },
     {
       "shard_file": "eval_shard_004_of_005.jsonl",
-      "cases_count": 52,
-      "size_kb": 125.1,
-      "sha256": "d768f06c7b35020690177692b3b6c95b58311d080784f38ad3b26aca962e2db7"
+      "cases_count": 50,
+      "size_kb": 122.29,
+      "sha256": "cbaa26c04a406a03eefeaf94fa078a3921c765b2df574bd9776a001e2ad2d07c"
     },
     {
       "shard_file": "eval_shard_005_of_005.jsonl",
-      "cases_count": 53,
-      "size_kb": 122.07,
-      "sha256": "95bfe08d9f355f6d341ea847b2ff0cf9ff7f27a08c31170b09cabfe5c767d945"
+      "cases_count": 54,
+      "size_kb": 126.47,
+      "sha256": "d247a722b1830d7f0ce6e47f1cc01b12a67a94e3481e2102570696365bce2b5a"
     }
   ]
 }

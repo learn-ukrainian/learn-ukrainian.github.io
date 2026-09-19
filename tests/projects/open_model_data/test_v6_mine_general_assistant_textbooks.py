@@ -1169,3 +1169,11 @@ def test_r13_fable_findings_elimination():
         assert "філологічн" not in task_art["query"].lower()
         assert "мовознавч" not in task_art["query"].lower()
         assert "літератур" not in task_art["query"].lower()
+
+    # 9. Ukrainian apostrophe preservation: zero slicing into bogus lemmas ('ятка' from 'пам'ятки', 'трава' from 'трав'янисті')
+    s_apo = "Пам'ятки природи — це унікальні природні утворення, де ростуть трав'янисті рослини та живе плем'я."
+    terms_apo = extract_scientific_terminology_for_snippet(s_apo, "Пам'ятки природи", "heohrafiya", cur)
+    assert "ятка" not in terms_apo
+    assert "трава" not in terms_apo
+    assert "пам'ятка" in terms_apo
+    assert "плем'я" in get_vesum_lemmas("рід і племені та плем'я", cur)

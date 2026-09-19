@@ -62,6 +62,17 @@ GENITIVE_GOVERNING_PREPOSITIONS = {
 }
 GENITIVE_QUANTIFIERS = {"один", "одна", "одне", "кілька", "декілька", "багато", "мало", "чимало"}
 
+UKRAINIAN_WORD_TOKEN_RE = re.compile(
+    r"\b[а-яіїєґ]+(?:['\u2019\u02bc][а-яіїєґ]+)*(?:-[а-яіїєґ]+(?:['\u2019\u02bc][а-яіїєґ]+)*)*\b",
+    re.IGNORECASE,
+)
+
+
+def normalize_ukrainian_apostrophes(text: str) -> str:
+    """Normalize typographical apostrophes (’, ʼ) to standard ASCII apostrophe (')."""
+    return text.replace("\u2019", "'").replace("\u02bc", "'")
+
+
 # General textbook & school metalanguage stopwords (excluding authentic scientific domain terms)
 AUDIT_STOPWORD_TERMS = {
     "клас", "класу", "класи", "класів", "класом", "математика", "математики", "математику",
@@ -352,7 +363,8 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
         return False
 
     def _get_std_lemmas(phrase: str) -> set[str]:
-        tokens = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", phrase.lower())]
+        norm_p = normalize_ukrainian_apostrophes(phrase.lower())
+        tokens = [m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_p)]
         res: set[str] = set()
         for tok in tokens:
             cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ?", (tok,))
@@ -399,7 +411,9 @@ def audit_definitional_alignment(concept: str, snippet: str, cur: sqlite3.Cursor
                 return True
         else:
             before_lemmas = _get_std_lemmas(before_phrase)
-            if _matches_concept(before_lemmas):
+            after_lemmas = _get_std_lemmas(after_phrase)
+            combined_lemmas = before_lemmas | after_lemmas
+            if _matches_concept(combined_lemmas) or _matches_concept(before_lemmas) or _matches_concept(after_lemmas):
                 return True
 
     # 3. Y називають X
@@ -441,8 +455,9 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
     if len(terms) < 2:
         return False
 
-    # Extract all whole tokens preserving hyphens
-    tokens = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", snippet.lower())]
+    # Extract all whole tokens preserving hyphens and apostrophes
+    norm_snip = normalize_ukrainian_apostrophes(snippet.lower())
+    tokens = [m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_snip)]
 
     # Build snippet standard lemmas set with contextual disambiguation
     snip_valid_lemmas: set[str] = set()
@@ -460,15 +475,30 @@ def audit_scientific_terms(terms: list[str], snippet: str, concept: str, cur: sq
 
         if prev_tok:
             prev_low = prev_tok.lower()
-            is_gen_context = prev_low in GENITIVE_GOVERNING_PREPOSITIONS or prev_low in GENITIVE_QUANTIFIERS
-            if not is_gen_context:
-                cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (prev_low,))
-                if any(r[0] == "noun" for r in cur.fetchall()):
-                    is_gen_context = True
-            if is_gen_context:
-                rod_rows = [r for r in noun_rows if ":v_rod" in r[2]]
-                if rod_rows:
-                    chosen_lemma = rod_rows[0][0].lower()
+            cur.execute("SELECT tags FROM forms_all WHERE word_form IN (?, ?) AND pos = 'adj'", (prev_low, prev_tok.capitalize()))
+            adj_tags = [r[0] for r in cur.fetchall()]
+            if adj_tags:
+                def extract_cgn(tag: str):
+                    parts = tag.split(":")
+                    case = next((p for p in parts if p.startswith("v_")), None)
+                    num = "p" if ":p:" in tag else "s"
+                    return (case, num)
+                adj_cgns = {extract_cgn(t) for t in adj_tags}
+                matching_noun_rows = [r for r in noun_rows if extract_cgn(r[2]) in adj_cgns]
+                if matching_noun_rows:
+                    sing = [r for r in matching_noun_rows if ":p:" not in r[2]]
+                    chosen_lemma = (sing[0] if sing else matching_noun_rows[0])[0].lower()
+
+            if chosen_lemma is None:
+                is_gen_context = prev_low in GENITIVE_GOVERNING_PREPOSITIONS or prev_low in GENITIVE_QUANTIFIERS
+                if not is_gen_context:
+                    cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (prev_low,))
+                    if any(r[0] == "noun" for r in cur.fetchall()):
+                        is_gen_context = True
+                if is_gen_context:
+                    rod_rows = [r for r in noun_rows if ":v_rod" in r[2]]
+                    if rod_rows:
+                        chosen_lemma = rod_rows[0][0].lower()
 
         if chosen_lemma is None:
             p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
@@ -592,17 +622,27 @@ def scan_entire_release_defects(cur: sqlite3.Cursor) -> dict[str, int]:
                 if "появ" in terms and re.search(r"\b(?:ознаки|причини|час)\s+появи?\b", snip, re.IGNORECASE):
                     defect_counts["disallowed_lemmas"] += 1
 
-                # Defect 4: Substring terms
-                snip_tokens = set(re.findall(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", snip.lower()))
+                # Defect 4: Substring terms & sliced apostrophes
+                norm_snip = normalize_ukrainian_apostrophes(snip.lower())
+                snip_tokens = {m.group(0).strip("'-") for m in UKRAINIAN_WORD_TOKEN_RE.finditer(norm_snip)}
+                if "ятка" in terms and any(tok.startswith("пам'ят") for tok in snip_tokens):
+                    defect_counts["disallowed_lemmas"] += 1
+                if "трава" in terms and any("трав'ян" in tok for tok in snip_tokens) and "трава" not in snip_tokens and "трави" not in snip_tokens:
+                    defect_counts["disallowed_lemmas"] += 1
+                ORGAN_FORMS = {"орган", "органи", "органів", "органу", "органові", "органом", "органі", "органа", "органах", "органами"}
+                SVITLO_FORMS = {"світло", "світла", "світлу", "світлом", "світлі"}
+                SPRAVEDLYVIST_FORMS = {"справедливість", "справедливості", "справедливістю"}
+                MORAL_FORMS = {"мораль", "моралі", "мораллю"}
+
                 for t in terms:
                     t_low = t.lower()
-                    if t_low == "орган" and "орган" not in snip_tokens and any(tok.startswith("організм") for tok in snip_tokens):
+                    if t_low == "орган" and not any(tok in ORGAN_FORMS for tok in snip_tokens) and any(tok.startswith("організм") for tok in snip_tokens):
                         defect_counts["substring_terms"] += 1
-                    if t_low == "світло" and "світло" not in snip_tokens and any("світло-" in tok for tok in snip_tokens):
+                    if t_low == "світло" and not any(tok in SVITLO_FORMS for tok in snip_tokens) and any("світло-" in tok for tok in snip_tokens):
                         defect_counts["substring_terms"] += 1
-                    if t_low == "справедливість" and "справедливість" not in snip_tokens and "несправедливість" in snip_tokens:
+                    if t_low == "справедливість" and not any(tok in SPRAVEDLYVIST_FORMS for tok in snip_tokens) and "несправедливість" in snip_tokens:
                         defect_counts["substring_terms"] += 1
-                    if t_low == "мораль" and "мораль" not in snip_tokens and any("моральн" in tok for tok in snip_tokens):
+                    if t_low == "мораль" and not any(tok in MORAL_FORMS for tok in snip_tokens) and any("моральн" in tok for tok in snip_tokens):
                         defect_counts["substring_terms"] += 1
 
                 # Defect 5: Conversational anaphora
