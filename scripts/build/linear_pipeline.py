@@ -330,6 +330,9 @@ PROMPT_ADHERENCE_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
 WRITER_TOOL_NAMES = frozenset(
     {
         "verify_words",
+        # Singular form is a genuine `sources` MCP tool; omitting it made the
+        # always-on -tools gate misread a real lookup as zero calls (#7994).
+        "verify_word",
         "verify_lemma",
         "search_definitions",
         "search_definitions_slovnyk",
@@ -2774,12 +2777,23 @@ def _module_ref(level: str | None, module_num: str | int | None) -> str | None:
     return f"{level.strip().lower()}/{module_part}"
 
 
+UPGRADE_PROMPT_HEADER_RE = re.compile(
+    r"^Mode:\s*upgrade\.\s*Base level:\s*(?P<level>[A-Za-z0-9-]+)\.\s*Module:\s*(?P<module>[a-z0-9-]+)\.\s*$",
+    re.MULTILINE,
+)
+UNKNOWN_MODULE_REF = "unknown"
+
+
 def _prompt_module_ref(prompt: str) -> str | None:
     level_match = re.search(r"^\s*-\s*Level:\s*(?P<level>\S+)\s*$", prompt, re.MULTILINE)
     module_match = re.search(r"^\s*-\s*Module:\s*(?P<module>\S+)\s*$", prompt, re.MULTILINE)
-    if not level_match or not module_match:
-        return None
-    return _module_ref(level_match.group("level"), module_match.group("module"))
+    if level_match and module_match:
+        return _module_ref(level_match.group("level"), module_match.group("module"))
+    # Upgrade template header: ``Mode: upgrade. Base level: a1. Module: slug.``
+    upgrade_match = UPGRADE_PROMPT_HEADER_RE.search(prompt)
+    if upgrade_match:
+        return _module_ref(upgrade_match.group("level"), upgrade_match.group("module"))
+    return None
 
 
 def _prompt_sections(prompt: str) -> list[str]:
@@ -4324,7 +4338,15 @@ def invoke_writer(
             + "\n",
             encoding="utf-8",
         )
-    if module_ref and section_names:
+    # The runtime gates must never depend on prompt-shape regexes: the
+    # ``--upgrade`` prompt has neither ``- Level:`` bullets nor ``## Contract
+    # YAML``, so gating on both silently skipped MCP_TOOLS_NEVER_INVOKED for
+    # every upgrade write (#7994: special-signs shipped with ``[]`` traces).
+    # A -tools writer is always gated; other writers keep the legacy
+    # telemetry-only-when-parseable behaviour.
+    if writer.endswith("-tools") and not module_ref:
+        module_ref = UNKNOWN_MODULE_REF
+    if module_ref and (section_names or writer.endswith("-tools")):
         phase_writer_summary = emit_writer_response_telemetry(
             response_text,
             writer=writer,
