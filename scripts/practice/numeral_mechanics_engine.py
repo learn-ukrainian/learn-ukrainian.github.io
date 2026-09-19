@@ -2374,8 +2374,8 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_67",
             category=NumeralCategory.TIME_EXPRESSIONS_ANTI_CALQUE,
             cefr_level="A2",
-            sentence_before="Ранковий швидкісний поїзд вирушає рівно о",
-            sentence_after="з першої платформи.",
+            sentence_before="На вокзальному годиннику зараз рівно",
+            sentence_after=", і посадка на швидкісний поїзд уже розпочалася.",
             correct_answer="чверть на одинадцяту",
             distractors=(
                 NumeralDistractor(
@@ -2792,11 +2792,14 @@ def main() -> None:
             print(f"Missing targets: {len(res['missing_targets'])}")
             if res["missing_targets"]:
                 print("Missing:", res["missing_targets"])
-                sys.exit(1)
-            print("VESUM verification: PASSED (100% target coverage)")
+            else:
+                print("VESUM verification: PASSED (100% target coverage)")
+        if res["missing_targets"] or not res.get("vesum_verified", False):
+            sys.exit(1)
 
     if args.export:
-        payload = export_deck(cards, PROJECT_ROOT / args.output)
+        out_path = Path(args.output) if Path(args.output).is_absolute() else PROJECT_ROOT / args.output
+        payload = export_deck(cards, out_path)
         print(f"Successfully exported {payload['card_count']} cards to {args.output}")
 
 

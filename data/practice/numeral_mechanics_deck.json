@@ -2994,7 +2994,7 @@
       "card_id": "numeral_67",
       "category": "time_expressions_anti_calque",
       "cefr_level": "A2",
-      "prompt_sentence": "Ранковий швидкісний поїзд вирушає рівно о _______ з першої платформи.",
+      "prompt_sentence": "На вокзальному годиннику зараз рівно _______, і посадка на швидкісний поїзд уже розпочалася.",
       "blank_target": "чверть на одинадцяту",
       "correct_answer": "чверть на одинадцяту",
       "options": [

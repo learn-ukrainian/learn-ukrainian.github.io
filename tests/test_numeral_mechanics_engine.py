@@ -22,10 +22,13 @@ import json
 from collections import Counter
 from pathlib import Path
 
+import pytest
+
 from scripts.practice.numeral_mechanics_engine import (
     NumeralCategory,
     build_canonical_numeral_cards,
     export_deck,
+    main,
     resolve_approximate_constructions_rule,
     resolve_cardinal_40_90_100_rule,
     resolve_cardinal_50_80_rule,
@@ -208,3 +211,50 @@ def test_vesum_verification_clean():
     assert res["vesum_verified"] is True
     assert len(res["missing_targets"]) == 0, f"Missing target tokens in VESUM: {res['missing_targets']}"
     assert res["target_tokens_count"] >= 50
+
+
+def test_cli_verify_vesum_json_failure_exits_and_blocks_export(monkeypatch, tmp_path: Path):
+    """Regression test for P2: --verify-vesum failure must exit 1 regardless of --json mode and block export."""
+    from scripts.practice import numeral_mechanics_engine
+
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 88,
+        "missing_targets": ["вигаданеслово"],
+        "vesum_verified": False,
+    }
+    monkeypatch.setattr(numeral_mechanics_engine, "verify_deck_with_vesum", lambda cards, **kw: fake_res)
+
+    out_file = tmp_path / "blocked_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["numeral_mechanics_engine.py", "--verify-vesum", "--json", "--export", "--output", str(out_file)],
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 1
+    assert not out_file.exists(), "Deck must NOT be exported when verification fails"
+
+
+def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
+    """Verify that CLI --verify-vesum --json --export succeeds and writes deck on clean verification."""
+    from scripts.practice import numeral_mechanics_engine
+
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 88,
+        "missing_targets": [],
+        "vesum_verified": True,
+    }
+    monkeypatch.setattr(numeral_mechanics_engine, "verify_deck_with_vesum", lambda cards, **kw: fake_res)
+
+    out_file = tmp_path / "allowed_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["numeral_mechanics_engine.py", "--verify-vesum", "--json", "--export", "--output", str(out_file)],
+    )
+
+    main()
+    assert out_file.exists(), "Deck should be exported when verification succeeds"
