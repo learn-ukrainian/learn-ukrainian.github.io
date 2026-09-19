@@ -2139,22 +2139,22 @@
       "card_id": "numeral_48",
       "category": "collective_restriction_feminine",
       "cefr_level": "B1",
-      "prompt_sentence": "У міському конкурсі перемогли _______ із нашого університету.",
+      "prompt_sentence": "У міському конкурсі здобули перемогу _______ із нашого університету.",
       "blank_target": "чотири дівчини",
       "correct_answer": "чотири дівчини",
       "options": [
-        "чотирьох дівчат",
+        "четверо дівчат",
         "чотири дівчині",
         "чотири дівчини",
         "чотири дівчат"
       ],
       "distractors": [
         {
-          "text": "чотирьох дівчат",
-          "interference_type": "case_confusion_dative_locative",
+          "text": "четверо дівчат",
+          "interference_type": "collective_with_adult_female",
           "explanation": {
-            "ua": "Форма родового/знахідного відмінка 'чотирьох дівчат' не може виступати підметом у називному контексті без прийменника чи керуючого слова; правильна форма називного відмінка — 'чотири дівчини'.",
-            "en": "Genitive/Accusative form 'чотирьох дівчат' cannot serve as the subject in a nominative context without governing context; correct nominative form is 'чотири дівчини'."
+            "ua": "З іменниками жіночого роду на позначення осіб збірні числівники не вживаються (*четверо дівчат* — ненормативно; літературна норма — 'чотири дівчини').",
+            "en": "Collective numerals are not used with feminine personal nouns (*четверо дівчат* is non-standard; literary norm is 'чотири дівчини')."
           }
         },
         {

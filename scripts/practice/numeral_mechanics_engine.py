@@ -1773,15 +1773,15 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
             card_id="numeral_48",
             category=NumeralCategory.COLLECTIVE_RESTRICTION_FEMININE,
             cefr_level="B1",
-            sentence_before="У міському конкурсі перемогли",
+            sentence_before="У міському конкурсі здобули перемогу",
             sentence_after="із нашого університету.",
             correct_answer="чотири дівчини",
             distractors=(
                 NumeralDistractor(
-                    text="чотирьох дівчат",
-                    interference_type=NumeralInterferenceType.CASE_CONFUSION_DATIVE_LOCATIVE,
-                    explanation_ua="Форма родового/знахідного відмінка 'чотирьох дівчат' не може виступати підметом у називному контексті без прийменника чи керуючого слова; правильна форма називного відмінка — 'чотири дівчини'.",
-                    explanation_en="Genitive/Accusative form 'чотирьох дівчат' cannot serve as the subject in a nominative context without governing context; correct nominative form is 'чотири дівчини'.",
+                    text="четверо дівчат",
+                    interference_type=NumeralInterferenceType.COLLECTIVE_WITH_ADULT_FEMALE,
+                    explanation_ua="З іменниками жіночого роду на позначення осіб збірні числівники не вживаються (*четверо дівчат* — ненормативно; літературна норма — 'чотири дівчини').",
+                    explanation_en="Collective numerals are not used with feminine personal nouns (*четверо дівчат* is non-standard; literary norm is 'чотири дівчини').",
                 ),
                 NumeralDistractor(
                     text="чотири дівчат",

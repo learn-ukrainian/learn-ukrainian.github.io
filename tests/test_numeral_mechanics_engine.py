@@ -286,3 +286,18 @@ def test_approximate_cards_register_and_unambiguous_distractors():
     d75 = [d.text for d in card75.distractors]
     assert "біля трьох років" not in d75, "Card 75 must not reject bare 'біля трьох років' without register prompt"
     assert "порядка трьох років" in d75, "Card 75 should use unambiguously incorrect 'порядка трьох років'"
+
+
+def test_card_48_subject_clarity_and_collective_distractor():
+    """Regression test for Card 48 (Astra review finding):
+    - Card 48 makes subject reading explicit ('здобули перемогу').
+    - Distractor rejects invalid collective numeral with feminine noun ('четверо дівчат').
+    - No ambiguous accusative distractor ('чотирьох дівчат').
+    """
+    cards = {c.card_id: c for c in build_canonical_numeral_cards()}
+    card48 = cards["numeral_48"]
+    assert "здобули перемогу" in card48.sentence_before
+    assert card48.correct_answer == "чотири дівчини"
+    d48 = [d.text for d in card48.distractors]
+    assert "чотирьох дівчат" not in d48, "Card 48 must not reject accusative 'чотирьох дівчат'"
+    assert "четверо дівчат" in d48, "Card 48 must test collective feminine restriction 'четверо дівчат'"

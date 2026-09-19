@@ -270,4 +270,17 @@ describe('numeral-mechanics', () => {
     expect(d75).not.toContain('біля трьох років');
     expect(d75).toContain('порядка трьох років');
   });
+
+  it('ensures Card 48 uses explicit subject framing and collective feminine restriction distractor', () => {
+    const deckPath = resolve(__dirname, '../../../data/practice/numeral_mechanics_deck.json');
+    const content = readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(content);
+
+    const card48 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_48');
+    expect(card48.prompt_sentence).toContain('здобули перемогу');
+    expect(card48.correct_answer).toBe('чотири дівчини');
+    const d48 = card48.distractors.map((d: { text: string }) => d.text);
+    expect(d48).not.toContain('чотирьох дівчат');
+    expect(d48).toContain('четверо дівчат');
+  });
 });
