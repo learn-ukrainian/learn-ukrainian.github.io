@@ -6431,4 +6431,50 @@ describe('LexiconPractice', () => {
       expect(await screen.findByRole('button', { name: /кави/ })).toBeInTheDocument();
     });
   });
+
+  describe('#8260 Practice Hub Progressive Disclosure & Parts of Speech Track', () => {
+    test('renders 3 progressive disclosure tracks with explicit headers and parts-of-speech discovery', async () => {
+      const { container } = render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      // Track 1: Vocabulary & Lexical Relations
+      expect(await screen.findByRole('heading', { name: /Словниковий запас/i })).toBeInTheDocument();
+      expect(screen.getByText(/Опанування слів, значень/i)).toBeInTheDocument();
+
+      // Track 2: Grammar & Parts of Speech
+      const grammarTrack = screen.getByTestId('practice-track-grammar');
+      expect(grammarTrack).toBeInTheDocument();
+      expect(within(grammarTrack).getByRole('heading', { name: /Граматика та частини мови/i })).toBeInTheDocument();
+
+      // Verify POS badges on Track 2 cards
+      const paradigmBtn = container.querySelector('[data-mode="paradigm"]')!;
+      expect(within(paradigmBtn as HTMLElement).getByText('Іменник')).toBeInTheDocument();
+
+      const imperativeBtn = container.querySelector('[data-mode="imperative"]')!;
+      expect(within(imperativeBtn as HTMLElement).getByText('Дієслово')).toBeInTheDocument();
+
+      const stressBtn = container.querySelector('[data-mode="stress"]')!;
+      expect(within(stressBtn as HTMLElement).getByText('Наголоси')).toBeInTheDocument();
+
+      const classifyBtn = container.querySelector('[data-mode="classify"]')!;
+      expect(within(classifyBtn as HTMLElement).getByText('Частини мови')).toBeInTheDocument();
+
+      // Case selector is housed inside Grammar Track
+      expect(within(grammarTrack).getByTestId('practice-case-selector')).toBeInTheDocument();
+
+      // Track 3: Thematic Courses & ZNO
+      expect(screen.getByRole('heading', { name: /Тематичні курси та ЗНО/i })).toBeInTheDocument();
+    });
+
+    test('renders Google Drive privacy disclosure text in secondary tools when configured', async () => {
+      localStorage.setItem('learn_uk_google_client_id', 'test-client-id.apps.googleusercontent.com');
+      try {
+        render(<LexiconPractice initialDeck={sampleDeck()} />);
+        const secondaryTools = screen.getByTestId('practice-secondary-tools');
+        expect(secondaryTools).toBeInTheDocument();
+        expect(within(secondaryTools).getByText(/Безпечна синхронізація через appDataFolder/i)).toBeInTheDocument();
+      } finally {
+        localStorage.removeItem('learn_uk_google_client_id');
+      }
+    });
+  });
 });
