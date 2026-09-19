@@ -244,8 +244,7 @@ def _patch_provider_binary_lookup(monkeypatch, lookup) -> None:
 
 
 def _patch_path_binary_lookup(monkeypatch, lookup) -> None:
-    """Patch node PATH lookup and the provider resolver seam (#7161)."""
-    monkeypatch.setattr(acpx_module.shutil, "which", lookup)
+    """Patch the provider resolver seam (#7161). Node is found via PATH."""
     monkeypatch.setattr(binary_resolve_module, "_which", lookup)
 
 
@@ -275,8 +274,15 @@ def _fake_node_binary(directory: Path, *, version: str) -> Path:
     return node
 
 
-def _isolate_node_fallbacks(monkeypatch, *roots: Path) -> None:
-    """Disable keg + host fallbacks except the supplied dirs (hermetic)."""
+def _isolate_node_fallbacks(
+    monkeypatch, *roots: Path, path_dirs: tuple[Path, ...] = ()
+) -> None:
+    """Disable keg + host fallbacks except the supplied dirs (hermetic).
+
+    Replaces PATH with ``path_dirs`` so a real host Node cannot leak into
+    resolver tests (#8287).
+    """
+    monkeypatch.setenv("PATH", os.pathsep.join(str(path) for path in path_dirs))
     monkeypatch.setattr(acpx_module, "_versioned_node_keg_dirs", lambda _major: ())
     monkeypatch.setattr(acpx_module, "_NODE_HOST_BIN_DIRS", tuple(roots))
 
@@ -288,12 +294,7 @@ def test_resolve_host_node_skips_wrong_version_on_path_for_contract_fallback(
     required = acpx_module._required_node_major(adapter_label="test")
     wrong = _fake_node_binary(tmp_path / "wrong", version=f"v{required + 4}.0.0")
     correct = _fake_node_binary(tmp_path / "correct", version=f"v{required}.14.0")
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str(wrong) if name == "node" else None,
-    )
-    _isolate_node_fallbacks(monkeypatch, correct.parent)
+    _isolate_node_fallbacks(monkeypatch, correct.parent, path_dirs=(wrong.parent,))
 
     resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
     assert resolved == correct.resolve()
@@ -314,33 +315,85 @@ def test_resolve_host_node_rejects_masquerading_non_node_executable(
     impostor = tmp_path / "node"
     impostor.write_text("#!/bin/sh\nexec /bin/echo stub-node\n", encoding="utf-8")
     impostor.chmod(0o755)
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str(impostor) if name == "node" else None,
-    )
-    _isolate_node_fallbacks(monkeypatch)
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
 
     with pytest.raises(AcpxShadowRefusalError, match=r"no Node \d+\.x binary"):
         acpx_module._resolve_host_node_binary(adapter_label="test")
 
 
 def test_resolve_host_node_fails_loudly_when_none_qualify(tmp_path, monkeypatch):
-    """#6953 CF: every candidate wrong/non-Node → loud refusal."""
+    """#6953 CF / #8287: every candidate wrong/non-Node → loud refusal."""
     required = acpx_module._required_node_major(adapter_label="test")
     wrong = _fake_node_binary(tmp_path / "wrong", version=f"v{required + 1}.0.0")
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str(wrong) if name == "node" else None,
-    )
-    _isolate_node_fallbacks(monkeypatch)
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(wrong.parent,))
 
     with pytest.raises(
         AcpxShadowRefusalError,
         match=rf"no Node {required}\.x binary.*--version matching \.nvmrc",
     ):
         acpx_module._resolve_host_node_binary(adapter_label="test")
+
+
+def test_resolve_host_node_prefers_highest_matching_major_on_path(tmp_path, monkeypatch):
+    """#8287: two matching-major stubs, older first on PATH → newer wins."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    older = _fake_node_binary(tmp_path / "older", version=f"v{required}.14.0")
+    newer = _fake_node_binary(tmp_path / "newer", version=f"v{required}.22.1")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(older.parent, newer.parent))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == newer.resolve()
+
+
+def test_resolve_host_node_rejects_newer_wrong_major_before_matching(
+    tmp_path, monkeypatch
+):
+    """#8287: newer wrong-major first on PATH does not beat matching-major."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    wrong = _fake_node_binary(tmp_path / "wrong", version=f"v{required + 2}.19.0")
+    matching = _fake_node_binary(tmp_path / "matching", version=f"v{required}.14.0")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(wrong.parent, matching.parent))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == matching.resolve()
+
+
+def test_resolve_host_node_equal_versions_keep_earlier_candidate(tmp_path, monkeypatch):
+    """#8287: equal matching-major versions keep the earlier candidate."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    first = _fake_node_binary(tmp_path / "first", version=f"v{required}.22.1")
+    second = _fake_node_binary(tmp_path / "second", version=f"v{required}.22.1")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(first.parent, second.parent))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == first.resolve()
+
+
+def test_resolve_host_node_single_matching_candidate_unchanged(tmp_path, monkeypatch):
+    """#8287: a single matching-major candidate is still returned."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    only = _fake_node_binary(tmp_path / "only", version=f"v{required}.14.0")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(only.parent,))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == only.resolve()
+
+
+def test_resolve_host_node_skips_symlink_loop_path_entry(tmp_path, monkeypatch):
+    """#8287 CF: cyclic node symlink on PATH is skipped; later matching stub wins."""
+    required = acpx_module._required_node_major(adapter_label="test")
+    loop_dir = tmp_path / "loop"
+    loop_dir.mkdir()
+    loop_a = loop_dir / "a"
+    loop_b = loop_dir / "b"
+    loop_a.symlink_to(loop_b)
+    loop_b.symlink_to(loop_a)
+    (loop_dir / "node").symlink_to(loop_a)
+    matching = _fake_node_binary(tmp_path / "matching", version=f"v{required}.14.0")
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(loop_dir, matching.parent))
+
+    resolved = acpx_module._resolve_host_node_binary(adapter_label="test")
+    assert resolved == matching.resolve()
 
 
 def test_acpx_spawn_argv_pins_absolute_node_when_shebang_uses_env(tmp_path, monkeypatch):
@@ -353,22 +406,12 @@ def test_acpx_spawn_argv_pins_absolute_node_when_shebang_uses_env(tmp_path, monk
     script.write_text("#!/usr/bin/env node\nconsole.log('ok')\n", encoding="utf-8")
     script.chmod(0o755)
     node = _fake_node_binary(tmp_path, version=f"v{required}.14.0")
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str(node) if name == "node" else None,
-    )
-    _isolate_node_fallbacks(monkeypatch)
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
 
     argv = acpx_module._acpx_spawn_argv(str(script), adapter_label="test")
     assert argv == [str(node.resolve()), str(script.resolve())]
 
-    monkeypatch.setattr(
-        acpx_module.shutil,
-        "which",
-        lambda name: str(host_node) if name == "node" else None,
-    )
-    _isolate_node_fallbacks(monkeypatch, host_node.parent)
+    _isolate_node_fallbacks(monkeypatch, host_node.parent, path_dirs=(host_node.parent,))
     primary = Path(__file__).resolve().parents[2] / "node_modules" / ".bin" / "acpx"
     if not primary.is_file():
         pytest.skip("project-local acpx not installed")
@@ -2399,7 +2442,7 @@ def test_new_fleet_discussion_seats_use_fixed_confined_commands(
     _patch_path_binary_lookup(
         monkeypatch, lambda name, *_a, **_k: binaries.get(name)
     )
-    _isolate_node_fallbacks(monkeypatch)
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
     monkeypatch.setattr(
         acpx_module,
         "_probe_participant_cli_compatibility",
@@ -2665,7 +2708,7 @@ def test_new_fleet_discussion_seat_accepts_provider_cli_version_drift(tmp_path, 
         monkeypatch,
         lambda name, *_a, **_k: str({"agy": agy, "node": node}[name]),
     )
-    _isolate_node_fallbacks(monkeypatch)
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
     monkeypatch.setattr(
         acpx_module,
         "_probe_participant_cli_compatibility",
@@ -2703,7 +2746,7 @@ def test_new_fleet_discussion_seat_rejects_missing_provider_capability(tmp_path,
         monkeypatch,
         lambda name, *_a, **_k: str({"agy": agy, "node": node}[name]),
     )
-    _isolate_node_fallbacks(monkeypatch)
+    _isolate_node_fallbacks(monkeypatch, path_dirs=(tmp_path,))
     monkeypatch.setattr(
         acpx_module,
         "_probe_participant_cli_compatibility",
