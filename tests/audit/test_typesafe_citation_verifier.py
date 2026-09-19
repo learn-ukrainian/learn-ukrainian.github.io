@@ -30,11 +30,14 @@ class FakeClient:
 
 
 def _answer(choice: str, confidence: float, *, probabilities: dict | None = None, drop: str | None = None) -> dict:
+    if probabilities is None:
+        others = [opt for opt in v.CHOICE_OPTIONS if opt != choice]
+        probabilities = {opt: 0.1 for opt in others}
+        probabilities[choice] = 1.0 - 0.1 * len(others)
     body: dict = {
         "choice": choice,
         "confidence": confidence,
-        "probabilities": probabilities
-        or {"supports": 0.05, "contradicts": 0.05, "says_nothing": 0.05, choice: confidence},
+        "probabilities": probabilities,
     }
     if drop:
         body.pop(drop, None)
@@ -77,11 +80,11 @@ def test_fabricated_quote_does_not_call_the_client():
 @pytest.mark.parametrize(
     ("quote", "source"),
     [
-        ("риб'ячу гідність", "риб\u2019ячу гідність береже"),
-        ("риб\u02bcячу гідність", "риб'ячу гідність береже"),
+        ("риб'ячу гідність береже", "риб\u2019ячу гідність береже"),
+        ("риб\u02bcячу гідність береже", "риб'ячу гідність береже"),
         ("Та принесла я вам літечко", "Та принесла\n\nя вам   літечко."),
-        ("Київ-місто", "Київ\u2014місто на Дніпрі"),
-        ("риба мовчить", "риб\u00adа мовчить тут"),
+        ("Київ-місто на Дніпрі", "Київ\u2014місто на Дніпрі"),
+        ("риба мовчить тут", "риб\u00adа мовчить тут"),
         ('Він сказав "мед"', "Він сказав «мед» вчора"),
     ],
 )
@@ -173,6 +176,75 @@ def test_malformed_answer_needs_human_review():
 
     not_an_object = FakeClient({"model": "jev-test", "answers": None})
     assert v.verify_citation(_case(), client=not_an_object)["verdict"] == "needs_human_review"
+
+
+def test_missing_probabilities_needs_human_review():
+    client = FakeClient(_answer("supports", 0.95, drop="probabilities"))
+    receipt = v.verify_citation(_case(), client=client)
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["accepted"] is False
+    assert receipt["choice"] is None
+
+
+def test_non_numeric_probability_needs_human_review():
+    probabilities = {"supports": "0.8", "contradicts": 0.1, "says_nothing": 0.1}
+    client = FakeClient(_answer("supports", 0.95, probabilities=probabilities))
+    receipt = v.verify_citation(_case(), client=client)
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["accepted"] is False
+
+
+def test_choice_that_is_not_the_argmax_needs_human_review():
+    probabilities = {"supports": 0.2, "contradicts": 0.7, "says_nothing": 0.1}
+    client = FakeClient(_answer("supports", 0.95, probabilities=probabilities))
+    receipt = v.verify_citation(_case(), client=client)
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["accepted"] is False
+    assert receipt["choice"] is None
+
+
+def test_overflow_confidence_needs_human_review():
+    payload = _answer("supports", 0.95)
+    payload["answers"][v.QUESTION_ID]["confidence"] = 10**400
+    client = FakeClient(payload)
+    receipt = v.verify_citation(_case(), client=client)
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["accepted"] is False
+
+
+def test_substring_inside_a_word_is_not_a_match():
+    assert v.quote_occurs_in_source("art", "A cart.") is False
+    assert v.quote_occurs_in_source("п'ять", "У хлопця є п'ять яблук.") is True
+    assert v.quote_occurs_in_source("ять", "У хлопця є п'ять яблук.") is False
+    assert v.quote_word_tokens("п'ять") == ["п'ять"]
+
+
+def test_two_word_quote_needs_human_review_without_a_client_call():
+    client = FakeClient()
+    receipt = v.verify_citation(_case(quote="Альфа сидить"), client=client)
+    assert client.calls == []
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["decided_by"] == "deterministic"
+    assert receipt["reason"] == "quote_too_short"
+    assert receipt["accepted"] is False
+    assert v.MIN_QUOTE_WORD_TOKENS == 3
+
+
+def test_unexpected_exception_needs_human_review_and_the_run_continues(monkeypatch):
+    def explode(case, **kwargs):
+        if case.get("id") == "bad":
+            raise RuntimeError("leak this message")
+        return v._base_receipt(case, verdict="fabricated", decided_by="deterministic")
+
+    monkeypatch.setattr(v, "verify_citation", explode)
+    good = _case()
+    bad = _case()
+    bad["id"] = "bad"
+    results = v.verify_citations([good, bad, good])
+    assert [row["verdict"] for row in results] == ["fabricated", "needs_human_review", "fabricated"]
+    assert results[1]["reason"] == "internal_error"
+    assert results[1]["exception_type"] == "RuntimeError"
+    assert "leak this message" not in json.dumps(results[1])
 
 
 def test_mock_cli_fail_closes_without_network(tmp_path):

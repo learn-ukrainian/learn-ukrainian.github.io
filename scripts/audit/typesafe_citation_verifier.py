@@ -8,9 +8,11 @@ Pipeline, per citation ``{id, claim, quote, source_text}``:
 1. **Deterministic quote match.** No model call. Unicode NFC, collapsed
    whitespace, unified apostrophes / quotation marks / dashes, soft hyphens
    stripped. An elision marker inside the quote (``[...]``, ``[…]``, ``...``,
-   ``…``) splits it; every segment must occur in the source, in order. No
-   fuzzy match. A miss, or an empty quote or source, is ``fabricated`` and
-   the model is not called.
+   ``…``) splits it; every segment must occur in the source, in order, and
+   on a word boundary. An apostrophe inside a word (``п'ять``) is not a
+   boundary. No fuzzy match. A quote with fewer than ``MIN_QUOTE_WORD_TOKENS``
+   word tokens is ``needs_human_review`` (``quote_too_short``) and the model
+   is not called. A miss, or an empty quote or source, is ``fabricated``.
 2. **One System One request.** A single Choice — ``supports`` /
    ``contradicts`` / ``says_nothing`` — judged on the source passage versus
    the claim. Thresholds live in ``ACCEPT_CONFIDENCE``, not in the prompt.
@@ -20,7 +22,8 @@ Routing (only ``verified`` is an accept):
 - ``supports`` with confidence >= ``ACCEPT_CONFIDENCE`` → ``verified``
 - ``contradicts`` at any confidence → ``contradicted``
 - ``says_nothing`` with confidence >= ``ACCEPT_CONFIDENCE`` → ``unsupported``
-- anything else, including API failure, a malformed answer, or a missing key
+- anything else, including API failure, a malformed answer, a missing or
+  unusable key, or an unexpected error on one citation
   → ``needs_human_review``
 
 ``--mock`` injects a fail-closed stub (no keyword heuristics, no network).
@@ -52,6 +55,11 @@ from scripts.typesafe.client import (
 # gates both auto-accept (supports) and auto-reject-as-unsupported (says_nothing).
 # ``contradicts`` is not gated: any confidence is enough to refuse the citation.
 ACCEPT_CONFIDENCE = 0.80
+# A quote this short cannot show that the source says the claim. Count is
+# word tokens after ``normalize_for_match``, apostrophes kept inside the word.
+MIN_QUOTE_WORD_TOKENS = 3
+# Float noise only. A distribution that is off by a percentage point is malformed.
+PROBABILITY_SUM_TOLERANCE = 1e-6
 
 QUESTION_ID = "source_relation"
 CHOICE_OPTIONS = ("supports", "contradicts", "says_nothing")
@@ -129,11 +137,69 @@ def normalize_for_match(text: str) -> str:
     return _WHITESPACE.sub(" ", normalized).strip()
 
 
+def _is_letter_or_digit(char: str) -> bool:
+    return char.isalnum()
+
+
+def _is_word_char(char: str) -> bool:
+    """Letter, digit, or an apostrophe that sits inside a word such as ``п'ять``."""
+    return char == "'" or _is_letter_or_digit(char)
+
+
+def quote_word_tokens(text: str) -> list[str]:
+    """Word tokens of ``text`` after ``normalize_for_match``.
+
+    An apostrophe between two letters or digits does not split the token.
+    """
+    normalized = normalize_for_match(text)
+    tokens: list[str] = []
+    index = 0
+    length = len(normalized)
+    while index < length:
+        if not _is_letter_or_digit(normalized[index]):
+            index += 1
+            continue
+        end = index + 1
+        while end < length:
+            char = normalized[end]
+            if _is_letter_or_digit(char):
+                end += 1
+                continue
+            if char == "'" and end + 1 < length and _is_letter_or_digit(normalized[end + 1]):
+                end += 2
+                continue
+            break
+        tokens.append(normalized[index:end])
+        index = end
+    return tokens
+
+
+def _find_at_word_boundary(source: str, segment: str, cursor: int) -> int:
+    """Index of ``segment`` at or after ``cursor``, or -1.
+
+    The character before the match and the character after it must be absent
+    or not a word character. Apostrophes count as word characters, so ``ять``
+    does not match inside ``п'ять``.
+    """
+    start = cursor
+    while True:
+        found = source.find(segment, start)
+        if found < 0:
+            return -1
+        end = found + len(segment)
+        before_ok = found == 0 or not _is_word_char(source[found - 1])
+        after_ok = end == len(source) or not _is_word_char(source[end])
+        if before_ok and after_ok:
+            return found
+        start = found + 1
+
+
 def quote_occurs_in_source(quote: str, source: str) -> bool:
     """True when every elision-split segment of ``quote`` occurs in ``source``, in order.
 
-    Empty quote or empty source is a miss. Matching is exact substring after
-    ``normalize_for_match`` — not fuzzy and not token overlap.
+    Empty quote or empty source is a miss. Matching is exact after
+    ``normalize_for_match`` — not fuzzy and not token overlap. Each segment
+    must align to word boundaries in the normalised source.
     """
     normalized_quote = normalize_for_match(quote)
     normalized_source = normalize_for_match(source)
@@ -145,7 +211,7 @@ def quote_occurs_in_source(quote: str, source: str) -> bool:
         return False
     cursor = 0
     for segment in segments:
-        found = normalized_source.find(segment, cursor)
+        found = _find_at_word_boundary(normalized_source, segment, cursor)
         if found < 0:
             return False
         cursor = found + len(segment)
@@ -166,6 +232,19 @@ def _blank_usage() -> dict[str, int | None]:
     return {"input_tokens": None, "output_tokens": None}
 
 
+def _coerce_finite_float(value: Any) -> float:
+    """Coerce one API number. Bool, str, and overflow are ``MalformedAnswer``."""
+    if isinstance(value, bool) or not isinstance(value, (int, float)):
+        raise MalformedAnswer("value is not a number")
+    try:
+        number = float(value)
+    except (OverflowError, ValueError, TypeError) as exc:
+        raise MalformedAnswer("value is not a number") from exc
+    if not math.isfinite(number):
+        raise MalformedAnswer("value is not a finite number")
+    return number
+
+
 def _usage_from(response: Mapping[str, Any] | None) -> dict[str, int | None]:
     usage = _blank_usage()
     if not isinstance(response, Mapping):
@@ -175,8 +254,10 @@ def _usage_from(response: Mapping[str, Any] | None) -> dict[str, int | None]:
         return usage
     for key in ("input_tokens", "output_tokens"):
         value = raw.get(key)
-        if isinstance(value, int) and not isinstance(value, bool):
-            usage[key] = value
+        if isinstance(value, bool) or not isinstance(value, int):
+            continue
+        _coerce_finite_float(value)
+        usage[key] = value
     return usage
 
 
@@ -209,7 +290,7 @@ def _route(choice: str, confidence: float) -> str:
     return "needs_human_review"
 
 
-def _parse_choice(response: Any) -> tuple[str, float, dict[str, Any]]:
+def _parse_choice(response: Any) -> tuple[str, float, dict[str, float]]:
     if not isinstance(response, Mapping):
         raise MalformedAnswer("response is not an object")
     answers = response.get("answers")
@@ -221,16 +302,35 @@ def _parse_choice(response: Any) -> tuple[str, float, dict[str, Any]]:
     choice = answer.get("choice")
     if choice not in CHOICE_OPTIONS:
         raise MalformedAnswer("choice is not one of the closed options")
-    confidence = answer.get("confidence")
-    if isinstance(confidence, bool) or not isinstance(confidence, (int, float)):
+    if "confidence" not in answer:
         raise MalformedAnswer("confidence is not a number")
-    confidence_value = float(confidence)
-    if not math.isfinite(confidence_value) or not 0.0 <= confidence_value <= 1.0:
+    confidence_value = _coerce_finite_float(answer.get("confidence"))
+    if not 0.0 <= confidence_value <= 1.0:
         raise MalformedAnswer("confidence is outside [0, 1]")
-    probabilities = answer.get("probabilities", {})
-    if not isinstance(probabilities, dict):
+    if "probabilities" not in answer:
+        raise MalformedAnswer("probabilities is missing")
+    probabilities = answer.get("probabilities")
+    if not isinstance(probabilities, Mapping):
         raise MalformedAnswer("probabilities is not an object")
-    return choice, confidence_value, probabilities
+    if set(probabilities) != set(CHOICE_OPTIONS):
+        raise MalformedAnswer("probabilities keys are not the closed options")
+    parsed: dict[str, float] = {}
+    for option in CHOICE_OPTIONS:
+        number = _coerce_finite_float(probabilities[option])
+        if not 0.0 <= number <= 1.0:
+            raise MalformedAnswer("probability is outside [0, 1]")
+        parsed[option] = number
+    if not math.isclose(sum(parsed.values()), 1.0, abs_tol=PROBABILITY_SUM_TOLERANCE):
+        raise MalformedAnswer("probabilities do not sum to 1")
+    peak = max(parsed.values())
+    winners = [
+        option
+        for option, number in parsed.items()
+        if math.isclose(number, peak, abs_tol=PROBABILITY_SUM_TOLERANCE)
+    ]
+    if winners != [choice]:
+        raise MalformedAnswer("choice is not the arg-max")
+    return choice, confidence_value, parsed
 
 
 def verify_citation(
@@ -247,7 +347,14 @@ def verify_citation(
     """
     quote = case.get("quote")
     source = case.get("source_text")
-    if not isinstance(quote, str) or not isinstance(source, str) or not quote_occurs_in_source(quote, source):
+    if not isinstance(quote, str) or not isinstance(source, str):
+        return _base_receipt(case, verdict="fabricated", decided_by="deterministic")
+    token_count = len(quote_word_tokens(quote))
+    if 0 < token_count < MIN_QUOTE_WORD_TOKENS:
+        receipt = _base_receipt(case, verdict="needs_human_review", decided_by="deterministic")
+        receipt["reason"] = "quote_too_short"
+        return receipt
+    if not quote_occurs_in_source(quote, source):
         return _base_receipt(case, verdict="fabricated", decided_by="deterministic")
 
     active = client if client is not None else HttpSystemOneClient()
@@ -267,11 +374,11 @@ def verify_citation(
 
     receipt = _base_receipt(case, verdict="needs_human_review", decided_by="system_one")
     receipt["question_ids"] = list(questions)
-    if isinstance(response, Mapping):
-        model_id = response.get("model")
-        receipt["model"] = model_id if isinstance(model_id, str) else None
-        receipt["usage"] = _usage_from(response)
     try:
+        if isinstance(response, Mapping):
+            model_id = response.get("model")
+            receipt["model"] = model_id if isinstance(model_id, str) else None
+            receipt["usage"] = _usage_from(response)
         choice, confidence, probabilities = _parse_choice(response)
     except MalformedAnswer:
         return receipt
@@ -291,7 +398,18 @@ def verify_citations(
     model: str = DEFAULT_MODEL,
     timeout: float = DEFAULT_TIMEOUT,
 ) -> list[dict[str, Any]]:
-    return [verify_citation(case, client=client, model=model, timeout=timeout) for case in cases]
+    """Verify each citation. An unexpected error on one row does not stop the run."""
+    receipts: list[dict[str, Any]] = []
+    for case in cases:
+        try:
+            receipts.append(verify_citation(case, client=client, model=model, timeout=timeout))
+        except Exception as exc:
+            safe_case = case if isinstance(case, Mapping) else {}
+            receipt = _base_receipt(safe_case, verdict="needs_human_review", decided_by="deterministic")
+            receipt["reason"] = "internal_error"
+            receipt["exception_type"] = type(exc).__name__
+            receipts.append(receipt)
+    return receipts
 
 
 def load_cases(path: Path) -> list[dict[str, Any]]:
@@ -322,7 +440,13 @@ def _sum_tokens(citations: Sequence[Mapping[str, Any]]) -> dict[str, int]:
             continue
         for key in totals:
             value = usage.get(key)
-            if isinstance(value, int) and not isinstance(value, bool):
+            if isinstance(value, bool) or not isinstance(value, int):
+                continue
+            try:
+                number = float(value)
+            except (OverflowError, ValueError, TypeError):
+                continue
+            if math.isfinite(number):
                 totals[key] += value
     return totals
 

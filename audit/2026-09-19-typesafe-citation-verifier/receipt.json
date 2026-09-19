@@ -4,7 +4,7 @@
   "model_requested": "jev-latest",
   "accept_confidence": 0.8,
   "mock": false,
-  "wall_time_seconds": 22.689521,
+  "wall_time_seconds": 22.365897,
   "usage": {
     "input_tokens": 31678,
     "output_tokens": 1737
@@ -33,11 +33,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "supports": 0.89,
+        "supports": 0.88,
         "contradicts": 0.01,
-        "says_nothing": 0.1
+        "says_nothing": 0.11
       },
-      "confidence": 0.84,
+      "confidence": 0.81,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 137712,
@@ -59,11 +59,11 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "says_nothing": 0.41,
         "supports": 0.0,
-        "contradicts": 0.59
+        "contradicts": 0.6,
+        "says_nothing": 0.4
       },
-      "confidence": 0.37,
+      "confidence": 0.39,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 137712,
@@ -86,8 +86,8 @@
       "choice": "says_nothing",
       "probabilities": {
         "supports": 0.0,
-        "says_nothing": 1.0,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -132,10 +132,10 @@
       "choice": "supports",
       "probabilities": {
         "supports": 0.99,
-        "says_nothing": 0.01,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 0.01
       },
-      "confidence": 0.99,
+      "confidence": 0.98,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 137715,
@@ -157,11 +157,11 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "contradicts": 0.98,
-        "says_nothing": 0.02,
-        "supports": 0.0
+        "supports": 0.0,
+        "contradicts": 0.97,
+        "says_nothing": 0.03
       },
-      "confidence": 0.97,
+      "confidence": 0.95,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 137715,
@@ -183,11 +183,11 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "contradicts": 0.0,
         "supports": 0.0,
+        "contradicts": 0.0,
         "says_nothing": 1.0
       },
-      "confidence": 1.0,
+      "confidence": 0.99,
       "expected": "out_of_context",
       "table": "literary_texts",
       "row_id": 137715,
@@ -229,11 +229,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "contradicts": 0.14,
         "supports": 0.81,
-        "says_nothing": 0.04
+        "contradicts": 0.14,
+        "says_nothing": 0.05
       },
-      "confidence": 0.72,
+      "confidence": 0.71,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 137705,
@@ -255,11 +255,11 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "says_nothing": 0.02,
         "supports": 0.0,
-        "contradicts": 0.98
+        "contradicts": 0.99,
+        "says_nothing": 0.01
       },
-      "confidence": 0.97,
+      "confidence": 0.98,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 137705,
@@ -281,9 +281,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "says_nothing": 1.0,
         "supports": 0.0,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -327,11 +327,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "says_nothing": 0.1,
+        "supports": 0.93,
         "contradicts": 0.0,
-        "supports": 0.9
+        "says_nothing": 0.07
       },
-      "confidence": 0.85,
+      "confidence": 0.89,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 38358,
@@ -353,11 +353,11 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "says_nothing": 0.01,
         "supports": 0.0,
-        "contradicts": 0.99
+        "contradicts": 0.99,
+        "says_nothing": 0.01
       },
-      "confidence": 0.99,
+      "confidence": 0.98,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 38358,
@@ -379,9 +379,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "says_nothing": 1.0,
         "supports": 0.0,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -425,11 +425,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "says_nothing": 0.01,
-        "supports": 0.99,
-        "contradicts": 0.0
+        "supports": 0.97,
+        "contradicts": 0.0,
+        "says_nothing": 0.03
       },
-      "confidence": 0.98,
+      "confidence": 0.96,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 4462,
@@ -451,9 +451,9 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "says_nothing": 0.0,
         "supports": 0.0,
-        "contradicts": 1.0
+        "contradicts": 0.99,
+        "says_nothing": 0.01
       },
       "confidence": 0.99,
       "expected": "contradicted",
@@ -477,9 +477,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "says_nothing": 1.0,
+        "supports": 0.0,
         "contradicts": 0.0,
-        "supports": 0.0
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -523,9 +523,9 @@
       },
       "choice": "supports",
       "probabilities": {
-        "says_nothing": 0.01,
         "supports": 0.99,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 0.01
       },
       "confidence": 0.99,
       "expected": "accurate",
@@ -550,8 +550,8 @@
       "choice": "contradicts",
       "probabilities": {
         "supports": 0.0,
-        "says_nothing": 0.01,
-        "contradicts": 0.99
+        "contradicts": 0.99,
+        "says_nothing": 0.01
       },
       "confidence": 0.99,
       "expected": "contradicted",
@@ -575,9 +575,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "says_nothing": 1.0,
+        "supports": 0.0,
         "contradicts": 0.0,
-        "supports": 0.0
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -621,11 +621,11 @@
       },
       "choice": "supports",
       "probabilities": {
+        "supports": 0.73,
         "contradicts": 0.02,
-        "supports": 0.72,
-        "says_nothing": 0.26
+        "says_nothing": 0.25
       },
-      "confidence": 0.58,
+      "confidence": 0.6,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 13041,
@@ -647,11 +647,11 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "contradicts": 0.89,
         "supports": 0.0,
-        "says_nothing": 0.11
+        "contradicts": 0.88,
+        "says_nothing": 0.12
       },
-      "confidence": 0.83,
+      "confidence": 0.81,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 13041,
@@ -673,9 +673,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
+        "supports": 0.0,
         "contradicts": 0.0,
-        "says_nothing": 1.0,
-        "supports": 0.0
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -719,11 +719,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "says_nothing": 0.01,
         "supports": 0.99,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 0.01
       },
-      "confidence": 0.98,
+      "confidence": 0.99,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 20035,
@@ -746,10 +746,10 @@
       "choice": "contradicts",
       "probabilities": {
         "supports": 0.01,
-        "contradicts": 0.72,
-        "says_nothing": 0.27
+        "contradicts": 0.75,
+        "says_nothing": 0.24
       },
-      "confidence": 0.58,
+      "confidence": 0.63,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 20035,
@@ -771,9 +771,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "says_nothing": 1.0,
+        "supports": 0.0,
         "contradicts": 0.0,
-        "supports": 0.0
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -817,11 +817,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "says_nothing": 0.07,
+        "supports": 0.95,
         "contradicts": 0.0,
-        "supports": 0.93
+        "says_nothing": 0.05
       },
-      "confidence": 0.89,
+      "confidence": 0.91,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 40983,
@@ -844,8 +844,8 @@
       "choice": "contradicts",
       "probabilities": {
         "supports": 0.0,
-        "says_nothing": 0.0,
-        "contradicts": 1.0
+        "contradicts": 1.0,
+        "says_nothing": 0.0
       },
       "confidence": 1.0,
       "expected": "contradicted",
@@ -869,11 +869,11 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "contradicts": 0.27,
         "supports": 0.0,
-        "says_nothing": 0.73
+        "contradicts": 0.24,
+        "says_nothing": 0.76
       },
-      "confidence": 0.59,
+      "confidence": 0.63,
       "expected": "out_of_context",
       "table": "literary_texts",
       "row_id": 40983,
@@ -941,11 +941,11 @@
       },
       "choice": "contradicts",
       "probabilities": {
-        "says_nothing": 0.11,
-        "contradicts": 0.89,
-        "supports": 0.0
+        "supports": 0.0,
+        "contradicts": 0.87,
+        "says_nothing": 0.13
       },
-      "confidence": 0.83,
+      "confidence": 0.8,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 21192,
@@ -967,9 +967,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
+        "supports": 0.0,
         "contradicts": 0.0,
-        "says_nothing": 1.0,
-        "supports": 0.0
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -1013,11 +1013,11 @@
       },
       "choice": "supports",
       "probabilities": {
-        "supports": 0.51,
-        "contradicts": 0.04,
+        "supports": 0.52,
+        "contradicts": 0.03,
         "says_nothing": 0.45
       },
-      "confidence": 0.27,
+      "confidence": 0.28,
       "expected": "accurate",
       "table": "literary_texts",
       "row_id": 37191,
@@ -1040,10 +1040,10 @@
       "choice": "contradicts",
       "probabilities": {
         "supports": 0.01,
-        "contradicts": 0.97,
-        "says_nothing": 0.02
+        "contradicts": 0.96,
+        "says_nothing": 0.03
       },
-      "confidence": 0.96,
+      "confidence": 0.95,
       "expected": "contradicted",
       "table": "literary_texts",
       "row_id": 37191,
@@ -1066,8 +1066,8 @@
       "choice": "says_nothing",
       "probabilities": {
         "supports": 0.0,
-        "says_nothing": 1.0,
-        "contradicts": 0.0
+        "contradicts": 0.0,
+        "says_nothing": 1.0
       },
       "confidence": 1.0,
       "expected": "out_of_context",
@@ -1138,8 +1138,8 @@
       "choice": "contradicts",
       "probabilities": {
         "supports": 0.0,
-        "says_nothing": 0.0,
-        "contradicts": 1.0
+        "contradicts": 1.0,
+        "says_nothing": 0.0
       },
       "confidence": 0.99,
       "expected": "contradicted",
@@ -1163,9 +1163,9 @@
       },
       "choice": "says_nothing",
       "probabilities": {
-        "says_nothing": 0.99,
         "supports": 0.0,
-        "contradicts": 0.01
+        "contradicts": 0.01,
+        "says_nothing": 0.99
       },
       "confidence": 0.98,
       "expected": "out_of_context",
@@ -1209,8 +1209,8 @@
       },
       "choice": "supports",
       "probabilities": {
-        "contradicts": 0.0,
         "supports": 0.99,
+        "contradicts": 0.0,
         "says_nothing": 0.01
       },
       "confidence": 0.98,

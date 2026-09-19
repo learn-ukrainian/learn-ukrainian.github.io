@@ -129,3 +129,38 @@ def test_non_object_json_raises_typesafe_error(monkeypatch):
     monkeypatch.setattr(urllib.request, "urlopen", lambda request, timeout=None: _Body(b"[1]"))
     with pytest.raises(TypeSafeError):
         system_one("state", {})
+
+
+def _assert_key_not_in_error(exc: BaseException, key: str) -> None:
+    assert key not in str(exc)
+    assert key not in repr(exc.__cause__)
+    assert key not in repr(exc.__context__)
+
+
+def test_key_with_embedded_newline_does_not_leak(monkeypatch):
+    key = "super-secret-key-value\ninjected"
+    monkeypatch.setenv("TYPESAFE_API_KEY", key)
+    calls = {"n": 0}
+
+    def _open(request, timeout=None):
+        calls["n"] += 1
+        raise ValueError(f"Invalid header value: {key}")
+
+    monkeypatch.setattr(urllib.request, "urlopen", _open)
+    with pytest.raises(TypeSafeError) as caught:
+        system_one("state", {})
+    _assert_key_not_in_error(caught.value, key)
+    assert calls["n"] == 0
+
+    monkeypatch.setattr("scripts.typesafe.client.load_typesafe_api_key", lambda: key)
+    with pytest.raises(TypeSafeError) as wrapped:
+        system_one("state", {})
+    _assert_key_not_in_error(wrapped.value, key)
+    assert calls["n"] == 1
+
+
+def test_invalid_utf8_key_file_falls_through_to_the_next_location(monkeypatch, tmp_path):
+    secrets = _isolate_home(monkeypatch, tmp_path)
+    (secrets / "typesafe-ai.key").write_bytes(b"\xff\xfe not utf-8")
+    (secrets / "typsafe-ai.key").write_text("from-legacy\n", encoding="utf-8")
+    assert load_typesafe_api_key() == "from-legacy"
