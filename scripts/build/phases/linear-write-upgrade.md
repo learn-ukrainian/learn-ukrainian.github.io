@@ -179,7 +179,6 @@ equal to the original vocabulary, with >=12 complete entries per lesson. Learner
 is cumulative: prior-module vocabulary plus entries introduced in previous lessons.
 Every entry needs lemma, translation, pos, usage. Every lesson needs nonempty resources
 with title plus url, chunk_id or source. The landing page aggregates these artifacts.
-Each resource object needs `title` and one of `url` / `chunk_id` / `source` (`source_ref` is accepted as `source`).
 
 {ACTIVITY_CONFIG}
 
