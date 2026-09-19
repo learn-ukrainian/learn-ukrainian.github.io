@@ -1,0 +1,299 @@
+"""Unit tests for the Adverb Deep Mechanics Practice Engine (Issue #8274).
+
+Covers:
+- 15 category rule resolutions and citations
+- 75 canonical cards count, distribution, uniqueness, and option balance
+- Homophone discrimination feedback logic (adverb vs prepositional phrase)
+- Anti-calque distractor feedback logic
+- VESUM verification with CI skip guard
+- JSON export parity
+- CLI --verify-vesum flags (success, failure, and skipped report handling)
+"""
+
+import json
+from collections import Counter
+from pathlib import Path
+
+import pytest
+
+from scripts.practice.adverb_mechanics_engine import (
+    AdverbCategory,
+    AdverbInterferenceKey,
+    build_canonical_adverb_cards,
+    export_deck,
+    main,
+    resolve_anti_calque_rule,
+    resolve_cause_purpose_rule,
+    resolve_comparison_superlative_rule,
+    resolve_comparison_synthetic_rule,
+    resolve_homophone_1_rule,
+    resolve_homophone_2_rule,
+    resolve_manner_action_rule,
+    resolve_measure_degree_rule,
+    resolve_particles_hyphen_rule,
+    resolve_place_direction_rule,
+    resolve_prefix_po_rule,
+    resolve_reduplication_rule,
+    resolve_separate_phrases_rule,
+    resolve_time_rule,
+    resolve_together_fused_rule,
+    verify_deck_with_vesum,
+)
+
+
+def test_resolve_adverb_rules():
+    """Verify that all 15 rule resolver functions return valid citations and summaries."""
+    resolvers = [
+        resolve_manner_action_rule,
+        resolve_time_rule,
+        resolve_place_direction_rule,
+        resolve_measure_degree_rule,
+        resolve_cause_purpose_rule,
+        resolve_prefix_po_rule,
+        resolve_particles_hyphen_rule,
+        resolve_reduplication_rule,
+        resolve_together_fused_rule,
+        resolve_homophone_1_rule,
+        resolve_homophone_2_rule,
+        resolve_separate_phrases_rule,
+        resolve_comparison_synthetic_rule,
+        resolve_comparison_superlative_rule,
+        resolve_anti_calque_rule,
+    ]
+
+    assert len(resolvers) == 15
+    for r in resolvers:
+        cit, ua, en = r()
+        assert "Правопис" in cit
+        assert len(ua) > 30
+        assert len(en) > 30
+
+
+def test_build_canonical_adverb_cards_count_and_distribution():
+    """Verify that 75 cards are built with exactly 5 cards per category."""
+    cards = build_canonical_adverb_cards()
+    assert len(cards) == 75
+
+    cat_counts = Counter(c.category for c in cards)
+    assert len(cat_counts) == 15
+
+    for cat in AdverbCategory:
+        assert cat_counts[cat] == 5, f"Category {cat} does not have exactly 5 cards: {cat_counts[cat]}"
+
+
+def test_cards_zero_collision_and_unique_options():
+    """Verify that card IDs are unique, each card has 4 unique options, and distractors are well-formed."""
+    cards = build_canonical_adverb_cards()
+    card_ids = [c.card_id for c in cards]
+    assert len(card_ids) == len(set(card_ids)), "Duplicate card IDs detected"
+
+    for card in cards:
+        opts = card.all_options()
+        assert len(opts) == 4, f"Card {card.card_id} does not have exactly 4 options"
+        assert len(set(opts)) == 4, f"Card {card.card_id} contains duplicate options: {opts}"
+        assert card.correct_answer in opts, f"Card {card.card_id} correct answer not in options"
+
+        distractor_texts = [d.text for d in card.distractors]
+        assert len(distractor_texts) == 3
+        assert len(set(distractor_texts)) == 3
+        assert card.correct_answer not in distractor_texts
+
+        for d in card.distractors:
+            assert isinstance(d.interference_key, AdverbInterferenceKey)
+            assert len(d.explanation_ua) > 15
+            assert len(d.explanation_en) > 15
+
+
+def test_card_prompt_display_and_full_sentence():
+    """Verify that every card prompt contains the blank indicator _______."""
+    cards = build_canonical_adverb_cards()
+    for card in cards:
+        assert "_______" in card.prompt, f"Card {card.card_id} prompt missing blank indicator: {card.prompt}"
+        assert card.target_token in card.correct_answer, f"Card {card.card_id} target token mismatch"
+
+
+def test_shuffled_options_balanced_distribution():
+    """Verify that deterministic shuffle distributes correct answer across positions 0..3."""
+    cards = build_canonical_adverb_cards()
+    positions = []
+
+    for card in cards:
+        opts = card.all_options()
+        idx = opts.index(card.correct_answer)
+        positions.append(idx)
+
+    pos_counts = Counter(positions)
+    for pos in range(4):
+        # With 75 cards, expected average is ~18.75 per position; ensure each has >= 10
+        assert pos_counts[pos] >= 10, f"Position {pos} count {pos_counts[pos]} is under-represented"
+
+
+def test_adverb_deck_json_export_and_file_parity(tmp_path: Path):
+    """Verify JSON export schema and parity with committed artifact."""
+    cards = build_canonical_adverb_cards()
+    export_file = tmp_path / "adverb_mechanics_deck.json"
+    payload = export_deck(cards, export_file)
+
+    assert payload["schema_version"] == "1.0"
+    assert payload["card_count"] == 75
+    assert len(payload["categories"]) == 15
+    assert len(payload["cards"]) == 75
+
+    committed_path = Path(__file__).resolve().parents[1] / "data/practice/adverb_mechanics_deck.json"
+    assert committed_path.exists(), "Committed data/practice/adverb_mechanics_deck.json does not exist"
+
+    with open(committed_path, encoding="utf-8") as f:
+        committed_data = json.load(f)
+
+    assert committed_data["card_count"] == 75
+    assert committed_data["categories"] == payload["categories"]
+    assert len(committed_data["cards"]) == 75
+
+
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
+    reason="Requires full local data/vesum.db (>1MB); CI omits it",
+)
+def test_vesum_verification_clean():
+    """Verify 100% VESUM attestation for all 75 cards."""
+    cards = build_canonical_adverb_cards()
+    res = verify_deck_with_vesum(cards)
+    if res.get("status") == "skipped":
+        pytest.skip(res["message"])
+
+    assert res["vesum_verified"] is True
+    assert len(res["missing_targets"]) == 0, f"Missing target tokens in VESUM: {res['missing_targets']}"
+    assert res["target_tokens_count"] >= 50
+
+
+def test_cli_verify_vesum_json_failure_exits_and_blocks_export(monkeypatch, tmp_path: Path):
+    """Verify that CLI --verify-vesum failure exits 1 and blocks deck export."""
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 79,
+        "missing_targets": ["неіснуючеслово"],
+        "vesum_verified": False,
+    }
+    monkeypatch.setattr("scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+
+    out_file = tmp_path / "blocked_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["adverb_mechanics_engine.py", "--verify-vesum", "--json", "--export", "--output", str(out_file)],
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 1
+    assert not out_file.exists(), "Deck must NOT be exported when verification fails"
+
+
+def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
+    """Verify that CLI --verify-vesum --json --export succeeds and writes deck on clean verification."""
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 79,
+        "missing_targets": [],
+        "vesum_verified": True,
+    }
+    monkeypatch.setattr("scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+
+    out_file = tmp_path / "allowed_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["adverb_mechanics_engine.py", "--verify-vesum", "--json", "--export", "--output", str(out_file)],
+    )
+
+    main()
+    assert out_file.exists(), "Deck should be exported when verification succeeds"
+
+
+def test_cli_verify_vesum_skipped_reports_skip_and_exits_nonzero(capsys, monkeypatch, tmp_path: Path):
+    """Verify that CLI without JSON reports SKIPPED and exits 1 when database is missing."""
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 0,
+        "missing_targets": [],
+        "vesum_verified": None,
+        "status": "skipped",
+        "message": "VESUM database not found or incomplete at /fake/path",
+    }
+    monkeypatch.setattr("scripts.practice.adverb_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+
+    out_file = tmp_path / "blocked_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["adverb_mechanics_engine.py", "--verify-vesum", "--export", "--output", str(out_file)],
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 1
+    captured = capsys.readouterr().out
+    assert "VESUM verification: SKIPPED (VESUM database not found or incomplete at /fake/path)" in captured
+    assert "PASSED" not in captured
+    assert not out_file.exists(), "Deck must NOT be exported when verification is skipped"
+
+
+def test_homophone_discrimination_card_pairs():
+    """Verify that homophone cards correctly discriminate adverb vs noun+preposition."""
+    cards_by_id = {c.card_id: c for c in build_canonical_adverb_cards()}
+
+    # Card 46: на пам'ять (noun) vs Card 47: напам'ять (adverb)
+    c46 = cards_by_id["adverb_card_46"]
+    c47 = cards_by_id["adverb_card_47"]
+    assert c46.correct_answer == "на пам'ять"
+    assert any(d.text == "напам'ять" and d.interference_key == AdverbInterferenceKey.HOMOPHONE_ADVERB_CONFUSION for d in c46.distractors)
+    assert c47.correct_answer == "напам'ять"
+    assert any(d.text == "на пам'ять" and d.interference_key == AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION for d in c47.distractors)
+
+    # Card 48: в день (noun) vs Card 49: вдень (adverb)
+    c48 = cards_by_id["adverb_card_48"]
+    c49 = cards_by_id["adverb_card_49"]
+    assert c48.correct_answer == "в день"
+    assert c49.correct_answer == "вдень"
+
+    # Card 50: до дому (noun) vs Card 51: додому (adverb)
+    c50 = cards_by_id["adverb_card_50"]
+    c51 = cards_by_id["adverb_card_51"]
+    assert c50.correct_answer == "до дому"
+    assert c51.correct_answer == "додому"
+
+    # Card 52: з гори (noun) vs Card 53: згори (adverb)
+    c52 = cards_by_id["adverb_card_52"]
+    c53 = cards_by_id["adverb_card_53"]
+    assert c52.correct_answer == "з гори"
+    assert c53.correct_answer == "згори"
+
+    # Card 54: на зустріч (noun) vs Card 55: назустріч (adverb)
+    c54 = cards_by_id["adverb_card_54"]
+    c55 = cards_by_id["adverb_card_55"]
+    assert c54.correct_answer == "на зустріч"
+    assert c55.correct_answer == "назустріч"
+
+
+def test_anti_calque_adverbials():
+    """Verify that anti-calque category specifically rejects prominent Russian calques."""
+    cards_by_id = {c.card_id: c for c in build_canonical_adverb_cards()}
+
+    c71 = cards_by_id["adverb_card_71"]
+    assert c71.correct_answer == "насамперед"
+    assert any("в першу чергу" in d.text for d in c71.distractors)
+
+    c72 = cards_by_id["adverb_card_72"]
+    assert c72.correct_answer == "навряд чи"
+    assert any("вряд ли" in d.text for d in c72.distractors)
+
+    c73 = cards_by_id["adverb_card_73"]
+    assert c73.correct_answer == "переважно"
+    assert any("в основному" in d.text for d in c73.distractors)
+
+    c74 = cards_by_id["adverb_card_74"]
+    assert c74.correct_answer == "принаймні"
+    assert any("по крайній мірі" in d.text for d in c74.distractors)
+
+    c75 = cards_by_id["adverb_card_75"]
+    assert c75.correct_answer == "у крайньому разі"
+    assert any("в крайньому випадку" in d.text for d in c75.distractors)
