@@ -3,6 +3,8 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
+import subprocess
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -14,6 +16,7 @@ _DEFAULT_AGY_CONFIG_DIRS = (
     "~/.gemini/config",
     "~/.gemini/antigravity-cli",
 )
+_AGY_MCP_CLI_TIMEOUT_SECONDS = 30
 _RESOLUTION_STATUSES = {"ok", "config_missing", "config_empty", "servers_not_found"}
 _CODEX_MCP_SERVER_FIELDS = frozenset(
     {
@@ -217,13 +220,159 @@ def _codex_server_is_usable(server_config: Any) -> bool:
 
 
 def _agy_server_is_usable(server_config: Any) -> bool:
-    """Return true for Antigravity streamable-HTTP or stdio MCP server entries."""
+    """Return true for Antigravity HTTP or stdio MCP server entries.
+
+    ``serverUrl`` is the field the agy CLI reads and the shape
+    ``agy mcp add --type http`` writes. ``httpUrl`` / ``url`` are foreign
+    (Claude/Gemini-format) spellings kept for back-compat only: the CLI lists
+    such an entry as a dead ``stdio`` server with no command, so config-level
+    usability is NOT proof the tools are visible — writer dispatch must also
+    pass :func:`assert_agy_mcp_catalog_visible`.
+    """
     if not isinstance(server_config, dict):
         return False
-    http_url = str(server_config.get("httpUrl") or "").strip()
-    url = str(server_config.get("url") or "").strip()
-    command = str(server_config.get("command") or "").strip()
-    return bool(http_url or url or command)
+    if server_config.get("disabled") is True:
+        return False
+    return any(
+        str(server_config.get(field) or "").strip()
+        for field in ("serverUrl", "httpUrl", "url", "command")
+    )
+
+
+class AgyMcpCatalogError(RuntimeError):
+    """The agy CLI's MCP catalog cannot expose a required server's tools."""
+
+
+def _agy_binary() -> str:
+    return shutil.which("agy") or str(Path.home() / ".local/bin/agy")
+
+
+def _run_agy_mcp(args: list[str]) -> str:
+    cmd = [_agy_binary(), "mcp", *args]
+    try:
+        completed = subprocess.run(
+            cmd,
+            capture_output=True,
+            text=True,
+            timeout=_AGY_MCP_CLI_TIMEOUT_SECONDS,
+            check=False,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise AgyMcpCatalogError(f"`agy mcp {args[0]}` could not run: {exc}") from exc
+    if completed.returncode != 0:
+        raise AgyMcpCatalogError(
+            f"`agy mcp {args[0]}` exited {completed.returncode}: "
+            f"{(completed.stderr or completed.stdout).strip()[:500]}"
+        )
+    return completed.stdout
+
+
+def agy_mcp_catalog() -> dict[str, dict[str, str]]:
+    """Parse ``agy mcp list`` into ``{name: {type, status, target}}``.
+
+    This is the catalog the CLI actually loads for ``agy -p``; unlike
+    ``mcp_config.json`` it cannot be satisfied by a field the CLI ignores.
+    ``target`` is empty for the dead-stdio row a foreign ``httpUrl`` produces.
+    """
+    catalog: dict[str, dict[str, str]] = {}
+    for line in _run_agy_mcp(["list"]).splitlines():
+        parts = line.split()
+        if len(parts) < 3 or parts[0] == "NAME":
+            continue
+        catalog[parts[0]] = {
+            "type": parts[1].lower(),
+            "status": parts[2].lower(),
+            "target": " ".join(parts[3:]),
+        }
+    return catalog
+
+
+def _agy_catalog_problem(entry: dict[str, str] | None, url: str | None) -> str | None:
+    """Return why a catalog row cannot serve tools, or ``None`` when it can."""
+    if entry is None:
+        return "not registered"
+    if entry["status"] != "enabled":
+        return f"status={entry['status']}"
+    if not entry["target"]:
+        return f"{entry['type']} entry with no command/URL (foreign `httpUrl` config shape)"
+    if url is not None and (entry["type"] != "http" or entry["target"] != url):
+        return f"{entry['type']} {entry['target']!r}, expected http {url!r}"
+    return None
+
+
+def _repo_mcp_server_url(server_name: str, mcp_config_path: Path | None = None) -> str | None:
+    data = _load_mcp_config(_resolved_mcp_config_path(mcp_config_path)) or {}
+    servers = data.get("mcpServers")
+    server = servers.get(server_name) if isinstance(servers, dict) else None
+    url = str(server.get("url") or "").strip() if isinstance(server, dict) else ""
+    return url or None
+
+
+def register_agy_mcp_http_server(server_name: str, url: str) -> bool:
+    """Idempotently register ``server_name`` as an HTTP server in agy's catalog.
+
+    Returns ``True`` when ``agy mcp add`` ran, ``False`` when the catalog was
+    already correct. Raises :class:`AgyMcpCatalogError` if the catalog is still
+    wrong afterwards.
+    """
+    if _agy_catalog_problem(agy_mcp_catalog().get(server_name), url) is None:
+        return False
+    _run_agy_mcp(["add", "--type", "http", server_name, url])
+    problem = _agy_catalog_problem(agy_mcp_catalog().get(server_name), url)
+    if problem is not None:
+        raise AgyMcpCatalogError(
+            f"`agy mcp add --type http {server_name} {url}` ran but the catalog "
+            f"still shows {server_name!r} as {problem}. Recovery: inspect "
+            "`agy mcp list` / `agy mcp remove`, then re-run the register helper."
+        )
+    return True
+
+
+def assert_agy_mcp_catalog_visible(
+    server_names: list[str],
+    *,
+    mcp_config_path: Path | None = None,
+) -> dict[str, dict[str, str]]:
+    """Fail closed unless every server is a live row in ``agy mcp list``.
+
+    A server with a URL in the repo ``.mcp.json`` must be listed as ``http`` on
+    exactly that URL. Returns the verified catalog rows.
+    """
+    catalog = agy_mcp_catalog()
+    problems = {
+        name: problem
+        for name in server_names
+        if (problem := _agy_catalog_problem(catalog.get(name), _repo_mcp_server_url(name, mcp_config_path)))
+    }
+    if problems:
+        details = "; ".join(f"{name}: {problem}" for name, problem in problems.items())
+        raise AgyMcpCatalogError(
+            f"agy MCP catalog cannot expose required tools ({details}). "
+            "`agy -p` would run with no mcp__<server>__* tools. Recovery: "
+            "re-run the register helper — "
+            "`scripts.agent_runtime.tool_config.ensure_agy_mcp_catalog([...])` "
+            "or `agy mcp add --type http <name> <url>` — then check `agy mcp list`."
+        )
+    return {name: catalog[name] for name in server_names}
+
+
+def ensure_agy_mcp_catalog(
+    server_names: list[str],
+    *,
+    mcp_config_path: Path | None = None,
+) -> dict[str, Any]:
+    """Register repo-known HTTP servers in agy's catalog, then verify it.
+
+    Writer-path preflight: idempotent self-heal followed by the fail-closed
+    catalog check. Returns ``{"registered": [...], "catalog": {...}}``.
+    """
+    registered = [
+        name
+        for name in server_names
+        if (url := _repo_mcp_server_url(name, mcp_config_path)) and register_agy_mcp_http_server(name, url)
+    ]
+    catalog = assert_agy_mcp_catalog_visible(server_names, mcp_config_path=mcp_config_path)
+    return {"registered": registered, "catalog": catalog}
 
 
 def _agy_mcp_servers(
@@ -373,11 +522,12 @@ def build_mcp_tool_config(
 
     if canonical_agent == "agy":
         # agy enables MCP through the global Antigravity config, not a
-        # per-invocation CLI flag. Antigravity's streamable-HTTP shape uses
-        # `httpUrl`; the adapter still receives resolved names for parity and
-        # observability. Runtime telemetry remains load-bearing:
-        # MCP_TOOLS_NEVER_INVOKED catches a configured server that is never
-        # actually called.
+        # per-invocation CLI flag. The CLI's HTTP field is `serverUrl` (what
+        # `agy mcp add --type http` writes); a Claude-format `httpUrl` entry
+        # resolves here but lists as a dead stdio server, so writer dispatch
+        # additionally runs `ensure_agy_mcp_catalog` (#7994). The adapter still
+        # receives resolved names for parity and observability, and
+        # MCP_TOOLS_NEVER_INVOKED remains the runtime backstop.
         return _agy_mcp_servers(_resolved_agy_mcp_config_path(), mcp_servers)
 
     if canonical_agent == "kimi":

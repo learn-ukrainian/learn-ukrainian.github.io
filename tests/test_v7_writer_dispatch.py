@@ -56,6 +56,28 @@ def _seed_sources_mcp_config(
     tool_config_mod._load_mcp_config.cache_clear()
     monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", mcp_config_path)
     monkeypatch.setenv(tool_config_mod._AGY_APP_DATA_ENV, str(agy_app_data_dir))
+    # Hermetic `agy mcp list`: a live HTTP catalog row, so agy-tools writers
+    # pass the #7994 catalog preflight without a real agy binary.
+    _stub_agy_catalog(
+        monkeypatch,
+        {"sources": {"type": "http", "status": "enabled", "target": "http://127.0.0.1:8766/mcp"}},
+    )
+
+
+def _stub_agy_catalog(monkeypatch: pytest.MonkeyPatch, servers: dict[str, dict[str, str]]) -> list[list[str]]:
+    """Replace the `agy mcp` subprocess with an in-memory catalog; returns the call log."""
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str]) -> str:
+        calls.append(args)
+        if args[0] == "add":
+            servers[args[3]] = {"type": "http", "status": "enabled", "target": args[4]}
+            return ""
+        rows = [f"{name}  {row['type']}  {row['status']}  {row['target']}" for name, row in servers.items()]
+        return "\n".join(["NAME  TYPE  STATUS  COMMAND/URL", *rows])
+
+    monkeypatch.setattr(tool_config_mod, "_run_agy_mcp", fake_run)
+    return calls
 
 
 @pytest.mark.parametrize(
@@ -402,6 +424,53 @@ def test_upgrade_shaped_prompt_runs_runtime_gate_on_empty_agy_trace(
     assert summary["tool_calls_total"] == 0
     failure = next(event for event in events if event["event"] == "writer_failure_class")
     assert failure["failure_class"] == "mcp_tools_never_invoked"
+
+
+def test_agy_writer_self_heals_dead_stdio_catalog_before_dispatch(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#7994: a foreign `httpUrl` config lists as dead stdio; preflight re-registers HTTP."""
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    calls = _stub_agy_catalog(monkeypatch, {"sources": {"type": "stdio", "status": "enabled", "target": ""}})
+    events: list[dict[str, Any]] = []
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="mcp_tools_never_invoked"):
+        _invoke_upgrade_writer(tmp_path, [], events)
+
+    assert ["add", "--type", "http", "sources", "http://127.0.0.1:8766/mcp"] in calls
+    preflight = next(event for event in events if event["event"] == "agy_mcp_catalog_preflight")
+    assert preflight["ok"] is True
+    assert preflight["registered"] == ["sources"]
+
+
+def test_agy_writer_refuses_dispatch_when_catalog_stays_dead(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#7994: never let agy write a module it cannot probe — HARD stop pre-dispatch."""
+    _seed_sources_mcp_config(tmp_path, monkeypatch)
+    dead = "NAME  TYPE  STATUS  COMMAND/URL\nsources  stdio  enabled  "
+    monkeypatch.setattr(tool_config_mod, "_run_agy_mcp", lambda _args: dead)
+    events: list[dict[str, Any]] = []
+    invoked: list[str] = []
+
+    def fake_invoker(agent: str, _prompt: str, **_kwargs: Any) -> SimpleNamespace:
+        invoked.append(agent)
+        return SimpleNamespace(response="writer output", tool_calls=[])
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match="re-run the register helper"):
+        linear_pipeline.invoke_writer(
+            UPGRADE_SHAPED_PROMPT,
+            writer="agy-tools",
+            cwd=tmp_path,
+            invoker=fake_invoker,
+            event_sink=lambda event, **fields: events.append({"event": event, **fields}),
+        )
+
+    assert invoked == []
+    preflight = next(event for event in events if event["event"] == "agy_mcp_catalog_preflight")
+    assert preflight["ok"] is False
 
 
 def test_tools_writer_without_any_module_ref_is_still_gated(

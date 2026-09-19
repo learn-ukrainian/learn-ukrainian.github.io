@@ -610,16 +610,22 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
     """agy-tools resolves the ``sources`` MCP from agy's global Antigravity
-    config (``AGY_APP_DATA_DIR/mcp_config.json``, ``httpUrl`` streamable-HTTP).
-    The runtime MCP_TOOLS_NEVER_INVOKED gate remains the load-bearing check
-    that a configured server is actually invoked."""
+    config (``serverUrl``, the shape ``agy mcp add --type http`` writes), then
+    proves the CLI catalog lists it as live HTTP (#7994). The runtime
+    MCP_TOOLS_NEVER_INVOKED gate remains the backstop that a visible server is
+    actually invoked."""
     app_data_dir = tmp_path / "antigravity-cli"
     app_data_dir.mkdir()
     _write_mcp_config(
         app_data_dir / "mcp_config.json",
-        {"mcpServers": {"sources": {"httpUrl": "http://127.0.0.1:8766/mcp"}}},
+        {"mcpServers": {"sources": {"disabled": False, "serverUrl": "http://127.0.0.1:8766/mcp"}}},
     )
     monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data_dir))
+    monkeypatch.setattr(
+        tool_config_mod,
+        "_run_agy_mcp",
+        lambda _args: "NAME  TYPE  STATUS  COMMAND/URL\nsources  http  enabled  http://127.0.0.1:8766/mcp",
+    )
     events: list[tuple[str, dict[str, Any]]] = []
 
     config = linear_pipeline._runtime_tool_config(
@@ -634,6 +640,9 @@ def test_runtime_tool_config_agy_tools_emits_resolution_event_success(
     assert events[0][1]["writer"] == "agy-tools"
     assert events[0][1]["resolution_status"] == "ok"
     assert events[0][1]["resolved_servers"] == ["sources"]
+    assert events[1][0] == "agy_mcp_catalog_preflight"
+    assert events[1][1]["ok"] is True
+    assert events[1][1]["registered"] == []
 
 
 @pytest.mark.parametrize("writer", ["deepseek-tools"])
