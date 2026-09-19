@@ -538,6 +538,58 @@ def test_audit_card_ambiguity_honors_sample_size(tmp_path: Path):
     assert len(violations) == 0
 
 
+def test_audit_practice_shards_marked_answer_must_match_target(tmp_path: Path):
+    """R2 Finding 1: Option marked as answer must match target form or accepted answers."""
+    mismatched_card_data = {
+        "paronym": [
+            {
+                "paronymId": "p_mismatched",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "options": [
+                    {"label": "бігає", "kind": "distractor"},
+                    {"label": "біжить", "kind": "answer"},
+                ],
+                "distinction_gloss_uk": "Пояснення.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(
+        json.dumps(mismatched_card_data, ensure_ascii=False), encoding="utf-8"
+    )
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    assert any(v["type"] == "MARKED_ANSWER_MISMATCH" and "p_mismatched" in v["item"] for v in violations)
+
+
+def test_audit_practice_shards_empty_option_label_fails(tmp_path: Path):
+    """R2 Finding 2: Missing, empty, or whitespace-only option labels must be rejected."""
+    empty_label_data = {
+        "paronym": [
+            {
+                "paronymId": "p_empty_label",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "options": [
+                    {"label": "бігає"},
+                    {"label": "   "},
+                ],
+                "distinction_gloss_uk": "Пояснення.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(
+        json.dumps(empty_label_data, ensure_ascii=False), encoding="utf-8"
+    )
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    assert any(v["type"] == "EMPTY_OPTION_LABEL" and "p_empty_label" in v["item"] for v in violations)
+
+
 def test_production_practice_quality_gate_passes():
     """Verify that current repository practice datasets pass with 0 violations."""
     results = run_all_practice_audits()

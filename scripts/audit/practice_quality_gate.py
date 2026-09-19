@@ -494,16 +494,38 @@ def audit_practice_shards(
                     labels: list[str] = []
                     correct_count = 0
                     has_markings = False
+                    marked_answers: list[str] = []
+                    has_empty_option = False
                     for opt in opts:
                         if isinstance(opt, dict):
-                            lbl = opt.get("label") or opt.get("text") or opt.get("word") or ""
+                            raw_lbl = opt.get("label") or opt.get("text") or opt.get("word")
+                            if raw_lbl is None or not str(raw_lbl).strip():
+                                has_empty_option = True
+                                lbl = ""
+                            else:
+                                lbl = str(raw_lbl).strip()
                             if "kind" in opt or "isCorrect" in opt:
                                 has_markings = True
                             if opt.get("kind") == "answer" or opt.get("isCorrect") is True:
                                 correct_count += 1
+                                if lbl:
+                                    marked_answers.append(_normalize_plain(lbl))
                         else:
-                            lbl = str(opt)
+                            if opt is None or not str(opt).strip():
+                                has_empty_option = True
+                                lbl = ""
+                            else:
+                                lbl = str(opt).strip()
                         labels.append(_normalize_plain(lbl))
+
+                    if has_empty_option:
+                        violations.append(
+                            {
+                                "type": "EMPTY_OPTION_LABEL",
+                                "item": f"{name}:{cid}",
+                                "message": f"Option label in mode {mode!r} is missing, empty, or whitespace-only",
+                            }
+                        )
 
                     if mode != "homonym" and len(set(labels)) != len(labels):
                         violations.append(
@@ -536,6 +558,7 @@ def audit_practice_shards(
                     else:
                         ans_norm = _normalize_plain(ans)
                         acc = [_normalize_plain(a) for a in item.get("acceptedAnswers", [])]
+                        all_valid_answers = {ans_norm, *acc}
                         if ans_norm not in labels and not any(a in labels for a in acc):
                             violations.append(
                                 {
@@ -544,6 +567,19 @@ def audit_practice_shards(
                                     "message": f"Answer {ans!r} not found in option labels: {labels}",
                                 }
                             )
+                        if has_markings and correct_count == 1:
+                            marked_norm = marked_answers[0] if marked_answers else ""
+                            if marked_norm not in all_valid_answers:
+                                violations.append(
+                                    {
+                                        "type": "MARKED_ANSWER_MISMATCH",
+                                        "item": f"{name}:{cid}",
+                                        "message": (
+                                            f"Option marked as correct answer {marked_norm!r} does not match "
+                                            f"target answer {ans_norm!r} (or accepted answers {acc})"
+                                        ),
+                                    }
+                                )
 
             # 4. Explanation & Pedagogical Metadata
             if mode in ("paronym", "homonym", "antonym"):
