@@ -259,9 +259,9 @@ def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
 
 
 def test_approximate_cards_register_and_unambiguous_distractors():
-    """Regression test for Card 71 and Card 75 (Astra review finding):
+    """Regression test for Cards 71, 72, 74, and 75 (Astra review findings):
     - Card 71 explicitly specifies official register in the prompt before testing 'близько ста' vs colloquial 'біля ста'.
-    - Card 75 uses unambiguously incorrect distractors (no bare colloquial 'біля' rejected as an error without register context).
+    - Cards 72, 74, and 75 use unambiguously incorrect distractors (no colloquial 'біля' rejected without formal register prompt).
     """
     cards = {c.card_id: c for c in build_canonical_numeral_cards()}
 
@@ -269,8 +269,20 @@ def test_approximate_cards_register_and_unambiguous_distractors():
     assert "офіційному" in card71.sentence_before.lower(), "Card 71 must establish official register in prompt"
     assert card71.correct_answer == "близько ста"
 
+    card72 = cards["numeral_72"]
+    assert card72.correct_answer == "хвилин двадцять"
+    d72 = [d.text for d in card72.distractors]
+    assert "десь біля двадцяти хвилин" not in d72, "Card 72 must not reject 'десь біля двадцяти хвилин' without register prompt"
+    assert "порядка двадцяти хвилин" in d72, "Card 72 should use unambiguously incorrect 'порядка двадцяти хвилин'"
+
+    card74 = cards["numeral_74"]
+    assert card74.correct_answer == "з десяток"
+    d74 = [d.text for d in card74.distractors]
+    assert "десь біля десяти" not in d74, "Card 74 must not reject 'десь біля десяти' without register prompt"
+    assert "порядка десяти" in d74, "Card 74 should use unambiguously incorrect 'порядка десяти'"
+
     card75 = cards["numeral_75"]
     assert card75.correct_answer == "роки три"
-    distractor_texts = [d.text for d in card75.distractors]
-    assert "біля трьох років" not in distractor_texts, "Card 75 must not reject bare 'біля трьох років' without register prompt"
-    assert "порядка трьох років" in distractor_texts, "Card 75 should use unambiguously incorrect 'порядка трьох років'"
+    d75 = [d.text for d in card75.distractors]
+    assert "біля трьох років" not in d75, "Card 75 must not reject bare 'біля трьох років' without register prompt"
+    assert "порядка трьох років" in d75, "Card 75 should use unambiguously incorrect 'порядка трьох років'"

@@ -2543,10 +2543,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                     explanation_en="*в районі двадцяти хвилин* is a bureaucratic calque; authentic Ukrainian uses noun-numeral inversion: 'хвилин двадцять'.",
                 ),
                 NumeralDistractor(
-                    text="десь біля двадцяти хвилин",
+                    text="порядка двадцяти хвилин",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="Сполука *десь біля двадцяти хвилин* містить розмовний плеоназм; у літературній мові вживають інверсію ('хвилин двадцять') або нормативне 'близько двадцяти хвилин'.",
-                    explanation_en="Phrase *десь біля двадцяти хвилин* is a colloquial pleonasm; literary norm requires inversion ('хвилин двадцять') or standard 'близько двадцяти хвилин'.",
+                    explanation_ua="Конструкція *порядка двадцяти хвилин* є грубою калькою з російської мови (*порядка двадцати минут*); приблизність передають інверсією ('хвилин двадцять') або 'близько двадцяти хвилин'.",
+                    explanation_en="The construction *порядка двадцяти хвилин* is a gross Russian calque (*порядка двадцати минут*); approximation is expressed via inversion ('хвилин двадцять') or 'близько двадцяти хвилин'.",
                 ),
                 NumeralDistractor(
                     text="двадцять близько хвилин",
@@ -2605,10 +2605,10 @@ def build_canonical_numeral_cards() -> list[NumeralCard]:
                     explanation_en="Bureaucratic phrase *в районі десятка* violates Ukrainian norms; natural idiom is 'з десяток'.",
                 ),
                 NumeralDistractor(
-                    text="десь біля десяти",
+                    text="порядка десяти",
                     interference_type=NumeralInterferenceType.IMPROPER_APPROXIMATION_PREPOSITION,
-                    explanation_ua="Сполука *десь біля десяти* є розмовним плеоназмом; у нормативному мовленні вживають питомий вислів 'з десяток' або 'близько десяти'.",
-                    explanation_en="Phrase *десь біля десяти* is a colloquial pleonasm; standard literary usage requires 'з десяток' or 'близько десяти'.",
+                    explanation_ua="Вислів *порядка десяти* є грубою калькою з російської мови (*порядка десяти*); питома українська ідіома для приблизності — 'з десяток' або 'близько десяти'.",
+                    explanation_en="Phrase *порядка десяти* is an ungrammatical Russian calque (*порядка десяти*); authentic Ukrainian idiom is 'з десяток' or 'близько десяти'.",
                 ),
                 NumeralDistractor(
                     text="з десятка",

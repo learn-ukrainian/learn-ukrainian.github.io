@@ -252,10 +252,22 @@ describe('numeral-mechanics', () => {
     const card71 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_71');
     expect(card71.prompt_sentence.toLowerCase()).toContain('офіційному');
 
+    const card72 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_72');
+    expect(card72.correct_answer).toBe('хвилин двадцять');
+    const d72 = card72.distractors.map((d: { text: string }) => d.text);
+    expect(d72).not.toContain('десь біля двадцяти хвилин');
+    expect(d72).toContain('порядка двадцяти хвилин');
+
+    const card74 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_74');
+    expect(card74.correct_answer).toBe('з десяток');
+    const d74 = card74.distractors.map((d: { text: string }) => d.text);
+    expect(d74).not.toContain('десь біля десяти');
+    expect(d74).toContain('порядка десяти');
+
     const card75 = deck.cards.find((c: PracticeNumeralMechanicsCard) => c.card_id === 'numeral_75');
     expect(card75.correct_answer).toBe('роки три');
-    const distractorTexts = card75.distractors.map((d: { text: string }) => d.text);
-    expect(distractorTexts).not.toContain('біля трьох років');
-    expect(distractorTexts).toContain('порядка трьох років');
+    const d75 = card75.distractors.map((d: { text: string }) => d.text);
+    expect(d75).not.toContain('біля трьох років');
+    expect(d75).toContain('порядка трьох років');
   });
 });
