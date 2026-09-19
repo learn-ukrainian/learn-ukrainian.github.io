@@ -236,26 +236,32 @@ def test_syntax_punctuation_particle_vs_interjection():
     syntax_cards = {c.card_id: c for c in cards if c.category == InterjectionCategory.SYNTAX_PUNCTUATION_PARTICLE}
     assert len(syntax_cards) == 5
 
-    # Card 56: Vocative particle О without comma
+    # Card 56: Vocative particle О without comma (stated in prompt)
     c56 = syntax_cards["interjection_card_56"]
     assert c56.correct_answer == "О краю"
+    assert "без інтонаційної паузи" in c56.prompt
+    assert "підсилювальну частку" in c56.prompt
     assert any(
         d.text == "О, краю" and d.interference_key == InterjectionInterferenceKey.PUNCTUATION_UNWARRANTED_COMMA_PARTICLE
         for d in c56.distractors
     )
 
-    # Card 57: Vocative particle Ой without comma
+    # Card 57: Vocative particle Ой without comma (stated in prompt)
     c57 = syntax_cards["interjection_card_57"]
     assert c57.correct_answer == "Ой Дніпре"
+    assert "без інтонаційної паузи" in c57.prompt
+    assert "підсилювальну частку" in c57.prompt
     assert any(
         d.text == "Ой, Дніпре"
         and d.interference_key == InterjectionInterferenceKey.PUNCTUATION_UNWARRANTED_COMMA_PARTICLE
         for d in c57.distractors
     )
 
-    # Card 58: Independent interjection О with comma before address
+    # Card 58: Independent interjection О with comma before address (stated in prompt)
     c58 = syntax_cards["interjection_card_58"]
     assert c58.correct_answer == "О, краю мій"
+    assert "інтонаційну паузу" in c58.prompt
+    assert "самостійного емоційного вигуку" in c58.prompt
     assert any(
         d.text == "О краю мій" and d.interference_key == InterjectionInterferenceKey.PUNCTUATION_COMMA_OMISSION
         for d in c58.distractors
@@ -341,8 +347,19 @@ def test_is_valid_vesum_token_rejections_and_compounds():
     assert is_valid_vesum_token(cursor, "-ура") is False
     assert is_valid_vesum_token(cursor, "ура-") is False
 
-    # Rejection of bad tag entries (e.g. будь-ласка with tag noninfl:insert:bad)
-    assert is_valid_vesum_token(cursor, "будь-ласка") is False
+    # Rejection of bad tag entries and corrupt compounds (Astra R2 regression tests)
+    assert is_valid_vesum_token(cursor, "будь-ласка") is False  # noninfl:insert:bad
+    assert is_valid_vesum_token(cursor, "чуть-чуть") is False  # adv:bad
+    assert is_valid_vesum_token(cursor, "баю-баю") is False  # intj:bad
+    assert is_valid_vesum_token(cursor, "чи-то") is False  # conj:coord:bad
+
+    # Rejection of invalid constituent morphology in compounds
+    assert (
+        is_valid_vesum_token(cursor, "столу-столу") is False
+    )  # dative/locative noun cannot form onomatopoeic reduplication
+    assert (
+        is_valid_vesum_token(cursor, "гарний-бо") is False
+    )  # adjective cannot take enclitic particle as an imperative/interjection compound
 
     # Rejection of non-existent words
     assert is_valid_vesum_token(cursor, "неіснуючеслововигукxyz") is False

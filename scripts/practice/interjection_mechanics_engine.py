@@ -35,6 +35,20 @@ from typing import Any
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 ENCLITIC_PARTICLES: frozenset[str] = frozenset({"бо", "но", "то", "от", "таки"})
+REDUPLICATION_BASE_TAG_SUBSTRINGS: tuple[str, ...] = (
+    "intj",
+    "onomat",
+    "predic",
+    "part",
+    "v_naz",
+)
+ENCLITIC_STEM_TAG_SUBSTRINGS: tuple[str, ...] = (
+    ":impr",
+    "intj",
+    "predic",
+    "adv",
+    "part",
+)
 
 
 class InterjectionCategory(StrEnum):
@@ -1988,7 +2002,7 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
         InterjectionCard(
             card_id="interjection_card_56",
             category=InterjectionCategory.SYNTAX_PUNCTUATION_PARTICLE,
-            prompt="«_______ мій, люблю тебе безтямно всім серцем і душею!» — палко продекламував поет.",
+            prompt="«_______ мій, люблю тебе безтямно всім серцем і душею!» — палко на одному диханні без інтонаційної паузи виголосив поет, уживаючи «о» як підсилювальну частку перед звертанням.",
             target_token="о краю",
             correct_answer="О краю",
             distractors=(
@@ -2020,7 +2034,7 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
         InterjectionCard(
             card_id="interjection_card_57",
             category=InterjectionCategory.SYNTAX_PUNCTUATION_PARTICLE,
-            prompt="«_______, мій брате широкий, розлий же свої могутні весняні води!» — звернувся до річки козак.",
+            prompt="«_______, мій брате широкий, розлий же свої могутні весняні води!» — урочисто без інтонаційної паузи промовив козак, поєднуючи підсилювальну частку «ой» зі звертанням.",
             target_token="ой дніпре",
             correct_answer="Ой Дніпре",
             distractors=(
@@ -2052,7 +2066,7 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
         InterjectionCard(
             card_id="interjection_card_58",
             category=InterjectionCategory.SYNTAX_PUNCTUATION_PARTICLE,
-            prompt="«_______, як довго я не бачив твоїх безкраїх золотих нив!» — зітхнув мандрівник, повернувшись із чужини.",
+            prompt="«_______, як довго я не бачив твоїх безкраїх золотих нив!» — зітхнув мандрівник, зробивши виразну інтонаційну паузу після самостійного емоційного вигуку «о» перед звертанням.",
             target_token="о краю мій",
             correct_answer="О, краю мій",
             distractors=(
@@ -2084,7 +2098,7 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
         InterjectionCard(
             card_id="interjection_card_59",
             category=InterjectionCategory.SYNTAX_PUNCTUATION_PARTICLE,
-            prompt="«_______ Що це за дивовижна веселка засяяла над високим лісом?» — вражено вигукнула дитина.",
+            prompt="«_______ Що це за дивовижна веселка засяяла над високим лісом?» — виразно з сильною окличною інтонацією вигукнула дитина (наступне речення починається з великої літери).",
             target_token="леле",
             correct_answer="Леле!",
             distractors=(
@@ -2116,7 +2130,7 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
         InterjectionCard(
             card_id="interjection_card_60",
             category=InterjectionCategory.SYNTAX_PUNCTUATION_PARTICLE,
-            prompt="«_______ як солодко й п'янко пахне скошена лугова трава на світанку!» — замилувано прошепотіла дівчина.",
+            prompt="«_______ як солодко й п'янко пахне скошена лугова трава на світанку!» — спокійно з плавною невикличною інтонацією прошепотіла дівчина (наступне слово починається з малої літери).",
             target_token="ох",
             correct_answer="Ох,",
             distractors=(
@@ -2151,48 +2165,65 @@ def build_canonical_interjection_cards() -> list[InterjectionCard]:
 def is_valid_vesum_token(cursor: sqlite3.Cursor, raw_token: str) -> bool:
     """Validates an individual token or compound against VESUM dictionary.
 
-    Rejects malformed strings (consecutive hyphens, leading/trailing hyphens, empty parts),
-    verifies standard attestation without :bad tags, and supports rule-backed compounds:
-    - Exact reduplication (e.g. гав-гав, крап-крап, хлюп-хлюп)
-    - Enclitic particle combinations (e.g. годі-бо, ну-бо, давай-но per § 44, п. 3, 1))
+    Rejects malformed strings (consecutive hyphens, leading/trailing hyphens, empty parts).
+    If the full form exists in forms_all:
+      - Accepts if any entry is not tagged with :bad.
+      - REJECTS immediately if all entries are tagged with :bad (e.g. чуть-чуть, баю-баю, чи-то, будь-ласка),
+        preventing flawed compound fallback approval.
+
+    Only when the full compound is absent from forms_all does it attempt rule-backed compound validation:
+      - Exact reduplication (§ 35, п. 5, 4): parts count == identical set, and base morphology must be
+        an onomatopoeia, interjection, predicative, particle, or nominative sound noun (excluding :bad).
+      - Enclitic particles (§ 44, п. 3, 1): stem + recognized enclitic particle (-бо, -но, -то, -от, -таки),
+        where stem morphology must be imperative verb, interjection, predicative, adverb, or particle (excluding :bad).
     """
     strip_punctuation = ".,!?:;—…\"'«»`()[]"
     clean = raw_token.strip(strip_punctuation).lower().replace("’", "'").replace("`", "'")
     if not clean or clean.startswith("-") or clean.endswith("-") or "--" in clean:
         return False
 
-    # 1. Direct lookup in forms_all excluding :bad tags
+    # 1. Full-form check in forms_all
     cursor.execute(
-        "SELECT 1 FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%' LIMIT 1",
+        "SELECT tags FROM forms_all WHERE word_form = ? OR word_form = ? OR word_form = ?",
         (clean, clean.capitalize(), clean.lower()),
     )
-    if cursor.fetchone():
-        return True
+    full_matches = cursor.fetchall()
+    if full_matches:
+        # If full form is attested, accept if ANY entry is non-bad; reject immediately if all are bad
+        return any(":bad" not in row[0] for row in full_matches)
 
-    # 2. Rule-backed compound validation if hyphenated
+    # 2. Rule-backed compound validation ONLY when full compound is absent from forms_all
     if "-" in clean:
         parts = clean.split("-")
         word_re = re.compile(r"^[а-яіїєґ']+$")
         if not all(p and word_re.match(p) for p in parts):
             return False
 
-        # Case A: Exact reduplication (e.g. гав-гав, крап-крап, хлюп-хлюп, цок-цок)
+        # Case A: Exact reduplication (e.g. гав-гав, крап-крап, хлюп-хлюп, цок-цок) per § 35, п. 5, 4)
         if len(set(parts)) == 1:
             base = parts[0]
             cursor.execute(
-                "SELECT 1 FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%' LIMIT 1",
+                "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%'",
                 (base, base.capitalize(), base.lower()),
             )
-            return cursor.fetchone() is not None
+            base_tags = [row[0] for row in cursor.fetchall()]
+            if not base_tags:
+                return False
+            # Constrain constituent morphology: must be onomatopoeia, interjection, predicative, particle, or nominative sound noun
+            return any(any(sub in tag for sub in REDUPLICATION_BASE_TAG_SUBSTRINGS) for tag in base_tags)
 
         # Case B: Stem + recognized enclitic particle (e.g. годі-бо, ну-бо, давай-но) per § 44, п. 3, 1)
         if len(parts) == 2 and parts[1] in ENCLITIC_PARTICLES:
             stem = parts[0]
             cursor.execute(
-                "SELECT 1 FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%' LIMIT 1",
+                "SELECT tags FROM forms_all WHERE (word_form = ? OR word_form = ? OR word_form = ?) AND tags NOT LIKE '%bad%'",
                 (stem, stem.capitalize(), stem.lower()),
             )
-            return cursor.fetchone() is not None
+            stem_tags = [row[0] for row in cursor.fetchall()]
+            if not stem_tags:
+                return False
+            # Constrain constituent morphology: must be imperative verb, interjection, predicative, adverb, or particle
+            return any(any(sub in tag for sub in ENCLITIC_STEM_TAG_SUBSTRINGS) for tag in stem_tags)
 
     return False
 
