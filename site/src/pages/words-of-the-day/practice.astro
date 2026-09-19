@@ -2127,6 +2127,109 @@ const frontmatter = {
     border: 1px solid var(--lu-border);
   }
 
+  /* Progressive disclosure tracks & Parts of Speech styles (#8260) */
+  :global(.k3-track) {
+    margin-bottom: 2rem;
+    padding: 1.25rem;
+    border-radius: 14px;
+    border: 1px solid var(--lu-border);
+    background: var(--lu-surface, rgba(255, 255, 255, 0.03));
+  }
+  @media (max-width: 640px) {
+    :global(.k3-track) {
+      padding: 0.85rem;
+    }
+  }
+  :global(.k3-track-header) {
+    margin-bottom: 1rem;
+  }
+  :global(.k3-track-title-row) {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+  }
+  :global(.k3-track-title) {
+    font-size: 1.15rem;
+    font-weight: 800;
+    margin: 0;
+  }
+  :global(.k3-track-badge) {
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.15rem 0.5rem;
+    border-radius: 6px;
+    background: var(--lu-primary-subtle, rgba(37, 99, 235, 0.1));
+    color: var(--lu-primary);
+  }
+  :global(.k3-track-desc) {
+    font-size: 0.85rem;
+    color: var(--lu-text-muted);
+    margin: 0.25rem 0 0;
+  }
+  :global(.k3-track-subgroup) {
+    margin-top: 1rem;
+    border-top: 1px dashed var(--lu-border);
+    padding-top: 0.85rem;
+  }
+  :global(.k3-track-subgroup summary) {
+    cursor: pointer;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--lu-text-muted);
+    margin-bottom: 0.75rem;
+  }
+  :global(.k3-track-subgroup summary:hover) {
+    color: var(--lu-text);
+  }
+  :global(.k3-mode-card[data-recommended='true']) {
+    border: 2px solid var(--lu-accent-blue, #2563eb);
+    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+  }
+  :global(.k3-mode-card-recommended-badge) {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.7rem;
+    font-weight: 800;
+    padding: 0.1rem 0.45rem;
+    border-radius: 4px;
+    background: var(--lu-primary, #2563eb);
+    color: var(--lu-on-primary-fill, #ffffff);
+    margin-bottom: 0.25rem;
+    width: fit-content;
+  }
+  :global(.k3-mode-card-pos-badge) {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 700;
+    padding: 0.12rem 0.45rem;
+    border-radius: 4px;
+    background: var(--lu-state-active, rgba(255, 255, 255, 0.08));
+    color: var(--lu-accent-blue, #3b82f6);
+    margin-bottom: 0.2rem;
+    width: fit-content;
+  }
+  :global(.k3-case-selector-container) {
+    margin-top: 1.25rem;
+  }
+  :global(.k3-case-selector-intro) {
+    margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+  :global(.k3-case-selector-title) {
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: var(--lu-text-primary, inherit);
+  }
+  :global(.k3-case-selector-subtitle) {
+    font-size: 0.8rem;
+    color: var(--lu-text-muted, #64748b);
+  }
+
   /* Chunk 5 — generalized form rail and N-vowel stress */
   :global(.practice-form-rail) {
     display: grid;
