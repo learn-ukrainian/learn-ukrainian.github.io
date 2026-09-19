@@ -4345,6 +4345,7 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
     storage and MDX assembly keep the existing artifact file contracts.
     """
     artifacts: dict[str, str] = {}
+    raw_bodies: dict[str, str] = {}  # Stripped fence bodies, for duplicate-fence comparison.
     pending_name: str | None = None
     in_fence = False
     fence_name: str | None = None
@@ -4394,8 +4395,6 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
                 fence_open_run = run_len
                 if fence_name is None:
                     raise LinearPipelineError(f"Writer output contains unnamed fenced block at line {line_no}")
-                if fence_name in artifacts:
-                    raise LinearPipelineError(f"Writer output contains duplicate artifact block: {fence_name}")
                 if fence_name in WRITER_JSON_ARTIFACTS and fence_lang != "json":
                     got = fence_lang or "<none>"
                     raise LinearPipelineError(f"{fence_name} must be fenced as json, got {got} at line {line_no}")
@@ -4424,9 +4423,20 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
                 fence_lines.append(line)
                 continue
 
-            if fence_name == "module.md":
-                artifacts[fence_name] = "\n".join(fence_lines).strip() + "\n"
+            # A writer sometimes finishes all artifacts and then dumps one of
+            # them again (#8236: Gemini repeated a byte-identical module.md).
+            # An identical repeat carries no new information, so ignore it. A
+            # repeat with a DIFFERENT body is ambiguous — never silently pick
+            # one copy; fail loud.
+            fence_body = "\n".join(fence_lines).strip()
+            if fence_name in raw_bodies:
+                if fence_body != raw_bodies[fence_name]:
+                    raise LinearPipelineError(f"Writer output contains duplicate artifact block: {fence_name}")
+            elif fence_name == "module.md":
+                raw_bodies[fence_name] = fence_body
+                artifacts[fence_name] = fence_body + "\n"
             elif fence_name in WRITER_JSON_ARTIFACTS:
+                raw_bodies[fence_name] = fence_body
                 artifacts[fence_name] = _parse_and_dump_writer_json_artifact(
                     fence_name,
                     "\n".join(fence_lines),
