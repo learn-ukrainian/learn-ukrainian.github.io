@@ -55,6 +55,7 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     generate_sft_dataset,
     get_vesum_cursor,
     get_vesum_lemmas,
+    has_space_split_ocr_word,
     has_unresolved_anaphora,
     is_concept_in_citation_form,
     is_definitional_for_concept,
@@ -63,7 +64,9 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     is_vesum_pronoun,
     lemmatize_noun_phrase,
     load_textbook_chunks,
+    recover_named_noun_phrase,
     sanitize_ip_addresses,
+    sanitize_typography,
     synthesize_eval_task,
     synthesize_trajectory,
     truncate_word_boundary,
@@ -920,3 +923,78 @@ def test_r9_fable_findings_elimination():
     assert "величина" not in terms_teplo
     assert "питомий" not in terms_teplo
     assert len(terms_teplo) >= 3
+
+
+def test_r10_fable_findings_elimination():
+    """Verify systematic elimination of all 7 defect classes identified in Round 10 CF review."""
+    cur = get_vesum_cursor()
+
+    # 1. Anaphoric initial 'Так' and demonstrative 'таке'
+    assert has_unresolved_anaphora("Так називають частини тіла тварин.") is True
+    assert is_definitional_for_concept("Так називають частини тіла тварин.", "Частина тіла", cur) is False
+    assert has_unresolved_anaphora("Таке тертя називають в'язким.") is True
+    assert is_definitional_for_concept("Таке тертя називають в'язким.", "В'язке тертя", cur) is False
+
+    # 2. Adjective-to-noun recovery with correct gender and number agreement
+    line_v_tertya = "внутрішнє тертя, яке виникає під час руху шарів рідини, називають в'язким"
+    rec_v_tertya = recover_named_noun_phrase(line_v_tertya, "в'язким", cur)
+    assert rec_v_tertya == "В'язке тертя"  # Neuter singular, NOT plural 'В'язкі тертя'
+
+    line_rivn = "рух зі сталою швидкістю називають рівнозмінним рухом"
+    rec_rivn = recover_named_noun_phrase(line_rivn, "рівнозмінним", cur)
+    assert rec_rivn == "Рівнозмінний рух"  # Masculine singular, NOT 'Рівнозмінні сталі'
+
+    # 3. Non-definitions rejected
+    # Metaphors
+    assert is_definitional_for_concept("Кордони – це наче „двері“ між державами.", "Кордони", cur) is False
+    # Evaluative remarks
+    assert is_definitional_for_concept("Метр є одним із найзначніших досягнень науки.", "Метр", cur) is False
+    # Biographical / narrative notes with verb after dash
+    assert is_definitional_for_concept("Прихильник скромного способу життя — живе в селі.", "Прихильник", cur) is False
+    # Consequence of definition
+    assert is_definitional_for_concept("З означення випливає важлива властивість фігури.", "Властивість", cur) is False
+    # Ordinal concepts
+    assert clean_and_validate_candidate("Третя теорія", cur) is None
+    # Stopword / generic concepts
+    assert clean_and_validate_candidate("Жителі планети", cur) is None
+    # Geographic entity / proper noun as bare concept
+    assert clean_and_validate_candidate("Дніпро", cur) is None
+
+    # 4. Terminology extraction: authentic single-word scientific nouns
+    s_bio = "Морські актинії мають жалкі клітини, якими вони паралізують здобич."
+    terms_bio = extract_scientific_terminology_for_snippet(s_bio, "Морські актинії", "biolohiya", cur)
+    assert "живе" not in terms_bio
+    assert "актиній" not in terms_bio
+    assert "донець" not in terms_bio
+    assert "безліч" not in terms_bio
+    assert "протилежне" not in terms_bio
+    assert all(" " not in t for t in terms_bio)
+
+    s_math = "Ці методи застосовують для розв'язування рівнянь."
+    terms_math = extract_scientific_terminology_for_snippet(s_math, "Рівняння", "algebra", cur)
+    assert "метода" not in terms_math
+    assert "метод" not in terms_math  # 'метод' is in STOPWORD_TERMS
+
+    # 5. OCR missing hyphen repair
+    assert sanitize_typography("будьякі предмети") == "будь-які предмети"
+    assert has_space_split_ocr_word("будьякі предмети", cur) is True
+    assert has_space_split_ocr_word("будь-які предмети", cur) is False
+
+    # 6. Geography discipline query synthesis
+    geo_chunk = TextbookChunk(
+        chunk_id="test_geo_1",
+        title="Територіальний устрій",
+        subject="heohrafiya",
+        grade="10",
+        author="Кобернік С. Г.",
+        source_file="geography_10.pdf",
+        text="Територіальна громада — це первинний суб'єкт місцевого самоврядування в Україні.",
+        char_count=80,
+        concept="Територіальна громада",
+        snippet="Територіальна громада — це первинний суб'єкт місцевого самоврядування в Україні.",
+        terms=["громада", "самоврядування"],
+    )
+    task_geo = synthesize_eval_task(geo_chunk, 1)
+    assert "природничо-наукові закономірності" not in task_geo["query"]
+    assert "природне явище" not in task_geo["reference_solution"]
+    assert "географічн" in task_geo["query"] or "просторов" in task_geo["query"]

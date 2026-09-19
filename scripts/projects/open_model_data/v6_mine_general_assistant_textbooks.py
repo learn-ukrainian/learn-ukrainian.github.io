@@ -112,7 +112,8 @@ HUMANITIES_SUBJECTS = {
 
 # 4 Academic Disciplines for pedagogy & reasoning specialization
 DISCIPLINE_MATH_COMPUTING = {"algebra", "heometriya", "matematyka", "informatyka"}
-DISCIPLINE_NATURAL_SCIENCES = {"fizyka", "khimiya", "biolohiya", "astronomiya", "heohrafiya", "pryroda", "ya_doslidzhuiu_svit"}
+DISCIPLINE_NATURAL_SCIENCES = {"fizyka", "khimiya", "biolohiya", "astronomiya", "pryroda", "ya_doslidzhuiu_svit"}
+DISCIPLINE_GEOGRAPHY = {"heohrafiya"}
 DISCIPLINE_SOCIAL_LAW = {"istoriya", "vsesvitnia", "pravoznavstvo", "hromadianska", "ekonomika", "finansova", "zakhyst"}
 DISCIPLINE_PHILOLOGY_CULTURE = {"ukrmova", "ukrlit", "zarlit", "mystetstvo", "etyka", "zdorovia", "tekhnolohiyi"}
 
@@ -327,7 +328,7 @@ OBLIQUE_DEMONSTRATIVE_RE = re.compile(
 )
 
 NOM_DEMONSTRATIVE_START_RE = re.compile(
-    r"^(?:[^.!?«„]{0,50}\b)(?:цей|ця|ці|це\s+[а-яіїєґ]+|такий|така|таке|такі)\s+[а-яіїєґ]+",
+    r"^(?:[^.!?«„—–-]{0,50}\b)(?:цей|ця|ці|це\s+(?:явище|процес|поняття|правило|закон)|такий|така|таке|такі)\s+[а-яіїєґ]+",
     re.IGNORECASE,
 )
 
@@ -352,6 +353,16 @@ PRONOUN_STARTER_RE = re.compile(
 )
 
 
+TAK_ANAPHORA_START_RE = re.compile(
+    r"^(?:[^.!?«„]{0,25}\b)(?:так|саме\s+так)\s+(?:називають|називається)\b",
+    re.IGNORECASE,
+)
+TAKE_ANAPHORA_RE = re.compile(
+    r"(?<![—–-]\s)(?<![—–-]\sце\s)\bтаке\s+[а-яіїєґ]+",
+    re.IGNORECASE,
+)
+
+
 def has_unresolved_anaphora(s: str) -> bool:
     """Check if a snippet or opening clause contains dangling deictic openers, participles, or ungrounded demonstratives/anaphora."""
     s_clean = s.strip().lstrip("«„\"")
@@ -365,6 +376,10 @@ def has_unresolved_anaphora(s: str) -> bool:
         return True
     if PRONOUN_STARTER_RE.search(s_clean):
         return True
+    if TAK_ANAPHORA_START_RE.search(s_clean):
+        return True
+    if TAKE_ANAPHORA_RE.search(s_clean):
+        return True
     first_sent = re.split(r"[.!?]", s_clean)[0]
     if OBLIQUE_DEMONSTRATIVE_RE.search(first_sent):
         return True
@@ -373,7 +388,7 @@ def has_unresolved_anaphora(s: str) -> bool:
 
 # Typography & Calque Sanitation
 APOSTROPHE_RE = re.compile(r"['’ʼ´`]")
-HYPHEN_BREAK_RE = re.compile(r"([а-яіїєґА-ЯІЇЄҐa-zA-Z])[\xad-][\s\r\n]*([а-яіїєґА-ЯІЇЄҐa-zA-Z])")
+HYPHEN_BREAK_RE = re.compile(r"([а-яіїєґА-ЯІЇЄҐa-zA-Z])(?:-[\s\t]*[\r\n]+[\s\t]*|\xad[\s\r\n]*|- +)([а-яіїєґА-ЯІЇЄҐa-zA-Z])")
 DOUBLE_PUNCT_RE = re.compile(r"\.{2,}")
 PUNCT_DOT_RE = re.compile(r"([?!…])\.")
 MULTISPACE_RE = re.compile(r"[ \t]+")
@@ -455,6 +470,12 @@ STOPWORD_TERMS = {
     "напрям", "напрямок", "сторона", "точка", "місце", "край", "стан", "роль",
     "сутність", "середина", "межа", "розмір", "кількість", "якість",
     "величина", "величини", "величину", "величиною",
+    "безліч", "безлічі", "безліччю", "кількості",
+    "метод", "методи", "методів", "метода", "двері", "дверей", "дверима",
+    "досягнення", "історія", "людство",
+    "життя", "світ", "світу", "рік", "року", "роки", "років",
+    "день", "дня", "дні", "днів", "протилежне", "живе", "живий", "живим", "актиній",
+    "житель", "жителі", "жителя", "жителів", "прихильник", "прихильники", "прихильника",
     "богиня", "богині", "богинею", "божество", "божества", "божеств", "бог", "бога", "боги", "богів", "міф", "міфи", "міфів", "міфологія",
     # Generic adjectives
     "давньоримський", "давньоримська", "давньоримське", "давньоримські",
@@ -634,7 +655,7 @@ def get_vesum_word_info(word: str, cur_ves: sqlite3.Cursor | None = None) -> lis
     if cur is None:
         return []
     try:
-        cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ?", (w,))
+        cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ? OR word_form = ?", (w, w.capitalize()))
         rows = cur.fetchall()
     except Exception:
         rows = []
@@ -882,54 +903,84 @@ def recover_named_noun_phrase(line: str, raw_val: str, cur_ves: sqlite3.Cursor |
     if cur.fetchone()[0] > 0:
         return raw_val
 
-    # If raw_val is adjectival, inspect the preceding clause before 'називають'
-    m_before = re.search(r"([^.!?«„]+?)\s+(?:називають|називається)\s+" + re.escape(raw_val), line, re.IGNORECASE)
-    if not m_before:
-        return None
-    before_text = m_before.group(1).strip()
-    before_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", before_text)
-    noun_cand = None
-    is_plural = False
-    for w in reversed(before_words):
-        if len(w) < 3 or w.lower() in ("такі", "цей", "ця", "ці", "це", "їх", "його", "її", "них", "який", "яка", "які", "де", "якщо", "для"):
-            continue
-        cur.execute("SELECT pos, lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (w.lower(),))
-        rows = cur.fetchall()
-        if rows:
-            noun_cand = rows[0][1]
-            is_plural = any(":p:" in r[2] for r in rows)
-            if is_plural:
-                cur.execute("SELECT word_form FROM forms_all WHERE lemma = ? AND pos = 'noun' AND tags LIKE '%:p:v_naz%'", (noun_cand,))
-                p_rows = cur.fetchall()
-                if p_rows:
-                    noun_cand = p_rows[0][0]
-            break
-    if not noun_cand:
-        return None
+    adj_w = words[0].lower()
+    if adj_w.endswith(("ими", "іми")):
+        is_plural = True
+        req_gender = None
+    elif adj_w.endswith(("ою", "ею", "єю")):
+        is_plural = False
+        req_gender = {"f"}
+    elif adj_w.endswith(("им", "ім")):
+        is_plural = False
+        req_gender = {"m", "n"}
+    else:
+        is_plural = False
+        req_gender = None
 
-    cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'adj'", (words[0].lower(),))
+    cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'adj'", (adj_w,))
     adj_rows = cur.fetchall()
     if not adj_rows:
         return None
     adj_lem = adj_rows[0][0]
 
+    # If raw_val is adjectival, inspect the preceding clause before 'називають'
+    m_before = re.search(r"([^.!?«„]+?)\s+(?:називають|називається)\s+" + re.escape(raw_val), line, re.IGNORECASE)
+    if not m_before:
+        return None
+    before_text = m_before.group(1).strip()
+
+    # Prioritize the main clause subject / topic noun (left-to-right order)
+    candidate_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", before_text)
+
+    chosen_noun_lem = None
+    chosen_noun_gender = "m"
+    for w in candidate_words:
+        if len(w) < 3 or w.lower() in ("такі", "цей", "ця", "ці", "це", "їх", "його", "її", "них", "який", "яка", "які", "де", "якщо", "для", "тобто", "весь", "час"):
+            continue
+        cur.execute("SELECT pos, lemma, tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (w.lower(),))
+        n_rows = cur.fetchall()
+        if not n_rows:
+            continue
+        # Reject proper nouns
+        if any(":prop" in r[2] or ":fname" in r[2] or ":lname" in r[2] for r in n_rows):
+            continue
+        noun_lem = n_rows[0][1]
+        cur.execute("SELECT tags FROM forms_all WHERE lemma = ? AND pos = 'noun'", (noun_lem,))
+        lem_tags = [r[0] for r in cur.fetchall()]
+        noun_gender = "m"
+        for lt in lem_tags:
+            if ":f:" in lt:
+                noun_gender = "f"
+                break
+            elif ":n:" in lt:
+                noun_gender = "n"
+                break
+            elif ":m:" in lt:
+                noun_gender = "m"
+                break
+
+        if req_gender and noun_gender not in req_gender:
+            continue
+        chosen_noun_lem = noun_lem
+        chosen_noun_gender = noun_gender
+        break
+
+    if not chosen_noun_lem:
+        return None
+
     if is_plural:
         cur.execute("SELECT word_form FROM forms_all WHERE lemma = ? AND pos = 'adj' AND tags LIKE '%adj:p:v_naz%'", (adj_lem,))
+        adj_res = cur.fetchall()
+        adj_form = adj_res[0][0] if adj_res else adj_lem
+        cur.execute("SELECT word_form FROM forms_all WHERE lemma = ? AND pos = 'noun' AND tags LIKE '%:p:v_naz%'", (chosen_noun_lem,))
+        p_row = cur.fetchone()
+        noun_cand = p_row[0] if p_row else chosen_noun_lem
     else:
-        cur.execute("SELECT tags FROM forms_all WHERE word_form = ? AND pos = 'noun'", (noun_cand.lower(),))
-        n_tags = [r[0] for r in cur.fetchall()]
-        gender = "m"
-        for t in n_tags:
-            if ":f:" in t:
-                gender = "f"
-                break
-            elif ":n:" in t:
-                gender = "n"
-                break
-        cur.execute(f"SELECT word_form FROM forms_all WHERE lemma = ? AND pos = 'adj' AND tags LIKE '%adj:{gender}:v_naz%'", (adj_lem,))
+        cur.execute(f"SELECT word_form FROM forms_all WHERE lemma = ? AND pos = 'adj' AND tags LIKE '%adj:{chosen_noun_gender}:v_naz%'", (adj_lem,))
+        adj_res = cur.fetchall()
+        adj_form = adj_res[0][0] if adj_res else adj_lem
+        noun_cand = chosen_noun_lem
 
-    adj_res = cur.fetchall()
-    adj_form = adj_res[0][0] if adj_res else adj_lem
     return f"{adj_form.capitalize()} {noun_cand}"
 
 
@@ -998,7 +1049,13 @@ def sanitize_ip_addresses(text: str) -> str:
 
 
 def has_space_split_ocr_word(snippet: str, cur_ves: sqlite3.Cursor | None = None) -> bool:
-    """Detect if snippet contains space-split broken words where w1 or w2 is non-word but w1+w2 is attested."""
+    """Detect if snippet contains space-split broken words or missing OCR hyphens."""
+    if re.search(
+        r"\b(?:будь|хтозна|казна)(?:який|яка|яке|які|якого|якій|якому|яким|яких|якою|хто|що|де|коли|куди|кого|кому|ким|чого|чому|чим|як)\b",
+        snippet,
+        re.IGNORECASE,
+    ):
+        return True
     cur = cur_ves or get_vesum_cursor()
     if not cur:
         return False
@@ -1012,6 +1069,16 @@ def has_space_split_ocr_word(snippet: str, cur_ves: sqlite3.Cursor | None = None
             if not is_vesum_attested(w1, cur) and is_vesum_attested(combined, cur):
                 return True
     return False
+
+
+def repair_ocr_missing_hyphens(text: str) -> str:
+    """Repair missing hyphens in indefinite/negative pronouns or adverbs like будь-який, хтозна-що, казна-де."""
+    return re.sub(
+        r"\b(будь|хтозна|казна)(який|яка|яке|які|якого|якій|якому|яким|яких|якою|хто|що|де|коли|куди|кого|кому|ким|чого|чому|чим|як)\b",
+        r"\1-\2",
+        text,
+        flags=re.IGNORECASE,
+    )
 
 
 def repair_ocr_space_splits(text: str, cur_ves: sqlite3.Cursor | None = None) -> str:
@@ -1031,9 +1098,10 @@ def repair_ocr_space_splits(text: str, cur_ves: sqlite3.Cursor | None = None) ->
 
 
 def sanitize_typography(text: str) -> str:
-    """Sanitize spacing, apostrophes, OCR space splits, and terminal punctuation."""
+    """Sanitize spacing, apostrophes, OCR space splits, missing hyphens, and terminal punctuation."""
     t = normalize_apostrophes(text)
     t = dehyphenate_text(t)
+    t = repair_ocr_missing_hyphens(t)
     t = sanitize_ip_addresses(t)
     t = repair_ocr_space_splits(t)
     t = MULTISPACE_RE.sub(" ", t)
@@ -1427,6 +1495,49 @@ def is_definitional_for_concept(
         return False
     cur = cur_ves or get_vesum_cursor()
 
+    # Negative gates
+    # 1. Anaphora / deictic starters
+    if re.search(r"^(?:«|„|\"|\s)*(?:так|саме\s+так)\s+(?:називають|називається)\b", snippet, re.IGNORECASE):
+        return False
+    if re.search(r"\bтаке\s+[а-яіїєґ]+", snippet, re.IGNORECASE):
+        return False
+    if DANGLING_STARTER_RE.search(snippet) or has_unresolved_anaphora(snippet):
+        return False
+
+    # 2. Metaphors
+    if re.search(r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b", snippet, re.IGNORECASE):
+        return False
+
+    # 3. Evaluative commentary
+    if re.search(
+        r"\b(?:одним\s+із\s+найзначніших|одним\s+з\s+найзначніших|одним\s+із\s+найбільших|одним\s+з\s+найбільших|"
+        r"одним\s+із\s+найважливіших|одним\s+з\s+найважливіших|найважливішим\s+досягненням|чудовим\s+прикладом|"
+        r"варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
+        snippet,
+        re.IGNORECASE,
+    ):
+        return False
+
+    # 4. Narrative / biography
+    if re.search(
+        r"\b(?:живе\s+в\b|народивс\w*|помер\w*|навчавс\w*|закінчив\w*|працював\w*|очолив\w*|прожив\w*|мешкав\w*)\b",
+        snippet,
+        re.IGNORECASE,
+    ):
+        return False
+
+    # 5. Consequence of definition
+    if re.search(r"\b(?:з\s+означення\s+випливає|як\s+наслідок|звідси\s+випливає|отже|таким\s+чином)\b", snippet, re.IGNORECASE):
+        return False
+
+    # 6. Ordinals in concept
+    if re.search(
+        r"^(?:перш\w*|друг\w*|трет\w*|четверт\w*|п['ʼ’]?ят\w*|шост\w*|сьом\w*|восьм\w*|дев['ʼ’]?ят\w*|десят\w*|наступн\w*|останн\w*)\b",
+        concept,
+        re.IGNORECASE,
+    ):
+        return False
+
     def _extract_content_lemmas(phrase: str) -> set[str]:
         words = re.findall(r"[а-яіїєґ']+", phrase.lower())
         func_words = {
@@ -1460,8 +1571,13 @@ def is_definitional_for_concept(
         return False
 
     # 1. Copula: X — це ... or X — [noun] ...
-    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|[а-яіїєґ]{3,})", snippet):
+    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+[—–-]\s+(?:це\b|([а-яіїєґ]{3,}))", snippet):
         subj = m.group(1).strip()
+        after_w = m.group(2)
+        if after_w:
+            w_info = get_vesum_word_info(after_w.lower(), cur)
+            if any(r[1] == "verb" or "verb" in r[2] for r in w_info):
+                continue
         subj_lemmas = _extract_content_lemmas(subj)
         if _matches_concept(subj_lemmas):
             return True
@@ -1497,10 +1613,12 @@ def is_definitional_for_concept(
     # 5. Copula with є: concept appears as defined subject or predicate complement of є
     for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,40})\s+є\s+([а-яіїєґ\s'-]{3,40})", snippet, re.IGNORECASE):
         subj = m.group(1).strip()
+        pred = m.group(2).strip()
+        if re.match(r"^(?:одним|однією|найбільш|найзначніш|найважливіш)\b", pred.lower()):
+            continue
         subj_lemmas = _extract_content_lemmas(subj)
         if _matches_concept(subj_lemmas):
             return True
-        pred = m.group(2).strip()
         pred_lemmas = _extract_content_lemmas(pred)
         if _matches_concept(pred_lemmas):
             return True
@@ -1751,8 +1869,26 @@ def clean_and_validate_candidate(cand: str, cur_ves: sqlite3.Cursor | None = Non
     if c.isupper() or any(ch.isupper() for ch in c[1:]):
         c = c.capitalize()
 
-    # Citation form verification and normalization via VESUM
+    # Reject ordinal concepts (e.g. 'Третя теорія')
+    if re.match(
+        r"^(?:перш\w*|друг\w*|трет\w*|четверт\w*|п['ʼ’]?ят\w*|шост\w*|сьом\w*|восьм\w*|дев['ʼ’]?ят\w*|десят\w*|наступн\w*|останн\w*)\b",
+        c,
+        re.IGNORECASE,
+    ):
+        return None
+
+    if len(words) == 1 and words[0].lower() in STOPWORD_TERMS:
+        return None
+    if words[0].lower() in {"житель", "жителі", "жителя", "жителів", "прихильник", "прихильники", "прихильника"}:
+        return None
+
     cur = cur_ves or get_vesum_cursor()
+    if cur and len(words) == 1:
+        w_info = get_vesum_word_info(words[0], cur)
+        if w_info and all(any(tag in r[2] for tag in (":prop", ":fname", ":lname", ":geo")) for r in w_info):
+            return None
+
+    # Citation form verification and normalization via VESUM
     if cur and not is_concept_in_citation_form(c, cur):
         c_norm = lemmatize_noun_phrase(c, cur)
         if is_concept_in_citation_form(c_norm, cur):
@@ -1870,25 +2006,18 @@ def extract_scientific_terminology_for_snippet(
     canonical_list = CANONICAL_SUBJECT_TERMINOLOGY.get(subject, [])
     candidate_terms: list[str] = []
 
-    # 1. Subject canonical terms present directly in target definition (preserve compound terms!)
+    # 1. Subject canonical terms present directly in target definition (only single-word lemmas!)
     snip_lemmas = get_vesum_lemmas(target_text, cur)
     if isinstance(canonical_list, list):
         for ct in canonical_list:
             ct_lower = ct.lower()
-            if ct_lower == conc_lower:
+            if " " in ct_lower:
                 continue
-            ct_words = ct_lower.split()
-            if len(ct_words) == 1:
-                if ct_lower in STOPWORD_TERMS:
-                    continue
-                ct_lemmas = get_vesum_lemmas(ct_lower, cur)
-                if ((ct_lemmas and ct_lemmas & snip_lemmas) or (ct_lower in target_text)) and ct_lower not in candidate_terms:
-                    candidate_terms.append(ct_lower)
-            else:
-                ct_w_lemmas = [get_vesum_lemmas(cw, cur) or {cw} for cw in ct_words]
-                has_compound = ct_lower in target_text or (bool(ct_w_lemmas) and all(bool(cw_lem & snip_lemmas) for cw_lem in ct_w_lemmas))
-                if has_compound and ct_lower not in candidate_terms:
-                    candidate_terms.append(ct_lower)
+            if ct_lower == conc_lower or ct_lower in STOPWORD_TERMS:
+                continue
+            ct_lemmas = get_vesum_lemmas(ct_lower, cur)
+            if ((ct_lemmas and ct_lemmas & snip_lemmas) or (ct_lower in target_text)) and ct_lower not in candidate_terms:
+                candidate_terms.append(ct_lower)
 
     # 2. Extract substantive domain NOUNS directly from definition text via VESUM with POS disambiguation
     tokens = re.findall(r"[а-яіїєґ']+", target_text)
@@ -1898,27 +2027,42 @@ def extract_scientific_terminology_for_snippet(
         rows = get_vesum_word_info(tok, cur)
         if not rows:
             continue
-        # Skip if any function word / pronoun reading
-        if any(r[1] in ("pronoun", "prep", "conj", "part", "intj") or "pron" in r[2] for r in rows):
+        # Skip if any verb, function word, or pronoun reading
+        if any(r[1] in ("verb", "pronoun", "prep", "conj", "part", "intj") or "verb" in r[2] or "pron" in r[2] for r in rows):
+            continue
+        # Skip proper nouns
+        if any(":prop" in r[2] or ":fname" in r[2] or ":lname" in r[2] or ":geo" in r[2] for r in rows):
             continue
         # Filter out participles, comparatives, superlatives (:comps, :compc, :adjp)
         clean_rows = [r for r in rows if not any(tag in r[2] for tag in (":comps", ":compc", ":adjp"))]
         if not clean_rows:
             continue
-        # Substantive scientific terms MUST be nouns (or substantive adj if in canonical)
+        # Substantive scientific terms MUST be nouns
         noun_rows = [r for r in clean_rows if r[1] == "noun"]
         if not noun_rows:
             continue
 
-        # Prefer standard lemma (e.g. точка for точок, тепло for тепла, світло for світла, простір for простору, краса for краси)
-        # Check if any lemma has :p:v_rod (plural genitive)
-        p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
-        chosen_row = p_rod_rows[0] if p_rod_rows else noun_rows[0]
+        # Prefer exact lemma match with token if available (e.g. метод -> метод, not метода)
+        exact_rows = [r for r in noun_rows if r[0].lower() == tok.lower()]
+        if exact_rows:
+            chosen_row = exact_rows[0]
+        else:
+            # Prefer nominative singular (:v_naz)
+            v_naz_rows = [r for r in noun_rows if ":v_naz" in r[2] and ":p:" not in r[2]]
+            if v_naz_rows:
+                chosen_row = v_naz_rows[0]
+            else:
+                p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
+                chosen_row = p_rod_rows[0] if p_rod_rows else noun_rows[0]
+
         lem = chosen_row[0].lower()
 
-        if lem in STOPWORD_TERMS or lem == conc_lower or lem in candidate_terms:
+        # Reject multi-word, stopwords, concept identity, substantivized neuter adjectives ending in -е/-є
+        if " " in lem or lem in STOPWORD_TERMS or lem == conc_lower or lem in candidate_terms:
             continue
-        # If concept is a single word, exclude its exact lemma; if concept is multi-word, allow domain head noun!
+        if lem.endswith(("е", "є")):
+            continue
+        # If concept is a single word, exclude its exact lemma
         if len(conc_lower.split()) == 1 and lem in conc_lemmas:
             continue
         if is_vesum_pronoun(lem, cur):
@@ -1927,16 +2071,7 @@ def extract_scientific_terminology_for_snippet(
             continue
         candidate_terms.append(lem)
 
-    # 3. Subsumption: if multi-word compound present, drop isolated single-word parts
-    multi_word = [t for t in candidate_terms if " " in t]
-    filtered: list[str] = []
-    for t in candidate_terms:
-        if " " not in t and any(t in mw.split() for mw in multi_word):
-            continue
-        if t not in filtered:
-            filtered.append(t)
-
-    return filtered[:5]
+    return candidate_terms[:5]
 
 
 def extract_scientific_terminology(
@@ -2043,6 +2178,43 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
             f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
             f"Ключові наукові терміни теми: {terms_str}.\n\n"
             f"Засвоєння цих наукових фактів є основою для формування цілісного природничо-наукового світогляду учнів."
+        )
+    elif chunk.subject in DISCIPLINE_GEOGRAPHY:
+        templates = [
+            f"Охарактеризуйте географічний зміст матеріалу «{concept}» для учнів {grade} класу з курсу {subj_gen} на основі підручника ({author}). Наведіть профільні наукові терміни.",
+            f"У чому полягає сутність теми «{concept}» у курсі {subj_gen} ({grade} клас, автор підручника — {author})? Вкажіть ключові географічні поняття.",
+            f"Поясніть просторові закономірності та особливості теми «{concept}» для учнів {grade} класу з курсу {subj_gen} (підручник автора {author}).",
+            f"Розкрийте теоретичні та практичні засади теми «{concept}» у шкільному курсі {subj_gen} ({grade} клас, автор — {author}) та наведіть профільну термінологію.",
+            f"Дайте обґрунтовану географічну характеристику теми «{concept}» ({subj_nom}, {grade} клас, підручник {author}).",
+            f"Які базові просторові закономірності та поняття розкривають тему «{concept}» у курсі {subj_gen} ({grade} клас, автор — {author})?",
+            f"Сформулюйте наукове визначення поняття «{concept}» згідно з підручником з курсу {subj_gen} для {grade} класу ({author}).",
+            f"Як у курсі {subj_gen} ({grade} клас, автор — {author}) висвітлюється сутність та значення теми «{concept}»?",
+            f"Опишіть фундаментальні географічні положення теми «{concept}» за шкільним підручником {subj_gen} ({grade} клас, {author}).",
+            f"Проаналізуйте сутність поняття «{concept}» для {grade} класу з курсу {subj_gen} (автор — {author}).",
+            f"У чому полягає змістове наповнення теми «{concept}» у структурі курсу {subj_gen} ({grade} клас, підручник {author})?",
+            f"Як у курсі {subj_gen} ({grade} клас, {author}) інтерпретуються просторові та суспільно-географічні закономірності теми «{concept}»? Вкажіть термінологічну базу.",
+            f"Визначте наукові засади теми «{concept}» для учнів {grade} класу з курсу {subj_gen} за підручником ({author}).",
+            f"Яку наукову інтерпретацію теми «{concept}» пропонує підручник з курсу {subj_gen} ({grade} клас, автор — {author})?",
+            f"Схарактеризуйте географічну сутність поняття «{concept}» у структурі курсу {subj_gen} для {grade} класу ({author}).",
+            f"Поясніть сутність теми «{concept}» у курсі {subj_gen} ({grade} клас, автор підручника — {author}).",
+            f"У чому полягає пізнавальне та практичне значення теми «{concept}» з курсу {subj_gen} для {grade} класу за підручником ({author})?",
+            f"Розкрийте змістові та просторові особливості теми «{concept}» у підручнику з предмета {subj_nom} ({grade} клас, {author}).",
+            f"Наведіть обґрунтоване наукове визначення поняття «{concept}» у межах курсу {subj_gen} ({grade} клас, автор — {author}).",
+            f"Які основні властивості та просторові закономірності теми «{concept}» розглядаються у курсі {subj_gen} ({grade} клас, {author})?",
+            f"Сформулюйте змістовний аналіз поняття «{concept}» за матеріалами шкільного підручника з {subj_gen} ({grade} клас, {author}).",
+            f"Опишіть понятійно-термінологічний апарат теми «{concept}» для {grade} класу з курсу {subj_gen} (автор — {author}).",
+            f"Узагальніть наукові положення щодо поняття «{concept}» у курсі {subj_gen} ({grade} клас, підручник {author}).",
+        ]
+        query = templates[q_var % len(templates)]
+        step1 = f"1. Географічний аналіз: Розглядаємо сутність теми «{concept}» у структурі курсу {subj_gen} ({grade} клас)."
+        step2 = f"2. Джерельна основа: Спираємося на виклад матеріалу в підручнику ({author}): «{snippet}»"
+        step3 = f"3. Термінологічний аналіз: Виділяємо ключові географічні терміни теми: {terms_str}."
+        step4 = "4. Науково-педагогічний висновок: Сформульовано сутнісну характеристику навчальної теми на основі шкільного курсу географії."
+        solution = (
+            f"Тема «{concept}» розкриває важливі географічні та просторові закономірності у курсі {subj_gen} ({grade} клас).\n\n"
+            f"Згідно з підручником ({author}):\n«{snippet}»\n\n"
+            f"Ключові наукові терміни теми: {terms_str}.\n\n"
+            f"Засвоєння цих знань є основою для формування географічної грамотності та просторового мислення учнів."
         )
     elif chunk.subject in DISCIPLINE_SOCIAL_LAW:
         templates = [
@@ -2740,9 +2912,9 @@ def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
                     sol = d.get("reference_solution") or d.get("final_response") or ""
                     m = re.search(r"«([^»]{20,})»", sol)
                     snip = m.group(1).lower().replace("„", "«").replace("“", "»").replace("”", "»") if m else ""
-                snip_lemmas = get_vesum_lemmas(snip, cur)
                 if len(terms) < 2:
                     return False
+                snip_lemmas = None
                 for t in terms:
                     t_clean = t.strip().lower()
                     if t_clean == concept:
@@ -2751,8 +2923,12 @@ def verify_terms_present_in_snippet(eval_dir: Path, sft_dir: Path) -> bool:
                         return False
                     if is_vesum_pronoun(t_clean, cur):
                         return False
+                    if t_clean in snip:
+                        continue
+                    if snip_lemmas is None:
+                        snip_lemmas = get_vesum_lemmas(snip, cur)
                     t_lemmas = get_vesum_lemmas(t_clean, cur) or {t_clean}
-                    if not (t_clean in snip or (t_lemmas & snip_lemmas)):
+                    if not (t_lemmas & snip_lemmas):
                         return False
     return True
 

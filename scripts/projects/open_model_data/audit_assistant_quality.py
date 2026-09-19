@@ -48,15 +48,18 @@ DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 
 from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
     STOPWORD_TERMS,
+    get_vesum_word_info,
     has_space_split_ocr_word,
     has_unresolved_anaphora,
     is_concept_in_citation_form,
     is_definitional_for_concept,
-    is_vesum_attested,
 )
 
 
 def audit_records() -> tuple[list[dict], bool]:
+    import random
+    rng = random.Random(42)
+
     conn = sqlite3.connect(f"file:{DEFAULT_VESUM_DB}?mode=ro", uri=True)
     cur = conn.cursor()
 
@@ -66,50 +69,48 @@ def audit_records() -> tuple[list[dict], bool]:
     sampled_records: list[dict] = []
     seen_eval_concepts: set[str] = set()
 
-    # 1. Sample from eval_shard_003 explicitly (lines 198-212 0-indexed -> lines 199-213 1-indexed)
-    if len(eval_shards) >= 3:
-        with eval_shards[2].open("r", encoding="utf-8") as f:
-            for idx, line in enumerate(f):
-                if 198 <= idx <= 212:
-                    d = json.loads(line)
-                    conc = (d.get("concept") or "").strip()
-                    if conc not in seen_eval_concepts:
-                        seen_eval_concepts.add(conc)
-                        d["_origin"] = f"eval_shard_003_of_005.jsonl:line_{idx + 1}"
-                        sampled_records.append(d)
-
-    # 2. Fill eval sample up to 25 distinct concepts across eval shards
+    # 1. Sample exactly 5 distinct records from each of the 5 eval shards (total 25 eval records)
     for shard in eval_shards:
-        if len(sampled_records) >= 25:
-            break
+        records_in_shard = []
         with shard.open("r", encoding="utf-8") as f:
             for idx, line in enumerate(f):
-                if len(sampled_records) >= 25:
-                    break
-                d = json.loads(line)
-                conc = (d.get("concept") or "").strip()
-                if conc not in seen_eval_concepts:
-                    seen_eval_concepts.add(conc)
+                if line.strip():
+                    d = json.loads(line)
                     d["_origin"] = f"{shard.name}:line_{idx + 1}"
-                    sampled_records.append(d)
+                    records_in_shard.append(d)
+        rng.shuffle(records_in_shard)
+        shard_sampled = 0
+        for d in records_in_shard:
+            conc = (d.get("concept") or "").strip()
+            if conc not in seen_eval_concepts:
+                seen_eval_concepts.add(conc)
+                sampled_records.append(d)
+                shard_sampled += 1
+                if shard_sampled >= 5:
+                    break
 
-    # 3. Sample 25 distinct concepts from SFT shards
+    # 2. Sample 25 distinct records across all 150 SFT shards using seeded PRNG
     seen_sft_concepts: set[str] = set()
-    sft_sampled = 0
-    for shard in sft_shards[::4]:
-        if sft_sampled >= 25:
+    sft_indices = list(range(len(sft_shards)))
+    rng.shuffle(sft_indices)
+    for s_idx in sft_indices:
+        if len(sampled_records) >= 50:
             break
+        shard = sft_shards[s_idx]
+        records_in_shard = []
         with shard.open("r", encoding="utf-8") as f:
             for idx, line in enumerate(f):
-                if sft_sampled >= 25:
-                    break
-                d = json.loads(line)
-                conc = (d.get("concept") or d.get("target_concept") or "").strip()
-                if conc not in seen_sft_concepts:
-                    seen_sft_concepts.add(conc)
+                if line.strip():
+                    d = json.loads(line)
                     d["_origin"] = f"{shard.name}:line_{idx + 1}"
-                    sampled_records.append(d)
-                    sft_sampled += 1
+                    records_in_shard.append(d)
+        rng.shuffle(records_in_shard)
+        for d in records_in_shard:
+            conc = (d.get("concept") or d.get("target_concept") or "").strip()
+            if conc not in seen_sft_concepts:
+                seen_sft_concepts.add(conc)
+                sampled_records.append(d)
+                break
 
     all_passed = True
     audit_results: list[dict] = []
@@ -128,22 +129,52 @@ def audit_records() -> tuple[list[dict], bool]:
             raw_snip = m.group(1) if m else sol
         raw_snip = raw_snip.strip("«» \t\n")
 
-        # 1. Citation form check (strict: nominative noun head, no bare adjs, no preps, no verbs)
-        citation_ok = is_concept_in_citation_form(concept, cur)
+        # 1. Citation form check (strict: nominative noun head, no bare adjs, no preps, no verbs, no ordinals)
+        citation_ok = (
+            is_concept_in_citation_form(concept, cur)
+            and not re.match(
+                r"^(?:перш\w*|друг\w*|трет\w*|четверт\w*|п['ʼ’]?ят\w*|шост\w*|сьом\w*|восьм\w*|дев['ʼ’]?ят\w*|десят\w*|наступн\w*|останн\w*)\b",
+                concept,
+                re.IGNORECASE,
+            )
+            and concept.lower() not in STOPWORD_TERMS
+        )
 
-        # 2. Deictic / Anaphora check (strict: participles, external refs, labelled objects, pronoun starters)
-        anaphora_clean = not has_unresolved_anaphora(raw_snip)
+        # 2. Deictic / Anaphora check (strict: participles, external refs, labelled objects, pronoun starters, initial Так, demonstrative таке)
+        anaphora_clean = (
+            not has_unresolved_anaphora(raw_snip)
+            and not re.search(r"^(?:«|„|\"|\s)*(?:так|саме\s+так)\s+(?:називають|називається)\b", raw_snip, re.IGNORECASE)
+            and not re.search(r"\bтаке\s+[а-яіїєґ]+", raw_snip, re.IGNORECASE)
+        )
 
-        # 3. OCR space-split check
-        ocr_clean = not has_space_split_ocr_word(raw_snip, cur)
+        # 3. OCR space-split check and missing hyphen check
+        ocr_clean = (
+            not has_space_split_ocr_word(raw_snip, cur)
+            and re.search(
+                r"\b(?:будь|хтозна|казна)(?:який|яка|яке|які|якого|якій|якому|яким|яких|якою|хто|що|де|коли|куди|кого|кому|ким|чого|чому|чим|як)\b",
+                raw_snip,
+                re.IGNORECASE,
+            ) is None
+        )
 
-        # 4. Definitional alignment check (concept must be defined subject)
+        # 4. Definitional alignment check (concept must be defined subject, no metaphors, no evaluatives, no narratives)
         def_aligned = is_definitional_for_concept(raw_snip, concept, cur)
 
-        # 5. Scientific terminology check (>=2 terms, VESUM attested, no stopwords)
-        terms_attested = all(is_vesum_attested(t, cur) for t in terms)
-        no_stopwords = not any(t.lower() in STOPWORD_TERMS for t in terms)
-        terms_ok = len(terms) >= 2 and terms_attested and no_stopwords
+        # 5. Scientific terminology check (>=2 single-word terms, VESUM attested common nouns, no stopwords, no pure proper nouns, no substantivized adjectives)
+        def is_valid_scientific_term(t: str) -> bool:
+            if len(t) < 3 or " " in t:
+                return False
+            if t.lower() in STOPWORD_TERMS or t.endswith(("е", "є")):
+                return False
+            w_info = get_vesum_word_info(t, cur)
+            if not w_info:
+                return False
+            return any(
+                r[1] == "noun" and not any(tag in r[2] for tag in (":prop", ":fname", ":lname", ":geo"))
+                for r in w_info
+            )
+
+        terms_ok = len(terms) >= 2 and all(is_valid_scientific_term(t) for t in terms)
 
         rec_ok = citation_ok and anaphora_clean and ocr_clean and def_aligned and terms_ok
         if not rec_ok:
