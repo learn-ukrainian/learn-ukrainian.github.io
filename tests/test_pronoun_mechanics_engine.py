@@ -1,21 +1,22 @@
 """Unit and integration tests for Ukrainian Pronoun Deep Mechanics Practice Engine.
 
 Tests:
-  1. Epenthetic [n-] rules [Правопис 2019 § 116]:
+  1. Epenthetic [n-] rules [Правопис 2019 § 108]:
      - Prepositional government: compulsory n- (до нього, біля неї, про них, на ньому).
      - Direct case government: absence of n- (бачу його, чую її, зустрів їх, дав йому).
      - Instrumental omnipresence: n- always present (ним, нею, ними, із ним, із нею).
      - Derivative prepositions: no n- (завдяки йому, наперекір їй, всупереч їм).
-  2. Orthography rules [Правопис 2019 § 42]:
+  2. Orthography rules [Правопис 2019 § 39]:
      - Together (дехто, абихто, хтось, щось, ніхто, нічого, ніякий).
      - Hyphenated (будь-хто, хто-небудь, казна-що, хтозна-який).
      - Split three words with prepositions (будь у кого, будь з ким, хтозна з ким, ні про що, ні з ким).
-  3. Declension paradigm rules [§§ 117–121]:
-     - Reflexive pronoun себе: defective paradigm, собі, собою, на собі, при собі.
-     - Pronoun весь: Instrumental plural всіма.
-     - Demonstratives цей / той: цими, тими, цього, тому.
-     - Interrogatives хто, що, чий: чийого, кому, чим, чиїми, кого.
-  4. Semantic & stylistic distinctions:
+  3. Declension paradigm rules [§§ 109–113]:
+     - Reflexive pronoun себе (§ 109): defective paradigm, собі, собою, на собі, при собі.
+     - Possessive їхній vs personal до них (§ 110).
+     - Demonstratives цей / той (§ 111): цими, тими, цього, тому.
+     - Interrogatives хто, що, чий (§ 112): чийого, кому, чим, чиїми, кого.
+     - Pronoun весь (§ 113): Instrumental plural всіма.
+  4. Semantic & stylistic distinctions [§ 113]:
      - сам vs самий (сам personally vs той самий identity vs з самого ранку limit; anti-calque *самий кращий -> найкращий).
      - Possessive їхній vs personal після прийменника до них.
   5. Deck validation: zero collisions, 4 unique options, prompt placeholder.
@@ -258,6 +259,12 @@ def test_regression_zero_valid_distractor_collisions():
     assert any(d.text == "будь-ким" for d in c32.distractors)
     assert c32.correct_answer == "будь з ким"
 
+    # Card 66: "він _______ зміг знайти правильне розв'язання задачі"
+    c66 = cards_by_id["pron_sem_sam"]
+    assert "самий" not in c66.all_options()
+    assert any(d.text == "сама" for d in c66.distractors)
+    assert c66.correct_answer == "сам"
+
     # Card 68: "працювали в саду з _______ ранку"
     c68 = cards_by_id["pron_sem_z_samoho_ranku"]
     assert "самого ж" not in c68.all_options()
@@ -268,6 +275,7 @@ def test_regression_zero_valid_distractor_collisions():
     c70 = cards_by_id["pron_sem_sama"]
     assert "сама ж" not in c70.all_options()
     assert "сама-одна" not in c70.all_options()
+    assert "саме" not in c70.all_options()
     assert any(d.text == "сам" for d in c70.distractors)
-    assert any(d.text == "саме" for d in c70.distractors)
+    assert any(d.text == "саму" for d in c70.distractors)
     assert c70.correct_answer == "сама"

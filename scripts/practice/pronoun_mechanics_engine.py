@@ -1,24 +1,25 @@
 """Ukrainian Pronoun Deep Mechanics Practice Engine (Займенник).
 
 Implements Ukrainian Pravopys 2019:
-  - Part II, § 42: Правопис займенників разом, окремо, через дефіс:
+  - Part II, § 39: Правопис складних займенників разом, окремо, через дефіс:
     * П. 1: Разом пишуться займенники з префіксами де-, аби-, ані-, що- та суфіксом -сь (дехто, абихто, аніщо, хтось, щось),
       а також заперечні займенники з часткою ні- (ніхто, ніщо, ніякий, нічий, нікотрий, ніскільки).
     * П. 2: Через дефіс пишуться неозначені займенники з частками будь-, -небудь, казна-, хтозна-, бозна-
       (будь-хто, що-небудь, казна-що, хтозна-який, бозна-хто).
     * П. 3: Окремо (в три слова) пишуться сполуки часток будь, хтозна, казна, бозна, аби, де, ні із займенниками,
       якщо між ними стоїть прийменник (будь у кого, будь з ким, хтозна з ким, аби до кого, де з ким; ні про що, ні з ким, ні до кого, ні за яких).
-  - Part III, §§ 115–124: Морфологія — Займенник:
-    * § 115: Поділ займенників на розряди за значенням (особові, зворотний, присвійні, вказівні, означальні, питальні, відносні, неозначені, заперечні).
-    * § 116: Відмінювання особових займенників:
+  - Part III, §§ 107–114: Морфологія — Займенник:
+    * § 107: Поділ займенників на розряди за значенням (особові, зворотний, присвійні, вказівні, означальні, питальні, відносні, неозначені, заперечні).
+    * § 108: Відмінювання особових займенників:
       - Обов'язковий приставний н- після прийменників у непрямих відмінках 3-ї особи (до нього, біля неї, про них, на ньому).
       - Відсутність приставного н- у формах без прийменників при прямому керуванні (бачу його, чую її, зустрів їх, дав йому, допоміг їй).
       - Орудний відмінок 3-ї особи завжди має форму з н-: ним, нею, ними (як з прийменником, так і без нього).
       - Похідні прийменники з давальним відмінком (завдяки, наперекір, всупереч) не приймають приставного н- (завдяки йому, наперекір їй, всупереч їм).
-    * § 117: Відмінювання зворотного займенника себе (не має форми називного відмінка; давальний собі, орудний собою, місцевий на собі).
-    * § 118: Відмінювання присвійних займенників (їхній відмінюється за м'якою групою прикметників: їхній, їхнього, їхньому, їхнім, їхніми, їхніх).
-    * § 119: Відмінювання вказівних (цей, той) та означальних (весь) займенників (орудний відмінок множини — всіма, не *всьома).
-    * §§ 120–121: Відмінювання питально-відносних займенників (хто, що, чий).
+    * § 109: Відмінювання зворотного займенника себе (не має форми називного відмінка; давальний собі, орудний собою, місцевий на собі).
+    * § 110: Відмінювання присвійних займенників (їхній відмінюється за м'якою групою прикметників: їхній, їхнього, їхньому, їхнім, їхніми, їхніх).
+    * § 111: Відмінювання вказівних займенників цей, той (цими, тими, цього, тому).
+    * § 112: Відмінювання питально-відносних займенників (хто, що, чий).
+    * § 113: Відмінювання означальних займенників весь (всіма, не *всьома), сам, самий.
   - Академічна стилістика та синтаксис:
     * Розрізнення 'сам' (особисто, без сторонньої допомоги) vs 'самий' (тотожність, виділення межі; викорінення кальки *самий кращий -> найкращий).
     * Вживання особового займенника після прийменника ('до них') vs присвійного означення ('їхній дім').
@@ -263,7 +264,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
 
     cards: list[PronounCard] = [
         # ====================================================================
-        # 1. EPENTHETIC_N_PREPOSITIONAL (5 cards) [Правопис 2019 § 116]
+        # 1. EPENTHETIC_N_PREPOSITIONAL (5 cards) [Правопис 2019 § 108]
         # ====================================================================
         PronounCard(
             card_id="pron_epenth_prep_do_nyoho",
@@ -421,7 +422,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_ep_prep,
         ),
         # ====================================================================
-        # 2. EPENTHETIC_N_ABSENCE_DIRECT (5 cards) [Правопис 2019 § 116]
+        # 2. EPENTHETIC_N_ABSENCE_DIRECT (5 cards) [Правопис 2019 § 108]
         # ====================================================================
         PronounCard(
             card_id="pron_epenth_abs_yoho",
@@ -579,7 +580,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_ep_dir,
         ),
         # ====================================================================
-        # 3. EPENTHETIC_N_INSTRUMENTAL_OMNIPRESENT (5 cards) [Правопис 2019 § 116]
+        # 3. EPENTHETIC_N_INSTRUMENTAL_OMNIPRESENT (5 cards) [Правопис 2019 § 108]
         # ====================================================================
         PronounCard(
             card_id="pron_epenth_ins_nym",
@@ -737,7 +738,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_ep_ins,
         ),
         # ====================================================================
-        # 4. EPENTHETIC_N_DERIVATIVE_PREPOSITIONS (5 cards) [Правопис 2019 § 116]
+        # 4. EPENTHETIC_N_DERIVATIVE_PREPOSITIONS (5 cards) [Правопис 2019 § 108]
         # ====================================================================
         PronounCard(
             card_id="pron_epenth_der_zavdyaky_yomu",
@@ -895,7 +896,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_ep_der,
         ),
         # ====================================================================
-        # 5. ORTHOGRAPHY_INDEFINITE_TOGETHER (5 cards) [Правопис 2019 § 42]
+        # 5. ORTHOGRAPHY_INDEFINITE_TOGETHER (5 cards) [Правопис 2019 § 39]
         # ====================================================================
         PronounCard(
             card_id="pron_orth_tog_dekhto",
@@ -1053,7 +1054,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_orth_tog,
         ),
         # ====================================================================
-        # 6. ORTHOGRAPHY_INDEFINITE_HYPHEN (5 cards) [Правопис 2019 § 42]
+        # 6. ORTHOGRAPHY_INDEFINITE_HYPHEN (5 cards) [Правопис 2019 § 39]
         # ====================================================================
         PronounCard(
             card_id="pron_orth_hyph_bud_khto",
@@ -1211,7 +1212,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_orth_hyph,
         ),
         # ====================================================================
-        # 7. ORTHOGRAPHY_INDEFINITE_SPLIT_PREPOSITION (5 cards) [Правопис 2019 § 42]
+        # 7. ORTHOGRAPHY_INDEFINITE_SPLIT_PREPOSITION (5 cards) [Правопис 2019 § 39]
         # ====================================================================
         PronounCard(
             card_id="pron_orth_split_bud_u_koho",
@@ -1369,7 +1370,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_orth_split_indef,
         ),
         # ====================================================================
-        # 8. ORTHOGRAPHY_NEGATIVE_TOGETHER (5 cards) [Правопис 2019 § 42]
+        # 8. ORTHOGRAPHY_NEGATIVE_TOGETHER (5 cards) [Правопис 2019 § 39]
         # ====================================================================
         PronounCard(
             card_id="pron_orth_neg_nikhto",
@@ -1527,7 +1528,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_orth_neg_tog,
         ),
         # ====================================================================
-        # 9. ORTHOGRAPHY_NEGATIVE_SPLIT_PREPOSITION (5 cards) [Правопис 2019 § 42]
+        # 9. ORTHOGRAPHY_NEGATIVE_SPLIT_PREPOSITION (5 cards) [Правопис 2019 § 39]
         # ====================================================================
         PronounCard(
             card_id="pron_orth_split_neg_ni_pro_shcho",
@@ -1685,7 +1686,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_orth_split_neg,
         ),
         # ====================================================================
-        # 10. REFLEXIVE_SEBE_PARADIGM (5 cards) [Правопис 2019 § 117]
+        # 10. REFLEXIVE_SEBE_PARADIGM (5 cards) [Правопис 2019 § 109]
         # ====================================================================
         PronounCard(
             card_id="pron_refl_sobi",
@@ -1843,7 +1844,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_refl,
         ),
         # ====================================================================
-        # 11. DECLENSION_VES_ALTERNATION (5 cards) [Правопис 2019 § 119]
+        # 11. DECLENSION_VES_ALTERNATION (5 cards) [Правопис 2019 § 113]
         # ====================================================================
         PronounCard(
             card_id="pron_ves_vsima",
@@ -2001,7 +2002,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_ves,
         ),
         # ====================================================================
-        # 12. DECLENSION_TSYEY_TOY (5 cards) [Правопис 2019 § 119]
+        # 12. DECLENSION_TSYEY_TOY (5 cards) [Правопис 2019 § 111]
         # ====================================================================
         PronounCard(
             card_id="pron_dem_tsymy",
@@ -2159,7 +2160,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_dem,
         ),
         # ====================================================================
-        # 13. INTERROGATIVE_CHYI_KHTO_SHCHO (5 cards) [Правопис 2019 §§ 120–121]
+        # 13. INTERROGATIVE_CHYI_KHTO_SHCHO (5 cards) [Правопис 2019 § 112]
         # ====================================================================
         PronounCard(
             card_id="pron_int_chyyoho",
@@ -2317,7 +2318,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_int,
         ),
         # ====================================================================
-        # 14. SEMANTIC_SAM_VS_SAMYI (5 cards) [Академічна стилістика]
+        # 14. SEMANTIC_SAM_VS_SAMYI (5 cards) [Академічна стилістика та Правопис 2019 § 113]
         # ====================================================================
         PronounCard(
             card_id="pron_sem_sam",
@@ -2328,10 +2329,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             correct_answer="сам",
             distractors=(
                 PronounDistractor(
-                    text="самий",
-                    interference_type=PronounInterferenceType.CONFUSION_SAM_VS_SAMYI,
-                    explanation_ua="Займенник 'самий' вказує на тотожність або межу; для значення 'особисто, без сторонньої допомоги' вживається 'сам'.",
-                    explanation_en="'самий' indicates identity or limit; for 'personally, unassisted', 'сам' is used.",
+                    text="сама",
+                    interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
+                    explanation_ua="Форма жіночого роду 'сама' порушує узгодження за родом із займенником чоловічого роду 'він' та іменником 'хлопцеві' (правильно 'сам').",
+                    explanation_en="Feminine form 'сама' violates gender agreement with masculine pronoun 'він' and noun 'хлопцеві' (correct: 'сам').",
                 ),
                 PronounDistractor(
                     text="найбільш",
@@ -2458,10 +2459,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="Pronoun modifies feminine subject 'вона', requiring feminine 'сама'; masculine 'сам' violates gender agreement.",
                 ),
                 PronounDistractor(
-                    text="саме",
+                    text="саму",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Форма середнього роду 'саме' не узгоджується з особовим займенником жіночого роду 'вона'.",
-                    explanation_en="Neuter form 'саме' does not agree with feminine personal pronoun 'вона'.",
+                    explanation_ua="Форма знахідного відмінка жіночого роду 'саму' порушує узгодження з підметом у називному відмінку 'вона' (правильно 'сама').",
+                    explanation_en="Feminine accusative 'саму' violates agreement with nominative subject 'вона' (correct: 'сама').",
                 ),
                 PronounDistractor(
                     text="самій",
@@ -2475,7 +2476,7 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
             rule_summary_en=en_sam,
         ),
         # ====================================================================
-        # 15. POSSESSIVE_YIKHNIY_VS_YIKH (5 cards) [Правопис 2019 § 118]
+        # 15. POSSESSIVE_YIKHNIY_VS_YIKH (5 cards) [Правопис 2019 § 110]
         # ====================================================================
         PronounCard(
             card_id="pron_poss_yikhnim_ins",

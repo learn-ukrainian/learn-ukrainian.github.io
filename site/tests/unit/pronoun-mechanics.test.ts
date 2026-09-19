@@ -263,7 +263,7 @@ describe('pronoun-mechanics', () => {
     }
   });
 
-  it('regression: ensures zero valid alternative collisions across Cards 24, 26, 27, 29, 31, 32, 68, 70', () => {
+  it('regression: ensures zero valid alternative collisions across Cards 24, 26, 27, 29, 31, 32, 66, 68, 70', () => {
     const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
     const raw = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(raw);
@@ -305,6 +305,12 @@ describe('pronoun-mechanics', () => {
     expect(c32.options).toContain('будь-ким');
     expect(c32.correct_answer).toBe('будь з ким');
 
+    // Card 66
+    const c66 = cardMap.get('pron_sem_sam')!;
+    expect(c66.options).not.toContain('самий');
+    expect(c66.options).toContain('сама');
+    expect(c66.correct_answer).toBe('сам');
+
     // Card 68
     const c68 = cardMap.get('pron_sem_z_samoho_ranku')!;
     expect(c68.options).not.toContain('самого ж');
@@ -315,8 +321,9 @@ describe('pronoun-mechanics', () => {
     const c70 = cardMap.get('pron_sem_sama')!;
     expect(c70.options).not.toContain('сама ж');
     expect(c70.options).not.toContain('сама-одна');
+    expect(c70.options).not.toContain('саме');
     expect(c70.options).toContain('сам');
-    expect(c70.options).toContain('саме');
+    expect(c70.options).toContain('саму');
     expect(c70.correct_answer).toBe('сама');
   });
 });

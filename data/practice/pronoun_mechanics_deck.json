@@ -2953,18 +2953,18 @@
       "blank_target": "сам",
       "correct_answer": "сам",
       "options": [
-        "самий",
+        "сама",
         "самого",
         "сам",
         "найбільш"
       ],
       "distractors": [
         {
-          "text": "самий",
-          "interference_type": "confusion_sam_vs_samyi",
+          "text": "сама",
+          "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "Займенник 'самий' вказує на тотожність або межу; для значення 'особисто, без сторонньої допомоги' вживається 'сам'.",
-            "en": "'самий' indicates identity or limit; for 'personally, unassisted', 'сам' is used."
+            "ua": "Форма жіночого роду 'сама' порушує узгодження за родом із займенником чоловічого роду 'він' та іменником 'хлопцеві' (правильно 'сам').",
+            "en": "Feminine form 'сама' violates gender agreement with masculine pronoun 'він' and noun 'хлопцеві' (correct: 'сам')."
           }
         },
         {
@@ -3135,7 +3135,7 @@
       "options": [
         "сам",
         "сама",
-        "саме",
+        "саму",
         "самій"
       ],
       "distractors": [
@@ -3148,11 +3148,11 @@
           }
         },
         {
-          "text": "саме",
+          "text": "саму",
           "interference_type": "corrupted_declension_stem",
           "explanation": {
-            "ua": "Форма середнього роду 'саме' не узгоджується з особовим займенником жіночого роду 'вона'.",
-            "en": "Neuter form 'саме' does not agree with feminine personal pronoun 'вона'."
+            "ua": "Форма знахідного відмінка жіночого роду 'саму' порушує узгодження з підметом у називному відмінку 'вона' (правильно 'сама').",
+            "en": "Feminine accusative 'саму' violates agreement with nominative subject 'вона' (correct: 'сама')."
           }
         },
         {
