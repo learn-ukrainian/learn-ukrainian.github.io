@@ -205,10 +205,16 @@ def test_numeral_deck_json_export_and_file_parity(tmp_path: Path):
     assert len(committed_data["cards"]) == 75
 
 
+@pytest.mark.skipif(
+    not Path("data/vesum.db").exists() or Path("data/vesum.db").stat().st_size < 1_000_000,
+    reason="Requires full local data/vesum.db (>1MB); CI omits it",
+)
 def test_vesum_verification_clean():
     """Verify 100% VESUM attestation for all 75 cards."""
     cards = build_canonical_numeral_cards()
     res = verify_deck_with_vesum(cards)
+    if res.get("status") == "skipped":
+        pytest.skip(res["message"])
 
     assert res["vesum_verified"] is True
     assert len(res["missing_targets"]) == 0, f"Missing target tokens in VESUM: {res['missing_targets']}"

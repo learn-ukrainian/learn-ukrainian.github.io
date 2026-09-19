@@ -2689,8 +2689,33 @@ def verify_deck_with_vesum(cards: list[NumeralCard], vesum_db_path: Path | str |
     import re
 
     resolved_path = find_vesum_db(Path(vesum_db_path) if vesum_db_path else None)
+    if not resolved_path.exists() or resolved_path.stat().st_size < 1_000_000:
+        return {
+            "total_cards": len(cards),
+            "target_tokens_count": 0,
+            "missing_targets": [],
+            "distractor_tokens_count": 0,
+            "unattested_distractor_tokens": [],
+            "vesum_verified": None,
+            "status": "skipped",
+            "message": f"VESUM database not found or incomplete at {resolved_path}",
+        }
+
     conn = sqlite3.connect(str(resolved_path))
     cursor = conn.cursor()
+    cursor.execute("SELECT 1 FROM sqlite_master WHERE type='table' AND name='forms_all'")
+    if not cursor.fetchone():
+        conn.close()
+        return {
+            "total_cards": len(cards),
+            "target_tokens_count": 0,
+            "missing_targets": [],
+            "distractor_tokens_count": 0,
+            "unattested_distractor_tokens": [],
+            "vesum_verified": None,
+            "status": "skipped",
+            "message": f"forms_all table not found in VESUM database at {resolved_path}",
+        }
 
     word_pattern = re.compile(r"^[а-яіїєґА-ЯІЇЄҐ'\-]+$")
     strip_punctuation = ".,!?:;—…\"'«»`()[]"
