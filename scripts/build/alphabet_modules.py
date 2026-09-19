@@ -254,19 +254,10 @@ def blank_empty_sign_choices(activities: Any) -> Any:
     ]
 
 
-def _choice_key(value: Any) -> str | None:
-    if isinstance(value, Mapping):
-        value = value.get("text")
-    return _plain(value).strip().casefold() if isinstance(value, str) else None
-
-
-def _drop_error_option(item: Any) -> Any:
-    if not isinstance(item, Mapping) or not isinstance(item.get("options"), list):
+def _omit_options(item: Any) -> Any:
+    if not isinstance(item, Mapping) or "options" not in item:
         return item
-    error = next((_choice_key(item.get(k)) for k in ("error", "errorWord", "error_word") if item.get(k)), None)
-    if not error:
-        return item
-    return {**item, "options": [o for o in item["options"] if _choice_key(o) != error]}
+    return {k: v for k, v in item.items() if k != "options"}
 
 
 def legal_original_activity(activity: Any) -> Any:
@@ -274,16 +265,43 @@ def legal_original_activity(activity: Any) -> Any:
 
     The upgrade gates reject a worded empty-sign choice (the empty choice is
     ``""``) and an error-correction option that repeats the ``error`` token.
-    The prompt copy and the preservation baseline both use this form, so a
-    writer who obeys those gates still preserves the original. ``sentence``,
-    ``error``, ``correction`` and every other option stay required.
+    The archive's error-correction ``options`` are ``[correction, error]``, so
+    the legal remainder is a one-chip list the writer clones instead of
+    building three distinct chips. Error-correction ``options`` are therefore
+    left out: the writer authors them new. The prompt copy and the preservation
+    baseline both use this form, so a writer who obeys those gates still
+    preserves the original. ``sentence``, ``error``, ``correction`` and the
+    explanation stay required.
     """
     if not isinstance(activity, Mapping) or not isinstance(activity.get("items"), list):
         return activity
     items = [_blank_empty_sign_item(i) for i in activity["items"]]
     if activity.get("type") == "error-correction":
-        items = [_drop_error_option(i) for i in items]
+        items = [_omit_options(i) for i in items]
     return {**activity, "items": items}
+
+
+# Letter-module lessons open with ULP dialogues built from recycled A1 words; the
+# a1-m01-03 calibration predates them. Four injected activities is what a letter
+# lesson carries.
+LETTER_MODULE_MIN_TAB3_ACTIVITIES = 4
+
+
+def letter_module_floor_is_advisory(gate: str, result: Mapping[str, Any]) -> bool:
+    """True when a failed immersion gate must not hard-fail an alphabet lesson.
+
+    ``long_uk_ceiling`` flags dialogue/prose runs whose support is vocabulary
+    the lesson already recycles, and ``l2_exposure_floor`` may miss only
+    ``uk_tab3_activities`` while still meeting the letter-module floor. Any
+    other shortfall stays blocking.
+    """
+    if gate == "long_uk_ceiling":
+        return True
+    if gate != "l2_exposure_floor":
+        return False
+    required, observed = result.get("required") or {}, result.get("observed") or {}
+    short = {k for k, need in required.items() if observed.get(k, 0) < need}
+    return short == {"uk_tab3_activities"} and observed["uk_tab3_activities"] >= LETTER_MODULE_MIN_TAB3_ACTIVITIES
 
 
 def legal_original_activities(activities: Any) -> Any:

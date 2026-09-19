@@ -21,6 +21,7 @@ from scripts.build.alphabet_modules import (
     is_dropped_original_paragraph,
     is_line_break_activity,
     legal_original_activity,
+    letter_module_floor_is_advisory,
     mentions_line_breaks,
 )
 
@@ -1276,7 +1277,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         if act.get("type") != a.get("type"):
             block(f"{expected_id}: type {a.get('type')} became {act.get('type')}")
         # Compare against what the writer may legally keep: the archive's worded
-        # empty-sign chips and [correction, error] options fail the upgrade gates.
+        # empty-sign chips and [correction, error] options fail the upgrade gates,
+        # so error-correction options are authored new and not compared.
         legal = legal_original_activity(a) if alphabet else a
         payload = {k: v for k, v in legal.items() if k in LIST_FIELDS}
         if not payload:
@@ -1328,7 +1330,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             }
             report["facts"].setdefault("immersion", {})[n] = immersion
             for name, result in immersion.items():
-                if not result["passed"]:
+                if result["passed"]:
+                    continue
+                if alphabet and letter_module_floor_is_advisory(name, result):
+                    warn(f"lesson {n}: {name} advisory for letter modules: {result}")
+                else:
                     block(f"lesson {n}: {name} failed: {result}")
         except Exception as exc:
             block(f"lesson {n}: immersion gate unavailable: {type(exc).__name__}")

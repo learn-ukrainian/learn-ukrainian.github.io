@@ -365,12 +365,12 @@ def test_special_signs_upgrade_prompt_has_no_worded_empty_choice_or_divide_words
 
 # ── legal originals: what the upgrade writer may keep (#8236) ────────────────
 
-def test_legal_original_activity_blanks_chips_and_drops_only_the_error_option():
+def test_legal_original_activity_blanks_chips_and_omits_error_correction_options():
     ec = {"id": "act-4", "type": "error-correction", "items": [
         {"sentence": "Моя́ сімя живе́ у Ки́єві.", "error": "сімя", "correction": "сім'я́",
          "options": ["сім'я́", "сімя"], "explanation": "У слові сім'я́ потрібен апо́строф."}]}
     out = am.legal_original_activity(ec)
-    assert out["items"][0]["options"] == ["сім'я́"]
+    assert "options" not in out["items"][0]  # never a one-chip list to clone
     assert {k: out["items"][0][k] for k in ("sentence", "error", "correction", "explanation")} == {
         k: ec["items"][0][k] for k in ("sentence", "error", "correction", "explanation")}
     assert ec["items"][0]["options"] == ["сім'я́", "сімя"]  # input untouched
@@ -395,10 +395,24 @@ def test_upgrade_prompt_originals_match_the_preservation_baseline():
     shown = yaml.safe_load(linear_pipeline._original_artifact_for_prompt(plan, "activities.yaml", acts))["inline"]
     assert shown[0]["items"][0]["answer"] == ""
     assert shown[0]["items"][0]["options"] == ["", "'", "ь"]
-    assert shown[1]["items"][0]["options"] == ["день"]
+    assert "options" not in shown[1]["items"][0]
     assert shown[1]["items"][0]["error"] == "ден"
     assert shown[2]["groups"][0]["label"] == "Немає знака — No sign"
     assert shown == [am.legal_original_activity(a) for a in yaml.safe_load(acts)["inline"]]
+
+
+def test_letter_module_floor_is_advisory_only_for_long_uk_and_tab3_four_of_five():
+    def floor(**observed):
+        required = {"uk_dialogue_lines": 0, "uk_tab3_activities": 5}
+        return {"required": required, "observed": {"uk_dialogue_lines": 3, "uk_tab3_activities": 5, **observed}}
+
+    assert am.letter_module_floor_is_advisory("long_uk_ceiling", {"offending_runs": ["— Привіт!"]})
+    assert am.letter_module_floor_is_advisory("l2_exposure_floor", floor(uk_tab3_activities=4))
+    assert not am.letter_module_floor_is_advisory("l2_exposure_floor", floor(uk_tab3_activities=3))
+    both = floor(uk_tab3_activities=4)
+    both["required"]["uk_dialogue_lines"] = 10
+    assert not am.letter_module_floor_is_advisory("l2_exposure_floor", both)
+    assert not am.letter_module_floor_is_advisory("component_density", {})
 
 
 def test_upgrade_prompt_prose_drops_banned_phrase_paragraphs_only():

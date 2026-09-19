@@ -1133,7 +1133,8 @@ def _original_artifact_for_prompt(plan: Mapping[str, Any], name: str, text: str)
     """Original artifact text for the upgrade prompt.
 
     Alphabet slugs lose what the upgrade gates reject: line-break teaching,
-    banned learner phrases, worded empty-sign choices and error-token options.
+    banned learner phrases, worded empty-sign choices and error-correction
+    ``options`` (the writer authors those new).
     The preservation gate compares against the same filtered original.
     """
     if not is_alphabet_slug(plan.get("slug")):
