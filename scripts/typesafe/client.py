@@ -5,11 +5,15 @@ This helper is the one place for that. Existing modules are not migrated
 here (#8192); new callers should import these two functions instead of
 copying the sketch in ``docs/best-practices/typesafe-jev.md`` §9.
 
-Never log the API key or the expanded secret path. Error text uses the
-tilde form ``~/.secrets/…`` only, or a fixed message that names neither
-the key nor a path. A key that is not one printable-ASCII line is unusable.
-A bad key file is skipped; a bad environment value, or a header the HTTP
-stack rejects, raises ``TypeSafeError`` with that fixed message.
+Never log the API key or a secret path. Every client ``TypeSafeError`` is
+raised ``from None`` after the handler has exited, so ``__cause__`` and
+``__context__`` cannot echo a header, URL, reason phrase, or body. The
+message is only a category (``http_error``, ``timeout``, ``network_error``,
+``malformed_json``, ``invalid_key``, ``no_key``) plus the integer HTTP
+status when the category is ``http_error``. A key that is not one
+printable-ASCII line is unusable. A bad key file is skipped; a bad
+environment value, or a header the HTTP stack rejects, raises
+``invalid_key``.
 """
 
 from __future__ import annotations
@@ -27,14 +31,30 @@ DEFAULT_MODEL = "jev-latest"
 DEFAULT_TIMEOUT = 60.0
 
 _KEY_FILENAMES = ("typesafe-ai.key", "typsafe-ai.key")
-_UNUSABLE_KEY_MESSAGE = "TypeSafe API key is unusable"
 
 
 class TypeSafeError(Exception):
-    """HTTP error, timeout, malformed JSON, or a missing API key.
+    """HTTP error, timeout, malformed JSON, or a missing or unusable API key.
 
-    ``str(self)`` never includes the key or an expanded secret path.
+    ``category`` is one of ``http_error``, ``timeout``, ``network_error``,
+    ``malformed_json``, ``invalid_key``, ``no_key``. ``status`` is the integer
+    HTTP status for ``http_error`` and ``None`` otherwise. ``str(self)`` is
+    built only from those fields. It never includes a key, key path, URL,
+    header, reason phrase, or response body.
     """
+
+    def __init__(self, message: str, *, category: str | None = None, status: int | None = None) -> None:
+        super().__init__(message)
+        self.category = category
+        self.status = status
+
+
+def _client_error(category: str, status: int | None = None) -> TypeSafeError:
+    """Build an error whose text is the category and, for HTTP, the status code."""
+    safe_status = status if isinstance(status, int) and not isinstance(status, bool) else None
+    if category == "http_error" and safe_status is not None:
+        return TypeSafeError(f"http_error {safe_status}", category=category, status=safe_status)
+    return TypeSafeError(category, category=category, status=None)
 
 
 def _api_key_is_usable(key: str) -> bool:
@@ -49,14 +69,14 @@ def load_typesafe_api_key() -> str:
     then ``~/.secrets/typsafe-ai.key``. Empty env falls through. An empty,
     undecodable, or otherwise unusable file falls through to the next name.
     A non-empty env value that is not a usable key raises ``TypeSafeError``
-    with the fixed message ``TypeSafe API key is unusable`` and does not
-    fall through. That message contains neither the key nor a path.
+    with category ``invalid_key`` and does not fall through. No key at all
+    raises category ``no_key``. Neither message names the key or a path.
     """
     env = os.environ.get("TYPESAFE_API_KEY", "")
     stripped = env.strip()
     if stripped:
         if not _api_key_is_usable(stripped):
-            raise TypeSafeError(_UNUSABLE_KEY_MESSAGE) from None
+            raise _client_error("invalid_key") from None
         return stripped
     secrets = Path.home() / ".secrets"
     for name in _KEY_FILENAMES:
@@ -70,9 +90,7 @@ def load_typesafe_api_key() -> str:
         lines = [line.strip() for line in raw.splitlines() if line.strip()]
         if len(lines) == 1 and _api_key_is_usable(lines[0]):
             return lines[0]
-    raise TypeSafeError(
-        "TYPESAFE_API_KEY unset and neither ~/.secrets/typesafe-ai.key nor legacy ~/.secrets/typsafe-ai.key found"
-    )
+    raise _client_error("no_key") from None
 
 
 def system_one(
@@ -86,16 +104,21 @@ def system_one(
 
     Raises ``TypeSafeError`` on HTTP failure, timeout, or a body that is not
     a JSON object. The key is loaded inside this call and is not returned.
+    The raised error is built only from a category and, for HTTP, the integer
+    status. It is raised after the handler exits, ``from None``, so the
+    server reason, body, and URL are not attached as ``__cause__`` or
+    ``__context__``.
     """
     api_key = load_typesafe_api_key()
     payload = json.dumps(
         {"state": state, "model": model, "questions": questions},
         ensure_ascii=False,
     ).encode("utf-8")
-    # Raise the sanitised error only after this handler has exited. Raising
-    # inside the ``except`` reattaches the ``ValueError`` as ``__context__``,
-    # and that message can contain the key.
-    request_rejected = False
+    # Capture only the safe fields, then raise after this handler has exited.
+    # Raising inside ``except`` attaches the raw error as ``__context__``, and
+    # that text can contain a credential, a URL, or a response body.
+    failure: tuple[str, int | None] | None = None
+    raw = b""
     try:
         request = urllib.request.Request(
             API_URL,
@@ -109,29 +132,30 @@ def system_one(
         )
         with urllib.request.urlopen(request, timeout=timeout) as response:
             raw = response.read()
-    except ValueError:
-        request_rejected = True
     except urllib.error.HTTPError as exc:
-        raise TypeSafeError(f"System One HTTP {exc.code}") from exc
+        code = exc.code
+        status = code if isinstance(code, int) and not isinstance(code, bool) else None
+        failure = ("http_error", status)
     except urllib.error.URLError as exc:
-        if isinstance(exc.reason, TimeoutError):
-            raise TypeSafeError("System One request timed out") from exc
-        raise TypeSafeError("System One request failed (URLError)") from exc
-    except TimeoutError as exc:
-        raise TypeSafeError("System One request timed out") from exc
-    except http.client.HTTPException as exc:
-        raise TypeSafeError(f"System One request failed ({type(exc).__name__})") from exc
-    except OSError as exc:
-        raise TypeSafeError(f"System One request failed ({type(exc).__name__})") from exc
-    if request_rejected:
-        raise TypeSafeError(_UNUSABLE_KEY_MESSAGE) from None
+        failure = ("timeout", None) if isinstance(exc.reason, TimeoutError) else ("network_error", None)
+    except TimeoutError:
+        failure = ("timeout", None)
+    except http.client.HTTPException:
+        failure = ("network_error", None)
+    except OSError:
+        failure = ("network_error", None)
+    except ValueError:
+        failure = ("invalid_key", None)
+    if failure is not None:
+        raise _client_error(failure[0], failure[1]) from None
+    malformed = False
+    parsed: Any = None
     try:
-        text = raw.decode("utf-8")
-        parsed = json.loads(text)
-    except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-        raise TypeSafeError("System One returned malformed JSON") from exc
-    if not isinstance(parsed, dict):
-        raise TypeSafeError("System One returned malformed JSON")
+        parsed = json.loads(raw.decode("utf-8"))
+    except (UnicodeDecodeError, json.JSONDecodeError):
+        malformed = True
+    if malformed or not isinstance(parsed, dict):
+        raise _client_error("malformed_json") from None
     return parsed
 
 

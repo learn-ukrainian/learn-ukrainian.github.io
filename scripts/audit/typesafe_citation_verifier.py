@@ -9,10 +9,13 @@ Pipeline, per citation ``{id, claim, quote, source_text}``:
    whitespace, unified apostrophes / quotation marks / dashes, soft hyphens
    stripped. An elision marker inside the quote (``[...]``, ``[…]``, ``...``,
    ``…``) splits it; every segment must occur in the source, in order, and
-   on a word boundary. An apostrophe inside a word (``п'ять``) is not a
-   boundary. No fuzzy match. A quote with fewer than ``MIN_QUOTE_WORD_TOKENS``
-   word tokens is ``needs_human_review`` (``quote_too_short``) and the model
-   is not called. A miss, or an empty quote or source, is ``fabricated``.
+   on a word boundary. An apostrophe is a word character only between two
+   word characters (``п'ять``); at a word edge it is punctuation. A combining
+   mark stays inside the word, including one NFC cannot compose. No fuzzy
+   match. Checks, in order: a non-string or empty quote or source is
+   ``fabricated``; a quote with fewer than ``MIN_QUOTE_WORD_TOKENS`` word
+   tokens, including zero, is ``needs_human_review`` (``quote_too_short``)
+   and the model is not called; then a miss is ``fabricated``.
 2. **One System One request.** A single Choice — ``supports`` /
    ``contradicts`` / ``says_nothing`` — judged on the source passage versus
    the claim. Thresholds live in ``ACCEPT_CONFIDENCE``, not in the prompt.
@@ -56,7 +59,8 @@ from scripts.typesafe.client import (
 # ``contradicts`` is not gated: any confidence is enough to refuse the citation.
 ACCEPT_CONFIDENCE = 0.80
 # A quote this short cannot show that the source says the claim. Count is
-# word tokens after ``normalize_for_match``, apostrophes kept inside the word.
+# word tokens after ``normalize_for_match``. Zero tokens (``!!!``) are included.
+# An apostrophe counts only when it sits inside the word.
 MIN_QUOTE_WORD_TOKENS = 3
 # Float noise only. A distribution that is off by a percentage point is malformed.
 PROBABILITY_SUM_TOLERANCE = 1e-6
@@ -137,38 +141,50 @@ def normalize_for_match(text: str) -> str:
     return _WHITESPACE.sub(" ", normalized).strip()
 
 
-def _is_letter_or_digit(char: str) -> bool:
+def _is_word_char(char: str) -> bool:
+    """Unicode letter, digit, or combining mark.
+
+    ``str.isalnum()`` is false for combining marks, so it splits a base letter
+    from a mark NFC cannot compose (``q`` + U+0301). An apostrophe is not a
+    word character here; ``_is_word_char_at`` counts it only between two.
+    """
+    if unicodedata.category(char).startswith("M"):
+        return True
     return char.isalnum()
 
 
-def _is_word_char(char: str) -> bool:
-    """Letter, digit, or an apostrophe that sits inside a word such as ``п'ять``."""
-    return char == "'" or _is_letter_or_digit(char)
+def _is_word_char_at(text: str, index: int) -> bool:
+    """True when ``text[index]`` belongs to a word.
+
+    An apostrophe counts only between two word characters (``п'ять``,
+    ``м'який``). At a word edge it is punctuation, so a surrounding quote
+    mark is a valid boundary.
+    """
+    char = text[index]
+    if _is_word_char(char):
+        return True
+    if char != "'" or index == 0 or index + 1 >= len(text):
+        return False
+    return _is_word_char(text[index - 1]) and _is_word_char(text[index + 1])
 
 
 def quote_word_tokens(text: str) -> list[str]:
     """Word tokens of ``text`` after ``normalize_for_match``.
 
-    An apostrophe between two letters or digits does not split the token.
+    An apostrophe between two word characters does not split the token.
+    A combining mark stays on the same token as the base letter.
     """
     normalized = normalize_for_match(text)
     tokens: list[str] = []
     index = 0
     length = len(normalized)
     while index < length:
-        if not _is_letter_or_digit(normalized[index]):
+        if not _is_word_char(normalized[index]):
             index += 1
             continue
         end = index + 1
-        while end < length:
-            char = normalized[end]
-            if _is_letter_or_digit(char):
-                end += 1
-                continue
-            if char == "'" and end + 1 < length and _is_letter_or_digit(normalized[end + 1]):
-                end += 2
-                continue
-            break
+        while end < length and _is_word_char_at(normalized, end):
+            end += 1
         tokens.append(normalized[index:end])
         index = end
     return tokens
@@ -178,8 +194,9 @@ def _find_at_word_boundary(source: str, segment: str, cursor: int) -> int:
     """Index of ``segment`` at or after ``cursor``, or -1.
 
     The character before the match and the character after it must be absent
-    or not a word character. Apostrophes count as word characters, so ``ять``
-    does not match inside ``п'ять``.
+    or not part of the word. An internal apostrophe is part of the word, so
+    ``п`` and ``ять`` do not match inside ``п'ять``. A combining mark is too,
+    so ``q`` does not match inside ``q́r``.
     """
     start = cursor
     while True:
@@ -187,8 +204,8 @@ def _find_at_word_boundary(source: str, segment: str, cursor: int) -> int:
         if found < 0:
             return -1
         end = found + len(segment)
-        before_ok = found == 0 or not _is_word_char(source[found - 1])
-        after_ok = end == len(source) or not _is_word_char(source[end])
+        before_ok = found == 0 or not _is_word_char_at(source, found - 1)
+        after_ok = end == len(source) or not _is_word_char_at(source, end)
         if before_ok and after_ok:
             return found
         start = found + 1
@@ -347,10 +364,15 @@ def verify_citation(
     """
     quote = case.get("quote")
     source = case.get("source_text")
-    if not isinstance(quote, str) or not isinstance(source, str):
+    if (
+        not isinstance(quote, str)
+        or not isinstance(source, str)
+        or not normalize_for_match(quote)
+        or not normalize_for_match(source)
+    ):
         return _base_receipt(case, verdict="fabricated", decided_by="deterministic")
     token_count = len(quote_word_tokens(quote))
-    if 0 < token_count < MIN_QUOTE_WORD_TOKENS:
+    if token_count < MIN_QUOTE_WORD_TOKENS:
         receipt = _base_receipt(case, verdict="needs_human_review", decided_by="deterministic")
         receipt["reason"] = "quote_too_short"
         return receipt

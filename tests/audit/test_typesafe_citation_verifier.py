@@ -115,7 +115,8 @@ def test_elision_matches_in_order_and_fails_out_of_order():
     ellipsis_only = FakeClient()
     empty_segments = v.verify_citation(_case(quote="…", source=source), client=ellipsis_only)
     assert ellipsis_only.calls == []
-    assert empty_segments["verdict"] == "fabricated"
+    assert empty_segments["verdict"] == "needs_human_review"
+    assert empty_segments["reason"] == "quote_too_short"
 
 
 def test_empty_quote_or_source_is_fabricated_without_a_call():
@@ -228,6 +229,47 @@ def test_two_word_quote_needs_human_review_without_a_client_call():
     assert receipt["reason"] == "quote_too_short"
     assert receipt["accepted"] is False
     assert v.MIN_QUOTE_WORD_TOKENS == 3
+
+
+def test_zero_word_quote_needs_human_review_without_a_client_call():
+    client = FakeClient()
+    receipt = v.verify_citation(_case(quote="!!!", source="!!!"), client=client)
+    assert client.calls == []
+    assert receipt["verdict"] == "needs_human_review"
+    assert receipt["decided_by"] == "deterministic"
+    assert receipt["reason"] == "quote_too_short"
+    assert receipt["accepted"] is False
+
+
+def test_combining_mark_does_not_split_a_word_or_open_a_boundary():
+    marked = "q\u0301r"
+    client = FakeClient()
+    miss = v.verify_citation(_case(quote="one two q", source=f"one two {marked}"), client=client)
+    assert client.calls == []
+    assert miss["verdict"] == "fabricated"
+    assert miss["decided_by"] == "deterministic"
+
+    short = FakeClient()
+    review = v.verify_citation(_case(quote=f"{marked} s", source=f"{marked} s"), client=short)
+    assert short.calls == []
+    assert review["verdict"] == "needs_human_review"
+    assert review["reason"] == "quote_too_short"
+    assert review["decided_by"] == "deterministic"
+    assert len(v.quote_word_tokens(f"{marked} s")) == 2
+
+
+def test_internal_apostrophe_is_one_word_and_a_prefix_does_not_match():
+    assert v.quote_word_tokens("п'ять") == ["п'ять"]
+    assert v.quote_word_tokens("м'який") == ["м'який"]
+    assert v.quote_occurs_in_source("п'ять", "У хлопця є п'ять яблук.") is True
+    assert v.quote_occurs_in_source("п", "п'ять") is False
+
+
+def test_surrounding_apostrophes_are_boundaries():
+    client = FakeClient()
+    receipt = v.verify_citation(_case(quote="Alpha beta gamma", source="'Alpha beta gamma'"), client=client)
+    assert len(client.calls) == 1
+    assert receipt["verdict"] == "verified"
 
 
 def test_unexpected_exception_needs_human_review_and_the_run_continues(monkeypatch):
