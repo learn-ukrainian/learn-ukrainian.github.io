@@ -1213,9 +1213,12 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
             },
             {
-                "text": "добудували би",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "збудувавали",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
+                "explanation": {
+                    "ua": "Помилкове утворення минулого часу з надлишковим нарощенням суфікса: правильно «збудували», а не «*збудувавали».",
+                    "en": "Erroneous past tense with spurious suffix lengthening: standard is 'zbuduvaly', not '*zbuduvavaly'.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
@@ -1331,7 +1334,7 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_suff_pysaty_impersuff",
         "category": VerbCategory.ASPECT_SUFFIXATION_ABLAUT,
         "cefr_level": "B1",
-        "prompt_sentence": "Секретар уважно ___ важливий офіційний документ за новими вимогами.",
+        "prompt_sentence": "Упродовж цілого дня секретар уважно ___ цей важливий документ (виберіть форму недоконаного виду минулого часу до «переписати»).",
         "blank_target": "переписував",
         "correct_answer": "переписував",
         "distractors": [
@@ -1341,20 +1344,26 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
             },
             {
-                "text": "переписавав би",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
+                "text": "переписив",
+                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "explanation": {
+                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ував: правильно «переписував», а не «*переписив» (Правопис 2019 § 115).",
+                    "en": "Erroneous use of Class II suffix -yv instead of -uvav: standard is 'perepysuvav', not '*perepysiv' (Pravopys 2019 § 115).",
+                },
             },
             {
-                "text": "переписав би",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "переписувавав",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
+                "explanation": {
+                    "ua": "Помилкове подвоєння суфікса імперфективації: нормативною формою є «переписував», а не «*переписувавав».",
+                    "en": "Erroneous doubling of imperfectivation suffix: standard is 'perepysuvav', not '*perepysuvavav'.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
         "rule_summary": {
-            "ua": "Вторинна імперфективація дієслова «переписати» здійснюється за допомогою суфікса -ува-: «переписувати» / «переписував» (а не *переписавати).",
-            "en": "Secondary imperfectivation uses suffix -uva-: 'perepysuvaty' / 'perepysuvav' (not *perepysavaty).",
+            "ua": "Вторинна імперфективація дієслова «переписати» здійснюється за допомогою суфікса -ува-: «переписувати» / «переписував» (Правопис 2019 § 115).",
+            "en": "Secondary imperfectivation uses suffix -uva-: 'perepysuvaty' / 'perepysuvav' (Pravopys 2019 § 115).",
         },
     },
     {
@@ -1391,14 +1400,17 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_ablaut_zlamuvaty",
         "category": VerbCategory.ASPECT_SUFFIXATION_ABLAUT,
         "cefr_level": "B1",
-        "prompt_sentence": "Буря безжально ___ сухі гілки старого дерева одну за одною.",
+        "prompt_sentence": "Упродовж усієї ночі сильна буря безупинно ___ гілки старого дерева (виберіть дієслово недоконаного виду).",
         "blank_target": "зламувала",
         "correct_answer": "зламувала",
         "distractors": [
             {
-                "text": "зломила",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "зламавала",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
+                "explanation": {
+                    "ua": "Помилкове утворення недоконаного виду: суфікс -ува- вимагає чергування кореневого голосного [о] на [а], правильно «зламувала», а не «*зламавала».",
+                    "en": "Erroneous imperfective: standard is 'zlamuvala' with suffix -uva-, not '*zlamavala'.",
+                },
             },
             {
                 "text": "зломувала",
@@ -1413,8 +1425,8 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         ],
         "pravopys_section": "Правопис 2019 § 115",
         "rule_summary": {
-            "ua": "Дієслово недоконаного виду твориться суфіксом -ува- з чергуванням голосного в основі: «зламувати» / «зламувала» (а не *зломовувала).",
-            "en": "Imperfective formation with -uva- and root vowel alternation: 'zlamuvaty' / 'zlamuvala'.",
+            "ua": "Дієслово недоконаного виду твориться суфіксом -ува- з обов'язковим чергуванням голосного [о] на [а] в корені: «зламувати» / «зламувала» (Правопис 2019 § 115).",
+            "en": "Imperfective formation with -uva- requires root vowel ablaut [o] -> [a]: 'zlamuvaty' / 'zlamuvala' (Pravopys 2019 § 115).",
         },
     },
 
@@ -1485,7 +1497,7 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_sup_lovyty_piimaty",
         "category": VerbCategory.ASPECT_SUPPLETIVE,
         "cefr_level": "A2",
-        "prompt_sentence": "Кіт довго вартував біля нори і врешті миттєво ___ спритну мишу.",
+        "prompt_sentence": "Кіт довго вартував біля нори і врешті одним стрибком ___ спритну мишу (виберіть суплетивну доконану пару до «ловити»).",
         "blank_target": "піймав",
         "correct_answer": "піймав",
         "distractors": [
@@ -1495,9 +1507,12 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
             },
             {
-                "text": "зловив би",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "ловлявав",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_SUPPLETIVE_REGULARIZED,
+                "explanation": {
+                    "ua": "Помилкове утворення минулого часу від основи теперішнього часу з нарощенням суфікса: правильно «піймав», а не «*ловлявав».",
+                    "en": "Erroneous past tense derivation with spurious suffixation: standard is 'piimav', not '*lovliavav'.",
+                },
             },
             {
                 "text": "ловляв",
@@ -1545,14 +1560,17 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_sup_shukaty_znaity",
         "category": VerbCategory.ASPECT_SUPPLETIVE,
         "cefr_level": "A2",
-        "prompt_sentence": "Після тривалих архівних досліджень історики нарешті ___ втрачений рукопис.",
+        "prompt_sentence": "Після тривалих архівних досліджень історики нарешті увінчали успіхом пошуки та ___ втрачений рукопис (виберіть суплетивну доконану пару до «шукати»).",
         "blank_target": "знайшли",
         "correct_answer": "знайшли",
         "distractors": [
             {
-                "text": "відшукали би",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "шукавали",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_SUPPLETIVE_REGULARIZED,
+                "explanation": {
+                    "ua": "Помилкове утворення суплетивної форми минулого часу: канонічною формою доконаного виду є «знайшли», а не «*шукавали».",
+                    "en": "Erroneous regularized suppletive: standard perfective is 'znaishly', not '*shukavaly'.",
+                },
             },
             {
                 "text": "зшукали",
@@ -1560,9 +1578,12 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_SUPPLETIVE_REGULARIZED],
             },
             {
-                "text": "пошукали",
+                "text": "пошукавали",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "explanation": {
+                    "ua": "Помилкове утворення форми минулого часу з надлишковим суфіксом: правильно «знайшли», а не «*пошукавали».",
+                    "en": "Erroneous past tense form with superfluous suffix: standard is 'znaishly', not '*poshukavaly'.",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
