@@ -1,0 +1,205 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/open-model-data/v1_ulif_phraseology_release_receipt.schema.json",
+  "title": "v1_ulif_phraseology_release_receipt",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "issue",
+    "parent_epic",
+    "created_at",
+    "git_commit",
+    "evaluation_benchmark",
+    "sft_training_dataset",
+    "dpo_preference_dataset",
+    "invariants_verified"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "v1_ulif_phraseology_release_receipt"
+    },
+    "issue": {
+      "type": "integer",
+      "const": 8140
+    },
+    "parent_epic": {
+      "type": "integer",
+      "const": 6321
+    },
+    "created_at": {
+      "type": "string"
+    },
+    "git_commit": {
+      "type": "string"
+    },
+    "evaluation_benchmark": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_cases",
+        "max_shard_size_kb",
+        "held_out_categories",
+        "held_out_authors_count",
+        "held_out_authors"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "total_cases": {
+          "type": "integer",
+          "minimum": 1500
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "held_out_categories": {
+          "type": "object",
+          "additionalProperties": true
+        },
+        "held_out_authors_count": {
+          "type": "integer",
+          "minimum": 3
+        },
+        "held_out_authors": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "sft_training_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_trajectories",
+        "max_shard_size_kb",
+        "task_distribution"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "const": 90
+        },
+        "total_trajectories": {
+          "type": "integer",
+          "const": 45000
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "task_distribution": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "dpo_preference_dataset": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "directory_path",
+        "manifest_file",
+        "manifest_sha256",
+        "shards_count",
+        "total_pairs",
+        "max_shard_size_kb",
+        "flaw_distribution"
+      ],
+      "properties": {
+        "directory_path": {
+          "type": "string"
+        },
+        "manifest_file": {
+          "type": "string"
+        },
+        "manifest_sha256": {
+          "type": "string",
+          "pattern": "^[a-f0-9]{64}$"
+        },
+        "shards_count": {
+          "type": "integer",
+          "const": 40
+        },
+        "total_pairs": {
+          "type": "integer",
+          "const": 20000
+        },
+        "max_shard_size_kb": {
+          "type": "number",
+          "maximum": 2000.0
+        },
+        "flaw_distribution": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      }
+    },
+    "invariants_verified": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "zero_russian_syntactic_calques",
+        "classical_literary_citations_grounded",
+        "thought_tag_etymological_reasoning",
+        "vesum_and_ulif_morphology_verified",
+        "zero_train_eval_leakage"
+      ],
+      "properties": {
+        "zero_russian_syntactic_calques": {
+          "type": "boolean",
+          "const": true
+        },
+        "classical_literary_citations_grounded": {
+          "type": "boolean",
+          "const": true
+        },
+        "thought_tag_etymological_reasoning": {
+          "type": "boolean",
+          "const": true
+        },
+        "vesum_and_ulif_morphology_verified": {
+          "type": "boolean",
+          "const": true
+        },
+        "zero_train_eval_leakage": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    }
+  }
+}

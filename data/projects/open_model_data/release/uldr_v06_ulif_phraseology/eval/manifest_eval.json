@@ -1,0 +1,26 @@
+{
+  "dataset_name": "uldr_v06_ulif_phraseology_eval",
+  "total_cases": 1500,
+  "shards_count": 3,
+  "max_shard_size_kb": 1140.88,
+  "shards": [
+    {
+      "shard_file": "eval_shard_001_of_003.jsonl",
+      "cases_count": 500,
+      "size_kb": 1132.85,
+      "sha256": "a425a9158bea056d54e6ae88adfb24c3f5c31a2607bdf048c6afcdd2d531052b"
+    },
+    {
+      "shard_file": "eval_shard_002_of_003.jsonl",
+      "cases_count": 500,
+      "size_kb": 1137.47,
+      "sha256": "c17abae305e5dbc2759c45a56f70a5e4506ed68c8d03739fac9449df9b8e09c8"
+    },
+    {
+      "shard_file": "eval_shard_003_of_003.jsonl",
+      "cases_count": 500,
+      "size_kb": 1140.88,
+      "sha256": "3af59d5e98e4fc354314d9433df9d966f81a9cb7c1a378c0ea72bb0cd8979378"
+    }
+  ]
+}

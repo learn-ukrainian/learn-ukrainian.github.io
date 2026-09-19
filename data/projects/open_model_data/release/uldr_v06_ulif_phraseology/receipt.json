@@ -1,0 +1,67 @@
+{
+  "schema_version": "v1_ulif_phraseology_release_receipt",
+  "issue": 8140,
+  "parent_epic": 6321,
+  "created_at": "2026-09-19T22:33:43.130507+00:00",
+  "git_commit": "380e649937af786f93abb9bbe96458e7141362de",
+  "evaluation_benchmark": {
+    "directory_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
+    "manifest_file": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
+    "manifest_sha256": "9edef6d6c01efce36783ffa575e84dc9722590413497dddc37433b0f2592ede3",
+    "shards_count": 3,
+    "total_cases": 1500,
+    "max_shard_size_kb": 1140.88,
+    "held_out_categories": {
+      "anti_calque_decolonization": 3,
+      "figurative_reasoning": 499,
+      "synonymic_register_distinction": 499,
+      "authentic_idiom_usage": 499
+    },
+    "held_out_authors_count": 8,
+    "held_out_authors": [
+      "І. Гончаренко",
+      "А. Дімаров",
+      "Антоненко-Давидович",
+      "Б. Антоненко-Давидович",
+      "М. Стельмах",
+      "МОН України",
+      "О. Гончар",
+      "Ю. Яновський"
+    ]
+  },
+  "sft_training_dataset": {
+    "directory_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
+    "manifest_file": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
+    "manifest_sha256": "63e4594d46ec2fd2c17aa824b2c85fc72c19dd59eda60d7b415283e6e27f34ee",
+    "shards_count": 90,
+    "total_trajectories": 45000,
+    "max_shard_size_kb": 1012.26,
+    "task_distribution": {
+      "anti_calque_decolonization": 15000,
+      "idiom_interpretation_literary": 15000,
+      "synonymic_nuance_and_register": 10000,
+      "contextual_dialogue_usage": 5000
+    }
+  },
+  "dpo_preference_dataset": {
+    "directory_path": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
+    "manifest_file": "/home/ops/learn-ukrainian/.worktrees/dispatch/gemini/8140-ulif-phraseology/data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
+    "manifest_sha256": "1317d919718375e0ea96fa689a8868a8a78d4afc921b74fec73d8465032c07df",
+    "shards_count": 40,
+    "total_pairs": 20000,
+    "max_shard_size_kb": 902.95,
+    "flaw_distribution": {
+      "lack_of_morphemic_reasoning": 13889,
+      "soviet_lexicography_acceptance": 5000,
+      "mechanical_wordnet_synset": 556,
+      "unvetted_purism_hallucination": 555
+    }
+  },
+  "invariants_verified": {
+    "zero_russian_syntactic_calques": true,
+    "classical_literary_citations_grounded": true,
+    "thought_tag_etymological_reasoning": true,
+    "vesum_and_ulif_morphology_verified": true,
+    "zero_train_eval_leakage": true
+  }
+}
