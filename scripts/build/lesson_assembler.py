@@ -9,6 +9,7 @@ from pathlib import Path
 
 import yaml
 
+from scripts.build.alphabet_modules import banned_phrases_in, mentions_line_breaks
 from scripts.generate_mdx.core import generate_mdx, parse_frontmatter
 from scripts.yaml_activities import ActivityParser
 
@@ -110,6 +111,8 @@ def _clean_a1_landing_prose(body: str) -> str | None:
 
     Tables, tip boxes, and code fences belong in lessons, not on the landing.
     If nothing usable remains, return None (lesson list only — never dump plan YAML).
+    Previous-edition prose carrying a banned learner phrase or line-break teaching
+    is unusable as a whole: the landing gate would block on it.
     """
     body = re.sub(r"^# [^\n]+\n", "", body)
     body = re.sub(r"<!--.*?-->", "", body, flags=re.DOTALL)
@@ -120,6 +123,9 @@ def _clean_a1_landing_prose(body: str) -> str | None:
     body = _NARRATOR_HELLO.sub("", body)
     body = re.sub(r"\n{3,}", "\n\n", body).strip()
     if len(body) < 40:
+        return None
+    plain = re.sub(r"\s+", " ", unicodedata.normalize("NFD", body).replace("\u0301", ""))
+    if banned_phrases_in(plain) or mentions_line_breaks(plain):
         return None
     return body
 

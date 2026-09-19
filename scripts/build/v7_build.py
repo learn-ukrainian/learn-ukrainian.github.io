@@ -2052,13 +2052,15 @@ def _clear_previous_edition(module_dir: Path) -> list[Path]:
     The writer replaces a lesson only when that lesson finishes, so a stopped
     run over the published files is a mix of old and new lessons. Removes
     ``lesson-*/`` writer artifacts and any ``writer_prompt.md`` not bound to
-    that lesson's writer receipt. ``lessons.yaml``, the bound raw response and
+    that lesson's writer receipt, plus the module's ``landing-overview.md``:
+    the assembler prefers that file, so the old landing would be republished.
+    ``lessons.yaml``, the bound raw response and
     its receipt stay: a resumed lesson is re-parsed from them. Runs only inside
     a build worktree (``_run`` refuses the primary checkout) and never touches
     ``a1-v1/`` or site pages.
 
     A symlink must never carry a delete out of the worktree: a symlinked
-    ``lesson-*`` directory is refused, and every target must still resolve
+    ``lesson-*`` directory or ``landing-overview.md`` is refused, and every target must still resolve
     inside both the module directory and the worktree. All targets are checked
     before the first delete, so a refusal leaves the module untouched.
     """
@@ -2085,6 +2087,14 @@ def _clear_previous_edition(module_dir: Path) -> list[Path]:
             if not (resolved.is_relative_to(module_root) and resolved.is_relative_to(root)):
                 raise linear_pipeline.LinearPipelineError(f"Refusing to delete {path}: resolves outside the build worktree")
             targets.append(path)
+    landing = module_dir / "landing-overview.md"
+    if landing.is_symlink():
+        raise linear_pipeline.LinearPipelineError(f"Refusing to clear {landing}: landing overview is a symlink")
+    if landing.is_file():
+        resolved = landing.resolve()
+        if not (resolved.is_relative_to(module_root) and resolved.is_relative_to(root)):
+            raise linear_pipeline.LinearPipelineError(f"Refusing to delete {landing}: resolves outside the build worktree")
+        targets.append(landing)
     for path in targets:
         path.unlink()
     return targets

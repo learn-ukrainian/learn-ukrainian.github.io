@@ -708,8 +708,9 @@ QUALITY_FIELD_PATTERNS: dict[str, tuple[str, ...]] = {
     ),
 }
 
-_WORD_RE = re.compile(r"[A-Za-zА-ЯІЇЄҐа-яіїєґ][A-Za-zА-ЯІЇЄҐа-яіїєґ'ʼ-]*")
-_UK_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ-]*")
+# Combining stress marks (U+0300/U+0301) stay inside the token: `Окса́на` is one word.
+_WORD_RE = re.compile(r"[A-Za-zА-ЯІЇЄҐа-яіїєґ][A-Za-zА-ЯІЇЄҐа-яіїєґ'ʼ\u0300\u0301-]*")
+_UK_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'ʼ\u0300\u0301-]*")
 # Bounded markdown-decoration quantifiers to avoid ReDoS (py/redos).
 # Decoration markers (`*`, `_`, `` ` ``) appear at most twice contiguously in
 # real markdown (`**bold**`, single `*italic*`, `_italic_`, backtick code).

@@ -229,6 +229,37 @@ def test_a1_opening_hygiene_four_shapes():
     assert "Questions turn the verbs" in questions
 
 
+def test_a1_landing_prose_rejects_previous_edition_banned_text(tmp_path):
+    from scripts.build.lesson_assembler import (
+        _clean_a1_landing_prose,
+        _original_intro,
+        _writer_landing_overview,
+    )
+
+    banned = (
+        "# Special Signs\n\nThis module completes your mastery of all 33 le\u0301tters "
+        "and gives you the soft sign and the apostrophe in real words.\n"
+    )
+    line_breaks = (
+        "# Special Signs\n\nYou read the soft sign and the apostrophe in real words, "
+        "then learn word hyphenation rules for dividing a word across lines.\n"
+    )
+    clean = "# Special Signs\n\nYou read the soft sign and the apostrophe in real Ukrainian words.\n"
+    assert _clean_a1_landing_prose(banned) is None
+    assert _clean_a1_landing_prose(line_breaks) is None
+    assert _clean_a1_landing_prose(clean) == clean.split("\n\n", 1)[1].strip()
+
+    # Neither source may republish it: not the writer overview, not the a1-v1 opening.
+    module_dir = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    archive = tmp_path / "curriculum/l2-uk-en/a1-v1/special-signs"
+    module_dir.mkdir(parents=True)
+    archive.mkdir(parents=True)
+    (module_dir / "landing-overview.md").write_text(banned, encoding="utf-8")
+    (archive / "module.md").write_text(line_breaks + "\n## Section\n\nBody.\n", encoding="utf-8")
+    assert _writer_landing_overview(module_dir) is None
+    assert _original_intro(module_dir, "special-signs") is None
+
+
 def test_a1_assembler_converts_text_fences_to_bilingual_bullets():
     from scripts.build.lesson_assembler import _normalize_a1_example_fences
 
