@@ -2827,11 +2827,13 @@ def main() -> None:
         else:
             print(f"Cards: {res['total_cards']}, Target tokens: {res['target_tokens_count']}")
             print(f"Missing targets: {len(res['missing_targets'])}")
-            if res["missing_targets"]:
+            if res.get("status") == "skipped":
+                print(f"VESUM verification: SKIPPED ({res.get('message', 'VESUM database unavailable')})")
+            elif res["missing_targets"]:
                 print("Missing:", res["missing_targets"])
             else:
                 print("VESUM verification: PASSED (100% target coverage)")
-        if res["missing_targets"] or not res.get("vesum_verified", False):
+        if res.get("status") == "skipped" or res["missing_targets"] or not res.get("vesum_verified", False):
             sys.exit(1)
 
     if args.export:

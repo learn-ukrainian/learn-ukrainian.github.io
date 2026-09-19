@@ -264,6 +264,36 @@ def test_cli_verify_vesum_json_success_and_export(monkeypatch, tmp_path: Path):
     assert out_file.exists(), "Deck should be exported when verification succeeds"
 
 
+def test_cli_verify_vesum_skipped_reports_skip_and_exits_nonzero(capsys, monkeypatch, tmp_path: Path):
+    """Regression test for P2 (Round 14): skipped verification must report SKIPPED (not PASSED) and exit 1."""
+    fake_res = {
+        "total_cards": 75,
+        "target_tokens_count": 0,
+        "missing_targets": [],
+        "distractor_tokens_count": 0,
+        "unattested_distractor_tokens": [],
+        "vesum_verified": None,
+        "status": "skipped",
+        "message": "VESUM database not found or incomplete at /nonexistent/path",
+    }
+    monkeypatch.setattr("scripts.practice.numeral_mechanics_engine.verify_deck_with_vesum", lambda _cards, **_kw: fake_res)
+
+    out_file = tmp_path / "blocked_deck.json"
+    monkeypatch.setattr(
+        "sys.argv",
+        ["numeral_mechanics_engine.py", "--verify-vesum", "--export", "--output", str(out_file)],
+    )
+
+    with pytest.raises(SystemExit) as excinfo:
+        main()
+
+    assert excinfo.value.code == 1
+    captured = capsys.readouterr().out
+    assert "VESUM verification: SKIPPED (VESUM database not found or incomplete at /nonexistent/path)" in captured
+    assert "PASSED" not in captured
+    assert not out_file.exists(), "Deck must NOT be exported when verification is skipped"
+
+
 def test_approximate_cards_register_and_unambiguous_distractors():
     """Regression test for Cards 71, 72, 74, and 75 (Astra review findings):
     - Card 71 explicitly specifies official register in the prompt before testing 'близько ста' vs colloquial 'біля ста'.
