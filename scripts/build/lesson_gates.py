@@ -16,6 +16,7 @@ from scripts.audit.checks.activity_validation import check_error_correction_stem
 from scripts.build.alphabet_modules import (
     banned_phrases_in,
     contains_line_break_model,
+    filter_dropped_original_paragraphs,
     is_alphabet_slug,
     is_dropped_original_paragraph,
     is_line_break_activity,
@@ -993,8 +994,12 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
     original_ids = {a.get("id") for a in base_acts.get("inline", [])} | {
         (a.get("id") or f"act-w{i + 1}") for i, a in enumerate(base_acts.get("workbook", []))}
     base_vocab = yaml.safe_load(base["vocabulary.yaml"])
-    base_secs = sections(base_md)
     alphabet = is_alphabet_slug(plan.get("slug"))
+    # The alphabet writer sees the filtered original, where a dropped heading
+    # (``## Перенос і письмо``) leaves its surviving paragraphs under the previous
+    # heading. Split the same text, so each paragraph is owed to the lesson the
+    # prompt shows it in (#8236).
+    base_secs = sections(filter_dropped_original_paragraphs(base_md) if alphabet else base_md)
     base_paras_by_lesson: dict[int, list[str]] = {L["n"]: [] for L in lessons}
     for title, body in base_secs.items():
         mapped = section_to_lesson.get(title) or section_to_lesson.get(strip_acute(title))

@@ -954,6 +954,55 @@ def test_non_alphabet_gate_still_requires_a_line_break_baseline_section(gold):
     assert any("baseline section 'Перенос і письмо' has no lesson mapping" in d for d in report["blocking"])
 
 
+_NOTEBOOK_CUE = "Open your notebook and copy each new word by hand three times, saying it aloud as you write."
+
+
+def _install_dropped_hyphenation_section(module, source, *, cue_lesson):
+    """Archive ``Контраст і пастки`` (lesson 1) then ``Перенос і письмо`` (lesson 2) with a surviving cue."""
+    contrast = "Compare the two spellings side by side and read each pair aloud before you check the answer."
+    path = source / "module.md"
+    path.write_text(path.read_text().replace(
+        "## Предмети навколо",
+        f"## Контраст і пастки\n\n{contrast}\n\n## Перенос і письмо\n\n"
+        "Перенос слів: a word splits across a line only between its syllables.\n\n"
+        f"{_NOTEBOOK_CUE}\n\n## Предмети навколо", 1))
+    path = module / "lessons.yaml"
+    ly = yaml.safe_load(path.read_text())
+    ly["lessons"][0]["sections"].append("Контраст і пастки")
+    ly["lessons"][1]["sections"].insert(0, "Перенос і письмо")
+    path.write_text(yaml.safe_dump(ly, allow_unicode=True))
+    for n, extra in ((1, contrast), (cue_lesson, _NOTEBOOK_CUE)):
+        path = module / f"lesson-{n}/module.md"
+        path.write_text(path.read_text() + f"\n\n{extra}\n")
+
+
+def _misplaced(report):
+    return [d for d in report["blocking"] if "original paragraph belongs to lesson" in d]
+
+
+def test_alphabet_surviving_paragraph_follows_the_heading_the_writer_sees(gold):
+    """The prompt drops ``## Перенос і письмо``, so its surviving cue reads under ``Контраст і пастки`` (#8236)."""
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_dropped_hyphenation_section(module, source, cue_lesson=1)
+    report = gates.run_lesson_gates(module, source, plan)
+    assert _misplaced(report) == []
+    assert report["facts"]["preservation"]["lost"] == 0
+
+
+def test_alphabet_surviving_paragraph_in_the_dropped_sections_lesson_is_misplaced(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_dropped_hyphenation_section(module, source, cue_lesson=2)
+    assert any("belongs to lesson 1 but is in [2]" in d and "Open your notebook" in d
+               for d in _misplaced(gates.run_lesson_gates(module, source, plan)))
+
+
+def test_non_alphabet_paragraph_stays_with_its_own_hyphenation_section(gold):
+    module, source, plan = gold
+    _install_dropped_hyphenation_section(module, source, cue_lesson=1)
+    assert any("belongs to lesson 2 but is in [1]" in d and "Open your notebook" in d
+               for d in _misplaced(gates.run_lesson_gates(module, source, plan)))
+
+
 # ── upgrade preservation vs empty-sign / error-correction rewrite (#8236) ─────
 
 _NO_SIGN = "без знака — no sign"
