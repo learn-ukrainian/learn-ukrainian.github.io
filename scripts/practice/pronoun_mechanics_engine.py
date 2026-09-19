@@ -1259,10 +1259,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="When a preposition intervenes between particle будь- and the pronoun, hyphens disappear: 'будь з ким'.",
                 ),
                 PronounDistractor(
-                    text="з будь-ким",
+                    text="будь-ким",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="В українській літературній мові частка будь- стоїть перед прийменником: правильно 'будь з ким'.",
-                    explanation_en="In standard Ukrainian word order, particle будь- precedes the preposition: 'будь з ким'.",
+                    explanation_ua="Дієслівне керування 'вступати в суперечку' обов'язково вимагає прийменника 'з' ('будь з ким'); вживання безприйменникового орудного 'будь-ким' порушує синтаксичний зв'язок.",
+                    explanation_en="Verb government 'вступати в суперечку' requires preposition 'з' ('будь з ким'); form without preposition 'будь-ким' violates case government.",
                 ),
                 PronounDistractor(
                     text="будьзким",
@@ -1290,10 +1290,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="When a preposition intervenes between particle хтозна- and pronoun, all three words are written separately: 'хтозна з ким'.",
                 ),
                 PronounDistractor(
-                    text="з хтозна-ким",
+                    text="хтозна-ким",
                     interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
-                    explanation_ua="Нормативний порядок слів вимагає позиції частки перед прийменником: 'хтозна з ким'.",
-                    explanation_en="Standard word order requires placing the particle before the preposition: 'хтозна з ким'.",
+                    explanation_ua="Дієслово 'вирушити в мандрівку' у значенні супутника вимагає прийменника сумісності 'з' ('хтозна з ким'); вживання форми без прийменника 'хтозна-ким' порушує керування.",
+                    explanation_en="Denoting accompaniment, 'вирушити в мандрівку' requires preposition 'з' ('хтозна з ким'); form without preposition 'хтозна-ким' violates government.",
                 ),
                 PronounDistractor(
                     text="хтозназким",
@@ -1321,10 +1321,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="With a preposition, combination with particle аби- is written as three words without hyphens: 'аби перед ким'.",
                 ),
                 PronounDistractor(
-                    text="перед абиким",
-                    interference_type=PronounInterferenceType.SOLID_SPLIT_PREPOSITION,
-                    explanation_ua="Прийменник ставиться між часткою та займенником, і всі три компоненти пишуться окремо: 'аби перед ким'.",
-                    explanation_en="Preposition stands between particle and pronoun root, written separately: 'аби перед ким'.",
+                    text="аби-ким",
+                    interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
+                    explanation_ua="Дієслово 'виправдовуватися' вимагає прийменника 'перед' ('аби перед ким'); форма без прийменника 'аби-ким' порушує синтаксичне керування.",
+                    explanation_en="Verb 'виправдовуватися' requires preposition 'перед' ('аби перед ким'); form without preposition 'аби-ким' violates government.",
                 ),
                 PronounDistractor(
                     text="абипередким",
@@ -1352,10 +1352,10 @@ def build_canonical_pronoun_cards() -> list[PronounCard]:
                     explanation_en="When a preposition separates particle де- and pronoun, write as three separate words: 'де з ким'.",
                 ),
                 PronounDistractor(
-                    text="з деким",
-                    interference_type=PronounInterferenceType.SOLID_SPLIT_PREPOSITION,
-                    explanation_ua="Прийменник розриває префікс де- та корінь займенника, утворюючи три окремих слова: 'де з ким'.",
-                    explanation_en="Preposition splits particle де- and the pronoun into three separate words: 'де з ким'.",
+                    text="де-ким",
+                    interference_type=PronounInterferenceType.CORRUPTED_DECLENSION_STEM,
+                    explanation_ua="Дієслово 'радитися' керує орудним відмінком із прийменником 'з' ('де з ким'); форма без прийменника 'де-ким' порушує синтаксичне керування.",
+                    explanation_en="Verb 'радитися' governs Instrumental with preposition 'з' ('де з ким'); form without preposition 'де-ким' violates government.",
                 ),
                 PronounDistractor(
                     text="дезким",
@@ -2679,35 +2679,35 @@ def validate_pronoun_card(card: PronounCard) -> list[str]:
 
 
 def export_pronoun_mechanics_deck(cards: list[PronounCard], output_path: Path | None = None) -> dict[str, Any]:
-    """Export canonical pronoun cards to JSON deck format."""
+    """Export canonical pronoun cards to JSON deck format matching PracticePronounMechanicsCard."""
     deck: dict[str, Any] = {
-        "version": "1.0",
+        "schema_version": "1.0",
         "title": "Ukrainian Pronoun Deep Mechanics Practice (Займенник)",
+        "card_count": len(cards),
         "categories": [c.value for c in PronounCategory],
-        "total_cards": len(cards),
         "cards": [
             {
-                "id": c.card_id,
+                "card_id": c.card_id,
                 "category": c.category.value,
-                "cefrLevel": c.cefr_level,
-                "prompt": c.prompt_display,
-                "fullSentence": c.full_sentence,
-                "sentenceBefore": c.sentence_before,
-                "sentenceAfter": c.sentence_after,
-                "correctAnswer": c.correct_answer,
+                "cefr_level": c.cefr_level,
+                "prompt_sentence": c.prompt_display,
+                "blank_target": c.correct_answer,
+                "correct_answer": c.correct_answer,
                 "options": c.all_options(),
                 "distractors": [
                     {
-                        "form": d.text,
-                        "interferenceType": d.interference_type.value,
-                        "explanationUa": d.explanation_ua,
-                        "explanationEn": d.explanation_en,
+                        "text": d.text,
+                        "interference_type": d.interference_type.value,
+                        "explanation": {
+                            "ua": d.explanation_ua,
+                            "en": d.explanation_en,
+                        },
                     }
                     for d in c.distractors
                 ],
-                "ruleCitation": c.rule_citation,
-                "ruleSummary": {
-                    "uk": c.rule_summary_ua,
+                "pravopys_section": c.rule_citation,
+                "rule_summary": {
+                    "ua": c.rule_summary_ua,
                     "en": c.rule_summary_en,
                 },
             }

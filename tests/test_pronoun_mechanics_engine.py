@@ -182,13 +182,13 @@ def test_committed_deck_parity(tmp_path: Path):
     test_export = tmp_path / "test_deck.json"
     generated_data = export_pronoun_mechanics_deck(cards, test_export)
 
-    assert committed_data["total_cards"] == 75
-    assert committed_data["total_cards"] == generated_data["total_cards"]
+    assert committed_data["card_count"] == 75
+    assert committed_data["card_count"] == generated_data["card_count"]
     assert len(committed_data["cards"]) == 75
 
     for c_comm, c_gen in zip(committed_data["cards"], generated_data["cards"], strict=True):
-        assert c_comm["id"] == c_gen["id"]
-        assert c_comm["correctAnswer"] == c_gen["correctAnswer"]
+        assert c_comm["card_id"] == c_gen["card_id"]
+        assert c_comm["correct_answer"] == c_gen["correct_answer"]
         assert c_comm["category"] == c_gen["category"]
         assert c_comm["options"] == c_gen["options"]
 

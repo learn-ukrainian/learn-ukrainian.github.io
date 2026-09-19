@@ -80,14 +80,12 @@ export interface PracticePronounMechanicsCard {
   card_id: string;
   category: PronounMechanicsCategoryKey;
   cefr_level: string;
-  sentence_before: string;
-  sentence_after: string;
-  prompt_display: string;
-  full_sentence: string;
+  prompt_sentence: string;
+  blank_target: string;
   correct_answer: string;
   options: string[];
   distractors: PronounMechanicsDistractor[];
-  rule_citation: string;
+  pravopys_section: string;
   rule_summary: {
     ua: string;
     en: string;
@@ -95,32 +93,11 @@ export interface PracticePronounMechanicsCard {
 }
 
 export interface PronounMechanicsDeckPayload {
-  version: string;
+  schema_version: string;
   title: string;
+  card_count: number;
   categories: PronounMechanicsCategoryKey[];
-  total_cards: number;
-  cards: Array<{
-    id: string;
-    category: string;
-    cefrLevel: string;
-    prompt: string;
-    fullSentence: string;
-    sentenceBefore: string;
-    sentenceAfter: string;
-    correctAnswer: string;
-    options: string[];
-    distractors: Array<{
-      form: string;
-      interferenceType: string;
-      explanationUa: string;
-      explanationEn: string;
-    }>;
-    ruleCitation: string;
-    ruleSummary: {
-      uk: string;
-      en: string;
-    };
-  }>;
+  cards: PracticePronounMechanicsCard[];
 }
 
 export interface PronounMechanicsFeedbackResult {
@@ -138,46 +115,52 @@ export function pronounMechanicsFeedbackFor(
   selectedOption: string,
   locale: 'ua' | 'en' = 'ua',
 ): PronounMechanicsFeedbackResult {
-  const normSelected = selectedOption.trim();
-  const normCorrect = card.correct_answer.trim();
+  const normSelected = (selectedOption ?? '').trim();
+  const normCorrect = (card.correct_answer ?? (card as any).correctAnswer ?? '').trim();
+  const ruleUa = card.rule_summary?.ua ?? (card as any).ruleSummary?.uk ?? '';
+  const ruleEn = card.rule_summary?.en ?? (card as any).ruleSummary?.en ?? '';
+  const citation =
+    card.pravopys_section ?? (card as any).rule_citation ?? (card as any).ruleCitation ?? '';
 
   if (normSelected === normCorrect) {
     const successMsg =
       locale === 'ua'
-        ? `Правильно! ${card.rule_summary.ua}`
-        : `Correct! ${card.rule_summary.en}`;
+        ? `Правильно! ${ruleUa}`
+        : `Correct! ${ruleEn}`;
     return {
       isCorrect: true,
       feedback: successMsg,
-      ruleCitation: card.rule_citation,
-      ruleSummary: locale === 'ua' ? card.rule_summary.ua : card.rule_summary.en,
+      ruleCitation: citation,
+      ruleSummary: locale === 'ua' ? ruleUa : ruleEn,
     };
   }
 
-  const matchedDistractor = card.distractors.find((d) => d.text.trim() === normSelected);
+  const matchedDistractor = card.distractors?.find(
+    (d) => (d.text ?? (d as any).form ?? '').trim() === normSelected,
+  );
   if (matchedDistractor) {
     const explanation =
       locale === 'ua'
-        ? matchedDistractor.explanation.ua
-        : matchedDistractor.explanation.en;
+        ? (matchedDistractor.explanation?.ua ?? (matchedDistractor as any).explanationUa ?? '')
+        : (matchedDistractor.explanation?.en ?? (matchedDistractor as any).explanationEn ?? '');
     return {
       isCorrect: false,
       feedback: explanation,
-      ruleCitation: card.rule_citation,
-      ruleSummary: locale === 'ua' ? card.rule_summary.ua : card.rule_summary.en,
+      ruleCitation: citation,
+      ruleSummary: locale === 'ua' ? ruleUa : ruleEn,
     };
   }
 
   const fallback =
     locale === 'ua'
-      ? `Неправильно. Правильна форма: «${card.correct_answer}». ${card.rule_summary.ua}`
-      : `Incorrect. The correct form is "${card.correct_answer}". ${card.rule_summary.en}`;
+      ? `Неправильно. Правильна форма: «${normCorrect}». ${ruleUa}`
+      : `Incorrect. The correct form is "${normCorrect}". ${ruleEn}`;
 
   return {
     isCorrect: false,
     feedback: fallback,
-    ruleCitation: card.rule_citation,
-    ruleSummary: locale === 'ua' ? card.rule_summary.ua : card.rule_summary.en,
+    ruleCitation: citation,
+    ruleSummary: locale === 'ua' ? ruleUa : ruleEn,
   };
 }
 

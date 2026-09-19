@@ -127,10 +127,8 @@ describe('pronoun-mechanics', () => {
       card_id: 'test_pron_card',
       category: 'epenthetic_n_prepositional',
       cefr_level: 'A2',
-      sentence_before: 'Я зайшов',
-      sentence_after: 'у гості.',
-      prompt_display: 'Я зайшов _______ у гості.',
-      full_sentence: 'Я зайшов до нього у гості.',
+      prompt_sentence: 'Я зайшов _______ у гості.',
+      blank_target: 'до нього',
       correct_answer: 'до нього',
       options: ['до нього', 'до його', 'до йому', 'до нему'],
       distractors: [
@@ -159,7 +157,7 @@ describe('pronoun-mechanics', () => {
           },
         },
       ],
-      rule_citation: 'Правопис 2019 § 116',
+      pravopys_section: 'Правопис 2019 § 116',
       rule_summary: {
         ua: 'Обов’язковий приставний н- після прийменників.',
         en: 'Compulsory epenthetic n- after prepositions.',
@@ -201,9 +199,9 @@ describe('pronoun-mechanics', () => {
     const raw = readFileSync(deckPath, 'utf-8');
     const deck = JSON.parse(raw);
 
-    expect(deck.version).toBe('1.0');
+    expect(deck.schema_version).toBe('1.0');
     expect(deck.title).toContain('Займенник');
-    expect(deck.total_cards).toBe(75);
+    expect(deck.card_count).toBe(75);
     expect(deck.cards).toHaveLength(75);
 
     const categoryCounts: Record<string, number> = {};
@@ -212,21 +210,55 @@ describe('pronoun-mechanics', () => {
 
       expect(c.options).toHaveLength(4);
       expect(new Set(c.options).size).toBe(4);
-      expect(c.options).toContain(c.correctAnswer);
-      expect(c.prompt).toContain('_______');
+      expect(c.options).toContain(c.correct_answer);
+      expect(c.prompt_sentence).toContain('_______');
       expect(c.distractors).toHaveLength(3);
 
       for (const d of c.distractors) {
-        expect(d.form).not.toBe(c.correctAnswer);
-        expect(c.options).toContain(d.form);
-        expect(d.explanationUa.length).toBeGreaterThan(10);
-        expect(d.explanationEn.length).toBeGreaterThan(10);
+        expect(d.text).not.toBe(c.correct_answer);
+        expect(c.options).toContain(d.text);
+        expect(d.explanation.ua.length).toBeGreaterThan(10);
+        expect(d.explanation.en.length).toBeGreaterThan(10);
       }
     }
 
     expect(Object.keys(categoryCounts)).toHaveLength(15);
-    for (const [cat, count] of Object.entries(categoryCounts)) {
+    for (const [_cat, count] of Object.entries(categoryCounts)) {
       expect(count).toBe(5);
+    }
+  });
+
+  it('evaluates feedback directly using actual exported deck cards without throwing TypeError', () => {
+    const deckPath = resolve(__dirname, '../../../data/practice/pronoun_mechanics_deck.json');
+    const raw = readFileSync(deckPath, 'utf-8');
+    const deck = JSON.parse(raw);
+
+    // Test first card (the exact card that threw TypeError in Astra review)
+    const firstCard = deck.cards[0];
+    expect(firstCard.card_id).toBe('pron_epenth_prep_do_nyoho');
+
+    const correctRes = pronounMechanicsFeedbackFor(firstCard, firstCard.correct_answer, 'ua');
+    expect(correctRes.isCorrect).toBe(true);
+    expect(correctRes.feedback).toContain('Правильно!');
+
+    const distractorRes = pronounMechanicsFeedbackFor(
+      firstCard,
+      firstCard.distractors[0].text,
+      'ua',
+    );
+    expect(distractorRes.isCorrect).toBe(false);
+    expect(distractorRes.feedback).toBeTruthy();
+
+    // Test across all 75 committed cards
+    for (const card of deck.cards) {
+      const ok = pronounMechanicsFeedbackFor(card, card.correct_answer, 'ua');
+      expect(ok.isCorrect).toBe(true);
+
+      for (const dist of card.distractors) {
+        const fail = pronounMechanicsFeedbackFor(card, dist.text, 'ua');
+        expect(fail.isCorrect).toBe(false);
+        expect(fail.feedback.length).toBeGreaterThan(10);
+      }
     }
   });
 });
