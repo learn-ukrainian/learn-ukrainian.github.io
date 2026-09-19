@@ -41,7 +41,7 @@ from practice_linguistic import (
     index_from_generator_candidates,
 )
 
-from scripts.practice_deck.io import ensure_practice_deck_hydrated
+from scripts.practice_deck.io import PracticeDeckHydrationError, ensure_practice_deck_hydrated
 
 DEFAULT_DAILY_POOL = Path("site/src/data/lexicon-daily-pool.json")
 DEFAULT_PRACTICE_DIR = Path("site/public/lexicon")
@@ -349,10 +349,7 @@ def _check_level(
     paths = {
         "index": practice_dir / f"practice-index.{level}.json",
         "lexemes": practice_dir / f"practice-lexemes.{level}.json",
-        **{
-            kind: practice_dir / f"practice-{kind}.{level}.json"
-            for kind in MODE_SHARD_KINDS
-        },
+        **{kind: practice_dir / f"practice-{kind}.{level}.json" for kind in MODE_SHARD_KINDS},
     }
     shards = {
         kind: _check_shard_meta(
@@ -368,10 +365,7 @@ def _check_level(
     index_items = shards["index"].get("items")
     lexemes = shards["lexemes"].get("lexemes")
     cloze_items = shards["cloze"].get("cloze")
-    mode_items = {
-        kind: shards[kind].get(MODE_BODY_KEYS[kind])
-        for kind in DRILL_MODES
-    }
+    mode_items = {kind: shards[kind].get(MODE_BODY_KEYS[kind]) for kind in DRILL_MODES}
     if not isinstance(index_items, list):
         errors.append(f"{paths['index']}: items must be a list")
         index_items = []
@@ -390,10 +384,7 @@ def _check_level(
         linguistic_shards[level] = {
             "lexemes": [item for item in lexemes if isinstance(item, dict)],
             "cloze": [item for item in cloze_items if isinstance(item, dict)],
-            **{
-                kind: [item for item in mode_items[kind] if isinstance(item, dict)]
-                for kind in DRILL_MODES
-            },
+            **{kind: [item for item in mode_items[kind] if isinstance(item, dict)] for kind in DRILL_MODES},
         }
 
     if len(index_items) < min_lexemes:
@@ -482,43 +473,26 @@ def _check_level(
                 if kind in {"heritage", "synonym"} and str(lemma_id) in (lower_lexeme_ids or set()):
                     pass
                 elif kind in {"heritage", "synonym"}:
-                    errors.append(
-                        f"{prefix} lemmaId {lemma_id!r} missing from lexeme shards at or below {level}"
-                    )
+                    errors.append(f"{prefix} lemmaId {lemma_id!r} missing from lexeme shards at or below {level}")
                 else:
                     errors.append(f"{prefix} lemmaId {lemma_id!r} missing from {level} lexeme shard")
         if kind == "classify":
             classify_rows = [item for item in rows if isinstance(item, dict)]
             for index, item in enumerate(classify_rows):
-                errors.extend(
-                    f"{paths[kind]}: classify[{index}] {error}"
-                    for error in validate_classify_item(item)
-                )
+                errors.extend(f"{paths[kind]}: classify[{index}] {error}" for error in validate_classify_item(item))
             errors.extend(f"{paths[kind]}: {error}" for error in validate_classify_session_cap(classify_rows))
         elif kind == "imperative":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
-                errors.extend(
-                    f"{paths[kind]}: imperative[{index}] {error}"
-                    for error in validate_imperative_item(item)
-                )
+                errors.extend(f"{paths[kind]}: imperative[{index}] {error}" for error in validate_imperative_item(item))
         elif kind == "synonym":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
-                errors.extend(
-                    f"{paths[kind]}: synonym[{index}] {error}"
-                    for error in validate_synonym_item(item)
-                )
+                errors.extend(f"{paths[kind]}: synonym[{index}] {error}" for error in validate_synonym_item(item))
         elif kind == "heritage":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
-                errors.extend(
-                    f"{paths[kind]}: heritage[{index}] {error}"
-                    for error in validate_heritage_item(item)
-                )
+                errors.extend(f"{paths[kind]}: heritage[{index}] {error}" for error in validate_heritage_item(item))
         elif kind == "paradigm":
             for index, item in enumerate(item for item in rows if isinstance(item, dict)):
-                errors.extend(
-                    f"{paths[kind]}: paradigm[{index}] {error}"
-                    for error in validate_paradigm_item(item)
-                )
+                errors.extend(f"{paths[kind]}: paradigm[{index}] {error}" for error in validate_paradigm_item(item))
 
     counts = shards["index"].get("counts")
     if not isinstance(counts, dict):
@@ -564,9 +538,7 @@ def _check_level(
         for mode, threshold in THIN_WARN_THRESHOLDS.items():
             cov = mode_coverage.get(mode, 0.0)
             if cov < threshold:
-                warnings.append(
-                    f"{level} {mode} coverage {cov:.4f} is below thin-deck threshold {threshold:.2f}"
-                )
+                warnings.append(f"{level} {mode} coverage {cov:.4f} is below thin-deck threshold {threshold:.2f}")
 
     return {
         "index": len(index_items),
@@ -621,8 +593,6 @@ def _format_coverage_table(coverage: dict[str, Any]) -> str:
     if any(cell["thin"] for row in level_rows.values() for cell in row.values()):
         lines.append("* below thin-deck warning threshold")
     return "\n".join(lines)
-
-
 
 
 def _ensure_registered_mode_shards(
@@ -728,9 +698,7 @@ def _run_linguistic_pack(
 ) -> None:
     """Fail closed on mechanical linguistic errors when VESUM is available."""
     if not vesum_db.exists():
-        errors.append(
-            f"linguistic gate v{LINGUISTIC_GATE_VERSION}: VESUM database missing at {vesum_db}"
-        )
+        errors.append(f"linguistic gate v{LINGUISTIC_GATE_VERSION}: VESUM database missing at {vesum_db}")
         return
     from generate_practice_deck import RealVesumVerifier, read_cloze_sources, read_sentence_inventory
 
@@ -799,8 +767,7 @@ def _run_linguistic_pack(
     )
     if findings:
         errors.append(
-            f"linguistic gate v{LINGUISTIC_GATE_VERSION} failed ({len(findings)}): "
-            f"{format_findings(findings)}"
+            f"linguistic gate v{LINGUISTIC_GATE_VERSION} failed ({len(findings)}): {format_findings(findings)}"
         )
 
 
@@ -820,7 +787,11 @@ def check_assets(
     run_qa_gate: bool = False,
 ) -> dict[str, Any]:
     if practice_dir == DEFAULT_PRACTICE_DIR:
-        ensure_practice_deck_hydrated(practice_dir)
+        try:
+            ensure_practice_deck_hydrated(practice_dir)
+        except PracticeDeckHydrationError as exc:
+            if "refusing to overwrite local practice deck" not in str(exc):
+                raise
     _ensure_registered_mode_shards(practice_dir, levels)
 
     errors: list[str] = []
@@ -846,12 +817,7 @@ def check_assets(
         seen_lexeme_ids |= set(row.pop("lexeme_ids", None) or ())
         practice[level] = row
 
-    deck_versions = {
-        version
-        for row in practice.values()
-        for version in row.get("deck_versions", [])
-        if version
-    }
+    deck_versions = {version for row in practice.values() for version in row.get("deck_versions", []) if version}
     if len(deck_versions) > 1:
         errors.append(f"{practice_dir}: cross-level deckVersion mismatch: {sorted(deck_versions)}")
 
@@ -923,10 +889,7 @@ def _print_summary(summary: dict[str, Any]) -> None:
     print(f"Reviewed cloze source allowlist rows: {summary['reviewed_sources']}")
     for level, row in summary["practice"].items():
         mode_counts = " ".join(f"{mode}={row.get(mode, 0)}" for mode in DRILL_MODES)
-        print(
-            f"  {level}: index={row['index']} lexemes={row['lexemes']} "
-            f"cloze={row['cloze']} {mode_counts}"
-        )
+        print(f"  {level}: index={row['index']} lexemes={row['lexemes']} cloze={row['cloze']} {mode_counts}")
     print(_format_coverage_table(summary["coverage"]))
 
 
@@ -943,12 +906,36 @@ Exit codes: 0 valid; 1 validation failure; 2 invalid arguments.
 Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
 """,
     )
-    parser.add_argument("--daily-pool", type=Path, default=DEFAULT_DAILY_POOL, help="Daily pool JSON path (default: %(default)s).")
-    parser.add_argument("--practice-dir", type=Path, default=DEFAULT_PRACTICE_DIR, help="Directory of hydrated shards (default: %(default)s).")
-    parser.add_argument("--reviewed-sources", type=Path, default=DEFAULT_REVIEWED_SOURCES, help="Reviewed source allowlist JSON (default: %(default)s).")
-    parser.add_argument("--levels", type=_parse_levels, default=DEFAULT_LEVELS, help="Comma-separated CEFR levels, e.g. A1,A2 (default: all published levels).")
-    parser.add_argument("--min-daily-pool-size", type=int, default=250, help="Minimum daily word count (default: %(default)s).")
-    parser.add_argument("--min-practice-lexemes-per-level", type=int, default=25, help="Minimum lexemes in each level (default: %(default)s).")
+    parser.add_argument(
+        "--daily-pool", type=Path, default=DEFAULT_DAILY_POOL, help="Daily pool JSON path (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--practice-dir",
+        type=Path,
+        default=DEFAULT_PRACTICE_DIR,
+        help="Directory of hydrated shards (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--reviewed-sources",
+        type=Path,
+        default=DEFAULT_REVIEWED_SOURCES,
+        help="Reviewed source allowlist JSON (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--levels",
+        type=_parse_levels,
+        default=DEFAULT_LEVELS,
+        help="Comma-separated CEFR levels, e.g. A1,A2 (default: all published levels).",
+    )
+    parser.add_argument(
+        "--min-daily-pool-size", type=int, default=250, help="Minimum daily word count (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--min-practice-lexemes-per-level",
+        type=int,
+        default=25,
+        help="Minimum lexemes in each level (default: %(default)s).",
+    )
     parser.add_argument(
         "--vesum-db",
         type=Path,
@@ -958,8 +945,15 @@ Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
             "CI stays schema-only by omitting this flag."
         ),
     )
-    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze source JSON (default: %(default)s).")
-    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence inventory JSON (default: %(default)s).")
+    parser.add_argument(
+        "--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze source JSON (default: %(default)s)."
+    )
+    parser.add_argument(
+        "--sentence-inventory",
+        type=Path,
+        default=DEFAULT_SENTENCE_INVENTORY,
+        help="Sentence inventory JSON (default: %(default)s).",
+    )
     parser.add_argument(
         "--teacher-cloze",
         type=Path,
@@ -978,7 +972,9 @@ Related: generate_practice_deck.py; docs/practice/IMPERATIVE-PRACTICE-SPEC.md.
         default=True,
         help="Run the Practice Hub quality assurance gate (default: enabled in CLI)",
     )
-    parser.add_argument("--format", choices=("summary", "json"), default="summary", help="Output format (default: %(default)s).")
+    parser.add_argument(
+        "--format", choices=("summary", "json"), default="summary", help="Output format (default: %(default)s)."
+    )
     args = parser.parse_args(argv)
 
     summary = check_assets(

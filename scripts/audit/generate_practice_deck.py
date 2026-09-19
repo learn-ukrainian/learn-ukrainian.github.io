@@ -467,22 +467,11 @@ def _contains_forbidden_text(value: Any) -> bool:
     text = _clean_text(value)
     if text is None:
         return False
-    return any(
-        unicodedata.category(char) in {"Cc", "Cf"}
-        or 0xE000 <= ord(char) <= 0xF8FF
-        for char in text
-    )
+    return any(unicodedata.category(char) in {"Cc", "Cf"} or 0xE000 <= ord(char) <= 0xF8FF for char in text)
 
 
 def _plain(value: str) -> str:
-    return (
-        value.casefold()
-        .replace("\u0301", "")
-        .replace("́", "")
-        .replace("’", "'")
-        .replace("ʼ", "'")
-        .strip()
-    )
+    return value.casefold().replace("\u0301", "").replace("́", "").replace("’", "'").replace("ʼ", "'").strip()
 
 
 def _surface_variants(value: str) -> tuple[str, ...]:
@@ -537,11 +526,7 @@ def _stress_position(stressed: str) -> tuple[str, int | None]:
 
 
 def _vowel_nuclei(value: str) -> list[dict[str, Any]]:
-    return [
-        {"index": index, "label": char}
-        for index, char in enumerate(value)
-        if char in UKRAINIAN_VOWELS
-    ]
+    return [{"index": index, "label": char} for index, char in enumerate(value) if char in UKRAINIAN_VOWELS]
 
 
 def _slug_key(entry: dict[str, Any]) -> str:
@@ -715,9 +700,7 @@ def _sense_learner_en(sense: dict[str, Any]) -> str | None:
     if not cleaned:
         return None
     multi = [
-        item
-        for item in cleaned
-        if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
+        item for item in cleaned if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
     ]
     return multi[0] if multi else cleaned[0]
 
@@ -763,9 +746,7 @@ def _english_translation_gloss(
     # Prefer short multi-word learner senses ("fairy tale") over a single academic
     # first gloss ("fable") when both are offered.
     multi = [
-        item
-        for item in cleaned
-        if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
+        item for item in cleaned if 1 < _meaning_label_word_count(item) <= 4 and not _meaning_label_is_phrase(item)
     ]
     return multi[0] if multi else cleaned[0]
 
@@ -1128,11 +1109,7 @@ def _all_paradigm_forms(paradigm: dict[str, Any]) -> list[str]:
 
 def _match_cases(match: dict[str, Any]) -> set[str]:
     tokens = set(str(match.get("tags") or "").replace(":", " ").split())
-    return {
-        case_name
-        for case_name, tag in CASE_VESUM_TAGS.items()
-        if tag in tokens
-    }
+    return {case_name for case_name, tag in CASE_VESUM_TAGS.items() if tag in tokens}
 
 
 def _verify_paradigm(
@@ -1249,8 +1226,7 @@ _INVENTORY_WORD_RE = re.compile(r"[^\W_]+(?:[-'’ʼ][^\W_]+)*", re.UNICODE)
 
 def _inventory_source_text(provenance: dict[str, Any]) -> str:
     return " ".join(
-        _clean_text(provenance.get(key)) or ""
-        for key in ("source", "label", "locator", "title")
+        _clean_text(provenance.get(key)) or "" for key in ("source", "label", "locator", "title")
     ).casefold()
 
 
@@ -1291,28 +1267,16 @@ def _prefer_inventory_sources(rows: list[dict[str, Any]]) -> list[dict[str, Any]
 
     selected: list[dict[str, Any]] = []
     for group in grouped.values():
-        low_level = [
-            row
-            for row in group
-            if _normalize_cefr(row.get("cefr")) in {"A1", "A2"}
-        ]
+        low_level = [row for row in group if _normalize_cefr(row.get("cefr")) in {"A1", "A2"}]
         if not low_level:
             selected.extend(group)
             continue
 
-        language_rows = [
-            row
-            for row in low_level
-            if _inventory_source_kind(row["provenance"]) == "language"
-        ]
+        language_rows = [row for row in low_level if _inventory_source_kind(row["provenance"]) == "language"]
         if language_rows:
             selected.extend(language_rows)
         else:
-            non_subject_rows = [
-                row
-                for row in low_level
-                if _inventory_source_kind(row["provenance"]) != "subject"
-            ]
+            non_subject_rows = [row for row in low_level if _inventory_source_kind(row["provenance"]) != "subject"]
             if non_subject_rows:
                 selected.extend(non_subject_rows)
             else:
@@ -1356,11 +1320,7 @@ def _inventory_form_details(
     # ``proper noun`` that are not VESUM ``pos`` values.  A filtered miss is
     # not proof that the source form is absent; ``_verified_surface_matches``
     # retries without the incompatible filter.
-    matching = [
-        match
-        for match in matches
-        if _plain(str(match.get("lemma") or "")) == lemma_plain
-    ]
+    matching = [match for match in matches if _plain(str(match.get("lemma") or "")) == lemma_plain]
     if not matching:
         return None
 
@@ -1410,9 +1370,7 @@ def _eligible_decoys(
         if _headword(lexeme["gloss"]) == answer_head:
             continue
         decoy_form = _case_form(lexeme.get("paradigm", {}), case_name, number)
-        if decoy_form and (
-            case_name == "nominative" or _plain(decoy_form) != _plain(lexeme["lemma"])
-        ):
+        if decoy_form and (case_name == "nominative" or _plain(decoy_form) != _plain(lexeme["lemma"])):
             candidates.append((lexeme, decoy_form))
     return candidates
 
@@ -1477,14 +1435,8 @@ def _eligible_dictionary_decoys(
     # lemma is normalized lowercase, so using it here makes a sentence-initial
     # answer look uniquely capitalized even when a safe capitalized decoy is
     # available in the practice pool.
-    answer_cap = _initial_capitalization(
-        answer.get("lemma") if answer_surface is None else answer_surface
-    )
-    same_capitalization = [
-        candidate
-        for candidate in candidates
-        if _initial_capitalization(candidate[1]) == answer_cap
-    ]
+    answer_cap = _initial_capitalization(answer.get("lemma") if answer_surface is None else answer_surface)
+    same_capitalization = [candidate for candidate in candidates if _initial_capitalization(candidate[1]) == answer_cap]
     if len(same_capitalization) >= 3:
         return same_capitalization
     return candidates
@@ -1607,11 +1559,7 @@ def _make_no_pair_options(
             for decoy_lexeme, decoy_form in decoys
         ]
         answer_length = len(str(cloze.get("form") or ""))
-        decoys = [
-            candidate
-            for candidate in decoys
-            if abs(len(candidate[1]) - answer_length) <= 3
-        ]
+        decoys = [candidate for candidate in decoys if abs(len(candidate[1]) - answer_length) <= 3]
         # Inventory identity cards used to take the alphabetically earliest POS
         # entries, which made chips look like an unrelated word list.  Keep the
         # same POS and a tight length band, then use the build's seeded RNG so
@@ -1625,16 +1573,10 @@ def _make_no_pair_options(
         # shuffled above, so the first valid window remains seeded and varied.
         for lower_length in range(max(1, answer_length - 3), answer_length + 1):
             upper_length = lower_length + 3
-            window = [
-                candidate
-                for candidate in decoys
-                if lower_length <= len(candidate[1]) <= upper_length
-            ]
+            window = [candidate for candidate in decoys if lower_length <= len(candidate[1]) <= upper_length]
             if answer_cap is not None:
                 matching_cap = [
-                    candidate
-                    for candidate in window
-                    if _initial_capitalization(candidate[1]) == answer_cap
+                    candidate for candidate in window if _initial_capitalization(candidate[1]) == answer_cap
                 ]
                 if not matching_cap:
                     continue
@@ -1777,11 +1719,7 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     if isinstance(accepted_alt, list):
         accepted.extend(accepted_alt)
     accepted_normalized = {_plain(str(value)) for value in accepted if _clean_text(value)}
-    distractors = [
-        option
-        for option in options
-        if isinstance(option, dict) and option.get("kind") != "answer"
-    ]
+    distractors = [option for option in options if isinstance(option, dict) and option.get("kind") != "answer"]
     if any(_plain(str(option.get("label") or "")) in accepted_normalized for option in distractors):
         errors.append("accepted alternate must not equal a distractor")
     answer_labels = [
@@ -1792,20 +1730,13 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     answer_cap = _initial_capitalization(answer_labels[0] if answer_labels else cloze.get("form"))
     distractor_caps = {
         cap
-        for cap in (
-            _initial_capitalization(option.get("label"))
-            for option in distractors
-            if isinstance(option, dict)
-        )
+        for cap in (_initial_capitalization(option.get("label")) for option in distractors if isinstance(option, dict))
         if cap is not None
     }
     if answer_cap is not None and len(distractor_caps) == 1 and answer_cap not in distractor_caps:
         errors.append("answer capitalization must not uniquely reveal the answer")
     oblique_count = sum(
-        1
-        for option in options
-        if isinstance(option, dict)
-        and option.get("case") not in {None, "", "nominative"}
+        1 for option in options if isinstance(option, dict) and option.get("case") not in {None, "", "nominative"}
     )
     oblique_distractor_count = sum(
         1
@@ -1818,9 +1749,7 @@ def validate_option_set(cloze: dict[str, Any]) -> list[str]:
     if blank_case != "nominative" and (oblique_count < 2 or oblique_distractor_count < 1):
         errors.append("option set must contain at least two oblique-looking forms")
     pos_values = {
-        _option_pos_bucket(option.get("pos"))
-        for option in options
-        if isinstance(option, dict) and "pos" in option
+        _option_pos_bucket(option.get("pos")) for option in options if isinstance(option, dict) and "pos" in option
     }
     if "" in pos_values:
         errors.append("option set contains an unknown or multi-POS category")
@@ -1917,11 +1846,7 @@ def _build_lexeme(entry: dict[str, Any], verifier: VesumVerifier) -> dict[str, A
 
 
 def _candidate_rule_id(candidate: dict[str, Any], case_name: str) -> str | None:
-    raw_rule = (
-        candidate.get("caseRuleId")
-        or candidate.get("ruleId")
-        or candidate.get("caseRule")
-    )
+    raw_rule = candidate.get("caseRuleId") or candidate.get("ruleId") or candidate.get("caseRule")
     if isinstance(raw_rule, dict):
         raw_rule = raw_rule.get("ruleId") or raw_rule.get("id")
     rule_id = _clean_text(raw_rule)
@@ -2065,9 +1990,7 @@ def _build_cloze_items(
             )
         if number not in NUMBER_KEYS:
             continue
-        if rule_id == "nominative_identification" and (
-            case_name != "nominative" or number != "singular"
-        ):
+        if rule_id == "nominative_identification" and (case_name != "nominative" or number != "singular"):
             continue
         form = curated_form or _case_form(lexeme["paradigm"], case_name, number)
         if not form or (not inventory_candidate and _plain(form) == lexeme["lemmaPlain"]):
@@ -2319,6 +2242,7 @@ def _definition_pos_alias_pattern(alias: str) -> str:
         return r"part(?=$|[.,;:])"
     return alias
 
+
 _DEFINITION_POS_PATTERNS: tuple[tuple[str, re.Pattern[str]], ...] = tuple(
     (
         bucket,
@@ -2508,9 +2432,7 @@ def _aspect_category(labels: list[str]) -> str | None:
     return None
 
 
-def _vesum_aspect_by_lemma(
-    lemmas: list[str], verifier: VesumVerifier
-) -> dict[str, str]:
+def _vesum_aspect_by_lemma(lemmas: list[str], verifier: VesumVerifier) -> dict[str, str]:
     """Read explicit aspect from VESUM tags for exact verb lemmas in batches.
 
     The manifest's learner-facing form labels historically omit ``perf`` and
@@ -2608,11 +2530,7 @@ def _pos_category_set_payload(values: list[str], level: str) -> dict[str, Any] |
 
 def _is_aspect_residual_target(entry: dict[str, Any], lexeme: dict[str, Any]) -> bool:
     cefr = _normalize_cefr(lexeme.get("cefr"))
-    return bool(
-        cefr
-        and CEFR_RANK["A2"] <= CEFR_RANK[cefr] <= CEFR_RANK["C1"]
-        and _morph_pos(entry) == "verb"
-    )
+    return bool(cefr and CEFR_RANK["A2"] <= CEFR_RANK[cefr] <= CEFR_RANK["C1"] and _morph_pos(entry) == "verb")
 
 
 def _build_classify_items(
@@ -2644,7 +2562,9 @@ def _build_classify_items(
         gender = _gender_category(labels)
         if gender:
             sets.append(_category_set_payload("gender", gender, lexeme["cefr"]))
-        declension = _declension_category(entry, labels, morphology.get("paradigm") if isinstance(morphology.get("paradigm"), dict) else {})
+        declension = _declension_category(
+            entry, labels, morphology.get("paradigm") if isinstance(morphology.get("paradigm"), dict) else {}
+        )
         if declension and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["B1"]:
             sets.append(_category_set_payload("declension", declension, lexeme["cefr"]))
     elif pos == "verb":
@@ -2658,19 +2578,11 @@ def _build_classify_items(
             for pattern in patterns
         )
         explicit_conflict = explicit is None and has_any_explicit
-        aspect = (
-            None
-            if explicit_conflict
-            else explicit or vesum_aspect or _aspect_category(labels)
-        )
+        aspect = None if explicit_conflict else explicit or vesum_aspect or _aspect_category(labels)
         if aspect and CEFR_RANK[lexeme["cefr"]] >= CEFR_RANK["A2"]:
             sets.append(_category_set_payload("aspect", aspect, lexeme["cefr"]))
         elif aspect_residuals is not None and _is_aspect_residual_target(entry, lexeme):
-            reason = (
-                "conflicting_explicit_aspect"
-                if explicit_conflict
-                else "no_explicit_aspect_or_tense_proxy"
-            )
+            reason = "conflicting_explicit_aspect" if explicit_conflict else "no_explicit_aspect_or_tense_proxy"
             aspect_residuals.append(
                 {
                     "lemmaId": str(lexeme["lemmaId"]),
@@ -2762,9 +2674,20 @@ IMPERATIVE_EXPLANATIONS = {
 }
 # Literary practice excludes marked register forms, but keeps short/long and
 # orthographic variants. Query forms_all (or forms view fallback), filtering form_markers.
-_IMPERATIVE_EXCLUDED_TAGS = frozenset({
-    "bad", "obsc", "subst", "arch", "dial", "dialect", "slang", "vulg", "coll", "rare",
-})
+_IMPERATIVE_EXCLUDED_TAGS = frozenset(
+    {
+        "bad",
+        "obsc",
+        "subst",
+        "arch",
+        "dial",
+        "dialect",
+        "slang",
+        "vulg",
+        "coll",
+        "rare",
+    }
+)
 
 
 @lru_cache(maxsize=32768)
@@ -2777,7 +2700,9 @@ def _imperative_display(form: str, number: str, *, mood: str = "Imp") -> str | N
     if sum(letter in UKRAINIAN_VOWELS for letter in form) == 1:
         return form
     result = verify_stress(
-        form, pos="VERB", tags=[f"Number={'Sing' if number == 's' else 'Plur'}", f"Mood={mood}"],
+        form,
+        pos="VERB",
+        tags=[f"Number={'Sing' if number == 's' else 'Plur'}", f"Mood={mood}"],
     )
     if result["status"] == "not_found":
         return form
@@ -2791,7 +2716,8 @@ def _imperative_display(form: str, number: str, *, mood: str = "Imp") -> str | N
 
 
 def _imperative_forms(
-    lemma: str, vesum_conn: sqlite3.Connection,
+    lemma: str,
+    vesum_conn: sqlite3.Connection,
 ) -> tuple[dict[str, list[str]], dict[str, list[str]], str | None]:
     slots: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
     present: dict[str, set[str]] = {slot: set() for slot in IMPERATIVE_SLOTS}
@@ -2827,6 +2753,7 @@ def _imperative_forms(
                     slots[slot].add(form)
                 elif "pres" in tokens or ("perf" in tokens and "futr" in tokens):
                     present[slot].add(form)
+
     # Prefer full -мо and -ся forms; never discard their attested alternatives.
     def preference(form: str) -> tuple[bool, bool, str]:
         stem = re.sub(r"(?:ся|сь)$", "", form)
@@ -2840,17 +2767,23 @@ def _imperative_forms(
 
 
 def _imperative_distractors(
-    lemma: str, slot: str, target: str, slots: dict[str, list[str]],
-    present: dict[str, list[str]], vesum_conn: sqlite3.Connection,
-    *, aspect: str, stressed_lemma: str,
+    lemma: str,
+    slot: str,
+    target: str,
+    slots: dict[str, list[str]],
+    present: dict[str, list[str]],
+    vesum_conn: sqlite3.Connection,
+    *,
+    aspect: str,
+    stressed_lemma: str,
 ) -> list[tuple[str, str]]:
     """Rank explainable errors; mutations must not be attested word forms."""
     candidates: list[tuple[str, str]] = []
     plain_target = _plain(target)
     stem = re.sub(r"(?:ся|сь)$", "", plain_target)
     target_stem = re.sub(r"(?:ся|сь)$", "", target)
-    reflexive = plain_target[len(stem):]
-    target_reflexive = target[len(target_stem):]
+    reflexive = plain_target[len(stem) :]
+    target_reflexive = target[len(target_stem) :]
     has_stress = STRESS_MARK in target
     mutation = None
     if slot == "2sg" and stem[-1:] in "бпвмфжчшщ":
@@ -2861,9 +2794,14 @@ def _imperative_distractors(
         if stem[-2] in "рлмн" and stem[-3] in consonants:
             mutation_str = (target_stem[:-1] + target_reflexive) if has_stress else (stem[:-1] + reflexive)
             mutation = (mutation_str, "STEM_CLUSTER")
-    if mutation and vesum_conn.execute(
-        "SELECT 1 FROM forms WHERE word_form = ? LIMIT 1", (_plain(mutation[0]),),
-    ).fetchone() is None:
+    if (
+        mutation
+        and vesum_conn.execute(
+            "SELECT 1 FROM forms WHERE word_form = ? LIMIT 1",
+            (_plain(mutation[0]),),
+        ).fetchone()
+        is None
+    ):
         candidates.append(mutation)
     number = IMPERATIVE_SLOTS[slot][0]
     for form in present[slot]:
@@ -2898,7 +2836,9 @@ def _imperative_distractors(
 
 
 def _build_imperative_items(
-    lexeme: dict[str, Any], vesum_conn: sqlite3.Connection, cefr: str,
+    lexeme: dict[str, Any],
+    vesum_conn: sqlite3.Connection,
+    cefr: str,
 ) -> list[dict[str, Any]]:
     """Extract all attested synthetic slots and emit collision-free four-choice cards."""
     if cefr not in PUBLISHED_LEVELS or lexeme.get("pos") != "verb":
@@ -2920,8 +2860,14 @@ def _build_imperative_items(
         seen = {_plain(answer) for answer in accepted}
         options = [{"text": target, "isCorrect": True, "code": "CORRECT"}]
         for text, code in _imperative_distractors(
-            lemma, slot, target, slots, present, vesum_conn,
-            aspect=aspect, stressed_lemma=str(lexeme.get("lemma") or lemma),
+            lemma,
+            slot,
+            target,
+            slots,
+            present,
+            vesum_conn,
+            aspect=aspect,
+            stressed_lemma=str(lexeme.get("lemma") or lemma),
         ):
             if _plain(text) in seen:
                 continue
@@ -2945,12 +2891,20 @@ def _build_imperative_items(
             if len(forms) > 1:
                 notes += " All listed variants are accepted."
         item = {
-            "id": item_id, "lemmaId": lexeme["lemmaId"],
+            "id": item_id,
+            "lemmaId": lexeme["lemmaId"],
             "srsKey": f"{lexeme['lemmaId']}::imperative::{slot}",
-            "lemma": lexeme["lemma"], "lemmaPlain": lemma, "aspect": aspect,
-            "slot": slot, "slotLabelUa": label_uk, "target": target,
-            "targetPlain": _plain(target), "acceptedAnswers": accepted,
-            "options": options, "cefr": cefr, "notes": notes,
+            "lemma": lexeme["lemma"],
+            "lemmaPlain": lemma,
+            "aspect": aspect,
+            "slot": slot,
+            "slotLabelUa": label_uk,
+            "target": target,
+            "targetPlain": _plain(target),
+            "acceptedAnswers": accepted,
+            "options": options,
+            "cefr": cefr,
+            "notes": notes,
             "cueSentence": "Прямий наказ або заклик: «___!»",
         }
         if cefr in {"A1", "A2"}:
@@ -2972,9 +2926,13 @@ def _imperative_connection(verifier: VesumVerifier) -> sqlite3.Connection:
     if isinstance(verifier, JsonVesumVerifier):
         conn.executemany(
             "INSERT INTO forms VALUES (?, ?, ?, ?)",
-            [(form, row.get("lemma"), row.get("tags", ""), row.get("pos"))
-             for form, rows in verifier.payload.items() if isinstance(rows, list)
-             for row in rows if isinstance(row, dict)],
+            [
+                (form, row.get("lemma"), row.get("tags", ""), row.get("pos"))
+                for form, rows in verifier.payload.items()
+                if isinstance(rows, list)
+                for row in rows
+                if isinstance(row, dict)
+            ],
         )
     return conn
 
@@ -3275,10 +3233,7 @@ def _build_paradigm_items(
             valid_target_forms = set()
         valid_target_forms.add(_plain(slot["form"]))
 
-        candidates = [
-            other for other in slots
-            if _plain(other["form"]) not in valid_target_forms
-        ]
+        candidates = [other for other in slots if _plain(other["form"]) not in valid_target_forms]
         confusions = CASE_CONFUSION_PRIORITY.get(slot["case"], ())
         candidates.sort(key=lambda other: _paradigm_distractor_rank(other, slot, confusions, paradigm_id))
 
@@ -3289,12 +3244,14 @@ def _build_paradigm_items(
             if norm_other in seen_option_surfaces:
                 continue
             seen_option_surfaces.add(norm_other)
-            options.append({
-                "label": other["form"],
-                "kind": "same-paradigm",
-                "distractorCase": other["case"],
-                "distractorNumber": other["number"],
-            })
+            options.append(
+                {
+                    "label": other["form"],
+                    "kind": "same-paradigm",
+                    "distractorCase": other["case"],
+                    "distractorNumber": other["number"],
+                }
+            )
             if len(options) == 4:
                 break
         if len(options) < 4:
@@ -3398,8 +3355,7 @@ def build_synonym_verdict_sets(
             # flag (the pair stays approved at the B1+ default) instead of suppressing
             # the whole approved pair.
             print(
-                "WARN: synonym verdict a2Exception flag dropped (pair stays B1+): "
-                + "; ".join(flag_errors),
+                "WARN: synonym verdict a2Exception flag dropped (pair stays B1+): " + "; ".join(flag_errors),
                 file=sys.stderr,
             )
         elif item.get("a2Exception") is True:
@@ -3494,11 +3450,7 @@ def nominate_a2_synonym_pairs(
 ) -> list[dict[str, Any]]:
     """Report approved both-leg-A2 synonym pairs for curator a2Exception review (#4698)."""
     approved_set, _, _a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
-    entry_by_lemma_id = {
-        _stable_lemma_id(entry): entry
-        for entry in entries
-        if _stable_lemma_id(entry)
-    }
+    entry_by_lemma_id = {_stable_lemma_id(entry): entry for entry in entries if _stable_lemma_id(entry)}
     nominations: list[dict[str, Any]] = []
     for item in (synonym_verdicts or {}).get("approved", []):
         if not isinstance(item, dict):
@@ -3519,9 +3471,8 @@ def nominate_a2_synonym_pairs(
         if not entry_a or not entry_b:
             continue
         polarity = str(item["polarity"])
-        linked = (
-            _lexeme_lists_synonym_target(entry_a, key[1], polarity)
-            or _lexeme_lists_synonym_target(entry_b, key[0], polarity)
+        linked = _lexeme_lists_synonym_target(entry_a, key[1], polarity) or _lexeme_lists_synonym_target(
+            entry_b, key[0], polarity
         )
         if not linked:
             continue
@@ -3598,10 +3549,7 @@ def _build_synonym_items(
                 flagged_a2_exception = pair_key in a2_exception_set
                 both_legs_a2 = lexeme["cefr"] == "A2" and target["cefr"] == "A2"
                 a2_exception = flagged_a2_exception and both_legs_a2
-                if (
-                    CEFR_RANK[lexeme["cefr"]] < CEFR_RANK[SYNONYM_DEFAULT_AVAILABILITY]
-                    and not a2_exception
-                ):
+                if CEFR_RANK[lexeme["cefr"]] < CEFR_RANK[SYNONYM_DEFAULT_AVAILABILITY] and not a2_exception:
                     continue
                 if CEFR_RANK[target["cefr"]] > CEFR_RANK[lexeme["cefr"]]:
                     continue
@@ -3628,8 +3576,7 @@ def _build_synonym_items(
         both_legs_a2 = prompt_a["cefr"] == "A2" and prompt_b["cefr"] == "A2"
         if pair_key in a2_exception_set and not both_legs_a2 and pair_key not in warned_a2_flags:
             print(
-                f"WARN: synonym pair {pair_key!r} a2Exception ignored: "
-                "both legs must be A2 vocabulary; staying B1+",
+                f"WARN: synonym pair {pair_key!r} a2Exception ignored: both legs must be A2 vocabulary; staying B1+",
                 file=sys.stderr,
             )
             warned_a2_flags.add(pair_key)
@@ -3724,11 +3671,7 @@ def _valid_heritage_frames(pair: dict[str, Any]) -> list[dict[str, Any]]:
     frames = pair.get("frames")
     if not isinstance(frames, list):
         return []
-    return [
-        frame
-        for frame in frames
-        if isinstance(frame, dict) and not _heritage_frame_errors(frame, kind)
-    ]
+    return [frame for frame in frames if isinstance(frame, dict) and not _heritage_frame_errors(frame, kind)]
 
 
 def _heritage_pair_native_lexeme(
@@ -3785,10 +3728,7 @@ def _valid_heritage_distractors(
             # Find matching lexeme in all_lexemes (lexemes) first
             matching_lexeme = next((l for l in lexemes if _plain(l["lemma"]) == _plain(dist_lemma_clean)), None)
             if matching_lexeme:
-                resolved_distractors.append({
-                    **matching_lexeme,
-                    "pos": answer.get("pos")
-                })
+                resolved_distractors.append({**matching_lexeme, "pos": answer.get("pos")})
             else:
                 # Verify against VESUM
                 if verifier is not None:
@@ -3798,21 +3738,25 @@ def _valid_heritage_distractors(
                         matches = verifier.verify_words([dist_lemma_clean]).get(dist_lemma_clean, [])
 
                     if matches:
-                        resolved_distractors.append({
+                        resolved_distractors.append(
+                            {
+                                "lemmaId": f"cur_{_plain(dist_lemma_clean)}",
+                                "lemma": dist_lemma_clean,
+                                "lemmaPlain": _plain(dist_lemma_clean),
+                                "pos": answer.get("pos"),
+                                "cefr": level,
+                            }
+                        )
+                else:
+                    resolved_distractors.append(
+                        {
                             "lemmaId": f"cur_{_plain(dist_lemma_clean)}",
                             "lemma": dist_lemma_clean,
                             "lemmaPlain": _plain(dist_lemma_clean),
                             "pos": answer.get("pos"),
                             "cefr": level,
-                        })
-                else:
-                    resolved_distractors.append({
-                        "lemmaId": f"cur_{_plain(dist_lemma_clean)}",
-                        "lemma": dist_lemma_clean,
-                        "lemmaPlain": _plain(dist_lemma_clean),
-                        "pos": answer.get("pos"),
-                        "cefr": level,
-                    })
+                        }
+                    )
         return resolved_distractors
 
     candidates = []
@@ -3861,9 +3805,7 @@ def _shuffle_heritage_options(heritage_id: str, options: list[dict[str, str]]) -
 def _strip_heritage_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
     stripped = {**item}
     stripped["options"] = [
-        {"label": str(option.get("label") or "")}
-        for option in item.get("options", [])
-        if isinstance(option, dict)
+        {"label": str(option.get("label") or "")} for option in item.get("options", []) if isinstance(option, dict)
     ]
     return stripped
 
@@ -3972,9 +3914,7 @@ def _build_heritage_items(
 def _strip_paronym_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
     stripped = {**item}
     stripped["options"] = [
-        {"label": str(option.get("label") or "")}
-        for option in item.get("options", [])
-        if isinstance(option, dict)
+        {"label": str(option.get("label") or "")} for option in item.get("options", []) if isinstance(option, dict)
     ]
     return stripped
 
@@ -4019,8 +3959,8 @@ def _build_paronym_items(
         ans_matches: list[dict[str, Any]] = []
         if verifier:
             try:
-                vres = verifier.verify_words([answer_form])
-                ans_matches = vres.get(answer_form, []) or []
+                vres = verifier.verify_words([answer_form, answer_form.lower()])
+                ans_matches = vres.get(answer_form) or vres.get(answer_form.lower()) or []
             except Exception:
                 ans_matches = []
         if ans_matches:
@@ -4030,7 +3970,9 @@ def _build_paronym_items(
         if target_lex is None:
             # Fallback: try direct lemma match on stored lemmas (for fixture paths)
             for cand in (lex_a, lex_b):
-                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(_clean_text(cand.get("lemma")).lower()[:3]):
+                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(
+                    _clean_text(cand.get("lemma")).lower()[:3]
+                ):
                     target_lex = cand
                     break
         if target_lex is None or not target_lex.get("cefr"):
@@ -4087,9 +4029,7 @@ def validate_classify_item(item: dict[str, Any]) -> list[str]:
             continue
         closed_values = set(CLASSIFY_LABELS[str(set_id)])
         option_values = {
-            option.get("value")
-            for option in (options if isinstance(options, list) else [])
-            if isinstance(option, dict)
+            option.get("value") for option in (options if isinstance(options, list) else []) if isinstance(option, dict)
         }
         if option_values != closed_values:
             errors.append(f"classify {set_id} options must equal the closed category set")
@@ -4100,8 +4040,10 @@ def validate_classify_item(item: dict[str, Any]) -> list[str]:
             if set_id != "pos":
                 errors.append("classify multi-answer sets are only valid for POS")
                 continue
-            if not isinstance(answers, list) or len(answers) < 2 or not all(
-                isinstance(value, str) for value in answers
+            if (
+                not isinstance(answers, list)
+                or len(answers) < 2
+                or not all(isinstance(value, str) for value in answers)
             ):
                 errors.append("classify POS answers must be a string list with at least two values")
                 continue
@@ -4180,10 +4122,7 @@ def validate_heritage_item(item: dict[str, Any], *, internal_options: bool = Fal
         for option in option_objects:
             leaked_keys = sorted(set(option) - HERITAGE_PUBLIC_OPTION_KEYS)
             if leaked_keys:
-                errors.append(
-                    "heritage options must expose only label; "
-                    f"remove leaked option keys {leaked_keys}"
-                )
+                errors.append(f"heritage options must expose only label; remove leaked option keys {leaked_keys}")
                 break
     normalized = [_plain(label) for label in labels]
     if len(set(normalized)) != len(normalized):
@@ -4331,7 +4270,7 @@ def validate_paronym_item(item: dict[str, Any], *, internal_options: bool = Fals
         errors.append("paronym option set must contain at least two options (answer + confusable)")
     if not internal_options:
         # public items carry only labels (mirrors heritage public strip)
-        for option in (options or []):
+        for option in options or []:
             if isinstance(option, dict):
                 leaked = sorted(set(option.keys()) - {"label"})
                 if leaked:
@@ -4342,9 +4281,7 @@ def validate_paronym_item(item: dict[str, Any], *, internal_options: bool = Fals
 def _strip_antonym_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
     stripped = {**item}
     stripped["options"] = [
-        {"label": str(option.get("label") or "")}
-        for option in item.get("options", [])
-        if isinstance(option, dict)
+        {"label": str(option.get("label") or "")} for option in item.get("options", []) if isinstance(option, dict)
     ]
     return stripped
 
@@ -4396,7 +4333,9 @@ def _build_antonym_items(
                 target_lex = lex_by_lemma[ans_lemma]
         if target_lex is None:
             for cand in (lex_a, lex_b):
-                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(_clean_text(cand.get("lemma")).lower()[:3]):
+                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(
+                    _clean_text(cand.get("lemma")).lower()[:3]
+                ):
                     target_lex = cand
                     break
         if target_lex is None:
@@ -4485,7 +4424,7 @@ def validate_antonym_item(item: dict[str, Any], *, internal_options: bool = Fals
     if not isinstance(options, list) or len(options) < 2:
         errors.append("antonym option set must contain at least two options (answer + confusable)")
     if not internal_options:
-        for option in (options or []):
+        for option in options or []:
             if isinstance(option, dict):
                 leaked = sorted(set(option.keys()) - {"label"})
                 if leaked:
@@ -4496,9 +4435,7 @@ def validate_antonym_item(item: dict[str, Any], *, internal_options: bool = Fals
 def _strip_homonym_option_metadata(item: dict[str, Any]) -> dict[str, Any]:
     stripped = {**item}
     stripped["options"] = [
-        {"label": str(option.get("label") or "")}
-        for option in item.get("options", [])
-        if isinstance(option, dict)
+        {"label": str(option.get("label") or "")} for option in item.get("options", []) if isinstance(option, dict)
     ]
     return stripped
 
@@ -4540,8 +4477,8 @@ def _build_homonym_items(
         ans_matches: list[dict[str, Any]] = []
         if verifier:
             try:
-                vres = verifier.verify_words([answer_form])
-                ans_matches = vres.get(answer_form, []) or []
+                vres = verifier.verify_words([answer_form, answer_form.lower()])
+                ans_matches = vres.get(answer_form) or vres.get(answer_form.lower()) or []
             except Exception:
                 ans_matches = []
         if ans_matches:
@@ -4550,7 +4487,9 @@ def _build_homonym_items(
                 target_lex = lex_by_lemma[ans_lemma]
         if target_lex is None:
             for cand in (lex_a, lex_b):
-                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(_clean_text(cand.get("lemma")).lower()[:3]):
+                if _clean_text(cand.get("lemma")) and answer_form.lower().startswith(
+                    _clean_text(cand.get("lemma")).lower()[:3]
+                ):
                     target_lex = cand
                     break
         if target_lex is None:
@@ -4639,7 +4578,7 @@ def validate_homonym_item(item: dict[str, Any], *, internal_options: bool = Fals
     if not isinstance(options, list) or len(options) < 2:
         errors.append("homonym option set must contain at least two options (answer + confusable)")
     if not internal_options:
-        for option in (options or []):
+        for option in options or []:
             if isinstance(option, dict):
                 leaked = sorted(set(option.keys()) - {"label"})
                 if leaked:
@@ -4730,9 +4669,7 @@ def validate_mode_items(mode: str, items: list[dict[str, Any]]) -> list[str]:
             if not isinstance(item, dict):
                 errors.append(f"stress[{index}]: item must be an object")
                 continue
-            errors.extend(
-                f"stress[{index}]: {finding.message}" for finding in check_stress_item(item)
-            )
+            errors.extend(f"stress[{index}]: {finding.message}" for finding in check_stress_item(item))
     return errors
 
 
@@ -4818,7 +4755,12 @@ def _select_practice_lexemes(
     verifier: VesumVerifier,
     config: BuildConfig,
     priority_lemma_keys: set[str] | None = None,
-) -> tuple[list[tuple[dict[str, Any], dict[str, Any]]], list[dict[str, Any]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
+) -> tuple[
+    list[tuple[dict[str, Any], dict[str, Any]]],
+    list[dict[str, Any]],
+    dict[str, dict[str, Any]],
+    dict[str, dict[str, Any]],
+]:
     eligible = [entry for entry in entries if is_practice_eligible(entry)]
     # A practice seed is an explicit curriculum admission, not merely a source of
     # optional fill entries. Keep those entries ahead of ordinary course/fill
@@ -4970,10 +4912,7 @@ def admit_thin_mode_pair_leg_surfaces(
         changed = False
 
         # Browse-only source-inventory legs: curated pair YAML admits practice.
-        if (
-            entry.get("primary_source") == SOURCE_INVENTORY_SOURCE
-            and not is_surface_admitted(entry, SURFACE_PRACTICE)
-        ):
+        if entry.get("primary_source") == SOURCE_INVENTORY_SOURCE and not is_surface_admitted(entry, SURFACE_PRACTICE):
             admission = entry.get("surface_admission")
             if isinstance(admission, (list, tuple, set)):
                 merged_list = [str(item) for item in admission]
@@ -5044,8 +4983,7 @@ def build_practice_shards(
     approved_set, rejected_set, a2_exception_set = build_synonym_verdict_sets(synonym_verdicts)
 
     encountered_pairs: dict[str, dict[str, set[tuple[str, str, str]]]] = {
-        level: {"approved": set(), "rejected": set(), "awaiting": set()}
-        for level in CEFR_ORDER
+        level: {"approved": set(), "rejected": set(), "awaiting": set()} for level in CEFR_ORDER
     }
 
     deck_version = compute_deck_version(
@@ -5062,7 +5000,14 @@ def build_practice_shards(
     # Seed from the DATA-ONLY fingerprint, not deck_version: builder-version
     # bumps mint new asset names but must not reshuffle seeded content.
     inputs_fingerprint = compute_deck_inputs_fingerprint(
-        entries, heritage_pairs, paronym_pairs, synonym_verdicts, cloze_sources, SCHEMA_VERSION, antonym_pairs=antonym_pairs, homonym_pairs=homonym_pairs
+        entries,
+        heritage_pairs,
+        paronym_pairs,
+        synonym_verdicts,
+        cloze_sources,
+        SCHEMA_VERSION,
+        antonym_pairs=antonym_pairs,
+        homonym_pairs=homonym_pairs,
     )
     rng_seed = int(hashlib.sha256(inputs_fingerprint.encode("utf-8")).hexdigest()[:16], 16)
     rng = random.Random(rng_seed)
@@ -5091,9 +5036,7 @@ def build_practice_shards(
         priority_lemma_keys,
     )
     verb_lemmas = [
-        str(entry.get("lemma") or "")
-        for entry, lexeme in lexemes_by_entry
-        if _is_aspect_residual_target(entry, lexeme)
+        str(entry.get("lemma") or "") for entry, lexeme in lexemes_by_entry if _is_aspect_residual_target(entry, lexeme)
     ]
     vesum_aspects = _vesum_aspect_by_lemma(verb_lemmas, verifier)
     # Paronym emit resolves adjudicated pair slugs against the selected pool
@@ -5117,8 +5060,7 @@ def build_practice_shards(
     cloze_by_level: dict[str, list[dict[str, Any]]] = {level: [] for level in CEFR_ORDER}
     cloze_ids_by_lemma: dict[str, list[str]] = {}
     mode_by_level: dict[str, dict[str, list[dict[str, Any]]]] = {
-        level: {mode: [] for mode in DRILL_MODES}
-        for level in CEFR_ORDER
+        level: {mode: [] for mode in DRILL_MODES} for level in CEFR_ORDER
     }
     for _entry, lexeme in lexemes_by_entry:
         # Unlevelled entries stay eligible for recognition.  Cloze and the
@@ -5174,9 +5116,7 @@ def build_practice_shards(
         for lexeme in all_lexemes:
             level = lexeme.get("cefr")
             if level in PUBLISHED_LEVELS:
-                mode_by_level[level]["imperative"].extend(
-                    _build_imperative_items(lexeme, imperative_conn, level)
-                )
+                mode_by_level[level]["imperative"].extend(_build_imperative_items(lexeme, imperative_conn, level))
 
     synonym_items = _build_synonym_items(
         lexemes_by_entry,
@@ -5193,17 +5133,10 @@ def build_practice_shards(
         level = str(item.pop("level"))
         item.pop("promptLevel", None)
         mode_by_level[level]["synonym"].append(item)
-    resolved_approved_pairs = set().union(
-        *(encountered_pairs[level]["approved"] for level in CEFR_ORDER)
-    )
-    emitted_synonym_items = [
-        item
-        for level in CEFR_ORDER
-        for item in mode_by_level[level]["synonym"]
-    ]
+    resolved_approved_pairs = set().union(*(encountered_pairs[level]["approved"] for level in CEFR_ORDER))
+    emitted_synonym_items = [item for level in CEFR_ORDER for item in mode_by_level[level]["synonym"]]
     emitted_synonym_pairs = {
-        _synonym_pair_key(item["prompt"], item["answer"], item["polarity"])
-        for item in emitted_synonym_items
+        _synonym_pair_key(item["prompt"], item["answer"], item["polarity"]) for item in emitted_synonym_items
     }
     effective_approved_set = approved_set - rejected_set
     print(
@@ -5233,8 +5166,7 @@ def build_practice_shards(
         if not native_lexeme:
             native_slug = _clean_text(pair.get("nativeSlug")) or "<missing>"
             print(
-                f"WARN: heritage_pair[{index}] nativeSlug {native_slug!r} not in practice lexemes; "
-                "emitted 0 items",
+                f"WARN: heritage_pair[{index}] nativeSlug {native_slug!r} not in practice lexemes; emitted 0 items",
                 file=sys.stderr,
             )
             continue
@@ -5471,8 +5403,7 @@ def build_practice_shards(
         level_lexemes = [
             lexeme
             for lexeme in all_lexemes
-            if lexeme["cefr"] == level
-            or (level == UNKNOWN_CEFR_TRANSPORT_LEVEL and lexeme["cefr"] is None)
+            if lexeme["cefr"] == level or (level == UNKNOWN_CEFR_TRANSPORT_LEVEL and lexeme["cefr"] is None)
         ]
         if not level_lexemes:
             continue
@@ -5493,8 +5424,7 @@ def build_practice_shards(
             mode: {
                 _clean_text(item.get("lemmaId"))
                 for item in mode_by_level[level][mode]
-                if isinstance(item, dict)
-                and _clean_text(item.get("lemmaId")) in level_lemma_ids
+                if isinstance(item, dict) and _clean_text(item.get("lemmaId")) in level_lemma_ids
             }
             for mode in DRILL_MODES
         }
@@ -5548,8 +5478,7 @@ def build_practice_shards(
                 "cloze": coverage,
                 **{
                     mode: round(
-                        len({item["lemmaId"] for item in mode_by_level[level][mode]})
-                        / len(level_lexemes),
+                        len({item["lemmaId"] for item in mode_by_level[level][mode]}) / len(level_lexemes),
                         4,
                     )
                     for mode in DRILL_MODES
@@ -5667,20 +5596,18 @@ def read_practice_seed(path: Path, *, allow_local_private: bool = False) -> list
         )
         is_local_no_route = is_local_recognition and row.get("localOnly") is True
         if not lemma or not slug or not cefr:
-            raise ValueError(
-                f"practice seed entries[{index}] requires lemma, slug, and CEFR: {path}"
-            )
+            raise ValueError(f"practice seed entries[{index}] requires lemma, slug, and CEFR: {path}")
         if is_local_recognition:
             if example or provenance is not None:
-                raise ValueError(f"local-only practice seed entries[{index}] must not contain example or provenance: {path}")
+                raise ValueError(
+                    f"local-only practice seed entries[{index}] must not contain example or provenance: {path}"
+                )
             if is_local_no_route and _clean_text(row.get("gloss")) is None:
                 raise ValueError(f"local-only no-route practice seed entries[{index}] requires a private gloss: {path}")
             validated.append(row)
             continue
         if not example or not isinstance(provenance, dict):
-            raise ValueError(
-                f"practice seed entries[{index}] requires example and provenance: {path}"
-            )
+            raise ValueError(f"practice seed entries[{index}] requires example and provenance: {path}")
         if row.get("sentenceStatus") != "ok":
             raise ValueError(f"practice seed entries[{index}] must retain sentenceStatus=ok: {path}")
         if _clean_text(provenance.get("source_file")) is None or _clean_text(provenance.get("credit")) is None:
@@ -5700,9 +5627,7 @@ def merge_practice_seed_entries(
     receives a public route, manifest write, cloze example, or export flag.
     """
     by_slug = {
-        slug: index
-        for index, entry in enumerate(entries)
-        if (slug := _clean_text(entry.get("url_slug"))) is not None
+        slug: index for index, entry in enumerate(entries) if (slug := _clean_text(entry.get("url_slug"))) is not None
     }
     merged = list(entries)
     applied_slugs: set[str] = set()
@@ -5711,8 +5636,7 @@ def merge_practice_seed_entries(
         target_index = by_slug.get(slug)
         if target_index is None:
             is_local_no_route = (
-                seed.get("admissionMode") == "local_practice_private_teacher"
-                and seed.get("localOnly") is True
+                seed.get("admissionMode") == "local_practice_private_teacher" and seed.get("localOnly") is True
             )
             if not is_local_no_route:
                 raise ValueError(f"practice seed slug is not a public Atlas entry: {slug}")
@@ -5839,10 +5763,7 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
     residual_path = path.with_name(path.stem + ".residual" + path.suffix)
     if residual_path.exists():
         residual_payload = json.loads(residual_path.read_text(encoding="utf-8"))
-        if (
-            not isinstance(residual_payload, dict)
-            or residual_payload.get("schema") != "atlas-sentence-inventory"
-        ):
+        if not isinstance(residual_payload, dict) or residual_payload.get("schema") != "atlas-sentence-inventory":
             raise ValueError("residual sentence inventory must use atlas-sentence-inventory schema")
         residual_rows = residual_payload.get("rows")
         if not isinstance(residual_rows, list):
@@ -5880,9 +5801,7 @@ def read_sentence_inventory(path: Path | None) -> list[dict[str, Any]]:
         # Include ASCII hyphen and Unicode Pd-ish dashes U+2010–U+2015 so en/em
         # dash compounds are not split (CF #6186 F1).
         _dash = r"\-\u2010\u2011\u2012\u2013\u2014\u2015"
-        pattern = re.compile(
-            rf"(?<![\wʼ'’{_dash}]){re.escape(target_form)}(?![\wʼ'’{_dash}])"
-        )
+        pattern = re.compile(rf"(?<![\wʼ'’{_dash}]){re.escape(target_form)}(?![\wʼ'’{_dash}])")
         blanked_sentence, replacements = pattern.subn("___", sentence)
         if replacements != 1:
             continue
@@ -5940,15 +5859,12 @@ def _merge_heritage_pair_overlay(
             existing_frames = target.get("frames")
             existing_frames = existing_frames if isinstance(existing_frames, list) else []
             existing_sentences = {
-                _clean_text(frame.get("sentence_with_slot"))
-                for frame in existing_frames
-                if isinstance(frame, dict)
+                _clean_text(frame.get("sentence_with_slot")) for frame in existing_frames if isinstance(frame, dict)
             }
             new_frames = [
                 frame
                 for frame in overlay_frames
-                if isinstance(frame, dict)
-                and _clean_text(frame.get("sentence_with_slot")) not in existing_sentences
+                if isinstance(frame, dict) and _clean_text(frame.get("sentence_with_slot")) not in existing_sentences
             ]
             if new_frames:
                 target["frames"] = [*existing_frames, *new_frames]
@@ -6042,6 +5958,7 @@ def read_synonym_verdicts(path: Path | None) -> dict[str, Any] | None:
         print("WARN: synonym verdicts file not found; emitting no synonym items", file=sys.stderr)
         return None
     import yaml
+
     try:
         return yaml.safe_load(path.read_text(encoding="utf-8"))
     except Exception as e:
@@ -6111,12 +6028,8 @@ def run_broken_validator_fixtures() -> int:
                 ],
             }
         ),
-        "paronym_pair": validate_paronym_pair(
-            {"slugA": "адресант", "slugB": "адресат", "frames": [], "citations": []}
-        ),
-        "homonym_pair": validate_homonym_pair(
-            {"slugA": "байка", "slugB": "байка", "frames": [], "citations": []}
-        ),
+        "paronym_pair": validate_paronym_pair({"slugA": "адресант", "slugB": "адресат", "frames": [], "citations": []}),
+        "homonym_pair": validate_homonym_pair({"slugA": "байка", "slugB": "байка", "frames": [], "citations": []}),
     }
     print("Broken validator fixtures:")
     ok = True
@@ -6205,12 +6118,8 @@ def apply_size_budgets(
         return payload[key]
 
     def set_budget(payload: dict[str, Any], kind: str) -> dict[str, int | bool]:
-        effective_raw_limit = (
-            cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
-        )
-        effective_gzip_limit = (
-            cloze_gzip_limit if kind == "cloze" and cloze_gzip_limit is not None else gzip_limit
-        )
+        effective_raw_limit = cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
+        effective_gzip_limit = cloze_gzip_limit if kind == "cloze" and cloze_gzip_limit is not None else gzip_limit
         budget = _size_budget(payload, effective_raw_limit, effective_gzip_limit)
         payload["sizeBudget"] = budget
         return budget
@@ -6261,9 +6170,7 @@ def apply_size_budgets(
         counts["lexemes"] = lexeme_count
         counts["cloze"] = len(cloze_items)
         counts["clozeEligibleLexemes"] = len(cloze_by_lemma)
-        counts["clozeCoverage"] = round(
-            len(cloze_by_lemma) / lexeme_count, 4
-        ) if lexeme_count else 0
+        counts["clozeCoverage"] = round(len(cloze_by_lemma) / lexeme_count, 4) if lexeme_count else 0
         mode_counts = counts.setdefault("modeCounts", {})
         mode_coverage = counts.setdefault("modeCoverage", {})
         if not isinstance(mode_counts, dict) or not isinstance(mode_coverage, dict):
@@ -6276,18 +6183,14 @@ def apply_size_budgets(
             mode_item_lemma_ids = {
                 _clean_text(item.get("lemmaId"))
                 for item in mode_items
-                if isinstance(item, dict)
-                and _clean_text(item.get("lemmaId"))
+                if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
             }
-            mode_coverage[mode] = round(
-                len(mode_item_lemma_ids) / lexeme_count, 4
-            ) if lexeme_count else 0
+            mode_coverage[mode] = round(len(mode_item_lemma_ids) / lexeme_count, 4) if lexeme_count else 0
 
     def refresh_all_metadata() -> None:
         """Rebuild mode links from each level's post-trim mode payload."""
         mode_lemma_ids_by_level: dict[str, dict[str, set[str]]] = {
-            level: {mode: set() for mode in DRILL_MODES}
-            for level in shards
+            level: {mode: set() for mode in DRILL_MODES} for level in shards
         }
         for level, level_shards in shards.items():
             level_lemma_ids = {
@@ -6358,11 +6261,7 @@ def apply_size_budgets(
         representatives = [rows[0] for rows in groups.values()]
         representatives.sort(key=lambda row: (item_size(row[1]), row[0]))
         representative_indexes = {index for index, _item in representatives}
-        extras = [
-            (index, item)
-            for index, item in enumerate(original)
-            if index not in representative_indexes
-        ]
+        extras = [(index, item) for index, item in enumerate(original) if index not in representative_indexes]
         return [*representatives, *extras]
 
     def trim_surface(
@@ -6420,8 +6319,10 @@ def apply_size_budgets(
             ):
                 return 0
             # Priority 1: cloze or other drill modes anywhere across the deck
-            if (lemma_id and lemma_id in deck_drill_mode_lemma_ids) or item.get("clozeIds") or any(
-                m in modes for m in DRILL_MODES
+            if (
+                (lemma_id and lemma_id in deck_drill_mode_lemma_ids)
+                or item.get("clozeIds")
+                or any(m in modes for m in DRILL_MODES)
             ):
                 return 1
             # Priority 2: plain lexemes
@@ -6452,11 +6353,16 @@ def apply_size_budgets(
 
         def surface_fits(selected: list[Any]) -> bool:
             apply_selection(selected)
-            return all(
-                set_budget(level_shards[kind], kind)["ok"]
-                for kind in oversized_surface
-                if kind in level_shards
-            )
+            for kind in oversized_surface:
+                if kind in level_shards:
+                    b = set_budget(level_shards[kind], kind)
+                    if not (
+                        b["ok"]
+                        and int(b["gzipBytes"]) <= int(b["gzipLimitBytes"]) - 128
+                        and int(b["rawBytes"]) <= int(b["rawLimitBytes"]) - 512
+                    ):
+                        return False
+            return True
 
         low = 0
         high = len(candidates)
@@ -6494,9 +6400,7 @@ def apply_size_budgets(
 
         def mode_fits(candidate: list[Any]) -> bool:
             items[:] = candidate
-            effective_raw_limit = (
-                cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
-            )
+            effective_raw_limit = cloze_raw_limit if kind == "cloze" and cloze_raw_limit is not None else raw_limit
             # Most greedy tail candidates already exceed the raw-byte cap.
             # Reject them before compression; final retained shards still get
             # their complete raw/gzip measurements through set_budget below.
@@ -6529,12 +6433,8 @@ def apply_size_budgets(
         kept = len(selected)
         if kept == len(original):
             return False
-        original_lemma_count = len(
-            {item_lemma_id(item, index) for index, item in enumerate(original)}
-        )
-        selected_lemma_count = len(
-            {item_lemma_id(item, index) for index, item in enumerate(selected)}
-        )
+        original_lemma_count = len({item_lemma_id(item, index) for index, item in enumerate(original)})
+        selected_lemma_count = len({item_lemma_id(item, index) for index, item in enumerate(selected)})
         print(
             f"WARN: {payload['schema']}.{level} exceeds size budget; "
             f"trimmed {kind} items {len(original)} -> {kept}; "
@@ -6639,8 +6539,7 @@ def apply_size_budgets(
                     items[:] = [
                         item
                         for item in items
-                        if isinstance(item, dict)
-                        and _clean_text(item.get("lemmaId")) not in all_dropped_lexemes
+                        if isinstance(item, dict) and _clean_text(item.get("lemmaId")) not in all_dropped_lexemes
                     ]
                 if len(items) != before:
                     any_cross_level_pruned = True
@@ -6685,12 +6584,33 @@ Exit codes: 0 success; nonzero on invalid data, validation failures, or CLI erro
 Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
 """,
     )
-    parser.add_argument("--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Hydrated Atlas SQLite input (default: data/atlas.db).")
-    parser.add_argument("--manifest", type=Path, help="Use an Atlas JSON manifest instead of --atlas-db (default: none).")
-    parser.add_argument("--out-dir", type=Path, default=DEFAULT_OUT_DIR, help="Write shards here (default: site/public/lexicon).")
-    parser.add_argument("--reviewed-allowlist", type=Path, default=DEFAULT_ALLOWLIST, help="Reviewed cloze source JSON (default: site/src/data/lexicon-practice-reviewed-sources.json).")
-    parser.add_argument("--cloze-sources", type=Path, default=DEFAULT_CLOZE_SOURCES, help="Cloze candidate JSON (default: site/src/data/lexicon-practice-cloze-sources.json).")
-    parser.add_argument("--sentence-inventory", type=Path, default=DEFAULT_SENTENCE_INVENTORY, help="Sentence candidate inventory (default: site/src/data/lexicon-sentence-inventory.json).")
+    parser.add_argument(
+        "--atlas-db", type=Path, default=DEFAULT_ATLAS_DB, help="Hydrated Atlas SQLite input (default: data/atlas.db)."
+    )
+    parser.add_argument(
+        "--manifest", type=Path, help="Use an Atlas JSON manifest instead of --atlas-db (default: none)."
+    )
+    parser.add_argument(
+        "--out-dir", type=Path, default=DEFAULT_OUT_DIR, help="Write shards here (default: site/public/lexicon)."
+    )
+    parser.add_argument(
+        "--reviewed-allowlist",
+        type=Path,
+        default=DEFAULT_ALLOWLIST,
+        help="Reviewed cloze source JSON (default: site/src/data/lexicon-practice-reviewed-sources.json).",
+    )
+    parser.add_argument(
+        "--cloze-sources",
+        type=Path,
+        default=DEFAULT_CLOZE_SOURCES,
+        help="Cloze candidate JSON (default: site/src/data/lexicon-practice-cloze-sources.json).",
+    )
+    parser.add_argument(
+        "--sentence-inventory",
+        type=Path,
+        default=DEFAULT_SENTENCE_INVENTORY,
+        help="Sentence candidate inventory (default: site/src/data/lexicon-sentence-inventory.json).",
+    )
     parser.add_argument(
         "--end-dictionary-inventory",
         type=Path,
@@ -6700,11 +6620,36 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
             "overlay when combining acute is present; never fabricates cloze."
         ),
     )
-    parser.add_argument("--heritage-pairs", type=Path, default=DEFAULT_HERITAGE_PAIRS, help="Curated heritage YAML (default: data/lexicon/heritage_pairs.yaml).")
-    parser.add_argument("--paronym-pairs", type=Path, default=DEFAULT_PARONYM_PAIRS, help="Curated paronym YAML (default: data/lexicon/paronym_pairs.yaml).")
-    parser.add_argument("--antonym-pairs", type=Path, default=DEFAULT_ANTONYM_PAIRS, help="Curated antonym YAML (default: data/lexicon/antonym_pairs.yaml).")
-    parser.add_argument("--homonym-pairs", type=Path, default=DEFAULT_HOMONYM_PAIRS, help="Curated homonym YAML (default: data/lexicon/homonym_pairs.yaml).")
-    parser.add_argument("--synonym-verdicts", type=Path, default=DEFAULT_SYNONYM_VERDICTS, help="Reviewed synonym verdict YAML (default: data/lexicon/synonym_pair_verdicts.yaml).")
+    parser.add_argument(
+        "--heritage-pairs",
+        type=Path,
+        default=DEFAULT_HERITAGE_PAIRS,
+        help="Curated heritage YAML (default: data/lexicon/heritage_pairs.yaml).",
+    )
+    parser.add_argument(
+        "--paronym-pairs",
+        type=Path,
+        default=DEFAULT_PARONYM_PAIRS,
+        help="Curated paronym YAML (default: data/lexicon/paronym_pairs.yaml).",
+    )
+    parser.add_argument(
+        "--antonym-pairs",
+        type=Path,
+        default=DEFAULT_ANTONYM_PAIRS,
+        help="Curated antonym YAML (default: data/lexicon/antonym_pairs.yaml).",
+    )
+    parser.add_argument(
+        "--homonym-pairs",
+        type=Path,
+        default=DEFAULT_HOMONYM_PAIRS,
+        help="Curated homonym YAML (default: data/lexicon/homonym_pairs.yaml).",
+    )
+    parser.add_argument(
+        "--synonym-verdicts",
+        type=Path,
+        default=DEFAULT_SYNONYM_VERDICTS,
+        help="Reviewed synonym verdict YAML (default: data/lexicon/synonym_pair_verdicts.yaml).",
+    )
     parser.add_argument(
         "--curated-membership",
         type=Path,
@@ -6720,23 +6665,54 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         type=Path,
         help="Private local recognition-only overlay; do not use for public output.",
     )
-    parser.add_argument("--vesum-fixture", type=Path, help="Use a JSON form-to-analysis fixture instead of production VESUM (default: none).")
+    parser.add_argument(
+        "--vesum-fixture",
+        type=Path,
+        help="Use a JSON form-to-analysis fixture instead of production VESUM (default: none).",
+    )
     parser.add_argument(
         "--vesum-db",
         type=Path,
         help="Explicit VESUM database path, including a validated local shadow.",
     )
-    parser.add_argument("--target", type=int, default=DEFAULT_TARGET, help="Maximum selected lexemes before size budgets (default: %(default)s).")
-    parser.add_argument("--raw-limit", type=int, default=DEFAULT_RAW_LIMIT, help="Maximum raw bytes per ordinary shard (default: %(default)s).")
-    parser.add_argument("--gzip-limit", type=int, default=DEFAULT_GZIP_LIMIT, help="Maximum gzip bytes per ordinary shard (default: %(default)s).")
-    parser.add_argument("--cloze-raw-limit", type=int, default=DEFAULT_CLOZE_RAW_LIMIT, help="Maximum raw bytes per cloze shard (default: %(default)s).")
-    parser.add_argument("--cloze-gzip-limit", type=int, default=DEFAULT_CLOZE_GZIP_LIMIT, help="Maximum gzip bytes per cloze shard (default: %(default)s).")
+    parser.add_argument(
+        "--target",
+        type=int,
+        default=DEFAULT_TARGET,
+        help="Maximum selected lexemes before size budgets (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--raw-limit",
+        type=int,
+        default=DEFAULT_RAW_LIMIT,
+        help="Maximum raw bytes per ordinary shard (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--gzip-limit",
+        type=int,
+        default=DEFAULT_GZIP_LIMIT,
+        help="Maximum gzip bytes per ordinary shard (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--cloze-raw-limit",
+        type=int,
+        default=DEFAULT_CLOZE_RAW_LIMIT,
+        help="Maximum raw bytes per cloze shard (default: %(default)s).",
+    )
+    parser.add_argument(
+        "--cloze-gzip-limit",
+        type=int,
+        default=DEFAULT_CLOZE_GZIP_LIMIT,
+        help="Maximum gzip bytes per cloze shard (default: %(default)s).",
+    )
     parser.add_argument(
         "--aspect-residual-report",
         type=Path,
         help="Write named A2-C1 practice verbs that still have no emitted aspect set.",
     )
-    parser.add_argument("--fixture-note", type=str, help="Attach a fixture-only explanatory note to output (default: none).")
+    parser.add_argument(
+        "--fixture-note", type=str, help="Attach a fixture-only explanatory note to output (default: none)."
+    )
     parser.add_argument(
         "--seed-selection",
         choices=("priority", "representative"),
@@ -6766,10 +6742,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
     entries = read_manifest(args.manifest) if args.manifest else read_atlas_db(args.atlas_db)
     if args.curated_membership:
         entries, membership_report = apply_membership(entries, read_membership(args.curated_membership))
-        print(
-            "curated membership "
-            f"members={membership_report['members']} resolved={membership_report['resolved']}"
-        )
+        print(f"curated membership members={membership_report['members']} resolved={membership_report['resolved']}")
     if args.practice_seed and args.local_practice_seed:
         parser.error("--practice-seed and --local-practice-seed are mutually exclusive")
     if args.practice_seed:
@@ -6803,9 +6776,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
             print("ERROR: synonym verdicts required for --nominate-a2", file=sys.stderr)
             return 1
         verifier = (
-            JsonVesumVerifier.from_path(args.vesum_fixture)
-            if args.vesum_fixture
-            else RealVesumVerifier(args.vesum_db)
+            JsonVesumVerifier.from_path(args.vesum_fixture) if args.vesum_fixture else RealVesumVerifier(args.vesum_db)
         )
         _lexemes_by_entry, all_lexemes, by_plain_lemma, _lexemes_by_id = _select_practice_lexemes(
             entries,
@@ -6817,9 +6788,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
         return 0
 
     verifier: VesumVerifier = (
-        JsonVesumVerifier.from_path(args.vesum_fixture)
-        if args.vesum_fixture
-        else RealVesumVerifier(args.vesum_db)
+        JsonVesumVerifier.from_path(args.vesum_fixture) if args.vesum_fixture else RealVesumVerifier(args.vesum_db)
     )
     config = BuildConfig(
         target=args.target,
@@ -6904,9 +6873,7 @@ Related: docs/practice/IMPERATIVE-PRACTICE-SPEC.md; issue #8158.
             for item in level_shards.get("lexemes", {}).get("items", [])
             if isinstance(item, dict) and _clean_text(item.get("lemmaId"))
         }
-        aspect_residuals = [
-            residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids
-        ]
+        aspect_residuals = [residual for residual in aspect_residuals if residual["lemmaId"] in emitted_lemma_ids]
         write_aspect_residual_report(args.aspect_residual_report, aspect_residuals)
         print(
             "aspect residuals "

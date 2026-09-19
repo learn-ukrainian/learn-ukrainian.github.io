@@ -4,7 +4,10 @@ import json
 from pathlib import Path
 
 from scripts.audit.practice_quality_gate import (
+    VOLUME_THRESHOLDS,
+    audit_card_ambiguity,
     audit_error_correction_deck,
+    audit_practice_shards,
     audit_sentence_inventory,
     audit_teacher_cloze_deck,
     run_all_practice_audits,
@@ -76,7 +79,6 @@ def test_audit_teacher_cloze_detects_duplicate_options(tmp_path: Path):
 
 
 def test_audit_error_correction_validates_contract(tmp_path: Path):
-    # Valid drill
     valid_deck = {
         "drills": [
             {
@@ -171,8 +173,232 @@ def test_audit_error_correction_vesum_attestation(tmp_path: Path, monkeypatch):
     )
 
 
+def test_audit_practice_shards_volume_thresholds(tmp_path: Path):
+    """Verify that thin-mode volume thresholds (paronym>=250, homonym>=150, heritage>=250) are enforced."""
+    # Under-threshold paronym shard (only 2 items)
+    paronym_data = {
+        "paronym": [
+            {
+                "paronymId": f"par_{i}",
+                "prompt": "Сьогодні він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Бігти vs бігати.",
+            }
+            for i in range(2)
+        ]
+    }
+    shard_file = tmp_path / "practice-paronym.A1.json"
+    shard_file.write_text(json.dumps(paronym_data, ensure_ascii=False), encoding="utf-8")
+
+    counts, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=True, verify_vesum=False, modes=["paronym"]
+    )
+    assert counts["paronym"] == 2
+    assert any(v["type"] == "VOLUME_BELOW_THRESHOLD" and v["item"] == "paronym" for v in violations)
+
+
+def test_audit_practice_shards_blank_syntax(tmp_path: Path):
+    """Verify that fill-in blank modes must contain exactly 1 blank (___)."""
+    shard_data = {
+        "paronym": [
+            {
+                "paronymId": "p_bad_no_blank",
+                "prompt": "Він бігає у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Різниця значень.",
+            },
+            {
+                "paronymId": "p_bad_two_blanks",
+                "prompt": "Він ___ у парку і ___ на стадіоні.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Різниця значень.",
+            },
+            {
+                "paronymId": "p_good",
+                "prompt": "Він ___ у парку щоранку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Різниця значень.",
+            },
+        ]
+    }
+    shard_file = tmp_path / "practice-paronym.A1.json"
+    shard_file.write_text(json.dumps(shard_data, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    bad_items = [v["item"] for v in violations if v["type"] == "INVALID_BLANK_COUNT"]
+    assert any("p_bad_no_blank" in item for item in bad_items)
+    assert any("p_bad_two_blanks" in item for item in bad_items)
+    assert not any("p_good" in item for item in bad_items)
+
+
+def test_audit_practice_shards_options_and_homonym_rule(tmp_path: Path):
+    """Verify option count >= 2, no duplicates (except homonym mode where forms are homonymous)."""
+    # Paronym with duplicate options -> violation
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_dup",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "бігає"}],
+                "distinction_gloss_uk": "Різниця значень.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    # Homonym with homonymous options -> allowed
+    hom_data = {
+        "homonym": [
+            {
+                "homonymId": "h_ok",
+                "prompt": "Старенька ___ спекла пиріг.",
+                "answer": "баба",
+                "options": [{"label": "баба"}, {"label": "баба"}],
+                "distinction_gloss_uk": "Омоніми баба.",
+            }
+        ]
+    }
+    (tmp_path / "practice-homonym.A1.json").write_text(json.dumps(hom_data, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym", "homonym"]
+    )
+    assert any(v["type"] == "DUPLICATE_OPTIONS" and "p_dup" in v["item"] for v in violations)
+    assert not any("h_ok" in v["item"] for v in violations)
+
+
+def test_audit_practice_shards_target_in_options(tmp_path: Path):
+    """Verify target answer must be present in options list."""
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_missing_ans",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "гуляє"}, {"label": "сидить"}],
+                "distinction_gloss_uk": "Різниця значень.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    assert any(v["type"] == "ANSWER_NOT_IN_OPTIONS" and "p_missing_ans" in v["item"] for v in violations)
+
+
+def test_audit_practice_shards_metadata_required(tmp_path: Path):
+    """Verify that pedagogical explanation metadata is required."""
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_no_meta",
+                "prompt": "Він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path, check_volume=False, verify_vesum=False, modes=["paronym"]
+    )
+    assert any(v["type"] == "MISSING_EXPLANATION" and "p_no_meta" in v["item"] for v in violations)
+
+
+def test_audit_practice_shards_vesum_attestation(tmp_path: Path, monkeypatch):
+    """Verify that target answers not attested in VESUM trigger VESUM_UNATTESTED."""
+    from scripts.audit import practice_quality_gate
+
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_unattested",
+                "prompt": "Він ___ у парку.",
+                "answer": "неіснуючеслово",
+                "options": [{"label": "неіснуючеслово"}, {"label": "біжить"}],
+                "distinction_gloss_uk": "Пояснення.",
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    def mock_verify(word: str, db_path=None):
+        return False
+
+    monkeypatch.setattr(practice_quality_gate, "verify_word", mock_verify)
+    fake_db = tmp_path / "mock_vesum.db"
+    fake_db.touch()
+
+    _, violations = audit_practice_shards(
+        shards_dir=tmp_path,
+        vesum_db=fake_db,
+        check_volume=False,
+        verify_vesum=True,
+        modes=["paronym"],
+    )
+    assert any(v["type"] == "VESUM_UNATTESTED" and "p_unattested" in v["item"] for v in violations)
+
+
+def test_audit_card_ambiguity_mocked(tmp_path: Path):
+    """Verify audit_card_ambiguity with mock TypeSafe System One responses."""
+    par_data = {
+        "paronym": [
+            {
+                "paronymId": "p_test",
+                "prompt": "Вранці він ___ у парку.",
+                "answer": "бігає",
+                "options": [{"label": "бігає"}, {"label": "біжить"}],
+            }
+        ]
+    }
+    (tmp_path / "practice-paronym.A1.json").write_text(json.dumps(par_data, ensure_ascii=False), encoding="utf-8")
+
+    mock_resp = {
+        "model": "mock-jev",
+        "answers": {
+            "distractor_plausibility": {"score": 1.8, "confidence": 0.95},
+            "is_unambiguous": {"noul": 0.92},
+            "anti_calque_yield": {"noul": 0.10},
+            "card_quality": {"choice": "pass", "confidence": 0.95},
+        },
+    }
+
+    verdicts, violations = audit_card_ambiguity(
+        shards_dir=tmp_path,
+        sample_size=1,
+        mock_response=mock_resp,
+        strict_ambiguity=True,
+    )
+    assert len(verdicts) == 1
+    assert verdicts[0]["verdict"] == "pass"
+    assert len(violations) == 0
+
+
 def test_production_practice_quality_gate_passes():
     """Verify that current repository practice datasets pass with 0 violations."""
     results = run_all_practice_audits()
     total_violations = sum(len(v) for v in results.values())
     assert total_violations == 0, f"Practice Quality Gate failed with violations: {results}"
+
+
+def test_production_practice_shards_all_modes_gate_passes():
+    """Verify that all practice shards across all modes satisfy volume thresholds and linguistic gates."""
+    results = run_all_practice_audits(all_modes=True, verify_vesum=True)
+    total_violations = sum(len(v) for v in results.values())
+    assert total_violations == 0, f"Practice Shards Quality Gate failed with violations: {results}"
+
+    # Assert volume thresholds
+    assert results.shard_counts.get("paronym", 0) >= VOLUME_THRESHOLDS["paronym"]
+    assert results.shard_counts.get("homonym", 0) >= VOLUME_THRESHOLDS["homonym"]
+    assert results.shard_counts.get("heritage", 0) >= VOLUME_THRESHOLDS["heritage"]
