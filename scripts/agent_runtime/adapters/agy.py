@@ -16,7 +16,10 @@ Known behavioral facts as of agy 1.0.0 (verified locally 2026-05-20):
   ``mode="danger"`` for headless dispatch (mirrors the codex protection).
 - Print-mode stdout is the final answer only. Tool-call telemetry is stored
   in Antigravity's per-conversation JSONL transcript, located via a unique
-  ``--log-file`` path for each invocation.
+  ``--log-file`` path for each invocation (fallback: the recent brain
+  conversation whose ``USER_INPUT`` opens with this invocation's prompt).
+  Tool results are ``type: GENERIC`` events (agy 2026-09) or legacy
+  ``MCP_TOOL`` events; both shapes are paired with planner intents.
 - Per-invocation model is ``--model "<Display Name>"`` where the display name
   is one of the strings printed by ``agy models`` (e.g. ``Gemini 3.1 Pro
   (High)``). The runtime slug (``gemini-3.1-pro-high``) and the display string
@@ -55,6 +58,7 @@ import os
 import re
 import shutil
 import tempfile
+import time
 import urllib.parse
 import uuid
 from collections.abc import Mapping
@@ -79,7 +83,17 @@ _RATE_LIMIT_PATTERNS = (
 _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 _AGY_LOG_ENV = "AGY_RUNTIME_LOG_FILE"
 _AGY_APP_DATA_ENV = "AGY_APP_DATA_DIR"
-_AGY_CONVERSATION_RE = re.compile(r"\b(?:conversation=|Created conversation\s+)(?P<id>[0-9a-fA-F-]{36})\b")
+_AGY_UUID = r"[0-9a-fA-F]{8}(?:-[0-9a-fA-F]{4}){3}-[0-9a-fA-F]{12}"
+_AGY_CONVERSATION_RE = re.compile(
+    r"(?:\bconversation=|\bcascade_id:|\b(?:Created|found|to) conversation\s+"
+    r"|\bconversation update stream for\s+)(?P<id>" + _AGY_UUID + r")\b"
+)
+# agy 2026-09 writes every tool result (MCP or builtin) as ``type: GENERIC``;
+# older builds used the dedicated ``MCP_TOOL`` type.
+_LEGACY_MCP_RESULT_TYPE = "MCP_TOOL"
+_GENERIC_RESULT_TYPE = "GENERIC"
+_PROMPT_MATCH_CHARS = 200
+_BRAIN_FALLBACK_MAX_AGE_S = 6 * 60 * 60
 _STDOUT_MARKER_RE = re.compile(r"^\s*●\s+(?P<tool>mcp_sources_[A-Za-z0-9_]+)\((?P<args>.*)\)\s*$")
 _STDOUT_RESULT_PREFIX = "⎿"
 _SAVED_OUTPUT_POINTER_RE = re.compile(
@@ -499,6 +513,8 @@ def _parse_transcript_tool_calls(plan: InvocationPlan | None) -> list[dict[str, 
         return []
 
     has_step_index = any(_event_step_index(event) is not None for event in events)
+    if not any(event.get("type") == _LEGACY_MCP_RESULT_TYPE for event in events):
+        return _pair_transcript_generic_results(events, transcript_path=transcript_path)
     if has_step_index:
         return _pair_transcript_by_step_index(events, transcript_path=transcript_path)
     return _pair_transcript_fifo(events, transcript_path=transcript_path)
@@ -665,14 +681,56 @@ def _pair_transcript_by_step_index(
     return calls
 
 
+def _pair_transcript_generic_results(
+    events: list[dict[str, Any]],
+    *,
+    transcript_path: Path,
+) -> list[dict[str, Any]]:
+    """Pair planner intents with ``GENERIC`` results (agy 2026-09 transcript shape).
+
+    Current agy emits one ``GENERIC`` event per executed tool — MCP and builtin
+    (``view_file``, ``run_command``…) alike — right after the planner step that
+    requested it. Every planner tool call therefore holds a FIFO slot, and only
+    slots that are ``sources`` MCP calls become telemetry; a builtin's result must
+    never be credited to an MCP intent. Matching on ``MCP_TOOL`` alone reported
+    zero calls for writers that did ground (#7994).
+    """
+    ordered = sorted(
+        enumerate(events),
+        key=lambda item: (
+            _event_step_index(item[1]) if _event_step_index(item[1]) is not None else 10**9,
+            item[0],
+        ),
+    )
+
+    calls: list[dict[str, Any]] = []
+    pending: list[tuple[str, dict[str, Any] | None]] = []
+    for _, event in ordered:
+        raw_calls = event.get("tool_calls")
+        if isinstance(raw_calls, list):
+            for raw_call in raw_calls:
+                if not isinstance(raw_call, Mapping):
+                    continue
+                key = json.dumps(raw_call, sort_keys=True, ensure_ascii=False, default=str)
+                if any(key == pending_key for pending_key, _ in pending):
+                    continue  # re-emitted still-pending intent
+                extracted = _extract_transcript_tool_calls({**event, "tool_calls": [raw_call]})
+                pending.append((key, extracted[0] if extracted else None))
+        if event.get("type") != _GENERIC_RESULT_TYPE or not pending:
+            continue
+        _, call = pending.pop(0)
+        if call is not None:
+            calls.append(
+                _attach_tool_result(
+                    call,
+                    _mcp_result_text(event, transcript_path=transcript_path),
+                )
+            )
+    return calls
+
+
 def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
     if plan is None:
-        return None
-    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
-    if not log_file:
-        return None
-    conversation_id = _conversation_id_from_log(Path(log_file))
-    if not conversation_id:
         return None
     app_data = Path(
         plan.env_overrides.get(
@@ -680,7 +738,77 @@ def _transcript_path_from_plan(plan: InvocationPlan | None) -> Path | None:
             str(Path.home() / ".gemini" / "antigravity-cli"),
         )
     )
+    log_file = plan.env_overrides.get(_AGY_LOG_ENV)
+    conversation_id = _conversation_id_from_log(Path(log_file)) if log_file else None
+    if conversation_id:
+        transcript = _brain_transcript_path(app_data, conversation_id)
+        if transcript.exists():
+            return transcript
+    fallback = _transcript_path_from_brain(plan, app_data)
+    if fallback is not None:
+        _logger.warning(
+            "agy runtime log did not identify the conversation; matched brain transcript %s by prompt",
+            fallback,
+        )
+        return fallback
+    return _brain_transcript_path(app_data, conversation_id) if conversation_id else None
+
+
+def _brain_transcript_path(app_data: Path, conversation_id: str) -> Path:
     return app_data / "brain" / conversation_id / ".system_generated" / "logs" / "transcript.jsonl"
+
+
+def _prompt_from_plan(plan: InvocationPlan) -> str:
+    cmd = list(plan.cmd)
+    with contextlib.suppress(ValueError, IndexError):
+        return str(cmd[cmd.index("-p") + 1])
+    return ""
+
+
+def _transcript_path_from_brain(plan: InvocationPlan, app_data: Path) -> Path | None:
+    """Find this invocation's transcript when the runtime log names no conversation.
+
+    Only a recent conversation whose first ``USER_INPUT`` opens with this
+    invocation's own prompt qualifies, so an unrelated conversation is never
+    credited. Identical prompts (a retry) resolve to the newest transcript, which
+    is the one that just finished.
+    """
+    prompt_head = _prompt_from_plan(plan).strip()[:_PROMPT_MATCH_CHARS]
+    if not prompt_head:
+        return None
+    needle = "<USER_REQUEST>\n" + prompt_head
+    cutoff = time.time() - _BRAIN_FALLBACK_MAX_AGE_S
+    candidates: list[tuple[float, Path]] = []
+    try:
+        conversation_dirs = list((app_data / "brain").iterdir())
+    except OSError:
+        return None
+    for conversation_dir in conversation_dirs:
+        transcript = _brain_transcript_path(app_data, conversation_dir.name)
+        try:
+            mtime = transcript.stat().st_mtime
+        except OSError:
+            continue
+        if mtime >= cutoff:
+            candidates.append((mtime, transcript))
+    for _, transcript in sorted(candidates, reverse=True):
+        if _transcript_opens_with(transcript, needle):
+            return transcript
+    return None
+
+
+def _transcript_opens_with(transcript: Path, needle: str) -> bool:
+    try:
+        with transcript.open(encoding="utf-8", errors="replace") as handle:
+            for raw_line in handle:
+                if not raw_line.strip():
+                    continue
+                event = json.loads(raw_line)
+                if isinstance(event, dict) and event.get("type") == "USER_INPUT":
+                    return str(event.get("content") or "").lstrip().startswith(needle)
+    except (OSError, json.JSONDecodeError):
+        return False
+    return False
 
 
 def _conversation_id_from_log(log_file: Path) -> str | None:

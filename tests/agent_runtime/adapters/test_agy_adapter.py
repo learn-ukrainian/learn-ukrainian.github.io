@@ -406,3 +406,140 @@ def test_build_invocation_remaps_retired_flash_aliases(tmp_path: Path, tier: str
     plan = _build(tmp_path, model=model)
     assert _model_after_flag(plan) == f"gemini-3.8-flash-{tier}"
     assert f"gemini-3.5-flash-{tier}" not in agy_module._AGY_MODEL_SLUGS
+
+
+# --- #7994: agy 2026-09 transcript shape (tool results are ``type: GENERIC``) ---
+
+GENERIC_CONVERSATION_ID = "00000000-aaaa-4bbb-8ccc-000000000001"
+GENERIC_PROMPT = "# V7 UPGRADE writer — preserve and expand an existing module\n\nMode: upgrade."
+
+
+def _write_generic_transcript(app_data: Path, conversation_id: str = GENERIC_CONVERSATION_ID) -> Path:
+    transcript = agy_module._brain_transcript_path(app_data, conversation_id)
+    transcript.parent.mkdir(parents=True)
+    transcript.write_text(
+        (FIXTURES / "generic_results_transcript.jsonl").read_text(encoding="utf-8"),
+        encoding="utf-8",
+    )
+    return transcript
+
+
+def _parse_generic(tmp_path: Path, *, log_text: str | None, cmd: list[str] | None = None):
+    app_data = tmp_path / "antigravity-cli"
+    log_file = tmp_path / "agy.log"
+    if log_text is not None:
+        log_file.write_text(log_text, encoding="utf-8")
+    _write_generic_transcript(app_data)
+    plan = _plan(tmp_path, log_file=log_file, app_data=app_data)
+    if cmd is not None:
+        plan = InvocationPlan(
+            cmd=cmd,
+            cwd=plan.cwd,
+            stdin_payload="",
+            output_file=None,
+            env_overrides=plan.env_overrides,
+            env_unsets=(),
+            liveness_paths=plan.liveness_paths,
+        )
+    return AgyAdapter().parse_response(
+        stdout="module text", stderr="", returncode=0, output_file=None, plan=plan
+    )
+
+
+def test_parse_response_pairs_generic_results_with_sources_mcp_calls(tmp_path: Path) -> None:
+    # Writer 195757 grounded via search_text/verify_words, yet the adapter wrote
+    # writer_tool_calls.json as [] because results were no longer ``MCP_TOOL``.
+    result = _parse_generic(
+        tmp_path,
+        log_text=f"I0919 server.go:1185] Created conversation {GENERIC_CONVERSATION_ID}\n",
+    )
+
+    assert [call["name"] for call in result.tool_calls] == [
+        "mcp__sources__search_text",
+        "mcp__sources__verify_words",
+        "mcp__sources__query_pravopys",
+        "mcp__sources__search_text",
+    ]
+    assert result.tool_calls[0]["arguments"] == {"query": "м'який знак пом'якшує"}
+    texts = [call["result"][0]["text"] for call in result.tool_calls]
+    assert "М'який знак пом'якшує" in texts[0]
+    assert texts[1].startswith("Batch verification: 3 words")
+    assert "Tool call failed: query_pravopys" in texts[2]
+    assert "Апостроф пишемо після губних" in texts[3]
+    # Builtin (view_file / run_command) results must never be credited to MCP calls.
+    assert not any("BUILTIN" in text for text in texts)
+
+
+def test_generic_transcript_satisfies_tools_writer_runtime_gate(tmp_path: Path) -> None:
+    result = _parse_generic(
+        tmp_path,
+        log_text=f"I0919 session.go:177] Print mode: conversation={GENERIC_CONVERSATION_ID}, sending message\n",
+    )
+    events: list[tuple[str, dict[str, object]]] = []
+
+    summary = linear_pipeline.emit_writer_response_telemetry(
+        "module text",
+        writer="agy-tools",
+        module="special-signs",
+        sections=[],
+        tool_calls=result.tool_calls,
+        event_sink=lambda event, **fields: events.append((event, fields)),
+    )
+
+    assert summary["tool_calls_total"] >= 1
+    assert summary["verify_words_calls"] == 1
+    tools = [fields["tool"] for event, fields in events if event == "writer_tool_call"]
+    assert "search_text" in tools
+    linear_pipeline._enforce_tools_writer_runtime_gate(
+        writer="agy-tools", module="special-signs", phase_writer_summary=summary
+    )
+
+
+@pytest.mark.parametrize(
+    "line",
+    [
+        "I0919 server.go:3133] GetConversationDetail: found conversation {id} (active=true)",
+        "I0919 conversation_manager.go:654] Forwarding user message to conversation {id} (items=1, media=0)",
+        "I0919 server.go:1194] Starting conversation update stream for {id}",
+        "I0919 log.go:1] map[blocking:false cascade_id:{id} cascade_send_latency_ms:1]",
+    ],
+)
+def test_conversation_id_recovered_from_alternate_log_phrases(tmp_path: Path, line: str) -> None:
+    log_file = tmp_path / "agy.log"
+    log_file.write_text(
+        "I0919 log.go:1] trajectory_id:f5b120e3-eb45-4ea3-81a4-d42f55efd849\n"
+        + line.format(id=GENERIC_CONVERSATION_ID)
+        + "\n",
+        encoding="utf-8",
+    )
+    assert agy_module._conversation_id_from_log(log_file) == GENERIC_CONVERSATION_ID
+
+
+@pytest.mark.parametrize("log_text", [None, "I0919 no conversation id in this log\n"])
+def test_transcript_located_by_prompt_when_log_names_no_conversation(
+    tmp_path: Path, log_text: str | None
+) -> None:
+    result = _parse_generic(tmp_path, log_text=log_text, cmd=["agy", "-p", GENERIC_PROMPT])
+    assert [call["name"] for call in result.tool_calls].count("mcp__sources__search_text") == 2
+
+
+def test_prompt_fallback_never_credits_unrelated_conversation(tmp_path: Path) -> None:
+    result = _parse_generic(
+        tmp_path, log_text=None, cmd=["agy", "-p", "Review this pull request for bugs."]
+    )
+    assert result.tool_calls == []
+
+
+def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> None:
+    events = [
+        _planner_intent("query_wikipedia", "Колядки", step_index=1),
+        _planner_intent("query_wikipedia", "Колядки", step_index=2),  # re-emit, still pending
+        {"step_index": 3, "type": "GENERIC", "content": "out-1"},
+        _planner_intent("query_wikipedia", "Колядки", step_index=4),  # genuine repeat
+        {"step_index": 5, "type": "GENERIC", "content": "out-2"},
+        {"step_index": 6, "type": "GENERIC", "content": "not a tool result"},
+    ]
+    calls = agy_module._pair_transcript_generic_results(
+        events, transcript_path=tmp_path / "transcript.jsonl"
+    )
+    assert [call["result"][0]["text"] for call in calls] == ["out-1", "out-2"]
