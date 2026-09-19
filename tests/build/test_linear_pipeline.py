@@ -641,6 +641,94 @@ Plain prose without any code fences.
     assert "Plain prose" in artifacts["module.md"]
 
 
+_DUPLICATE_FENCE_MODULE_BLOCK = """```markdown file=module.md
+# Мій ранок
+
+Plain prose without any code fences.
+```
+"""
+
+_DUPLICATE_FENCE_STRUCTURED_BLOCKS = """
+```json file=activities.yaml
+[{"id": "act-1", "type": "fill-in", "title": "Додайте -ся"}]
+```
+
+```json file=vocabulary.yaml
+[{"lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "test."}]
+```
+
+```json file=resources.yaml
+[{"title": "Караман Grade 10, p.176", "role": "textbook", "notes": "test."}]
+```
+"""
+
+
+def test_parse_writer_output_ignores_identical_duplicate_module_fence() -> None:
+    """A byte-identical repeat of an artifact fence is ignored (#8236).
+
+    Gemini finished all four artifacts for a1/special-signs lesson 2, then
+    dumped `module.md` again with an identical body. The repeat carries no new
+    information and must not kill the module.
+    """
+    baseline = linear_pipeline.parse_writer_output_strict_json(
+        _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS
+    )
+    output = _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS + "\n" + _DUPLICATE_FENCE_MODULE_BLOCK
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(output)
+
+    assert tuple(artifacts) == linear_pipeline.WRITER_ARTIFACTS
+    assert artifacts == baseline
+
+
+def test_parse_writer_output_ignores_identical_duplicate_json_fence() -> None:
+    duplicate = """
+```json file=vocabulary.yaml
+[{"lemma": "ранок", "translation": "morning", "pos": "noun", "usage": "test."}]
+```
+"""
+    baseline = linear_pipeline.parse_writer_output_strict_json(
+        _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS
+    )
+
+    artifacts = linear_pipeline.parse_writer_output_strict_json(
+        _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS + duplicate
+    )
+
+    assert artifacts == baseline
+
+
+def test_parse_writer_output_rejects_differing_duplicate_module_fence() -> None:
+    """A repeated fence with a DIFFERENT body stays a hard failure (#8236).
+
+    Two different copies are ambiguous; the parser must never silently pick
+    the first or the last one.
+    """
+    differing = """
+```markdown file=module.md
+# Мій ранок
+
+Different prose in the second copy.
+```
+"""
+    output = _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS + differing
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"duplicate artifact block: module\.md"):
+        linear_pipeline.parse_writer_output_strict_json(output)
+
+
+def test_parse_writer_output_rejects_differing_duplicate_json_fence() -> None:
+    differing = """
+```json file=vocabulary.yaml
+[{"lemma": "вечір", "translation": "evening", "pos": "noun", "usage": "test."}]
+```
+"""
+    output = _DUPLICATE_FENCE_MODULE_BLOCK + _DUPLICATE_FENCE_STRUCTURED_BLOCKS + differing
+
+    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"duplicate artifact block: vocabulary\.yaml"):
+        linear_pipeline.parse_writer_output_strict_json(output)
+
+
 def test_parse_writer_output_rejects_yaml_block() -> None:
     output = """```markdown file=module.md
 # Мій ранок
