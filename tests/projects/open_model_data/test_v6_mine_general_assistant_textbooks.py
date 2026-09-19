@@ -55,10 +55,13 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     generate_sft_dataset,
     get_vesum_cursor,
     get_vesum_lemmas,
+    has_unresolved_anaphora,
+    is_concept_in_citation_form,
     is_definitional_for_concept,
     is_snippet_grounded_in_concept,
     is_vesum_attested,
     is_vesum_pronoun,
+    lemmatize_noun_phrase,
     load_textbook_chunks,
     sanitize_ip_addresses,
     synthesize_eval_task,
@@ -72,6 +75,7 @@ from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import
     verify_snippet_concept_grounding,
     verify_terms_present_in_snippet,
     verify_zero_dangling_starters,
+    verify_zero_inflected_concepts,
     verify_zero_train_eval_leakage,
 )
 
@@ -713,6 +717,7 @@ def test_dynamic_verification_functions_pass():
         assert verify_snippet_concept_grounding(eval_dir, sft_dir) is True
         assert verify_terms_present_in_snippet(eval_dir, sft_dir) is True
         assert verify_zero_dangling_starters(eval_dir, sft_dir) is True
+        assert verify_zero_inflected_concepts(eval_dir, sft_dir) is True
         assert verify_eval_no_fake_algorithm_claims(eval_dir) is True
 
 
@@ -856,3 +861,62 @@ def test_r8_mojibake_rejection_and_strict_concept_grounding():
 
     s_shkola = "Школа — це не лише будівля для навчання, а спільнота, у якій щодня народжуються ідеї."
     assert is_snippet_grounded_in_concept(s_shkola, "Школа", cur_ves=cur) is True
+
+
+def test_r9_fable_findings_elimination():
+    """Verify systematic elimination of all 4 defect classes identified in Round 8 CF review."""
+    cur = get_vesum_cursor()
+
+    # 1. Defect 1: Inflected Instrumental Concepts vs Citation Form
+    assert is_concept_in_citation_form("Сонячною радіацією", cur) is False
+    assert is_concept_in_citation_form("Механічним рухом", cur) is False
+    assert is_concept_in_citation_form("Силою тяжіння", cur) is False
+    assert is_concept_in_citation_form("Клітиною", cur) is False
+    assert is_concept_in_citation_form("Сонячна радіація", cur) is True
+    assert is_concept_in_citation_form("Механічний рух", cur) is True
+    assert is_concept_in_citation_form("Сила тяжіння", cur) is True
+    assert is_concept_in_citation_form("Клітина", cur) is True
+
+    assert lemmatize_noun_phrase("сонячною радіацією", cur) == "Сонячна радіація"
+    assert lemmatize_noun_phrase("механічним рухом", cur) == "Механічний рух"
+    assert lemmatize_noun_phrase("питомою теплотою плавлення", cur) == "Питома теплота плавлення"
+    assert lemmatize_noun_phrase("силою тяжіння", cur) == "Сила тяжіння"
+    assert clean_and_validate_candidate("Сонячною радіацією", cur) == "Сонячна радіація"
+    assert clean_and_validate_candidate("Механічним рухом", cur) == "Механічний рух"
+
+    # 2. Defect 2: Dangling Mid-Sentence Anaphora and Deictic Openers
+    assert has_unresolved_anaphora("Нині в цій непростій справі допомагає комп'ютер.") is True
+    assert has_unresolved_anaphora("Сукупність цієї енергії називають сонячною радіацією.") is True
+    assert has_unresolved_anaphora("Таку зміну називають механічним рухом.") is True
+    assert has_unresolved_anaphora("Цей процес називають дифузією.") is True
+    assert has_unresolved_anaphora("Сьогодні у школі ми вивчаємо фізику.") is True
+
+    s_clean_anim = "Покадрова анімація — спосіб створення анімації, за якого художник малює кожен кадр майбутнього фільму."
+    assert has_unresolved_anaphora(s_clean_anim) is False
+    s_clean_teplo = "Питома теплота плавлення — фізична величина, що характеризує кристалічну речовину."
+    assert has_unresolved_anaphora(s_clean_teplo) is False
+
+    # 3. Defect 3: Definitional Alignment & Defined Subject
+    assert is_definitional_for_concept(s_clean_teplo, "Теплота", cur) is False
+    assert is_definitional_for_concept(s_clean_teplo, "Питома теплота плавлення", cur) is True
+
+    s_nerve = "Нервова тканина. Основні клітини нервової тканини — нейрони — мають численні відростки."
+    assert is_definitional_for_concept(s_nerve, "Клітина", cur) is False
+
+    # 4. Defect 4: Scientific Terminology Quality
+    terms_anim = extract_scientific_terminology_for_snippet(s_clean_anim, "Покадрова анімація", "informatyka", cur)
+    assert "анімація" in terms_anim
+    assert "кадр" in terms_anim
+    assert "фільм" in terms_anim
+    assert "непростий" not in terms_anim
+    assert "справа" not in terms_anim
+    assert "створення" not in terms_anim
+    assert "художник" not in terms_anim
+    assert len(terms_anim) >= 3
+
+    terms_teplo = extract_scientific_terminology_for_snippet(s_clean_teplo, "Питома теплота плавлення", "fizyka", cur)
+    assert "речовина" in terms_teplo or "кристалічний" in terms_teplo
+    assert "фізичний" not in terms_teplo
+    assert "величина" not in terms_teplo
+    assert "питомий" not in terms_teplo
+    assert len(terms_teplo) >= 3
