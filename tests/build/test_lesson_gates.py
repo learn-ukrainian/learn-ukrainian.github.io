@@ -1226,3 +1226,108 @@ def test_alphabet_preservation_does_not_require_original_ec_options(gold):
                 act["items"][0]["options"] = ["сімья", "сім'я́", "сім'йа"]
         path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
     assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == []
+
+
+# ── #7994: EC explanations may grow mid-sentence; phonetic tokens; A1 landing ──
+
+def _rewrite_act4(module, mutate):
+    for path in module.glob("lesson-*/activities.yaml"):
+        data = yaml.safe_load(path.read_text())
+        for act in data.get("inline") or []:
+            if act.get("id") == "act-4":
+                mutate(act["items"][0])
+        path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+
+
+def test_alphabet_preservation_accepts_a_mid_sentence_explanation_gloss(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_archive_originals(module, source, rewrite=True)
+    expanded = ("У слові сім'я́ потрібен апо́строф після губного м перед я. — "
+                "In the word сім'я́ an apostrophe is needed after the labial м before я.")
+    _rewrite_act4(module, lambda item: item.update(explanation=expanded))
+    original = _ARCHIVE_ORIGINALS["act-4"][2]["items"][0]["explanation"]
+    assert not gates.contains(original, expanded, expand_explanations=True)  # not a prefix: a mid-sentence gloss
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == []
+
+    _rewrite_act4(module, lambda item: item.update(error="сімья"))
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == ["act-4"]
+
+
+def test_non_alphabet_preservation_still_compares_error_correction_explanations(gold):
+    module, source, plan = gold
+    _install_archive_originals(module, source, rewrite=False)
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == []
+    _rewrite_act4(module, lambda item: item.update(explanation="У слові сім'я́ потрібен апо́строф після губного."))
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == ["act-4"]
+
+
+@pytest.mark.parametrize("token", ["йа́блуко", "Йу́шка", "мойа́", "л'у́ди", "па́л'ц'і", "п’йат’"])
+def test_phonetic_transcriptions_skip_the_stress_dictionary_in_alphabet_lessons(token):
+    assert gates._is_phonetic_token(token)
+    assert gates.wrong_stress(token, set(), phonetic=True) == []
+    bare = gates.strip_acute(token)
+    assert gates.missing_stress(bare, set(), phonetic=True) == []
+
+
+@pytest.mark.parametrize("word", ["сім'я́", "бур'я́н", "комп’ю́тер", "його́", "я́блуко", "моя́"])
+def test_real_words_are_not_phonetic_tokens(word):
+    assert not gates._is_phonetic_token(word)
+
+
+def test_real_apostrophe_words_are_still_stress_checked():
+    assert gates.wrong_stress("сі́м'я", set(), phonetic=True)  # wrong acute still caught
+    assert gates.wrong_stress("сім'я́", set(), phonetic=True) == []
+    assert "сімя" not in gates.missing_stress("сім'я", set(), phonetic=True)
+    assert gates.missing_stress("сім'я", set(), phonetic=True) == ["сім'я"]
+    # Outside alphabet slugs a transcription is an unstressed unknown word, as before.
+    assert gates.missing_stress("мойа", set()) == ["мойа"]
+
+
+_LANDING = (
+    "Two small signs change how you read: **м'яки́й знак** and **апо́строф**.\n\n"
+    "By the end, you can:\n\n- read **день** and **сім'я́**;\n- choose the sign you hear.\n\n"
+    "Keep the scope small: two signs, a handful of words.\n"
+)
+
+
+def _strip_original_outcomes(source):
+    path = source / "module.md"
+    _head, sep, rest = path.read_text().partition("\n## ")
+    path.write_text("# Title\n\nA short opening paragraph that carries no outcome list at all.\n" + sep + rest)
+
+
+def _landing_blocks(report):
+    return [d for d in report["blocking"] if "landing-overview.md" in d]
+
+
+def test_a1_upgrade_without_a_landing_overview_is_blocked(gold):
+    module, source, plan = gold
+    assert _landing_blocks(gates.run_lesson_gates(module, source, plan)) == []  # the original opening carries the outcomes
+    _strip_original_outcomes(source)
+    blocks = _landing_blocks(gates.run_lesson_gates(module, source, plan))
+    assert len(blocks) == 1 and "missing at the module root" in blocks[0]
+
+
+def test_a1_upgrade_with_a_bilingual_landing_overview_passes_the_landing_check(gold):
+    module, source, plan = gold
+    _strip_original_outcomes(source)
+    (module / "landing-overview.md").write_text(_LANDING)
+    assert _landing_blocks(gates.run_lesson_gates(module, source, plan)) == []
+
+
+@pytest.mark.parametrize(("text", "needle"), [
+    (_LANDING.replace("By the end, you can:", "You will learn:"), "By the end, you can"),
+    ("Two small signs change how you read them. By the end, you can: read and choose the sign you hear.", "bilingual"),
+    ("By the end, you can: **день**.", "unusable"),
+])
+def test_a_present_but_unusable_landing_overview_is_blocked(gold, text, needle):
+    module, source, plan = gold
+    (module / "landing-overview.md").write_text(text)
+    blocks = _landing_blocks(gates.run_lesson_gates(module, source, plan))
+    assert len(blocks) == 1 and needle in blocks[0]
+
+
+def test_landing_overview_is_not_required_above_a1(gold):
+    module, source, plan = gold
+    _strip_original_outcomes(source)
+    assert gates.landing_overview_defects(module, source, {**plan, "level": "a2"}) == []

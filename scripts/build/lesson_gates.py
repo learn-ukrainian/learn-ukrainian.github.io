@@ -20,9 +20,9 @@ from scripts.build.alphabet_modules import (
     is_alphabet_slug,
     is_dropped_original_paragraph,
     is_line_break_activity,
-    legal_original_activity,
     letter_module_floor_is_advisory,
     mentions_line_breaks,
+    preservation_baseline_activity,
 )
 
 MAX_UNVERIFIED_STRESS = 10
@@ -431,6 +431,22 @@ def _skip_stress_token(tok: str) -> bool:
         return True
     bare = strip_acute(core.strip("'’-"))
     return not bare or len(re.findall(r"[аеєиіїоуюяАЕЄИІЇОУЮЯ]", bare)) < 2
+
+
+_IOTATED_SOUND_RE = re.compile(r"й[аеуі]")
+_SOFTNESS_MARK_RE = re.compile(r"'(?![яюєї])")
+
+
+def _is_phonetic_token(tok: str) -> bool:
+    """Sound transcription in an alphabet lesson, not a dictionary word.
+
+    Letter lessons spell я/ю/є/ї by sound (``йа́блуко``, ``мойа́``) and mark
+    softness with ``'`` (``л'у́ди``, ``па́л'ц'і``). Ukrainian spelling writes
+    neither ``й`` + а/е/у/і nor an apostrophe anywhere but before я/ю/є/ї, so a
+    real word (``сім'я́``, ``бур'я́н``, ``його́``) never matches.
+    """
+    core = strip_acute(nfc(tok)).lower().replace("’", "'").strip("_").strip("'-")
+    return bool(_IOTATED_SOUND_RE.search(core) or _SOFTNESS_MARK_RE.search(core))
 
 
 _ERROR_KEYS = frozenset({"error", "errorword", "incorrect", "error_word"})
@@ -870,15 +886,53 @@ def alphabet_line_break_defects(
     return out
 
 
+LANDING_OVERVIEW = "landing-overview.md"
+_LANDING_OUTCOMES_RE = re.compile(r"By the end[^\n]*, you can", re.I)
+
+
+def landing_overview_defects(module_dir: Path, source_dir: Path, plan: dict) -> list[str]:
+    """An A1 upgrade landing needs a bilingual orientation with "By the end, you can".
+
+    The upgrade prompt orders lesson 1 to return ``landing-overview.md`` unless the
+    cleaned original opening already carries the outcome list, which the assembler
+    then reuses. With neither, the landing is a bare lesson list: blocked. A writer
+    file that is present must itself be usable, since the assembler prefers it.
+    """
+    from scripts.build.lesson_assembler import _clean_a1_landing_prose, _plan_level
+
+    if _plan_level(plan) != "a1":
+        return []
+    path = module_dir / LANDING_OVERVIEW
+    if not path.is_file():
+        original = source_dir / "module.md"
+        opening = re.split(r"^## ", original.read_text(encoding="utf-8"), maxsplit=1, flags=re.M)[0] \
+            if original.is_file() else ""
+        if _LANDING_OUTCOMES_RE.search(_clean_a1_landing_prose(opening) or ""):
+            return []
+        return [f"{LANDING_OVERVIEW} missing at the module root: lesson 1 must return it "
+                "(the original opening has no usable \"By the end, you can\")"]
+    body = _clean_a1_landing_prose(path.read_text(encoding="utf-8"))
+    if not body:
+        return [f"{LANDING_OVERVIEW} is unusable (too short, banned learner phrase, or line-break teaching)"]
+    out = []
+    if not _LANDING_OUTCOMES_RE.search(body):
+        out.append(f"{LANDING_OVERVIEW} lacks \"By the end, you can\" outcomes")
+    if not (re.search(rf"[{CYR}]{{2,}}", body) and re.search(r"[A-Za-z]{3,}", body)):
+        out.append(f"{LANDING_OVERVIEW} must be bilingual: English carrier with Ukrainian targets")
+    return out
+
+
 def banned_phrase_defects(text: str, label: str) -> list[str]:
     return [f"{label}: banned learner-facing phrase {p!r}" for p in banned_phrases_in(norm_text(text))]
 
 
-def missing_stress(text: str, allow: set[str]) -> list[str]:
-    """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text."""
+def missing_stress(text: str, allow: set[str], *, phonetic: bool = False) -> list[str]:
+    """Cyrillic tokens (NFC) with >=2 vowels and no combining acute, in learner-facing text.
+
+    ``phonetic`` (alphabet slugs only) skips sound transcriptions."""
     bad = []
     for tok in _stress_tokens(learner_text(text)):
-        if ACUTE in tok or _skip_stress_token(tok):
+        if ACUTE in tok or _skip_stress_token(tok) or (phonetic and _is_phonetic_token(tok)):
             continue
         tok = tok.strip("_").strip("'’-")
         if tok and strip_acute(tok).lower() not in allow:
@@ -897,8 +951,9 @@ def _acute_positions(form: str) -> list[int]:
 
 
 def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset(),
-                 exact_skip: set[str] | frozenset[str] = frozenset()) -> list[str]:
+                 exact_skip: set[str] | frozenset[str] = frozenset(), *, phonetic: bool = False) -> list[str]:
     """Marked forms whose acute is not on a vowel the stress dictionary accepts.
+    ``phonetic`` (alphabet slugs only) skips sound transcriptions.
     Uses the repo oracle (scripts.verification.stress, ULIF-derived); forms the dictionary
     does not know are skipped here (they must be declared in unverified_stress)."""
     try:
@@ -911,7 +966,7 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset(),
         if ACUTE not in tok or tok in seen:
             continue
         seen.add(tok)
-        if _skip_stress_token(tok):
+        if _skip_stress_token(tok) or (phonetic and _is_phonetic_token(tok)):
             continue
         tok = tok.strip("_").strip("'’-")
         bare = strip_acute(tok)
@@ -1157,6 +1212,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 ),
                 unverified_allow,
                 proper,
+                phonetic=alphabet,
             )
             for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
                 if not isinstance(activity, dict):
@@ -1164,22 +1220,24 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
                 blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
                 wrong += wrong_stress(
-                    blob, unverified_allow, proper, exact_skip={nfc(w).lower() for w in errors}
+                    blob, unverified_allow, proper, exact_skip={nfc(w).lower() for w in errors},
+                    phonetic=alphabet,
                 )
         except Exception as exc:
             block(f"lesson {n}: stress oracle unavailable: {type(exc).__name__}")
             wrong = []
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
-        bad = sorted(set(missing_stress(_blank_avoid_cells(lesson_md_clean[n]), allow)
-                         + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow)))
+        bad = sorted(set(missing_stress(_blank_avoid_cells(lesson_md_clean[n]), allow, phonetic=alphabet)
+                         + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow,
+                                          phonetic=alphabet)))
         for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
             if not isinstance(activity, dict):
                 continue
             errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
             local = allow | {strip_acute(w).lower() for w in errors}
             blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
-            bad.extend(missing_stress(blob, local))
+            bad.extend(missing_stress(blob, local, phonetic=alphabet))
         bad = sorted(set(bad))
         if bad:
             block(f"lesson {n}: {len(bad)} multi-syllable words without stress mark (not in unverified_stress): {bad[:20]}")
@@ -1278,8 +1336,9 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(f"{expected_id}: type {a.get('type')} became {act.get('type')}")
         # Compare against what the writer may legally keep: the archive's worded
         # empty-sign chips and [correction, error] options fail the upgrade gates,
-        # so error-correction options are authored new and not compared.
-        legal = legal_original_activity(a) if alphabet else a
+        # so error-correction options are authored new and not compared; an
+        # error-correction explanation may be expanded mid-sentence.
+        legal = preservation_baseline_activity(a) if alphabet else a
         payload = {k: v for k, v in legal.items() if k in LIST_FIELDS}
         if not payload:
             block(f"{expected_id}: original has no list payload to compare (checker config)")
@@ -1408,6 +1467,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         for resource in lesson_res[n]:
             if norm_text(str(resource["title"])) not in visible:
                 block(f"lesson {n}: render lacks resource title")
+    for defect in landing_overview_defects(module_dir, source_dir, plan):
+        block(defect)
     landing = (rendered or {}).get("index", (rendered or {}).get("index.mdx", ""))
     if not landing:
         block("module landing render missing")

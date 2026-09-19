@@ -177,6 +177,8 @@ WRITER_ARTIFACTS = (
     "vocabulary.yaml",
     "resources.yaml",
 )
+# Optional lesson-1 artifact of an A1 upgrade; it lives at the module root, not in the lesson.
+LANDING_OVERVIEW_ARTIFACT = "landing-overview.md"
 _LABEL_LINE_RE = re.compile(
     r"^[\s>#\-*]*(?P<name>" + "|".join(re.escape(name) for name in WRITER_ARTIFACTS) + r")\s*:?\s*$"
 )
@@ -4421,6 +4423,8 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
             if not in_fence:
                 info = fence_match.group("info").strip()
                 info_name = _artifact_name_from_text(info)
+                if info_name is None and lesson_mode and LANDING_OVERVIEW_ARTIFACT in info:
+                    info_name = LANDING_OVERVIEW_ARTIFACT
                 # Detect label-vs-fence-name mismatches. If a preceding label
                 # line said "activities.yaml" but the fence info string says
                 # "file=vocabulary.yaml", silently picking one would land
@@ -4475,7 +4479,7 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
             if fence_name in raw_bodies:
                 if fence_body != raw_bodies[fence_name]:
                     raise LinearPipelineError(f"Writer output contains duplicate artifact block: {fence_name}")
-            elif fence_name == "module.md":
+            elif fence_name in ("module.md", LANDING_OVERVIEW_ARTIFACT):
                 raw_bodies[fence_name] = fence_body
                 artifacts[fence_name] = fence_body + "\n"
             elif fence_name in WRITER_JSON_ARTIFACTS:
@@ -4508,12 +4512,15 @@ def parse_writer_output_strict_json(output: str, *, lesson_mode: bool = False) -
         raise LinearPipelineError(f"Writer output has an unterminated fenced block for {fence_name}")
 
     missing = [name for name in WRITER_ARTIFACTS if name not in artifacts]
-    extra = sorted(set(artifacts) - set(WRITER_ARTIFACTS))
+    extra = sorted(set(artifacts) - set(WRITER_ARTIFACTS) - {LANDING_OVERVIEW_ARTIFACT})
     if missing or extra:
         raise LinearPipelineError(
             f"Writer output must contain exactly {WRITER_ARTIFACTS}. missing={missing} extra={extra}"
         )
-    return {name: artifacts[name] for name in WRITER_ARTIFACTS}
+    parsed = {name: artifacts[name] for name in WRITER_ARTIFACTS}
+    if LANDING_OVERVIEW_ARTIFACT in artifacts:
+        parsed[LANDING_OVERVIEW_ARTIFACT] = artifacts[LANDING_OVERVIEW_ARTIFACT]
+    return parsed
 
 
 def parse_writer_output(output: str, *, lesson_mode: bool = False) -> dict[str, str]:

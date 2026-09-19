@@ -414,3 +414,42 @@ def test_alphabet_dry_run_does_not_clear(upgrade_root, monkeypatch):
     module_dir, seen = _run_upgrade_with_old_edition(upgrade_root, monkeypatch, alphabet=True, dry_run=True)
     assert seen == []
     assert (module_dir / "lesson-1/module.md").read_text(encoding="utf-8") == "old edition"
+
+
+# ── #7994: lesson 1 lands landing-overview.md at the module root ─────────────
+
+_LANDING_FENCE = (
+    "````markdown file=landing-overview.md\n"
+    "Nouns have gender: **стіл**, **кни́га**, **вікно́**.\n\nBy the end, you can:\n\n- name the gender of a noun.\n\n"
+    "Keep the scope small.\n````"
+)
+
+
+def test_lesson_mode_parser_returns_the_optional_landing_overview():
+    parsed = linear_pipeline.parse_writer_output(_gold_response(1) + "\n" + _LANDING_FENCE, lesson_mode=True)
+    assert parsed["landing-overview.md"].startswith("Nouns have gender")
+    assert "landing-overview.md" not in linear_pipeline.parse_writer_output(_gold_response(1), lesson_mode=True)
+    with pytest.raises(linear_pipeline.LinearPipelineError):  # module builds have no landing artifact
+        linear_pipeline.parse_writer_output(_gold_response(1) + "\n" + _LANDING_FENCE)
+
+
+def _no_outcomes_source(tmp_path):
+    source = tmp_path / "a1-v1"
+    source.mkdir()
+    (source / "module.md").write_text("# Title\n\nA short opening paragraph that carries no outcome list at all.\n\n## One\n")
+    return source
+
+
+def test_lesson_one_without_a_landing_fails_before_review(tmp_path):
+    module = tmp_path / "a1"
+    module.mkdir()
+    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"landing-overview\.md missing"):
+        v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, {})
+
+
+def test_lesson_one_landing_is_written_to_the_module_root(tmp_path):
+    module = tmp_path / "a1"
+    module.mkdir()
+    parsed = linear_pipeline.parse_writer_output(_gold_response(1) + "\n" + _LANDING_FENCE, lesson_mode=True)
+    v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
+    assert (module / "landing-overview.md").read_text().startswith("Nouns have gender")

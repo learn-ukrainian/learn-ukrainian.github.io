@@ -270,8 +270,9 @@ def legal_original_activity(activity: Any) -> Any:
     building three distinct chips. Error-correction ``options`` are therefore
     left out: the writer authors them new. The prompt copy and the preservation
     baseline both use this form, so a writer who obeys those gates still
-    preserves the original. ``sentence``, ``error``, ``correction`` and the
-    explanation stay required.
+    preserves the original. ``sentence``, ``error`` and ``correction`` stay
+    required; the baseline (``preservation_baseline_activity``) lets the
+    explanation grow.
     """
     if not isinstance(activity, Mapping) or not isinstance(activity.get("items"), list):
         return activity
@@ -279,6 +280,24 @@ def legal_original_activity(activity: Any) -> Any:
     if activity.get("type") == "error-correction":
         items = [_omit_options(i) for i in items]
     return {**activity, "items": items}
+
+
+def preservation_baseline_activity(activity: Any) -> Any:
+    """``legal_original_activity`` as the preservation gate compares it.
+
+    The writer still sees an error-correction ``explanation`` in the prompt and
+    keeps its teaching, but may expand it mid-sentence (``потрібен апо́строф`` →
+    ``потрібен апо́строф після губного…``), which is no prefix of the original.
+    The baseline therefore holds ``sentence``, ``error`` and ``correction`` only.
+    """
+    legal = legal_original_activity(activity)
+    if not isinstance(legal, Mapping) or legal.get("type") != "error-correction":
+        return legal
+    items = [
+        {k: v for k, v in i.items() if k != "explanation"} if isinstance(i, Mapping) else i
+        for i in legal.get("items") or []
+    ]
+    return {**legal, "items": items}
 
 
 # Letter-module lessons open with ULP dialogues built from recycled A1 words; the

@@ -383,6 +383,18 @@ def test_legal_original_activity_blanks_chips_and_omits_error_correction_options
     assert am.legal_original_activity(sort) == sort
 
 
+def test_preservation_baseline_omits_error_correction_explanations_only():
+    ec = {"id": "act-4", "type": "error-correction", "items": [
+        {"sentence": "Моя́ сімя живе́ у Ки́єві.", "error": "сімя", "correction": "сім'я́",
+         "options": ["сім'я́", "сімя"], "explanation": "У слові сім'я́ потрібен апо́строф."}]}
+    assert am.preservation_baseline_activity(ec)["items"] == [
+        {"sentence": "Моя́ сімя живе́ у Ки́єві.", "error": "сімя", "correction": "сім'я́"}]
+    assert "explanation" in am.legal_original_activity(ec)["items"][0]  # the writer still sees it
+    fill = {"type": "fill-in", "items": [{"sentence": "ден___", "answer": "ь", "options": ["ь", "'"],
+                                          "explanation": "М'який знак."}]}
+    assert am.preservation_baseline_activity(fill) == am.legal_original_activity(fill)
+
+
 def test_upgrade_prompt_originals_match_the_preservation_baseline():
     plan = {"slug": "special-signs"}
     acts = yaml.safe_dump({"inline": [
