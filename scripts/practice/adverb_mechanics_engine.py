@@ -203,8 +203,8 @@ def resolve_comparison_superlative_rule() -> tuple[str, str, str]:
 
 def resolve_anti_calque_rule() -> tuple[str, str, str]:
     cit = "Правопис 2019; Антоненко-Давидович «Як ми говоримо»; СУМ-20"
-    ua = "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'в основному'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'."
-    en = "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *в основному*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
+    ua = "Слід уникати калькованих канцеляризмів та суржику: вживайте 'насамперед / передусім' замість 'в першу чергу'; 'навряд чи' замість 'вряд ли'; 'переважно / здебільшого' замість 'по більшій мірі'; 'принаймні' замість 'по крайній мірі'; 'у крайньому разі' замість 'в крайньому випадку'."
+    en = "Avoid Russian bureaucratic calques and Surzhyk: use 'насамперед' instead of *в першу чергу*; 'навряд чи' instead of *вряд ли*; 'переважно' instead of *по більшій мірі*; 'принаймні' instead of *по крайній мірі*; 'у крайньому разі' instead of *в крайньому випадку*."
     return cit, ua, en
 
 
@@ -1237,10 +1237,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                         explanation_en="'Хтозна-як' cannot be fused; particle хтозна- strictly requires a hyphen per § 41, p. 3, 3).",
                     ),
                     AdverbDistractor(
-                        text="бог знає як",
-                        interference_key=AdverbInterferenceKey.RUSSIANISM_CALQUE,
-                        explanation_ua="В українській мові неозначеність передають префіксальні частки бозна-, хтозна-, казна-; нормативне прислівникове написання — «хтозна-як».",
-                        explanation_en="Ukrainian uses prefixal particles бозна-, хтозна-, казна-; normative adverbial form is 'хтозна-як'.",
+                        text="хтозна-де",
+                        interference_key=AdverbInterferenceKey.INCORRECT_QUESTION_CATEGORY,
+                        explanation_ua="«Хтозна-де» вказує на невідоме місце (де?), тоді як для характеристики способу розв'язання задачі потрібен прислівник способу дії «хтозна-як» (як? — хтозна-як хитро).",
+                        explanation_en="'Хтозна-де' indicates an unknown location (where?), whereas characterizing manner of action requires manner adverb 'хтозна-як' (how? — хтозна-як хитро).",
                     ),
                 ),
                 rule_citation=cit_part,
@@ -1539,10 +1539,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                 correct_answer="спідлоба",
                 distractors=(
                     AdverbDistractor(
-                        text="з-під лоба",
-                        interference_key=AdverbInterferenceKey.HOMOPHONE_NOUN_PREP_CONFUSION,
-                        explanation_ua="Прийменник «з-під» окремо пишеться з іменником (наприклад, визирнути з-під лоба), а цілісний прислівник способу погляду пишеться разом: «спідлоба» per § 41, п. 1.",
-                        explanation_en="Preposition 'з-під' is written separately with nouns; the fused adverb of gaze is 'спідлоба' per § 41, p. 1.",
+                        text="спід-лоба",
+                        interference_key=AdverbInterferenceKey.UNWARRANTED_HYPHEN,
+                        explanation_ua="Прислівник способу погляду «спідлоба» пишеться разом без дефіса per § 41, п. 1.",
+                        explanation_en="Adverb of gaze 'спідлоба' is written together without a hyphen per § 41, p. 1.",
                     ),
                     AdverbDistractor(
                         text="зпід лоба",
@@ -2481,10 +2481,10 @@ def build_canonical_adverb_cards() -> list[AdverbCard]:
                 correct_answer="переважно",
                 distractors=(
                     AdverbDistractor(
-                        text="в основному",
-                        interference_key=AdverbInterferenceKey.RUSSIANISM_CALQUE,
-                        explanation_ua="Канцелярський вираз «в основному» є калькою з російської («в основном»); природні українські слова — «переважно», «здебільшого».",
-                        explanation_en="Bureaucratic phrase 'в основному' is a Russian calque; authentic Ukrainian uses 'переважно', 'здебільшого'.",
+                        text="по-переважно",
+                        interference_key=AdverbInterferenceKey.CORRUPTED_ADVERB_FORM,
+                        explanation_ua="Форма «по-переважно» є штучною та ненормативною; якісно-означальний прислівник вживається без префікса: «переважно» per § 41, п. 1.",
+                        explanation_en="The form 'по-переважно' is artificial and non-normative; the qualitative adverb is used without a prefix: 'переважно' per § 41, p. 1.",
                     ),
                     AdverbDistractor(
                         text="по більшій мірі",

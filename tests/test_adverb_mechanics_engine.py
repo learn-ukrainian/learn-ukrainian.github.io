@@ -311,7 +311,9 @@ def test_anti_calque_adverbials():
 
     c73 = cards_by_id["adverb_card_73"]
     assert c73.correct_answer == "переважно"
-    assert any("в основному" in d.text for d in c73.distractors)
+    assert any("по-переважно" in d.text for d in c73.distractors)
+    assert any("по більшій мірі" in d.text for d in c73.distractors)
+    assert any("главним образом" in d.text for d in c73.distractors)
 
     c74 = cards_by_id["adverb_card_74"]
     assert c74.correct_answer == "принаймні"
@@ -345,6 +347,12 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     distractor_texts_14 = [d.text for d in c14.distractors]
     assert "вперід" in distractor_texts_14
 
+    # Card 33: хтозна-як must not penalize attested phrase 'бог знає як'
+    c33 = cards_by_id["adverb_card_33"]
+    distractor_texts_33 = [d.text for d in c33.distractors]
+    assert "бог знає як" not in distractor_texts_33, "Attested phrase 'бог знає як' must not be marked as error"
+    assert "хтозна-де" in distractor_texts_33
+
     # Card 40: давним-давно must reject morphological corruption 'давнім-давно', not valid 'дуже давно'
     c40 = cards_by_id["adverb_card_40"]
     distractor_texts_40 = [d.text for d in c40.distractors]
@@ -356,6 +364,14 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     distractor_texts_42 = [d.text for d in c42.distractors]
     assert "перший раз" not in distractor_texts_42, "Attested phrase 'перший раз' must not be marked as calque error"
     assert "по-вперше" in distractor_texts_42
+
+    # Card 43: спідлоба must not penalize attested phraseologism 'з-під лоба'
+    c43 = cards_by_id["adverb_card_43"]
+    distractor_texts_43 = [d.text for d in c43.distractors]
+    assert "з-під лоба" not in distractor_texts_43, (
+        "Phraseologism 'з-під лоба' must not be marked as error in gaze context"
+    )
+    assert "спід-лоба" in distractor_texts_43
 
     # Card 45: насторожі must not penalize valid 'на сторожі' in watchman contexts
     c45 = cards_by_id["adverb_card_45"]
@@ -384,6 +400,12 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     assert "найглибше" not in distractor_texts_64, "Superlative 'найглибше' must not be rejected in ambiguous prompt"
     assert "самий глибоко" in distractor_texts_64
     assert "більш глибше" in distractor_texts_64
+
+    # Card 73: переважно must not penalize valid phrase 'в основному'
+    c73 = cards_by_id["adverb_card_73"]
+    distractor_texts_73 = [d.text for d in c73.distractors]
+    assert "в основному" not in distractor_texts_73, "Phrase 'в основному' recorded in СУМ-20 must not be penalized"
+    assert "по-переважно" in distractor_texts_73
 
     # Card 74: принаймні must reject orthographic corruption 'принаймі'
     c74 = cards_by_id["adverb_card_74"]
