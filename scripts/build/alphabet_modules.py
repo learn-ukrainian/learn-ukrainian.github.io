@@ -188,6 +188,57 @@ def filter_line_break_activities(activities: Any) -> Any:
     return activities
 
 
+# A whole choice that only words the empty sign: ``без знака``, ``Немає знака``,
+# ``no sign``, or a bilingual pair of them. Prose that merely contains the phrase
+# never matches; the three-way contrast is still taught in words.
+_NO_SIGN = r"(?:(?:без|немає)\s+знака|no\s+sign)"
+_EMPTY_SIGN_CHOICE_RE = re.compile(rf"\s*{_NO_SIGN}(?:\s*[—–-]\s*{_NO_SIGN})*\s*", re.IGNORECASE)
+
+
+def is_empty_sign_choice(value: object) -> bool:
+    return isinstance(value, str) and bool(_EMPTY_SIGN_CHOICE_RE.fullmatch(_plain(value)))
+
+
+def _blank_choice(value: Any) -> Any:
+    if is_empty_sign_choice(value):
+        return ""
+    if isinstance(value, Mapping) and is_empty_sign_choice(value.get("text")):
+        return {**value, "text": ""}
+    return value
+
+
+def _blank_empty_sign_item(item: Any) -> Any:
+    if not isinstance(item, Mapping):
+        return item
+    out = dict(item)
+    if isinstance(out.get("options"), list):
+        out["options"] = [_blank_choice(o) for o in out["options"]]
+    for key in ("answer", "correct_answer"):
+        if key in out:
+            out[key] = _blank_choice(out[key])
+    return out
+
+
+def blank_empty_sign_choices(activities: Any) -> Any:
+    """Rewrite worded empty-sign choices to ``""`` in a parsed ``activities.yaml``.
+
+    The fill-in gate rejects ``без знака — no sign`` as an option or answer; the
+    empty choice is the empty string. An original shown to the writer with the
+    old wording gets copied, so the prompt copy carries ``""`` instead. Only item
+    ``options`` / ``answer`` change: instructions, explanations and group-sort
+    labels keep the phrase.
+    """
+    if isinstance(activities, Mapping):
+        return {k: blank_empty_sign_choices(v) if isinstance(v, list) else v for k, v in activities.items()}
+    if not isinstance(activities, list):
+        return activities
+    return [
+        {**a, "items": [_blank_empty_sign_item(i) for i in a["items"]]}
+        if isinstance(a, Mapping) and isinstance(a.get("items"), list) else a
+        for a in activities
+    ]
+
+
 def filter_line_break_resources(resources: Any) -> Any:
     """Drop line-break notes from a parsed ``resources.yaml``.
 
