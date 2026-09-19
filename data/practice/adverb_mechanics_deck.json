@@ -1079,7 +1079,7 @@
     {
       "id": "adverb_card_25",
       "category": "adverb_semantic_cause_purpose",
-      "prompt": "Юнак вирішив стати художником усім пересторогам і заборонам _______.",
+      "prompt": "Він завжди мав норовливий характер і робив усе _______, не зважаючи на застереження друзів.",
       "target_token": "наперекір",
       "correct_answer": "наперекір",
       "options": [
@@ -1093,24 +1093,24 @@
           "text": "на перекір",
           "interference_key": "UNWARRANTED_SEPARATION",
           "explanation": {
-            "ua": "Прислівник мети/протиставлення «наперекір» пишеться разом per § 41, п. 1.",
-            "en": "Adverb of counter-purpose 'наперекір' is written together per § 41, p. 1."
+            "ua": "Прислівник мети й наміру «наперекір» (у значенні «на зло, усупереч іншим») пишеться разом per § 41, п. 1.",
+            "en": "Adverb of intent/purpose 'наперекір' (meaning 'in defiance, spitefully') is written together per § 41, p. 1."
           }
         },
         {
           "text": "на-перекір",
           "interference_key": "UNWARRANTED_HYPHEN",
           "explanation": {
-            "ua": "Слово «наперекір» пишеться разом, дефіс не ставиться per § 41, п. 1.",
-            "en": "Word 'наперекір' is written together, no hyphen is placed per § 41, p. 1."
+            "ua": "Прислівник «наперекір» пишеться разом, дефіс не вживається per § 41, п. 1.",
+            "en": "Adverb 'наперекір' is written together; no hyphen is used per § 41, p. 1."
           }
         },
         {
           "text": "на перекор",
           "interference_key": "RUSSIANISM_CALQUE",
           "explanation": {
-            "ua": "Форма «на перекор» з голосним [о] є суржиком або русизмом («наперекор»); українська норма — «наперекір» з ікавізмом у закритому складі.",
-            "en": "Form 'на перекор' is Russian interference; Ukrainian standard features ikavism in closed syllable: 'наперекір'."
+            "ua": "Форма «на перекор» з голосним [о] є русизмом; в українській літературній мові нормативним є прислівник «наперекір» з ікавізмом у закритому складі.",
+            "en": "Form 'на перекор' is Russian interference; standard Ukrainian uses adverb 'наперекір' with ikavism in a closed syllable."
           }
         }
       ],
@@ -1391,7 +1391,7 @@
       "target_token": "як-небудь",
       "correct_answer": "як-небудь",
       "options": [
-        "як попало",
+        "як-не-будь",
         "як-небудь",
         "як небудь",
         "якнебудь"
@@ -1414,11 +1414,11 @@
           }
         },
         {
-          "text": "як попало",
-          "interference_key": "RUSSIANISM_CALQUE",
+          "text": "як-не-будь",
+          "interference_key": "UNWARRANTED_HYPHEN",
           "explanation": {
-            "ua": "Фразеологізм «як попало» є калькою з російської; літературною нормою є прислівник «як-небудь» або «абияк».",
-            "en": "'Як попало' is a Russian calque; literary Ukrainian standard uses 'як-небудь' or 'абияк'."
+            "ua": "Частка -небудь утворює єдиний формант і приєднується одним дефісом: «як-небудь» per § 41, п. 3, 3); написання з двома дефісами («як-не-будь») є помилковим.",
+            "en": "The particle -небудь is a single formant attached with one hyphen: 'як-небудь' per § 41, p. 3, 3); writing with two hyphens ('як-не-будь') is incorrect."
           }
         }
       ],
@@ -3283,34 +3283,34 @@
       "target_token": "у крайньому разі",
       "correct_answer": "у крайньому разі",
       "options": [
-        "в крайнім случаї",
+        "по-крайньому",
         "в крайньому випадку",
         "у крайньому разі",
-        "на крайній випадок"
+        "на крайній случай"
       ],
       "distractors": [
         {
           "text": "в крайньому випадку",
           "interference_key": "RUSSIANISM_CALQUE",
           "explanation": {
-            "ua": "Словосполучення «в крайньому випадку» є калькою з російської («в крайнем случае»); слово «випадок» означає пригоду чи подію, а можливість вибору передає «у крайньому разі».",
-            "en": "'В крайньому випадку' is a Russian calque ('в крайнем случае'); choice in extremity is expressed by 'у крайньому разі'."
+            "ua": "Словосполучення «в крайньому випадку» є калькою з російської («в крайнем случае»); літературною нормою для вираження вибору за крайніх обставин є «у крайньому разі».",
+            "en": "'В крайньому випадку' is a Russian calque ('в крайнем случае'); the literary standard for last-resort choice is 'у крайньому разі'."
           }
         },
         {
-          "text": "на крайній випадок",
+          "text": "на крайній случай",
           "interference_key": "RUSSIANISM_CALQUE",
           "explanation": {
-            "ua": "Ще один калькований варіант; правильний літературний вираз — «у крайньому разі» або «в разі крайньої потреби».",
-            "en": "Another calqued variant; correct literary expression is 'у крайньому разі'."
+            "ua": "Вираз «на крайній случай» є суржиком із російським коренем «случай»; нормативний український зворот — «у крайньому разі».",
+            "en": "'На крайній случай' is Surzhyk with the Russian root 'случай'; standard Ukrainian uses 'у крайньому разі'."
           }
         },
         {
-          "text": "в крайнім случаї",
-          "interference_key": "RUSSIANISM_CALQUE",
+          "text": "по-крайньому",
+          "interference_key": "CORRUPTED_ADVERB_FORM",
           "explanation": {
-            "ua": "Відвертий суржик; літературна українська мова вимагає форми «у крайньому разі».",
-            "en": "Obvious Surzhyk; literary Ukrainian requires the form 'у крайньому разі'."
+            "ua": "Штучна форма «по-крайньому» не існує в українській мові; прислівниковий зворот крайньої можливості вживається окремо: «у крайньому разі».",
+            "en": "The artificial form 'по-крайньому' does not exist in Ukrainian; the adverbial phrase of last resort is 'у крайньому разі'."
           }
         }
       ],

@@ -322,6 +322,8 @@ def test_anti_calque_adverbials():
     c75 = cards_by_id["adverb_card_75"]
     assert c75.correct_answer == "у крайньому разі"
     assert any("в крайньому випадку" in d.text for d in c75.distractors)
+    assert any("на крайній случай" in d.text for d in c75.distractors)
+    assert any("по-крайньому" in d.text for d in c75.distractors)
 
 
 def test_distractor_exclusivity_and_no_valid_synonym_rejection():
@@ -346,6 +348,23 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     c14 = cards_by_id["adverb_card_14"]
     distractor_texts_14 = [d.text for d in c14.distractors]
     assert "вперід" in distractor_texts_14
+
+    # Card 25: наперекір must teach adverbial intent/purpose modifying verb without prepositional dative governance
+    c25 = cards_by_id["adverb_card_25"]
+    assert c25.correct_answer == "наперекір"
+    assert c25.category == AdverbCategory.CAUSE_PURPOSE
+    assert "пересторогам" not in c25.prompt, "Card 25 must not use prepositional governance of dative noun"
+    assert "заборонам" not in c25.prompt
+    assert "робив усе _______" in c25.prompt
+    assert any("на зло" in d.explanation_ua for d in c25.distractors)
+
+    # Card 32: як-небудь must not penalize attested expression 'як попало' recorded in СУМ-20
+    c32 = cards_by_id["adverb_card_32"]
+    distractor_texts_32 = [d.text for d in c32.distractors]
+    assert "як попало" not in distractor_texts_32, (
+        "Attested expression 'як попало' in СУМ-20 must not be marked as calque error"
+    )
+    assert "як-не-будь" in distractor_texts_32
 
     # Card 33: хтозна-як must not penalize attested phrase 'бог знає як'
     c33 = cards_by_id["adverb_card_33"]
@@ -411,6 +430,15 @@ def test_distractor_exclusivity_and_no_valid_synonym_rejection():
     c74 = cards_by_id["adverb_card_74"]
     distractor_texts_74 = [d.text for d in c74.distractors]
     assert "принаймі" in distractor_texts_74
+
+    # Card 75: у крайньому разі must not penalize attested phrase 'на крайній випадок' recorded in СУМ-20
+    c75 = cards_by_id["adverb_card_75"]
+    distractor_texts_75 = [d.text for d in c75.distractors]
+    assert "на крайній випадок" not in distractor_texts_75, (
+        "Attested phrase 'на крайній випадок' recorded in СУМ-20 must not be penalized"
+    )
+    assert "на крайній случай" in distractor_texts_75
+    assert "по-крайньому" in distractor_texts_75
 
     # Verify citation numbering for particles and reduplication across deck
     particles_cards = [c for c in cards_by_id.values() if c.category == AdverbCategory.PARTICLES_HYPHEN]
