@@ -952,3 +952,133 @@ def test_non_alphabet_gate_still_requires_a_line_break_baseline_section(gold):
     path.write_text(path.read_text() + "\n\n## Перенос і письмо\n\nПеренос слів у цьому модулі.\n")
     report = gates.run_lesson_gates(module, source, plan)
     assert any("baseline section 'Перенос і письмо' has no lesson mapping" in d for d in report["blocking"])
+
+
+# ── upgrade preservation vs empty-sign / error-correction rewrite (#8236) ─────
+
+_NO_SIGN = "без знака — no sign"
+
+
+def _archive_fill_in(extra_sentence):
+    return {"type": "fill-in", "title": "Додай знак — Add a sign",
+            "instruction": "Обери ь, апо́строф або без знака. — Choose ь, an apostrophe, or no sign.",
+            "items": [
+                {"sentence": "сім___я", "answer": "'", "options": ["'", "ь", _NO_SIGN]},
+                {"sentence": "ден___", "answer": "ь", "options": ["ь", "'", _NO_SIGN]},
+                {"sentence": extra_sentence, "answer": _NO_SIGN, "options": [_NO_SIGN, "'", "ь"]},
+            ]}
+
+
+def _archive_error_correction(sentence):
+    return {"type": "error-correction", "title": "Виправ пастки — Correct the traps",
+            "instruction": "Обери правильну українську форму. — Choose the correct Ukrainian form.",
+            "items": [
+                {"sentence": sentence, "error": "сімя", "correction": "сім'я́", "options": ["сім'я́", "сімя"],
+                 "explanation": "У слові сім'я́ потрібен апо́строф. — In the word сім'я́ an apostrophe is needed."},
+                {"sentence": "Сього́дні га́рний і те́плий ден.", "error": "ден", "correction": "день",
+                 "options": ["день", "ден"],
+                 "explanation": "День потребує м'якого знака. — День requires a soft sign."},
+            ]}
+
+
+_ARCHIVE_ORIGINALS = {
+    "act-3": ("inline", 2, _archive_fill_in("У слові свя́то правильний вибір — ___ .")),
+    "act-4": ("inline", 4, _archive_error_correction("Моя́ дру́жна сімя живе́ у Ки́єві.")),
+    "act-w3": ("workbook", 2, _archive_error_correction("Це на́ша дру́жна сімя.")),
+    "act-w5": ("workbook", 4, _archive_fill_in("У слові цвях правильний вибір — ___ .")),
+}
+_EC_DISTRACTORS = {"сімя": ["сімья", "сім'йа"], "ден": ["день'", "дьен"]}
+
+
+def _legal_rewrite(activity):
+    """What an obedient upgrade writer ships: ``""`` chips; EC without the error token, plus a distractor."""
+    out = yaml.safe_load(yaml.safe_dump(activity, allow_unicode=True))
+    for item in out["items"]:
+        if out["type"] == "fill-in":
+            item["options"] = ["" if o == _NO_SIGN else o for o in item["options"]]
+            item["answer"] = "" if item["answer"] == _NO_SIGN else item["answer"]
+        else:
+            item["options"] = [item["correction"], *_EC_DISTRACTORS[item["error"]]]
+    return out
+
+
+def _install_archive_originals(module, source, *, rewrite):
+    base_path = source / "activities.yaml"
+    base = yaml.safe_load(base_path.read_text())
+    for aid, (placement, index, activity) in _ARCHIVE_ORIGINALS.items():
+        base[placement][index] = {**({"id": aid} if placement == "inline" else {}), **activity}
+    base_path.write_text(yaml.safe_dump(base, allow_unicode=True, sort_keys=False))
+    seen = set()
+    for path in sorted(module.glob("lesson-*/activities.yaml")):
+        data = yaml.safe_load(path.read_text())
+        for placement in ("inline", "workbook"):
+            for i, act in enumerate(data.get(placement) or []):
+                if act.get("id") in _ARCHIVE_ORIGINALS:
+                    original = _ARCHIVE_ORIGINALS[act["id"]][2]
+                    data[placement][i] = {"id": act["id"], **(_legal_rewrite(original) if rewrite else original)}
+                    seen.add(act["id"])
+        path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+    assert seen == set(_ARCHIVE_ORIGINALS)
+
+
+def _not_preserved(report):
+    return sorted(d.split(":")[0] for d in report["blocking"] if "not preserved structurally" in d)
+
+
+def test_alphabet_preservation_accepts_the_legal_rewrite_of_archive_activities(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_archive_originals(module, source, rewrite=True)
+    report = gates.run_lesson_gates(module, source, plan)
+    assert _not_preserved(report) == []
+    for aid in _ARCHIVE_ORIGINALS:
+        assert not any(f" {aid}[" in d and ("fill-in" in d or "error-correction" in d)
+                       for d in report["blocking"]), report["blocking"]
+
+
+def test_alphabet_dirty_archive_copy_still_fails_fill_in_and_ec_gates(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_archive_originals(module, source, rewrite=False)
+    blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
+    for aid in ("act-3", "act-w5"):
+        assert any(f" {aid}[" in d and "words the empty choice" in d for d in blocking), blocking
+    for aid in ("act-4", "act-w3"):
+        assert any(f" {aid}[" in d and "error-correction needs >=3 options" in d for d in blocking), blocking
+
+
+def test_non_alphabet_preservation_still_compares_the_raw_archive(gold):
+    module, source, plan = gold
+    _install_archive_originals(module, source, rewrite=True)
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == sorted(_ARCHIVE_ORIGINALS)
+
+
+def test_alphabet_preservation_still_requires_sentence_error_correction_and_real_options(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_archive_originals(module, source, rewrite=True)
+    for path in module.glob("lesson-*/activities.yaml"):
+        data = yaml.safe_load(path.read_text())
+        for act in data.get("inline") or []:
+            if act.get("id") == "act-4":
+                act["items"][0]["error"] = "сімʼя"
+            if act.get("id") == "act-3":
+                act["items"][0]["options"] = ["'", ""]  # the real ь option lost
+        path.write_text(yaml.safe_dump(data, allow_unicode=True, sort_keys=False))
+    assert _not_preserved(gates.run_lesson_gates(module, source, plan)) == ["act-3", "act-4"]
+
+
+def test_alphabet_preservation_baseline_drops_banned_phrase_paragraphs(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    path = source / "module.md"
+    clean = gates.run_lesson_gates(module, source, plan)["facts"]["baseline"]["long_paragraphs"]
+    first_heading = path.read_text().index("\n## ")
+    end = path.read_text().index("\n\n", first_heading + 1)
+    text = path.read_text()
+    banned = ("Stay inside Ukrainian for this lesson. The apostrophe and soft sign already\n"
+              "have Ukrainian jobs.\n\nBefore you leave the lesson\ntab, check that you can do these things today:")
+    path.write_text(text[:end] + "\n\n" + banned + text[end:])
+    report = gates.run_lesson_gates(module, source, plan)
+    assert report["facts"]["baseline"]["long_paragraphs"] == clean
+    assert not any("not preserved verbatim" in d for d in report["blocking"]), report["blocking"]
+
+    plan["slug"] = "things-have-gender"
+    report = gates.run_lesson_gates(module, source, plan)
+    assert report["facts"]["baseline"]["long_paragraphs"] == clean + 2

@@ -361,3 +361,52 @@ def test_special_signs_upgrade_prompt_has_no_worded_empty_choice_or_divide_words
     assert "Do **not** teach `перенос`" in prompt
     shown_map = yaml.safe_load(_region(prompt, "## Deterministic lessons.yaml (read-only)", "## Original plan (read-only)"))
     assert "title" not in shown_map["lessons"][4] and shown_map["closes_module"] == 5  # lesson 5 stays as the close
+
+
+# ── legal originals: what the upgrade writer may keep (#8236) ────────────────
+
+def test_legal_original_activity_blanks_chips_and_drops_only_the_error_option():
+    ec = {"id": "act-4", "type": "error-correction", "items": [
+        {"sentence": "Моя́ сімя живе́ у Ки́єві.", "error": "сімя", "correction": "сім'я́",
+         "options": ["сім'я́", "сімя"], "explanation": "У слові сім'я́ потрібен апо́строф."}]}
+    out = am.legal_original_activity(ec)
+    assert out["items"][0]["options"] == ["сім'я́"]
+    assert {k: out["items"][0][k] for k in ("sentence", "error", "correction", "explanation")} == {
+        k: ec["items"][0][k] for k in ("sentence", "error", "correction", "explanation")}
+    assert ec["items"][0]["options"] == ["сім'я́", "сімя"]  # input untouched
+
+    # A quiz that happens to list an ``error`` key keeps its options: EC only.
+    quiz = {"type": "quiz", "items": [{"error": "сімя", "options": ["сімя", "сім'я́"]}]}
+    assert am.legal_original_activity(quiz) == quiz
+
+    sort = {"type": "group-sort", "groups": [{"label": "Немає знака — No sign", "items": ["свято"]}]}
+    assert am.legal_original_activity(sort) == sort
+
+
+def test_upgrade_prompt_originals_match_the_preservation_baseline():
+    plan = {"slug": "special-signs"}
+    acts = yaml.safe_dump({"inline": [
+        {"id": "act-3", "type": "fill-in", "items": [
+            {"sentence": "свя___то", "answer": "без знака — no sign", "options": ["без знака — no sign", "'", "ь"]}]},
+        {"id": "act-4", "type": "error-correction", "items": [
+            {"sentence": "Теплий ден.", "error": "ден", "correction": "день", "options": ["день", "ден"]}]},
+        {"id": "act-5", "type": "group-sort", "groups": [{"label": "Немає знака — No sign", "items": ["свято"]}]},
+    ]}, allow_unicode=True)
+    shown = yaml.safe_load(linear_pipeline._original_artifact_for_prompt(plan, "activities.yaml", acts))["inline"]
+    assert shown[0]["items"][0]["answer"] == ""
+    assert shown[0]["items"][0]["options"] == ["", "'", "ь"]
+    assert shown[1]["items"][0]["options"] == ["день"]
+    assert shown[1]["items"][0]["error"] == "ден"
+    assert shown[2]["groups"][0]["label"] == "Немає знака — No sign"
+    assert shown == [am.legal_original_activity(a) for a in yaml.safe_load(acts)["inline"]]
+
+
+def test_upgrade_prompt_prose_drops_banned_phrase_paragraphs_only():
+    text = ("## Знаки\n\nThree choices: ь, apostrophe, or no sign at all.\n\n"
+            "Stay inside Ukrainian for this lesson. The apostrophe and soft sign already\nhave Ukrainian jobs.\n\n"
+            "Before you leave the lesson\ntab, check that you can do these things:\n\n- read день\n")
+    shown = linear_pipeline._original_artifact_for_prompt({"slug": "special-signs"}, "module.md", text)
+    assert "Stay inside Ukrainian" not in shown
+    assert "leave the lesson" not in shown
+    assert "or no sign at all" in shown and "- read день" in shown
+    assert linear_pipeline._original_artifact_for_prompt({"slug": "my-family"}, "module.md", text) == text
