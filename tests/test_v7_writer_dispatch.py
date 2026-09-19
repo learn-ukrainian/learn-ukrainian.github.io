@@ -44,8 +44,18 @@ def _seed_sources_mcp_config(
         ),
         encoding="utf-8",
     )
+    # agy resolves MCP servers from the global Antigravity config, not
+    # `.mcp.json`; seed it too so agy-tools writers reach the runtime gate on
+    # hosts (CI) without a real Antigravity profile.
+    agy_app_data_dir = tmp_path / "agy-app-data"
+    agy_app_data_dir.mkdir(exist_ok=True)
+    (agy_app_data_dir / "mcp_config.json").write_text(
+        json.dumps({"mcpServers": {"sources": {"httpUrl": "http://127.0.0.1:8766/mcp"}}}),
+        encoding="utf-8",
+    )
     tool_config_mod._load_mcp_config.cache_clear()
     monkeypatch.setattr(tool_config_mod, "_DEFAULT_MCP_CONFIG_PATH", mcp_config_path)
+    monkeypatch.setenv(tool_config_mod._AGY_APP_DATA_ENV, str(agy_app_data_dir))
 
 
 @pytest.mark.parametrize(
