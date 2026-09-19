@@ -22,18 +22,30 @@ describe('mechanics-deck-loader', () => {
   });
 
   it.each(ALL_MECHANICS_POS_KEYS)(
-    'loads and normalizes %s mechanics deck correctly',
+    'loads and normalizes %s mechanics deck correctly with exact count and valid sentence blanks',
     async (pos: MechanicsPosKey) => {
       const cards = await loadMechanicsDeck(pos);
-      expect(cards.length).toBeGreaterThanOrEqual(40);
+      const meta = MECHANICS_DECK_META[pos];
+
+      // Exact count agreement with metadata
+      expect(cards.length).toBe(meta.itemCount);
+
+      // Verify EVERY card in the deck has normalized prompt and does not drop text
+      for (const card of cards) {
+        expect(card.id).toBeTruthy();
+        expect(card.pos).toBe(pos);
+        expect(card.prompt).toBeTruthy();
+        expect(card.prompt).not.toMatch(/_{4,}/); // No unnormalized underscore runs
+        expect(card.options.length).toBeGreaterThanOrEqual(3);
+        expect(card.options).toContain(card.correctAnswer);
+
+        if (card.prompt.includes('___')) {
+          const blankIdx = card.prompt.indexOf('___');
+          expect(blankIdx).toBeGreaterThanOrEqual(0);
+        }
+      }
 
       const firstCard = cards[0];
-      expect(firstCard.id).toBeTruthy();
-      expect(firstCard.pos).toBe(pos);
-      expect(firstCard.prompt).toContain('___');
-      expect(firstCard.options.length).toBeGreaterThanOrEqual(3);
-      expect(firstCard.options).toContain(firstCard.correctAnswer);
-
       // Verify evaluation: correct pick
       const correctEval = firstCard.evaluate(firstCard.correctAnswer, 'uk');
       expect(correctEval.isCorrect).toBe(true);

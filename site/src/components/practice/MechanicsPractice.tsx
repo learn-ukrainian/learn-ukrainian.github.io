@@ -152,7 +152,11 @@ export default function MechanicsPractice({
     );
   }
 
-  const promptParts = currentCard.prompt.split('___');
+  // Normalize prompt underscores to '___' and split reliably into prefix and suffix
+  const normalizedPrompt = currentCard.prompt.replace(/_{2,}/g, '___');
+  const blankIdx = normalizedPrompt.indexOf('___');
+  const promptPrefix = blankIdx >= 0 ? normalizedPrompt.slice(0, blankIdx) : normalizedPrompt;
+  const promptSuffix = blankIdx >= 0 ? normalizedPrompt.slice(blankIdx + 3) : '';
 
   return (
     <div className="lexicon-practice-stage-shell" data-testid="practice-mechanics-session">
@@ -179,7 +183,7 @@ export default function MechanicsPractice({
       </div>
 
       <div className="lexicon-practice-stage" tabIndex={-1} style={{ maxWidth: '640px', margin: '0 auto', padding: '1rem' }}>
-        {/* Prompt with styled blank */}
+        {/* Prompt with styled blank or question text */}
         <div
           className="k3-mechanics-prompt-box"
           data-testid="practice-mechanics-prompt"
@@ -193,21 +197,31 @@ export default function MechanicsPractice({
             textAlign: 'center',
           }}
         >
-          {promptParts[0]}
-          <span
-            data-testid="practice-mechanics-blank"
-            style={{
-              display: 'inline-block',
-              minWidth: '60px',
-              padding: '0 0.5rem',
-              borderBottom: '2px solid var(--sl-color-accent)',
-              fontWeight: 'bold',
-              color: selectedOption ? (evaluation?.isCorrect ? 'var(--sl-color-green, #10b981)' : 'var(--sl-color-red, #ef4444)') : 'var(--sl-color-accent)',
-            }}
-          >
-            {selectedOption ?? '____'}
-          </span>
-          {promptParts[1] ?? ''}
+          {blankIdx >= 0 ? (
+            <>
+              {promptPrefix}
+              <span
+                data-testid="practice-mechanics-blank"
+                style={{
+                  display: 'inline-block',
+                  minWidth: '60px',
+                  padding: '0 0.5rem',
+                  borderBottom: '2px solid var(--sl-color-accent)',
+                  fontWeight: 'bold',
+                  color: selectedOption
+                    ? evaluation?.isCorrect
+                      ? 'var(--sl-color-green, #10b981)'
+                      : 'var(--sl-color-red, #ef4444)'
+                    : 'var(--sl-color-accent)',
+                }}
+              >
+                {selectedOption ?? '____'}
+              </span>
+              {promptSuffix}
+            </>
+          ) : (
+            <span>{promptPrefix}</span>
+          )}
         </div>
 
         {/* Options grid */}

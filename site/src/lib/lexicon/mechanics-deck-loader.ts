@@ -80,6 +80,11 @@ export interface MechanicsDeckMeta {
   accent: 'blue' | 'teal' | 'purple' | 'orange';
 }
 
+export function normalizeBlankPrompt(prompt: string): string {
+  if (!prompt) return '';
+  return prompt.replace(/_{2,}/g, '___');
+}
+
 export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
   noun: {
     pos: 'noun',
@@ -87,7 +92,7 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
     titleEn: 'Noun',
     descriptionUk: 'Закінчення -а/-у в родовому, кличний відмінок, чергування в орудному',
     descriptionEn: 'Genitive -а/-у endings, vocative case, instrumental mutations',
-    itemCount: 75,
+    itemCount: 71,
     accent: 'purple',
   },
   adjective: {
@@ -96,7 +101,7 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
     titleEn: 'Adjective',
     descriptionUk: 'Ступені порівняння, тверда/м’яка групи, присвійні суфікси',
     descriptionEn: 'Degrees of comparison, hard/soft groups, possessive suffixes',
-    itemCount: 65,
+    itemCount: 78,
     accent: 'teal',
   },
   verb: {
@@ -105,7 +110,7 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
     titleEn: 'Verb',
     descriptionUk: 'I та II дієвідміни, видові пари, наказовий спосіб, дієприкметники',
     descriptionEn: 'I & II conjugations, aspectual pairs, imperatives, participles',
-    itemCount: 80,
+    itemCount: 75,
     accent: 'blue',
   },
   pronoun: {
@@ -114,7 +119,7 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
     titleEn: 'Pronoun',
     descriptionUk: 'Приставний н- з прийменниками, правопис неозначених та заперечних',
     descriptionEn: 'Epenthetic n- with prepositions, indefinite & negative spelling',
-    itemCount: 60,
+    itemCount: 75,
     accent: 'orange',
   },
   numeral: {
@@ -123,7 +128,7 @@ export const MECHANICS_DECK_META: Record<MechanicsPosKey, MechanicsDeckMeta> = {
     titleEn: 'Numeral',
     descriptionUk: 'Відмінювання 50–80, 200–900, узгодження 2/3/4 vs 5+ з іменниками',
     descriptionEn: 'Declension of 50–80, 200–900, government 2/3/4 vs 5+ with nouns',
-    itemCount: 60,
+    itemCount: 75,
     accent: 'purple',
   },
   adverb: {
@@ -182,7 +187,7 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
           pos,
           category: card.category,
           cefrLevel: card.cefr_level,
-          prompt: card.prompt_sentence,
+          prompt: normalizeBlankPrompt(card.prompt_sentence ?? (card as any).prompt),
           options: card.options,
           correctAnswer: card.correct_answer,
           ruleCitation: card.pravopys_section,
@@ -206,7 +211,7 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
           pos,
           category: card.category,
           cefrLevel: card.cefr_level,
-          prompt: card.prompt_sentence,
+          prompt: normalizeBlankPrompt(card.prompt_sentence ?? (card as any).prompt),
           options: card.options,
           correctAnswer: card.correct_answer,
           ruleCitation: card.pravopys_section,
@@ -230,7 +235,7 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
           pos,
           category: card.category,
           cefrLevel: card.cefr_level,
-          prompt: card.prompt_sentence,
+          prompt: normalizeBlankPrompt(card.prompt_sentence ?? (card as any).prompt),
           options: card.options,
           correctAnswer: card.correct_answer,
           ruleCitation: card.pravopys_section,
@@ -257,7 +262,7 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
           pos,
           category: card.category,
           cefrLevel: card.cefr_level ?? (card as any).cefrLevel,
-          prompt: card.prompt_sentence ?? (card as any).prompt,
+          prompt: normalizeBlankPrompt(card.prompt_sentence ?? (card as any).prompt),
           options: card.options,
           correctAnswer: card.correct_answer ?? (card as any).correctAnswer,
           ruleCitation: citation,
@@ -281,7 +286,7 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
           pos,
           category: card.category,
           cefrLevel: card.cefr_level,
-          prompt: card.prompt_sentence,
+          prompt: normalizeBlankPrompt(card.prompt_sentence ?? (card as any).prompt),
           options: card.options,
           correctAnswer: card.correct_answer,
           ruleCitation: card.pravopys_section,
@@ -299,13 +304,12 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
       }
       case 'adverb': {
         const card = c as PracticeAdverbMechanicsCard;
-        const prompt = card.prompt.replace(/_{3,}/g, '___');
         return {
           id: card.id,
           pos,
           category: card.category,
           cefrLevel: (card as any).cefr_level ?? 'B1',
-          prompt,
+          prompt: normalizeBlankPrompt(card.prompt),
           options: card.options,
           correctAnswer: card.correct_answer,
           ruleCitation: card.rule_citation,
@@ -328,7 +332,7 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
           pos,
           category: card.category,
           cefrLevel: card.cefrLevel,
-          prompt: card.prompt,
+          prompt: normalizeBlankPrompt(card.prompt),
           options: card.options,
           correctAnswer: card.correctAnswer,
           ruleCitation: card.ruleCitation,
@@ -346,13 +350,12 @@ export async function loadMechanicsDeck(pos: MechanicsPosKey): Promise<Normalize
       }
       case 'interjection': {
         const card = c as PracticeInterjectionMechanicsCard;
-        const prompt = card.prompt.replace(/_{3,}/g, '___');
         return {
           id: card.id,
           pos,
           category: card.category,
           cefrLevel: (card as any).cefr_level ?? 'B1',
-          prompt,
+          prompt: normalizeBlankPrompt(card.prompt),
           options: card.options,
           correctAnswer: card.correct_answer,
           ruleCitation: card.rule_citation ?? (card as any).pravopys_section ?? '',

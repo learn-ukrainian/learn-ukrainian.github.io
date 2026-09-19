@@ -1,4 +1,4 @@
-import { type RefObject } from 'react';
+import { useEffect, useRef, type RefObject } from 'react';
 import ChromeText from '../../lib/i18n/ChromeText';
 import type { CustomSet } from '../../lib/lexicon/custom-decks';
 import { getTeacherTableVirtualDeck } from '../../lib/lexicon/custom-decks';
@@ -34,6 +34,74 @@ export default function SettingsDrawer({
   onOpenCustomDeckManager,
   secondaryToolsRef,
 }: SettingsDrawerProps) {
+  const drawerRef = useRef<HTMLElement>(null);
+  const closeButtonRef = useRef<HTMLButtonElement>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+
+  useEffect(() => {
+    if (!isOpen) {
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+        previousFocusRef.current.focus();
+        previousFocusRef.current = null;
+      }
+      return;
+    }
+
+    // Capture active element before opening to restore on close
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+
+    // Focus close button on open
+    const timer = setTimeout(() => {
+      closeButtonRef.current?.focus();
+    }, 50);
+
+    // Escape key listener & Tab key focus trap
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onClose();
+        return;
+      }
+
+      if (e.key === 'Tab' && drawerRef.current) {
+        const focusableElements = drawerRef.current.querySelectorAll<HTMLElement>(
+          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), details summary'
+        );
+        if (focusableElements.length === 0) return;
+
+        const firstElement = focusableElements[0];
+        const lastElement = focusableElements[focusableElements.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+    };
+
+    // Prevent focus from entering closed drawer
+    const handleFocusIn = (e: FocusEvent) => {
+      if (!isOpen && drawerRef.current?.contains(e.target as Node)) {
+        (e.target as HTMLElement)?.blur();
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('focusin', handleFocusIn);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('focusin', handleFocusIn);
+    };
+  }, [isOpen, onClose]);
+
   return (
     <>
       {/* Slide-over Drawer Backdrop */}
@@ -54,6 +122,7 @@ export default function SettingsDrawer({
 
       {/* Slide-over Drawer Container */}
       <aside
+        ref={drawerRef}
         className={`k3-settings-drawer ${isOpen ? 'open' : ''}`}
         data-testid="practice-settings-drawer"
         role="dialog"
@@ -84,9 +153,11 @@ export default function SettingsDrawer({
             ⚙️ {chromeLocale === 'uk' ? 'Налаштування та інструменти' : 'Settings & Tools'}
           </h3>
           <button
+            ref={closeButtonRef}
             type="button"
             className="btn btn-sm"
             data-testid="settings-drawer-close"
+            tabIndex={isOpen ? 0 : -1}
             aria-label={chromeLocale === 'uk' ? 'Закрити налаштування' : 'Close settings'}
             onClick={onClose}
             style={{ fontSize: '1.2rem', padding: '0.2rem 0.6rem', lineHeight: 1 }}

@@ -143,6 +143,10 @@ import {
 } from '../lib/lexicon/case-filter';
 import MechanicsPractice from './practice/MechanicsPractice';
 import SettingsDrawer from './practice/SettingsDrawer';
+import PracticeTrackTabs, { type PracticeTrackId } from './practice/PracticeTrackTabs';
+import VocabularyTrack from './practice/VocabularyTrack';
+import GrammarTrack from './practice/GrammarTrack';
+import CoursesTrack from './practice/CoursesTrack';
 import {
   ALL_MECHANICS_POS_KEYS,
   MECHANICS_DECK_META,
@@ -2452,6 +2456,7 @@ function LexiconPracticeIsland({
   const [activeMechanicsLoading, setActiveMechanicsLoading] = useState(false);
   const [hoveredMechanicsPos, setHoveredMechanicsPos] = useState<MechanicsPosKey | null>(null);
   const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [activeTrack, setActiveTrack] = useState<PracticeTrackId>('all');
 
   const handleSelectMechanicsMode = useCallback(async (pos: MechanicsPosKey) => {
     try {
@@ -3946,10 +3951,10 @@ function LexiconPracticeIsland({
 
   function openSecondaryToolsPanel() {
     setDeckPickerOpen(false);
+    setIsSettingsOpen(true);
     const panel = secondaryToolsRef.current;
     if (panel) {
       panel.open = true;
-      panel.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
     }
   }
 
@@ -4863,286 +4868,88 @@ function LexiconPracticeIsland({
                   : modeDetail.descriptionEn}
               </p>
 
-              {/* Track 1: Словниковий запас (Vocabulary & Lexical Relations) */}
-              <section className="k3-track k3-track-vocab" aria-labelledby="track-vocab-title">
-                <div className="k3-track-header">
-                  <div className="k3-track-title-row">
-                    <h3 id="track-vocab-title" className="k3-track-title">
-                      {chromeLocale === 'uk' ? '📖 Словниковий запас' : '📖 Vocabulary'}
-                    </h3>
-                    <span className="k3-track-badge">{chromeLocale === 'uk' ? 'Трек 1' : 'Track 1'}</span>
-                  </div>
-                  <p className="k3-track-desc">
-                    {chromeLocale === 'uk'
-                      ? 'Опанування слів, значень, контексту та лексичних зв’язків'
-                      : 'Master words, meanings, context, and lexical relations'}
-                  </p>
-                </div>
+              {/* Progressive Disclosure 3-Track Navigation Tabs */}
+              <PracticeTrackTabs
+                activeTrack={activeTrack}
+                onSelectTrack={setActiveTrack}
+                chromeLocale={chromeLocale}
+              />
 
-                <div
-                  className="k3-mode-grid"
-                  role="group"
-                  aria-label={chromeLocale === 'uk' ? 'Словниковий запас' : 'Vocabulary modes'}
-                >
-                  {VOCAB_MODE_ORDER.map((mode) => (
+              {/* Track 1: Словниковий запас (Vocabulary & Lexical Relations) */}
+              <div
+                style={{
+                  display: activeTrack === 'all' || activeTrack === 'vocab' ? 'block' : 'none',
+                }}
+              >
+                <VocabularyTrack
+                  chromeLocale={chromeLocale}
+                  weakChips={[]}
+                  onStartWeakAreaFocus={(w) => void startWeakAreaFocus(w)}
+                  renderModeCard={(mode, isRecommended) => (
                     <ModeCard
                       key={mode}
-                      practiceMode={mode}
-                      meta={MODE_META[mode]}
-                      modeCount={modeCounts[mode] ?? 0}
+                      practiceMode={mode as VisiblePracticeModeFilter}
+                      meta={MODE_META[mode as VisiblePracticeModeFilter]}
+                      modeCount={modeCounts[mode as VisiblePracticeModeFilter] ?? 0}
                       modeDataLoaded={modeDataLoaded}
-                      isRecommended={mode === 'mixed'}
+                      isRecommended={isRecommended}
                       chromeLocale={chromeLocale}
                       onHover={setHoveredMode}
                       onSelect={(m) => void startFocusMode(m)}
                     />
-                  ))}
-                </div>
-
-                <details className="k3-track-subgroup">
-                  <summary>
-                    <span>
-                      {chromeLocale === 'uk'
-                        ? '🔗 Лексичні зв’язки (синоніми, пароніми, історичні форми)'
-                        : '🔗 Lexical Relations (synonyms, paronyms, heritage forms)'}
-                    </span>
-                  </summary>
-                  <div
-                    className="k3-mode-grid"
-                    role="group"
-                    aria-label={chromeLocale === 'uk' ? 'Лексичні зв’язки' : 'Lexical relations'}
-                  >
-                    {LEXICAL_RELATIONS_ORDER.map((mode) => (
-                      <ModeCard
-                        key={mode}
-                        practiceMode={mode}
-                        meta={MODE_META[mode]}
-                        modeCount={modeCounts[mode] ?? 0}
-                        modeDataLoaded={modeDataLoaded}
-                        chromeLocale={chromeLocale}
-                        onHover={setHoveredMode}
-                        onSelect={(m) => void startFocusMode(m)}
-                      />
-                    ))}
-                  </div>
-                </details>
-              </section>
+                  )}
+                />
+              </div>
 
               {/* Track 2: Граматика та частини мови (Grammar & Parts of Speech) */}
-              <section
-                className="k3-track k3-track-grammar"
-                aria-labelledby="track-grammar-title"
-                data-testid="practice-track-grammar"
+              <div
+                style={{
+                  display: activeTrack === 'all' || activeTrack === 'grammar' ? 'block' : 'none',
+                }}
               >
-                <div className="k3-track-header">
-                  <div className="k3-track-title-row">
-                    <h3 id="track-grammar-title" className="k3-track-title">
-                      {chromeLocale === 'uk' ? '🧩 Граматика та частини мови' : '🧩 Grammar & Parts of Speech'}
-                    </h3>
-                    <span className="k3-track-badge">{chromeLocale === 'uk' ? 'Трек 2' : 'Track 2'}</span>
-                  </div>
-                  <p className="k3-track-desc">
-                    {chromeLocale === 'uk'
-                      ? 'Відмінювання, форми дієслів, наголошування та розпізнавання частин мови'
-                      : 'Declension, verb forms, accentuation, and parts of speech identification'}
-                  </p>
-                </div>
-
-                {/* 10 Parts of Speech Deep Mechanics Interactive Cards */}
-                <div className="k3-pos-mechanics-section" style={{ marginBottom: '1.25rem' }}>
-                  <h4
-                    style={{
-                      fontSize: '1rem',
-                      fontWeight: 600,
-                      marginBottom: '0.75rem',
-                      color: 'var(--sl-color-gray-2)',
-                    }}
-                  >
-                    {chromeLocale === 'uk'
-                      ? '🎯 Тренажери 10 частин мови (Правопис 2019)'
-                      : '🎯 10 Parts of Speech Drills (Pravopys 2019)'}
-                  </h4>
-                  <div
-                    className="k3-mode-grid"
-                    role="group"
-                    aria-label={chromeLocale === 'uk' ? 'Частини мови' : 'Parts of speech drills'}
-                    data-testid="practice-pos-mechanics-grid"
-                  >
-                    {ALL_MECHANICS_POS_KEYS.map((posKey) => {
-                      const meta = MECHANICS_DECK_META[posKey];
-                      return (
-                        <button
-                          key={posKey}
-                          type="button"
-                          className="k3-mode-card"
-                          data-mechanics-mode={posKey}
-                          data-pos-mechanics={posKey}
-                          data-accent={meta.accent}
-                          data-mode-count={meta.itemCount}
-                          data-testid={`practice-card-mechanics-${posKey}`}
-                          aria-describedby="mode-detail-line"
-                          onMouseEnter={() => setHoveredMechanicsPos(posKey)}
-                          onMouseLeave={() => setHoveredMechanicsPos(null)}
-                          onFocus={() => setHoveredMechanicsPos(posKey)}
-                          onBlur={() => setHoveredMechanicsPos(null)}
-                          onClick={() => void handleSelectMechanicsMode(posKey)}
-                        >
-                          <span className="k3-mode-title">
-                            {chromeLocale === 'uk' ? meta.titleUk : meta.titleEn}
-                          </span>
-                          <span className="k3-mode-step">
-                            {chromeLocale === 'uk' ? 'Частина мови' : 'Part of Speech'}
-                          </span>
-                          <span className="k3-mode-desc">
-                            {chromeLocale === 'uk' ? meta.descriptionUk : meta.descriptionEn}
-                          </span>
-                          <span
-                            className="k3-mode-count"
-                            data-testid={`practice-mode-count-mechanics-${posKey}`}
-                          >
-                            <span aria-hidden="true">{meta.itemCount}</span>
-                            <span className="sr-only">
-                              {chromeLocale === 'uk' ? `${meta.itemCount} завдань` : `${meta.itemCount} items`}
-                            </span>
-                          </span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-
-                <div
-                  className="k3-mode-grid"
-                  role="group"
-                  aria-label={chromeLocale === 'uk' ? 'Граматика та частини мови' : 'Grammar and parts of speech modes'}
-                >
-                  {GRAMMAR_MODE_ORDER.map((mode) => (
+                <GrammarTrack
+                  chromeLocale={chromeLocale}
+                  onSelectMechanicsMode={(pos) => void handleSelectMechanicsMode(pos)}
+                  onHoverMechanicsPos={setHoveredMechanicsPos}
+                  renderBaseModeCard={(mode) => (
                     <ModeCard
                       key={mode}
-                      practiceMode={mode}
-                      meta={MODE_META[mode]}
-                      modeCount={modeCounts[mode] ?? 0}
+                      practiceMode={mode as VisiblePracticeModeFilter}
+                      meta={MODE_META[mode as VisiblePracticeModeFilter]}
+                      modeCount={modeCounts[mode as VisiblePracticeModeFilter] ?? 0}
                       modeDataLoaded={modeDataLoaded}
                       focusTag={GRAMMAR_FOCUS_TAGS[mode]}
                       chromeLocale={chromeLocale}
                       onHover={setHoveredMode}
                       onSelect={(m) => void startFocusMode(m)}
                     />
-                  ))}
-                </div>
-
-                <div className="k3-case-selector-container">
-                  <div className="k3-case-selector-intro">
-                    <span className="k3-case-selector-title">
-                      {chromeLocale === 'uk' ? 'Фільтр відмінків для іменників:' : 'Case filter for noun drills:'}
-                    </span>
-                    <span className="k3-case-selector-subtitle">
-                      {chromeLocale === 'uk' ? 'Оберіть відмінки для фокусного тренування парадигм' : 'Select cases to focus on in paradigm drills'}
-                    </span>
-                  </div>
-                  <CaseSelectorBar
-                    filter={caseFilter}
-                    onPresetSelect={handleCasePresetSelect}
-                    onToggleCase={handleToggleCase}
-                    onToggleNumber={handleToggleNumber}
-                    chromeLocale={chromeLocale}
-                  />
-                </div>
-              </section>
+                  )}
+                  caseSelectorNode={
+                    <CaseSelectorBar
+                      filter={caseFilter}
+                      onPresetSelect={handleCasePresetSelect}
+                      onToggleCase={handleToggleCase}
+                      onToggleNumber={handleToggleNumber}
+                      chromeLocale={chromeLocale}
+                    />
+                  }
+                />
+              </div>
 
               {/* Track 3: Тематичні курси та ЗНО / НМТ (Exams & Specialized Decks) */}
-              <section className="k3-track k3-track-courses" aria-labelledby="track-courses-title">
-                <div className="k3-track-header">
-                  <div className="k3-track-title-row">
-                    <h3 id="track-courses-title" className="k3-track-title">
-                      {chromeLocale === 'uk' ? '🎓 Тематичні курси та ЗНО / НМТ' : '🎓 Thematic Courses & Exams'}
-                    </h3>
-                    <span className="k3-track-badge">{chromeLocale === 'uk' ? 'Трек 3' : 'Track 3'}</span>
-                  </div>
-                  <p className="k3-track-desc">
-                    {chromeLocale === 'uk'
-                      ? 'Підготовка до державного тестування ЗНО / НМТ та культура українського мовлення'
-                      : 'Preparation for state ZNO / NMT exams and Ukrainian speech culture'}
-                  </p>
-                </div>
-
-                <div
-                  className="k3-mode-grid"
-                  role="group"
-                  aria-label={chromeLocale === 'uk' ? 'Тематичні курси та ЗНО' : 'Thematic courses and exam modes'}
-                >
-                  {ZNO_PRACTICE_DECK_META.map((znoDeck) => {
-                    const meta = ZNO_MODE_META[znoDeck.deckId];
-                    const modeCount = znoDeck.itemCount;
-                    return (
-                      <button
-                        key={znoDeck.deckId}
-                        type="button"
-                        className="k3-mode-card"
-                        data-mode={znoDeck.deckId}
-                        data-zno-deck="true"
-                        data-accent={meta.accent}
-                        data-mode-count={modeCount}
-                        aria-describedby="mode-detail-line"
-                        onMouseEnter={() => setHoveredZnoDeckId(znoDeck.deckId)}
-                        onMouseLeave={() => setHoveredZnoDeckId(null)}
-                        onFocus={() => setHoveredZnoDeckId(znoDeck.deckId)}
-                        onBlur={() => setHoveredZnoDeckId(null)}
-                        onClick={() => setActiveZnoDeckId(znoDeck.deckId)}
-                      >
-                        <span className="k3-mode-title">{znoDeck.title}</span>
-                        <span className="k3-mode-step">ЗНО / НМТ</span>
-                        <span className="k3-mode-desc">
-                          {chromeLocale === 'uk' ? meta.description : meta.descriptionEn}
-                        </span>
-                        {znoDeck.thinDeck ? (
-                          <span className="k3-mode-empty-note" data-testid={`practice-zno-thin-${znoDeck.deckId}`}>
-                            Невелика добірка
-                          </span>
-                        ) : null}
-                        <span
-                          className="k3-mode-count"
-                          data-testid={`practice-mode-count-${znoDeck.deckId}`}
-                        >
-                          <span aria-hidden="true">{modeCount}</span>
-                          <span className="sr-only">
-                            {modeCountAccessibleSuffix(modeCount, chromeLocale)}
-                          </span>
-                        </span>
-                      </button>
-                    );
-                  })}
-                  <button
-                    key="culture-error-correction"
-                    type="button"
-                    className="k3-mode-card"
-                    data-mode="culture-error-correction"
-                    data-accent={CULTURE_DECK_META.accent}
-                    data-mode-count={CULTURE_DECK_META.itemCount}
-                    aria-describedby="mode-detail-line"
-                    onMouseEnter={() => setHoveredCultureDeck(true)}
-                    onMouseLeave={() => setHoveredCultureDeck(false)}
-                    onFocus={() => setHoveredCultureDeck(true)}
-                    onBlur={() => setHoveredCultureDeck(false)}
-                    onClick={() => setActiveCulturePractice(true)}
-                  >
-                    <span className="k3-mode-title">{chromeLocale === 'uk' ? CULTURE_DECK_META.title : CULTURE_DECK_META.en}</span>
-                    <span className="k3-mode-step">{chromeLocale === 'uk' ? CULTURE_DECK_META.step : CULTURE_DECK_META.stepEn}</span>
-                    <span className="k3-mode-desc">
-                      {chromeLocale === 'uk' ? CULTURE_DECK_META.description : CULTURE_DECK_META.descriptionEn}
-                    </span>
-                    <span
-                      className="k3-mode-count"
-                      data-testid="practice-mode-count-culture-error-correction"
-                    >
-                      <span aria-hidden="true">{CULTURE_DECK_META.itemCount}</span>
-                      <span className="sr-only">
-                        {modeCountAccessibleSuffix(CULTURE_DECK_META.itemCount, chromeLocale)}
-                      </span>
-                    </span>
-                  </button>
-                </div>
-              </section>
+              <div
+                style={{
+                  display: activeTrack === 'all' || activeTrack === 'courses' ? 'block' : 'none',
+                }}
+              >
+                <CoursesTrack
+                  chromeLocale={chromeLocale}
+                  onSelectZnoDeck={(deckId) => setActiveZnoDeckId(deckId)}
+                  onSelectCulturePractice={() => setActiveCulturePractice(true)}
+                  onHoverZnoDeck={setHoveredZnoDeckId}
+                  onHoverCultureDeck={setHoveredCultureDeck}
+                />
+              </div>
             </div>
             </div>
           </div>

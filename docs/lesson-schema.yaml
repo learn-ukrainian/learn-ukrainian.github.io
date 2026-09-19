@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 9988014c029a04333f60f46b9d8fa3d5f33992cc8311fd382b071641f4236de1
+  components_sha256: 9174f7023540e3084dde1ef14ac5b6b7566d9e8680dbcc8be4d60fdc2edfca8b
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -966,6 +966,10 @@ components:
         description: onSelectMechanicsMode prop.
         ukrainian_text: 'false'
       optional:
+      - name: onHoverMechanicsPos
+        type: '(pos: MechanicsPosKey | null) => void'
+        description: onHoverMechanicsPos prop.
+        ukrainian_text: 'false'
       - name: renderBaseModeCard
         type: '(mode: PracticeModeFilter) => ReactNode'
         description: renderBaseModeCard prop.
@@ -1924,84 +1928,6 @@ components:
       chromeLocale: <ChromeLocale>
     deprecated: false
     deprecation_reason: null
-  PracticeHeader:
-    tab: lesson
-    level_scope: *id001
-    activity_type: null
-    placement: n/a
-    props:
-      required:
-      - name: currentLevel
-        type: CefrLevel
-        description: currentLevel prop.
-        ukrainian_text: 'false'
-      - name: onSelectLevel
-        type: '(level: CefrLevel) => void'
-        description: onSelectLevel prop.
-        ukrainian_text: 'false'
-      - name: streakDays
-        type: number
-        description: streakDays prop.
-        ukrainian_text: 'false'
-      - name: dueTodayCount
-        type: number
-        description: dueTodayCount prop.
-        ukrainian_text: 'false'
-      - name: newCardsDueCount
-        type: number
-        description: newCardsDueCount prop.
-        ukrainian_text: 'false'
-      - name: hasActiveSnapshot
-        type: boolean
-        description: hasActiveSnapshot prop.
-        ukrainian_text: 'false'
-      - name: onStartSession
-        type: () => void
-        description: onStartSession prop.
-        ukrainian_text: 'false'
-      - name: onRestartSession
-        type: () => void
-        description: onRestartSession prop.
-        ukrainian_text: 'false'
-      - name: onOpenSettings
-        type: () => void
-        description: onOpenSettings prop.
-        ukrainian_text: 'false'
-      - name: activeDeckLabel
-        type: string
-        description: activeDeckLabel prop.
-        ukrainian_text: 'false'
-      optional:
-      - name: activeDeckItemCount
-        type: number
-        description: activeDeckItemCount prop.
-        ukrainian_text: 'false'
-      - name: dailyDeckNode
-        type: ReactNode
-        description: dailyDeckNode prop.
-        ukrainian_text: 'false'
-      - name: chromeLocale
-        type: '''uk'' | ''en'''
-        description: chromeLocale prop.
-        ukrainian_text: 'false'
-      - name: loading
-        type: boolean
-        description: loading prop.
-        ukrainian_text: 'false'
-    nested_types: {}
-    example:
-      currentLevel: <CefrLevel>
-      onSelectLevel: '<(level: CefrLevel) => void>'
-      streakDays: 1
-      dueTodayCount: 1
-      newCardsDueCount: 1
-      hasActiveSnapshot: false
-      onStartSession: <() => void>
-      onRestartSession: <() => void>
-      onOpenSettings: <() => void>
-      activeDeckLabel: Приклад
-    deprecated: false
-    deprecation_reason: null
   PracticeSessionSummary:
     tab: lesson
     level_scope: *id001
@@ -2087,6 +2013,32 @@ components:
       item: <PracticeStressItem>
       selectedPosition: <number | null>
       answerLocked: false
+    deprecated: false
+    deprecation_reason: null
+  PracticeTrackTabs:
+    tab: lesson
+    level_scope: *id001
+    activity_type: null
+    placement: n/a
+    props:
+      required:
+      - name: activeTrack
+        type: PracticeTrackId
+        description: activeTrack prop.
+        ukrainian_text: 'false'
+      - name: onSelectTrack
+        type: '(track: PracticeTrackId) => void'
+        description: onSelectTrack prop.
+        ukrainian_text: 'false'
+      optional:
+      - name: chromeLocale
+        type: '''uk'' | ''en'''
+        description: chromeLocale prop.
+        ukrainian_text: 'false'
+    nested_types: {}
+    example:
+      activeTrack: <PracticeTrackId>
+      onSelectTrack: '<(track: PracticeTrackId) => void>'
     deprecated: false
     deprecation_reason: null
   PrimaryReading:

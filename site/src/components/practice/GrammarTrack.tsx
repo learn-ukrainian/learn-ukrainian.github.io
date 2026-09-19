@@ -8,6 +8,7 @@ import {
 export interface GrammarTrackProps {
   chromeLocale: 'uk' | 'en';
   onSelectMechanicsMode: (pos: MechanicsPosKey) => void;
+  onHoverMechanicsPos?: (pos: MechanicsPosKey | null) => void;
   renderBaseModeCard?: (mode: PracticeModeFilter) => ReactNode;
   caseSelectorNode?: ReactNode;
 }
@@ -26,6 +27,7 @@ const ALL_MECHANICS_POS_KEYS: MechanicsPosKey[] = [
 export default function GrammarTrack({
   chromeLocale,
   onSelectMechanicsMode,
+  onHoverMechanicsPos,
   renderBaseModeCard,
   caseSelectorNode,
 }: GrammarTrackProps) {
@@ -82,6 +84,11 @@ export default function GrammarTrack({
                 data-accent={meta.accent}
                 data-mode-count={meta.itemCount}
                 data-testid={`practice-card-mechanics-${posKey}`}
+                aria-describedby="mode-detail-line"
+                onMouseEnter={() => onHoverMechanicsPos?.(posKey)}
+                onMouseLeave={() => onHoverMechanicsPos?.(null)}
+                onFocus={() => onHoverMechanicsPos?.(posKey)}
+                onBlur={() => onHoverMechanicsPos?.(null)}
                 onClick={() => onSelectMechanicsMode(posKey)}
               >
                 <span className="k3-mode-title">
@@ -128,10 +135,10 @@ export default function GrammarTrack({
             role="group"
             aria-label={chromeLocale === 'uk' ? 'Додаткові тренажери' : 'Additional drills'}
           >
-            {renderBaseModeCard('classify')}
-            {renderBaseModeCard('stress')}
             {renderBaseModeCard('paradigm')}
             {renderBaseModeCard('imperative')}
+            {renderBaseModeCard('stress')}
+            {renderBaseModeCard('classify')}
           </div>
         </div>
       ) : null}

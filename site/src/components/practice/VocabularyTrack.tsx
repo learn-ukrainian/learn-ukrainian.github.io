@@ -9,12 +9,16 @@ export interface VocabularyTrackProps {
   renderModeCard: (mode: PracticeModeFilter, isRecommended?: boolean) => ReactNode;
 }
 
-export const VOCAB_PRIMARY_MODES: PracticeModeFilter[] = ['mixed', 'flashcards', 'cloze'];
+export const VOCAB_PRIMARY_MODES: PracticeModeFilter[] = [
+  'mixed',
+  'flashcards',
+  'cloze',
+  'matching',
+  'choice',
+];
 export const LEXICAL_RELATIONS_MODES: PracticeModeFilter[] = [
   'synonym',
-  'antonym',
   'paronym',
-  'homonym',
   'heritage',
 ];
 
