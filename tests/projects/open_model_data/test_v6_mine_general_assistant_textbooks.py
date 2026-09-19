@@ -1080,3 +1080,92 @@ def test_r11_fable_findings_elimination():
     assert "явища «Дифузія»" not in task_nat["query"]
     assert "природного явища" not in task_nat["reference_solution"]
     assert "поняття «Дифузія»" in task_nat["query"] or "теми «Дифузія»" in task_nat["query"]
+
+
+def test_r13_fable_findings_elimination():
+    """Verify that all Round 12 adversarial review findings are eliminated.
+
+    1. Term validation: strict whole-token lemma matching with ZERO substring matching.
+    2. Lemma disambiguation: колона over колон, циліндр over циліндер (:alt), точка over точок.
+    3. Inverted definitions: 'Висотою циліндра називається перпендикуляр' defines 'Висота циліндра', NOT 'Перпендикуляр'.
+    4. Truncated snippets & poetry: unbalanced parens, author initials at end rejected.
+    5. Context-bound heads & non-concepts: 'авторки', 'вірша', 'Невеликі листки' rejected.
+    6. Metaphors & evaluatives: 'символ вічності', 'неодмінна частина' rejected.
+    7. Conversational anaphora: 'Про один...', 'ви вже дізналися' rejected.
+    8. Query framing alignment: art subjects (mystetstvo) never receive 'філологічн' in query.
+    """
+    cur = get_vesum_cursor()
+
+    # 1 & 2. Term validation & lemma disambiguation (whole tokens, no substrings, no alt lemmas)
+    # циліндер vs циліндр
+    s_geom = "Висотою циліндра називається перпендикуляр, проведений із будь-якої точки однієї основи на іншу."
+    terms_geom = extract_scientific_terminology_for_snippet(s_geom, "Висота циліндра", "heometriya", cur)
+    assert "циліндр" in terms_geom
+    assert "циліндер" not in terms_geom
+
+    # рядів колон -> колона
+    s_arch = "Колонада — один або кілька рядів колон, об'єднаних горизонтальним перекриттям."
+    terms_arch = extract_scientific_terminology_for_snippet(s_arch, "Колонада", "mystetstvo", cur)
+    assert "колона" in terms_arch
+    assert "колон" not in terms_arch
+
+    # No substring matching
+    s_bio = "Хімічні джерела енергії — це окисно-відновні хімічні реакції, які відбуваються у клітинах організму."
+    terms_bio = extract_scientific_terminology_for_snippet(s_bio, "Хімічні джерела енергії", "biolohiya", cur)
+    assert "орган" not in terms_bio
+    assert "організм" in terms_bio
+
+    s_leaf = "Листки рослин поглинають світло-зелені промені в умовах належного освітлення."
+    terms_leaf = extract_scientific_terminology_for_snippet(s_leaf, "Листки рослин", "biolohiya", cur)
+    assert "світло" not in terms_leaf
+
+    s_etyk = "Несправедливість — неправильне ставлення до людини, що не відповідає морально-етичним нормам."
+    terms_etyk = extract_scientific_terminology_for_snippet(s_etyk, "Несправедливість", "etyka", cur)
+    assert "справедливість" not in terms_etyk
+    assert "мораль" not in terms_etyk
+
+    # 3. Inverted definitions
+    s_inv = "Висотою циліндра називається перпендикуляр, проведений із будь-якої точки однієї основи на іншу."
+    assert is_definitional_for_concept(s_inv, "Перпендикуляр", cur) is False
+    assert is_definitional_for_concept(s_inv, "Висота циліндра", cur) is True
+    assert extract_key_concept(s_inv, cur_ves=cur) == "Висота циліндра"
+
+    # 4. Truncated snippets & poetry
+    assert is_definitional_for_concept("Прикмета червня – найкоротша ніч замріяна казково-загадкова (В.", "Прикмета червня", cur) is False
+    assert extract_meaningful_text_snippet("Прикмета червня – найкоротша ніч замріяна казково-загадкова (В.", "Прикмета червня") == ""
+    assert extract_meaningful_text_snippet("Прикмета червня – найкоротша ніч замріяна казково-загадкова (В. Сосюра).", "Прикмета червня") == ""
+
+    # 5. Context-bound heads & descriptive non-concepts
+    assert clean_and_validate_candidate("Письменницький доробок авторки", cur) is None
+    assert clean_and_validate_candidate("Художній конфлікт вірша", cur) is None
+    assert clean_and_validate_candidate("Невеликі світло-зелені листки", cur) is None
+    assert is_definitional_for_concept("Письменницький доробок авторки – це поезія для дітей і дорослих.", "Письменницький доробок авторки", cur) is False
+
+    # 6. Metaphors & evaluative copulas
+    assert is_definitional_for_concept("Фотографія – символ вічності, упійманої миті життя.", "Фотографія", cur) is False
+    assert is_definitional_for_concept("Захист прав дитини — неодмінна частина захисту прав людини.", "Захист прав дитини", cur) is False
+
+    # 7. Conversational anaphora
+    s_conv = "Про один — карбон(IV) оксид — ви вже дізналися, але існує ще карбон(ІІ) оксид, який називають чадним газом."
+    assert has_unresolved_anaphora(s_conv) is True
+    assert is_definitional_for_concept(s_conv, "Чадний газ", cur) is False
+
+    # 8. Query framing alignment
+    art_chunk = TextbookChunk(
+        chunk_id="test_art_1",
+        title="Архітектура",
+        subject="mystetstvo",
+        grade="8",
+        author="Масол Л. М.",
+        source_file="mystetstvo_8.pdf",
+        text="Базиліка — прямокутна в плані споруда, розділена всередині рядами колон на кілька частин.",
+        char_count=92,
+        concept="Базиліка",
+        snippet="Базиліка — прямокутна в плані споруда, розділена всередині рядами колон на кілька частин.",
+        terms=["споруда", "колона"],
+    )
+    for q_idx in range(50):
+        task_art = synthesize_eval_task(art_chunk, q_idx)
+        assert "філологічн" not in task_art["query"].lower()
+        assert "мовознавч" not in task_art["query"].lower()
+        assert "літератур" not in task_art["query"].lower()

@@ -297,6 +297,9 @@ FORWARD_BACKWARD_REF_RE = re.compile(
     r"як\s+уже\s+зазначалося|"
     r"як\s+ми\s+вже\s+знаємо|"
     r"як\s+ви\s+вже\s+знаєте|"
+    r"ви\s+вже\s+(?:дізналися|знаєте|вивчили|чули|бачили)|"
+    r"ми\s+вже\s+(?:дізналися|знаємо|вивчили|розглянули)|"
+    r"про\s+(?:один|одну|одне|них|це)\b.*?\bви\s+вже\b|"
     r"як\s+відомо\s+з\s+попередн\w*|"
     r"рівносильн\w*\s+даній|"
     r"розглянут\w*\s+раніше|"
@@ -317,7 +320,7 @@ DEFINITIONAL_MARKER_RE = re.compile(
 )
 
 DEICTIC_OPENER_RE = re.compile(
-    r"^(?:нині|сьогодні|тепер|зараз|у\s+наш\s+час|в\s+наш\s+час|на\s+сьогодні|наразі|у\s+сучасному\s+світі|в\s+сучасному\s+світі)\b",
+    r"^(?:нині|сьогодні|тепер|зараз|у\s+наш\s+час|в\s+наш\s+час|на\s+сьогодні|наразі|у\s+сучасному\s+світі|в\s+сучасному\s+світі|про\s+(?:один|одну|одне|нього|неї|них|цей|цю|це|ці))\b",
     re.IGNORECASE,
 )
 
@@ -614,6 +617,7 @@ def is_vesum_attested(term: str, cur_ves: sqlite3.Cursor | None = None, use_defa
     return True
 
 
+DISALLOWED_VESUM_TAGS = (":alt", ":subst", ":nonstd", ":arch", ":bad", ":rare", ":dial", ":slang")
 _VESUM_LEMMA_CACHE: dict[str, set[str]] = {}
 _VESUM_WORD_INFO_CACHE: dict[str, list[tuple[str, str, str]]] = {}
 
@@ -627,8 +631,11 @@ def get_vesum_word_lemmas(word: str, cur_ves: sqlite3.Cursor | None = None) -> s
     if cur is None:
         return set()
     try:
-        cur.execute("SELECT lemma FROM forms_all WHERE word_form = ?", (w,))
-        res = {r[0].lower() for r in cur.fetchall()}
+        cur.execute("SELECT lemma, tags FROM forms_all WHERE word_form = ?", (w,))
+        raw_rows = cur.fetchall()
+        std_rows = [r for r in raw_rows if not any(tag in r[1] for tag in DISALLOWED_VESUM_TAGS)]
+        rows = std_rows if std_rows else raw_rows
+        res = {r[0].lower() for r in rows}
     except Exception:
         res = set()
     _VESUM_LEMMA_CACHE[w] = res
@@ -639,7 +646,7 @@ def get_vesum_lemmas(text: str, cur_ves: sqlite3.Cursor | None = None) -> set[st
     """Extract all dictionary lemmas for tokens in text from VESUM forms_all."""
     if not text:
         return set()
-    words = re.findall(r"[а-яіїєґ']+", text.lower())
+    words = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", text.lower())]
     lemmas: set[str] = set()
     for w in words:
         lemmas.update(get_vesum_word_lemmas(w, cur_ves))
@@ -656,7 +663,9 @@ def get_vesum_word_info(word: str, cur_ves: sqlite3.Cursor | None = None) -> lis
         return []
     try:
         cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ? OR word_form = ?", (w, w.capitalize()))
-        rows = cur.fetchall()
+        raw_rows = cur.fetchall()
+        std_rows = [r for r in raw_rows if not any(tag in r[2] for tag in DISALLOWED_VESUM_TAGS)]
+        rows = std_rows if std_rows else raw_rows
     except Exception:
         rows = []
     _VESUM_WORD_INFO_CACHE[w] = rows
@@ -1588,8 +1597,21 @@ def is_definitional_for_concept(
     if DANGLING_STARTER_RE.search(snippet) or has_unresolved_anaphora(snippet):
         return False
 
+    # Snippet syntax & truncation gates
+    if snippet.count("(") != snippet.count(")") or snippet.count("[") != snippet.count("]") or snippet.count("«") != snippet.count("»"):
+        return False
+    if re.search(r"\([А-ЯІЇЄҐ]\.?$|\b[А-ЯІЇЄҐ]\.$|\(\s*[А-ЯІЇЄҐ]\s*$", snippet):
+        return False
+    if re.search(r"\([А-ЯІЇЄҐ]\.?\s*[А-ЯІЇЄҐ][а-яіїєґ'-]+\)\.?$", snippet):
+        return False
+
     # 2. Metaphors
-    if re.search(r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b", snippet, re.IGNORECASE):
+    if re.search(
+        r"\b(?:наче|мов|немов|немовби|ніби|неначе|подібно\s+до)\b|"
+        r"[—–-]\s*(?:це\s+)?(?:символ|образ|втілення|уособлення|дзеркало|вікно|ключ\s+до|міст\s+між)\b",
+        snippet,
+        re.IGNORECASE,
+    ):
         return False
 
     # 3. Evaluative commentary and non-definitions
@@ -1598,6 +1620,7 @@ def is_definitional_for_concept(
         r"[—–-]\s*(?:це\s+)?(?:один|одна|одне|одні)\s+(?:з|із)\s+най\w+|"
         r"[—–-]\s*(?:це\s+)?якщо\b|"
         r"[—–-]\s*(?:це\s+)?така\s+сама\s+\w+,\s+як\b|"
+        r"[—–-]\s*(?:це\s+)?(?:неодмінн\w*|невід'ємн\w*|важлив\w*|значн\w*|головн\w*|провідн\w*)\s+(?:частин\w*|елемент|складова|умова|фактор|чинник)|"
         r"[—–-]\s*(?:це\s+)?(?:ефективн\w*|унікальн\w*|чудов\w*|важлив\w*|цікав\w*|зручн\w*|найкращ\w*|найважливіш\w*|головн\w*)\b|"
         r"\b(?:найважливішим\s+досягненням|чудовим\s+прикладом|варто\s+зазначити|цікаво,\s*що|як\s+відомо|має\s+важливе\s+значення)\b",
         snippet,
@@ -1621,16 +1644,28 @@ def is_definitional_for_concept(
     if re.search(r"\b(?:з\s+означення\s+випливає|як\s+наслідок|звідси\s+випливає|отже|таким\s+чином)\b", snippet, re.IGNORECASE):
         return False
 
-    # 6. Ordinals in concept
+    # 6. Ordinals, context-bound heads, descriptive attributes in concept
     if re.search(
         r"^(?:перш\w*|друг\w*|трет\w*|четверт\w*|п['ʼ’]?ят\w*|шост\w*|сьом\w*|восьм\w*|дев['ʼ’]?ят\w*|десят\w*|наступн\w*|останн\w*)\b",
         concept,
         re.IGNORECASE,
     ):
         return False
+    if re.search(
+        r"\b(?:авторки|автора|письменника|письменниці|поета|поетеси|вірша|твору|книжки|роману|повісті|оповідання|п'єси|драми|статті|тексту|героя|персонажа)\b",
+        concept,
+        re.IGNORECASE,
+    ):
+        return False
+    if re.match(
+        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*)\b",
+        concept,
+        re.IGNORECASE,
+    ):
+        return False
 
     def _extract_content_lemmas(phrase: str) -> set[str]:
-        words = re.findall(r"[а-яіїєґ']+", phrase.lower())
+        words = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", phrase.lower())]
         func_words = {
             "та", "і", "й", "або", "чи", "а", "але", "це", "до", "від", "на", "в", "у",
             "із", "зі", "за", "під", "над", "при", "про", "для", "без", "через", "з",
@@ -1673,19 +1708,33 @@ def is_definitional_for_concept(
         if _matches_concept(subj_lemmas):
             return True
 
-    # 2. Naming: називають X / X називають
-    for m in re.finditer(r"\b(?:називають|називається|названо)\s+([а-яіїєґ\s'-]{2,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snippet):
+    # 2. Naming: X називається Y (with strict instrumental case & inverted-definition check)
+    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{2,45})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snippet):
+        before_phrase = m.group(1).strip()
+        after_phrase = m.group(2).strip()
+        first_w = before_phrase.split()[0].lower().strip(".,;:?!'\"«»„“—–()")
+        first_w_info = get_vesum_word_info(first_w, cur)
+        is_before_oru = any("v_oru" in r[2] or ":oru" in r[2] for r in first_w_info) and not any("v_naz" in r[2] or ":naz" in r[2] for r in first_w_info)
+        if is_before_oru:
+            # Defined entity is before_phrase (e.g. Висотою циліндра -> concept must be Висота циліндра)
+            # after_phrase (перпендикуляр) is the genus: REJECT if concept matches after_phrase!
+            after_lemmas = _extract_content_lemmas(after_phrase)
+            if _matches_concept(after_lemmas):
+                return False
+            before_lemmas = _extract_content_lemmas(before_phrase)
+            if _matches_concept(before_lemmas):
+                return True
+        else:
+            before_lemmas = _extract_content_lemmas(before_phrase)
+            if _matches_concept(before_lemmas):
+                return True
+
+    for m in re.finditer(r"\bназивають\s+([а-яіїєґ\s'-]{2,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)", snippet):
         obj = m.group(1).strip()
         rec = recover_named_noun_phrase(snippet, obj, cur)
         cand_obj = rec or obj
         obj_lemmas = _extract_content_lemmas(cand_obj)
         if _matches_concept(obj_lemmas):
-            return True
-
-    for m in re.finditer(r"(?:^|[.!?«„]\s*)([А-ЯІЇЄҐ][а-яіїєґ\s'-]{2,45})\s+(?:називають|називається)\b", snippet):
-        subj = m.group(1).strip()
-        subj_lemmas = _extract_content_lemmas(subj)
-        if _matches_concept(subj_lemmas):
             return True
 
     # 3. Formal Означення. ... containing concept
@@ -1841,6 +1890,12 @@ def extract_meaningful_text_snippet(
             return -100
         if re.search(r"\(\s*\)|\.\s+\.|\.{3,}", s):
             return -100
+        if s.count("(") != s.count(")") or s.count("[") != s.count("]") or s.count("«") != s.count("»"):
+            return -100
+        if re.search(r"\([А-ЯІЇЄҐ]\.?$|\b[А-ЯІЇЄҐ]\.$|\(\s*[А-ЯІЇЄҐ]\s*$", s):
+            return -100
+        if re.search(r"\([А-ЯІЇЄҐ]\.?\s*[А-ЯІЇЄҐ][а-яіїєґ'-]+\)\.?$", s):
+            return -100
         if s.count(";") >= 2:
             return -100
         if any(w in EXERCISE_IMPERATIVES for w in re.findall(r"[а-яіїєґ']+", s.lower())):
@@ -1983,7 +2038,20 @@ def clean_and_validate_candidate(cand: str, cur_ves: sqlite3.Cursor | None = Non
         return None
 
     # Reject evaluative and descriptive adjective starters
-    if re.match(r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*|висок\w*\s+цінност\w*|велик\w*\s+листк\w*)\b", c, re.IGNORECASE):
+    if re.match(
+        r"^(?:найкращ\w*|найголовніш\w*|найбільш\w*|найважливіш\w*|найскладніш\w*|потужн\w*|ефективн\w*|унікальн\w*|чудов\w*|прекрасн\w*)\b|"
+        r"^(?:невелик\w*|маленьк\w*|велик\w*|світл\w*|темн\w*|довг\w*|коротк\w*|тонк\w*|товст\w*|кругл\w*|овальн\w*)\b",
+        c,
+        re.IGNORECASE,
+    ):
+        return None
+
+    # Reject context-bound heads (unnamed referent genitive)
+    if re.search(
+        r"\b(?:авторки|автора|письменника|письменниці|поета|поетеси|вірша|твору|книжки|роману|повісті|оповідання|п'єси|драми|статті|тексту|героя|персонажа)\b",
+        c,
+        re.IGNORECASE,
+    ):
         return None
 
     # Reject conjunctions and conditionals starting concept
@@ -2059,8 +2127,30 @@ def extract_key_concept(
             val = clean_and_validate_candidate(m_def.group(1), cur_ves=cur)
             if val:
                 return val
+        # Check X називається Y (with instrumental case disambiguation)
+        m_naz = re.search(
+            r"(?:^|[.!?«„●•*–-]\s*)([А-ЯІЇЄҐ][а-яіїєґa-zA-Z\s'-]{2,45})\s+називається\s+([а-яіїєґ\s'-]{3,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
+            line,
+        )
+        if m_naz:
+            before_phrase = m_naz.group(1).strip()
+            first_w = before_phrase.split()[0].lower().strip(".,;:?!'\"«»„“—–()")
+            first_w_info = get_vesum_word_info(first_w, cur)
+            is_before_oru = any("v_oru" in r[2] or ":oru" in r[2] for r in first_w_info) and not any("v_naz" in r[2] or ":naz" in r[2] for r in first_w_info)
+            if is_before_oru:
+                norm_val = lemmatize_noun_phrase(before_phrase, cur)
+                val = clean_and_validate_candidate(norm_val, cur_ves=cur)
+                if val:
+                    return val
+            else:
+                norm_val = lemmatize_noun_phrase(before_phrase, cur)
+                val = clean_and_validate_candidate(norm_val, cur_ves=cur)
+                if val:
+                    return val
+
+        # Check ... називають [Y]
         m_def2 = re.search(
-            r"\b(?:називають|називається|названо)\s+([а-яіїєґ\s'-]{3,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
+            r"\bназивають\s+([а-яіїєґ\s'-]{3,40})(?:[,.:;\(«»“\"—–-]|\bякщо\b|\bколи\b|\bде\b|\bна\b|$)",
             line,
         )
         if m_def2:
@@ -2142,7 +2232,11 @@ def extract_scientific_terminology_for_snippet(
     candidate_terms: list[str] = []
 
     # 1. Subject canonical terms present directly in target definition (only single-word noun lemmas!)
-    snip_lemmas = get_vesum_lemmas(target_text, cur)
+    snip_tokens = [m.group(0).strip("'-") for m in re.finditer(r"\b[а-яіїєґ]+(?:-[а-яіїєґ]+)*\b", target_text)]
+    snip_lemmas: set[str] = set()
+    for tok in snip_tokens:
+        snip_lemmas.update(get_vesum_word_lemmas(tok, cur))
+
     if isinstance(canonical_list, list):
         for ct in canonical_list:
             ct_lower = ct.lower()
@@ -2155,31 +2249,18 @@ def extract_scientific_terminology_for_snippet(
                 continue
             if not any(r[1] == "noun" for r in ct_info):
                 continue
-            ct_lemmas = get_vesum_lemmas(ct_lower, cur)
-            if ((ct_lemmas and ct_lemmas & snip_lemmas) or (ct_lower in target_text)) and ct_lower not in candidate_terms:
+            # Term MUST be a dictionary lemma of an actual whole token in the snippet! ZERO substring matching!
+            if ct_lower in snip_lemmas and ct_lower not in candidate_terms:
                 candidate_terms.append(ct_lower)
 
-    # 2. Extract substantive domain NOUNS directly from definition text via VESUM with POS disambiguation
-    tokens = re.findall(r"[а-яіїєґ']+", target_text)
-    for i, tok in enumerate(tokens):
+    # 2. Extract substantive domain NOUNS directly from definition text via VESUM with POS & context disambiguation
+    for i, tok in enumerate(snip_tokens):
         if len(tok) < 3 or tok in STOPWORD_TERMS:
             continue
-        # Specific domain disambiguations
-        if tok in ("пари", "парою", "парі", "паром", "пару") and subject in ("fizyka", "khimiya", "heohrafiya", "pryroda", "biolohiya"):
-            lem = "пара"
-            if lem not in candidate_terms and lem != conc_lower:
-                candidate_terms.append(lem)
-            continue
-        if tok in ("появ", "появу", "появи", "появою", "появі"):
-            lem = "поява"
-            if lem not in candidate_terms and lem != conc_lower:
-                candidate_terms.append(lem)
-            continue
-        if tok == "судом":
-            lem = "суд"
-            if lem not in candidate_terms and lem != conc_lower:
-                candidate_terms.append(lem)
-            continue
+        if "-" in tok:
+            hyphen_rows = get_vesum_word_info(tok, cur)
+            if not hyphen_rows or any(r[1] != "noun" for r in hyphen_rows):
+                continue
 
         rows = get_vesum_word_info(tok, cur)
         if not rows:
@@ -2199,11 +2280,14 @@ def extract_scientific_terminology_for_snippet(
         if not noun_rows:
             continue
 
-        # If preceded by an adjective, match case and number
-        prev_tok = tokens[i - 1] if i > 0 else None
+        prev_tok = snip_tokens[i - 1] if i > 0 else None
         chosen_row = None
+
+        # Contextual syntax check:
+        # A. Preceded by an adjective -> match gender, number, case
         if prev_tok:
-            cur.execute("SELECT tags FROM forms_all WHERE word_form IN (?, ?) AND pos = 'adj'", (prev_tok.lower(), prev_tok.capitalize()))
+            prev_low = prev_tok.lower()
+            cur.execute("SELECT tags FROM forms_all WHERE word_form IN (?, ?) AND pos = 'adj'", (prev_low, prev_tok.capitalize()))
             adj_tags = [r[0] for r in cur.fetchall()]
             if adj_tags:
                 def extract_cgn(tag: str):
@@ -2217,13 +2301,34 @@ def extract_scientific_terminology_for_snippet(
                     sing = [r for r in matching_noun_rows if ":p:" not in r[2]]
                     chosen_row = sing[0] if sing else matching_noun_rows[0]
 
+        # B. Genitive context: preceded by a noun, genitive preposition, or quantifier -> noun is in genitive (e.g. рядів колон -> колона)
+        if chosen_row is None and prev_tok:
+            prev_low = prev_tok.lower()
+            GEN_PREPS = {"до", "від", "з", "із", "зі", "для", "без", "після", "біля", "навколо", "серед", "проти", "замість", "внаслідок", "щодо", "поза", "поблизу", "крім", "окрім"}
+            GEN_QUANTS = {"один", "одна", "одне", "кілька", "декілька", "багато", "мало", "чимало"}
+            is_gen_context = prev_low in GEN_PREPS or prev_low in GEN_QUANTS
+            if not is_gen_context:
+                cur.execute("SELECT pos FROM forms_all WHERE word_form = ?", (prev_low,))
+                if any(r[0] == "noun" for r in cur.fetchall()):
+                    is_gen_context = True
+            if is_gen_context:
+                rod_rows = [r for r in noun_rows if ":v_rod" in r[2]]
+                if rod_rows:
+                    chosen_row = rod_rows[0]
+
+        # C. Disambiguate zero-ending genitive plurals vs obscure masculine homonyms:
+        # e.g. колон -> колона, точок -> точка, появ -> поява, пар -> пара
         if chosen_row is None:
-            # Prefer exact lemma match with token if available (e.g. метод -> метод, not метода)
-            exact_rows = [r for r in noun_rows if r[0].lower() == tok.lower()]
+            p_rod_rows = [r for r in noun_rows if ":p:v_rod" in r[2]]
+            m_naz_rows = [r for r in noun_rows if r[0].lower() == tok.lower() and ":v_naz" in r[2]]
+            if p_rod_rows and m_naz_rows:
+                chosen_row = p_rod_rows[0]
+
+        if chosen_row is None:
+            exact_rows = [r for r in noun_rows if r[0].lower() == tok.lower() and ":v_naz" in r[2]]
             if exact_rows:
                 chosen_row = exact_rows[0]
             else:
-                # Prefer nominative singular (:v_naz)
                 v_naz_rows = [r for r in noun_rows if ":v_naz" in r[2] and ":p:" not in r[2]]
                 if v_naz_rows:
                     chosen_row = v_naz_rows[0]
@@ -2430,15 +2535,15 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
             f"Ключові поняття теми: {terms_str}.\n\n"
             f"Вивчення цього матеріалу сприяє формуванню правової культури та активної громадянської позиції учнів."
         )
-    else:  # DISCIPLINE_PHILOLOGY_CULTURE
+    elif chunk.subject in ("ukrmova", "ukrlit", "zarlit"):
         templates = [
             f"Розкрийте сутність теми «{concept}» з предмета {subj_nom} ({grade} клас) за матеріалом підручника (автор — {author}). Вкажіть ключові поняття теми.",
             f"Охарактеризуйте змістове наповнення теми «{concept}» у курсі {subj_nom} ({grade} клас) на основі підручника ({author}). Наведіть основні фахові терміни.",
             f"У чому полягає культурно-освітнє значення теми «{concept}» у курсі з предмета {subj_nom} ({grade} клас, автор підручника — {author})? Вкажіть ключові терміни теми.",
             f"Поясніть теоретико-літературний та мовознавчий зміст теми «{concept}» для учнів {grade} класу з предмета {subj_nom} ({author}).",
-            f"Розкрийте художню та естетичну сутність теми «{concept}» у шкільному курсі {subj_nom} ({grade} клас, автор — {author}).",
+            f"Розкрийте художню та образну сутність теми «{concept}» у шкільному курсі {subj_nom} ({grade} клас, автор — {author}).",
             f"Дайте фахове визначення поняття «{concept}» у контексті вивчення предмета {subj_nom} ({grade} клас, підручник {author}).",
-            f"Які ключові філологічні та мистецькі категорії розкриває тема «{concept}» у курсі {subj_nom} ({grade} клас, автор — {author})?",
+            f"Які ключові філологічні та естетичні категорії розкриває тема «{concept}» у курсі {subj_nom} ({grade} клас, автор — {author})?",
             f"Сформулюйте зміст поняття «{concept}» відповідно до підручника з предмета {subj_nom} для {grade} класу ({author}).",
             f"Як у навчальному курсі {subj_nom} ({grade} клас, {author}) інтерпретується сутність та значення теми «{concept}»?",
             f"Опишіть мовностилістичні та змістові характеристики теми «{concept}» за підручником {subj_nom} ({grade} клас, {author}).",
@@ -2466,7 +2571,45 @@ def synthesize_eval_task(chunk: TextbookChunk, idx: int, q_var_override: int | N
             f"Матеріал теми «{concept}» посідає важливе місце в курсі {subj_nom} ({grade} клас).\n\n"
             f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
             f"Ключові терміни теми: {terms_str}.\n\n"
-            f"Опанування цієї теми формує високу культуру мислення та грамотність учнів."
+            f"Опанування цієї теми формує високу культуру мовлення та грамотність учнів."
+        )
+    else:  # Culture, Art, Ethics, Technology (mystetstvo, etyka, zdorovia, tekhnolohiyi)
+        templates = [
+            f"Розкрийте сутність теми «{concept}» з предмета {subj_nom} ({grade} клас) за матеріалом підручника (автор — {author}). Вкажіть ключові поняття теми.",
+            f"Охарактеризуйте змістове наповнення теми «{concept}» у курсі {subj_nom} ({grade} клас) на основі підручника ({author}). Наведіть основні фахові терміни.",
+            f"У чому полягає культурно-освітнє значення теми «{concept}» у курсі з предмета {subj_nom} ({grade} клас, автор підручника — {author})? Вкажіть ключові терміни теми.",
+            f"Поясніть практичний та світоглядний зміст теми «{concept}» для учнів {grade} класу з предмета {subj_nom} ({author}).",
+            f"Розкрийте художню та естетичну сутність теми «{concept}» у шкільному курсі {subj_nom} ({grade} клас, автор — {author}).",
+            f"Дайте фахове визначення поняття «{concept}» у контексті вивчення предмета {subj_nom} ({grade} клас, підручник {author}).",
+            f"Які ключові естетичні та практичні категорії розкриває тема «{concept}» у курсі {subj_nom} ({grade} клас, автор — {author})?",
+            f"Сформулюйте зміст поняття «{concept}» відповідно до підручника з предмета {subj_nom} для {grade} класу ({author}).",
+            f"Як у навчальному курсі {subj_nom} ({grade} клас, {author}) інтерпретується сутність та значення теми «{concept}»?",
+            f"Опишіть змістові та ціннісні характеристики теми «{concept}» за підручником {subj_nom} ({grade} клас, {author}).",
+            f"Проаналізуйте культурно-історичне значення поняття «{concept}» у курсі {subj_nom} ({grade} клас, автор — {author}).",
+            f"У чому полягає навчально-виховний потенціал теми «{concept}» у курсі з предмета {subj_nom} ({grade} клас, підручник {author})?",
+            f"Як у шкільному підручнику з предмета {subj_nom} ({grade} клас, {author}) розкрито сутність поняття «{concept}»? Наведіть ключові поняття.",
+            f"Визначте теоретичні та практичні засади поняття «{concept}» у курсі {subj_nom} ({grade} клас, автор — {author}).",
+            f"Яку естетичну та змістову характеристику теми «{concept}» пропонує підручник {subj_nom} для {grade} класу ({author})?",
+            f"Схарактеризуйте ключові поняття та зміст теми «{concept}» у курсі {subj_nom} ({grade} клас, автор підручника — {author}).",
+            f"Поясніть культурно-мистецьку та світоглядну сутність поняття «{concept}» для учнів {grade} класу з предмета {subj_nom} ({author}).",
+            f"У чому полягає практичне та культурне значення теми «{concept}» у навчальному курсі {subj_nom} ({grade} клас, {author})?",
+            f"Розкрийте змістовий апарат та теоретичні ознаки теми «{concept}» за підручником з предмета {subj_nom} ({grade} клас, автор — {author}).",
+            f"Наведіть змістовне визначення поняття «{concept}» відповідно до курсу {subj_nom} ({grade} клас, підручник {author}).",
+            f"Які ключові фахові поняття розкривають тему «{concept}» у підручнику {subj_nom} ({grade} клас, {author})?",
+            f"Сформулюйте фахове розуміння поняття «{concept}» у змісті курсу {subj_nom} ({grade} клас, автор — {author}).",
+            f"Опишіть освітній зміст навчального матеріалу «{concept}» для {grade} класу з курсу {subj_nom} ({author}).",
+            f"Узагальніть знання про тему «{concept}» у структурі шкільного підручника {subj_nom} ({grade} клас, {author}).",
+        ]
+        query = templates[q_var % len(templates)]
+        step1 = f"1. Змістовий аналіз: Розглядаємо навчальні аспекти теми «{concept}» у курсі {subj_nom} ({grade} клас)."
+        step2 = f"2. Текстологічна база: Наводимо матеріал підручника ({author}): «{snippet}»"
+        step3 = f"3. Термінологічний аналіз: Виділяємо ключові поняття теми: {terms_str}."
+        step4 = "4. Педагогічний підсумок: Подано структурований зміст навчального матеріалу з дотриманням фахових норм."
+        solution = (
+            f"Матеріал теми «{concept}» посідає важливе місце в курсі {subj_nom} ({grade} клас).\n\n"
+            f"У підручнику ({author}) подано такий виклад:\n«{snippet}»\n\n"
+            f"Ключові терміни теми: {terms_str}.\n\n"
+            f"Опанування цієї теми сприяє всебічному розвитку та формуванню естетичної і практичної культури учнів."
         )
 
     t_idx = q_var % len(templates)
