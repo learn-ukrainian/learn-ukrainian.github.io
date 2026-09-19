@@ -1153,30 +1153,36 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
         "card_id": "verb_aspect_pref_chytaty_perf",
         "category": VerbCategory.ASPECT_PREFIXATION,
         "cefr_level": "A1",
-        "prompt_sentence": "Учора ввечері я від першої до останньої сторінки ___ цю книгу.",
+        "prompt_sentence": "Учора ввечері я вперше від початку до кінця ___ цю захопливу нову книгу (виберіть нейтральну доконану пару до «читати»).",
         "blank_target": "прочитав",
         "correct_answer": "прочитав",
         "distractors": [
             {
-                "text": "дочитав",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "прочитавав",
+                "interference_type": VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT,
+                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_IMPERFECTIVATION_ABLAUT],
             },
             {
-                "text": "перечитав",
+                "text": "почитав",
                 "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "explanation": {
+                    "ua": "Префікс по- позначає дію, обмежену в часі («почитав трохи»), а не повне прочитання від початку до кінця.",
+                    "en": "The prefix po- denotes action limited in time ('read for a bit'), not complete reading from beginning to end.",
+                },
             },
             {
-                "text": "вичитав",
-                "interference_type": VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_ASPECT_PREFIX_CONFUSION],
+                "text": "прочитив",
+                "interference_type": VerbInterferenceType.FALSE_CONJUGATION_CLASS_II_FOR_I,
+                "explanation": {
+                    "ua": "Помилкове застосування суфікса II дієвідміни -ив замість -ав: правильно «прочитав», а не «*прочитив» (Правопис 2019 § 115).",
+                    "en": "Erroneous use of Class II suffix -yv instead of -av: standard is 'prochytav', not '*prochytiv' (Pravopys 2019 § 115).",
+                },
             },
         ],
         "pravopys_section": "Правопис 2019 § 115",
         "rule_summary": {
-            "ua": "Нейтральною видовою парою до «читати» для завершеної дії є «прочитати» (перечитати означає читати вдруге).",
-            "en": "The neutral perfective partner to 'chytaty' is 'prochytaty'.",
+            "ua": "Нейтральною видовою парою до «читати» для позначення повністю завершеної дії є «прочитати» з префіксом про- (Правопис 2019 § 115).",
+            "en": "The neutral perfective counterpart to 'chytaty' denoting fully completed action is 'prochytaty' with prefix pro- (Pravopys 2019 § 115).",
         },
     },
     {
@@ -2057,7 +2063,7 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_PARTICIPLE_SUFFIX_NYI_TYI],
             },
             {
-                "text": "розбиване",
+                "text": "розбитене",
                 "interference_type": VerbInterferenceType.FALSE_PARTICIPLE_SUFFIX_NYI_TYI,
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_PARTICIPLE_SUFFIX_NYI_TYI],
             },
@@ -2147,7 +2153,7 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_PARTICIPLE_SUFFIX_NYI_TYI],
             },
             {
-                "text": "зшиваний",
+                "text": "зшитений",
                 "interference_type": VerbInterferenceType.FALSE_PARTICIPLE_SUFFIX_NYI_TYI,
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_PARTICIPLE_SUFFIX_NYI_TYI],
             },
@@ -2609,9 +2615,12 @@ CANONICAL_VERB_CARDS: list[dict[str, Any]] = [
                 "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
             },
             {
-                "text": "лежачи",
+                "text": "лягши",
                 "interference_type": VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX,
-                "explanation": INTERFERENCE_EXPLANATIONS[VerbInterferenceType.FALSE_GERUND_ASPECT_SUFFIX],
+                "explanation": {
+                    "ua": "У дієприслівнику доконаного виду від «лягти» у закритому складі відбувається чергування кореневого [а] (я) на [і]: «лігши», а не «*лягши» (Правопис 2019 § 120).",
+                    "en": "In the perfective gerund of 'liahty', the closed root syllable alternates [a] (ia) to [i]: 'lihshy', not '*liahshy' (Pravopys 2019 § 120).",
+                },
             },
             {
                 "text": "лігшися",
@@ -2803,11 +2812,15 @@ def verify_distractors_with_vesum(
                     )
                     rows = cursor.fetchall()
 
-                # A distractor is invalid if it matches a standard verb form in VESUM without non-standard tags
+                # A distractor is invalid if it matches a standard verb, gerund, or participle form in VESUM without non-standard tags
                 standard_verb_rows = [
                     r
                     for r in rows
-                    if r[1].startswith("verb")
+                    if (
+                        r[1].startswith("verb")
+                        or r[1] == "advp"
+                        or (r[1] == "adj" and "adjp" in r[2])
+                    )
                     and ":bad" not in r[2]
                     and ":alt" not in r[2]
                     and ":subst" not in r[2]

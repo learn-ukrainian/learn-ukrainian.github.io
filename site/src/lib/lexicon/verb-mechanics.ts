@@ -240,11 +240,10 @@ export function resolveDentalMutationRule(mutationKey: string): {
       ruleEn: 'zd alternates with zhdzh: yizdyty -> yizhdzhu.',
     },
   };
-  const res = mapping[mutationKey];
-  if (!res) {
+  if (!Object.prototype.hasOwnProperty.call(mapping, mutationKey)) {
     throw new Error(`Unknown dental mutation key: ${mutationKey}`);
   }
-  return res;
+  return mapping[mutationKey];
 }
 
 /**

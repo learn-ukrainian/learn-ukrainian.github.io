@@ -89,6 +89,10 @@ def test_resolve_dental_mutation_rule():
         assert expected_example in ua
         assert "alternates" in en
 
+    for invalid_key in ("unknown_key", "constructor", "toString", "__proto__"):
+        with pytest.raises(ValueError, match="Unknown dental mutation key"):
+            resolve_dental_mutation_rule(invalid_key)
+
 
 def test_resolve_imperative_rule():
     """Verify imperative mood rules per Правопис 2019 § 116."""

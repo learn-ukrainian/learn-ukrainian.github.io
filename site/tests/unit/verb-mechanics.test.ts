@@ -108,6 +108,9 @@ describe('verb-mechanics', () => {
     // @ts-expect-error test invalid category
     expect(() => resolveConjugationClassRule('invalid_cat')).toThrow(/not a primary conjugation/);
     expect(() => resolveDentalMutationRule('unknown_key')).toThrow(/Unknown dental mutation key/);
+    expect(() => resolveDentalMutationRule('constructor')).toThrow(/Unknown dental mutation key/);
+    expect(() => resolveDentalMutationRule('toString')).toThrow(/Unknown dental mutation key/);
+    expect(() => resolveDentalMutationRule('__proto__')).toThrow(/Unknown dental mutation key/);
   });
 
   it('produces targeted feedback for learner responses', () => {
