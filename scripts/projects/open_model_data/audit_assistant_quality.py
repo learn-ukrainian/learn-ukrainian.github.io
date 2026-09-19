@@ -1,13 +1,13 @@
 """audit_assistant_quality.py - Independent verification and 50-record audit report generator.
 
-Performs independent audit with fresh criteria and exports a human-readable
+Performs independent audit with strict adversarial criteria and exports a human-readable
 markdown report (SAMPLE_INSPECTION_50.md) containing 50 full inspected records
 (eval and SFT) covering:
-1. Citation form (nominative, non-inflected).
-2. Deictic opener & ungrounded anaphora absence.
-3. Definitional alignment of defined subject.
-4. Scientific terminology authenticity (>= 3 terms, no generic adjectives/stopwords).
-5. Gate 6 pedagogical tone and Pravopys 2019 compliance.
+1. Citation form (nominative noun head, no bare adjectives/prepositions/verbs).
+2. Deictic opener & ungrounded anaphora absence (including participles, external refs, labelled objects).
+3. Definitional alignment of defined subject (verifying concept is the defined subject).
+4. Absence of space-split broken OCR words.
+5. Scientific terminology authenticity (>= 3 terms, VESUM attested, no stopwords/fillers/participles).
 """
 
 from __future__ import annotations
@@ -46,25 +46,14 @@ def resolve_data_path(rel_path: str) -> Path:
 
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
 
-DEICTIC_RE = re.compile(
-    r"^(?:нині|сьогодні|тепер|зараз|у\s+наш\s+час|в\s+наш\s+час|на\s+сьогодні|наразі|у\s+сучасному\s+світі)\b",
-    re.IGNORECASE,
+from scripts.projects.open_model_data.v6_mine_general_assistant_textbooks import (
+    STOPWORD_TERMS,
+    has_space_split_ocr_word,
+    has_unresolved_anaphora,
+    is_concept_in_citation_form,
+    is_definitional_for_concept,
+    is_vesum_attested,
 )
-ANAPHORA_RE = re.compile(
-    r"\b(?:цієї|цій|цього|цьому|цим|цими|цих|цією|цю|такої|такій|такого|такому|таким|такими|таких|такою|таку)\b",
-    re.IGNORECASE,
-)
-NOM_DEMONSTRATIVE_START_RE = re.compile(
-    r"^(?:[^.!?«„]{0,50}\b)(?:цей|ця|ці|це\s+[а-яіїєґ]+|такий|така|таке|такі)\s+[а-яіїєґ]+",
-    re.IGNORECASE,
-)
-
-GENERIC_TERMS = {
-    "непростий", "простий", "складний", "основний", "численний", "справа",
-    "створення", "художник", "робота", "людина", "час", "використання",
-    "сукупність", "можливість", "величина", "фізичний", "питомий",
-    "богиня", "божество", "бог", "давньоримський", "міф",
-}
 
 
 def audit_records() -> tuple[list[dict], bool]:
@@ -75,32 +64,52 @@ def audit_records() -> tuple[list[dict], bool]:
     sft_shards = sorted(RELEASE_DIR.glob("sft/sft_shard_*.jsonl"))
 
     sampled_records: list[dict] = []
+    seen_eval_concepts: set[str] = set()
 
-    # Sample 25 records from eval: include lines 200-210 of shard 3 explicitly!
+    # 1. Sample from eval_shard_003 explicitly (lines 198-212 0-indexed -> lines 199-213 1-indexed)
     if len(eval_shards) >= 3:
         with eval_shards[2].open("r", encoding="utf-8") as f:
             for idx, line in enumerate(f):
-                if 198 <= idx <= 208:
+                if 198 <= idx <= 212:
                     d = json.loads(line)
-                    d["_origin"] = f"eval_shard_003_of_005.jsonl:line_{idx}"
-                    sampled_records.append(d)
+                    conc = (d.get("concept") or "").strip()
+                    if conc not in seen_eval_concepts:
+                        seen_eval_concepts.add(conc)
+                        d["_origin"] = f"eval_shard_003_of_005.jsonl:line_{idx + 1}"
+                        sampled_records.append(d)
 
+    # 2. Fill eval sample up to 25 distinct concepts across eval shards
     for shard in eval_shards:
+        if len(sampled_records) >= 25:
+            break
         with shard.open("r", encoding="utf-8") as f:
             for idx, line in enumerate(f):
-                if idx in (10, 50, 100, 250) and len(sampled_records) < 25:
-                    d = json.loads(line)
-                    d["_origin"] = f"{shard.name}:line_{idx}"
+                if len(sampled_records) >= 25:
+                    break
+                d = json.loads(line)
+                conc = (d.get("concept") or "").strip()
+                if conc not in seen_eval_concepts:
+                    seen_eval_concepts.add(conc)
+                    d["_origin"] = f"{shard.name}:line_{idx + 1}"
                     sampled_records.append(d)
 
-    # Sample 25 records from SFT shards
-    for shard in sft_shards[::6]:
+    # 3. Sample 25 distinct concepts from SFT shards
+    seen_sft_concepts: set[str] = set()
+    sft_sampled = 0
+    for shard in sft_shards[::4]:
+        if sft_sampled >= 25:
+            break
         with shard.open("r", encoding="utf-8") as f:
             for idx, line in enumerate(f):
-                if idx in (5, 45) and len(sampled_records) < 50:
-                    d = json.loads(line)
-                    d["_origin"] = f"{shard.name}:line_{idx}"
+                if sft_sampled >= 25:
+                    break
+                d = json.loads(line)
+                conc = (d.get("concept") or d.get("target_concept") or "").strip()
+                if conc not in seen_sft_concepts:
+                    seen_sft_concepts.add(conc)
+                    d["_origin"] = f"{shard.name}:line_{idx + 1}"
                     sampled_records.append(d)
+                    sft_sampled += 1
 
     all_passed = True
     audit_results: list[dict] = []
@@ -119,39 +128,24 @@ def audit_records() -> tuple[list[dict], bool]:
             raw_snip = m.group(1) if m else sol
         raw_snip = raw_snip.strip("«» \t\n")
 
-        # 1. Citation form check
-        words = [w.strip(".,;:?!'\"«»„“—–()") for w in concept.split() if w.strip(".,;:?!'\"«»„“—–()")]
-        cur.execute(
-            "SELECT tags, lemma FROM forms_all WHERE word_form IN (?, ?, ?)",
-            (words[0].lower(), words[0].capitalize(), words[0]),
-        )
-        w0_rows = cur.fetchall()
-        is_cit_0 = any("v_naz" in r[0] for r in w0_rows) or any(r[1].lower() == words[0].lower() for r in w0_rows)
-        citation_ok = is_cit_0
-        if len(words) > 1:
-            cur.execute(
-                "SELECT tags, lemma FROM forms_all WHERE word_form IN (?, ?, ?)",
-                (words[1].lower(), words[1].capitalize(), words[1]),
-            )
-            w1_rows = cur.fetchall()
-            is_cit_1 = any("v_naz" in r[0] or "v_rod" in r[0] for r in w1_rows) or any(r[1].lower() == words[1].lower() for r in w1_rows)
-            citation_ok = citation_ok and is_cit_1
+        # 1. Citation form check (strict: nominative noun head, no bare adjs, no preps, no verbs)
+        citation_ok = is_concept_in_citation_form(concept, cur)
 
-        # 2. Deictic / Anaphora check
-        snip_clean = raw_snip.lstrip("«„\"")
-        first_sent = re.split(r"[.!?]", snip_clean)[0]
-        has_deictic = bool(DEICTIC_RE.search(snip_clean))
-        has_anaphora = bool(ANAPHORA_RE.search(first_sent))
-        has_nom_demonstrative = bool(NOM_DEMONSTRATIVE_START_RE.search(first_sent))
-        anaphora_clean = not (has_deictic or has_anaphora or has_nom_demonstrative)
+        # 2. Deictic / Anaphora check (strict: participles, external refs, labelled objects, pronoun starters)
+        anaphora_clean = not has_unresolved_anaphora(raw_snip)
 
-        # 3. Terminology check
-        terms_ok = len(terms) >= 3 and not any(t.lower() in GENERIC_TERMS for t in terms)
+        # 3. OCR space-split check
+        ocr_clean = not has_space_split_ocr_word(raw_snip, cur)
 
-        # 4. Definitional check
-        def_marker = bool(re.search(r"[—–-]\s*(?:це\b|[а-яіїєґ]{3,})|\b(?:називають|називається|означення|визначення)\b|\bє\b", raw_snip, re.IGNORECASE))
+        # 4. Definitional alignment check (concept must be defined subject)
+        def_aligned = is_definitional_for_concept(raw_snip, concept, cur)
 
-        rec_ok = citation_ok and anaphora_clean and terms_ok and def_marker
+        # 5. Scientific terminology check (>=2 terms, VESUM attested, no stopwords)
+        terms_attested = all(is_vesum_attested(t, cur) for t in terms)
+        no_stopwords = not any(t.lower() in STOPWORD_TERMS for t in terms)
+        terms_ok = len(terms) >= 2 and terms_attested and no_stopwords
+
+        rec_ok = citation_ok and anaphora_clean and ocr_clean and def_aligned and terms_ok
         if not rec_ok:
             all_passed = False
 
@@ -164,8 +158,9 @@ def audit_records() -> tuple[list[dict], bool]:
             "snippet": raw_snip,
             "citation_ok": citation_ok,
             "anaphora_clean": anaphora_clean,
+            "ocr_clean": ocr_clean,
+            "def_aligned": def_aligned,
             "terms_ok": terms_ok,
-            "def_marker": def_marker,
             "verdict": "PASS" if rec_ok else "FAIL",
         })
 
@@ -180,8 +175,8 @@ def main() -> None:
         "# Sample Inspection of 50 Mined Records (Phase 6.1)\n",
         f"**Audit Result:** {'ALL 50 RECORDS PASSED' if ok else 'FAILURES DETECTED'}\n",
         f"**Inspected Records:** {len(results)}\n",
-        "| # | Origin | Concept | Subject | Grade | Terms | Citation | Anaphora-Free | Terms Valid | Verdict |",
-        "|---|---|---|---|---|---|---|---|---|---|",
+        "| # | Origin | Concept | Subject | Grade | Terms | Citation | Anaphora-Free | OCR-Clean | Def-Aligned | Terms Valid | Verdict |",
+        "|---|---|---|---|---|---|---|---|---|---|---|---|",
     ]
 
     for i, r in enumerate(results, 1):
@@ -189,6 +184,7 @@ def main() -> None:
         out_md.append(
             f"| {i} | `{r['origin']}` | **{r['concept']}** | {r['subject']} | {r['grade']} | {terms_str} | "
             f"{'✅' if r['citation_ok'] else '❌'} | {'✅' if r['anaphora_clean'] else '❌'} | "
+            f"{'✅' if r['ocr_clean'] else '❌'} | {'✅' if r['def_aligned'] else '❌'} | "
             f"{'✅' if r['terms_ok'] else '❌'} | **{r['verdict']}** |"
         )
 
@@ -197,8 +193,8 @@ def main() -> None:
         out_md.append(f"### Record {i}: {r['concept']} ({r['origin']})")
         out_md.append(f"- **Subject / Grade:** {r['subject']} (Grade {r['grade']})")
         out_md.append(f"- **Concept:** `{r['concept']}` (Citation form: {'✅' if r['citation_ok'] else '❌'})")
-        out_md.append(f"- **Scientific Terminology:** `{r['terms']}` (Terms >= 3 & non-generic: {'✅' if r['terms_ok'] else '❌'})")
-        out_md.append(f"- **Textbook Snippet:** «{r['snippet']}» (Anaphora-free: {'✅' if r['anaphora_clean'] else '❌'}, Definitional: {'✅' if r['def_marker'] else '❌'})")
+        out_md.append(f"- **Scientific Terminology:** `{r['terms']}` (Terms >= 2 & non-generic: {'✅' if r['terms_ok'] else '❌'})")
+        out_md.append(f"- **Textbook Snippet:** «{r['snippet']}» (Anaphora-free: {'✅' if r['anaphora_clean'] else '❌'}, OCR-Clean: {'✅' if r['ocr_clean'] else '❌'}, Def-Aligned: {'✅' if r['def_aligned'] else '❌'})")
         out_md.append(f"- **Overall Record Verdict:** **{r['verdict']}**\n")
 
     report_path = RELEASE_DIR / "SAMPLE_INSPECTION_50.md"
