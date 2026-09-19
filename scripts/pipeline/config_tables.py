@@ -1334,8 +1334,13 @@ def get_activity_config(
     track: str,
     module_num: int,
     slug: str | None = None,
+    *,
+    forbid: tuple[str, ...] = (),
 ) -> dict[str, str]:
     """Get activity configuration for a track + module number.
+
+    ``forbid`` names activity types the caller rules out for this module; each
+    moves from the allowed/priority lists to ``FORBIDDEN_ACTIVITY_TYPES``.
 
     The optional ``slug`` argument routes checkpoint modules
     (slug starts with ``checkpoint-``) to a checkpoint-specific
@@ -1364,6 +1369,8 @@ def get_activity_config(
     # Dynamic rules applied to the copy
     if track == "a1" and module_num > 10:
         _phase_out_activity_type(config, "anagram")
+    for activity_type in forbid:
+        _phase_out_activity_type(config, activity_type)
 
     return config
 

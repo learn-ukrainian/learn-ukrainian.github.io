@@ -52,6 +52,7 @@ from scripts.audit.failure_classes import FailureClass, FailureRecord
 from scripts.audit.module_size_policy_audit import markdown_module_evidence
 from scripts.audit.wiki_completeness_gate import SEMINAR_LEVELS
 from scripts.build.alphabet_modules import (
+    blank_empty_sign_choices,
     filter_line_break_activities,
     filter_line_break_lesson_map,
     filter_line_break_paragraphs,
@@ -1126,14 +1127,15 @@ def _plan_content_for_prompt(plan: Mapping[str, Any], plan_content: str) -> str:
 
 
 def _original_artifact_for_prompt(plan: Mapping[str, Any], name: str, text: str) -> str:
-    """Original artifact text for the upgrade prompt, minus line-break teaching for alphabet slugs."""
+    """Original artifact text for the upgrade prompt; alphabet slugs lose line-break teaching and worded empty-sign choices."""
     if not is_alphabet_slug(plan.get("slug")):
         return text
     if name == "module.md":
         return filter_line_break_paragraphs(text)
     if name == "activities.yaml":
         data = yaml.safe_load(text)
-        return yaml.safe_dump(filter_line_break_activities(data), allow_unicode=True, sort_keys=False)
+        data = blank_empty_sign_choices(filter_line_break_activities(data))
+        return yaml.safe_dump(data, allow_unicode=True, sort_keys=False)
     if name == "resources.yaml":
         data = yaml.safe_load(text)
         return yaml.safe_dump(filter_line_break_resources(data), allow_unicode=True, sort_keys=False)
@@ -1167,8 +1169,6 @@ def render_upgrade_prompt(
     prior_vocabulary: Sequence[str] = (),
 ) -> str:
     """Render the V7 lesson-scoped upgrade brief without retrieval or model calls."""
-    from scripts.pipeline.config_tables import get_activity_config
-
     plan = filter_line_break_plan(plan)
     level = str(plan["level"]).lower()
     sequence = int(plan["sequence"])
@@ -1179,7 +1179,7 @@ def render_upgrade_prompt(
         "BASE_LEVEL": level,
         "SLUG": str(plan["slug"]),
         "LESSON_SCOPE": f"lesson {lesson}" if lesson is not None else "dry-run preview of all lesson briefs",
-        "ACTIVITY_CONFIG": yaml.safe_dump(get_activity_config(level, sequence, str(plan["slug"])), sort_keys=False),
+        "ACTIVITY_CONFIG": yaml.safe_dump(_activity_config(level, sequence, str(plan["slug"])), sort_keys=False),
         "LEARNER_STATE": state,
         "LESSON_MAP": yaml.safe_dump(
             _lesson_map_for_prompt(plan, lesson_map, source_dir), allow_unicode=True, sort_keys=False,
@@ -10247,7 +10247,10 @@ def _placeholder_review_report() -> dict[str, dict[str, Any]]:
 def _activity_config(level: str, module_num: int, slug: str | None = None) -> dict[str, str]:
     from pipeline.config_tables import get_activity_config
 
-    return get_activity_config(level.lower(), module_num, slug)
+    # Alphabet modules do not teach line breaks (#8237): divide-words moves from
+    # the allowed lists to the forbidden one, for the prompt and the type gate alike.
+    forbid = ("divide-words",) if is_alphabet_slug(slug) else ()
+    return get_activity_config(level.lower(), module_num, slug, forbid=forbid)
 
 
 def _required_vocabulary_for_contract(plan: Mapping[str, Any]) -> list[Any]:

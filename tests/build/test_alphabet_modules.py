@@ -269,3 +269,95 @@ def test_live_special_signs_lessons_yaml_still_points_at_the_dropped_original():
     dropped = am.line_break_original_keys(base)
     lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
     assert dropped and dropped <= {(p["placement"], p["index"]) for p in lesson_map["provenance"]}
+
+
+# --- #8236: the writer never sees a worded empty-sign choice or divide-words as allowed ---
+
+@pytest.mark.parametrize("choice", ["без знака", "без зна́ка — no sign", "Немає знака", "No sign", "Немає знака — No sign"])
+def test_whole_worded_empty_sign_choice_is_recognised(choice):
+    assert am.is_empty_sign_choice(choice)
+
+
+@pytest.mark.parametrize("text", ["", "ь", "'", "слово без знака", "інші слова тут без знака.", None, 3])
+def test_prose_and_real_choices_are_not_empty_sign_choices(text):
+    assert not am.is_empty_sign_choice(text)
+
+
+def test_blank_empty_sign_choices_rewrites_only_options_and_answers():
+    from scripts.build import lesson_gates
+
+    fill = {
+        "id": "act-3", "type": "fill-in",
+        "instruction": "Обери ь, апо́строф або без знака. — Choose ь, an apostrophe, or no sign.",
+        "items": [
+            {"sentence": "свя___то", "answer": "без знака — no sign", "options": ["ь", "'", "без знака — no sign"],
+             "explanation": "Тут без знака."},
+            {"sentence": "ден___", "answer": "ь", "options": ["ь", "'", "Немає знака"]},
+        ],
+    }
+    sort = {"id": "act-4", "type": "group-sort", "groups": [{"label": "Немає знака — No sign", "items": ["свято"]}]}
+    data = {"inline": [fill], "workbook": [sort]}
+    assert lesson_gates.fill_in_activity_defects(fill)  # the dirty original still fails the gate
+
+    out = am.blank_empty_sign_choices(data)
+
+    items = out["inline"][0]["items"]
+    assert items[0]["answer"] == "" and items[0]["options"] == ["ь", "'", ""]
+    assert items[1]["answer"] == "ь" and items[1]["options"] == ["ь", "'", ""]
+    assert items[0]["explanation"] == "Тут без знака."
+    assert out["inline"][0]["instruction"] == fill["instruction"]
+    assert out["workbook"] == [sort]  # the sorting concept keeps its words
+    assert lesson_gates.fill_in_activity_defects(out["inline"][0]) == []
+    assert fill["items"][0]["answer"] == "без знака — no sign"  # input untouched
+
+
+def test_non_alphabet_original_activities_keep_their_wording():
+    text = yaml.safe_dump({"inline": [{"type": "fill-in", "items": [{"answer": "no sign", "options": ["no sign"]}]}]})
+    assert linear_pipeline._original_artifact_for_prompt({"slug": "my-family"}, "activities.yaml", text) == text
+
+
+@pytest.mark.parametrize("slug", sorted(am.ALPHABET_SLUGS))
+def test_alphabet_activity_config_forbids_divide_words(slug):
+    config = linear_pipeline._activity_config("a1", 3, slug)
+    for key in ("INLINE_ALLOWED_TYPES", "WORKBOOK_ALLOWED_TYPES", "ALLOWED_ACTIVITY_TYPES"):
+        assert "divide-words" not in config[key], key
+    assert "divide-words" in config["FORBIDDEN_ACTIVITY_TYPES"]
+    other = linear_pipeline._activity_config("a1", 4, "stress-and-melody")
+    assert "divide-words" in other["ALLOWED_ACTIVITY_TYPES"]
+    assert "divide-words" not in other["FORBIDDEN_ACTIVITY_TYPES"]
+
+
+def test_alphabet_type_gate_rejects_divide_words():
+    acts = [{"type": "divide-words"}]
+    assert linear_pipeline._activity_type_gate(acts, "a1", 3, "special-signs")["forbidden"] == ["divide-words"]
+    assert linear_pipeline._activity_type_gate(acts, "a1", 4, "stress-and-melody")["passed"]
+
+
+@pytest.mark.parametrize("lesson", [None, 5])
+def test_special_signs_upgrade_prompt_has_no_worded_empty_choice_or_divide_words_type(lesson):
+    from scripts.build import lesson_gates
+
+    root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
+    plan = yaml.safe_load((root / "plans/a1/special-signs.yaml").read_text(encoding="utf-8"))
+    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    source = root / "a1-v1/special-signs"
+    dirty = yaml.safe_load((source / "activities.yaml").read_text(encoding="utf-8"))
+    assert any(lesson_gates.fill_in_activity_defects(a) for a in dirty["inline"] + dirty["workbook"])
+
+    prompt = linear_pipeline.render_upgrade_prompt(plan, source, lesson_map, lesson=lesson)
+
+    artifacts = _region(prompt, "## Existing module artifacts (read-only)", "## Response format")
+    shown = yaml.safe_load(artifacts.split("### activities.yaml", 1)[1].split("### ", 1)[0])
+    fill_ins = [a for a in shown["inline"] + shown["workbook"] if a["type"] == "fill-in"]
+    assert fill_ins
+    for activity in fill_ins:
+        assert lesson_gates.fill_in_activity_defects(activity) == []
+    assert any("" in item["options"] and item["answer"] == "" for a in fill_ins for item in a["items"])
+    assert "без зна́ка" in artifacts  # the three-way contrast is still taught in prose
+
+    for line in re.findall(r"^[A-Z_]*ALLOWED[A-Z_]*TYPES:.*(?:\n  .*)*", prompt, re.MULTILINE):
+        assert "divide-words" not in line, line
+    assert re.search(r"^FORBIDDEN_ACTIVITY_TYPES:.*(?:\n  .*)*divide-words", prompt, re.MULTILINE)
+    assert "Do **not** teach `перенос`" in prompt
+    shown_map = yaml.safe_load(_region(prompt, "## Deterministic lessons.yaml (read-only)", "## Original plan (read-only)"))
+    assert "title" not in shown_map["lessons"][4] and shown_map["closes_module"] == 5  # lesson 5 stays as the close
