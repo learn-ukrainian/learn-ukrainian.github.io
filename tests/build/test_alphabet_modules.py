@@ -542,3 +542,114 @@ def test_vesum_is_word_fail_open_when_db_missing(monkeypatch):
     assert winner == "чай"
     assert isinstance(options, list) and len(options) >= 2
     assert options[0] == "чай"
+
+
+def test_persist_cloned_winner_yaml_unique_and_no_contradiction(monkeypatch):
+    """Cloned [corr, corr, corr] after persist is unique; contradictions() empty."""
+    from scripts.build.lesson_gates import contradictions
+
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", lambda _w: False)
+    acts = {
+        "inline": [
+            {
+                "id": "act-lozhka",
+                "type": "error-correction",
+                "instruction": "Fix",
+                "items": [
+                    {
+                        "sentence": "Це ло́шка.",
+                        "error": "ло́шка",
+                        "correction": "ло́жка",
+                        "options": ["ло́жка", "ло́жка", "ло́жка"],
+                        "explanation": "Write ж.",
+                    },
+                    {
+                        "sentence": "Моя́ сімя́.",
+                        "error": "сімя́",
+                        "correction": "сім'я́",
+                        "options": ["сім'я́", "сім'я́"],
+                        "explanation": "Apostrophe after м.",
+                    },
+                ],
+            }
+        ],
+        "workbook": [],
+    }
+    out = am.persist_alphabet_ec_options(acts)
+    for item in out["inline"][0]["items"]:
+        opts = item["options"]
+        assert isinstance(opts, list) and len(opts) >= 2
+        keys = [am._chip_key(c) for c in opts]
+        assert len(keys) == len(set(keys))
+        assert keys[0] == am._chip_key(item["correction"])
+    assert contradictions(
+        {k: v for k, v in out["inline"][0].items() if k == "items"},
+        "act-lozhka",
+    ) == []
+
+
+def test_persist_drops_chip_so_yaml_lacks_din(monkeypatch):
+    """If repair drops дінь, persisted YAML no longer contains it (no render-lacks)."""
+    monkeypatch.setattr(
+        "scripts.build.alphabet_modules.vesum_is_word",
+        lambda w: am._chip_key(w) == "дінь",
+    )
+    acts = {
+        "inline": [
+            {
+                "id": "act-4",
+                "type": "error-correction",
+                "items": [
+                    {
+                        "sentence": "Сього́дні га́рний ден.",
+                        "error": "ден",
+                        "correction": "день",
+                        "options": ["день", "дінь", "деннь"],
+                    }
+                ],
+            }
+        ],
+        "workbook": [
+            {
+                "id": "act-w-din",
+                "type": "error-correction",
+                "items": [
+                    {
+                        "sentence": "Це мій ден.",
+                        "error": "ден",
+                        "correction": "день",
+                        "options": ["день", "дінь"],
+                    }
+                ],
+            }
+        ],
+    }
+    out = am.persist_alphabet_ec_options(acts)
+    for placement in ("inline", "workbook"):
+        opts = out[placement][0]["items"][0]["options"]
+        assert all(am._chip_key(c) != "дінь" for c in opts)
+        assert "дінь" not in opts
+
+
+def test_persist_fills_missing_options(monkeypatch):
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", lambda _w: False)
+    acts = {
+        "inline": [
+            {
+                "type": "error-correction",
+                "items": [
+                    {
+                        "sentence": "Це лошка.",
+                        "error": "лошка",
+                        "correction": "ло́жка",
+                        # no options key — assembler fills
+                    }
+                ],
+            }
+        ],
+        "workbook": [],
+    }
+    out = am.persist_alphabet_ec_options(acts)
+    opts = out["inline"][0]["items"][0]["options"]
+    assert isinstance(opts, list) and len(opts) >= 2
+    assert opts[0] == "ло́жка"
