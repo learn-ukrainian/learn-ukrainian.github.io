@@ -111,6 +111,51 @@ represent ordinary merged-PR dispatch cleanup:
 - `_acp_execution.acp_execution_cwd` force-removes only the detached,
   no-checkout ACP workspace it created below `.worktrees/dispatch/acp/` during
   setup failure or context teardown.
+- `_acp_execution.sweep_dead_acp_runtime_worktrees` removes no ACP runtime
+  path itself: it proves the recorded lock owner dead (pid absent, or pid
+  recycled with a different `/proc/<pid>/stat` start time), verifies the
+  no-checkout directory holds only its `.git` pointer, unlocks, and delegates
+  deletion to `reap_worktrees._remove_worktree`. Alive or unknown owners are
+  never touched; a sweep failure is logged and never blocks the ask.
+
+### ACP runtime worktree ownership and abandoned-runtime reaping (#8344)
+
+Every ACP runtime worktree is locked at creation with a reason of the form
+`active ACP execution <label> (owner pid=<pid> start=<start>)`, where the
+start time is field 22 of `/proc/<pid>/stat`. Any later process can prove the
+owner dead without the owner's cooperation: pid absent, or pid recycled with
+a different start time. Hosts without `/proc` record `start=unknown` and are
+treated as unknown, never as dead. The proof assumes the ask and the reaper
+share one PID namespace; a live owner inside a container or private namespace
+can read as absent, so do not rely on it across namespace boundaries.
+
+`reap_worktrees` reaps a `.worktrees/dispatch/acp/runtime-*` worktree under
+`--apply` and `--safe-only` when it is detached, locked by an ACP reason, and:
+
+- the lock carries owner information and the owner is provably dead; or
+- the lock is a legacy owner-less ACP lock **and** the worktree is older than
+  24h **and** the process-CWD probe is available and shows no live process
+  inside.
+
+The directory must hold exactly its `.git` pointer (no-checkout residue); any
+other file preserves it. The class never consults PR state and re-proves
+every precondition immediately before deletion. `acp_execution_cwd` also runs
+the same dead-owner sweep on entry, before creating its own workspace, so a
+killed ask's stub is gone by the next ACP call at the latest. As defence in
+depth, the ask entry path converts SIGTERM into an orderly unwind
+(`SystemExit(143)`) so the context `finally` cleans up when it can.
+
+Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
+zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`
+subdirectories) are reported as `would_remove` husks and removed under
+`--apply`. A directory containing any file, symlink, or git metadata is never
+removed by this rule. The rule fails closed on every other guard too: an
+unavailable process-CWD probe skips the directory, a live process cwd inside
+preserves it, and it must be at least one hour old measured by the newest
+mtime anywhere in its subtree — a directory a concurrent `delegate.py` is
+still provisioning (created before `git worktree add` registers it) is never
+"old". Husk removals, dry-run observations, and skips are recorded through
+the same `reaper_lifecycle` journal as every other reaper action.
 - `delegate._release_stale_branch_holders` performs a non-force release after
   clean, synced, terminal-owner checks so a blocked dispatch may reattach its
   branch. Its normal completed-worktree cleanup still uses the P0 reaper.

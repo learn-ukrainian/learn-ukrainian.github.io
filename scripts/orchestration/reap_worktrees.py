@@ -17,6 +17,7 @@ import fcntl
 import json
 import os
 import re
+import shutil
 import signal
 import subprocess
 import sys
@@ -29,6 +30,15 @@ PROJECT_ROOT = Path(__file__).resolve().parents[2]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+from scripts.common.acp_runtime_lock import (
+    holds_only_git_pointer,
+)
+from scripts.common.acp_runtime_lock import (
+    owner_alive as acp_lock_owner_alive,
+)
+from scripts.common.acp_runtime_lock import (
+    parse_lock_owner as parse_acp_lock_owner,
+)
 from scripts.control_plane.storage import StoreId
 from scripts.control_plane.storage import connect as cp_connect
 from scripts.orchestration import reaper_lifecycle
@@ -63,6 +73,7 @@ class WorktreeInfo:
     branch: str | None
     head: str | None
     detached: bool = False
+    locked_reason: str | None = None
 
 
 @dataclass(frozen=True)
@@ -176,6 +187,7 @@ def parse_worktree_porcelain(output: str) -> list[WorktreeInfo]:
                     branch=current.get("branch"),
                     head=current.get("head"),
                     detached=bool(current.get("detached")),
+                    locked_reason=current.get("locked_reason"),
                 )
             )
         current = None
@@ -196,6 +208,10 @@ def parse_worktree_porcelain(output: str) -> list[WorktreeInfo]:
             current["branch"] = _branch_name(line.removeprefix("branch ").strip())
         elif line == "detached":
             current["detached"] = True
+        elif line == "locked":
+            current["locked_reason"] = current.get("locked_reason") or ""
+        elif line.startswith("locked "):
+            current["locked_reason"] = line.removeprefix("locked ").strip()
     finish()
     return entries
 
@@ -747,6 +763,302 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
             if owner in {"codex", "claude", "agy", "grok", "cursor", "hermes"}:
                 return owner
     return "unattributed"
+
+
+_ACP_RUNTIME_REASON_PREFIX = "acp runtime "
+_ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
+# Minimum age for a zero-file dispatch husk before it may be removed.
+# ``delegate.py`` creates the dispatch directory before ``git worktree add``
+# registers it, so an unregistered empty directory can be mid-creation; the
+# provisioning window is seconds, and one hour bounds it with a wide margin
+# while still reaping same-day debris.
+_DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
+
+
+def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
+    """True for a ``runtime-*`` child of ``.worktrees/dispatch/acp/`` itself."""
+    acp_root = (repo_root / ".worktrees" / "dispatch" / "acp").resolve()
+    try:
+        relative = path.resolve().relative_to(acp_root)
+    except (OSError, ValueError):
+        return False
+    return len(relative.parts) == 1 and relative.parts[0].startswith("runtime-")
+
+
+def _acp_dead_owner_reason(
+    *,
+    repo_root: Path,
+    info: WorktreeInfo,
+    now: float | None,
+    live_cwds: set[Path] | None,
+) -> str | None:
+    """Provably-safe reap class for abandoned ACP runtime worktrees (#8344).
+
+    A cancelled or killed ACP ask leaves a detached, no-checkout, locked
+    ``runtime-*`` worktree that no other class can clear. Owner-tagged locks
+    qualify only when the recorded pid is provably dead (absent, or recycled
+    with a different process start time). Legacy locks without owner
+    information qualify only past 24h with a conclusive no-live-cwd probe.
+    Alive or unknown owners are never eligible; this class never consults PR
+    state, so it stays available under --safe-only.
+    """
+    if not info.detached or info.branch is not None:
+        return None
+    if not _is_acp_runtime_path(repo_root, info.path):
+        return None
+    owner = parse_acp_lock_owner(info.locked_reason)
+    if owner is None:
+        return None
+    pid, start_time = owner
+    if pid is not None:
+        if acp_lock_owner_alive(pid, start_time) is not False:
+            return None
+        return f"{_ACP_RUNTIME_REASON_PREFIX}lock owner pid={pid} is provably dead"
+    age_hours = _worktree_age_hours(info.path, now=now)
+    if age_hours is None or age_hours <= _ACP_LEGACY_LOCK_MIN_AGE_HOURS:
+        return None
+    if live_cwds is None:
+        return None
+    worktree = info.path.resolve()
+    if any(_path_contains(worktree, cwd) for cwd in live_cwds):
+        return None
+    return (
+        f"{_ACP_RUNTIME_REASON_PREFIX}legacy lock age {age_hours:.1f}h "
+        f"> {_ACP_LEGACY_LOCK_MIN_AGE_HOURS:g}h; no live process cwd"
+    )
+
+
+def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | None:
+    """Re-prove every ACP runtime precondition immediately before deletion."""
+    fresh: WorktreeInfo | None = None
+    for current in list_git_worktrees(repo_root):
+        if current.path.resolve() == info.path.resolve():
+            fresh = current
+            break
+    if fresh is None:
+        return "acp runtime worktree unregistered during cleanup"
+    live_cwds = _live_cwd_paths(repo_root)
+    if live_cwds is None:
+        return "process-CWD activity probe unavailable during cleanup"
+    if _acp_dead_owner_reason(
+        repo_root=repo_root,
+        info=fresh,
+        now=None,
+        live_cwds=live_cwds,
+    ) is None:
+        return "acp runtime lock owner changed during cleanup"
+    if not holds_only_git_pointer(info.path):
+        return "acp runtime worktree gained files during cleanup"
+    return None
+
+
+def _tree_has_any_file_or_symlink(root: Path) -> bool:
+    """True when ``root`` holds any file, symlink, or metadata entry.
+
+    Unreadable directories fail closed and read as non-empty.
+    """
+    stack = [root]
+    while stack:
+        current = stack.pop()
+        try:
+            with os.scandir(current) as entries:
+                for entry in entries:
+                    if entry.is_symlink() or not entry.is_dir(follow_symlinks=False):
+                        return True
+                    stack.append(Path(entry.path))
+        except OSError:
+            return True
+    return False
+
+
+def _tree_newest_age_hours(root: Path, now: float | None = None) -> float | None:
+    """Age in hours of the newest mtime anywhere in ``root``'s subtree.
+
+    A directory whose subtree was touched recently must not read as old, so
+    the top-level mtime alone is not sufficient. ``None`` when any directory
+    is unreadable, so callers fail closed.
+    """
+    try:
+        newest = root.stat().st_mtime
+    except OSError:
+        return None
+    stack = [root]
+    while stack:
+        current = stack.pop()
+        try:
+            with os.scandir(current) as entries:
+                for entry in entries:
+                    try:
+                        if entry.is_dir(follow_symlinks=False):
+                            newest = max(newest, entry.stat(follow_symlinks=False).st_mtime)
+                            stack.append(Path(entry.path))
+                    except OSError:
+                        return None
+        except OSError:
+            return None
+    return ((now or time.time()) - newest) / 3600
+
+
+def _reap_dispatch_husks(
+    repo_root: Path,
+    *,
+    registered: set[Path],
+    apply: bool,
+    live_cwds: set[Path] | None,
+    targets: set[Path] | None,
+    now: float | None = None,
+) -> list[ReapResult]:
+    """Report — and with ``apply`` remove — zero-file dispatch husks (#8344).
+
+    Unregistered placeholder directories under ``.worktrees/dispatch/<agent>/``
+    (only empty subdirectories, e.g. ``site/ node_modules/ data/``) are
+    invisible to ``git worktree list`` and accumulate forever. A directory
+    containing any file, symlink, or git metadata is never touched by this
+    rule. Every other guard fails closed too: an unavailable process-CWD
+    probe, a live process cwd inside, or a youngest-mtime age below
+    ``_DISPATCH_HUSK_MIN_AGE_HOURS`` (measured across the whole subtree, so a
+    directory still being provisioned is never "old") all preserve.
+    """
+    results: list[ReapResult] = []
+    dispatch_root = repo_root / ".worktrees" / "dispatch"
+    if not dispatch_root.is_dir():
+        return results
+    for agent_dir in sorted(dispatch_root.iterdir()):
+        if agent_dir.is_symlink() or not agent_dir.is_dir():
+            continue
+        for child in sorted(agent_dir.iterdir()):
+            if child.is_symlink() or not child.is_dir():
+                continue
+            resolved = child.resolve()
+            if resolved in registered:
+                continue
+            if targets is not None and resolved not in targets:
+                continue
+            owner = agent_dir.name or "unattributed"
+            if _tree_has_any_file_or_symlink(resolved):
+                continue
+            reason = "unregistered dispatch directory contains zero files (empty placeholder husk)"
+            if live_cwds is None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason="process-CWD activity probe unavailable",
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
+            if any(_path_contains(resolved, cwd) for cwd in live_cwds):
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason="live process cwd inside unregistered empty directory",
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
+            age_hours = _tree_newest_age_hours(resolved, now=now)
+            if age_hours is None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason="could not determine husk age; treating as in use",
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
+            if age_hours < _DISPATCH_HUSK_MIN_AGE_HOURS:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=(
+                            f"empty placeholder husk is only {age_hours:.1f}h old "
+                            f"(< {_DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum)"
+                        ),
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
+            if not apply:
+                reaper_lifecycle.append_journal(
+                    repo_root,
+                    "observe",
+                    path=str(child),
+                    branch=None,
+                    head=None,
+                    reason=reason,
+                    pr=None,
+                )
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="would_remove",
+                        reason=reason,
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
+            if os.environ.get("LU_REAPER_DISABLED") == "1":
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason="reaper disabled by LU_REAPER_DISABLED=1",
+                        dirty=False,
+                        owner=owner,
+                    )
+                )
+                continue
+            reaper_lifecycle.append_journal(
+                repo_root,
+                "plan",
+                path=str(child),
+                branch=None,
+                head=None,
+                reason=reason,
+                pr=None,
+            )
+            try:
+                target = assert_delete_target(child, repo_root=repo_root)
+                shutil.rmtree(target)
+            except (ValueError, OSError) as exc:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="error",
+                        reason=reason,
+                        dirty=False,
+                        owner=owner,
+                        error=str(exc),
+                    )
+                )
+                continue
+            results.append(
+                ReapResult(
+                    path=str(child),
+                    branch=None,
+                    action="removed",
+                    reason=reason,
+                    dirty=False,
+                    owner=owner,
+                )
+            )
+    return results
 
 
 def classify_preservation(result: ReapResult) -> str:
@@ -1532,16 +1844,43 @@ def _reap_qualified_worktree(
                 pr=_pr_dict(pr_state),
             )
 
-        current_clean = _worktree_clean(info.path)
-        if current_clean is not True:
-            return ReapResult(
-                path=str(info.path),
-                branch=info.branch,
-                action="skipped",
-                reason=f"worktree changed during cleanup; originally qualified because {reason}",
-                dirty=None if current_clean is None else True,
-                pr=_pr_dict(pr_state),
-            )
+        if reason.startswith(_ACP_RUNTIME_REASON_PREFIX):
+            # A no-checkout tree is never "clean" for the generic status
+            # probe; its safety proof is the dead owner plus the only-.git
+            # pointer, both re-verified here, plus an explicit unlock so the
+            # final removal needs no double --force past the lock.
+            recheck = _acp_runtime_cleanup_recheck(repo_root, info)
+            if recheck is not None:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=recheck,
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                )
+            unlock = _run(["git", "worktree", "unlock", str(info.path)], cwd=repo_root)
+            if unlock.returncode != 0:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="error",
+                    reason=reason,
+                    dirty=dirty,
+                    pr=_pr_dict(pr_state),
+                    error=f"worktree unlock failed: {_format_failure(unlock)}",
+                )
+        else:
+            current_clean = _worktree_clean(info.path)
+            if current_clean is not True:
+                return ReapResult(
+                    path=str(info.path),
+                    branch=info.branch,
+                    action="skipped",
+                    reason=f"worktree changed during cleanup; originally qualified because {reason}",
+                    dirty=None if current_clean is None else True,
+                    pr=_pr_dict(pr_state),
+                )
 
         if require_terminal_dispatch_guards:
             current_active_ids = _active_task_ids()
@@ -1805,7 +2144,8 @@ def reap_worktrees(
         raise RuntimeError("process-CWD activity probe unavailable; cleanup skipped")
 
     with _ReapLock(repo_root):
-        for info in list_git_worktrees(repo_root):
+        worktree_listing = list_git_worktrees(repo_root)
+        for info in worktree_listing:
             if targets is not None and info.path.resolve() not in targets:
                 continue
             if (
@@ -1870,6 +2210,44 @@ def reap_worktrees(
                         owner=_dispatch_owner(repo_root, info),
                     )
                 )
+                continue
+
+            # New provably-safe class (#8344): abandoned ACP runtime
+            # worktrees. Handled before the PR queries because the class
+            # never consults PR state and a no-checkout tree is never
+            # "clean" under the generic status probe.
+            acp_reason = _acp_dead_owner_reason(
+                repo_root=repo_root,
+                info=info,
+                now=now,
+                live_cwds=live_cwds,
+            )
+            if acp_reason is not None:
+                if not holds_only_git_pointer(info.path):
+                    results.append(
+                        ReapResult(
+                            path=str(info.path),
+                            branch=info.branch,
+                            action="skipped",
+                            reason=(
+                                "acp runtime worktree holds unexpected files; "
+                                f"{acp_reason}"
+                            ),
+                            dirty=None,
+                            owner=_dispatch_owner(repo_root, info),
+                        )
+                    )
+                    continue
+                reaper_lifecycle.append_journal(
+                    repo_root,
+                    "plan" if apply else "observe",
+                    path=str(info.path),
+                    branch=info.branch,
+                    head=info.head,
+                    reason=acp_reason,
+                    pr=None,
+                )
+                qualified.append((info, acp_reason, False, None))
                 continue
 
             dirty_state = _worktree_clean(info.path)
@@ -2022,6 +2400,19 @@ def reap_worktrees(
             if res.owner is None:
                 res = replace(res, owner=_dispatch_owner(repo_root, info))
             results.append(res)
+
+        # Zero-file unregistered placeholder directories are invisible to
+        # ``git worktree list``; sweep them after the registered worktrees.
+        results.extend(
+            _reap_dispatch_husks(
+                repo_root,
+                registered={info.path.resolve() for info in worktree_listing},
+                apply=apply,
+                live_cwds=live_cwds,
+                targets=targets,
+                now=now,
+            )
+        )
 
     if targets is not None:
         seen = {Path(result.path).resolve() for result in results}
