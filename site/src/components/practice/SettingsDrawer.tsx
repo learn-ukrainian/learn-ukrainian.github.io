@@ -37,48 +37,75 @@ export default function SettingsDrawer({
   const drawerRef = useRef<HTMLElement>(null);
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const previousFocusRef = useRef<HTMLElement | null>(null);
+  const wasOpenRef = useRef(false);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  const getFocusableElements = (): HTMLElement[] => {
+    if (!drawerRef.current) return [];
+    const elements = Array.from(
+      drawerRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), details summary'
+      )
+    );
+    return elements.filter((el) => {
+      const closedDetails = el.closest('details:not([open])');
+      if (closedDetails && !el.matches('summary')) {
+        return false;
+      }
+      return el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0;
+    });
+  };
 
   useEffect(() => {
     if (!isOpen) {
-      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
-        previousFocusRef.current.focus();
-        previousFocusRef.current = null;
+      if (wasOpenRef.current) {
+        wasOpenRef.current = false;
+        if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+          previousFocusRef.current.focus();
+          previousFocusRef.current = null;
+        }
       }
       return;
     }
 
-    // Capture active element before opening to restore on close
-    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    if (!wasOpenRef.current) {
+      wasOpenRef.current = true;
+      previousFocusRef.current = document.activeElement as HTMLElement | null;
+      const timer = setTimeout(() => {
+        closeButtonRef.current?.focus();
+      }, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [isOpen]);
 
-    // Focus close button on open
-    const timer = setTimeout(() => {
-      closeButtonRef.current?.focus();
-    }, 50);
+  useEffect(() => {
+    if (!isOpen) return;
 
-    // Escape key listener & Tab key focus trap
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         e.preventDefault();
-        onClose();
+        onCloseRef.current();
         return;
       }
 
-      if (e.key === 'Tab' && drawerRef.current) {
-        const focusableElements = drawerRef.current.querySelectorAll<HTMLElement>(
-          'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), details summary'
-        );
-        if (focusableElements.length === 0) return;
+      if (e.key === 'Tab') {
+        const focusables = getFocusableElements();
+        if (focusables.length === 0) {
+          e.preventDefault();
+          return;
+        }
 
-        const firstElement = focusableElements[0];
-        const lastElement = focusableElements[focusableElements.length - 1];
+        const firstElement = focusables[0];
+        const lastElement = focusables[focusables.length - 1];
 
         if (e.shiftKey) {
-          if (document.activeElement === firstElement) {
+          if (document.activeElement === firstElement || !drawerRef.current?.contains(document.activeElement)) {
             e.preventDefault();
             lastElement?.focus();
           }
         } else {
-          if (document.activeElement === lastElement) {
+          if (document.activeElement === lastElement || !drawerRef.current?.contains(document.activeElement)) {
             e.preventDefault();
             firstElement?.focus();
           }
@@ -86,21 +113,11 @@ export default function SettingsDrawer({
       }
     };
 
-    // Prevent focus from entering closed drawer
-    const handleFocusIn = (e: FocusEvent) => {
-      if (!isOpen && drawerRef.current?.contains(e.target as Node)) {
-        (e.target as HTMLElement)?.blur();
-      }
-    };
-
     window.addEventListener('keydown', handleKeyDown);
-    document.addEventListener('focusin', handleFocusIn);
     return () => {
-      clearTimeout(timer);
       window.removeEventListener('keydown', handleKeyDown);
-      document.removeEventListener('focusin', handleFocusIn);
     };
-  }, [isOpen, onClose]);
+  }, [isOpen]);
 
   return (
     <>
@@ -127,6 +144,8 @@ export default function SettingsDrawer({
         data-testid="practice-settings-drawer"
         role="dialog"
         aria-modal={isOpen}
+        aria-hidden={!isOpen}
+        inert={!isOpen ? true : undefined}
         aria-label={chromeLocale === 'uk' ? 'Налаштування практики' : 'Practice settings'}
         style={{
           position: 'fixed',
@@ -139,7 +158,8 @@ export default function SettingsDrawer({
           boxShadow: isOpen ? '-4px 0 24px rgba(0, 0, 0, 0.4)' : 'none',
           zIndex: 999,
           transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
-          transition: 'transform 0.25s ease-in-out',
+          visibility: isOpen ? 'visible' : 'hidden',
+          transition: 'transform 0.25s ease-in-out, visibility 0.25s ease-in-out',
           overflowY: 'auto',
           padding: '1.5rem',
           display: 'flex',
