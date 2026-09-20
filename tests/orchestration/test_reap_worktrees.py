@@ -14,6 +14,7 @@ from typing import Any
 
 import pytest
 
+from scripts.common.acp_runtime_lock import build_lock_reason, process_start_time
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import reaper_lifecycle
@@ -2827,3 +2828,273 @@ def test_read_sandbox_processes_scans_only_orphans_under_worktrees(
     processes = rw._read_sandbox_processes(proc_root, repo_root=tmp_path)
     assert scanned == [worktree]
     assert {proc.pid: proc.workspace_mtime for proc in processes} == {11: 123.0, 12: None, 13: None}
+
+
+# --- #8344: dead-owner ACP runtime worktrees and zero-file dispatch husks ---
+
+
+def _dead_pid() -> int:
+    proc = subprocess.Popen(["true"], env=git_env())
+    pid = proc.pid
+    proc.wait()
+    return pid
+
+
+def add_acp_runtime(repo: Path, name: str, reason: str) -> Path:
+    worktree = repo / ".worktrees" / "dispatch" / "acp" / name
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", "--no-checkout", str(worktree), "main")
+    git(repo, "worktree", "lock", "--reason", reason, str(worktree))
+    return worktree
+
+
+def test_acp_runtime_dead_owner_reaped_under_apply_and_safe_only(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    dead_pid = _dead_pid()
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-dead-owner",
+        build_lock_reason("ask-8344", pid=dead_pid, start_time=1),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "removed"
+    assert f"acp runtime lock owner pid={dead_pid} is provably dead" in result.reason
+    assert not worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_acp_runtime_dead_owner_reported_under_dry_run(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-dry-run",
+        build_lock_reason("ask-8344", pid=_dead_pid(), start_time=1),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set())
+
+    result = result_for(results, worktree)
+    assert result.action == "would_remove"
+    assert result.reason.startswith("acp runtime ")
+    assert worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_acp_runtime_live_owner_is_preserved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    own_pid = os.getpid()
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-live-owner",
+        build_lock_reason("ask-8344", pid=own_pid, start_time=process_start_time(own_pid)),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_acp_runtime_recycled_pid_is_treated_as_dead(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    own_pid = os.getpid()
+    start = process_start_time(own_pid)
+    assert start is not None
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-recycled-pid",
+        build_lock_reason("ask-8344", pid=own_pid, start_time=start + 1000),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_acp_runtime_with_unexpected_files_is_never_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-with-files",
+        build_lock_reason("ask-8344", pid=_dead_pid(), start_time=1),
+    )
+    (worktree / "stray.txt").write_text("keep\n", encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "unexpected files" in result.reason
+    assert (worktree / "stray.txt").read_text(encoding="utf-8") == "keep\n"
+
+
+def test_acp_runtime_legacy_lock_reaped_after_24h_without_live_cwd(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(repo, "runtime-legacy-lock", "active ACP execution old-ask")
+    now = time.time()
+    old = now - 25 * 3600
+    os.utime(worktree, (old, old))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        safe_only=True,
+        now=now,
+    )
+
+    result = result_for(results, worktree)
+    assert result.action == "removed"
+    assert "acp runtime legacy lock age 25.0h > 24h; no live process cwd" in result.reason
+    assert not worktree.exists()
+
+
+def test_acp_runtime_legacy_lock_younger_than_24h_is_preserved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(repo, "runtime-legacy-young", "active ACP execution young-ask")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert worktree.exists()
+
+
+def test_acp_runtime_legacy_lock_fails_closed_when_cwd_probe_unavailable(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(repo, "runtime-legacy-noprobe", "active ACP execution old-ask")
+    now = time.time()
+    old = now - 25 * 3600
+    os.utime(worktree, (old, old))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: None)
+
+    results = rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=None, now=now)
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert not result.reason.startswith("acp runtime ")
+    assert worktree.exists()
+
+
+def test_acp_runtime_legacy_lock_preserved_when_live_cwd_inside(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(repo, "runtime-legacy-busy", "active ACP execution old-ask")
+    now = time.time()
+    old = now - 25 * 3600
+    os.utime(worktree, (old, old))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=False,
+        live_cwds={worktree / "sub"},
+        now=now,
+    )
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert "live process cwd" in result.reason
+    assert worktree.exists()
+
+
+def test_dispatch_husk_reported_under_dry_run_and_removed_under_apply(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-bare"
+    for sub in ("site", "node_modules", "data"):
+        (husk / sub).mkdir(parents=True)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    dry = rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set())
+    dry_result = result_for(dry, husk)
+    assert dry_result.action == "would_remove"
+    assert "zero files" in dry_result.reason
+    assert husk.exists()
+
+    applied = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+    applied_result = result_for(applied, husk)
+    assert applied_result.action == "removed"
+    assert applied_result.reason == dry_result.reason
+    assert not husk.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_dispatch_husk_with_any_file_is_never_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "1476-auto-path"
+    (husk / "site").mkdir(parents=True)
+    (husk / "site" / "index.html").write_text("keep\n", encoding="utf-8")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    assert all(Path(r.path).resolve() != husk.resolve() for r in results)
+    assert (husk / "site" / "index.html").read_text(encoding="utf-8") == "keep\n"
+
+
+def test_dispatch_husk_with_symlink_is_never_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "linked-husk"
+    (husk / "data").mkdir(parents=True)
+    (husk / "data" / "link").symlink_to(repo / "README.md")
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    assert all(Path(r.path).resolve() != husk.resolve() for r in results)
+    assert (husk / "data" / "link").is_symlink()
