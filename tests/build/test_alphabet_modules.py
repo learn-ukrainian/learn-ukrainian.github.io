@@ -489,11 +489,15 @@ def test_repair_returns_winner_only_when_no_illegal_mutant():
 
 def test_repair_chai_neighbors_are_vesum_words_and_mutants_are_not():
     """Real-VESUM proof for the чай case (#7994); skip if VESUM is unavailable."""
+    from scripts.verification.vesum import verify_word
+
     try:
-        assert am.vesum_is_word("чаю")
-        assert am.vesum_is_word("чаї")
-    except Exception as exc:  # pragma: no cover - environment without VESUM
+        assert verify_word("чаю") or verify_word("чаю".lower())
+        assert verify_word("чаї") or verify_word("чаї".lower())
+    except (FileNotFoundError, OSError) as exc:  # pragma: no cover - CI / no db
         pytest.skip(f"VESUM unavailable: {exc}")
+    assert am.vesum_is_word("чаю")
+    assert am.vesum_is_word("чаї")
     repaired = am.repair_error_correction_options(
         "чаі", "чай", ["чай", "чаї́", "чаю"], is_word=am.vesum_is_word,
     )
@@ -502,3 +506,39 @@ def test_repair_chai_neighbors_are_vesum_words_and_mutants_are_not():
     assert am._chip_key("чаї") not in {am._chip_key(c) for c in repaired}
     for chip in repaired[1:]:
         assert not am.vesum_is_word(chip)
+
+
+def test_vesum_is_word_fail_open_when_db_missing(monkeypatch):
+    """Absent VESUM must not crash alphabet EC repair / render (#7994 CI)."""
+    from scripts.build.activity_renderer import error_correction_render_values
+
+    def boom(_form, **_kwargs):
+        raise FileNotFoundError(
+            "VESUM database not found at data/vesum.db. "
+            "Step 1 builds an explicit shadow database only."
+        )
+
+    monkeypatch.setattr("scripts.verification.vesum.verify_word", boom)
+
+    assert am.vesum_is_word("чаю") is False
+    assert am.vesum_is_word("чаї") is False
+
+    repaired = am.repair_error_correction_options(
+        "чаі", "чай", ["чай", "чаї́", "чаю"], is_word=am.vesum_is_word,
+    )
+    assert repaired[0] == "чай"
+    assert len(repaired) >= 2
+    # Fail-open: legal neighbors are not dropped when VESUM cannot be consulted.
+    keys = {am._chip_key(c) for c in repaired}
+    assert "чаю" in keys or "чаї" in keys
+
+    winner, options = error_correction_render_values(
+        "Вра́нці я пив чаі з лимо́ном.",
+        "чаі",
+        "чай",
+        ["чай", "чаї́", "чаю"],
+        alphabet=True,
+    )
+    assert winner == "чай"
+    assert isinstance(options, list) and len(options) >= 2
+    assert options[0] == "чай"

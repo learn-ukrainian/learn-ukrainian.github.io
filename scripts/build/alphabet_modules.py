@@ -72,13 +72,27 @@ def _chip_key(text: str) -> str:
 
 
 def vesum_is_word(form: str) -> bool:
-    """True when ``form`` (acute-stripped) exists in VESUM."""
+    """True when ``form`` (acute-stripped) exists in VESUM.
+
+    Fail-open when VESUM is missing or unreadable (CI without ``data/vesum.db``):
+    return False so alphabet EC repair does not treat chips as legal drops and
+    never raises into ``run_lesson_gates``.
+    """
     from scripts.verification.vesum import verify_word
 
     bare = _strip_acute(form)
     if not bare:
         return False
-    return bool(verify_word(bare) or verify_word(bare.lower()))
+    try:
+        return bool(verify_word(bare) or verify_word(bare.lower()))
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return False
+    except Exception as exc:
+        if "VESUM database not found" in str(exc):
+            return False
+        raise
 
 
 def _soft_sign_mutants(winner: str) -> list[str]:
