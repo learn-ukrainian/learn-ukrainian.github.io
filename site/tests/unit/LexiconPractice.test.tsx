@@ -3037,7 +3037,7 @@ describe('LexiconPractice', () => {
   test('bare in-pool Atlas lemma opens that lemma’s practice', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
-    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+    window.location = new URL('http://localhost/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
 
     try {
       const cafe = lexeme('kafe', 'кафе', 'cafe', {
@@ -3081,7 +3081,7 @@ describe('LexiconPractice', () => {
   test('focused lemma answer stays on practice, records the rating, and advances the counter (#7664)', async () => {
     const originalLocation = window.location;
     delete (window as any).location;
-    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0') as any;
+    window.location = new URL('http://localhost/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0') as any;
 
     try {
       const water = lexeme('voda', 'вода', 'water', {
@@ -3116,7 +3116,7 @@ describe('LexiconPractice', () => {
       await user.click(container.querySelector<HTMLButtonElement>('[data-rate="good"]')!);
 
       expect(window.location.pathname).toBe(pathnameBeforeAnswer);
-      expect(window.location.pathname).toBe('/words-of-the-day/practice/');
+      expect(window.location.pathname).toBe('/practice/');
       expect(window.location.pathname).not.toBe('/a2/');
       expect(screen.getByTestId('practice-session-progress')).toHaveTextContent('1/1');
       expect(storedState().reviews).toEqual(expect.arrayContaining([
@@ -3131,7 +3131,7 @@ describe('LexiconPractice', () => {
   test('focused deep link clears a transient deck-load error after its retry renders the exercise', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
-    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+    window.location = new URL('http://localhost/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
 
     try {
       const cafe = lexeme('kafe', 'кафе', 'cafe', {
@@ -3191,7 +3191,7 @@ describe('LexiconPractice', () => {
   test('bare Atlas lemma outside the initial deck resolves from cumulative shards', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
-    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+    window.location = new URL('http://localhost/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
     localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'B1');
 
     try {
@@ -3244,7 +3244,7 @@ describe('LexiconPractice', () => {
   test('out-of-pool Atlas lemma keeps the hub usable without retrying its lookup', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
-    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BF%D0%BE%D0%B7%D0%B0%D0%BF%D1%83%D0%BB%D0%BE%D0%BC') as any;
+    window.location = new URL('http://localhost/practice/?lemmaId=%D0%BF%D0%BE%D0%B7%D0%B0%D0%BF%D1%83%D0%BB%D0%BE%D0%BC') as any;
 
     try {
       const user = userEvent.setup();
@@ -3271,7 +3271,7 @@ describe('LexiconPractice', () => {
   test('a real deep-link fetch failure renders pure dual-locale practice fallback', async () => {
     const originalSearch = window.location.search;
     delete (window as any).location;
-    window.location = new URL('http://localhost/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
+    window.location = new URL('http://localhost/practice/?lemmaId=%D0%BA%D0%B0%D1%84%D0%B5') as any;
 
     try {
       vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('network offline'));

@@ -56,7 +56,7 @@ test('browse supports search, category, and letter entry points without dumping 
 });
 
 test('practice cloze mode never dead-ends for a fresh learner', async ({ page }) => {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="cloze"]').click();
   // Cloze is fail-closed until reviewed sentences are authored (#3797). The mode must show a
@@ -68,7 +68,7 @@ test('practice cloze mode never dead-ends for a fresh learner', async ({ page })
 });
 
 test('practice matching renders a real round (>=3 pairs) for a fresh learner', async ({ page }) => {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="matching"]').click();
   await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
@@ -76,7 +76,7 @@ test('practice matching renders a real round (>=3 pairs) for a fresh learner', a
 });
 
 test('practice mode switch starts the selected mode without inheriting the unfinished one', async ({ page }) => {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="matching"]').click();
   await expect(page.locator('[data-testid="practice-matching"]')).toBeVisible();
@@ -92,8 +92,8 @@ test('practice mode switch starts the selected mode without inheriting the unfin
 });
 
 for (const [path, label] of [
-  ['/words-of-the-day/practice/', 'plain practice page'],
-  ['/words-of-the-day/practice/?lemmaId=%D0%BA%D0%B0%D0%B2%D0%B0', 'deep-link practice page'],
+  ['/practice/', 'plain practice page'],
+  ['/practice/?lemmaId=%D0%BA%D0%B0%D0%B2%D0%B0', 'deep-link practice page'],
 ] as const) {
   test(`${label} hides the static error fallback after practice loads (#4984, #4946)`, async ({ page }) => {
     await page.goto(path);
@@ -151,7 +151,7 @@ test('practice page shows UA fallback when LexiconPractice island chunk fails to
   // hydrates successfully — match on the LexiconPractice stem with or without query.
   await page.route(/LexiconPractice[^/]*\.js(?:\?|$)/, (route) => route.abort());
 
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   // Expect the static UA fallback (error listener path is fast; no reliance on 10s timeout).
   // Allow for Astro's 1s import retry before hydration-error fires.
@@ -166,7 +166,7 @@ test('practice page shows UA fallback when LexiconPractice island chunk fails to
 });
 
 async function prepareResumableMixedSession(page: Page): Promise<void> {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   // Wait for the idle dashboard to settle and the primary CTA to be actionable.
   await expect(page.getByTestId('practice-start-session')).toBeVisible();
   await page.getByTestId('practice-start-session').click();
@@ -227,7 +227,7 @@ async function assertFirstViewportPracticeCTAs(page: Page, locale: 'en' | 'uk'):
 
 test('HARD-1: English setup dashboard shows start and resume CTAs without scroll at 1366x768', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await page.evaluate(() => {
     window.localStorage.setItem('lu-chrome-locale', 'en');
     document.documentElement.setAttribute('data-theme', 'light');
@@ -246,7 +246,7 @@ test('HARD-1: English setup dashboard shows start and resume CTAs without scroll
 
 test('HARD-2: Ukrainian setup dashboard shows start and resume CTAs without scroll at 1366x768', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await page.evaluate(() => {
     window.localStorage.setItem('lu-chrome-locale', 'uk');
     document.documentElement.setAttribute('data-theme', 'dark');
@@ -272,7 +272,7 @@ test('A4d: active-deck chip is visible above the fold without opening Sync & dec
   await context.clearCookies();
   await page.addInitScript(() => window.localStorage.setItem('lu-chrome-locale', 'en'));
   await page.setViewportSize({ width: 1366, height: 768 });
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await page.waitForLoadState('networkidle');
   await page.evaluate(() => window.scrollTo(0, 0));
 
@@ -299,7 +299,7 @@ test('A4d: active-deck chip is visible above the fold without opening Sync & dec
 });
 
 test('practice stress mode renders word-shaped vowel buttons for an N-vowel word', async ({ page }) => {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="stress"]').click();
   const stress = page.locator('[data-testid="practice-stress"]');
@@ -315,7 +315,7 @@ test('practice stress mode renders word-shaped vowel buttons for an N-vowel word
 
 test('Stress mode and ZNO decks remain available after choosing A2', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.getByRole('button', { name: 'A2' }).click();
   await expect(page.locator('button[data-mode="stress"]')).toBeVisible();
@@ -332,7 +332,7 @@ test('Stress mode and ZNO decks remain available after choosing A2', async ({ pa
 
 test('practice flashcard rating locks the card and waits for explicit next', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="flashcards"]').click();
   const card = page.locator('[data-activity="flashcard"]');
@@ -402,7 +402,7 @@ async function completeOneEasyMixedItem(page: Page): Promise<void> {
 }
 
 async function prepareResumableMixedSessionWithProgress(page: Page): Promise<void> {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await expect(page.getByTestId('practice-start-session')).toBeVisible();
   await page.getByTestId('practice-start-session').click();
   await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
@@ -423,7 +423,7 @@ test('A1: the practice Words-of-the-Day zone shows the same 12 as /words-of-the-
   await expect(page.locator('.lexicon-daily-item')).not.toHaveCount(0);
   const atlasLemmas = await page.locator('.lexicon-daily-lemma').allTextContents();
 
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await page.getByTestId('practice-daily-summary').click();
   const practiceLemmas = await page.locator('.daily-deck-row .row-lemma').allTextContents();
 
@@ -436,7 +436,7 @@ test('A1b: the Words-of-the-Day preview card renders a real word and gloss on re
 
   await page.addInitScript(() => window.localStorage.setItem('lu-learner-level', 'A1'));
 
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   const card = page.locator('.daily-preview-card');
   await expect(card).toBeVisible();
@@ -456,7 +456,7 @@ test('A2: starting two sessions back-to-back yields different item sequences', a
   await context.clearCookies();
 
   async function captureFirstThreeFlashcards(): Promise<string[]> {
-    await page.goto('/words-of-the-day/practice/');
+    await page.goto('/practice/');
     await page.locator('button[data-mode="flashcards"]').click();
     const words: string[] = [];
     for (let i = 0; i < 3; i += 1) {
@@ -499,7 +499,7 @@ test('A3: a stored in-progress session shows Продовжити + Почати
 test('A4: Далі sits in the top status row next to the counter and is clickable without scrolling at 1366x768', async ({ page, context }) => {
   await context.clearCookies();
   await page.setViewportSize({ width: 1366, height: 768 });
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="flashcards"]').click();
   await completeOneFlashcard(page);
@@ -685,7 +685,7 @@ test('A6: the session-box estimate stays inside the card at 1366x768 and 390x844
 
   for (const viewport of [{ width: 1366, height: 768 }, { width: 390, height: 844 }]) {
     await page.setViewportSize(viewport);
-    await page.goto('/words-of-the-day/practice/');
+    await page.goto('/practice/');
 
     const card = page.getByTestId('practice-dashboard-session');
     const estimate = page.getByTestId('practice-session-scope');
@@ -754,7 +754,7 @@ test('A6b: dashboard session estimate narrows to the selected custom deck before
     );
   });
 
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   const estimate = page.getByTestId('practice-session-scope');
   // Before selecting the custom deck, the estimate reports the full-level soft-CEFR scope.
@@ -783,7 +783,7 @@ test('A7: word cards render the level exactly once', async ({ page, context }) =
       ]),
     }),
   );
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   // Wait for the real daily deck (not the loading placeholder's bare "—" card).
   await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
@@ -870,7 +870,7 @@ test('A8a: an Atlas-only custom-deck key gets its gloss and route while a true o
     window.localStorage.setItem('learn_ukrainian_custom_sets_v1', JSON.stringify([catSet, orphanSet]));
   }, [catDeck, orphanDeck] as const);
 
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /E2E D10 Cat Deck/ }).click();
@@ -937,7 +937,7 @@ test('A8: two different custom decks show different daily-zone sets, each drawn 
     [deckAlpha, deckBeta] as const,
   );
 
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await openSecondaryTools(page);
 
   await page.getByRole('button', { name: /E2E D10 Alpha Deck/ }).click();
@@ -964,7 +964,7 @@ test('A9a: a deck-scoped daily set is stable within a day and rotates across day
 
   async function selectDeckAndReadWords(clockTime: string): Promise<string[]> {
     await page.clock.setFixedTime(new Date(clockTime));
-    await page.goto('/words-of-the-day/practice/');
+    await page.goto('/practice/');
     await openSecondaryTools(page);
     await page.getByRole('button', { name: /E2E D10 Rotation Deck/ }).click();
     await expect(page.getByTestId('practice-daily-deck-title')).toContainText('E2E D10 Rotation Deck');
@@ -990,7 +990,7 @@ test('A9b: the All-Words daily set is stable within a day and rotates across day
 
   async function readAllWordsAt(clockTime: string): Promise<string[]> {
     await page.clock.setFixedTime(new Date(clockTime));
-    await page.goto('/words-of-the-day/practice/');
+    await page.goto('/practice/');
     return readDailyDeckWords(page);
   }
 
@@ -1048,7 +1048,7 @@ test.describe('daily preview UTC boundary', () => {
       { instant: '2026-07-27T00:05:00.000Z', expectedWord: 'сирота' },
     ]) {
       await page.clock.setFixedTime(new Date(instant));
-      await page.goto('/words-of-the-day/practice/');
+      await page.goto('/practice/');
 
       const front = page.locator('.daily-preview-card .flashcard-front');
       await expect(page.getByTestId('practice-daily-deck')).toBeVisible();
@@ -1059,7 +1059,7 @@ test.describe('daily preview UTC boundary', () => {
 });
 
 test('practice hub renders 3-track layout, launches 10 POS mechanics drill, and toggles settings drawer', async ({ page }) => {
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   // 1. Verify Track 2 & 10 POS Mechanics grid
   const grammarTrack = page.getByTestId('practice-track-grammar');
@@ -1092,4 +1092,66 @@ test('practice hub renders 3-track layout, launches 10 POS mechanics drill, and 
   await page.getByTestId('settings-drawer-close').click();
   await expect(drawer).not.toHaveClass(/open/);
   await expect(page.getByTestId('practice-settings-backdrop')).toHaveCount(0);
+});
+
+test('seeded localStorage progress survives the move to /practice/ (#8328)', async ({ page }) => {
+  const today = new Date();
+  const lastPracticeDate = `${today.getFullYear()}-${String(today.getMonth() + 1).padStart(2, '0')}-${String(today.getDate()).padStart(2, '0')}`;
+  await page.addInitScript((date) => {
+    window.localStorage.setItem('lu-learner-level', 'B1');
+    window.localStorage.setItem(
+      'lu-lexicon-practice-streak',
+      JSON.stringify({ version: 1, current: 5, lastPracticeDate: date }),
+    );
+  }, lastPracticeDate);
+
+  await page.goto('/practice/');
+
+  await expect(page.locator('.k3-levels button[aria-pressed="true"]')).toHaveText(/B1/);
+  await expect(page.locator('.k3-stat-value', { hasText: '🔥' })).toHaveText('🔥 5');
+  expect(await page.evaluate(() => window.localStorage.getItem('lu-learner-level'))).toBe('B1');
+});
+
+for (const oldPath of ['/words-of-the-day/practice/', '/lexicon/practice/']) {
+  test(`legacy URL ${oldPath} redirects to /practice/ (#8328)`, async ({ page }) => {
+    await page.goto(oldPath);
+    await page.waitForURL((url) => url.pathname === '/practice/');
+    expect(new URL(page.url()).pathname).toBe('/practice/');
+  });
+}
+
+test('saved learning progress (SRS reviews and in-progress session) survives legacy redirect to /practice/ (#8328)', async ({ page, context }) => {
+  test.setTimeout(60000);
+  await context.clearCookies();
+  // 1. Prepare an active session with real progress and reviews
+  await prepareResumableMixedSessionWithProgress(page);
+
+  // Read stored session and SRS state before navigation
+  const sessionBefore = await page.evaluate(() => window.localStorage.getItem('lu-practice-session'));
+  const srsBefore = await page.evaluate(() => window.localStorage.getItem('lu-lexicon-srs'));
+  expect(sessionBefore).not.toBeNull();
+  expect(srsBefore).not.toBeNull();
+
+  // Verify dashboard offers resume button
+  const resumeBtn = page.getByRole('button', { name: /Продовжити|Resume/ });
+  await expect(resumeBtn).toBeVisible();
+
+  // 2. Navigate via legacy redirect URL (/words-of-the-day/practice/)
+  await page.goto('/words-of-the-day/practice/');
+  await page.waitForURL((url) => url.pathname === '/practice/');
+  expect(new URL(page.url()).pathname).toBe('/practice/');
+
+  // 3. Verify retained reviews and session progress
+  const sessionAfter = await page.evaluate(() => window.localStorage.getItem('lu-practice-session'));
+  const srsAfter = await page.evaluate(() => window.localStorage.getItem('lu-lexicon-srs'));
+  expect(sessionAfter).toBe(sessionBefore);
+  expect(srsAfter).toBe(srsBefore);
+
+  // 4. Resume the session and verify progress was retained (1/, not 0/)
+  const resumeAfterRedirect = page.getByRole('button', { name: /Продовжити|Resume/ });
+  await expect(resumeAfterRedirect).toBeVisible();
+  await resumeAfterRedirect.click();
+
+  await expect(page.locator('.lexicon-practice-stage')).toBeVisible();
+  await expect(page.getByTestId('practice-session-progress')).toContainText('1/');
 });

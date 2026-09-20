@@ -7,7 +7,7 @@ import { join, resolve } from 'node:path';
 
 const LIVE_URL = 'https://learn-ukrainian.github.io';
 const LOCAL_URL = 'http://127.0.0.1:4321';
-const PRACTICE = '/words-of-the-day/practice/';
+const PRACTICE = '/practice/';
 const SLICES = ['C1', 'C2', 'C3', 'C4', 'C5', 'C6', 'C7', 'C8'];
 const PROFILES = {
   desktop: { label: 'Desktop Chrome', options: { ...devices['Desktop Chrome'] } },
@@ -97,7 +97,7 @@ async function findPracticeLinks(page, scope = 'body') {
 }
 
 // The Practice Hub itself (NOT other "practice" pages such as /b1/practice-exam/).
-const TARGET = '/words-of-the-day/practice';
+const TARGET = '/practice';
 const isTarget = (href) => !!href && new URL(href, 'https://x.invalid/').pathname.replace(/\/$/, '') === TARGET;
 
 // Click a link and wait until the browser has actually arrived, so the trace covers the hub.

@@ -60,7 +60,7 @@ const PERSISTENT_GROUPS: SelectorGroup[] = [
 
 test('persistent selector groups expose exactly one pressed, visually distinct option', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
   await expect(page.locator('#lexicon-practice-mount .lexicon-practice')).toBeVisible();
 
   for (const group of PERSISTENT_GROUPS) {
@@ -112,7 +112,7 @@ test('persistent selector groups expose exactly one pressed, visually distinct o
 
 test('matching pairing: the selected tile is announced and visually distinct', async ({ page, context }) => {
   await context.clearCookies();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="matching"]').click();
   const leftTiles = page.locator('[data-activity="match-left-tile"]');

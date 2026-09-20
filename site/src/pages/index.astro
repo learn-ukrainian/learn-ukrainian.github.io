@@ -121,6 +121,11 @@ const seminarTracks: TrackRow[] = ([
         <h3><ChromeText k="home.track.upperIntermediate" /></h3>
         <p><ChromeText k="home.cardB2Desc" /></p>
       </a>
+      <a class="lu-card" href="/practice/">
+        <span class="track-badge practice"><ChromeText k="label.practice" /></span>
+        <h3><ChromeText k="nav.practice" /></h3>
+        <p><ChromeText k="home.cardPracticeDesc" /></p>
+      </a>
       <a class="lu-card" href="/lexicon/">
         <span class="track-badge atlas"><ChromeText k="label.reference" /></span>
         <h3><ChromeText k="nav.atlas" /></h3>
@@ -278,6 +283,7 @@ const seminarTracks: TrackRow[] = ([
     .track-badge.b1 { background: #E65100; }
     .track-badge.b2 { background: #C2185B; }
     .track-badge.atlas { background: var(--lu-teal); }
+    .track-badge.practice { background: var(--lu-accent, #FFD700); color: var(--lu-on-accent, #1c1e21); }
     /* In dark mode --lu-green/--lu-teal go pale, so white text fails. */
     :global([data-theme='dark']) .track-badge.a1,
     :global([data-theme='dark']) .track-badge.atlas {

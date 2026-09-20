@@ -13,6 +13,12 @@ describe('Atlas redirects', () => {
     expect(configContent).toContain("'/lexicon/%D0%BF%D1%80%D0%BE%D1%94%D0%BA': '/lexicon/проєкт/'");
   });
 
+  test('legacy practice URLs redirect to /practice/', () => {
+    const configContent = readFileSync(resolve(__dirname, '../../astro.config.mjs'), 'utf-8');
+    expect(configContent).toContain("'/lexicon/practice': '/practice/'");
+    expect(configContent).toContain("'/words-of-the-day/practice': '/practice/'");
+  });
+
   test('search index does not contain purged ghost entry проєк', () => {
     const searchIndexPath = resolve(__dirname, '../../src/data/lexicon-search-index.json');
     expect(existsSync(searchIndexPath)).toBe(true);

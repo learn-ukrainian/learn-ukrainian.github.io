@@ -1,7 +1,7 @@
 /**
  * Practice first paint (#6715).
  *
- * `/words-of-the-day/practice/` mounts LexiconPractice with client:only, so
+ * `/practice/` mounts LexiconPractice with client:only, so
  * without an SSR shell the <main> is empty until the bundle downloads and
  * hydrates. The mount must ship a visible static shell, and the inline script
  * must hide it on both the success (hydrated content) and fallback paths.

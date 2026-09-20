@@ -99,7 +99,7 @@ function mountHero(theme: "light" | "dark"): {
             подаватися
             <span class="word-stress">[подавáтися]</span>
           </h1>
-          <a class="practice-cta-hero" href="/words-of-the-day/practice/?lemmaId=%D0%BF%D0%BE%D0%B4%D0%B0%D0%B2%D0%B0%D1%82%D0%B8%D1%81%D1%8F">
+          <a class="practice-cta-hero" href="/practice/?lemmaId=%D0%BF%D0%BE%D0%B4%D0%B0%D0%B2%D0%B0%D1%82%D0%B8%D1%81%D1%8F">
             Practice this word →
           </a>
         </div>

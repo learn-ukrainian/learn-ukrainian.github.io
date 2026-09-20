@@ -72,7 +72,7 @@ describe("WordAtlasArticle practice CTA (#5435)", () => {
 
     const href = cta?.getAttribute("href");
     expect(href).toBe(atlasPracticeHref("кава"));
-    expect(href).toContain("/words-of-the-day/practice/");
+    expect(href).toContain("/practice/");
     expect(new URL(href!, "https://example.test").searchParams.get("lemmaId")).toBe("кава");
 
     // Dual-render chrome (FOUC-safe): both locales present in markup.
