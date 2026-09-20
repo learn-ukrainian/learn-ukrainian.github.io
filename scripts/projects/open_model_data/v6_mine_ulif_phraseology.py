@@ -1253,6 +1253,29 @@ def is_headword_header(s: str, word: str) -> bool:
     return bool(w_tokens and s_tokens and w_tokens[0] in s_tokens[:2])
 
 
+LABEL_TOKENS: set[str] = {
+    "перев", "жарт", "вульг", "згруб", "запереч", "зневажл", "розм", "книжн",
+    "поет", "нар.-поет", "фольк", "безос", "лайл", "діал", "грубо", "грубе", "рідко",
+    "підсил", "також", "переважно", "додатка", "дієсл", "імен", "прикм", "присл",
+    "знач", "виг", "вставн", "част", "спол", "прийм", "академ", "перен", "образн",
+    "фам", "ірон",
+}
+
+
+def is_label_fragment(s: str) -> bool:
+    """Detect if a text segment is an orphaned grammatical/stylistic label rather than a gloss."""
+    s_clean = s.strip().rstrip(".")
+    if not s_clean:
+        return True
+    if s_clean.startswith(",") or s_clean.startswith(":"):
+        return True
+    if s_clean[0].islower():
+        tokens = [t.rstrip(".") for t in re.findall(r"[а-яіїєґА-ЯІЇЄҐ\.\-]+", s_clean.lower())]
+        if all(t in LABEL_TOKENS or len(t) <= 3 for t in tokens):
+            return True
+    return bool(len(s_clean) < 15 and any(t in LABEL_TOKENS for t in re.findall(r"[а-яіїєґ]+", s_clean.lower())))
+
+
 def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit | None:
     """Parse a raw frazeolohichnyi entry with strict definition cleaning and quote attestation."""
     word = clean_raw_html_and_tags(clean_stress_marks(word_raw))
@@ -1260,6 +1283,8 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
     word = re.sub(r"^[|\d]+\|?", "", word)
     word = re.sub(r"\{\{.*$", "", word).strip()
     word = re.sub(r"^.*?\}\}", "", word).strip()
+    if ".." in word or "…" in word:
+        return None
 
     clean_d = clean_raw_html_and_tags(clean_stress_marks(def_raw))
 
@@ -1315,25 +1340,31 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
     if not parts:
         return None
 
-    if len(parts) >= 2 and is_headword_header(parts[0], word):
-        defn = parts[1]
-    elif len(parts) >= 2:
-        defn = parts[0]
-    else:
-        defn = parts[0]
+    defn = None
+    for p in parts:
+        if is_headword_header(p, word) or is_label_fragment(p):
+            continue
+        defn = p
+        break
+
+    if not defn:
+        return None
 
     defn = re.sub(r"^\d+\.\s*", "", defn).strip()
     defn = re.sub(r"^(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим|чиє|чию)[^.]*?\.\s*", "", defn).strip()
     defn = re.sub(r"^(?:перев\.|також|переважно)[^.]*?\.\s*", "", defn).strip()
     defn = re.sub(r"^(?:зі сл\.|і без додатка|без додатка)\.?\s*", "", defn).strip()
-    defn = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл)\.\s*", "", defn).strip()
+    defn = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл|грубо|грубе)\.\s*", "", defn).strip()
+    defn = re.sub(r"^[,\s:;—–-]+", "", defn).strip()
     defn = defn.replace("і_т_ін.", "і т.ін.").replace("і_под.", "і под.").strip()
 
     if not defn.endswith("."):
         defn += "."
 
-    # Drop definition if it starts with dummy pronoun schema or valency formula
-    if defn.lower().startswith(DUMMY_STARTS):
+    # Drop definition if it starts with dummy pronoun schema, valency formula, or is an orphaned label
+    if defn.lower().startswith(DUMMY_STARTS) or is_label_fragment(defn):
+        return None
+    if defn.startswith(",") or defn.startswith(":") or ": , " in defn:
         return None
     if len(defn) < 8 or len(defn) > 300 or "зі сл." in defn or re.search(r"\b\d+\.\s*", defn):
         return None
@@ -1378,14 +1409,14 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
             continue
         if len(q) < 15 or len(q) > 400:
             continue
-        # No spliced quotes or broken punctuation
-        if ".. ." in q or ".., " in q or re.search(r"\.\.\s+\.", q):
+        # No spliced quotes or broken punctuation (CF R9/R10 Finding 2: regex catches no-space '..,' splices)
+        if re.search(r"\.\.\s*[,;:]", q) or re.search(r"\.\.\s+\.", q) or ".. ." in q:
             continue
         if " . —" in q or " . -" in q:
             continue
         if SPEECH_VERB_RE.search(q):
             continue
-        # Pronoun check: quote must attest required pronoun forms if present in idiom
+        # Pronoun check: quote must attest all required pronoun tokens present in the idiom
         if w_pronouns:
             q_tokens = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", q.lower()))
             if not (w_pronouns <= q_tokens):
@@ -2095,6 +2126,9 @@ def synthesize_sft_trajectory(
         if cur_ves:
             verify_phrase_in_vesum(unit.idiom, cur_ves)
 
+        if unit.definition.startswith(",") or unit.definition.startswith(":") or ": , " in unit.definition or is_label_fragment(unit.definition):
+            raise ValueError(f"Corrupted definition in unit '{unit.idiom}': '{unit.definition}'")
+
         query_templates = [
             f"Поясніть значення та образну основу фразеологізму «{unit.idiom}» і проілюструйте його прикладом з української літератури.",
             f"Що означає український фразеологізм «{unit.idiom}»? Наведіть приклад його вживання в класичній літературі.",
@@ -2133,7 +2167,7 @@ def synthesize_sft_trajectory(
                 (
                     f"<thought>\n"
                     f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
-                    f"Семантика одиниці розкривається через дію або стан: {unit.definition}\n"
+                    f"Семантика одиниці розкриває таке значення: {unit.definition}\n"
                     f"Стилістичний діапазон: {unit.register}.\n"
                     f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
                     f"</thought>"
@@ -2219,7 +2253,7 @@ def synthesize_sft_trajectory(
                 (
                     f"<thought>\n"
                     f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
-                    f"Семантика одиниці розкривається через дію або стан: {unit.definition}\n"
+                    f"Семантика одиниці розкриває таке значення: {unit.definition}\n"
                     f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
                     f"</thought>"
                 ),
@@ -2814,7 +2848,7 @@ def verify_receipt_invariants(
                 raise AssertionError(f"Orphaned speech verb before punctuation in eval record {rec.get('eval_id')}: «{cit}»")
             if " . —" in cit or " . -" in cit:
                 raise AssertionError(f"Stray dot-dash punctuation in eval record {rec.get('eval_id')}: «{cit}»")
-            if ".. ." in cit or ".., " in cit or re.search(r"\.\.\s+\.", cit):
+            if re.search(r"\.\.\s*[,;:]", cit) or re.search(r"\.\.\s+\.", cit) or ".. ." in cit:
                 raise AssertionError(f"Broken ellipsis splice in eval record {rec.get('eval_id')}: «{cit}»")
             t_idiom = rec.get("target_idiom", "")
             t_stems = get_content_stems(t_idiom)
@@ -2930,13 +2964,23 @@ def verify_receipt_invariants(
                             raise AssertionError(f"Orphaned speech verb before punctuation in {shard_path.name}:{line_no}: «{q}»")
                         if " . —" in q or " . -" in q:
                             raise AssertionError(f"Stray dot-dash punctuation in {shard_path.name}:{line_no}: «{q}»")
-                        if ".. ." in q or ".., " in q or re.search(r"\.\.\s+\.", q):
+                        if re.search(r"\.\.\s*[,;:]", q) or re.search(r"\.\.\s+\.", q) or ".. ." in q:
                             raise AssertionError(f"Broken ellipsis splice in {shard_path.name}:{line_no}: «{q}»")
                     p_stems = get_content_stems(target_p)
                     if p_stems and quotes:
                         cit_quote = quotes[-1]
                         if not any(st in cit_quote.lower() for st in p_stems):
                             raise AssertionError(f"Target idiom stem not found in citation quote in {shard_path.name}:{line_no}: '{target_p}' vs «{cit_quote}»")
+
+                    # Corpus-wide definition invariants (CF R10 Finding 2)
+                    if ": , " in resp:
+                        raise AssertionError(f"Orphaned label ': , ' found in SFT response in {shard_path.name}:{line_no}")
+                    if re.search(r"(?:позначає|тлумачиться як|значення полягає у такому|значення|використовують для|виражає):\s*[,;:]", resp):
+                        raise AssertionError(f"Definition starting with punctuation found in SFT response in {shard_path.name}:{line_no}")
+                    if re.search(r"семантичне ядро вислову передає:\s*[,;:]", resp, re.IGNORECASE):
+                        raise AssertionError(f"Thought definition starting with punctuation in SFT response in {shard_path.name}:{line_no}")
+                    if re.search(r"тлумачення за академічними джерелами:\s*[,;:]", resp, re.IGNORECASE):
+                        raise AssertionError(f"Thought definition starting with punctuation in SFT response in {shard_path.name}:{line_no}")
 
                 # Calque firewall: check if calque is affirmed as correct (Finding 3)
                 for cq, pats in calque_patterns:

@@ -45,6 +45,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     generate_sft_dataset,
     get_phrase_lemmas,
     get_word_lemma_or_stem,
+    is_label_fragment,
     is_record_held_out,
     load_frazeolohichnyi_dictionary,
     load_ua_gec_calques,
@@ -996,3 +997,115 @@ def test_speech_verb_before_punctuation_re():
     # Legitimate non-orphaned text
     assert SPEECH_VERB_RE.search("— питає Лушня. — Чого ти") is None
     assert SPEECH_VERB_RE.search("він каже правду") is None
+
+
+def test_is_label_fragment_detection():
+    """CF R10 Finding 2: Ensure label fragments are detected and discriminated from genuine glosses."""
+    assert is_label_fragment(", перев. жарт.") is True
+    assert is_label_fragment(", вульг.") is True
+    assert is_label_fragment(", згруб.") is True
+    assert is_label_fragment(", із запереч.") is True
+    assert is_label_fragment("перев. з дієсл., із запереч.") is True
+    assert is_label_fragment(": , вульг.") is True
+    assert is_label_fragment(", а також кричати і под.") is True
+
+    # Real definitions must NOT be classified as label fragments
+    assert is_label_fragment("Ніскільки, зовсім, нітрохи.") is False
+    assert is_label_fragment("Служити одночасно двом протилежним сторонам.") is False
+    assert is_label_fragment("Хто-небудь пропаде або помре.") is False
+    assert is_label_fragment("Уживається для вираження незадоволення ким-, чим-небудь.") is False
+
+
+def test_parse_frazeolohichnyi_extracts_real_definition_not_orphaned_label():
+    """CF R10 Finding 2: Ensure entries with leading labels extract authentic definitions instead of label fragments."""
+    raw_word = "бодай грець спалив у діжі {{</fras>}}"
+    raw_def = (
+        "бодай (хай би і т.ін.) грець спалив у діжі кого, що, лайл., перев. жарт. "
+        "Уживається для вираження незадоволення ким-, чим-небудь, зневаги до когось--чогось, бажання позбутися когось, чогось. "
+        "Бодай тебе грець спалив у діжі! (Укр. присл.); "
+        "— А те приключилось, що твій бойовий побратим усі мої нетрудові заощадження викрав із матраца, хай би його грець спалив у діжі (Є. Гуцало)."
+    )
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit is not None
+    assert "Уживається для вираження незадоволення" in unit.definition
+    assert unit.definition.startswith("Уживається")
+    assert not unit.definition.startswith(",")
+    assert ": , " not in unit.definition
+    assert not is_label_fragment(unit.definition)
+
+    raw_word2 = "ані на волос {{</fras>}}"
+    raw_def2 = (
+        "і (ні, ані) на волосину (на волос). 1. перев. з дієсл., із запереч. "
+        "Ніскільки, зовсім, нітрохи. Днів з п'ять ні на волосину не спала хазяйка (Панас Мирний); "
+        "— А я цілу ніч ні на волос не спала й очей не стуляла через оцього вітрогона (І. Нечуй-Левицький)."
+    )
+    unit2 = parse_frazeolohichnyi_entry(raw_word2, raw_def2)
+    assert unit2 is not None
+    assert "Ніскільки, зовсім, нітрохи" in unit2.definition
+    assert not unit2.definition.startswith(",")
+    assert not is_label_fragment(unit2.definition)
+
+
+def test_splice_regex_catches_no_space_ellipsis_splices():
+    """CF R10 Finding 1: Ensure regex catches no-space '..,' and other spliced quotes."""
+    splice_re = re.compile(r"\.\.\s*[,;:]")
+    assert splice_re.search("…озвалася тітка..,— писав чоловік…") is not None
+    assert splice_re.search("…на цю поліцію..,— а користі від них…") is not None
+    assert splice_re.search("Князь оповістив..: — Хто хоче") is not None
+    assert splice_re.search("води сплило.., але пригадуються") is not None
+    assert splice_re.search("ця історія.. .складається таке") is None  # caught by \\.\\.\\s+\\.
+    assert re.search(r"\.\.\s+\.", "ця історія.. .складається таке") is not None
+
+    # Normal ellipses should not trigger false positives
+    assert splice_re.search("Він пішов… і не повернувся.") is None
+    assert splice_re.search("Що буде... те й буде.") is None
+
+
+def test_corpus_invariants_no_broken_definitions():
+    """CF R10 Finding 2 & 5: Verify 0 orphaned label definitions or leading punctuation across all release shards."""
+    release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
+    if not release_dir.exists():
+        pytest.skip("Release shards not yet generated")
+
+    sft_dir = release_dir / "sft"
+    eval_dir = release_dir / "eval"
+
+    for shard in list(sft_dir.glob("sft_shard_*.jsonl")) + list(eval_dir.glob("eval_shard_*.jsonl")):
+        with shard.open("r", encoding="utf-8") as f:
+            for line_no, line in enumerate(f, 1):
+                row = json.loads(line)
+                resp = row.get("final_response", "") or row.get("canonical_explanation", "")
+                assert ": , " not in resp, f"Orphaned label ': , ' found in {shard.name}:{line_no}"
+                assert not re.search(r"(?:позначає|тлумачиться як|значення полягає у такому|значення|виражає):\s*[,;:]", resp), (
+                    f"Definition starting with punctuation in {shard.name}:{line_no}"
+                )
+                assert not re.search(r"семантичне ядро вислову передає:\s*[,;:]", resp, re.IGNORECASE), (
+                    f"Thought definition starting with punctuation in {shard.name}:{line_no}"
+                )
+
+
+def test_corpus_invariants_no_spliced_quotes():
+    """CF R10 Finding 1 & 5: Verify 0 spliced quotes across all release shards."""
+    release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
+    if not release_dir.exists():
+        pytest.skip("Release shards not yet generated")
+
+    sft_dir = release_dir / "sft"
+    eval_dir = release_dir / "eval"
+    splice_re = re.compile(r"\.\.\s*[,;:]")
+    dot_space_dot_re = re.compile(r"\.\.\s+\.")
+
+    for shard in list(sft_dir.glob("sft_shard_*.jsonl")) + list(eval_dir.glob("eval_shard_*.jsonl")):
+        with shard.open("r", encoding="utf-8") as f:
+            for line_no, line in enumerate(f, 1):
+                row = json.loads(line)
+                resp = row.get("final_response", "") or row.get("classical_citation", "")
+                quotes = re.findall(r"«([^»]+)»", resp)
+                if not quotes and "classical_citation" in row:
+                    quotes = [row["classical_citation"]]
+                for q in quotes:
+                    assert not splice_re.search(q), f"Spliced quote with ..[,;:] in {shard.name}:{line_no}: «{q}»"
+                    assert not dot_space_dot_re.search(q), f"Spliced quote with .. . in {shard.name}:{line_no}: «{q}»"
+                    assert ".. ." not in q, f"Spliced quote with '.. .' in {shard.name}:{line_no}: «{q}»"
+                    assert " . —" not in q, f"Stray dot-dash in {shard.name}:{line_no}: «{q}»"
+                    assert " . -" not in q, f"Stray dot-dash in {shard.name}:{line_no}: «{q}»"
