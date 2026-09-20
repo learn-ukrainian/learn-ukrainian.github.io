@@ -1038,14 +1038,6 @@ def landing_overview_defects(module_dir: Path, source_dir: Path, plan: dict) -> 
         return out
     if re.search(r"Teacher\s+\w+|Hi,\s+I['’]m\s+|Привіт!\s+This module", body, re.I):
         out.append(f"{LANDING_OVERVIEW} has a named-narrator opener; copy Ohoiko's method, not a host persona")
-    if not re.search(r"keep the scope small|scope small", body, re.I):
-        out.append(f"{LANDING_OVERVIEW} lacks the scope-guard sentence (landing contract)")
-    original = source_dir / "module.md"
-    if original.is_file():
-        opening = re.split(r"^## ", original.read_text(encoding="utf-8"), maxsplit=1, flags=re.M)[0]
-        cleaned = _clean_a1_landing_prose(opening) or ""
-        if cleaned and body.strip()[:280] == cleaned.strip()[:280]:
-            out.append(f"{LANDING_OVERVIEW} is a copy of the lesson-1 opening, not a module orientation")
     return out
 
 

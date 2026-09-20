@@ -24,7 +24,7 @@ with `### Підсумок модуля — Module summary` and 4–7 bilingual 
 (module 9 *shape* only). Do **not** title it `Завершення модуля`.
 
 Copy **how** Anna Ohoiko teaches, not who she is: Ukrainian as sound, English that
-explains, Ukrainian again. No "Hi, I'm X." No named narrator in teaching prose.
+explains, Ukrainian again. NO named narrator and NO self-introduction. No "Hi, I'm X."
 Named people occur only inside dialogues. Do not paste her scripts. Do not invent
 Teacher Oksana or any other host. A quotation must be marked, attributed, and listed
 in resources.yaml.
