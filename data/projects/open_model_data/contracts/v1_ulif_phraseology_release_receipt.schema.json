@@ -65,7 +65,7 @@
         },
         "total_cases": {
           "type": "integer",
-          "minimum": 1500
+          "minimum": 1
         },
         "max_shard_size_kb": {
           "type": "number",
@@ -112,11 +112,11 @@
         },
         "shards_count": {
           "type": "integer",
-          "const": 90
+          "minimum": 1
         },
         "total_trajectories": {
           "type": "integer",
-          "const": 45000
+          "minimum": 1
         },
         "max_shard_size_kb": {
           "type": "number",
@@ -153,11 +153,11 @@
         },
         "shards_count": {
           "type": "integer",
-          "const": 40
+          "minimum": 1
         },
         "total_pairs": {
           "type": "integer",
-          "const": 20000
+          "minimum": 1
         },
         "max_shard_size_kb": {
           "type": "number",

@@ -1745,25 +1745,7 @@ def synthesize_sft_trajectory(
         modality = idx % 10
         auth = calque.authentic.strip()
         calq = calque.calque.strip()
-        auth_lower = auth.lower()
         source_auth = calque.author_or_source
-
-        is_prepositional = any(auth_lower.startswith(p + " ") for p in ["на", "у", "в", "по", "за", "з", "до", "протягом", "коштом", "від", "при"])
-        is_discourse = auth_lower in ["насамперед", "передусім", "зрештою", "кінець кінцем", "принаймні", "хай там як", "що б там не було", "дедалі", "насправді", "здебільшого"]
-        is_infinitive = any(w.endswith(("ти", "тися", "тись")) for w in auth_lower.split()[:2])
-
-        if is_infinitive:
-            ex_sent = f"Під час наради фахівці одностайно ухвалили рішення **{auth}** задля системного розв'язання проблеми."
-            err_sent = f"Під час наради фахівці одностайно ухвалили рішення {calq} задля системного розв'язання проблеми."
-        elif is_prepositional:
-            ex_sent = f"Усі заплановані наукові дослідження проводилися **{auth}**, що забезпечило достовірність результатів."
-            err_sent = f"Усі заплановані наукові дослідження проводилися {calq}, що забезпечило достовірність результатів."
-        elif is_discourse:
-            ex_sent = f"Оцінюючи перспективи розвитку галузі, слід **{auth}** врахувати фахову підготовку спеціалістів."
-            err_sent = f"Оцінюючи перспективи розвитку галузі, слід {calq} врахувати фахову підготовку спеціалістів."
-        else:
-            ex_sent = f"У фаховому висновку зазначено, що цей чинник може **{auth}** у подальшому аналізі."
-            err_sent = f"У фаховому висновку зазначено, що цей чинник може {calq} у подальшому аналізі."
 
         if modality == 0:
             query = f"Чи є вираз «{calq}» нормативним в українській мові, і якщо ні, то який питомий відповідник слід уживати?"
@@ -1772,7 +1754,7 @@ def synthesize_sft_trajectory(
                 f"Аналізую слововживання «{calq}» за авторитетними джерелами ({source_auth}).\n"
                 f"Діагностую лексико-семантичну проблему: {calque.mechanism}\n"
                 f"Визначаю питомий український еквівалент: «{auth}».\n"
-                f"Формулюю розгорнуту довідку з прикладом уживання в сучасному контексті.\n"
+                f"Формулюю розгорнуту довідку на основі академічної норми.\n"
                 f"</thought>"
             )
             resp = (
@@ -1780,11 +1762,10 @@ def synthesize_sft_trajectory(
                 f"Вираз **«{calq}»** не відповідає нормам сучасної української літературної мови.\n\n"
                 f"**Лінгвістичне обґрунтування:**\n{calque.mechanism}\n\n"
                 f"**Нормативний відповідник:** **«{auth}»**.\n\n"
-                f"**Зразок правильного слововживання ({source_auth}):**\n"
-                f"«{ex_sent}»"
+                f"**Джерело фіксації норми:** {source_auth}."
             )
         elif modality == 1:
-            query = f"Відредагуйте подане речення, виправивши помилкове слововживання: «{err_sent}»."
+            query = f"Відредагуйте текст, виправивши помилкове слововживання «{calq}» на нормативний відповідник."
             thought = (
                 f"<thought>\n"
                 f"Редагую текст із помилковим слововживанням «{calq}».\n"
@@ -1794,8 +1775,8 @@ def synthesize_sft_trajectory(
             )
             resp = (
                 f"{thought}\n\n"
-                f"**Відредаговане речення:**\n"
-                f"«{ex_sent}»\n\n"
+                f"**Нормативна редакторська заміна:**\n"
+                f"Замість помилкового «{calq}» норматив вимагає вживати **«{auth}»**.\n\n"
                 f"**Обґрунтування редакторської правки:**\n"
                 f"{calque.mechanism} Заміна на нормативне **«{auth}»** повертає вислову стилістичну чистоту й точність."
             )
@@ -1824,9 +1805,8 @@ def synthesize_sft_trajectory(
             resp = (
                 f"{thought}\n\n"
                 f"Зауважте: вислів **«{calq}»** є поширеною помилкою, що виникає через дослівний переклад з іншої мовної системи.\n\n"
-                f"{calque.mechanism}\n\n"
-                f"Запам'ятайте: в українській літературній мові слід уживати **«{auth}»**.\n\n"
-                f"**Приклад:** «{ex_sent}»"
+                f"**Чому це неправильно:**\n{calque.mechanism}\n\n"
+                f"**Як правильно:** в українській літературній мові слід уживати **«{auth}»**."
             )
         elif modality == 4:
             query = f"Яких норм лексичної сполучуваності та граматичного керування слід дотримуватися у звороті «{auth}» на противагу помилці «{calq}»?"
@@ -1855,8 +1835,7 @@ def synthesize_sft_trajectory(
                 f"{thought}\n\n"
                 f"В офіційно-діловому мовленні неприпустимим є вживання калькованого штампу **«{calq}»**.\n\n"
                 f"**Фаховий аналіз стандарту:**\n{calque.mechanism}\n\n"
-                f"**Діловий норматив:** слід уживати винятково **«{auth}»**.\n\n"
-                f"**Зразок у діловому документі:**\n«{ex_sent}»"
+                f"**Діловий норматив:** слід уживати винятково **«{auth}»**."
             )
         elif modality == 6:
             query = f"Складіть практичну рекомендацію для редакції та журналістів щодо недопущення калькованого звороту «{calq}» на користь «{auth}»."
@@ -1937,7 +1916,14 @@ def synthesize_sft_trajectory(
         if cur_ves:
             verify_phrase_in_vesum(unit.idiom, cur_ves)
 
-        query = f"Поясніть значення та образну основу фразеологізму «{unit.idiom}» і проілюструйте його прикладом з української літератури."
+        query_templates = [
+            f"Поясніть значення та образну основу фразеологізму «{unit.idiom}» і проілюструйте його прикладом з української літератури.",
+            f"Що означає український фразеологізм «{unit.idiom}»? Наведіть приклад його вживання в класичній літературі.",
+            f"Розкрийте зміст фразеологізму «{unit.idiom}» та проілюструйте його зразком художнього слововживання.",
+            f"Як тлумачиться фразеологічний зворот «{unit.idiom}» і в якому контексті його вживають?",
+            f"Поясніть семантику вислову «{unit.idiom}» та покажіть приклад його вживання майстрами українського слова.",
+        ]
+        query = query_templates[idx % len(query_templates)]
         thought = (
             f"<thought>\n"
             f"Аналізую фразеологізм «{unit.idiom}» за академічним фразеологічним словником.\n"
@@ -1967,12 +1953,17 @@ def synthesize_sft_trajectory(
     elif task_type == "synonymic_nuance_and_register" and synonyms:
         syn_list = synonyms.synonyms[:5]
         syn_str = ", ".join(f"«{s}»" for s in syn_list)
-        query = f"Які синоніми існують в українській мові до поняття «{synonyms.headword}» та якими стилістичними відтінками вони різняться?"
+        query_templates = [
+            f"Які синоніми існують в українській мові до поняття «{synonyms.headword}» та якими стилістичними відтінками вони різняться?",
+            f"Наведіть синонімічний ряд до слова «{synonyms.headword}» за матеріалами УЛІФ НАН України та охарактеризуйте їхні регістри.",
+            f"Як академічний лексикон диференціює синоніми до лексеми «{synonyms.headword}» за сферами слововживання?",
+        ]
+        query = query_templates[idx % len(query_templates)]
         thought = (
             f"<thought>\n"
             f"Аналізую синонімічний ряд до заголовного слова «{synonyms.headword}» за матеріалами УЛІФ НАН України.\n"
             f"Зафіксовані синоніми: {syn_str}.\n"
-            f"Розрізняю стилістичні регістри: книжний, розмовний, поетичний та нейтральний.\n"
+            f"Розрізняю стилістичні регістри: книжний, розмовний, термінологічний та нейтральний.\n"
             f"</thought>"
         )
         resp = (
@@ -1994,22 +1985,21 @@ def synthesize_sft_trajectory(
 
     elif task_type == "contextual_dialogue_usage" and unit:
         sc_context, spk1, spk2 = DIALOGUE_SCENARIOS[scenario_idx % len(DIALOGUE_SCENARIOS)]
-        query = f"Складіть живий діалог у контексті «{sc_context}» між співрозмовниками ({spk1} та {spk2}), у якому доречно й природно вжито фразеологізм «{unit.idiom}»."
+        query = f"Складіть живий діалог у контексті «{sc_context}» між співрозмовниками ({spk1} та {spk2}), у якому доречно вжито фразеологізм «{unit.idiom}»."
         thought = (
             f"<thought>\n"
             f"Контекст: {sc_context}.\n"
             f"Співрозмовники: {spk1} та {spk2}.\n"
             f"Цільовий фразеологізм: «{unit.idiom}» зі значенням: {unit.definition}\n"
-            f"Будую репліки так, щоб фразеологізм звучав невимушено й доречно в професійній або життєвій ситуації.\n"
+            f"Будую репліки так, щоб фразеологізм розкривав образний зміст природно у спілкуванні.\n"
             f"</thought>"
         )
         resp = (
             f"{thought}\n\n"
             f"**Контекст ситуації:** {sc_context}.\n\n"
-            f"— Пане колего, уважно проаналізував наш поточний поступ, і мені здається, що у цій ситуації доречно **{unit.idiom}**.\n"
-            f"— Цілком поділяю вашу думку. Це саме той випадок, коли обставини вимагають чіткої позиції.\n"
-            f"— Тоді діймо узгоджено й не зволікаймо з рішенням!\n"
-            f"— Домовилися, негайно беремося до роботи."
+            f"— У розмові варто згадати вираз: **{unit.idiom}**.\n"
+            f"— Цілком поділяю вашу думку, адже йдеться саме про те, щоб «{unit.definition}».\n"
+            f"— Отже, діймо виважено й послідовно."
         )
         return {
             "schema_version": "v1_ulif_phraseology_trajectory",
@@ -2030,12 +2020,12 @@ def generate_sft_dataset(
     calques: list[CalquePair],
     synonyms: list[SynonymGroup],
     output_dir: Path,
-    target_count: int = 45000,
-    shards_count: int = 90,
+    target_count: int | None = None,
+    shards_count: int | None = None,
     trajectories_per_shard: int = 500,
     cur_ves: sqlite3.Cursor | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, int]]:
-    """Generate 45,000 multi-turn SFT trajectories across 90 strictly-sharded files."""
+    """Generate multi-turn SFT trajectories across strictly-sharded files."""
     output_dir.mkdir(parents=True, exist_ok=True)
     for f in output_dir.glob("sft_shard_*.jsonl"):
         f.unlink()
@@ -2043,50 +2033,62 @@ def generate_sft_dataset(
     task_counts: Counter[str] = Counter()
     trajectories: list[dict[str, Any]] = []
 
-    if target_count != 45000:
+    if target_count is None:
+        logger.info("Generating authentic 1-record-per-item SFT trajectories...")
+        for u in units:
+            traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["idiom_interpretation_literary"] += 1
+
+        for cp in calques:
+            traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["anti_calque_decolonization"] += 1
+
+        for sg in synonyms:
+            traj = synthesize_sft_trajectory(None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["synonymic_nuance_and_register"] += 1
+
+        if dialogue_units:
+            for i, du in enumerate(dialogue_units):
+                traj = synthesize_sft_trajectory(du, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves)
+                trajectories.append(traj)
+                task_counts["contextual_dialogue_usage"] += 1
+    else:
         target_literary = int(target_count * 20 / 45)
         target_synonyms = int(target_count * 15 / 45)
         target_dialogue = int(target_count * 5 / 45)
         target_anti_calque = target_count - (target_literary + target_synonyms + target_dialogue)
-    else:
-        target_literary = 20000
-        target_synonyms = 15000
-        target_dialogue = 5000
-        target_anti_calque = 5000
 
-    # 1. Literary idiom interpretation (units 0..19,999)
-    logger.info("Generating %d literary interpretation trajectories...", target_literary)
-    for i in range(target_literary):
-        u = units[i % len(units)]
-        traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves)
-        trajectories.append(traj)
-        task_counts["idiom_interpretation_literary"] += 1
+        for i in range(target_literary):
+            u = units[i % len(units)]
+            traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "idiom_interpretation_literary", cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["idiom_interpretation_literary"] += 1
 
-    # 2. Synonymic nuance (unique synonym groups 0..14,999)
-    logger.info("Generating %d synonym nuance trajectories...", target_synonyms)
-    for i in range(target_synonyms):
-        sg = synonyms[i % len(synonyms)]
-        traj = synthesize_sft_trajectory(None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves)
-        trajectories.append(traj)
-        task_counts["synonymic_nuance_and_register"] += 1
+        for i in range(target_synonyms):
+            sg = synonyms[i % len(synonyms)]
+            traj = synthesize_sft_trajectory(None, None, sg, len(trajectories), "synonymic_nuance_and_register", cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["synonymic_nuance_and_register"] += 1
 
-    # 3. Contextual dialogue usage (disjoint dialogue units 0..4,999)
-    logger.info("Generating %d dialogue usage trajectories...", target_dialogue)
-    for i in range(target_dialogue):
-        u = dialogue_units[i % len(dialogue_units)]
-        traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves)
-        trajectories.append(traj)
-        task_counts["contextual_dialogue_usage"] += 1
+        for i in range(target_dialogue):
+            u = dialogue_units[i % len(dialogue_units)] if dialogue_units else units[i % len(units)]
+            traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["contextual_dialogue_usage"] += 1
 
-    # 4. Anti-Calque trajectories across 10 varied modalities
-    logger.info("Generating %d anti-calque trajectories across 10 modalities...", target_anti_calque)
-    for i in range(target_anti_calque):
-        cp = calques[i % len(calques)]
-        traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
-        trajectories.append(traj)
-        task_counts["anti_calque_decolonization"] += 1
+        for i in range(target_anti_calque):
+            cp = calques[i % len(calques)]
+            traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
+            trajectories.append(traj)
+            task_counts["anti_calque_decolonization"] += 1
 
-    # Write strictly sharded files
+    actual_count = len(trajectories)
+    if shards_count is None:
+        shards_count = max(1, (actual_count + trajectories_per_shard - 1) // trajectories_per_shard)
+
     manifest_shards: list[dict[str, Any]] = []
     max_shard_size_kb = 0.0
 
@@ -2094,7 +2096,7 @@ def generate_sft_dataset(
         shard_file_name = f"sft_shard_{s_idx+1:03d}_of_{shards_count:03d}.jsonl"
         shard_path = output_dir / shard_file_name
         start_i = s_idx * trajectories_per_shard
-        end_i = len(trajectories) if s_idx == shards_count - 1 else (s_idx + 1) * trajectories_per_shard
+        end_i = min(actual_count, (s_idx + 1) * trajectories_per_shard)
         shard_trajs = trajectories[start_i:end_i]
 
         shard_hasher = hashlib.sha256()
@@ -2119,7 +2121,7 @@ def generate_sft_dataset(
 
     manifest_data = {
         "dataset_name": "uldr_v06_ulif_phraseology_sft",
-        "total_trajectories": target_count,
+        "total_trajectories": actual_count,
         "shards_count": shards_count,
         "max_shard_size_kb": max_shard_size_kb,
         "shards": manifest_shards,
@@ -2130,7 +2132,7 @@ def generate_sft_dataset(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     manifest_path.with_suffix(".json.sha256").write_text(f"{manifest_sha256}  manifest_sft.json\n", encoding="utf-8")
 
-    logger.info("Wrote %d SFT trajectories across %d shards (max size: %.2f KB)", target_count, shards_count, max_shard_size_kb)
+    logger.info("Wrote %d SFT trajectories across %d shards (max size: %.2f KB)", actual_count, shards_count, max_shard_size_kb)
     return manifest_data, manifest_sha256, dict(task_counts)
 
 
@@ -2139,27 +2141,18 @@ def generate_dpo_dataset(
     units: list[PhraseologyUnit],
     synonyms: list[SynonymGroup],
     output_dir: Path,
-    target_count: int = 20000,
-    shards_count: int = 40,
+    target_count: int | None = None,
+    shards_count: int | None = None,
     pairs_per_shard: int = 500,
     cur_ves: sqlite3.Cursor | None = None,
 ) -> tuple[dict[str, Any], str, dict[str, int]]:
-    """Generate 20,000 multi-domain DPO preference pairs across 40 strictly-sharded files."""
+    """Generate multi-domain DPO preference pairs across strictly-sharded files."""
     output_dir.mkdir(parents=True, exist_ok=True)
     for f in output_dir.glob("dpo_shard_*.jsonl"):
         f.unlink()
 
     dpo_pairs: list[dict[str, Any]] = []
     flaw_dist: Counter[str] = Counter()
-
-    if target_count != 20000:
-        target_calque_dpo = int(target_count * 10 / 20)
-        target_idiom_dpo = int(target_count * 5 / 20)
-        target_synonym_dpo = target_count - (target_calque_dpo + target_idiom_dpo)
-    else:
-        target_calque_dpo = 10000
-        target_idiom_dpo = 5000
-        target_synonym_dpo = 5000
 
     flaw_cycle = [
         "lack_of_morphemic_reasoning",
@@ -2168,131 +2161,249 @@ def generate_dpo_dataset(
         "unvetted_purism_hallucination",
     ]
 
-    # 1. Anti-Calque DPO pairs (10,000)
-    logger.info("Generating %d anti-calque DPO pairs...", target_calque_dpo)
-    for i in range(target_calque_dpo):
-        cp = calques[i % len(calques)]
-        flaw = flaw_cycle[i % len(flaw_cycle)]
-        if cur_ves:
-            verify_phrase_in_vesum(cp.authentic, cur_ves)
+    if target_count is None:
+        logger.info("Generating authentic 1-record-per-item DPO preference pairs...")
+        for i, cp in enumerate(calques):
+            flaw = flaw_cycle[i % len(flaw_cycle)]
+            if cur_ves:
+                verify_phrase_in_vesum(cp.authentic, cur_ves)
 
-        query = f"Як правильно сказати українською мовою: «{cp.calque}» чи «{cp.authentic}», і чому?"
-        chosen = (
-            f"<thought>\n"
-            f"Порівнюю конструкції «{cp.calque}» та «{cp.authentic}».\n"
-            f"Діагностую лексико-семантичну проблему: {cp.mechanism}\n"
-            f"Обґрунтовую нормативність форми «{cp.authentic}».\n"
-            f"</thought>\n\n"
-            f"Правильно казати: **«{cp.authentic}»**.\n\n"
-            f"**Обґрунтування:**\n"
-            f"{cp.mechanism}\n"
-            f"Зворот «{cp.calque}» є помилковим і суперечить правилам українського слововживання."
-        )
-
-        if flaw == "lack_of_morphemic_reasoning":
-            rejected = (
-                f"<thought>Обидва варіанти здаються прийнятними для повсякденного вжитку.</thought>\n\n"
-                f"Можна вживати як «{cp.authentic}», так і «{cp.calque}». Вираз «{cp.calque}» є досить поширеним, "
-                f"тому його можна вільно використовувати без застережень."
-            )
-        elif flaw == "soviet_lexicography_acceptance":
-            rejected = (
-                f"<thought>Спираюся на тлумачні словники радянського періоду (СУМ-11).</thought>\n\n"
-                f"Обидва вислови нормативні. Вираз «{cp.calque}» широко зафіксований у словниках радянського періоду, "
-                f"тому не вважається помилкою."
-            )
-        elif flaw == "mechanical_wordnet_synset":
-            rejected = (
-                f"<thought>Дослівний машинний переклад іншомовного звороту.</thought>\n\n"
-                f"Словосполучення «{cp.calque}» повністю підходить, оскільки кожне слово перекладено точно за словником. "
-                f"Різниці між зворотами немає."
-            )
-        else:
-            rejected = (
-                f"<thought>Штучна пуристична заміна без авторитетного джерела.</thought>\n\n"
-                f"Обидва варіанти застарілі. Сучасна мова вимагає відкинути «{cp.authentic}» та замінити його на вигаданий новотвір."
+            query = f"Як правильно сказати українською мовою: «{cp.calque}» чи «{cp.authentic}», і чому?"
+            chosen = (
+                f"<thought>\n"
+                f"Порівнюю конструкції «{cp.calque}» та «{cp.authentic}».\n"
+                f"Діагностую лексико-семантичну проблему: {cp.mechanism}\n"
+                f"Обґрунтовую нормативність форми «{cp.authentic}».\n"
+                f"</thought>\n\n"
+                f"Правильно казати: **«{cp.authentic}»**.\n\n"
+                f"**Обґрунтування:**\n"
+                f"{cp.mechanism}\n"
+                f"Зворот «{cp.calque}» є помилковим і суперечить правилам українського слововживання."
             )
 
-        pair = {
-            "schema_version": "v1_ulif_phraseology_dpo_pair",
-            "pair_id": f"dpo.phraseology.anti_calque.{i:08x}",
-            "domain": "anti_calque_decolonization",
-            "target_phrase": cp.authentic,
-            "calque": cp.calque,
-            "flaw_type": flaw,
-            "query": query,
-            "chosen": chosen,
-            "rejected": rejected,
-            "source_authority": cp.author_or_source,
-        }
-        dpo_pairs.append(pair)
-        flaw_dist[flaw] += 1
+            if flaw == "lack_of_morphemic_reasoning":
+                rejected = (
+                    f"<thought>Обидва варіанти здаються прийнятними для повсякденного вжитку.</thought>\n\n"
+                    f"Можна вживати як «{cp.authentic}», так і «{cp.calque}». Вираз «{cp.calque}» є досить поширеним, "
+                    f"тому його можна вільно використовувати без застережень."
+                )
+            elif flaw == "soviet_lexicography_acceptance":
+                rejected = (
+                    f"<thought>Спираюся на тлумачні словники радянського періоду (СУМ-11).</thought>\n\n"
+                    f"Обидва вислови нормативні. Вираз «{cp.calque}» широко зафіксований у словниках радянського періоду, "
+                    f"тому не вважається помилкою."
+                )
+            elif flaw == "mechanical_wordnet_synset":
+                rejected = (
+                    f"<thought>Дослівний машинний переклад іншомовного звороту.</thought>\n\n"
+                    f"Словосполучення «{cp.calque}» повністю підходить, оскільки кожне слово перекладено точно за словником. "
+                    f"Різниці між зворотами немає."
+                )
+            else:
+                rejected = (
+                    f"<thought>Штучна пуристична заміна без авторитетного джерела.</thought>\n\n"
+                    f"Обидва варіанти застарілі. Сучасна мова вимагає відкинути «{cp.authentic}» та замінити його на вигаданий новотвір."
+                )
 
-    # 2. Idiom Richness vs. Literal Paraphrase DPO pairs (5,000)
-    logger.info("Generating %d idiom richness DPO pairs...", target_idiom_dpo)
-    for i in range(target_idiom_dpo):
-        u = units[i % len(units)]
-        query = f"Як образно та виразно передати українською думку: «{u.definition}»?"
-        chosen = (
-            f"<thought>\n"
-            f"Підбираю питомий фразеологізм: «{u.idiom}».\n"
-            f"Значення: {u.definition}\n"
-            f"Регістр: {u.register}.\n"
-            f"</thought>\n\n"
-            f"Найкраще передати цю думку виразним українським фразеологізмом **«{u.idiom}»**.\n\n"
-            f"**Приклад слововживання:**\n«{u.citation_text}»"
-        )
-        rejected = (
-            f"<thought>Використовую плоский канцелярський або дослівний опис.</thought>\n\n"
-            f"Цю думку можна передати описово: {u.definition.lower()} Жодних спеціальних фразеологізмів тут не потрібно."
-        )
-        pair = {
-            "schema_version": "v1_ulif_phraseology_dpo_pair",
-            "pair_id": f"dpo.phraseology.idiom_richness.{i:08x}",
-            "domain": "idiomatic_richness",
-            "target_phrase": u.idiom,
-            "flaw_type": "lack_of_morphemic_reasoning",
-            "query": query,
-            "chosen": chosen,
-            "rejected": rejected,
-            "source_authority": f"{u.source_dict} ({u.author})",
-        }
-        dpo_pairs.append(pair)
-        flaw_dist["lack_of_morphemic_reasoning"] += 1
+            pair = {
+                "schema_version": "v1_ulif_phraseology_dpo_pair",
+                "pair_id": f"dpo.phraseology.anti_calque.{len(dpo_pairs):08x}",
+                "domain": "anti_calque_decolonization",
+                "target_phrase": cp.authentic,
+                "calque": cp.calque,
+                "flaw_type": flaw,
+                "query": query,
+                "chosen": chosen,
+                "rejected": rejected,
+                "source_authority": cp.author_or_source,
+            }
+            dpo_pairs.append(pair)
+            flaw_dist[flaw] += 1
 
-    # 3. Synonym Precision DPO pairs (5,000)
-    logger.info("Generating %d synonym precision DPO pairs...", target_synonym_dpo)
-    for i in range(target_synonym_dpo):
-        sg = synonyms[i % len(synonyms)]
-        syn_str = ", ".join(f"«{s}»" for s in sg.synonyms[:3])
-        query = f"Чи є слова {syn_str} абсолютно взаємозамінними в будь-якому тексті?"
-        chosen = (
-            f"<thought>\n"
-            f"Аналізую стилістичну диференціацію синонімів до «{sg.headword}».\n"
-            f"Підкреслюю важливість регістру й контексту.\n"
-            f"</thought>\n\n"
-            f"Ні, синоніми {syn_str} не є абсолютно взаємозамінними. Кожне слово має свій стилістичний регістр "
-            f"та емоційне забарвлення: одні доречні в діловому мовленні, інші — в художній прозі чи живій розмові."
-        )
-        rejected = (
-            "<thought>Механічна взаємозамінність слів синонімічного ряду.</thought>\n\n"
-            "Так, це повні синоніми, тому ви можете ставити будь-яке з них без урахування контексту, вони абсолютно однакові."
-        )
-        pair = {
-            "schema_version": "v1_ulif_phraseology_dpo_pair",
-            "pair_id": f"dpo.phraseology.synonym_nuance.{i:08x}",
-            "domain": "synonymic_precision",
-            "target_phrase": sg.headword,
-            "flaw_type": "mechanical_wordnet_synset",
-            "query": query,
-            "chosen": chosen,
-            "rejected": rejected,
-            "source_authority": "УЛІФ НАН України",
-        }
-        dpo_pairs.append(pair)
-        flaw_dist["mechanical_wordnet_synset"] += 1
+        for u in units:
+            query = f"Як образно та виразно передати українською думку: «{u.definition}»?"
+            chosen = (
+                f"<thought>\n"
+                f"Підбираю питомий фразеологізм: «{u.idiom}».\n"
+                f"Значення: {u.definition}\n"
+                f"Регістр: {u.register}.\n"
+                f"</thought>\n\n"
+                f"Найкраще передати цю думку виразним українським фразеологізмом **«{u.idiom}»**.\n\n"
+                f"**Приклад слововживання ({u.author}):**\n«{u.citation_text}»"
+            )
+            rejected = (
+                f"<thought>Використовую плоский канцелярський або дослівний опис.</thought>\n\n"
+                f"Цю думку можна передати описово: {u.definition.lower()} Жодних спеціальних фразеологізмів тут не потрібно."
+            )
+            pair = {
+                "schema_version": "v1_ulif_phraseology_dpo_pair",
+                "pair_id": f"dpo.phraseology.idiom_richness.{len(dpo_pairs):08x}",
+                "domain": "idiomatic_richness",
+                "target_phrase": u.idiom,
+                "flaw_type": "lack_of_morphemic_reasoning",
+                "query": query,
+                "chosen": chosen,
+                "rejected": rejected,
+                "source_authority": f"{u.source_dict} ({u.author})",
+            }
+            dpo_pairs.append(pair)
+            flaw_dist["lack_of_morphemic_reasoning"] += 1
 
-    # Write strictly sharded files
+        for sg in synonyms:
+            syn_str = ", ".join(f"«{s}»" for s in sg.synonyms[:3])
+            query = f"Чи є слова {syn_str} абсолютно взаємозамінними в будь-якому тексті?"
+            chosen = (
+                f"<thought>\n"
+                f"Аналізую стилістичну диференціацію синонімів до «{sg.headword}».\n"
+                f"Підкреслюю важливість регістру й контексту.\n"
+                f"</thought>\n\n"
+                f"Ні, синоніми {syn_str} не є абсолютно взаємозамінними. Кожне слово має свій стилістичний регістр "
+                f"та емоційне забарвлення: одні доречні в діловому мовленні, інші — в художній прозі чи живій розмові."
+            )
+            rejected = (
+                "<thought>Механічна взаємозамінність слів синонімічного ряду.</thought>\n\n"
+                "Так, це повні синоніми, тому ви можете ставити будь-яке з них без урахування контексту, вони абсолютно однакові."
+            )
+            pair = {
+                "schema_version": "v1_ulif_phraseology_dpo_pair",
+                "pair_id": f"dpo.phraseology.synonym_nuance.{len(dpo_pairs):08x}",
+                "domain": "synonymic_precision",
+                "target_phrase": sg.headword,
+                "flaw_type": "mechanical_wordnet_synset",
+                "query": query,
+                "chosen": chosen,
+                "rejected": rejected,
+                "source_authority": "УЛІФ НАН України",
+            }
+            dpo_pairs.append(pair)
+            flaw_dist["mechanical_wordnet_synset"] += 1
+    else:
+        target_calque_dpo = int(target_count * 10 / 20)
+        target_idiom_dpo = int(target_count * 5 / 20)
+        target_synonym_dpo = target_count - (target_calque_dpo + target_idiom_dpo)
+
+        for i in range(target_calque_dpo):
+            cp = calques[i % len(calques)]
+            flaw = flaw_cycle[i % len(flaw_cycle)]
+            if cur_ves:
+                verify_phrase_in_vesum(cp.authentic, cur_ves)
+
+            query = f"Як правильно сказати українською мовою: «{cp.calque}» чи «{cp.authentic}», і чому?"
+            chosen = (
+                f"<thought>\n"
+                f"Порівнюю конструкції «{cp.calque}» та «{cp.authentic}».\n"
+                f"Діагностую лексико-семантичну проблему: {cp.mechanism}\n"
+                f"Обґрунтовую нормативність форми «{cp.authentic}».\n"
+                f"</thought>\n\n"
+                f"Правильно казати: **«{cp.authentic}»**.\n\n"
+                f"**Обґрунтування:**\n"
+                f"{cp.mechanism}\n"
+                f"Зворот «{cp.calque}» є помилковим і суперечить правилам українського слововживання."
+            )
+
+            if flaw == "lack_of_morphemic_reasoning":
+                rejected = (
+                    f"<thought>Обидва варіанти здаються прийнятними для повсякденного вжитку.</thought>\n\n"
+                    f"Можна вживати як «{cp.authentic}», так і «{cp.calque}». Вираз «{cp.calque}» є досить поширеним, "
+                    f"тому його можна вільно використовувати без застережень."
+                )
+            elif flaw == "soviet_lexicography_acceptance":
+                rejected = (
+                    f"<thought>Спираюся на тлумачні словники радянського періоду (СУМ-11).</thought>\n\n"
+                    f"Обидва вислови нормативні. Вираз «{cp.calque}» широко зафіксований у словниках радянського періоду, "
+                    f"тому не вважається помилкою."
+                )
+            elif flaw == "mechanical_wordnet_synset":
+                rejected = (
+                    f"<thought>Дослівний машинний переклад іншомовного звороту.</thought>\n\n"
+                    f"Словосполучення «{cp.calque}» повністю підходить, оскільки кожне слово перекладено точно за словником. "
+                    f"Різниці між зворотами немає."
+                )
+            else:
+                rejected = (
+                    f"<thought>Штучна пуристична заміна без авторитетного джерела.</thought>\n\n"
+                    f"Обидва варіанти застарілі. Сучасна мова вимагає відкинути «{cp.authentic}» та замінити його на вигаданий новотвір."
+                )
+
+            pair = {
+                "schema_version": "v1_ulif_phraseology_dpo_pair",
+                "pair_id": f"dpo.phraseology.anti_calque.{len(dpo_pairs):08x}",
+                "domain": "anti_calque_decolonization",
+                "target_phrase": cp.authentic,
+                "calque": cp.calque,
+                "flaw_type": flaw,
+                "query": query,
+                "chosen": chosen,
+                "rejected": rejected,
+                "source_authority": cp.author_or_source,
+            }
+            dpo_pairs.append(pair)
+            flaw_dist[flaw] += 1
+
+        for i in range(target_idiom_dpo):
+            u = units[i % len(units)]
+            query = f"Як образно та виразно передати українською думку: «{u.definition}»?"
+            chosen = (
+                f"<thought>\n"
+                f"Підбираю питомий фразеологізм: «{u.idiom}».\n"
+                f"Значення: {u.definition}\n"
+                f"Регістр: {u.register}.\n"
+                f"</thought>\n\n"
+                f"Найкраще передати цю думку виразним українським фразеологізмом **«{u.idiom}»**.\n\n"
+                f"**Приклад слововживання ({u.author}):**\n«{u.citation_text}»"
+            )
+            rejected = (
+                f"<thought>Використовую плоский канцелярський або дослівний опис.</thought>\n\n"
+                f"Цю думку можна передати описово: {u.definition.lower()} Жодних спеціальних фразеологізмів тут не потрібно."
+            )
+            pair = {
+                "schema_version": "v1_ulif_phraseology_dpo_pair",
+                "pair_id": f"dpo.phraseology.idiom_richness.{len(dpo_pairs):08x}",
+                "domain": "idiomatic_richness",
+                "target_phrase": u.idiom,
+                "flaw_type": "lack_of_morphemic_reasoning",
+                "query": query,
+                "chosen": chosen,
+                "rejected": rejected,
+                "source_authority": f"{u.source_dict} ({u.author})",
+            }
+            dpo_pairs.append(pair)
+            flaw_dist["lack_of_morphemic_reasoning"] += 1
+
+        for i in range(target_synonym_dpo):
+            sg = synonyms[i % len(synonyms)]
+            syn_str = ", ".join(f"«{s}»" for s in sg.synonyms[:3])
+            query = f"Чи є слова {syn_str} абсолютно взаємозамінними в будь-якому тексті?"
+            chosen = (
+                f"<thought>\n"
+                f"Аналізую стилістичну диференціацію синонімів до «{sg.headword}».\n"
+                f"Підкреслюю важливість регістру й контексту.\n"
+                f"</thought>\n\n"
+                f"Ні, синоніми {syn_str} не є абсолютно взаємозамінними. Кожне слово має свій стилістичний регістр "
+                f"та емоційне забарвлення: одні доречні в діловому мовленні, інші — в художній прозі чи живій розмові."
+            )
+            rejected = (
+                "<thought>Механічна взаємозамінність слів синонімічного ряду.</thought>\n\n"
+                "Так, це повні синоніми, тому ви можете ставити будь-яке з них без урахування контексту, вони абсолютно однакові."
+            )
+            pair = {
+                "schema_version": "v1_ulif_phraseology_dpo_pair",
+                "pair_id": f"dpo.phraseology.synonym_nuance.{len(dpo_pairs):08x}",
+                "domain": "synonymic_precision",
+                "target_phrase": sg.headword,
+                "flaw_type": "mechanical_wordnet_synset",
+                "query": query,
+                "chosen": chosen,
+                "rejected": rejected,
+                "source_authority": "УЛІФ НАН України",
+            }
+            dpo_pairs.append(pair)
+            flaw_dist["mechanical_wordnet_synset"] += 1
+
+    actual_count = len(dpo_pairs)
+    if shards_count is None:
+        shards_count = max(1, (actual_count + pairs_per_shard - 1) // pairs_per_shard)
+
     manifest_shards: list[dict[str, Any]] = []
     max_shard_size_kb = 0.0
 
@@ -2300,7 +2411,7 @@ def generate_dpo_dataset(
         shard_file_name = f"dpo_shard_{s_idx+1:03d}_of_{shards_count:03d}.jsonl"
         shard_path = output_dir / shard_file_name
         start_i = s_idx * pairs_per_shard
-        end_i = len(dpo_pairs) if s_idx == shards_count - 1 else (s_idx + 1) * pairs_per_shard
+        end_i = min(actual_count, (s_idx + 1) * pairs_per_shard)
         shard_pairs = dpo_pairs[start_i:end_i]
 
         shard_hasher = hashlib.sha256()
@@ -2325,7 +2436,7 @@ def generate_dpo_dataset(
 
     manifest_data = {
         "dataset_name": "uldr_v06_ulif_phraseology_dpo",
-        "total_pairs": target_count,
+        "total_pairs": actual_count,
         "shards_count": shards_count,
         "max_shard_size_kb": max_shard_size_kb,
         "shards": manifest_shards,
@@ -2336,7 +2447,7 @@ def generate_dpo_dataset(
     manifest_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     manifest_path.with_suffix(".json.sha256").write_text(f"{manifest_sha256}  manifest_dpo.json\n", encoding="utf-8")
 
-    logger.info("Wrote %d DPO pairs across %d shards (max size: %.2f KB)", target_count, shards_count, max_shard_size_kb)
+    logger.info("Wrote %d DPO pairs across %d shards (max size: %.2f KB)", actual_count, shards_count, max_shard_size_kb)
     return manifest_data, manifest_sha256, dict(flaw_dist)
 
 
@@ -2670,9 +2781,19 @@ def generate_release_receipt(
         sft_shards_count = len(sft_shards)
         total_sft_trajectories = sum(1 for s in sft_shards for _ in s.open("r", encoding="utf-8"))
         max_sft_size_kb = round(max((s.stat().st_size / 1024.0 for s in sft_shards), default=1100.0), 2)
+    elif sft_manifest_path and sft_manifest_path.exists():
+        try:
+            m_sft = json.loads(sft_manifest_path.read_text(encoding="utf-8"))
+            sft_shards_count = m_sft.get("shards_count", 1)
+            total_sft_trajectories = m_sft.get("total_trajectories", 1)
+            max_sft_size_kb = m_sft.get("max_shard_size_kb", 1100.0)
+        except Exception:
+            sft_shards_count = 1
+            total_sft_trajectories = sum(sft_task_dist.values()) if sft_task_dist else 1
+            max_sft_size_kb = 1100.0
     else:
-        sft_shards_count = 90
-        total_sft_trajectories = 45000
+        sft_shards_count = 1
+        total_sft_trajectories = sum(sft_task_dist.values()) if sft_task_dist else 1
         max_sft_size_kb = 1100.0
 
     if dpo_dir and dpo_dir.exists():
@@ -2680,9 +2801,19 @@ def generate_release_receipt(
         dpo_shards_count = len(dpo_shards)
         total_dpo_pairs = sum(1 for d in dpo_shards for _ in d.open("r", encoding="utf-8"))
         max_dpo_size_kb = round(max((d.stat().st_size / 1024.0 for d in dpo_shards), default=900.0), 2)
+    elif dpo_manifest_path and dpo_manifest_path.exists():
+        try:
+            m_dpo = json.loads(dpo_manifest_path.read_text(encoding="utf-8"))
+            dpo_shards_count = m_dpo.get("shards_count", 1)
+            total_dpo_pairs = m_dpo.get("total_pairs", 1)
+            max_dpo_size_kb = m_dpo.get("max_shard_size_kb", 900.0)
+        except Exception:
+            dpo_shards_count = 1
+            total_dpo_pairs = sum(dpo_flaw_dist.values()) if dpo_flaw_dist else 1
+            max_dpo_size_kb = 900.0
     else:
-        dpo_shards_count = 40
-        total_dpo_pairs = 20000
+        dpo_shards_count = 1
+        total_dpo_pairs = sum(dpo_flaw_dist.values()) if dpo_flaw_dist else 1
         max_dpo_size_kb = 900.0
 
     receipt_data = {
@@ -2797,12 +2928,12 @@ def run_pipeline(
     )
 
     target_eval = 20 if sample_only else 1500
-    target_sft = 100 if sample_only else 45000
-    target_dpo = 50 if sample_only else 20000
-    sft_shards = 2 if sample_only else 90
-    dpo_shards = 2 if sample_only else 40
-    sft_per_shard = target_sft // sft_shards
-    dpo_per_shard = target_dpo // dpo_shards
+    target_sft = 100 if sample_only else None
+    target_dpo = 50 if sample_only else None
+    sft_shards = 2 if sample_only else None
+    dpo_shards = 2 if sample_only else None
+    sft_per_shard = 50 if sample_only else 500
+    dpo_per_shard = 25 if sample_only else 500
 
     # 4. Generate Held-Out Eval
     eval_meta, eval_manifest_sha, _eval_cats, _eval_auths = generate_evaluation_benchmark(
@@ -2890,33 +3021,42 @@ def run_pipeline(
         and not has_candidate_leak(u.citation_text)
     ]
     random.Random(8140).shuffle(clean_fraz_pool)
-    train_units = clean_fraz_pool[:20000] if len(clean_fraz_pool) >= 20000 else clean_fraz_pool
 
-    # Clean ULIF phraseology pool for dialogue usage
-    clean_ulif_pool = [
-        u for u in ulif_units
-        if not u.is_held_out
-        and u.idiom.strip().lower() not in disallowed_in_train
-        and u.idiom.strip().lower() not in canonical_terms
-        and not has_candidate_leak(u.idiom)
-        and not has_candidate_leak(u.definition)
-    ]
-    random.Random(8140).shuffle(clean_ulif_pool)
-    dialogue_units = clean_ulif_pool[:5000] if len(clean_ulif_pool) >= 5000 else clean_ulif_pool
+    # Strictly deduplicate by idiom string to ensure zero repeated items
+    seen_fraz_idioms: set[str] = set()
+    dedup_fraz_pool: list[PhraseologyUnit] = []
+    for u in clean_fraz_pool:
+        k = u.idiom.strip().lower()
+        if k not in seen_fraz_idioms:
+            seen_fraz_idioms.add(k)
+            dedup_fraz_pool.append(u)
 
-    train_synonyms = [
-        sg for sg in train_synonyms
-        if sg.headword.strip().lower() not in disallowed_in_train
-        and not has_candidate_leak(sg.headword)
-        and not any(has_candidate_leak(s) for s in sg.synonyms)
-    ][:15000]
+    # Partition deduplicated items: SFT gets first slice, DPO gets a disjoint slice
+    sft_idiom_limit = 10000 if len(dedup_fraz_pool) >= 12000 else int(len(dedup_fraz_pool) * 0.8)
+    train_units = dedup_fraz_pool[:sft_idiom_limit]
+    dpo_units = dedup_fraz_pool[sft_idiom_limit:sft_idiom_limit + 2000]
+
+    # Clean synonyms
+    seen_syns: set[str] = set()
+    dedup_syns: list[SynonymGroup] = []
+    for sg in train_synonyms:
+        k = sg.headword.strip().lower()
+        if k not in seen_syns and k not in disallowed_in_train and not has_candidate_leak(sg.headword) and not any(has_candidate_leak(s) for s in sg.synonyms):
+            seen_syns.add(k)
+            dedup_syns.append(sg)
+
+    sft_syn_limit = 5000 if len(dedup_syns) >= 7000 else int(len(dedup_syns) * 0.7)
+    train_synonyms_sft = dedup_syns[:sft_syn_limit]
+    train_synonyms_dpo = dedup_syns[sft_syn_limit:sft_syn_limit + 2000]
+
+    dialogue_units: list[PhraseologyUnit] = []
 
     # 5. Generate SFT Dataset
     _sft_manifest, sft_manifest_sha, sft_tasks = generate_sft_dataset(
         units=train_units,
         dialogue_units=dialogue_units,
         calques=train_calques,
-        synonyms=train_synonyms,
+        synonyms=train_synonyms_sft,
         output_dir=sft_dir,
         target_count=target_sft,
         shards_count=sft_shards,
@@ -2927,8 +3067,8 @@ def run_pipeline(
     # 6. Generate DPO Dataset
     _dpo_manifest, dpo_manifest_sha, dpo_flaws = generate_dpo_dataset(
         calques=train_calques,
-        units=train_units,
-        synonyms=train_synonyms,
+        units=dpo_units,
+        synonyms=train_synonyms_dpo,
         output_dir=dpo_dir,
         target_count=target_dpo,
         shards_count=dpo_shards,
@@ -2949,7 +3089,7 @@ def run_pipeline(
         all_calques=all_calques,
     )
 
-    # 9. Generate Release Receipt (if full production run)
+    # 9. Generate Release Receipt (full run)
     if not sample_only:
         generate_release_receipt(
             eval_meta=eval_meta,
@@ -2961,8 +3101,8 @@ def run_pipeline(
             dpo_flaw_dist=dpo_flaws,
             verification_info=verification_info,
             unique_calques=len(train_calques),
-            unique_idioms=len(train_units) + len(dialogue_units),
-            unique_synonyms=len(train_synonyms),
+            unique_idioms=len(train_units) + len(dpo_units),
+            unique_synonyms=len(train_synonyms_sft) + len(train_synonyms_dpo),
             output_path=receipt_path,
             sft_dir=sft_dir,
             dpo_dir=dpo_dir,
