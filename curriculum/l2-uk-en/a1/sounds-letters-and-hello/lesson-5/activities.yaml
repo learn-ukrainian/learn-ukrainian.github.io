@@ -105,20 +105,20 @@ inline:
     - ве́чір
     answer: день
     explanation: До́брий день is the standard neutral daytime greeting.
-  - sentence: — Як спра́ви? — ____! А у тебе́?
+  - sentence: — Як спра́ви? — ____! А у те́бе?
     options:
     - Чудо́во
     - Звук
     - Склад
     answer: Чудо́во
     explanation: Чудо́во expresses that things are great or wonderful.
-  - sentence: — До́бре. А у ____? — У мене́ теж усе́ до́бре.
+  - sentence: — До́бре. А у ____? — У ме́не теж усе́ до́бре.
     options:
-    - тебе́
+    - те́бе
     - на́голос
     - день
-    answer: тебе́
-    explanation: А у тебе́? is the correct reciprocal phrase when inquiring about
+    answer: те́бе
+    explanation: А у те́бе? is the correct reciprocal phrase when inquiring about
       someone's condition.
   - sentence: — До ____! — На все до́бре!
     options:
@@ -328,8 +328,8 @@ workbook:
     - дім
     - дим
     answer: дім
-    explanation: Дім (house/home) uses high front vowel [і]; дим (smoke) uses open-mid
-      vowel [и].
+    explanation: Дім (house/home) uses high front vowel [і]; дим (smoke) uses near-close,
+      retracted vowel [и].
   - sentence: У селі́ ді́ти п'ють сві́же ____.
     options:
     - молоко́

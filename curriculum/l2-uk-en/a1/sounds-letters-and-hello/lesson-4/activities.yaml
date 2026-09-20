@@ -56,13 +56,13 @@ inline:
       of sounds.
   - prompt: Which response correctly answers the question 'Як спра́ви?'?
     options:
-    - text: До́бре. А у тебе́?
+    - text: До́бре. А у те́бе?
       correct: true
     - text: До́бре. А тебе́?
       correct: false
     - text: Мене́ зва́ти Марко́.
       correct: false
-    explanation: After 'Як спра́ви?', the correct reciprocal check is 'А у тебе́?'.
+    explanation: After 'Як спра́ви?', the correct reciprocal check is 'А у те́бе?'.
       'А тебе́?' is used when exchanging names.
 - id: act-6
   type: true-false
@@ -210,7 +210,7 @@ inline:
     - text: сир
       correct: false
     explanation: '''Ліс'' has the high front vowel [і], whereas ''лис'' and ''сир''
-      contain the open-mid vowel [и].'
+      contain the near-close, retracted vowel [и].'
   - prompt: Which word preserves three clean unstressed or stressed [о] sounds?
     options:
     - text: молоко́

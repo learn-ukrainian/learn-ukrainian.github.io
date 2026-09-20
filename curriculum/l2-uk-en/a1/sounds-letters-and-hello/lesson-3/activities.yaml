@@ -1,71 +1,68 @@
 inline:
 - id: act-3-in-1
   type: quiz
-  title: 'Euphony choices: У vs В and І vs Й'
-  instruction: Choose the smoother Ukrainian form.
+  title: 'Euphony: noticing У/В and І/Й'
+  instruction: Choose the correct idea about Ukrainian sound harmony.
   items:
-  - prompt: Which phrase flows smoothly between vowels and consonants?
+  - prompt: What is the primary reason Ukrainian alternates pairs like У/В and І/Й?
     options:
-    - text: Ході́мо в кіно́
+    - text: To create smooth sound flow (милозву́чність) and avoid clumsy consonant
+        clusters
       correct: true
-    - text: Ході́мо у кіно́
+    - text: To indicate past tense
       correct: false
-    - text: Ході́мо й кіно́
+    - text: To show whether a word is masculine or feminine
       correct: false
-    explanation: After a vowel (Ході́мо), use 'в' before a consonant (кіно́) to maintain
-      smooth alternation.
-  - prompt: How should a phrase begin before a consonant cluster like 'шк-'?
-    options:
-    - text: У шко́лі
-      correct: true
-    - text: В шко́лі
-      correct: false
-    - text: Й шко́лі
-      correct: false
-    explanation: At the start of a phrase before consonants (шко́лі), 'у' provides
-      a smooth opening.
-  - prompt: Which connector fits smoothly between two consonants in 'брат ___ сестра́'?
-    options:
-    - text: і
-      correct: true
-    - text: й
-      correct: false
-    - text: в
-      correct: false
-    explanation: Between consonants (брат and сестра́), use 'і' to prevent an awkward
-      consonant cluster.
-  - prompt: 'Which connector links two names ending and beginning with vowels: ''Марко́
-      ___ А́нна''?'
-    options:
-    - text: й
-      correct: true
-    - text: у
-      correct: false
-    - text: в
-      correct: false
-    explanation: Between vowels (Марко́ and А́нна), short 'й' provides a graceful
-      glide.
-  - prompt: Before a city name beginning with 'Льв-', which preposition avoids a collision
-      of consonants?
-    options:
-    - text: у Льво́ві
-      correct: true
-    - text: в Льво́ві
-      correct: false
-    - text: й Льво́ві
-      correct: false
-    explanation: Before 'льв-', Ukrainian always uses 'у' to avoid a heavy cluster
-      of consonants.
-  - prompt: What is the primary reason Ukrainian alternates У/В and І/Й?
-    options:
-    - text: To create smooth sound flow (милозву́чність) and avoid awkward clusters
-      correct: true
-    - text: To show grammatical past tense
-      correct: false
-    - text: To distinguish masculine and feminine nouns
-      correct: false
-    explanation: Милозву́чність (euphony) ensures that Ukrainian sounds melodious
+    explanation: Милозву́чність (euphony) ensures that Ukrainian sounds smooth, melodious,
       and easy to pronounce.
+  - prompt: In 'у шко́лі', why does the phrase open with 'у'?
+    options:
+    - text: To make the consonant cluster 'шк-' easier to pronounce
+      correct: true
+    - text: Because school is a feminine noun
+      correct: false
+    - text: Because 'в' can never appear at the start of a sentence
+      correct: false
+    explanation: Opening with vowel 'у' avoids an awkward consonant pile-up before
+      'шк-'.
+  - prompt: In 'Марко́ й А́нна', why does Ukrainian use short 'й'?
+    options:
+    - text: To create a gentle glide between the vowels 'о' and 'а'
+      correct: true
+    - text: Because Anna is a teacher
+      correct: false
+    - text: Because 'і' cannot be used with names
+      correct: false
+    explanation: Short glide 'й' provides a smooth transition between two vowel sounds.
+  - prompt: What are you expected to do with У/В and І/Й in your first module?
+    options:
+    - text: Recognize that Ukrainian chooses smoother sounds; do not worry about memorizing
+        every rule yet
+      correct: true
+    - text: Memorize thirty pages of phonetic alternations
+      correct: false
+    - text: Never use the letter В in speech
+      correct: false
+    explanation: At A1, recognition is enough. You do not need to choose them alone
+      yet.
+  - prompt: What is the Ukrainian term for this sound harmony?
+    options:
+    - text: милозву́чність
+      correct: true
+    - text: на́голос
+      correct: false
+    - text: абе́тка
+      correct: false
+    explanation: Милозву́чність literally means 'sweet-soundingness' (euphony).
+  - prompt: Which two pairs alternate to keep Ukrainian speech smooth?
+    options:
+    - text: у / в and і / й
+      correct: true
+    - text: а / о and е / и
+      correct: false
+    - text: п / б and т / д
+      correct: false
+    explanation: The alternating pairs у/в and і/й prevent heavy consonant collisions.
 - id: act-3-in-2
   type: match-up
   title: Greeting to time and register
@@ -95,7 +92,7 @@ inline:
     - Молоко́
     - Лі́тера
     explanation: Приві́т is the friendly everyday greeting used with friends and classmates.
-  - sentence: ____. А у тебе́?
+  - sentence: ____. А у те́бе?
     answer: До́бре
     options:
     - До́бре
@@ -146,7 +143,7 @@ inline:
       or unstressed.
   - statement: After 'Як тебе́ зва́ти?', the correct reciprocal question is 'А тебе́?'.
     correct: true
-    explanation: '''А тебе́?'' matches ''Як тебе́ зва́ти?''. ''А у тебе́?'' is only
+    explanation: '''А тебе́?'' matches ''Як тебе́ зва́ти?''. ''А у те́бе?'' is only
       used after ''Як спра́ви?''.'
   - statement: '''Приві́т!'' is suitable for addressing an unfamiliar official or
       store clerk.'
@@ -165,7 +162,7 @@ inline:
   instruction: Match each question or opener to its natural conversational response.
   pairs:
   - left: Як спра́ви?
-    right: До́бре. А у тебе́?
+    right: До́бре. А у те́бе?
   - left: Як тебе́ зва́ти?
     right: Мене́ зва́ти Марко́. А тебе́?
   - left: До́брий день!
@@ -217,73 +214,27 @@ workbook:
     right: My name is ...
   - left: На все до́бре!
     right: All the best!
-- id: act-3-wb-2
-  type: fill-in
-  title: 'Euphony: insert У or В'
-  instruction: Choose У or В to make the phrase euphonic.
-  items:
-  - sentence: Вона́ живе́ ____ Ки́єві.
-    answer: в
-    options:
-    - в
-    - у
-    explanation: After a vowel (живе́) before a single consonant, 'в' provides smooth
-      alternation.
-  - sentence: Марко́ зайшо́в ____ дім.
-    answer: у
-    options:
-    - у
-    - в
-    explanation: Between consonants (зайшо́в and дім), 'у' prevents three consonants
-      in a row.
-  - sentence: ____ шко́лі луна́є дзво́ник.
-    answer: У
-    options:
-    - У
-    - В
-    explanation: At the start of a sentence before consonant cluster 'шк-', 'У' is
-      required.
-  - sentence: Дру́зі зустрі́лися ____ Льво́ві.
-    answer: у
-    options:
-    - у
-    - в
-    explanation: Before 'Льв-', always use 'у' to avoid an unpronounceable consonant
-      cluster.
-  - sentence: Ді́ти гуля́ють ____ саду́.
-    answer: в
-    options:
-    - в
-    - у
-    explanation: After a vowel (гуля́ють) before a consonant (саду́), 'в' is the smoother
-      choice.
-  - sentence: Вчи́телька ____ кла́сі.
-    answer: у
-    options:
-    - у
-    - в
-    explanation: Before the cluster 'кл-', 'у' prevents a heavy pile-up of consonants.
 - id: act-3-wb-3
   type: quiz
-  title: 'Reciprocal etiquette: А тебе́ vs А у тебе́'
+  title: 'Reciprocal etiquette: А тебе́ vs А у те́бе'
   instruction: Choose the correct phrase for each dialogue situation.
   items:
   - prompt: 'Marko asks Sofia: ''Як спра́ви?'' Sofia answers: ''До́бре. ______?'''
     options:
-    - text: А у тебе́?
+    - text: А у те́бе?
       correct: true
     - text: А тебе́?
       correct: false
     - text: До поба́чення
       correct: false
     explanation: After 'Як спра́ви?', the reciprocal asking about the other person's
-      state is 'А у тебе́?'.
+      state is 'А у те́бе?'.
   - prompt: 'Marko asks: ''Як тебе́ зва́ти?'' Sofia answers: ''Мене́ зва́ти Софі́я.
       ______?'''
     options:
     - text: А тебе́?
       correct: true
-    - text: А у тебе́?
+    - text: А у те́бе?
       correct: false
     - text: Як спра́ви?
       correct: false
@@ -407,7 +358,7 @@ workbook:
     - До́бре.
     - Чудо́во.
     - Норма́льно.
-    - А у тебе́?
+    - А у те́бе?
 - id: act-3-wb-6
   type: fill-in
   title: Dialogue completion practice
@@ -439,7 +390,7 @@ workbook:
     answer: тебе́
     options:
     - тебе́
-    - у тебе́
+    - у те́бе
     - спра́ви
     explanation: In a name exchange, reciprocate with 'А тебе́?' (short for 'А тебе́
       як зва́ти?').

@@ -53,7 +53,7 @@ In many languages, vowels in unstressed syllables lose their clarity and blur in
 English speakers often struggle to differentiate Ukrainian **и** and **і**. They are distinct phonemes that completely change the meaning of a word:
 
 - **[і]** is a high, front, tense vowel. Stretch the corners of your lips into a broad smile, just like the vowel in **Приві́т!** or **дім — house / home**.
-- **[и]** is an open-mid front vowel. Relax your lips, lower your jaw slightly, and allow your tongue to rest comfortably in the center-front of your mouth. It is the vowel heard in **сир — cheese**, **син — son**, or the first syllable of **Приві́т!**.
+- **[и]** is a high-mid / near-close, retracted vowel. Relax your lips, keep your tongue pulled slightly back and down compared to **[і]**, and never replace it with English short *i*. It is the vowel heard in **сир — cheese**, **син — son**, or the first syllable of **Приві́т!**.
 
 Observe how swapping these two vowels changes the word entirely:
 - **дим — smoke** vs **дім — house / home**
@@ -103,7 +103,7 @@ Similarly, **Щ** always represents the two consonant sounds **[ш] + [ч] = [ш
 Listen to Marko and Sofia as they take a walk outside and practice their Ukrainian sounds in conversation. Notice how they keep their vowels pure and their consonants voiced:
 
 > **Марко́:** Приві́т, Софі́є! Як спра́ви?  
-> **Софі́я:** Приві́т, Ма́рку! До́бре, дя́кую. А у тебе́?  
+> **Софі́я:** Приві́т, Ма́рку! До́бре, дя́кую. А у те́бе?  
 > **Марко́:** Чудо́во! Погля́нь, ось дуб і вели́кий сад.  
 > **Софі́я:** А бі́ля де́рева росте́ бі́лий гриб!  
 > **Марко́:** Головне́ — гриб, а не грип. Вимовля́й звук [б] дзві́нко!  
@@ -114,7 +114,7 @@ Listen to Marko and Sofia as they take a walk outside and practice their Ukraini
 | Ukrainian line | English meaning | Pronunciation focus |
 | :--- | :--- | :--- |
 | **Марко́: Приві́т, Софі́є! Як спра́ви?** | Marko: Hi, Sofia! How are you? | Stress on **-ві́т**; pure **[и]** and smiling **[і]**. |
-| **Софі́я: Приві́т, Ма́рку! До́бре, дя́кую. А у тебе́?** | Sofia: Hi, Marko! Fine, thank you. And with you? | Round **[о]** in **До́бре**; proper reciprocal **А у тебе́?**. |
+| **Софі́я: Приві́т, Ма́рку! До́бре, дя́кую. А у те́бе?** | Sofia: Hi, Marko! Fine, thank you. And with you? | Round **[о]** in **До́бре**; proper reciprocal **А у те́бе?**. |
 | **Марко́: Чудо́во! Погля́нь, ось дуб і вели́кий сад.** | Marko: Great! Look, here is an oak and a big garden. | Voiced **[б]** in **дуб**; voiced **[д]** in **сад**. |
 | **Софі́я: А бі́ля де́рева росте́ бі́лий гриб!** | Sofia: And near the tree grows a white mushroom! | Final **[б]** in **гриб** stays fully voiced. |
 | **Марко́: Головне́ — гриб, а не грип. Вимовля́й звук [б] дзві́нко!** | Marko: The main thing is mushroom, not flu. Pronounce the sound [б] with voice! | Direct contrast between voiced **гриб** and voiceless **грип**. |

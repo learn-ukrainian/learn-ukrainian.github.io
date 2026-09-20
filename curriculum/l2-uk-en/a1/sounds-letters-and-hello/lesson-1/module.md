@@ -25,11 +25,11 @@ Keep this rule in mind from the very first minute:
 
 A **sound** belongs to your ear and mouth. A **letter** belongs to your eyes and hand. In Ukrainian schoolbooks, this distinction is taught from the earliest grades as the foundation of reading and writing.
 
-> **Золоте́ пра́вило з підру́чника (Заболо́тний, 5 клас, с. 83):**
+> **Золоте́ пра́вило з підру́чника (Заболо́тний, 5 клас, с. 83) — Golden rule from the textbook (Zabolotnyi, Grade 5, p. 83):**
 > «Зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо».
 > *"We hear and pronounce sounds, but we see and write letters."*
 
-Why does this matter so much? Because letters on the page are silent graphic symbols. They do not have a voice of their own. As Litvinova (5 клас, с. 130) emphasizes when training young learners: strictly speaking, there is no such thing as a "vowel letter" (*голосна́ лі́тера*). Sounds are vowels or consonants; letters are simply marks on paper that represent those sounds.
+Why does this matter so much? Because letters on the page are silent graphic symbols. They do not have a voice of their own. As Litvinova (5 клас, с. 130) emphasizes when training young learners: strictly speaking, there is no such thing as a "vowel letter" (*голосна́ лі́тера* — vowel letter). Sounds are vowels or consonants; letters are simply marks on paper that represent those sounds.
 
 Three numbers define the architecture of Ukrainian phonetics:
 
@@ -101,9 +101,9 @@ Ukrainian has six basic vowel sounds:
 
 A vowel sound (*голосни́й звук*) is formed purely with voice. When you pronounce a vowel, your vocal cords vibrate and the air stream passes freely through the mouth without encountering any obstacle from your lips, teeth, or tongue.
 
-> **Пра́вило з підру́чника (Большако́ва, 1 клас, с. 24):**
+> **Пра́вило з підру́чника (Большако́ва, 1 клас, с. 24) — Rule from the textbook (Bolshakova, Grade 1, p. 24):**
 > «Голосні́ почу́єш в пісні́, і у те́мному у лі́сі, і коли́ диву́єшся, і коли́ милу́єшся. Ле́гко вимовля́ються, ве́село співа́ються!»
-> *"Vowels are heard in song... Easily pronounced, cheerfully sung!"*
+> *"You will hear vowels in song, and in the dark forest, and when you wonder, and when you admire. Easily pronounced, cheerfully sung!"*
 
 Because the air flow is unobstructed, you can hold and sing any vowel sound:
 

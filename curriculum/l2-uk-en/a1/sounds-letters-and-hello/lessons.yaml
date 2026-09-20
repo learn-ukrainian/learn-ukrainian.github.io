@@ -51,7 +51,8 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - те́бе
   unverified_lemmas: []
 - n: 4
   title: First Pronunciation Traps
@@ -67,7 +68,8 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - те́бе
   unverified_lemmas: []
 - n: 5
   title: Textbook Check
@@ -83,7 +85,9 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - те́бе
+  - ме́не
   unverified_lemmas: []
 closes_module: 5
 provenance:

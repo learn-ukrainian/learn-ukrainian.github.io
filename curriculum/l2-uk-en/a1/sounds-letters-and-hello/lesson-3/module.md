@@ -8,41 +8,23 @@ Before you speak, you will notice something special about Ukrainian: it is built
 
 ## Euphony: У/В and І/Й
 
-Ukrainian is celebrated for its melodic flow. In Ukrainian linguistics, this quality is known as **милозву́чність — euphony** (literally "sweet-soundingness"). The language dislikes heavy consonant tangles or awkward vowels colliding across word boundaries. To keep speech flowing smoothly, Ukrainian alternates between pairs of small words and prefixes.
+Ukrainian likes smooth sound flow. This is called **милозву́чність — euphony**. At A1, you only need to recognize two common alternating pairs:
 
-At this stage, you do not need to memorize exhaustive lists of phonetic rules. Your goal is simply to train your ear to recognize two essential alternating pairs: **у / в** and **і / й**.
+| Pair | Beginner idea |
+| --- | --- |
+| **у / в** | Ukrainian chooses the smoother one for the sounds around it |
+| **і / й** | Ukrainian chooses the smoother one for the sounds around it |
 
-### The Alternating Pair: У and В
+You do not need to choose them alone yet. Just notice the idea: Ukrainian actively avoids heavy sound piles.
 
-The preposition meaning "in" or "at" can appear as either **у** or **в**. They carry the exact same meaning—the choice depends entirely on the surrounding sounds:
+Two tiny examples:
 
-- **Use в after a vowel** when the next word begins with a consonant:
-  - **Ході́мо в кіно́! — Let's go to the cinema!** (The vowel **о** flows cleanly into **в**, followed by consonant **к**.)
-  - **вона́ живе́ в Оде́сі — she lives in Odesa** (The vowel **е** links smoothly into **в**.)
+| Pair | What to notice |
+| --- | --- |
+| **у / в** | **у шко́лі** starts with **у** before **шк-**; **в Украї́ні** starts with **в** before **У-** |
+| **і / й** | **Марко́ й А́нна** puts short **й** between vowel sounds |
 
-- **Use у after a consonant**, or at the very start of a sentence before a consonant:
-  - **у шко́лі — at school** (Starting with vowel **у** makes the consonant cluster **шк-** easy to pronounce.)
-  - **У тебе́ га́рна кни́жка. — You have a nice book.** (Opening with **у** avoids starting with a cluster.)
-  - **зайшо́в у дім — walked into the house** (Between consonants **в** and **д**, vowel **у** acts as a comfortable cushion.)
-
-- **Special sound environments:** Before words starting with **в**, **ф**, or clusters like **льв-**, **св-**, **тв-**, Ukrainian always prefers **у**:
-  - **у Льво́ві — in Lviv** (Saying **в Льво́ві** would force your lips to collide on two **v** sounds.)
-  - **у тво́рі — in the essay** (Avoids three consonants in a row.)
-
-This alternation even appears inside vocabulary pairs: **учи́тель / вчи́тель — teacher**, and **уже́ / вже — already**.
-
-### The Alternating Pair: І and Й
-
-The conjunction meaning "and" alternates in the same musical way between full vowel **і** and short glide **й**:
-
-- **Use і between consonants:**
-  - **брат і сестра́ — brother and sister** (Vowel **і** separates consonants **т** and **с**.)
-  - **чай і ті́стечко — tea and pastry** (Vowel **і** cushions the flow between **й** and **т**.)
-
-- **Use й after a vowel** when the next word begins with a vowel or single consonant:
-  - **Марко́ й А́нна — Marko and Anna** (Glide **й** creates a gentle transition between vowels **о** and **а**.)
-
-Listen to how naturally your voice moves when consonants and vowels alternate. Ukrainian creates this melody by design.
+Do not memorize these as fixed rules today. Just hear that Ukrainian makes smooth sound choices.
 
 <!-- INJECT_ACTIVITY: act-3-in-1 -->
 
@@ -62,7 +44,7 @@ When meeting people in Ukraine, greetings are spoken as complete, ready-to-use p
 | **До́бре.** | Fine. / Well. | Simple, positive response |
 | **Чудо́во.** | Great. / Wonderful. | Enthusiastic response |
 | **Норма́льно.** | Okay. / Normal. | Balanced, neutral response |
-| **А у тебе́?** | And you? / And with you? | Friendly reciprocal check after **Як спра́ви?** |
+| **А у те́бе?** | And you? / And with you? | Friendly reciprocal check after **Як спра́ви?** |
 | **Як тебе́ зва́ти?** | What is your name? | Informal inquiry; literally "How to call you?" |
 | **Мене́ зва́ти ...** | My name is ... | Stating your name; literally "Me they call..." |
 | **А тебе́?** | And you? | Reciprocal question after a name exchange |
@@ -80,7 +62,7 @@ Two classmates meet in the hallway before class. Listen to how they greet each o
 > **А́нна:** Приві́т!  
 > **Марко́:** Приві́т!  
 > **А́нна:** Як спра́ви?  
-> **Марко́:** До́бре. А у тебе́?  
+> **Марко́:** До́бре. А у те́бе?  
 > **А́нна:** Чудо́во.  
 
 #### Dialogue Breakdown
@@ -89,7 +71,7 @@ Two classmates meet in the hallway before class. Listen to how they greet each o
 | :--- | :--- | :--- |
 | **Приві́т!** | Hi! | Stress is on **-ві́т**; stretch your lips into a smile for **[і]**. |
 | **Як спра́ви?** | How are you? | **спра́ви** has stress on **спра́-**; keep both syllables clean. |
-| **До́бре. А у тебе́?** | Fine. And with you? | **До́бре** has stress on the first syllable; **у тебе́** has stress on **-бе́**. |
+| **До́бре. А у те́бе?** | Fine. And with you? | **До́бре** has stress on the first syllable; after a preposition, stress is on **те́-** in **у те́бе**. |
 | **Чудо́во.** | Great. / Wonderful. | Stress is on the middle syllable: **чу-до́-во**. |
 
 ### Dialogue 2: Exchanging Names
@@ -109,13 +91,13 @@ Now Marko meets Sofia for the first time. They introduce themselves:
 | **А тебе́?** | And you? | Elliptical short form for **А тебе́ як зва́ти?** |
 | **Мене́ зва́ти Марко́.** | My name is Marko. | Stress on **-ко́**: **Мар-ко́**. |
 
-#### Crucial Etiquette Distinction: А у тебе́? vs А тебе́?
+#### Crucial Etiquette Distinction: А у те́бе? vs А тебе́?
 
 Notice how the follow-up question changes depending on what was asked:
-- When someone asks **Як спра́ви? — How are you?**, the underlying idea is "How are things *with you*?" (**у тебе́**). Therefore, your reciprocal question is:  
-  **А у тебе́? — And with you?**
+- When someone asks **Як спра́ви? — How are you?**, the underlying idea is "How are things *with you*?" (**у те́бе**). Therefore, your reciprocal question is:  
+  **А у те́бе? — And with you?**
 - When someone asks **Як тебе́ зва́ти? — What is your name?**, the word **тебе́** is the direct target ("What do they call *you*?"). Therefore, your reciprocal question is:  
-  **А тебе́? — And you?** (short for **А тебе́ як зва́ти?**). Never say **А у тебе́?** when exchanging names.
+  **А тебе́? — And you?** (short for **А тебе́ як зва́ти?**). Never say **А у те́бе?** when exchanging names.
 
 ### Dialogue 3: Classroom Greeting
 
