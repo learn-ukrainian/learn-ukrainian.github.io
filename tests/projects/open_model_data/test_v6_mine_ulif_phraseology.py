@@ -1085,27 +1085,48 @@ def test_corpus_invariants_no_broken_definitions():
 
 
 def test_corpus_invariants_no_spliced_quotes():
-    """CF R10 Finding 1 & 5: Verify 0 spliced quotes across all release shards."""
+    """CF R10/R11: Verify 0 spliced quotes across all release shards (SFT, eval, DPO)."""
     release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
     if not release_dir.exists():
         pytest.skip("Release shards not yet generated")
 
     sft_dir = release_dir / "sft"
     eval_dir = release_dir / "eval"
+    dpo_dir = release_dir / "dpo"
     splice_re = re.compile(r"\.\.\s*[,;:]")
     dot_space_dot_re = re.compile(r"\.\.\s+\.")
 
-    for shard in list(sft_dir.glob("sft_shard_*.jsonl")) + list(eval_dir.glob("eval_shard_*.jsonl")):
+    all_shards = (
+        sorted(list(sft_dir.glob("sft_shard_*.jsonl")))
+        + sorted(list(eval_dir.glob("eval_shard_*.jsonl")))
+        + sorted(list(dpo_dir.glob("dpo_shard_*.jsonl")))
+    )
+    assert len(all_shards) > 0, "No shards found to verify"
+
+    for shard in all_shards:
         with shard.open("r", encoding="utf-8") as f:
             for line_no, line in enumerate(f, 1):
-                row = json.loads(line)
-                resp = row.get("final_response", "") or row.get("classical_citation", "")
-                quotes = re.findall(r"«([^»]+)»", resp)
-                if not quotes and "classical_citation" in row:
-                    quotes = [row["classical_citation"]]
-                for q in quotes:
-                    assert not splice_re.search(q), f"Spliced quote with ..[,;:] in {shard.name}:{line_no}: «{q}»"
-                    assert not dot_space_dot_re.search(q), f"Spliced quote with .. . in {shard.name}:{line_no}: «{q}»"
-                    assert ".. ." not in q, f"Spliced quote with '.. .' in {shard.name}:{line_no}: «{q}»"
-                    assert " . —" not in q, f"Stray dot-dash in {shard.name}:{line_no}: «{q}»"
-                    assert " . -" not in q, f"Stray dot-dash in {shard.name}:{line_no}: «{q}»"
+                assert not splice_re.search(line), f"Spliced quote with ..[,;:] in {shard.name}:{line_no}: {line[:120]}"
+                assert not dot_space_dot_re.search(line), f"Spliced quote with .. . in {shard.name}:{line_no}: {line[:120]}"
+                assert ".. ." not in line, f"Spliced quote with '.. .' in {shard.name}:{line_no}: {line[:120]}"
+                assert " . —" not in line, f"Stray dot-dash in {shard.name}:{line_no}: {line[:120]}"
+                assert " . -" not in line, f"Stray dot-dash in {shard.name}:{line_no}: {line[:120]}"
+
+
+def test_parse_frazeolohichnyi_dirka_z_bublyka_definition_not_dialogue_splice():
+    """CF R11 Finding 1: Ensure 'дірка з бублика' parses 'Абсолютно нічого.' and not dialogue quote with splice."""
+    raw_word = "дірка з бублика {{</fras>}}"
+    raw_def = (
+        "д[']і[/']рка з (від) б[']у[/']блика. Абсолютно нічого. "
+        "— Мовчи, Марино..,— не вгавав Левко.— Що я там маю з того шоферування? Дірку з бублика (В. Кучер); "
+        "— Ця справа не варта дірки з бублика (М. Зарудний)."
+    )
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit is not None
+    assert unit.idiom == "дірка з бублика"
+    assert unit.definition == "Абсолютно нічого."
+    assert "Мовчи, Марино" not in unit.definition
+    assert unit.citation_text == "Ця справа не варта дірки з бублика"
+    assert unit.author == "М. Зарудний"
+    assert not re.search(r"\.\.\s*[,;:]", unit.definition)
+    assert not re.search(r"\.\.\s*[,;:]", unit.citation_text)

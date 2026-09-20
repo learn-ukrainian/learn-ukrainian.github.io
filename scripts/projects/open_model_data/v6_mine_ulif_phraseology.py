@@ -1244,7 +1244,7 @@ SPEECH_VERB_RE = re.compile(
 def is_headword_header(s: str, word: str) -> bool:
     """Detect if a leading segment is a dictionary headword/valency header rather than definition."""
     s_clean = s.lower().strip()
-    if any(s_clean.endswith(v) for v in ["кому.", "кого.", "чого.", "чому.", "ким.", "чим.", "і без додатка.", "без додатка.", "лайл.", "розм.", "книжн."]):
+    if re.search(r"\b(?:кому|кого|чого|чому|ким|чим|і без додатка|без додатка|лайл|розм|книжн)\.\s*$", s_clean):
         return True
     if "/" in s:
         return True
@@ -1367,6 +1367,8 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
     if defn.startswith(",") or defn.startswith(":") or ": , " in defn:
         return None
     if len(defn) < 8 or len(defn) > 300 or "зі сл." in defn or re.search(r"\b\d+\.\s*", defn):
+        return None
+    if re.search(r"\.\.\s*[,;:]", defn) or re.search(r"\.\.\s+\.", defn) or ".. ." in defn:
         return None
 
     raw_defn_stripped = defn.rstrip(".")
@@ -2841,15 +2843,17 @@ def verify_receipt_invariants(
 
     # 0. Corpus-wide quote and attestation invariants across all eval records (Findings 1, 2, 5)
     for rec in eval_records:
+        rec_str = json.dumps(rec, ensure_ascii=False)
+        if re.search(r"\.\.\s*[,;:]", rec_str) or re.search(r"\.\.\s+\.", rec_str) or ".. ." in rec_str:
+            raise AssertionError(f"Broken ellipsis splice in eval record {rec.get('eval_id')}: {rec_str}")
+        if " . —" in rec_str or " . -" in rec_str:
+            raise AssertionError(f"Stray dot-dash punctuation in eval record {rec.get('eval_id')}: {rec_str}")
+
         cit = rec.get("classical_citation", "")
         cat = rec.get("eval_category", "")
         if cit and cat in ("authentic_idiom_usage", "figurative_reasoning"):
             if SPEECH_VERB_RE.search(cit):
                 raise AssertionError(f"Orphaned speech verb before punctuation in eval record {rec.get('eval_id')}: «{cit}»")
-            if " . —" in cit or " . -" in cit:
-                raise AssertionError(f"Stray dot-dash punctuation in eval record {rec.get('eval_id')}: «{cit}»")
-            if re.search(r"\.\.\s*[,;:]", cit) or re.search(r"\.\.\s+\.", cit) or ".. ." in cit:
-                raise AssertionError(f"Broken ellipsis splice in eval record {rec.get('eval_id')}: «{cit}»")
             t_idiom = rec.get("target_idiom", "")
             t_stems = get_content_stems(t_idiom)
             if t_stems and not any(st in cit.lower() for st in t_stems):
@@ -2929,6 +2933,12 @@ def verify_receipt_invariants(
     for shard_path in sft_shards:
         with shard_path.open("r", encoding="utf-8") as f:
             for line_no, line in enumerate(f, 1):
+                # Universal corpus invariant: no ellipsis splices or stray dot-dash punctuation
+                if re.search(r"\.\.\s*[,;:]", line) or re.search(r"\.\.\s+\.", line) or ".. ." in line:
+                    raise AssertionError(f"Broken ellipsis splice in SFT {shard_path.name}:{line_no}")
+                if " . —" in line or " . -" in line:
+                    raise AssertionError(f"Stray dot-dash punctuation in SFT {shard_path.name}:{line_no}")
+
                 total_sft_trajectories += 1
                 row = json.loads(line)
                 resp = row.get("final_response", "")
@@ -3014,6 +3024,12 @@ def verify_receipt_invariants(
     for shard_path in dpo_shards:
         with shard_path.open("r", encoding="utf-8") as f:
             for line_no, line in enumerate(f, 1):
+                # Universal corpus invariant: no ellipsis splices or stray dot-dash punctuation
+                if re.search(r"\.\.\s*[,;:]", line) or re.search(r"\.\.\s+\.", line) or ".. ." in line:
+                    raise AssertionError(f"Broken ellipsis splice in DPO {shard_path.name}:{line_no}")
+                if " . —" in line or " . -" in line:
+                    raise AssertionError(f"Stray dot-dash punctuation in DPO {shard_path.name}:{line_no}")
+
                 total_dpo_pairs += 1
                 row = json.loads(line)
                 chosen = row.get("chosen", "")
