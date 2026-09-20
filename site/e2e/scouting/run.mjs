@@ -23,8 +23,8 @@ const HELP = `Practice Hub scouting harness (#8317)
 Usage: node e2e/scouting/run.mjs --slice <id> --out <dir> [options]
 
   --help                  Show this help
-  --slice <id>            Slice id: ${SLICES.join(', ')} (only C1 is implemented; C2-C8 are stubs)
-  --out <dir>             Output directory for report.json, report.md and trace-*.zip
+  --slice <id>            Slice id: ${SLICES.join(', ')} (C1 discoverability+session+TTFI; C2-C8 scripted journeys)
+  --out <dir>             Output directory for report, screenshots and timestamped trace zips
   --profile <name>        desktop | phone | android | fast | explorer  (default: desktop,phone,android;
                           comma-separated list allowed)
   --live                  Target ${LIVE_URL} (default: ${LOCAL_URL}, run \`npm run preview\` first)
@@ -48,8 +48,13 @@ function parseArgs(argv) {
   return a;
 }
 
+
 const now = () => performance.now();
 const round = (n) => (n == null ? null : Math.round(n));
+
+// Immutable artifacts: every file carries the run timestamp, so reruns never overwrite.
+const RUN_ID = new Date().toISOString().replace(/[:.]/g, '-');
+const stem = (slice, profile, name) => `${RUN_ID}-${slice.toLowerCase()}-${profile}-${name}`;
 
 async function withJourney(browser, profileName, slice, name, base, out, fn) {
   const prof = PROFILES[profileName];
@@ -58,122 +63,267 @@ async function withJourney(browser, profileName, slice, name, base, out, fn) {
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
   const page = await context.newPage();
   const errors = [];
+  const failed = [];
   page.on('pageerror', (e) => errors.push(String(e)));
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
+  page.on('response', (r) => r.status() >= 400 && failed.push(`${r.status()} ${r.url()}`));
+  const shot = async (label) => {
+    const path = join(out, `${stem(slice, profileName, name)}-${label}.png`);
+    await page.screenshot({ path });
+    return path;
+  };
   let result;
   try {
-    result = await fn(page);
+    result = await fn(page, shot);
   } catch (e) {
-    result = { error: String(e).split('\n')[0] };
+    result = { error: String(e).split('\n').slice(0, 3).join(' ').slice(0, 300) };
   }
-  const tracePath = join(out, `trace-${slice.toLowerCase()}-${profileName}-${name}.zip`);
+  const tracePath = join(out, `${stem(slice, profileName, name)}.zip`);
   await context.tracing.stop({ path: tracePath });
   await context.close();
-  return { journey: name, profile: profileName, trace: tracePath, consoleErrors: errors.slice(0, 5), ...result };
+  return { journey: name, profile: profileName, trace: tracePath, consoleErrors: errors.slice(0, 5), failedRequests: [...new Set(failed)].slice(0, 8), ...result };
 }
 
-// Visible practice-ish entry points on the current page.
+// Practice-ish links inside `scope` (a CSS selector, default whole document).
 const PRACTICE_RE = /practi[cs]e|drill|exercise|quiz|практик|вправ/i;
-async function findPracticeLinks(page) {
-  return page.evaluate((src) => {
+async function findPracticeLinks(page, scope = 'body') {
+  return page.evaluate(({ src, scope }) => {
     const re = new RegExp(src, 'i');
     const vis = (el) => { const r = el.getBoundingClientRect(); const s = getComputedStyle(el); return r.width > 0 && r.height > 0 && s.visibility !== 'hidden'; };
-    return [...document.querySelectorAll('a[href], button, summary')]
+    return [...document.querySelectorAll(scope)].flatMap((root) => [...root.querySelectorAll('a[href], button, summary')])
       .filter((el) => re.test((el.textContent || '') + ' ' + (el.getAttribute('href') || '')))
-      .map((el) => ({ text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60), href: el.getAttribute('href'), visible: vis(el), inNav: !!el.closest('nav,header') }));
-  }, PRACTICE_RE.source);
+      .map((el) => ({ text: (el.textContent || '').replace(/\s+/g, ' ').trim().slice(0, 60), href: el.getAttribute('href'), visible: vis(el) }));
+  }, { src: PRACTICE_RE.source, scope });
 }
 
 // The Practice Hub itself (NOT other "practice" pages such as /b1/practice-exam/).
 const TARGET = '/words-of-the-day/practice';
 const isTarget = (href) => !!href && new URL(href, 'https://x.invalid/').pathname.replace(/\/$/, '') === TARGET;
 
-// Click path to the hub: direct link on this page (1 click), else via a plausible parent (2 clicks).
-async function clicksToPractice(page) {
-  const direct = async () => (await findPracticeLinks(page)).find((l) => l.visible && isTarget(l.href));
-  let hit = await direct();
+// Click a link and wait until the browser has actually arrived, so the trace covers the hub.
+async function clickAndArrive(page, locator, arrive) {
+  await locator.click();
+  await page.waitForURL((u) => arrive(u.pathname), { timeout: 15000 });
+  await page.waitForLoadState('domcontentloaded');
+}
+const arrivedHub = (p) => p.replace(/\/$/, '') === TARGET;
+
+// Click path to the hub starting inside `scope`: direct link (1 click), else via a parent page (2 clicks).
+async function clicksToPractice(page, scope = 'body') {
+  const direct = async (sc) => (await findPracticeLinks(page, sc)).find((l) => l.visible && isTarget(l.href));
+  let hit = await direct(scope);
   if (hit) {
-    await page.locator(`a[href="${hit.href}"]:visible`).first().click();
+    await clickAndArrive(page, page.locator(`${scope} a[href="${hit.href}"]:visible`).first(), arrivedHub);
     return { reached: true, clicks: 1, path: [`${hit.text} -> ${hit.href}`] };
   }
   const start = page.url();
   for (const parent of ['/words-of-the-day/', '/lexicon/']) {
-    const link = page.locator(`a[href="${parent}"]:visible`).first();
+    const link = page.locator(`${scope} a[href="${parent}"]:visible`).first();
     if (!(await link.count())) continue;
-    await link.click();
-    await page.waitForLoadState('domcontentloaded');
-    hit = await direct();
+    await clickAndArrive(page, link, (p) => p === parent);
+    hit = await direct('body');
     if (hit) {
-      await page.locator(`a[href="${hit.href}"]:visible`).first().click();
-      return { reached: true, clicks: 2, path: [`nav -> ${parent}`, `${hit.text} -> ${hit.href}`] };
+      await clickAndArrive(page, page.locator(`a[href="${hit.href}"]:visible`).first(), arrivedHub);
+      return { reached: true, clicks: 2, path: [`${scope} -> ${parent}`, `${hit.text} -> ${hit.href}`] };
     }
     await page.goto(start, { waitUntil: 'domcontentloaded' });
   }
   return { reached: false, clicks: null, path: [] };
 }
 
+// --- C1 -------------------------------------------------------------------------------
+async function entryJourney(page, url, scope, prep) {
+  await page.goto(url, { waitUntil: 'load' });
+  if (prep) { if (!(await prep(page))) return { reached: null, clicks: null, path: [], note: 'n/a: control not present at this viewport' }; }
+  const links = await findPracticeLinks(page, scope);
+  const found = await clicksToPractice(page, scope);
+  return { start: url, scope, practiceLinksInScope: links.filter((l) => l.visible).length, ...found };
+}
+
+async function openHubReady(page) {
+  await page.goto(PRACTICE, { waitUntil: 'load' });
+  await page.locator('button[data-mode]').first().waitFor({ state: 'visible', timeout: 20000 });
+}
+
+// Full first session: A1, budget 10, Flashcards, 10 cards, end screen.
+async function flashcardSession(page, shot) {
+  await openHubReady(page);
+  await page.locator('.k3-levels button', { hasText: /^A1$/ }).click();
+  await page.getByTestId('practice-session-budget-10').click();
+  await page.locator('button[data-mode="flashcards"]').click();
+  const summary = page.getByTestId('practice-session-summary');
+  const answered = [];
+  const total = await page.getByTestId('practice-session-progress').textContent().catch(() => null);
+  for (let i = 0; i < 12 && !(await summary.isVisible()); i++) {
+    const card = page.locator('[data-activity="flashcard"]');
+    await card.waitFor({ state: 'visible', timeout: 10000 });
+    answered.push(((await card.textContent()) || '').replace(/\s+/g, ' ').trim().slice(0, 30));
+    await card.click(); // flip
+    await page.locator('.rate-btn[data-rate="good"]').click(); // "Знаю"-equivalent
+    await page.getByTestId('practice-advance-button').click(); // no auto-advance: «Далі» is required
+    await page.waitForTimeout(300);
+  }
+  await summary.waitFor({ state: 'visible', timeout: 15000 });
+  const shotPath = await shot('end-screen');
+  return {
+    progressAtStart: total,
+    cardsAnswered: answered.length,
+    endScreen: true,
+    summaryText: ((await summary.textContent()) || '').replace(/\s+/g, ' ').trim().slice(0, 200),
+    continueLinks: await page.getByTestId('practice-session-continue-links').locator('a,button').count(),
+    endScreenShot: shotPath,
+  };
+}
+
+async function landingTtfi(page, shot) {
+  const t0 = now();
+  await page.goto(PRACTICE, { waitUntil: 'commit' });
+  const ctl = page.locator('main button:visible, main a[href]:visible, main input:visible, main select:visible, main summary:visible').first();
+  await ctl.waitFor({ state: 'visible', timeout: 20000 });
+  const ttfi = now() - t0;
+  await page.waitForLoadState('load');
+  const loadMs = now() - t0;
+  const info = await page.evaluate(() => {
+    const vis = (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+    return {
+      h1: document.querySelector('h1')?.textContent?.trim() ?? null,
+      modes: [...document.querySelectorAll('button[data-mode]')].filter(vis).map((b) => b.dataset.mode),
+      dialogs: document.querySelectorAll('dialog[open], [role="dialog"]').length,
+      horizontalOverflow: document.documentElement.scrollWidth > innerWidth + 1,
+      smallTargets: [...document.querySelectorAll('main button, main a[href]')].filter(vis).filter((e) => { const r = e.getBoundingClientRect(); return r.width < 44 || r.height < 44; }).length,
+    };
+  });
+  const firstControl = await ctl.evaluate((e) => (e.textContent || e.getAttribute('aria-label') || e.tagName).replace(/\s+/g, ' ').trim().slice(0, 60));
+  return { ttfiMs: round(ttfi), loadMs: round(loadMs), firstControl, landingShot: await shot('landing'), ...info };
+}
+
+async function directPractice404(page, shot) {
+  const resp = await page.goto('/practice/', { waitUntil: 'load' });
+  return { requested: '/practice/', httpStatus: resp?.status() ?? null, finalUrl: page.url(), h1: await page.locator('h1').first().textContent().catch(() => null), shot: await shot('direct-practice') };
+}
+
 async function slice1(browser, profileName, base, out) {
+  const J = (name, fn) => withJourney(browser, profileName, 'C1', name, base, out, fn);
   const results = [];
-
-  results.push(await withJourney(browser, profileName, 'C1', 'j1-home', base, out, async (page) => {
-    await page.goto('/', { waitUntil: 'load' });
-    const entryPoints = await findPracticeLinks(page);
-    const nav = await page.evaluate(() => [...document.querySelectorAll('nav a')].filter((a) => a.getBoundingClientRect().width > 0).map((a) => a.getAttribute('href')));
-    const found = await clicksToPractice(page);
-    return { entryPointsOnHome: entryPoints, visibleNavLinks: nav, ...found };
-  }));
-
-  results.push(await withJourney(browser, profileName, 'C1', 'j2-word', base, out, async (page) => {
+  results.push(await J('e1-home', (p) => entryJourney(p, '/', 'main')));
+  results.push(await J('e2-header-nav', (p) => entryJourney(p, '/', 'header nav.lu-nav')));
+  results.push(await J('e3-phone-menu', (p) => entryJourney(p, '/', 'details.lu-mobile-menu nav', async (pg) => {
+    const sum = pg.locator('details.lu-mobile-menu > summary');
+    if (!(await sum.isVisible())) return false;
+    await sum.click();
+    return true;
+  })));
+  results.push(await J('e4-footer', (p) => entryJourney(p, '/', 'footer.lu-footer')));
+  results.push(await J('e5-words-of-the-day', (p) => entryJourney(p, '/words-of-the-day/', 'main')));
+  results.push(await J('e6-word-page', (p) => entryJourney(p, '/lexicon/%D0%B2%D0%BE%D0%B4%D0%B0/', 'main')));
+  results.push(await J('e6b-word-page-control', (p) => entryJourney(p, '/lexicon/%D0%BE%D1%84%D1%96%D1%81/', 'main')));
+  results.push(await J('e6c-word-via-browse', async (page) => {
     await page.goto('/lexicon/browse/', { waitUntil: 'load' });
-    const browsePractice = await findPracticeLinks(page);
-    await page.locator('[data-index-search]').fill('офіс');
-    const link = page.locator('.atlas-index-link', { hasText: 'офіс' }).first();
-    await link.waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
-    const wordHref = await link.getAttribute('href').catch(() => null);
-    if (!wordHref) return { note: 'no word link found via /lexicon/browse/ search', browsePractice };
-    await page.goto(wordHref, { waitUntil: 'load' });
-    const wordPagePractice = await findPracticeLinks(page);
-    const found = await clicksToPractice(page);
-    return { wordPage: wordHref, browsePractice, wordPagePractice, ...found };
+    await page.locator('[data-index-search]').fill('вода');
+    const link = page.locator('.atlas-index-link', { hasText: 'вода' }).first();
+    await link.waitFor({ state: 'visible', timeout: 10000 });
+    const href = await link.getAttribute('href');
+    const resp = await page.goto(href, { waitUntil: 'load' });
+    const links = await findPracticeLinks(page, 'main');
+    return { wordHref: href, httpStatus: resp?.status() ?? null, h1: await page.locator('h1').first().textContent().catch(() => null), practiceLinksInScope: links.filter((l) => l.visible).length, ...(await clicksToPractice(page, 'main')) };
   }));
-
-  results.push(await withJourney(browser, profileName, 'C1', 'j3-direct', base, out, async (page) => {
-    const t0 = now();
-    await page.goto(PRACTICE, { waitUntil: 'commit' });
-    const ctl = page.locator('main button:visible, main a[href]:visible, main input:visible, main select:visible, main summary:visible').first();
-    await ctl.waitFor({ state: 'visible', timeout: 20000 });
-    const ttfi = now() - t0;
-    await page.waitForLoadState('load');
-    const loadMs = now() - t0;
-    const info = await page.evaluate(() => {
-      const vis = (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
-      const nav = performance.getEntriesByType('navigation')[0];
-      return {
-        h1: document.querySelector('h1')?.textContent?.trim() ?? null,
-        modes: [...document.querySelectorAll('button[data-mode]')].filter(vis).map((b) => b.dataset.mode),
-        trackCards: document.querySelectorAll('[data-testid*="track"], .practice-track, [class*="track-card"]').length,
-        testids: [...new Set([...document.querySelectorAll('[data-testid]')].filter(vis).map((e) => e.dataset.testid))].slice(0, 25),
-        dialogs: document.querySelectorAll('dialog[open], [role="dialog"]').length,
-        buttonsVisible: [...document.querySelectorAll('main button')].filter(vis).length,
-        horizontalOverflow: document.documentElement.scrollWidth > innerWidth + 1,
-        smallTargets: [...document.querySelectorAll('main button, main a[href]')].filter(vis).filter((e) => { const r = e.getBoundingClientRect(); return r.width < 44 || r.height < 44; }).length,
-        domContentLoadedMs: nav ? Math.round(nav.domContentLoadedEventEnd) : null,
-      };
-    });
-    const firstControl = await ctl.evaluate((e) => (e.textContent || e.getAttribute('aria-label') || e.tagName).replace(/\s+/g, ' ').trim().slice(0, 60));
-    await page.screenshot({ path: join(out, `shot-c1-${profileName}-landing.png`) });
-    return { ttfiMs: round(ttfi), loadMs: round(loadMs), firstControl, ...info };
-  }));
-
+  results.push(await J('e7-direct-practice-url', directPractice404));
+  results.push(await J('s1-flashcards-a1-10', flashcardSession));
+  results.push(await J('t1-landing-ttfi', landingTtfi));
   return results;
 }
 
+// --- C2-C8: scripted journeys ---------------------------------------------------------
+// Exercise a mode: open it, record what rendered, attempt one real interaction, screenshot.
+async function exerciseMode(page, mode, shot) {
+  await openHubReady(page);
+  const btn = page.locator(`button[data-mode="${mode}"]`).first();
+  if (!(await btn.count())) return { mode, note: 'no mode button' };
+  await btn.scrollIntoViewIfNeeded();
+  const clicked = await btn.click({ timeout: 8000 }).then(() => true, () => false);
+  if (!clicked) return { mode, note: 'mode button present but not clickable', disabled: await btn.isDisabled(), shot: await shot(`mode-${mode}-blocked`) };
+  await page.waitForTimeout(1500);
+  const state = await page.evaluate(() => {
+    const vis = (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
+    return {
+      testids: [...new Set([...document.querySelectorAll('[data-testid^="practice-"]')].filter(vis).map((e) => e.dataset.testid))].slice(0, 12),
+      empty: [...document.querySelectorAll('[data-testid*="empty"]')].filter(vis).length > 0,
+      horizontalOverflow: document.documentElement.scrollWidth > innerWidth + 1,
+    };
+  });
+  let interaction = 'none';
+  const flash = page.locator('[data-activity="flashcard"]');
+  if (await flash.isVisible().catch(() => false)) {
+    await flash.click(); await page.locator('.rate-btn[data-rate="good"]').click(); interaction = 'flip+rate';
+  } else {
+    const opt = page.locator('main [role="option"]:visible, main [data-activity] button:visible, main [data-testid$="-options"] button:visible, main [data-activity="match-left-tile"]:visible').first();
+    if (await opt.count()) { await opt.click().catch(() => {}); interaction = 'first-option-click'; }
+  }
+  await page.waitForTimeout(400);
+  return { mode, ...state, interaction, shot: await shot(`mode-${mode}`) };
+}
+
+const modeSlice = (tag, modes, tab) => async (browser, profileName, base, out) => {
+  const results = [];
+  for (const mode of modes) {
+    results.push(await withJourney(browser, profileName, tag, `mode-${mode}`, base, out, async (page, shot) => {
+      const r = await exerciseMode(page, mode, shot);
+      return { ...r, tab };
+    }));
+  }
+  return results;
+};
+
+async function settingsJourney(page, shot) {
+  await openHubReady(page);
+  await page.getByTestId('practice-settings-toggle').click();
+  const drawer = page.getByTestId('practice-settings-drawer');
+  await drawer.waitFor({ state: 'visible', timeout: 10000 });
+  const opened = await shot('drawer-open');
+  const tools = page.getByTestId('practice-secondary-tools');
+  if (await tools.count()) await tools.locator('summary').click().catch(() => {});
+  await page.keyboard.press('Escape');
+  const closedByEsc = await drawer.waitFor({ state: 'hidden', timeout: 3000 }).then(() => true, () => false);
+  if (!closedByEsc) await page.getByTestId('settings-drawer-close').click({ timeout: 5000 }).catch(() => {});
+  await page.getByTestId('practice-active-deck-chip').click();
+  const deckOptions = await page.getByTestId('practice-active-deck-menu').locator('[role="option"]').count();
+  await page.locator('.k3-levels button:not([disabled])').nth(1).click();
+  return { drawerOpened: true, closedByEsc, deckOptions, levelSwitched: true, shot: opened };
+}
+
+const slice7 = async (browser, profileName, base, out) => [await withJourney(browser, profileName, 'C7', 'settings-deck-level', base, out, settingsJourney)];
+
+// Phone pass: the essentials at phone viewport (defaults to phone profiles).
+const slice8 = async (browser, profileName, base, out) => {
+  const J = (name, fn) => withJourney(browser, profileName, 'C8', name, base, out, fn);
+  return [
+    await J('phone-session-a1-10', flashcardSession),
+    await J('phone-landing', landingTtfi),
+    await J('phone-settings', settingsJourney),
+    await J('phone-mode-matching', (p, s) => exerciseMode(p, 'matching', s)),
+  ];
+};
+
+const SLICE_RUNNERS = {
+  C1: slice1,
+  C2: modeSlice('C2', ['mixed', 'flashcards', 'matching', 'choice'], 'vocab'),
+  C3: modeSlice('C3', ['cloze', 'synonym', 'paronym', 'heritage'], 'vocab'),
+  C4: modeSlice('C4', ['paradigm', 'imperative'], 'grammar'),
+  C5: modeSlice('C5', ['stress', 'classify'], 'grammar'),
+  C6: modeSlice('C6', ['zno-stress', 'zno-paronym', 'zno-lexical-norm', 'zno-morphological-norm', 'zno-syntactic-norm', 'zno-orthography', 'zno-morphology', 'zno-syntax', 'zno-phonetics', 'culture-error-correction'], 'courses'),
+  C7: slice7,
+  C8: slice8,
+};
+
 function toMarkdown(report) {
   const L = [`# Scouting report — slice ${report.slice}`, '', `- Target: ${report.base}${report.live ? ' (live)' : ' (local)'}`, `- Timestamp: ${report.timestamp}`, `- Commit: ${report.commit ?? 'unknown'}`, `- WebKit probe: ${report.webkit.available ? 'available' : 'unavailable'}${report.webkit.note ? ' — ' + report.webkit.note : ''}`, ''];
-  L.push('## TTFI (journey 3, direct landing)', '', '| Profile | TTFI ms | Load ms | First control | Overflow-x | Targets <44px |', '|---|---|---|---|---|---|');
-  for (const r of report.results.filter((r) => r.journey === 'j3-direct')) L.push(`| ${r.profile} | ${r.ttfiMs ?? 'ERR'} | ${r.loadMs ?? ''} | ${r.firstControl ?? r.error ?? ''} | ${r.horizontalOverflow ?? ''} | ${r.smallTargets ?? ''} |`);
-  L.push('', '## Discoverability (journeys 1-2)', '', '| Profile | Journey | Reached practice | Clicks | Path |', '|---|---|---|---|---|');
-  for (const r of report.results.filter((r) => r.journey !== 'j3-direct')) L.push(`| ${r.profile} | ${r.journey} | ${r.reached ?? 'ERR'} | ${r.clicks ?? ''} | ${(r.path ?? []).join(' → ') || r.error || r.note || '—'} |`);
+  L.push('## Journeys', '', '| Profile | Journey | Outcome | Errors |', '|---|---|---|---|');
+  const cell = (v) => String(v ?? '').replace(/\|/g, '\\|');
+  for (const r of report.results) {
+    const { journey, profile, trace, consoleErrors, failedRequests, error, ...rest } = r;
+    const outcome = error ? `ERROR: ${error}` : JSON.stringify(rest);
+    L.push(`| ${profile} | ${journey} | ${cell(outcome)} | ${cell([...(consoleErrors ?? []), ...(failedRequests ?? [])].join('; '))} |`);
+  }
   L.push('', '## Trace files', '', ...report.results.map((r) => `- ${r.trace}`), '');
   return L.join('\n');
 }
@@ -187,14 +337,8 @@ async function main() {
   const out = resolve(args.out);
   await mkdir(out, { recursive: true });
   const base = args.base || (args.live ? LIVE_URL : LOCAL_URL);
-  const names = args.profile ? args.profile.split(',') : DEFAULT_PROFILES;
+  const names = args.profile ? args.profile.split(',') : slice === 'C8' ? ['phone', 'android'] : DEFAULT_PROFILES;
   for (const n of names) if (!PROFILES[n]) throw new Error(`Unknown profile: ${n}`);
-
-  if (slice !== 'C1') {
-    await writeFile(join(out, `report-${slice.toLowerCase()}.md`), `# Slice ${slice}\n\nNot implemented yet (stub).\n`);
-    console.log(`Slice ${slice} is a stub; wrote placeholder report.`);
-    return;
-  }
 
   const wk = { available: false };
   try { const b = await webkit.launch(); wk.available = true; await b.close(); } catch (e) { wk.note = String(e).split('\n')[0].slice(0, 160); }
@@ -202,14 +346,14 @@ async function main() {
   const browser = await chromium.launch();
   const results = [];
   try {
-    for (const n of names) results.push(...(await slice1(browser, n, base, out)));
+    for (const n of names) results.push(...(await SLICE_RUNNERS[slice](browser, n, base, out)));
   } finally {
     await browser.close();
   }
   let commit = process.env.SCOUT_COMMIT || null;
   const report = { slice, base, live: !!args.live, timestamp: new Date().toISOString(), commit, webkit: wk, results };
-  await writeFile(join(out, `report-${slice.toLowerCase()}.json`), JSON.stringify(report, null, 2));
-  await writeFile(join(out, `report-${slice.toLowerCase()}.md`), toMarkdown(report));
+  await writeFile(join(out, `${RUN_ID}-report-${slice.toLowerCase()}.json`), JSON.stringify(report, null, 2));
+  await writeFile(join(out, `${RUN_ID}-report-${slice.toLowerCase()}.md`), toMarkdown(report));
   console.log(toMarkdown(report));
 }
 

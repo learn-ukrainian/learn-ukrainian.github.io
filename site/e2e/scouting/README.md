@@ -9,23 +9,31 @@ node e2e/scouting/run.mjs --slice C1 --live --out /tmp/scout-c1        # deploye
 npm run preview &  node e2e/scouting/run.mjs --slice C1 --out /tmp/scout-c1   # local (127.0.0.1:4321)
 ```
 
-Flags: `--slice C1..C8` (only C1 is implemented; C2-C8 write a stub report), `--out <dir>`,
+Flags: `--slice C1..C8`, `--out <dir>`,
 `--profile desktop|phone|android|fast|explorer` (comma list; default `desktop,phone,android`),
 `--live`, `--base <url>`. `SCOUT_COMMIT=<sha>` tags the report with the deployed commit.
 
-Slice C1 journeys per profile, each in a fresh context (clean storage) with its own trace:
-`j1-home` (home → practice), `j2-word` (lexicon search → word page → practice),
-`j3-direct` (`/words-of-the-day/practice/`, time to first interactive control).
+Every journey runs in a fresh context (clean storage) with its own trace. All artifacts are named
+`<run-timestamp>-<slice>-<profile>-<journey>` so reruns never overwrite earlier evidence.
 
-Output: `report-c1.json`, `report-c1.md`, `shot-*.png`, `trace-c1-<profile>-<journey>.zip`.
+- **C1** entry points (`e1-home`, `e2-header-nav`, `e3-phone-menu`, `e4-footer`, `e5-words-of-the-day`,
+  `e6*-word-page`, `e7-direct-practice-url`), the full A1 10-budget Flashcards session to the end screen
+  (`s1-flashcards-a1-10`), and landing TTFI (`t1-landing-ttfi`).
+- **C2** vocab modes (mixed, flashcards, matching, choice) · **C3** form modes (cloze, synonym, paronym, heritage) ·
+  **C4** grammar (paradigm, imperative) · **C5** grammar (stress, classify) · **C6** exams (ZNO + culture) ·
+  **C7** settings drawer, deck picker, level switch · **C8** phone pass (defaults to phone,android).
+  Each mode journey opens the mode, records what rendered, attempts one interaction and screenshots.
+
+Output (in `--out`, gitignored under `reports/artifacts/`): `<ts>-report-<slice>.{json,md}`, `*.png`, `*.zip` traces.
 
 ## Viewing traces
 
 ```bash
-npx playwright show-trace /tmp/scout-c1/trace-c1-desktop-j3-direct.zip
+npx playwright show-trace /tmp/scout-c1/<ts>-c1-desktop-t1-landing-ttfi.zip
 ```
 or drag the zip into <https://trace.playwright.dev>. Baseline traces are published on the
-`practice-scouting` GitHub release (`gh release upload practice-scouting <zip> --clobber`).
+`practice-scouting` GitHub release (`gh release upload practice-scouting <file>`). Filenames are
+timestamped and immutable: never overwrite or `--clobber` an uploaded asset; a rerun gets new names.
 
 ## Mobile emulation caveat
 
