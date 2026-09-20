@@ -46,17 +46,20 @@ inline:
     word with its description.
   pairs:
   - left: сім'я́
-    right: апо́строф пі́сля «м» — apostrophe after «м»
+    right: у дру́гому скла́ді пі́сля «сім-» (family) — in second syllable after «сім-»
+      (family)
   - left: м'я́со
-    right: апо́строф пі́сля «м» пе́ред «я» — apostrophe after «м» before «я»
+    right: на поча́тку сло́ва пі́сля губно́го «м» (meat) — at word start after labial
+      «м» (meat)
   - left: п'ять
-    right: апо́строф пі́сля «п» — apostrophe after «п»
+    right: пі́сля губно́го «п» пе́ред «я» (five) — after labial «п» before «я» (five)
   - left: де́в'ять
-    right: апо́строф пі́сля «в» — apostrophe after «в»
+    right: пі́сля губно́го «в» пе́ред «я» (nine) — after labial «в» before «я» (nine)
   - left: ім'я́
-    right: апо́строф пі́сля «м» в ко́рені — apostrophe after «м» in root
+    right: пі́сля голосно́го «і» пе́ред «я» (name) — after vowel «і» before «я» (name)
   - left: комп'ю́тер
-    right: апо́строф пі́сля «п» пе́ред «ю» — apostrophe after «п» before «ю»
+    right: пі́сля «п» пе́ред «ю» у запози́ченому сло́ві — after «п» before «ю» in
+      loanword (computer)
 - id: act-1
   type: quiz
   title: М'я́ко чи розді́льно — Soft or separate
@@ -104,7 +107,7 @@ inline:
     options:
     - сім'я́
     - сімья́
-    - ьсім'я́
+    - сьім'я
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe
       is needed.
   - sentence: Сього́дні га́рний і те́плий ден.
@@ -113,7 +116,7 @@ inline:
     options:
     - день
     - дєнь
-    - ьдень
+    - дьень
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
   - sentence: Сього́дні у мі́сті вели́ке св'ято.
     error: св'ято
@@ -121,7 +124,7 @@ inline:
     options:
     - свя́то
     - свья́то
-    - ьсвя́то
+    - сьвя́то
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is
       no apostrophe.
   - sentence: На столі́ лежи́ть вели́ка льожка.
@@ -129,8 +132,8 @@ inline:
     correction: ло́жка
     options:
     - ло́жка
-    - ьло́жка
-    - лоь́жка
+    - лю́жка
+    - льо́шка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign
       after л.
 - id: act-402
@@ -263,7 +266,7 @@ workbook:
     options:
     - сім'я́
     - сімья́
-    - ьсім'я́
+    - сьім'я
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe
       is needed.
   - sentence: У руці́ рі́вно пять па́льців.
@@ -290,7 +293,7 @@ workbook:
     options:
     - день
     - дєнь
-    - ьдень
+    - дьень
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
   - sentence: Сього́дні у на́с весе́ле св'ято.
     error: св'ято
@@ -298,7 +301,7 @@ workbook:
     options:
     - свя́то
     - свья́то
-    - ьсвя́то
+    - сьвя́то
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is
       no apostrophe.
   - sentence: У су́пі лежи́ть вели́ка льожка.
@@ -306,8 +309,8 @@ workbook:
     correction: ло́жка
     options:
     - ло́жка
-    - ьло́жка
-    - лоь́жка
+    - лю́жка
+    - льо́шка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign
       after л.
 - id: act-w4

@@ -83,9 +83,8 @@ inline:
     explanation: У сло́ві «рис» звук [с] тверди́й, а в сло́ві «рись» — м'яки́й [с'].
 - id: act-l1-2
   type: fill-in
-  title: Дода́й знак або́ залі́ш поро́жнім — Add sign or leave blank
-  instruction: Вста́в ь або́ залі́ш мі́сце поро́жнім. — Insert ь or leave the slot
-    blank.
+  title: Обери́ ь або́ без зна́ка — Choose ь or no sign
+  instruction: Обери́ ь або́ без зна́ка. — Choose ь or no sign.
   items:
   - sentence: па́лец___
     options:
@@ -133,17 +132,17 @@ inline:
     description.
   pairs:
   - left: па́лець
-    right: soft [ts'] with soft sign
+    right: soft [ts'] in unstressed ending (finger)
   - left: стіле́ць
-    right: soft [ts'] with soft sign
+    right: soft [ts'] in stressed ending (chair)
   - left: со́нце
-    right: hard [ts] before vowel [e]
+    right: hard [ts] in the middle before vowel [e] (sun)
   - left: ніч
-    right: hard sibilant [ch] without soft sign
+    right: hard sibilant [ch] at word end without soft sign (night)
   - left: ча́шка
-    right: hard sibilant [ch] before [a]
+    right: hard sibilant [ch] in two syllables before -шка (cup)
   - left: чай
-    right: hard sibilant [ch] at word start
+    right: hard sibilant [ch] in one syllable ending in -й (tea)
 - id: act-l1-4
   type: quiz
   title: 'Переві́рка африка́т: Ц чи Ч — Affricate check: Ц or Ч'
@@ -223,9 +222,8 @@ workbook:
     - ло́жка
 - id: act-l1-w2
   type: fill-in
-  title: Вста́в пра́вильний знак або́ залі́ш поро́жнім — Insert correct sign or leave
-    blank
-  instruction: Обери́ ь або́ поро́жнє мі́сце. — Choose ь or a blank slot.
+  title: Обери́ ь або́ без зна́ка — Choose ь or no sign
+  instruction: Обери́ ь або́ без зна́ка. — Choose ь or no sign.
   items:
   - sentence: Сього́дні те́плий ден___ .
     options:
@@ -257,7 +255,7 @@ workbook:
     - ''
     answer: ь
     explanation: 'У су́фіксі -еньк- пи́шемо м''яки́й знак: «мале́нький».'
-  - sentence: На столі́ лежи́ть ло___жка.
+  - sentence: На столі́ лежи́ть л___ожка.
     options:
     - ''
     - ь
@@ -293,7 +291,7 @@ workbook:
     options:
     - день
     - дєнь
-    - ьдень
+    - дьень
     explanation: 'The word «день» requires a soft sign at the end: день.'
   - sentence: У кімна́ті стої́ть дерев'я́ний стілеч.
     error: стілеч
@@ -308,7 +306,7 @@ workbook:
     correction: ло́жка
     options:
     - ло́жка
-    - ля́жка
+    - льо́шка
     - лю́жка
     explanation: The Ukrainian word is «ло́жка» with hard л and no soft sign.
   - sentence: У лі́сі біжи́ть ди́ка рис.

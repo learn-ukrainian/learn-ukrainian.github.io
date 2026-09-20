@@ -20,8 +20,8 @@ inline:
 - id: act-5-2
   type: fill-in
   title: Ви́беріть пра́вильний знак — Choose the correct sign
-  instruction: Вста́вте ь, апо́строф або́ зали́ште про́пуск поро́жнім. — Insert ь,
-    an apostrophe, or leave the blank empty.
+  instruction: Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or
+    no sign.
   items:
   - sentence: Моя́ дру́жна сім___я живе́ дру́жно. — My family lives in harmony.
     answer: ''''
@@ -342,7 +342,7 @@ workbook:
     options:
     - сім'я́
     - сімья
-    - ьсім'я́
+    - сьім'я
     explanation: У сло́ві «сім'я́» потрі́бен апо́строф пі́сля губно́го [м] пе́ред
       я. — In the word сім'я́ an apostrophe is needed after the labial [m] before
       я.
@@ -352,7 +352,7 @@ workbook:
     options:
     - день
     - дєнь
-    - ьдень
+    - дьень
     explanation: Сло́во «день» пи́шеться з м'яки́м зна́ком на кінці́. — The word день
       is written with a soft sign at the end.
   - sentence: У руці́ рі́вно пять па́льців.
@@ -379,7 +379,7 @@ workbook:
     options:
     - свя́то
     - сьвя́то
-    - ьсвя́то
+    - свья́то
     explanation: У сло́ві «свя́то» нема́є апо́строфа че́рез збіг при́голосних св у
       ко́рені. — In the word свя́то there is no apostrophe due to the consonant cluster
       св in the root.
@@ -388,8 +388,8 @@ workbook:
     correction: ло́жка
     options:
     - ло́жка
-    - ьло́жка
-    - лоь́жка
+    - лю́жка
+    - льо́шка
     explanation: Сло́во «ло́жка» не ма́є м'яко́го зна́ка пі́сля л. — The word ло́жка
       has no soft sign after л.
 - id: act-w10
