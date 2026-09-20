@@ -483,6 +483,7 @@ def test_live_ua_gec_extraction():
         assert not re.search(r"(?<![а-яіїєґА-ЯІЇЄҐ'])'|'(?![а-яіїєґА-ЯІЇЄҐ'])", c.authentic)
 
 
+@requires_sources
 def test_verify_receipt_invariants_real_checks():
     with tempfile.TemporaryDirectory() as tmpdir:
         td = Path(tmpdir)
@@ -608,6 +609,7 @@ def test_rebalanced_sft_distribution():
         assert task_counts["anti_calque_decolonization"] == 5
 
 
+@requires_sources
 def test_verify_receipt_invariants_fails_on_unattested_literary():
     """Finding 1 & 2: Invariants fail when literary idiom is not attested in frazeolohichnyi."""
     with tempfile.TemporaryDirectory() as tmpdir:
@@ -642,6 +644,7 @@ def test_verify_receipt_invariants_fails_on_unattested_literary():
             )
 
 
+@requires_sources
 def test_verify_receipt_invariants_fails_on_affirmed_calque():
     """Finding 3: Calque firewall catches affirmed calque recommendation in SFT and DPO chosen."""
     with tempfile.TemporaryDirectory() as tmpdir:
