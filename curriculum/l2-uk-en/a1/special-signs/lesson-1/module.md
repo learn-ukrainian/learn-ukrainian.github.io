@@ -11,9 +11,6 @@ Listen once before you write. A native Ukrainian teacher or tutor can say
 the sign you hear on the page. If you are working alone, record your own voice
 and compare it with the routine below.
 
-Teacher Oksana's routine for this module is short: find the sign, say what it
-does, then read the word once.
-
 Keep the goal simple. You are not learning every spelling rule today. You are
 learning these beginner contrasts:
 
@@ -33,6 +30,8 @@ By the end, you can:
   the apostrophe;
 - sort words into **м'яки́й знак**, **апо́строф**, and **без зна́ка**;
 - choose the safer form when a visual habit creates a mistake.
+
+In Ukrainian, **знак — sign** means a written mark. Today we focus on **м'яки́й знак — soft sign (ь)**, and also meet two new consonant letters: **Ц** and **Ч**. When reading, we read syllables smoothly together (**зли́то — together**), not separated into disconnected letters (**розді́льно — separately**). Even a **мале́нький — small** mark on paper changes how you shape the sounds with your mouth: in words like **вчи́тель — teacher**, the sign softens the final consonant sound.
 
 ## М'яки́й знак
 
@@ -68,13 +67,15 @@ conversation today.
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-Згі́дно з Украї́нським право́писом (§ 26), бу́квою **ь** познача́ємо на письмі́ м'я́кість при́голосних зву́ків: **д, т, з, с, дз, ц, л, н** у кінці́ сло́ва та складу́. — According to the Ukrainian Orthography (§ 26), the letter **ь** marks the softness of consonant sounds: **д, т, з, с, дз, ц, л, н** at the end of a word or syllable.
+| Украї́нське пра́вило — Ukrainian rule | Пере́клад та поя́снення — English explanation |
+| --- | --- |
+| **Згі́дно з Украї́нським право́писом (§ 26), бу́квою ь познача́ємо м'я́кість при́голосних: д, т, з, с, дз, ц, л, н у кінці́ сло́ва та складу́.** | According to Ukrainian Orthography (§ 26), the letter **ь** marks the softness of dental consonants: **д, т, з, с, дз, ц, л, н** at the end of a word or syllable. |
+| **Для запам'ято́вування ти́х при́голосних існу́є мнемоні́чна фра́за: «Де ти з'їси́ ці лини́?».** | As Oleksandr Avramenko notes (Grade 5, § 54), Ukrainian students learn a mnemonic phrase to remember which consonants take a soft sign: *«Де ти з'їси́ ці лини́?»* ("Where will you eat these tenches?"). |
+| **Пі́сля губни́х (б, п, в, м, ф) та шипля́чих (ж, ч, ш, щ) м'яки́й знак в украї́нській мо́ві не пи́шеться.** | Consonants made with the lips (**б, п, в, м, ф**) and hushing consonants (**ж, ч, ш, щ**) never take a soft sign in standard Ukrainian spelling. |
 
-Як зазнача́є Олекса́ндр Авра́менко (5 клас, § 54), для запам'ято́вування ти́х при́голосних, пі́сля яки́х пи́шеться м'яки́й знак, існу́є зру́чна мнемоні́чна фра́за: «Де ти з'їси́ ці лини́?». Бу́кви **д, т, з, с, ц, л, н** м'я́кшають пе́ред бу́квою **ь**. — As Oleksandr Avramenko notes (Grade 5, § 54), there is a handy mnemonic phrase to remember which consonants take a soft sign: "Де ти з'їси́ ці лини́?" (Where will you eat these tenches?). The letters **д, т, з, с, ц, л, н** soften before the letter **ь**.
+In everyday communication, you will hear these soft sounds constantly in common words like **день — day**, **кінь — horse**, **сіль — salt**, and **вчи́тель — teacher**.
 
-У щоде́нному спілкува́нні ми ча́сто чу́ємо та вжива́ємо сло́ва з м'яки́м кінце́вим зву́ком: — In everyday communication, we often hear and use words with a soft final sound: **день** — day, **кінь** — horse, **сіль** — salt, **вчи́тель** — teacher, **мале́нький** — small, **сього́дні** — today.
-
-Слу́хайте діало́г між дру́зями:
+Слу́хайте діало́г між дру́зями — Listen to a dialogue between friends:
 
 > **Окса́на**: Приві́т, Тара́се! Яки́й сього́дні день?
 > **Тара́с**: Приві́т! Сього́дні те́плий день.
@@ -83,7 +84,7 @@ conversation today.
 > **Окса́на**: А де наш вчи́тель?
 > **Тара́с**: Наш вчи́тель уже́ тут.
 
-Розгля́немо ко́жну фра́зу розмо́ви:
+Розгля́немо ко́жну фра́зу розмо́ви — Let us examine each phrase of the conversation:
 
 | Фра́за — Phrase | Пере́клад — Translation | Мо́вний комента́р — Language note |
 | --- | --- | --- |
@@ -98,15 +99,21 @@ conversation today.
 
 ## Африка́ти Ц та Ч
 
-В украї́нській фоне́тиці лі́тери **Ц** та **Ч** познача́ють особли́ві зву́ки — африка́ти: — In Ukrainian phonetics, the letters **Ц** and **Ч** represent special blended sounds — affricates:
-- **Ц ц** познача́є звук [t͡s]; — **Ц ц** represents the sound [ts] (like in *cats*);
-- **Ч ч** познача́є звук [t͡ʃ]. — **Ч ч** represents the sound [ch] (like in *chair*).
+**Лі́тери Ц та Ч — The letters Ц and Ч** represent **африка́ти — affricates**, complex consonant sounds produced by stopping the airflow momentarily and then releasing it with friction as a single blended sound unit. They are single phonemes, not two separate letters pronounced back-to-back.
 
-Важли́ва відмі́нність між ци́ми двома́ лі́терами поляга́є у вжива́нні м'яко́го зна́ка: — An important difference between these two letters lies in the use of the soft sign:
-1. Лі́тера **Ц** в украї́нській мо́ві мо́же бу́ти як твердо́ю, так і м'яко́ю. Коли́ вона́ м'яка́ наприкінці́ сло́ва чи скла́ду, ми пи́шемо **ь**: — The letter **Ц** in Ukrainian can be either hard or soft. When it is soft at the end of a word or syllable, we write **ь**: **па́лець** — finger, **стіле́ць** — chair, **кільце́** — ring, **хло́пець** — boy. Пе́ред голосни́м **е** вона́ звучи́ть тве́рдо: — Before vowel **е** it sounds hard: **со́нце** — sun.
-2. Лі́тера **Ч** — це шипля́чий звук. В украї́нській мо́ві шипля́чі зву́ки є тверди́ми. Пі́сля шипля́чих (**ж, ч, ш, щ**) м'яки́й знак у кінці́ слів не пи́шеться: — The letter **Ч** is a sibilant sound. In Ukrainian, sibilants are typically hard. After sibilants (**ж, ч, ш, щ**), a soft sign is never written at the end of words: **ніч** — night, **чай** — tea, **чи** — whether / or, **ча́шка** — cup, **чу́ти** — to hear.
+**Лі́тера Ц — The letter Ц** represents the voiceless alveolar affricate [ts], like the *ts* in *cats*. In Ukrainian, **ц** can be either hard (**тверди́й**) or soft (**м'яки́й**):
+- **со́нце — sun**: hard sound [ts], where the tongue position leaves the consonant unsoftened before vowel **е**.
+- **па́льці — fingers**, **па́лець — finger**, **стіле́ць — chair**: soft sound [ts'], where Ukrainian spelling marks the softness with **ь** at the end of a word or syllable.
 
-Послу́хайте коро́тку розмо́ву на ку́хні:
+**Лі́тера Ч — The letter Ч** represents the voiceless postalveolar affricate [tʃ], like the *ch* in *chair*. In Ukrainian, hushing consonants (**шипля́чі**) are inherently hard (**тверді́**). Keep **ч** hard in words like:
+- **чай — tea**
+- **ча́шка — cup**
+- **чи́стий — clean**
+- **ніч — night**
+
+Because **ч** is a hard hushing consonant in Ukrainian, it never takes a soft sign at the end of words. Notice the difference between **стіле́ць** (with **ь** after **ц**) and **ніч** (no **ь** after **ч**).
+
+Послу́хайте коро́тку розмо́ву на ку́хні — Listen to a short conversation in the kitchen:
 
 > **Марко́**: Окса́но, що це на столі́?
 > **Окса́на**: Це гаря́чий чай і цу́кор.
@@ -115,7 +122,7 @@ conversation today.
 > **Марко́**: Дя́кую! На дворі́ ти́ха ніч.
 > **Окса́на**: Так, те́пла лі́тня ніч.
 
-Розгля́немо фонети́чні та орфографі́чні дета́лі:
+Розгля́немо фонети́чні та орфографі́чні дета́лі — Let us examine phonetic and spelling details:
 
 | Фра́за — Phrase | Пере́клад — Translation | Що помі́тити — What to notice |
 | --- | --- | --- |
@@ -132,7 +139,7 @@ conversation today.
 
 <!-- INJECT_ACTIVITY: act-l1-4 -->
 
-Підсуму́ємо головне́ пра́вило сього́днішнього уро́ку: — Let us summarize the main rule of today's lesson:
-- **М'яки́й знак (ь)** не ма́є вла́сного зву́ка; він лише́ вка́зує на м'я́кість попере́днього при́голосного (**день**, **кінь**, **сіль**); — The **soft sign (ь)** has no sound of its own; it only indicates the softness of the preceding consonant (**день**, **кінь**, **сіль**);
-- Бу́ква **Ц** бува́є м'яко́ю та пи́шеться з **ь** (**па́лець**, **стіле́ць**); — The letter **Ц** can be soft and is written with **ь** (**па́лець**, **стіле́ць**);
-- Бу́ква **Ч** в украї́нській мо́ві тверда́ й наприкінці́ слів ніко́ли не ма́є м'яко́го зна́ка (**ніч**, **чай**). — The letter **Ч** in Ukrainian is hard, and at the end of words it never takes a soft sign (**ніч**, **чай**).
+Підсуму́ємо головні́ пра́вила — Let us summarize the key rules:
+- **М'яки́й знак (ь) — soft sign**: has no sound of its own; it only softens the preceding consonant (**день**, **кінь**, **сіль**);
+- **Лі́тера Ц — letter Ц**: can be soft, taking **ь** at the end of words (**па́лець**, **стіле́ць**);
+- **Лі́тера Ч — letter Ч**: is always hard and never takes **ь** at the end of words (**ніч**, **чай**).
