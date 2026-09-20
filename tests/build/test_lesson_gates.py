@@ -810,8 +810,9 @@ def test_writer_prompt_is_not_a_learner_attribution_surface(gold):
     # The same reference remains blocking when it leaks into a learner file.
     learner_path = module / "lesson-1/module.md"
     learner_path.write_text(learner_path.read_text() + "\n\nULP\n")
-    assert any("unattributed reference-name" in d
-               for d in gates.run_lesson_gates(module, source, plan)["diagnostics"])
+    leaked = gates.run_lesson_gates(module, source, plan)
+    assert not any("unattributed reference-name" in d for d in leaked["blocking"])
+    assert any("unattributed reference-name" in d for d in leaked["warnings"])
 
 
 def test_configured_word_target_is_enforced(gold):
