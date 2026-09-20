@@ -1,0 +1,1244 @@
+{
+  "schema": "typesafe_citation_verifier_receipt_v1",
+  "issue": 8192,
+  "model_requested": "jev-latest",
+  "accept_confidence": 0.8,
+  "mock": false,
+  "wall_time_seconds": 22.885232,
+  "usage": {
+    "input_tokens": 31678,
+    "output_tokens": 1737
+  },
+  "counts": {
+    "verified": 9,
+    "fabricated": 13,
+    "contradicted": 12,
+    "unsupported": 11,
+    "needs_human_review": 5
+  },
+  "n": 50,
+  "citations": [
+    {
+      "id": "acc-01",
+      "verdict": "needs_human_review",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 906,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.84,
+        "contradicts": 0.02,
+        "says_nothing": 0.14
+      },
+      "confidence": 0.77,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 137712,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-01",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 899,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.56,
+        "says_nothing": 0.44
+      },
+      "confidence": 0.33,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 137712,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-01",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 897,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 137712,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-01",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 137712,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-02",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 1009,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.0,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 137715,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-02",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 999,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.98,
+        "says_nothing": 0.02
+      },
+      "confidence": 0.97,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 137715,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-02",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 995,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 137715,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-02",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 137715,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-03",
+      "verdict": "needs_human_review",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 837,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.84,
+        "contradicts": 0.12,
+        "says_nothing": 0.04
+      },
+      "confidence": 0.75,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 137705,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-03",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 831,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.99,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 137705,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-03",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 827,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 137705,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-03",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 137705,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-04",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 849,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.89,
+        "contradicts": 0.01,
+        "says_nothing": 0.1
+      },
+      "confidence": 0.84,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 38358,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-04",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 841,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.99,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.99,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 38358,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-04",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 826,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 38358,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-04",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 38358,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-05",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 781,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.98,
+        "contradicts": 0.0,
+        "says_nothing": 0.02
+      },
+      "confidence": 0.97,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 4462,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-05",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 777,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.99,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.99,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 4462,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-05",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 775,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 4462,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-05",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 4462,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-06",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 895,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.0,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 4438,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-06",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 887,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.99,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.99,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 4438,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-06",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 883,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 4438,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-06",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 4438,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-07",
+      "verdict": "needs_human_review",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 655,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.69,
+        "contradicts": 0.03,
+        "says_nothing": 0.28
+      },
+      "confidence": 0.54,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 13041,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-07",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 649,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.86,
+        "says_nothing": 0.14
+      },
+      "confidence": 0.78,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 13041,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-07",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 639,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 13041,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-07",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 13041,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-08",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 762,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.0,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 20035,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-08",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 757,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.01,
+        "contradicts": 0.74,
+        "says_nothing": 0.25
+      },
+      "confidence": 0.62,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 20035,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-08",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 749,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 20035,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-08",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 20035,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-09",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 767,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.95,
+        "contradicts": 0.0,
+        "says_nothing": 0.05
+      },
+      "confidence": 0.91,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 40983,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-09",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 751,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 1.0,
+        "says_nothing": 0.0
+      },
+      "confidence": 1.0,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 40983,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-09",
+      "verdict": "needs_human_review",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 750,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.23,
+        "says_nothing": 0.77
+      },
+      "confidence": 0.65,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 40983,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-09",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 40983,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-10",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 1169,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.0,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 21192,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-10",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 1146,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.86,
+        "says_nothing": 0.14
+      },
+      "confidence": 0.79,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 21192,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-10",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 1139,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 21192,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-10",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 21192,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-11",
+      "verdict": "needs_human_review",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 724,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.56,
+        "contradicts": 0.03,
+        "says_nothing": 0.41
+      },
+      "confidence": 0.35,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 37191,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-11",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 717,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.01,
+        "contradicts": 0.97,
+        "says_nothing": 0.02
+      },
+      "confidence": 0.96,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 37191,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-11",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 708,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.0,
+        "says_nothing": 1.0
+      },
+      "confidence": 1.0,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 37191,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-11",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 37191,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-12",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 1006,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.0,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 19722,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "con-12",
+      "verdict": "contradicted",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 999,
+        "output_tokens": 47
+      },
+      "choice": "contradicts",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.99,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.99,
+      "expected": "contradicted",
+      "table": "literary_texts",
+      "row_id": 19722,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "ooc-12",
+      "verdict": "unsupported",
+      "decided_by": "system_one",
+      "accepted": false,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 994,
+        "output_tokens": 49
+      },
+      "choice": "says_nothing",
+      "probabilities": {
+        "supports": 0.0,
+        "contradicts": 0.01,
+        "says_nothing": 0.99
+      },
+      "confidence": 0.98,
+      "expected": "out_of_context",
+      "table": "literary_texts",
+      "row_id": 19722,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-12",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 19722,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    },
+    {
+      "id": "acc-13",
+      "verdict": "verified",
+      "decided_by": "system_one",
+      "accepted": true,
+      "model": "jev-1.13.0",
+      "question_ids": [
+        "source_relation"
+      ],
+      "usage": {
+        "input_tokens": 883,
+        "output_tokens": 45
+      },
+      "choice": "supports",
+      "probabilities": {
+        "supports": 0.99,
+        "contradicts": 0.0,
+        "says_nothing": 0.01
+      },
+      "confidence": 0.98,
+      "expected": "accurate",
+      "table": "literary_texts",
+      "row_id": 24012,
+      "invented_quote": false,
+      "quote_origin": "corpus"
+    },
+    {
+      "id": "fab-13",
+      "verdict": "fabricated",
+      "decided_by": "deterministic",
+      "accepted": false,
+      "model": null,
+      "question_ids": [],
+      "usage": {
+        "input_tokens": null,
+        "output_tokens": null
+      },
+      "choice": null,
+      "probabilities": null,
+      "confidence": null,
+      "expected": "fabricated",
+      "table": "literary_texts",
+      "row_id": 24012,
+      "invented_quote": true,
+      "quote_origin": "invented"
+    }
+  ]
+}
