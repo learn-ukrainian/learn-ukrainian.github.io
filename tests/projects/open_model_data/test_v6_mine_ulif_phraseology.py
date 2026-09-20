@@ -1185,8 +1185,11 @@ def test_parse_frazeolohichnyi_rejects_lone_dot_space_dot_splice():
 
 
 def test_clean_raw_html_collapses_whitespace_before_punctuation():
-    """CF R13 Finding 2: Ensure stray whitespace before ?, !, ., ,, ;, : is collapsed."""
+    """CF R13/R14: Ensure stray whitespace before ?, !, ., ,, ;, : is collapsed after letters and digits."""
     assert clean_raw_html_and_tags("а се що таке ?") == "а се що таке?"
     assert clean_raw_html_and_tags("ні слихом слихати !") == "ні слихом слихати!"
     assert clean_raw_html_and_tags("не видати кого .") == "не видати кого."
     assert clean_raw_html_and_tags("не слихати , Видом") == "не слихати, Видом"
+    assert clean_raw_html_and_tags("параграф 5 .") == "параграф 5."
+    assert SPACE_BEFORE_PUNCT_RE.search("параграф 5 .") is not None
+    assert SPACE_BEFORE_PUNCT_RE.search("параграф 5.") is None

@@ -1252,7 +1252,7 @@ SPLICE_PUNCTUATION_RE = re.compile(
     r"|\s+\.\s+[-—–]"             # stray dot-dash (e.g. ' . —', ' . -')
 )
 
-SPACE_BEFORE_PUNCT_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ]\s+[.,;:?!](?:\s|$)")
+SPACE_BEFORE_PUNCT_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ\d]\s+[.,;:?!](?:\s|$)")
 
 
 
