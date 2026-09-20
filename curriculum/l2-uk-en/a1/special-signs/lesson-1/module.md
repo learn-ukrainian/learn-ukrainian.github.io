@@ -9,7 +9,7 @@ mouth how to read the nearby letters.
 Listen once before you write. A native Ukrainian teacher or tutor can say
 **день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то**; you point to
 the sign you hear on the page. If you are working alone, record your own voice
-and compare it with the routine below.
+and compare it with the words above.
 
 Keep the goal simple. You are not learning every spelling rule today. You are
 learning these beginner contrasts:
@@ -103,7 +103,7 @@ In everyday communication, you will hear these soft sounds constantly in common 
 
 **Лі́тера Ц — The letter Ц** represents the voiceless alveolar affricate [ts], like the *ts* in *cats*. In Ukrainian, **ц** can be either hard (**тверди́й**) or soft (**м'яки́й**):
 - **со́нце — sun**: hard sound [ts], where the tongue position leaves the consonant unsoftened before vowel **е**.
-- **па́льці — fingers**, **па́лець — finger**, **стіле́ць — chair**: soft sound [ts'], where Ukrainian spelling marks the softness with **ь** at the end of a word or syllable.
+- **па́лець — finger**, **стіле́ць — chair**: soft sound [ts'], where Ukrainian spelling marks the softness with **ь** at the end of a word or syllable.
 
 **Лі́тера Ч — The letter Ч** represents the voiceless postalveolar affricate [tʃ], like the *ch* in *chair*. In Ukrainian, hushing consonants (**шипля́чі**) are inherently hard (**тверді́**). Keep **ч** hard in words like:
 - **чай — tea**
