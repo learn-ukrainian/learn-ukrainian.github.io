@@ -4,7 +4,7 @@
 - Harness: `site/e2e/scouting/run.mjs --slice C1 --live` (Chromium; phone/android are Playwright device emulation; WebKit not installed on this host)
 - Evidence: immutable assets on the `practice-scouting` release, named `2026-09-20T20-14-53-956Z-c1-<profile>-<journey>.zip` (traces) and `….png` (screenshots); full machine report `2026-09-20T20-14-53-956Z-report-c1.{json,md}`.
 - One run per profile on a fast network: timings are indicative, not a distribution. Profiles: desktop, phone (iPhone 14), android (Pixel 7).
-- Denominator covered: Home `/`, header nav, phone menu, footer, `/words-of-the-day/`, word page, direct `/practice/`, plus the first A1 Flashcards session and landing TTFI.
+- Denominator covered: Home `/`, header nav, phone menu, footer, `/words-of-the-day/`, word page, direct `/practice/`, plus the first A1 Flashcards session and landing time to first control (TTFC).
 
 ## Findings
 
@@ -74,9 +74,9 @@
 - **Repro steps:** Fresh browser → `/words-of-the-day/practice/` → level A1 → budget 10 → Flashcards.
 - **Evidence:** journey `s1-flashcards-a1-10` (`-end-screen.png`, all profiles). Also logs repeated 404s for `/audio/pronunciation/manifest.json`.
 
-### F-07 — Landing TTFI and first control
+### F-07 — Landing time to first control (TTFC)
 - **Surface:** `/words-of-the-day/practice/`
-- **Viewport:** desktop 1206 ms / phone 1518 ms / android 1887 ms (load ≈ same)
+- **Viewport:** time to first visible control (measured as visible; the metric was recorded as `ttfiMs` before rename; `firstControlEnabled` and `timeToEnabledControlMs` are now captured too) — desktop 1206 ms / phone 1518 ms / android 1887 ms (load ≈ same)
 - **Observation:** The first interactive control is "⚙️ Settings", not a start action. Small touch targets (<44 px) in `main`: 1 desktop, 2 phone, 2 android. No horizontal overflow. 22 mode buttons visible at once.
 - **Status:** confirmed
 - **Severity:** low

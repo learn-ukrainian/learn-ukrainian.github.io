@@ -180,7 +180,11 @@ async function landingTtfi(page, shot) {
   await page.goto(PRACTICE, { waitUntil: 'commit' });
   const ctl = page.locator('main button:visible, main a[href]:visible, main input:visible, main select:visible, main summary:visible').first();
   await ctl.waitFor({ state: 'visible', timeout: 20000 });
-  const ttfi = now() - t0;
+  const ttfc = now() - t0;
+  // Visible is not interactive: also require the control to be enabled and record when.
+  const firstControlEnabled = await ctl.isEnabled().catch(() => false)
+    || await ctl.waitFor({ state: 'visible' }).then(() => ctl.isEnabled(), () => false);
+  const ttfcEnabled = now() - t0;
   await page.waitForLoadState('load');
   const loadMs = now() - t0;
   const info = await page.evaluate(() => {
@@ -194,7 +198,7 @@ async function landingTtfi(page, shot) {
     };
   });
   const firstControl = await ctl.evaluate((e) => (e.textContent || e.getAttribute('aria-label') || e.tagName).replace(/\s+/g, ' ').trim().slice(0, 60));
-  return { ttfiMs: round(ttfi), loadMs: round(loadMs), firstControl, landingShot: await shot('landing'), ...info };
+  return { timeToFirstVisibleControlMs: round(ttfc), firstControlEnabled, timeToEnabledControlMs: round(ttfcEnabled), loadMs: round(loadMs), firstControl, landingShot: await shot('landing'), ...info };
 }
 
 async function directPractice404(page, shot) {
@@ -252,15 +256,35 @@ async function exerciseMode(page, mode, shot) {
     };
   });
   let interaction = 'none';
+  let selectionChanged = null;
   const flash = page.locator('[data-activity="flashcard"]');
   if (await flash.isVisible().catch(() => false)) {
     await flash.click(); await page.locator('.rate-btn[data-rate="good"]').click(); interaction = 'flip+rate';
   } else {
-    const opt = page.locator('main [role="option"]:visible, main [data-activity] button:visible, main [data-testid$="-options"] button:visible, main [data-activity="match-left-tile"]:visible').first();
-    if (await opt.count()) { await opt.click().catch(() => {}); interaction = 'first-option-click'; }
+    const opt = page.locator([
+      'button.mc-opt', '.lexicon-option-list button', '[data-activity="choice-option"]',
+      '.match-tile', '[data-activity^="match-"]',
+      '.cloze-input', 'input[data-activity]', 'input.cloze-blank',
+      'main [role="option"]:visible', 'main [data-activity] button:visible', 'main [data-testid$="-options"] button:visible',
+    ].join(', ')).first();
+    if (await opt.count()) {
+      const kind = await opt.evaluate((e) => (e.matches('input,textarea') ? 'input' : e.matches('.match-tile,[data-activity^="match-"]') ? 'tile' : 'option'));
+      const stateOf = (el) => el.evaluate((e) => `${e.className}|${e.getAttribute('aria-pressed')}|${e.getAttribute('aria-checked')}|${e.disabled}|${e.value ?? ''}`);
+      const before = await stateOf(opt).catch(() => '');
+      try {
+        if (kind === 'input') await opt.fill('а', { timeout: 5000 });
+        else await opt.click({ timeout: 5000 });
+        await page.waitForTimeout(300);
+        const after = await stateOf(opt).catch(() => 'detached');
+        interaction = `${kind}-${kind === 'input' ? 'fill' : 'click'}`;
+        selectionChanged = after !== before;
+      } catch (err) {
+        interaction = `click-failed: ${String(err.message).split('\n')[0]}`;
+      }
+    }
   }
   await page.waitForTimeout(400);
-  return { mode, ...state, interaction, shot: await shot(`mode-${mode}`) };
+  return { mode, ...state, interaction, selectionChanged, shot: await shot(`mode-${mode}`) };
 }
 
 const modeSlice = (tag, modes, tab) => async (browser, profileName, base, out) => {
