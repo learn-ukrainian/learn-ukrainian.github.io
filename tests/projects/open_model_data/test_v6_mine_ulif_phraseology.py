@@ -828,3 +828,76 @@ def test_dpo_rejected_diversity():
 
         # Across 14 DPO pairs, there must not be constant strawmen
         assert len(rejected_texts) == 14, f"Expected 14 unique rejected texts across pairs, got {len(rejected_texts)}"
+
+
+def test_quote_boundary_no_embedded_author_or_joins():
+    """CF R8 Finding 1: Ensure quotes never have embedded author tags or multi-quote joins."""
+    raw_word = "пристати до лиця {{</fras>}}"
+    raw_def = "приставати / пристати до лиця кому. Личити, пасувати комусь. Ясно-синій колір дуже приставав їй до лиця (І. Нечуй-Левицький); Чорний здоровий платок, котрим була її голова і плечі аж до пояса прикриті, так пристав їй до лиця (Панас Мирний)."
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit is not None
+    assert "(" not in unit.citation_text
+    assert ")" not in unit.citation_text
+    assert ";" not in unit.citation_text
+    assert "І. Нечуй-Левицький" not in unit.citation_text
+    assert unit.author == "І. Нечуй-Левицький"
+    assert unit.citation_text == "Ясно-синій колір дуже приставав їй до лиця"
+
+
+def test_parser_leakage_remnants_and_dummy_starts():
+    """CF R8 Finding 2: Ensure dummy pronoun starts are rejected and headword remnants stripped."""
+    # Definition starting with dummy pronoun must be dropped
+    raw_word_dummy = "мати рацію {{</fras>}}"
+    raw_def_dummy = "Хто-небудь має рацію. Бути правим у суперечці. Я сказав правду (О. Гончар)."
+    assert parse_frazeolohichnyi_entry(raw_word_dummy, raw_def_dummy) is None
+
+    # Valency remnants like 'матері кого. Копистка:' must be stripped or rejected
+    raw_word_leak = "ну к лихій матері {{</fras>}}"
+    raw_def_leak = "ну к лихій (нечистій) матері кого. Уживається як лайка або прокльон. ≤Копистка:≥ Випий, зіронько!.. Та випий, ну тебе к лихій матері! ≤Параска:≥ От сатана, таки спокусив (М. Куліш)."
+    unit_leak = parse_frazeolohichnyi_entry(raw_word_leak, raw_def_leak)
+    assert unit_leak is not None
+    assert "матері кого" not in unit_leak.citation_text
+    assert "Копистка:" not in unit_leak.citation_text
+    assert "(" not in unit_leak.citation_text
+    assert unit_leak.citation_text == "Випий, зіронько!.. Та випий, ну тебе к лихій матері! От сатана, таки спокусив"
+
+
+def test_idiom_thought_register_conditional():
+    """CF R8 Finding 3: Ensure thoughts only assert register when present and match answers."""
+    unit_no_reg = PhraseologyUnit(
+        headword="рука",
+        idiom="набити руку",
+        definition="Набути практичного досвіду.",
+        citation_text="Кріпкі дід були, руку на житті набили",
+        author="Остап Вишня",
+        source_dict="frazeolohichnyi_slovnyk",
+        register=None,
+        is_held_out=False,
+    )
+    sft_no_reg = synthesize_sft_trajectory(unit_no_reg, None, None, 0, "idiom_interpretation_literary")
+    # No fake register claim when register is None
+    assert "загальновживаний літературний" not in sft_no_reg["final_response"]
+    assert "стилістичний регістр" not in sft_no_reg["final_response"].lower()
+
+    unit_reg = PhraseologyUnit(
+        headword="горщик",
+        idiom="розбити горщик",
+        definition="Розірвати дружні стосунки.",
+        citation_text="Дівер з невісткою розбив горщик",
+        author="П. Чубинський",
+        source_dict="frazeolohichnyi_slovnyk",
+        register="розмовний",
+        is_held_out=False,
+    )
+    sft_reg = synthesize_sft_trajectory(unit_reg, None, None, 0, "idiom_interpretation_literary")
+    # Register present in thought and answer
+    assert "розмовний" in sft_reg["final_response"]
+
+
+def test_vetted_calque_catalog_no_disputed_pairs():
+    """CF R8 Finding 5: Ensure disputed calques are excluded and vetted pairs included."""
+    calques = [cp.calque for cp in CANONICAL_CALQUE_PAIRS]
+    assert "кидатися в очі" not in calques
+    assert "грати роль" not in calques
+    assert "потерпіти крах" in calques
+    assert "взяти себе в руки" in calques

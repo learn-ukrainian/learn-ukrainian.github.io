@@ -92,7 +92,7 @@ class PhraseologyUnit:
     citation_text: str
     author: str
     source_dict: str
-    register: str = "загальновживаний літературний"
+    register: str | None = None
     is_held_out: bool = False
 
 
@@ -120,15 +120,15 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="відмінити зустріч",
         authentic="скасувати зустріч",
         mechanism="Дієслово «відміняти» в українській мові означає змінювати відмінок у граматиці або робити іншим (відміна). Визнання заходу чи документа недійсним передається питомим дієсловом «скасовувати» (скасувати зустріч, наказ, розпорядження).",
-        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; Словник української мови (СУМ-20)",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="брати верх",
         authentic="брати гору",
         mechanism="Питомий український фразеологізм на позначення перемоги й переваги — «брати гору» або «мати перевагу». Зворот «брати верх» є буквальним перекладом російського «брать верх».",
-        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; О. Пономарів, «Культура слова»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="приходити в голову",
@@ -138,157 +138,157 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
-        calque="кидатися в очі",
-        authentic="впадати в око",
-        mechanism="Нормативними українськими виразами є «впадати в око» або «впадати у вічі». Вираз «кидатися в очі» утворений за російським зразком «бросаться в глаза».",
-        author_or_source="Б. Антоненко-Давидович; СУМ-20",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        calque="потерпіти крах",
+        authentic="зазнати краху",
+        mechanism="Дієслово «терпіти» стосується фізичного болю чи страждання (терпіти муку). З іменниками на позначення краху чи поразки вживають питоме дієслово «зазнавати» (зазнати краху, зазнати поразки).",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; О. Пономарів, «Культура слова»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
-        calque="грати роль",
-        authentic="відігравати роль",
-        mechanism="В українській літературній мові функціональну роль тільки «відіграють» («відігравати важливу роль»), тоді як значення тільки «мають» («мати значення»). Кальковане «грати роль / значення» виникає через змішування.",
-        author_or_source="О. Пономарів, «Культура слова»; Словник української мови (СУМ-20)",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        calque="взяти себе в руки",
+        authentic="опанувати себе",
+        mechanism="Зворот «взяти себе в руки» є буквальною калькою російського вислову «взять себя в руки». В українській літературній мові нормативними відповідниками є «опанувати себе» або «вгамуватися».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; О. Пономарів, «Культура слова»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="приймати участь",
         authentic="брати участь",
         mechanism="Словосполучення «приймати участь» є поширеною калькою російського «принимать участие». В українській мові усталеною є сполука «брати участь».",
-        author_or_source="Підручники МОН України; Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Підручники МОН України; Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="приймати міри",
         authentic="вживати заходів",
         mechanism="Канцелярський русизм «приймати міри» спотворює значення слова «міра» (одиниця виміру). Нормативний вираз — «вживати заходів».",
-        author_or_source="Б. Антоненко-Давидович; СУМ-20",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; Підручники МОН України",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="на протязі тижня",
         authentic="протягом тижня",
         mechanism="«На протязі» позначає перебування на різкому струмені повітря (протяг). Часовий відтинок передають прийменниками «протягом» або «упродовж».",
-        author_or_source="Підручники МОН України; СУМ-20",
+        author_or_source="Підручники МОН України; Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="по крайній мірі",
         authentic="принаймні",
         mechanism="«По крайній мірі» — буквальний переклад російського «по крайней мере». Українська мова володіє питомими виразами «принаймні» та «щонайменше».",
-        author_or_source="СУМ-20; Культура слова",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; О. Пономарів, «Культура слова»",
         rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
         calque="в кінці кінців",
         authentic="зрештою",
         mechanism="Зворот «в кінці кінців» є калькою російського «в конце концов». Нормативними відповідниками є «зрештою», «кінець кінцем», «нарешті».",
-        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
         calque="як би там не було",
         authentic="хай там як",
         mechanism="Конструкція «як би там не було» копіює російське «как бы то ни было». В українській літературній мові вживають лаконічні звороти «хай там як», «що б там не було».",
-        author_or_source="СУМ-20; Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
         calque="у першу чергу",
         authentic="насамперед",
         mechanism="Зворот «у першу чергу» переносить поняття черги людей на абстрактний порядок дій. Нормативними є «насамперед», «передусім», «найперше».",
-        author_or_source="СУМ-20; Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
         calque="кидатися в крайнощі",
         authentic="вдаватися в крайнощі",
         mechanism="Українська дієслівна валентність вимагає виразу «вдаватися в крайнощі», а не «кидатися в крайнощі».",
-        author_or_source="Словник української мови (СУМ-20); УЛІФ НАН України",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="робити вигляд",
         authentic="вдавати",
         mechanism="Конструкція «робити вигляд» є калькою російського «делать вид». В українській мові природніше вживати дієслово «вдавати» (вдавати радість, удавати байдужого).",
-        author_or_source="Б. Антоненко-Давидович; СУМ-20",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="терпіти поразку",
         authentic="зазнавати поразки",
         mechanism="З іменниками на позначення негативних наслідків узгоджується дієслово «зазнавати» (зазнавати поразки, зазнавати лиха). «Терпіти» вживають про фізичний стан чи терпіння (терпіти біль).",
-        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; О. Пономарів, «Культура слова»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="здавати іспит",
         authentic="складати іспит",
         mechanism="В українській мові екзамени та іспити «складають» (скласти іспит). Дієслово «здавати» позначає передавання речей чи здавання позицій.",
-        author_or_source="Підручники МОН України; СУМ-20",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Підручники МОН України; Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="задавати питання",
         authentic="ставити запитання",
         mechanism="Запитання в українській мові «ставлять» (ставити запитання). Дієслово «задавати» використовують у значенні давати завдання або корм тваринам.",
-        author_or_source="Б. Антоненко-Давидович; СУМ-20",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="стати в нагоді",
         authentic="стати в пригоді",
         mechanism="«Нагода» означає слушний момент чи випадок (мати нагоду); коли ж ідеться про корисність чи практичну допомогу, правильно казати «стати в пригоді».",
-        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
         calque="по мірі того як",
         authentic="у міру того як",
         mechanism="Конструкція «по мірі того як» утворена за російським зразком «по мере того как». В українській мові нормативним є прийменник «у/в» зі знахідним відмінком («у міру того як») або звороти «пропорційно до», «з плином часу».",
-        author_or_source="Б. Антоненко-Давидович; Правопис 2019",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; Правопис 2019",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="говорити на українській мові",
         authentic="говорити українською мовою",
         mechanism="Конструкція «на мові» є синтаксичною калькою російського «на языке». В українській мові вживають безприйменниковий орудний відмінок: «говорити українською мовою» або «говорити українською».",
-        author_or_source="Правопис 2019; Б. Антоненко-Давидович",
+        author_or_source="Правопис 2019; Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="співпадати в поглядах",
         authentic="збігатися в поглядах",
         mechanism="Дієслово «співпадати» утворене префіксальним копіюванням російського «совпадать». В українській мові нормативним є «збігатися» (погляди збігаються).",
-        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
         calque="вести себе пристойно",
         authentic="поводитися пристойно",
         mechanism="Зворот «вести себе» копіює російське «вести себя». В українській мові дієслово зворотне: «поводитися» (він поводиться гідно).",
-        author_or_source="Підручники МОН України; СУМ-20",
+        author_or_source="Підручники МОН України; Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="відноситися до колег з повагою",
         authentic="ставитися до колег з повагою",
         mechanism="«Відноситися» в українській мові вказує на математичну пропорцію (2 відноситься до 4) або географічну належність. Міжособистісні стосунки позначаються словом «ставитися».",
-        author_or_source="Б. Антоненко-Давидович; СУМ-20",
-        rejected_flaw="lack_of_morphemic_reasoning",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
         calque="за рахунок спонсорів",
         authentic="коштом спонсорів",
         mechanism="Зворот «за рахунок» у значенні «завдяки комусь» або «чиїмись коштами» є калькою російського «за счет». В українській мові вживають «коштом», «завдяки», «ціною».",
-        author_or_source="Б. Антоненко-Давидович; СУМ-20",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="вибачаюся за запізнення",
         authentic="прошу вибачення за запізнення",
         mechanism="Постфікс -ся вказує на зворотність дії (дію, спрямовану на самого себе: миюся, одягаюся). Форма «вибачаюся» буквально означає «вибачаю сам себе». Правильно казати «пробачте», «перепрошую», «прошу вибачення».",
-        author_or_source="Підручники МОН України; Б. Антоненко-Давидович",
+        author_or_source="Підручники МОН України; Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
 ]
@@ -1109,7 +1109,8 @@ def clean_stress_marks(text: str) -> str:
 def clean_raw_html_and_tags(text: str) -> str:
     """Remove HTML/XML tags and trailing template artifacts."""
     text = re.sub(r"<[^>]+>", "", text)
-    text = re.sub(r"[≤≥\{\}]", "", text)
+    text = re.sub(r"≤[^≥]*≥:?\s*", "", text)
+    text = re.sub(r"[≤≥\{\}\[\]]", "", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -1192,19 +1193,55 @@ def get_content_stems(phrase: str) -> list[str]:
     return [w[:4] for w in content]
 
 
-author_pattern = re.compile(r"\(([А-ЯІЇЄҐ][а-яіїєґ\.]*(?:\s+[А-ЯІЇЄҐ][а-яіїєґ\-]+)*)\)")
+AUTHOR_PATTERN = re.compile(
+    r"\(\s*("
+    r"(?:[А-ЯІЇЄҐ]\.\s*)+[А-ЯІЇЄҐ][а-яіїєґ\'’]*(?:-[А-ЯІЇЄҐ][а-яіїєґ\'’]*)?"
+    r"|"
+    r"[А-ЯІЇЄҐ][а-яіїєґ\'’]+(?:\s+[А-ЯІЇЄҐ][а-яіїєґ\'’]*(?:-[А-ЯІЇЄҐ][а-яіїєґ\'’]*)?)+"
+    r"|"
+    r"(?:Шевченко|Франко|Грінченко|Котляревський|Сковорода|Коцюбинський|Стельмах|Гончар)"
+    r")\s*\)"
+)
+
+# Backward-compatibility alias for tests
+author_pattern = AUTHOR_PATTERN
+
+EXCLUDED_AUTHOR_KEYWORDS = {
+    "присл", "приказк", "казк", "пісн", "творч", "газет", "журнал", "мовленн", "вип", "том", "нар."
+}
+
+DUMMY_PRONOUNS = [
+    "хто-небудь", "кому-небудь", "у кого-небудь", "кого-небудь", "чим-небудь", "що-небудь", "ким-небудь", "чиє-небудь"
+]
+
+DUMMY_STARTS = (
+    "хто-небудь", "кому-небудь", "у кого-небудь", "кого-небудь", "ким-небудь", "чим-небудь", "що-небудь", "чиє-небудь",
+    "хтось", "комусь", "когось", "кимсь", "чимсь", "щось"
+)
+
+
+def is_headword_header(s: str, word: str) -> bool:
+    """Detect if a leading segment is a dictionary headword/valency header rather than definition."""
+    s_clean = s.lower().strip()
+    if any(s_clean.endswith(v) for v in ["кому.", "кого.", "чого.", "чому.", "ким.", "чим.", "і без додатка.", "без додатка.", "лайл.", "розм.", "книжн."]):
+        return True
+    if "/" in s:
+        return True
+    w_tokens = [t for t in re.findall(r"[а-яіїєґ\']+", word.lower()) if len(t) > 2]
+    s_tokens = [t for t in re.findall(r"[а-яіїєґ\']+", s_clean) if len(t) > 2]
+    return bool(w_tokens and s_tokens and w_tokens[0] in s_tokens[:2])
 
 
 def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit | None:
     """Parse a raw frazeolohichnyi entry with strict definition cleaning and quote attestation."""
     word = clean_raw_html_and_tags(clean_stress_marks(word_raw))
     word = re.sub(r"^\d+\|.*?\|", "", word)
+    word = re.sub(r"^[|\d]+\|?", "", word)
     word = re.sub(r"^.*?\}\}", "", word).strip()
 
     clean_d = clean_raw_html_and_tags(clean_stress_marks(def_raw))
-    is_held = is_record_held_out(clean_d)
 
-    reg = "загальновживаний літературний"
+    reg: str | None = None
     if "книжн." in clean_d:
         reg = "книжний"
     elif "нар.-поет." in clean_d or "поет." in clean_d:
@@ -1219,9 +1256,17 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         reg = "жартівливий"
     elif "фольк." in clean_d:
         reg = "фольклорний"
+    elif "уроч." in clean_d:
+        reg = "урочистий"
 
-    # Step 1: Clean definition from first part of entry
-    m_first_auth = author_pattern.search(clean_d)
+    # Step 1: Find first author to bound the definition section
+    m_first_auth = None
+    for m in AUTHOR_PATTERN.finditer(clean_d):
+        a_cand = m.group(1).strip()
+        if not any(kw in a_cand.lower() for kw in EXCLUDED_AUTHOR_KEYWORDS) and not a_cand.startswith("З "):
+            m_first_auth = m
+            break
+
     if not m_first_auth:
         return None
 
@@ -1237,42 +1282,41 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         m_val = re.match(r"^(?:зі сл\..*?\.\s*|(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим)[^.]*?\.\s*)", after_sense)
         body = after_sense[m_val.end():].strip() if m_val else after_sense
     else:
-        m_header = re.search(r"(?:\b(?:і без додатка|без додатка)\.|\b(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос)\.)\s*", prefix_first)
+        m_header = re.search(r"(?:\b(?:і без додатка|без додатка)\.|\b(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл)\.)\s*", prefix_first)
         if m_header:
             body = prefix_first[m_header.end():].strip()
         else:
             m_dot = re.search(r"\.\s+(?=[А-ЯІЇЄҐ])", prefix_first)
             body = prefix_first[m_dot.end():].strip() if m_dot else prefix_first
 
-    m_q = re.search(r"(?:(?<=[.!?])\s*[—–-]\s+|(?<=[.!?])\s+[А-ЯІЇЄҐ][а-яіїєґ]+:\s+)", body)
-    if m_q:
-        defn = body[:m_q.start()].strip()
-        q_candidate = body[m_q.start():].strip()
+    parts = [s.strip() for s in re.split(r"(?<=[.!?])\s+(?=[А-ЯІЇЄҐ—–-])", body) if s.strip()]
+    if not parts:
+        return None
+
+    if len(parts) >= 2 and is_headword_header(parts[0], word):
+        defn = parts[1]
+    elif len(parts) >= 2:
+        defn = parts[0]
     else:
-        parts = [s.strip() for s in re.split(r"(?<=[.!?])\s+(?=[А-ЯІЇЄҐ])", body) if s.strip()]
-        if len(parts) >= 2:
-            defn = parts[0]
-            q_candidate = " ".join(parts[1:])
-        else:
-            defn = body
-            q_candidate = ""
+        defn = parts[0]
 
     defn = re.sub(r"^\d+\.\s*", "", defn).strip()
-    defn = re.sub(r"^зі сл\..*?\.\s*", "", defn).strip()
-    defn = re.sub(r"^[,\s]*(?:а також|і т\.ін\.|і под\.|зі сл\.)[^.]*?\.\s*", "", defn).strip()
-    defn = re.sub(r"^(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим)[^.]*?\.\s*", "", defn).strip()
-    defn = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос)\.\s*", "", defn).strip()
-    if ";" in defn:
-        subparts = [sp.strip() for sp in defn.split(";")]
-        if len(subparts) > 1 and len(subparts[0].split()) <= 4 and not any(subparts[0].startswith(kw) for kw in ["Так", "Хто", "Кому", "У кого", "Дуже", "Самотній", "Розірвати", "Набути", "Говорити", "Біс", "Невідомо", "Стати", "Відплата", "Сприяти", "Набридливо", "Надмірно"]):
-            defn = "; ".join(subparts[1:]).strip()
-
+    defn = re.sub(r"^(?:кому|чому|кого|чого|у кого|в кого|з ким|ким|чим|чиє|чию)[^.]*?\.\s*", "", defn).strip()
+    defn = re.sub(r"^(?:перев\.|також|переважно)[^.]*?\.\s*", "", defn).strip()
+    defn = re.sub(r"^(?:зі сл\.|і без додатка|без додатка)\.?\s*", "", defn).strip()
+    defn = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос|лайл|зневажл)\.\s*", "", defn).strip()
     defn = defn.replace("і_т_ін.", "і т.ін.").replace("і_под.", "і под.").strip()
+
     if not defn.endswith("."):
         defn += "."
 
-    if re.search(r"\b\d+\.\s*", defn) or "зі сл." in defn or len(defn) < 5:
+    # Drop definition if it starts with dummy pronoun schema or valency formula
+    if defn.lower().startswith(DUMMY_STARTS):
         return None
+    if len(defn) < 8 or len(defn) > 300 or "зі сл." in defn or re.search(r"\b\d+\.\s*", defn):
+        return None
+
+    raw_defn_stripped = defn.rstrip(".")
 
     # Step 2: Find best quote and author attesting the idiom
     stems = get_content_stems(word)
@@ -1280,39 +1324,44 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         return None
     min_required = len(stems) if len(stems) <= 2 else len(stems) - 1
 
-    best_quote = None
-    best_author = None
+    all_authors = list(AUTHOR_PATTERN.finditer(clean_d))
+    best_quote: str | None = None
+    best_author: str | None = None
 
-    q_cand_clean = re.sub(r"^[—–-]\s*", "", q_candidate).replace("і_т_ін.", "і т.ін.").replace("і_под.", "і под.").strip()
-    if (
-        len(q_cand_clean) >= 15
-        and not any(q_cand_clean.startswith(kw) for kw in ["Хто-небудь має", "Кому-небудь", "У кого-небудь", "Дуже старанно", "Так, як ніщо"])
-        and sum(1 for st in stems if st in q_cand_clean.lower()) >= min_required
-    ):
-        best_quote = q_cand_clean
-        best_author = m_first_auth.group(1).strip()
+    for i, m in enumerate(all_authors):
+        auth = m.group(1).strip()
+        if any(kw in auth.lower() for kw in EXCLUDED_AUTHOR_KEYWORDS) or auth.startswith("З "):
+            continue
 
-    # If first candidate didn't attest, search all citations in clean_d
-    if not best_quote:
-        for m in author_pattern.finditer(clean_d):
-            auth = m.group(1).strip()
-            prefix = clean_d[:m.start()]
-            last_boundary = max(prefix.rfind(";"), prefix.rfind(")"))
-            q = prefix[last_boundary + 1:].strip() if last_boundary != -1 else prefix.strip()
-            q = re.sub(r"^[—–-]\s*", "", q).strip()
-            q = re.sub(r"^\.?\s*\d+\.\s*", "", q).strip()
-            q = re.sub(r"^[,\s]*(?:а також|і т\.ін\.|і под\.|зі сл\.)[^.]*?\.\s*", "", q).strip()
-            if any(q.startswith(kw) for kw in ["Хто-небудь має", "Кому-небудь", "У кого-небудь", "Дуже старанно", "Так, як ніщо"]):
-                continue
-            if len(q) < 15:
-                continue
-            if sum(1 for st in stems if st in q.lower()) >= min_required:
-                best_quote = q
-                best_author = auth
-                break
+        pref = clean_d[:m.start()]
+        prev_end = all_authors[i - 1].end() if i > 0 else 0
+        last_semi = pref.rfind(";")
+        d_idx = pref.find(raw_defn_stripped)
+        start_pos = max(last_semi, prev_end, d_idx + len(raw_defn_stripped) if d_idx != -1 else -1)
+
+        q = pref[start_pos:].strip()
+        q = re.sub(r"^[;—–\-\s:.]+", "", q).strip()
+        q = re.sub(r"^\.?\s*\d+\.\s*", "", q).strip()
+        q = re.sub(r"^[а-яіїєґА-ЯІЇЄҐ\s\'\(\)]+?\s+(?:кого|кому|чого|чому|ким|чим|що)[^.]*?\.\s*", "", q).strip()
+        q = re.sub(r"^[А-ЯІЇЄҐ][а-яіїєґ]+:\s*", "", q).strip()
+        q = re.sub(r"^[;—–\-\s:.]+", "", q).strip()
+
+        # Invariants: no parentheses, no semicolons, no dummy pronouns at start
+        if "(" in q or ")" in q or ";" in q:
+            continue
+        if q.lower().startswith(DUMMY_STARTS):
+            continue
+        if len(q) < 15 or len(q) > 400:
+            continue
+        if sum(1 for st in stems if st in q.lower()) >= min_required:
+            best_quote = q
+            best_author = auth
+            break
 
     if not best_quote or not best_author:
         return None
+
+    is_held = bool(HELD_OUT_AUTHORS_RE.search(best_author))
 
     return PhraseologyUnit(
         headword=word.split()[0] if word else "ідіома",
@@ -1351,7 +1400,19 @@ def get_word_lemma_or_stem(word: str, cur_ves: sqlite3.Cursor | None, cache: dic
         return cache[w]
     if cur_ves and len(w) >= 3:
         try:
-            cur_ves.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (w,))
+            cur_ves.execute(
+                """
+                SELECT lemma FROM forms_all
+                WHERE word_form = ?
+                ORDER BY
+                    (tags NOT LIKE '%:v_kly%') DESC,
+                    (tags NOT LIKE '%:xp%') DESC,
+                    (source_comment IS NULL OR source_comment NOT LIKE 'від %') DESC,
+                    id ASC
+                LIMIT 1
+                """,
+                (w,),
+            )
             row = cur_ves.fetchone()
             if row and row[0]:
                 lemma = row[0].lower().replace("’", "'").strip()
@@ -1829,10 +1890,10 @@ def synthesize_sft_trajectory(
             query = f"Чи є вираз «{calq}» нормативним в українській мові, і якщо ні, то який питомий відповідник слід уживати?"
             thought = (
                 f"<thought>\n"
-                f"Аналізую слововживання «{calq}» за авторитетними джерелами ({source_auth}).\n"
-                f"Діагностую лексико-семантичну проблему: {calque.mechanism}\n"
-                f"Визначаю питомий український еквівалент: «{auth}».\n"
-                f"Формулюю розгорнуту довідку на основі академічної норми.\n"
+                f"Аналізую нормативність слововживання «{calq}» за авторитетними працями з культури мови ({source_auth}).\n"
+                f"Виявляю наслідки міжмовної інтерференції: чужорідна калька порушує питому лексико-семантичну структуру українського вислову.\n"
+                f"Зіставляю з нормативною мовною практикою та встановлюю питомий відповідник «{auth}».\n"
+                f"Формулюю розгорнуту мовознавчу довідку для утвердження автентичної норми.\n"
                 f"</thought>"
             )
             resp = (
@@ -1846,9 +1907,9 @@ def synthesize_sft_trajectory(
             query = f"Відредагуйте текст, виправивши помилкове слововживання «{calq}» на нормативний відповідник."
             thought = (
                 f"<thought>\n"
-                f"Редагую текст із помилковим слововживанням «{calq}».\n"
-                f"Замінюю на нормативний український відповідник: «{auth}».\n"
-                f"Мотивую редакторське виправлення з опорою на {source_auth}: {calque.mechanism}\n"
+                f"Здійснюю редакторський аналіз тексту, що містить поширену кальку «{calq}».\n"
+                f"Спираючись на рекомендації мовознавців ({source_auth}), замінюю ненормативний покруч на питомий еквівалент «{auth}».\n"
+                f"Мотивуватиму правку лінгвістичними закономірностями словотвору та лексичної сполучуваності.\n"
                 f"</thought>"
             )
             resp = (
@@ -1862,8 +1923,9 @@ def synthesize_sft_trajectory(
             query = f"У чому полягає стилістична й змістова перевага вислову «{auth}» над калькою «{calq}»?"
             thought = (
                 f"<thought>\n"
-                f"Зіставляю автентичний вираз «{auth}» та помилкову кальку «{calq}».\n"
-                f"Аналізую мовну деколонізацію: усунення чужорідного калькованого шаблону згідно з {source_auth}.\n"
+                f"Порівнюю нормативний зворот «{auth}» із штучним калькованим штампом «{calq}».\n"
+                f"Аналізую процес деколонізації мови: повернення до самобутніх синтаксичних і лексичних моделей згідно з {source_auth}.\n"
+                f"Виокремлюю стилістичні переваги питомого вислову.\n"
                 f"</thought>"
             )
             resp = (
@@ -1876,8 +1938,9 @@ def synthesize_sft_trajectory(
             query = f"Поясніть учневі чи студентові, чому вислів «{calq}» вважається помилкою і як висловити цю думку правильно."
             thought = (
                 f"<thought>\n"
-                f"Аналізую типову інтерференційну помилку у звороті «{calq}».\n"
-                f"Формулюю нормативне дидактичне пояснення щодо заміни на питоме «{auth}» з опорою на академічні джерела ({source_auth}) та стандарти.\n"
+                f"Розглядаю дидактичний аспект пояснення типової інтерференційної помилки «{calq}».\n"
+                f"Формулюю доступне лінгвістичне роз'яснення для учнів про несумісність кальки з нормами української мови ({source_auth}).\n"
+                f"Показую правильний шлях висловлення думки за допомогою звороту «{auth}».\n"
                 f"</thought>"
             )
             resp = (
@@ -1887,26 +1950,27 @@ def synthesize_sft_trajectory(
                 f"**Як правильно:** в українській літературній мові слід уживати **«{auth}»**."
             )
         elif modality == 4:
-            query = f"Яких норм лексичної сполучуваності та граматичного керування слід дотримуватися у звороті «{auth}» на противагу помилці «{calq}»?"
+            query = f"Яких норм лексичної сполучуваності слід дотримуватися у звороті «{auth}» на противагу помилковій сполуці «{calq}»?"
             thought = (
                 f"<thought>\n"
-                f"Аналізую граматичну валентність і синтаксичне керування у виразі «{auth}».\n"
-                f"Контрастую з порушенням лексичної сполучуваності «{calq}» за джерелом {source_auth}.\n"
+                f"Досліджую лексичну сполучуваність та стилістичну закріпленість компонентів у виразі «{auth}».\n"
+                f"Контрастую з порушенням сполучуваності у калькованій формі «{calq}» за матеріалами {source_auth}.\n"
+                f"Обґрунтовую нормативність автентичної конструкції.\n"
                 f"</thought>"
             )
             resp = (
                 f"{thought}\n\n"
                 f"У звороті **«{auth}»** неухильно дотримуються питомих норм української лексичної сполучуваності.\n\n"
                 f"{calque.mechanism}\n\n"
-                f"Правильна конструкція **«{auth}»** забезпечує стилістичну довершеність тексту й однозначність сприйняття."
+                f"Правильна конструкція **«{auth}»** забезпечує точність мовлення та захищає мову від невластивих їй калькованих штампів."
             )
         elif modality == 5:
             query = f"Проаналізуйте типову інтерференційну помилку у виразі «{calq}» та обґрунтуйте заміну на «{auth}» в офіційно-діловому мовленні."
             thought = (
                 f"<thought>\n"
-                f"Аналізую вимоги офіційно-ділового стилю до стандартизації лексики.\n"
-                f"Виявляю інтерференційну конструкцію «{calq}» та зіставляю з діловим стандартом {source_auth}.\n"
-                f"Формулюю рекомендацію щодо переходу на нормативний еквівалент «{auth}».\n"
+                f"Аналізую стандарти офіційно-ділового стилю української мови.\n"
+                f"Виявляю канцеляризм-кальку «{calq}» та зіставляю з нормативом ділового мовлення ({source_auth}).\n"
+                f"Обґрунтовую обов'язковість уживання нормативного звороту «{auth}» у документах та діловому листуванні.\n"
                 f"</thought>"
             )
             resp = (
@@ -1919,9 +1983,9 @@ def synthesize_sft_trajectory(
             query = f"Складіть практичну рекомендацію для редакції та журналістів щодо недопущення калькованого звороту «{calq}» на користь «{auth}»."
             thought = (
                 f"<thought>\n"
-                f"Аналізую практичну пораду для медійників і редакторів періодичних видань.\n"
-                f"Спираюся на посібники з редагування та авторитетні нормативні джерела ({source_auth}).\n"
-                f"Пояснюю механізм очищення медіатекстів від ненормативного покруча «{calq}» на користь питомого «{auth}».\n"
+                f"Формулюю практичні рекомендації для медійників і редакторів періодичних видань.\n"
+                f"Спираючись на посібники з культури слова ({source_auth}), аналізую проникнення покруча «{calq}» у публічний простір.\n"
+                f"Пропоную дієвий стандарт заміни на питомий зворот «{auth}» для піднесення якості медіатекстів.\n"
                 f"</thought>"
             )
             resp = (
@@ -1935,9 +1999,9 @@ def synthesize_sft_trajectory(
             query = f"Як мовна традиція та закони українського словотвору спростовують штучний покруч «{calq}» на користь «{auth}»?"
             thought = (
                 f"<thought>\n"
-                f"Звертаюся до історичної традиції української літературної норми.\n"
-                f"Аналізую штучну русифікаторську деформацію у звороті «{calq}» за працями мовознавців ({source_auth}).\n"
-                f"Обґрунтовую повернення питомої форми «{auth}».\n"
+                f"Звертаюся до історичного контексту формування української літературної норми.\n"
+                f"Аналізую штучне насадження покруча «{calq}» у процесі мовної уніфікації та звертаюся до академічних праць ({source_auth}).\n"
+                f"Обґрунтовую повернення органічної народної форми «{auth}».\n"
                 f"</thought>"
             )
             resp = (
@@ -1950,9 +2014,9 @@ def synthesize_sft_trajectory(
             query = f"Яку комунікативну неточність і стилістичну неохайність спричиняє використання конструкції «{calq}» замість «{auth}»?"
             thought = (
                 f"<thought>\n"
-                f"Досліджую прагматичні наслідки неточного слововживання.\n"
-                f"Висвітлюю змістове спотворення та втрату виразності при використанні кальки «{calq}».\n"
-                f"Доводжу перевагу однозначного «{auth}» згідно з {source_auth}.\n"
+                f"Досліджую комунікативну неточність, яку породжує калька «{calq}» у спілкуванні.\n"
+                f"З'ясовую, як невластиве значення спотворює авторську думку, порівнюючи з настановами {source_auth}.\n"
+                f"Доводжу перевагу однозначного та стилістично виразного еквівалента «{auth}».\n"
                 f"</thought>"
             )
             resp = (
@@ -1965,9 +2029,9 @@ def synthesize_sft_trajectory(
             query = f"Подайте стислий мовний коментар для академічного посібника з культури мови щодо протиставлення «{calq}» та «{auth}»."
             thought = (
                 f"<thought>\n"
-                f"Укладаю словникову статтю-довідку для посібника з культури мови.\n"
-                f"Формулюю стисле, нормативно вивірене протиставлення помилкового вислову «{calq}» та правильного «{auth}».\n"
-                f"Зазначаю джерело: {source_auth}.\n"
+                f"Укладаю нормативну статтю-довідку для посібника з культури мови.\n"
+                f"Систематизую аргументи проти калькованого вислову «{calq}» на користь нормативного «{auth}» за джерелом {source_auth}.\n"
+                f"Формулюю стислий висновок для практичного запам'ятовування.\n"
                 f"</thought>"
             )
             resp = (
@@ -2002,117 +2066,174 @@ def synthesize_sft_trajectory(
             f"Поясніть семантику вислову «{unit.idiom}» та покажіть приклад його вживання майстрами українського слова.",
         ]
         query = query_templates[idx % len(query_templates)]
-        thought_templates = [
-            (
-                f"<thought>\n"
-                f"Аналізую образну семантику звороту «{unit.idiom}».\n"
-                f"Метафоричне значення базується на переносному вживанні: {unit.definition}\n"
-                f"Стилістичний регістр висловлювання: {unit.register}.\n"
-                f"Контекст ілюструється класичним слововживанням ({unit.author}).\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Досліджую стилістичну диференціацію фразеологізму «{unit.idiom}».\n"
-                f"Оцінюю належність до сфери: {unit.register}.\n"
-                f"Семантичне ядро вислову передає: {unit.definition}\n"
-                f"Спираюся на художню фіксацію у творі майстра слова {unit.author}.\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Аналізую синтаксичне функціонування та образність ідіоми «{unit.idiom}».\n"
-                f"Значення одиниці: {unit.definition}\n"
-                f"Характеризую слововживання в контексті ({unit.author}), де зворот виступає у функції образного акцентування.\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Розкриваю внутрішню форму та експресивне забарвлення звороту «{unit.idiom}».\n"
-                f"Змістове наповнення: {unit.definition}\n"
-                f"Регістр уживання: {unit.register}.\n"
-                f"Нормативність засвідчена літературним джерелом: {unit.author}.\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Зіставляю фразеологізований вислів «{unit.idiom}» із його описовим тлумаченням.\n"
-                f"Образний зворот концентрує значення: {unit.definition}\n"
-                f"Стилістична маркованість: {unit.register}.\n"
-                f"Ілюстрація з класичної спадщини ({unit.author}) демонструє живу мовну енергію.\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
-                f"Семантика одиниці розкривається через дію або стан: {unit.definition}\n"
-                f"Стилістичний діапазон: {unit.register}.\n"
-                f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Здійснюю лексикографічний та семантичний розбір стійкої сполуки «{unit.idiom}».\n"
-                f"Тлумачення за академічними джерелами: {unit.definition}\n"
-                f"Сфера вживання: {unit.register}.\n"
-                f"Художній контекст слововживання зафіксовано у {unit.author}.\n"
-                f"</thought>"
-            ),
-            (
-                f"<thought>\n"
-                f"Аналізую прагматику та образну силу вислову «{unit.idiom}» у художньому дискурсі.\n"
-                f"Смислова дефініція: {unit.definition}\n"
-                f"Стилістична тональність: {unit.register}.\n"
-                f"Текстове засвідчення ({unit.author}) демонструє доречність уживання звороту.\n"
-                f"</thought>"
-            ),
-        ]
-        thought = thought_templates[idx % len(thought_templates)]
-        resp_templates = [
-            (
-                f"{thought}\n\n"
-                f"Український фразеологізм **«{unit.idiom}»** позначає: {unit.definition}\n\n"
-                f"**Стилістичний регістр:** {unit.register}.\n\n"
-                f"**Зразок уживання в художній літературі ({unit.author}):**\n"
-                f"«{unit.citation_text}»"
-            ),
-            (
-                f"{thought}\n\n"
-                f"Фразеологічний зворот **«{unit.idiom}»** вживається на позначення: {unit.definition}\n\n"
-                f"**Стилістичний контекст:** {unit.register}.\n\n"
-                f"**Ілюстрація з творчості майстрів слова ({unit.author}):**\n"
-                f"«{unit.citation_text}»"
-            ),
-            (
-                f"{thought}\n\n"
-                f"Вислів **«{unit.idiom}»** має значення: {unit.definition}\n\n"
-                f"**Сфера слововживання:** {unit.register}.\n\n"
-                f"**Приклад із класичної літератури ({unit.author}):**\n"
-                f"«{unit.citation_text}»"
-            ),
-            (
-                f"{thought}\n\n"
-                f"Значення фразеологізму **«{unit.idiom}»** полягає у такому: {unit.definition}\n\n"
-                f"**Регістр:** {unit.register}.\n\n"
-                f"**Зразок слововживання в українській літературі ({unit.author}):**\n"
-                f"«{unit.citation_text}»"
-            ),
-            (
-                f"{thought}\n\n"
-                f"У сучасній українській літературній мові зворот **«{unit.idiom}»** виражає: {unit.definition}\n\n"
-                f"**Стилістична характеристика:** {unit.register}.\n\n"
-                f"**Художнє засвідчення ({unit.author}):**\n"
-                f"«{unit.citation_text}»"
-            ),
-            (
-                f"{thought}\n\n"
-                f"Цей образний фразеологізм — **«{unit.idiom}»** — тлумачиться як: {unit.definition}\n\n"
-                f"**Стилістичний регістр:** {unit.register}.\n\n"
-                f"**Приклад із літературного джерела ({unit.author}):**\n"
-                f"«{unit.citation_text}»"
-            ),
-        ]
-        resp = resp_templates[idx % len(resp_templates)]
+
+        if unit.register:
+            thought_templates = [
+                (
+                    f"<thought>\n"
+                    f"Аналізую образну семантику звороту «{unit.idiom}».\n"
+                    f"Метафоричне значення базується на переносному вживанні: {unit.definition}\n"
+                    f"Стилістичний регістр висловлювання: {unit.register}.\n"
+                    f"Контекст ілюструється класичним слововживанням ({unit.author}).\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Досліджую стилістичну диференціацію фразеологізму «{unit.idiom}».\n"
+                    f"Оцінюю належність до сфери: {unit.register}.\n"
+                    f"Семантичне ядро вислову передає: {unit.definition}\n"
+                    f"Спираюся на художню фіксацію у творі майстра слова {unit.author}.\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Розкриваю внутрішню форму та експресивне забарвлення звороту «{unit.idiom}».\n"
+                    f"Змістове наповнення: {unit.definition}\n"
+                    f"Регістр уживання: {unit.register}.\n"
+                    f"Нормативність засвідчена літературним джерелом: {unit.author}.\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
+                    f"Семантика одиниці розкривається через дію або стан: {unit.definition}\n"
+                    f"Стилістичний діапазон: {unit.register}.\n"
+                    f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Здійснюю лексикографічний та семантичний розбір стійкої сполуки «{unit.idiom}».\n"
+                    f"Тлумачення за академічними джерелами: {unit.definition}\n"
+                    f"Сфера вживання: {unit.register}.\n"
+                    f"Художній контекст слововживання зафіксовано у {unit.author}.\n"
+                    f"</thought>"
+                ),
+            ]
+            thought = thought_templates[idx % len(thought_templates)]
+            resp_templates = [
+                (
+                    f"{thought}\n\n"
+                    f"Український фразеологізм **«{unit.idiom}»** позначає: {unit.definition}\n\n"
+                    f"**Стилістичний регістр:** {unit.register}.\n\n"
+                    f"**Зразок уживання в художній літературі ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Фразеологічний зворот **«{unit.idiom}»** вживається на позначення: {unit.definition}\n\n"
+                    f"**Стилістичний контекст:** {unit.register}.\n\n"
+                    f"**Ілюстрація з творчості майстрів слова ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Вислів **«{unit.idiom}»** має значення: {unit.definition}\n\n"
+                    f"**Сфера слововживання:** {unit.register}.\n\n"
+                    f"**Приклад із класичної літератури ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Значення фразеологізму **«{unit.idiom}»** полягає у такому: {unit.definition}\n\n"
+                    f"**Регістр:** {unit.register}.\n\n"
+                    f"**Зразок слововживання в українській літературі ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"У сучасній українській літературній мові зворот **«{unit.idiom}»** виражає: {unit.definition}\n\n"
+                    f"**Стилістична характеристика:** {unit.register}.\n\n"
+                    f"**Художнє засвідчення ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Цей образний фразеологізм — **«{unit.idiom}»** — тлумачиться як: {unit.definition}\n\n"
+                    f"**Стилістичний регістр:** {unit.register}.\n\n"
+                    f"**Приклад із літературного джерела ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+            ]
+            resp = resp_templates[idx % len(resp_templates)]
+        else:
+            thought_templates = [
+                (
+                    f"<thought>\n"
+                    f"Аналізую образну семантику звороту «{unit.idiom}».\n"
+                    f"Метафоричне значення базується на переносному вживанні: {unit.definition}\n"
+                    f"Контекст ілюструється класичним слововживанням ({unit.author}).\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Досліджую фразеологічне значення звороту «{unit.idiom}».\n"
+                    f"Семантичне ядро вислову передає: {unit.definition}\n"
+                    f"Спираюся на художню фіксацію у творі майстра слова {unit.author}.\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Розкриваю внутрішню форму та експресивне забарвлення звороту «{unit.idiom}».\n"
+                    f"Змістове наповнення: {unit.definition}\n"
+                    f"Нормативність засвідчена літературним джерелом: {unit.author}.\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Аналізую культурно-мовну образність українського фразеологізму «{unit.idiom}».\n"
+                    f"Семантика одиниці розкривається через дію або стан: {unit.definition}\n"
+                    f"Приклад автора ({unit.author}) підтверджує питому традицію вживання.\n"
+                    f"</thought>"
+                ),
+                (
+                    f"<thought>\n"
+                    f"Здійснюю лексикографічний та семантичний розбір стійкої сполуки «{unit.idiom}».\n"
+                    f"Тлумачення за академічними джерелами: {unit.definition}\n"
+                    f"Художній контекст слововживання зафіксовано у {unit.author}.\n"
+                    f"</thought>"
+                ),
+            ]
+            thought = thought_templates[idx % len(thought_templates)]
+            resp_templates = [
+                (
+                    f"{thought}\n\n"
+                    f"Український фразеологізм **«{unit.idiom}»** позначає: {unit.definition}\n\n"
+                    f"**Зразок уживання в художній літературі ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Фразеологічний зворот **«{unit.idiom}»** вживається на позначення: {unit.definition}\n\n"
+                    f"**Ілюстрація з творчості майстрів слова ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Вислів **«{unit.idiom}»** має значення: {unit.definition}\n\n"
+                    f"**Приклад із класичної літератури ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Значення фразеологізму **«{unit.idiom}»** полягає у такому: {unit.definition}\n\n"
+                    f"**Зразок слововживання в українській літературі ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"У сучасній українській літературній мові зворот **«{unit.idiom}»** виражає: {unit.definition}\n\n"
+                    f"**Художнє засвідчення ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+                (
+                    f"{thought}\n\n"
+                    f"Цей образний фразеологізм — **«{unit.idiom}»** — тлумачиться як: {unit.definition}\n\n"
+                    f"**Приклад із літературного джерела ({unit.author}):**\n"
+                    f"«{unit.citation_text}»"
+                ),
+            ]
+            resp = resp_templates[idx % len(resp_templates)]
         return {
             "schema_version": "v1_ulif_phraseology_trajectory",
             "trajectory_id": traj_id,
@@ -2327,20 +2448,13 @@ def generate_dpo_dataset(
     dpo_pairs: list[dict[str, Any]] = []
     flaw_dist: Counter[str] = Counter()
 
-    flaw_cycle = [
-        "lack_of_morphemic_reasoning",
-        "soviet_lexicography_acceptance",
-        "mechanical_wordnet_synset",
-        "unvetted_purism_hallucination",
-    ]
-
     if target_count is not None:
         target_calques = [calques[i % len(calques)] for i in range(target_count)] if calques else []
     else:
         target_calques = calques
     logger.info("Generating authentic 1-record-per-item DPO preference pairs (total: %d)...", len(target_calques))
     for i, cp in enumerate(target_calques):
-        flaw = flaw_cycle[i % len(flaw_cycle)]
+        flaw = cp.rejected_flaw
         if cur_ves:
             verify_phrase_in_vesum(cp.authentic, cur_ves)
 
@@ -2353,70 +2467,60 @@ def generate_dpo_dataset(
         query = query_variants[i % len(query_variants)]
         chosen = (
             f"<thought>\n"
-            f"Порівнюю конструкції «{cp.calque}» та «{cp.authentic}».\n"
-            f"Діагностую лексико-семантичну проблему: {cp.mechanism}\n"
-            f"Обґрунтовую нормативність питомої форми «{cp.authentic}».\n"
+            f"Аналізую лексико-семантичну структуру вислову «{cp.calque}» та нормативні приписи української мови.\n"
+            f"Зіставляю з автентичним відповідником «{cp.authentic}» на основі авторитетних джерел ({cp.author_or_source}).\n"
+            f"Виявляю природу мовного спотворення (калькування) та обґрунтовую вживання питомого виразу.\n"
             f"</thought>\n\n"
             f"Правильно казати: **«{cp.authentic}»**.\n\n"
             f"**Обґрунтування:**\n"
-            f"{cp.mechanism}\n"
+            f"{cp.mechanism}\n\n"
             f"Зворот «{cp.calque}» є помилковим і суперечить нормам українського слововживання."
         )
 
         if flaw == "lack_of_morphemic_reasoning":
-            rej_variants = [
-                (
-                    f"<thought>Обидва варіанти здаються прийнятними для повсякденного вжитку.</thought>\n\n"
-                    f"Можна вживати як «{cp.authentic}», так і «{cp.calque}». Вираз «{cp.calque}» є досить поширеним, "
-                    f"тому його можна вільно використовувати без застережень."
-                ),
-                (
-                    f"<thought>Спрощений погляд на лексичну норму.</thought>\n\n"
-                    f"Немає принципової різниці між «{cp.calque}» та «{cp.authentic}», обидві форми однаково передають зміст, "
-                    f"тому обирайте будь-яку з них."
-                ),
-            ]
-            rejected = rej_variants[i % len(rej_variants)]
+            rejected = (
+                f"<thought>\n"
+                f"Розглядаю компоненти вислову «{cp.calque}». Оскільки окремі слова існують у лексиконі, "
+                f"вважаю сполучення граматично природним. Ігнорую специфіку питомого українського словотвору "
+                f"та семантичну модель звороту «{cp.authentic}».\n"
+                f"</thought>\n\n"
+                f"Вираз **«{cp.calque}»** є цілком прийнятним: окремі слова входять до лексичного складу української мови, "
+                f"тому їх поєднання не порушує граматичних правил. Вимога вживати винятково **«{cp.authentic}»** "
+                f"є надмірною пуристичною регламентацією, адже вислів «{cp.calque}» є зрозумілим і вживаним."
+            )
         elif flaw == "soviet_lexicography_acceptance":
-            rej_variants = [
-                (
-                    f"<thought>Спираюся на тлумачні словники радянського періоду (СУМ-11).</thought>\n\n"
-                    f"Обидва вислови нормативні. Вираз «{cp.calque}» широко зафіксований у словниках радянського періоду, "
-                    f"тому вважати його помилкою немає підстав."
-                ),
-                (
-                    f"<thought>Апеляція до практики радянської лексикографії 1970-х.</thought>\n\n"
-                    f"Вираз «{cp.calque}» є цілком прийнятним, оскільки він відповідав стандартам радянського слововживання, "
-                    f"і його не варто замінювати на «{cp.authentic}»."
-                ),
-            ]
-            rejected = rej_variants[i % len(rej_variants)]
+            rejected = (
+                f"<thought>\n"
+                f"Апелюю до практики радянської лексикографії 1970–1980-х років (зокрема СУМ-11). "
+                f"Укладачі тогочасних академічних словників свідомо кодифікували вираз «{cp.calque}» у межах політики зближення мов, "
+                f"вважаючи прагнення вживати «{cp.authentic}» архаїчним або штучним відокремленням. "
+                f"Визнаю форму «{cp.calque}» чинною нормою на підставі радянських джерел.\n"
+                f"</thought>\n\n"
+                f"Обидва вислови слід визнати нормативними. Зворот **«{cp.calque}»** був офіційно закріплений "
+                f"в 11-томному академічному Словнику української мови (СУМ-11) і широко функціонував у тогочасній літературі та пресі. "
+                f"Заперечення цього виразу на користь конструкції **«{cp.authentic}»** суперечить багаторічній лексикографічній практиці, "
+                f"тому «{cp.calque}» можна вільно використовувати без застережень."
+            )
         elif flaw == "mechanical_wordnet_synset":
-            rej_variants = [
-                (
-                    f"<thought>Дослівний машинний переклад іншомовного звороту.</thought>\n\n"
-                    f"Словосполучення «{cp.calque}» повністю підходить, оскільки кожне слово перекладено точно за словником. "
-                    f"Різниці між зворотами «{cp.calque}» та «{cp.authentic}» немає."
-                ),
-                (
-                    f"<thought>Механічна синонімізація без урахування контексту.</thought>\n\n"
-                    f"Конструкція «{cp.calque}» цілком природна, адже компоненти відповідають словарним значенням, "
-                    f"тож вона рівнозначна до «{cp.authentic}»."
-                ),
-            ]
-            rejected = rej_variants[i % len(rej_variants)]
+            rejected = (
+                f"<thought>\n"
+                f"Спираюся на механічну синонімію за тезаурусом. Оскільки компоненти вислову «{cp.calque}» є прямими синонімами "
+                f"до слів у звороті «{cp.authentic}», вважаю обидві конструкції взаємозамінними, "
+                f"не враховуючи усталеність фразеологічної сполучуваності та стилістичні конотації.\n"
+                f"</thought>\n\n"
+                f"Конструкція **«{cp.calque}»** та зворот **«{cp.authentic}»** є абсолютно рівнозначними синонімами. "
+                f"Кожне слово одного виразу відповідає за значенням слову іншого, отже вибір між ними не впливає на зміст. "
+                f"Вислів «{cp.calque}» можна вживати нарівні з «{cp.authentic}» як довільний синонімічний варіант."
+            )
         else:
-            rej_variants = [
-                (
-                    f"<thought>Штучна пуристична заміна без авторитетного джерела.</thought>\n\n"
-                    f"Обидва варіанти «{cp.calque}» та «{cp.authentic}» вважаю застарілими. Сучасна мова вимагає вигадати інший новотвір."
-                ),
-                (
-                    f"<thought>Необґрунтований мовний ригоризм.</thought>\n\n"
-                    f"І вираз «{cp.calque}», і вираз «{cp.authentic}» треба вилучити з обігу на користь неперевірених авторських слів."
-                ),
-            ]
-            rejected = rej_variants[i % len(rej_variants)]
+            rejected = (
+                f"<thought>\n"
+                f"Застосовую неперевірений пуристичний підхід: відкидаю як кальку «{cp.calque}», "
+                f"так і усталений нормативний відповідник «{cp.authentic}», припускаючи необхідність уживати штучний авторський неологізм.\n"
+                f"</thought>\n\n"
+                f"І зворот **«{cp.calque}»**, і форму **«{cp.authentic}»** варто вважати недосконалими. "
+                f"Сучасний розвиток мови вимагає відмовитися від обох варіантів на користь нових авторських слів або описових конструкцій."
+            )
 
         pair = {
             "schema_version": "v1_ulif_phraseology_dpo_pair",
