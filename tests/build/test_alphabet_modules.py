@@ -251,7 +251,7 @@ def test_special_signs_upgrade_prompt_original_plan_has_no_hyphenation_title(les
     plan_text = plan_path.read_text(encoding="utf-8")
     assert "section: Перенос і підсумок" in plan_text  # the file does carry it
     plan = yaml.safe_load(plan_text)
-    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    lesson_map = _special_signs_upgrade_input_lesson_map()
 
     prompt = linear_pipeline.render_upgrade_prompt(plan, root / "a1-v1/special-signs", lesson_map, lesson=lesson)
 
@@ -273,7 +273,7 @@ def test_no_line_break_english_title_exists_for_the_alphabet_section():
     assert "Підсумок" in keys and "Textbook Check" in keys  # the heading the writer was given passes the gate
 
 
-def test_live_special_signs_lessons_yaml_still_points_at_the_dropped_original():
+def test_upgrade_input_lesson_map_still_points_at_the_dropped_original():
     """The gate must cope with this row as-is; nobody removes it by hand."""
     from scripts.build.lesson_map import _normalize_activities
 
@@ -282,7 +282,7 @@ def test_live_special_signs_lessons_yaml_still_points_at_the_dropped_original():
     base = _normalize_activities((source / "module.md").read_text(encoding="utf-8"),
                                  yaml.safe_load((source / "activities.yaml").read_text(encoding="utf-8")))
     dropped = am.line_break_original_keys(base)
-    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    lesson_map = _special_signs_upgrade_input_lesson_map()
     assert dropped and dropped <= {(p["placement"], p["index"]) for p in lesson_map["provenance"]}
 
 
