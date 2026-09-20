@@ -20,6 +20,12 @@ function findTfButton(container: HTMLElement, text: string) {
   return btn;
 }
 
+function expectQuizOptionShell(button: HTMLElement) {
+  // True/False reuses the Quiz option-button classes (not the old .tfButton shell).
+  expect(button.className).toMatch(/option/);
+  expect(button.className).not.toMatch(/tfButton/);
+}
+
 function singleFeedback(container: HTMLElement) {
   return container.querySelector('[data-activity="tf-feedback"]');
 }
@@ -63,6 +69,9 @@ describe('TrueFalseQuestion', () => {
     expect(btns).toHaveLength(2);
     expect(findTfButton(container, 'True')).toBeInTheDocument();
     expect(findTfButton(container, 'False')).toBeInTheDocument();
+    for (const btn of btns) {
+      expectQuizOptionShell(btn);
+    }
   });
 
   test('renders Ukrainian buttons when isUkrainian=true (regression for #1082 r1)', () => {
@@ -86,7 +95,7 @@ describe('TrueFalseQuestion', () => {
     const fb = singleFeedback(container);
     expect(fb).toBeInTheDocument();
     expect(fb!.getAttribute('data-correct')).toBe('true');
-    expect(fb!.textContent).toContain('Correct');
+    expect(fb!.textContent).toContain('✓ Correct!');
   });
 
   test('clicking the wrong button reveals the incorrect feedback', async () => {
@@ -98,11 +107,10 @@ describe('TrueFalseQuestion', () => {
     const fb = singleFeedback(container);
     expect(fb).toBeInTheDocument();
     expect(fb!.getAttribute('data-correct')).toBe('false');
-    // For a "true" statement answered false, the message reveals the truth
-    expect(fb!.textContent).toMatch(/true/i);
+    expect(fb!.textContent).toContain('✗ Incorrect');
   });
 
-  test('wrong-answer feedback uses Ukrainian phrasing in UK mode', async () => {
+  test('wrong-answer feedback uses Ukrainian Quiz phrasing in UK mode', async () => {
     const user = userEvent.setup();
     document.documentElement.dataset.chromeLocale = 'uk';
     const { container } = render(<TrueFalseQuestion {...baseProps} isUkrainian />);
@@ -111,7 +119,7 @@ describe('TrueFalseQuestion', () => {
 
     const fb = singleFeedback(container);
     expect(fb).toBeInTheDocument();
-    expect(fb!.textContent).toContain('правдиве');
+    expect(fb!.textContent).toContain('✗ Неправильно');
   });
 
   test('both buttons become disabled after an answer is submitted', async () => {
@@ -203,8 +211,12 @@ describe('TrueFalse wrapper', () => {
 
     const feedbacks = rowFeedbacks(container);
     expect(feedbacks).toHaveLength(1);
+    expect(feedbacks[0].textContent).toContain('✗ Incorrect');
     expect(within(rows[1]).getByText(/It flows into the Black Sea/)).toBeInTheDocument();
     expect(feedbacks[0].getAttribute('data-correct')).toBe('false');
+    for (const btn of within(rows[1]).getAllByRole('button')) {
+      expectQuizOptionShell(btn);
+    }
   });
 
   test('clicking one row does not mark the other rows wrong or lock them', async () => {
