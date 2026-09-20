@@ -4678,7 +4678,8 @@ def run_stress_annotation(module_dir: Path) -> dict[str, Any]:
     """Deterministically add Ukrainian stress marks to writer artifacts."""
     from scripts.pipeline.stress_annotator import annotate_file
 
-    targets = ("module.md", "vocabulary.yaml")
+    # activities.yaml: annotate_file leaves error chips (intentional misspellings) as-is.
+    targets = ("module.md", "vocabulary.yaml", "activities.yaml")
     counts: dict[str, int] = {}
     for target in targets:
         path = module_dir / target
