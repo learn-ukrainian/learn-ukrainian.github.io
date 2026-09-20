@@ -1331,3 +1331,66 @@ def test_landing_overview_is_not_required_above_a1(gold):
     module, source, plan = gold
     _strip_original_outcomes(source)
     assert gates.landing_overview_defects(module, source, {**plan, "level": "a2"}) == []
+
+
+@pytest.mark.parametrize("token", ["шчу́ка", "пло́шча", "Шчи́рий"])
+def test_shcha_sound_transcription_skips_the_stress_dictionary(token):
+    assert gates._is_phonetic_token(token)
+    assert gates.wrong_stress(token, set(), phonetic=True) == []
+    assert gates.missing_stress(gates.strip_acute(token), set(), phonetic=True) == []
+    assert gates.missing_stress(gates.strip_acute(token), set())  # alphabet slugs only
+
+
+def test_real_shcha_words_are_still_stress_checked():
+    assert not gates._is_phonetic_token("щу́ка")
+    assert gates.wrong_stress("щука́ пло́ща", set(), phonetic=True) == ["щука́→щу́ка"]
+    assert gates.missing_stress("площа", set(), phonetic=True) == ["площа"]
+
+
+_MISSPELT_ACTS = {
+    "inline": [{"id": "act-ec", "type": "error-correction", "items": [
+        {"sentence": "Це вчител.", "error": "вчител", "correction": "вчи́тель"},
+        {"sentence": "Це моя́ сімя.", "error": "сімя", "correction": "сім'я́"},
+        {"sentence": "Це ___ дім.", "answer": "нови́й", "options": ["нови́й", "но́вий"]},
+    ]}],
+    "workbook": [],
+}
+
+
+def test_pedagogical_misspellings_are_non_words_only():
+    misspelt = gates.pedagogical_misspellings(_MISSPELT_ACTS)
+    assert {"вчител", "сімя"} <= misspelt
+    # A real word used as a distractor is exempt only inside its own activity.
+    assert not {"новий", "но́вий", "нови́й", "сім'я́", "сім'я"} & misspelt
+    allow = {gates.strip_acute(w) for w in misspelt}
+    assert gates.wrong_stress("вчи́тел", allow, exact_skip=misspelt) == []
+    assert gates.missing_stress("Це сімя.", allow) == []
+    assert gates.wrong_stress("сі́м'я", allow, exact_skip=misspelt)  # still dictionary-checked
+    assert gates.missing_stress("сім'я", allow) == ["сім'я"]
+
+
+def _unstressed(report):
+    return [d for d in report["blocking"] if "without stress mark" in d]
+
+
+def _quote_act4_error_in_prose(module):
+    for path in module.glob("lesson-*/activities.yaml"):
+        if "act-4" in path.read_text():
+            prose = path.parent / "module.md"
+            prose.write_text(prose.read_text() + "\n\nNever write сімя: the apostrophe is missing.\n")
+
+
+def test_alphabet_prose_may_quote_the_activity_error_token(gold):
+    module, source, plan = _alphabet_gold(gold, "special-signs")
+    _install_archive_originals(module, source, rewrite=True)
+    _rewrite_act4(module, lambda item: item.update(error="сімя"))
+    _quote_act4_error_in_prose(module)
+    assert not any("сімя" in d for d in _unstressed(gates.run_lesson_gates(module, source, plan)))
+
+
+def test_non_alphabet_prose_quoting_an_error_token_still_blocks(gold):
+    module, source, plan = gold
+    _install_archive_originals(module, source, rewrite=False)
+    _rewrite_act4(module, lambda item: item.update(error="сімя"))
+    _quote_act4_error_in_prose(module)
+    assert any("сімя" in d for d in _unstressed(gates.run_lesson_gates(module, source, plan)))
