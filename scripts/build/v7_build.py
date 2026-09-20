@@ -2100,6 +2100,24 @@ def _clear_previous_edition(module_dir: Path) -> list[Path]:
     return targets
 
 
+def _land_overview_or_fail(module_dir: Path, source_dir: Path, plan: Mapping[str, Any], parsed: Mapping[str, str]) -> None:
+    """Write lesson 1's ``landing-overview.md`` to the module root and fail before paid review without a landing.
+
+    Same check as the final lesson gates; here it stops the run before lessons 2+ are bought.
+    """
+    from scripts.build.lesson_gates import landing_overview_defects
+
+    overview = parsed.get(linear_pipeline.LANDING_OVERVIEW_ARTIFACT)
+    if overview and overview.strip():
+        target = module_dir / linear_pipeline.LANDING_OVERVIEW_ARTIFACT
+        if target.is_symlink():
+            raise linear_pipeline.LinearPipelineError(f"Refusing to write {target}: landing overview is a symlink")
+        target.write_text(overview, encoding="utf-8")
+    defects = landing_overview_defects(module_dir, source_dir, dict(plan))
+    if defects:
+        raise linear_pipeline.LinearPipelineError("Lesson 1 landing: " + "; ".join(defects))
+
+
 UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
 UPGRADE_INDEPENDENT_EFFORT = "medium"
 
@@ -2266,7 +2284,8 @@ def _run_upgrade(args: argparse.Namespace) -> int:
                     event_sink=tracker.emit,
                 )
                 response_path.write_text(response, encoding="utf-8")
-                linear_pipeline.write_writer_artifacts(lesson_dir, linear_pipeline.parse_writer_output(response, lesson_mode=True))
+                parsed = linear_pipeline.parse_writer_output(response, lesson_mode=True)
+                linear_pipeline.write_writer_artifacts(lesson_dir, parsed)
                 linear_pipeline.write_json(receipt_path, {
                     "identity": writer_identity,
                     "prompt_sha256": hashlib.sha256(prompt.encode()).hexdigest(),
@@ -2275,10 +2294,11 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             else:
                 # Re-parse the bound raw response, so post-review annotations or
                 # external edits cannot silently become unreviewed writer output.
-                linear_pipeline.write_writer_artifacts(
-                    lesson_dir, linear_pipeline.parse_writer_output(response_path.read_text(encoding="utf-8"), lesson_mode=True),
-                )
+                parsed = linear_pipeline.parse_writer_output(response_path.read_text(encoding="utf-8"), lesson_mode=True)
+                linear_pipeline.write_writer_artifacts(lesson_dir, parsed)
                 tracker.emit("phase_resumed", phase=phase, lesson=n, **fields)
+            if n == lesson_map["lessons"][0]["n"]:
+                _land_overview_or_fail(module_dir, source_dir, plan, parsed)
             phase = "llm_qg"
             lesson_plan = dict(plan, word_target=lesson["word_target"], content_outline=[
                 section for section in plan["content_outline"] if section["section"] in lesson["sections"]
