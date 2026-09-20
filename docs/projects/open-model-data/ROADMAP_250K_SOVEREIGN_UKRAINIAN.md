@@ -1,181 +1,128 @@
-# ULDR 250K+ Sovereign Ukrainian Model Data Roadmap
+# Open Model Data — Roadmap
 
-> **Parent Epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321) (Open Model Data) & [#7423](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/7423)
-> **Authority & Invariant:** Non-commercial, permanent open-source educational resource.
-> **Core Mandate:** **Literary Ukrainian first and foremost**, comprehensive authentic regional dialects as protected heritage, and absolute resistance to Russian/Soviet colonial assimilation, imperial propaganda, and Surzhyk.
+> **Parent epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321).
+> **Rewritten 2026-09-20** after a review of the whole epic, by operator decision. The earlier
+> version of this file planned "250,000 SFT + 50,000 DPO" records; that plan is withdrawn. The
+> filename is kept only because older issues and pull requests link to it.
+> **Policy:** non-commercial, permanent, free and open.
 
----
+## 1. What we are building
 
-## 1. Executive Summary & Strategic Rationale
+A free, open dataset that teaches an AI model to speak **proper modern Ukrainian** — clean literary
+language, real Ukrainian idioms, correct grammar — **without Russian, Soviet or other colonial
+poisoning**. Each item is a question plus a good answer. Anyone training an open model may use it.
 
-Early prototype phases (such as Phase 3.7 and Phase 5.6) produced small proof-of-concept datasets (e.g. 550 dialect trajectories, 6,000 preliminary calque pairs) to validate mining filters, claim verifiers, and 0% train/eval leakage firewalls.
+## 2. Why the earlier plan was withdrawn
 
-However, **a national language cannot be aligned on a toy dataset of a few thousand examples**. Modern foundation models (LLaMA, Gemma, GPT) have millions of parameters contaminated by Russian web crawls, Sovietized administrative phrasing, and imperial historical framings.
+The earlier plan made a record count the goal, so the work chased the count. Scripts placed source
+sentences into a small number of fill-in-the-blank forms, many thousands of times. Measured on
+2026-09-20 on the files in `data/projects/open_model_data/release/`:
 
-To train an open model that possesses true sovereign Ukrainian intelligence, we are executing an **industrial-scale 250,000+ SFT & 50,000 DPO roadmap** utilizing our verified local holdings in `data/sources.db` (150K+ chunks), `data/vesum.db` (409K lemmas), and the actively completing `data/ulif_dump_all.db` (National Academy of Sciences of Ukraine).
+| Set | Lines | What they contain |
+| --- | --- | --- |
+| `uldr_v06_general_assistant` (#8139) | 75,000 | 4,220 different question–answer pairs, copied (one of them 398 times) under different IDs |
+| `uldr_v05_grammar_valency` (#8143) | 35,000 | 32,629 rows labelled as controls (sentence unchanged, answer "nothing wrong here"); 2,371 rows marked as corrections; eight of twenty error types have fewer than 50 examples; 13 question patterns cover all 35,000 lines |
+| `uldr_v04a_kyivan_rus` (#8103) | 10,000 | 467 records are labelled "XI–XIII century" while their own first reasoning step gives a date range starting between 1400 and 1999; five question patterns cover 94% of lines |
+| `uldr_v04b_middle_ukrainian` (#8105) | 10,000 | twenty reasoning patterns cover 99% of lines (142 patterns in all); five question patterns cover 90% |
 
-```
-┌──────────────────────────────────────────────────────────────────────────────────┐
-│              TOTAL PRODUCTION VOLUME: 250,000 SFT + 50,000 DPO                   │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│ Track 1: General Ukrainian Assistant (Textbook STEM & Humanities)  │ 75,000 SFT  │
-│ Track 2: NASU Authentic Phraseology & Idiomatic Depth (ULIF)       │ 45,000 SFT  │
-│ Track 3: Systematic Decolonization & Register Purge (Calques)      │ 50,000 SFT  │
-│ Track 4: Comprehensive Regional Dialect Vernacular (Modern & Hist) │ 25,000 SFT  │
-│ Track 5: Historical Continuity (Kyivan Rus Epigraphy & Baroque)    │ 20,000 SFT  │
-│ Track 6: Grammar, Case Valency & Syntactic Precision (UA-GEC)      │ 35,000 SFT  │
-├──────────────────────────────────────────────────────────────────────────────────┤
-│ Multi-Domain Direct Preference Optimization (Contrastive DPO)      │ 50,000 DPO  │
-│ - Track 2 ULIF Idiomatic Nuance & Figurative DPO Pairs             │ 20,000 DPO  │
-│ - Track 3 Anti-Calque & Soviet Bureaucratic Reversal DPO Pairs     │ 25,000 DPO  │
-│ - Track 4 Authentic Regional vs. Surzhyk Erosion DPO Pairs        │  5,000 DPO  │
-└──────────────────────────────────────────────────────────────────────────────────┘
-```
+How "pattern" is measured, so the figures can be reproduced: take the plain text of the field
+(reasoning steps joined by newlines), replace every «…» and "…" span with a placeholder and every
+run of digits with `#`, and count distinct results. Whether the control rows and the rows marked as
+corrections are linguistically right was **not** checked here — that is the language reviewers' job.
 
----
+No validated training result for the claimed model exists in the repository. Issue #8054
+("alignment training and 5-gate evaluation") was closed by PR #8112, which changed an evaluation
+harness, a contradiction audit and their tests — no training run and no scorecard. The one result on
+file (Phase 3.6 pilot, #8010) does not substantiate a fine-tune of the model it names: the saved
+adapter has 32 tensors across 4 layers (sixteen of shape 16×256 and sixteen of shape 256×16), where
+Gemma 3 4B has 34 layers of width 2,560, and the producing script
+(`v4_pilot_canary_evaluation.py`) builds a 4-layer, 256-wide stand-in model.
 
-## 2. The Six Production Tracks
+**The risk** this creates: a model trained on heavily copied and patterned data may learn the
+pattern rather than the language. That is a hypothesis, not a measured result — measuring it is the
+purpose of #8338.
 
-### Track 1: The General Ukrainian Assistant (Literary Foundation First)
+## 3. Rules
 
-* **Goal**: Equip the model to reason, calculate, explain, and write across STEM, law, history, philosophy, and literature in decolonized, pristine Literary Ukrainian (Pravopys 2019).
-* **Source Material**:
-  * **24,000 chunks of Ukrainian school textbooks (Grades 1–11)** in `data/sources.db`: Algebra, Geometry, Physics, Chemistry, Biology, Ukrainian History, World History, Geography, Law, and Ukrainian Literature.
-  * Vetted Ukrainian encyclopedic and legal texts.
-* **Target Scale**: **75,000 multi-turn instructional reasoning trajectories**.
-* **Key Invariants**:
-  * Zero Russian syntactic interference.
-  * Native Ukrainian scientific nomenclature (*сірчана / сульфатна кислота*, *водень*, *кисень*).
-  * Semantic entity preservation (e.g. mathematical *об'єм піраміди* and physical *відношення* strictly preserved, never falsely mutated by hyper-purist scripts).
+1. **No count targets.** A set is as large as its sources honestly support, and every example is
+   different from the others.
+2. **Every "this is a Russianism — say it this way" rests on a named authority** (rule 4). Never a
+   script's or an AI's guess. Inventing "corrections" of good Ukrainian is its own kind of poison.
+3. **The Soviet-era dictionary (СУМ-11) is evidence of distortion only.** It fails in two directions:
+   - *What it left out.* A large part of real Ukrainian vocabulary was never admitted. A word being
+     absent from it means nothing — no script may treat that as a sign the word is rare, dialectal,
+     archaic or wrong.
+   - *What it put in.* Russianisms were added and given ordinary entries. A word being present does
+     not make it authentic, and its labels ("dialectal", "obsolete", "colloquial") are not copied.
+4. **Ukrainian is explained in Ukrainian, from sources Ukrainian scholarship accepts.** The meaning
+   of a word comes only from a Ukrainian explanatory dictionary — never from a translation
+   dictionary in any language, and never from the Soviet dictionary. Which source answers which
+   question is already decided by the project and is not restated here: see the table in
+   [`agents_extensions/shared/rules/ukrainian-linguistics.md`](../../../agents_extensions/shared/rules/ukrainian-linguistics.md) §4.
+   That list is changed only by the operator and the language reviewers. If no accepted source
+   explains a word, no example is made for it.
+5. **Ukrainian language judgment belongs to the language reviewers.** Infrastructure agents do not
+   decide what is correct Ukrainian.
+6. **A set is accepted only when** it has almost no repeats, no handful of patterns covering most
+   of it, a drawn sample approved by an independent language reviewer, and test questions written
+   by someone other than the author of the training examples. The check is built in #8339.
+7. **Proof before volume.** A small model is really trained and measured (#8338) before more data
+   is built.
+8. **Rights.** Dictionaries, textbooks and corpora are other people's work. Crediting them is
+   required but is not permission. Nothing that reproduces a source's own text is released until
+   the right to do so is recorded for that source. Crediting follows
+   [`docs/best-practices/atlas-source-presentation.md`](../../best-practices/atlas-source-presentation.md).
 
-### Track 2: Authentic Ukrainian Phraseology & Idiomatic Depth (ULIF Engine)
+## 4. Work, in order
 
-* **Goal**: Restore native Ukrainian figurative thinking and systematically replace Russianized word-for-word translated idioms with authentic Ukrainian phraseology.
-* **Source Material**:
-  * **`data/ulif_dump_all.db`** (NASU "Словники України on-line"): Currently downloading (PID `714616`, ETA ~8 days), containing the complete national phraseological and synonymic treasury.
-* **Target Scale**: **45,000 SFT trajectories + 20,000 DPO preference pairs**.
-* **Key Invariants**:
-  * Pairs authentic native idioms (*«брати гору»*, *«мати рацію»*, *«спадати на думку»*, *«впадати в око»*) against Russianized calques (*«брати верх»*, *«бути правим»*, *«приходити в голову»*, *«кидатися в очі»*).
-  * Multi-turn `<thought>` reasoning explaining the cultural and literary roots of the idiom with verified citations from classical Ukrainian authors (Kvitka-Osnovyanenko, Tychyna, Honchar, Mordovets).
+| Order | Work | Issue |
+| --- | --- | --- |
+| 1 | First real training run and honest scorecard | #8338 |
+| 1 | Acceptance check for every dataset | #8339 |
+| 2 | Real Ukrainian idioms — one checked example per dictionary idiom. Release waits for the Academy institute's permission | #8140 |
+| 2 | Russianisms and Soviet officialese — cases from accepted sources, confirmed by reviewers | #8340 |
+| 3 | Grammar — real corrections outweigh "nothing wrong" examples | #8342 |
+| 3 | School-subject answers — real explanations, no copies | #8341 |
+| 4 | Dialects — small and cautious, attested entries only | #8141 |
+| — | Set aside the historical files | #8343 |
+| hold | Assemble one release | #8330 |
+| hold | Independent final test set and training recipes | #8331 |
 
-### Track 3: Systematic Decolonization & Calque Elimination
+Items on hold start only when the sets above pass rule 6 and the scorecard from #8338 exists.
 
-* **Goal**: Eradicate over 300 codified Soviet-era administrative, military, legal, and conversational Russianisms across all registers.
-* **Source Material**:
-  * `sources.db: sum11` (strictly quarantined for Sovietization contrastive analysis, never positive authority).
-  * `style_guide` (Borys Antonenko-Davydovych, *Як ми говоримо*).
-  * Modern independent lexicons: СУМ-20, VESUM, and УЛІФ.
-* **Target Scale**: **50,000 SFT trajectories + 25,000 DPO contrastive pairs**.
-* **Key Invariants**:
-  * Full-sentence context transformations, not isolated word swaps.
-  * Rigorous minimal-pair DPO training to penalize Soviet bureaucratic jargon (*«приймати міри»* $\rightarrow$ *«вживати заходів»*, *«нанести шкоду»* $\rightarrow$ *«завдати шкоди»*, *«в кінці кінців»* $\rightarrow$ *«зрештою / кінець кінцем»*).
+**This roadmap and epic #6321 override older issue text.** Any record count, track composition or
+use of the historical files written in an issue before 2026-09-20 (for example "25,000" in #8141,
+or "250,000 + 50,000" and "Track 5 … `uldr_v04a` & `uldr_v04b`" in #8330) is withdrawn. Such an
+issue must be rewritten to match this roadmap before anyone works on it.
 
-### Track 4: Comprehensive Regional Dialect Vernacular (Historical & Modern)
+**"Say this, not that" pairs (DPO).** The method stays: a preferred answer set against a rejected
+one is a good way to teach a model to avoid a Russian copy. Its old volume target (50,000) is
+withdrawn. A pair is made only where a named authority backs it (rule 2) and the language reviewers
+have confirmed it. Pairs are built inside the idiom and Russianism work (#8140, #8340), not as a
+separate track.
 
-* **Goal**: Expand beyond the Phase 5.6 seed (550 trajectories) to capture the living vernacular of all three Ukrainian dialect macro-zones (Southwestern, Northern, Southeastern) as protected cultural heritage, spanning both historical field collections and modern 20th–21st century dialectology.
-* **Source Material**:
-  * **Modern Academic Dialectology (Institute of the Ukrainian Language of NASU)**:
-    * Materials from the **Atlas of the Ukrainian Language (АУМ / Atlas Ukrainskoi Movy)** across Northern (Polissian), Southwestern (Hutsul, Boyko, Lemko, Transcarpathian, Podolian, Bukovinian-Pokuttian, Dniester, Volhynian), and Southeastern (Middle Dnieper, Slobozhan, Steppe) dialect groups.
-    * Specialized modern regional dictionaries (e.g., Словник бойківських говірок / Онишкевич, Словник поліських говорів / Лисенко, Гуцульські говірки, Словник буковинських говірок, Лемківський словник).
-  * **Modern Regional Lexica & Living Vernacular**:
-    * Regional dialect dictionaries digitized on `slovnyk.me` (Bukovina, Galicia, Lviv, Hutsul, Transcarpathia).
-    * Contemporary dialectological field records, regional literary prose, and memoirs in `data/sources.db`.
-  * **Historical Foundation**:
-    * The complete **11,000+ regional field citations in Borys Grinchenko’s 1907 dictionary** (Shukhevych, Chubynskyi, Hnatiuk, Manzhura, etc.).
-* **Target Scale**: **25,000 multi-turn dialect defense trajectories + 5,000 DPO pairs** (~11,000 historical Grinchenko + ~14,000 modern regional/academic dialect entries).
-* **Key Invariants**:
-  * **Living Dialects vs. Archaic Form Preservation**: The model must understand contemporary living dialects as well as classical 19th-century regionalisms, without treating modern dialect speakers as archaic or uneducated.
-  * **Anti-Copying Mixed-Error Coverage ($\ge 30\%$)**: Dialect sentences pair authentic regional vocabulary with real grammatical, punctuation, or calque errors, forcing the model to fix the error while strictly defending the dialect marker.
-  * **Absolute Anti-Surzhyk Invariant**: Surzhyk is strictly diagnosed as Russian imperial linguistic degradation and eradicated; authentic regional vernacular across all three macro-zones is fiercely defended with linguistic etymology and dialectological citations.
+## 5. Later, with experts
 
-### Track 5: Historical Continuity (Kyivan Rus Epigraphy & Cossack Baroque)
+Kyivan Rus and Middle Ukrainian texts are **out of the training data for now**. They are mixed with
+Church Slavonic, chancery language, Polish and Latin; sorting them needs a historical linguist, and
+the project has none yet. The source texts stay in the database untouched. What stays in scope is the
+protective side only: test questions that check the model does **not** "correct" a quotation from an
+old text into modern language.
 
-* **Goal**: Reclaim 1,000 years of unbroken Ukrainian written continuity from Russian imperial appropriation.
-* **Source Material**:
-  * **Phase 5.7 ([#8103](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8103))**: All **2,570 text-bearing St. Sophia Cathedral graffiti inscriptions** + **10,202 Old East Slavic chronicle chunks** (PVL, Ipatiev, Galician-Volhynian). Models Kyivan Church Slavonic diglossia.
-  * **Phase 5.8 ([#8105](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8105))**: **20,085 chunks of Middle Ukrainian & Cossack Baroque** (Skovoroda, Velychko, 14th–15th c. charters).
-* **Target Scale**: **20,000 historical continuity and philological reasoning trajectories**.
-* **Key Invariants**:
-  * Teaches models to recognize Church Slavonic as the liturgical "Latin" of Kyivan Rus and distinguish it from the living Ukrainian spoken vernacular.
-  * Refutes imperial "three brotherly nations" mythology with diplomatic, primary-source epigraphic evidence.
+When an expert is available, this reopens as a small, expert-checked set.
 
-### Track 6: Grammar, Case Valency & Syntactic Precision (UA-GEC)
+## 6. What remains valid from the earlier work
 
-* **Goal**: Perfect the model's structural, inflectional, and syntactical accuracy across complex Ukrainian case government and agreement.
-* **Source Material**:
-  * The complete **UA-GEC (Ukrainian Grammar Error Correction)** annotated corpus.
-  * Morphological valency frames extracted from `data/vesum.db` (409K lemmas).
-* **Target Scale**: **35,000 multi-turn grammatical correction & syntactic reasoning trajectories**.
-* **Key Invariants**:
-  * Verbal and prepositional government: strictly enforcing Ukrainian prepositional valency (*властивий кому*, *опанувати що*, *чекати на кого/що*, *завідувач кафедри*, *по справах* $\rightarrow$ *у справах*).
-  * Animate/inanimate accusative case distinctions, dual-form preservation (*очі, уші, плечі*), and vocative case mastery.
+Source custody and rights records, the wall between training and test data, record formats, file
+sharding, receipts, the evaluation harness, and the five qualification gates in
+[`PRODUCTION_RELEASE_PLAN.md`](PRODUCTION_RELEASE_PLAN.md) §3.2. The gates stay; what changes is
+that a real trained model must be measured against them, on test questions the training-data
+generators did not write.
 
----
+Two different measurements must not be confused:
 
-## 3. Target Models & Binding Qualification Gates
-
-To prevent token drift and collateral linguistic damage, the 250,000+ production dataset is qualified across target high-capacity foundation models:
-* **Gemma 3 27B** (`google/gemma-3-27b-it`)
-* **Gemma 4 31B** (`google/gemma-4-31b-it` dual-channel native thought architecture)
-
-All training candidates must pass the complete, non-negotiable **1,600-case held-out evaluation suite** governed by the binding gates codified in [`PRODUCTION_RELEASE_PLAN.md`](https://github.com/learn-ukrainian/learn-ukrainian.github.io/blob/main/docs/projects/open-model-data/PRODUCTION_RELEASE_PLAN.md) §3.2:
-
-```
-┌────────────────────────────────────────────────────────────────────────────────────────┐
-│                        BINDING PRODUCTION QUALIFICATION GATES                          │
-├────────────────────────────────────────────────────────────────────────────────────────┤
-│ Gate 1: Linguistic Precision & Span Integrity: Precision >= 98.0%                      │
-│         - Strict 100% byte/token preservation outside designated error spans.          │
-│         - 0 unintended rephrasings or collocation mutations permitted.                 │
-│ Gate 2: Calque Elimination Rate: True Positive Rate >= 98.0% (N = 300)                  │
-│ Gate 3: Negative Control / Harmful-Edit Floor: Exact 0 observed errors (k = 0, N = 300)│
-│         - One-sided 95% Clopper-Pearson upper bound: <= 0.994%.                        │
-│ Gate 4: Anti-Overstandardization Protection: Exact 0 observed errors (k = 0, N = 600)  │
-│         - One-sided 95% Clopper-Pearson upper bound: <= 0.499%.                        │
-│         - Zero tolerance for altering regional vocabulary or historical grammar.       │
-│ Gate 5: Citation Verification & Dedicated High-Frequency Calque Floor:                 │
-│         - 100% Recall on the dedicated 50 most common calques.                         │
-│         - 0 Hallucinated Headwords or Senses in <thought> traces or final answers.      │
-│         - Citations must validate against approved positive authorities whitelist      │
-│           (SUM-20, Grinchenko 1907, style_guide, VESUM, Pravopys 2019, ULIF).          │
-│         - SUM-11 strictly quarantined for contrastive Sovietization analysis.          │
-└────────────────────────────────────────────────────────────────────────────────────────┘
-```
-
----
-
-## 4. Immediate Execution Roadmap
-
-```mermaid
-flowchart TD
-    subgraph Days1to8["Sprint 1: Days 1–8 (Active Downloader Window)"]
-        A1["Phase 5.7 (#8103): Mine 2,570 St. Sophia Inscriptions\n+ 10,202 Chronicle Chunks"]
-        A2["Phase 5.8 (#8105): Mine 20,085 Cossack Baroque Chunks"]
-        A3["Prototype ULIF Extractor on 53,000 Downloaded Entries\n(Build Phraseology & Synonym Mappers)"]
-    end
-
-    subgraph Days8to16["Sprint 2: Days 8–16 (ULIF Completion & Calque Expansion)"]
-        B1["Full ULIF Ingestion: 45,000 Idiomatic & Phraseological Pairs"]
-        B2["Expand Decolonization Corpus to 50,000 SFT + 25,000 DPO"]
-        B3["Expand Dialect Mining: Grinchenko (11k) +\nModern Regional Dictionaries & AUM (14k) to 25k SFT"]
-    end
-
-    subgraph Days16to30["Sprint 3: Days 16–30 (Textbook STEM Synthesis & Model Training)"]
-        C1["Synthesize 75,000 Textbook STEM & Humanities Trajectories\n(Grades 1–11 across all subjects)"]
-        C2["Assemble & Shard Full 250,000 SFT + 50,000 DPO Production Dataset"]
-        C3["Train Gemma 3 27B / Gemma 4 31B LoRA Adapters"]
-        C4["Audit Against Full 1,600 Held-Out Benchmark Gates"]
-    end
-
-    Days1to8 --> Days8to16
-    Days8to16 --> Days16to30
-```
-
----
-
-## 5. Operational Invariants
-
-1. **Literary Ukrainian is the Sovereign Standard**: Dialects, historical texts, and colloquial speech enrich the language, but standard literary Ukrainian per Pravopys 2019 is the non-negotiable core.
-2. **Zero Web-Scraped Junk**: All training records originate exclusively from verified local databases (`sources.db`, `vesum.db`, `ulif_dump_all.db`, `ua-gec`).
-3. **Strict 0% Train/Eval Partition Firewalls**: Evaluation benchmarks are strictly partitioned by work, author, and monument.
-4. **Tool-Backed Factual Claims**: Every dictionary citation, form count, and morphological property must be verified against local databases. No LLM hallucinations permitted in training trajectories.
+- **The first scorecard (#8338) is a diagnostic.** It uses the existing held-out questions, which
+  were written by the same generators as the training data. It can show whether training changes
+  the model's behaviour at all. It cannot show that the model's Ukrainian is good.
+- **Qualification against the five gates** needs independently written test questions (#8331).
+  No dataset is called qualified, and no release is assembled (#8330), on the diagnostic alone.
