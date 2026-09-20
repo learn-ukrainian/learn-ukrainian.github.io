@@ -44,7 +44,9 @@ def test_upgrade_dry_run_saves_full_prompt_without_writer(upgrade_root, monkeypa
     prompt = (output / "writer_prompt.md").read_text()
     assert "Mode: upgrade" in prompt
     assert "NO named narrator" in prompt
-    assert "side-by-side English support" in prompt
+    assert "Classify the archive" in prompt
+    assert "watch-and-repeat" in prompt
+    assert "untaught" in prompt.lower() or "cannot read" in prompt.lower()
     assert "file=activities.yaml" in prompt
     # #7994: named sources MCP probes, theory + landing; shell VESUM is no proof.
     assert "mcp__sources__search_text" in prompt
