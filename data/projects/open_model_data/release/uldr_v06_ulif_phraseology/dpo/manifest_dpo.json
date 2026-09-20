@@ -1,0 +1,15 @@
+{
+  "dataset_name": "uldr_v06_ulif_phraseology_dpo",
+  "total_pairs": 414,
+  "shards_count": 1,
+  "max_shard_size_kb": 1084.56,
+  "shards": [
+    {
+      "shard_id": 1,
+      "shard_file": "dpo_shard_001_of_001.jsonl",
+      "pairs_count": 414,
+      "size_kb": 1084.56,
+      "sha256": "04e4c6b24d450a1cc6ceca395bac8a95675bd3a3c609c8df9aec8d73aa4aaa0a"
+    }
+  ]
+}
