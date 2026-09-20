@@ -220,6 +220,44 @@ class TestApostropheWords:
 
 
 @pytest.mark.slow
+class TestApostropheSpellings:
+    """Typographic ’ and the YAML '' escape are one word, not two (#7994)."""
+
+    @pytest.mark.parametrize("apostrophe", ["'", "’", "ʼ", "''"])
+    def test_contradicting_mark_is_replaced(self, apostrophe: str):
+        wrong = f"дере{STRESS_MARK}в{apostrophe}яний"
+        result, count = annotate_stress(f"Це {wrong} стіл.")
+        assert count == 1
+        assert wrong not in result
+        assert f"дерев{apostrophe}я{STRESS_MARK}ний" in result
+
+    @pytest.mark.parametrize("apostrophe", ["’", "''"])
+    def test_unmarked_word_is_stressed_whole(self, apostrophe: str):
+        result, _ = annotate_stress(f"- 'сім{apostrophe}я і дерев{apostrophe}яний'")
+        assert f"сім{apostrophe}я{STRESS_MARK}" in result
+        assert f"дерев{apostrophe}я{STRESS_MARK}ний" in result
+        assert f"дере{STRESS_MARK}в" not in result
+        assert annotate_stress(result)[1] == 0
+
+    def test_module_md_and_activities_yaml_files_are_repaired(self, tmp_path: Path):
+        wrong = f"дере{STRESS_MARK}в'яний"
+        module = tmp_path / "module.md"
+        module.write_text(f"Це **{wrong}** стіл.\n", encoding="utf-8")
+        activities = tmp_path / "activities.yaml"
+        activities.write_text(
+            f"inline:\n- items:\n  - sentence: 'Це {wrong.replace(chr(39), chr(39) * 2)} стіл і сім''я.'\n",
+            encoding="utf-8",
+        )
+        assert annotate_file(module) == 1
+        assert annotate_file(activities) > 0
+        assert f"дерев'я{STRESS_MARK}ний" in module.read_text(encoding="utf-8")
+        import yaml
+
+        sentence = yaml.safe_load(activities.read_text(encoding="utf-8"))["inline"][0]["items"][0]["sentence"]
+        assert f"дерев'я{STRESS_MARK}ний" in sentence and f"сім'я{STRESS_MARK}" in sentence
+        assert f"дере{STRESS_MARK}в" not in sentence
+
+
 class TestProperNouns:
     """AC: proper nouns not double-stressed."""
 

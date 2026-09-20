@@ -962,6 +962,50 @@ def missing_stress(text: str, allow: set[str], *, phonetic: bool = False) -> lis
     return bad
 
 
+def dictionary_stressed_forms(text: str, wrong: list[str], *, phonetic: bool = False) -> set[str]:
+    """Bare lowercase spellings the lesson already shows with a dictionary-accepted mark.
+
+    Alphabet lessons repeat a word many times (``сім'я́`` beside a stray ``сім'я``);
+    once the marked form is on the page the learner has the stress. Forms
+    ``wrong_stress`` reported (contradicting or unverified) never count.
+    """
+    rejected = {nfc(re.split(r"→|: ", w, maxsplit=1)[0]) for w in wrong}
+    out: set[str] = set()
+    for tok in _stress_tokens(text):
+        if ACUTE not in tok or _skip_stress_token(tok) or (phonetic and _is_phonetic_token(tok)):
+            continue
+        tok = tok.strip("_").strip("'’-")
+        if tok and tok not in rejected:
+            out.add(strip_acute(tok).lower())
+    return out
+
+
+_UNDECLARED_SUFFIX = ": undeclared unverified stress"
+
+
+def split_attested_undeclared(wrong: list[str]) -> tuple[list[str], list[str]]:
+    """Alphabet slugs: (still blocking, VESUM-attested undeclared forms).
+
+    The stress dictionary lacks many inflected forms (``ньо́го``, ``Мар'я́ною``).
+    When VESUM resolves the form to a lemma it is a real word, not a typo, so
+    it warns instead of blocking. A misspelling (``вчі́тель``) has no analysis.
+    """
+    from scripts.verification.vesum import verify_word  # type: ignore
+
+    blocking: list[str] = []
+    attested: list[str] = []
+    for entry in wrong:
+        if not entry.endswith(_UNDECLARED_SUFFIX):
+            blocking.append(entry)
+            continue
+        bare = strip_acute(entry[: -len(_UNDECLARED_SUFFIX)])
+        if verify_word(bare) or verify_word(bare.lower()):
+            attested.append(entry)
+        else:
+            blocking.append(entry)
+    return blocking, attested
+
+
 def _acute_positions(form: str) -> list[int]:
     out, i = [], 0
     for ch in unicodedata.normalize("NFD", form):
@@ -1007,7 +1051,7 @@ def wrong_stress(text: str, allow: set[str], proper: set[str] = frozenset(),
                 forms = [nfc(m["stressed_form"]) for m in r["matches"]]
                 break
         if not forms:
-            out.append(f"{tok}: undeclared unverified stress")
+            out.append(f"{tok}{_UNDECLARED_SUFFIX}")
             continue
         allowed: set[int] = set()
         for f in forms:
@@ -1254,9 +1298,19 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         except Exception as exc:
             block(f"lesson {n}: stress oracle unavailable: {type(exc).__name__}")
             wrong = []
+        rejected = list(wrong)
+        if alphabet and wrong:
+            wrong, attested = split_attested_undeclared(wrong)
+            if attested:
+                warn(f"lesson {n}: {len(attested)} inflected forms attested in VESUM but absent from the stress dictionary: {sorted(set(attested))[:15]}")
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
         allow = allow | {strip_acute(w) for w in misspelt}
+        if alphabet:
+            lesson_text = "\n".join([learner_text(lesson_md_clean[n])] + [
+                str(x) for x in leaves(vocab) + leaves(acts) if isinstance(x, str)
+            ])
+            allow = allow | dictionary_stressed_forms(lesson_text, rejected, phonetic=True)
         bad = sorted(set(missing_stress(_blank_avoid_cells(lesson_md_clean[n]), allow, phonetic=alphabet)
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow,
                                           phonetic=alphabet)))

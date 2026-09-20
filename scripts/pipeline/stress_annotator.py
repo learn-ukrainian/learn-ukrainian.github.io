@@ -35,9 +35,13 @@ STRESS_MARK = "\u0301"
 # Include \u0301 (combining acute accent) so already-stressed words are matched whole
 _CYRILLIC_BASE_CLASS = "А-ЯҐЄІЇа-яґєії"
 _CYRILLIC_LETTER_CLASS = f"{_CYRILLIC_BASE_CLASS}\u0301"
+# Apostrophe spellings inside a word: ʼ ' ’ and the YAML single-quoted escape ''.
+# Without the last two a word splits at the apostrophe and each half is stressed
+# as its own word (дерев''яний → дере́в + яний), contradicting the dictionary.
+_APOSTROPHE_RE = re.compile(r"''|[ʼ'’]")
 _CYRILLIC_WORD_RE = re.compile(
     rf"(?<![{_CYRILLIC_LETTER_CLASS}])"
-    rf"([{_CYRILLIC_BASE_CLASS}][{_CYRILLIC_LETTER_CLASS}]*(?:[ʼ'][{_CYRILLIC_BASE_CLASS}][{_CYRILLIC_LETTER_CLASS}]*)*)"
+    rf"([{_CYRILLIC_BASE_CLASS}][{_CYRILLIC_LETTER_CLASS}]*(?:(?:''|[ʼ'’])[{_CYRILLIC_BASE_CLASS}][{_CYRILLIC_LETTER_CLASS}]*)*)"
     rf"(?![{_CYRILLIC_LETTER_CLASS}])",
     re.UNICODE,
 )
@@ -137,6 +141,12 @@ def _already_stressed(word: str) -> bool:
 
 def _strip_surface_stress(word: str) -> str:
     return word.replace(STRESS_MARK, "")
+
+
+def _restore_apostrophes(stressed: str, original: str) -> str:
+    """Put the surface apostrophe spellings of *original* back into *stressed*."""
+    surface = iter(_APOSTROPHE_RE.findall(original))
+    return re.sub("'", lambda _: next(surface, "'"), stressed)
 
 
 def _collapse_non_hyphen_multi_acute(word: str) -> str:
@@ -326,7 +336,7 @@ def annotate_stress(
     for match in matches:
         if _in_skip_range(match.start(), skip_ranges):
             continue
-        word = match.group(1)
+        word = _APOSTROPHE_RE.sub("'", match.group(1))
         if _count_syllables(_strip_surface_stress(word)) < 2:
             continue
         chosen = _oracle_choice(word)
@@ -334,16 +344,18 @@ def annotate_stress(
             unresolved.append(match)
             continue
         if chosen != word:
-            replacements[match.start(1)] = chosen
+            replacements[match.start(1)] = _restore_apostrophes(chosen, match.group(1))
 
     if unresolved:
         stress_map = _build_sentence_stress_map(text, matches)
         stressifier = _get_stressifier()
         for match in unresolved:
             pos = match.start(1)
-            word = match.group(1)
+            word = _APOSTROPHE_RE.sub("'", match.group(1))
             clean = _strip_surface_stress(word)
             stressed = stress_map.get(pos)
+            if stressed is not None:
+                stressed = _APOSTROPHE_RE.sub("'", stressed)
             if stressed is None:
                 try:
                     stressed = stressifier(clean)
@@ -357,7 +369,7 @@ def annotate_stress(
             if _already_stressed(word) and word.count(STRESS_MARK) == 1:
                 continue
             if collapsed != word:
-                replacements[pos] = collapsed
+                replacements[pos] = _restore_apostrophes(collapsed, match.group(1))
 
     result = list(text)
     count = 0
