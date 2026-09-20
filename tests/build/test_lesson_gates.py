@@ -1462,3 +1462,36 @@ def test_non_alphabet_gate_still_blocks_unmarked_copy_and_undeclared_inflection(
     path.write_text(path.read_text() + _SAME_LESSON)
     blocks = "\n".join(_stress_blocks(gates.run_lesson_gates(module, source, plan)))
     assert "сім'я" in blocks and "ньо́го: undeclared unverified stress" in blocks
+
+
+def test_alphabet_wrong_option_words_skip_stress_but_the_answer_still_checks():
+    acts = {
+        "inline": [{"id": "act-c", "type": "fill-in",
+                    "items": [{"sentence": "Яка́ лі́тера? «...а́шка»", "answer": "Ц (цу́кор)",
+                               "options": ["Ц (цу́кор)", "Ч (чу́кор)"]}]},
+                   {"id": "act-mc", "type": "quiz",
+                    "questions": [{"question": "Де ь?", "correct": 0,
+                                   "options": [{"text": "па́лець"}, {"text": "па́лечь"}]}]}],
+        "workbook": [],
+    }
+    assert "чу́кор" not in gates.pedagogical_error_forms(acts)  # non-alphabet unchanged
+    forms = gates.pedagogical_error_forms(acts, option_words=True)
+    assert {"чу́кор", "а́шка", "па́лечь"} <= forms
+    assert "цу́кор" not in forms and "па́лець" not in forms
+    misspelt = gates.pedagogical_misspellings(acts, option_words=True)
+    assert {"чу́кор", "чукор", "па́лечь"} <= misspelt
+    assert gates.wrong_stress("Ч (чу́кор) «...а́шка» па́лечь", set(), exact_skip=misspelt) == []
+    assert gates.wrong_stress("Ч (чу́кор)", set()) == ["чу́кор: undeclared unverified stress"]
+    assert gates.wrong_stress("цуко́р", set(), exact_skip=misspelt)  # the answer's word still checks
+
+
+def test_alphabet_citation_surnames_warn_instead_of_block():
+    text = "За підру́чником: Захарійчу́к, 1 клас, § 12. Вчі́тель пи́ше да́лі в уро́ці про і́нше, без жо́дного посила́ння."
+    surnames = gates.citation_surnames(text)
+    assert "Захарійчу́к" in surnames
+    wrong = ["Захарійчу́к: undeclared unverified stress", "вчі́тель: undeclared unverified stress",
+             "Строка́ль→Стро́каль"]
+    blocking, cited = gates.split_citation_surnames(wrong, surnames | {"Строка́ль"})
+    assert cited == ["Захарійчу́к: undeclared unverified stress"]
+    assert blocking == wrong[1:]
+    assert gates.citation_surnames("Строка́ль пи́ше. Далі нічо́го.") == set()
