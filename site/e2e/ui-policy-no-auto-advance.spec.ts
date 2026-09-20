@@ -13,7 +13,7 @@ import { expect, test } from '@playwright/test';
 test('flashcards: rating never auto-advances; only «Далі» moves the session', async ({ page, context }) => {
   await context.clearCookies();
   await page.clock.install();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="flashcards"]').click();
   const card = page.locator('[data-activity="flashcard"]');
@@ -48,7 +48,7 @@ test('flashcards: rating never auto-advances; only «Далі» moves the sessio
 test('choice mode: answering never auto-advances; only «Далі» moves the session', async ({ page, context }) => {
   await context.clearCookies();
   await page.clock.install();
-  await page.goto('/words-of-the-day/practice/');
+  await page.goto('/practice/');
 
   await page.locator('button[data-mode="choice"]').click();
   const option = page.locator('.mc-opt').first();

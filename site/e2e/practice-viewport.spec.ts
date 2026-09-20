@@ -13,7 +13,7 @@ test('answer preserves the toolbar and exercise position in a short viewport', a
       .map((item: object) => ({ ...item, modes: ['stress'], hasCloze: false, clozeIds: [] }));
     await route.fulfill({ response, json: index });
   });
-  await page.goto('/words-of-the-day/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0');
+  await page.goto('/practice/?lemmaId=%D0%B2%D0%BE%D0%B4%D0%B0');
   const stage = page.locator('.lexicon-practice-stage');
   const answer = stage.locator('.stress-vowel').first();
   await expect(answer).toBeVisible();
@@ -24,7 +24,7 @@ test('answer preserves the toolbar and exercise position in a short viewport', a
 
   const advance = page.getByTestId('practice-advance-button');
   await expect(advance).toBeFocused();
-  expect(new URL(page.url()).pathname).toBe('/words-of-the-day/practice/');
+  expect(new URL(page.url()).pathname).toBe('/practice/');
   const after = await stage.boundingBox();
   expect(after!.y).toBe(before!.y);
   expect(await page.evaluate(() => window.scrollY)).toBe(scrollBefore);

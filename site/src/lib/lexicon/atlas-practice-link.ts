@@ -1,13 +1,13 @@
 /**
  * Atlas → Practice deep-link contract (#5435).
  *
- * Practice hub reads `?lemmaId=` on `/words-of-the-day/practice/` and focuses a
+ * Practice hub reads `?lemmaId=` on `/practice/` and focuses a
  * single-lemma mixed session when the lemma is in the practice pool
  * (`LexiconPractice` `initializeFocusedPractice`). Missing lemmas surface an
  * honest pool-miss notice rather than a dead end.
  */
 
-export const ATLAS_PRACTICE_PATH = "/words-of-the-day/practice/" as const;
+export const ATLAS_PRACTICE_PATH = "/practice/" as const;
 export const ATLAS_PRACTICE_LEMMA_PARAM = "lemmaId" as const;
 
 /** Build a same-origin Practice hub URL focused on the given Atlas lemma id/slug. */

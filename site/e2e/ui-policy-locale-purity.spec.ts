@@ -51,7 +51,7 @@ interface Surface {
 
 const SURFACES: Surface[] = [
   {
-    path: '/words-of-the-day/practice/',
+    path: '/practice/',
     contentAllowlist: [
       '.k3-hero-epigraph', // authored Ukrainian epigraph (lang="uk")
       '[data-testid="practice-daily-deck"]', // words-of-the-day content: lemmas, EN glosses, etymology

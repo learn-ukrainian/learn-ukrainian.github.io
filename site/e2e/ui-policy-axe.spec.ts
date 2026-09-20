@@ -15,7 +15,7 @@ import { expect, test } from '@playwright/test';
  */
 
 const SURFACES = [
-  { path: '/words-of-the-day/practice/', waitForPractice: true },
+  { path: '/practice/', waitForPractice: true },
   { path: '/lexicon/', waitForPractice: false },
 ];
 

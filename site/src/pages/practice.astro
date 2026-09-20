@@ -1,17 +1,17 @@
 ---
-import LexiconPracticeMount from "../../lexicon/LexiconPracticeMount.astro";
-import CourseLayout from "../../layouts/CourseLayout.astro";
+import LexiconPracticeMount from "../lexicon/LexiconPracticeMount.astro";
+import CourseLayout from "../layouts/CourseLayout.astro";
 
 const frontmatter = {
-  title: "Практика — Слова дня",
-  description: "Інтервальне повторення слів вашого рівня (CEFR) з локальним прогресом у браузері.",
+  title: "Практика",
+  description: "Інтервальне повторення слів вашого рівня (CEFR) та граматичні вправи з локальним прогресом у браузері.",
 };
 ---
 
 <CourseLayout
   title={frontmatter.title}
   description={frontmatter.description}
-  currentPath="/words-of-the-day/practice/"
+  currentPath="/practice/"
   heroVariant="lexicon"
   wide
   showHero={false}

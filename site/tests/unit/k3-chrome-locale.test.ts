@@ -60,7 +60,7 @@ describe("atlas dictionary size headline (K3 A2)", () => {
 
 describe("K3 practice dashboard layout and copy (Chunk 2)", () => {
   const practiceSource = readFileSync(
-    resolve(process.cwd(), "src/pages/words-of-the-day/practice.astro"),
+    resolve(process.cwd(), "src/pages/practice.astro"),
     "utf8",
   );
   const lexiconPracticeSource = readFileSync(
