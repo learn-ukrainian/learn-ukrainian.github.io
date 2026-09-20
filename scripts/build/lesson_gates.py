@@ -508,8 +508,39 @@ def _correct_keys(blob: dict) -> set[str]:
     return keys
 
 
-def pedagogical_error_forms(acts: dict) -> set[str]:
-    """Wrong spellings in error-correction / gapped fill-in are not lemmas to stress."""
+_ELLIPSIS_GAP_RE = re.compile(rf"(?:\.{{3}}|…)([{CYR}'’{ACUTE}]+)")
+
+
+def _wrong_option_words(blob: dict, correct_keys: set[str]) -> set[str]:
+    """Words inside non-correct options (``Ч (чу́кор)``) and ``«...а́шка»`` gap stems.
+
+    A word the right answer also spells the same way (``цу́кор``) stays checked.
+    """
+    right = {nfc(tok).lower().strip("_'-") for key in correct_keys for tok in _stress_tokens(key)}
+    texts: list[str] = []
+    for option in blob.get("options") or []:
+        text = _option_text(option)
+        key = nfc(text).lower().strip()
+        if not key or key in correct_keys:
+            continue
+        if isinstance(option, dict) and option.get("correct") is not False and not correct_keys:
+            continue  # no declared winner: a dict option is not provably wrong
+        texts.append(text)
+    for key in ("distractors", "wrong", "wrongs"):
+        raw = blob.get(key)
+        texts.extend(_option_text(x) for x in (raw if isinstance(raw, list) else [raw]))
+    words = {nfc(tok).lower().strip("_'-") for text in texts for tok in _stress_tokens(text)}
+    for value in blob.values():
+        if isinstance(value, str):
+            words.update(nfc(m).lower().replace("’", "'").strip("'") for m in _ELLIPSIS_GAP_RE.findall(nfc(value)))
+    return {w for w in words if w and w not in right}
+
+
+def pedagogical_error_forms(acts: dict, *, option_words: bool = False) -> set[str]:
+    """Wrong spellings in error-correction / gapped fill-in are not lemmas to stress.
+
+    ``option_words`` (alphabet slugs only) also takes the words inside wrong options.
+    """
     out: set[str] = set()
     for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
         if not isinstance(activity, dict):
@@ -540,10 +571,12 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                     key = nfc(option).lower().strip()
                     if key and key not in correct_keys:
                         out.add(key)
+            if option_words:
+                out.update(_wrong_option_words(blob, correct_keys))
     return {form for form in out if form}
 
 
-def pedagogical_misspellings(acts: dict) -> set[str]:
+def pedagogical_misspellings(acts: dict, *, option_words: bool = False) -> set[str]:
     """Lesson-wide error forms the stress dictionary does not know (``сімя``, ``стілец``).
 
     Alphabet prose quotes the wrong spelling its activities drill, so these skip
@@ -553,7 +586,7 @@ def pedagogical_misspellings(acts: dict) -> set[str]:
     from scripts.verification.stress import verify_stress  # type: ignore
 
     out: set[str] = set()
-    for form in pedagogical_error_forms(acts):
+    for form in pedagogical_error_forms(acts, option_words=option_words):
         form = form.replace("’", "'")
         bare = strip_acute(form)
         if " " in bare or (verify_stress(bare).get("status") in ("ok", "ambiguous")):
@@ -1006,6 +1039,36 @@ def split_attested_undeclared(wrong: list[str]) -> tuple[list[str], list[str]]:
     return blocking, attested
 
 
+_CITATION_MARK_RE = re.compile(r"§|\bклас\w*", re.IGNORECASE)
+_CITATION_WINDOW = 60
+
+
+def citation_surnames(text: str) -> set[str]:
+    """Capitalised marked forms beside a textbook citation (``Захарійчу́к, 1 клас, § 12``)."""
+    text = nfc(text)
+    out: set[str] = set()
+    for mark in _CITATION_MARK_RE.finditer(text):
+        lo = max(0, mark.start() - _CITATION_WINDOW)
+        window = text[lo: mark.end() + _CITATION_WINDOW]
+        for tok in _stress_tokens(window):
+            tok = tok.strip("_").strip("'’-")
+            if ACUTE in tok and tok[:1].isupper():
+                out.add(tok)
+    return out
+
+
+def split_citation_surnames(wrong: list[str], surnames: set[str]) -> tuple[list[str], list[str]]:
+    """Alphabet slugs: (still blocking, undeclared textbook-author surnames)."""
+    blocking: list[str] = []
+    cited: list[str] = []
+    for entry in wrong:
+        if entry.endswith(_UNDECLARED_SUFFIX) and entry[: -len(_UNDECLARED_SUFFIX)] in surnames:
+            cited.append(entry)
+        else:
+            blocking.append(entry)
+    return blocking, cited
+
+
 def _acute_positions(form: str) -> list[int]:
     out, i = [], 0
     for ch in unicodedata.normalize("NFD", form):
@@ -1274,7 +1337,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         misspelt: set[str] = set()
         try:
             if alphabet:
-                misspelt = pedagogical_misspellings(acts)
+                misspelt = pedagogical_misspellings(acts, option_words=True)
                 # bare forms: prose may mark a misspelling the activity leaves unmarked
                 unverified_allow = unverified_allow | {strip_acute(w) for w in misspelt}
             wrong = wrong_stress(
@@ -1289,7 +1352,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
                 if not isinstance(activity, dict):
                     continue
-                errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
+                errors = pedagogical_error_forms({"inline": [activity], "workbook": []}, option_words=alphabet)
                 blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
                 wrong += wrong_stress(
                     blob, unverified_allow, proper, exact_skip={nfc(w).lower() for w in errors} | misspelt,
@@ -1301,6 +1364,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         rejected = list(wrong)
         if alphabet and wrong:
             wrong, attested = split_attested_undeclared(wrong)
+            wrong, cited = split_citation_surnames(wrong, citation_surnames("\n".join(
+                [lesson_md_clean[n]] + [str(x) for x in leaves(acts) if isinstance(x, str)]
+            )))
+            if cited:
+                warn(f"lesson {n}: {len(cited)} textbook-citation surnames with undeclared stress: {sorted(set(cited))[:15]}")
             if attested:
                 warn(f"lesson {n}: {len(attested)} inflected forms attested in VESUM but absent from the stress dictionary: {sorted(set(attested))[:15]}")
         if wrong:
@@ -1317,7 +1385,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
             if not isinstance(activity, dict):
                 continue
-            errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
+            errors = pedagogical_error_forms({"inline": [activity], "workbook": []}, option_words=alphabet)
             local = allow | {strip_acute(w).lower() for w in errors}
             blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
             bad.extend(missing_stress(blob, local, phonetic=alphabet))
