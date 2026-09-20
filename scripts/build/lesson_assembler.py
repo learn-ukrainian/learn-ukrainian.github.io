@@ -134,24 +134,69 @@ def _clean_a1_landing_prose(body: str) -> str | None:
     return body
 
 
-def lift_landing_overview(module_md: str) -> str | None:
-    """Copy lesson 1's opening outcomes into a landing overview, or None.
+def _extract_outcomes_block(text: str) -> str | None:
+    """Return only the ``By the end, you can:`` heading plus its bullet list.
 
-    Takes the text before the first ``## `` heading, drops the H1, and returns
-    it only when it carries ``By the end, you can`` and survives
-    ``_clean_a1_landing_prose``. Does not strip the block from lesson 1.
+    Ignores academic orientation paragraphs and named-narrator openers above the
+    outcomes list. Scope-guard sentences after the bullets are dropped.
     """
     from scripts.build.lesson_gates import _LANDING_OUTCOMES_RE
 
-    opening = re.split(r"^## ", module_md, maxsplit=1, flags=re.MULTILINE)[0]
-    without_h1 = re.sub(r"^# [^\n]+\n?", "", opening, count=1)
-    if not _LANDING_OUTCOMES_RE.search(without_h1):
+    match = _LANDING_OUTCOMES_RE.search(text)
+    if not match:
         return None
-    return _clean_a1_landing_prose(without_h1)
+    start = text.rfind("\n", 0, match.start()) + 1
+    lines: list[str] = []
+    seen_bullet = False
+    for index, line in enumerate(text[start:].splitlines()):
+        stripped = line.strip()
+        if index == 0:
+            lines.append(line.rstrip())
+            continue
+        if not stripped:
+            if seen_bullet:
+                break
+            lines.append("")
+            continue
+        if stripped.startswith(("-", "*", "•")):
+            seen_bullet = True
+            lines.append(line.rstrip())
+            continue
+        # Wrapped bullet bodies are indented continuations of the prior item.
+        if seen_bullet and line[:1] in (" ", "\t"):
+            lines.append(line.rstrip())
+            continue
+        break
+    while lines and not lines[-1].strip():
+        lines.pop()
+    block = "\n".join(lines).strip()
+    if not block or not seen_bullet:
+        return None
+    # Same banned/line-break hygiene as orientation prose, without the short-prose floor.
+    marked = unicodedata.normalize("NFD", block)
+    for plain in (md_to_text(marked), md_to_text(re.sub(r"[*_`]", "", marked))):
+        if banned_phrases_in(plain) or mentions_line_breaks(plain):
+            return None
+    return block
+
+
+def lift_landing_overview(module_md: str) -> str | None:
+    """Lift only lesson 1's ``By the end, you can`` outcomes, or None.
+
+    Takes the text before the first ``## `` heading and returns the outcomes
+    block alone — never the academic opening paragraphs. Does not strip the
+    block from lesson 1.
+    """
+    opening = re.split(r"^## ", module_md, maxsplit=1, flags=re.MULTILINE)[0]
+    return _extract_outcomes_block(opening)
 
 
 def _original_intro(module_dir: Path, slug: str) -> str | None:
-    """Usable A1 landing prose from the previous edition, or None if there is none."""
+    """Usable A1 landing prose from the previous edition, or None if there is none.
+
+    Kept for hygiene tests and gate fallbacks; the Lesson tab no longer lifts
+    this body onto the landing.
+    """
     candidates = [module_dir.parent.parent / "a1-v1" / slug / "module.md"]
     if len(module_dir.parents) >= 4:
         candidates.append(module_dir.parents[3] / "site/src/content/docs/a1-v1" / f"{slug}.mdx")
@@ -174,24 +219,72 @@ def _original_intro(module_dir: Path, slug: str) -> str | None:
 
 
 def _writer_landing_overview(module_dir: Path) -> str | None:
-    """Optional Gemini-authored 9-shape overview (upgrade writer, lesson 1)."""
+    """Optional Gemini-authored overview file after landing hygiene, or None."""
     path = module_dir / "landing-overview.md"
     if not path.is_file():
         return None
     return _clean_a1_landing_prose(path.read_text(encoding="utf-8"))
 
 
-def _landing_intro(level: str, module_dir: Path, slug: str, cards: list[str]) -> str:
+def _a1_lesson_map_pitch(plan: dict, lessons: list[dict]) -> str:
+    """Deterministic bilingual pitch from the module title and lesson map."""
+    title = str(plan.get("title") or "").strip()
+    subtitle = str(plan.get("subtitle") or "").strip()
+    head = f"**{title}**" if title else "This module"
+    if subtitle:
+        head = f"{head} — {subtitle}"
+    topics: list[str] = []
+    for lesson in lessons:
+        raw = str(lesson.get("title") or "").strip()
+        if not raw:
+            continue
+        topics.append(raw.split(" · ", 1)[0].strip())
+    n = len(lessons)
+    if topics:
+        return f"{head}.\n\nThis module has **{n}** lessons: {'; '.join(topics)}."
+    return f"{head}.\n\nThis module has **{n}** lessons."
+
+
+def _landing_outcomes(module_dir: Path) -> str | None:
+    """Outcomes list for the A1 landing: writer overview first, else lesson 1."""
+    overview = module_dir / "landing-overview.md"
+    if overview.is_file():
+        block = _extract_outcomes_block(overview.read_text(encoding="utf-8"))
+        if block:
+            return block
+    lesson1 = module_dir / "lesson-1" / "module.md"
+    if lesson1.is_file():
+        opening = re.split(
+            r"^## ", lesson1.read_text(encoding="utf-8"), maxsplit=1, flags=re.MULTILINE,
+        )[0]
+        return _extract_outcomes_block(opening)
+    return None
+
+
+def _landing_intro(
+    level: str,
+    module_dir: Path,
+    slug: str,
+    cards: list[str],
+    *,
+    plan: dict | None = None,
+    lessons: list[dict] | None = None,
+) -> str:
     """Level-specific landing Lesson tab. A1 is bilingual; A2+ is Ukrainian-only.
 
-    A1 prefers a writer landing-overview.md, then a *cleaned* original opening.
-    If neither exists, the landing is the lesson list only — never plan YAML.
-    A2+ never copies an English-carrier original (full immersion).
+    A1 landing = template pitch from module title + ``lessons.yaml`` titles,
+    then ``## Уроки — Lessons`` cards, then outcomes only (never lesson 1's
+    academic opening or named-narrator prose). A2+ is the lesson list only.
     """
+    _ = slug
     if _is_a1(level):
-        intro = _writer_landing_overview(module_dir) or _original_intro(module_dir, slug) or ""
+        pitch = _a1_lesson_map_pitch(plan or {}, lessons or [])
         heading = "## Уроки — Lessons"
-        return f"{intro}\n\n{heading}\n\n" + "\n".join(cards) if intro else f"{heading}\n\n" + "\n".join(cards)
+        parts = [pitch, f"{heading}\n\n" + "\n".join(cards)]
+        outcomes = _landing_outcomes(module_dir)
+        if outcomes:
+            parts.append(outcomes)
+        return "\n\n".join(parts)
     heading = "## Уроки"
     return f"{heading}\n\n" + "\n".join(cards)
 
@@ -359,7 +452,9 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
         pages[str(n)] = mdx
         cards.append(f'- [{n}. {lesson["title"]}]({base}{n}/) — {lesson["minutes"]} min')
         tab_links.append((n, lesson["title"]))
-    intro = _landing_intro(level, module_dir, slug, cards)
+    intro = _landing_intro(
+        level, module_dir, slug, cards, plan=plan, lessons=lessons,
+    )
     landing = generate_mdx(
         intro, int(plan.get("sequence", 1)), yaml_activities=workbook,
         meta_data=dict(plan, level=level), vocab_items=list(vocabulary.values()),

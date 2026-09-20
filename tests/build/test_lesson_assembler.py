@@ -154,33 +154,48 @@ new AsyncFunction('getCollection', 'moduleCount', compiled + '\nreturn {routes: 
     assert [item["n"] for item in upgraded["lessons"]] == [1, 2, 3]
 
 
-def test_a1_landing_follows_original_bilingual_intro(gold, tmp_path):
-    """A1 landing: original English-carrier intro + UK terms, never an English-only Objectives dump."""
+def test_a1_landing_uses_lesson_map_pitch_not_original_body(gold, tmp_path):
+    """A1 landing: title + lesson-map pitch + cards; never L1/archive academic prose."""
     module, plan = gold
     original = tmp_path / "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md"
     original.parent.mkdir(parents=True, exist_ok=True)
     original.write_text(fixture_text("baseline", "curriculum/l2-uk-en/a1-v1/things-have-gender/module.md"))
+    (module / "landing-overview.md").write_text(
+        "Teacher Oksana's routine for this module is short.\n\n"
+        "By the end, you can:\n\n- ask **який?** with a noun.\n\n"
+        "Keep the scope small.\n",
+        encoding="utf-8",
+    )
     pages = assemble_lessons(module, tmp_path / "site", plan)
     lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
+    plan_data = yaml.safe_load(plan.read_text(encoding="utf-8"))
+    lessons = yaml.safe_load((module / "lessons.yaml").read_text(encoding="utf-8"))["lessons"]
     assert "## Objectives" not in lesson_tab
     assert "## Уроки — Lessons" in lesson_tab
-    # English carrier with embedded Ukrainian target terms.
+    assert f"**{plan_data['title']}**" in lesson_tab
+    assert f"This module has **{len(lessons)}** lessons" in lesson_tab
+    for lesson in lessons:
+        assert lesson["title"] in lesson_tab
     assert "By the end, you can" in lesson_tab
-    assert "він" in lesson_tab
-    assert "вона" in lesson_tab
+    assert "ask **який?** with a noun" in lesson_tab
+    assert "Teacher Oksana" not in lesson_tab
+    assert "English has \"he,\"" not in lesson_tab
 
 
-def test_a1_landing_without_original_is_lesson_list_only(gold, tmp_path):
-    """No original summary and no writer overview → cards only, never plan YAML."""
+def test_a1_landing_without_outcomes_still_has_lesson_map_pitch(gold, tmp_path):
+    """No outcomes file and no L1 \"By the end\" → pitch + cards, never plan YAML dump."""
     module, plan = gold
     pages = assemble_lessons(module, tmp_path / "site", plan)
     lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
+    plan_data = yaml.safe_load(plan.read_text(encoding="utf-8"))
     assert "## Objectives" not in lesson_tab
     assert "## Цілі — Objectives" not in lesson_tab
     assert "## Уроки — Lessons" in lesson_tab
+    assert f"**{plan_data['title']}**" in lesson_tab
+    assert "This module has **3** lessons" in lesson_tab
 
 
-def test_a1_landing_prefers_writer_overview(gold, tmp_path):
+def test_a1_landing_outcomes_only_from_writer_overview(gold, tmp_path):
     module, plan = gold
     (module / "landing-overview.md").write_text(
         "You already know **він**. Now describe things.\n\n"
@@ -189,8 +204,95 @@ def test_a1_landing_prefers_writer_overview(gold, tmp_path):
     )
     pages = assemble_lessons(module, tmp_path / "site", plan)
     lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
-    assert "You already know **він**" in lesson_tab
+    assert "You already know **він**" not in lesson_tab
+    assert "Keep the scope small" not in lesson_tab
     assert "By the end, you can" in lesson_tab
+    assert "ask **який?** with a noun" in lesson_tab
+    assert "## Уроки — Lessons" in lesson_tab
+
+
+def test_extract_outcomes_keeps_wrapped_by_the_end_bullets():
+    """Indented wrap lines after a bullet stay in the outcomes block."""
+    from scripts.build.lesson_assembler import _extract_outcomes_block
+
+    text = (
+        "Teacher Oksana's routine is short.\n\n"
+        "By the end, you can:\n\n"
+        "- recognize **ь** and apostrophe in common A1 words;\n"
+        "- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding an extra\n"
+        "  vowel;\n"
+        "- read **сім'я́** with **й** after the apostrophe;\n"
+        "- sort words into **м'яки́й знак** and **апо́строф**;\n"
+        "- choose the safer form when a visual habit creates a mistake.\n\n"
+        "Keep the scope small.\n"
+    )
+    block = _extract_outcomes_block(text)
+    assert block is not None
+    assert "without adding an extra\n  vowel;" in block
+    assert "read **сім'я́** with **й** after the apostrophe;" in block
+    assert "sort words into **м'яки́й знак** and **апо́строф**;" in block
+    assert "choose the safer form when a visual habit creates a mistake." in block
+    assert "Teacher Oksana" not in block
+    assert "Keep the scope small" not in block
+
+
+def test_a1_landing_five_lessons_from_map_excludes_teacher_oksana(tmp_path, monkeypatch):
+    """Generated landing lists all five lesson titles + By the end; never Teacher Oksana."""
+    from scripts.generate_mdx import atlas_links
+
+    atlas = tmp_path / "atlas.json"
+    atlas.write_text('{"entries": []}')
+    monkeypatch.setattr(atlas_links, "_DEFAULT_MANIFEST", atlas)
+
+    module = tmp_path / "curriculum/l2-uk-en/a1/special-signs"
+    titles = [
+        "М'яки́й знак (Ь) та африка́ти · Soft Sign (Ь) and Affricates",
+        "Йото́вані лі́тери · Iotated Vowels",
+        "За́вжди два зву́ки · Always Two Sounds",
+        "Апо́строф і три контра́сти · The Apostrophe and Three Contrasts",
+        "Си́нтез особли́вих зна́ків · Special Signs Synthesis",
+    ]
+    lessons = [{"n": n, "title": title, "minutes": 60} for n, title in enumerate(titles, start=1)]
+    module.mkdir(parents=True)
+    (module / "lessons.yaml").write_text(
+        yaml.safe_dump({"lessons": lessons}, allow_unicode=True), encoding="utf-8",
+    )
+    for lesson in lessons:
+        lesson_dir = module / f"lesson-{lesson['n']}"
+        lesson_dir.mkdir()
+        (lesson_dir / "vocabulary.yaml").write_text("vocabulary: []\n", encoding="utf-8")
+        (lesson_dir / "resources.yaml").write_text("resources: []\n", encoding="utf-8")
+        (lesson_dir / "activities.yaml").write_text(
+            "inline: []\nworkbook: []\n", encoding="utf-8",
+        )
+        body = f"# {lesson['title']}\n\nLesson body.\n\n## Section\n\nText.\n"
+        if lesson["n"] == 1:
+            body = (
+                "# Soft Sign\n\n"
+                "Teacher Oksana's routine for this module is short: find the sign.\n\n"
+                "By the end, you can:\n\n"
+                "- recognize **ь** and apostrophe in common A1 words;\n"
+                "- read **день** without adding an extra vowel.\n\n"
+                "## Section\n\nBody.\n"
+            )
+        (lesson_dir / "module.md").write_text(body, encoding="utf-8")
+
+    plan = tmp_path / "plan.yaml"
+    plan.write_text(
+        "level: A1\nslug: special-signs\nsequence: 3\n"
+        "title: Особливі знаки\n"
+        "subtitle: Ь, апостроф і три ключові контрасти\n",
+        encoding="utf-8",
+    )
+    pages = assemble_lessons(module, tmp_path / "site", plan)
+    lesson_tab = pages["index"].split('<TabItem label="Урок — Lesson">', 1)[1].split("</TabItem>", 1)[0]
+    assert "This module has **5** lessons" in lesson_tab
+    assert "**Особливі знаки**" in lesson_tab
+    for title in titles:
+        assert title in lesson_tab
+    assert "By the end, you can" in lesson_tab
+    assert "recognize **ь** and apostrophe" in lesson_tab
+    assert "Teacher Oksana" not in lesson_tab
     assert "## Уроки — Lessons" in lesson_tab
 
 

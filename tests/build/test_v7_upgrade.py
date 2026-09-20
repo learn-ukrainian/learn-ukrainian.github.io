@@ -475,11 +475,14 @@ def test_land_overview_lifts_outcomes_from_lesson_one_opening(tmp_path):
     before = parsed["module.md"]
     v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
     landed = (module / "landing-overview.md").read_text(encoding="utf-8")
-    assert "By the end, you can" in landed
+    assert landed.startswith("By the end, you can")
+    assert "recognize **ь** and apostrophe" in landed
+    assert "You read the soft sign" not in landed
     assert not landed.lstrip().startswith("# ")
     assert "First section" not in landed
     assert parsed["module.md"] == before
     assert lift_landing_overview(module_md) is not None
+    assert "You read the soft sign" not in (lift_landing_overview(module_md) or "")
 
 
 def test_land_overview_prefers_writer_file_over_lift(tmp_path):
@@ -500,7 +503,26 @@ def test_land_overview_lift_refuses_line_break_or_banned_opening(tmp_path):
     banned = (
         "# Soft Sign\n\n"
         "This module completes your mastery of all 33 letters today.\n\n"
-        "By the end, you can:\n\n- read soft sign words.\n\n## Section\n"
+        "By the end, you can:\n\n- read **день** with the soft sign.\n\n## Section\n"
+    )
+    # Banned phrase is only in the orientation prose; outcomes alone still land.
+    v7_build._land_overview_or_fail(
+        module, _no_outcomes_source(tmp_path), {"level": "a1"}, {"module.md": banned},
+    )
+    landed = (module / "landing-overview.md").read_text(encoding="utf-8")
+    assert landed.startswith("By the end, you can")
+    assert "mastery" not in landed
+    assert "день" in landed
+
+
+def test_land_overview_lift_refuses_banned_phrase_inside_outcomes(tmp_path):
+    module = tmp_path / "a1"
+    module.mkdir()
+    banned = (
+        "# Soft Sign\n\n"
+        "A clean orientation paragraph about soft signs in Ukrainian words.\n\n"
+        "By the end, you can:\n\n"
+        "- complete your mastery of all 33 letters with **день**.\n\n## Section\n"
     )
     with pytest.raises(linear_pipeline.LinearPipelineError, match=r"landing-overview\.md missing"):
         v7_build._land_overview_or_fail(
@@ -531,6 +553,8 @@ def test_lift_handles_real_230730_lesson1_dump():
         pytest.skip("230730 worktree absent")
     lifted = lift_landing_overview(path.read_text(encoding="utf-8"))
     assert lifted is not None
-    assert "By the end, you can" in lifted
+    assert lifted.startswith("By the end, you can")
+    assert "Teacher Oksana" not in lifted
+    assert "The signs are small on the page" not in lifted
     assert not lifted.lstrip().startswith("# ")
     assert "## М'яки́й знак" not in lifted

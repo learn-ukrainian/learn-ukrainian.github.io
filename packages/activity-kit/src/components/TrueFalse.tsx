@@ -43,26 +43,27 @@ export function TrueFalseQuestion({ statement, isTrue, explanation, isUkrainian 
   // isUkrainian={true} modules. (#1082 review r1 blocker)
   const trueLabel = isUkrainian ? 'Правда' : 'True';
   const falseLabel = isUkrainian ? 'Неправда' : 'False';
+  // Same verdict shell as Quiz (`✓ Correct!` / `✗ Incorrect` + explanation).
   const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
-  const wrongLabel = isUkrainian
-    ? `✗ Це твердження ${isTrue ? 'правдиве' : 'хибне'}.`
-    : `✗ The statement is ${isTrue ? 'true' : 'false'}.`;
+  const wrongLabel = isUkrainian ? '✗ Неправильно' : '✗ Incorrect';
 
   return (
-    <div className={styles.trueFalseQuestion} data-activity="tf-question">
-      <p className={styles.statementText}>{parseMarkdown(statement)}</p>
-      <div className={styles.trueFalseButtons} data-activity="tf-buttons">
+    <div className={styles.quizQuestion} data-activity="tf-question">
+      <p className={styles.questionText}>{parseMarkdown(statement)}</p>
+      <div className={styles.options} data-activity="tf-buttons">
         <button
-          className={`${styles.tfButton} ${styles.trueButton} ${showResult && isTrue ? styles.correct : ''
-            } ${showResult && answer === true && !isTrue ? styles.incorrect : ''}`}
+          className={`${styles.option} ${showResult && isTrue ? styles.correct : ''
+            } ${showResult && answer === true && !isTrue ? styles.incorrect : ''
+            } ${answer === true ? styles.selected : ''}`}
           onClick={() => handleAnswer(true)}
           disabled={showResult}
         >
           {trueLabel}
         </button>
         <button
-          className={`${styles.tfButton} ${styles.falseButton} ${showResult && !isTrue ? styles.correct : ''
-            } ${showResult && answer === false && isTrue ? styles.incorrect : ''}`}
+          className={`${styles.option} ${showResult && !isTrue ? styles.correct : ''
+            } ${showResult && answer === false && isTrue ? styles.incorrect : ''
+            } ${answer === false ? styles.selected : ''}`}
           onClick={() => handleAnswer(false)}
           disabled={showResult}
         >
@@ -139,6 +140,8 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
   const headerLabel = isUkrainian ? 'Правда чи хибність' : 'True or False';
   const trueLabel = isUkrainian ? 'Правда' : 'True';
   const falseLabel = isUkrainian ? 'Неправда' : 'False';
+  const correctLabel = isUkrainian ? '✓ Правильно!' : '✓ Correct!';
+  const wrongLabel = isUkrainian ? '✗ Неправильно' : '✗ Incorrect';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
   const anyAnswered = Object.keys(selections).length > 0;
 
@@ -158,11 +161,11 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
           const isCorrect = selections[index] === item.isTrue;
 
           return (
-            <div key={index} className={styles.trueFalseRow} data-activity="tf-row">
-              <p className={styles.statementText}>{parseMarkdown(item.statement)}</p>
-              <div className={styles.trueFalseButtons}>
+            <div key={index} className={styles.quizQuestion} data-activity="tf-row">
+              <p className={styles.questionText}>{parseMarkdown(item.statement)}</p>
+              <div className={styles.options} data-activity="tf-buttons">
                 <button
-                  className={`${styles.tfButton} ${selections[index] === true ? styles.selected : ''
+                  className={`${styles.option} ${selections[index] === true ? styles.selected : ''
                     } ${answered && item.isTrue ? styles.correct : ''} ${answered && selections[index] === true && !item.isTrue ? styles.incorrect : ''
                     }`}
                   onClick={() => handleSelect(index, true)}
@@ -171,7 +174,7 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
                   {trueLabel}
                 </button>
                 <button
-                  className={`${styles.tfButton} ${selections[index] === false ? styles.selected : ''
+                  className={`${styles.option} ${selections[index] === false ? styles.selected : ''
                     } ${answered && !item.isTrue ? styles.correct : ''} ${answered && selections[index] === false && item.isTrue ? styles.incorrect : ''
                     }`}
                   onClick={() => handleSelect(index, false)}
@@ -186,7 +189,10 @@ export default function TrueFalse({ items, instruction, isUkrainian, onComplete 
                   data-activity="tf-row-feedback"
                   data-correct={isCorrect ? 'true' : 'false'}
                 >
-                  {isCorrect ? '✓' : '✗'} {item.explanation}
+                  {isCorrect ? correctLabel : wrongLabel}
+                  {item.explanation && (
+                    <p className={styles.explanation}>{item.explanation}</p>
+                  )}
                 </div>
               )}
             </div>

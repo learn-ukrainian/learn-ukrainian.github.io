@@ -2104,7 +2104,8 @@ def _land_overview_or_fail(module_dir: Path, source_dir: Path, plan: Mapping[str
     """Write lesson 1's ``landing-overview.md`` to the module root and fail before paid review without a landing.
 
     Same check as the final lesson gates; here it stops the run before lessons 2+ are bought.
-    When the writer omitted the artifact, lift usable outcomes from lesson 1 ``module.md``.
+    When the writer omitted the artifact, lift only the ``By the end, you can`` outcomes
+    from lesson 1 ``module.md`` — never the academic opening paragraphs.
     """
     from scripts.build.lesson_assembler import lift_landing_overview
     from scripts.build.lesson_gates import landing_overview_defects

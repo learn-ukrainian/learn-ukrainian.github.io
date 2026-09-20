@@ -299,7 +299,7 @@ describe('TrueFalseQuestion in isolation', () => {
     expect(feedback?.textContent).toContain('Київ є столицею з 1918 року.');
   });
 
-  test('reports the true/false verdict on a wrong answer and locks the buttons', () => {
+  test('reports Incorrect on a wrong answer and locks the buttons', () => {
     const { container } = render(
       <TrueFalseQuestion statement="Львів — столиця України." isTrue={false} />,
     );
@@ -308,7 +308,7 @@ describe('TrueFalseQuestion in isolation', () => {
 
     const feedback = container.querySelector('[data-activity="tf-feedback"]');
     expect(feedback?.getAttribute('data-correct')).toBe('false');
-    expect(feedback?.textContent).toContain('✗ The statement is false.');
+    expect(feedback?.textContent).toContain('✗ Incorrect');
     expect(screen.getByRole('button', { name: 'True' })).toBeDisabled();
     expect(screen.getByRole('button', { name: 'False' })).toBeDisabled();
   });
@@ -496,21 +496,21 @@ describe('isUkrainian label and feedback switching', () => {
     expect(screen.getByRole('button', { name: 'Try Again' })).toBeInTheDocument();
   });
 
-  test('switches TrueFalseQuestion labels and verdict language', () => {
+  test('switches TrueFalseQuestion labels and Quiz verdict language', () => {
     const ukrainian = render(
       <TrueFalseQuestion statement="Два плюс два — чотири." isTrue isUkrainian />,
     );
     fireEvent.click(screen.getByRole('button', { name: 'Неправда' }));
     expect(
       ukrainian.container.querySelector('[data-activity="tf-feedback"]')?.textContent,
-    ).toContain('✗ Це твердження правдиве.');
+    ).toContain('✗ Неправильно');
     ukrainian.unmount();
 
     const english = render(<TrueFalseQuestion statement="Два плюс два — чотири." isTrue />);
     fireEvent.click(screen.getByRole('button', { name: 'False' }));
     expect(
       english.container.querySelector('[data-activity="tf-feedback"]')?.textContent,
-    ).toContain('✗ The statement is true.');
+    ).toContain('✗ Incorrect');
   });
 
   test('switches the match-up header between Ukrainian-only and bilingual', () => {
