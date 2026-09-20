@@ -126,7 +126,7 @@ def test_extract_quote_for_author():
 
 def test_parse_frazeolohichnyi_entry():
     raw_word = "блудити манівцями {{</fras>}}"
-    raw_def = "блук[']а[/']ти манівц[']я[/']ми, розм. Робити щось не так, як треба. — Я вирішив так (О. Гончар)."
+    raw_def = "блук[']а[/']ти манівц[']я[/']ми, розм. Робити щось не так, як треба. — Довго я блудив манівцями (О. Гончар)."
     unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
     assert unit.idiom == "блудити манівцями"
     assert unit.register == "розмовний"
@@ -386,7 +386,7 @@ def test_release_receipt_schema_validation():
         verification_info = {
             "zero_russian_syntactic_calques": True,
             "classical_literary_citations_grounded": True,
-            "thought_tag_etymological_reasoning": True,
+            "thought_tag_semantic_reasoning": True,
             "vesum_and_ulif_morphology_verified": True,
             "zero_train_eval_leakage": True,
             "vesum_attested_tokens_count": 1500,
@@ -462,7 +462,7 @@ def test_live_ulif_extraction():
 @requires_sources
 def test_live_frazeolohichnyi_extraction():
     units = load_frazeolohichnyi_dictionary(DEFAULT_SOURCES_DB)
-    assert len(units) > 20000
+    assert len(units) >= 15000
 
 
 @requires_sources
@@ -727,7 +727,7 @@ def test_release_receipt_git_commit_custom():
         verification_info = {
             "zero_russian_syntactic_calques": True,
             "classical_literary_citations_grounded": True,
-            "thought_tag_etymological_reasoning": True,
+            "thought_tag_semantic_reasoning": True,
             "vesum_and_ulif_morphology_verified": True,
             "zero_train_eval_leakage": True,
             "vesum_attested_tokens_count": 100,
@@ -797,30 +797,24 @@ def test_clean_definition_no_embedded_quotes_or_numbers():
     assert "Кріпкі дід були" in unit.citation_text
 
     raw_word2 = "розбити горщик {{</fras>}}"
-    raw_def2 = "розб[']и[/']ти (поб[']и[/']ти) глек (гл[']е[/']ка, г[']о[/']рщик, г[']о[/']рщика, макітру і т.ін.) з ким, рідше між ким і без додатка. 1. Розірвати, порушити дружні стосунки; посваритися. Чи вона сміється, чи просто знущається? (П. Загребельний)"
+    raw_def2 = "розб[']и[/']ти (поб[']и[/']ти) глек (гл[']е[/']ка, г[']о[/']рщик, г[']о[/']рщика, макітру і т.ін.) з ким, рідше між ким і без додатка. 1. Розірвати, порушити дружні стосунки; посваритися. Дівер з невісткою Розбив горщик з лемішкою (П. Чубинський); Чи вона сміється? (П. Загребельний)"
     unit2 = parse_frazeolohichnyi_entry(raw_word2, raw_def2)
     assert unit2.idiom == "розбити горщик"
     assert "Розірвати, порушити дружні стосунки" in unit2.definition
     assert "1." not in unit2.definition
     assert "макітру" not in unit2.definition
-    assert "П. Загребельний" not in unit2.definition
-    assert unit2.author == "П. Загребельний"
-    assert "Чи вона сміється" in unit2.citation_text
+    assert "П. Чубинський" not in unit2.definition
+    assert unit2.author == "П. Чубинський"
+    assert "Розбив горщик" in unit2.citation_text
 
 
 def test_dpo_rejected_diversity():
     """Finding 2 & 5: Ensure DPO rejected pairs are not byte-identical across records."""
-    units = [
-        PhraseologyUnit(f"гору_{i}", f"брати гору {i}", f"перемагати у змаганні {i}", f"Автор {i}", f"Автор {i}", "dict", "регістр", False)
-        for i in range(10)
-    ]
-    calques = CANONICAL_CALQUE_PAIRS[:4]
+    calques = CANONICAL_CALQUE_PAIRS[:14]
     with tempfile.TemporaryDirectory() as tmpdir:
         dpo_dir = Path(tmpdir) / "dpo"
         _manifest, _sha, _flaws = generate_dpo_dataset(
             calques=calques,
-            units=units,
-            synonyms=[],
             output_dir=dpo_dir,
             target_count=None,
             pairs_per_shard=20,

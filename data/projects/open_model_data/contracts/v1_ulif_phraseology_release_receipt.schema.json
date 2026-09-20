@@ -175,7 +175,7 @@
       "required": [
         "zero_russian_syntactic_calques",
         "classical_literary_citations_grounded",
-        "thought_tag_etymological_reasoning",
+        "thought_tag_semantic_reasoning",
         "vesum_and_ulif_morphology_verified",
         "zero_train_eval_leakage"
       ],
@@ -188,7 +188,7 @@
           "type": "boolean",
           "const": true
         },
-        "thought_tag_etymological_reasoning": {
+        "thought_tag_semantic_reasoning": {
           "type": "boolean",
           "const": true
         },
