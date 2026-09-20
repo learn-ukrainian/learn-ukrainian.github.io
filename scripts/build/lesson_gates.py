@@ -1089,18 +1089,19 @@ def watch_and_repeat_preservation_defects(module_dir: Path, source_dir: Path) ->
 
     def _videos(blob: object) -> set[str]:
         found: set[str] = set()
-        acts = blob if isinstance(blob, list) else []
-        if isinstance(blob, dict):
-            acts = list(blob.get("inline") or []) + list(blob.get("workbook") or [])
-        for act in acts:
-            if not isinstance(act, dict):
-                continue
-            typ = str(act.get("type") or "")
-            if typ not in {"watch-and-repeat", "watch_and_repeat", "video"}:
-                continue
-            url = str(act.get("video") or act.get("url") or act.get("src") or "")
-            if "youtu" in url.lower() or url.startswith("http"):
-                found.add(url)
+
+        def walk(obj: object) -> None:
+            if isinstance(obj, dict):
+                url = str(obj.get("video") or obj.get("url") or obj.get("src") or "")
+                if "youtu" in url.lower() or (url.startswith("http") and "video" in obj):
+                    found.add(url)
+                for v in obj.values():
+                    walk(v)
+            elif isinstance(obj, list):
+                for v in obj:
+                    walk(v)
+
+        walk(blob)
         return found
 
     import yaml

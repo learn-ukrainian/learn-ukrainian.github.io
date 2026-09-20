@@ -1675,12 +1675,14 @@ def test_watch_and_repeat_videos_must_survive(tmp_path):
     (module / "lesson-1").mkdir()
     url = "https://www.youtube.com/watch?v=letter-soft-sign"
     (source / "activities.yaml").write_text(
-        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  video: " + url + "\n"
+        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  items:\n"
+        "  - letter: Ь\n    word: кінь\n    video: " + url + "\n"
     )
     (module / "lesson-1" / "activities.yaml").write_text("inline: []\nworkbook: []\n")
     defects = gates.watch_and_repeat_preservation_defects(module, source)
     assert defects
     (module / "lesson-1" / "activities.yaml").write_text(
-        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  video: " + url + "\n"
+        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  items:\n"
+        "  - letter: Ь\n    word: кінь\n    video: " + url + "\n"
     )
     assert gates.watch_and_repeat_preservation_defects(module, source) == []
