@@ -56,7 +56,8 @@ inline:
   - left: де́в'ять
     right: пі́сля губно́го «в» пе́ред «я» (nine) — after labial «в» before «я» (nine)
   - left: ім'я́
-    right: пі́сля голосно́го «і» пе́ред «я» (name) — after vowel «і» before «я» (name)
+    right: пі́сля губно́го «м» у сло́ві на «і-» (name) — after labial «м» in a word
+      starting with «і-» (name)
   - left: комп'ю́тер
     right: пі́сля «п» пе́ред «ю» у запози́ченому сло́ві — after «п» before «ю» in
       loanword (computer)
@@ -337,8 +338,8 @@ workbook:
 - id: act-403
   type: fill-in
   title: Встав знак у ре́ченнях — Insert sign in sentences
-  instruction: Ви́бери апо́строф, м'яки́й знак або́ зали́ш по́ле поро́жнім. — Choose
-    apostrophe, soft sign, or leave the field blank.
+  instruction: Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or
+    no sign.
   items:
   - sentence: Моє́ ім___я́ — Марко́.
     options:
