@@ -1,20 +1,23 @@
-- title: Украї́нська мо́ва. Буква́р. 1 клас
-  author: Большако́ва І. О., При́стинська М. С.
-  year: 2018
-  publisher: Ра́нок
-  url: https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html
-- title: Украї́нська мо́ва. Буква́р. 1 клас
-  author: Захарійчук М. Д.
-  year: 2018
-  publisher: Гра́мота
-  url: https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html
-- title: Украї́нська мо́ва. Буква́р. 1 клас
-  author: Вашуленко М. С., Вашуленко О. В.
-  year: 2018
-  publisher: Осві́та
-  url: https://pidruchnyk.com.ua/1180-bukvar-1-klas-vashulenko.html
-- title: Украї́нська мо́ва. 5 клас
-  author: Авра́менко О. М.
-  year: 2018
-  publisher: Гра́мота
-  url: https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html
+- title: Украї́нський право́пис (2019), § 7 (Апостро́ф) та § 26 (Вжива́ння м'яко́го зна́ка)
+  role: reference
+  url: https://2019.pravopys.net/sections/7/
+  notes: Офіці́йні пра́вила право́пису для вжива́ння апостро́фа та зна́ка м'я́кшення (ь).
+- title: Большако́ва І. О., При́стинська М. С. — Украї́нська мо́ва. Буква́р. 1 клас (2019),
+    с. 48, 57
+  role: textbook
+  source: 2-klas-ukrmova-bolshakova-2019-1
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0057
+  notes: Поя́снення ро́лі апостро́фа та зна́ка м'я́кшення для початко́вих кла́сів НУШ.
+- title: Авра́менко О. М. — Украї́нська мо́ва. 5 клас (2022), § 57–58, с. 131
+  role: textbook
+  source: 5-klas-ukrmova-avramenko-2022
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0133
+  notes: Фонети́чні моде́лі буря́к / бур'я́н та пра́вила вжива́ння апостро́фа.
+- title: Захарійчук М. Д. — Украї́нська мо́ва. Буква́р. 1 клас (НУШ 2025), с. 97
+  role: textbook
+  source: Захарійчук, 1 клас (НУШ 2025), с. 97
+  notes: Ба́зове пра́вило апостро́фа пі́сля губни́х пере́д я, ю, є, ї.
+- title: 'Anna Ohoiko — Ukrainian Lessons Podcast: Soft Sign and Apostrophe'
+  role: audio
+  url: https://www.ukrainianlessons.com/
+  notes: 'ULP audio contrasts: hard vs soft consonants and apostrophe separation.'

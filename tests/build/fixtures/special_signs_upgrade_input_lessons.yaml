@@ -1,3 +1,6 @@
+# Frozen pre-M3 special-signs lessons.yaml (upgrade-prompt *input*).
+# Live a1/special-signs/lessons.yaml is the post-upgrade map; do not sync from it.
+
 lessons:
 - n: 1
   title: 'М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates:
@@ -73,9 +76,10 @@ lessons:
   - Мар'я́но
   unverified_lemmas: []
 - n: 5
-  title: 'Си́нтез особли́вих зна́ків та підсу́мок мо́дуля · Special Signs Synthesis and
-    Module Summary'
+  title: Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation
+    Rules and Special Signs Synthesis
   sections:
+  - Перенос і письмо
   - Далі
   - Підсумок модуля
   minutes: 60

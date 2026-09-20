@@ -1,67 +1,109 @@
 ```markdown file=module.md
 # За́вжди два зву́ки: Лі́тери Ї, Щ та лі́тера Ф · Always Two Sounds: Letters Ї, Щ and Letter Ф
 
-In this lesson, we complete our survey of Ukrainian letters by examining two letters that **always** represent two separate sounds — **Ї** and **Щ** — as well as the consonant letter **Ф**.
+In Ukrainian phonetics, most alphabet letters represent a single stable sound. Even the iotated vowels **Я, Ю, Є** often collapse into one vowel sound after a consonant, softening that consonant in the process. However, the Ukrainian alphabet features two remarkable letters that **always** represent two distinct sounds in every position: **Ї** and **Щ**. Alongside these, the consonant letter **Ф** stands out because it represents a single voiceless sound primarily found in international vocabulary.
 
-Most letters of the Ukrainian alphabet represent a single sound, and the iotated vowels **Я, Ю, Є** can represent either one or two sounds depending on their environment. However, **Ї** and **Щ** are unique because they have an unchanging two-sound value anywhere they appear.
-
-Understanding these letters connects directly with the core themes of our module. Reading smoothly together (**зли́то**) without pausing awkwardly (**розді́льно**) depends on knowing whether a letter contains a hidden [j] glide. Even a **мале́нький** (small) **знак** (sign) on paper changes how you shape the sounds with your mouth. When reading about a pleasant **день** (day) or a joyful **свя́то** (holiday), our **вчи́тель** (teacher) reminds us that clarity in pronunciation makes communication effortless.
+Mastering these letters completes the sound foundations necessary for reading smoothly together (**зли́то**) without pausing awkwardly (**розді́льно**). Even a **мале́нький** (small) **знак** (sign) on the page guides your articulation. When greeting a friend on a bright **день** (day) or celebrating a joyful **свя́то** (holiday), our **вчи́тель** (teacher) reminds us that clear pronunciation makes every conversation natural and warm.
 
 ## За́вжди два зву́ки: Ї та Щ
 
-The letter **Ї ї** always represents two sounds: **[йі]**, said as "starts with a y-sound" (the semi-vowel [j] plus the vowel [i]). Unlike **Я, Ю, Є**, the letter **Ї** never softens a preceding consonant and never collapses into a single sound:
-- At the beginning of a word: **їжа́к** — hedgehog (pronounced [йі-жа́к]).
-- In the middle of a word after a vowel: **по́їзд** — train (pronounced [по́-йізд]).
-- In the capital city of Ukraine: **Ки́їв** — Kyiv (pronounced [ки́-йів]).
-- In the name of the country: **Украї́на** — Ukraine (pronounced [у-кра-йі́-на]).
+The letter **Ї ї** is unique among Ukrainian vowels: it **always** represents two sounds: **[й] + [і] = [йі]**. 
+
+As Ukrainian school textbooks emphasize (for example, Bolshakova, 2nd grade, p. 35: «Бу́ква ї за́вжди познача́є два зву́ки [йі]»), **Ї** never softens a preceding consonant and never simplifies into a single sound [і]. Because **Ї** inherently carries its own initial [й] glide, the soft sign (**ь**) is never written before it.
+
+You will encounter **Ї** in two primary environments:
+- At the beginning of a word: **їжа́к** — hedgehog, **ї́сти** — to eat, **ї́хати** — to travel / ride.
+- After a vowel inside a word: **по́їзд** — train, **мої́** — my (plural), **твої́** — your (plural), **Украї́на** — Ukraine, **Ки́їв** — Kyiv.
+
+Notice how the vowel before **Ї** does not blend with it; your voice transitions smoothly through the semivowel [й]:
+
+| Сло́во — Word | Вимо́ва — Pronunciation | Пози́ція — Position |
+| --- | --- | --- |
+| **їжа́к** | [йі-жа́к] | at word start |
+| **по́їзд** | [по́-йізд] | after vowel **о** |
+| **Ки́їв** | [ки́-йів] | after vowel **и** |
+| **Украї́на** | [у-кра-йі́-на] | after vowel **а** |
 
 <!-- INJECT_ACTIVITY: act-301 -->
 
-The letter **Щ щ** always represents two sounds: **"sh+ch"** ([ш] + [ч]), like English *fresh cheese* or *cash check*. In standard Ukrainian, both consonants are pronounced crisply, firmly, and without softening:
-- **щу́ка** — pike fish (pronounced [шчу́-ка])
-- **борщ** — borscht, the famous Ukrainian beet soup (pronounced [боршч])
-- **кущ** — bush (pronounced [кушч])
-- **що** — what (pronounced [шчо])
-- **ще** — still or yet (pronounced [шче])
+The letter **Щ щ** is equally consistent: it **always** represents two consonant sounds: **[ш] + [ч] = [шч]**.
+
+In Ukrainian, both elements of **Щ** are pronounced crisply and firmly. Unlike neighboring languages where similar letters may denote a single long soft sound, standard Ukrainian strictly articulates the hard consonant **[ш]** immediately followed by the affricate **[ч]** (as formulated in Golub, 5th grade, p. 78: «Бу́ква щ за́вжди познача́є два зву́ки [шч]: щу́ка — [шчу́ка]»).
+
+Observe how **Щ** functions across different positions in common words:
+- At the beginning of a word: **щу́ка** — pike (fish), **що** — what, **ще** — still / yet, **ща́стя** — happiness.
+- At the end of a word: **борщ** — borscht (traditional beet soup), **кущ** — bush, **дощ** — rain.
+
+When counting sounds on your **па́льці** (fingers), remember that a four-letter word like **борщ** actually contains five sounds: **[б] + [о] + [р] + [ш] + [ч]**.
+
+| Сло́во — Word | Зву́ки — Sounds | Зна́чення — Meaning |
+| --- | --- | --- |
+| **щу́ка** | [ш-ч-у́-к-а] (5 sounds, 4 letters) | pike (fish) |
+| **борщ** | [б-о-р-ш-ч] (5 sounds, 4 letters) | borscht |
+| **кущ** | [к-у-ш-ч] (4 sounds, 3 letters) | bush |
+| **що** | [ш-ч-о] (3 sounds, 2 letters) | what |
 
 <!-- INJECT_ACTIVITY: act-302 -->
-
-Notice that even when counting beats on your **па́льці** (fingers), each letter **Щ** gives you two consonant sounds [ш] + [ч]. Because Ukrainian does not simplify [шч] into a single long sound, practicing **борщ** and **щу́ка** gives your mouth the exact native muscular habit.
 
 <!-- INJECT_ACTIVITY: act-303 -->
 
 ## Бу́ква Ф та по́вний спектр віта́нь
 
-The letter **Ф ф** represents the voiceless labiodental fricative [f]. In native Slavic vocabulary, original Ukrainian words rarely had this sound, so **Ф** appears mostly in borrowed words and international terms that have become fully integrated into modern Ukrainian:
+The letter **Ф ф** represents the voiceless labiodental fricative consonant **[ф]**.
+
+Unlike native Slavic roots that developed without this sound, Ukrainian vocabulary acquired **Ф** through cultural contact and international loanwords. Words with **Ф** are common in everyday life, technology, and culture:
 - **фо́то** — photo
 - **факт** — fact
 - **шарф** — scarf
+- **кафе́** — café
+- **телефо́н** — telephone
+- **фільм** — film / movie
+- **футбо́л** — football / soccer
+
+To pronounce **Ф**, place your upper teeth lightly against your lower lip and release a steady stream of air: [f]. Avoid dialectal substitutions such as pronouncing [хв] instead of [ф]; standard Ukrainian uses a clean, clear [ф] in words like **фо́то**.
+
+Ukrainian speech etiquette features a rich, time-tested spectrum of greetings (**віта́ння**) and farewells (**проща́ння**). Choosing the appropriate greeting depends on the time of day and your social relationship:
+
+1. **Час доби́ — Time of day:**
+   - **До́брого ра́нку!** — Good morning! Used from dawn until mid-morning. Literary Ukrainian customarily uses the genitive case here to express a wish of good morning.
+   - **До́брий день!** (or **Добри́день!**) — Good day! / Good afternoon! The most universal daytime greeting, used in the nominative case.
+   - **До́брий ве́чір!** (or **Добри́вечір!**) — Good evening! Used as evening approaches, also in the nominative case.
+
+2. **Дру́жні та універса́льні фо́рмули — Friendly and universal formulas:**
+   - **Приві́т!** — Hi! / Hello! Informal and warm, shared among friends, classmates, and close peers.
+   - **Віта́ю!** — Greetings! / Welcome! Versatile and polite for both formal and informal contexts.
+   - **До́брого здоро́в'я!** — Good health to you! A traditional, respectful greeting wishing vitality to the listener.
+
+3. **Проща́ння та побажа́ння — Farewells and well-wishes:**
+   - **До поба́чення!** — Good-bye! Standard polite farewell.
+   - **На все до́бре!** — All the best! A friendly wish when parting.
+   - **До зу́стрічі!** — Until next time! / See you!
+   - **Щасли́во!** / **Щасли́вої доро́ги!** — Have a safe journey! Notice the letters **Щ** [шч] and **Ї** [йі] working together in this polite wish.
+   - **Добра́ніч!** (or **На добра́ніч!**) — Good night!
+
+Here is how these sounds and polite greetings interact in daily communication when meeting a friend today (**сього́дні**) and speaking about family (**сім'я́**):
+
+> **Марко́:** До́брого ра́нку, Окса́но! *(Good morning, Oksana!)*
+> **Окса́на:** До́брого ра́нку, Ма́рку! Як твої́ спра́ви? *(Good morning, Marko! How are you doing?)*
+> **Марко́:** Дя́кую, чудо́во! Ось моє́ нове́ сіме́йне фо́то. *(Thank you, wonderful! Here is my new family photo.)*
+> **Окса́на:** Яка́ га́рна сім'я́! А куди́ ви ї́дете сього́дні? *(What a lovely family! And where are you traveling today?)*
+> **Марко́:** Сього́дні о дев'я́тій ми ї́демо на по́їзді в Ки́їв. *(Today at nine we are traveling by train to Kyiv.)*
+> **Окса́на:** Щасли́вої доро́ги! На все до́бре! *(Have a safe journey! All the best!)*
+> **Марко́:** Ду́же дя́кую! До поба́чення! *(Thank you very much! Good-bye!)*
+
+| Украї́нська ре́пліка | English breakdown |
+| --- | --- |
+| **До́брого ра́нку, Окса́но!** | Good morning, Oksana! |
+| **До́брого ра́нку, Ма́рку! Як твої́ спра́ви?** | Good morning, Marko! How are you doing? |
+| **Дя́кую, чудо́во! Ось моє́ нове́ сіме́йне фо́то.** | Thank you, wonderful! Here is my new family photo. |
+| **Яка́ га́рна сім'я́! А куди́ ви ї́дете сього́дні?** | What a lovely family! And where are you traveling today? |
+| **Сього́дні о дев'я́тій ми ї́демо на по́їзді в Ки́їв.** | Today at nine we are traveling by train to Kyiv. |
+| **Щасли́вої доро́ги! На все до́бре!** | Have a safe journey! All the best! |
+| **Ду́же дя́кую! До поба́чення!** | Thank you very much! Good-bye! |
+
+When practicing reading, pay close attention to each letter's phonetic instruction. By recognizing that **Ї** consistently signals **[йі]**, **Щ** signals **[шч]**, and **Ф** signals **[ф]**, you can approach new Ukrainian words with clarity and confidence.
 
 <!-- INJECT_ACTIVITY: act-304 -->
-
-Notice how these letters appear in real polite dialogues today (**сього́дні**) when greeting people and discussing family (**сім'я́**):
-
-> **Марко́:** До́брий день, Окса́но! Ра́дий тебе́ ба́чити.
-> **Окса́на:** До́брий день, Ма́рку! Як твоя́ сім'я́?
-> **Марко́:** Дя́кую, усе́ чудо́во! Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв.
-> **Окса́на:** Щасли́вої доро́ги! На все до́бре!
-
-English support after the dialogue:
-
-| Ukrainian | English |
-| --- | --- |
-| **До́брий день, Окса́но!** | Good day, Oksana! |
-| **Ра́дий тебе́ ба́чити.** | Glad to see you. |
-| **До́брий день, Ма́рку!** | Good day, Marko! |
-| **Як твоя́ сім'я́?** | How is your family? |
-| **Дя́кую, усе́ чудо́во!** | Thank you, everything is great! |
-| **Сього́дні вве́чері ми ї́демо на по́їзді в Ки́їв.** | This evening we are traveling by train to Kyiv. |
-| **Щасли́вої доро́ги!** | Have a safe trip! |
-| **На все до́бре!** | All the best! |
-
-When practicing Ukrainian pronunciation, remember that each letter gives you a predictable and reliable sound signal. In many languages, letters change drastically depending on subtle surrounding factors, but Ukrainian orthography adheres closely to phonetic principles. By mastering the clear two-sound combinations of **Ї** [йі] and **Щ** [шч], you build an authentic native accent from your very first steps in reading.
-
-Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete confidence.
 
 <!-- INJECT_ACTIVITY: act-305 -->
 ```
@@ -108,14 +150,14 @@ Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete con
           "letter": "Щ",
           "sound": "[шч]",
           "video": "https://www.youtube.com/watch?v=QmBLieIuf6Q",
-          "note": "Famous Ukrainian dish ending in [шч]: [боршч]."
+          "note": "Traditional Ukrainian beet soup ending in [шч]: [боршч]."
         },
         {
           "word": "фо́то",
           "letter": "Ф",
           "sound": "[ф]",
           "video": "https://www.youtube.com/watch?v=haHRsFFZRQI",
-          "note": "The letter Ф represents a single voiceless labiodental fricative [f]."
+          "note": "The letter Ф represents a single voiceless consonant [f]."
         }
       ]
     },
@@ -126,185 +168,250 @@ Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete con
       "instruction": "Ви́значте, пра́вда це чи непра́вда. — Decide whether each statement is true or false.",
       "items": [
         {
-          "statement": "Лі́тера Ї за́вжди познача́є два зву́ки [йі]. — The letter Ї always represents two sounds [йі].",
-          "answer": true,
-          "explanation": "Лі́тера Ї ніко́ли не познача́є оди́н звук. — The letter Ї never represents just one sound."
+          "statement": "Лі́тера Ї за́вжди познача́є два зву́ки [йі]. — The letter Ї always represents two sounds [ji].",
+          "correct": true,
+          "explanation": "Лі́тера ї ніко́ли не познача́є оди́н звук і не пом'якшує при́голосний. — The letter ї never represents a single sound and never softens a consonant."
         },
         {
-          "statement": "Лі́тера Щ за́вжди познача́є два зву́ки [шч]. — The letter Щ always represents two sounds [шч].",
-          "answer": true,
-          "explanation": "В украї́нській мо́ві Щ — це сполу́чення тверди́х зву́ків [ш] та [ч]. — In Ukrainian, Щ is a blend of hard sounds [ш] and [ч]."
+          "statement": "Перед лі́терою Ї мо́жна писа́ти м'яки́й знак (ь). — The soft sign (ь) can be written before the letter Ї.",
+          "correct": false,
+          "explanation": "Перед ї м'яки́й знак ніко́ли не пи́шеться, оскі́льки ї вже ма́є звук [й]. — The soft sign is never written before ї because ї already contains [j]."
         },
         {
-          "statement": "Лі́тера Ф за́вжди познача́є два зву́ки. — The letter Ф always represents two sounds.",
-          "answer": false,
-          "explanation": "Лі́тера Ф познача́є оди́н звук [ф]. — The letter Ф represents one sound [ф]."
+          "statement": "Лі́тера Щ за́вжди познача́є сполу́чення зву́ків [шч]. — The letter Щ always represents the blend [shch].",
+          "correct": true,
+          "explanation": "В украї́нській мо́ві буква щ за́вжди познача́є два тверди́х зву́ки: [ш] + [ч]. — In Ukrainian, the letter щ always represents two hard sounds: [sh] + [ch]."
         },
         {
-          "statement": "У сло́ві «борщ» оста́нній звук познача́ється як [шч]. — In the word «борщ», the final letter represents [шч].",
-          "answer": true,
-          "explanation": "Лі́тера щ наприкінці́ сло́ва вимовля́ється як [шч]. — The letter щ at the end of a word is pronounced [шч]."
+          "statement": "У сло́ві «борщ» чоти́ри зву́ки. — In the word «борщ» there are four sounds.",
+          "correct": false,
+          "explanation": "У сло́ві «борщ» 4 бу́кви, але́ 5 зву́ків: [б-о-р-ш-ч]. — In «борщ» there are 4 letters but 5 sounds: [b-o-r-sh-ch]."
         },
         {
-          "statement": "Лі́тера Ї мо́же пом'я́кшувати попере́дній при́голосний. — The letter Ї can soften the preceding consonant.",
-          "answer": false,
-          "explanation": "Лі́тера Ї за́вжди зберіга́є сві́й напівголосни́й звук [й]. — The letter Ї always keeps its semivowel sound [й]."
+          "statement": "Лі́тера Ф познача́є оди́н при́голосний звук [ф]. — The letter Ф represents a single consonant sound [f].",
+          "correct": true,
+          "explanation": "Лі́тера ф передає́ оди́н глухи́й гу́бно-зубни́й звук [ф]. — The letter ф conveys a single voiceless labiodental sound [f]."
         },
         {
-          "statement": "Слова́ «бу́ква» та «лі́тера» ма́ють одна́кове зна́чення. — The words «бу́ква» and «лі́тера» have the same meaning.",
-          "answer": true,
-          "explanation": "Оби́два те́рміни є сино́німами. — Both terms are synonyms."
+          "statement": "Сло́во «фо́то» пи́шеться як «хвото». — The word «фо́то» is written as «хвото».",
+          "correct": false,
+          "explanation": "В літерату́рній мо́ві вжива́ється норма́тивна фо́рма з лі́терою ф: «фо́то». — In literary Ukrainian, the standard form with letter ф is used: «фо́то»."
         }
       ]
     },
     {
       "id": "act-303",
       "type": "quiz",
-      "title": "Оди́н чи два зву́ки: Ї, Щ, Ф — One or Two Sounds",
-      "instruction": "Обері́ть, оди́н чи два зву́ки познача́є ви́ділена лі́тера. — Choose whether the highlighted letter represents one sound or two sounds.",
-      "items": [
-        {
-          "question": "Лі́тера «ї» у сло́ві «їжа́к»: — The letter «ї» in «їжа́к» (hedgehog):",
-          "options": [
-            "два зву́ки [йі] — two sounds [йі]",
-            "оди́н звук [і] — one sound [і]"
-          ],
-          "answer": "два зву́ки [йі] — two sounds [йі]",
-          "explanation": "Лі́тера ї на поча́тку сло́ва познача́є два зву́ки: [й] + [і]. — The letter ї at the beginning of a word represents two sounds: [j] + [i]."
-        },
-        {
-          "question": "Лі́тера «ї» у сло́ві «Ки́їв»: — The letter «ї» in «Ки́їв» (Kyiv):",
-          "options": [
-            "два зву́ки [йі] — two sounds [йі]",
-            "оди́н звук [і] — one sound [і]"
-          ],
-          "answer": "два зву́ки [йі] — two sounds [йі]",
-          "explanation": "Пі́сля голосно́го лі́тера ї за́вжди познача́є два зву́ки [йі]. — After a vowel, the letter ї always represents two sounds [ji]."
-        },
-        {
-          "question": "Лі́тера «щ» у сло́ві «щу́ка»: — The letter «щ» in «щу́ка» (pike):",
-          "options": [
-            "два зву́ки [шч] — two sounds [шч]",
-            "оди́н звук [ш] — one sound [ш]"
-          ],
-          "answer": "два зву́ки [шч] — two sounds [шч]",
-          "explanation": "Лі́тера щ за́вжди познача́є два тверди́х зву́ки: [ш] + [ч]. — The letter щ always represents two hard sounds: [sh] + [ch]."
-        },
-        {
-          "question": "Лі́тера «щ» у сло́ві «борщ»: — The letter «щ» in «борщ» (borscht):",
-          "options": [
-            "два зву́ки [шч] — two sounds [шч]",
-            "оди́н звук [ч] — one sound [ч]"
-          ],
-          "answer": "два зву́ки [шч] — two sounds [шч]",
-          "explanation": "Наприкінці́ слів лі́тера щ та́кож передає́ два зву́ки [шч]. — At the end of words, the letter щ also represents two sounds [shch]."
-        },
-        {
-          "question": "Лі́тера «ф» у сло́ві «фо́то»: — The letter «ф» in «фо́то» (photo):",
-          "options": [
-            "оди́н звук [ф] — one sound [ф]",
-            "два зву́ки — two sounds"
-          ],
-          "answer": "оди́н звук [ф] — one sound [ф]",
-          "explanation": "Лі́тера ф познача́є оди́н при́голосний звук [ф]. — The letter ф represents a single consonant sound [f]."
-        },
-        {
-          "question": "Лі́тера «ф» у сло́ві «факт»: — The letter «ф» in «факт» (fact):",
-          "options": [
-            "оди́н звук [ф] — one sound [ф]",
-            "два зву́ки — two sounds"
-          ],
-          "answer": "оди́н звук [ф] — one sound [ф]",
-          "explanation": "Лі́тера ф за́вжди познача́є лише́ оди́н звук [ф]. — The letter ф always represents just one sound [f]."
-        }
-      ]
-    },
-    {
-      "id": "act-304",
-      "type": "quiz",
       "title": "Звукове́ зна́чення лі́тер — Sound Values",
       "instruction": "Ви́значте пра́вильне фонети́чне зна́чення для ко́жної лі́тери. — Identify the correct phonetic transcription for each letter.",
       "items": [
         {
-          "question": "Які́ зву́ки познача́є лі́тера Ї? — Which sounds does the letter Ї represent?",
+          "prompt": "Які́ зву́ки познача́є лі́тера Ї? — Which sounds does the letter Ї represent?",
           "options": [
-            "[йі]",
-            "[і]",
-            "[й]"
+            {
+              "text": "[йі]",
+              "correct": true
+            },
+            {
+              "text": "[і]",
+              "correct": false
+            },
+            {
+              "text": "[й]",
+              "correct": false
+            }
           ],
-          "answer": "[йі]",
           "explanation": "Лі́тера ї за́вжди познача́є два зву́ки [йі]. — The letter ї always represents two sounds [ji]."
         },
         {
-          "question": "Які́ зву́ки познача́є лі́тера Щ? — Which sounds does the letter Щ represent?",
+          "prompt": "Які́ зву́ки познача́є лі́тера Щ? — Which sounds does the letter Щ represent?",
           "options": [
-            "[шч]",
-            "[ш]",
-            "[ч]"
+            {
+              "text": "[шч]",
+              "correct": true
+            },
+            {
+              "text": "[ш]",
+              "correct": false
+            },
+            {
+              "text": "[ч]",
+              "correct": false
+            }
           ],
-          "answer": "[шч]",
           "explanation": "Лі́тера щ за́вжди познача́є сполу́чення зву́ків [шч]. — The letter щ always represents the blend [shch]."
         },
         {
-          "question": "Яки́й звук познача́є лі́тера Ф? — Which sound does the letter Ф represent?",
+          "prompt": "Яки́й звук познача́є лі́тера Ф? — Which sound does the letter Ф represent?",
           "options": [
-            "[ф]",
-            "[п]",
-            "[в]"
+            {
+              "text": "[ф]",
+              "correct": true
+            },
+            {
+              "text": "[п]",
+              "correct": false
+            },
+            {
+              "text": "[в]",
+              "correct": false
+            }
           ],
-          "answer": "[ф]",
           "explanation": "Лі́тера ф познача́є глухи́й при́голосний звук [ф]. — The letter ф represents the voiceless consonant [f]."
         },
         {
-          "question": "Скі́льки зву́ків у сло́ві «борщ»? — How many sounds are in the word «борщ»?",
+          "prompt": "Скі́льки зву́ків у сло́ві «борщ»? — How many sounds are in the word «борщ»?",
           "options": [
-            "5 зву́ків [б-о-р-ш-ч] — 5 sounds [б-о-р-ш-ч]",
-            "чоти́ри зву́ки — four sounds"
+            {
+              "text": "5 зву́ків [б-о-р-ш-ч] — 5 sounds [б-о-р-ш-ч]",
+              "correct": true
+            },
+            {
+              "text": "чоти́ри зву́ки — four sounds",
+              "correct": false
+            },
+            {
+              "text": "три зву́ки — three sounds",
+              "correct": false
+            }
           ],
-          "answer": "5 зву́ків [б-о-р-ш-ч] — 5 sounds [б-о-р-ш-ч]",
           "explanation": "У сло́ві 4 бу́кви, але́ 5 зву́ків [б-о-р-ш-ч]. — There are 4 letters but 5 sounds [b-o-r-sh-ch]."
         },
         {
-          "question": "Скі́льки зву́ків у сло́ві «їжа́к»? — How many sounds are in the word «їжа́к»?",
+          "prompt": "Скі́льки зву́ків у сло́ві «їжа́к»? — How many sounds are in the word «їжа́к»?",
           "options": [
-            "5 зву́ків [й-і-ж-а-к] — 5 sounds [й-і-ж-а-к]",
-            "чоти́ри зву́ки — four sounds"
+            {
+              "text": "5 зву́ків [й-і-ж-а-к] — 5 sounds [й-і-ж-а-к]",
+              "correct": true
+            },
+            {
+              "text": "чоти́ри зву́ки — four sounds",
+              "correct": false
+            },
+            {
+              "text": "шість зву́ків — six sounds",
+              "correct": false
+            }
           ],
-          "answer": "5 зву́ків [й-і-ж-а-к] — 5 sounds [й-і-ж-а-к]",
           "explanation": "У сло́ві 4 бу́кви, але́ 5 зву́ків [й-і-ж-а-к]. — There are 4 letters but 5 sounds [y-i-zh-a-k]."
         },
         {
-          "question": "Скі́льки зву́ків у сло́ві «факт»? — How many sounds are in the word «факт»?",
+          "prompt": "Скі́льки зву́ків у сло́ві «факт»? — How many sounds are in the word «факт»?",
           "options": [
-            "чоти́ри зву́ки [ф-а-к-т] — four sounds [ф-а-к-т]",
-            "5 зву́ків — 5 sounds"
+            {
+              "text": "чоти́ри зву́ки [ф-а-к-т] — four sounds [ф-а-к-т]",
+              "correct": true
+            },
+            {
+              "text": "5 зву́ків — 5 sounds",
+              "correct": false
+            },
+            {
+              "text": "три зву́ки — three sounds",
+              "correct": false
+            }
           ],
-          "answer": "чоти́ри зву́ки [ф-а-к-т] — four sounds [ф-а-к-т]",
           "explanation": "Ко́жна лі́тера познача́є оди́н звук: [ф-а-к-т]. — Each letter represents one sound: [f-a-k-t]."
         }
       ]
     },
     {
-      "id": "act-305",
-      "type": "group-sort",
-      "title": "Розподілі́ть слова́ за лі́терами — Group Sort",
-      "instruction": "Розподілі́ть слова́ зале́жно від то́го, оди́н чи два зву́ки познача́є головна́ лі́тера. — Sort words according to whether their key letter represents two sounds or one sound.",
-      "groups": [
+      "id": "act-304",
+      "type": "match-up",
+      "title": "Віта́ння та їх зна́чення — Greetings and meanings",
+      "instruction": "З'єдна́йте украї́нське віта́ння з його́ англі́йським зна́ченням. — Match the Ukrainian greeting to its English meaning.",
+      "pairs": [
         {
-          "name": "За́вжди два зву́ки (Ї, Щ) — Always two sounds",
-          "items": [
-            "їжа́к",
-            "щу́ка",
-            "борщ"
-          ]
+          "left": "До́брого ра́нку!",
+          "right": "ра́нкове віта́ння — morning greeting"
         },
         {
-          "name": "Оди́н звук (Ф) — One sound",
-          "items": [
-            "фо́то",
-            "факт",
-            "шарф"
-          ]
+          "left": "До́брий день!",
+          "right": "де́нне віта́ння — daytime greeting"
+        },
+        {
+          "left": "До́брий ве́чір!",
+          "right": "вечі́рнє віта́ння — evening greeting"
+        },
+        {
+          "left": "Приві́т!",
+          "right": "неформа́льне привіта́ння дру́зів — informal greeting to friends"
+        },
+        {
+          "left": "До поба́чення!",
+          "right": "станда́ртне проща́ння — standard farewell"
+        },
+        {
+          "left": "Щасли́вої доро́ги!",
+          "right": "побажа́ння тим, хто ї́де — wish to travelers"
+        }
+      ]
+    },
+    {
+      "id": "act-305",
+      "type": "fill-in",
+      "title": "Вста́вте лі́теру Ї, Щ або Ф — Insert letter Ї, Щ, or Ф",
+      "instruction": "Запо́вніть про́пуски пра́вильною лі́терою: ї, щ або ф. — Fill in the blanks with the correct letter: ї, щ, or ф.",
+      "items": [
+        {
+          "sentence": "У лі́сі живе́ колю́чий ___жа́к. — A spiky hedgehog lives in the forest.",
+          "options": [
+            "ї",
+            "і",
+            "щ"
+          ],
+          "answer": "ї",
+          "explanation": "Сло́во «їжа́к» почина́ється зі зву́ків [йі], яки́й познача́ється лі́терою ї. — The word «їжа́к» begins with the sounds [ji], spelled with letter ї."
+        },
+        {
+          "sentence": "Ми ї́демо на екску́рсію в мі́сто Ки́___в. — We are going on an excursion to the city of Kyiv.",
+          "options": [
+            "ї",
+            "і",
+            "й"
+          ],
+          "answer": "ї",
+          "explanation": "У на́зві «Ки́їв» пі́сля голосно́го «и» пи́шемо лі́теру ї [йі]. — In «Ки́їв», after vowel «и», we write letter ї [ji]."
+        },
+        {
+          "sentence": "Украї́нський бор___ — це сма́чна стра́ва. — Ukrainian borscht is a delicious dish.",
+          "options": [
+            "щ",
+            "ш",
+            "ч"
+          ],
+          "answer": "щ",
+          "explanation": "У кінці́ сло́ва «борщ» звукосполу́чення [шч] познача́ється лі́терою щ. — At the end of «борщ», the sound blend [shch] is spelled with letter щ."
+        },
+        {
+          "sentence": "У рі́чці пла́ває хи́жа ___у́ка. — A predatory pike swims in the river.",
+          "options": [
+            "щ",
+            "ш",
+            "ч"
+          ],
+          "answer": "щ",
+          "explanation": "Сло́во «щу́ка» почина́ється з буквосполу́чення [шч], то́бто лі́тери щ. — The word «щу́ка» begins with [shch], represented by letter щ."
+        },
+        {
+          "sentence": "У ме́не є нове́ сіме́йне ___о́то. — I have a new family photo.",
+          "options": [
+            "ф",
+            "хв",
+            "п"
+          ],
+          "answer": "ф",
+          "explanation": "Сло́во «фо́то» пи́шеться з лі́терою ф. — The word «фо́то» is written with the letter ф."
+        },
+        {
+          "sentence": "Швидки́й по́___зд прибува́є вча́сно. — The fast train arrives on time.",
+          "options": [
+            "ї",
+            "і",
+            "й"
+          ],
+          "answer": "ї",
+          "explanation": "Пі́сля голосно́го «о» пи́шемо лі́теру ї: по́їзд. — After the vowel «о», we write the letter ї: по́їзд."
         }
       ]
     }
@@ -312,367 +419,380 @@ Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete con
   "workbook": [
     {
       "id": "act-306",
-      "type": "fill-in",
-      "title": "Вста́вте пропу́щене сло́во — Fill in the blank",
-      "instruction": "Вста́вте пропу́щене сло́во у ко́жне ре́чення. — Fill in the blank with the appropriate vocabulary word.",
-      "items": [
+      "type": "group-sort",
+      "title": "Класифіка́ція за кіль́кістю зву́ків — Classify by sound count",
+      "instruction": "Розподілі́ть слова́ на дві гру́пи: лі́тери за́вжди даю́ть два зву́ки (Ї, Щ) чи оди́н звук (Ф). — Sort the words into two groups: letters always give two sounds (Ї, Щ) or one sound (Ф).",
+      "groups": [
         {
-          "sentence": "У лі́сі біжи́ть колю́чий ___ . — In the forest runs a prickly […].",
-          "answer": "їжа́к",
-          "options": [
+          "label": "За́вжди два зву́ки (Ї, Щ) — Always two sounds",
+          "items": [
             "їжа́к",
-            "кінь",
-            "єно́т"
-          ],
-          "explanation": "Лі́тера ї на поча́тку сло́ва передає́ два зву́ки [йі]: їжа́к. — The letter ї at the beginning represents two sounds [ji]: їжа́к."
-        },
-        {
-          "sentence": "Столи́ця Украї́ни — це прекра́сне мі́сто ___ . — The capital of Ukraine is the beautiful city of […].",
-          "answer": "Ки́їв",
-          "options": [
+            "по́їзд",
             "Ки́їв",
-            "день",
-            "по́їзд"
-          ],
-          "explanation": "У на́зві столи́ці пі́сля голосно́го пи́шеться ї: Ки́їв. — In the name of the capital, ї is written after a vowel: Ки́їв."
-        },
-        {
-          "sentence": "У рі́чці пла́ває вели́ка ___ . — In the river swims a big […].",
-          "answer": "щу́ка",
-          "options": [
             "щу́ка",
-            "кінь",
-            "лань"
-          ],
-          "explanation": "Лі́тера щ на поча́тку сло́ва познача́є [шч]: щу́ка. — The letter щ at the beginning represents [shch]: щу́ка."
+            "борщ"
+          ]
         },
         {
-          "sentence": "На обі́д ма́ма звари́ла смачни́й гаря́чий ___ . — For lunch mom cooked tasty hot […].",
-          "answer": "борщ",
-          "options": [
-            "борщ",
-            "рис",
-            "чай"
-          ],
-          "explanation": "Сло́во «борщ» закі́нчується лі́терою щ [шч]. — The word «борщ» ends with the letter щ [shch]."
-        },
-        {
-          "sentence": "У мене́ в альбо́мі є га́рне сіме́йне ___ . — In my album there is a nice family […].",
-          "answer": "фо́то",
-          "options": [
+          "label": "Оди́н звук (Ф) — One sound",
+          "items": [
             "фо́то",
             "факт",
-            "шарф"
-          ],
-          "explanation": "Сло́во «фо́то» почина́ється з лі́тери ф [ф]. — The word «фо́то» starts with the letter ф [f]."
-        },
-        {
-          "sentence": "До Ки́єва щодня́ ї́де швидки́й ___ . — To Kyiv every day runs a fast […].",
-          "answer": "по́їзд",
-          "options": [
-            "по́їзд",
-            "їжа́к",
-            "борщ"
-          ],
-          "explanation": "У сло́ві «по́їзд» пі́сля голосно́го пи́шеться ї. — In the word «по́їзд», ї is written after a vowel."
+            "шарф",
+            "кафе́"
+          ]
         }
       ]
     },
     {
       "id": "act-307",
+      "type": "fill-in",
+      "title": "Пра́вильне віта́ння за ча́сом доби́ — Greetings by time of day",
+      "instruction": "Вста́вте пра́вильне сло́во у віта́ння. — Insert the correct word into the greeting.",
+      "items": [
+        {
+          "sentence": "До́брого ___! — Good morning! (ранко́ве віта́ння)",
+          "options": [
+            "ра́нку",
+            "ве́чора",
+            "дня"
+          ],
+          "answer": "ра́нку",
+          "explanation": "Ура́нці віта́ються: «До́брого ра́нку!». — In the morning, people greet with: «До́брого ра́нку!»."
+        },
+        {
+          "sentence": "До́брий ___! — Good afternoon! / Good day! (де́нне віта́ння)",
+          "options": [
+            "день",
+            "ра́нок",
+            "ніч"
+          ],
+          "answer": "день",
+          "explanation": "Уде́нь вжива́ють станда́ртне віта́ння: «До́брий день!». — During the day, the standard greeting is: «До́брий день!»."
+        },
+        {
+          "sentence": "До́брий ___! — Good evening! (вечі́рнє віта́ння)",
+          "options": [
+            "ве́чір",
+            "день",
+            "ра́нок"
+          ],
+          "answer": "ве́чір",
+          "explanation": "Уве́чері віта́ються: «До́брий ве́чір!». — In the evening, people greet with: «До́брий ве́чір!»."
+        },
+        {
+          "sentence": "До ___! — Good-bye! (ввічли́ве проща́ння)",
+          "options": [
+            "поба́чення",
+            "зу́стрічі",
+            "ра́нку"
+          ],
+          "answer": "поба́чення",
+          "explanation": "Станда́ртна фо́рмула проща́ння: «До поба́чення!». — The standard farewell formula is: «До поба́чення!»."
+        },
+        {
+          "sentence": "На все ___! — All the best! (побажа́ння добра́)",
+          "options": [
+            "до́бре",
+            "кра́ще",
+            "я́сне"
+          ],
+          "answer": "до́бре",
+          "explanation": "Стійки́й ви́раз проща́ння: «На все до́бре!». — The fixed farewell expression is: «На все до́бре!»."
+        },
+        {
+          "sentence": "___ доро́ги! — Safe journey! (побажа́ння мандрівника́м)",
+          "options": [
+            "Щасли́вої",
+            "До́брої",
+            "Кра́щої"
+          ],
+          "answer": "Щасли́вої",
+          "explanation": "Тим, хто від'їжджа́є, ка́жуть: «Щасли́вої доро́ги!». — To travelers departing, people say: «Щасли́вої доро́ги!»."
+        }
+      ]
+    },
+    {
+      "id": "act-308",
       "type": "match-up",
-      "title": "З'єдна́йте слова́ та зна́чення — Match word meanings",
-      "instruction": "З'єдна́йте ко́жне украї́нське сло́во з йо́го англі́йським зна́ченням. — Match each Ukrainian word with its English meaning.",
+      "title": "Зіста́влення слів та зна́чень — Match words with meanings",
+      "instruction": "З'єдна́йте сло́во з лі́терами Ї, Щ, Ф із його́ перекла́дом. — Match the word with letters Ї, Щ, Ф to its translation.",
       "pairs": [
+        {
+          "left": "по́їзд",
+          "right": "train"
+        },
         {
           "left": "їжа́к",
           "right": "hedgehog"
         },
         {
-          "left": "Ки́їв",
-          "right": "Kyiv"
+          "left": "борщ",
+          "right": "beet soup"
         },
         {
           "left": "щу́ка",
           "right": "pike (fish)"
         },
         {
-          "left": "борщ",
-          "right": "borscht"
-        },
-        {
           "left": "фо́то",
           "right": "photo"
         },
         {
-          "left": "по́їзд",
-          "right": "train"
-        }
-      ]
-    },
-    {
-      "id": "act-308",
-      "type": "unjumble",
-      "title": "Складі́ть слова́ з лі́тер — Unjumble letters",
-      "instruction": "Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words.",
-      "items": [
-        {
-          "words": [
-            "ї",
-            "ж",
-            "а́",
-            "к"
-          ],
-          "answer": "їжа́к"
-        },
-        {
-          "words": [
-            "п",
-            "о́",
-            "ї",
-            "з",
-            "д"
-          ],
-          "answer": "по́їзд"
-        },
-        {
-          "words": [
-            "К",
-            "и́",
-            "ї",
-            "в"
-          ],
-          "answer": "Ки́їв"
-        },
-        {
-          "words": [
-            "б",
-            "о",
-            "р",
-            "щ"
-          ],
-          "answer": "борщ"
-        },
-        {
-          "words": [
-            "к",
-            "у",
-            "щ"
-          ],
-          "answer": "кущ"
-        },
-        {
-          "words": [
-            "ф",
-            "а",
-            "к",
-            "т"
-          ],
-          "answer": "факт"
+          "left": "шарф",
+          "right": "scarf"
         }
       ]
     },
     {
       "id": "act-309",
-      "type": "error-correction",
-      "title": "Знайді́ть поми́лку — Spot the error",
-      "instruction": "Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each sentence.",
+      "type": "unjumble",
+      "title": "Складі́ть ре́чення етике́ту — Unjumble the greeting sentences",
+      "instruction": "Розташу́йте слова́ у пра́вильному поря́дку. — Put the words into the correct order.",
       "items": [
         {
-          "sentence": "У лі́сі спить мале́нький йіжа́к. — A little hedgehog sleeps in the forest.",
-          "error": "йіжа́к",
-          "correction": "їжа́к",
-          "options": [
-            "їжа́к",
-            "йіжа́к",
-            "іжа́к"
+          "scrambled": [
+            "ра́нку,",
+            "До́брого",
+            "вчи́телю!"
           ],
-          "explanation": "Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к. — The sound blend [ji] is always written with letter ї: їжа́к."
+          "answer": "До́брого ра́нку, вчи́телю!",
+          "explanation": "Ввічли́ве ранко́ве зверта́ння: «До́брого ра́нку, вчи́телю!». — Polite morning address: «До́брого ра́нку, вчи́телю!»."
         },
         {
-          "sentence": "Швидки́й пойи́зд ї́де в столи́цю. — A fast train goes to the capital.",
-          "error": "пойи́зд",
-          "correction": "по́їзд",
-          "options": [
-            "по́їзд",
-            "пойи́зд",
-            "по́ізд"
+          "scrambled": [
+            "день,",
+            "До́брий",
+            "Окса́но!"
           ],
-          "explanation": "Сло́во «по́їзд» пи́шеться з лі́терою ї: по́їзд. — The word «по́їзд» is written with the letter ї: по́їзд."
+          "answer": "До́брий день, Окса́но!",
+          "explanation": "Де́нне віта́ння: «До́брий день, Окса́но!». — Daytime greeting: «До́брий день, Окса́но!»."
         },
         {
-          "sentence": "Ми ї́демо в мі́сто Кийи́в. — We are going to the city of Kyiv.",
-          "error": "Кийи́в",
-          "correction": "Ки́їв",
-          "options": [
-            "Ки́їв",
-            "Кийи́в",
-            "Ки́ів"
+          "scrambled": [
+            "ве́чір,",
+            "До́брий",
+            "Ма́рку!"
           ],
-          "explanation": "На́зва столи́ці Украї́ни пи́шеться з лі́терою ї: Ки́їв. — The capital of Ukraine is written with the letter ї: Ки́їв."
+          "answer": "До́брий ве́чір, Ма́рку!",
+          "explanation": "Вечі́рнє віта́ння: «До́брий ве́чір, Ма́рку!». — Evening greeting: «До́брий ве́чір, Ма́рку!»."
         },
         {
-          "sentence": "На обі́д ми їмо́ гаря́чий боршч. — For lunch we eat hot borshch.",
-          "error": "боршч",
-          "correction": "борщ",
-          "options": [
-            "борщ",
-            "боршч",
-            "борч"
+          "scrambled": [
+            "поба́чення,",
+            "До",
+            "дру́зі!"
           ],
-          "explanation": "Звукосполу́чення [шч] на письмі́ познача́ється лі́терою щ: борщ. — The sound blend [шч] is written with the letter щ: борщ."
+          "answer": "До поба́чення, дру́зі!",
+          "explanation": "Формула проща́ння: «До поба́чення, дру́зі!». — Farewell formula: «До поба́чення, дру́зі!»."
         },
         {
-          "sentence": "У рі́чці пла́ває вели́ка шчу́ка. — A big pike swims in the river.",
-          "error": "шчу́ка",
-          "correction": "щу́ка",
-          "options": [
-            "щу́ка",
-            "шчу́ка",
-            "шу́ка"
+          "scrambled": [
+            "все",
+            "На",
+            "до́бре!"
           ],
-          "explanation": "Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка. — The sound blend [шч] is written with single letter щ: щу́ка."
+          "answer": "На все до́бре!",
+          "explanation": "Побажа́ння при проща́нні: «На все до́бре!». — Well-wish on parting: «На все до́бре!»."
         },
         {
-          "sentence": "На столі́ лежи́ть га́рне хво́то. — A nice photo lies on the table.",
-          "error": "хво́то",
-          "correction": "фо́то",
-          "options": [
-            "фо́то",
-            "хво́то",
-            "хо́то"
+          "scrambled": [
+            "доро́ги,",
+            "Щасли́вої",
+            "сім'є́!"
           ],
-          "explanation": "Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то. — The word «фо́то» is written with the letter ф: фо́то."
+          "answer": "Щасли́вої доро́ги, сім'є́!",
+          "explanation": "Побажа́ння мандрівника́м: «Щасли́вої доро́ги, сім'є́!». — Safe journey wish: «Щасли́вої доро́ги, сім'є́!»."
         }
       ]
     },
     {
       "id": "act-310",
-      "type": "quiz",
-      "title": "Ви́беріть пра́вильне сло́во — Multiple Choice",
-      "instruction": "Ви́беріть пра́вильно напи́сане украї́нське сло́во. — Select the correctly spelled Ukrainian word.",
+      "type": "error-correction",
+      "title": "Знайді́ть та ви́правте поми́лку — Find and fix the error",
+      "instruction": "Знайді́ть поми́лково напи́сане сло́во та ви́беріть пра́вильний варіа́нт. — Find the misspelled word and choose the correct form.",
       "items": [
         {
-          "question": "Що означа́є «hedgehog» в украї́нській мо́ві? — What is the Ukrainian word for \"hedgehog\"?",
+          "sentence": "У лі́сі біжи́ть колю́чий йіжа́к.",
+          "error": "йіжа́к",
+          "correction": "їжа́к",
           "options": [
             "їжа́к",
-            "кінь",
-            "єно́т"
+            "іжа́к",
+            "єжа́к"
           ],
-          "answer": "їжа́к",
-          "explanation": "«Hedgehog» украї́нською мо́вою — це «їжа́к». — \"Hedgehog\" in Ukrainian is «їжа́к»."
+          "explanation": "Звукосполу́чення [йі] за́вжди познача́ється лі́терою ї: їжа́к. — The sound blend [ji] is always written with letter ї: їжа́к."
         },
         {
-          "question": "Як пра́вильно назива́ється столи́ця Украї́ни? — What is the correct name of Ukraine's capital?",
-          "options": [
-            "Ки́їв",
-            "день",
-            "по́їзд"
-          ],
-          "answer": "Ки́їв",
-          "explanation": "Столи́ця Украї́ни — це мі́сто Ки́їв. — The capital of Ukraine is Kyiv."
-        },
-        {
-          "question": "Що означа́є «borscht» в украї́нській мо́ві? — What is the Ukrainian word for \"borscht\"?",
-          "options": [
-            "борщ",
-            "рис",
-            "чай"
-          ],
-          "answer": "борщ",
-          "explanation": "«Borscht» украї́нською мо́вою — це «борщ». — \"Borscht\" in Ukrainian is «борщ»."
-        },
-        {
-          "question": "Що означа́є «pike (fish)» в украї́нській мо́ві? — What is the Ukrainian word for \"pike (fish)\"?",
-          "options": [
-            "щу́ка",
-            "кінь",
-            "лань"
-          ],
-          "answer": "щу́ка",
-          "explanation": "«Pike» украї́нською мо́вою — це «щу́ка». — \"Pike\" in Ukrainian is «щу́ка»."
-        },
-        {
-          "question": "Що означа́є «photo» в украї́нській мо́ві? — What is the Ukrainian word for \"photo\"?",
-          "options": [
-            "фо́то",
-            "факт",
-            "шарф"
-          ],
-          "answer": "фо́то",
-          "explanation": "«Photo» украї́нською мо́вою — це «фо́то». — \"Photo\" in Ukrainian is «фо́то»."
-        },
-        {
-          "question": "Що означа́є «train» в украї́нській мо́ві? — What is the Ukrainian word for \"train\"?",
+          "sentence": "Швидки́й пойи́зд ї́де до Ки́єва.",
+          "error": "пойи́зд",
+          "correction": "по́їзд",
           "options": [
             "по́їзд",
-            "день",
-            "свя́то"
+            "по́ізд",
+            "по́езд"
           ],
-          "answer": "по́їзд",
-          "explanation": "«Train» украї́нською мо́вою — це «по́їзд». — \"Train\" in Ukrainian is «по́їзд»."
+          "explanation": "Пі́сля голосно́го пи́шемо лі́теру ї: по́їзд. — After a vowel, we write the letter ї: train."
+        },
+        {
+          "sentence": "Ми ї́демо в мі́сто Кийи́в.",
+          "error": "Кийи́в",
+          "correction": "Ки́їв",
+          "options": [
+            "Ки́їв",
+            "Ки́ів",
+            "Ки́єв"
+          ],
+          "explanation": "У на́зві столи́ці Украї́ни пи́шеться лі́тера ї: Ки́їв. — The capital of Ukraine is written with the letter ї: Kyiv."
+        },
+        {
+          "sentence": "На обі́д сього́дні гаря́чий боршч.",
+          "error": "боршч",
+          "correction": "борщ",
+          "options": [
+            "борщ",
+            "борч",
+            "борш"
+          ],
+          "explanation": "Звукосполу́чення [шч] на письмі́ передає́ться лі́терою щ: борщ. — The sound blend [шч] is written with the letter щ: borscht."
+        },
+        {
+          "sentence": "У рі́чці пла́ває вели́ка шчу́ка.",
+          "error": "шчу́ка",
+          "correction": "щу́ка",
+          "options": [
+            "щу́ка",
+            "шу́ка",
+            "чу́ка"
+          ],
+          "explanation": "Звукосполу́чення [шч] познача́ється одніє́ю лі́терою щ: щу́ка. — The sound blend [шч] is written with single letter щ: щу́ка."
+        },
+        {
+          "sentence": "На столі́ лежи́ть га́рне хво́то.",
+          "error": "хво́то",
+          "correction": "фо́то",
+          "options": [
+            "фо́то",
+            "по́то",
+            "хо́то"
+          ],
+          "explanation": "Сло́во «фо́то» пи́шеться з лі́терою ф: фо́то. — The word «фо́то» is written with the letter ф: photo."
         }
       ]
     },
     {
       "id": "act-311",
       "type": "quiz",
-      "title": "Ви́бір лі́тери — Letter Choice",
-      "instruction": "Обері́ть потрі́бну лі́теру для ко́жного сло́ва. — Choose the appropriate letter for each word.",
+      "title": "Підсумко́вий тест з віта́нь та зву́ків — Final quiz on greetings and sounds",
+      "instruction": "Обері́ть пра́вильний варіа́нт ві́дповіді. — Choose the correct answer option.",
       "items": [
         {
-          "question": "Пе́рша лі́тера у сло́ві «___жа́к»: — First letter in «___жа́к» (hedgehog):",
+          "prompt": "Яке́ віта́ння використо́вують ура́нці? — Which greeting is used in the morning?",
           "options": [
-            "Ї",
-            "І"
+            {
+              "text": "До́брого ра́нку!",
+              "correct": true
+            },
+            {
+              "text": "До́брий ве́чір!",
+              "correct": false
+            },
+            {
+              "text": "Добра́ніч!",
+              "correct": false
+            }
           ],
-          "answer": "Ї",
-          "explanation": "Сло́во «їжа́к» почина́ється з лі́тери Ї. — The word «їжа́к» starts with the letter Ї."
+          "explanation": "Ура́нці вжива́ють уста́лену фо́рму «До́брого ра́нку!». — In the morning, the established form «До́брого ра́нку!» is used."
         },
         {
-          "question": "Пе́рша лі́тера у сло́ві «___у́ка»: — First letter in «___у́ка» (pike):",
+          "prompt": "Яке́ віта́ння є найбі́льш універса́льним уде́нь? — Which greeting is most universal during the day?",
           "options": [
-            "Щ",
-            "Ш"
+            {
+              "text": "До́брий день!",
+              "correct": true
+            },
+            {
+              "text": "До́брого ра́нку!",
+              "correct": false
+            },
+            {
+              "text": "Добра́ніч!",
+              "correct": false
+            }
           ],
-          "answer": "Щ",
-          "explanation": "Сло́во «щу́ка» почина́ється з лі́тери Щ. — The word «щу́ка» starts with the letter Щ."
+          "explanation": "Універса́льне де́нне віта́ння — «До́брий день!». — The universal daytime greeting is «До́брий день!»."
         },
         {
-          "question": "Оста́ння лі́тера у сло́ві «бор___»: — Last letter in «бор___» (borscht):",
+          "prompt": "Скі́льки зву́ків дає́ лі́тера Ї в украї́нській мо́ві? — How many sounds does letter Ї produce in Ukrainian?",
           "options": [
-            "щ",
-            "ч"
+            {
+              "text": "за́вжди два зву́ки [йі] — always two sounds [ji]",
+              "correct": true
+            },
+            {
+              "text": "оди́н звук [і] — one sound [i]",
+              "correct": false
+            },
+            {
+              "text": "і́ноді оди́н, і́ноді два — sometimes one, sometimes two",
+              "correct": false
+            }
           ],
-          "answer": "щ",
-          "explanation": "Наприкінці́ сло́ва «борщ» пи́шеться лі́тера щ. — At the end of «борщ», the letter щ is written."
+          "explanation": "Лі́тера ї за́вжди познача́є два зву́ки: [й] + [і]. — Letter ї always represents two sounds: [j] + [i]."
         },
         {
-          "question": "Пе́рша лі́тера у сло́ві «___о́то»: — First letter in «___о́то» (photo):",
+          "prompt": "Скі́льки зву́ків дає́ лі́тера Щ? — How many sounds does letter Щ produce?",
           "options": [
-            "Ф",
-            "Х"
+            {
+              "text": "за́вжди два зву́ки [шч] — always two sounds [shch]",
+              "correct": true
+            },
+            {
+              "text": "оди́н звук [ш] — one sound [sh]",
+              "correct": false
+            },
+            {
+              "text": "три зву́ки — three sounds",
+              "correct": false
+            }
           ],
-          "answer": "Ф",
-          "explanation": "Сло́во «фо́то» почина́ється з лі́тери Ф. — The word «фо́то» starts with the letter Ф."
+          "explanation": "Бу́ква щ за́вжди познача́є сполу́чення [шч]. — Letter щ always represents the blend [shch]."
         },
         {
-          "question": "Тре́тя лі́тера у сло́ві «Ки́___в»: — Third letter in «Ки́___в» (Kyiv):",
+          "prompt": "Як коре́ктно сказа́ти «Have a safe trip!» украї́нською? — How to correctly say «Have a safe trip!» in Ukrainian?",
           "options": [
-            "ї",
-            "і"
+            {
+              "text": "Щасли́вої доро́ги!",
+              "correct": true
+            },
+            {
+              "text": "До́брий ве́чір!",
+              "correct": false
+            },
+            {
+              "text": "Будь ла́ска!",
+              "correct": false
+            }
           ],
-          "answer": "ї",
-          "explanation": "У сло́ві «Ки́їв» пи́шеться лі́тера ї. — In the word «Ки́їв», the letter ї is written."
+          "explanation": "Побажа́ння мандрівника́м — «Щасли́вої доро́ги!». — The wish to travelers is «Щасли́вої доро́ги!»."
         },
         {
-          "question": "Тре́тя лі́тера у сло́ві «по́___зд»: — Third letter in «по́___зд» (train):",
+          "prompt": "Яке́ з цих слів мі́стить лі́теру Ф? — Which of these words contains letter Ф?",
           "options": [
-            "ї",
-            "і"
+            {
+              "text": "фо́то",
+              "correct": true
+            },
+            {
+              "text": "борщ",
+              "correct": false
+            },
+            {
+              "text": "по́їзд",
+              "correct": false
+            }
           ],
-          "answer": "ї",
-          "explanation": "У сло́ві «по́їзд» пи́шеться лі́тера ї. — In the word «по́їзд», the letter ї is written."
+          "explanation": "Сло́во «фо́то» пи́шеться з лі́терою ф. — The word «фо́то» is written with the letter ф."
         }
       ]
     }

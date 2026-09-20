@@ -1,30 +1,14 @@
-- title: Украї́нська мо́ва. Буква́р. 1 клас
-  author: Большако́ва І. О., При́стинська М. С.
-  year: 2018
-  publisher: Ра́нок
-  url: https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html
-- title: Украї́нська мо́ва. Буква́р. 1 клас
-  author: Захарійчук М. Д.
-  year: 2018
-  publisher: Гра́мота
-  url: https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html
-- title: Украї́нська мо́ва. 5 клас
-  author: Авра́менко О. М.
-  year: 2018
-  publisher: Гра́мота
-  url: https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html
-- title: Pronunciation Video Series (Letter Ь)
-  author: Anna Ohoiko
-  year: 2020
-  publisher: Ukrainian Lessons
-  url: https://www.youtube.com/watch?v=cJlal8XKBxo
-- title: Pronunciation Video Series (Letter Ц)
-  author: Anna Ohoiko
-  year: 2020
-  publisher: Ukrainian Lessons
-  url: https://www.youtube.com/watch?v=u44eCjR2Oz8
-- title: Pronunciation Video Series (Letter Ч)
-  author: Anna Ohoiko
-  year: 2020
-  publisher: Ukrainian Lessons
-  url: https://www.youtube.com/watch?v=UsJkbdsY2RA
+- title: Украї́нський право́пис (2019), § 26–27. Бу́ква Ь
+  url: https://2019.pravopys.net/sections/26/
+  source: Украї́нський право́пис 2019
+  notes: Пра́вила вжива́ння м'яко́го зна́ка пі́сля букв д, т, з, с, дз, ц, л, н та відсу́тність
+    м'яко́го зна́ка пі́сля шипля́чих.
+- title: Авра́менко О. Украї́нська мо́ва. 5 клас (2022), § 54–55, с. 124–127
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0127
+  source: 5-klas-ukrmova-avramenko-2022
+  notes: Позна́чення м'я́кості при́голосних на письмі́. Вжива́ння м'яко́го зна́ка та африка́ти.
+- title: 'Строкаль О. Суча́сна украї́нська літерату́рна мо́ва: Орфогра́фія (2021), § 5,
+    с. 28'
+  chunk_id: uni-ukrmova-orthography-strokal-2021_s0047
+  source: uni-ukrmova-orthography-strokal-2021
+  notes: Позна́чення м'я́кості при́голосних та відсу́тність м'яко́го зна́ка пі́сля шипля́чих.

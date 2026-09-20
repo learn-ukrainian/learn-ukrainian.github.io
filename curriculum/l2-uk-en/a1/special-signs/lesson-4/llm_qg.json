@@ -1,43 +1,43 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 5.0,
-      "evidence": "Act-405 teaches an unconditional apostrophe rule contradicting the lesson’s contrasts; cumulative vocabulary and baseline preservation remain unverified, while module closure belongs to lesson 5.",
-      "verdict": "REJECT",
+      "score": 6.0,
+      "evidence": "Act-401 permits overlapping matches, added vocabulary lacks first-use scaffolding, and baseline preservation, cumulative coverage, and lesson-5 closure remain unverified.",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "which letters is an apostrophe always written before я, ю, є, ї?"
+        "**Мій комп'ю́тер стої́ть там, де вели́кий дерев'я́ний стіл.** | My computer is sitting where the large wooden table is."
       ]
     },
     "naturalness": {
       "score": 5.0,
-      "evidence": "The soup example is awkward, and attempted VESUM, orthography and dictionary calls returned “MCP tool call requires approval, but approval policy is never,” leaving gender, government and usage unverified.",
+      "evidence": "The dialogue abruptly switches topics, while attempted VESUM, government, and source checks were denied by approval policy, leaving linguistic grounding unverified.",
       "verdict": "REJECT",
       "evidence_quotes": [
-        "У су́пі потрі́бна вели́ка ___ . — In the soup a big […] is needed."
+        "**А де тві́й комп'ю́тер?** | And where is your computer?"
       ]
     },
     "decolonization": {
-      "score": 8.0,
-      "evidence": "The explanation treats Ukrainian as autonomous rather than deriving its spelling from Russian, although source-based exclusion of calques remains unverified.",
-      "verdict": "PASS",
+      "score": 6.0,
+      "evidence": "Ukrainian authorities are attributed and listed in Resources, but denied sources calls prevent verifying the quotation and required non-calque grounding.",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "have Ukrainian jobs, so you do not need another alphabet or another sign to"
+        "As formulated in standard Ukrainian textbooks (Zabolotnyi, 5th grade, p. 135:"
       ]
     },
     "engagement": {
-      "score": 6.0,
-      "evidence": "The supported dialogue adds context, but repeated spelling recognition and uniformly first-position correct answers in act-405 and act-407 make practice predictable.",
+      "score": 7.0,
+      "evidence": "Varied exercises support practice, but repeated explanations and the unmotivated computer exchange weaken the conversational thread.",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "Обері́ть пра́вильно напи́сану фо́рму. — Select the correctly spelled"
+        "**А де тві́й комп'ю́тер?** | And where is your computer?"
       ]
     },
     "tone": {
       "score": 8.0,
-      "evidence": "Instructions are supportive, dialogue speakers are not narrators, Ukrainian dialogue has adjacent English support, and learner examples avoid text fences.",
+      "evidence": "The instructional voice is respectful, has no named narrator or text fences, and supplies side-by-side English for the extended dialogue.",
       "verdict": "PASS",
       "evidence_quotes": [
-        "Read **п'ять** smoothly, with a clear **й** sound. The airflow continues; the"
+        "Use the signs as reading instructions, not decorations."
       ]
     }
   },
@@ -51,7 +51,6 @@
       "engagement"
     ],
     "rejected_dims": [
-      "pedagogical",
       "naturalness"
     ],
     "warning_dims": [
@@ -61,6 +60,6 @@
       "engagement"
     ],
     "min_score": 5.0,
-    "min_dim": "pedagogical"
+    "min_dim": "naturalness"
   }
 }

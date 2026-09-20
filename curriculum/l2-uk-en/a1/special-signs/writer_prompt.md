@@ -33,15 +33,49 @@ clone only its close/summary *shape*). Added Ukrainian passages of three or more
 sentences require side-by-side English support. Write dialogues as > blockquotes,
 never as code fences; put the English breakdown after.
 
-**Why you must call `sources` / VESUM — not as a ritual, as the reason this page is better Ukrainian.**
-A fluent model still mixes Russian calques, wrong gender, wrong government, and invented
-example sentences. VESUM is the dictionary of record for lemma, gender, aspect, and
-rections. Looking it up is what makes the line teachable. This run is also a **test of
-the sources tools**: we will check your tool trace. If you never call them, we cannot
-tell they work, and this corpus is the dataset for a Ukrainian LLM — guessed forms
-become the next model's errors. If a lookup misses, mark `<!-- VERIFY: … -->` and do
-not invent. Stress marks still come from the pipeline annotator after review; do not
-invent stressed spellings.
+## Prove what you write — named `sources` MCP tools (HARD, runtime-gated)
+
+**Why: this is the reason the page is better Ukrainian, not a ritual.** A fluent model
+still mixes Russian calques, wrong gender, wrong government, and invented rules and
+example sentences. Our corpus (textbooks, VESUM, Правопис) is the record. This run is
+also a **test of the sources tools**, and this corpus is the dataset for a Ukrainian
+LLM — guessed forms and guessed rules become the next model's errors.
+
+Call these MCP tools **by these exact names** (your harness may expose them as
+`call_mcp_tool` with ServerName `sources`, or as `mcp_sources_<tool>`; same tools):
+
+- `mcp__sources__search_text` — **probe every theory claim and every landing claim in
+  the textbook corpus BEFORE you emit the sentence.** Query the rule the way a textbook
+  states it, read the hits, and write what the corpus supports. If the corpus does not
+  support the claim, write `<!-- VERIFY: … -->` and do **not** invent.
+- `mcp__sources__verify_words` — every lemma you teach: all vocabulary entries plus
+  every new example word you add (batch them in one call).
+- Optional, same server: `mcp__sources__query_pravopys` for an orthography rule,
+  `mcp__sources__verify_lemma` / `mcp__sources__check_modern_form` for a single doubtful form.
+
+Required probes, checked against your recorded tool trace:
+
+1. **Theory probe (every lesson).** At least one `mcp__sources__search_text` (or other
+   `sources` corpus search) that probes a **theory claim in this lesson's presentation**
+   — the rule you explain, not a random word.
+2. **Landing probe (lesson 1 only).** When you return `landing-overview.md`, at least one
+   corpus search that probes the landing itself: each bilingual "By the end, you can"
+   bullet and each bold Ukrainian target must be corpus-true and actually taught in this
+   module. The landing is an executive orientation portal
+   (docs/epics/a1-upgrade-landing-contract.md) — not a theory dump, not a table, not YAML
+   objectives — but its claims are still claims, and you probe the landing like theory.
+3. **Vocabulary proof (every lesson).** At least one `mcp__sources__verify_words` covering
+   this lesson's vocabulary and new example words.
+
+**What does NOT count as proof.** Only `sources` MCP calls are recorded in the tool
+trace. Shell commands, Python scripts, `curl`/HTTP requests and direct SQLite reads of
+any dictionary database are invisible to the trace and are never a substitute — do not
+run them. A lesson whose trace holds zero `sources` MCP calls **fails the build**
+(`MCP_TOOLS_NEVER_INVOKED`) and the write is discarded. If the MCP tools are not
+visible in your session, stop and report that in one line instead of working around it.
+
+Stress marks come from the pipeline annotator after review. Do not invent stressed
+spellings, and do not look stress up by any other route.
 
 A1 landing overview (lesson 1 only): if the original module opening (text before the first `##`) has no "By the end, you can" after tables/tips/code fences are ignored, also return:
 
@@ -68,29 +102,34 @@ Use only the base A1 placement/type matrix below. Preserve every option of odd-o
 ### Find-and-Fix (`error-correction`) — HARD (upgrade gate)
 
 Step 1 is “spot the bad token”. Step 2 must be a **real spelling choice**, not a
-tautology. After the learner marks the error, chips that are only
-`[correction, same-error]` fail the lesson gates (and teach nothing).
+tautology. The component removes the spotted error from the step-2 chips, so an
+`options:` list that contains the `error` token both fails the lesson gates and
+shrinks the visible choice set.
 
 For **every** `error-correction` item that has a non-empty `error:`:
 
-1. `sentence:` is a **natural Ukrainian carrier** (dialogue/scene). At **A1**,
-   for **new** Find-and-Fix items add a short English scaffold after an em dash
-   `—` (or a parenthetical gloss). For items preserved from the original module,
-   do **not** rewrite `sentence:` (structural preservation); put EN in
-   `explanation:` instead if needed. Forbidden: English meta stems
-   (“Find the word…”, “Identify which…”, “In Ukrainian, the word for…”).
+1. `sentence:` is a **natural Ukrainian carrier** (dialogue/scene) with **no**
+   English gloss. At **A1**, put the short English scaffold in `explanation:`
+   (not after `—` on the sentence, and not in parentheses on the sentence).
+   For items preserved from the original module, do **not** rewrite `sentence:`
+   (structural preservation); still put EN in `explanation:` if it is missing.
+   Forbidden: English meta stems (“Find the word…”, “Identify which…”,
+   “In Ukrainian, the word for…”).
 2. Canonical fields only: `sentence`, `error`, `correction`, `options`,
    optional `explanation` (same contract as fresh write).
-3. `options:` has **≥3 distinct** forms, **includes `correction`**, and includes
-   **≥1 distractor that is not the spotted `error` token**.
+3. `options:` has **≥3 distinct** forms, **includes `correction`**, and must **NOT
+   contain the `error` token** (any option equal to `error` fails). The three chips
+   are the correction plus ≥2 distractors, none of them the error. Distractors are
+   **other spellings of the same word** (`день` → `дєнь` / `дінь`), never an unrelated
+   vocabulary word (`кінь`, `сіль`, `свято`).
 4. **Render-faithful chips:** after MDX derivation, at least one option string
    must equal the rendered `correctForm` **exactly** (React uses
    `selectedFix === correctForm`). Do not put English glosses on chips
-   (`день (day)` vs bare `день`); keep glosses in `sentence` / `explanation`.
+   (`день (day)` vs bare `день`); keep glosses in `explanation` only.
 5. Distractors come **only** from the inventory below (wiki L2 / bad-form pairs /
    cumulative learner-state contrasts). Never invent Russianisms or fabricate
    wrong forms. If inventory is thin, reuse attested pairs from the original
-   module’s other EC items / quiz contrasts — still never ship `[corr, err]` alone.
+   module’s other EC items / quiz contrasts — still never put the error token in `options`.
 6. You **may grow** original `options` lists (preservation is ⊆). You **must**
    grow empty or binary tautological originals to satisfy (3)–(5).
 
@@ -103,6 +142,31 @@ the answer is correct (apostrophe rule, soft sign, letter, etc.). Micro-blanks
 like `бур___ян` / answer `'` without feedback are a hard fail — same contract as
 quiz/translate explanations. Structural blank + `answer∈options` checks still
 apply.
+
+**Empty choice (blank slot).** When "no character" is the right answer, the option
+and the `answer` are the **empty string `""`**, nothing else. The chip renders as a
+blank clickable slot; grading compares the selected value to `answer`; empty means
+no character inserted. Never write `без знака`, `без зна́ка — no sign`, `Немає знака`
+or any gloss in `options` or `answer` — the gate rejects them. Sample:
+
+```json
+{"sentence": "ден___ь", "options": ["", "ь", "'"], "answer": "", "explanation": "..."}
+```
+
+### Alphabet modules: no line breaks (`sounds-letters-and-hello`, `reading-ukrainian`, `special-signs`)
+
+These three modules teach syllables, not line breaks. Do **not** teach `перенос`, do
+not emit `divide-words` activities, and do not use the models `Мар'-яна`,
+`дере-в'яний`, `бур'-ян`, `паль-ці` or any other hyphenated break. The lesson map, plan
+and original artifacts below have been filtered of `перенос` items on purpose; an
+original divide-words activity that is missing from them is intentionally dropped.
+The gate fails such a build.
+
+### Learner-facing phrases banned at every level
+
+Never write (case-insensitive): "mastery of all 33 letters", "comprehensive command of
+the complete 33-letter", "use only prepared models", "before you leave the lesson
+tab", "Stay inside Ukrainian for this lesson".
 
 ### Activity chrome language
 
@@ -123,32 +187,31 @@ WORKBOOK_MIN: '6'
 WORKBOOK_MAX: '9'
 ITEMS_MIN: '6'
 VOCAB_COUNT_TARGET: '20'
-INLINE_ALLOWED_TYPES: image-to-letter, letter-grid, watch-and-repeat, divide-words,
-  count-syllables, pick-syllables, unjumble, order, odd-one-out, observe, phrase-table,
-  match-up, group-sort, quiz, true-false, fill-in
-WORKBOOK_ALLOWED_TYPES: divide-words, count-syllables, pick-syllables, anagram, unjumble,
-  order, odd-one-out, observe, phrase-table, match-up, group-sort, quiz, true-false,
-  fill-in, error-correction, translate
+INLINE_ALLOWED_TYPES: image-to-letter, letter-grid, watch-and-repeat, count-syllables,
+  pick-syllables, unjumble, order, odd-one-out, observe, phrase-table, match-up, group-sort,
+  quiz, true-false, fill-in
+WORKBOOK_ALLOWED_TYPES: count-syllables, pick-syllables, anagram, unjumble, order,
+  odd-one-out, observe, phrase-table, match-up, group-sort, quiz, true-false, fill-in,
+  error-correction, translate
 INLINE_PRIORITY_TYPES: image-to-letter, match-up, fill-in, quiz, watch-and-repeat
 WORKBOOK_PRIORITY_TYPES: fill-in, match-up, group-sort, anagram, unjumble
 ACTIVITY_COUNT_TARGET: '10'
 ACTIVITY_MIN: '0'
 ACTIVITY_MAX: '15'
-ALLOWED_ACTIVITY_TYPES: image-to-letter, letter-grid, watch-and-repeat, divide-words,
-  count-syllables, pick-syllables, anagram, unjumble, order, odd-one-out, observe,
-  phrase-table, match-up, group-sort, quiz, true-false, fill-in, error-correction,
-  translate
+ALLOWED_ACTIVITY_TYPES: image-to-letter, letter-grid, watch-and-repeat, count-syllables,
+  pick-syllables, anagram, unjumble, order, odd-one-out, observe, phrase-table, match-up,
+  group-sort, quiz, true-false, fill-in, error-correction, translate
 FORBIDDEN_ACTIVITY_TYPES: classify, mark-the-words, cloze, grammar-identify, highlight-morphemes,
   essay-response, reading, critical-analysis, translation-critique, comparative-study,
   source-evaluation, authorial-intent, debate, etymology-trace, paleography-analysis,
-  dialect-comparison, transcription, select
+  dialect-comparison, transcription, select, divide-words
 REQUIRED_TYPES: ''
 PRIORITY_TYPES: fill-in, match-up, quiz, image-to-letter, watch-and-repeat
 
 
 ## Distractor inventory (read-only — use for EC / MCQ wrong forms)
 
-### Wiki `/home/ops/learn-ukrainian/.worktrees/builds/a1-special-signs-20260918-081833/wiki/pedagogy/a1/special-signs.md`
+### Wiki `/home/ops/learn-ukrainian/.worktrees/builds/a1-special-signs-20260919-230730/wiki/pedagogy/a1/special-signs.md`
 
 ## Типові помилки L2 (англомовні учні)
 
@@ -260,13 +323,11 @@ lessons:
     workbook:
     - 6
     - 9
-  unverified_stress: []
+  unverified_stress:
+  - Мар'я́но
   unverified_lemmas: []
 - n: 5
-  title: Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation
-    Rules and Special Signs Synthesis
   sections:
-  - Перенос і письмо
   - Далі
   - Підсумок модуля
   minutes: 60
@@ -300,10 +361,6 @@ provenance:
   index: 3
   new_id: act-4
   lesson: 4
-- placement: inline
-  index: 4
-  new_id: act-5
-  lesson: 5
 - placement: workbook
   index: 0
   new_id: act-w1
@@ -340,8 +397,6 @@ items_min_exempt:
 - id: act-3
   reason: 4-item original activity preserved from baseline
 - id: act-4
-  reason: 4-item original activity preserved from baseline
-- id: act-5
   reason: 4-item original activity preserved from baseline
 - id: act-w2
   reason: 4-item original activity preserved from baseline
@@ -382,14 +437,6 @@ letter_module: true
 lifecycle: locked
 reviewed_at: '2026-04-23T09:32:45Z'
 reviewed_by: codex-scale-special-signs
-review_notes: 'Review-and-lock pass per the #1412 rubric template (docs/best-practices/wiki-plan-review-and-lock.md).
-  Plan-side findings: the prior plan drifted outside the slug by teaching voiced/voiceless
-  pairs, Г/Ґ, Р, and И inside `special-signs`, while the paired wiki is specifically
-  about `ь` + apostrophe. Fixed by re-scoping the plan to special signs only, adding
-  hooks for the locked wiki''s key contrasts (`буряк` / `бур''ян` / `свято` / `цвях`),
-  adding a transfer block (`Мар''-яна`, `дере-в''яний`), mirroring the wiki''s `Типові
-  помилки L2` table in activity_hints, and adding lifecycle markers plus a wiki back-reference.
-  Scan clean for Russianisms, calques, homoglyphs, and word-count contradictions.'
 title: Особливі знаки
 subtitle: Ь, апостроф і три ключові контрасти - день, сім'я, буряк/бур'ян
 focus: phonetics
@@ -402,8 +449,6 @@ objectives:
 - Читати й писати базові слова з апострофом (`сім'я`, `м'ясо`, `п'ять`, `комп'ютер`)
 - Розрізняти три сценарії - м'якість без апострофа (`буряк`), апостроф (`бур'ян`)
   і зону без апострофа після збігу приголосних (`свято`, `цвях`)
-- Користуватися готовими моделями переносу (`Мар'-яна`, `дере-в'яний`, `бур'-ян`,
-  `паль-ці`)
 - Впізнавати й виправляти типові L2-помилки - пропуск апострофа, механічне вставляння
   апострофа, пропуск `ь`, механічне `льожка`
 content_outline:
@@ -450,15 +495,9 @@ content_outline:
   - 'Усі activity_hints цього блоку повинні дзеркалити wiki "Типові помилки L2": пропуск
     апострофа у слові `сім''я`, механічний апостроф (`св''ято`), пропуск `ь` (`ден`),
     механічне `льожка`.'
-- section: Перенос і підсумок
+- section: Підсумок
   words: 200
-  points:
-  - 'Закріпити, що `ь` та апостроф тримаються попередньої літери при переносі: `Мар''-яна`,
-    `дере-в''яний`, `бур''-ян`, `паль-ці`. Додати правило: одну букву не залишаємо
-    окремо і не переносимо саму.'
-  - 'Самоперевірка: учень має вміти пояснити різницю між `день`, `сім''я`, `буряк`,
-    `бур''ян`, `свято`; вставити знак у 4-5 словах; правильно поділити для переносу
-    2-3 приклади.'
+  points: []
 vocabulary_hints:
   author_note: 'У цьому модулі слова подаються як орфографічні та фонетичні чанки,
     а не як матеріал для відмінювання чи словотвору. НЕ робіть продуктивним префіксне
@@ -484,8 +523,6 @@ vocabulary_hints:
   - здоров'я (health) - apostrophe after В
   - маленький (small) - soft sign in a high-frequency adjective
   - сьогодні (today) - soft sign in a frequent adverb
-  - Мар'яна (given name) - transfer model `Мар'-яна`
-  - дерев'яний (wooden) - transfer model `дере-в'яний`
   - ложка (spoon) - counterexample against mechanical `льожка`
 targets:
   new_vocabulary:
@@ -519,9 +556,6 @@ activity_hints:
   focus: 'Типові помилки L2 - виправте написання з пропущеним знаком: сім_я, п_ять,
     свято з апострофом, ден_, льожка'
   items: 6
-- type: divide-words
-  focus: 'Поділи слова для переносу: Мар''-яна, дере-в''яний, бур''-ян, паль-ці'
-  items: 4
 connects_to:
 - a1-004 (Наголос та мелодика)
 prerequisites:
@@ -538,8 +572,6 @@ grammar:
   `є`, `ї`'
 - 'Контраст `буряк` / `бур''ян` / `свято` як три окремі сценарії: м''якість без апострофа
   / апостроф / збіг приголосних без апострофа'
-- 'Перенос: `ь` та апостроф не відриваються від попередньої літери; одну букву не
-  залишаємо окремо'
 register: розмовний
 references:
 - title: Захарійчук, 1 клас (НУШ 2025), стор. 97
@@ -548,7 +580,6 @@ references:
   notes: М'який знак як показник м'якості приголосного; шкільне узагальнення про набір
     приголосних.
 - title: Большакова, 2 клас, стор. 58-59
-  notes: 'Апостроф і перенос слів: моделі `Мар''-яна`, `дере-в''яний`, `бур''-ян`.'
 - title: 'Wiki: pedagogy/a1/special-signs (LOCKED 2026-04-23)'
   notes: Authoritative pedagogical brief - see the contrast block (`буряк` / `бур'ян`
     / `свято` / `цвях`), the writer note after "Словниковий мінімум", and the wiki
@@ -564,8 +595,6 @@ changelog:
     `ь` + apostrophe.'
   - 'Added explicit wiki-plan hooks for the locked wiki''s key contrasts: `буряк`
     / `бур''ян` / `свято` / `цвях`.'
-  - Added a dedicated transfer block (`Мар'-яна`, `дере-в'яний`, `бур'-ян`, `паль-ці`)
-    and a matching `divide-words` activity.
   - Added an `error-correction` activity that mirrors the wiki "Типові помилки L2"
     table and a wiki back-reference in references[].
 - version: 1.4.1
@@ -749,26 +778,7 @@ Common learner traps:
 | inventing a soft-sign version of **ло́жка** | do not invent a soft sign or soft **л** |
 | treating apostrophe as a hard stop | keep airflow and pronounce **й** |
 
-Stay inside Ukrainian for this lesson. The apostrophe and soft sign already
-have Ukrainian jobs, so you do not need another alphabet or another sign to
-explain them.
-
 <!-- INJECT_ACTIVITY: act-4 -->
-
-## Перенос і письмо
-
-You will sometimes see words split across a line in printed Ukrainian. At this
-level, use only prepared models:
-
-| Whole word | Safe line-break model |
-| --- | --- |
-| **Мар'я́на** | `Мар'-яна` |
-| **дерев'я́ний** | `дере-в'яний` |
-| **бур'я́н** | `бур'-ян` |
-| **па́льці** | `паль-ці` |
-
-The simple idea: **ь** and apostrophe stay with the letter before them. Also,
-do not leave one single letter alone on a line.
 
 Reading before writing: first recognize the printed word, then copy the sign in
 a notebook cue.
@@ -786,8 +796,6 @@ teacher/tutor.
 Ask a native Ukrainian teacher or tutor to listen to a short read-aloud:
 **день, сім'я́, буря́к, бур'я́н, свя́то**. The feedback target is small:
 soft ending, clear **й**, no invented pause.
-
-Before you leave the lesson tab, check that you can do these things:
 
 - say that **ь** has no sound of its own;
 - read **день**, **кінь**, **сіль**, and **вчи́тель** without adding **і**;
@@ -815,313 +823,288 @@ same six contrast words: **день**, **сім'я́**, **буря́к**, **бу
 
 ### activities.yaml
 
----
 inline:
-  - id: act-1
-    type: quiz
-    title: М'яко чи розді́льно — Soft or separate
-    instruction: Обери пояснення для читання. — Choose the explanation for reading.
-    items:
-      - prompt: Буря́к — що відбувається перед літерою я? — Буря́к — what happens before the letter я?
-        options:
-          - text: Р пом'якшується перед я. — Р softens before я.
-            correct: true
-          - text: Є апо́строф. — There is an apostrophe.
-            correct: false
-          - text: Ї завжди [йі]. — Ї is always [йі].
-            correct: false
-        explanation: У слові буря́к немає апо́строфа; р пом'якшується перед я. — In the word буря́к there is no apostrophe; р softens before я.
-      - prompt: Бур'я́н — що робить апо́строф? — Бур'я́н — what does the apostrophe do?
-        options:
-          - text: Р зникає. — Р disappears.
-            correct: false
-          - text: Р залишається твердим, потім чути [йа]. — Р remains hard, then [йа] is heard.
-            correct: true
-          - text: Додає звук [і]. — It adds the sound [і].
-            correct: false
-        explanation: Апо́строф відділяє р від я. — The apostrophe separates р from я.
-      - prompt: Ї — що завжди правильно? — Ї — what is always true?
-        options:
-          - text: Мовчить. — It is silent.
-            correct: false
-          - text: Це м'яки́й знак. — It is the soft sign.
-            correct: false
-          - text: Завжди [йі]. — Always [йі].
-            correct: true
-        explanation: Ї завжди позначає [йі]. — Ї always represents [йі].
-  - id: act-2
-    type: match-up
-    title: Що робить ь
-    instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
-    pairs:
-      - left: день
-        right: soft [n'] in «день»
-      - left: кінь
-        right: soft [n'] in «кінь»
-      - left: сіль
-        right: soft [l'] in «сіль»
-      - left: вчи́тель
-        right: soft [l'] in «вчи́тель»
-      - left: ь (soft sign)
-        right: has no sound of its own
-  - id: act-3
-    type: fill-in
-    title: Додай знак — Add a sign
-    instruction: Обери ь, апо́строф або без знака. — Choose ь, an apostrophe, or no sign.
-    items:
-      - sentence: сім___я
-        answer: "'"
-        options:
-          - "'"
-          - ь
-          - без знака — no sign
-      - sentence: ден___
-        answer: ь
-        options:
-          - ь
-          - "'"
-          - без знака — no sign
-      - sentence: п___ять
-        answer: "'"
-        options:
-          - "'"
-          - ь
-          - без знака — no sign
-      - sentence: У слові свя́то правильний вибір — ___ . — In the word "свя́то", the correct choice is […].
-        answer: без знака — no sign
-        options:
-          - без знака — no sign
-          - "'"
-          - ь
-  - id: act-4
-    type: error-correction
-    title: Виправ пастки — Correct the traps
-    instruction: Обери правильну українську форму. — Choose the correct Ukrainian form.
-    items:
-      - sentence: Моя́ дру́жна сімя живе́ у Ки́єві.
-        error: сімя
-        correction: сім'я́
-        options:
-          - сім'я́
-          - сімя
-        explanation: У слові сім'я́ потрібен апо́строф. — In the word сім'я́ an apostrophe is needed.
-      - sentence: Сього́дні га́рний і те́плий ден.
-        error: ден
-        correction: день
-        options:
-          - день
-          - ден
-        explanation: День потребує м'якого знака. — День requires a soft sign.
-      - sentence: Сього́дні у мі́сті вели́ке св'ято.
-        error: св'ято
-        correction: свя́то
-        options:
-          - свя́то
-          - св'ято
-        explanation: У слові свя́то немає апо́строфа. — In the word свя́то there is no apostrophe.
-      - sentence: На столі́ лежи́ть вели́ка льожка.
-        error: льожка
-        correction: ло́жка
-        options:
-          - ло́жка
-          - льожка
-        explanation: Ло́жка не має м'якого знака після л. — Ло́жка has no soft sign after л.
-  - id: act-5
-    type: divide-words
-    title: Практика переносу слів
-    instruction: Обери підготовлену модель переносу.
-    items:
-      - word: Мар'я́на
-        answer: Мар'-яна
-      - word: дерев'я́ний
-        answer: дере-в'яний
-      - word: бур'я́н
-        answer: бур'-ян
-      - word: па́льці
-        answer: паль-ці
+- id: act-1
+  type: quiz
+  title: М'яко чи розді́льно — Soft or separate
+  instruction: Обери пояснення для читання. — Choose the explanation for reading.
+  items:
+  - prompt: Буря́к — що відбувається перед літерою я? — Буря́к — what happens before
+      the letter я?
+    options:
+    - text: Р пом'якшується перед я. — Р softens before я.
+      correct: true
+    - text: Є апо́строф. — There is an apostrophe.
+      correct: false
+    - text: Ї завжди [йі]. — Ї is always [йі].
+      correct: false
+    explanation: У слові буря́к немає апо́строфа; р пом'якшується перед я. — In the
+      word буря́к there is no apostrophe; р softens before я.
+  - prompt: Бур'я́н — що робить апо́строф? — Бур'я́н — what does the apostrophe do?
+    options:
+    - text: Р зникає. — Р disappears.
+      correct: false
+    - text: Р залишається твердим, потім чути [йа]. — Р remains hard, then [йа] is
+        heard.
+      correct: true
+    - text: Додає звук [і]. — It adds the sound [і].
+      correct: false
+    explanation: Апо́строф відділяє р від я. — The apostrophe separates р from я.
+  - prompt: Ї — що завжди правильно? — Ї — what is always true?
+    options:
+    - text: Мовчить. — It is silent.
+      correct: false
+    - text: Це м'яки́й знак. — It is the soft sign.
+      correct: false
+    - text: Завжди [йі]. — Always [йі].
+      correct: true
+    explanation: Ї завжди позначає [йі]. — Ї always represents [йі].
+- id: act-2
+  type: match-up
+  title: Що робить ь
+  instruction: З'єднай кожне слово з підказкою про м'яки́й знак.
+  pairs:
+  - left: день
+    right: soft [n'] in «день»
+  - left: кінь
+    right: soft [n'] in «кінь»
+  - left: сіль
+    right: soft [l'] in «сіль»
+  - left: вчи́тель
+    right: soft [l'] in «вчи́тель»
+  - left: ь (soft sign)
+    right: has no sound of its own
+- id: act-3
+  type: fill-in
+  title: Додай знак — Add a sign
+  instruction: Обери ь, апо́строф або без знака. — Choose ь, an apostrophe, or no
+    sign.
+  items:
+  - sentence: сім___я
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - ''
+  - sentence: ден___
+    answer: ь
+    options:
+    - ь
+    - ''''
+    - ''
+  - sentence: п___ять
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - ''
+  - sentence: У слові свя́то правильний вибір — ___ . — In the word "свя́то", the
+      correct choice is […].
+    answer: ''
+    options:
+    - ''
+    - ''''
+    - ь
+- id: act-4
+  type: error-correction
+  title: Виправ пастки — Correct the traps
+  instruction: Обери правильну українську форму. — Choose the correct Ukrainian form.
+  items:
+  - sentence: Моя́ дру́жна сімя живе́ у Ки́єві.
+    error: сімя
+    correction: сім'я́
+    explanation: У слові сім'я́ потрібен апо́строф. — In the word сім'я́ an apostrophe
+      is needed.
+  - sentence: Сього́дні га́рний і те́плий ден.
+    error: ден
+    correction: день
+    explanation: День потребує м'якого знака. — День requires a soft sign.
+  - sentence: Сього́дні у мі́сті вели́ке св'ято.
+    error: св'ято
+    correction: свя́то
+    explanation: У слові свя́то немає апо́строфа. — In the word свя́то there is no
+      apostrophe.
+  - sentence: На столі́ лежи́ть вели́ка льожка.
+    error: льожка
+    correction: ло́жка
+    explanation: Ло́жка не має м'якого знака після л. — Ло́жка has no soft sign after
+      л.
 workbook:
-  - type: group-sort
-    title: Сортуй за знаком — Sort by sign
-    instruction: Розподіли кожне слово в правильну групу. — Sort each word into the correct group.
-    groups:
-      - label: Є ь — Has ь
-        items:
-          - день
-          - кінь
-          - сіль
-          - вчи́тель
-          - мале́нький
-      - label: Є апо́строф — Has apostrophe
-        items:
-          - сім'я́
-          - м'я́со
-          - п'ять
-          - комп'ю́тер
-          - бур'я́н
-      - label: Немає знака — No sign
-        items:
-          - буря́к
-          - свя́то
-          - цвях
-          - ло́жка
-  - type: match-up
-    title: Поясни контраст — Explain the contrast
-    instruction: З'єднай слово з поясненням. — Match each word with its explanation.
-    pairs:
-      - left: буря́к
-        right: 'м''я́кість без апо́строфа: р + я — softness without apostrophe: р + я'
-      - left: бур'я́н
-        right: 'апо́строф: р тверди́й, по́тім [йа] — apostrophe: hard р, then [йа]'
-      - left: свя́то
-        right: 'збіг св + я без апо́строфа — cluster св + я without apostrophe'
-      - left: цвях
-        right: 'збіг цв + я без апо́строфа — cluster цв + я without apostrophe'
-  - type: error-correction
-    title: Виправ усі пастки — Fix all traps
-    instruction: Обери правильну українську форму. — Choose the correct Ukrainian form.
+- type: group-sort
+  title: Сортуй за знаком — Sort by sign
+  instruction: Розподіли кожне слово в правильну групу. — Sort each word into the
+    correct group.
+  groups:
+  - label: Є ь — Has ь
     items:
-      - sentence: Це на́ша дру́жна сімя.
-        error: сімя
-        correction: сім'я́
-        options:
-          - сім'я́
-          - сімя
-        explanation: У слові сім'я́ потрібен апо́строф. — In the word сім'я́ an apostrophe is needed.
-      - sentence: У руці́ рі́вно пять па́льців.
-        error: пять
-        correction: п'ять
-        options:
-          - п'ять
-          - пять
-        explanation: У слові п'ять потрібен апо́строф. — In the word п'ять an apostrophe is needed.
-      - sentence: На по́лі росте́ зеле́ний бурян.
-        error: бурян
-        correction: бур'я́н
-        options:
-          - бур'я́н
-          - бурян
-        explanation: У слові бур'я́н потрібен апо́строф після р. — In the word бур'я́н an apostrophe is needed after р.
-      - sentence: Сього́дні ду́же те́плий ден.
-        error: ден
-        correction: день
-        options:
-          - день
-          - ден
-        explanation: День потребує м'якого знака. — День requires a soft sign.
-      - sentence: Сього́дні у на́с весе́ле св'ято.
-        error: св'ято
-        correction: свя́то
-        options:
-          - свя́то
-          - св'ято
-        explanation: У слові свя́то немає апо́строфа. — In the word свя́то there is no apostrophe.
-      - sentence: У су́пі лежи́ть вели́ка льожка.
-        error: льожка
-        correction: ло́жка
-        options:
-          - ло́жка
-          - льожка
-        explanation: Ло́жка не має м'якого знака після л. — Ло́жка has no soft sign after л.
-  - type: true-false
-    title: Факти про знаки — Facts about signs
-    instruction: 'Обери: правда чи неправда. — Choose: true or false.'
+    - день
+    - кінь
+    - сіль
+    - вчи́тель
+    - мале́нький
+  - label: Є апо́строф — Has apostrophe
     items:
-      - statement: Ь не має власного звука. — Ь has no sound of its own.
-        correct: true
-        explanation: Він пом'якшує попередній при́голосний. — It softens the preceding consonant.
-      - statement: Апо́строф тримає попередній при́голосний твердим. — The apostrophe keeps the preceding consonant hard.
-        correct: true
-        explanation: Він відділяє при́голосний від йотованої голосної. — It separates the consonant from the iotated vowel.
-      - statement: Ї іноді мовчить. — Ї is sometimes silent.
-        correct: false
-        explanation: Ї завжди читаємо як [йі]. — We always read ї as [йі].
-      - statement: Свя́то має апо́строф. — Свя́то has an apostrophe.
-        correct: false
-        explanation: Свя́то — модельне слово без апо́строфа. — Свя́то is a model word without an apostrophe.
-  - type: fill-in
-    title: Додай знак у нових словах
-    instruction: Обери ь, апо́строф або без знака.
+    - сім'я́
+    - м'я́со
+    - п'ять
+    - комп'ю́тер
+    - бур'я́н
+  - label: Немає знака — No sign
     items:
-      - sentence: бур___ян
-        answer: "'"
-        options:
-          - "'"
-          - ь
-          - без знака — no sign
-      - sentence: комп___ютер
-        answer: "'"
-        options:
-          - "'"
-          - ь
-          - без знака — no sign
-      - sentence: ім___я
-        answer: "'"
-        options:
-          - "'"
-          - ь
-          - без знака — no sign
-      - sentence: У слові мален_кий потрібен ___ . — In the word "мален_кий", […] is needed.
-        answer: ь
-        options:
-          - ь
-          - "'"
-          - без знака — no sign
-      - sentence: У слові цвях правильний вибір — ___ . — In the word "цвях", the correct choice is […].
-        answer: без знака — no sign
-        options:
-          - без знака — no sign
-          - "'"
-          - ь
-  - type: quiz
-    title: Правильна форма
-    instruction: Обери правильно написане слово.
-    items:
-      - prompt: Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?
-        options:
-          - text: сім'я́
-            correct: true
-          - text: сімя
-            correct: false
-        explanation: Сім'я́ потребує апо́строфа.
-      - prompt: День — яка́ фо́рма пра́вильна? — День — which form is correct?
-        options:
-          - text: ден
-            correct: false
-          - text: день
-            correct: true
-        explanation: День потребує м'якого знака.
-      - prompt: Сло́во без апо́строфа? — Which word is without an apostrophe?
-        options:
-          - text: св'ято
-            correct: false
-          - text: свя́то
-            correct: true
-        explanation: У слові свя́то немає апо́строфа.
-  - type: odd-one-out
-    title: Зайве за знаком
-    instruction: Обери слово, яке не має такого самого знака, як інші.
-    items:
-      - words:
-          - сім'я́
-          - м'я́со
-          - п'ять
-          - буря́к
-        answer: буря́к
-        explanation: Буря́к без апо́строфа; інші слова мають апо́строф.
-      - words:
-          - день
-          - кінь
-          - сіль
-          - свя́то
-        answer: свя́то
-        explanation: Свя́то без ь; інші слова мають м'який знак.
-      - words:
-          - буря́к
-          - свя́то
-          - цвях
-          - бур'я́н
-        answer: бур'я́н
-        explanation: Бур'я́н має апо́строф; інші слова тут без знака.
+    - буря́к
+    - свя́то
+    - цвях
+    - ло́жка
+- type: match-up
+  title: Поясни контраст — Explain the contrast
+  instruction: З'єднай слово з поясненням. — Match each word with its explanation.
+  pairs:
+  - left: буря́к
+    right: 'м''я́кість без апо́строфа: р + я — softness without apostrophe: р + я'
+  - left: бур'я́н
+    right: 'апо́строф: р тверди́й, по́тім [йа] — apostrophe: hard р, then [йа]'
+  - left: свя́то
+    right: збіг св + я без апо́строфа — cluster св + я without apostrophe
+  - left: цвях
+    right: збіг цв + я без апо́строфа — cluster цв + я without apostrophe
+- type: error-correction
+  title: Виправ усі пастки — Fix all traps
+  instruction: Обери правильну українську форму. — Choose the correct Ukrainian form.
+  items:
+  - sentence: Це на́ша дру́жна сімя.
+    error: сімя
+    correction: сім'я́
+    explanation: У слові сім'я́ потрібен апо́строф. — In the word сім'я́ an apostrophe
+      is needed.
+  - sentence: У руці́ рі́вно пять па́льців.
+    error: пять
+    correction: п'ять
+    explanation: У слові п'ять потрібен апо́строф. — In the word п'ять an apostrophe
+      is needed.
+  - sentence: На по́лі росте́ зеле́ний бурян.
+    error: бурян
+    correction: бур'я́н
+    explanation: У слові бур'я́н потрібен апо́строф після р. — In the word бур'я́н
+      an apostrophe is needed after р.
+  - sentence: Сього́дні ду́же те́плий ден.
+    error: ден
+    correction: день
+    explanation: День потребує м'якого знака. — День requires a soft sign.
+  - sentence: Сього́дні у на́с весе́ле св'ято.
+    error: св'ято
+    correction: свя́то
+    explanation: У слові свя́то немає апо́строфа. — In the word свя́то there is no
+      apostrophe.
+  - sentence: У су́пі лежи́ть вели́ка льожка.
+    error: льожка
+    correction: ло́жка
+    explanation: Ло́жка не має м'якого знака після л. — Ло́жка has no soft sign after
+      л.
+- type: true-false
+  title: Факти про знаки — Facts about signs
+  instruction: 'Обери: правда чи неправда. — Choose: true or false.'
+  items:
+  - statement: Ь не має власного звука. — Ь has no sound of its own.
+    correct: true
+    explanation: Він пом'якшує попередній при́голосний. — It softens the preceding
+      consonant.
+  - statement: Апо́строф тримає попередній при́голосний твердим. — The apostrophe
+      keeps the preceding consonant hard.
+    correct: true
+    explanation: Він відділяє при́голосний від йотованої голосної. — It separates
+      the consonant from the iotated vowel.
+  - statement: Ї іноді мовчить. — Ї is sometimes silent.
+    correct: false
+    explanation: Ї завжди читаємо як [йі]. — We always read ї as [йі].
+  - statement: Свя́то має апо́строф. — Свя́то has an apostrophe.
+    correct: false
+    explanation: Свя́то — модельне слово без апо́строфа. — Свя́то is a model word
+      without an apostrophe.
+- type: fill-in
+  title: Додай знак у нових словах
+  instruction: Обери ь, апо́строф або без знака.
+  items:
+  - sentence: бур___ян
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - ''
+  - sentence: комп___ютер
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - ''
+  - sentence: ім___я
+    answer: ''''
+    options:
+    - ''''
+    - ь
+    - ''
+  - sentence: У слові мален_кий потрібен ___ . — In the word "мален_кий", […] is needed.
+    answer: ь
+    options:
+    - ь
+    - ''''
+    - ''
+  - sentence: У слові цвях правильний вибір — ___ . — In the word "цвях", the correct
+      choice is […].
+    answer: ''
+    options:
+    - ''
+    - ''''
+    - ь
+- type: quiz
+  title: Правильна форма
+  instruction: Обери правильно написане слово.
+  items:
+  - prompt: Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?
+    options:
+    - text: сім'я́
+      correct: true
+    - text: сімя
+      correct: false
+    explanation: Сім'я́ потребує апо́строфа.
+  - prompt: День — яка́ фо́рма пра́вильна? — День — which form is correct?
+    options:
+    - text: ден
+      correct: false
+    - text: день
+      correct: true
+    explanation: День потребує м'якого знака.
+  - prompt: Сло́во без апо́строфа? — Which word is without an apostrophe?
+    options:
+    - text: св'ято
+      correct: false
+    - text: свя́то
+      correct: true
+    explanation: У слові свя́то немає апо́строфа.
+- type: odd-one-out
+  title: Зайве за знаком
+  instruction: Обери слово, яке не має такого самого знака, як інші.
+  items:
+  - words:
+    - сім'я́
+    - м'я́со
+    - п'ять
+    - буря́к
+    answer: буря́к
+    explanation: Буря́к без апо́строфа; інші слова мають апо́строф.
+  - words:
+    - день
+    - кінь
+    - сіль
+    - свя́то
+    answer: свя́то
+    explanation: Свя́то без ь; інші слова мають м'який знак.
+  - words:
+    - буря́к
+    - свя́то
+    - цвях
+    - бур'я́н
+    answer: бур'я́н
+    explanation: Бур'я́н має апо́строф; інші слова тут без знака.
 
 
 ### vocabulary.yaml
@@ -1253,11 +1236,9 @@ workbook:
 - title: Большакова, 2 клас, p. 58-59
   role: textbook
   source_ref: Большакова, 2 клас, p. 58-59
-  notes: 'Apostrophe as hard consonant + [йа], and transfer models Мар''-яна / Дере-в''яний.'
 - title: Вашуленко, 3 клас, p. 90
   role: textbook
   source_ref: Вашуленко, 3 клас, p. 90
-  notes: 'Line-break rule: apostrophe is not separated from the previous letter.'
 
 
 ## Response format

@@ -1,29 +1,39 @@
 ```markdown file=module.md
 # М'яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates: Letters Ь, Ц, Ч
 
-**день. сім'я́. буря́к. бур'я́н.** — four words, two signs, three beginner contrasts.
+**день. сім'я́. буря́к. бур'я́н.** — four words, two signs, three
+beginner contrasts.
 
-The signs are small on the page, but they are not decorative. They tell your mouth how to read the nearby letters.
+The signs are small on the page, but they are not decorative. They tell your
+mouth how to read the nearby letters.
 
-Listen once before you write. A native Ukrainian teacher or tutor can say **день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то**; you point to the sign you hear on the page. If you are working alone, record your own voice and compare it with the routine below.
+Listen once before you write. A native Ukrainian teacher or tutor can say
+**день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то**; you point to
+the sign you hear on the page. If you are working alone, record your own voice
+and compare it with the routine below.
 
-Teacher Oksana's routine for this module is short: find the sign, say what it does, then read the word once.
+Teacher Oksana's routine for this module is short: find the sign, say what it
+does, then read the word once.
 
-Keep the goal simple. You are not learning every spelling rule today. You are learning these beginner contrasts:
+Keep the goal simple. You are not learning every spelling rule today. You are
+learning these beginner contrasts:
 
 - **день** — **ь** has no sound, but it softens the consonant before it;
-- **сім'я́** — apostrophe keeps the previous consonant hard and lets you hear **[й]** before **я**;
-- **буря́к / бур'я́н / свя́то / цвях** — sometimes **я** softens, sometimes apostrophe separates, and sometimes two consonants before **я** mean there is no apostrophe.
+- **сім'я́** — apostrophe keeps the previous consonant hard and lets you hear
+  **[й]** before **я**;
+- **буря́к / бур'я́н / свя́то / цвях** — sometimes **я** softens, sometimes
+  apostrophe separates, and sometimes two consonants before **я** mean there is
+  no apostrophe.
 
 By the end, you can:
 
 - recognize **ь** and apostrophe in common A1 words;
-- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding an extra vowel;
-- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with **й** after the apostrophe;
+- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding an extra
+  vowel;
+- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with **й** after
+  the apostrophe;
 - sort words into **м'яки́й знак**, **апо́строф**, and **без зна́ка**;
 - choose the safer form when a visual habit creates a mistake.
-
-In Ukrainian, the word **знак** means a written sign or mark. Today we focus on the **м'яки́й знак** (soft sign, **ь**), and also meet two new consonant letters: **Ц** and **Ч**. When reading, we read syllables smoothly together (**зли́то**), not separated into disconnected letters (**розді́льно**). Our **вчи́тель** (teacher) shows that even a **мале́нький** (small) mark on paper changes how you shape the sounds with your mouth.
 
 ## М'яки́й знак
 
@@ -31,18 +41,18 @@ In Ukrainian, the word **знак** means a written sign or mark. Today we focus
 
 It has no sound of its own. It changes the consonant before it.
 
-| Сло́во | English support | What to notice |
+| Слово́ | English support | What to notice |
 | --- | --- | --- |
 | **день** | day | final **нь** is soft |
 | **кінь** | horse | final **нь** is soft |
 | **сіль** | salt | final **ль** is soft |
 | **вчи́тель** | teacher | final **ль** is soft |
 
-Do not read **ь** as **і**, **й**, or a tiny extra vowel. In **день**, stop on soft **н**. In **сіль**, stop on soft **л**.
+Do not read **ь** as **і**, **й**, or a tiny extra vowel. In **день**, stop on
+soft **н**. In **сіль**, stop on soft **л**.
 
-<!-- INJECT_ACTIVITY: act-101 -->
-
-Short contrast pairs show the job. Treat them as sound examples, not new vocabulary to memorize today:
+Short contrast pairs show the job. Treat them as sound examples, not new
+vocabulary to memorize today:
 
 | Without soft sign | With soft sign | Reading idea |
 | --- | --- | --- |
@@ -50,7 +60,8 @@ Short contrast pairs show the job. Treat them as sound examples, not new vocabul
 | **лан** | **лань** | listen only for hard **н** vs soft **нь** |
 | **рис** | **рись** | listen only for hard **с** vs soft **сь** |
 
-These pairs are reading tools. You do not need to use all of them in conversation today.
+These pairs are reading tools. You do not need to use all of them in
+conversation today.
 
 :::tip
 **ь** points backward. It is a silent instruction for the consonant before it.
@@ -58,106 +69,84 @@ These pairs are reading tools. You do not need to use all of them in conversatio
 
 <!-- INJECT_ACTIVITY: act-2 -->
 
-Ukrainian schoolchildren remember which consonants can be softened with a famous mnemonic phrase: *«Де ти з'їси́ ці лини́?»* (Where will you eat these tench?). The consonants **д, т, з, с, ц, л, н** can take a soft sign. In contrast, consonants made with the lips (**б, п, в, м, ф**) and hushing consonants (**ж, ч, ш, щ**) never take a soft sign in standard Ukrainian spelling.
+Згі́дно з Украї́нським право́писом (§ 26), бу́квою **ь** познача́ємо на письмі́ м'я́кість при́голосних зву́ків: **д, т, з, с, дз, ц, л, н** у кінці́ сло́ва та складу́.
 
-<!-- INJECT_ACTIVITY: act-103 -->
+Як зазна́чає Олекса́ндр Авра́менко (5 клас, § 54), для запам'ято́вування ти́х при́голосних, пі́сля яки́х пи́шеться м'яки́й знак, існу́є зру́чна мнемоні́чна фра́за: «Де ти з'їси́ ці лини́?». Бу́кви **д, т, з, с, ц, л, н** м'якша́ють пе́ред бу́квою **ь**.
 
-## Африка́ти Ц та Ч
+У щоде́нному спілкува́нні ми ча́сто чу́ємо та вжива́ємо сло́ва з м'яки́м кінце́вим зву́ком: **день** — day, **кінь** — horse, **сіль** — salt, **вчи́тель** — teacher, **мале́нький** — small, **сьогодні** — today.
 
-The letters **Ц** and **Ч** represent affricates — complex consonant sounds produced by stopping the airflow momentarily and then releasing it with friction as a single blended sound unit. They are single phonemes, not two separate letters pronounced back-to-back.
+Слу́хайте діало́г між дру́зями:
 
-The letter **Ц** represents the voiceless alveolar affricate [ts], like the *ts* in *cats*. In Ukrainian, **ц** can be either hard (**тверди́й**) or soft (**м'яки́й**):
-- Hard sound [ts]: **цирк** (circus), **со́нце** (sun). Here the tongue position leaves the consonant unsoftened.
-- Soft sound [ts']: **ціна́** (price), **па́льці** (fingers). Here the following vowel **і** softens the affricate.
+> **Окса́на**: Приві́т, Тара́се! Яки́й сього́дні день?
+> **Тара́с**: Приві́т! Сього́дні те́плий день.
+> **Окса́на**: Що це там? Це кінь?
+> **Тара́с**: Так, це вели́кий бі́лий кінь.
+> **Окса́на**: А де наш вчи́тель?
+> **Тара́с**: Наш вчи́тель уже́ тут.
 
-<!-- INJECT_ACTIVITY: act-104 -->
+Розгля́немо ко́жну фра́зу розмо́ви:
 
-The letter **Ч** represents the voiceless postalveolar affricate [tʃ], like the *ch* in *chair*. A crucial rule of standard Ukrainian orthoepy is that **ч is always hard** (**тверди́й**). Even when followed by other sounds, keep it firmly unsoftened. Do not pronounce it soft like in some other Slavic languages:
-- **час** — time
-- **ча́ша** — bowl or goblet
-- **ча́шка** — cup
-- **чи́стий** — clean
-- **ру́чка** — pen or handle
-- **ніч** — night
+| Фра́за — Phrase | Пере́клад — Translation | Мо́вний комента́р — Language note |
+| --- | --- | --- |
+| **Приві́т, Тара́се!** | Hello, Taras! | Зверта́ння до дру́га — friendly greeting |
+| **Яки́й сього́дні день?** | What day is it today? | Кінце́вий **нь** м'яки́й — soft **нь** in **день** |
+| **Сього́дні те́плий день.** | Today is a warm day. | Бу́ква **ь** пом'я́кшує звук **[н']** |
+| **Це вели́кий бі́лий кінь.** | This is a big white horse. | Сло́во **кінь** ма́є м'яки́й кінце́вий звук |
+| **А де наш вчи́тель?** | And where is our teacher? | Су́фікс **-тель** ма́є м'яки́й **[л']** |
+| **Наш вчи́тель уже́ тут.** | Our teacher is already here. | Чі́тка ви́мова без дода́ткових голосних |
 
-Notice how **па́льці** (fingers) combines both principles: the soft sign softens **ль**, and **ці** provides a soft affricate ending. Today (**сього́дні**) you have the tools to read all these contrasts accurately.
+<!-- INJECT_ACTIVITY: act-l1-1 -->
 
-> **Окса́на:** До́брий день! Яка́ ціна́ на цей рис? *(Good day! What is the price of this rice?)*
-> **Тара́с:** До́брий день! Ціна́ мале́нька. Ось чи́ста ча́шка та сві́жий рис. *(Good day! The price is low. Here is a clean cup and fresh rice.)*
-> **Окса́на:** Дя́кую! Наш вчи́тель каза́в, що сього́дні со́нце я́сне. *(Thank you! Our teacher said that today the sun is bright.)*
+## Африкати Ц та Ч
 
-English support after the dialogue:
+В украї́нській фоне́тиці лі́тери **Ц** та **Ч** познача́ють особли́ві зву́ки — африка́ти:
+- **Ц ц** познача́є звук [t͡s];
+- **Ч ч** познача́є звук [t͡ʃ].
 
-| Ukrainian | English |
-| --- | --- |
-| **До́брий день!** | Good day! / Hello! |
-| **Яка́ ціна́ на цей рис?** | What is the price of this rice? |
-| **Ціна́ мале́нька.** | The price is low (small). |
-| **Ось чи́ста ча́шка та сві́жий рис.** | Here is a clean cup and fresh rice. |
-| **Дя́кую!** | Thank you! |
-| **Наш вчи́тель каза́в, що сього́дні со́нце я́сне.** | Our teacher said that today the sun is bright. |
+Олекса́ндр Строка́ль (§ 5) підкре́слює важли́ву відмі́нність між ци́ми двома́ лі́терами щодо вжива́ння м'яко́го зна́ка:
+1. Лі́тера **Ц** в украї́нській мо́ві мо́же бу́ти як твердо́ю, так і м'яко́ю. Коли́ вона́ м'яка́ наприкінці́ сло́ва чи скла́ду, ми пи́шемо **ь**: **па́лець** — finger, **стіле́ць** — chair, **кільце́** — ring, **хло́пець** — boy. Пе́ред голосни́м **е** вона́ звучи́ть твердо: **со́нце** — sun.
+2. Лі́тера **Ч** — це шипля́чий звук. В украї́нській мо́ві шипля́чі зву́ки є тверди́ми. Пі́сля шипля́чих (**ж, ч, ш, щ**) м'яки́й знак у кінці́ слів не пи́шеться: **ніч** — night, **чай** — tea, **чи** — whether / or, **ча́шка** — cup, **чу́ти** — to hear.
 
-<!-- INJECT_ACTIVITY: act-105 -->
+Послу́хайте коро́тку розмо́ву на ку́хні:
+
+> **Марко́**: Окса́но, що це на столі́?
+> **Окса́на**: Це гаря́чий чай і цу́кор.
+> **Марко́**: А де моя́ ча́шка?
+> **Окса́на**: Ось вона́ бі́ля стола́, де стої́ть стіле́ць.
+> **Марко́**: Дя́кую! На дво́рі ти́ха ніч.
+> **Окса́на**: Так, те́пла лі́тня ніч.
+
+Розгля́немо фонети́чні та орфографі́чні дета́лі:
+
+| Фра́за — Phrase | Пере́клад — Translation | Що помі́тити — What to notice |
+| --- | --- | --- |
+| **Окса́но, що це на столі́?** | Oksana, what is this on the table? | Запита́ння про предмети — question |
+| **Це гаря́чий чай і цу́кор.** | This is hot tea and sugar. | Тверди́й **ч** у сло́ві **чай**, тверди́й **ц** у **цу́кор** |
+| **А де моя́ ча́шка?** | And where is my cup? | Тверди́й звук **[ч]** пе́ред **а** |
+| **Ось вона́ бі́ля стола́, де стої́ть стіле́ць.** | Here it is near the table, where the chair stands. | М'яки́й кінце́вий **ць** із бу́квою **ь** |
+| **Дя́кую! На дво́рі ти́ха ніч.** | Thank you! Outside it is a quiet night. | Сло́во **ніч** без м'яко́го зна́ка |
+| **Так, те́пла лі́тня ніч.** | Yes, a warm summer night. | Кінце́вий **ч** за́вжди тверди́й |
+
+<!-- INJECT_ACTIVITY: act-l1-2 -->
+
+<!-- INJECT_ACTIVITY: act-l1-3 -->
+
+<!-- INJECT_ACTIVITY: act-l1-4 -->
+
+Підсуму́ємо головне́ пра́вило сього́днішнього уро́ку:
+- **М'яки́й знак (ь)** не ма́є вла́сного зву́ка; він ли́ше вка́зує на м'я́кість попере́днього при́голосного (**день**, **кінь**, **сіль**);
+- Бу́ква **Ц** бува́є м'яко́ю та пи́шеться з **ь** (**па́лець**, **стіле́ць**);
+- Бу́ква **Ч** в украї́нській мо́ві тверда́ й наприкінці́ слів ніко́ли не ма́є м'яко́го зна́ка (**ніч**, **чай**).
 ```
 
 ```json file=activities.yaml
 {
   "inline": [
     {
-      "id": "act-101",
-      "type": "watch-and-repeat",
-      "title": "Диві́ться та повто́рюйте: Ь, Ц, Ч — Watch and repeat: Ь, Ц, Ч",
-      "instruction": "Диві́ться навча́льне ві́део та повто́рюйте ко́жне сло́во вго́лос. — Watch the pronunciation video and repeat each word aloud.",
-      "items": [
-        {
-          "word": "день",
-          "letter": "Ь",
-          "sound": "[н']",
-          "video": "https://www.youtube.com/watch?v=cJlal8XKBxo",
-          "note": "The soft sign has no sound of its own; it softens the preceding consonant."
-        },
-        {
-          "word": "кінь",
-          "letter": "Ь",
-          "sound": "[н']",
-          "video": "https://www.youtube.com/watch?v=cJlal8XKBxo",
-          "note": "Soft ending: pronounce [кін']."
-        },
-        {
-          "word": "цирк",
-          "letter": "Ц",
-          "sound": "[т͡с]",
-          "video": "https://www.youtube.com/watch?v=u44eCjR2Oz8",
-          "note": "Voiceless dental affricate; hard before [и]."
-        },
-        {
-          "word": "ціна́",
-          "letter": "Ц",
-          "sound": "[т͡с']",
-          "video": "https://www.youtube.com/watch?v=u44eCjR2Oz8",
-          "note": "Soft dental affricate before [і]."
-        },
-        {
-          "word": "час",
-          "letter": "Ч",
-          "sound": "[т͡ʃ]",
-          "video": "https://www.youtube.com/watch?v=UsJkbdsY2RA",
-          "note": "Voiceless postalveolar affricate; always hard in standard Ukrainian."
-        },
-        {
-          "word": "ча́шка",
-          "letter": "Ч",
-          "sound": "[т͡ʃ]",
-          "video": "https://www.youtube.com/watch?v=UsJkbdsY2RA",
-          "note": "Hard affricate [ч] at the beginning of the word."
-        }
-      ]
-    },
-    {
       "id": "act-2",
       "type": "match-up",
-      "title": "Що ро́бить ь — What does ь do",
-      "instruction": "З'єдна́йте ко́жне сло́во з підка́зкою про м'яки́й знак. — Match each word or sign with what the soft sign does.",
+      "title": "Що робить ь",
+      "instruction": "З'єднай кожне слово з підказкою про м'яки́й знак.",
       "pairs": [
         {
           "left": "день",
@@ -182,499 +171,658 @@ English support after the dialogue:
       ]
     },
     {
-      "id": "act-103",
-      "type": "true-false",
-      "title": "Пра́вила м'яко́го зна́ка та африка́т — True or False",
-      "instruction": "Ви́значте: пра́вда це чи непра́вда. — Decide whether each statement is true or false.",
-      "items": [
-        {
-          "statement": "The soft sign (ь) has its own vowel sound.",
-          "answer": false,
-          "explanation": "The soft sign has no sound of its own; it only softens the preceding consonant."
-        },
-        {
-          "statement": "In the word «день», the final sound is soft.",
-          "answer": true,
-          "explanation": "The letter ь makes the sound [н] soft: [ден']."
-        },
-        {
-          "statement": "In Ukrainian, the sound [ч] is hard.",
-          "answer": true,
-          "explanation": "In standard Ukrainian, the affricate [ч] is pronounced hard."
-        },
-        {
-          "statement": "The letter Ц represents the affricate [ts].",
-          "answer": true,
-          "explanation": "Ц is a voiceless dental affricate [ts]."
-        },
-        {
-          "statement": "In the word «ціна́», the sound [ц] is hard.",
-          "answer": false,
-          "explanation": "Before the vowel [і], the affricate [ц] is softened."
-        },
-        {
-          "statement": "The words «бу́ква» and «лі́тера» are synonyms in Ukrainian.",
-          "answer": true,
-          "explanation": "Both words mean a written letter of the alphabet."
-        }
-      ]
-    },
-    {
-      "id": "act-104",
+      "id": "act-l1-1",
       "type": "quiz",
-      "title": "Тверди́й чи м'яки́й звук — Hard or soft sound",
-      "instruction": "Обері́ть, яки́м є ви́ділений при́голосний звук: тверди́м чи м'яки́м. — Choose whether the highlighted consonant sound is hard or soft.",
+      "title": "Впізна́й м'яки́й знак — Recognize the soft sign",
+      "instruction": "Обери́ пра́вильне твер́дження про звук чи лі́теру. — Choose the correct statement about the sound or letter.",
       "items": [
         {
-          "question": "Кінце́вий звук у сло́ві «день» [н'] — The final sound in «день» [n']:",
+          "prompt": "Що ро́бить м'яки́й знак (ь)? — What does the soft sign (ь) do?",
           "options": [
-            "м'яки́й — soft",
-            "тверди́й — hard"
+            {
+              "text": "Пом'я́кшує попере́дній при́голосний. — Softens the preceding consonant.",
+              "correct": true
+            },
+            {
+              "text": "Познача́є окре́мий звук [і]. — Represents a separate sound [і].",
+              "correct": false
+            },
+            {
+              "text": "Ро́бить звук тверди́м. — Makes the sound hard.",
+              "correct": false
+            }
           ],
-          "answer": "м'яки́й — soft",
-          "explanation": "Знак ь ро́бить звук [н] м'яки́м: [ден']."
+          "explanation": "М'яки́й знак не ма́є вла́сного зву́ка; він ли́ше пом'я́кшує попере́дній при́голосний."
         },
         {
-          "question": "Кінце́вий звук у сло́ві «стан» [н] — The final sound in «стан» [n]:",
+          "prompt": "Сло́во «день» — як звучи́ть оста́нній звук? — The word «день» — how does the last sound sound?",
           "options": [
-            "тверди́й — hard",
-            "м'яки́й — soft"
+            {
+              "text": "М'яки́й [н']. — Soft [н'].",
+              "correct": true
+            },
+            {
+              "text": "Тверди́й [н]. — Hard [н].",
+              "correct": false
+            },
+            {
+              "text": "Окре́мий звук [і]. — Separate sound [і].",
+              "correct": false
+            }
           ],
-          "answer": "тверди́й — hard",
-          "explanation": "Без м'яко́го зна́ка звук [н] залиша́ється тверди́м: [стан]."
+          "explanation": "У сло́ві «день» стої́ть ь, тому́ оста́нній при́голосний звучи́ть м'я́ко: [н']."
         },
         {
-          "question": "Звук [ц] у сло́ві «цирк» пе́ред лі́терою и — The sound [ts] in «цирк» before letter и:",
+          "prompt": "Сло́во «сіль» — як звучи́ть оста́нній звук? — The word «сіль» — how does the last sound sound?",
           "options": [
-            "тверди́й — hard",
-            "м'яки́й — soft"
+            {
+              "text": "М'яки́й [л']. — Soft [л'].",
+              "correct": true
+            },
+            {
+              "text": "Тверди́й [л]. — Hard [л].",
+              "correct": false
+            },
+            {
+              "text": "Звук [й]. — Sound [й].",
+              "correct": false
+            }
           ],
-          "answer": "тверди́й — hard",
-          "explanation": "Пе́ред лі́терою и звук [ц] є тверди́м: [цирк]."
+          "explanation": "У сло́ві «сіль» буква ь ро́бить звук [л'] м'яки́м."
         },
         {
-          "question": "Звук [ц'] у сло́ві «ціна́» пе́ред лі́терою і — The sound [ts'] in «ціна́» before letter і:",
+          "prompt": "Чи ма́є м'яки́й знак вла́сний звук? — Does the soft sign have its own sound?",
           "options": [
-            "м'яки́й — soft",
-            "тверди́й — hard"
+            {
+              "text": "Ні, він не ма́є зву́ка. — No, it has no sound.",
+              "correct": true
+            },
+            {
+              "text": "Так, це звук [і]. — Yes, it is the sound [і].",
+              "correct": false
+            },
+            {
+              "text": "Так, це звук [й]. — Yes, it is the sound [й].",
+              "correct": false
+            }
           ],
-          "answer": "м'яки́й — soft",
-          "explanation": "Пе́ред лі́терою і звук [ц] пом'я́кшується: [ts'ina]."
+          "explanation": "М'яки́й знак — це грамати́чний знак без вла́сного зву́ка."
         },
         {
-          "question": "Звук [ч] у сло́ві «час» — The sound [ch] in «час»:",
+          "prompt": "Чим відрізня́ються слова́ «стан» і «стань»? — How do the words «стан» and «стань» differ?",
           "options": [
-            "тверди́й — hard",
-            "м'яки́й — soft"
+            {
+              "text": "Тверди́й [н] проти́ м'яко́го [н']. — Hard [н] versus soft [н'].",
+              "correct": true
+            },
+            {
+              "text": "Додає́ться нови́й голосни́й звук. — A new vowel sound is added.",
+              "correct": false
+            },
+            {
+              "text": "Звук [с] стає́ м'яки́м. — Sound [с] becomes soft.",
+              "correct": false
+            }
           ],
-          "answer": "тверди́й — hard",
-          "explanation": "В украї́нській мо́ві звук [ч] за́вжди тверди́й: [час]."
+          "explanation": "Буква ь у сло́ві «стань» пом'я́кшує кінце́вий при́голосний [н']."
         },
         {
-          "question": "Кінце́вий звук у сло́ві «сіль» [л'] — The final sound in «сіль» [l']:",
+          "prompt": "Чим відрізня́ються слова́ «рис» і «рись»? — How do the words «рис» and «рись» differ?",
           "options": [
-            "м'яки́й — soft",
-            "тверди́й — hard"
+            {
+              "text": "Тверди́й [с] проти́ м'яко́го [с']. — Hard [с] versus soft [с'].",
+              "correct": true
+            },
+            {
+              "text": "Вони́ зву́чать одна́ково. — They sound the same.",
+              "correct": false
+            },
+            {
+              "text": "З'явля́ється звук [й]. — Sound [й] appears.",
+              "correct": false
+            }
           ],
-          "answer": "м'яки́й — soft",
-          "explanation": "Знак ь ро́бить звук [л] м'яки́м: [с'іл']."
+          "explanation": "У сло́ві «рис» звук [с] тверди́й, а в сло́ві «рись» — м'яки́й [с']."
         }
       ]
     },
     {
-      "id": "act-105",
-      "type": "group-sort",
-      "title": "Розподілі́ть слова́ за тве́рдістю зву́ка — Group Sort: Hard vs Soft",
-      "instruction": "Розподілі́ть слова́ на дві гру́пи: з тверди́м або́ з м'яки́м кінце́вим при́голосним. — Sort words into those ending in a hard consonant and those ending in a soft consonant.",
-      "groups": [
+      "id": "act-l1-2",
+      "type": "fill-in",
+      "title": "Дода́й знак або залі́ш поро́жнім — Add sign or leave blank",
+      "instruction": "Вста́в ь або залі́ш мі́сце поро́жнім. — Insert ь or leave the slot blank.",
+      "items": [
         {
-          "name": "Тверди́й при́голосний — Hard consonant",
-          "items": [
-            "стан",
-            "лан",
-            "рис"
-          ]
+          "sentence": "па́лец___",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "У сло́ві «па́лець» наприкінці́ пи́шемо м'яки́й знак після ц."
         },
         {
-          "name": "М'яки́й при́голосний — Soft consonant",
-          "items": [
-            "стань",
-            "лань",
-            "рись"
-          ]
+          "sentence": "ніч___",
+          "options": [
+            "",
+            "ь"
+          ],
+          "answer": "",
+          "explanation": "Пі́сля шипля́чого [ч] у кінці́ слів м'яки́й знак не пи́шеться: «ніч»."
+        },
+        {
+          "sentence": "стіле́ц___",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "Африка́та [ц'] у сло́ві «стіле́ць» є м'яко́ю і потре́бує м'яко́го зна́ка."
+        },
+        {
+          "sentence": "ден___",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "У сло́ві «день» пи́шемо м'яки́й знак для позна́чення м'я́кості кінце́вого [н']."
+        },
+        {
+          "sentence": "со́нце___",
+          "options": [
+            "",
+            "ь"
+          ],
+          "answer": "",
+          "explanation": "У сло́ві «со́нце» звук [ц] тверди́й пе́ред е, м'яки́й знак не потрі́бен."
+        },
+        {
+          "sentence": "чи́ста темна ніч___",
+          "options": [
+            "",
+            "ь"
+          ],
+          "answer": "",
+          "explanation": "Пі́сля лі́тери ч м'яки́й знак не ста́вимо: «ніч»."
+        }
+      ]
+    },
+    {
+      "id": "act-l1-3",
+      "type": "match-up",
+      "title": "Зву́ки та бу́кви: Ц та Ч — Sounds and letters: Ц and Ч",
+      "instruction": "З'єднай сло́во з опи́сом зву́ка. — Match each word with its sound description.",
+      "pairs": [
+        {
+          "left": "па́лець",
+          "right": "soft [ts'] with soft sign"
+        },
+        {
+          "left": "стіле́ць",
+          "right": "soft [ts'] with soft sign"
+        },
+        {
+          "left": "со́нце",
+          "right": "hard [ts] before vowel [e]"
+        },
+        {
+          "left": "ніч",
+          "right": "hard sibilant [ch] without soft sign"
+        },
+        {
+          "left": "ча́шка",
+          "right": "hard sibilant [ch] before [a]"
+        },
+        {
+          "left": "чай",
+          "right": "hard sibilant [ch] at word start"
+        }
+      ]
+    },
+    {
+      "id": "act-l1-4",
+      "type": "quiz",
+      "title": "Переві́рка африка́т: Ц чи Ч — Affricate check: Ц or Ч",
+      "instruction": "Обери́ пра́вильну лі́теру для сло́ва. — Choose the correct letter for the word.",
+      "items": [
+        {
+          "prompt": "У сло́ві «...ай» пе́рша лі́тера — це: — In the word «...ай» the first letter is:",
+          "options": [
+            {
+              "text": "Ч (чай) — letter Ч",
+              "correct": true
+            },
+            {
+              "text": "Ц (цай) — letter Ц",
+              "correct": false
+            }
+          ],
+          "explanation": "Украї́нське сло́во пи́шеться з лі́терою Ч: чай."
+        },
+        {
+          "prompt": "У сло́ві «...у́кор» пе́рша лі́тера — це: — In the word «...у́кор» the first letter is:",
+          "options": [
+            {
+              "text": "Ц (цу́кор) — letter Ц",
+              "correct": true
+            },
+            {
+              "text": "Ч (чу́кор) — letter Ч",
+              "correct": false
+            }
+          ],
+          "explanation": "Украї́нське сло́во пи́шеться з лі́терою Ц: цу́кор."
+        },
+        {
+          "prompt": "У сло́ві «стіле́...» оста́ння лі́тера перед ь — це: — In the word «стіле́...» the last letter before ь is:",
+          "options": [
+            {
+              "text": "ц (стіле́ць) — letter ц",
+              "correct": true
+            },
+            {
+              "text": "ч (стіле́чь) — letter ч",
+              "correct": false
+            }
+          ],
+          "explanation": "Прави́льна украї́нська фо́рма — стіле́ць."
+        },
+        {
+          "prompt": "Чи пи́шемо ь у кінці́ сло́ва «ніч»? — Do we write ь at the end of «ніч»?",
+          "options": [
+            {
+              "text": "Ні, після ч м'яки́й знак не пи́шемо. — No, soft sign is not written after ч.",
+              "correct": true
+            },
+            {
+              "text": "Так, обов'язко́во пи́шемо ь. — Yes, ь is mandatory.",
+              "correct": false
+            }
+          ],
+          "explanation": "В украї́нській мо́ві шипля́чі при́голосні не ма́ють м'яко́го зна́ка наприкінці́ слів."
+        },
+        {
+          "prompt": "У сло́ві «...а́шка» пе́рша лі́тера — це: — In the word «...а́шка» the first letter is:",
+          "options": [
+            {
+              "text": "Ч (ча́шка) — letter Ч",
+              "correct": true
+            },
+            {
+              "text": "Ц (ца́шка) — letter Ц",
+              "correct": false
+            }
+          ],
+          "explanation": "Прави́льне украї́нське сло́во — ча́шка."
+        },
+        {
+          "prompt": "У сло́ві «па́ле...» оста́нній при́голосний перед ь — це: — In the word «па́ле...» the last consonant before ь is:",
+          "options": [
+            {
+              "text": "ц (па́лець) — letter ц",
+              "correct": true
+            },
+            {
+              "text": "ч (па́лечь) — letter ч",
+              "correct": false
+            }
+          ],
+          "explanation": "Прави́льна украї́нська фо́рма — па́лець."
         }
       ]
     }
   ],
   "workbook": [
     {
-      "id": "act-106",
-      "type": "quiz",
-      "title": "Ви́беріть пра́вильне зна́чення — Choose the correct meaning",
-      "instruction": "Обері́ть пра́вильний англі́йський перекла́д для ко́жного украї́нського сло́ва. — Select the correct English translation for each Ukrainian word.",
-      "items": [
+      "id": "act-l1-w1",
+      "type": "group-sort",
+      "title": "Сортува́ння за зна́ком: Є ь чи Нема́є ь — Sort by sign: Has ь or No ь",
+      "instruction": "Розподіли́ слова́ на дві гру́пи. — Sort the words into two groups.",
+      "groups": [
         {
-          "question": "Що означа́є сло́во «день»? — What is the meaning of «день»?",
-          "options": [
-            "day",
-            "horse",
-            "salt",
-            "teacher"
-          ],
-          "answer": "day",
-          "explanation": "«День» означа́є «day». — «День» means «day»."
-        },
-        {
-          "question": "Що означа́є сло́во «кінь»? — What is the meaning of «кінь»?",
-          "options": [
-            "horse",
-            "day",
-            "salt",
-            "spoon"
-          ],
-          "answer": "horse",
-          "explanation": "«Кінь» означа́є «horse». — «Кінь» means «horse»."
-        },
-        {
-          "question": "Що означа́є сло́во «сіль»? — What is the meaning of «сіль»?",
-          "options": [
-            "salt",
-            "price",
-            "cup",
-            "circus"
-          ],
-          "answer": "salt",
-          "explanation": "«Сіль» означа́є «salt». — «Сіль» means «salt»."
-        },
-        {
-          "question": "Що означа́є сло́во «вчи́тель»? — What is the meaning of «вчи́тель»?",
-          "options": [
-            "teacher",
-            "student",
-            "circus",
-            "family"
-          ],
-          "answer": "teacher",
-          "explanation": "«Вчи́тель» означа́є «teacher». — «Вчи́тель» means «teacher»."
-        },
-        {
-          "question": "Що означа́є сло́во «ціна́»? — What is the meaning of «ціна́»?",
-          "options": [
-            "price",
-            "time",
-            "circus",
-            "cup"
-          ],
-          "answer": "price",
-          "explanation": "«Ціна́» означа́є «price». — «Ціна́» means «price»."
-        },
-        {
-          "question": "Що означа́є сло́во «па́льці»? — What is the meaning of «па́льці»?",
-          "options": [
-            "fingers",
-            "hands",
-            "eyes",
-            "feet"
-          ],
-          "answer": "fingers",
-          "explanation": "«Па́льці» означа́є «fingers». — «Па́льці» means «fingers»."
-        }
-      ]
-    },
-    {
-      "id": "act-107",
-      "type": "fill-in",
-      "title": "Вста́вте пропу́щене сло́во — Fill in the blank",
-      "instruction": "Впиші́ть або́ обері́ть пра́вильне сло́во у ре́ченні. — Fill in the blanks with the correct vocabulary word.",
-      "items": [
-        {
-          "sentence": "Світи́ть со́нце, наста́в ___ . — The sun shines, […] has arrived.",
-          "answer": "день",
-          "options": [
+          "label": "Є м'яки́й знак — Has soft sign",
+          "items": [
             "день",
             "кінь",
-            "сіль"
-          ],
-          "explanation": "«День» познача́є час доби́ зі сві́тлом со́нця й пи́шеться з м'яки́м зна́ком на кінці́: день. — «День» denotes the daytime with sunlight and ends with a soft sign: день."
-        },
-        {
-          "sentence": "У селі́ на по́лі біжи́ть ___ . — In the village in the field runs a […].",
-          "answer": "кінь",
-          "options": [
-            "кінь",
-            "день",
-            "вчи́тель"
-          ],
-          "explanation": "«Кінь» — це сві́йська твари́на; сло́во ма́є м'яки́й кінце́вий [н'] і пи́шеться з ь: кінь. — «Кінь» is a domestic animal; the word ends in a soft [n'] and is written with ь: кінь."
-        },
-        {
-          "sentence": "На столі́ лежи́ть бі́ла ___ . — On the table lies white […].",
-          "answer": "сіль",
-          "options": [
             "сіль",
-            "ціна́",
-            "ча́шка"
-          ],
-          "explanation": "«Сіль» — це бі́ла припра́ва для страв; сло́во ма́є м'яки́й кінце́вий [л'] і пи́шеться з ь: сіль. — «Сіль» is salt, a white seasoning for food; it ends in a soft [l'] with ь: сіль."
-        },
-        {
-          "sentence": "Наш ___ пи́ше те́кст. — Our […] is writing a text.",
-          "answer": "вчи́тель",
-          "options": [
             "вчи́тель",
-            "кінь",
-            "день"
-          ],
-          "explanation": "«Вчи́тель» — це люди́на, яка́ навча́є; сло́во ма́є м'яки́й кінце́вий [л'] з ь: вчи́тель. — «Вчи́тель» is a teacher; the word ends in a soft [l'] with ь: вчи́тель."
+            "па́лець",
+            "стіле́ць"
+          ]
         },
         {
-          "sentence": "Чи висо́ка тут ___ на хліб? — Is the […] for bread high here?",
-          "answer": "ціна́",
-          "options": [
-            "ціна́",
-            "сіль",
-            "ча́шка"
-          ],
-          "explanation": "«Ціна́» означа́є ва́ртість това́ру; пе́ред лі́терою і африка́та [ц'] пом'я́кшується: ціна́. — «Ціна́» means price; before the letter і the affricate [ts'] softens: ціна́."
-        },
-        {
-          "sentence": "Ось рука́, а на руці́ — ___ . — Here is a hand, and on the hand are […].",
-          "answer": "па́льці",
-          "options": [
-            "па́льці",
+          "label": "Нема́є м'яко́го зна́ка — No soft sign",
+          "items": [
+            "ніч",
+            "чай",
+            "цу́кор",
             "ча́шка",
-            "вчи́тель"
-          ],
-          "explanation": "«Па́льці» — це части́ни руки́; сло́во поє́днує м'яки́й [л'] із ь та африка́ту ц: па́льці. — «Па́льці» means fingers; the word combines soft [l'] with ь and affricate ц: па́льці."
+            "со́нце",
+            "ло́жка"
+          ]
         }
       ]
     },
     {
-      "id": "act-108",
-      "type": "unjumble",
-      "title": "Складі́ть слова́ з лі́тер — Unjumble letters",
-      "instruction": "Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words.",
+      "id": "act-l1-w2",
+      "type": "fill-in",
+      "title": "Вста́в пра́вильний знак або залі́ш поро́жнім — Insert correct sign or leave blank",
+      "instruction": "Обери́ ь або поро́жнє мі́сце. — Choose ь or a blank slot.",
       "items": [
         {
-          "words": [
-            "д",
-            "е",
-            "н",
+          "sentence": "Сього́дні те́плий ден___ .",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "Сло́во «день» пи́шеться з м'яки́м зна́ком на кінці́."
+        },
+        {
+          "sentence": "У комо́рі стої́ть бі́лий кін___ .",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "Сло́во «кінь» має м'яки́й знак після н."
+        },
+        {
+          "sentence": "На столі́ біла сіл___ .",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "Сло́во «сіль» має м'яки́й знак після л."
+        },
+        {
+          "sentence": "Настала темна ніч___ .",
+          "options": [
+            "",
             "ь"
           ],
-          "answer": "день"
+          "answer": "",
+          "explanation": "В украї́нській мо́ві після ч м'яки́й знак не пи́шемо: «ніч»."
         },
         {
-          "words": [
-            "к",
-            "і",
-            "н",
+          "sentence": "Це мале́н___кий па́лець.",
+          "options": [
+            "ь",
+            ""
+          ],
+          "answer": "ь",
+          "explanation": "У су́фіксі -еньк- пи́шемо м'яки́й знак: «мале́нький»."
+        },
+        {
+          "sentence": "На столі́ лежи́ть ло___жка.",
+          "options": [
+            "",
             "ь"
           ],
-          "answer": "кінь"
-        },
-        {
-          "words": [
-            "с",
-            "і",
-            "л",
-            "ь"
-          ],
-          "answer": "сіль"
-        },
-        {
-          "words": [
-            "ц",
-            "и",
-            "р",
-            "к"
-          ],
-          "answer": "цирк"
-        },
-        {
-          "words": [
-            "ц",
-            "і",
-            "н",
-            "а́"
-          ],
-          "answer": "ціна́"
-        },
-        {
-          "words": [
-            "ч",
-            "а",
-            "с"
-          ],
-          "answer": "час"
+          "answer": "",
+          "explanation": "У сло́ві «ло́жка» після л нема́є м'яко́го зна́ка; [л] тверди́й."
         }
       ]
     },
     {
-      "id": "act-109",
+      "id": "act-l1-w3",
       "type": "match-up",
-      "title": "З'єдна́йте па́ри слів — Match word pairs",
-      "instruction": "З'єдна́йте украї́нське сло́во з йо́го англі́йським перекла́дом. — Match each Ukrainian word with its English meaning.",
+      "title": "З'єднай па́ри протиле́жностей — Match contrast pairs",
+      "instruction": "З'єднай тверди́й при́голосний із м'яки́м ана́логом. — Match the hard consonant with its soft counterpart.",
       "pairs": [
         {
-          "left": "день",
-          "right": "day"
+          "left": "стан (hard н)",
+          "right": "стань (soft нь)"
         },
         {
-          "left": "кінь",
-          "right": "horse"
+          "left": "лан (hard н)",
+          "right": "лань (soft нь)"
         },
         {
-          "left": "сіль",
-          "right": "salt"
+          "left": "рис (hard с)",
+          "right": "рись (soft сь)"
         },
         {
-          "left": "вчи́тель",
-          "right": "teacher"
+          "left": "стіл (hard л)",
+          "right": "сіль (soft ль)"
         },
         {
-          "left": "ціна́",
-          "right": "price"
+          "left": "син (hard н)",
+          "right": "кінь (soft нь)"
         },
         {
-          "left": "па́льці",
-          "right": "fingers"
+          "left": "брат (hard т)",
+          "right": "мить (soft ть)"
         }
       ]
     },
     {
-      "id": "act-110",
+      "id": "act-l1-w4",
       "type": "error-correction",
-      "title": "Знайді́ть поми́лку — Spot the error",
-      "instruction": "Знайді́ть сло́во з поми́лкою за пра́вилами м'яко́го зна́ка. — Identify which word is written incorrectly according to Ukrainian soft sign rules.",
+      "title": "Знайди́ та ви́прав поми́лку — Find and fix the error",
+      "instruction": "Обери́ пра́вильну украї́нську фо́рму для ви́діленого сло́ва. — Choose the correct Ukrainian form for the marked word.",
       "items": [
         {
-          "sentence": "Сього́дні га́рний ден. — Today is a nice day.",
+          "sentence": "Сього́дні ду́же га́рний ден.",
           "error": "ден",
           "correction": "день",
           "options": [
             "день",
-            "ден",
-            "дєнь"
+            "дєнь",
+            "дінь"
           ],
-          "explanation": "Пе́ред па́узою сло́во «день» пи́шеться з м'яки́м зна́ком: день. — Before a pause, the word «день» is written with a soft sign: день."
+          "explanation": "The word «день» requires a soft sign at the end: день."
         },
         {
-          "sentence": "На по́лі біжи́ть кін. — A horse runs in the field.",
-          "error": "кін",
-          "correction": "кінь",
+          "sentence": "У кімна́ті стої́ть дере́в'яний стілеч.",
+          "error": "стілеч",
+          "correction": "стіле́ць",
           "options": [
-            "кінь",
-            "кін",
-            "кинь"
+            "стіле́ць",
+            "стілец",
+            "стілєць"
           ],
-          "explanation": "Сло́во «кінь» закі́нчується на м'яки́й знак: кінь. — The word «кінь» ends with a soft sign: кінь."
+          "explanation": "The correct noun is «стіле́ць» with ц and a soft sign."
         },
         {
-          "sentence": "Ма́ма си́пле сіл у суп. — Mom puts salt in the soup.",
-          "error": "сіл",
-          "correction": "сіль",
+          "sentence": "На столі́ лежи́ть вели́ка льо́жка.",
+          "error": "льо́жка",
+          "correction": "ло́жка",
           "options": [
-            "сіль",
-            "сіл",
-            "сил"
+            "ло́жка",
+            "ля́жка",
+            "лю́жка"
           ],
-          "explanation": "Сло́во «сіль» ма́є м'яки́й [л'] і пи́шеться з ь: сіль. — The word «сіль» has a soft [l'] and is written with ь: сіль."
+          "explanation": "The Ukrainian word is «ло́жка» with hard л and no soft sign."
         },
         {
-          "sentence": "Наш вчител пи́ше те́кст. — Our teacher is writing a text.",
-          "error": "вчител",
-          "correction": "вчи́тель",
+          "sentence": "У лі́сі біжи́ть ди́ка рис.",
+          "error": "рис",
+          "correction": "рись",
           "options": [
-            "вчи́тель",
-            "вчител",
-            "вчитиль"
+            "рись",
+            "рісь",
+            "рєсь"
           ],
-          "explanation": "Іме́нник «вчи́тель» ма́є м'яки́й кінце́вий [л']: вчи́тель. — The noun «вчи́тель» has a soft final [l']: вчи́тель."
+          "explanation": "The lynx is «рись» with a soft sign, unlike «рис» (rice)."
         },
         {
-          "sentence": "За́раз ма́ємо чьас на обі́д. — Now we have time for lunch.",
-          "error": "чьас",
-          "correction": "час",
+          "sentence": "Надво́рі ти́ха темна нічь.",
+          "error": "нічь",
+          "correction": "ніч",
           "options": [
-            "час",
-            "чьас",
-            "чяс"
+            "ніч",
+            "неч",
+            "нич"
           ],
-          "explanation": "Звук [ч] в украї́нській мо́ві тверди́й; пі́сля ч знак ь не ста́виться: час. — The sound [ч] in Ukrainian is hard; no soft sign is written after ч: час."
+          "explanation": "In Ukrainian, sibilant ч never takes a soft sign at the end: ніч."
         },
         {
-          "sentence": "На руці́ ба́чу па́лці. — I see fingers on the hand.",
-          "error": "па́лці",
-          "correction": "па́льці",
+          "sentence": "Це мій вели́кий палец.",
+          "error": "палец",
+          "correction": "па́лець",
           "options": [
-            "па́льці",
-            "па́лці",
-            "па́лци"
+            "па́лець",
+            "па́лєць",
+            "па́ліць"
           ],
-          "explanation": "У сло́ві «па́льці» пі́сля лі́тери л пи́шеться м'яки́й знак: па́льці. — In the word «па́льці», a soft sign is written after letter л: па́льці."
+          "explanation": "The word «па́лець» ends in soft ц with ь: па́лець."
         }
       ]
     },
     {
-      "id": "act-111",
-      "type": "quiz",
-      "title": "Знак ь чи без зна́ка — Soft sign or no sign",
-      "instruction": "Обері́ть сло́во з м'яки́м або́ тверди́м при́голосним. — Choose the word with a soft or hard consonant.",
+      "id": "act-l1-w5",
+      "type": "true-false",
+      "title": "Факти про м'яки́й знак та африка́ти — Facts about soft sign and affricates",
+      "instruction": "Обери́: пра́вда чи непра́вда. — Choose: true or false.",
       "items": [
         {
-          "question": "Сло́во «день» чи «стан» з м'яки́м зву́ком [н'] — Word «день» or «стан» with soft [n']:",
-          "options": [
-            "день",
-            "стан"
-          ],
-          "answer": "день",
-          "explanation": "Сло́во «день» ма́є м'яки́й знак на кінці́: [ден']. — The word «день» has a soft sign at the end: [den']."
+          "statement": "М'яки́й знак (ь) ма́є вла́сний голосни́й звук. — The soft sign (ь) has its own vowel sound.",
+          "correct": false,
+          "explanation": "М'яки́й знак не ма́є вла́сного зву́ка; він ли́ше пом'я́кшує попере́дній при́голосний."
         },
         {
-          "question": "Сло́во «кінь» чи «лан» з м'яки́м зву́ком [н'] — Word «кінь» or «лан» with soft [n']:",
-          "options": [
-            "кінь",
-            "лан"
-          ],
-          "answer": "кінь",
-          "explanation": "Сло́во «кінь» закі́нчується на м'яки́й знак: [кін']. — The word «кінь» ends with a soft sign: [kin']."
+          "statement": "У сло́ві «день» оста́нній звук — м'яки́й [н']. — In the word «день», the last sound is soft [н'].",
+          "correct": true,
+          "explanation": "Буква ь познача́є м'я́кість зву́ка [н']."
         },
         {
-          "question": "Сло́во «сіль» чи «рис» з м'яки́м зву́ком [л'] — Word «сіль» or «рис» with soft [l']:",
-          "options": [
-            "сіль",
-            "рис"
-          ],
-          "answer": "сіль",
-          "explanation": "Сло́во «сіль» ма́є м'яки́й знак: [с'іл']. — The word «сіль» has a soft sign: [sil']."
+          "statement": "В украї́нській мо́ві після шипля́чого [ч] у кінці́ слів пи́шемо ь. — In Ukrainian, after sibilant [ч] at the end of words we write ь.",
+          "correct": false,
+          "explanation": "Після шипля́чих (ж, ч, ш, щ) м'яки́й знак в украї́нській мо́ві не пи́шеться: «ніч», «ключ»."
         },
         {
-          "question": "Фо́рма «стань» чи «стан» з м'яки́м зву́ком [н'] — Form «стань» or «стан» with soft [n']:",
-          "options": [
-            "стань",
-            "стан"
-          ],
-          "answer": "стань",
-          "explanation": "Фо́рма «стань» вимовля́ється з м'яки́м [н']. — The form «стань» is pronounced with a soft [n']."
+          "statement": "У сло́ві «па́лець» наприкінці́ пи́шемо м'яки́й знак після ц. — In the word «па́лець», at the end we write a soft sign after ц.",
+          "correct": true,
+          "explanation": "Африка́та [ц'] мо́же бу́ти м'яко́ю і потре́бує м'яко́го зна́ка."
         },
         {
-          "question": "На́зва твари́ни «лань» чи по́ле «лан» — Animal name «лань» or field «лан»:",
-          "options": [
-            "лань",
-            "лан"
-          ],
-          "answer": "лань",
-          "explanation": "Сло́во «лань» познача́є твари́ну й ма́є м'яки́й знак. — The word «лань» denotes an animal and has a soft sign."
+          "statement": "Слова́ «стан» і «стань» ма́ють одна́кове зна́чення. — The words «стан» and «стань» have the same meaning.",
+          "correct": false,
+          "explanation": "«Стан» (condition) і «стань» (become/stand) — це рі́зні слова́ з тверди́м та м'яки́м [н]."
         },
         {
-          "question": "На́зва твари́ни «рись» чи крупа́ «рис» — Animal name «рись» or grain «рис»:",
+          "statement": "У сло́ві «со́нце» звук [ц] є тверди́м. — In the word «со́нце», the sound [ц] is hard.",
+          "correct": true,
+          "explanation": "Пе́ред бу́квою е звук [ц] звучи́ть твердо: [со́нце]."
+        }
+      ]
+    },
+    {
+      "id": "act-l1-w6",
+      "type": "translate",
+      "title": "Пере́клад ре́чень: м'яки́й знак та африка́ти — Translation of sentences: soft sign and affricates",
+      "instruction": "Обери́ пра́вильний украї́нський пере́клад. — Choose the correct Ukrainian translation.",
+      "items": [
+        {
+          "source": "Today is a warm day.",
           "options": [
-            "рись",
-            "рис"
+            {
+              "text": "Сього́дні те́плий день.",
+              "correct": true
+            },
+            {
+              "text": "Сього́дні те́плий ден.",
+              "correct": false
+            },
+            {
+              "text": "Сього́дні бі́лий кінь.",
+              "correct": false
+            }
           ],
-          "answer": "рись",
-          "explanation": "Сло́во «рись» познача́є твари́ну й ма́є м'яки́й знак. — The word «рись» denotes an animal and has a soft sign."
+          "explanation": "«Day» is «день» with a soft sign at the end."
+        },
+        {
+          "source": "This is a white horse.",
+          "options": [
+            {
+              "text": "Це бі́лий кінь.",
+              "correct": true
+            },
+            {
+              "text": "Це бі́лий кін.",
+              "correct": false
+            },
+            {
+              "text": "Це бі́лий стіл.",
+              "correct": false
+            }
+          ],
+          "explanation": "«Horse» is «кінь» with soft [н']."
+        },
+        {
+          "source": "Where is our teacher?",
+          "options": [
+            {
+              "text": "Де наш вчи́тель?",
+              "correct": true
+            },
+            {
+              "text": "Де наш стіле́ць?",
+              "correct": false
+            },
+            {
+              "text": "Де наш кінь?",
+              "correct": false
+            }
+          ],
+          "explanation": "«Teacher» is «вчи́тель» with soft [л']."
+        },
+        {
+          "source": "This is hot tea.",
+          "options": [
+            {
+              "text": "Це гаря́чий чай.",
+              "correct": true
+            },
+            {
+              "text": "Це гаря́чий цай.",
+              "correct": false
+            },
+            {
+              "text": "Це бі́лий цу́кор.",
+              "correct": false
+            }
+          ],
+          "explanation": "«Tea» begins with the letter Ч: чай."
+        },
+        {
+          "source": "It is a quiet night outside.",
+          "options": [
+            {
+              "text": "На дво́рі ти́ха ніч.",
+              "correct": true
+            },
+            {
+              "text": "На дво́рі ти́ха нічь.",
+              "correct": false
+            },
+            {
+              "text": "На дво́рі те́плий день.",
+              "correct": false
+            }
+          ],
+          "explanation": "In Ukrainian, «ніч» ends with hard sibilant [ч] and has no soft sign."
+        },
+        {
+          "source": "Here is a wooden chair.",
+          "options": [
+            {
+              "text": "Ось дере́в'яний стіле́ць.",
+              "correct": true
+            },
+            {
+              "text": "Ось дере́в'яний стілеч.",
+              "correct": false
+            },
+            {
+              "text": "Ось мале́нька ло́жка.",
+              "correct": false
+            }
+          ],
+          "explanation": "«Chair» is «стіле́ць» ending in letter ц with a soft sign."
         }
       ]
     }
@@ -739,28 +887,22 @@ English support after the dialogue:
     "usage": "Мале́нький знак."
   },
   {
-    "lemma": "па́льці",
-    "translation": "fingers",
-    "pos": "noun",
-    "usage": "Па́льці."
-  },
-  {
     "lemma": "сього́дні",
     "translation": "today",
     "pos": "adverb",
     "usage": "Сього́дні свя́то."
   },
   {
-    "lemma": "зли́то",
-    "translation": "together / smoothly",
-    "pos": "adverb",
-    "usage": "Чита́й зли́то."
+    "lemma": "ло́жка",
+    "translation": "spoon",
+    "pos": "noun",
+    "usage": "Ло́жка."
   },
   {
-    "lemma": "розді́льно",
-    "translation": "separately",
-    "pos": "adverb",
-    "usage": "Чита́й розді́льно."
+    "lemma": "па́льці",
+    "translation": "fingers",
+    "pos": "noun",
+    "usage": "Па́льці."
   }
 ]
 ```
@@ -768,46 +910,22 @@ English support after the dialogue:
 ```json file=resources.yaml
 [
   {
-    "title": "Украї́нська мо́ва. Буква́р. 1 клас",
-    "author": "Большако́ва І. О., При́стинська М. С.",
-    "year": 2018,
-    "publisher": "Ра́нок",
-    "url": "https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html"
+    "title": "Український правопис (2019), § 26–27. Буква Ь",
+    "url": "https://2019.pravopys.net/sections/26/",
+    "source": "Український правопис 2019",
+    "notes": "Правила вживання м'якого знака після букв д, т, з, с, дз, ц, л, н та відсутність м'якого знака після шиплячих."
   },
   {
-    "title": "Украї́нська мо́ва. Буква́р. 1 клас",
-    "author": "Захарійчук М. Д.",
-    "year": 2018,
-    "publisher": "Гра́мота",
-    "url": "https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html"
+    "title": "Авраменко О. Українська мова. 5 клас (2022), § 54–55, с. 124–127",
+    "chunk_id": "5-klas-ukrmova-avramenko-2022_s0127",
+    "source": "5-klas-ukrmova-avramenko-2022",
+    "notes": "Позначення м'якості приголосних на письмі. Вживання м'якого знака та африкати."
   },
   {
-    "title": "Украї́нська мо́ва. 5 клас",
-    "author": "Авра́менко О. М.",
-    "year": 2018,
-    "publisher": "Гра́мота",
-    "url": "https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html"
-  },
-  {
-    "title": "Pronunciation Video Series (Letter Ь)",
-    "author": "Anna Ohoiko",
-    "year": 2020,
-    "publisher": "Ukrainian Lessons",
-    "url": "https://www.youtube.com/watch?v=cJlal8XKBxo"
-  },
-  {
-    "title": "Pronunciation Video Series (Letter Ц)",
-    "author": "Anna Ohoiko",
-    "year": 2020,
-    "publisher": "Ukrainian Lessons",
-    "url": "https://www.youtube.com/watch?v=u44eCjR2Oz8"
-  },
-  {
-    "title": "Pronunciation Video Series (Letter Ч)",
-    "author": "Anna Ohoiko",
-    "year": 2020,
-    "publisher": "Ukrainian Lessons",
-    "url": "https://www.youtube.com/watch?v=UsJkbdsY2RA"
+    "title": "Строкаль О. Сучасна українська літературна мова: Орфографія (2021), § 5, с. 28",
+    "chunk_id": "uni-ukrmova-orthography-strokal-2021_s0047",
+    "source": "uni-ukrmova-orthography-strokal-2021",
+    "notes": "Позначення м'якості приголосних та відсутність м'якого знака після шиплячих."
   }
 ]
 ```

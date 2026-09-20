@@ -1,78 +1,104 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 6.0,
-      "evidence": "\"After which letters is an apostrophe always written before я, ю, є, ї?\"",
-      "verdict": "REVISE",
+      "score": 5.8,
+      "evidence": "\"When reading Ukrainian, we read syllables smoothly together (**зли́то**), not in a disconnected staccato (**розді́льно**).\"",
+      "verdict": "REJECT",
       "evidence_quotes": [
-        "After which letters is an apostrophe always written before я, ю, є, ї?",
-        "Mechanical spelling fails here. You cannot put apostrophe before every **я**.",
-        "**Ви вимовля́єте апо́строф із розді́льним зву́ком [й]**"
+        "When reading Ukrainian, we read syllables smoothly together (**зли́то**), not in a disconnected staccato (**розді́льно**).",
+        "У щоде́нному спілкува́нні ми ча́сто чу́ємо та вжива́ємо сло́ва з м'яки́м кінце́вим зву́ком: **день** — day, **кінь** — horse, **сіль** — salt, **вчи́тель** — teacher, **мале́нький** — small, **сьогодні** — today.",
+        "Use the signs as reading instructions, not decorations. Before moving on,\nchoose one word from each contrast and do a final sign check: name the sign,\nstate its effect, then read the word."
       ],
-      "rubric_mapping": "Quote 1 is against pedagogical accuracy: lesson 4 act-405 rewards an unconditional apostrophe rule that contradicts the same lesson's буряк and свято examples. Quote 2 supports pedagogy: it explicitly discourages mechanical insertion and accompanies useful contrasting models. Quote 3 undermines final consolidation by assigning pronunciation to the apostrophe itself, despite earlier teaching that it has no sound. Across all five lessons, the progression from soft signs through vowel-letter...",
+      "rubric_mapping": "Quote 1 is against coherent progression: lesson 2 associates роздільно with undesirable staccato, whereas lesson 4 uses it for the desired apostrophe pronunciation while explicitly requiring continuous airflow. The same instructional term therefore gives conflicting motor cues. Quote 2 is against illuminating examples and accessible scaffolding: the list labels маленький and сьогодні as examples of a soft final sound although their soft signs occur internally; the Ukrainian explanation itself...",
       "flags": [
-        "source_verification_unavailable: query_pravopys, verify_words and search_text returned 'MCP tool call requires...",
-        "out_of_level_textbook: all five resources.yaml artifacts list Украї́нська мо́ва. 5 клас by Авра́менко О. М., outside...",
+        "source_verification_blocked: VESUM verify_words, query_pravopys, verify_source_attribution and search_text returned...",
+        "unverified citation: attributed textbook wording and page claims could not be verified",
+        "out_of_level_textbook",
         "activity_split_audit_missing",
         "audit_line_missing: implementation_map_audit",
         "audit_line_missing: bad_form_audit",
         "audit_line_missing: activity_split_audit",
-        "missing_foreshadowing_gloss: lesson 1 introduces сім'я́, буря́к, бур'я́н and цвях before supplying their meanings in...",
-        "preservation_unverified: the embedded artifacts do not include the original baseline needed for a verbatim preservation..."
+        "unknown_vocab_unscaffolded: lesson 1 technical Ukrainian explanations lack equivalent English support",
+        "preservation_unverified: original baseline artifacts were not included"
       ],
       "issue_ids": [
-        "MISLEADING_FINAL_CONSOLIDATION",
-        "OVERGENERALIZED_APOSTROPHE_RULE",
-        "PRACTICE_BEFORE_INPUT",
+        "A1_EXPLANATION_UNSCAFFOLDED",
+        "CONFLICTING_PRONUNCIATION_CUES",
+        "LOW_TRANSFER_CLOSURE",
+        "MISALIGNED_PHONETIC_EXAMPLES",
+        "NAMED_TEACHER_FRAMING",
+        "OUT_OF_LEVEL_TEXTBOOK",
         "UNRELATED_EC_DISTRACTOR"
       ],
       "findings": [
         {
-          "issue_id": "OVERGENERALIZED_APOSTROPHE_RULE",
-          "severity": "high",
-          "quote": "After which letters is an apostrophe always written before я, ю, є, ї?",
-          "explanation": "Lesson 4 act-405 marks the labials-plus-р answer correct without a pronunciation condition. This teaches automatic insertion precisely where the surrounding lesson teaches counterexamples, including буряк and свято. The contradiction is visible within the supplied artifacts; external rule verification was blocked.",
+          "issue_id": "CONFLICTING_PRONUNCIATION_CUES",
+          "severity": "major",
+          "quote": "When reading Ukrainian, we read syllables smoothly together (**зли́то**), not in a disconnected staccato (**розді́льно**).",
+          "explanation": "Lesson 2 teaches learners to avoid роздільно as interrupted speech. Lesson 4 then teaches роздільна вимова as the apostrophe target. Distinguish the consonant-plus-glide contrast from interruption of airflow consistently.",
           "dimension": "pedagogical"
         },
         {
-          "issue_id": "MISLEADING_FINAL_CONSOLIDATION",
-          "severity": "medium",
-          "quote": "**Ви вимовля́єте апо́строф із розді́льним зву́ком [й]**",
-          "explanation": "The final summary describes pronouncing the apostrophe, reversing the earlier distinction between a silent written sign and the following sound sequence. A closing takeaway should consolidate that distinction accurately.",
+          "issue_id": "MISALIGNED_PHONETIC_EXAMPLES",
+          "severity": "major",
+          "quote": "**мале́нький** — small, **сьогодні** — today.",
+          "explanation": "Lesson 1 includes these under words with a soft final sound. Their written soft signs are internal. The examples therefore fail to isolate the final-position feature being taught and miss the opportunity to explicitly introduce internal soft signs.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "A1_EXPLANATION_UNSCAFFOLDED",
+          "severity": "major",
+          "quote": "В украї́нській фоне́тиці лі́тери **Ц** та **Ч** познача́ють особли́ві зву́ки — африка́ти:",
+          "explanation": "Lesson 1 switches into an extended Ukrainian explanation of affricates, sibilants and positional spelling without aligned English explanations. English glosses for individual example nouns and the later dialogue do not explain this metalanguage. The learner must understand unfamiliar technical prose to acquire the rule.",
           "dimension": "pedagogical"
         },
         {
           "issue_id": "UNRELATED_EC_DISTRACTOR",
-          "severity": "medium",
-          "quote": "options: - п'ять - пять - день",
-          "explanation": "Lesson 4 act-w3 uses день as the third correction option for пять. It is a different lexical item, not a competing spelling of the target word. Likewise, act-4 offers [день, ден, кінь] and [ло́жка, льожка, сіль]. These distractors permit elimination by meaning instead of testing the targeted spelling contrast. Preservation does not remove this pedagogical limitation.",
+          "severity": "moderate",
+          "quote": "options: - ло́жка - ля́жка - лю́жка",
+          "explanation": "Lesson 1 act-l1-w4 targets an invented soft sign in льо́жка, but both distractors replace the vowel. This shifts discrimination away from the taught presence-or-absence-of-ь contrast. Similar vowel substitutions recur in the ден correction options.",
           "dimension": "pedagogical"
         },
         {
-          "issue_id": "PRACTICE_BEFORE_INPUT",
-          "severity": "medium",
-          "quote": "<!-- INJECT_ACTIVITY: act-504 -->",
-          "explanation": "Lesson 5 places this dialogue-comprehension activity before the Module summary dialogue it tests. Questions about what Mariana thanks the teacher for and what the teacher says about her work require information that has not yet appeared at the inline activity location.",
+          "issue_id": "LOW_TRANSFER_CLOSURE",
+          "severity": "moderate",
+          "quote": "Go to Vocabulary and Activities; those drills reuse the same six contrast words:",
+          "explanation": "Lesson 5 clearly signals review, but its added matching, gap filling, quizzes and sorting mostly repeat lesson 4's decisions on the same words. The grammar-recitation dialogue supplies the explanations again. The final summary closes the module, yet the lesson offers little additional evidence that learners can read or write independently with support withdrawn.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "NAMED_TEACHER_FRAMING",
+          "severity": "moderate",
+          "quote": "Teacher Oksana's routine for this module is short: find the sign, say what it does, then read the word once.",
+          "explanation": "The teacher is named outside a dialogue, contrary to the upgrade's explicit voice boundary. The instructional routine is useful but does not require a named teaching persona.",
+          "dimension": "pedagogical"
+        },
+        {
+          "issue_id": "OUT_OF_LEVEL_TEXTBOOK",
+          "severity": "moderate",
+          "quote": "Авраменко О. Українська мова. 5 клас (2022), § 54–55, с. 124–127",
+          "explanation": "The supplied A1 corpus-access audit permits Grades 1–4. Grade 5 citations recur across the lessons, and lesson 1 additionally cites a university orthography source. This is a source-level mismatch under the requested audit, not proof that those sources are fabricated.",
           "dimension": "pedagogical"
         }
       ]
     },
     "naturalness": {
-      "score": 6.8,
-      "evidence": "\"У руці́ рі́вно ___ па́льців.\"",
+      "score": 6.5,
+      "evidence": "\"зі зву́ків [йі], яки́й познача́ється\"",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "У руці́ рі́вно ___ па́льців.",
-        "Пі́сля при́голосного «лю́ди» лі́тера «ю» пом'я́кшує [л'] і дає́ оди́н звук [у].",
-        "Ви вимовля́єте апо́строф із розді́льним зву́ком [й]"
+        "зі зву́ків [йі], яки́й познача́ється",
+        "Пі́сля при́голосного «лю́ди»",
+        "У руці́ рі́вно п___ять па́льців."
       ],
-      "rubric_mapping": "Reviewed all five embedded lessons for naturalness. Quote 1, lesson 4 act-406: unsuitable locative construction for fingers belonging to a hand; the sentence uses the construction for something held inside the hand. Quote 2, lesson 2 act-203: malformed explanatory syntax places «люди» directly after «приголосного», effectively identifying the whole word as a consonant. Quote 3, lesson 5 summary: unnatural explanatory wording makes the silent apostrophe itself the object of pronunciation instead...",
+      "rubric_mapping": "Reviewed all five lessons for naturalness. Quote 1, lesson 3 act-305: number agreement fails between plural «зву́ків» and singular «яки́й познача́ється». Quote 2, lesson 2 act-203: malformed explanatory syntax makes «лю́ди» identify a consonant instead of the word containing it. Quote 3, lesson 5 act-5-2: the anatomical expression uses an unnatural preposition; fingers are described as being на руці, whereas у руці normally locates something held inside the hand. These are residual grammar and...",
       "flags": [
-        "source_verification_unavailable: VESUM verify_words and sources search_definitions calls returned 'MCP tool call...",
+        "source_verification_blocked: verify_words, verify_lemma, search_definitions, search_text and verify_source_attribution...",
+        "unverified citation: textbook quotations and attributed rules remain unresolved because source access was blocked...",
+        "out_of_level_textbook: Grade 5 resources occur across the lessons, and lesson 1 cites university-level Строкаль; this...",
         "audit_line_missing: implementation_map_audit",
         "audit_line_missing: bad_form_audit",
-        "audit_line_missing: activity_split_audit",
-        "out_of_level_textbook: all five resources.yaml artifacts cite Авра́менко, Украї́нська мо́ва. 5 клас; the supplied A1..."
+        "audit_line_missing: activity_split_audit"
       ],
       "issue_ids": [
         "UKRAINIAN_GRAMMAR_CALQUE"
@@ -81,143 +107,165 @@
         {
           "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
           "severity": "major",
-          "quote": "У руці́ рі́вно ___ па́льців.",
-          "replacement": "На руці рівно ___ пальців.",
-          "explanation": "Lesson 4 act-406 uses an inside-the-hand locative for anatomical attachment. The same construction appears in act-w3. This models an unsuitable preposition in an otherwise ordinary learner sentence. Source verification was blocked.",
+          "quote": "зі зву́ків [йі], яки́й познача́ється",
+          "replacement": "зі звуків [йі], які позначаються",
+          "explanation": "Lesson 3, act-305: plural sounds are followed by a singular relative pronoun and verb. This is an agreement error in the answer explanation. VESUM verification was attempted but blocked, so morphological corroboration remains outstanding.",
           "dimension": "naturalness"
         },
         {
           "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
           "severity": "major",
-          "quote": "Пі́сля при́голосного «лю́ди» лі́тера «ю» пом'я́кшує [л'] і дає́ оди́н звук [у].",
-          "replacement": "У слові «люди» літера «ю» позначає звук [у] та м’якість попереднього приголосного [л'].",
-          "explanation": "Lesson 2 act-203 omits the syntactic link identifying «люди» as the word containing the consonant. The resulting Ukrainian reads as though «люди» names a consonant. Source verification was blocked.",
+          "quote": "Пі́сля при́голосного «лю́ди»",
+          "replacement": "Після приголосного [л'] у слові «люди»",
+          "explanation": "Lesson 2, act-203: the sentence omits the relationship between the consonant and the example word. Its literal syntax treats «люди» as the consonant. Name the consonant and introduce the word explicitly.",
           "dimension": "naturalness"
         },
         {
           "issue_id": "UKRAINIAN_GRAMMAR_CALQUE",
-          "severity": "major",
-          "quote": "Ви вимовля́єте апо́строф із розді́льним зву́ком [й]",
-          "replacement": "Ви читаєте слова з апострофом, чітко вимовляючи [й] після попереднього приголосного.",
-          "explanation": "The final summary uses an inappropriate verb-object combination: learners pronounce words and sounds, while the apostrophe indicates how to read adjacent letters. This wording obscures that distinction at module closure. Source verification was blocked.",
+          "severity": "moderate",
+          "quote": "У руці́ рі́вно п___ять па́льців.",
+          "replacement": "На руці рівно п___ять пальців.",
+          "explanation": "Lesson 5, act-5-2: the anatomical location calls for «На руці». The same unnatural construction recurs in lessons 4 and 5. The dictionary lookup intended to corroborate usage was blocked; this remains an editorial government finding with source verification outstanding.",
           "dimension": "naturalness"
         }
       ]
     },
     "decolonization": {
-      "score": 8.0,
-      "evidence": "\"The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant; keep the next **й** sound.\"",
-      "verdict": "PASS",
-      "evidence_quotes": [
-        "The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant; keep the next **й** sound.",
-        "In the capital city of Ukraine: **Ки́їв** — Kyiv",
-        "The apostrophe and soft sign already\nhave Ukrainian jobs, so you do not need another alphabet or another sign to\nexplain them."
-      ],
-      "rubric_mapping": "TYPE: topic-neutral phonetics/orthography. Quote 1 explains pronunciation through Ukrainian itself rather than a Russian equivalent. Quote 2 anchors practice in Ukrainian geography and Ukrainian-derived naming. Quote 3 explicitly establishes Ukrainian as the explanatory reference. Across all five lessons, no Russian-imperial authority or derivative-language framing is established. Additional political rhetoric is unnecessary. The passing dimension score is limited to 8.0 because source...",
-      "flags": [
-        "source_verification_unavailable: VESUM verify_words and query_pravopys were blocked by the approval policy; source...",
-        "audit_line_missing: implementation_map_audit",
-        "audit_line_missing: bad_form_audit",
-        "audit_line_missing: activity_split_audit",
-        "out_of_level_textbook: all five resources.yaml artifacts list Украї́нська мо́ва. 5 клас; pedagogical routing"
-      ]
-    },
-    "engagement": {
-      "score": 6.6,
-      "evidence": "\"Наш вчи́тель каза́в, що сього́дні со́нце я́сне.\"",
+      "score": 7.5,
+      "evidence": "\"Unlike neighboring languages where similar letters may denote a single long soft sound\"",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "Готу́ю борщ: купу́ю сві́же м'я́со та черво́ний буря́к.",
-        "Наш вчи́тель каза́в, що сього́дні со́нце я́сне.",
-        "Whether reading about a bright sunny **день** (day), an authentic Ukrainian **свя́то** (holiday), a thriving garden where **бур'я́н** (weed) is removed, or a gathering of your whole beloved **сім'я́** (family), you have established a reliable foundation for all future Ukrainian learning."
+        "The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant; keep the next **й** sound.",
+        "Unlike neighboring languages where similar letters may denote a single long soft sound",
+        "В украї́нській мо́ві є тве́рдий знак (ъ). — In Ukrainian there is a hard sign (ъ)."
       ],
-      "rubric_mapping": "Quote 1 supports engagement: lesson 4 gives the target words a concrete purpose through holiday cooking and a relevant conversational response. Quote 2 opposes engagement: lesson 1 abruptly moves from buying rice and discussing its price to reporting the teacher's observation about sunshine; the dialogue feels assembled to accommodate vocabulary rather than motivated by the speakers. Quote 3 opposes engagement: lesson 5 substitutes decorative scenarios and generalized reassurance for a...",
+      "rubric_mapping": "This is a topic-neutral phonetics module; canonical Ukrainian teaching can earn 9.0+ without political rhetoric. Quote 1 supports that anchor: lesson 2 explains the apostrophe directly through Ukrainian articulation. Quote 2 undermines the required absence-only approach: lesson 3 introduces an unnamed neighboring-language pronunciation as the reference point for Щ. Quote 3, although explicitly marked false in lesson 5, introduces ъ into foundational practice and then contrasts it with the...",
       "flags": [
-        "source_verification_blocked: VESUM verify_words, search_external, and search_text were attempted; all returned 'MCP...",
-        "activity_split_audit_missing: no activity_split_audit line appears in the supplied Generated Content.",
-        "audit_line_missing: implementation_map_audit.",
-        "audit_line_missing: bad_form_audit.",
-        "audit_line_missing: activity_split_audit.",
-        "out_of_level_textbook: all five Resources lists include Авра́менко, Украї́нська мо́ва. 5 клас, outside audit H's A1...",
-        "unsignposted_repetition: lesson 2 act-202 and act-203 repeat five sound-value decisions consecutively without..."
+        "source_verification_unavailable: all four attempted sources calls returned 'MCP tool call requires approval, but...",
+        "heritage_verification_unresolved: search_heritage for хвото was blocked; no heritage classification finding is sustained",
+        "out_of_level_textbook: Grade 5 sources appear across lessons 1–5; lesson 1 also cites a university orthography source...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
       ],
       "issue_ids": [
-        "CONTRIVED_DIALOGUE",
-        "ENGAGEMENT_PADDING",
-        "REPETITIVE_PRACTICE"
+        "RUSSIAN_AS_REFERENCE"
       ],
       "findings": [
         {
-          "issue_id": "CONTRIVED_DIALOGUE",
+          "issue_id": "RUSSIAN_AS_REFERENCE",
           "severity": "major",
-          "quote": "Наш вчи́тель каза́в, що сього́дні со́нце я́сне.",
-          "explanation": "In lesson 1, this response follows a rice-price exchange and an offer of a clean cup and fresh rice. The unexplained topic change makes the speakers serve the word list instead of a believable interaction. This is a discourse-coherence finding, not an unverified claim about Ukrainian morphology.",
+          "quote": "Unlike neighboring languages where similar letters may denote a single long soft sound",
+          "explanation": "Lesson 3 uses an indirect neighboring-language comparison to introduce Ukrainian Щ. The module expressly requires avoiding hidden as well as explicit Russian analogies. Explain the Ukrainian articulation directly.",
+          "dimension": "decolonization"
+        },
+        {
+          "issue_id": "RUSSIAN_AS_REFERENCE",
+          "severity": "moderate",
+          "quote": "В украї́нській мо́ві є тве́рдий знак (ъ). — In Ukrainian there is a hard sign (ъ).",
+          "explanation": "Lesson 5 correctly marks this statement false, but the item and its apostrophe-based explanation introduce a foreign orthographic reference that the foundational module explicitly excludes. Test Ukrainian sign functions using Ukrainian examples.",
+          "dimension": "decolonization"
+        }
+      ]
+    },
+    "engagement": {
+      "score": 6.5,
+      "evidence": "\"Чудо́во! Чи пам'ята́єш ти, коли́ пи́шемо апо́строф?\"",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "**ь** points backward. It is a silent instruction for the consonant before it.",
+        "Чудо́во! Чи пам'ята́єш ти, коли́ пи́шемо апо́строф?",
+        "When greeting a friend on a bright **день** (day) or celebrating a joyful **свя́то** (holiday), our **вчи́тель** (teacher) reminds us that clear pronunciation makes every conversation natural and warm."
+      ],
+      "rubric_mapping": "The first quote supports engagement: the lesson-1 callout gives a concise, actionable reading cue. The second works against dialogue authenticity: lesson 5 turns named characters into examiners reciting rules rather than people pursuing a practical goal. The third is generic motivational framing that largely repeats lesson 2's sunny-day, holiday, and teacher setup without adding a meaningful situation. Across all five lessons, concrete pronunciation contrasts and video practice provide useful...",
+      "flags": [
+        "activity_split_audit_missing: no writer split-audit line appears in the supplied artifacts.",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit",
+        "out_of_level_textbook: the supplied A1 resources cite Grade 5 textbooks across the lessons and a university orthography...",
+        "unverified citation: source attributions and quoted textbook wording remain unresolved; no fabrication verdict is...",
+        "sources_verification_blocked: attempted mcp__sources__verify_words and mcp__sources__verify_source_attribution calls..."
+      ],
+      "issue_ids": [
+        "GENERIC_ENGAGEMENT_PADDING",
+        "REPETITIVE_PRACTICE_WITHOUT_PROGRESSION",
+        "ROBOTIC_DIALOGUE"
+      ],
+      "findings": [
+        {
+          "issue_id": "ROBOTIC_DIALOGUE",
+          "severity": "major",
+          "quote": "Чудо́во! Чи пам'ята́єш ти, коли́ пи́шемо апо́строф?",
+          "explanation": "Lesson 5 promises everyday plans in Kyiv but delivers a rule-recitation exchange. The characters mainly ask and answer textbook questions, so the module finale provides little human interest or practical payoff.",
           "dimension": "engagement"
         },
         {
-          "issue_id": "REPETITIVE_PRACTICE",
+          "issue_id": "ROBOTIC_DIALOGUE",
+          "severity": "moderate",
+          "quote": "А де тві́й комп'ю́тер?",
+          "explanation": "In lesson 4, the conversation abruptly switches from buying food for a family celebration to locating a computer. No situation motivates the transition; the exchange visibly serves the vocabulary list.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "GENERIC_ENGAGEMENT_PADDING",
+          "severity": "moderate",
+          "quote": "When greeting a friend on a bright **день** (day) or celebrating a joyful **свя́то** (holiday), our **вчи́тель** (teacher) reminds us that clear pronunciation makes every conversation natural and warm.",
+          "explanation": "Lesson 3 repeats lesson 2's day/holiday/teacher framing with a broad reassurance rather than a concrete observation, problem, or learner action. This adds reading without advancing interest.",
+          "dimension": "engagement"
+        },
+        {
+          "issue_id": "REPETITIVE_PRACTICE_WITHOUT_PROGRESSION",
           "severity": "major",
           "quote": "How many sounds does the letter «я» represent at the beginning of «я́блуко»?",
-          "explanation": "Lesson 2 act-202 asks this question, then the immediately adjacent act-203 repeats the same decision for я́блуко and also repeats пі́сня, ю́шка, лю́ди, and єно́т. Changing the language of the prompt adds little challenge or application. The workbook again revisits these words through matching, translation selection, and letter selection. The concern is limited progression and attention fatigue, not activity counts.",
-          "dimension": "engagement"
-        },
-        {
-          "issue_id": "ENGAGEMENT_PADDING",
-          "severity": "moderate",
-          "quote": "Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete confidence.",
-          "explanation": "Lesson 3 declares the learner's confidence rather than providing a concrete demonstration of newly usable reading ability. Similar assurances recur in lesson 5, weakening the otherwise practical direct-address voice.",
-          "dimension": "engagement"
-        },
-        {
-          "issue_id": "ENGAGEMENT_PADDING",
-          "severity": "moderate",
-          "quote": "Whether reading about a bright sunny **день** (day), an authentic Ukrainian **свя́то** (holiday), a thriving garden where **бур'я́н** (weed) is removed, or a gathering of your whole beloved **сім'я́** (family), you have established a reliable foundation for all future Ukrainian learning.",
-          "explanation": "Lesson 5 strings together unrelated embellished settings to recycle vocabulary without giving the learner a meaningful reading task. Following the practical checklist, this passage and the subsequent additional summary prolong the ending without comparable engagement value.",
+          "explanation": "Lesson-2 act-202 asks this recognition question; the immediately following act-203 retests the same apple, song, soup, people, and raccoon distinctions. The adjacent inline sets offer little change in demand, while workbook practice again revisits the same word choices. The concern is monotonous practice and interrupted lesson momentum, not activity counts.",
           "dimension": "engagement"
         }
       ]
     },
     "tone": {
       "score": 5.8,
-      "evidence": "\"You now possess a comprehensive command of the complete 33-letter Ukrainian alphabet:\"",
+      "evidence": "\"Згі́дно з Украї́нським право́писом (§ 26), бу́квою **ь** познача́ємо на письмі́ м'я́кість при́голосних зву́ків: **д, т, з, с, дз, ц, л, н** у кінці́ сло́ва та складу́.\"",
       "verdict": "REJECT",
       "evidence_quotes": [
-        "The letter **Щ щ** always represents two sounds: **\"sh+ch\"** ([ш] + [ч]), like English *fresh cheese* or *cash check*.",
-        "You now possess a comprehensive command of the complete 33-letter Ukrainian alphabet:",
-        "The airflow continues; the\nspelling tells you to separate the consonant from the iotated vowel."
+        "These pairs are reading tools. You do not need to use all of them in\nconversation today.",
+        "Згі́дно з Украї́нським право́писом (§ 26), бу́квою **ь** познача́ємо на письмі́ м'я́кість при́голосних зву́ків: **д, т, з, с, дз, ц, л, н** у кінці́ сло́ва та складу́.",
+        "By completing this module, you have built foundational phonological and orthographic literacy in Ukrainian:"
       ],
-      "rubric_mapping": "Quote 1, lesson 3: AGAINST audience-language calibration. English pronunciation analogies become the explanatory frame rather than brief support for Ukrainian examples; lessons 1 and 2 use the same approach. This meets the rubric's explicitly rejected English-sound-comparison pattern, rather than merely reflecting permitted A1 English scaffolding. Quote 2, lesson 5: AGAINST consistent adult peer voice. The categorical mastery claim shifts from practical coaching to inflated congratulation...",
+      "rubric_mapping": "Quote 1 supports tone: lesson 1 addresses the adult learner directly and sets a manageable expectation. Quote 2 demonstrates the subsequent shift into untranslated Ukrainian textbook metalanguage, breaking the accessible teacher voice within the same lesson. Lessons 2–4 return largely to English explanation; permitted A1 English support is not itself a defect. Quote 3 illustrates lesson 5's institutional, abstract register instead of the opening's concrete reading guidance. Across the five...",
       "flags": [
-        "source_verification_blocked: sources.verify_words and sources.search_external both returned 'MCP tool call requires...",
-        "out_of_level_textbook: every lesson's resources.yaml includes 'Украї́нська мо́ва. 5 клас' by 'Авра́менко О. М.'...",
-        "audit_line_missing: implementation_map_audit is absent from the supplied Generated Content.",
-        "audit_line_missing: bad_form_audit is absent from the supplied Generated Content.",
-        "audit_line_missing: activity_split_audit is absent from the supplied Generated Content."
+        "source_verification_blocked: VESUM verify_words and three textbook search_text calls returned 'MCP tool call requires...",
+        "unverified citation: lesson 1 Avramenko mnemonic, lesson 3 Bolshakova quotation and lesson 4 Zabolotnyi quotation could...",
+        "out_of_level_textbook: Grade 5 references occur throughout lessons 1–5; lesson 1 also invokes university-level Strokal...",
+        "audit_line_missing: implementation_map_audit",
+        "audit_line_missing: bad_form_audit",
+        "audit_line_missing: activity_split_audit"
       ],
       "issue_ids": [
-        "ENGLISH_LEAKAGE",
-        "INFLATED_MASTERY_CLAIM"
+        "A1_REGISTER_SHIFT",
+        "ABSTRACT_COMPLETION_REGISTER",
+        "STAGED_DIALOGUE_REGISTER"
       ],
       "findings": [
         {
-          "issue_id": "ENGLISH_LEAKAGE",
-          "severity": "major",
-          "quote": "The letter **Щ щ** always represents two sounds: **\"sh+ch\"** ([ш] + [ч]), like English *fresh cheese* or *cash check*.",
-          "explanation": "Lesson 3 uses the English-sound-comparison teaching frame explicitly rejected by the tone rubric. This is a repeated explanatory posture across the letter lessons, not an objection to English glosses or task support.",
+          "issue_id": "A1_REGISTER_SHIFT",
+          "severity": "high",
+          "quote": "Згі́дно з Украї́нським право́писом (§ 26), бу́квою **ь** познача́ємо на письмі́ м'я́кість при́голосних зву́ків: **д, т, з, с, дз, ц, л, н** у кінці́ сло́ва та складу́.",
+          "explanation": "Lesson 1 abruptly changes from direct, accessible English coaching to Ukrainian orthographic exposition without corresponding English support. The subsequent mnemonic discussion and phonetics exposition sustain this register change. This is an audience and voice mismatch, not an immersion-percentage finding.",
           "dimension": "tone"
         },
         {
-          "issue_id": "INFLATED_MASTERY_CLAIM",
-          "severity": "major",
-          "quote": "You now possess a comprehensive command of the complete 33-letter Ukrainian alphabet:",
-          "explanation": "Lesson 5 asserts comprehensive mastery on the learner's behalf. This promotional register undermines the otherwise measured, practical teacher voice and substitutes reassurance for an honest account of what was practiced.",
+          "issue_id": "ABSTRACT_COMPLETION_REGISTER",
+          "severity": "medium",
+          "quote": "By completing this module, you have built foundational phonological and orthographic literacy in Ukrainian:",
+          "explanation": "Lesson 5 adopts institutional achievement language instead of the concrete, restrained guidance established at the opening. Repeated assertions of confidence and mastery make the closure sound promotional rather than responsive to what the learner can demonstrate.",
           "dimension": "tone"
         },
         {
-          "issue_id": "INFLATED_MASTERY_CLAIM",
-          "severity": "moderate",
-          "quote": "Now you can recognize and pronounce **Ї**, **Щ**, and **Ф** with complete confidence.",
-          "explanation": "Lesson 3 prescribes the learner's confidence rather than inviting a concrete self-check, reinforcing the recurring shift into exaggerated encouragement.",
+          "issue_id": "STAGED_DIALOGUE_REGISTER",
+          "severity": "medium",
+          "quote": "Тара́с: Дя́кую, Мар'я́но! Ти чудо́во зна́єш усі́ моде́лі. Смачно́го обі́ду та га́рного дня!",
+          "explanation": "Lesson 5 presents friends conversing, but Taras evaluates Mariana's recitation like an examiner and immediately adds an unrelated lunch farewell. The exchange feels scripted to deliver rules and praise rather than like warm adult conversation.",
           "dimension": "tone"
         }
       ]
@@ -234,6 +282,7 @@
       "tone"
     ],
     "rejected_dims": [
+      "pedagogical",
       "tone"
     ],
     "warning_dims": [
@@ -244,6 +293,6 @@
       "tone"
     ],
     "min_score": 5.8,
-    "min_dim": "tone"
+    "min_dim": "pedagogical"
   }
 }

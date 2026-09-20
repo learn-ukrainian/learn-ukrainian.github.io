@@ -3,22 +3,19 @@
   "diagnostics": [],
   "blocking": [],
   "warnings": [
-    "lesson 4: act-4[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-4[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-4[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-4[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-w3[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-w3[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-w3[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-w3[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-w3[4]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-    "lesson 4: act-w3[5]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first"
+    "lesson 1: 1 textbook-citation surnames with undeclared stress: ['Строка́ль: undeclared unverified stress']",
+    "lesson 1: 3 stressed forms absent from the stress dictionary (typos or fragments): ['залі́ш: undeclared unverified stress', 'стіле́: undeclared unverified stress']",
+    "lesson 3: 1 inflected forms attested in VESUM but absent from the stress dictionary: ['буквосполу́чення: undeclared unverified stress']",
+    "lesson 1: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 5}, 'reason': 'long_uk_without_gloss', 'offending_runs': [\"Згі́дно з Украї́нським право́писом бу́квою ь познача́ємо на письмі́ м'я́кість при́голосних зву́ків д т з с дз ц л н у кінці́ сло́ва та складу́\", \"Як зазнача́є Олекса́ндр Авра́менко клас для запам'ято́вування ти́х при́голосних пі́сля яки́х пи́шеться м'яки́й знак існу́є зру́чна мнемоні́чна фра́за Де ти з'їси́ ці лини́ Бу́кви д т з с ц л н м'я́кшають пе́ред бу́квою ь\", 'Окса́на Приві́т Тара́се Яки́й сього́дні день Тара́с Приві́т Сього́дні те́плий день Окса́на Що це там Це кінь Тара́с Так це вели́кий бі́лий кінь Окса́на А де наш вчи́тель Тара́с Наш вчи́тель уже́ тут', 'В украї́нській фоне́тиці лі́тери Ц та Ч познача́ють особли́ві зву́ки африка́ти', 'Марко́ Окса́но що це на столі́ Окса́на Це гаря́чий чай і цу́кор Марко́ А де моя́ ча́шка Окса́на Ось вона́ бі́ля стола́ де стої́ть стіле́ць Марко́ Дя́кую На дворі́ ти́ха ніч Окса́на Так те́пла лі́тня ніч'], 'policy': 'a1-m01-03'}",
+    "lesson 4: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 2}, 'reason': 'long_uk_without_gloss', 'offending_runs': [\"У попере́дніх уро́ках ви дізна́лися як м'яки́й знак ь пом'я́кшує при́голосні день кінь сіль а йото́вані лі́тери я ю є пом'я́кшують звук пе́ред собо́ю зли́то Тепе́р ми вивча́ємо і́нший важли́вий знак украї́нський апо́строф апо́строф\", 'б п в м ф р апо́строф я ю є ї'], 'policy': 'a1-m01-03'}",
+    "lesson 5: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 8, 'vocab_entries': 14, 'uk_example_sentences': 48, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+    "lesson 5: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': [\"Тара́с До́брий день Мар'я́но Що ти сього́дні ро́биш Мар'я́на До́брий день Тара́се Я повто́рюю пра́вила про особли́ві зна́ки Тара́с Чудо́во Чи пам'ята́єш ти коли́ пи́шемо апо́строф Мар'я́на Так зві́сно Апо́строф пи́шемо пі́сля губни́х лі́тер та лі́тери р коли́ чу́ти розді́льний ...\"], 'policy': 'a1-m01-03'}"
   ],
   "facts": {
     "baseline": {
       "commit": null,
       "prose_tokens": 1449,
-      "long_paragraphs": 42,
+      "long_paragraphs": 37,
       "activities": {
         "inline": 5,
         "workbook": 7
@@ -27,10 +24,10 @@
     },
     "lessons": {
       "1": {
-        "prose_tokens": 962,
+        "prose_tokens": 1125,
         "inline": 5,
         "workbook": 6,
-        "vocab": 13,
+        "vocab": 12,
         "lemma_list": [
           "м'який знак",
           "знак",
@@ -41,15 +38,14 @@
           "сіль",
           "вчитель",
           "маленький",
-          "пальці",
           "сьогодні",
-          "злито",
-          "роздільно"
+          "ложка",
+          "пальці"
         ],
-        "resources": 6,
+        "resources": 3,
         "unverified_stress": 0,
         "unverified_lemmas": 0,
-        "est_minutes": 55
+        "est_minutes": 57
       },
       "2": {
         "prose_tokens": 792,
@@ -71,13 +67,13 @@
           "роздільно",
           "пальці"
         ],
-        "resources": 7,
+        "resources": 8,
         "unverified_stress": 0,
         "unverified_lemmas": 0,
         "est_minutes": 52
       },
       "3": {
-        "prose_tokens": 604,
+        "prose_tokens": 1212,
         "inline": 5,
         "workbook": 6,
         "vocab": 13,
@@ -99,20 +95,54 @@
         "resources": 6,
         "unverified_stress": 0,
         "unverified_lemmas": 0,
-        "est_minutes": 49
+        "est_minutes": 59
       },
       "4": {
-        "prose_tokens": 1154,
+        "prose_tokens": 1214,
         "inline": 5,
-        "workbook": 6,
-        "vocab": 18,
+        "workbook": 7,
+        "vocab": 19,
         "lemma_list": [
           "апостроф",
-          "знак",
+          "м'ясо",
+          "п'ять",
+          "дев'ять",
+          "ім'я",
+          "здоров'я",
+          "комп'ютер",
+          "бур'ян",
+          "цвях",
+          "мар'яна",
+          "дерев'яний",
+          "буряк",
+          "свято",
+          "сім'я",
+          "день",
           "роздільно",
           "злито",
           "твердий",
+          "м'який"
+        ],
+        "resources": 5,
+        "unverified_stress": 1,
+        "unverified_lemmas": 0,
+        "est_minutes": 62
+      },
+      "5": {
+        "prose_tokens": 1137,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 26,
+        "lemma_list": [
+          "м'який знак",
+          "апостроф",
+          "знак",
           "м'який",
+          "твердий",
+          "день",
+          "кінь",
+          "сіль",
+          "вчитель",
           "сім'я",
           "м'ясо",
           "п'ять",
@@ -124,43 +154,22 @@
           "бур'ян",
           "свято",
           "цвях",
-          "ложка"
-        ],
-        "resources": 4,
-        "unverified_stress": 1,
-        "unverified_lemmas": 0,
-        "est_minutes": 58
-      },
-      "5": {
-        "prose_tokens": 849,
-        "inline": 5,
-        "workbook": 6,
-        "vocab": 14,
-        "lemma_list": [
-          "мар'яна",
-          "дерев'яний",
-          "пальці",
+          "маленький",
           "сьогодні",
           "ложка",
-          "день",
-          "сім'я",
-          "апостроф",
-          "м'який знак",
-          "знак",
-          "маленький",
-          "вчитель",
-          "свято",
-          "бур'ян"
+          "пальці",
+          "злито",
+          "роздільно"
         ],
-        "resources": 4,
+        "resources": 5,
         "unverified_stress": 1,
         "unverified_lemmas": 0,
-        "est_minutes": 53
+        "est_minutes": 55
       }
     },
-    "total_prose_tokens": 4361,
+    "total_prose_tokens": 5480,
     "preservation": {
-      "long_paragraphs": 42,
+      "long_paragraphs": 37,
       "lost": 0,
       "duplicated": 0,
       "misplaced": 0
@@ -169,7 +178,7 @@
       "1": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 27.86,
+          "pct": 54.56,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m01-03"
@@ -183,25 +192,31 @@
             "uk_tab3_activities": 5
           },
           "observed": {
-            "uk_dialogue_lines": 3,
-            "vocab_entries": 14,
-            "uk_example_sentences": 42,
+            "uk_dialogue_lines": 12,
+            "vocab_entries": 22,
+            "uk_example_sentences": 46,
             "uk_tab3_activities": 5
           },
           "reason": null,
           "policy": "a1-m01-03"
         },
         "long_uk_ceiling": {
-          "passed": true,
+          "passed": false,
           "required": {
             "max_unsupported_uk_words": 10,
             "support_proximity": 8
           },
           "observed": {
-            "offending_runs": 0
+            "offending_runs": 5
           },
-          "reason": null,
-          "offending_runs": [],
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "Згі́дно з Украї́нським право́писом бу́квою ь познача́ємо на письмі́ м'я́кість при́голосних зву́ків д т з с дз ц л н у кінці́ сло́ва та складу́",
+            "Як зазнача́є Олекса́ндр Авра́менко клас для запам'ято́вування ти́х при́голосних пі́сля яки́х пи́шеться м'яки́й знак існу́є зру́чна мнемоні́чна фра́за Де ти з'їси́ ці лини́ Бу́кви д т з с ц л н м'я́кшають пе́ред бу́квою ь",
+            "Окса́на Приві́т Тара́се Яки́й сього́дні день Тара́с Приві́т Сього́дні те́плий день Окса́на Що це там Це кінь Тара́с Так це вели́кий бі́лий кінь Окса́на А де наш вчи́тель Тара́с Наш вчи́тель уже́ тут",
+            "В украї́нській фоне́тиці лі́тери Ц та Ч познача́ють особли́ві зву́ки африка́ти",
+            "Марко́ Окса́но що це на столі́ Окса́на Це гаря́чий чай і цу́кор Марко́ А де моя́ ча́шка Окса́на Ось вона́ бі́ля стола́ де стої́ть стіле́ць Марко́ Дя́кую На дворі́ ти́ха ніч Окса́на Так те́пла лі́тня ніч"
+          ],
           "policy": "a1-m01-03"
         },
         "component_density": {
@@ -226,7 +241,7 @@
       "2": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 29.3,
+          "pct": 22.37,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m01-03"
@@ -283,7 +298,7 @@
       "3": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 25.94,
+          "pct": 26.37,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m01-03"
@@ -297,9 +312,9 @@
             "uk_tab3_activities": 5
           },
           "observed": {
-            "uk_dialogue_lines": 4,
-            "vocab_entries": 0,
-            "uk_example_sentences": 25,
+            "uk_dialogue_lines": 7,
+            "vocab_entries": 18,
+            "uk_example_sentences": 53,
             "uk_tab3_activities": 5
           },
           "reason": null,
@@ -340,7 +355,7 @@
       "4": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 29.8,
+          "pct": 31.42,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m01-03"
@@ -355,24 +370,27 @@
           },
           "observed": {
             "uk_dialogue_lines": 6,
-            "vocab_entries": 28,
-            "uk_example_sentences": 50,
+            "vocab_entries": 31,
+            "uk_example_sentences": 62,
             "uk_tab3_activities": 5
           },
           "reason": null,
           "policy": "a1-m01-03"
         },
         "long_uk_ceiling": {
-          "passed": true,
+          "passed": false,
           "required": {
             "max_unsupported_uk_words": 10,
             "support_proximity": 8
           },
           "observed": {
-            "offending_runs": 0
+            "offending_runs": 2
           },
-          "reason": null,
-          "offending_runs": [],
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "У попере́дніх уро́ках ви дізна́лися як м'яки́й знак ь пом'я́кшує при́голосні день кінь сіль а йото́вані лі́тери я ю є пом'я́кшують звук пе́ред собо́ю зли́то Тепе́р ми вивча́ємо і́нший важли́вий знак украї́нський апо́строф апо́строф",
+            "б п в м ф р апо́строф я ю є ї"
+          ],
           "policy": "a1-m01-03"
         },
         "component_density": {
@@ -397,13 +415,13 @@
       "5": {
         "ratio_advisory": {
           "passed": true,
-          "pct": 31.76,
+          "pct": 40.4,
           "min_pct": 40,
           "max_pct": 55,
           "policy": "a1-m01-03"
         },
         "l2_exposure_floor": {
-          "passed": true,
+          "passed": false,
           "required": {
             "uk_dialogue_lines": 0,
             "vocab_entries": 0,
@@ -411,25 +429,27 @@
             "uk_tab3_activities": 5
           },
           "observed": {
-            "uk_dialogue_lines": 3,
-            "vocab_entries": 10,
-            "uk_example_sentences": 43,
-            "uk_tab3_activities": 5
+            "uk_dialogue_lines": 8,
+            "vocab_entries": 14,
+            "uk_example_sentences": 48,
+            "uk_tab3_activities": 4
           },
-          "reason": null,
+          "reason": "too_few_uk_tab3_activities",
           "policy": "a1-m01-03"
         },
         "long_uk_ceiling": {
-          "passed": true,
+          "passed": false,
           "required": {
             "max_unsupported_uk_words": 10,
             "support_proximity": 8
           },
           "observed": {
-            "offending_runs": 0
+            "offending_runs": 1
           },
-          "reason": null,
-          "offending_runs": [],
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "Тара́с До́брий день Мар'я́но Що ти сього́дні ро́биш Мар'я́на До́брий день Тара́се Я повто́рюю пра́вила про особли́ві зна́ки Тара́с Чудо́во Чи пам'ята́єш ти коли́ пи́шемо апо́строф Мар'я́на Так зві́сно Апо́строф пи́шемо пі́сля губни́х лі́тер та лі́тери р коли́ чу́ти розді́льний ..."
+          ],
           "policy": "a1-m01-03"
         },
         "component_density": {
@@ -461,22 +481,19 @@
       "diagnostics": [],
       "blocking": [],
       "warnings": [
-        "lesson 4: act-4[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-4[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-4[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-4[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-w3[0]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-w3[1]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-w3[2]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-w3[3]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-w3[4]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first",
-        "lesson 4: act-w3[5]: error-correction A1 sentence should add English scaffold (after — or in parentheses), Ukrainian-first"
+        "lesson 1: 1 textbook-citation surnames with undeclared stress: ['Строка́ль: undeclared unverified stress']",
+        "lesson 1: 3 stressed forms absent from the stress dictionary (typos or fragments): ['залі́ш: undeclared unverified stress', 'стіле́: undeclared unverified stress']",
+        "lesson 3: 1 inflected forms attested in VESUM but absent from the stress dictionary: ['буквосполу́чення: undeclared unverified stress']",
+        "lesson 1: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 5}, 'reason': 'long_uk_without_gloss', 'offending_runs': [\"Згі́дно з Украї́нським право́писом бу́квою ь познача́ємо на письмі́ м'я́кість при́голосних зву́ків д т з с дз ц л н у кінці́ сло́ва та складу́\", \"Як зазнача́є Олекса́ндр Авра́менко клас для запам'ято́вування ти́х при́голосних пі́сля яки́х пи́шеться м'яки́й знак існу́є зру́чна мнемоні́чна фра́за Де ти з'їси́ ці лини́ Бу́кви д т з с ц л н м'я́кшають пе́ред бу́квою ь\", 'Окса́на Приві́т Тара́се Яки́й сього́дні день Тара́с Приві́т Сього́дні те́плий день Окса́на Що це там Це кінь Тара́с Так це вели́кий бі́лий кінь Окса́на А де наш вчи́тель Тара́с Наш вчи́тель уже́ тут', 'В украї́нській фоне́тиці лі́тери Ц та Ч познача́ють особли́ві зву́ки африка́ти', 'Марко́ Окса́но що це на столі́ Окса́на Це гаря́чий чай і цу́кор Марко́ А де моя́ ча́шка Окса́на Ось вона́ бі́ля стола́ де стої́ть стіле́ць Марко́ Дя́кую На дворі́ ти́ха ніч Окса́на Так те́пла лі́тня ніч'], 'policy': 'a1-m01-03'}",
+        "lesson 4: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 2}, 'reason': 'long_uk_without_gloss', 'offending_runs': [\"У попере́дніх уро́ках ви дізна́лися як м'яки́й знак ь пом'я́кшує при́голосні день кінь сіль а йото́вані лі́тери я ю є пом'я́кшують звук пе́ред собо́ю зли́то Тепе́р ми вивча́ємо і́нший важли́вий знак украї́нський апо́строф апо́строф\", 'б п в м ф р апо́строф я ю є ї'], 'policy': 'a1-m01-03'}",
+        "lesson 5: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 8, 'vocab_entries': 14, 'uk_example_sentences': 48, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+        "lesson 5: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': [\"Тара́с До́брий день Мар'я́но Що ти сього́дні ро́биш Мар'я́на До́брий день Тара́се Я повто́рюю пра́вила про особли́ві зна́ки Тара́с Чудо́во Чи пам'ята́єш ти коли́ пи́шемо апо́строф Мар'я́на Так зві́сно Апо́строф пи́шемо пі́сля губни́х лі́тер та лі́тери р коли́ чу́ти розді́льний ...\"], 'policy': 'a1-m01-03'}"
       ],
       "facts": {
         "baseline": {
           "commit": null,
           "prose_tokens": 1449,
-          "long_paragraphs": 42,
+          "long_paragraphs": 37,
           "activities": {
             "inline": 5,
             "workbook": 7
@@ -485,10 +502,10 @@
         },
         "lessons": {
           "1": {
-            "prose_tokens": 962,
+            "prose_tokens": 1125,
             "inline": 5,
             "workbook": 6,
-            "vocab": 13,
+            "vocab": 12,
             "lemma_list": [
               "м'який знак",
               "знак",
@@ -499,15 +516,14 @@
               "сіль",
               "вчитель",
               "маленький",
-              "пальці",
               "сьогодні",
-              "злито",
-              "роздільно"
+              "ложка",
+              "пальці"
             ],
-            "resources": 6,
+            "resources": 3,
             "unverified_stress": 0,
             "unverified_lemmas": 0,
-            "est_minutes": 55
+            "est_minutes": 57
           },
           "2": {
             "prose_tokens": 792,
@@ -529,13 +545,13 @@
               "роздільно",
               "пальці"
             ],
-            "resources": 7,
+            "resources": 8,
             "unverified_stress": 0,
             "unverified_lemmas": 0,
             "est_minutes": 52
           },
           "3": {
-            "prose_tokens": 604,
+            "prose_tokens": 1212,
             "inline": 5,
             "workbook": 6,
             "vocab": 13,
@@ -557,20 +573,54 @@
             "resources": 6,
             "unverified_stress": 0,
             "unverified_lemmas": 0,
-            "est_minutes": 49
+            "est_minutes": 59
           },
           "4": {
-            "prose_tokens": 1154,
+            "prose_tokens": 1214,
             "inline": 5,
-            "workbook": 6,
-            "vocab": 18,
+            "workbook": 7,
+            "vocab": 19,
             "lemma_list": [
               "апостроф",
-              "знак",
+              "м'ясо",
+              "п'ять",
+              "дев'ять",
+              "ім'я",
+              "здоров'я",
+              "комп'ютер",
+              "бур'ян",
+              "цвях",
+              "мар'яна",
+              "дерев'яний",
+              "буряк",
+              "свято",
+              "сім'я",
+              "день",
               "роздільно",
               "злито",
               "твердий",
+              "м'який"
+            ],
+            "resources": 5,
+            "unverified_stress": 1,
+            "unverified_lemmas": 0,
+            "est_minutes": 62
+          },
+          "5": {
+            "prose_tokens": 1137,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 26,
+            "lemma_list": [
+              "м'який знак",
+              "апостроф",
+              "знак",
               "м'який",
+              "твердий",
+              "день",
+              "кінь",
+              "сіль",
+              "вчитель",
               "сім'я",
               "м'ясо",
               "п'ять",
@@ -582,43 +632,22 @@
               "бур'ян",
               "свято",
               "цвях",
-              "ложка"
-            ],
-            "resources": 4,
-            "unverified_stress": 1,
-            "unverified_lemmas": 0,
-            "est_minutes": 58
-          },
-          "5": {
-            "prose_tokens": 849,
-            "inline": 5,
-            "workbook": 6,
-            "vocab": 14,
-            "lemma_list": [
-              "мар'яна",
-              "дерев'яний",
-              "пальці",
+              "маленький",
               "сьогодні",
               "ложка",
-              "день",
-              "сім'я",
-              "апостроф",
-              "м'який знак",
-              "знак",
-              "маленький",
-              "вчитель",
-              "свято",
-              "бур'ян"
+              "пальці",
+              "злито",
+              "роздільно"
             ],
-            "resources": 4,
+            "resources": 5,
             "unverified_stress": 1,
             "unverified_lemmas": 0,
-            "est_minutes": 53
+            "est_minutes": 55
           }
         },
-        "total_prose_tokens": 4361,
+        "total_prose_tokens": 5480,
         "preservation": {
-          "long_paragraphs": 42,
+          "long_paragraphs": 37,
           "lost": 0,
           "duplicated": 0,
           "misplaced": 0
@@ -627,7 +656,7 @@
           "1": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 27.86,
+              "pct": 54.56,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m01-03"
@@ -641,25 +670,31 @@
                 "uk_tab3_activities": 5
               },
               "observed": {
-                "uk_dialogue_lines": 3,
-                "vocab_entries": 14,
-                "uk_example_sentences": 42,
+                "uk_dialogue_lines": 12,
+                "vocab_entries": 22,
+                "uk_example_sentences": 46,
                 "uk_tab3_activities": 5
               },
               "reason": null,
               "policy": "a1-m01-03"
             },
             "long_uk_ceiling": {
-              "passed": true,
+              "passed": false,
               "required": {
                 "max_unsupported_uk_words": 10,
                 "support_proximity": 8
               },
               "observed": {
-                "offending_runs": 0
+                "offending_runs": 5
               },
-              "reason": null,
-              "offending_runs": [],
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "Згі́дно з Украї́нським право́писом бу́квою ь познача́ємо на письмі́ м'я́кість при́голосних зву́ків д т з с дз ц л н у кінці́ сло́ва та складу́",
+                "Як зазнача́є Олекса́ндр Авра́менко клас для запам'ято́вування ти́х при́голосних пі́сля яки́х пи́шеться м'яки́й знак існу́є зру́чна мнемоні́чна фра́за Де ти з'їси́ ці лини́ Бу́кви д т з с ц л н м'я́кшають пе́ред бу́квою ь",
+                "Окса́на Приві́т Тара́се Яки́й сього́дні день Тара́с Приві́т Сього́дні те́плий день Окса́на Що це там Це кінь Тара́с Так це вели́кий бі́лий кінь Окса́на А де наш вчи́тель Тара́с Наш вчи́тель уже́ тут",
+                "В украї́нській фоне́тиці лі́тери Ц та Ч познача́ють особли́ві зву́ки африка́ти",
+                "Марко́ Окса́но що це на столі́ Окса́на Це гаря́чий чай і цу́кор Марко́ А де моя́ ча́шка Окса́на Ось вона́ бі́ля стола́ де стої́ть стіле́ць Марко́ Дя́кую На дворі́ ти́ха ніч Окса́на Так те́пла лі́тня ніч"
+              ],
               "policy": "a1-m01-03"
             },
             "component_density": {
@@ -684,7 +719,7 @@
           "2": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 29.3,
+              "pct": 22.37,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m01-03"
@@ -741,7 +776,7 @@
           "3": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 25.94,
+              "pct": 26.37,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m01-03"
@@ -755,9 +790,9 @@
                 "uk_tab3_activities": 5
               },
               "observed": {
-                "uk_dialogue_lines": 4,
-                "vocab_entries": 0,
-                "uk_example_sentences": 25,
+                "uk_dialogue_lines": 7,
+                "vocab_entries": 18,
+                "uk_example_sentences": 53,
                 "uk_tab3_activities": 5
               },
               "reason": null,
@@ -798,7 +833,7 @@
           "4": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 29.8,
+              "pct": 31.42,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m01-03"
@@ -813,24 +848,27 @@
               },
               "observed": {
                 "uk_dialogue_lines": 6,
-                "vocab_entries": 28,
-                "uk_example_sentences": 50,
+                "vocab_entries": 31,
+                "uk_example_sentences": 62,
                 "uk_tab3_activities": 5
               },
               "reason": null,
               "policy": "a1-m01-03"
             },
             "long_uk_ceiling": {
-              "passed": true,
+              "passed": false,
               "required": {
                 "max_unsupported_uk_words": 10,
                 "support_proximity": 8
               },
               "observed": {
-                "offending_runs": 0
+                "offending_runs": 2
               },
-              "reason": null,
-              "offending_runs": [],
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "У попере́дніх уро́ках ви дізна́лися як м'яки́й знак ь пом'я́кшує при́голосні день кінь сіль а йото́вані лі́тери я ю є пом'я́кшують звук пе́ред собо́ю зли́то Тепе́р ми вивча́ємо і́нший важли́вий знак украї́нський апо́строф апо́строф",
+                "б п в м ф р апо́строф я ю є ї"
+              ],
               "policy": "a1-m01-03"
             },
             "component_density": {
@@ -855,13 +893,13 @@
           "5": {
             "ratio_advisory": {
               "passed": true,
-              "pct": 31.76,
+              "pct": 40.4,
               "min_pct": 40,
               "max_pct": 55,
               "policy": "a1-m01-03"
             },
             "l2_exposure_floor": {
-              "passed": true,
+              "passed": false,
               "required": {
                 "uk_dialogue_lines": 0,
                 "vocab_entries": 0,
@@ -869,25 +907,27 @@
                 "uk_tab3_activities": 5
               },
               "observed": {
-                "uk_dialogue_lines": 3,
-                "vocab_entries": 10,
-                "uk_example_sentences": 43,
-                "uk_tab3_activities": 5
+                "uk_dialogue_lines": 8,
+                "vocab_entries": 14,
+                "uk_example_sentences": 48,
+                "uk_tab3_activities": 4
               },
-              "reason": null,
+              "reason": "too_few_uk_tab3_activities",
               "policy": "a1-m01-03"
             },
             "long_uk_ceiling": {
-              "passed": true,
+              "passed": false,
               "required": {
                 "max_unsupported_uk_words": 10,
                 "support_proximity": 8
               },
               "observed": {
-                "offending_runs": 0
+                "offending_runs": 1
               },
-              "reason": null,
-              "offending_runs": [],
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "Тара́с До́брий день Мар'я́но Що ти сього́дні ро́биш Мар'я́на До́брий день Тара́се Я повто́рюю пра́вила про особли́ві зна́ки Тара́с Чудо́во Чи пам'ята́єш ти коли́ пи́шемо апо́строф Мар'я́на Так зві́сно Апо́строф пи́шемо пі́сля губни́х лі́тер та лі́тери р коли́ чу́ти розді́льний ..."
+              ],
               "policy": "a1-m01-03"
             },
             "component_density": {

@@ -1,14 +1,33 @@
-Welcome to Module 3: **Особли́ві зна́ки та по́вна абе́тка** (Special Signs & The Full Alphabet). Building on the foundation vowels and consonants from Modules 1 and 2, this module completes your mastery of all 33 letters of the Ukrainian alphabet and introduces the essential orthographic signs. You explore the soft sign (**м'яки́й знак**, **ь**), the consonant affricates **Ц** and **Ч**, the semivowel **Й**, the iotated vowels (**Я, Ю, Є**), the two-sound letters **Ї** and **Щ**, the consonant **Ф**, the apostrophe (**апо́строф**, **'**), and word hyphenation rules.
+**день. сім'я́. буря́к. бур'я́н.** — four words, two signs, three
+beginner contrasts.
 
-By the end of this module, you can:
+The signs are small on the page, but they are not decorative. They tell your
+mouth how to read the nearby letters.
 
-- Understand the job of the soft sign (**м'яки́й знак**, **ь**) and read words with soft consonant endings cleanly: **день**, **кінь**, **сіль**, and **вчи́тель**;
-- Articulate the affricates **Ц** (both hard in **цирк**, **со́нце** and soft in **ціна́**, **па́льці**) and **Ч** (hard in these examples: **час**, **чи́стий**, **ча́шка**, **ніч**);
-- Read the semivowel **Й** (**чай**, **йо́гурт**) and iotated vowels (**Я, Ю, Є**) both as "y + vowel" at the beginning of words and after vowels (**я́блуко**, **ю́шка**, **єно́т**, **моя́**), and as softening vowels after consonants (**пі́сня**, **лю́ди**, **си́нє**);
-- Pronounce the letter **Ї** as always two sounds: [йі], remembering that it always starts with a y-sound (**їжа́к**, **по́їзд**, **Ки́їв**, **Украї́на**);
-- Articulate the letter **Щ** as always two sounds: "sh+ch" ([ш] + [ч]) without softening (**борщ**, **щу́ка**, **що**, **ще**);
-- Pronounce the consonant **Ф** in international and loan vocabulary (**фо́то**, **факт**, **шарф**), completing all 33 letters of the Ukrainian alphabet;
-- Master the apostrophe (**'**) and the three core contrasts: softening without apostrophe (**буря́к**), separation with apostrophe (**бур'я́н**, **сім'я́**, **п'ять**, **комп'ю́тер**), and consonant clusters with no apostrophe (**свя́то**, **цвях**);
-- Apply standard Ukrainian hyphenation rules at line breaks (**паль-ці**, `Мар'-яна`, `дере-в'яний`).
+Listen once before you write. A native Ukrainian teacher or tutor can say
+**день**, **сім'я́**, **буря́к**, **бур'я́н**, and **свя́то**; you point to
+the sign you hear on the page. If you are working alone, record your own voice
+and compare it with the routine below.
 
-Keep the scope small. Today is not a theoretical linguistics lecture. You are training clear visual and acoustic reflexes to recognize every Ukrainian sign and pronounce every letter with confidence.
+Teacher Oksana's routine for this module is short: find the sign, say what it
+does, then read the word once.
+
+Keep the goal simple. You are not learning every spelling rule today. You are
+learning these beginner contrasts:
+
+- **день** — **ь** has no sound, but it softens the consonant before it;
+- **сім'я́** — apostrophe keeps the previous consonant hard and lets you hear
+  **[й]** before **я**;
+- **буря́к / бур'я́н / свя́то / цвях** — sometimes **я** softens, sometimes
+  apostrophe separates, and sometimes two consonants before **я** mean there is
+  no apostrophe.
+
+By the end, you can:
+
+- recognize **ь** and apostrophe in common A1 words;
+- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding an extra
+  vowel;
+- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with **й** after
+  the apostrophe;
+- sort words into **м'яки́й знак**, **апо́строф**, and **без зна́ка**;
+- choose the safer form when a visual habit creates a mistake.

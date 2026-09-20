@@ -1,4 +1,66 @@
 inline:
+- id: act-3
+  type: fill-in
+  title: Дода́й знак — Add a sign
+  instruction: Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or
+    no sign.
+  items:
+  - sentence: сім___я
+    options:
+    - ''''
+    - ь
+    - ''
+    answer: ''''
+    explanation: 'Пі́сля губно́го при́голосного «м» пе́ред «я» пи́шемо апо́строф:
+      сім''я́. — After labial ''м'' before ''я'', we write an apostrophe: сім''я́.'
+  - sentence: ден___
+    options:
+    - ь
+    - ''''
+    - ''
+    answer: ь
+    explanation: 'Наприкінці́ сло́ва пі́сля «н» пи́шемо м''яки́й знак: день. — At
+      the end of the word after ''н'', we write a soft sign: день.'
+  - sentence: п___ять
+    options:
+    - ''''
+    - ь
+    - ''
+    answer: ''''
+    explanation: 'Пі́сля губно́го при́голосного «п» пе́ред «я» пи́шемо апо́строф:
+      п''ять. — After labial ''п'' before ''я'', we write an apostrophe: п''ять.'
+  - sentence: У сло́ві свя́то пра́вильний ви́бір — ___ . — In the word "свя́то", the
+      correct choice is […].
+    options:
+    - ''
+    - ''''
+    - ь
+    answer: ''
+    explanation: 'Пі́сля корене́вого збі́гу при́голосних «св» пе́ред «я» апо́строф
+      не пи́шемо: свя́то. — After root consonant cluster ''св'' before ''я'', no apostrophe
+      is written: свя́то.'
+- id: act-401
+  type: match-up
+  title: Апо́строф пі́сля губни́х — Apostrophe after labials
+  instruction: З'єдна́й украї́нське сло́во з йо́го о́писом. — Match the Ukrainian
+    word with its description.
+  pairs:
+  - left: сім'я́
+    right: у дру́гому скла́ді пі́сля «сім-» (family) — in second syllable after «сім-»
+      (family)
+  - left: м'я́со
+    right: на поча́тку сло́ва пі́сля губно́го «м» (meat) — at word start after labial
+      «м» (meat)
+  - left: п'ять
+    right: пі́сля губно́го «п» пе́ред «я» (five) — after labial «п» before «я» (five)
+  - left: де́в'ять
+    right: пі́сля губно́го «в» пе́ред «я» (nine) — after labial «в» before «я» (nine)
+  - left: ім'я́
+    right: пі́сля губно́го «м» у сло́ві на «і-» (name) — after labial «м» in a word
+      starting with «і-» (name)
+  - left: комп'ю́тер
+    right: пі́сля «п» пе́ред «ю» у запози́ченому сло́ві — after «п» before «ю» in
+      loanword (computer)
 - id: act-1
   type: quiz
   title: М'я́ко чи розді́льно — Soft or separate
@@ -34,49 +96,6 @@ inline:
     - text: За́вжди [йі]. — Always [йі].
       correct: true
     explanation: Ї за́вжди познача́є [йі]. — Ї always represents [йі].
-- id: act-3
-  type: fill-in
-  title: Дода́й знак — Add a sign
-  instruction: Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or
-    no sign.
-  items:
-  - sentence: сім___я
-    answer: ''''
-    options:
-    - ''''
-    - ь
-    - без зна́ка — no sign
-    explanation: У сло́ві «сім'я́» пи́шеться апо́строф пі́сля губно́го [м] пе́ред
-      я. — In the word «сім'я́», an apostrophe is written after the labial [m] before
-      я.
-  - sentence: ден___
-    answer: ь
-    options:
-    - ь
-    - ''''
-    - без зна́ка — no sign
-    explanation: У сло́ві «день» наприкінці́ пи́шеться м'яки́й знак для позна́чення
-      м'я́кості [н']. — In the word «день», a soft sign is written at the end to indicate
-      the softness of [n'].
-  - sentence: п___ять
-    answer: ''''
-    options:
-    - ''''
-    - ь
-    - без зна́ка — no sign
-    explanation: У сло́ві «п'ять» пи́шеться апо́строф пі́сля губно́го [п] пе́ред я.
-      — In the word «п'ять», an apostrophe is written after the labial [p] before
-      я.
-  - sentence: У сло́ві свя́то пра́вильний ви́бір — ___ . — In the word "свя́то", the
-      correct choice is […].
-    answer: без зна́ка — no sign
-    options:
-    - без зна́ка — no sign
-    - ''''
-    - ь
-    explanation: У сло́ві «свя́то» апо́строф не пи́шеться, бо пе́ред губни́м [в] є
-      корене́вий при́голосний [с]. — In the word «свя́то», no apostrophe is written
-      because there is a root consonant [s] before labial [v].
 - id: act-4
   type: error-correction
   title: Ви́прав па́стки — Correct the traps
@@ -88,8 +107,8 @@ inline:
     correction: сім'я́
     options:
     - сім'я́
-    - сімя
-    - свя́то
+    - сімья́
+    - сьім'я
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe
       is needed.
   - sentence: Сього́дні га́рний і те́плий ден.
@@ -97,16 +116,16 @@ inline:
     correction: день
     options:
     - день
-    - ден
-    - кінь
+    - дєнь
+    - дьень
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
   - sentence: Сього́дні у мі́сті вели́ке св'ято.
     error: св'ято
     correction: свя́то
     options:
     - свя́то
-    - св'ято
-    - сім'я́
+    - свья́то
+    - сьвя́то
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is
       no apostrophe.
   - sentence: На столі́ лежи́ть вели́ка льожка.
@@ -114,107 +133,88 @@ inline:
     correction: ло́жка
     options:
     - ло́жка
-    - льожка
-    - сіль
+    - лю́жка
+    - льо́шка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign
       after л.
-- id: act-404
-  type: match-up
-  title: 'Зіста́влення слів та зна́ків — Match-up: Words and signs'
-  instruction: З'єдна́йте украї́нське сло́во з йо́го фо́рмою та зна́ченням. — Match
-    each Ukrainian word with its phonetic role and meaning.
-  pairs:
-  - left: сім'я́
-    right: 'роди́на: тверди́й [м] та [йа] — family: hard [m] and [йа]'
-  - left: м'я́со
-    right: 'ї́жа: тверди́й [м] та [йа] — food / meat: hard [m] and [йа]'
-  - left: п'ять
-    right: 'число́: тверди́й [п] та [йа] — number five: hard [p] and [йа]'
-  - left: буря́к
-    right: 'о́воч: м''яки́й [р''] пе́ред [а] — vegetable: soft [р''] before [а]'
-  - left: бур'я́н
-    right: 'трава́: тверди́й [р] та [йа] — weed: hard [р] and [йа]'
-  - left: свя́то
-    right: 'ра́дість: губни́й [в] пі́сля [с] — holiday: labial [в] after [с]'
-- id: act-405
+- id: act-402
   type: quiz
-  title: Пра́вила вжива́ння апо́строфа — Rules of apostrophe usage
-  instruction: Обері́ть пра́вильний варіа́нт ві́дповіді на ко́жне запита́ння. — Choose
-    the correct answer to each question.
+  title: 'Три контра́сти: ви́бір пра́вила — Three contrasts: choosing the rule'
+  instruction: Обери́ пра́вильне поя́снення для по́даного сло́ва. — Choose the correct
+    explanation for the given word.
   items:
-  - prompt: 'Which set is right? — сім''я́, п''ять, бур''я́н vs буря́к, свя́то, цвях'
-    options:
-    - text: 'сім''я́, п''ять, бур''я́н — так; буря́к, свя́то, цвях — ні'
-      correct: true
-    - text: 'апо́строф пі́сля ко́жних б, п, в, м, ф, р — apostrophe after every б, п, в, м, ф, р'
-      correct: false
-    - text: 'апо́строф пі́сля будь-яки́х при́голосних — apostrophe after any consonants'
-      correct: false
-    explanation: 'Апо́строф: сім''я́, п''ять, бур''я́н. Без апо́строфа: буря́к, свя́то,
-      цвях. — Apostrophe in сім''я́, п''ять, бур''я́н. None in буря́к, свя́то, цвях.'
   - prompt: Чому́ в сло́ві «буря́к» нема́є апо́строфа? — Why is there no apostrophe
       in the word «буря́к»?
     options:
-    - text: Тому́ що [р'] м'яки́й і нема́є розді́льної вимо́ви — Because [р'] is soft
-        and there is no separated pronunciation
+    - text: Бу́ква «р» познача́є м'яки́й звук [р'], вимо́ва зли́та. — Letter «р» denotes
+        soft [р'], pronunciation is blended.
       correct: true
-    - text: Тому́ що це поми́лка — Because it is an error
+    - text: Бу́ква «р» вимага́є апо́строфа за́вжди. — Letter «р» always requires an
+        apostrophe.
       correct: false
-    - text: Тому́ що я мовчи́ть — Because я is silent
+    - text: Тут є м'яки́й знак. — There is a soft sign here.
       correct: false
-    explanation: У сло́ві «буря́к» при́голосний [р'] пом'я́кшується пе́ред [а], тому́
-      апо́строф не потрі́бен. — In the word «буря́к», the consonant [р'] softens before
-      [а], so no apostrophe is needed.
+    explanation: У сло́ві «буря́к» звук [р'] є м'яки́м, тому́ апо́строф не пи́шеться.
+      — In «буря́к» the sound [р'] is soft, so no apostrophe is written.
+  - prompt: Що ро́бить апо́строф у сло́ві «бур'я́н»? — What does the apostrophe do
+      in the word «бур'я́н»?
+    options:
+    - text: Зберіга́є тве́рдість [р] і розді́льну вимо́ву [йа]. — Keeps [р] hard and
+        pronunciation separate [йа].
+      correct: true
+    - text: Пом'я́кшує звук [р]. — Softens the sound [р].
+      correct: false
+    - text: Пока́зує, що бу́ква «я» мовчи́ть. — Shows that letter «я» is silent.
+      correct: false
+    explanation: Апо́строф познача́є тверди́й звук [р] пе́ред [йа]. — The apostrophe
+      indicates a hard [р] before [йа].
   - prompt: Чому́ в сло́ві «свя́то» нема́є апо́строфа? — Why is there no apostrophe
       in the word «свя́то»?
     options:
-    - text: Тому́ що пе́ред губни́м в стої́ть при́голосний с — Because before labial
-        в stands consonant с
+    - text: Пе́ред губни́м «в» є корене́вий при́голосний «с». — Before labial «в»
+        there is root consonant «с».
       correct: true
-    - text: Тому́ що в сло́ві лише́ три лі́тери — Because the word has only three
-        letters
+    - text: Бу́ква «в» за́вжди м'яка́. — Letter «в» is always soft.
       correct: false
-    - text: Тому́ що в за́вжди м'яки́й — Because в is always soft
+    - text: Сло́во є запози́ченим. — The word is borrowed.
       correct: false
-    explanation: Пе́ред губни́м [в] є і́нший корене́вий при́голосний [с], тому́ апо́строф
-      не ста́виться. — Before labial [в] there is another root consonant [с], so no
-      apostrophe is written.
-  - prompt: Як пра́вильно чита́ти сло́во «комп'ю́тер»? — How do you correctly read
-      the word «комп'ю́тер»?
+    explanation: 'Пе́ред губни́м «в» стої́ть при́голосний «с», тому́ апо́строф не
+      пи́шеться: свя́то. — Before labial «в» stands consonant «с», so no apostrophe
+      is written: свя́то.'
+  - prompt: Чому́ в сло́ві «цвях» нема́є апо́строфа? — Why is there no apostrophe
+      in the word «цвях»?
     options:
-    - text: З розді́льною вимо́вою твердо́го [п] та [йу] — With separated pronunciation
-        of hard [п] and [йу]
+    - text: Пе́ред губни́м «в» є при́голосний «ц». — Before labial «в» stands consonant
+        «ц».
       correct: true
-    - text: З пом'я́кшеним п — With softened п
+    - text: Апо́строф пи́шеться лише́ наприкінці́. — Apostrophe is written only at
+        the end.
       correct: false
-    - text: Без зву́ка п — Without sound п
+    - text: Бу́ква «я» не познача́є звук. — Letter «я» does not represent a sound.
       correct: false
-    explanation: Апо́строф зберіга́є розді́льну вимо́ву [йу] пі́сля твердо́го [п].
-      — The apostrophe preserves the separated pronunciation [ju] after hard [p].
-  - prompt: Скі́льки зву́ків познача́є лі́тера я у сло́ві «ім'я́»? — How many sounds
-      does the letter я represent in «ім'я́»?
+    explanation: Пе́ред губни́м «в» є при́голосний ко́реня «ц», тому́ апо́строф не
+      пи́шеться. — Before labial «в» stands root consonant «ц», so no apostrophe is
+      written.
+  - prompt: Яка́ вимо́ва у сло́ві «м'я́со»? — What is the pronunciation of «м'я́со»?
     options:
-    - text: 'Два зву́ки: [й] + [а] — Two sounds: [й] + [а]'
+    - text: Тверди́й [м] + розді́льне [йа]. — Hard [м] + separate [йа].
       correct: true
-    - text: 'Оди́н звук: [а] — One sound: [а]'
+    - text: М'яки́й [м'] + [а]. — Soft [м'] + [а].
       correct: false
-    - text: Жо́дного зву́ка — No sound
+    - text: До́вга па́уза з горта́нним зву́ком. — A long pause with a glottal stop.
       correct: false
-    explanation: Пі́сля апо́строфа лі́тери я, ю, є за́вжди познача́ють два зву́ки.
-      — After an apostrophe, letters я, ю, є always represent two sounds.
-  - prompt: Яку́ роль відігра́є апо́строф в украї́нській мо́ві? — What role does the
-      apostrophe play in Ukrainian?
+    explanation: Апо́строф пі́сля «м» забезпе́чує тверди́й [м] і розді́льний звук
+      [йа]. — Apostrophe after «м» provides hard [м] and separate sound [йа].
+  - prompt: Що познача́є «ь» у сло́ві «день»? — What does «ь» indicate in «день»?
     options:
-    - text: Він є розді́льним зна́ком і не ма́є вла́сного зву́ка — It is a separation
-        mark and has no sound of its own
+    - text: М'я́кість попере́днього [н']. — Softness of preceding [н'].
       correct: true
-    - text: Він познача́є окре́мий голосни́й звук — It represents a separate vowel
-        sound
+    - text: Розді́льну вимо́ву [й]. — Separate pronunciation [й].
       correct: false
-    - text: Він пом'я́кшує попере́дній при́голосний — It softens the preceding consonant
+    - text: Окре́мий звук [і]. — A separate sound [і].
       correct: false
-    explanation: Апо́строф — це графі́чний розді́льний знак, яки́й сам зву́ка не познача́є.
-      — The apostrophe is a graphic separation mark that has no sound of its own.
+    explanation: М'яки́й знак пока́зує м'я́кість попере́днього при́голосного [н'].
+      — The soft sign indicates softness of the preceding consonant [н'].
 workbook:
 - id: act-w1
   type: group-sort
@@ -266,8 +266,8 @@ workbook:
     correction: сім'я́
     options:
     - сім'я́
-    - сімя
-    - свя́то
+    - сімья́
+    - сьім'я
     explanation: У сло́ві сім'я́ потрі́бен апо́строф. — In the word сім'я́ an apostrophe
       is needed.
   - sentence: У руці́ рі́вно пять па́льців.
@@ -275,8 +275,8 @@ workbook:
     correction: п'ять
     options:
     - п'ять
-    - пять
-    - день
+    - пьять
+    - ьп'ять
     explanation: У сло́ві п'ять потрі́бен апо́строф. — In the word п'ять an apostrophe
       is needed.
   - sentence: На по́лі росте́ зеле́ний бурян.
@@ -284,8 +284,8 @@ workbook:
     correction: бур'я́н
     options:
     - бур'я́н
-    - бурян
-    - буря́к
+    - бурья́н
+    - ьбур'я́н
     explanation: У сло́ві бур'я́н потрі́бен апо́строф пі́сля р. — In the word бур'я́н
       an apostrophe is needed after р.
   - sentence: Сього́дні ду́же те́плий ден.
@@ -293,16 +293,16 @@ workbook:
     correction: день
     options:
     - день
-    - ден
-    - кінь
+    - дєнь
+    - дьень
     explanation: День потребу́є м'яко́го зна́ка. — День requires a soft sign.
   - sentence: Сього́дні у на́с весе́ле св'ято.
     error: св'ято
     correction: свя́то
     options:
     - свя́то
-    - св'ято
-    - сім'я́
+    - свья́то
+    - сьвя́то
     explanation: У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is
       no apostrophe.
   - sentence: У су́пі лежи́ть вели́ка льожка.
@@ -310,8 +310,8 @@ workbook:
     correction: ло́жка
     options:
     - ло́жка
-    - льожка
-    - сіль
+    - лю́жка
+    - льо́шка
     explanation: Ло́жка не ма́є м'яко́го зна́ка пі́сля л. — Ло́жка has no soft sign
       after л.
 - id: act-w4
@@ -335,135 +335,132 @@ workbook:
     correct: false
     explanation: Свя́то — моде́льне сло́во без апо́строфа. — Свя́то is a model word
       without an apostrophe.
-- id: act-406
+- id: act-403
   type: fill-in
-  title: Впиші́ть пра́вильне сло́во зі зна́ком — Fill in the correct word with sign
-  instruction: Впиші́ть пра́вильне сло́во у про́пуск ___ у ко́жному ре́ченні. — Fill
-    in the correct word in the blank […] in each sentence.
+  title: Встав знак у ре́ченнях — Insert sign in sentences
+  instruction: Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or
+    no sign.
   items:
-  - sentence: Моя́ дру́жна ___ живе́ у Ки́єві. — My close-knit […] lives in Kyiv.
-    answer: сім'я́
+  - sentence: Моє́ ім___я́ — Марко́.
     options:
+    - ''''
+    - ь
+    - ''
+    answer: ''''
+    explanation: 'Пі́сля губно́го «м» пе́ред «я» пи́шемо апо́строф: ім''я́. — After
+      labial «м» before «я» write an apostrophe: ім''я́.'
+  - sentence: Бажа́ю міцно́го здоро́в___я!
+    options:
+    - ''''
+    - ь
+    - ''
+    answer: ''''
+    explanation: 'Пі́сля губно́го «в» пе́ред «я» пи́шемо апо́строф: здоро́в''я. —
+      After labial «в» before «я» write an apostrophe: здоро́в''я.'
+  - sentence: На поли́ці стої́ть нови́й комп___ю́тер.
+    options:
+    - ''''
+    - ь
+    - ''
+    answer: ''''
+    explanation: У сло́ві комп'ю́тер пи́шемо апо́строф пі́сля «п». — In комп'ю́тер
+      an apostrophe is written after «п».
+  - sentence: У стіні́ заби́тий метале́вий цв___ях.
+    options:
+    - ''
+    - ''''
+    - ь
+    answer: ''
+    explanation: 'Пі́сля корене́вого збі́гу «цв» апо́строф не пи́шемо: цвях. — After
+      root cluster «цв» no apostrophe is written: цвях.'
+  - sentence: У го́роді ви́ріс вели́кий бур___я́н.
+    options:
+    - ''''
+    - ь
+    - ''
+    answer: ''''
+    explanation: 'Пі́сля твердо́го «р» пе́ред «я» пи́шемо апо́строф: бур''я́н. — After
+      hard «р» before «я» write an apostrophe: бур''я́н.'
+  - sentence: У борщі́ є черво́ний бур___я́к.
+    options:
+    - ''
+    - ''''
+    - ь
+    answer: ''
+    explanation: 'Пі́сля м''яко́го «р» апо́строф не пи́шемо: буря́к. — After soft
+      «р» no apostrophe is written: буря́к.'
+- id: act-404
+  type: match-up
+  title: Слова́ та ї́хнє зна́чення — Words and their meanings
+  instruction: З'єдна́й украї́нське сло́во з йо́го зна́ченням. — Match the Ukrainian
+    word with its meaning.
+  pairs:
+  - left: сім'я́
+    right: family
+  - left: м'я́со
+    right: meat
+  - left: де́в'ять
+    right: nine
+  - left: ім'я́
+    right: name
+  - left: здоро́в'я
+    right: health
+  - left: дерев'я́ний
+    right: wooden
+- id: act-405
+  type: odd-one-out
+  title: Знайди́ за́йве сло́во — Find the odd word
+  instruction: Обери́ сло́во, яке́ відрізня́ється за ная́вністю або́ відсу́тністю
+    апо́строфа. — Choose the word that differs by the presence or absence of an apostrophe.
+  items:
+  - words:
     - сім'я́
-    - сімя
-    - свя́то
-    explanation: Сло́во «сім'я́» пи́шеться з апо́строфом пі́сля губно́го [м]. — The
-      word «сім'я́» is written with an apostrophe after the labial [m].
-  - sentence: У руці́ рі́вно ___ па́льців. — In a hand there are exactly […] fingers.
-    answer: п'ять
-    options:
+    - м'я́со
     - п'ять
-    - пять
-    - день
-    explanation: Сло́во «п'ять» пи́шеться з апо́строфом пі́сля губно́го [п]. — The
-      word «п'ять» is written with an apostrophe after the labial [p].
-  - sentence: На горо́ді росте́ черво́ний ___ . — In the garden grows red […].
-    answer: буря́к
-    options:
-    - буря́к
-    - бур'я́н
     - свя́то
-    explanation: У сло́ві «буря́к» апо́строф не пи́шеться, бо [р'] є м'яки́м. — In
-      the word «буря́к» no apostrophe is written because [r'] is soft.
-  - sentence: На по́лі зеле́ний ___ заважа́є кві́там. — In the field green […] hinders
-      the flowers.
-    answer: бур'я́н
-    options:
-    - бур'я́н
-    - бурян
-    - буря́к
-    explanation: У сло́ві «бур'я́н» пи́шеться апо́строф пі́сля твердо́го [р]. — In
-      the word «бур'я́н» an apostrophe is written after hard [r].
-  - sentence: Сього́дні весе́ле ___ у на́шому мі́сті. — Today there is a merry […]
-      in our city.
     answer: свя́то
-    options:
+    explanation: Свя́то пи́шеться без апо́строфа, тоді́ як і́нші три сло́ва ма́ють
+      апо́строф. — Свя́то is written without an apostrophe, while the other three
+      words have an apostrophe.
+  - words:
+    - буря́к
+    - цвях
     - свя́то
-    - св'ято
-    - сім'я́
-    explanation: У сло́ві «свя́то» апо́строф не пи́шеться пі́сля збі́гу при́голосних
-      св. — In the word «свя́то» no apostrophe is written after the consonant cluster
-      св.
-  - sentence: У су́пі потрі́бна вели́ка ___ . — In the soup a big […] is needed.
-    answer: ло́жка
-    options:
+    - бур'я́н
+    answer: бур'я́н
+    explanation: Бур'я́н пи́шеться з апо́строфом, а ре́шта слів — без апо́строфа.
+      — Бур'я́н is written with an apostrophe, whereas the remaining words are without
+      an apostrophe.
+  - words:
+    - ім'я́
+    - де́в'ять
+    - здоро́в'я
     - ло́жка
-    - льожка
-    - сіль
-    explanation: Сло́во «ло́жка» не ма́є м'яко́го зна́ка пі́сля л. — The word «ло́жка»
-      has no soft sign after л.
-- id: act-407
-  type: quiz
-  title: Знак чи без зна́ка — Apostrophe or no apostrophe
-  instruction: Обері́ть пра́вильно напи́сану фо́рму. — Select the correctly spelled
-    form.
-  items:
-  - prompt: Як пра́вильно пи́шеться сло́во «family»? — How is the word "family" correctly
-      written?
-    options:
-    - text: сім'я́
-      correct: true
-    - text: сімя
-      correct: false
-    - text: свя́то
-      correct: false
-    explanation: У сло́ві «сім'я́» пе́ред я пи́шеться апо́строф пі́сля губно́го [м].
-      — In the word «сім'я́», an apostrophe is written before я after the labial [м].
-  - prompt: Як пра́вильно пи́шеться сло́во «beetroot»? — How is the word "beetroot"
-      correctly written?
-    options:
-    - text: буря́к
-      correct: true
-    - text: бур'я́н
-      correct: false
-    - text: свя́то
-      correct: false
-    explanation: У сло́ві «буря́к» [р'] пом'я́кшується пе́ред я, тому́ апо́строф не
-      пи́шеться. — In the word «буря́к», [р'] softens before я, so no apostrophe is
-      written.
-  - prompt: Як пра́вильно пи́шеться сло́во «weed»? — How is the word "weed" correctly
-      written?
-    options:
-    - text: бур'я́н
-      correct: true
-    - text: бурян
-      correct: false
-    - text: буря́к
-      correct: false
-    explanation: У сло́ві «бур'я́н» [р] залиша́ється тверди́м, тому́ пи́шеться апо́строф.
-      — In the word «бур'я́н», [р] stays hard, so an apostrophe is written.
-  - prompt: Як пра́вильно пи́шеться сло́во «holiday»? — How is the word "holiday"
-      correctly written?
-    options:
-    - text: свя́то
-      correct: true
-    - text: св'ято
-      correct: false
-    - text: сім'я́
-      correct: false
-    explanation: У сло́ві «свя́то» апо́строф не пи́шеться пі́сля збі́гу при́голосних
-      св. — In the word «свя́то», no apostrophe is written after the consonant cluster
-      св.
-  - prompt: Як пра́вильно пи́шеться сло́во «five»? — How is the word "five" correctly
-      written?
-    options:
-    - text: п'ять
-      correct: true
-    - text: пять
-      correct: false
-    - text: день
-      correct: false
-    explanation: У сло́ві «п'ять» пі́сля губно́го [п] пе́ред я пи́шеться апо́строф.
-      — In the word «п'ять», an apostrophe is written after the labial [п] before
-      я.
-  - prompt: Як пра́вильно пи́шеться сло́во «spoon»? — How is the word "spoon" correctly
-      written?
-    options:
-    - text: ло́жка
-      correct: true
-    - text: льожка
-      correct: false
-    - text: сіль
-      correct: false
-    explanation: У сло́ві «ло́жка» нема́є м'яко́го зна́ка пі́сля л. — In the word
-      «ло́жка», there is no soft sign after л.
+    answer: ло́жка
+    explanation: Ло́жка не ма́є апо́строфа, а і́нші сло́ва ма́ють апо́строф. — Ло́жка
+      has no apostrophe, while the other words have an apostrophe.
+  - words:
+    - комп'ю́тер
+    - дерев'я́ний
+    - Мар'я́на
+    - буря́к
+    answer: буря́к
+    explanation: Буря́к не ма́є апо́строфа, а в і́нших слова́х є апо́строф. — Буря́к
+      has no apostrophe, while the other words have an apostrophe.
+  - words:
+    - свя́то
+    - цвях
+    - буря́к
+    - м'я́со
+    answer: м'я́со
+    explanation: М'я́со ма́є апо́строф пі́сля «м», і́нші сло́ва — без апо́строфа.
+      — М'я́со has an apostrophe after «м», the other words are without an apostrophe.
+  - words:
+    - сім'я́
+    - бур'я́н
+    - п'ять
+    - цвях
+    answer: цвях
+    explanation: Цвях пи́шеться без апо́строфа че́рез збіг «цв», і́нші сло́ва — з
+      апо́строфом. — Цвях is written without an apostrophe due to the cluster «цв»,
+      the other words have an apostrophe.
