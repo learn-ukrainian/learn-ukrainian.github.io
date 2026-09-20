@@ -88,6 +88,8 @@ flowchart LR
 ### Authoritative Plans & Architecture (Active)
 | Document | Purpose |
 | :--- | :--- |
+| [`ROADMAP_250K_SOVEREIGN_UKRAINIAN.md`](ROADMAP_250K_SOVEREIGN_UKRAINIAN.md) | Authoritative, source-honest roadmap for Epic #6321 (rewritten 2026-09-20). |
+| [`GRAMMAR_DATASET_SPEC_8342.md`](GRAMMAR_DATASET_SPEC_8342.md) | Grammar dataset redo specification, mixture ratios, and #8339/#8338 acceptance gates (#8342). |
 | [`CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md`](CORPUS_GROUNDED_DECOLONIZATION_DATASET_PLAN.md) | Operational plan for the 6K SFT + 3K DPO production dataset and miner pipeline. |
 | [`DECOLONIZATION_EPIC_ARCHITECTURE.md`](DECOLONIZATION_EPIC_ARCHITECTURE.md) | Tri-family architectural agreement (Gemini, Claude, Codex) on production design. |
 | [`LINGUISTIC_DECOLONIZATION_REASONING_DATASET_PLAN.md`](LINGUISTIC_DECOLONIZATION_REASONING_DATASET_PLAN.md) | Complete specification of linguistic diagnostic methodology and Soviet lexicographical analysis. |
