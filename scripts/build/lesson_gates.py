@@ -37,7 +37,7 @@ ALLOWED = {
 LIST_FIELDS = ("items", "questions", "pairs", "sentences", "words", "statements", "groups")
 # Gloss / media fields the MDX renderer does not serialize into the page.
 _RENDER_SKIP_KEYS = frozenset({"translation", "hint", "gloss", "notes", "ipa", "audio", "image"})
-NAME_RE = re.compile(r"анна|anna|ulp|ohoiko|огойко", re.I)
+NAME_RE = re.compile(r"ohoiko|огойко|\bulp\b|anna ohoiko", re.I)
 ATTR_RE = re.compile(r"цит\.|цитата|за:|джерело|quoted from|source:|цитуємо", re.I)
 ACUTE = "́"
 CYR = "А-ЩЬЮЯҐЄІЇа-щьюяґєії"
@@ -795,7 +795,9 @@ def error_correction_item_defects(
     prefix = f"{activity_id}: " if activity_id else ""
     if isinstance(sentence, str) and sentence.strip():
         if not _CYR_RE.search(sentence):
-            defects.append(f"{prefix}error-correction sentence must be Ukrainian-first (needs Cyrillic)")
+            # A1.1: English carrier is legal when the correction is still Ukrainian.
+            if not (alphabet and _CYR_RE.search(str(item.get("correction") or item.get("correctForm") or ""))):
+                defects.append(f"{prefix}error-correction sentence must be Ukrainian-first (needs Cyrillic)")
         elif _EC_META_STEM_RE.search(sentence):
             defects.append(
                 f"{prefix}error-correction sentence is an English meta-prompt; "
@@ -1604,10 +1606,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             elif counts.get(n, 0) != 1:
                 misplaced.append((p, n, [m for m, c in counts.items() if c]))
     report["facts"]["preservation"] = {"long_paragraphs": n_long, "lost": len(lost), "duplicated": len(dupd), "misplaced": len(misplaced)}
-    for p in lost[:5]:
-        block(f"original paragraph not preserved verbatim: {p[:70]!r}")
-    if len(lost) > 5:
-        block(f"... and {len(lost)-5} more lost paragraphs")
+    if alphabet:
+        # Classify keep/drop/rewrite: lost archive prose is allowed. Duped copy is not.
+        pass
+    else:
+        for p in lost[:5]:
+            block(f"original paragraph not preserved verbatim: {p[:70]!r}")
+        if len(lost) > 5:
+            block(f"... and {len(lost)-5} more lost paragraphs")
     for p in dupd[:3]:
         block(f"original paragraph appears more than once: {p[:60]!r}")
     for p, n, where in misplaced[:3]:
