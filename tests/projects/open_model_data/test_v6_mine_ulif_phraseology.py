@@ -31,6 +31,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     HELD_OUT_CURATED_CALQUE_PAIRS,
     SCHEMA_EVAL_PATH,
     SCHEMA_RECEIPT_PATH,
+    SPEECH_VERB_RE,
     CalquePair,
     PhraseologyUnit,
     SynonymGroup,
@@ -895,9 +896,103 @@ def test_idiom_thought_register_conditional():
 
 
 def test_vetted_calque_catalog_no_disputed_pairs():
-    """CF R8 Finding 5: Ensure disputed calques are excluded and vetted pairs included."""
+    """CF R8 & R9: Ensure disputed calques are excluded and vetted pairs included."""
     calques = [cp.calque for cp in CANONICAL_CALQUE_PAIRS]
     assert "кидатися в очі" not in calques
     assert "грати роль" not in calques
+    assert "брати верх" not in calques
+    assert "приходити в голову" not in calques
     assert "потерпіти крах" in calques
     assert "взяти себе в руки" in calques
+    assert "нанести шкоду" in calques
+    assert "слідуюча зупинка" in calques
+
+
+def test_clean_raw_html_preserves_speaker_names_in_dialogue():
+    """CF R9 Finding 1: Ensure character names in ≤word≥ are preserved in dialogue, not stripped into stray punctuation."""
+    raw_quote = "— Чого це ти, Чіпко, як мила з'їв? — питає ≤Лушня≥. — Чого ти журишся? (Панас Мирний)."
+    cleaned = clean_raw_html_and_tags(raw_quote)
+    assert "питає Лушня" in cleaned
+    assert "питає ." not in cleaned
+    assert " . —" not in cleaned
+
+    # Drama speaker prefix with colon should still be stripped
+    drama_line = "≤Савка:≥ Я вам, куме, признаюсь, що сам ходив... (І. Карпенко-Карий)."
+    cleaned_drama = clean_raw_html_and_tags(drama_line)
+    assert "Савка:" not in cleaned_drama
+    assert "Я вам, куме" in cleaned_drama
+
+
+def test_parse_frazeolohichnyi_rejects_spliced_quotes_and_selects_clean_attestation():
+    """CF R9 Finding 2: Ensure spliced quotes with '.. .' are rejected in favor of clean citations."""
+    raw_word = "хоч крізь землю провалися {{</fras>}}"
+    raw_def = (
+        "хоч крізь з[']е[/']млю пров[']а[/']люйся (провал[']и[/']ся і т.ін.). Дуже неприємно, незручно, соромно і т.ін. комусь. "
+        "Йому так неприємна була вся ця історія.. .складається таке неприємне враження, що прямо хоч крізь землю провалюйсь (М. Хвильовий); "
+        "А як щось поламається? Та ще й на Віриній ділянці! Тоді хоч крізь землю провалися (А. Хорунжий); "
+        "≤Любов:≥ Коли б ви знали, як мені часом буває сором (Леся Українка)."
+    )
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit is not None
+    # Spliced quote by Хвильовий with '.. .' must be skipped in favor of clean quote by Хорунжий
+    assert unit.author == "А. Хорунжий"
+    assert unit.citation_text == "А як щось поламається? Та ще й на Віриній ділянці! Тоді хоч крізь землю провалися"
+    assert ".. ." not in unit.citation_text
+
+
+def test_parse_frazeolohichnyi_rejects_mismatched_pronoun_quote():
+    """CF R9 Finding 2: Ensure quote must attest specific required pronoun variant."""
+    raw_word = "хай би тобі трясця {{</fras>}}"
+    raw_def = (
+        "хай ≤би≥ йому (їй, тобі, їм, вам) трясця, лайл. Уживається як недобре побажання. "
+        "— Хай йому трясця, ще вскочимо в пащу Гітлера (П. Панч); "
+        "— Хай йому трясця, цьому улемові! (З. Тулуб); "
+        "— Та в трест викликали, хай би йому трясця,— зі словом сказала вона (Є. Гуцало); "
+        "— А хай вам трясця! — тріснув голос тітки Марії (Я. Баш)."
+    )
+    # None of the citations in raw_def attests 'тобі', so this variant must not be matched to a mismatched quote with 'йому'
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit is None
+
+    # If the entry variant is 'хай би йому трясця', it should match Є. Гуцало
+    raw_word_yomu = "хай би йому трясця {{</fras>}}"
+    unit_yomu = parse_frazeolohichnyi_entry(raw_word_yomu, raw_def)
+    assert unit_yomu is not None
+    assert unit_yomu.author in ("П. Панч", "З. Тулуб", "Є. Гуцало")
+
+
+def test_dpo_chosen_thought_diversity_and_no_tautology():
+    """CF R9 Finding 3: Ensure chosen thoughts are varied across linguistic angles and avoid tautology."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        dpo_dir = Path(tmpdir) / "dpo"
+        _manifest, _sha, _flaws = generate_dpo_dataset(
+            calques=CANONICAL_CALQUE_PAIRS[:8],
+            output_dir=dpo_dir,
+            target_count=None,
+            pairs_per_shard=20,
+        )
+        thoughts = set()
+        for f in dpo_dir.glob("dpo_shard_*.jsonl"):
+            with f.open("r", encoding="utf-8") as fh:
+                for line in fh:
+                    row = json.loads(line)
+                    chosen = row["chosen"]
+                    # No tautological phrases
+                    assert "думка спадає на думку" not in chosen.lower()
+                    m_th = re.search(r"<thought>(.*?)</thought>", chosen, re.DOTALL)
+                    assert m_th is not None
+                    thoughts.add(m_th.group(1).strip())
+
+        # Must have diverse reasoning angles, not a single static template
+        assert len(thoughts) >= 4, f"Expected at least 4 distinct chosen thoughts, got {len(thoughts)}"
+
+
+def test_speech_verb_before_punctuation_re():
+    """CF R9 Finding 1 & 5: Ensure speech verb regex detects orphaned verbs before punctuation."""
+    assert SPEECH_VERB_RE.search("— питає . — Чого ти") is not None
+    assert SPEECH_VERB_RE.search("— каже . — Ходімо") is not None
+    assert SPEECH_VERB_RE.search("— мовив — і пішов") is not None
+    assert SPEECH_VERB_RE.search("— сказав .. Безпачпортною") is not None
+    # Legitimate non-orphaned text
+    assert SPEECH_VERB_RE.search("— питає Лушня. — Чого ти") is None
+    assert SPEECH_VERB_RE.search("він каже правду") is None

@@ -2,15 +2,15 @@
   "schema_version": "v1_ulif_phraseology_release_receipt",
   "issue": 8140,
   "parent_epic": 6321,
-  "created_at": "2026-09-20T19:51:23.763147+00:00",
-  "git_commit": "a60956596a053c6035ec0c4aeb0bf969dc9565ca",
+  "created_at": "2026-09-20T20:04:43.273043+00:00",
+  "git_commit": "b8328090bc0b507a70a373c7298945c8dab09e75",
   "evaluation_benchmark": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/eval/manifest_eval.json",
-    "manifest_sha256": "eb0b94cde9bf1bc5e7463ba623a67ffc5354d358638ff45b79ed3b4f8a0a4e44",
+    "manifest_sha256": "433d30292b15eb41908535894d82d7474092a1e3b090da4a7ad758c188f38810",
     "shards_count": 3,
     "total_cases": 1500,
-    "max_shard_size_kb": 1118.54,
+    "max_shard_size_kb": 929.32,
     "held_out_categories": {
       "anti_calque_decolonization": 100,
       "authentic_idiom_usage": 700,
@@ -27,26 +27,26 @@
   "sft_training_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/sft/manifest_sft.json",
-    "manifest_sha256": "fb2b548785e0817e41277b44902c1219e2d615c2caffce79c4331ecf927ddffb",
+    "manifest_sha256": "c2f0f454b36c659a3b9bbe379bed3958e6e07c1f3d40abf5d86fc89b31a81327",
     "shards_count": 21,
-    "total_trajectories": 10416,
-    "max_shard_size_kb": 767.14,
+    "total_trajectories": 10414,
+    "max_shard_size_kb": 763.78,
     "task_distribution": {
       "idiom_interpretation_literary": 10000,
-      "anti_calque_decolonization": 416
+      "anti_calque_decolonization": 414
     }
   },
   "dpo_preference_dataset": {
     "directory_path": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo",
     "manifest_file": "data/projects/open_model_data/release/uldr_v06_ulif_phraseology/dpo/manifest_dpo.json",
-    "manifest_sha256": "b046020da98b3c7948b3754ada101c7d0795caca9c2a660e5d6b7b5ad6ec74a4",
+    "manifest_sha256": "a58feaf1c9620be123cf19241c3a508078c540982d95cc1335fff6489f1108e6",
     "shards_count": 1,
-    "total_pairs": 416,
-    "max_shard_size_kb": 1096.71,
+    "total_pairs": 414,
+    "max_shard_size_kb": 1084.83,
     "flaw_distribution": {
       "lack_of_morphemic_reasoning": 322,
-      "mechanical_wordnet_synset": 87,
-      "soviet_lexicography_acceptance": 7
+      "mechanical_wordnet_synset": 86,
+      "soviet_lexicography_acceptance": 6
     }
   },
   "invariants_verified": {
@@ -57,12 +57,12 @@
     "zero_train_eval_leakage": true
   },
   "verification_metrics": {
-    "vesum_attested_tokens_count": 7375,
+    "vesum_attested_tokens_count": 7302,
     "literary_citations_grounded_count": 10000,
-    "thought_tags_verified_count": 10416,
+    "thought_tags_verified_count": 10414,
     "zero_leakage_shards_checked": 22,
     "eval_target_overlap_count": 0,
-    "unique_calque_pairs_count": 416,
+    "unique_calque_pairs_count": 414,
     "unique_idiom_units_count": 10000,
     "unique_synonym_groups_count": 0
   }

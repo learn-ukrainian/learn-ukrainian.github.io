@@ -124,18 +124,18 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
-        calque="брати верх",
-        authentic="брати гору",
-        mechanism="Питомий український фразеологізм на позначення перемоги й переваги — «брати гору» або «мати перевагу». Зворот «брати верх» є буквальним перекладом російського «брать верх».",
-        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; О. Пономарів, «Культура слова»",
+        calque="нанести шкоду",
+        authentic="завдати шкоди",
+        mechanism="Дієслово «наносити» означає переміщення речовин течією чи вітром (наносити піску, снігу). З іменниками на позначення негативних наслідків, ушкоджень чи болю вживають питоме дієслово «завдавати» (завдати шкоди, завдати удару, завдати поразки).",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
         rejected_flaw="mechanical_wordnet_synset",
     ),
     CalquePair(
-        calque="приходити в голову",
-        authentic="спадати на думку",
-        mechanism="В українській мові думка спадає на думку або на гадку. Зворот «приходити в голову» є калькою російського вислову «приходить в голову».",
-        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
-        rejected_flaw="soviet_lexicography_acceptance",
+        calque="слідуюча зупинка",
+        authentic="наступна зупинка",
+        mechanism="Активні дієприкметники теперішнього часу на -чий невластиві українській мові, тому форма «слідуючий» є штучним запозиченням із російської. Нормативним відповідником для позначення черговості є питомий прикметник «наступний» (наступна зупинка).",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; Правопис 2019",
+        rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="потерпіти крах",
@@ -1109,7 +1109,11 @@ def clean_stress_marks(text: str) -> str:
 def clean_raw_html_and_tags(text: str) -> str:
     """Remove HTML/XML tags and trailing template artifacts."""
     text = re.sub(r"<[^>]+>", "", text)
-    text = re.sub(r"≤[^≥]*≥:?\s*", "", text)
+    # Strip drama speaker labels: ≤Speaker:≥ or ≤Speaker≥:
+    text = re.sub(r"≤[^≥]*:≥:?\s*", "", text)
+    text = re.sub(r"≤[^≥]+≥:\s*", "", text)
+    # Preserve inner text of other ≤word≥ markup (characters, emphasis)
+    text = re.sub(r"≤([^≥]+)≥", r"\1", text)
     text = re.sub(r"[≤≥\{\}\[\]]", "", text)
     return re.sub(r"\s+", " ", text).strip()
 
@@ -1219,6 +1223,23 @@ DUMMY_STARTS = (
     "хтось", "комусь", "когось", "кимсь", "чимсь", "щось"
 )
 
+PRONOUN_TOKENS: set[str] = {
+    "я", "мене", "мені", "мною", "ти", "тебе", "тобі", "тобою",
+    "він", "вона", "воно", "вони", "його", "йому", "ним", "ньому",
+    "її", "їй", "нею", "нього", "неї", "них", "ними",
+    "ми", "нас", "нам", "нами", "ви", "вас", "вам", "вами", "їх", "їм",
+    "себе", "собі", "собою",
+}
+
+SPEECH_VERB_RE = re.compile(
+    r"\b(?:питає|питають|спитав|спитала|спитали|каже|кажуть|сказав|сказала|сказали|"
+    r"мовив|мовила|мовили|говорить|говорять|говорив|говорила|говорили|"
+    r"відповідає|відповідають|відповів|відповіла|відповіли|"
+    r"скрикнув|скрикнула|скрикнули|додав|додала|додали|"
+    r"гукнув|гукнула|гукнули|відказав|відказала|відказали|"
+    r"озвався|озвалася|озвалися)\s+[.:—–-]"
+)
+
 
 def is_headword_header(s: str, word: str) -> bool:
     """Detect if a leading segment is a dictionary headword/valency header rather than definition."""
@@ -1237,6 +1258,7 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
     word = clean_raw_html_and_tags(clean_stress_marks(word_raw))
     word = re.sub(r"^\d+\|.*?\|", "", word)
     word = re.sub(r"^[|\d]+\|?", "", word)
+    word = re.sub(r"\{\{.*$", "", word).strip()
     word = re.sub(r"^.*?\}\}", "", word).strip()
 
     clean_d = clean_raw_html_and_tags(clean_stress_marks(def_raw))
@@ -1324,6 +1346,9 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         return None
     min_required = len(stems) if len(stems) <= 2 else len(stems) - 1
 
+    w_tokens = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", word.lower()))
+    w_pronouns = w_tokens & PRONOUN_TOKENS
+
     all_authors = list(AUTHOR_PATTERN.finditer(clean_d))
     best_quote: str | None = None
     best_author: str | None = None
@@ -1353,6 +1378,18 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
             continue
         if len(q) < 15 or len(q) > 400:
             continue
+        # No spliced quotes or broken punctuation
+        if ".. ." in q or ".., " in q or re.search(r"\.\.\s+\.", q):
+            continue
+        if " . —" in q or " . -" in q:
+            continue
+        if SPEECH_VERB_RE.search(q):
+            continue
+        # Pronoun check: quote must attest required pronoun forms if present in idiom
+        if w_pronouns:
+            q_tokens = set(re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", q.lower()))
+            if not (w_pronouns <= q_tokens):
+                continue
         if sum(1 for st in stems if st in q.lower()) >= min_required:
             best_quote = q
             best_author = auth
@@ -2465,16 +2502,52 @@ def generate_dpo_dataset(
             f"Якому варіанту віддати перевагу в українському слововживанні: «{cp.calque}» чи «{cp.authentic}»?",
         ]
         query = query_variants[i % len(query_variants)]
+        thought_angles = [
+            (
+                f"<thought>\n"
+                f"Досліджую словотвірну та морфемну структуру вислову «{cp.calque}».\n"
+                f"Виявляю невідповідність питомій моделі українського словотвору внаслідок міжмовного калькування.\n"
+                f"Обґрунтовую нормативність автентичного виразу «{cp.authentic}» на підставі авторитетного джерела ({cp.author_or_source}).\n"
+                f"</thought>"
+            ),
+            (
+                f"<thought>\n"
+                f"Аналізую лексико-семантичну сполучуваність та валентність у сполуці «{cp.calque}».\n"
+                f"Зіставляю семантичні обсяги компонентів і фіксую спотворення контекстуального значення.\n"
+                f"Спираючись на зафіксовані норми ({cp.author_or_source}), доводжу точність виразу «{cp.authentic}».\n"
+                f"</thought>"
+            ),
+            (
+                f"<thought>\n"
+                f"Здійснюю деколонізаційний стилістичний аналіз вислову «{cp.calque}».\n"
+                f"Ідентифікую штучне нашарування конструкції в період міжмовного зближення радянської доби.\n"
+                f"Подаю питому мовну форму «{cp.authentic}», засвідчену класичною традицією та працею: {cp.author_or_source}.\n"
+                f"</thought>"
+            ),
+            (
+                f"<thought>\n"
+                f"Зіставляю зворот «{cp.calque}» із сучасними академічними лексикографічними та правописними нормами.\n"
+                f"Визначаю помилковість калькованої структури проти живої української фразеології.\n"
+                f"Наводжу нормативний відповідник «{cp.authentic}» з посиланням на {cp.author_or_source}.\n"
+                f"</thought>"
+            ),
+        ]
+        chosen_thought = thought_angles[i % len(thought_angles)]
+
+        conclusions = [
+            f"Зворот «{cp.calque}» є помилковим і суперечить нормам українського слововживання.",
+            f"Конструкція «{cp.calque}» є калькованою помилкою; слід послуговуватися питомим виразом «{cp.authentic}».",
+            f"Кальковану сполуку «{cp.calque}» необхідно уникати, віддаючи перевагу нормативній формі «{cp.authentic}».",
+            f"Вислів «{cp.calque}» не відповідає нормам сучасної літературної мови, тому правильним вибором є «{cp.authentic}».",
+        ]
+        conclusion = conclusions[i % len(conclusions)]
+
         chosen = (
-            f"<thought>\n"
-            f"Аналізую лексико-семантичну структуру вислову «{cp.calque}» та нормативні приписи української мови.\n"
-            f"Зіставляю з автентичним відповідником «{cp.authentic}» на основі авторитетних джерел ({cp.author_or_source}).\n"
-            f"Виявляю природу мовного спотворення (калькування) та обґрунтовую вживання питомого виразу.\n"
-            f"</thought>\n\n"
+            f"{chosen_thought}\n\n"
             f"Правильно казати: **«{cp.authentic}»**.\n\n"
             f"**Обґрунтування:**\n"
             f"{cp.mechanism}\n\n"
-            f"Зворот «{cp.calque}» є помилковим і суперечить нормам українського слововживання."
+            f"{conclusion}"
         )
 
         if flaw == "lack_of_morphemic_reasoning":
@@ -2732,6 +2805,22 @@ def verify_receipt_invariants(
     calque_violations_count = 0
     unattested_literary: list[str] = []
 
+    # 0. Corpus-wide quote and attestation invariants across all eval records (Findings 1, 2, 5)
+    for rec in eval_records:
+        cit = rec.get("classical_citation", "")
+        cat = rec.get("eval_category", "")
+        if cit and cat in ("authentic_idiom_usage", "figurative_reasoning"):
+            if SPEECH_VERB_RE.search(cit):
+                raise AssertionError(f"Orphaned speech verb before punctuation in eval record {rec.get('eval_id')}: «{cit}»")
+            if " . —" in cit or " . -" in cit:
+                raise AssertionError(f"Stray dot-dash punctuation in eval record {rec.get('eval_id')}: «{cit}»")
+            if ".. ." in cit or ".., " in cit or re.search(r"\.\.\s+\.", cit):
+                raise AssertionError(f"Broken ellipsis splice in eval record {rec.get('eval_id')}: «{cit}»")
+            t_idiom = rec.get("target_idiom", "")
+            t_stems = get_content_stems(t_idiom)
+            if t_stems and not any(st in cit.lower() for st in t_stems):
+                raise AssertionError(f"Target idiom stem not found in eval citation {rec.get('eval_id')}: '{t_idiom}' vs «{cit}»")
+
     # 1. Verify VESUM attestation across all unique content tokens in the dataset
     if cur_ves:
         all_target_phrases = [rec["target_idiom"] for rec in eval_records if "target_idiom" in rec]
@@ -2833,6 +2922,21 @@ def verify_receipt_invariants(
                         literary_grounded_count += 1
                     else:
                         unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
+
+                    # Corpus-wide quote invariants (Findings 1, 2, 5)
+                    quotes = re.findall(r"«([^»]+)»", resp)
+                    for q in quotes:
+                        if SPEECH_VERB_RE.search(q):
+                            raise AssertionError(f"Orphaned speech verb before punctuation in {shard_path.name}:{line_no}: «{q}»")
+                        if " . —" in q or " . -" in q:
+                            raise AssertionError(f"Stray dot-dash punctuation in {shard_path.name}:{line_no}: «{q}»")
+                        if ".. ." in q or ".., " in q or re.search(r"\.\.\s+\.", q):
+                            raise AssertionError(f"Broken ellipsis splice in {shard_path.name}:{line_no}: «{q}»")
+                    p_stems = get_content_stems(target_p)
+                    if p_stems and quotes:
+                        cit_quote = quotes[-1]
+                        if not any(st in cit_quote.lower() for st in p_stems):
+                            raise AssertionError(f"Target idiom stem not found in citation quote in {shard_path.name}:{line_no}: '{target_p}' vs «{cit_quote}»")
 
                 # Calque firewall: check if calque is affirmed as correct (Finding 3)
                 for cq, pats in calque_patterns:
@@ -3063,7 +3167,7 @@ def run_pipeline(
         logger.info("Connected to VESUM database at %s", vesum_db)
 
     # 2. Load data from diverse sources
-    ulif_units, synonym_groups = load_ulif_phraseology_and_synonyms(ulif_db)
+    _ulif_units, synonym_groups = load_ulif_phraseology_and_synonyms(ulif_db)
     fraz_units = load_frazeolohichnyi_dictionary(sources_db)
     uagec_calques = load_ua_gec_calques(sources_db)
 
@@ -3074,7 +3178,7 @@ def run_pipeline(
     eval_calques = HELD_OUT_CURATED_CALQUE_PAIRS
     train_calques = [c for c in all_calques if not c.is_held_out]
 
-    eval_units = [u for u in (ulif_units + fraz_units) if u.is_held_out and u.idiom.strip().lower() not in canonical_terms]
+    eval_units = [u for u in fraz_units if u.is_held_out and u.idiom.strip().lower() not in canonical_terms]
 
     # Partition synonyms: reserve 500 for eval, rest for training
     random.Random(8140).shuffle(synonym_groups)
