@@ -177,10 +177,10 @@ async function flashcardSession(page, shot) {
 
 async function landingTtfi(page, shot) {
   const t0 = now();
-  // Measure load independently so the bounded enablement wait below cannot inflate it.
+  await page.goto(PRACTICE, { waitUntil: 'commit' });
+  // Navigation committed: measure load on the new document, independent of the enablement wait below.
   const loadPromise = page.waitForLoadState('load').then(() => now() - t0);
   loadPromise.catch(() => {});
-  await page.goto(PRACTICE, { waitUntil: 'commit' });
   const ctl = page.locator('main button:visible, main a[href]:visible, main input:visible, main select:visible, main summary:visible').first();
   await ctl.waitFor({ state: 'visible', timeout: 20000 });
   const ttfc = now() - t0;
