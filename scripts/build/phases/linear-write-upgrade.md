@@ -10,28 +10,39 @@ Return artifacts for the current lesson only using the existing V7 output contra
 
 ## Lesson contract
 
-Each lesson is a 60-minute block: warm-up and retrieval, Ukrainian-first presentation,
-dialogue and breakdown, guided practice, independent practice, recap and next step.
-Preserve every original paragraph in its mapped section and lesson verbatim, exactly
-once across the split (only whitespace and deterministic stress annotation may differ).
-The introduction belongs to lesson 1. Keep original section headings and activity IDs.
-Expand with useful transitions, explanations and breakdown tables; never pad or repeat
-paragraphs to meet the floor. Each lesson must meet its word_target (minimum 550);
-the whole module must reach at least 2000 prose tokens. The final lesson closes the module. On that lesson, end with a bilingual heading
-`### Підсумок модуля — Module summary` and 4–7 bilingual bullets of what the
-learner can now do (module 9 shape). Do **not** title it `Завершення модуля` /
-`Module completion`, and do **not** put that close in a support table.
+Each lesson is a 60-minute block: warm-up and retrieval, presentation, dialogue and
+breakdown, guided practice, independent practice, recap and next step.
 
-Follow docs/best-practices/ulp-presentation-pattern.md and the v4 lesson contract.
-Use a direct, friendly teaching voice with NO named narrator and NO self-introduction.
-Named people occur only inside dialogues. Do not adopt any reference author's persona
-or lesson structure. A quotation must be visibly marked, attributed, and have a matching
-entry in resources.yaml (Ресурси). Preserve source provenance.
-Ukrainian comes first, with English scaffolding appropriate to the supplied learner state
-and to **this module's original A1 mix** (do not clone module 9's adjectives lesson;
-clone only its close/summary *shape*). Added Ukrainian passages of three or more
-sentences require side-by-side English support. Write dialogues as > blockquotes,
-never as code fences; put the English breakdown after.
+**Classify the archive. Do not preserve every paragraph.** Keep what already teaches
+(letter videos, good examples, working activities). Drop junk (hyphenation, named-narrator
+openers, unread Ukrainian walls, AI padding). Rewrite explanations that a learner at
+this module cannot use. Keep original activity IDs when you keep the activity.
+The introduction belongs to lesson 1. Expand with useful transitions and breakdown
+tables; never pad. Each lesson must meet its word_target (minimum 550); the whole
+module must reach at least 2000 prose tokens. The final lesson closes the module
+with `### Підсумок модуля — Module summary` and 4–7 bilingual can-do bullets
+(module 9 *shape* only). Do **not** title it `Завершення модуля`.
+
+Copy **how** Anna Ohoiko teaches, not who she is: Ukrainian as sound, English that
+explains, Ukrainian again. No "Hi, I'm X." No named narrator in teaching prose.
+Named people occur only inside dialogues. Do not paste her scripts. Do not invent
+Teacher Oksana or any other host. A quotation must be marked, attributed, and listed
+in resources.yaml.
+
+**They cannot read a letter they have not been taught.** For A1 alphabet modules
+(sounds-letters-and-hello, reading-ukrainian, special-signs, and any module that
+introduces graphemes), teaching metalanguage is English. Ukrainian on the page is
+the letters and words this lesson (and earlier ones) already gave, plus audio/video.
+Do not write unread Ukrainian paragraphs. A1.1 modules 1–4: English next to prompts,
+options, and explanations (operating rules). From who-am-i onward, UA first with
+English support. A2+: do not raise English.
+
+Keep every original `watch-and-repeat` / letter-video activity (YouTube) that the
+archive maps into this lesson. Dropping a letter video is a defect.
+
+Follow docs/best-practices/ulp-presentation-pattern.md (method, not persona) and
+docs/epics/a1-upgrade-landing-contract.md. Dialogues as `>` blockquotes, never code
+fences; English breakdown after.
 
 ## Prove what you write — named `sources` MCP tools (HARD, runtime-gated)
 
@@ -88,7 +99,9 @@ A2+ upgrade: full Ukrainian immersion. Do not write English-carrier landings or 
 
 ## Activities and vocabulary
 
-Keep every original activity's type, items, answer flags and groups structurally intact.
+Keep every original activity's type, items, answer flags and groups structurally intact
+**except** activities you classified as drop (hyphenation / divide-words on alphabet
+modules; narrator junk). **Keep** every `watch-and-repeat` with a video URL.
 Use provenance to find its assigned lesson. Inline IDs stay unchanged; id-less workbook
 originals use act-w1, act-w2, etc. Add distinct activities with globally unique IDs.
 A lesson with no activities is a defect (boring theory). After a 2–5 lesson split the

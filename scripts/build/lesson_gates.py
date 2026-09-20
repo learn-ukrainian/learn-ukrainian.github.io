@@ -1034,7 +1034,87 @@ def landing_overview_defects(module_dir: Path, source_dir: Path, plan: dict) -> 
         out.append(f"{LANDING_OVERVIEW} lacks \"By the end, you can\" outcomes")
     if not (re.search(rf"[{CYR}]{{2,}}", body) and re.search(r"[A-Za-z]{3,}", body)):
         out.append(f"{LANDING_OVERVIEW} must be bilingual: English carrier with Ukrainian targets")
+    if out:
+        return out
+    if re.search(r"Teacher\s+\w+|Hi,\s+I['’]m\s+|Привіт!\s+This module", body, re.I):
+        out.append(f"{LANDING_OVERVIEW} has a named-narrator opener; copy Ohoiko's method, not a host persona")
+    if not re.search(r"keep the scope small|scope small", body, re.I):
+        out.append(f"{LANDING_OVERVIEW} lacks the scope-guard sentence (landing contract)")
+    original = source_dir / "module.md"
+    if original.is_file():
+        opening = re.split(r"^## ", original.read_text(encoding="utf-8"), maxsplit=1, flags=re.M)[0]
+        cleaned = _clean_a1_landing_prose(opening) or ""
+        if cleaned and body.strip()[:280] == cleaned.strip()[:280]:
+            out.append(f"{LANDING_OVERVIEW} is a copy of the lesson-1 opening, not a module orientation")
     return out
+
+
+_NARRATOR_RE = re.compile(
+    r"Teacher\s+\w+(?:'s)?\s+routine|Hi,\s+I['’]m\s+\w+|Привіт!\s+This module",
+    re.I,
+)
+
+
+def named_narrator_defects(prose: str, prefix: str) -> list[str]:
+    """Teaching prose must not host a named narrator (Ohoiko method, not persona)."""
+    if _NARRATOR_RE.search(prose or ""):
+        return [f"{prefix}named narrator / self-introduction in teaching prose"]
+    return []
+
+
+def unread_ukrainian_wall_defects(prose: str, prefix: str) -> list[str]:
+    """Alphabet teaching must not run three UA-only lines with no English."""
+    run = 0
+    for raw in (prose or "").splitlines():
+        line = raw.strip()
+        if not line or line.startswith("#") or line.startswith(">") or line.startswith("|"):
+            run = 0
+            continue
+        has_ua = bool(re.search(rf"[{CYR}]{{3,}}", line))
+        has_en = bool(re.search(r"[A-Za-z]{3,}", line))
+        if has_ua and not has_en:
+            run += 1
+            if run >= 3:
+                return [f"{prefix}unread Ukrainian wall (3+ lines with no English); learner cannot decode untaught letters"]
+        else:
+            run = 0
+    return []
+
+
+def watch_and_repeat_preservation_defects(module_dir: Path, source_dir: Path) -> list[str]:
+    """Archive letter videos must survive the upgrade."""
+    src = source_dir / "activities.yaml"
+    if not src.is_file():
+        return []
+
+    def _videos(blob: object) -> set[str]:
+        found: set[str] = set()
+        acts = blob if isinstance(blob, list) else []
+        if isinstance(blob, dict):
+            acts = list(blob.get("inline") or []) + list(blob.get("workbook") or [])
+        for act in acts:
+            if not isinstance(act, dict):
+                continue
+            typ = str(act.get("type") or "")
+            if typ not in {"watch-and-repeat", "watch_and_repeat", "video"}:
+                continue
+            url = str(act.get("video") or act.get("url") or act.get("src") or "")
+            if "youtu" in url.lower() or url.startswith("http"):
+                found.add(url)
+        return found
+
+    import yaml
+
+    old = _videos(yaml.safe_load(src.read_text(encoding="utf-8")) or {})
+    if not old:
+        return []
+    new: set[str] = set()
+    for path in sorted(module_dir.glob("lesson-*/activities.yaml")):
+        new |= _videos(yaml.safe_load(path.read_text(encoding="utf-8")) or {})
+    missing = old - new
+    if missing:
+        return [f"archive letter video(s) dropped: {len(missing)} WatchAndRepeat URL(s) missing after upgrade"]
+    return []
 
 
 def banned_phrase_defects(text: str, label: str) -> list[str]:
@@ -1374,6 +1454,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             block(defect)
         for defect in banned_phrase_defects(lesson_md_clean[n], f"lesson {n} prose"):
             block(defect)
+        for defect in named_narrator_defects(lesson_md_clean[n], f"lesson {n}: "):
+            block(defect)
+        if alphabet:
+            for defect in unread_ukrainian_wall_defects(lesson_md_clean[n], f"lesson {n}: "):
+                block(defect)
         for v in check_error_correction_stem_quality(
             {"inline": inline, "workbook": workbook},
             level=str(plan.get("level") or "").lower(),
@@ -1695,6 +1780,9 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 block(f"lesson {n}: render lacks resource title")
     for defect in landing_overview_defects(module_dir, source_dir, plan):
         block(defect)
+    if alphabet:
+        for defect in watch_and_repeat_preservation_defects(module_dir, source_dir):
+            block(defect)
     landing = (rendered or {}).get("index", (rendered or {}).get("index.mdx", ""))
     if not landing:
         block("module landing render missing")

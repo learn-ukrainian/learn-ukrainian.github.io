@@ -19,6 +19,12 @@ Landing shape: [`a1-upgrade-landing-contract.md`](a1-upgrade-landing-contract.md
 - Do **not** rebuild lessons by hand. Use
   `scripts/build/v7_build.py {level} {slug} --upgrade --worktree --writer …`.
 - Preserve-and-expand the archived module. Do not regenerate from scratch.
+  **Classify** keep / drop / rewrite: keep letter videos and working examples;
+  drop hyphenation, named narrators, unread Ukrainian walls, slop. Copy Ohoiko's
+  *method* (sound, then English that explains), never her persona or scripts.
+  A1.1 (modules 1–4): the learner cannot read untaught letters — English carries
+  teaching; Ukrainian is the example with audio/video. Create and upgrade use
+  this same standard (C1/C2/FOLK/BIO change the immersion *band*, not the ethics).
 - A1 is bilingual by design (about 40–55% Ukrainian on the page; English
   **after** Ukrainian). From **A2 on**, do not raise English.
 - Module **9** (`what-is-it-like`) is the **close/summary shape**, not a
