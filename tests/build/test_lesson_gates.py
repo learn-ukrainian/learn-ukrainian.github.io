@@ -1125,10 +1125,22 @@ def test_alphabet_dirty_archive_copy_still_fails_fill_in_and_ec_gates(gold):
     blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
     for aid in ("act-3", "act-w5"):
         assert any(f" {aid}[" in d and "words the empty choice" in d for d in blocking), blocking
-    for aid in ("act-4", "act-w3"):
-        # Alphabet slugs count unique chips (>=2 passes), so the archive's
-        # [correction, error] blocks on the error chip, not on the count.
-        assert any(f" {aid}[" in d and "must not contain the spotted error" in d for d in blocking), blocking
+    # Repair drops the spotted-error chip before the gate (and MDX) see options;
+    # assert repaired alphabet chips exclude the error while fill-in still blocks.
+    by_id = {}
+    for path in module.glob("lesson-*/activities.yaml"):
+        data = yaml.safe_load(path.read_text())
+        for placement in ("inline", "workbook"):
+            for act in data.get(placement) or []:
+                if act.get("id") in ("act-4", "act-w3"):
+                    by_id[act["id"]] = act
+    assert set(by_id) == {"act-4", "act-w3"}
+    for aid, act in by_id.items():
+        for item in act["items"]:
+            error = item["error"]
+            _, _, chips = gates._ec_rendered_chips(item, alphabet=True)
+            keys = {gates.strip_acute(gates.nfc(c)).lower() for c in chips}
+            assert gates.strip_acute(gates.nfc(error)).lower() not in keys, (aid, error, chips)
 
 
 def test_non_alphabet_preservation_still_compares_the_raw_archive(gold):
@@ -1532,8 +1544,8 @@ def test_alphabet_citation_surnames_warn_instead_of_block():
     assert gates.citation_surnames("Строка́ль пи́ше. Далі нічо́го.") == set()
 
 
-def test_alphabet_error_correction_counts_unique_options():
-    """#7994: alphabet slugs count chips unique; two distinct chips pass with a warning."""
+def test_alphabet_error_correction_counts_unique_options(monkeypatch):
+    """#7994: alphabet slugs count chips unique; repair fills illegal mutants."""
     cloned = {
         "sentence": "Це моя́ сімя́.",
         "error": "сімя́",
@@ -1541,17 +1553,18 @@ def test_alphabet_error_correction_counts_unique_options():
         "options": ["сім'я́", "сім'я́", "сьім'я"],
         "explanation": "Apostrophe after м before я.",
     }
+    # Stub: no option/mutant is a real word, so repair keeps сьім'я and may fill a third.
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", lambda _w: False)
     assert gates.error_correction_item_defects(cloned, level="a1", alphabet=True) == []
-    warnings = gates.error_correction_item_warnings(cloned, level="a1", alphabet=True)
-    assert any("2 distinct options" in w for w in warnings)
-    # Non-alphabet still blocks the duplicate.
+    _, _, chips = gates._ec_rendered_chips(cloned, alphabet=True)
+    assert len(gates._ec_distinct_chips(chips)) >= 2
+    # Non-alphabet still blocks the duplicate (no repair).
     assert any(
         "duplicates" in d for d in gates.error_correction_item_defects(cloned, level="a1")
     )
-    assert not any(
-        "distinct" in w for w in gates.error_correction_item_warnings(cloned, level="a1")
-    )
 
+    # Winner-only with every mutant declared a word → unique-2 still blocks.
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", lambda _w: True)
     winner_only = {
         "sentence": "Це ло́шка.",
         "error": "ло́шка",
@@ -1561,14 +1574,16 @@ def test_alphabet_error_correction_counts_unique_options():
     blocked = gates.error_correction_item_defects(winner_only, level="a1", alphabet=True)
     assert any(">=2 distinct" in d for d in blocked)
 
+    # Error chip is dropped by repair; remaining illegal distractors still pass.
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", lambda _w: False)
     with_error = {**cloned, "options": ["сім'я́", "сімя́", "сьім'я"]}
-    assert any(
-        "must not contain the spotted error" in d
-        for d in gates.error_correction_item_defects(with_error, level="a1", alphabet=True)
-    )
+    assert gates.error_correction_item_defects(with_error, level="a1", alphabet=True) == []
+    _, _, err_chips = gates._ec_rendered_chips(with_error, alphabet=True)
+    assert "сімя́" not in err_chips
 
     no_correction = {**cloned, "options": ["сьім'я", "сем'я"]}
-    assert gates.error_correction_item_defects(no_correction, level="a1", alphabet=True)
+    # Repair always injects the winner, so a missing authored correction chip is fixed.
+    assert gates.error_correction_item_defects(no_correction, level="a1", alphabet=True) == []
 
     three = {**cloned, "options": ["сім'я́", "сьім'я", "сем'я"]}
     assert gates.error_correction_item_defects(three, level="a1", alphabet=True) == []
@@ -1582,3 +1597,43 @@ def test_error_correction_render_drops_repeated_chip():
     from scripts.build.activity_renderer import unique_error_correction_options
 
     assert unique_error_correction_options(["сім'я́", "сім'я́", "сьім'я"]) == ["сім'я́", "сьім'я"]
+
+
+def test_alphabet_ec_gate_sees_repaired_chips(monkeypatch):
+    item = {
+        "sentence": "Вра́нці я пив чаі з лимо́ном.",
+        "error": "чаі",
+        "correction": "чай",
+        "options": ["чай", "чаї́", "чаю"],
+        "explanation": "Write й, not і.",
+    }
+    monkeypatch.setattr(
+        "scripts.build.alphabet_modules.vesum_is_word",
+        lambda w: gates.strip_acute(gates.nfc(w)).lower() in {"чаю", "чаї"},
+    )
+    defects = gates.error_correction_item_defects(item, level="a1", alphabet=True)
+    assert defects == []
+    _, _, chips = gates._ec_rendered_chips(item, alphabet=True)
+    keys = {gates.strip_acute(gates.nfc(c)).lower() for c in chips}
+    assert "чаю" not in keys and "чаї" not in keys
+    assert "чай" in keys
+
+
+def test_non_alphabet_ec_keeps_legal_declined_distractors(monkeypatch):
+    item = {
+        "sentence": "Вра́нці я пив чаі з лимо́ном.",
+        "error": "чаі",
+        "correction": "чай",
+        "options": ["чай", "чаї́", "чаю"],
+        "explanation": "Write й, not і.",
+    }
+    called = []
+
+    def boom(w):
+        called.append(w)
+        return True
+
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", boom)
+    _, _, chips = gates._ec_rendered_chips(item, alphabet=False)
+    assert called == []
+    assert "чаю" in chips or any(gates.strip_acute(gates.nfc(c)).lower() == "чаю" for c in chips)

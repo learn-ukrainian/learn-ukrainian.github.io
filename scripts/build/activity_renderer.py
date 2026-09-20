@@ -18,11 +18,12 @@ from itertools import pairwise
 from typing import Any
 
 
-def render_activity_to_jsx(activity: dict) -> str:
+def render_activity_to_jsx(activity: dict, *, alphabet: bool = False) -> str:
     """Convert an activity YAML dict to React component JSX string.
 
     Args:
         activity: Parsed YAML dict matching activity-v2.schema.json
+        alphabet: When True, Find-and-Fix chips are repaired for alphabet slugs.
 
     Returns:
         JSX string ready for insertion into MDX content.
@@ -32,6 +33,8 @@ def render_activity_to_jsx(activity: dict) -> str:
     renderer = _RENDERERS.get(activity_type)
     if not renderer:
         return f"<!-- Unknown activity type: {activity_type} -->"
+    if activity_type == "error-correction":
+        return renderer(activity, alphabet=alphabet)
     return renderer(activity)
 
 
@@ -233,7 +236,7 @@ def _render_true_false(act: dict) -> str:
     return _component("TrueFalse", props)
 
 
-def _render_error_correction(act: dict) -> str:
+def _render_error_correction(act: dict, *, alphabet: bool = False) -> str:
     """error-correction → <ErrorCorrection> children (renders per-item).
 
     React ErrorCorrection uses children, but the wrapper also accepts structured
@@ -249,6 +252,7 @@ def _render_error_correction(act: dict) -> str:
             item.get("error", ""),
             item.get("correction", ""),
             item.get("options", []),
+            alphabet=alphabet,
         )
         entry = {
             "sentence": item.get("sentence", ""),
@@ -435,8 +439,16 @@ def error_correction_render_values(
     error: object,
     correction: object,
     options: object,
+    *,
+    alphabet: bool = False,
+    is_word: Any | None = None,
 ) -> tuple[object, object]:
-    """Return ErrorCorrection props while preserving non-derivable input."""
+    """Return ErrorCorrection props while preserving non-derivable input.
+
+    ``alphabet=True`` repairs Find-and-Fix chips so VESUM-legal declined
+    neighbors are not offered as wrong answers (#7994). Gate and MDX share
+    this path so they cannot disagree.
+    """
     correct_form = derive_error_correction_replacement(sentence, error, correction)
     rendered_options = options
     if isinstance(options, list):
@@ -446,7 +458,20 @@ def error_correction_render_values(
             ) or option
             for option in options
         ]
-    return correct_form or correction, rendered_options
+    winner = correct_form or correction
+    if alphabet and isinstance(rendered_options, list):
+        from scripts.build.alphabet_modules import (
+            repair_error_correction_options,
+            vesum_is_word,
+        )
+
+        rendered_options = repair_error_correction_options(
+            error,
+            winner,
+            rendered_options,
+            is_word=is_word or vesum_is_word,
+        )
+    return winner, rendered_options
 
 
 def unique_error_correction_options(options: object) -> object:

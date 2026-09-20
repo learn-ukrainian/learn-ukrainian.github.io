@@ -404,3 +404,32 @@ def test_custom_artifact_directory_keeps_plan_slug(gold, tmp_path):
     assert "/a1/things-have-gender/1/" in pages["index"]
     assert "/a1/things-have-gender/2/" in pages["1"]
     assert "/a1/custom-writer-output/" not in "".join(pages.values())
+
+
+def test_alphabet_mdx_error_correction_matches_gate_chips(monkeypatch):
+    """Gate and activity_renderer share error_correction_render_values repair."""
+    import json
+    import re
+
+    from scripts.build import lesson_gates as gates
+    from scripts.build.activity_renderer import render_activity_to_jsx
+
+    item = {
+        "sentence": "Вра́нці я пив чаі з лимо́ном.",
+        "error": "чаі",
+        "correction": "чай",
+        "options": ["чай", "чаї́", "чаю"],
+        "explanation": "Write й, not і.",
+    }
+    monkeypatch.setattr(
+        "scripts.build.alphabet_modules.vesum_is_word",
+        lambda w: gates.strip_acute(gates.nfc(w)).lower() in {"чаю", "чаї"},
+    )
+    act = {"type": "error-correction", "items": [item], "instruction": "Fix"}
+    jsx = render_activity_to_jsx(act, alphabet=True)
+    match = re.search(r"items=\{(\[.*\])\}", jsx, flags=re.S)
+    assert match, jsx
+    rendered = json.loads(match.group(1))[0]["options"]
+    _, _, gate_chips = gates._ec_rendered_chips(item, alphabet=True)
+    assert rendered == gate_chips
+    assert gates.error_correction_item_defects(item, level="a1", alphabet=True) == []

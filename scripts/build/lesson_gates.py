@@ -648,7 +648,9 @@ def _ec_option_labels(options) -> list[str]:
     return out
 
 
-def _ec_rendered_chips(item: dict) -> tuple[object, list | None, list[str]]:
+def _ec_rendered_chips(
+    item: dict, *, alphabet: bool = False,
+) -> tuple[object, list | None, list[str]]:
     """``(correct_form, rendered_options, chip_labels)`` as the learner sees them."""
     sentence = item.get("sentence")
     correction = _ec_item_correction_token(item)
@@ -666,6 +668,7 @@ def _ec_rendered_chips(item: dict) -> tuple[object, list | None, list[str]]:
             _ec_item_error_token(item) or "",
             correction or item.get("correction") or "",
             raw_options if isinstance(raw_options, list) else [],
+            alphabet=alphabet,
         )
     chip_labels = labels
     if isinstance(rendered_options, list):
@@ -712,7 +715,7 @@ def error_correction_item_warnings(
     prefix = f"{activity_id}: " if activity_id else ""
     out: list[str] = []
     if alphabet:
-        distinct = _ec_distinct_chips(_ec_rendered_chips(item)[2])
+        distinct = _ec_distinct_chips(_ec_rendered_chips(item, alphabet=True)[2])
         if len(distinct) == 2:
             out.append(
                 f"{prefix}error-correction has 2 distinct options (want >=3): {distinct}"
@@ -800,7 +803,9 @@ def error_correction_item_defects(
             )
     correction = _ec_item_correction_token(item)
     # Prefer the same chip list the MDX/React path shows the learner.
-    correct_form, rendered_options, chip_labels = _ec_rendered_chips(item)
+    correct_form, rendered_options, chip_labels = _ec_rendered_chips(
+        item, alphabet=alphabet,
+    )
     if not chip_labels:
         defects.append(f"{prefix}error-correction options empty (reveal-only is forbidden)")
         return defects

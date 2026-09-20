@@ -12,8 +12,12 @@ from __future__ import annotations
 
 import copy
 import re
-from collections.abc import Mapping, Set
+import unicodedata
+from collections.abc import Callable, Mapping, Set
 from typing import Any
+
+_ACUTE = "\u0301"
+_APOS_CHARS = frozenset("'’ʼ`")
 
 ALPHABET_SLUGS = frozenset({
     "sounds-letters-and-hello",
@@ -53,6 +57,144 @@ BANNED_LEARNER_PHRASES = (
 
 def is_alphabet_slug(slug: object) -> bool:
     return str(slug or "").strip().lower() in ALPHABET_SLUGS
+
+
+def _nfc(text: str) -> str:
+    return unicodedata.normalize("NFC", text)
+
+
+def _strip_acute(text: str) -> str:
+    return _nfc(unicodedata.normalize("NFD", text).replace(_ACUTE, ""))
+
+
+def _chip_key(text: str) -> str:
+    return _strip_acute(text).lower()
+
+
+def vesum_is_word(form: str) -> bool:
+    """True when ``form`` (acute-stripped) exists in VESUM.
+
+    Fail-open when VESUM is missing or unreadable (CI without ``data/vesum.db``):
+    return False so alphabet EC repair does not treat chips as legal drops and
+    never raises into ``run_lesson_gates``.
+    """
+    from scripts.verification.vesum import verify_word
+
+    bare = _strip_acute(form)
+    if not bare:
+        return False
+    try:
+        return bool(verify_word(bare) or verify_word(bare.lower()))
+    except FileNotFoundError:
+        return False
+    except OSError:
+        return False
+    except Exception as exc:
+        if "VESUM database not found" in str(exc):
+            return False
+        raise
+
+
+def _soft_sign_mutants(winner: str) -> list[str]:
+    """Insert or delete ``ь``; acute marks on ``winner`` are kept."""
+    out: list[str] = []
+    for i, ch in enumerate(winner):
+        if ch == "ь":
+            out.append(winner[:i] + winner[i + 1 :])
+    for i in range(len(winner) + 1):
+        out.append(winner[:i] + "ь" + winner[i:])
+    return out
+
+
+def _apostrophe_mutants(winner: str) -> list[str]:
+    """Insert, delete, or shift ``'`` by one position; keep stress marks."""
+    out: list[str] = []
+    for i, ch in enumerate(winner):
+        if ch in _APOS_CHARS:
+            out.append(winner[:i] + winner[i + 1 :])
+    for i in range(len(winner) + 1):
+        out.append(winner[:i] + "'" + winner[i:])
+    for i, ch in enumerate(winner):
+        if ch not in _APOS_CHARS:
+            continue
+        chars = list(winner)
+        if i > 0:
+            chars[i], chars[i - 1] = chars[i - 1], chars[i]
+            out.append("".join(chars))
+            chars = list(winner)
+        if i + 1 < len(winner):
+            chars[i], chars[i + 1] = chars[i + 1], chars[i]
+            out.append("".join(chars))
+    return out
+
+
+def alphabet_ec_mutants(winner: str) -> list[str]:
+    """Illegal spelling mutants of ``winner`` in a fixed order (no shuffle)."""
+    seen: set[str] = set()
+    out: list[str] = []
+    for mutant in _soft_sign_mutants(winner) + _apostrophe_mutants(winner):
+        if not mutant or mutant in seen:
+            continue
+        seen.add(mutant)
+        out.append(mutant)
+    return out
+
+
+def repair_error_correction_options(
+    error: object,
+    correct_form: object,
+    options: object,
+    *,
+    is_word: Callable[[str], bool],
+) -> list:
+    """Drop VESUM-legal Find-and-Fix chips; refill with illegal mutants (#7994).
+
+    Alphabet slugs only (caller gates). Always keeps the winner. Drops chips that
+    equal the winner or the spotted error, and any other chip ``is_word`` accepts.
+    Fills to three with soft-sign / apostrophe mutants of the winner (acute kept).
+    If no illegal second chip exists, returns the winner alone so the unique-2
+    gate still fires — reveal-only is residual.
+    """
+    winner = correct_form if isinstance(correct_form, str) else (str(correct_form) if correct_form else "")
+    err = error if isinstance(error, str) else (str(error) if error else "")
+    if not isinstance(options, list):
+        return [winner] if winner else []
+
+    winner_key = _chip_key(winner) if winner else ""
+    err_key = _chip_key(err) if err else ""
+    kept: list[str] = []
+    seen: set[str] = set()
+
+    def _accept(chip: str) -> bool:
+        key = _chip_key(chip)
+        if not chip or key in seen:
+            return False
+        if winner_key and key == winner_key:
+            return False
+        if err_key and key == err_key:
+            return False
+        if is_word(chip):
+            return False
+        seen.add(key)
+        kept.append(chip)
+        return True
+
+    if winner:
+        seen.add(winner_key)
+        kept.append(winner)
+
+    for opt in options:
+        if isinstance(opt, str):
+            _accept(opt)
+
+    for mutant in alphabet_ec_mutants(winner):
+        if len(kept) >= 3:
+            break
+        _accept(mutant)
+
+    if len(kept) < 2:
+        return [winner] if winner else []
+    return kept
 
 
 def _plain(text: str) -> str:

@@ -453,3 +453,84 @@ def test_lesson_one_landing_is_written_to_the_module_root(tmp_path):
     parsed = linear_pipeline.parse_writer_output(_gold_response(1) + "\n" + _LANDING_FENCE, lesson_mode=True)
     v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
     assert (module / "landing-overview.md").read_text().startswith("Nouns have gender")
+
+
+_LIFT_MODULE = (
+    "# Soft Sign\n\n"
+    "You read the soft sign and the apostrophe in real Ukrainian words.\n\n"
+    "By the end, you can:\n\n"
+    "- recognize **ь** and apostrophe in common A1 words;\n"
+    "- read **день** without adding an extra vowel.\n\n"
+    "## First section\n\nBody that must not be lifted.\n"
+)
+
+
+def test_land_overview_lifts_outcomes_from_lesson_one_opening(tmp_path):
+    from scripts.build.lesson_assembler import lift_landing_overview
+
+    module = tmp_path / "a1"
+    module.mkdir()
+    module_md = _LIFT_MODULE
+    parsed = {"module.md": module_md}
+    before = parsed["module.md"]
+    v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
+    landed = (module / "landing-overview.md").read_text(encoding="utf-8")
+    assert "By the end, you can" in landed
+    assert not landed.lstrip().startswith("# ")
+    assert "First section" not in landed
+    assert parsed["module.md"] == before
+    assert lift_landing_overview(module_md) is not None
+
+
+def test_land_overview_prefers_writer_file_over_lift(tmp_path):
+    module = tmp_path / "a1"
+    module.mkdir()
+    writer = (
+        "Nouns have gender: **стіл**, **кни́га**, **вікно́**.\n\n"
+        "By the end, you can:\n\n- name the gender of a noun.\n\nKeep the scope small.\n"
+    )
+    parsed = {"module.md": _LIFT_MODULE, "landing-overview.md": writer}
+    v7_build._land_overview_or_fail(module, _no_outcomes_source(tmp_path), {"level": "a1"}, parsed)
+    assert (module / "landing-overview.md").read_text(encoding="utf-8") == writer
+
+
+def test_land_overview_lift_refuses_line_break_or_banned_opening(tmp_path):
+    module = tmp_path / "a1"
+    module.mkdir()
+    banned = (
+        "# Soft Sign\n\n"
+        "This module completes your mastery of all 33 letters today.\n\n"
+        "By the end, you can:\n\n- read soft sign words.\n\n## Section\n"
+    )
+    with pytest.raises(linear_pipeline.LinearPipelineError, match=r"landing-overview\.md missing"):
+        v7_build._land_overview_or_fail(
+            module, _no_outcomes_source(tmp_path), {"level": "a1"}, {"module.md": banned},
+        )
+    assert not (module / "landing-overview.md").is_file()
+
+
+def test_lift_ignores_outcomes_after_first_h2():
+    from scripts.build.lesson_assembler import lift_landing_overview
+
+    text = (
+        "# Soft Sign\n\n"
+        "An opening paragraph without any outcomes list at all for the learner.\n\n"
+        "## Later\n\nBy the end, you can:\n\n- do something.\n"
+    )
+    assert lift_landing_overview(text) is None
+
+
+def test_lift_handles_real_230730_lesson1_dump():
+    from scripts.build.lesson_assembler import lift_landing_overview
+
+    path = Path(
+        "/home/ops/learn-ukrainian/.worktrees/builds/a1-special-signs-20260919-230730"
+        "/curriculum/l2-uk-en/a1/special-signs/lesson-1/module.md"
+    )
+    if not path.is_file():
+        pytest.skip("230730 worktree absent")
+    lifted = lift_landing_overview(path.read_text(encoding="utf-8"))
+    assert lifted is not None
+    assert "By the end, you can" in lifted
+    assert not lifted.lstrip().startswith("# ")
+    assert "## М'яки́й знак" not in lifted
