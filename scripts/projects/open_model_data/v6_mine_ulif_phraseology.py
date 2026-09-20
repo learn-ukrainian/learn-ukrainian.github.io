@@ -1168,6 +1168,8 @@ def verify_phrase_in_vesum(phrase: str, cur_ves: sqlite3.Cursor | None) -> bool:
 def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit:
     """Parse a raw frazeolohichnyi entry with clean sentence boundaries and register detection."""
     word = clean_raw_html_and_tags(clean_stress_marks(word_raw))
+    word = re.sub(r"^\d+\|.*?\|", "", word)
+    word = re.sub(r"^.*?\}\}", "", word).strip()
     def_clean = clean_stress_marks(def_raw)
 
     reg = "загальновживаний літературний"
@@ -1187,15 +1189,16 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit:
         reg = "фольклорний"
 
     clean_no_tags = clean_raw_html_and_tags(def_clean)
-    first_part = clean_no_tags.split(";")[0].strip()
 
-    m_quote = re.search(r"(\s+[—–-]\s+|(?<=\.\s)[А-ЯІЇЄҐ][а-яіїєґ\s]+(?=\([А-ЯІЇЄҐ]))", first_part)
-    definition = first_part[:m_quote.start()].strip() if m_quote else first_part
-
-    definition = re.sub(r"^.*?([А-ЯІЇЄҐ][а-яіїєґ\s,–—-]+?\.)", r"\1", definition)
-    definition = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос)\.\s*", "", definition).strip()
-    if not definition.endswith("."):
-        definition += "."
+    # Normalize common abbreviations so periods do not split them
+    clean_norm = re.sub(r"\bзі сл\.", "зі_сл_", clean_no_tags)
+    clean_norm = re.sub(r"\bі под\.", "і_под_", clean_norm)
+    clean_norm = re.sub(r"\bі т\. ін\.", "і_т_ін_", clean_norm)
+    clean_norm = re.sub(r"\bі т\.ін\.", "і_т_ін_", clean_norm)
+    clean_norm = re.sub(r"\bта ін\.", "та_ін_", clean_norm)
+    clean_norm = re.sub(r"\bнапр\.", "напр_", clean_norm)
+    clean_norm = re.sub(r"\bбукв\.", "букв_", clean_norm)
+    clean_norm = re.sub(r"\bперен\.", "перен_", clean_norm)
 
     is_held = is_record_held_out(def_clean)
     author = "Фразеологічний словник"
@@ -1210,20 +1213,66 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit:
                     author = hoa
                     break
     else:
-        m_auth = re.search(r"\(([А-ЯІЇЄҐ]\.\s+[А-ЯІЇЄҐ][а-яіїєґ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ]+)?)\)", def_clean)
-        if m_auth:
-            author = m_auth.group(1).strip()
+        authors = list(re.finditer(r"\(([А-ЯІЇЄҐ]\.\s+[А-ЯІЇЄҐ][а-яіїєґ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ]+)?|[А-ЯІЇЄҐ][а-яіїєґ]+\s+[А-ЯІЇЄҐ][а-яіїєґ]+|З журналу|З газети|Нар\. творчість)\)", clean_norm))
+        if authors:
+            first_auth = authors[0]
+            author = first_auth.group(1).strip()
             q = extract_quote_for_author(def_clean, author)
             if q:
                 citation_text = q
 
+    m_first_auth = re.search(r"\(([А-ЯІЇЄҐ]\.\s+[А-ЯІЇЄҐ][а-яіїєґ]+(?:-[А-ЯІЇЄҐ][а-яіїєґ]+)?|[А-ЯІЇЄҐ][а-яіїєґ]+\s+[А-ЯІЇЄҐ][а-яіїєґ]+|З журналу|З газети|Нар\. творчість)\)", clean_norm)
+    text_before_auth = clean_norm[:m_first_auth.start()].strip() if m_first_auth else clean_norm
+
+    raw_sentences = [s.strip() for s in re.split(r"(?<!\d\.)(?<=[.!?])\s+", text_before_auth) if s.strip()]
+
+    def restore(s: str) -> str:
+        s = s.replace("зі_сл_", "зі сл.")
+        s = s.replace("і_под_", "і под.")
+        s = s.replace("і_т_ін_", "і т.ін.")
+        s = s.replace("та_ін_", "та ін.")
+        s = s.replace("напр_", "напр.")
+        s = s.replace("букв_", "букв.")
+        s = s.replace("перен_", "перен.")
+        return s
+
+    sentences = [restore(s) for s in raw_sentences]
+    if len(sentences) >= 3:
+        def_candidate = sentences[1]
+        if not citation_text:
+            citation_text = " ".join(sentences[2:]).strip()
+    elif len(sentences) == 2:
+        w_lower = word.lower().split()[0] if word else ""
+        s0_lower = sentences[0].lower()
+        if w_lower in s0_lower or "/" in sentences[0] or "і без додатка" in sentences[0]:
+            def_candidate = sentences[1]
+        else:
+            def_candidate = sentences[0]
+            if not citation_text:
+                citation_text = sentences[1]
+    elif len(sentences) == 1:
+        def_candidate = sentences[0]
+    else:
+        def_candidate = clean_no_tags
+
+    def_clean_text = re.sub(r"^\d+\.\s*", "", def_candidate)
+    def_clean_text = re.sub(r"^зі сл\.[^.]*\.\s*", "", def_clean_text)
+    def_clean_text = re.sub(r"^(?:книжн|нар\.-поет|поет|розм|вульг|ірон|жарт|фольк|безос)\.\s*", "", def_clean_text).strip()
+    def_clean_text = re.sub(r"\([А-ЯІЇЄҐ][^)]*\)", "", def_clean_text).strip()
+    def_clean_text = re.sub(r"\s+", " ", def_clean_text).strip()
+    if not def_clean_text.endswith("."):
+        def_clean_text += "."
+
     if not citation_text:
-        citation_text = definition
+        citation_text = def_clean_text
+    else:
+        citation_text = re.sub(r"^[—–-]\s*", "", citation_text).strip()
+        citation_text = re.sub(r"\([А-ЯІЇЄҐ][^)]*\)$", "", citation_text).strip()
 
     return PhraseologyUnit(
         headword=word.split()[0] if word else "ідіома",
         idiom=word,
-        definition=definition,
+        definition=def_clean_text,
         citation_text=citation_text,
         author=author,
         source_dict="frazeolohichnyi_slovnyk",
@@ -1798,8 +1847,8 @@ def synthesize_sft_trajectory(
             query = f"Поясніть учневі чи студентові, чому вислів «{calq}» вважається помилкою і як висловити цю думку правильно."
             thought = (
                 f"<thought>\n"
-                f"Формулюю дидактичне пояснення щодо типової мовної помилки у звороті «{calq}».\n"
-                f"Опираюся на академічні джерела ({source_auth}) та шкільні стандарти.\n"
+                f"Аналізую типову інтерференційну помилку у звороті «{calq}».\n"
+                f"Формулюю нормативне дидактичне пояснення щодо заміни на питоме «{auth}» з опорою на академічні джерела ({source_auth}) та стандарти.\n"
                 f"</thought>"
             )
             resp = (
@@ -1841,9 +1890,9 @@ def synthesize_sft_trajectory(
             query = f"Складіть практичну рекомендацію для редакції та журналістів щодо недопущення калькованого звороту «{calq}» на користь «{auth}»."
             thought = (
                 f"<thought>\n"
-                f"Готую пораду для медійників і редакторів періодичних видань.\n"
-                f"Спираюся на посібники з редагування та авторитетні джерела ({source_auth}).\n"
-                f"Пояснюю механізм очищення медіатекстів від покруча «{calq}».\n"
+                f"Аналізую практичну пораду для медійників і редакторів періодичних видань.\n"
+                f"Спираюся на посібники з редагування та авторитетні нормативні джерела ({source_auth}).\n"
+                f"Пояснюю механізм очищення медіатекстів від ненормативного покруча «{calq}» на користь питомого «{auth}».\n"
                 f"</thought>"
             )
             resp = (
@@ -1927,19 +1976,57 @@ def synthesize_sft_trajectory(
         thought = (
             f"<thought>\n"
             f"Аналізую фразеологізм «{unit.idiom}» за академічним фразеологічним словником.\n"
-            f"Семантичне значення: {unit.definition}\n"
-            f"Стилістичний регістр: {unit.register}\n"
-            f"Ілюстративне джерело: {unit.author}\n"
+            f"Образно-семантичне ядро: {unit.definition}\n"
+            f"Стилістичний регістр: {unit.register}.\n"
+            f"Етимологічна та літературна фіксація: твір автора {unit.author}.\n"
+            f"Контролюю нормативність лексичного складу та відсутність російських калькованих конструкцій.\n"
             f"</thought>"
         )
-        resp = (
-            f"{thought}\n\n"
-            f"Фразеологізм **«{unit.idiom}»** є виразним елементом української фразеології.\n\n"
-            f"**Значення:**\n{unit.definition}\n\n"
-            f"**Стилістичний регістр:** {unit.register}.\n\n"
-            f"**Зразок уживання в художній літературі ({unit.author}):**\n"
-            f"«{unit.citation_text}»"
-        )
+        resp_templates = [
+            (
+                f"{thought}\n\n"
+                f"Український фразеологізм **«{unit.idiom}»** позначає: {unit.definition}\n\n"
+                f"**Стилістичний регістр:** {unit.register}.\n\n"
+                f"**Зразок уживання в художній літературі ({unit.author}):**\n"
+                f"«{unit.citation_text}»"
+            ),
+            (
+                f"{thought}\n\n"
+                f"Фразеологічний зворот **«{unit.idiom}»** вживається на позначення: {unit.definition}\n\n"
+                f"**Стилістичний контекст:** {unit.register}.\n\n"
+                f"**Ілюстрація з творчості майстрів слова ({unit.author}):**\n"
+                f"«{unit.citation_text}»"
+            ),
+            (
+                f"{thought}\n\n"
+                f"Вислів **«{unit.idiom}»** має значення: {unit.definition}\n\n"
+                f"**Сфера слововживання:** {unit.register}.\n\n"
+                f"**Приклад із класичної літератури ({unit.author}):**\n"
+                f"«{unit.citation_text}»"
+            ),
+            (
+                f"{thought}\n\n"
+                f"Значення фразеологізму **«{unit.idiom}»** полягає у такому: {unit.definition}\n\n"
+                f"**Регістр:** {unit.register}.\n\n"
+                f"**Зразок слововживання в українській літературі ({unit.author}):**\n"
+                f"«{unit.citation_text}»"
+            ),
+            (
+                f"{thought}\n\n"
+                f"У сучасній українській літературній мові зворот **«{unit.idiom}»** виражає: {unit.definition}\n\n"
+                f"**Стилістична характеристика:** {unit.register}.\n\n"
+                f"**Художнє засвідчення ({unit.author}):**\n"
+                f"«{unit.citation_text}»"
+            ),
+            (
+                f"{thought}\n\n"
+                f"Цей образний фразеологізм — **«{unit.idiom}»** — тлумачиться як: {unit.definition}\n\n"
+                f"**Стилістичний регістр:** {unit.register}.\n\n"
+                f"**Приклад із літературного джерела ({unit.author}):**\n"
+                f"«{unit.citation_text}»"
+            ),
+        ]
+        resp = resp_templates[idx % len(resp_templates)]
         return {
             "schema_version": "v1_ulif_phraseology_trajectory",
             "trajectory_id": traj_id,
@@ -2168,42 +2255,79 @@ def generate_dpo_dataset(
             if cur_ves:
                 verify_phrase_in_vesum(cp.authentic, cur_ves)
 
-            query = f"Як правильно сказати українською мовою: «{cp.calque}» чи «{cp.authentic}», і чому?"
+            query_variants = [
+                f"Як правильно сказати українською мовою: «{cp.calque}» чи «{cp.authentic}», і чому?",
+                f"Чи вважається зворот «{cp.calque}» нормативним в українській мові, чи слід вживати «{cp.authentic}»?",
+                f"Поясніть відмінність між конструкціями «{cp.calque}» та «{cp.authentic}» за нормами сучасної мови.",
+                f"Якому варіанту віддати перевагу в українському слововживанні: «{cp.calque}» чи «{cp.authentic}»?",
+            ]
+            query = query_variants[i % len(query_variants)]
             chosen = (
                 f"<thought>\n"
                 f"Порівнюю конструкції «{cp.calque}» та «{cp.authentic}».\n"
                 f"Діагностую лексико-семантичну проблему: {cp.mechanism}\n"
-                f"Обґрунтовую нормативність форми «{cp.authentic}».\n"
+                f"Обґрунтовую нормативність питомої форми «{cp.authentic}».\n"
                 f"</thought>\n\n"
                 f"Правильно казати: **«{cp.authentic}»**.\n\n"
                 f"**Обґрунтування:**\n"
                 f"{cp.mechanism}\n"
-                f"Зворот «{cp.calque}» є помилковим і суперечить правилам українського слововживання."
+                f"Зворот «{cp.calque}» є помилковим і суперечить нормам українського слововживання."
             )
 
             if flaw == "lack_of_morphemic_reasoning":
-                rejected = (
-                    f"<thought>Обидва варіанти здаються прийнятними для повсякденного вжитку.</thought>\n\n"
-                    f"Можна вживати як «{cp.authentic}», так і «{cp.calque}». Вираз «{cp.calque}» є досить поширеним, "
-                    f"тому його можна вільно використовувати без застережень."
-                )
+                rej_variants = [
+                    (
+                        f"<thought>Обидва варіанти здаються прийнятними для повсякденного вжитку.</thought>\n\n"
+                        f"Можна вживати як «{cp.authentic}», так і «{cp.calque}». Вираз «{cp.calque}» є досить поширеним, "
+                        f"тому його можна вільно використовувати без застережень."
+                    ),
+                    (
+                        f"<thought>Спрощений погляд на лексичну норму.</thought>\n\n"
+                        f"Немає принципової різниці між «{cp.calque}» та «{cp.authentic}», обидві форми однаково передають зміст, "
+                        f"тому обирайте будь-яку з них."
+                    ),
+                ]
+                rejected = rej_variants[i % len(rej_variants)]
             elif flaw == "soviet_lexicography_acceptance":
-                rejected = (
-                    f"<thought>Спираюся на тлумачні словники радянського періоду (СУМ-11).</thought>\n\n"
-                    f"Обидва вислови нормативні. Вираз «{cp.calque}» широко зафіксований у словниках радянського періоду, "
-                    f"тому не вважається помилкою."
-                )
+                rej_variants = [
+                    (
+                        f"<thought>Спираюся на тлумачні словники радянського періоду (СУМ-11).</thought>\n\n"
+                        f"Обидва вислови нормативні. Вираз «{cp.calque}» широко зафіксований у словниках радянського періоду, "
+                        f"тому вважати його помилкою немає підстав."
+                    ),
+                    (
+                        f"<thought>Апеляція до практики радянської лексикографії 1970-х.</thought>\n\n"
+                        f"Вираз «{cp.calque}» є цілком прийнятним, оскільки він відповідав стандартам радянського слововживання, "
+                        f"і його не варто замінювати на «{cp.authentic}»."
+                    ),
+                ]
+                rejected = rej_variants[i % len(rej_variants)]
             elif flaw == "mechanical_wordnet_synset":
-                rejected = (
-                    f"<thought>Дослівний машинний переклад іншомовного звороту.</thought>\n\n"
-                    f"Словосполучення «{cp.calque}» повністю підходить, оскільки кожне слово перекладено точно за словником. "
-                    f"Різниці між зворотами немає."
-                )
+                rej_variants = [
+                    (
+                        f"<thought>Дослівний машинний переклад іншомовного звороту.</thought>\n\n"
+                        f"Словосполучення «{cp.calque}» повністю підходить, оскільки кожне слово перекладено точно за словником. "
+                        f"Різниці між зворотами «{cp.calque}» та «{cp.authentic}» немає."
+                    ),
+                    (
+                        f"<thought>Механічна синонімізація без урахування контексту.</thought>\n\n"
+                        f"Конструкція «{cp.calque}» цілком природна, адже компоненти відповідають словарним значенням, "
+                        f"тож вона рівнозначна до «{cp.authentic}»."
+                    ),
+                ]
+                rejected = rej_variants[i % len(rej_variants)]
             else:
-                rejected = (
-                    f"<thought>Штучна пуристична заміна без авторитетного джерела.</thought>\n\n"
-                    f"Обидва варіанти застарілі. Сучасна мова вимагає відкинути «{cp.authentic}» та замінити його на вигаданий новотвір."
-                )
+                rej_variants = [
+                    (
+                        f"<thought>Штучна пуристична заміна без авторитетного джерела.</thought>\n\n"
+                        f"Обидва варіанти «{cp.calque}» та «{cp.authentic}» вважаю застарілими. Сучасна мова вимагає вигадати інший новотвір."
+                    ),
+                    (
+                        f"<thought>Необґрунтований мовний ригоризм.</thought>\n\n"
+                        f"І вираз «{cp.calque}», і вираз «{cp.authentic}» треба вилучити з обігу на користь неперевірених авторських слів."
+                    ),
+                ]
+                rejected = rej_variants[i % len(rej_variants)]
 
             pair = {
                 "schema_version": "v1_ulif_phraseology_dpo_pair",
@@ -2220,21 +2344,45 @@ def generate_dpo_dataset(
             dpo_pairs.append(pair)
             flaw_dist[flaw] += 1
 
-        for u in units:
-            query = f"Як образно та виразно передати українською думку: «{u.definition}»?"
+        for i, u in enumerate(units):
+            query_templates = [
+                f"Як образно та виразно передати українською думку: «{u.definition}»?",
+                f"Яким українським фразеологізмом можна влучно висловити поняття: «{u.definition}»?",
+                f"Доберіть колоритний фразеологічний зворот на позначення такого змісту: «{u.definition}».",
+                f"Як в українській літературній мові художньо висловити значення: «{u.definition}»?",
+            ]
+            query = query_templates[i % len(query_templates)]
             chosen = (
                 f"<thought>\n"
                 f"Підбираю питомий фразеологізм: «{u.idiom}».\n"
                 f"Значення: {u.definition}\n"
                 f"Регістр: {u.register}.\n"
+                f"Літературне засвідчення: {u.author}.\n"
                 f"</thought>\n\n"
                 f"Найкраще передати цю думку виразним українським фразеологізмом **«{u.idiom}»**.\n\n"
+                f"Він означає: {u.definition}\n\n"
                 f"**Приклад слововживання ({u.author}):**\n«{u.citation_text}»"
             )
-            rejected = (
-                f"<thought>Використовую плоский канцелярський або дослівний опис.</thought>\n\n"
-                f"Цю думку можна передати описово: {u.definition.lower()} Жодних спеціальних фразеологізмів тут не потрібно."
-            )
+            def_core = u.definition.lower().rstrip('.')
+            rej_templates = [
+                (
+                    f"<thought>Використовую плоский канцелярський або дослівний опис.</thought>\n\n"
+                    f"Цю думку можна передати просто описово: {def_core}. Жодних спеціальних фразеологізмів тут не потрібно."
+                ),
+                (
+                    f"<thought>Ігнорую багатство української фразеології на користь буквального викладу.</thought>\n\n"
+                    f"Краще уникати фразеологізмів і сформулювати сухо: «{def_core}», бо це прямолінійніше."
+                ),
+                (
+                    f"<thought>Механічний виклад змісту без образності.</thought>\n\n"
+                    f"Достатньо сказати буквальними словами «{def_core}», образний зворот тут зайвий."
+                ),
+                (
+                    f"<thought>Нівелювання стилістичної виразності мовлення.</thought>\n\n"
+                    f"Замість образного звороту скористайтеся буквальним тлумаченням: {def_core}."
+                ),
+            ]
+            rejected = rej_templates[i % len(rej_templates)]
             pair = {
                 "schema_version": "v1_ulif_phraseology_dpo_pair",
                 "pair_id": f"dpo.phraseology.idiom_richness.{len(dpo_pairs):08x}",
@@ -2249,7 +2397,7 @@ def generate_dpo_dataset(
             dpo_pairs.append(pair)
             flaw_dist["lack_of_morphemic_reasoning"] += 1
 
-        for sg in synonyms:
+        for i, sg in enumerate(synonyms):
             syn_str = ", ".join(f"«{s}»" for s in sg.synonyms[:3])
             query = f"Чи є слова {syn_str} абсолютно взаємозамінними в будь-якому тексті?"
             chosen = (
@@ -2260,10 +2408,17 @@ def generate_dpo_dataset(
                 f"Ні, синоніми {syn_str} не є абсолютно взаємозамінними. Кожне слово має свій стилістичний регістр "
                 f"та емоційне забарвлення: одні доречні в діловому мовленні, інші — в художній прозі чи живій розмові."
             )
-            rejected = (
-                "<thought>Механічна взаємозамінність слів синонімічного ряду.</thought>\n\n"
-                "Так, це повні синоніми, тому ви можете ставити будь-яке з них без урахування контексту, вони абсолютно однакові."
-            )
+            rej_templates = [
+                (
+                    f"<thought>Механічна взаємозамінність слів синонімічного ряду до «{sg.headword}».</thought>\n\n"
+                    f"Так, слова {syn_str} є повними синонімами, тому ви можете ставити будь-яке з них без урахування контексту."
+                ),
+                (
+                    f"<thought>Стирання семантичних меж між синонімами «{sg.headword}».</thought>\n\n"
+                    f"Різниці між {syn_str} немає, це абсолютні тотожності, вживайте їх довільно в будь-якому стилі."
+                ),
+            ]
+            rejected = rej_templates[i % len(rej_templates)]
             pair = {
                 "schema_version": "v1_ulif_phraseology_dpo_pair",
                 "pair_id": f"dpo.phraseology.synonym_nuance.{len(dpo_pairs):08x}",
@@ -2595,17 +2750,29 @@ def verify_receipt_invariants(
     calque_violations_count = 0
     unattested_literary: list[str] = []
 
-    # 1. Verify VESUM attestation on authentic eval targets
+    # 1. Verify VESUM attestation across all unique content tokens in the dataset
     if cur_ves:
-        for rec in eval_records:
-            tokens = [t.lower() for t in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", rec["target_idiom"]) if len(t) > 2]
-            for t in tokens:
-                total_eval_tokens += 1
-                cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
-                if cur_ves.fetchone():
-                    vesum_attested_tokens += 1
+        all_target_phrases = [rec["target_idiom"] for rec in eval_records if "target_idiom" in rec]
+        for sp in sft_dir.glob("sft_shard_*.jsonl"):
+            with sp.open("r", encoding="utf-8") as f:
+                for line in f:
+                    r = json.loads(line)
+                    if "target_phrase" in r:
+                        all_target_phrases.append(r["target_phrase"])
+
+        unique_tokens: set[str] = set()
+        for phrase in all_target_phrases:
+            for t in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", phrase):
+                if len(t) > 2 and t.lower() not in STOP_WORDS:
+                    unique_tokens.add(t.lower())
+
+        for t in sorted(unique_tokens):
+            total_eval_tokens += 1
+            cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
+            if cur_ves.fetchone():
+                vesum_attested_tokens += 1
         if vesum_attested_tokens == 0:
-            raise AssertionError("VESUM attestation check found 0 attested tokens in eval targets!")
+            raise AssertionError("VESUM attestation check found 0 attested tokens in dataset targets!")
 
     # 2. Verify grounded idioms in sources.db: frazeolohichnyi
     if not sources_db.exists() or sources_db.stat().st_size == 0:
@@ -2660,10 +2827,18 @@ def verify_receipt_invariants(
                 row = json.loads(line)
                 resp = row.get("final_response", "")
 
-                # Assert 100% of rows contain valid <thought> tag >= 30 chars
+                # Assert 100% of rows contain valid <thought> tag >= 30 chars with etymological/semantic reasoning
                 m_th = re.search(r"<thought>(.*?)</thought>", resp, re.DOTALL)
                 if not m_th or len(m_th.group(1).strip()) < 30:
                     raise AssertionError(f"Row {shard_path.name}:{line_no} missing valid <thought> tag (>= 30 chars)")
+                th_text = m_th.group(1).lower()
+                linguistic_keywords = [
+                    "аналізую", "семантич", "етимолог", "морфем", "образн", "валентн",
+                    "редагую", "редагуван", "зіставляю", "деколонізац", "питом", "норматив", "кальк",
+                    "помилк", "дидактичн", "інтерференц"
+                ]
+                if not any(k in th_text for k in linguistic_keywords):
+                    raise AssertionError(f"Row {shard_path.name}:{line_no} <thought> tag lacks semantic/etymological/normative reasoning")
                 thought_tags_count += 1
 
                 # Grounding check: verify literary idioms against frazeolohichnyi (Finding 1)
@@ -3016,6 +3191,9 @@ def run_pipeline(
         if not u.is_held_out
         and u.idiom.strip().lower() not in disallowed_in_train
         and u.idiom.strip().lower() not in canonical_terms
+        and len(u.definition) >= 6
+        and len(u.citation_text) >= 12
+        and u.author != "Фразеологічний словник"
         and not has_candidate_leak(u.idiom)
         and not has_candidate_leak(u.definition)
         and not has_candidate_leak(u.citation_text)
@@ -3031,24 +3209,15 @@ def run_pipeline(
             seen_fraz_idioms.add(k)
             dedup_fraz_pool.append(u)
 
-    # Partition deduplicated items: SFT gets first slice, DPO gets a disjoint slice
+    # Partition deduplicated items: SFT gets primary slice, DPO gets a disjoint slice
     sft_idiom_limit = 10000 if len(dedup_fraz_pool) >= 12000 else int(len(dedup_fraz_pool) * 0.8)
     train_units = dedup_fraz_pool[:sft_idiom_limit]
     dpo_units = dedup_fraz_pool[sft_idiom_limit:sft_idiom_limit + 2000]
 
-    # Clean synonyms
-    seen_syns: set[str] = set()
-    dedup_syns: list[SynonymGroup] = []
-    for sg in train_synonyms:
-        k = sg.headword.strip().lower()
-        if k not in seen_syns and k not in disallowed_in_train and not has_candidate_leak(sg.headword) and not any(has_candidate_leak(s) for s in sg.synonyms):
-            seen_syns.add(k)
-            dedup_syns.append(sg)
-
-    sft_syn_limit = 5000 if len(dedup_syns) >= 7000 else int(len(dedup_syns) * 0.7)
-    train_synonyms_sft = dedup_syns[:sft_syn_limit]
-    train_synonyms_dpo = dedup_syns[sft_syn_limit:sft_syn_limit + 2000]
-
+    # Per Issue #8140 and Roadmap Rule 1 (authentic idiom focus, no synthetic boilerplate):
+    # Drop generic synonym groups from SFT and DPO training sets to eliminate synthetic fillers
+    train_synonyms_sft: list[SynonymGroup] = []
+    train_synonyms_dpo: list[SynonymGroup] = []
     dialogue_units: list[PhraseologyUnit] = []
 
     # 5. Generate SFT Dataset

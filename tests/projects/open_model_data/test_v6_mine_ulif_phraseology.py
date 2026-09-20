@@ -618,7 +618,7 @@ def test_verify_receipt_invariants_fails_on_unattested_literary():
         fake_row = {
             "task_type": "idiom_interpretation_literary",
             "target_phrase": "вигаданий псевдофразеологізм абсолютно невідомий",
-            "final_response": "<thought>Докладний роздум про вигаданий фразеологізм з довгим текстом.</thought>\n\nТлумачення.",
+            "final_response": "<thought>Аналізую семантичне значення та образну основу фразеологізму.</thought>\n\nТлумачення.",
         }
         sft_shard.write_text(json.dumps(fake_row, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -652,7 +652,7 @@ def test_verify_receipt_invariants_fails_on_affirmed_calque():
         bad_sft = {
             "task_type": "anti_calque_decolonization",
             "target_phrase": "приймати участь",
-            "final_response": "<thought>Роздум про слововживання з достатньою кількістю символів.</thought>\n\nНормативний відповідник:** **«приймати участь»**.",
+            "final_response": "<thought>Аналізую морфемні корені та семантичне слововживання виразу.</thought>\n\nНормативний відповідник:** **«приймати участь»**.",
         }
         sft_shard.write_text(json.dumps(bad_sft, ensure_ascii=False) + "\n", encoding="utf-8")
 
@@ -759,3 +759,78 @@ def test_sanitize_calque_string_preserves_apostrophe():
     assert sanitize_calque_string("«розв’язати»") == "розв'язати"
     assert sanitize_calque_string("  'вирішити'  ") == "вирішити"
     assert sanitize_calque_string("«в см'ятку»") == "в см'ятку"
+
+
+def test_idiom_response_diversity():
+    """Finding 1 & 5: Ensure SFT idiom responses do not use a single repeated opening prefix."""
+    unit = PhraseologyUnit(
+        headword="рука",
+        idiom="гріти руки",
+        definition="Наживатися у нечесний спосіб.",
+        citation_text="Він на цьому добре погрів руки.",
+        author="І. Франко",
+        source_dict="frazeolohichnyi",
+        register="розмовний",
+    )
+    openings = set()
+    for i in range(12):
+        traj = synthesize_sft_trajectory(unit, None, None, i, "idiom_interpretation_literary")
+        # Extract first sentence after </thought>
+        body = traj["final_response"].split("</thought>\n\n")[1]
+        first_line = body.split("\n")[0]
+        openings.add(first_line)
+
+    assert len(openings) >= 5, f"Expected at least 5 varied response openings, got {len(openings)}"
+
+
+def test_clean_definition_no_embedded_quotes_or_numbers():
+    """Finding 3: Ensure parse_frazeolohichnyi_entry produces clean semantic definition without embedded quotes/valency numbers."""
+    raw_word = "набити руку {{</fras>}}"
+    raw_def = "наб[']и[/']ти / набив[']а[/']ти ≤соб[']і[/']≥ р[']у[/']ку на (в) чому і без додатка. Набути досвіду, уміння, вправності, майстерності в чому-небудь. Кріпкі дід були, руку на житті набили (Остап Вишня); Є загроза... (О. Довженко)"
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    assert unit.idiom == "набити руку"
+    assert "Остап Вишня" not in unit.definition
+    assert "набивати" not in unit.definition
+    assert "1." not in unit.definition
+    assert "Набути досвіду" in unit.definition
+    assert unit.author == "Остап Вишня"
+    assert "Кріпкі дід були" in unit.citation_text
+
+    raw_word2 = "розбити горщик {{</fras>}}"
+    raw_def2 = "розб[']и[/']ти (поб[']и[/']ти) глек (гл[']е[/']ка, г[']о[/']рщик, г[']о[/']рщика, макітру і т.ін.) з ким, рідше між ким і без додатка. 1. Розірвати, порушити дружні стосунки; посваритися. Чи вона сміється, чи просто знущається? (П. Загребельний)"
+    unit2 = parse_frazeolohichnyi_entry(raw_word2, raw_def2)
+    assert unit2.idiom == "розбити горщик"
+    assert "Розірвати, порушити дружні стосунки" in unit2.definition
+    assert "1." not in unit2.definition
+    assert "макітру" not in unit2.definition
+    assert "П. Загребельний" not in unit2.definition
+    assert unit2.author == "П. Загребельний"
+    assert "Чи вона сміється" in unit2.citation_text
+
+
+def test_dpo_rejected_diversity():
+    """Finding 2 & 5: Ensure DPO rejected pairs are not byte-identical across records."""
+    units = [
+        PhraseologyUnit(f"гору_{i}", f"брати гору {i}", f"перемагати у змаганні {i}", f"Автор {i}", f"Автор {i}", "dict", "регістр", False)
+        for i in range(10)
+    ]
+    calques = CANONICAL_CALQUE_PAIRS[:4]
+    with tempfile.TemporaryDirectory() as tmpdir:
+        dpo_dir = Path(tmpdir) / "dpo"
+        _manifest, _sha, _flaws = generate_dpo_dataset(
+            calques=calques,
+            units=units,
+            synonyms=[],
+            output_dir=dpo_dir,
+            target_count=None,
+            pairs_per_shard=20,
+        )
+        rejected_texts = set()
+        for f in dpo_dir.glob("dpo_shard_*.jsonl"):
+            with f.open("r", encoding="utf-8") as fh:
+                for line in fh:
+                    row = json.loads(line)
+                    rejected_texts.add(row["rejected"])
+
+        # Across 14 DPO pairs, there must not be constant strawmen
+        assert len(rejected_texts) == 14, f"Expected 14 unique rejected texts across pairs, got {len(rejected_texts)}"
