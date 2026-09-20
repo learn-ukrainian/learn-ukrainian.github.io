@@ -6666,34 +6666,47 @@ describe('LexiconPractice', () => {
       await user.click(manageDecksBtn);
 
       // Verify studio modal is open
-      const studioCloseBtn = await screen.findByTestId('custom-deck-studio-close');
+      const studioModal = await screen.findByRole('dialog', { name: /Студія власних колод|Custom Deck Studio/i });
+      const studioCloseBtn = screen.getByTestId('custom-deck-studio-close');
       expect(studioCloseBtn).toBeInTheDocument();
 
       // Settings drawer must now be suspended: inert and aria-hidden
       expect(drawer).toHaveAttribute('inert');
       expect(drawer).toHaveAttribute('aria-hidden', 'true');
 
-      // Focus the studio close button and press Tab: focus must NOT jump to settings-drawer-close behind the modal
-      studioCloseBtn.focus();
+      // 1. Initial focus: focus moves inside Custom Deck Studio automatically
+      await waitFor(() => {
+        expect(document.activeElement).toBe(studioCloseBtn);
+      });
+
+      // 2. Bidirectional focus trap containment:
+      // Shift+Tab from close button (first element) wraps to last focusable element in Studio
+      await user.tab({ shift: true });
+      expect(studioModal).toContainElement(document.activeElement as HTMLElement);
+      expect(drawer).not.toContainElement(document.activeElement as HTMLElement);
+      expect(document.activeElement).not.toBe(studioCloseBtn);
+
+      // Forward Tab from last element wraps back to close button
+      await user.tab();
       expect(document.activeElement).toBe(studioCloseBtn);
 
-      await user.tab();
-      expect(document.activeElement).not.toBe(screen.getByTestId('settings-drawer-close'));
-      expect(drawer).not.toContainElement(document.activeElement as HTMLElement);
-
-      // Close the studio modal
-      await user.click(studioCloseBtn);
+      // 3. Escape dismissal & focus restoration to drawer opener button:
+      await user.keyboard('{Escape}');
       expect(screen.queryByTestId('custom-deck-studio-close')).not.toBeInTheDocument();
 
       // Drawer is unsuspended and active again
       expect(drawer).not.toHaveAttribute('inert');
       expect(drawer).not.toHaveAttribute('aria-hidden', 'true');
 
-      // Close settings drawer via Escape: focus restores to practice-settings-toggle
+      // Focus restored to the opener button inside the drawer
+      expect(document.activeElement).toBe(manageDecksBtn);
+
+      // 4. Close settings drawer via Escape: focus restores to practice-settings-toggle
       await user.keyboard('{Escape}');
       expect(drawer).not.toHaveClass('open');
       expect(drawer).toHaveAttribute('inert');
       expect(drawer).toHaveAttribute('aria-hidden', 'true');
+      expect(document.activeElement).toBe(settingsToggle);
     });
   });
 });
