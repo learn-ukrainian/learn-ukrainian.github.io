@@ -1408,7 +1408,22 @@ def test_dictionary_stressed_forms_cover_unmarked_copies_but_not_rejected_marks(
     assert gates.missing_stress("сім''я і дерев'яний", covered, phonetic=True) == ["дерев'яний"]
 
 
-def test_split_attested_undeclared_keeps_typos_and_contradictions_blocking():
+# Real VESUM analyses for the forms below; data/vesum.db is not available in CI.
+_VESUM_ATTESTED = {"нього": "він", "Мар'яною": "Мар'яна"}
+
+
+@pytest.fixture
+def vesum_stub(monkeypatch):
+    from scripts.verification import vesum
+
+    def verify_word(word, *args, **kwargs):
+        lemma = _VESUM_ATTESTED.get(word)
+        return [{"lemma": lemma, "pos": "noun", "tags": ""}] if lemma else []
+
+    monkeypatch.setattr(vesum, "verify_word", verify_word)
+
+
+def test_split_attested_undeclared_keeps_typos_and_contradictions_blocking(vesum_stub):
     wrong = gates.wrong_stress("до ньо́го з Мар'я́ною, вчі́тель, дере́в'яний", set(), {"Мар'яна"})
     blocking, attested = gates.split_attested_undeclared(wrong)
     assert sorted(e.split(":")[0] for e in attested) == ["Мар'я́ною", "ньо́го"]
@@ -1426,13 +1441,16 @@ _REAL_WRONG_STRESS = gates.wrong_stress  # the gold fixture stubs the oracle out
 _SAME_LESSON = "\n\nЦе сім'я́. Моя́ сім'я вели́ка. Я йду́ до ньо́го з Мар'я́ною.\n"
 
 
-def test_alphabet_gate_passes_marked_form_and_attested_inflections(gold, monkeypatch):
+def test_alphabet_gate_passes_marked_form_and_attested_inflections(gold, monkeypatch, vesum_stub):
     monkeypatch.setattr(gates, "wrong_stress", _REAL_WRONG_STRESS)
     module, source, plan = _alphabet_gold(gold)
     path = module / "lesson-1/module.md"
     baseline = _stress_blocks(gates.run_lesson_gates(module, source, plan))
     path.write_text(path.read_text() + _SAME_LESSON)
     report = gates.run_lesson_gates(module, source, plan)
+    # a swallowed oracle error would empty the stress blocks and pass vacuously
+    assert not any("invalid lesson artifacts" in d for d in report["blocking"])
+    # the appended twins add nothing; the gold's own contradictions keep blocking
     assert _stress_blocks(report) == baseline
     assert any("ньо́го" in w and "Мар'я́ною" in w for w in report["warnings"])
 
