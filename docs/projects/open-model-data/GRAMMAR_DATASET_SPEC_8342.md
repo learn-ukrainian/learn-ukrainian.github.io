@@ -3,7 +3,7 @@
 > **Parent Epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **Specific Issues:** [#8342](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8342) (Grammar set redo), [#8339](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8339) (Acceptance checker), [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338) (Training & diagnostic scorecard)
 > **Target Model:** Gemma 3 4B fine-tuning on Hugging Face (Pro GPU infrastructure)
-> **Established Date:** 2026-09-20 (Cross-Model Deliberation: Astra, Grok 4.6, Gemini 3.1 Pro; Revised per Round 5 CF Review)
+> **Established Date:** 2026-09-20 (Cross-Model Deliberation: Astra, Grok 4.6, Gemini 3.1 Pro; Revised per Round 6 CF Review)
 
 ---
 
@@ -46,14 +46,14 @@ This document defines the binding specification, composition ratios, rights boun
 
 * **Pinned Source & Closed In-Scope Tag Set:**
   * Source: Upstream UA-GEC repository pinned to commit [`4757f72f192c4a41e4c8fb1d9690a948f87cf6d6`](https://github.com/grammarly/ua-gec/commit/4757f72f192c4a41e4c8fb1d9690a948f87cf6d6) (as tracked in `docs/projects/ua-eval-harness/THIRD_PARTY_NOTICES.md`).
-  * Annotation Layer: Extracted **exclusively from `gec-fluency/train`** (1,706 documents), which annotates grammatical errors as well as authentic Ukrainian calques and collocations.
+  * Annotation Layer: Extracted **exclusively from `gec-fluency/train`** (1,706 documents).
   * Multi-Annotator Handling: The 45 documents in `gec-fluency/train` annotated by two independent annotators (sharing `doc_id` but differing in `doc.meta.annotator_id`) keep **both annotator targets as parallel valid corrections** (matching `THIRD_PARTY_NOTICES.md` and the evaluation harness convention). Both annotations remain bound under the same `doc_id` during document-level splits.
-  * In-Scope Tag Rule: In-scope includes **all tags matching prefix `G/*`**, plus grammaticalized lexical tags `F/Calque` and `F/Collocation`:
+  * Unified In-Scope Tag Rule: To preserve strict alignment with the evaluation harness protocol, in-scope tags are **strictly all tags matching prefix `G/*` plus `F/Calque`**:
     * **Grammar (`G/*`):** `G/Case`, `G/Gender`, `G/Number`, `G/Aspect`, `G/Tense`, `G/VerbVoice`, `G/PartVoice`, `G/VerbAForm`, `G/Prep`, `G/Participle`, `G/Particle`, `G/UngrammaticalStructure`, `G/Comparison`, `G/Conjunction`, `G/Other`
-    * **Grammaticalized Lexicon (`F/*`):** `F/Calque`, `F/Collocation`
-  * Excluded Complement Tags: All remaining non-grammatical categories (`Punctuation`, `Spelling`, `F/Other`, `F/Style`, `F/PoorFlow`, `F/Repetition`) are excluded.
-  * Co-Occurring Out-of-Scope Edits: When an in-scope grammar error co-occurs with an out-of-scope edit (e.g. `G/Case` + `Spelling` in the same sentence), only the in-scope grammatical edit is applied to form the training pair, preserving evaluation-harness isolation.
-  * Denominator Uniqueness Key: Baseline denominator $N_{\text{raw}}$ is computed uniquely by key `(doc_id, annotator_id, source_sentence, target_sentence)` over in-scope tags in `gec-fluency/train`.
+    * **Grammaticalized Lexicon:** `F/Calque`
+  * Excluded Complement Tags: All remaining categories (`Punctuation`, `Spelling`, `F/Other`, `F/Style`, `F/PoorFlow`, `F/Repetition`, and non-calque fluency `F/Collocation`) are excluded from in-scope grammar editing.
+  * Co-Occurring Out-of-Scope Edits: When an in-scope grammar error co-occurs with an out-of-scope edit (e.g. `G/Case` + `Spelling` or `G/Prep` + `F/Collocation` in the same sentence), only the in-scope edits are applied to form the training target sentence, exactly preserving evaluation-harness isolation.
+  * Sentence-Level Uniqueness: One row represents the sentence after applying all in-scope edits for that annotator. The baseline denominator $N_{\text{raw}}$ is computed uniquely by key `(doc_id, annotator_id, source_sentence, target_sentence)` over in-scope tags in `gec-fluency/train`.
 * **Thin Categories (<50 examples in UA-GEC):**
   * **Preserve natural distribution. Zero synthetic reverse-corruption.**
   * LLM-generated "broken sentences" (reverse GEC) are strictly forbidden—they produce unauthentic slips that do not mirror human error distributions and violate Roadmap Rule 1 & Rule 2.
@@ -74,8 +74,8 @@ This document defines the binding specification, composition ratios, rights boun
   * Citations must map directly to the specific linguistic facet being corrected, per [`ukrainian-linguistics.md`](../../../agents_extensions/shared/rules/ukrainian-linguistics.md) §4:
     * **Morphological inflection & wordforms:** VESUM (validates lemma, paradigm, inflectional features).
     * **Case government & valency:** Academic syntax authorities (e.g. *Словник дієслівного керування* / академічна граматика Вихованця). VESUM validates form existence, not context valency.
-    * **Spelling, apostrophe, hyphens, prefixes:** *Український правопис (2019)* citing the exact paragraph.
-    * **Calques & collocations:** Борис Антоненко-Давидович (*Як ми говоримо*), Святослав Караванський (*Російсько-український словник складної лексики*). СУМ-20 is cited for explanatory definitions, not calque condemnation.
+    * **Grammatical orthography & morpheme boundaries:** *Український правопис (2019)* citing the exact paragraph for in-scope compound prepositions (*з-під*, *з-над*) and hyphenated particles/pronouns (*будь-хто*, *казна-що*, *як-от*).
+    * **Calques:** Борис Антоненко-Давидович (*Як ми говоримо*), Святослав Караванський (*Російсько-український словник складної лексики*). СУМ-20 is cited for explanatory definitions, not calque condemnation.
   * **100% of explained rows must carry a verified, resolvable citation.** Invented § numbers or generic "because Ukrainian grammar requires it" are strictly prohibited and fail the build.
 
 ---
@@ -86,7 +86,9 @@ This document defines the binding specification, composition ratios, rights boun
   * All documents in the official UA-GEC `test` partition (`gec-fluency/test` and `gec-only/test`) are **frozen as held-out evaluation**.
   * No text, original sentence, or corrected target from the `test` partition may enter the training dataset, whether as a correction or as a clean control.
 * **Document-Level Train/Validation Partition:**
-  * Training and validation sets are partitioned **strictly by document ID (`doc_id`)** from `gec-fluency/train` at a frozen **90:10 ratio** using deterministic hash seed `42`.
+  * Training and validation sets are partitioned **strictly by document ID (`doc_id`)** from `gec-fluency/train` at a frozen **90:10 ratio** using SHA-256 hashing:
+    * Let $h = \text{int}(\text{SHA256}(\text{doc\_id}.\text{encode}(\text{'utf-8'})).\text{hexdigest}(), 16)$.
+    * Document assigned to validation if $h \pmod{10} == 0$, else training.
   * Multi-annotator documents stay unified under their `doc_id` entirely within either the 90% train or the 10% validation slice.
   * 0 shared document IDs between train and validation splits.
   * 0 shared document IDs between training/validation and the official held-out `test` partition.
@@ -155,8 +157,8 @@ Static dataset acceptance (#8339) qualifies the dataset files. Behavioral verifi
    * **Gate 3 (`PRODUCTION_RELEASE_PLAN.md` §3.2) remains binding for final production qualification:** $k = 0$ harmful edits on $N = 300$ clean sentences (Clopper-Pearson 95% upper bound $\le 0.994\%$).
    * The metrics below are intermediate diagnostic training targets for #8338 on development splits; they do **not** relax, replace, or supersede Gate 3.
 2. **Intermediate Diagnostic Targets on Development Split (Carved from `gec-fluency/train`):**
-   * Checkpoint selection during training is determined strictly by maximizing edit-level $F_{0.5}$ on in-scope tags over the 10% validation split (`doc_id` disjoint from train), subject to passing the unnecessary-edit constraint.
-   * Tested on a dedicated evaluation slice containing **at least $N \ge 1,000$ verified clean Ukrainian sentences** (disjoint by `doc_id` from training data and controls):
+   * Checkpoint selection during training is determined strictly by maximizing edit-level $F_{0.5}$ on in-scope tags (`F/Calque` + `G/*`) over the 10% validation split (`doc_id` disjoint from train), subject to passing the unnecessary-edit constraint.
+   * Tested on a dedicated evaluation slice containing **at least $N \ge 1,000$ verified clean Ukrainian sentences** (drawn from unused Brown-UK sentences and validation gold target sentences, strictly disjoint by `doc_id` from the 90% training data and controls):
      * Diagnostic unnecessary-edit rate on clean sentences: point estimate $\le 1.0\%$, one-sided 95% Clopper-Pearson upper bound $< 2.0\%$.
    * Precision and recall are reported separately across coarse and fine error categories on the validation split.
 3. **Frozen Final Scorecard (Post-Training Stop):**
