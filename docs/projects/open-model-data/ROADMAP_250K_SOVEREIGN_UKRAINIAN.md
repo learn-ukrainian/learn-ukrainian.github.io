@@ -20,17 +20,26 @@ sentences into a small number of fill-in-the-blank forms, many thousands of time
 
 | Set | Lines | What they contain |
 | --- | --- | --- |
-| `uldr_v06_general_assistant` (#8139) | 75,000 | 4,220 different question–answer pairs, copied (one of them 398 times) under different IDs; one reasoning pattern for all lines |
-| `uldr_v05_grammar_valency` (#8143) | 35,000 | 32,629 correct sentences answered "nothing wrong here"; 2,371 real corrections; nine of twenty error types have fewer than 50 examples |
-| `uldr_v04a_kyivan_rus` (#8103) | 10,000 | 467 records give two different datings for the same inscription; five question patterns cover 94% |
-| `uldr_v04b_middle_ukrainian` (#8105) | 10,000 | three reasoning patterns for all 10,000 records |
+| `uldr_v06_general_assistant` (#8139) | 75,000 | 4,220 different question–answer pairs, copied (one of them 398 times) under different IDs |
+| `uldr_v05_grammar_valency` (#8143) | 35,000 | 32,629 rows labelled as controls (sentence unchanged, answer "nothing wrong here"); 2,371 rows marked as corrections; eight of twenty error types have fewer than 50 examples; 13 question patterns cover all 35,000 lines |
+| `uldr_v04a_kyivan_rus` (#8103) | 10,000 | 467 records are labelled "XI–XIII century" while their own first reasoning step gives a date range starting between 1400 and 1999; five question patterns cover 94% of lines |
+| `uldr_v04b_middle_ukrainian` (#8105) | 10,000 | twenty reasoning patterns cover 99% of lines (142 patterns in all); five question patterns cover 90% |
 
-No model has been trained on this data and checked. Issue #8054 ("alignment training and 5-gate
-evaluation") closed with a test harness only. The one training result on file (Phase 3.6 pilot,
-#8010) cannot be relied on: its saved model file has 4 layers of width 256, where the model it names
-has 34 layers of width 2,560, and its training log carries the same final fingerprint at every step.
+How "pattern" is measured, so the figures can be reproduced: take the plain text of the field
+(reasoning steps joined by newlines), replace every «…» and "…" span with a placeholder and every
+run of digits with `#`, and count distinct results. Whether the control rows and the rows marked as
+corrections are linguistically right was **not** checked here — that is the language reviewers' job.
 
-A model trained on such data learns the form letter, not the language.
+No training result exists in the repository. Issue #8054 ("alignment training and 5-gate
+evaluation") was closed by PR #8112, which changed an evaluation harness, a contradiction audit and
+their tests — no training run and no scorecard. The one result on file (Phase 3.6 pilot, #8010)
+does not substantiate a fine-tune of the model it names: the saved adapter has 32 tensors of shape
+16×256 across 4 layers, where Gemma 3 4B has 34 layers of width 2,560, and the producing script
+(`v4_pilot_canary_evaluation.py`) builds a 4-layer, 256-wide stand-in model.
+
+**The risk** this creates: a model trained on heavily copied and patterned data may learn the
+pattern rather than the language. That is a hypothesis, not a measured result — measuring it is the
+purpose of #8338.
 
 ## 3. Rules
 
@@ -80,6 +89,17 @@ A model trained on such data learns the form letter, not the language.
 
 Items on hold start only when the sets above pass rule 6 and the scorecard from #8338 exists.
 
+**This roadmap and epic #6321 override older issue text.** Any record count, track composition or
+use of the historical files written in an issue before 2026-09-20 (for example "25,000" in #8141,
+or "250,000 + 50,000" and "Track 5 … `uldr_v04a` & `uldr_v04b`" in #8330) is withdrawn. Such an
+issue must be rewritten to match this roadmap before anyone works on it.
+
+**"Say this, not that" pairs (DPO).** The method stays: a preferred answer set against a rejected
+one is a good way to teach a model to avoid a Russian copy. Its old volume target (50,000) is
+withdrawn. A pair is made only where a named authority backs it (rule 2) and the language reviewers
+have confirmed it. Pairs are built inside the idiom and Russianism work (#8140, #8340), not as a
+separate track.
+
 ## 5. Later, with experts
 
 Kyivan Rus and Middle Ukrainian texts are **out of the training data for now**. They are mixed with
@@ -97,3 +117,11 @@ sharding, receipts, the evaluation harness, and the five qualification gates in
 [`PRODUCTION_RELEASE_PLAN.md`](PRODUCTION_RELEASE_PLAN.md) §3.2. The gates stay; what changes is
 that a real trained model must be measured against them, on test questions the training-data
 generators did not write.
+
+Two different measurements must not be confused:
+
+- **The first scorecard (#8338) is a diagnostic.** It uses the existing held-out questions, which
+  were written by the same generators as the training data. It can show whether training changes
+  the model's behaviour at all. It cannot show that the model's Ukrainian is good.
+- **Qualification against the five gates** needs independently written test questions (#8331).
+  No dataset is called qualified, and no release is assembled (#8330), on the diagnostic alone.
