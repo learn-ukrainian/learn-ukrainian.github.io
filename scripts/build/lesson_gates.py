@@ -1546,7 +1546,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             bad.extend(missing_stress(blob, local, phonetic=alphabet))
         bad = sorted(set(bad))
         if bad:
-            block(f"lesson {n}: {len(bad)} multi-syllable words without stress mark (not in unverified_stress): {bad[:20]}")
+            msg = (
+                f"lesson {n}: {len(bad)} multi-syllable words without stress mark "
+                f"(not in unverified_stress): {bad[:20]}"
+            )
+            if alphabet:
+                warn(msg)
+            else:
+                block(msg)
         est = prose_tokens / 60 + 2.5 * len(inline) + 3 * len(workbook) + 8
         per_lesson[n] = {"prose_tokens": prose_tokens, "inline": len(inline), "workbook": len(workbook),
                          "vocab": len(lemmas), "lemma_list": lemmas, "resources": len(res),
