@@ -196,59 +196,7 @@ def build_unified_dataset(
                         f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
                         eval_count += 1
 
-        # 3. ULDR v04a: Kyivan Rus Epigraphy & Chronicles (10k SFT, 500 Eval)
-        v04a_dir = release_dir / "uldr_v04a_kyivan_rus"
-        if v04a_dir.exists():
-            logger.info("Processing uldr_v04a_kyivan_rus...")
-            for sft_file in sorted((v04a_dir / "sft").glob("*.jsonl")):
-                with open(sft_file, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_sft_record(json.loads(line), default_domain="kyivan_rus", default_subject="history")
-                        f_train.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        train_count += 1
-                        domain_counts["kyivan_rus"] += 1
-
-            v04a_eval = v04a_dir / "kyivan_rus_epigraphic_eval.jsonl"
-            if v04a_eval.exists():
-                with open(v04a_eval, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_eval_record(json.loads(line), default_domain="kyivan_rus", default_subject="history")
-                        f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        eval_count += 1
-
-        # 4. ULDR v04b: Middle Ukrainian / Cossack Baroque (10k SFT, 500 Eval)
-        v04b_dir = release_dir / "uldr_v04b_middle_ukrainian"
-        if v04b_dir.exists():
-            logger.info("Processing uldr_v04b_middle_ukrainian...")
-            for sft_file in sorted((v04b_dir / "sft").glob("*.jsonl")):
-                with open(sft_file, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_sft_record(json.loads(line), default_domain="middle_ukrainian", default_subject="literature")
-                        f_train.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        train_count += 1
-                        domain_counts["middle_ukrainian"] += 1
-
-            v04b_eval = v04b_dir / "middle_ukrainian_eval.jsonl"
-            if v04b_eval.exists():
-                with open(v04b_eval, encoding="utf-8") as in_f:
-                    for line in in_f:
-                        if not line.strip():
-
-                            continue
-                        rec = normalize_eval_record(json.loads(line), default_domain="middle_ukrainian", default_subject="literature")
-                        f_eval.write(json.dumps(rec, ensure_ascii=False) + "\n")
-                        eval_count += 1
-
-        # 5. ULDR v05: Grammar Valency & Syntactic Precision (35k SFT, 500 Eval)
+        # 3. ULDR v05: Grammar Valency & Syntactic Precision (35k SFT, 500 Eval)
         v05_dir = release_dir / "uldr_v05_grammar_valency"
         if v05_dir.exists():
             logger.info("Processing uldr_v05_grammar_valency...")
@@ -376,8 +324,6 @@ size_categories:
 |---|---:|---|
 | **Textbook Assistant** | {domain_counts.get("textbook_assistant", 0):,} | 25 subjects (STEM & Humanities) across Grades 1–11 with OCR cleanup. |
 | **Grammar Valency & Syntax** | {domain_counts.get("grammar_valency", 0):,} | Case government, syntactic valency, and error correction via VESUM & Brown-UK. |
-| **Kyivan Rus Epigraphy** | {domain_counts.get("kyivan_rus", 0):,} | 11th–13th century Sophia graffiti and chronicles (Old East Slavic). |
-| **Middle Ukrainian** | {domain_counts.get("middle_ukrainian", 0):,} | 14th–17th century Ruthenian chancery and Cossack Baroque. |
 | **Decolonization & Reasoning** | {domain_counts.get("decolonization", 0):,} | Deep anti-calque reasoning against Sovietized lexicography (СУМ-11). |
 | **Dialect Protection** | {domain_counts.get("dialect", 0):,} | Authentic living Ukrainian dialects (Hutsul, Boyko, Lemko, Polissian, Slobozhan). |
 

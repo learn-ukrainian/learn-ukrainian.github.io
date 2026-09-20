@@ -14,6 +14,7 @@ import jsonschema
 import pytest
 
 from scripts.projects.open_model_data.v5_mine_middle_ukrainian import (
+    DEFAULT_RELEASE_DIR,
     DEFAULT_SOURCES_DB,
     EVAL_SCHEMA_FILE,
     EXCLUDED_MODERN_WORKS,
@@ -498,7 +499,7 @@ def test_replay_buffer_sources_and_attestations(mock_vesum_db: Path) -> None:
 
 def test_release_dataset_disk_invariants() -> None:
     """Verify on-disk release artifacts strictly meet all quota, balance, and file-size invariants."""
-    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    release_dir = DEFAULT_RELEASE_DIR
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
     manifest_file = release_dir / "sft" / "manifest.json"
 
@@ -543,7 +544,7 @@ def test_release_dataset_disk_invariants() -> None:
 
 def test_no_editorial_apparatus_in_released_artifacts() -> None:
     """Verify no editorial commentaries, modern studies, or academic prefaces exist in released files."""
-    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    release_dir = DEFAULT_RELEASE_DIR
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
     sft_dir = release_dir / "sft"
 
@@ -587,7 +588,7 @@ def test_no_editorial_apparatus_in_released_artifacts() -> None:
 
 def test_vesum_attestation_consistency_in_released_artifacts() -> None:
     """Verify that is_standard_attested strictly equals (vesum_forms_count > 0) across all SFT rows."""
-    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    release_dir = DEFAULT_RELEASE_DIR
     sft_dir = release_dir / "sft"
 
     if not sft_dir.is_dir():
@@ -609,15 +610,7 @@ def test_vesum_attestation_consistency_in_released_artifacts() -> None:
 
 def test_release_receipt_schema_validation() -> None:
     """Verify that release_receipt.json strictly validates against the receipt schema contract."""
-    receipt_file = (
-        REPO_ROOT
-        / "data"
-        / "projects"
-        / "open_model_data"
-        / "release"
-        / "uldr_v04b_middle_ukrainian"
-        / "release_receipt.json"
-    )
+    receipt_file = DEFAULT_RELEASE_DIR / "release_receipt.json"
     schema_file = (
         REPO_ROOT
         / "data"
@@ -645,7 +638,7 @@ def test_release_receipt_schema_validation() -> None:
 
 def test_regression_velychkovsky_and_mytsyk_commentary_excluded() -> None:
     """Verify that specific Round 3, Round 4, and Round 5 commentary leaks (Velychkovsky, Mytsyk, Khanenko, Zinoviyiv) are excluded."""
-    release_dir = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04b_middle_ukrainian"
+    release_dir = DEFAULT_RELEASE_DIR
     eval_file = release_dir / "middle_ukrainian_eval.jsonl"
     sft_dir = release_dir / "sft"
 

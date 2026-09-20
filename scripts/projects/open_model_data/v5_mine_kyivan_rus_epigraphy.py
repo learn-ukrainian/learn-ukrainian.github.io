@@ -90,7 +90,15 @@ def resolve_data_path(rel_path: str) -> Path:
 
 DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
 DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
-DEFAULT_RELEASE_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v04a_kyivan_rus"
+DEFAULT_RELEASE_DIR = (
+    REPO_ROOT
+    / "data"
+    / "projects"
+    / "open_model_data"
+    / "archive"
+    / "quarantined_historical"
+    / "uldr_v04a_kyivan_rus"
+)
 DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
 
 EVAL_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_kyivan_rus_epigraphic_eval_record.schema.json"
