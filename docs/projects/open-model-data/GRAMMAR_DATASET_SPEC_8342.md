@@ -3,7 +3,7 @@
 > **Parent Epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **Specific Issues:** [#8342](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8342) (Grammar set redo), [#8339](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8339) (Acceptance checker), [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338) (Training & diagnostic scorecard)
 > **Target Model:** Gemma 3 4B fine-tuning on Hugging Face (Pro GPU infrastructure)
-> **Established Date:** 2026-09-20 (Cross-Model Deliberation: Astra, Grok 4.6, Gemini 3.1 Pro; Revised per Round 2 CF Review)
+> **Established Date:** 2026-09-20 (Cross-Model Deliberation: Astra, Grok 4.6, Gemini 3.1 Pro; Revised per Round 3 CF Review)
 
 ---
 
@@ -11,7 +11,7 @@
 
 In the review of Epic #6321 and PR #8345, the previous grammar release `uldr_v05_grammar_valency` (35,000 lines) was analyzed:
 * **93% passivity:** 32,629 of 35,000 rows were labeled as controls ("nothing wrong here"), with only 2,371 rows of real corrections.
-* **Template collapse:** 13 question patterns covered 100% of the 35,000-line dataset (top-1 pattern covered 48.2%; top-10 patterns covered 98.4%).
+* **Template collapse:** 13 question patterns covered 100% of the 35,000-line dataset ($K=13$).
 * **Class deficit:** 8 of 20 error categories had fewer than 50 examples.
 
 Issue #8342 replaces this dataset by rebuilding from authentic human-annotated sentences in UA-GEC. The old `uldr_v05_grammar_valency` release files are quarantined and marked "do not use".
@@ -25,9 +25,9 @@ This document defines the binding specification, composition ratios, rights boun
 ### 2.1. Control-to-Correction Ratio & Provenance
 
 * **Single Binding Mixture Interval:**
-  * **Clean Controls:** Strictly **20% to 30%** of unique training examples (target: **25%**).
-  * **Real Corrections:** Strictly **70% to 80%** of unique training examples (target: **75%**).
-  * **Acceptance Rule:** The checker fails closed if clean controls are **< 20.0%** (hyper-correction risk) or **> 30.0%** (passivity risk). No second or loose threshold exists.
+  * **Clean Controls:** Strictly **20.0% to 30.0%** of unique training examples (target: **25.0%**).
+  * **Real Corrections:** Strictly **70.0% to 80.0%** of unique training examples (target: **75.0%**).
+  * **Acceptance Rule:** The checker fails closed if clean controls are **< 20.0%** (hyper-correction risk) or **> 30.0%** (passivity risk).
 * **Control Provenance (Zero Synthetic Text):**
   * Controls must **never be synthetically manufactured** by rule engines, corruption scripts, or LLM prompt generation.
   * Controls are drawn exclusively from two verified sources:
@@ -46,11 +46,11 @@ This document defines the binding specification, composition ratios, rights boun
 
 * **Pinned Source & Closed In-Scope Tag Set:**
   * Source: Upstream UA-GEC repository pinned to commit [`4757f72f192c4a41e4c8fb1d9690a948f87cf6d6`](https://github.com/grammarly/ua-gec/commit/4757f72f192c4a41e4c8fb1d9690a948f87cf6d6) (as tracked in `docs/projects/ua-eval-harness/THIRD_PARTY_NOTICES.md`).
-  * Closed list of in-scope grammatical error tags:
-    * **Morphology & Agreement:** `G/Case`, `G/Gender`, `G/Number`, `G/Agreement`, `G/Participle`
-    * **Syntax & Government:** `G/Prep`, `G/Valency`, `G/VerbVoice`, `G/Tense`, `G/UngrammaticalStructure`, `G/Conjunction`
-    * **Grammaticalized Lexicon:** `F/Calque`, `F/Collocation`
-  * All other non-grammatical categories (e.g. `P/*` purely stylistic punctuation, `O/*` orthography/typos, `F/Other`) are excluded from this specific grammar set.
+  * Annotation Layer: Extracted from `gec-fluency` (which annotates both grammatical errors and calques/collocations). The 45 documents double-annotated across `gec-only` and `gec-fluency` in `train` are uniqued strictly by document ID (`doc_id`).
+  * Closed list of in-scope error tags (matching the exact upstream UA-GEC inventory):
+    * **Grammar (`G/*`):** `G/Case`, `G/Gender`, `G/Number`, `G/Aspect`, `G/Tense`, `G/VerbVoice`, `G/PartVoice`, `G/VerbAForm`, `G/Prep`, `G/Participle`, `G/UngrammaticalStructure`, `G/Comparison`, `G/Conjunction`, `G/Other`
+    * **Grammaticalized Lexicon (`F/*`):** `F/Calque`, `F/Collocation`
+  * Excluded tags: Non-grammatical categories (`Punctuation`, `Spelling`, `F/Other`) are excluded from this dataset.
   * The extracted unique sentence count from this closed tag set on the UA-GEC `train` split forms the immutable baseline denominator $N_{\text{raw}}$.
 * **Thin Categories (<50 examples in UA-GEC):**
   * **Preserve natural distribution. Zero synthetic reverse-corruption.**
@@ -67,13 +67,13 @@ This document defines the binding specification, composition ratios, rights boun
   * Correction rows are partitioned to balance proofreading efficiency and pedagogical reasoning:
     * **45% Silent Rewrites:** Direct text correction without metalinguistic commentary.
     * **55% Explained Corrections:** Direct text correction accompanied by concise, authoritative grammatical reasoning.
-  * *Fail-Closed Citation Rule:* If an explanation cannot resolve an exact, authoritative citation, the row **drops its explanation and becomes a silent rewrite**. The post-drop ratio of explained corrections must remain between **40% and 60%**.
+  * *Fail-Closed Citation Rule:* If an explanation cannot resolve an exact, authoritative citation, the row **drops its explanation and becomes a silent rewrite**. The post-drop ratio of explained corrections must remain strictly between **40.0% and 60.0%**.
 * **Facet-Aware Authority Grounding:**
   * Citations must map directly to the specific linguistic facet being corrected, per [`ukrainian-linguistics.md`](../../../agents_extensions/shared/rules/ukrainian-linguistics.md) §4:
     * **Morphological inflection & wordforms:** VESUM (validates lemma, paradigm, inflectional features).
     * **Case government & valency:** Academic syntax authorities (e.g. *Словник дієслівного керування* / академічна граматика Вихованця). VESUM validates form existence, not context valency.
     * **Spelling, apostrophe, hyphens, prefixes:** *Український правопис (2019)* citing the exact paragraph.
-    * **Calques & collocations:** Борис Антоненко-Давидович (*Як ми говоримо*), Святослав Караванський (*Пошук українського слова*). СУМ-20 is cited for explanatory definitions, not calque condemnation.
+    * **Calques & collocations:** Борис Антоненко-Давидович (*Як ми говоримо*), Святослав Караванський (*Російсько-український словник складної лексики*). СУМ-20 is cited for explanatory definitions, not calque condemnation.
   * **100% of explained rows must carry a verified, resolvable citation.** Invented § numbers or generic "because Ukrainian grammar requires it" are strictly prohibited and fail the build.
 
 ---
@@ -114,11 +114,12 @@ The automated acceptance checker built under [#8339](https://github.com/learn-uk
 | :--- | :--- | :--- | :--- |
 | **Mixture** | Clean Control Share | **20.0% to 30.0%** of unique examples | Fail if <20.0% or >30.0% |
 | **Mixture** | Substantive Corrections | **70.0% to 80.0%** of unique examples | Fail if <70.0% or >80.0% |
+| **Mixture** | Post-Drop Explained Corrections Share | **40.0% to 60.0%** of correction rows | Fail if <40.0% or >60.0% |
 | **Duplicates** | Exact Duplicate Sentences | **0** duplicate `(source, target)` pairs | Fail if >0 |
 | **Duplicates** | Near-Duplicate Padding | **0** synthetic word/number-swapped clones | Fail if >0 |
 | **Concentration** | Top Substantive Skeleton | **≤5.0%** of rows in that field | Fail if >5.0% |
 | **Concentration** | Top 10 Skeletons Combined | **≤25.0%** of rows in that field | Fail if >25.0% |
-| **Concentration** | Normalized Skeleton Entropy | $H_{\text{norm}} \ge 0.80$, with $K \ge 50$ unique skeletons | Fail if $H_{\text{norm}} < 0.80$ or $K \le 1$ |
+| **Concentration** | Normalized Skeleton Entropy | $H_{\text{norm}} \ge 0.80$, with $K \ge 50$ unique skeletons | Fail if $H_{\text{norm}} < 0.80$ or $K < 50$ |
 | **Multi-field Check** | Skeletons Measured Separately | Question, reasoning, and answer evaluated independently | Fail if any single field collapses |
 | **Split Integrity** | Document Leakage | **0** shared `doc_id`s between train and held-out test | Fail if >0 |
 | **Split Integrity** | Lemma-Normalized Overlap | **0** lemma-level overlap on focal constructions | Fail if detected |
@@ -132,13 +133,13 @@ The automated acceptance checker built under [#8339](https://github.com/learn-uk
 
 ### 3.1. Mathematical Definition of Normalized Skeleton Entropy
 
-To provide exact reproduciblity for the concentration check:
+To provide exact reproducibility for the concentration check:
 1. **Delexicalization:** In each field (question, reasoning, answer), every quoted span («…», "…") is replaced by `«…»` and every contiguous run of digits is replaced by `#`.
 2. **Skeleton Frequencies:** Let $K$ be the number of distinct delexicalized skeletons, with empirical frequencies $p_1, p_2, \dots, p_K$ ($\sum p_i = 1$).
 3. **Entropy Calculation:**
    $$H = -\sum_{i=1}^K p_i \ln p_i$$
    $$H_{\text{norm}} = \begin{cases} 0 & \text{if } K \le 1 \\ \frac{H}{\ln K} & \text{if } K > 1 \end{cases}$$
-4. **Historical Baseline Proof (v05):** In `uldr_v05`, 13 question skeletons covered 100% of 35,000 lines (top-1 was 48.2%, top-10 was 98.4%, $K=13$). The gate $H_{\text{norm}} \ge 0.80 \land K \ge 50 \land \text{top-1} \le 5.0\%$ fails `uldr_v05` deterministically.
+4. **Historical Baseline Proof (v05):** In `uldr_v05`, 13 question skeletons covered 100% of 35,000 lines ($K=13$). The gate $H_{\text{norm}} \ge 0.80 \land K \ge 50 \land \text{top-1} \le 5.0\%$ fails `uldr_v05` deterministically because $K = 13 < 50$.
 
 ---
 
@@ -149,8 +150,10 @@ Static dataset acceptance (#8339) qualifies the dataset files. Behavioral verifi
 1. **Relation to Production Gate 3 (Non-Negotiable Qualification):**
    * **Gate 3 (`PRODUCTION_RELEASE_PLAN.md` §3.2) remains binding for final production qualification:** $k = 0$ harmful edits on $N = 300$ clean sentences (Clopper-Pearson 95% upper bound $\le 0.994\%$).
    * The metrics below are intermediate diagnostic training targets for #8338 on development splits; they do **not** relax, replace, or supersede Gate 3.
-2. **Intermediate Diagnostic Targets on Development Set:**
-   * Tested on an independent set of $\ge 1,000$ verified clean sentences (disjoint from training controls):
-     * Diagnostic unnecessary-edit rate: point estimate $\le 1.0\%$, one-sided 95% Clopper-Pearson upper bound $< 2.0\%$.
-   * Edit-level $F_{0.5}$ on the official UA-GEC held-out test set must demonstrate measurable improvement over the baseline Gemma 3 4B checkpoint.
-   * Precision and recall must be reported separately across coarse and fine error categories.
+2. **Intermediate Diagnostic Targets on Development Set (Carved from UA-GEC Train):**
+   * Tested on an independent development validation split (strictly disjoint from training controls):
+     * Diagnostic unnecessary-edit rate on verified clean sentences: point estimate $\le 1.0\%$, one-sided 95% Clopper-Pearson upper bound $< 2.0\%$.
+   * Precision and recall must be reported separately across coarse and fine error categories on the development split.
+3. **Frozen Final Scorecard (Post-Training Stop):**
+   * Only after training is stopped and checkpoint selection is finalized, the official UA-GEC held-out `test` partition is evaluated once for the published scorecard.
+   * Edit-level $F_{0.5}$ on the official test set must demonstrate measurable improvement over the baseline Gemma 3 4B checkpoint.
