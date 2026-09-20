@@ -2,11 +2,11 @@
   "dataset_name": "uldr_v06_ulif_phraseology_eval",
   "total_cases": 1500,
   "shards_count": 3,
-  "max_shard_size_kb": 1058.56,
+  "max_shard_size_kb": 1056.87,
   "held_out_categories": {
-    "anti_calque_decolonization": 97,
-    "authentic_idiom_usage": 702,
-    "figurative_reasoning": 701
+    "anti_calque_decolonization": 100,
+    "authentic_idiom_usage": 700,
+    "figurative_reasoning": 700
   },
   "held_out_authors_count": 4,
   "held_out_authors": [
@@ -20,22 +20,22 @@
       "shard_id": 1,
       "shard_file": "eval_shard_001_of_003.jsonl",
       "cases_count": 500,
-      "size_kb": 1038.03,
-      "sha256": "9d5c265eedf98e1f5db0f5faac44a1baadfa97821678291641dc00df81e319a7"
+      "size_kb": 1043.02,
+      "sha256": "ebda64d4dbcdae60ef82a11af7a06e2a04cf321d4f2204aaa48541badadb995d"
     },
     {
       "shard_id": 2,
       "shard_file": "eval_shard_002_of_003.jsonl",
       "cases_count": 500,
-      "size_kb": 1047.47,
-      "sha256": "e332b9b326909fb7278a5bde31ea63a80c0aef5e66b3ca50b226bb4102bb16ad"
+      "size_kb": 1048.97,
+      "sha256": "3d9567593d95170d9ac6f3122aeea7001a98da745c4268c41c96bc9d052f2767"
     },
     {
       "shard_id": 3,
       "shard_file": "eval_shard_003_of_003.jsonl",
       "cases_count": 500,
-      "size_kb": 1058.56,
-      "sha256": "a0203e4321ee804c6eaebeb935270d9be3a491140c36e60a18bee00b9407f433"
+      "size_kb": 1056.87,
+      "sha256": "fc363c5bc730970d8eec200f85e37f2bc26af454fc1263cb3c4703cb905a7860"
     }
   ]
 }

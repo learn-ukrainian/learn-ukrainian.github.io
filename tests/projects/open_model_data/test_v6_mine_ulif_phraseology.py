@@ -14,6 +14,7 @@ Verifies:
 from __future__ import annotations
 
 import json
+import re
 import sqlite3
 import tempfile
 from pathlib import Path
@@ -27,6 +28,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     DEFAULT_ULIF_DB,
     DEFAULT_VESUM_DB,
     HELD_OUT_AUTHORS_DISPLAY,
+    HELD_OUT_CURATED_CALQUE_PAIRS,
     SCHEMA_EVAL_PATH,
     SCHEMA_RECEIPT_PATH,
     CalquePair,
@@ -40,12 +42,16 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     generate_evaluation_benchmark,
     generate_release_receipt,
     generate_sft_dataset,
+    get_phrase_lemmas,
+    get_word_lemma_or_stem,
     is_record_held_out,
     load_frazeolohichnyi_dictionary,
     load_ua_gec_calques,
     load_ulif_phraseology_and_synonyms,
     parse_frazeolohichnyi_entry,
+    sanitize_calque_string,
     synthesize_sft_trajectory,
+    ukrainian_stem,
     verify_phrase_in_vesum,
     verify_receipt_invariants,
 )
@@ -462,12 +468,15 @@ def test_live_frazeolohichnyi_extraction():
 @requires_sources
 def test_live_ua_gec_extraction():
     calques = load_ua_gec_calques(DEFAULT_SOURCES_DB)
-    assert len(calques) > 500
+    assert len(calques) >= 400
     for c in calques:
+        assert len(c.calque.split()) >= 2
         assert len(c.calque) >= 5
         assert len(c.authentic) >= 5
         assert '"' not in c.calque and '"' not in c.authentic
-        assert "'" not in c.calque and "'" not in c.authentic
+        # Quotation marks stripped, only intra-word Ukrainian apostrophes allowed
+        assert not re.search(r"(?<![а-яіїєґА-ЯІЇЄҐ'])'|'(?![а-яіїєґА-ЯІЇЄҐ'])", c.calque)
+        assert not re.search(r"(?<![а-яіїєґА-ЯІЇЄҐ'])'|'(?![а-яіїєґА-ЯІЇЄҐ'])", c.authentic)
 
 
 def test_verify_receipt_invariants_real_checks():
@@ -513,3 +522,240 @@ def test_live_vesum_attestation():
         cur = conn.cursor()
         assert verify_phrase_in_vesum("брати участь", cur) is True
         assert verify_phrase_in_vesum("впадати в око", cur) is True
+
+
+# =========================================================================
+# 8. Regression Tests for Claude Sonnet Review Findings 1–8
+# =========================================================================
+
+def test_canonical_calque_no_fake_volumes():
+    """Finding 5: Ensure no fabricated SUM-20 volumes in canonical or curated calques."""
+    vol_re = re.compile(r"т\.\s*\d+", re.IGNORECASE)
+    sum_vol_re = re.compile(r"СУМ-20,?\s*т\.", re.IGNORECASE)
+    for cp in CANONICAL_CALQUE_PAIRS:
+        assert not vol_re.search(cp.mechanism), f"Found volume citation in {cp.calque}: {cp.mechanism}"
+        assert not vol_re.search(cp.author_or_source), f"Found volume citation in {cp.calque}: {cp.author_or_source}"
+        assert not sum_vol_re.search(cp.mechanism), f"Found SUM volume in {cp.calque}: {cp.mechanism}"
+        assert not sum_vol_re.search(cp.author_or_source), f"Found SUM volume in {cp.calque}: {cp.author_or_source}"
+
+    for cp in HELD_OUT_CURATED_CALQUE_PAIRS:
+        assert not vol_re.search(cp.mechanism), f"Found volume citation in {cp.calque}: {cp.mechanism}"
+        assert not vol_re.search(cp.author_or_source), f"Found volume citation in {cp.calque}: {cp.author_or_source}"
+        assert not sum_vol_re.search(cp.mechanism), f"Found SUM volume in {cp.calque}: {cp.mechanism}"
+        assert not sum_vol_re.search(cp.author_or_source), f"Found SUM volume in {cp.calque}: {cp.author_or_source}"
+
+
+def test_curated_held_out_calques_integrity():
+    """Finding 4: Validate curated held-out calque catalog completeness and disjointness."""
+    assert len(HELD_OUT_CURATED_CALQUE_PAIRS) >= 100
+    canonical_set = {cp.calque.strip().lower() for cp in CANONICAL_CALQUE_PAIRS}
+    held_out_set = {cp.calque.strip().lower() for cp in HELD_OUT_CURATED_CALQUE_PAIRS}
+
+    # Zero overlap between canonical training calques and held-out evaluation calques
+    overlap = canonical_set.intersection(held_out_set)
+    assert not overlap, f"Found overlap between canonical and held-out calques: {overlap}"
+
+    for cp in HELD_OUT_CURATED_CALQUE_PAIRS:
+        assert cp.is_held_out is True
+        assert len(cp.calque.strip()) >= 3
+        assert len(cp.authentic.strip()) >= 3
+        assert len(cp.mechanism.strip()) >= 20
+        assert len(cp.author_or_source.strip()) >= 5
+
+
+def test_anti_calque_10_modalities():
+    """Finding 6: Test that anti-calque SFT trajectory synthesis generates 10 distinct queries."""
+    cp = CANONICAL_CALQUE_PAIRS[0]
+    queries = set()
+    for idx in range(10):
+        traj = synthesize_sft_trajectory(None, cp, None, idx, "anti_calque_decolonization", scenario_idx=idx)
+        assert traj["task_type"] == "anti_calque_decolonization"
+        assert cp.authentic in traj["final_response"]
+        assert "<thought>" in traj["final_response"]
+        assert "</thought>" in traj["final_response"]
+        queries.add(traj["query"])
+
+    assert len(queries) == 10, f"Expected 10 unique communicative query templates, got {len(queries)}"
+
+
+def test_rebalanced_sft_distribution():
+    """Finding 6: Verify SFT generation produces balanced task proportions."""
+    units = [PhraseologyUnit(f"гору_{i}", f"брати гору {i}", "перемагати", "Франко", "Франко", "dict", "регістр", False) for i in range(25)]
+    diag_units = [PhraseologyUnit(f"діалог_{i}", f"вести діалог {i}", "спілкуватися", "Франко", "Франко", "dict", "регістр", False) for i in range(10)]
+    calques = CANONICAL_CALQUE_PAIRS[:5]
+    synonyms = [SynonymGroup(f"слово_{i}", [f"синонім_{i}_a", f"синонім_{i}_b"], "dict") for i in range(15)]
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        sft_dir = Path(tmpdir) / "sft"
+        manifest, _sha, task_counts = generate_sft_dataset(
+            units=units,
+            dialogue_units=diag_units,
+            calques=calques,
+            synonyms=synonyms,
+            output_dir=sft_dir,
+            target_count=45,
+            shards_count=1,
+            trajectories_per_shard=45,
+        )
+        assert manifest["total_trajectories"] == 45
+        assert task_counts["idiom_interpretation_literary"] == 20
+        assert task_counts["synonymic_nuance_and_register"] == 15
+        assert task_counts["contextual_dialogue_usage"] == 5
+        assert task_counts["anti_calque_decolonization"] == 5
+
+
+def test_verify_receipt_invariants_fails_on_unattested_literary():
+    """Finding 1 & 2: Invariants fail when literary idiom is not attested in frazeolohichnyi."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        # Unattested literary idiom
+        sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
+        fake_row = {
+            "task_type": "idiom_interpretation_literary",
+            "target_phrase": "вигаданий псевдофразеологізм абсолютно невідомий",
+            "final_response": "<thought>Докладний роздум про вигаданий фразеологізм з довгим текстом.</thought>\n\nТлумачення.",
+        }
+        sft_shard.write_text(json.dumps(fake_row, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({
+            "chosen": "<thought>Коректне обґрунтування норми української мови.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Classical literary citations grounding invariant failed"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "брати гору"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
+
+
+def test_verify_receipt_invariants_fails_on_affirmed_calque():
+    """Finding 3: Calque firewall catches affirmed calque recommendation in SFT and DPO chosen."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        # Affirmed calque in SFT response
+        sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
+        bad_sft = {
+            "task_type": "anti_calque_decolonization",
+            "target_phrase": "приймати участь",
+            "final_response": "<thought>Роздум про слововживання з достатньою кількістю символів.</thought>\n\nНормативний відповідник:** **«приймати участь»**.",
+        }
+        sft_shard.write_text(json.dumps(bad_sft, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({
+            "chosen": "<thought>Коректне обґрунтування норми української мови.</thought>\n\nПравильно казати: **«брати участь»**.",
+            "rejected": "<thought>Помилкова думка.</thought>\n\nНеправильно.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        with pytest.raises(AssertionError, match="Russian calque 'приймати участь' affirmed/recommended"):
+            verify_receipt_invariants(
+                eval_records=[{"target_idiom": "брати гору"}],
+                sft_dir=sft_dir,
+                dpo_dir=dpo_dir,
+                cur_ves=None,
+                sources_db=DEFAULT_SOURCES_DB,
+            )
+
+
+def test_inflected_variant_leakage_detection():
+    """Finding 7: Stemming and morphological audit detects inflected forms of eval items."""
+    assert ukrainian_stem("брали") == "бра"
+    assert ukrainian_stem("участю") == "участ"
+    cache: dict[str, str] = {}
+    assert get_word_lemma_or_stem("брали", None, cache) == "бра"
+    lemmas = get_phrase_lemmas("брати участь у змаганнях", None, cache)
+    assert "бра" in lemmas or "участ" in lemmas
+
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_dir = td / "sft"
+        dpo_dir = td / "dpo"
+        sft_dir.mkdir()
+        dpo_dir.mkdir()
+
+        # SFT shard has inflected multi-word eval phrase in one sentence: "вчора брали гору"
+        sft_shard = sft_dir / "sft_shard_001_of_001.jsonl"
+        sft_shard.write_text(json.dumps({
+            "target_phrase": "інший вираз",
+            "query": "Питання",
+            "final_response": "У запеклій боротьбі козаки впевнено брали гору над ворогом.",
+        }, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        dpo_shard = dpo_dir / "dpo_shard_001_of_001.jsonl"
+        dpo_shard.write_text(json.dumps({"chosen": "Чистий текст", "rejected": "Помилка"}, ensure_ascii=False) + "\n", encoding="utf-8")
+
+        eval_records = [{"target_idiom": "брати гору", "calqued_counterpart": None}]
+        with pytest.raises(AssertionError, match="inflected variant leak"):
+            audit_zero_train_eval_leakage(sft_dir, dpo_dir, eval_records=eval_records)
+
+
+def test_release_receipt_git_commit_custom():
+    """Finding 8: Ensure git_commit can be explicitly passed to receipt generator."""
+    with tempfile.TemporaryDirectory() as tmpdir:
+        td = Path(tmpdir)
+        sft_man = td / "manifest_sft.json"
+        sft_man.write_text("{}")
+        dpo_man = td / "manifest_dpo.json"
+        dpo_man.write_text("{}")
+
+        eval_meta = {
+            "directory_path": "eval",
+            "manifest_file": "eval/manifest_eval.json",
+            "manifest_sha256": "0" * 64,
+            "shards_count": 3,
+            "total_cases": 1500,
+            "max_shard_size_kb": 1000.0,
+            "held_out_categories": {},
+            "held_out_authors_count": 4,
+            "held_out_authors": ["Франко"],
+        }
+        verification_info = {
+            "zero_russian_syntactic_calques": True,
+            "classical_literary_citations_grounded": True,
+            "thought_tag_etymological_reasoning": True,
+            "vesum_and_ulif_morphology_verified": True,
+            "zero_train_eval_leakage": True,
+            "vesum_attested_tokens_count": 100,
+            "literary_citations_grounded_count": 100,
+            "thought_tags_verified_count": 100,
+        }
+
+        receipt = generate_release_receipt(
+            eval_meta=eval_meta,
+            sft_manifest_path=sft_man,
+            sft_manifest_sha256="1" * 64,
+            sft_task_dist={},
+            dpo_manifest_path=dpo_man,
+            dpo_manifest_sha256="2" * 64,
+            dpo_flaw_dist={},
+            verification_info=verification_info,
+            unique_calques=10,
+            unique_idioms=10,
+            unique_synonyms=10,
+            output_path=td / "receipt.json",
+            git_commit="deadbeefcafe1234567890",
+        )
+        assert receipt["git_commit"] == "deadbeefcafe1234567890"
+
+
+def test_sanitize_calque_string_preserves_apostrophe():
+    """Ensure intra-word apostrophes in words like розв'язати are preserved, not split into spaces."""
+    assert sanitize_calque_string("розв'язати") == "розв'язати"
+    assert sanitize_calque_string("«розв’язати»") == "розв'язати"
+    assert sanitize_calque_string("  'вирішити'  ") == "вирішити"
+    assert sanitize_calque_string("«в см'ятку»") == "в см'ятку"

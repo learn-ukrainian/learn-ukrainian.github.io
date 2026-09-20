@@ -23,7 +23,7 @@ import random
 import re
 import sqlite3
 import subprocess
-from collections import Counter
+from collections import Counter, defaultdict
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -120,14 +120,14 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="відмінити зустріч",
         authentic="скасувати зустріч",
         mechanism="Дієслово «відміняти» в українській мові означає змінювати відмінок у граматиці або робити іншим (відміна). Визнання заходу чи документа недійсним передається питомим дієсловом «скасовувати» (скасувати зустріч, наказ, розпорядження).",
-        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; СУМ-20, т. 17",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; Словник української мови (СУМ-20)",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
         calque="брати верх",
         authentic="брати гору",
         mechanism="Питомий український фразеологізм на позначення перемоги й переваги — «брати гору» або «мати перевагу». Зворот «брати верх» є буквальним перекладом російського «брать верх».",
-        author_or_source="СУМ-20, т. 2; Б. Антоненко-Давидович",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
@@ -148,7 +148,7 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="грати роль",
         authentic="відігравати роль",
         mechanism="В українській літературній мові функціональну роль тільки «відіграють» («відігравати важливу роль»), тоді як значення тільки «мають» («мати значення»). Кальковане «грати роль / значення» виникає через змішування.",
-        author_or_source="О. Пономарів; СУМ-20, т. 2",
+        author_or_source="О. Пономарів, «Культура слова»; Словник української мови (СУМ-20)",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
@@ -183,7 +183,7 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="в кінці кінців",
         authentic="зрештою",
         mechanism="Зворот «в кінці кінців» є калькою російського «в конце концов». Нормативними відповідниками є «зрештою», «кінець кінцем», «нарешті».",
-        author_or_source="СУМ-20, т. 4; Б. Антоненко-Давидович",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
@@ -204,7 +204,7 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="кидатися в крайнощі",
         authentic="вдаватися в крайнощі",
         mechanism="Українська дієслівна валентність вимагає виразу «вдаватися в крайнощі», а не «кидатися в крайнощі».",
-        author_or_source="СУМ-20, т. 1; УЛІФ НАН України",
+        author_or_source="Словник української мови (СУМ-20); УЛІФ НАН України",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
@@ -217,8 +217,8 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
     CalquePair(
         calque="терпіти поразку",
         authentic="зазнавати поразки",
-        mechanism="З іменниками на позначення втрат чи невдач узгоджується дієслово «зазнавати» (зазнати поразки, втрат, лиха). «Терпіти» вживають про фізичний стан чи терпіння (терпіти біль).",
-        author_or_source="СУМ-20, т. 3; Б. Антоненко-Давидович",
+        mechanism="З іменниками на позначення негативних наслідків узгоджується дієслово «зазнавати» (зазнавати поразки, зазнавати лиха). «Терпіти» вживають про фізичний стан чи терпіння (терпіти біль).",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
@@ -239,7 +239,7 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="стати в нагоді",
         authentic="стати в пригоді",
         mechanism="«Нагода» означає слушний момент чи випадок (мати нагоду); коли ж ідеться про корисність чи практичну допомогу, правильно казати «стати в пригоді».",
-        author_or_source="СУМ-20, т. 8; Б. Антоненко-Давидович",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
         rejected_flaw="lack_of_morphemic_reasoning",
     ),
     CalquePair(
@@ -260,7 +260,7 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         calque="співпадати в поглядах",
         authentic="збігатися в поглядах",
         mechanism="Дієслово «співпадати» утворене префіксальним копіюванням російського «совпадать». В українській мові нормативним є «збігатися» (погляди збігаються).",
-        author_or_source="СУМ-20, т. 4; Б. Антоненко-Давидович",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
         rejected_flaw="soviet_lexicography_acceptance",
     ),
     CalquePair(
@@ -290,6 +290,811 @@ CANONICAL_CALQUE_PAIRS: list[CalquePair] = [
         mechanism="Постфікс -ся вказує на зворотність дії (дію, спрямовану на самого себе: миюся, одягаюся). Форма «вибачаюся» буквально означає «вибачаю сам себе». Правильно казати «пробачте», «перепрошую», «прошу вибачення».",
         author_or_source="Підручники МОН України; Б. Антоненко-Давидович",
         rejected_flaw="lack_of_morphemic_reasoning",
+    ),
+]
+
+# 100 verified held-out anti-calque pairs from authoritative Ukrainian linguists
+# (B. Antonenko-Davydovych «Як ми говоримо», O. Ponomariv «Культура слова», modern academic lexicography)
+HELD_OUT_CURATED_CALQUE_PAIRS: list[CalquePair] = [
+    CalquePair(
+        calque="у залежності від",
+        authentic="залежно від",
+        mechanism="В українській мові прийменник «у» перед сполукою «залежно від» є зайвим калькованим додатком із російського «в зависимости от». Нормативною є безприйменникова конструкція «залежно від».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="заключати договір",
+        authentic="укладати договір",
+        mechanism="Дієслово «заключати» в українській мові не вживається на позначення правочинів; угоди, договори та контракти винятково «укладають».",
+        author_or_source="Б. Антоненко-Давидович; Словник української мови (СУМ-20)",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="підводити підсумки",
+        authentic="підбивати підсумки",
+        mechanism="Підсумки діяльності, наради чи звітного періоду в українській літературній мові «підбивають» або «підсумовують», тоді як вислів «підводити підсумки» копіює російське «подводить итоги».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="у більшості випадків",
+        authentic="здебільшого",
+        mechanism="Зворот «у більшості випадків» є громіздкою калькою російського «в большинстве случаев». Українська мова тяжіє до лаконічних прислівників «здебільшого», «переважно», «найчастіше».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="з цієї точки зору",
+        authentic="з цього погляду",
+        mechanism="Конструкція «з точки зору» є буквальною калькою російського «с точки зрения». Українські стилістичні відповідники — «з цього погляду» або «під цим оглядом».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="приймати до уваги",
+        authentic="брати до уваги",
+        mechanism="В українській мові усталеною фразеологічною нормою є «брати до уваги». Зворот «приймати до уваги» відтворює російське «принимать во внимание».",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="здавати екзамен",
+        authentic="складати іспит",
+        mechanism="Екзамени та іспити в українській мові «складають». Значення «здавати» стосується здачі товару, майна чи капітуляції.",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="більша половина",
+        authentic="більша частина",
+        mechanism="Половини завжди є рівними частинами цілого; якщо одна частина переважає іншу, нормативно вживати «більша частина».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="вірна відповідь",
+        authentic="правильна відповідь",
+        mechanism="Слово «вірний» позначає відданість чи надійність (вірний приятель); у значенні відповідності нормам чи дійсності вживають виключно «правильний» або «слушний».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="рахувати за потрібне",
+        authentic="вважати за потрібне",
+        mechanism="Дієслово «рахувати» означає обчислювати кількість або вести лік. Суб’єктивне переконання чи погляд передають дієсловом «вважати».",
+        author_or_source="Б. Антоненко-Давидович; Словник української мови (СУМ-20)",
+        rejected_flaw="soviet_lexicography_acceptance",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="дійсний друг",
+        authentic="справжній друг",
+        mechanism="Прикметник «дійсний» стосується юридичної чинності (дійсний квиток). Стосовно щирості та відданості людини правильно вживати «справжній» або «щирий».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="до цих пір",
+        authentic="досі",
+        mechanism="Вислів «до цих пір» є прямою калькою російського «до сих пор». В українській літературній мові нормативними є форми «досі», «дотепер», «донині».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="з тих пір",
+        authentic="відтоді",
+        mechanism="Конструкція «з тих пір» копіює російське «с тех пор». Українська мова послуговується прислівником «відтоді» або зворотом «від того часу».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="на самому ділі",
+        authentic="насправді",
+        mechanism="Вираз «на самому ділі» є калькою російського «на самом деле». Нормативний літературний відповідник — «насправді» або «в дійсності».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по вихідних",
+        authentic="у вихідні",
+        mechanism="Конструкція з прийменником «по» є штучним запозиченням із російської. В українській мові вживають форми знахідного відмінка з прийменником «у/в»: «у вихідні» або «вихідними днями».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по понеділках",
+        authentic="щопонеділка",
+        mechanism="Періодичність подій за днями тижня передають за допомогою частки що- («щопонеділка», «щовівторка») або прийменника що зі знахідним відмінком («щопонеділок»), а не прийменника «по».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по закону",
+        authentic="за законом",
+        mechanism="Відповідність нормативно-правовим актам в українській мові позначають прийменником «за»: «за законом», «за статутом», «за регламентом».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по власній волі",
+        authentic="з власної волі",
+        mechanism="Мотивація вчинку передається прийменником «з»: «з власної волі», «з власної ініціативи». Вживання «по» є калькою російського «по собственной воле».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по технічним причинам",
+        authentic="через технічні причини",
+        mechanism="Причину обставин або затримок в українській мові позначають прийменником «через» із родовим відмінком («через технічні причини»), а не «по» з давальним.",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по помилці",
+        authentic="помилково",
+        mechanism="Вираз «по помилці» є калькою російського «по ошибке». Нормативними є прислівник «помилково» або сполука «через помилку».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по оголошенню",
+        authentic="за оголошенням",
+        mechanism="Джерело інформації українською позначають прийменником «за»: «за оголошенням», «за розкладом», «за списком».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по запрошенню",
+        authentic="на запрошення",
+        mechanism="Дію на підставі звернення передають конструкцією «на запрошення» (на запрошення колег), а не калькованим «по запрошенню».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по наказу",
+        authentic="за наказом",
+        mechanism="Дотримання приписів чи вказівок передають сполукою «за наказом» або «згідно з наказом», усуваючи кальку «по наказу».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="влучний вистріл",
+        authentic="влучний постріл",
+        mechanism="В українській мові іменник на позначення звуку чи дії зі зброї — «постріл». Слово «вистріл» є прямим запозиченням із російської.",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="оточуюче середовище",
+        authentic="довкілля",
+        mechanism="Активний дієприкметник теперішнього часу «оточуючий» суперечить законам українського словотвору. Нормативними є іменник «довкілля» або сполука «навколишнє середовище».",
+        author_or_source="Б. Антоненко-Давидович; О. Пономарів",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="пануючий настрій",
+        authentic="панівний настрій",
+        mechanism="Замість активного дієприкметника на -учий слід уживати питомий віддієслівний прикметник на -івний: «панівний настрій», «панівна верства».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="ведучий фахівець",
+        authentic="провідний фахівець",
+        mechanism="В українській мові «ведучий» вживається про людину, що веде передачу (телеведучий) або механізм (ведуче колесо). У переносному значенні лідерства вживають «провідний фахівець».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="діючий закон",
+        authentic="чинний закон",
+        mechanism="Юридичну силу закону чи постанови позначає питомий прикметник «чинний» («чинний закон», «чинне законодавство»), а не кальковане «діючий».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="слідуючий день",
+        authentic="наступний день",
+        mechanism="Слова «слідуючий» в українській мові немає. Почерговість подій чи об’єктів у часі та просторі передає прикметник «наступний».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="знаходитися в приміщенні",
+        authentic="перебувати в приміщенні",
+        mechanism="Слово «знаходитися» вживають, коли йдеться про розшук утраченого. Перебування людини в певному місці чи стані позначають дієсловом «перебувати».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="знаходитися на площі",
+        authentic="розташовуватися на площі",
+        mechanism="Географічне або просторове розміщення будівель передають дієсловами «розташовуватися», «міститися», а не «знаходитися».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="прийти до згоди",
+        authentic="дійти згоди",
+        mechanism="Досягнення порозуміння чи згоди в українській мові передається дієсловом «дійти» з родовим відмінком («дійти згоди», «дійти порозуміння»), а не «прийти».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="прийти до висновку",
+        authentic="дійти висновку",
+        mechanism="Логічний підсумок міркувань передають сполукою «дійти висновку» або «зробити висновок». «Прийти до висновку» є калькою російського «прийти к выводу».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="викликати інтерес",
+        authentic="будити інтерес",
+        mechanism="Замість калькованого «викликати інтерес» в українській мові використовують образні вирази «будити зацікавлення», «викликати зацікавлення» або «привертати увагу».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="мати місце",
+        authentic="відбуватися",
+        mechanism="Вислів «мати місце» є канцелярською калькою французько-російського звороту «иметь место». В українській мові вживають нормативні дієслова «відбуватися», «траплятися».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="оказувати вплив",
+        authentic="справляти вплив",
+        mechanism="Дієслово «оказувати» в українській мові не вживається. Нормативним фразеологізмом є «справляти вплив» або дієслово «впливати».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="оказувати допомогу",
+        authentic="надавати допомогу",
+        mechanism="Підтримку чи сприяння в українській мові «надають» («надавати допомогу», «подавати руку допомоги»), а не «оказують».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="оказувати опір",
+        authentic="чинити опір",
+        mechanism="Протидію чи боротьбу проти нападника або тиску передає питомий вираз «чинити опір».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="нанести збитки",
+        authentic="завдати збитків",
+        mechanism="Дієслово «наносити» позначає переміщення предметів у просторі (наносити піску). Шкоду, збитки, рани чи удари в українській мові винятково «завдають».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="нанести удар",
+        authentic="завдати удару",
+        mechanism="Фізичний чи моральний удар в українській літературній мові «завдають» («завдати нищівного удару»), а не «наносять».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="нанести образу",
+        authentic="завдати образи",
+        mechanism="Спричинення кривди або образи позначається дієсловом «завдати» з родовим відмінком («завдати тяжкої образи»).",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="нанести поразку",
+        authentic="завдати поразки",
+        mechanism="Перемогу над суперником виражають зворотом «завдати поразки» супротивникові, усуваючи кальку «нанести поразку».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="причинити шкоду",
+        authentic="заподіяти шкоду",
+        mechanism="Замість калькованого «причинити шкоду» в українській літературній мові вживають нормативні звороти «заподіяти шкоду» або «завдати шкоди».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="понести покарання",
+        authentic="зазнати покарання",
+        mechanism="Карні заходи чи покарання «зазнають» або «відбувають», а не «поносять».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="понести втрати",
+        authentic="зазнати втрат",
+        mechanism="Втрати особового складу, матеріальних ресурсів чи майна в українській мові «зазнають» («зазнати тяжких втрат»).",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="потерпіти аварію",
+        authentic="зазнати аварії",
+        mechanism="Нещасні випадки й катастрофи в українській літературній мові «зазнають» («зазнати катастрофи», «зазнати аварії»).",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="потерпіти невдачу",
+        authentic="зазнати невдачі",
+        mechanism="Поразку або провал у справі передають зворотом «зазнати невдачі» (зазнати фіаско), а не «потерпіти».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="подавляюча більшість",
+        authentic="переважна більшість",
+        mechanism="Слово «подавляючий» є штучним калькованим дієприкметником. Нормативним відповідником є прикметник «переважна більшість».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="виконуючий обов'язки",
+        authentic="виконувач обов'язків",
+        mechanism="Назву посадової особи чи діяча утворюють за допомогою суфікса -ач: «виконувач обов'язків» (так званий т.в.о.), а не калькованим дієприкметником.",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="керуючий справами",
+        authentic="керівник справ",
+        mechanism="Особу, яка керує підрозділом або справами, позначають іменником «керівник справ» або «управитель справ».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="початкуючий письменник",
+        authentic="письменник-початківець",
+        mechanism="В українській мові особу, яка починає якусь діяльність, позначають іменником «початківець» («письменник-початківець»), а не штучним дієприкметником.",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="бажаючі відпочити",
+        authentic="охочі відпочити",
+        mechanism="Замість активного дієприкметника «бажаючі» в українській мові вживають прикметник «охочі» («усі охочі») або описову конструкцію «ті, хто бажає».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="перебуваючий за кордоном",
+        authentic="той, хто перебуває за кордоном",
+        mechanism="Активні дієприкметники теперішнього часу на -ач-/-яч- в українській мові замінюють підрядними означальними реченнями: «той, хто перебуває за кордоном».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="відпочиваючий на морі",
+        authentic="відпочивальник на морі",
+        mechanism="Людину, яка перебуває на відпочинку, в українській мові позначає питомий іменник «відпочивальник», а не субстантивований дієприкметник «відпочиваючий».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="користуватися авторитетом",
+        authentic="мати авторитет",
+        mechanism="Дієслово «користуватися» в українській мові означає отримувати користь із речі (користуватися телефоном). Повагу й авторитет «мають» або «тішаться авторитетом».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="користуватися успіхом",
+        authentic="мати успіх",
+        mechanism="Успіх у публіки чи визнання в українській мові «мають» («вистава має величезний успіх»), а не «користуються» ним.",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="користуватися популярністю",
+        authentic="мати популярність",
+        mechanism="Широку популярність чи прихильність «мають» або «користуються любов'ю» змінюють на «тішитися популярністю».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="ставити в тупик",
+        authentic="заганяти в глухий кут",
+        mechanism="Слово «тупик» у значенні безвихідної ситуації є калькою з російської. Питомий український фразеологізм — «заганяти в глухий кут».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; СУМ-20",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="зайти в тупик",
+        authentic="зайти в глухий кут",
+        mechanism="Стан неможливості розв'язати проблему українською мовою передають висловом «зайти в глухий кут».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="вихід із положення",
+        authentic="вихід зі становища",
+        mechanism="Слово «положення» позначає розміщення тіла в просторі (лежаче положення) чи звід правил. Складну ситуацію позначають словом «становище» або «скрута».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="воєнне положення",
+        authentic="воєнний стан",
+        mechanism="Особливий правовий режим у державі українською мовою називається винятково «воєнний стан», а не «воєнне положення».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="тяжке положення",
+        authentic="скрутне становище",
+        mechanism="Важкі життєві чи матеріальні обставини правильно називати «скрутне становище» або «тяжка скрута».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="сімейне положення",
+        authentic="сімейний стан",
+        mechanism="Юридичний статус особи стосовно шлюбу в українській мові передається терміном «сімейний стан».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="попадати в біду",
+        authentic="потрапляти в біду",
+        mechanism="Дієслово «попадати» означає влучати в ціль. Опинятися в скрутному місці чи халепі — це «потрапляти» («потрапити в біду», «втрапити в халепу»).",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="попадати в пастку",
+        authentic="потрапляти в пастку",
+        mechanism="У небезпечну чи замасковану пастку в українській літературній мові «потрапляють» або «втрапляють».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="заставляти працювати",
+        authentic="змушувати працювати",
+        mechanism="Дієслово «заставляти» означає загороджувати предметами (заставити кімнату меблями) або давати під заставу. Спонукати силою — це «змушувати» чи «присилувати».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="лишити слова",
+        authentic="позбавити слова",
+        mechanism="Дієслово «лишити» означає залишити щось після себе. Відібрати право говорити — це винятково «позбавити слова».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="лишити спадку",
+        authentic="позбавити спадку",
+        mechanism="Відібрання спадкових прав позначають дієсловом «позбавити» («позбавити спадку»), а не «лишити».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="лишити волі",
+        authentic="позбавити волі",
+        mechanism="Юридична санкція, пов'язана з ув'язненням, називається «позбавлення волі» («позбавити волі»), усуваючи кальку «лишити волі».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="нанести візит",
+        authentic="завітати",
+        mechanism="Канцелярський зворот «нанести візит» є калькою російського «нанести визит». В українській мові вживають дієслова «завітати», «відвідати» або «зробити візит».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="кинутися в біга",
+        authentic="вдаритися в біги",
+        mechanism="Зворот «кинутися в біга» копіює російське «пуститься в бега». Питомий український фразеологізм — «вдаритися в біги» або «кинутися навтьоки».",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="підняти крик",
+        authentic="зняти галас",
+        mechanism="Початок галасу чи шуму українською мовою передають висловом «зняти галас» або «зчинити крик», а не «підняти крик».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="підняти скандал",
+        authentic="зчинити сварку",
+        mechanism="Конструкція «підняти скандал» є калькою. Нормативні фразеологізми — «зчинити скандал», «зчинити сварку», «збаламутити людей».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="підняти тост",
+        authentic="виголосити тост",
+        mechanism="Тост або промову за столом виголошують («виголосити тост» чи «підняти келих»), а не «піднімають тост».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="підняти питання",
+        authentic="порушити питання",
+        mechanism="Пропозицію для обговорення чи розв'язання на зборах в українській літературній мові «порушують» («порушити питання»), а не «піднімають».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="приводити приклад",
+        authentic="наводити приклад",
+        mechanism="Дієслово «приводити» стосується приведення істоти (привести сина). Аргументи чи зразки в тексті «наводять» («навести переконливий приклад»).",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="приводити докази",
+        authentic="наводити докази",
+        mechanism="Фактичні дані чи обґрунтування в українській мові «наводять» («навести неспростовні докази»), а не «приводять».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="привести до розпаду",
+        authentic="призвести до розпаду",
+        mechanism="Негативні наслідки подій позначають префіксальним дієсловом «призвести» з прийменником «до» («призвести до тяжких наслідків»), а не «привести».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="привести до загибелі",
+        authentic="призвести до загибелі",
+        mechanism="Загибель, лихо чи руйнацію спричиняють конструкцією «призвести до загибелі», дотримуючись норм керування.",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="зайти надто далеко",
+        authentic="зайти задалеко",
+        mechanism="Конструкція «надто далеко» у переносному значенні надмірності часто є буквальним перекладом. Питомим лаконічним зворотом є «зайти задалеко».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="в повній мірі",
+        authentic="повною мірою",
+        mechanism="Вислів «в повній мірі» копіює російське «в полной мере». В українській мові слід уживати орудний відмінок: «повною мірою» або «цілком».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="в значній мірі",
+        authentic="значною мірою",
+        mechanism="Ступінь вияву ознаки чи дії передається орудним відмінком «значною мірою», а не прийменниковим калькованим сполученням «в значній мірі».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="в деякій мірі",
+        authentic="певною мірою",
+        mechanism="Частковий прояв позначають нормативними сполуками «певною мірою» або «до певної міри», усуваючи кальку «в деякій мірі».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="у будь-якому випадку",
+        authentic="у всякому разі",
+        mechanism="Зворот «у будь-якому випадку» переносить значення конкретного судового чи життєвого «випадку» на модальність. Нормативно казати «у всякому разі» чи «хай там як».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="в окремих випадках",
+        authentic="подекуди",
+        mechanism="Замість громіздкої канцелярії «в окремих випадках» природніше вживати українські прислівники «подекуди», «подеколи», «часом».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="кинути погляд",
+        authentic="кинути оком",
+        mechanism="Питомий український фразеологізм на позначення швидкого погляду — «кинути оком», «кинути зором» або «глянути».",
+        author_or_source="Словник української мови (СУМ-20); Б. Антоненко-Давидович",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="зустрічаються помилки",
+        authentic="трапляються помилки",
+        mechanism="Дієслово «зустрічатися» стосується людей, які сходяться разом. Помилки чи явища в текстах та житті винятково «трапляються».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="зустрічаються труднощі",
+        authentic="трапляються труднощі",
+        mechanism="Несподівані проблеми чи перешкоди на шляху в українській мові «трапляються» або «трапляються на шляху», а не «зустрічаються».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="носити характер",
+        authentic="мати характер",
+        mechanism="Канцелярський штамп «носить характер» копіює російське «носит характер». В українській мові слід уживати «має характер» або просто прикметник чи прислівник.",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="носити ім'я",
+        authentic="зватися на честь",
+        mechanism="Підприємства, вулиці чи заклади в українській мові «звуться на честь когось» або «мають назву», а не «носять ім'я».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо» (розділ «Носити ім'я, зватися, мати назву»)",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="носити назву",
+        authentic="мати назву",
+        mechanism="Книга, фільм чи місцевість в українській літературній мові «має назву» («книга має назву»), а не «носить назву».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="під відкритим небом",
+        authentic="просто неба",
+        mechanism="Конструкція «під відкритим небом» є калькою російського «под открытым небом». Питомий український вислів — «просто неба».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="розбити палатку",
+        authentic="поставити намет",
+        mechanism="Слово «палатка» є росіянізмом (питоме українське — «намет»), а табірний намет «ставлять» («поставити намет») або «розпинають» («розіпнути намет»), а не «розбивають».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»; СУМ-20",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="розбити парк",
+        authentic="закласти парк",
+        mechanism="Новий сад або парк у місті «закладають» або «насаджують», тоді як вислів «розбити парк» є буквальним перекладом російського.",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="зробити вигляд",
+        authentic="удати вигляд",
+        mechanism="Питома українська конструкція на позначення імітації — дієслово «вдавати» (удати вигляд, удавати спокійного), а не «робити вигляд».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="приймати близько до серця",
+        authentic="брати близько до серця",
+        mechanism="Глибоке хвилювання чи переживання українською мовою передається фразеологізмом «брати близько до серця».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="приймати рішення",
+        authentic="ухвалювати рішення",
+        mechanism="Відповідальний вердикт чи постанову в українській мові «ухвалюють» («ухвалити рішення») або «приймати» замінюють на «вирішувати».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="попередити хворобу",
+        authentic="запобігти хворобі",
+        mechanism="Дієслово «попередити» означає завчасно повідомити людину. Не допустити настання хвороби чи біди — це «запобігти» чомусь («запобігти хворобі»).",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="попередити аварію",
+        authentic="запобігти аварії",
+        mechanism="Усунення небезпеки завчасно передають конструкцією з давальним відмінком: «запобігти аварії» або «відвернути аварію».",
+        author_or_source="Б. Антоненко-Давидович, «Як ми говоримо»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
+    ),
+    CalquePair(
+        calque="по крайній необхідності",
+        authentic="за крайньої потреби",
+        mechanism="Канцелярський зворот «по крайній необхідності» замінюють на нормативне «за крайньої потреби» або «в разі крайньої потреби».",
+        author_or_source="О. Пономарів, «Культура слова»",
+        rejected_flaw="lack_of_morphemic_reasoning",
+        is_held_out=True,
     ),
 ]
 
@@ -427,21 +1232,93 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit:
     )
 
 
+STOP_WORDS: set[str] = {
+    "в", "у", "на", "з", "зі", "із", "по", "за", "до", "від", "під", "над",
+    "перед", "через", "для", "про", "без", "при", "між", "поміж", "серед", "проти", "крізь",
+    "що", "як", "не", "чи", "та", "і", "й", "але", "або", "це", "же", "ж", "би", "б",
+    "хай", "нехай", "аби", "то", "от", "ось", "аж", "ба", "хоч", "ні", "ані",
+    "ніби", "наче", "немов", "немовби", "мов", "мовби", "нібито", "буцім", "начебто",
+    "там", "тут", "вже", "ще", "так", "теж", "дуже", "тоді", "тепер", "зараз", "скрізь", "всюди",
+    "я", "ти", "він", "вона", "воно", "вони", "ми", "ви", "мене", "мені", "мною", "тебе",
+    "тобі", "тобою", "його", "йому", "ним", "ньому", "її", "їй", "нею", "нього", "неї",
+    "них", "ними", "нас", "нам", "нами", "вас", "вам", "вами", "їх", "їм", "себе", "собі", "собою",
+    "хто", "кого", "кому", "ким", "чим", "чий", "чия", "чиє", "чиї", "чиїх", "чиїм",
+    "який", "яка", "яке", "які", "якого", "якій", "яким", "яких",
+    "цей", "ця", "ці", "цього", "цій", "цим", "цих", "той", "те", "ті", "того", "тій", "тим", "тих",
+    "свій", "своя", "своє", "свої", "свого", "своїй", "своїм", "своїх", "мій", "твій", "наш", "ваш", "їхній",
+    "бути", "був", "була", "було", "були", "буде", "будуть", "буду", "будеш", "будемо", "будете", "бувши",
+}
+
+
+def ukrainian_stem(word: str) -> str:
+    """Extract a robust stem for a Ukrainian word form by stripping inflectional affixes."""
+    w = word.lower().replace("’", "'").strip()
+    if len(w) <= 3:
+        return w
+    # Strip inflectional suffixes
+    w = re.sub(r"(уватися|итися|ятися|ється|ються|тиме|тимуть|ував|увала|ували|ться)$", "", w)
+    w = re.sub(r"(ського|ському|ських|ський|ським|ської|ська|ське|ські)$", "", w)
+    w = re.sub(r"(ому|ими|ого|ою|ею|єю|ові|еві|ями|ами)$", "", w)
+    w = re.sub(r"(ів|ей|ям|ам|ом|ем|ий|ій|ти|ли|ла|ло|ив|ав)$", "", w)
+    if len(w) > 3:
+        w = re.sub(r"[аяуюеєіїийовль]$", "", w)
+    if len(w) > 3:
+        w = re.sub(r"[аяуюеєіїийовль]$", "", w)
+    return w if len(w) >= 3 else word.lower()
+
+
+def get_word_lemma_or_stem(word: str, cur_ves: sqlite3.Cursor | None, cache: dict[str, str]) -> str:
+    """Retrieve lemma from VESUM if available, otherwise apply morphological stemmer."""
+    w = word.lower().replace("’", "'").strip()
+    if w in cache:
+        return cache[w]
+    if cur_ves and len(w) >= 3:
+        try:
+            cur_ves.execute("SELECT lemma FROM forms_all WHERE word_form = ? LIMIT 1", (w,))
+            row = cur_ves.fetchone()
+            if row and row[0]:
+                lemma = row[0].lower().replace("’", "'").strip()
+                cache[w] = lemma
+                return lemma
+        except Exception:
+            pass
+    stem = ukrainian_stem(w)
+    cache[w] = stem
+    return stem
+
+
+def get_phrase_lemmas(phrase: str, cur_ves: sqlite3.Cursor | None, cache: dict[str, str]) -> set[str]:
+    """Tokenize a phrase, filter stop words, and extract set of lemmas/stems."""
+    words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", phrase) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+    return {get_word_lemma_or_stem(w, cur_ves, cache) for w in words}
+
+
 def sanitize_calque_string(s: str) -> str:
     """Clean quotes, brackets, and extraneous punctuation from calque and authentic expressions."""
     s = clean_stress_marks(s)
-    s = re.sub(r"[\"\'«»“”„’`–—:;,.!?]+", " ", s)
+    s = s.replace("’", "'").replace("`", "'")
+    s = re.sub(r'[\"«»“”„:;,.!?–—]+', " ", s)
+    s = re.sub(r"(?<![а-яіїєґА-ЯІЇЄҐ'])[']|['](?![а-яіїєґА-ЯІЇЄҐ'])", " ", s)
     s = re.sub(r"\s+", " ", s).strip()
     return s
 
 
 def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
-    """Extract real human-annotated calque and collocation pairs from UA-GEC with corpus partitions."""
+    """Extract real human-annotated calque and collocation pairs from UA-GEC for training."""
     pairs: list[CalquePair] = []
     if not sources_db.exists() or sources_db.stat().st_size == 0:
         return pairs
 
-    conn = sqlite3.connect(sources_db)
+    # Build disallowed set of terms matching canonical or held-out curated calques
+    disallowed_terms = set()
+    for cp in CANONICAL_CALQUE_PAIRS:
+        disallowed_terms.add(cp.calque.strip().lower())
+        disallowed_terms.add(cp.authentic.strip().lower())
+    for cp in HELD_OUT_CURATED_CALQUE_PAIRS:
+        disallowed_terms.add(cp.calque.strip().lower())
+        disallowed_terms.add(cp.authentic.strip().lower())
+
+    conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
     cur = conn.cursor()
     try:
         cur.execute(
@@ -450,7 +1327,8 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
             "  AND length(error) >= 4 AND length(correct) >= 4 "
             "  AND error NOT LIKE '%http%' AND correct NOT LIKE '%http%';"
         )
-        for err, corr, etype, part in cur.fetchall():
+        seen_pairs = set()
+        for err, corr, etype, _part in cur.fetchall():
             err_c = sanitize_calque_string(err)
             corr_c = sanitize_calque_string(corr)
             if not err_c or not corr_c:
@@ -460,7 +1338,7 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
             if len(err_c) < 5 or len(corr_c) < 5:
                 continue
             # Ensure multi-word expressions or clear collocations, rejecting single everyday words
-            if len(err_c.split()) < 2 and len(corr_c.split()) < 2:
+            if len(err_c.split()) < 2:
                 continue
             # Reject strings with internal invalid chars (urls, markup, slashes)
             if any(ch in err_c or ch in corr_c for ch in ["/", "<", ">"]):
@@ -468,16 +1346,24 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
             # Reject Russian or Latin letters
             if re.search(r"[ъыэёѣa-zA-Z]", err_c) or re.search(r"[ъыэёѣa-zA-Z]", corr_c):
                 continue
-            # Reject known typos / corruptions
-            if "обуруд" in err_c.lower() or "доктор" in err_c.lower():
+            # Reject known typos / corruptions / noisy student annotations (Finding 4)
+            err_lower = err_c.lower()
+            corr_lower = corr_c.lower()
+            if any(bad in err_lower or bad in corr_lower for bad in ["обуруд", "доктор", "майорівськ", "закритилас", "обертом", "чорт знає", "чорт вас"]):
                 continue
+            # Disallow overlap with held-out curated or canonical
+            if err_lower in disallowed_terms or corr_lower in disallowed_terms:
+                continue
+            pair_key = (err_lower, corr_lower)
+            if pair_key in seen_pairs:
+                continue
+            seen_pairs.add(pair_key)
 
-            is_held = "test" in part.lower()
             if etype == "F/Calque":
                 mech = f"Слововживання «{err_c}» є калькою (росіянізмом); нормативним літературним відповідником в українській мові є «{corr_c}»."
                 flaw = "lack_of_morphemic_reasoning"
             else:
-                mech = f"У виразі «{err_c}» порушено лексичну сполучуваність слів; нормативним є словосполучення «{corr_c}»."
+                mech = f"Вираз «{err_c}» суперечить нормам лексичної сполучуваності; нормативним є слововживання «{corr_c}»."
                 flaw = "mechanical_wordnet_synset"
 
             pairs.append(
@@ -487,7 +1373,7 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
                     mechanism=mech,
                     author_or_source="Корпус UA-GEC (Ukrainian Grammar Error Correction)",
                     rejected_flaw=flaw,
-                    is_held_out=is_held,
+                    is_held_out=False,
                     error_type=etype,
                 )
             )
@@ -496,7 +1382,7 @@ def load_ua_gec_calques(sources_db: Path) -> list[CalquePair]:
     finally:
         conn.close()
 
-    logger.info("Loaded %d distinct calque/collocation pairs from UA-GEC", len(pairs))
+    logger.info("Loaded %d clean training calque/collocation pairs from UA-GEC", len(pairs))
     return pairs
 
 
@@ -509,7 +1395,7 @@ def load_ulif_phraseology_and_synonyms(ulif_db: Path) -> tuple[list[PhraseologyU
         logger.warning("ULIF database not found at %s", ulif_db)
         return phraseology_units, synonym_groups
 
-    conn = sqlite3.connect(ulif_db)
+    conn = sqlite3.connect(f"file:{ulif_db}?mode=ro", uri=True)
     cur = conn.cursor()
 
     cur.execute(
@@ -624,7 +1510,7 @@ def generate_evaluation_benchmark(
     category_counts: Counter[str] = Counter()
     authors_seen: set[str] = set()
 
-    # 1. Held-out Anti-Calque & Anti-Collocation from UA-GEC test partition
+    # 1. Held-out Anti-Calque from curated classical catalog (Finding 4)
     for i, c in enumerate(eval_calques):
         if len(eval_records) >= target_count:
             break
@@ -635,7 +1521,7 @@ def generate_evaluation_benchmark(
         q_label = "росіянізму" if c.error_type == "F/Calque" else "порушення лексичної сполучуваності"
         query = f"Поясніть, чому вираз «{c.calque}» вважається помилковим ({q_label}), та наведіть нормативний відповідник."
         r_steps = [
-            f"1. Аналіз помилки: Слововживання «{c.calque}» зафіксовано в корпусі як {q_label}.",
+            f"1. Аналіз помилки: Слововживання «{c.calque}» є типовим прикладом {q_label}.",
             f"2. Лінгвістичне обґрунтування: {c.mechanism}",
             f"3. Нормативний вираз: Питомим українським слововживанням є «{c.authentic}».",
         ]
@@ -652,7 +1538,7 @@ def generate_evaluation_benchmark(
             "classical_citation": f"Зафіксовано в авторитетних джерелах: {c.author_or_source}",
             "classical_author": c.author_or_source,
             "source_metadata": {
-                "source_dict": "ua_gec_errors_test",
+                "source_dict": "curated_decolonization_catalog",
                 "partition": "held_out_eval",
                 "entry_id": f"calque_{i}",
                 "char_length": len(sol),
@@ -856,14 +1742,14 @@ def synthesize_sft_trajectory(
         if cur_ves:
             verify_phrase_in_vesum(calque.authentic, cur_ves)
 
-        modality = idx % 5
+        modality = idx % 10
         auth = calque.authentic.strip()
         calq = calque.calque.strip()
         auth_lower = auth.lower()
         source_auth = calque.author_or_source
 
         is_prepositional = any(auth_lower.startswith(p + " ") for p in ["на", "у", "в", "по", "за", "з", "до", "протягом", "коштом", "від", "при"])
-        is_discourse = auth_lower in ["насамперед", "передусім", "зрештою", "кінець кінцем", "принаймні", "хай там як", "що б там не було", "дедалі"]
+        is_discourse = auth_lower in ["насамперед", "передусім", "зрештою", "кінець кінцем", "принаймні", "хай там як", "що б там не було", "дедалі", "насправді", "здебільшого"]
         is_infinitive = any(w.endswith(("ти", "тися", "тись")) for w in auth_lower.split()[:2])
 
         if is_infinitive:
@@ -873,8 +1759,8 @@ def synthesize_sft_trajectory(
             ex_sent = f"Усі заплановані наукові дослідження проводилися **{auth}**, що забезпечило достовірність результатів."
             err_sent = f"Усі заплановані наукові дослідження проводилися {calq}, що забезпечило достовірність результатів."
         elif is_discourse:
-            ex_sent = f"Оцінюючи перспективи розвитку галузі, слід **{auth}** звернути увагу на фахову підготовку спеціалістів."
-            err_sent = f"Оцінюючи перспективи розвитку галузі, слід {calq} звернути увагу на фахову підготовку спеціалістів."
+            ex_sent = f"Оцінюючи перспективи розвитку галузі, слід **{auth}** врахувати фахову підготовку спеціалістів."
+            err_sent = f"Оцінюючи перспективи розвитку галузі, слід {calq} врахувати фахову підготовку спеціалістів."
         else:
             ex_sent = f"У фаховому висновку зазначено, що цей чинник може **{auth}** у подальшому аналізі."
             err_sent = f"У фаховому висновку зазначено, що цей чинник може {calq} у подальшому аналізі."
@@ -937,12 +1823,12 @@ def synthesize_sft_trajectory(
             )
             resp = (
                 f"{thought}\n\n"
-                f"Зверніть увагу: вислів **«{calq}»** є поширеною помилкою, що виникає через дослівний переклад з іншої мовної системи.\n\n"
+                f"Зауважте: вислів **«{calq}»** є поширеною помилкою, що виникає через дослівний переклад з іншої мовної системи.\n\n"
                 f"{calque.mechanism}\n\n"
                 f"Запам'ятайте: в українській літературній мові слід уживати **«{auth}»**.\n\n"
                 f"**Приклад:** «{ex_sent}»"
             )
-        else:
+        elif modality == 4:
             query = f"Яких норм лексичної сполучуваності та граматичного керування слід дотримуватися у звороті «{auth}» на противагу помилці «{calq}»?"
             thought = (
                 f"<thought>\n"
@@ -955,6 +1841,85 @@ def synthesize_sft_trajectory(
                 f"У звороті **«{auth}»** неухильно дотримуються питомих норм української лексичної сполучуваності.\n\n"
                 f"{calque.mechanism}\n\n"
                 f"Правильна конструкція **«{auth}»** забезпечує стилістичну довершеність тексту й однозначність сприйняття."
+            )
+        elif modality == 5:
+            query = f"Проаналізуйте типову інтерференційну помилку у виразі «{calq}» та обґрунтуйте заміну на «{auth}» в офіційно-діловому мовленні."
+            thought = (
+                f"<thought>\n"
+                f"Аналізую вимоги офіційно-ділового стилю до стандартизації лексики.\n"
+                f"Виявляю інтерференційну конструкцію «{calq}» та зіставляю з діловим стандартом {source_auth}.\n"
+                f"Формулюю рекомендацію щодо переходу на нормативний еквівалент «{auth}».\n"
+                f"</thought>"
+            )
+            resp = (
+                f"{thought}\n\n"
+                f"В офіційно-діловому мовленні неприпустимим є вживання калькованого штампу **«{calq}»**.\n\n"
+                f"**Фаховий аналіз стандарту:**\n{calque.mechanism}\n\n"
+                f"**Діловий норматив:** слід уживати винятково **«{auth}»**.\n\n"
+                f"**Зразок у діловому документі:**\n«{ex_sent}»"
+            )
+        elif modality == 6:
+            query = f"Складіть практичну рекомендацію для редакції та журналістів щодо недопущення калькованого звороту «{calq}» на користь «{auth}»."
+            thought = (
+                f"<thought>\n"
+                f"Готую пораду для медійників і редакторів періодичних видань.\n"
+                f"Спираюся на посібники з редагування та авторитетні джерела ({source_auth}).\n"
+                f"Пояснюю механізм очищення медіатекстів від покруча «{calq}».\n"
+                f"</thought>"
+            )
+            resp = (
+                f"{thought}\n\n"
+                f"**Редакторська настанова:**\n\n"
+                f"У журналістських матеріалах та редакторській практиці уникайте ненормативного вислову **«{calq}»**.\n\n"
+                f"**Чому це важливо:**\n{calque.mechanism}\n\n"
+                f"**Стандарт редакції:** використовуйте вираз **«{auth}»**, що відповідає найвищим критеріям медіаграмотності та культури мови."
+            )
+        elif modality == 7:
+            query = f"Як мовна традиція та закони українського словотвору спростовують штучний покруч «{calq}» на користь «{auth}»?"
+            thought = (
+                f"<thought>\n"
+                f"Звертаюся до історичної традиції української літературної норми.\n"
+                f"Аналізую штучну русифікаторську деформацію у звороті «{calq}» за працями мовознавців ({source_auth}).\n"
+                f"Обґрунтовую повернення питомої форми «{auth}».\n"
+                f"</thought>"
+            )
+            resp = (
+                f"{thought}\n\n"
+                f"Штучна конструкція **«{calq}»** є типовим наслідком агресивної мовної уніфікації радянського періоду.\n\n"
+                f"**Історико-мовознавчий коментар:**\n{calque.mechanism}\n\n"
+                f"Українська мовна традиція послідовно утверджує питомий відповідник **«{auth}»**, що органічно випливає з живої народної стихії та класичної прози."
+            )
+        elif modality == 8:
+            query = f"Яку комунікативну неточність і стилістичну неохайність спричиняє використання конструкції «{calq}» замість «{auth}»?"
+            thought = (
+                f"<thought>\n"
+                f"Досліджую прагматичні наслідки неточного слововживання.\n"
+                f"Висвітлюю змістове спотворення та втрату виразності при використанні кальки «{calq}».\n"
+                f"Доводжу перевагу однозначного «{auth}» згідно з {source_auth}.\n"
+                f"</thought>"
+            )
+            resp = (
+                f"{thought}\n\n"
+                f"Використання кальки **«{calq}»** створює семантичну двозначність та знижує авторитетність мовця.\n\n"
+                f"**Семантичний розбір:**\n{calque.mechanism}\n\n"
+                f"Вживання вивіреного нормативного відповідника **«{auth}»** гарантує чіткість сприйняття думки адресатом."
+            )
+        else:
+            query = f"Подайте стислий мовний коментар для академічного посібника з культури мови щодо протиставлення «{calq}» та «{auth}»."
+            thought = (
+                f"<thought>\n"
+                f"Укладаю словникову статтю-довідку для посібника з культури мови.\n"
+                f"Формулюю стисле, нормативно вивірене протиставлення помилкового вислову «{calq}» та правильного «{auth}».\n"
+                f"Зазначаю джерело: {source_auth}.\n"
+                f"</thought>"
+            )
+            resp = (
+                f"{thought}\n\n"
+                f"**Культура слова: типові помилки та норма**\n\n"
+                f"❌ **Неправильно:** «{calq}»\n"
+                f"✅ **Правильно:** **«{auth}»**\n\n"
+                f"**Коментар мовознавця:**\n{calque.mechanism}\n\n"
+                f"**Джерело фіксації норми:** {source_auth}."
             )
 
         return {
@@ -1041,7 +2006,7 @@ def synthesize_sft_trajectory(
         resp = (
             f"{thought}\n\n"
             f"**Контекст ситуації:** {sc_context}.\n\n"
-            f"— Пане колего, уважно проаналізував наш поточний поступ, і мені здається, що в цій справі ми маємо **{unit.idiom}**.\n"
+            f"— Пане колего, уважно проаналізував наш поточний поступ, і мені здається, що у цій ситуації доречно **{unit.idiom}**.\n"
             f"— Цілком поділяю вашу думку. Це саме той випадок, коли обставини вимагають чіткої позиції.\n"
             f"— Тоді діймо узгоджено й не зволікаймо з рішенням!\n"
             f"— Домовилися, негайно беремося до роботи."
@@ -1079,25 +2044,17 @@ def generate_sft_dataset(
     trajectories: list[dict[str, Any]] = []
 
     if target_count != 45000:
-        target_anti_calque = int(target_count * 15 / 45)
-        target_literary = int(target_count * 15 / 45)
-        target_synonyms = int(target_count * 10 / 45)
-        target_dialogue = target_count - (target_anti_calque + target_literary + target_synonyms)
+        target_literary = int(target_count * 20 / 45)
+        target_synonyms = int(target_count * 15 / 45)
+        target_dialogue = int(target_count * 5 / 45)
+        target_anti_calque = target_count - (target_literary + target_synonyms + target_dialogue)
     else:
-        target_anti_calque = 15000
-        target_literary = 15000
-        target_synonyms = 10000
+        target_literary = 20000
+        target_synonyms = 15000
         target_dialogue = 5000
+        target_anti_calque = 5000
 
-    # 1. Anti-Calque trajectories across 5 modalities
-    logger.info("Generating %d anti-calque trajectories...", target_anti_calque)
-    for i in range(target_anti_calque):
-        cp = calques[i % len(calques)]
-        traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
-        trajectories.append(traj)
-        task_counts["anti_calque_decolonization"] += 1
-
-    # 2. Literary idiom interpretation (units 0..14,999)
+    # 1. Literary idiom interpretation (units 0..19,999)
     logger.info("Generating %d literary interpretation trajectories...", target_literary)
     for i in range(target_literary):
         u = units[i % len(units)]
@@ -1105,7 +2062,7 @@ def generate_sft_dataset(
         trajectories.append(traj)
         task_counts["idiom_interpretation_literary"] += 1
 
-    # 3. Synonymic nuance (unique synonym groups)
+    # 2. Synonymic nuance (unique synonym groups 0..14,999)
     logger.info("Generating %d synonym nuance trajectories...", target_synonyms)
     for i in range(target_synonyms):
         sg = synonyms[i % len(synonyms)]
@@ -1113,13 +2070,21 @@ def generate_sft_dataset(
         trajectories.append(traj)
         task_counts["synonymic_nuance_and_register"] += 1
 
-    # 4. Contextual dialogue usage (disjoint dialogue units)
+    # 3. Contextual dialogue usage (disjoint dialogue units 0..4,999)
     logger.info("Generating %d dialogue usage trajectories...", target_dialogue)
     for i in range(target_dialogue):
         u = dialogue_units[i % len(dialogue_units)]
         traj = synthesize_sft_trajectory(u, None, None, len(trajectories), "contextual_dialogue_usage", scenario_idx=i, cur_ves=cur_ves)
         trajectories.append(traj)
         task_counts["contextual_dialogue_usage"] += 1
+
+    # 4. Anti-Calque trajectories across 10 varied modalities
+    logger.info("Generating %d anti-calque trajectories across 10 modalities...", target_anti_calque)
+    for i in range(target_anti_calque):
+        cp = calques[i % len(calques)]
+        traj = synthesize_sft_trajectory(None, cp, None, len(trajectories), "anti_calque_decolonization", cur_ves=cur_ves)
+        trajectories.append(traj)
+        task_counts["anti_calque_decolonization"] += 1
 
     # Write strictly sharded files
     manifest_shards: list[dict[str, Any]] = []
@@ -1221,7 +2186,7 @@ def generate_dpo_dataset(
             f"Правильно казати: **«{cp.authentic}»**.\n\n"
             f"**Обґрунтування:**\n"
             f"{cp.mechanism}\n"
-            f"Зворот «{cp.calque}» є помилковим і суперечить нормам українського слововживання."
+            f"Зворот «{cp.calque}» є помилковим і суперечить правилам українського слововживання."
         )
 
         if flaw == "lack_of_morphemic_reasoning":
@@ -1279,7 +2244,7 @@ def generate_dpo_dataset(
         )
         rejected = (
             f"<thought>Використовую плоский канцелярський або дослівний опис.</thought>\n\n"
-            f"Цю думку можна висловити просто описово: {u.definition.lower()} Жодних спеціальних фразеологізмів тут не потрібно."
+            f"Цю думку можна передати описово: {u.definition.lower()} Жодних спеціальних фразеологізмів тут не потрібно."
         )
         pair = {
             "schema_version": "v1_ulif_phraseology_dpo_pair",
@@ -1379,20 +2344,40 @@ def audit_zero_train_eval_leakage(
     sft_dir: Path,
     dpo_dir: Path,
     eval_records: list[dict[str, Any]] | None = None,
+    cur_ves: sqlite3.Cursor | None = None,
 ) -> dict[str, Any]:
-    """Scan all generated shards on disk to verify 0% leakage of held-out authors and 0% target overlap."""
+    """Scan all generated shards on disk to verify 0% leakage of held-out authors, exact targets, and inflected variants."""
     leaked_findings: list[str] = []
     shards_checked = 0
 
-    # Collect held-out eval targets for exact overlap verification
+    # Collect held-out eval targets for exact overlap and inflected stem co-occurrence (Finding 7)
     eval_targets: set[str] = set()
     eval_calques: set[str] = set()
+    eval_multiword_stems: list[tuple[str, set[str]]] = []
+    cache: dict[str, str] = {}
+
     if eval_records:
         for r in eval_records:
-            if r.get("target_idiom"):
-                eval_targets.add(r["target_idiom"].strip().lower())
-            if r.get("calqued_counterpart"):
-                eval_calques.add(r["calqued_counterpart"].strip().lower())
+            t_id = r.get("target_idiom")
+            c_part = r.get("calqued_counterpart")
+            if t_id:
+                clean_t = t_id.strip().lower()
+                eval_targets.add(clean_t)
+                stems = get_phrase_lemmas(clean_t, cur_ves, cache)
+                if len(stems) >= 2:
+                    eval_multiword_stems.append((clean_t, stems))
+            if c_part:
+                clean_c = c_part.strip().lower()
+                eval_calques.add(clean_c)
+                stems = get_phrase_lemmas(clean_c, cur_ves, cache)
+                if len(stems) >= 2:
+                    eval_multiword_stems.append((clean_c, stems))
+
+    # Build inverted index for fast stem co-occurrence candidate lookup
+    stem_to_eval: dict[str, list[tuple[str, set[str], int]]] = defaultdict(list)
+    for orig_p, target_stems in eval_multiword_stems:
+        anchor = min(target_stems, key=lambda s: len(s))
+        stem_to_eval[anchor].append((orig_p, target_stems, len(target_stems)))
 
     all_shards = sorted(list(sft_dir.glob("sft_shard_*.jsonl")) + list(dpo_dir.glob("dpo_shard_*.jsonl")))
     for shard_path in all_shards:
@@ -1404,7 +2389,7 @@ def audit_zero_train_eval_leakage(
                 if match:
                     leaked_findings.append(f"{shard_path.name}:{line_no} author leak '{match.group(0)}'")
 
-                # 2. Target phrase overlap check (fail closed on malformed JSON)
+                # 2. Target phrase exact overlap check (fail closed on malformed JSON)
                 if eval_targets or eval_calques:
                     row = json.loads(line)
                     t_phrase = row.get("target_phrase", "").strip().lower()
@@ -1413,6 +2398,58 @@ def audit_zero_train_eval_leakage(
                         leaked_findings.append(f"{shard_path.name}:{line_no} target overlap '{t_phrase}'")
                     if calque_p and calque_p in eval_calques:
                         leaked_findings.append(f"{shard_path.name}:{line_no} calque overlap '{calque_p}'")
+
+                # 3. Inflected variant / stem co-occurrence check across sentences (Finding 7)
+                if eval_multiword_stems:
+                    row = json.loads(line)
+                    t_p = row.get("target_phrase", "").strip().lower()
+                    c_p = row.get("calque", "").strip().lower()
+                    for field in [t_p, c_p]:
+                        if not field:
+                            continue
+                        f_words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", field) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+                        f_lemmas = {get_word_lemma_or_stem(w, cur_ves, cache) for w in f_words}
+                        for s in f_lemmas:
+                            if s in stem_to_eval:
+                                for orig_p, target_stems, _k in stem_to_eval[s]:
+                                    if target_stems.issubset(f_lemmas):
+                                        leaked_findings.append(f"{shard_path.name}:{line_no} inflected variant leak of '{orig_p}' in field '{field}'")
+                                        break
+
+                    text_to_check = row.get("final_response") or (row.get("chosen", "") + " " + row.get("rejected", ""))
+                    segments = re.findall(r"«([^»]+)»|([^\n«»]+)", text_to_check)
+                    for seg_tuple in segments:
+                        seg = (seg_tuple[0] or seg_tuple[1]).strip()
+                        if len(seg) < 8:
+                            continue
+                        words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", seg) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+                        if len(words) < 2:
+                            continue
+                        lemmas = [get_word_lemma_or_stem(w, cur_ves, cache) for w in words]
+                        all_lemmas = set(lemmas)
+
+                        candidates = []
+                        for s in all_lemmas:
+                            if s in stem_to_eval:
+                                for orig_p, target_stems, k in stem_to_eval[s]:
+                                    if target_stems.issubset(all_lemmas):
+                                        candidates.append((orig_p, target_stems, k))
+
+                        if not candidates:
+                            continue
+
+                        for orig_p, target_stems, k in candidates:
+                            win_size = k + 2
+                            found = False
+                            for start in range(len(lemmas) - k + 1):
+                                if target_stems.issubset(set(lemmas[start : start + win_size])):
+                                    found = True
+                                    break
+                            if found:
+                                leaked_findings.append(
+                                    f"{shard_path.name}:{line_no} inflected variant leak of '{orig_p}' in sentence: '{seg}'"
+                                )
+                                break
 
     if leaked_findings:
         err_msg = f"0% Train/Eval Leakage Firewall Violated! Found {len(leaked_findings)} leaks:\n" + "\n".join(leaked_findings[:10])
@@ -1434,19 +2471,25 @@ def verify_receipt_invariants(
     dpo_dir: Path,
     cur_ves: sqlite3.Cursor | None,
     sources_db: Path,
+    all_calques: list[CalquePair] | None = None,
 ) -> dict[str, Any]:
     """Run real programmatic verification across datasets and databases."""
     logger.info("Verifying all release receipt invariants against live databases...")
     vesum_attested_tokens = 0
+    total_eval_tokens = 0
     literary_grounded_count = 0
+    total_literary_tasks = 0
     thought_tags_count = 0
     total_sft_trajectories = 0
+    calque_violations_count = 0
+    unattested_literary: list[str] = []
 
     # 1. Verify VESUM attestation on authentic eval targets
     if cur_ves:
         for rec in eval_records:
             tokens = [t.lower() for t in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", rec["target_idiom"]) if len(t) > 2]
             for t in tokens:
+                total_eval_tokens += 1
                 cur_ves.execute("SELECT 1 FROM forms_all WHERE word_form = ? OR lemma = ? LIMIT 1", (t, t))
                 if cur_ves.fetchone():
                     vesum_attested_tokens += 1
@@ -1459,18 +2502,40 @@ def verify_receipt_invariants(
 
     conn_src = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
     cur_src = conn_src.cursor()
-    cur_src.execute("SELECT DISTINCT word FROM frazeolohichnyi;")
-    known_fraz_idioms = {r[0].strip().lower() for r in cur_src.fetchall()}
+    cur_src.execute("SELECT word, definition FROM frazeolohichnyi;")
+    known_fraz_idioms: set[str] = set()
+    for w_raw, d_raw in cur_src.fetchall():
+        u = parse_frazeolohichnyi_entry(w_raw, d_raw)
+        known_fraz_idioms.add(u.idiom.strip().lower())
+        w_clean = clean_raw_html_and_tags(clean_stress_marks(w_raw)).strip().lower()
+        if w_clean:
+            known_fraz_idioms.add(w_clean)
+            base = re.split(r"[\(/,]", w_clean)[0].strip()
+            if base:
+                known_fraz_idioms.add(base)
     conn_src.close()
 
-    prohibited_calques = {
-        "приймати участь", "приймати міри", "на протязі тижня", "по крайній мірі",
-        "в кінці кінців", "як би там не було", "у першу чергу", "кидатися в крайнощі",
-        "робити вигляд", "терпіти поразку", "здавати іспит", "задавати питання",
-        "стати в нагоді", "по мірі того як", "говорити на українській мові",
-        "співпадати в поглядах", "вести себе пристойно", "відноситися до колег",
-        "за рахунок спонсорів", "вибачаюся за запізнення", "відмінити зустріч",
-    }
+    # Build comprehensive set of calques to check (Finding 3)
+    check_calques: set[str] = set()
+    if all_calques:
+        for cp in all_calques:
+            if len(cp.calque.strip()) >= 4:
+                check_calques.add(cp.calque.strip().lower())
+    for cp in CANONICAL_CALQUE_PAIRS + HELD_OUT_CURATED_CALQUE_PAIRS:
+        check_calques.add(cp.calque.strip().lower())
+
+    calque_patterns: list[tuple[str, list[re.Pattern]]] = []
+    for cq in sorted(check_calques):
+        cq_pattern = rf"(?<![а-яіїєґА-ЯІЇЄҐ']){re.escape(cq)}(?![а-яіїєґА-ЯІЇЄҐ'])"
+        patterns = [
+            re.compile(rf"правильно:\s*«{cq_pattern}»", re.IGNORECASE),
+            re.compile(rf"правильно казати:\s*\*\*«{cq_pattern}»\*\*", re.IGNORECASE),
+            re.compile(rf"нормативний відповідник:\*\*\s*\*\*«{cq_pattern}»\*\*", re.IGNORECASE),
+            re.compile(rf"слід уживати:\s*\*\*«{cq_pattern}»\*\*", re.IGNORECASE),
+            re.compile(rf"правильно вживати:\s*«{cq_pattern}»", re.IGNORECASE),
+            re.compile(rf"«{cq_pattern}»\s+є правильним", re.IGNORECASE),
+        ]
+        calque_patterns.append((cq, patterns))
 
     # 3. Verify thought tags, grounding, and anti-calque recommendations in SFT shards
     sft_shards = sorted(list(sft_dir.glob("sft_shard_*.jsonl")))
@@ -1490,19 +2555,32 @@ def verify_receipt_invariants(
                     raise AssertionError(f"Row {shard_path.name}:{line_no} missing valid <thought> tag (>= 30 chars)")
                 thought_tags_count += 1
 
-                # Grounding check: verify literary idioms against frazeolohichnyi
+                # Grounding check: verify literary idioms against frazeolohichnyi (Finding 1)
                 if row.get("task_type") == "idiom_interpretation_literary":
+                    total_literary_tasks += 1
                     target_p = row.get("target_phrase", "").strip().lower()
-                    if target_p in known_fraz_idioms or any(target_p.startswith(ki) for ki in known_fraz_idioms):
+                    if target_p in known_fraz_idioms or any(target_p.startswith(ki) for ki in known_fraz_idioms) or any(ki.startswith(target_p) for ki in known_fraz_idioms):
                         literary_grounded_count += 1
                     else:
-                        literary_grounded_count += 1
+                        unattested_literary.append(f"{shard_path.name}:{line_no} '{target_p}'")
 
-                # Assert NO Russian calque is recommended as proper Ukrainian
-                resp_lower = resp.lower()
-                for pc in prohibited_calques:
-                    if f"правильно: «{pc}»" in resp_lower or f"правильно казати: **«{pc}»**" in resp_lower or f"нормативний відповідник:** **«{pc}»**" in resp_lower:
-                        raise AssertionError(f"Russian calque '{pc}' recommended in {shard_path.name}:{line_no}")
+                # Calque firewall: check if calque is affirmed as correct (Finding 3)
+                for cq, pats in calque_patterns:
+                    if cq in resp.lower():
+                        for p in pats:
+                            if p.search(resp):
+                                calque_violations_count += 1
+                                raise AssertionError(f"Russian calque '{cq}' affirmed/recommended in {shard_path.name}:{line_no}")
+
+                # For anti-calque tasks, verify that the target calque is removed from the edited sentence
+                if row.get("task_type") == "anti_calque_decolonization":
+                    target_cq = row.get("calque", "").strip()
+                    if target_cq:
+                        cq_pat = rf"(?<![а-яіїєґА-ЯІЇЄҐ']){re.escape(target_cq)}(?![а-яіїєґА-ЯІЇЄҐ'])"
+                        p_edited = re.compile(rf"відредаговане речення:\*\*\n«[^»\n]*{cq_pat}[^»\n]*»", re.IGNORECASE)
+                        if p_edited.search(resp):
+                            calque_violations_count += 1
+                            raise AssertionError(f"Target calque '{target_cq}' not removed from edited sentence in {shard_path.name}:{line_no}")
 
     # Assert that thought_tags_count matches 100% of total_sft_trajectories
     assert thought_tags_count == total_sft_trajectories, (
@@ -1520,20 +2598,40 @@ def verify_receipt_invariants(
             for line_no, line in enumerate(f, 1):
                 total_dpo_pairs += 1
                 row = json.loads(line)
-                chosen = row.get("chosen", "").lower()
-                for pc in prohibited_calques:
-                    if f"правильно: «{pc}»" in chosen or f"правильно казати: **«{pc}»**" in chosen:
-                        raise AssertionError(f"Russian calque '{pc}' affirmed in DPO chosen {shard_path.name}:{line_no}")
+                chosen = row.get("chosen", "")
+                for cq, pats in calque_patterns:
+                    if cq in chosen.lower():
+                        for p in pats:
+                            if p.search(chosen):
+                                calque_violations_count += 1
+                                raise AssertionError(f"Russian calque '{cq}' affirmed in DPO chosen {shard_path.name}:{line_no}")
+
+    # 5. Programmatic checks and dynamic invariant computation (Finding 2)
+    vesum_morphology_verified = bool(total_eval_tokens > 0 and (vesum_attested_tokens / total_eval_tokens) >= 0.98) if cur_ves else True
+    classical_literary_citations_grounded = bool(total_literary_tasks > 0 and literary_grounded_count == total_literary_tasks)
+    thought_tag_etymological_reasoning = bool(total_sft_trajectories > 0 and thought_tags_count == total_sft_trajectories)
+    zero_russian_syntactic_calques = bool(calque_violations_count == 0)
+    zero_train_eval_leakage = True
+
+    if not classical_literary_citations_grounded:
+        raise AssertionError(f"Classical literary citations grounding invariant failed: {literary_grounded_count}/{total_literary_tasks}. First unattested: {unattested_literary[:5]}")
+    if not vesum_morphology_verified:
+        raise AssertionError(f"VESUM attestation invariant failed: {vesum_attested_tokens}/{total_eval_tokens}")
+    if not thought_tag_etymological_reasoning:
+        raise AssertionError(f"Thought tags invariant failed: {thought_tags_count}/{total_sft_trajectories}")
+    if not zero_russian_syntactic_calques:
+        raise AssertionError(f"Russian calques invariant failed: {calque_violations_count} violations")
 
     return {
-        "zero_russian_syntactic_calques": True,
-        "classical_literary_citations_grounded": True,
-        "thought_tag_etymological_reasoning": True,
-        "vesum_and_ulif_morphology_verified": True,
-        "zero_train_eval_leakage": True,
+        "zero_russian_syntactic_calques": zero_russian_syntactic_calques,
+        "classical_literary_citations_grounded": classical_literary_citations_grounded,
+        "thought_tag_etymological_reasoning": thought_tag_etymological_reasoning,
+        "vesum_and_ulif_morphology_verified": vesum_morphology_verified,
+        "zero_train_eval_leakage": zero_train_eval_leakage,
         "vesum_attested_tokens_count": vesum_attested_tokens,
         "literary_citations_grounded_count": literary_grounded_count,
         "thought_tags_verified_count": thought_tags_count,
+        "calque_violations_count": calque_violations_count,
     }
 
 
@@ -1552,18 +2650,20 @@ def generate_release_receipt(
     output_path: Path,
     sft_dir: Path | None = None,
     dpo_dir: Path | None = None,
+    git_commit: str | None = None,
 ) -> dict[str, Any]:
     """Generate cryptographic release receipt validated against SCHEMA_RECEIPT_PATH."""
-    try:
-        git_commit = subprocess.check_output(
-            ["git", "rev-parse", "HEAD"],
-            cwd=PROJECT_ROOT,
-            text=True,
-            stderr=subprocess.DEVNULL,
-            timeout=10,
-        ).strip()
-    except Exception:
-        git_commit = "git_commit_head"
+    if not git_commit or git_commit == "git_commit_head":
+        try:
+            git_commit = subprocess.check_output(
+                ["git", "rev-parse", "HEAD"],
+                cwd=PROJECT_ROOT,
+                text=True,
+                stderr=subprocess.DEVNULL,
+                timeout=10,
+            ).strip()
+        except Exception:
+            git_commit = "git_commit_head"
 
     if sft_dir and sft_dir.exists():
         sft_shards = sorted(list(sft_dir.glob("sft_shard_*.jsonl")))
@@ -1659,6 +2759,7 @@ def run_pipeline(
     vesum_db: Path,
     output_dir: Path,
     sample_only: bool = False,
+    git_commit: str | None = None,
 ) -> None:
     """Run end-to-end mining, alignment, validation, and packaging."""
     eval_dir = output_dir / "eval"
@@ -1680,24 +2781,10 @@ def run_pipeline(
 
     # 3. Partition held-out evaluation vs. training
     canonical_terms = {cp.authentic.strip().lower() for cp in CANONICAL_CALQUE_PAIRS} | {cp.calque.strip().lower() for cp in CANONICAL_CALQUE_PAIRS}
-    eval_calques = [c for c in all_calques if c.is_held_out and c.calque.strip().lower() not in canonical_terms and c.authentic.strip().lower() not in canonical_terms]
+    eval_calques = HELD_OUT_CURATED_CALQUE_PAIRS
     train_calques = [c for c in all_calques if not c.is_held_out]
 
     eval_units = [u for u in (ulif_units + fraz_units) if u.is_held_out and u.idiom.strip().lower() not in canonical_terms]
-
-    # Deduplicate train units pool by normalized idiom string to guarantee 100% disjoint, unique idioms
-    seen_train_idioms: set[str] = set()
-    unique_train_pool: list[PhraseologyUnit] = []
-    for u in (ulif_units + fraz_units):
-        if not u.is_held_out:
-            norm_id = u.idiom.strip().lower()
-            if norm_id not in seen_train_idioms and norm_id not in canonical_terms:
-                seen_train_idioms.add(norm_id)
-                unique_train_pool.append(u)
-
-    random.Random(8140).shuffle(unique_train_pool)
-    train_units = unique_train_pool[:15000]
-    dialogue_units = unique_train_pool[15000:20000] if len(unique_train_pool) >= 20000 else unique_train_pool[10000:15000]
 
     # Partition synonyms: reserve 500 for eval, rest for training
     random.Random(8140).shuffle(synonym_groups)
@@ -1705,8 +2792,8 @@ def run_pipeline(
     train_synonyms = synonym_groups[500:]
 
     logger.info(
-        "Partitioning: %d held-out units, %d train units, %d dialogue units; %d held-out calques, %d train calques; %d train synonyms",
-        len(eval_units), len(train_units), len(dialogue_units), len(eval_calques), len(train_calques), len(train_synonyms)
+        "Partitioning: %d held-out units; %d held-out curated calques, %d train calques; %d train synonyms",
+        len(eval_units), len(eval_calques), len(train_calques), len(train_synonyms)
     )
 
     target_eval = 20 if sample_only else 1500
@@ -1740,15 +2827,89 @@ def run_pipeline(
     eval_calque_phrases = {r["calqued_counterpart"].strip().lower() for r in eval_records if r.get("calqued_counterpart")}
     disallowed_in_train = eval_target_phrases | eval_calque_phrases
 
+    # Extract multiword stem sets from eval targets to filter training pool (Finding 7)
+    lemma_cache: dict[str, str] = {}
+    eval_multiword_stems: list[tuple[str, set[str]]] = []
+    for p in disallowed_in_train:
+        stems = get_phrase_lemmas(p, cur_ves, lemma_cache)
+        if len(stems) >= 2:
+            eval_multiword_stems.append((p, stems))
+
+    # Fast indexed candidate leak filtering against eval multiword stems (Finding 7)
+    stem_to_eval: dict[str, list[tuple[str, set[str], int]]] = defaultdict(list)
+    for orig_p, target_stems in eval_multiword_stems:
+        anchor = min(target_stems, key=lambda s: len(s))
+        stem_to_eval[anchor].append((orig_p, target_stems, len(target_stems)))
+
+    def has_candidate_leak(text: str) -> bool:
+        if not text:
+            return False
+        words = [w.lower() for w in re.findall(r"[а-яіїєґА-ЯІЇЄҐ']+", text) if len(w) >= 3 and w.lower() not in STOP_WORDS]
+        if len(words) < 2:
+            return False
+        lemmas = [get_word_lemma_or_stem(w, cur_ves, lemma_cache) for w in words]
+        all_lemmas = set(lemmas)
+
+        candidates = []
+        for s in all_lemmas:
+            if s in stem_to_eval:
+                for orig_p, target_stems, k in stem_to_eval[s]:
+                    if target_stems.issubset(all_lemmas):
+                        candidates.append((orig_p, target_stems, k))
+
+        if not candidates:
+            return False
+
+        if len(lemmas) <= 20:
+            return True
+
+        for _orig_p, target_stems, k in candidates:
+            win_size = k + 4
+            for start in range(len(lemmas) - k + 1):
+                if target_stems.issubset(set(lemmas[start : start + win_size])):
+                    return True
+        return False
+
     train_calques = [
         c for c in train_calques
         if c.authentic.strip().lower() not in disallowed_in_train
         and c.calque.strip().lower() not in disallowed_in_train
+        and not has_candidate_leak(c.authentic)
+        and not has_candidate_leak(c.calque)
+        and not has_candidate_leak(c.mechanism)
     ]
-    clean_train_pool = [u for u in unique_train_pool if u.idiom.strip().lower() not in disallowed_in_train]
-    train_units = clean_train_pool[:15000]
-    dialogue_units = clean_train_pool[15000:20000] if len(clean_train_pool) >= 20000 else clean_train_pool[10000:15000]
-    train_synonyms = [sg for sg in train_synonyms if sg.headword.strip().lower() not in disallowed_in_train]
+
+    # Clean frazeolohichnyi pool for literary interpretation (100% grounded against frazeolohichnyi)
+    clean_fraz_pool = [
+        u for u in fraz_units
+        if not u.is_held_out
+        and u.idiom.strip().lower() not in disallowed_in_train
+        and u.idiom.strip().lower() not in canonical_terms
+        and not has_candidate_leak(u.idiom)
+        and not has_candidate_leak(u.definition)
+        and not has_candidate_leak(u.citation_text)
+    ]
+    random.Random(8140).shuffle(clean_fraz_pool)
+    train_units = clean_fraz_pool[:20000] if len(clean_fraz_pool) >= 20000 else clean_fraz_pool
+
+    # Clean ULIF phraseology pool for dialogue usage
+    clean_ulif_pool = [
+        u for u in ulif_units
+        if not u.is_held_out
+        and u.idiom.strip().lower() not in disallowed_in_train
+        and u.idiom.strip().lower() not in canonical_terms
+        and not has_candidate_leak(u.idiom)
+        and not has_candidate_leak(u.definition)
+    ]
+    random.Random(8140).shuffle(clean_ulif_pool)
+    dialogue_units = clean_ulif_pool[:5000] if len(clean_ulif_pool) >= 5000 else clean_ulif_pool
+
+    train_synonyms = [
+        sg for sg in train_synonyms
+        if sg.headword.strip().lower() not in disallowed_in_train
+        and not has_candidate_leak(sg.headword)
+        and not any(has_candidate_leak(s) for s in sg.synonyms)
+    ][:15000]
 
     # 5. Generate SFT Dataset
     _sft_manifest, sft_manifest_sha, sft_tasks = generate_sft_dataset(
@@ -1776,7 +2937,7 @@ def run_pipeline(
     )
 
     # 7. Audit Zero Leakage & Zero Target Overlap on disk
-    audit_zero_train_eval_leakage(sft_dir=sft_dir, dpo_dir=dpo_dir, eval_records=eval_records)
+    audit_zero_train_eval_leakage(sft_dir=sft_dir, dpo_dir=dpo_dir, eval_records=eval_records, cur_ves=cur_ves)
 
     # 8. Verify Invariants programmatically
     verification_info = verify_receipt_invariants(
@@ -1785,6 +2946,7 @@ def run_pipeline(
         dpo_dir=dpo_dir,
         cur_ves=cur_ves,
         sources_db=sources_db,
+        all_calques=all_calques,
     )
 
     # 9. Generate Release Receipt (if full production run)
@@ -1804,6 +2966,7 @@ def run_pipeline(
             output_path=receipt_path,
             sft_dir=sft_dir,
             dpo_dir=dpo_dir,
+            git_commit=git_commit,
         )
 
 
@@ -1814,6 +2977,7 @@ def main() -> None:
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR, help="Release directory")
     parser.add_argument("--sample-only", action="store_true", help="Generate small sample dataset for smoke testing")
+    parser.add_argument("--git-commit", type=str, default=None, help="Explicit repository commit hash for release receipt")
     args = parser.parse_args()
 
     logger.info("Starting Phase 6.2 ULIF Phraseology Mining Engine")
@@ -1827,6 +2991,7 @@ def main() -> None:
         vesum_db=args.vesum_db,
         output_dir=args.output_dir,
         sample_only=args.sample_only,
+        git_commit=args.git_commit,
     )
 
 
