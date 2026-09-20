@@ -182,9 +182,24 @@ async function landingTtfi(page, shot) {
   await ctl.waitFor({ state: 'visible', timeout: 20000 });
   const ttfc = now() - t0;
   // Visible is not interactive: also require the control to be enabled and record when.
-  const firstControlEnabled = await ctl.isEnabled().catch(() => false)
-    || await ctl.waitFor({ state: 'visible' }).then(() => ctl.isEnabled(), () => false);
-  const ttfcEnabled = now() - t0;
+  // Bounded wait; a control that never enables reports null, not the elapsed time.
+  let firstControlEnabled = false;
+  let ttfcEnabled = null;
+  try {
+    const handle = await ctl.elementHandle({ timeout: 5000 });
+    if (handle) {
+      await page.waitForFunction(
+        (el) => el.isConnected && !el.disabled && !el.hasAttribute('disabled') && el.getAttribute('aria-disabled') !== 'true',
+        handle,
+        { timeout: 5000 },
+      );
+      firstControlEnabled = true;
+      ttfcEnabled = now() - t0;
+    }
+  } catch {
+    firstControlEnabled = false;
+    ttfcEnabled = null;
+  }
   await page.waitForLoadState('load');
   const loadMs = now() - t0;
   const info = await page.evaluate(() => {
@@ -198,7 +213,7 @@ async function landingTtfi(page, shot) {
     };
   });
   const firstControl = await ctl.evaluate((e) => (e.textContent || e.getAttribute('aria-label') || e.tagName).replace(/\s+/g, ' ').trim().slice(0, 60));
-  return { timeToFirstVisibleControlMs: round(ttfc), firstControlEnabled, timeToEnabledControlMs: round(ttfcEnabled), loadMs: round(loadMs), firstControl, landingShot: await shot('landing'), ...info };
+  return { timeToFirstVisibleControlMs: round(ttfc), firstControlEnabled, timeToEnabledControlMs: ttfcEnabled === null ? null : round(ttfcEnabled), loadMs: round(loadMs), firstControl, landingShot: await shot('landing'), ...info };
 }
 
 async function directPractice404(page, shot) {
@@ -263,12 +278,13 @@ async function exerciseMode(page, mode, shot) {
   } else {
     const opt = page.locator([
       'button.mc-opt', '.lexicon-option-list button', '[data-activity="choice-option"]',
-      '.match-tile', '[data-activity^="match-"]',
+      'button.match-tile', 'button[data-activity^="match-"]', 'button[data-activity*="tile"]',
+      '[data-activity^="match-"] button:visible',
       '.cloze-input', 'input[data-activity]', 'input.cloze-blank',
       'main [role="option"]:visible', 'main [data-activity] button:visible', 'main [data-testid$="-options"] button:visible',
     ].join(', ')).first();
     if (await opt.count()) {
-      const kind = await opt.evaluate((e) => (e.matches('input,textarea') ? 'input' : e.matches('.match-tile,[data-activity^="match-"]') ? 'tile' : 'option'));
+      const kind = await opt.evaluate((e) => (e.matches('input,textarea') ? 'input' : e.matches('.match-tile,[data-activity^="match-"] button,button[data-activity^="match-"],button[data-activity*="tile"]') ? 'tile' : 'option'));
       const stateOf = (el) => el.evaluate((e) => `${e.className}|${e.getAttribute('aria-pressed')}|${e.getAttribute('aria-checked')}|${e.disabled}|${e.value ?? ''}`);
       const before = await stateOf(opt).catch(() => '');
       try {
