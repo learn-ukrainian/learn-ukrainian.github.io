@@ -279,7 +279,8 @@ English is only for translation, gloss, and short scaffolds. Honor the Immersion
 3. **Dialogues are Ukrainian-first.** Use `<DialogueBox uk="..." en="..." />` for side-by-side translation. The `uk` turn is Ukrainian-only; do not interleave English grammar inside turns.
 4. **Dialogue inline gloss discipline.** Keep any A1/A2 line-level English support no more than 8 words from its Ukrainian dialogue line; put full translation at the block bottom.
 5. **Comprehension/recall is Ukrainian-only.** Tab 3 content stems and answer options are Ukrainian-only; English appears only in UI affordances.
-6. **Use a named first-person teacher persona or named characters.** Anchor examples in real Ukrainian places/foods/routines; never write abstractly about "the student must learn...".
+6. **No named narrator.** Teaching voice is "you" / "your", not "Hi, I'm Anna/Oksana/Teacher X". Named people only inside dialogues. Copy Ohoiko's *method* (sound, then English that explains, then Ukrainian again), not her scripts or persona. Anchor examples in real Ukrainian places/foods/routines; never "the student must learn...".
+6b. **Unread letters.** Until this module (and earlier ones) have taught a grapheme, do not ask the learner to *read* it in teaching prose. English carries the explanation; Ukrainian is the example with audio/video. A1.1 modules 1–4 need English next to prompts, options, and explanations.
 7. **A2 English limit.** In A2, English is limited to vocabulary glosses or one-line clarification when truly needed; do not add English support paragraphs to the module body.
 8. **Forbidden foreigner-textbook anti-patterns:** "X sounds like Y in English", transliteration tables, English grammar paragraphs with Ukrainian bolted on, "the student must learn", and English topic-sentence openers.
 

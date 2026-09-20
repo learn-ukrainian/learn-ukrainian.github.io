@@ -1637,3 +1637,52 @@ def test_non_alphabet_ec_keeps_legal_declined_distractors(monkeypatch):
     _, _, chips = gates._ec_rendered_chips(item, alphabet=False)
     assert called == []
     assert "чаю" in chips or any(gates.strip_acute(gates.nfc(c)).lower() == "чаю" for c in chips)
+
+
+def test_named_narrator_is_a_defect():
+    assert gates.named_narrator_defects("Teacher Oksana's routine for this module is short.", "L1: ")
+    assert not gates.named_narrator_defects("Окса́на: — Приві́т!\nYou answer.", "L1: ")
+
+
+def test_unread_ukrainian_wall_is_a_defect():
+    wall = "Це перше речення без англійської.\nЦе друге речення без англійської.\nЦе третє речення без англійської."
+    assert gates.unread_ukrainian_wall_defects(wall, "L1: ")
+    ok = "Це **день**. — This is the word day.\nYou hear **ь** at the end."
+    assert gates.unread_ukrainian_wall_defects(ok, "L1: ") == []
+
+
+def test_landing_rejects_named_narrator_and_l1_copy(tmp_path):
+    module = tmp_path / "a1"
+    source = tmp_path / "a1-v1"
+    module.mkdir()
+    source.mkdir()
+    opening = (
+        "Teacher Oksana's routine is short.\n\n"
+        "By the end, you can:\n- read **день**.\n\nKeep the scope small. Two signs.\n"
+    )
+    (source / "module.md").write_text("# T\n\n" + opening + "\n## Next\n")
+    (module / "landing-overview.md").write_text(opening)
+    plan = {"level": "a1", "slug": "special-signs"}
+    defects = gates.landing_overview_defects(module, source, plan)
+    assert any("named-narrator" in d for d in defects)
+
+
+def test_watch_and_repeat_videos_must_survive(tmp_path):
+    module = tmp_path / "a1"
+    source = tmp_path / "a1-v1"
+    module.mkdir()
+    source.mkdir()
+    (module / "lesson-1").mkdir()
+    url = "https://www.youtube.com/watch?v=letter-soft-sign"
+    (source / "activities.yaml").write_text(
+        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  items:\n"
+        "  - letter: Ь\n    word: кінь\n    video: " + url + "\n"
+    )
+    (module / "lesson-1" / "activities.yaml").write_text("inline: []\nworkbook: []\n")
+    defects = gates.watch_and_repeat_preservation_defects(module, source)
+    assert defects
+    (module / "lesson-1" / "activities.yaml").write_text(
+        "inline:\n- id: act-v1\n  type: watch-and-repeat\n  items:\n"
+        "  - letter: Ь\n    word: кінь\n    video: " + url + "\n"
+    )
+    assert gates.watch_and_repeat_preservation_defects(module, source) == []
