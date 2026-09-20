@@ -1,0 +1,184 @@
+# Frozen pre-M3 special-signs lessons.yaml (upgrade-prompt *input*).
+# Live a1/special-signs/lessons.yaml is the post-upgrade map; do not sync from it.
+
+lessons:
+- n: 1
+  title: 'М''яки́й знак (Ь) та африка́ти: Лі́тери Ь, Ц, Ч · Soft Sign (Ь) and Affricates:
+    Letters Ь, Ц, Ч'
+  sections:
+  - М'який знак
+  - Африкати Ц та Ч
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 2
+  title: 'Йото́вані лі́тери та напівголосни́й: Лі́тери Й, Я, Ю, Є · Iotated Vowels
+    and Semivowel: Letters Й, Я, Ю, Є'
+  sections:
+  - Йотовані голосні
+  - Буква Й та етикетні формули
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 3
+  title: 'За́вжди два зву́ки: Лі́тери Ї, Щ та лі́тера Ф · Always Two Sounds: Letters
+    Ї, Щ and Letter Ф'
+  sections:
+  - 'Завжди два звуки: Ї та Щ'
+  - Буква Ф та повний спектр вітань
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 4
+  title: 'Апо́строф і три ключові́ контра́сти: буря́к, бур''я́н, свя́то · The Apostrophe
+    and Three Key Contrasts: буря́к, бур''я́н, свя́то'
+  sections:
+  - Апостроф
+  - Контраст і пастки
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - Мар'я́но
+  unverified_lemmas: []
+- n: 5
+  title: Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation
+    Rules and Special Signs Synthesis
+  sections:
+  - Перенос і письмо
+  - Далі
+  - Підсумок модуля
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress:
+  - Мар'я́но
+  unverified_lemmas: []
+closes_module: 5
+provenance:
+- placement: inline
+  index: 0
+  new_id: act-1
+  lesson: 4
+- placement: inline
+  index: 1
+  new_id: act-2
+  lesson: 1
+- placement: inline
+  index: 2
+  new_id: act-3
+  lesson: 4
+- placement: inline
+  index: 3
+  new_id: act-4
+  lesson: 4
+- placement: inline
+  index: 4
+  new_id: act-5
+  lesson: 5
+- placement: workbook
+  index: 0
+  new_id: act-w1
+  lesson: 4
+- placement: workbook
+  index: 1
+  new_id: act-w2
+  lesson: 4
+- placement: workbook
+  index: 2
+  new_id: act-w3
+  lesson: 4
+- placement: workbook
+  index: 3
+  new_id: act-w4
+  lesson: 4
+- placement: workbook
+  index: 4
+  new_id: act-w5
+  lesson: 5
+- placement: workbook
+  index: 5
+  new_id: act-w6
+  lesson: 5
+- placement: workbook
+  index: 6
+  new_id: act-w7
+  lesson: 5
+items_min_exempt:
+- id: act-1
+  reason: 3-item original activity preserved from baseline
+- id: act-2
+  reason: 5-item original activity preserved from baseline
+- id: act-3
+  reason: 4-item original activity preserved from baseline
+- id: act-4
+  reason: 4-item original activity preserved from baseline
+- id: act-5
+  reason: 4-item original activity preserved from baseline
+- id: act-w2
+  reason: 4-item original activity preserved from baseline
+- id: act-w4
+  reason: 4-item original activity preserved from baseline
+- id: act-w5
+  reason: 5-item original activity preserved from baseline
+- id: act-w6
+  reason: 3-item original activity preserved from baseline
+- id: act-w7
+  reason: 3-item original activity preserved from baseline
+proper_names:
+- Київ
+- Україна
+- Мар'яна
+- Софія
+- Марко
+- Вашуленко
+- Захарійчук
+- Большакова
+- Пристинська
+- Авраменко
+- Оксана
+- Тарас
+- Анна
+- Огойко
+- Мар'я́но

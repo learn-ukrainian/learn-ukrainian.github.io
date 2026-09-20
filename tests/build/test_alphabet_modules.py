@@ -1,7 +1,9 @@
 """#8237: alphabet modules must not receive line-break (перенос) instructions."""
 from __future__ import annotations
 
+import copy
 import re
+from pathlib import Path
 
 import pytest
 import yaml
@@ -9,6 +11,19 @@ import yaml
 from scripts.build import alphabet_modules as am
 from scripts.build import linear_pipeline
 from scripts.build.phases.wiki_compressor import _build_scenario_tokens, compress_wiki_packet
+
+# Pre-M3 published map: L5 still lists «Перенос і письмо» (and a hyphenation
+# title). Post-upgrade live lessons.yaml is synthesis-only; upgrade-prompt
+# tests must not treat that published output as the upgrade *input*.
+_SPECIAL_SIGNS_UPGRADE_INPUT_LESSONS = Path(__file__).resolve().parent / (
+    "fixtures/special_signs_upgrade_input_lessons.yaml"
+)
+
+
+def _special_signs_upgrade_input_lesson_map() -> dict:
+    return copy.deepcopy(
+        yaml.safe_load(_SPECIAL_SIGNS_UPGRADE_INPUT_LESSONS.read_text(encoding="utf-8"))
+    )
 
 PLAN = {
     "slug": "special-signs",
@@ -178,14 +193,14 @@ def _region(prompt: str, start: str, end: str) -> str:
 
 @pytest.mark.parametrize("lesson", [None, 5])
 def test_special_signs_upgrade_prompt_has_no_hyphenation_lesson(monkeypatch, lesson):
-    """The real five-lesson map and a1-v1 sources, rendered with no model call."""
+    """Frozen pre-M3 five-lesson map + live plan/a1-v1, rendered with no model call."""
     monkeypatch.setattr(
         linear_pipeline, "invoke_writer",
         lambda *a, **kw: (_ for _ in ()).throw(AssertionError("called a model")),
     )
     root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
     plan = yaml.safe_load((root / "plans/a1/special-signs.yaml").read_text(encoding="utf-8"))
-    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    lesson_map = _special_signs_upgrade_input_lesson_map()
     assert len(lesson_map["lessons"]) == 5
     assert "Перенос і письмо" in lesson_map["lessons"][4]["sections"]  # the input does carry it
 
@@ -339,7 +354,7 @@ def test_special_signs_upgrade_prompt_has_no_worded_empty_choice_or_divide_words
 
     root = linear_pipeline.PROJECT_ROOT / "curriculum/l2-uk-en"
     plan = yaml.safe_load((root / "plans/a1/special-signs.yaml").read_text(encoding="utf-8"))
-    lesson_map = yaml.safe_load((root / "a1/special-signs/lessons.yaml").read_text(encoding="utf-8"))
+    lesson_map = _special_signs_upgrade_input_lesson_map()
     source = root / "a1-v1/special-signs"
     dirty = yaml.safe_load((source / "activities.yaml").read_text(encoding="utf-8"))
     assert any(lesson_gates.fill_in_activity_defects(a) for a in dirty["inline"] + dirty["workbook"])
