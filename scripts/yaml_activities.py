@@ -16,9 +16,15 @@ import yaml
 
 try:
     # Repo-root imports (scripts.api.main, audit chain) resolve the package form.
-    from scripts.build.activity_renderer import error_correction_render_values
+    from scripts.build.activity_renderer import (
+        error_correction_render_values,
+        unique_error_correction_options,
+    )
 except ImportError:  # pragma: no cover - scripts/-rooted callers (MDX generator)
-    from build.activity_renderer import error_correction_render_values
+    from build.activity_renderer import (
+        error_correction_render_values,
+        unique_error_correction_options,
+    )
 
 # =============================================================================
 # DATA CLASSES
@@ -1960,7 +1966,7 @@ class ActivityParser:
                 "sentence": str(i.sentence),
                 "errorWord": str(i.error) if i.error is not None else None,
                 "correctForm": correct_form,
-                "options": options,
+                "options": unique_error_correction_options(options),
                 "explanation": str(i.explanation),
             })
         instruction_prop = (

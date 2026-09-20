@@ -530,7 +530,8 @@ class TestMDXGeneration:
         mdx = parser.to_mdx(parser.parse(yaml_file))
 
         assert '"correctForm": "вчитель"' in mdx
-        assert '"options": ["вчитель", "вчителька", "вчитель"]' in mdx
+        # Sentence variants that reduce to the same form render as one chip.
+        assert '"options": ["вчитель", "вчителька"]' in mdx
 
 
 # =============================================================================

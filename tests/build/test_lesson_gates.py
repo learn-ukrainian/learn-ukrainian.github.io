@@ -1126,7 +1126,9 @@ def test_alphabet_dirty_archive_copy_still_fails_fill_in_and_ec_gates(gold):
     for aid in ("act-3", "act-w5"):
         assert any(f" {aid}[" in d and "words the empty choice" in d for d in blocking), blocking
     for aid in ("act-4", "act-w3"):
-        assert any(f" {aid}[" in d and "error-correction needs >=3 options" in d for d in blocking), blocking
+        # Alphabet slugs count unique chips (>=2 passes), so the archive's
+        # [correction, error] blocks on the error chip, not on the count.
+        assert any(f" {aid}[" in d and "must not contain the spotted error" in d for d in blocking), blocking
 
 
 def test_non_alphabet_preservation_still_compares_the_raw_archive(gold):
@@ -1528,3 +1530,55 @@ def test_alphabet_citation_surnames_warn_instead_of_block():
     assert cited == ["Захарійчу́к: undeclared unverified stress"]
     assert blocking == wrong[1:]
     assert gates.citation_surnames("Строка́ль пи́ше. Далі нічо́го.") == set()
+
+
+def test_alphabet_error_correction_counts_unique_options():
+    """#7994: alphabet slugs count chips unique; two distinct chips pass with a warning."""
+    cloned = {
+        "sentence": "Це моя́ сімя́.",
+        "error": "сімя́",
+        "correction": "сім'я́",
+        "options": ["сім'я́", "сім'я́", "сьім'я"],
+        "explanation": "Apostrophe after м before я.",
+    }
+    assert gates.error_correction_item_defects(cloned, level="a1", alphabet=True) == []
+    warnings = gates.error_correction_item_warnings(cloned, level="a1", alphabet=True)
+    assert any("2 distinct options" in w for w in warnings)
+    # Non-alphabet still blocks the duplicate.
+    assert any(
+        "duplicates" in d for d in gates.error_correction_item_defects(cloned, level="a1")
+    )
+    assert not any(
+        "distinct" in w for w in gates.error_correction_item_warnings(cloned, level="a1")
+    )
+
+    winner_only = {
+        "sentence": "Це ло́шка.",
+        "error": "ло́шка",
+        "correction": "ло́жка",
+        "options": ["ло́жка", "ло́жка", "ло́жка"],
+    }
+    blocked = gates.error_correction_item_defects(winner_only, level="a1", alphabet=True)
+    assert any(">=2 distinct" in d for d in blocked)
+
+    with_error = {**cloned, "options": ["сім'я́", "сімя́", "сьім'я"]}
+    assert any(
+        "must not contain the spotted error" in d
+        for d in gates.error_correction_item_defects(with_error, level="a1", alphabet=True)
+    )
+
+    no_correction = {**cloned, "options": ["сьім'я", "сем'я"]}
+    assert gates.error_correction_item_defects(no_correction, level="a1", alphabet=True)
+
+    three = {**cloned, "options": ["сім'я́", "сьім'я", "сем'я"]}
+    assert gates.error_correction_item_defects(three, level="a1", alphabet=True) == []
+    assert not any(
+        "distinct" in w
+        for w in gates.error_correction_item_warnings(three, level="a1", alphabet=True)
+    )
+
+
+def test_error_correction_render_drops_repeated_chip():
+    from scripts.build.activity_renderer import unique_error_correction_options
+
+    assert unique_error_correction_options(["сім'я́", "сім'я́", "сьім'я"]) == ["сім'я́", "сьім'я"]
