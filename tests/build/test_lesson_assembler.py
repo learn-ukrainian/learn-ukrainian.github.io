@@ -433,3 +433,73 @@ def test_alphabet_mdx_error_correction_matches_gate_chips(monkeypatch):
     _, _, gate_chips = gates._ec_rendered_chips(item, alphabet=True)
     assert rendered == gate_chips
     assert gates.error_correction_item_defects(item, level="a1", alphabet=True) == []
+
+
+def test_alphabet_assemble_persists_ec_repair_into_activities_yaml(tmp_path, monkeypatch):
+    """Assemble writes repaired chips to activities.yaml so gates read YAML."""
+    from scripts.build import lesson_gates as gates
+    from scripts.build.alphabet_modules import _chip_key
+
+    monkeypatch.setattr("scripts.build.alphabet_modules.vesum_is_word", lambda _w: False)
+
+    module = tmp_path / "module"
+    lesson = module / "lesson-1"
+    lesson.mkdir(parents=True)
+    (module / "lessons.yaml").write_text(
+        yaml.safe_dump({"lessons": [{"n": 1, "title": "Знаки", "minutes": 60, "sections": ["s1"], "word_target": 600}]}),
+        encoding="utf-8",
+    )
+    plan = tmp_path / "plan.yaml"
+    plan.write_text(
+        yaml.safe_dump({"slug": "special-signs", "level": "a1", "sequence": 3, "title": "Special signs"}),
+        encoding="utf-8",
+    )
+    (lesson / "module.md").write_text("# Знаки\n\nBy the end, you can read soft signs.\n\n", encoding="utf-8")
+    (lesson / "vocabulary.yaml").write_text("[]\n", encoding="utf-8")
+    (lesson / "resources.yaml").write_text("[]\n", encoding="utf-8")
+    cloned = {
+        "inline": [
+            {
+                "id": "act-1",
+                "type": "error-correction",
+                "instruction": "Fix the spelling.",
+                "items": [
+                    {
+                        "sentence": "Це ло́шка.",
+                        "error": "ло́шка",
+                        "correction": "ло́жка",
+                        "options": ["ло́жка", "ло́жка", "ло́жка"],
+                        "explanation": "Write ж, not ш.",
+                    }
+                ],
+            }
+        ],
+        "workbook": [
+            {
+                "id": "act-w1",
+                "type": "error-correction",
+                "instruction": "Fix.",
+                "items": [
+                    {
+                        "sentence": "Моя́ сімя́.",
+                        "error": "сімя́",
+                        "correction": "сім'я́",
+                        "options": ["сім'я́", "сім'я́"],
+                        "explanation": "Apostrophe.",
+                    }
+                ],
+            }
+        ],
+    }
+    acts_path = lesson / "activities.yaml"
+    acts_path.write_text(yaml.safe_dump(cloned, allow_unicode=True, sort_keys=False), encoding="utf-8")
+
+    pages = assemble_lessons(module, tmp_path / "site", plan, validated=False)
+    disk = yaml.safe_load(acts_path.read_text(encoding="utf-8"))
+    for placement in ("inline", "workbook"):
+        opts = disk[placement][0]["items"][0]["options"]
+        assert len(opts) == len({_chip_key(c) for c in opts})
+        assert len(opts) >= 2
+        assert gates.contradictions({"items": disk[placement][0]["items"]}, disk[placement][0]["id"]) == []
+    assert "ло́жка" in pages["1"]
+    assert "сім'я́" in pages["index"] or "сім\\'я́" in pages["index"]

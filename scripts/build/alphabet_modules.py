@@ -157,8 +157,8 @@ def repair_error_correction_options(
     """
     winner = correct_form if isinstance(correct_form, str) else (str(correct_form) if correct_form else "")
     err = error if isinstance(error, str) else (str(error) if error else "")
-    if not isinstance(options, list):
-        return [winner] if winner else []
+    # Missing / non-list options: assembler still fills illegal mutants (#7994 persist).
+    opts = options if isinstance(options, list) else []
 
     winner_key = _chip_key(winner) if winner else ""
     err_key = _chip_key(err) if err else ""
@@ -183,7 +183,7 @@ def repair_error_correction_options(
         seen.add(winner_key)
         kept.append(winner)
 
-    for opt in options:
+    for opt in opts:
         if isinstance(opt, str):
             _accept(opt)
 
@@ -195,6 +195,70 @@ def repair_error_correction_options(
     if len(kept) < 2:
         return [winner] if winner else []
     return kept
+
+
+def persist_alphabet_ec_options(
+    activities: Any,
+    *,
+    is_word: Callable[[str], bool] | None = None,
+) -> Any:
+    """Rewrite Find-and-Fix ``options`` to the repaired chip list (#7994).
+
+    Alphabet assemble only (caller gates). Mutates mappings in place so
+    ``activities.yaml``, the contradictory-payload gate, MDX, and landing union
+    all see one list. Missing ``options`` still become the repaired chips.
+    """
+    from scripts.build.activity_renderer import error_correction_render_values
+
+    word_fn = is_word or vesum_is_word
+
+    def _repair_item(item: Any) -> None:
+        if not isinstance(item, dict):
+            return
+        raw_opts = item.get("options")
+        opts = raw_opts if isinstance(raw_opts, list) else []
+        correction = (
+            item.get("correction")
+            or item.get("answer")
+            or item.get("correctForm")
+            or ""
+        )
+        if not isinstance(correction, str):
+            correction = str(correction) if correction else ""
+        sentence = item.get("sentence", "")
+        if not isinstance(sentence, str):
+            sentence = ""
+        error_tok = item.get("error", "") or ""
+        _, repaired = error_correction_render_values(
+            sentence,
+            error_tok if isinstance(error_tok, str) else str(error_tok),
+            correction,
+            opts,
+            alphabet=True,
+            is_word=word_fn,
+        )
+        if isinstance(repaired, list):
+            item["options"] = repaired
+
+    def _repair_activity(act: Any) -> None:
+        if not isinstance(act, dict) or act.get("type") != "error-correction":
+            return
+        items = act.get("items")
+        if isinstance(items, list):
+            for row in items:
+                _repair_item(row)
+
+    if isinstance(activities, Mapping):
+        for key in ("inline", "workbook"):
+            section = activities.get(key)
+            if isinstance(section, list):
+                for act in section:
+                    _repair_activity(act)
+        return activities
+    if isinstance(activities, list):
+        for act in activities:
+            _repair_activity(act)
+    return activities
 
 
 def _plain(text: str) -> str:

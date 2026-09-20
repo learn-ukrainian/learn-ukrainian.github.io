@@ -450,13 +450,15 @@ def error_correction_render_values(
     this path so they cannot disagree.
     """
     correct_form = derive_error_correction_replacement(sentence, error, correction)
-    rendered_options = options
-    if isinstance(options, list):
+    # Alphabet assemble may omit ``options``; treat as [] so repair can fill chips.
+    opts = options if isinstance(options, list) else ([] if alphabet else options)
+    rendered_options = opts
+    if isinstance(opts, list):
         rendered_options = [
             derive_error_correction_replacement(
                 sentence, error, option, allow_unchanged=True
             ) or option
-            for option in options
+            for option in opts
         ]
     winner = correct_form or correction
     if alphabet and isinstance(rendered_options, list):

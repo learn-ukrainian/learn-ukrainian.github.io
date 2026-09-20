@@ -291,10 +291,14 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     """Emit index.mdx and numbered pages; vocabulary accumulates by first use.
 
     ``output_dir`` is the module directory under the canonical site level. Source
-    artifacts remain in ``module_dir/lesson-N``; no source content is rewritten.
+    artifacts remain in ``module_dir/lesson-N`` except alphabet Find-and-Fix
+    chips: repaired ``options`` are written back to ``activities.yaml`` so the
+    gate, MDX, and landing union share one list (#7994).
     """
-    from scripts.build.activity_renderer import error_correction_render_values
-    from scripts.build.alphabet_modules import is_alphabet_slug
+    from scripts.build.alphabet_modules import (
+        is_alphabet_slug,
+        persist_alphabet_ec_options,
+    )
 
     manifest = yaml.safe_load((module_dir / "lessons.yaml").read_text(encoding="utf-8"))
     plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
@@ -315,30 +319,18 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     cards = []
     tab_links = []
 
-    def _repair_alphabet_ec(activities: list) -> None:
-        """In-memory chip repair so MDX matches the alphabet gate (disk untouched)."""
-        if not alphabet:
-            return
-        for act in activities:
-            if getattr(act, "type", None) != "error-correction":
-                continue
-            for item in getattr(act, "items", []) or []:
-                _, repaired = error_correction_render_values(
-                    getattr(item, "sentence", ""),
-                    getattr(item, "error", "") or "",
-                    getattr(item, "answer", "") or "",
-                    list(getattr(item, "options", []) or []),
-                    alphabet=True,
-                )
-                if isinstance(repaired, list):
-                    item.options = repaired
-
     for offset, lesson in enumerate(lessons):
         n = lesson["n"]
         source = module_dir / f"lesson-{n}"
-        activities, lesson_workbook = _activities(source / "activities.yaml")
-        _repair_alphabet_ec(activities)
-        _repair_alphabet_ec(lesson_workbook)
+        activities_path = source / "activities.yaml"
+        if alphabet:
+            raw = yaml.safe_load(activities_path.read_text(encoding="utf-8"))
+            persist_alphabet_ec_options(raw)
+            activities_path.write_text(
+                yaml.safe_dump(raw, allow_unicode=True, sort_keys=False),
+                encoding="utf-8",
+            )
+        activities, lesson_workbook = _activities(activities_path)
         for item in _rows(source / "vocabulary.yaml", "vocabulary"):
             vocabulary.setdefault(_lemma(item), item)
         lesson_resources = _rows(source / "resources.yaml", "resources")
