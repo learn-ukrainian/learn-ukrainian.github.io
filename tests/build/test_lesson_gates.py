@@ -616,7 +616,8 @@ def test_name_substring_of_archived_citation_is_still_unattributed(gold):
     path = module / "lesson-1/module.md"
     path.write_text(path.read_text() + "\nOhoiko\n")
     report = gates.run_lesson_gates(module, source, plan)
-    assert any("unattributed reference-name" in d for d in report["blocking"])
+    assert not any("unattributed reference-name" in d for d in report["blocking"])
+    assert any("unattributed reference-name" in d for d in report["warnings"])
 
 
 def test_list_shaped_baseline_activities_do_not_crash(gold):
