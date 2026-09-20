@@ -65,10 +65,15 @@ export default function SettingsDrawer({
     if (!isOpen) {
       if (wasOpenRef.current) {
         wasOpenRef.current = false;
-        if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+        const active = document.activeElement;
+        const isSwitchOffer =
+          active &&
+          (active.closest?.('.k3-switch-offer') ||
+            active.getAttribute?.('data-testid')?.includes('practice-switch-session'));
+        if (!isSwitchOffer && previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
           previousFocusRef.current.focus();
-          previousFocusRef.current = null;
         }
+        previousFocusRef.current = null;
       }
       return;
     }
@@ -296,6 +301,7 @@ export default function SettingsDrawer({
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.5rem' }}>
                 <button
                   type="button"
+                  data-testid="practice-settings-deck-all"
                   className={`btn btn-sm ${selectedDeckFilter === 'all' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
                   onClick={() => onRequestDeckSwitch('all')}
                   style={selectedDeckFilter === 'all' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}
@@ -305,6 +311,7 @@ export default function SettingsDrawer({
                 </button>
                 <button
                   type="button"
+                  data-testid="practice-settings-deck-virtual_teacher_lesson"
                   className={`btn btn-sm ${selectedDeckFilter === 'virtual_teacher_lesson' ? 'btn-primary shadow-md' : 'btn-ghost'}`}
                   onClick={() => onRequestDeckSwitch('virtual_teacher_lesson')}
                   style={selectedDeckFilter === 'virtual_teacher_lesson' ? { border: '2px solid #3b82f6', fontWeight: 800 } : {}}

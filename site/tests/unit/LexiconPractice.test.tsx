@@ -20,6 +20,8 @@ import znoSyntacticNormDeck from '@site/src/data/practice-zno.syntactic-norm.jso
 import znoOrthographyDeck from '@site/src/data/practice-zno.orthography.json';
 import {
   SRS_STORAGE_KEY,
+  PRACTICE_SESSION_STORAGE_KEY,
+  writePracticeSessionSnapshot,
   DAILY_PRACTICE_DECK_SIZE,
   cardKey,
   clearLoadedSrsState,
@@ -6707,6 +6709,62 @@ describe('LexiconPractice', () => {
       expect(drawer).toHaveAttribute('inert');
       expect(drawer).toHaveAttribute('aria-hidden', 'true');
       expect(document.activeElement).toBe(settingsToggle);
+    });
+
+    test('deck-switch request with resumable session closes settings drawer and focuses confirmation offer', async () => {
+      // Seed a resumable mixed session
+      writePracticeSessionSnapshot('mixed', {
+        sessionSeed: 12345,
+        history: [],
+        budget: 10,
+        completed: 2,
+        modeFilter: 'mixed',
+        level: 'A1',
+        deckId: 'all',
+        dateSeed: dateSeed(new Date()),
+        startedAt: Date.now(),
+        plannedTotal: 10,
+      });
+
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      // Open settings drawer
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      await user.click(settingsToggle);
+
+      const drawer = screen.getByTestId('practice-settings-drawer');
+      expect(drawer).toHaveClass('open');
+      expect(drawer).not.toHaveAttribute('inert');
+
+      // Click another deck inside the drawer (e.g. virtual teacher lesson curated deck)
+      const virtualTeacherBtn = screen.getByTestId('practice-settings-deck-virtual_teacher_lesson');
+      await user.click(virtualTeacherBtn);
+
+      // Verify drawer closes and becomes inert
+      expect(drawer).not.toHaveClass('open');
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+
+      // Verify switch session offer is visible on dashboard
+      const offer = await screen.findByTestId('practice-switch-session-offer');
+      expect(offer).toBeInTheDocument();
+
+      const acceptBtn = screen.getByTestId('practice-switch-session-accept');
+      const declineBtn = screen.getByTestId('practice-switch-session-decline');
+
+      // Verify focus is placed directly on the accept confirmation button
+      await waitFor(() => {
+        expect(document.activeElement).toBe(acceptBtn);
+      });
+
+      // Declining the offer dismisses it and returns focus to practice-settings-toggle
+      await user.click(declineBtn);
+      expect(screen.queryByTestId('practice-switch-session-offer')).not.toBeInTheDocument();
+      expect(document.activeElement).toBe(settingsToggle);
+
+      // Clean up snapshot
+      localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
     });
   });
 });

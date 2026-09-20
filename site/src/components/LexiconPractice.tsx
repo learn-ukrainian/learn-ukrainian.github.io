@@ -2446,6 +2446,19 @@ function LexiconPracticeIsland({
   const [pendingDeckSwitch, setPendingDeckSwitch] = useState<
     { kind: 'deck'; value: string } | { kind: 'level'; value: CefrLevel } | null
   >(null);
+  const switchAcceptBtnRef = useRef<HTMLButtonElement | null>(null);
+
+  useEffect(() => {
+    if (pendingDeckSwitch) {
+      const focusAccept = () => {
+        switchAcceptBtnRef.current?.focus();
+      };
+      focusAccept();
+      const timer = setTimeout(focusAccept, 50);
+      return () => clearTimeout(timer);
+    }
+  }, [pendingDeckSwitch]);
+
   const deckLemmaKeySet = useMemo(
     () => resolveDeckLemmaKeySet(selectedDeckFilter, customSets),
     [customSets, selectedDeckFilter],
@@ -3943,6 +3956,7 @@ function LexiconPracticeIsland({
     }
     if (hasActiveOrResumableSession()) {
       setPendingDeckSwitch({ kind: 'deck', value: nextDeckFilter });
+      setIsSettingsOpen(false);
       return;
     }
     setSelectedDeckFilter(nextDeckFilter);
@@ -3962,6 +3976,7 @@ function LexiconPracticeIsland({
     if (nextLevel === learnerLevel || !publishedLevels.has(nextLevel)) return;
     if (hasActiveOrResumableSession()) {
       setPendingDeckSwitch({ kind: 'level', value: nextLevel });
+      setIsSettingsOpen(false);
       return;
     }
     void changeLevel(nextLevel);
@@ -3969,6 +3984,8 @@ function LexiconPracticeIsland({
 
   function declineDeckSwitch() {
     setPendingDeckSwitch(null);
+    const settingsToggle = document.querySelector<HTMLButtonElement>('[data-testid="practice-settings-toggle"]');
+    settingsToggle?.focus();
   }
 
   async function acceptDeckSwitch() {
@@ -4749,6 +4766,7 @@ function LexiconPracticeIsland({
                       <span><ChromeText k="practice.switchSessionOffer" /></span>
                       <div className="k3-switch-offer-actions">
                         <button
+                          ref={switchAcceptBtnRef}
                           type="button"
                           className="btn btn-sm btn-accent"
                           data-testid="practice-switch-session-accept"
