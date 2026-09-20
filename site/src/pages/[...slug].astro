@@ -662,6 +662,7 @@ const plannedModuleGroups = (track: string, trackOverview: TrackOverview) => {
         .filter((entry) => Array.isArray(entry.data.lessons))
         .map((entry) => [normalizeId(entry.id).split('/')[1], entry] as const),
     );
+    if (upgradedBySlug.size === 0) return [];
     return A1_UNITS.map((group) => ({
       unit: group.unit,
       items: group.items.map((item) => {
