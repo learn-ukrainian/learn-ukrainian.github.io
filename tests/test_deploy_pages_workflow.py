@@ -2,9 +2,17 @@
 
 from pathlib import Path
 
+import pytest
 import yaml
 
-from scripts.deploy.auto_deploy_eligibility import decide_auto_deploy, read_nul_delimited_paths
+from scripts.deploy.auto_deploy_eligibility import (
+    AutoDeployDecision,
+    decide_auto_deploy,
+    format_step_summary,
+    main,
+    read_nul_delimited_paths,
+    write_step_summary,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
@@ -18,9 +26,7 @@ def test_pages_build_installs_atlas_python_dependencies() -> None:
     create_venv = next(step for step in steps if step.get("name") == "Create Python venv")
     build_site = next(step for step in steps if step.get("name") == "Build Site")
     locked_pyyaml = next(
-        line
-        for line in REQUIREMENTS_LOCK.read_text(encoding="utf-8").splitlines()
-        if line.startswith("PyYAML==")
+        line for line in REQUIREMENTS_LOCK.read_text(encoding="utf-8").splitlines() if line.startswith("PyYAML==")
     )
 
     assert f".venv/bin/python -m pip install {locked_pyyaml}" in create_venv["run"]
@@ -113,6 +119,94 @@ def test_auto_deploy_allows_release_pointer_bumps_not_bulk_data() -> None:
     assert decide_auto_deploy(["site/src/data/lexicon-search-index.json"]).reason == "content_drift"
 
 
+def test_auto_deploy_dispositions_activity_kit_and_data_paths() -> None:
+    """#8306: packages/activity-kit is site code, data/ is content drift."""
+    # activity-kit alone or mixed with site code is allowed
+    ak_component = "packages/activity-kit/src/components/TrueFalse.tsx"
+    ak_package = "packages/activity-kit/package.json"
+    ak_decision = decide_auto_deploy([ak_component, ak_package])
+    assert ak_decision.deploy is True
+    assert ak_decision.reason == "site_code_only"
+    assert ak_decision.offending_paths == ()
+
+    mixed_site_and_ak = decide_auto_deploy([ak_component, "site/src/pages/index.astro"])
+    assert mixed_site_and_ak.deploy is True
+    assert mixed_site_and_ak.reason == "site_code_only"
+
+    # data/ is content drift, denying auto-deploy
+    data_deck = "data/practice/noun_mechanics_deck.json"
+    data_db = "data/sources.db"
+    data_decision = decide_auto_deploy([data_deck, data_db])
+    assert data_decision.deploy is False
+    assert data_decision.reason == "content_drift"
+    assert set(data_decision.offending_paths) == {data_deck, data_db}
+
+    # unknown paths (e.g. docs, scripts) are tracked in offending_paths
+    unknown_decision = decide_auto_deploy([ak_component, "docs/index.md", "scripts/test.py"])
+    assert unknown_decision.deploy is False
+    assert unknown_decision.reason == "unknown_path"
+    assert set(unknown_decision.offending_paths) == {"docs/index.md", "scripts/test.py"}
+
+
+def test_auto_deploy_step_summary_and_cli(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    """#8306: Step summary and CLI warning output for eligible and skipped deploys."""
+    eligible = AutoDeployDecision(deploy=True, reason="site_code_only")
+    eligible_summary = format_step_summary(eligible)
+    assert "### 🚀 Pages Auto-Deploy: Eligible" in eligible_summary
+
+    skipped_drift = AutoDeployDecision(
+        deploy=False,
+        reason="content_drift",
+        offending_paths=("data/practice/deck.json", "curriculum/l2/01.md"),
+    )
+    drift_summary = format_step_summary(skipped_drift)
+    assert "### ⚠️ Pages Auto-Deploy: Skipped" in drift_summary
+    assert "- **Decision**: `content_drift`" in drift_summary
+    assert "- **Offending Paths (2)**:" in drift_summary
+    assert "  - `data/practice/deck.json`" in drift_summary
+    assert "  - `curriculum/l2/01.md`" in drift_summary
+
+    # Test summary truncation past 20 items
+    many_paths = tuple(f"unknown/file_{i}.txt" for i in range(25))
+    overflow_summary = format_step_summary(
+        AutoDeployDecision(deploy=False, reason="unknown_path", offending_paths=many_paths)
+    )
+    assert "- **Offending Paths (25)**:" in overflow_summary
+    assert "  - `unknown/file_0.txt`" in overflow_summary
+    assert "  - `unknown/file_19.txt`" in overflow_summary
+    assert "  - `unknown/file_20.txt`" not in overflow_summary
+    assert "  - *... and 5 more*" in overflow_summary
+
+    # Test file writing
+    summary_file = tmp_path / "step_summary.md"
+    write_step_summary(summary_file, skipped_drift)
+    assert summary_file.read_text(encoding="utf-8") == drift_summary
+
+    # Test main CLI execution with skipped run
+    changed_file = tmp_path / "changed.nul"
+    changed_file.write_bytes(b"docs/readme.md\0")
+    output_file = tmp_path / "github_output.txt"
+    cli_summary_file = tmp_path / "cli_summary.md"
+
+    main(
+        [
+            "--changed-paths",
+            str(changed_file),
+            "--github-output",
+            str(output_file),
+            "--github-step-summary",
+            str(cli_summary_file),
+        ]
+    )
+
+    captured = capsys.readouterr()
+    assert "auto-deploy eligibility: unknown_path" in captured.out
+    assert "::warning title=Pages Auto-Deploy Skipped::" in captured.out
+    assert "offending: docs/readme.md" in captured.out
+    assert "deploy=false\nreason=unknown_path\n" in output_file.read_text(encoding="utf-8")
+    assert "### ⚠️ Pages Auto-Deploy: Skipped" in cli_summary_file.read_text(encoding="utf-8")
+
+
 def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
     """The manual certification route remains available beside the push preflight."""
     workflow_text = WORKFLOW.read_text(encoding="utf-8")
@@ -139,3 +233,5 @@ def test_pages_workflow_uses_fail_closed_auto_deploy_preflight() -> None:
     assert "git merge-base --is-ancestor" in preflight
     assert "git diff --no-renames --name-only --diff-filter=ACDMRT -z" in preflight
     assert "scripts/deploy/auto_deploy_eligibility.py" in preflight
+    assert "--github-step-summary" in preflight
+    assert "::warning title=Pages Auto-Deploy Skipped::" in preflight

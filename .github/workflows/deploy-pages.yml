@@ -91,6 +91,16 @@ jobs:
           set -euo pipefail
           if [[ -z "${LAST_DEPLOY_SHA:-}" ]]; then
             echo "auto-deploy eligibility: no_prior_deployment (fail closed)"
+            echo "::warning title=Pages Auto-Deploy Skipped::Pages auto-deploy was skipped: no_prior_deployment. See job summary for details."
+            if [[ -n "${GITHUB_STEP_SUMMARY:-}" ]]; then
+              # shellcheck disable=SC2016
+              {
+                echo '### ⚠️ Pages Auto-Deploy: Skipped'
+                echo '- **Decision**: `no_prior_deployment`'
+                echo '- **Detail**: No prior successful deployment anchor resolvable; fail closed.'
+                echo ''
+              } >> "$GITHUB_STEP_SUMMARY"
+            fi
             printf 'deploy=false\n' >> "$GITHUB_OUTPUT"
             printf 'reason=no_prior_deployment\n' >> "$GITHUB_OUTPUT"
             exit 0
@@ -100,7 +110,8 @@ jobs:
             "$LAST_DEPLOY_SHA" "$GITHUB_SHA" > "$changed_paths"
           python scripts/deploy/auto_deploy_eligibility.py \
             --changed-paths "$changed_paths" \
-            --github-output "$GITHUB_OUTPUT"
+            --github-output "$GITHUB_OUTPUT" \
+            --github-step-summary "$GITHUB_STEP_SUMMARY"
 
   deploy:
     permissions:
