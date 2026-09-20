@@ -1,0 +1,436 @@
+inline:
+- id: act-5-in-1
+  type: quiz
+  title: Звук чи лі́тера? — Sound or letter?
+  instruction: Обері́ть пра́вильну ві́дповідь. — Choose the correct answer.
+  items:
+  - prompt: What is the fundamental difference between a звук and a лі́тера?
+    options:
+    - text: Sounds we hear and pronounce; letters we see and write.
+      correct: true
+    - text: Sounds exist only in books; letters are spoken aloud.
+      correct: false
+    - text: Letters and sounds are identical concepts in Ukrainian.
+      correct: false
+    explanation: 'As Ukrainian textbooks teach from the first grade: sounds belong
+      to the ear and mouth (чу́ємо й вимовля́ємо), while letters belong to the eye
+      and hand (ба́чимо й пи́шемо).'
+  - prompt: How many letters are in the Ukrainian alphabet, and how many sounds in
+      Ukrainian speech?
+    options:
+    - text: 33 letters and 38 sounds
+      correct: true
+    - text: 38 letters and 33 sounds
+      correct: false
+    - text: 33 letters and 33 sounds
+      correct: false
+    explanation: The alphabet has 33 letters, but spoken Ukrainian distinguishes 38
+      sounds (6 vowel sounds and 32 consonant sounds).
+  - prompt: Why do Ukrainian linguists forbid the phrase «голосна́ лі́тера»?
+    options:
+    - text: Letters are silent graphic signs; only sounds have voice.
+      correct: true
+    - text: Vowels are not written down in Ukrainian.
+      correct: false
+    - text: Only consonants can have letters.
+      correct: false
+    explanation: Letters are voiceless written symbols. They can only be described
+      as «лі́тери, що познача́ють голосні́ зву́ки».
+  - prompt: How should unstressed [о] be pronounced in Ukrainian words like молоко́?
+    options:
+    - text: As a clean, round [о] without blurring into [а]
+      correct: true
+    - text: As an English-style neutral murmur
+      correct: false
+    - text: As an open [а]
+      correct: false
+    explanation: Ukrainian phonetics strictly rejects vowel reduction (а́кання). Every
+      written «о» sounds clearly as [о].
+  - prompt: What does the soft sign (знак м'я́кшення — ь) do?
+    options:
+    - text: It produces no sound; it only softens the preceding consonant.
+      correct: true
+    - text: It produces a short [і] vowel sound.
+      correct: false
+    - text: It hardens the consonant before it.
+      correct: false
+    explanation: The letter «ь» has no sound of its own in nature; in words like «день»,
+      it signals that the preceding consonant is soft.
+  - prompt: What happens to voiced consonants at the end of Ukrainian words like гриб
+      and сад?
+    options:
+    - text: They remain fully voiced and resonant.
+      correct: true
+    - text: They devoice into voiceless sounds like [п] and [т].
+      correct: false
+    - text: They become silent.
+      correct: false
+    explanation: 'Ukrainian keeps final voiced consonants energetic and voiced: гриб
+      ends with voiced [б] (not voiceless [п] as in грип).'
+- id: act-5-in-2
+  type: match-up
+  title: Бу́кви та зву́ки — Letters and sounds
+  instruction: З'єдна́йте лі́теру з її́ пра́вильною фонети́чною ро́ллю. — Match each
+    letter with its phonetic role.
+  pairs:
+  - left: А
+    right: Познача́є чи́стий відкри́тий голосни́й звук [а]
+  - left: О
+    right: За́вжди чи́стий звук [о], на́віть у ненаголо́шеній пози́ції
+  - left: Ь
+    right: Не ма́є вла́сного зву́ка; пом'я́кшує попере́дній при́голосний
+  - left: Ї
+    right: За́вжди познача́є два зву́ки [йі] в будь-які́й пози́ції
+  - left: Ґ
+    right: Познача́є дзвінки́й проривни́й (вибухо́вий) звук [ґ]
+  - left: Г
+    right: Познача́є дзвінки́й горта́нний щіли́нний звук [г]
+- id: act-5-in-3
+  type: fill-in
+  title: Діало́ги віта́ння — Greeting dialogues
+  instruction: Ви́беріть потрі́бне сло́во для ко́жної ре́пліки. — Choose the correct
+    word for each line.
+  items:
+  - sentence: — ____! Як спра́ви? — До́бре, дя́кую.
+    options:
+    - Приві́т
+    - Молоко́
+    - Лі́тера
+    answer: Приві́т
+    explanation: Приві́т is the friendly informal greeting used with peers and friends.
+  - sentence: — До́брий ____! — До́брий день!
+    options:
+    - день
+    - ра́нок
+    - ве́чір
+    answer: день
+    explanation: До́брий день is the standard neutral daytime greeting.
+  - sentence: — Як спра́ви? — ____! А у тебе́?
+    options:
+    - Чудо́во
+    - Звук
+    - Склад
+    answer: Чудо́во
+    explanation: Чудо́во expresses that things are great or wonderful.
+  - sentence: — До́бре. А у ____? — У мене́ теж усе́ до́бре.
+    options:
+    - тебе́
+    - на́голос
+    - день
+    answer: тебе́
+    explanation: А у тебе́? is the correct reciprocal phrase when inquiring about
+      someone's condition.
+  - sentence: — До ____! — На все до́бре!
+    options:
+    - поба́чення
+    - ма́ма
+    - сон
+    answer: поба́чення
+    explanation: До поба́чення! is the universal formula for goodbye.
+  - sentence: — Ра́да тебе́ ба́чити! — Я теж ____ тебе́ ба́чити!
+    options:
+    - ра́дий
+    - ра́да
+    - до́брий
+    answer: ра́дий
+    explanation: A male speaker must use the masculine form ра́дий to match his gender.
+- id: act-5-in-4
+  type: true-false
+  title: Переві́рка пра́вил — Rule check
+  instruction: Ви́значте, чи тве́рдження пра́вильне, чи хи́бне. — Decide whether the
+    statement is true or false.
+  items:
+  - statement: Ukrainian speech has 33 letters and 38 sounds.
+    correct: true
+    explanation: Ukrainian has 33 letters in its alphabet and 38 recognized speech
+      sounds.
+  - statement: It is scientifically correct to call А, О, У «голосні́ лі́тери» in
+      Ukrainian.
+    correct: false
+    explanation: Letters are silent symbols. Only sounds can be vowels (голосні́ зву́ки)
+      or consonants (при́голосні зву́ки).
+  - statement: The soft sign (ь) represents a short [і] sound.
+    correct: false
+    explanation: The soft sign produces no sound of its own; it only softens the consonant
+      before it.
+  - statement: In Ukrainian words like молоко́, unstressed «о» stays pure [о] without
+      reducing to [а].
+    correct: true
+    explanation: Ukrainian phonetics maintains clean, rounded [о] in all positions,
+      stressed or unstressed.
+  - statement: Voiced consonants at the end of Ukrainian words, like [б] in гриб,
+      should remain fully voiced.
+    correct: true
+    explanation: Ukrainian does not devoice final consonants; гриб ends with voiced
+      [б], distinct from voiceless грип.
+  - statement: A female speaker greeting a friend says «Ра́дий тебе́ ба́чити».
+    correct: false
+    explanation: A female speaker says «Ра́да тебе́ ба́чити»; «Ра́дий» is used only
+      by male speakers.
+workbook:
+- id: act-9
+  type: translate
+  title: Зна́чення фраз — Phrase meanings
+  instruction: Обері́ть пра́вильний англі́йський пере́клад. — Choose the correct English
+    meaning.
+  items:
+  - source: Приві́т!
+    options:
+    - text: Hi!
+      correct: true
+    - text: Goodbye!
+      correct: false
+    - text: What is your name?
+      correct: false
+    explanation: Приві́т is the informal everyday greeting.
+  - source: До́брий день!
+    options:
+    - text: Hello! / Good day!
+      correct: true
+    - text: Milk!
+      correct: false
+    - text: And you?
+      correct: false
+    explanation: До́брий день is the neutral daytime greeting.
+  - source: До́брого ра́нку!
+    options:
+    - text: Good morning!
+      correct: true
+    - text: Good evening!
+      correct: false
+    - text: My name is Anna.
+      correct: false
+    explanation: Ра́нок means morning, so До́брого ра́нку is Good morning.
+  - source: До́брий ве́чір!
+    options:
+    - text: Good evening!
+      correct: true
+    - text: Good morning!
+      correct: false
+    - text: Fine.
+      correct: false
+    explanation: Ве́чір means evening, so До́брий ве́чір is Good evening.
+  - source: Як спра́ви?
+    options:
+    - text: How are you?
+      correct: true
+    - text: Goodbye!
+      correct: false
+    - text: Letter
+      correct: false
+    explanation: Як спра́ви? asks how someone is doing.
+  - source: До поба́чення!
+    options:
+    - text: Goodbye!
+      correct: true
+    - text: Hi!
+      correct: false
+    - text: Sound
+      correct: false
+    explanation: До поба́чення is the leaving phrase Goodbye.
+  - source: Ра́да тебе́ ба́чити.
+    options:
+    - text: Glad to see you. (female speaker)
+      correct: true
+    - text: What is your name?
+      correct: false
+    - text: Good evening!
+      correct: false
+    explanation: Ра́да is the form a female speaker uses in this phrase.
+- id: act-10
+  type: error-correction
+  title: Фонети́чні пастки́ — Pronunciation traps
+  instruction: Обері́ть пра́вильну украї́нську мо́вну зви́чку. — Choose the safer
+    Ukrainian habit.
+  items:
+  - sentence: Do not call А, О, У голосними літерами.
+    error: голосними літерами
+    correction: лі́терами, що познача́ють голосні́ зву́ки
+    options:
+    - лі́терами, що познача́ють голосні́ зву́ки
+    - голосни́ми зву́ками
+    - лі́терами-зву́ками
+    explanation: 'Safer habit: sounds are голосні́ or при́голосні. Letters represent
+      sounds, so call А, О, У letters that mark vowel sounds.'
+  - sentence: Do not say м[а]локо for молоко́.
+    error: м[а]локо
+    correction: молоко́
+    options:
+    - молоко́
+    - малако
+    - молако
+    explanation: 'Safer habit: keep Ukrainian о clean. Say молоко́ with three clear
+      о sounds: мо-ло-ко́.'
+  - sentence: Do not add a tiny sound after день.
+    error: add a tiny sound after день
+    correction: soften н, then stop
+    options:
+    - soften н, then stop
+    - soften н, then say [і]
+    - pronounce ь as a separate sound
+    explanation: 'Safer habit: ь has no sound of its own. In день, soften н and stop;
+      do not add a tiny vowel after it.'
+  - sentence: Do not treat Ї as a softening letter.
+    error: treat Ї as a softening letter
+    correction: read Ї as [йі]
+    options:
+    - read Ї as [йі]
+    - read Ї as [і]
+    - soften the consonant before Ї
+    explanation: 'Safer habit: Ї is not a softening letter. Read it as [йі] every
+      time.'
+  - sentence: Do not make one fixed glad phrase for every speaker.
+    error: one fixed glad phrase
+    correction: Ра́дий тебе́ ба́чити / Ра́да тебе́ ба́чити
+    options:
+    - Ра́дий тебе́ ба́чити / Ра́да тебе́ ба́чити
+    - Ра́дий тебе́ ба́чити (for everyone)
+    - Ра́да тебе́ ба́чити (for everyone)
+    explanation: 'Safer habit: match the phrase to the speaker. A male speaker says
+      Ра́дий тебе́ ба́чити; a female speaker says Ра́да тебе́ ба́чити.'
+- id: act-5-w1
+  type: group-sort
+  title: Класифіка́ція зву́ків — Classifying sounds
+  instruction: Розподілі́ть зву́ки на голосні́ та при́голосні. — Sort the sounds into
+    vowels and consonants.
+  groups:
+  - label: Голосні́ зву́ки — Vowel sounds
+    items:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[е]'
+    - '[и]'
+    - '[і]'
+  - label: При́голосні зву́ки — Consonant sounds
+    items:
+    - '[б]'
+    - '[д]'
+    - '[г]'
+    - '[ґ]'
+    - '[м]'
+    - '[н]'
+- id: act-5-w2
+  type: fill-in
+  title: Фонети́чні пари́ слів — Phonetic minimal pairs
+  instruction: Ви́беріть пра́вильне сло́во за змі́стом та вимо́вою. — Choose the correct
+    word for the context and sound.
+  items:
+  - sentence: У лі́сі росте́ вели́кий бі́лий ____.
+    options:
+    - гриб
+    - грип
+    answer: гриб
+    explanation: Гриб (mushroom) ends with voiced [б], whereas грип (flu) ends with
+      voiceless [п]. Ukrainian keeps final voiced consonants voiced.
+  - sentence: Це наш нови́й і те́плий ____.
+    options:
+    - дім
+    - дим
+    answer: дім
+    explanation: Дім (house/home) uses high front vowel [і]; дим (smoke) uses open-mid
+      vowel [и].
+  - sentence: У селі́ ді́ти п'ють сві́же ____.
+    options:
+    - молоко́
+    - малако́
+    answer: молоко́
+    explanation: 'Ukrainian maintains pure [о] without reduction: мо-ло-ко́, never
+      малако́.'
+  - sentence: Бі́ля буди́нку цвіте́ зеле́ний ____.
+    options:
+    - сад
+    - сат
+    answer: сад
+    explanation: Сад (garden) ends with voiced [д], which must not be devoiced into
+      [т].
+  - sentence: Сього́дні ясни́й і со́нячний ____.
+    options:
+    - день
+    - ден
+    answer: день
+    explanation: The soft sign ь softens the final [н′] in день.
+  - sentence: До пальта́ приши́тий вели́кий ____.
+    options:
+    - ґу́дзик
+    - гу́дзик
+    answer: ґу́дзик
+    explanation: Ґу́дзик (button) starts with the plosive stop [ґ], written with the
+      letter ґ.
+- id: act-5-w3
+  type: odd-one-out
+  title: Знайді́ть за́йве — Odd one out
+  instruction: Знайді́ть елеме́нт, яки́й не відповіда́є пра́вилу. — Find the item
+    that does not fit the phonetic rule.
+  items:
+  - prompt: Which sound is NOT a vowel sound in Ukrainian?
+    options:
+    - '[п]'
+    - '[а]'
+    - '[о]'
+    - '[і]'
+    answer: '[п]'
+    explanation: '[п] is a consonant sound; [а], [о], and [і] are open vowel sounds.'
+  - prompt: Which letter does NOT represent a vowel sound in Ukrainian?
+    options:
+    - М
+    - А
+    - У
+    - І
+    answer: М
+    explanation: М represents the consonant sound [м]; А, У, and І represent vowel
+      sounds.
+  - prompt: Which letter has NO sound of its own in nature?
+    options:
+    - Ь
+    - А
+    - Н
+    - С
+    answer: Ь
+    explanation: Ь (м'яки́й знак) has no sound of its own; its sole duty is to soften
+      the preceding consonant.
+  - prompt: Which word ends in a voiced consonant that must NOT be devoiced?
+    options:
+    - гриб
+    - ніс
+    - пес
+    - кіт
+    answer: гриб
+    explanation: Гриб ends in voiced [б], which must remain voiced. Ніс, пес, and
+      кіт end in naturally voiceless consonants.
+  - prompt: Which phrase is an informal greeting used with friends and peers?
+    options:
+    - Приві́т!
+    - До́брого ра́нку!
+    - До́брий день!
+    - До́брий ве́чір!
+    answer: Приві́т!
+    explanation: Приві́т! is informal; the other three are formal or neutral formulas.
+  - prompt: Which letter always represents two sounds [йі] in all positions?
+    options:
+    - Ї
+    - І
+    - И
+    - Е
+    answer: Ї
+    explanation: Ї always represents [йі], whereas І, И, and Е represent single vowel
+      sounds.
+- id: act-5-w4
+  type: match-up
+  title: Фо́рмули спілкува́ння — Communication formulas
+  instruction: З'єдна́йте украї́нську фра́зу з її́ відпові́дною ро́ллю. — Match each
+    Ukrainian phrase with its communicative role.
+  pairs:
+  - left: Приві́т!
+    right: Неформа́льне віта́ння з дру́зями — Informal greeting with friends
+  - left: До́брий день!
+    right: Нейтра́льне де́нне віта́ння — Neutral daytime greeting
+  - left: Як спра́ви?
+    right: Запита́ння про стан співрозмо́вника — Asking how someone is doing
+  - left: Чудо́во!
+    right: Позити́вна ві́дповідь про свій стан — Positive response about one's state
+  - left: До поба́чення!
+    right: Станда́ртна фо́рмула проща́ння — Standard farewell phrase
+  - left: Ра́дий тебе́ ба́чити!
+    right: Фо́рмула ра́дості від зу́стрічі (ка́же чолові́к) — Glad to see you (male
+      speaker)

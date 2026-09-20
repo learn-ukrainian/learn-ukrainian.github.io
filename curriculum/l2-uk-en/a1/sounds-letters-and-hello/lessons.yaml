@@ -1,0 +1,137 @@
+lessons:
+- n: 1
+  title: Six Vowel Sounds, Ten Letters
+  sections:
+  - Sound First, Letter Second
+  - Your First Word
+  - Six Vowel Sounds, Ten Letters
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 2
+  title: 'Stress: Наголос'
+  sections:
+  - What Is a Склад?
+  - Consonant Sounds
+  - Full Alphabet Pronunciation Pass
+  - 'Stress: Наголос'
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 3
+  title: Your First Conversation
+  sections:
+  - 'Euphony: У/В and І/Й'
+  - Your First Conversation
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 4
+  title: First Pronunciation Traps
+  sections:
+  - First Pronunciation Traps
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+- n: 5
+  title: Textbook Check
+  sections:
+  - Textbook Check
+  minutes: 60
+  word_target: 550
+  activities:
+    total: 10
+    inline:
+    - 4
+    - 6
+    workbook:
+    - 6
+    - 9
+  unverified_stress: []
+  unverified_lemmas: []
+closes_module: 5
+provenance:
+- placement: inline
+  index: 0
+  new_id: act-1
+  lesson: 1
+- placement: inline
+  index: 1
+  new_id: act-3
+  lesson: 2
+- placement: inline
+  index: 2
+  new_id: act-5
+  lesson: 3
+- placement: inline
+  index: 3
+  new_id: act-6
+  lesson: 4
+- placement: workbook
+  index: 0
+  new_id: act-2
+  lesson: 1
+- placement: workbook
+  index: 1
+  new_id: act-4
+  lesson: 2
+- placement: workbook
+  index: 2
+  new_id: act-7
+  lesson: 3
+- placement: workbook
+  index: 3
+  new_id: act-8
+  lesson: 4
+- placement: workbook
+  index: 4
+  new_id: act-9
+  lesson: 5
+- placement: workbook
+  index: 5
+  new_id: act-10
+  lesson: 5
+items_min_exempt:
+- id: act-2
+  reason: 4-item original activity preserved from baseline
+- id: act-4
+  reason: 5-item original activity preserved from baseline
+- id: act-10
+  reason: 5-item original activity preserved from baseline
+proper_names: []

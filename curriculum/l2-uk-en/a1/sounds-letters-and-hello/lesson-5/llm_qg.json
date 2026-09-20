@@ -1,0 +1,71 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Closure and activity allocation match, but cumulative vocabulary is unproven, dialogue translations omit sentences, and the gender-dependent answer lacks a specified speaker.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "A male speaker must use the masculine form ра́дий to match his gender.",
+        "Marko: I am also glad to see you..."
+      ]
+    },
+    "naturalness": {
+      "score": 5.0,
+      "evidence": "Attempted VESUM/sources checks were denied by the approval policy, leaving gender, government, and examples unverified; the conversation becomes a textbook recital.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Notice how they greet each other, inquire about each other's day, use the correct reciprocal question",
+        "Female speaker says **Ра́да тебе́ ба́чити** to match her gender."
+      ]
+    },
+    "decolonization": {
+      "score": 6.0,
+      "evidence": "Ukrainian sources are listed, but blocked verification leaves anti-calque grounding unresolved, and the opening quotation lacks local attribution.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "In Ukrainian schoolrooms, teachers write one fundamental distinction on the board from the very first week:"
+      ]
+    },
+    "engagement": {
+      "score": 6.0,
+      "evidence": "Varied activity formats help, but repeated rule recognition and a staged phonetics recital offer little meaningful conversational choice.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Read each statement carefully and decide whether it aligns with standard Ukrainian phonetic and orthographic rules:"
+      ]
+    },
+    "tone": {
+      "score": 6.0,
+      "evidence": "There is no named narrator or text-fenced example, but prohibitive phrasing and descriptions of English as lazy undermine the reassuring tone.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "In English, unstressed vowels frequently blur into a vague, lazy \"uh\" sound.",
+        "Why do Ukrainian linguists forbid the phrase «голосна літера»?"
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 5.0,
+    "min_dim": "pedagogical"
+  }
+}

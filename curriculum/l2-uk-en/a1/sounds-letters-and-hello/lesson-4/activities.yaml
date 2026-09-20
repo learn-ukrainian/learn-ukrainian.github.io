@@ -1,0 +1,527 @@
+inline:
+- id: act-4-in-1
+  type: quiz
+  title: 'Phonetic warm-up: sounds, letters, and vowels'
+  instruction: Choose the correct answer based on what you have learned so far.
+  items:
+  - prompt: What is the fundamental difference between a звук and a лі́тера?
+    options:
+    - text: We hear and pronounce sounds; we see and write letters.
+      correct: true
+    - text: Sounds exist only in books; letters are spoken aloud.
+      correct: false
+    - text: There is no difference; the terms are interchangeable.
+      correct: false
+    explanation: 'As Ukrainian textbooks emphasize from first grade: sounds belong
+      to the ear and mouth, while letters belong to the eye and pen.'
+  - prompt: How many basic vowel sounds does Ukrainian have?
+    options:
+    - text: '6'
+      correct: true
+    - text: '10'
+      correct: false
+    - text: '33'
+      correct: false
+    explanation: Ukrainian has exactly 6 vowel sounds ([а], [о], [у], [е], [и], [і]),
+      represented by 10 vowel letters.
+  - prompt: What does Ukrainian stress (на́голос) do to a vowel in a word?
+    options:
+    - text: It makes that vowel longer, louder, and more prominent.
+      correct: true
+    - text: It turns the vowel into a consonant.
+      correct: false
+    - text: It makes the vowel silent.
+      correct: false
+    explanation: Ukrainian stress highlights the stressed vowel with greater energy
+      and duration.
+  - prompt: In the informal greeting 'Приві́т!', which syllable carries the stress?
+    options:
+    - text: 'The second syllable: -ві́т'
+      correct: true
+    - text: 'The first syllable: При-'
+      correct: false
+    - text: Both syllables equally
+      correct: false
+    explanation: 'In ''Приві́т!'', the stress falls squarely on the second syllable:
+      При-ві́т.'
+  - prompt: What is the primary purpose of Ukrainian euphony (милозву́чність)?
+    options:
+    - text: To avoid harsh consonant clusters and keep speech melodious
+      correct: true
+    - text: To replace all consonants with vowels
+      correct: false
+    - text: To make words as short as possible
+      correct: false
+    explanation: Euphony alternates У/В and І/Й to ensure a natural, rhythmic flow
+      of sounds.
+  - prompt: Which response correctly answers the question 'Як спра́ви?'?
+    options:
+    - text: До́бре. А у тебе́?
+      correct: true
+    - text: До́бре. А тебе́?
+      correct: false
+    - text: Мене́ зва́ти Марко́.
+      correct: false
+    explanation: After 'Як спра́ви?', the correct reciprocal check is 'А у тебе́?'.
+      'А тебе́?' is used when exchanging names.
+- id: act-6
+  type: true-false
+  title: Pronunciation safety check
+  instruction: Choose true or false.
+  items:
+  - statement: In молоко́, every о stays clean.
+    correct: true
+    explanation: Ukrainian о does not blur into а in this beginner model.
+  - statement: The letters и and і always sound the same.
+    correct: false
+    explanation: Приві́т contains both [и] and [і].
+  - statement: Ь has no sound of its own.
+    correct: true
+    explanation: Ь softens the previous consonant.
+  - statement: Ї is always [йі].
+    correct: true
+    explanation: Treat Ї as [йі] at this level.
+  - statement: Г and Ґ are the same letter.
+    correct: false
+    explanation: Г is h-like; Ґ is hard g.
+  - statement: Щ is [шч].
+    correct: true
+    explanation: Щ represents two sounds together.
+- id: act-4-in-2
+  type: fill-in
+  title: 'Sound contrast: choose the correct letter'
+  instruction: Select the correct letter to complete each word accurately.
+  items:
+  - sentence: Ді́ти п'ють мол____ко́ ко́жного ра́нку.
+    answer: о
+    options:
+    - о
+    - а
+    - у
+    explanation: In Ukrainian, unstressed 'о' never reduces to 'а'; 'молоко́' has
+      three pure 'о' sounds.
+  - sentence: У лі́сі росте́ вели́кий гр____б.
+    answer: и
+    options:
+    - и
+    - і
+    - е
+    explanation: The word for mushroom is 'гриб' with vowel [и]; keep [и] distinct
+      from [і].
+  - sentence: Сього́дні я́сний і со́нячний де____.
+    answer: нь
+    options:
+    - нь
+    - н
+    - ні
+    explanation: The soft sign ь in 'день' softens the preceding [н] without adding
+      any vowel sound.
+  - sentence: На столі́ лежи́ть сві́жий с____р.
+    answer: и
+    options:
+    - и
+    - і
+    - е
+    explanation: '''Сир'' (cheese) uses the relaxed, open vowel [и].'
+  - sentence: У па́рку росте́ столі́тній д____б.
+    answer: у
+    options:
+    - у
+    - о
+    - а
+    explanation: '''Дуб'' (oak) contains the vowel [у] followed by voiced consonant
+      [б].'
+  - sentence: Бабу́ся розповіда́є ді́тям ціка́ву ка́з____у.
+    answer: к
+    options:
+    - к
+    - х
+    - п
+    explanation: In 'ка́зка', voiced 'з' is clearly pronounced before voiceless 'к'.
+- id: act-4-in-3
+  type: match-up
+  title: Pronunciation trap to safe habit
+  instruction: Match each common pronunciation trap to its safe Ukrainian habit.
+  pairs:
+  - left: Blurring unstressed О into А
+    right: 'Keep every О clear and rounded: мо-ло-ко́'
+  - left: Confusing И and І
+    right: Spread lips for smiling І; relax tongue for open И
+  - left: Adding a tiny vowel after Ь
+    right: 'Soften the consonant and stop immediately: день'
+  - left: Devoicing final consonants
+    right: 'Keep the final consonant voiced and resonant: гриб'
+  - left: Treating Ї as a single vowel
+    right: 'Pronounce two distinct sounds: [й] + [і]'
+  - left: Confusing Г with Ґ
+    right: Pronounce Г deep in throat; keep Ґ as a crisp plosive
+- id: act-4-in-4
+  type: odd-one-out
+  title: Find the phonetic odd-one-out
+  instruction: Identify the word or letter that does not share the phonetic rule with
+    the others.
+  items:
+  - prompt: Which word does NOT have the soft sign (знак м'я́кшення)?
+    options:
+    - text: дім
+      correct: true
+    - text: день
+      correct: false
+    - text: кінь
+      correct: false
+    explanation: '''Дім'' ends with hard [м], while ''день'' and ''кінь'' end with
+      softened consonants marked by ь.'
+  - prompt: Which word ends with a VOICED consonant that must NOT be devoiced?
+    options:
+    - text: гриб
+      correct: true
+    - text: пес
+      correct: false
+    - text: кіт
+      correct: false
+    explanation: '''Гриб'' ends with voiced [б], which must remain voiced. ''Пес''
+      ends with [с] and ''кіт'' ends with [т], both inherently voiceless.'
+  - prompt: Which letter always represents TWO sounds together?
+    options:
+    - text: Ї
+      correct: true
+    - text: І
+      correct: false
+    - text: И
+      correct: false
+    explanation: '''Ї'' always represents [йі], while ''І'' and ''И'' represent a
+      single vowel sound each.'
+  - prompt: Which word features the rare plosive letter Ґ?
+    options:
+    - text: ґу́дзик
+      correct: true
+    - text: гора́
+      correct: false
+    - text: головни́й
+      correct: false
+    explanation: '''Ґу́дзик'' is spelled with ''Ґ'' (plosive [ɡ]), while ''гора́''
+      and ''головни́й'' use ''Г'' (glottal fricative [ɦ]).'
+  - prompt: Which word contains the smiling, high front vowel [і]?
+    options:
+    - text: ліс
+      correct: true
+    - text: лис
+      correct: false
+    - text: сир
+      correct: false
+    explanation: '''Ліс'' has the high front vowel [і], whereas ''лис'' and ''сир''
+      contain the open-mid vowel [и].'
+  - prompt: Which word preserves three clean unstressed or stressed [о] sounds?
+    options:
+    - text: молоко́
+      correct: true
+    - text: ма́ма
+      correct: false
+    - text: та́то
+      correct: false
+    explanation: '''Молоко́'' has three pure [о] vowels, none of which reduce to [а].'
+workbook:
+- id: act-8
+  type: match-up
+  title: See a letter, hear a sound
+  instruction: Match each letter with its beginner sound clue.
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: М
+    right: '[м]'
+  - left: Н
+    right: '[н]'
+  - left: Г
+    right: h-like [г]
+  - left: Ґ
+    right: hard [g]
+  - left: Ї
+    right: '[йі]'
+  - left: Ь
+    right: no sound
+- id: act-4-wb-1
+  type: fill-in
+  title: 'Preserve the voiced consonant: choose the ending'
+  instruction: Choose the correct voiced consonant letter to complete the word.
+  items:
+  - sentence: Він знайшо́в у лі́сі вели́кий гри____.
+    answer: б
+    options:
+    - б
+    - п
+    - в
+    explanation: The word for mushroom is 'гриб' ending in voiced 'б'. It must be
+      pronounced [гриб], never devoiced to [грип].
+  - sentence: Бі́ля на́шого буди́нку росте́ стари́й ду____.
+    answer: б
+    options:
+    - б
+    - п
+    - т
+    explanation: '''Дуб'' (oak) ends in voiced ''б''; keep it voiced to maintain correct
+      Ukrainian phonetics.'
+  - sentence: Діду́сь посади́в вели́кий і краси́вий са____.
+    answer: д
+    options:
+    - д
+    - т
+    - с
+    explanation: '''Сад'' (garden) ends in voiced ''д''. In Ukrainian, final consonants
+      do not devoice.'
+  - sentence: У дити́ни заболі́в зу____.
+    answer: б
+    options:
+    - б
+    - п
+    - в
+    explanation: '''Зуб'' (tooth) ends in voiced ''б''. Pronounce it clearly with
+      vocal cord vibration.'
+  - sentence: Взи́мку на о́зері блищи́ть слизьки́й лі____.
+    answer: д
+    options:
+    - д
+    - т
+    - с
+    explanation: '''Лід'' (ice) ends in voiced ''д''. Keep the consonant fully voiced.'
+  - sentence: На ку́хні лежи́ть го́стрий ні____.
+    answer: ж
+    options:
+    - ж
+    - ш
+    - ч
+    explanation: '''Ніж'' (knife) ends in voiced ''ж''. Never turn it into voiceless
+      [ш].'
+- id: act-4-wb-2
+  type: quiz
+  title: Deeper phonetic rules
+  instruction: Choose the correct explanation for each phonetic trap.
+  items:
+  - prompt: Why is pronouncing 'молоко́' as 'малако́' considered an error in Ukrainian?
+    options:
+    - text: Ukrainian has no vowel reduction (а́кання); unstressed [о] remains clearly
+        [о].
+      correct: true
+    - text: Because 'молоко́' is borrowed from English.
+      correct: false
+    - text: Because [а] cannot appear in three-syllable words.
+      correct: false
+    explanation: Ukrainian orthoepy demands clean, unreduced vowels. Unstressed 'о'
+      stays 'о'.
+  - prompt: What happens to your tongue position when you switch from [і] to [и]?
+    options:
+    - text: The tongue lowers slightly and pulls back from the upper teeth.
+      correct: true
+    - text: The tongue sticks out past the lips.
+      correct: false
+    - text: The tongue stays glued to the palate.
+      correct: false
+    explanation: '[і] is a close high front vowel with spread lips; [и] is more open
+      and relaxed.'
+  - prompt: What role does the soft sign (Ь) play in the word 'день'?
+    options:
+    - text: It indicates that the consonant 'н' is soft, without making any sound
+        itself.
+      correct: true
+    - text: It adds an extra syllable to the word.
+      correct: false
+    - text: It lengthens the vowel 'е'.
+      correct: false
+    explanation: The soft sign ь represents no independent sound; it is a graphic
+      modifier showing softness.
+  - prompt: How does the sound of 'Г' differ from the sound of 'Ґ'?
+    options:
+    - text: '''Г'' is a voiced throat fricative [ɦ]; ''Ґ'' is a crisp plosive [ɡ].'
+      correct: true
+    - text: '''Г'' is silent, while ''Ґ'' is always loud.'
+      correct: false
+    - text: '''Г'' is only used in foreign words; ''Ґ'' is in all words.'
+      correct: false
+    explanation: '''Г'' is a pharyngeal/glottal fricative; ''Ґ'' is a velar stop/plosive.'
+  - prompt: Why does the letter 'Ї' always count as two sounds?
+    options:
+    - text: It consistently represents the combination of glide [й] and vowel [і].
+      correct: true
+    - text: It can soften any preceding consonant.
+      correct: false
+    - text: It has two dots, so it is spoken twice.
+      correct: false
+    explanation: Unlike 'Я', 'Ю', and 'Є', 'Ї' never acts as a softening indicator;
+      it is always [йі].
+  - prompt: How do you pronounce the final consonant in 'сад' compared to English
+      'sad'?
+    options:
+    - text: With vocal cord vibration maintained until the end of the sound.
+      correct: true
+    - text: By whispering the sound quietly.
+      correct: false
+    - text: By replacing it with [т].
+      correct: false
+    explanation: Ukrainian voiced consonants never devoice at the end of words; voice
+      is maintained throughout.
+- id: act-4-wb-3
+  type: group-sort
+  title: 'Phonetic sorting: voiced endings vs soft endings'
+  instruction: Sort each word according to whether it features a final voiced consonant
+    or a soft sign (ь).
+  groups:
+  - label: Ends in voiced consonant (no devoicing)
+    items:
+    - гриб
+    - дуб
+    - сад
+    - лід
+  - label: Ends in soft consonant with Ь
+    items:
+    - день
+    - кінь
+    - сіль
+    - мідь
+- id: act-4-wb-4
+  type: true-false
+  title: Ukrainian orthoepy check
+  instruction: Determine whether each statement about Ukrainian pronunciation is true
+    or false.
+  items:
+  - statement: In Ukrainian, the letter Ґ is far more common than the letter Г.
+    correct: false
+    explanation: The letter Ґ is relatively rare (found in about 100 words), while
+      Г is very common.
+  - statement: The word 'ка́зка' is pronounced with a voiced [з], not a voiceless
+      [с].
+    correct: true
+    explanation: 'In Ukrainian, voiced consonants before voiceless consonants remain
+      voiced: ка[з]ка.'
+  - statement: Ukrainian vowels in unstressed positions blur into a neutral 'uh' sound
+      like in English.
+    correct: false
+    explanation: Ukrainian maintains vowel clarity; unstressed vowels do not undergo
+      English-style schwa reduction.
+  - statement: The words 'гра́ти' (to play) and 'ґра́ти' (metal lattice/bars) have
+      different meanings based on the letter Г vs Ґ.
+    correct: true
+    explanation: 'Г and Ґ distinguish completely different words: гра́ти (to play)
+      vs ґра́ти (lattice/bars).'
+  - statement: The soft sign (ь) can begin a word in Ukrainian.
+    correct: false
+    explanation: Ь never appears at the beginning of a word because it only modifies
+      a preceding consonant.
+  - statement: The letter Щ always represents the two sounds [шч] together.
+    correct: true
+    explanation: In standard Ukrainian pronunciation, Щ is always the combination
+      [шч].
+- id: act-4-wb-5
+  type: translate
+  title: Translate essential contrast pairs
+  instruction: Choose the correct English translation for each Ukrainian word.
+  items:
+  - source: гриб
+    options:
+    - text: mushroom
+      correct: true
+    - text: flu
+      correct: false
+    - text: tree
+      correct: false
+    explanation: '''Гриб'' means mushroom. The word for flu is ''грип''.'
+  - source: грип
+    options:
+    - text: flu
+      correct: true
+    - text: mushroom
+      correct: false
+    - text: garden
+      correct: false
+    explanation: '''Грип'' means flu. Remember to distinguish voiced [б] in ''гриб''
+      from voiceless [п] in ''грип''.'
+  - source: дим
+    options:
+    - text: smoke
+      correct: true
+    - text: house / home
+      correct: false
+    - text: day
+      correct: false
+    explanation: '''Дим'' with vowel [и] means smoke; ''дім'' with vowel [і] means
+      house or home.'
+  - source: дім
+    options:
+    - text: house / home
+      correct: true
+    - text: smoke
+      correct: false
+    - text: forest
+      correct: false
+    explanation: '''Дім'' with vowel [і] means house or home.'
+  - source: лис
+    options:
+    - text: fox
+      correct: true
+    - text: forest
+      correct: false
+    - text: cheese
+      correct: false
+    explanation: '''Лис'' with vowel [и] means fox; ''ліс'' with vowel [і] means forest.'
+  - source: ліс
+    options:
+    - text: forest
+      correct: true
+    - text: fox
+      correct: false
+    - text: mountain
+      correct: false
+    explanation: '''Ліс'' with vowel [і] means forest.'
+- id: act-4-wb-6
+  type: fill-in
+  title: Complete the dialogue with safe pronunciation forms
+  instruction: Choose the correct form to complete the line.
+  items:
+  - sentence: — Що ти ба́чиш у саду́? — Я ба́чу вели́кий ____.
+    answer: дуб
+    options:
+    - дуб
+    - зуб
+    - дим
+    explanation: '''Дуб'' (oak) fits the context of a garden; pronounce final ''б''
+      voiced.'
+  - sentence: — Окса́но, ти ра́да мене́ ба́чити? — Так, я ду́же ____ тебе́ ба́чити!
+    answer: ра́да
+    options:
+    - ра́да
+    - ра́дий
+    - до́бре
+    explanation: Oksana is female, so she uses the feminine form 'ра́да'.
+  - sentence: — Ма́рку, що росте́ бі́ля де́рева? — Там росте́ бі́лий ____.
+    answer: гриб
+    options:
+    - гриб
+    - грип
+    - ніж
+    explanation: '''Гриб'' (mushroom) grows near a tree; remember voiced [б].'
+  - sentence: — Скі́льки зву́ків познача́є лі́тера Ї? — Вона́ за́вжди познача́є ____
+      зву́ки.
+    answer: два
+    options:
+    - два
+    - оди́н
+    - три
+    explanation: 'The letter Ї always represents two sounds: [й] + [і].'
+  - sentence: — Як пра́вильно сказа́ти сло́во 'молоко́'? — Вимовля́й усі́ три зву́ки
+      ____ чи́сто.
+    answer: о
+    options:
+    - о
+    - а
+    - у
+    explanation: In 'молоко́', all three 'о' sounds remain pure [о].
+  - sentence: — До поба́чення, Софі́є! — До поба́чення! На все ____!
+    answer: до́бре
+    options:
+    - до́бре
+    - ра́да
+    - сад
+    explanation: '''На все до́бре!'' is the warm farewell formula.'

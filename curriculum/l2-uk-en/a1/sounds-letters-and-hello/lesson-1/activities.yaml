@@ -1,0 +1,344 @@
+inline:
+- id: act-1
+  type: quiz
+  title: Sound or letter?
+  instruction: Choose the correct answer.
+  items:
+  - prompt: What is a звук?
+    options:
+    - text: A sound you hear and say
+      correct: true
+    - text: A letter you see and write
+      correct: false
+    - text: A whole sentence
+      correct: false
+    explanation: A звук belongs to hearing and speaking.
+  - prompt: What is a лі́тера?
+    options:
+    - text: A letter you see and write
+      correct: true
+    - text: A sound you hear and say
+      correct: false
+    - text: A greeting
+      correct: false
+    explanation: A лі́тера belongs to reading and writing.
+  - prompt: How many letters are in the Ukrainian alphabet?
+    options:
+    - text: '33'
+      correct: true
+    - text: '38'
+      correct: false
+    - text: '6'
+      correct: false
+    explanation: Ukrainian has 33 letters.
+  - prompt: How many basic Ukrainian vowel sounds are there?
+    options:
+    - text: '6'
+      correct: true
+    - text: '10'
+      correct: false
+    - text: '33'
+      correct: false
+    explanation: The six basic vowel sounds are [а], [о], [у], [е], [и], [і].
+  - prompt: Does ь have its own sound?
+    options:
+    - text: 'No'
+      correct: true
+    - text: 'Yes'
+      correct: false
+    - text: Only in Приві́т
+      correct: false
+    explanation: The soft sign ь has no sound of its own.
+  - prompt: What does Приві́т mean?
+    options:
+    - text: Hi
+      correct: true
+    - text: Goodbye
+      correct: false
+    - text: Milk
+      correct: false
+    explanation: Приві́т is the informal word for Hi.
+- id: act-1-first-word
+  type: fill-in
+  title: Твоє́ пе́рше сло́во — Your first word
+  instruction: Complete each statement about the greeting Приві́т.
+  items:
+  - sentence: 'The informal greeting for friends is: ____!'
+    options:
+    - Приві́т
+    - Молоко́
+    - Лі́тера
+    answer: Приві́т
+    explanation: Приві́т is the friendly, informal Ukrainian greeting meaning 'Hi!'
+      or 'Hello!'.
+  - sentence: In the word Приві́т, the first letter П marks the consonant sound [____].
+    options:
+    - п
+    - р
+    - т
+    answer: п
+    explanation: The initial letter П represents the voiceless consonant sound [п].
+  - sentence: In Приві́т, the two vowel sounds are [и] and [____].
+    options:
+    - і
+    - а
+    - о
+    answer: і
+    explanation: 'The word Приві́т contains two vowel sounds: [и] (letter и) and [і]
+      (letter і).'
+  - sentence: In the greeting Приві́т, the total number of vowel sounds is ____.
+    options:
+    - '2'
+    - '4'
+    - '6'
+    answer: '2'
+    explanation: 'Приві́т has two vowel sounds: [и] and [і].'
+  - sentence: In the greeting Приві́т, the total number of consonant sounds is ____.
+    options:
+    - '4'
+    - '2'
+    - '6'
+    answer: '4'
+    explanation: 'There are four consonant sounds in Приві́т: [п], [р], [в], and [т].'
+  - sentence: In Ukrainian, the letters и and і represent ____ vowel sounds.
+    options:
+    - different
+    - identical
+    - silent
+    answer: different
+    explanation: The letters и and і mark two distinctly different vowel sounds in
+      Ukrainian.
+- id: act-1-vowels
+  type: watch-and-repeat
+  title: Шість голосни́х зву́ків — Six vowel sounds
+  instruction: Watch the pronunciation model, listen closely, and repeat the vowel
+    and the key word.
+  items:
+  - letter: А
+    word: анана́с
+    video: https://www.youtube.com/watch?v=hvB3VpcR3ZE
+  - letter: О
+    word: о́ко
+    video: https://www.youtube.com/watch?v=gJFxRIPRZbI
+  - letter: У
+    word: уро́к
+    video: https://www.youtube.com/watch?v=VB1O6PmtYRU
+  - letter: Е
+    word: екра́н
+    video: https://www.youtube.com/watch?v=KFlsroBW0dk
+  - letter: И
+    word: сир
+    video: https://www.youtube.com/watch?v=W-1rCu0indE
+  - letter: І
+    word: ім'я́
+    video: https://www.youtube.com/watch?v=Z9TH0H4ShGo
+- id: act-1-match
+  type: match-up
+  title: Лі́тера та звук — Letter and sound
+  instruction: Match each vowel letter with the sound it represents.
+  pairs:
+  - left: А
+    right: '[а]'
+  - left: О
+    right: '[о]'
+  - left: У
+    right: '[у]'
+  - left: Е
+    right: '[е]'
+  - left: И
+    right: '[и]'
+  - left: І
+    right: '[і]'
+workbook:
+- id: act-2
+  type: quiz
+  title: Meet скла́ди
+  instruction: Choose the safer beginner idea.
+  items:
+  - question: What does склад mean?
+    options:
+    - syllable
+    - letter
+    - greeting
+    correct: 0
+    explanation: Склад means syllable. M02 will teach the counting rule.
+  - question: What gives a склад its voice?
+    options:
+    - a capital letter
+    - a vowel sound
+    - an English translation
+    correct: 1
+    explanation: Every Ukrainian склад needs a vowel sound.
+  - question: What should you do with ма́ма today?
+    options:
+    - Memorize every syllable rule.
+    - Notice the two clear а sounds.
+    - Ignore the vowel sounds.
+    correct: 1
+    explanation: Today is a sound-first preview. M02 practices syllable counting.
+  - question: What should you listen for in молоко́?
+    options:
+    - a blurred English vowel
+    - a silent letter
+    - three clean о sounds
+    correct: 2
+    explanation: Ukrainian о stays clean in молоко́.
+- id: act-w1-sound-letter
+  type: group-sort
+  title: Звук чи лі́тера? — Sound or letter?
+  instruction: Sort each item into sounds (what you hear and say) or letters (what
+    you see and write).
+  groups:
+  - label: Sounds (hear and say)
+    items:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[п]'
+    - '[м]'
+    - '[т]'
+  - label: Letters (see and write)
+    items:
+    - А
+    - О
+    - У
+    - П
+    - М
+    - Т
+- id: act-w2-vowels
+  type: group-sort
+  title: Голосні́ та при́голосні зву́ки — Vowel and consonant sounds
+  instruction: Sort the sounds into vowel sounds and consonant sounds.
+  groups:
+  - label: Vowel sounds
+    items:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[е]'
+    - '[и]'
+    - '[і]'
+  - label: Consonant sounds
+    items:
+    - '[п]'
+    - '[р]'
+    - '[в]'
+    - '[т]'
+    - '[м]'
+    - '[н]'
+- id: act-w3-odd-one-out
+  type: odd-one-out
+  title: Зна́йди за́йве — Odd one out
+  instruction: Choose the item that does not belong in the group.
+  items:
+  - words:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[п]'
+    answer: '[п]'
+    explanation: '[п] is a consonant sound; the others are vowel sounds.'
+  - words:
+    - '[е]'
+    - '[и]'
+    - '[і]'
+    - '[т]'
+    answer: '[т]'
+    explanation: '[т] is a consonant sound; the others are vowel sounds.'
+  - words:
+    - А
+    - О
+    - У
+    - '[а]'
+    answer: '[а]'
+    explanation: '[а] in brackets is a sound we hear and say; the others are letters
+      we see and write.'
+  - words:
+    - П
+    - Р
+    - В
+    - '[в]'
+    answer: '[в]'
+    explanation: '[в] in brackets is a sound we hear and say; the others are letters
+      we see and write.'
+  - words:
+    - ма́ма
+    - та́то
+    - молоко́
+    - звук
+    answer: звук
+    explanation: звук is a grammatical term meaning 'sound'; the others are concrete
+      everyday words.
+  - words:
+    - '[а]'
+    - '[о]'
+    - '[у]'
+    - '[м]'
+    answer: '[м]'
+    explanation: '[м] is a consonant sound formed with lip obstruction; the others
+      are open vowel sounds.'
+- id: act-w4-match
+  type: match-up
+  title: З'єдна́й сло́во і голосні́ зву́ки — Match the word and its vowel sounds
+  instruction: Match each Ukrainian word with the vowel sounds it contains.
+  pairs:
+  - left: ма́ма
+    right: два зву́ки [а] — two [а] sounds
+  - left: молоко́
+    right: три чи́сті зву́ки [о] — three clean [о] sounds
+  - left: о́ко
+    right: два чи́сті зву́ки [о] — two clean [о] sounds
+  - left: та́то
+    right: зву́ки [а] та [о] — sounds [а] and [о]
+  - left: дім
+    right: оди́н звук [і] — one [і] sound
+  - left: сон
+    right: оди́н звук [о] — one [о] sound
+- id: act-w5-fill-in
+  type: fill-in
+  title: Встав пра́вильну лі́теру — Insert the correct vowel letter
+  instruction: Choose the correct vowel letter to complete each word.
+  items:
+  - sentence: м___ма (mother)
+    options:
+    - а
+    - о
+    - у
+    answer: а
+    explanation: The word ма́ма is spelled with the vowel letter а in both syllables.
+  - sentence: т___то (father)
+    options:
+    - а
+    - о
+    - е
+    answer: а
+    explanation: The word та́то begins with the vowel letter а in the first syllable.
+  - sentence: м___ло́ко (milk)
+    options:
+    - о
+    - а
+    - у
+    answer: о
+    explanation: Ukrainian молоко́ is spelled with a clean о in every syllable, never
+      а.
+  - sentence: ___ко (eye)
+    options:
+    - о
+    - а
+    - у
+    answer: о
+    explanation: The word о́ко begins and ends with the vowel letter о.
+  - sentence: д___м (house)
+    options:
+    - і
+    - и
+    - а
+    answer: і
+    explanation: The word дім is spelled with the vowel letter і.
+  - sentence: с___н (dream)
+    options:
+    - о
+    - а
+    - е
+    answer: о
+    explanation: The word сон has the vowel letter о.
