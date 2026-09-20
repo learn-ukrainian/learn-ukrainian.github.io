@@ -108,7 +108,7 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
   hydrate change the rollover-cost calculus. Codex remains a formal-CF **review** seat + coding lane;
   each stream's lease prevents concurrent co-ownership.
-- **Kimi K3** — frontier coder/reviewer + cross-family escalation authority (`max-effort-only` makes a continuous loop costly).
+- **Kimi K3** — frontier coder/reviewer + cross-family escalation authority. Dispatch defaults to the faster `k3-256k` with no forced effort; full K3 defaults to `high` through the `kimicc` harness. Kimi cannot be a read-only review seat via `ask-kimi --type review` / `delegate.py --mode read-only` (the tooling refuses because headless Kimi auto-approves mutations), so pick another family for cross-family review; still a good implementer and non-Ukrainian design consult; drive when assigned.
 
 ### Machine-authority projection (lint #5642)
 
