@@ -20,6 +20,8 @@ import znoSyntacticNormDeck from '@site/src/data/practice-zno.syntactic-norm.jso
 import znoOrthographyDeck from '@site/src/data/practice-zno.orthography.json';
 import {
   SRS_STORAGE_KEY,
+  PRACTICE_SESSION_STORAGE_KEY,
+  writePracticeSessionSnapshot,
   DAILY_PRACTICE_DECK_SIZE,
   cardKey,
   clearLoadedSrsState,
@@ -1705,7 +1707,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Коти/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
 
     await waitFor(() =>
       expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Коти'),
@@ -1757,7 +1761,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Коти з Атласу/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
 
     await waitFor(() =>
       expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Коти з Атласу'),
@@ -1810,7 +1816,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Коти з практики/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
     await user.click(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')!);
 
     await waitFor(() => expect(container.querySelector('[data-activity="flashcard"]')).toBeInTheDocument());
@@ -1856,7 +1864,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Коти з Атласу: сесія/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
     // P0-3: the flashcards card is disabled until its count resolves — the Atlas
     // prefix-shard lookup for this custom-deck key is itself async.
     await waitFor(() =>
@@ -1913,7 +1923,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Довгий атласний глос/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
     await waitFor(() =>
       expect(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')).not.toBeDisabled(),
     );
@@ -1958,7 +1970,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Справжній сирота/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
     await waitFor(() =>
       expect(container.querySelector<HTMLButtonElement>('[data-mode="flashcards"]')).not.toBeDisabled(),
     );
@@ -1999,7 +2013,9 @@ describe('LexiconPractice', () => {
 
     const user = userEvent.setup();
     const { container } = render(<LexiconPractice />);
+    await user.click(await screen.findByTestId('practice-settings-toggle'));
     await user.click(await screen.findByRole('button', { name: /Невідомі слова/ }));
+    await user.click(screen.getByTestId('settings-drawer-close'));
 
     await waitFor(() =>
       expect(screen.getByTestId('practice-daily-deck-title')).toHaveTextContent('Невідомі слова'),
@@ -5469,6 +5485,7 @@ describe('LexiconPractice', () => {
       const user = userEvent.setup();
       render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} />);
 
+      await user.click(screen.getByTestId('practice-settings-toggle'));
       const teacherBtn = screen.getByRole('button', { name: new RegExp(label) });
       expect(teacherBtn).toBeInTheDocument();
 
@@ -5566,10 +5583,12 @@ describe('LexiconPractice', () => {
       const user = userEvent.setup();
       const { container } = render(<LexiconPractice initialDeck={sampleDeck()} autoStart={false} initialMode="cloze" />);
 
+      await user.click(screen.getByTestId('practice-settings-toggle'));
       const customBtn = screen.getByRole('button', { name: /Моя тестова колода/i });
       expect(customBtn).toBeInTheDocument();
       await user.click(customBtn);
       expect(customBtn).toHaveClass('btn-primary');
+      await user.click(screen.getByTestId('settings-drawer-close'));
 
       const clozeCard = container.querySelector<HTMLButtonElement>('[data-mode="cloze"]')!;
       await user.click(clozeCard);
@@ -5695,8 +5714,10 @@ describe('LexiconPractice', () => {
         expect(screen.getByTestId('practice-session-scope')).toHaveTextContent(/8 нових/),
       );
 
+      await user.click(screen.getByTestId('practice-settings-toggle'));
       const customBtn = screen.getByRole('button', { name: /Одне слово/i });
       await user.click(customBtn);
+      await user.click(screen.getByTestId('settings-drawer-close'));
 
       // F1-F3 (PR #5837) scoped the two session-START paths to the selected deck via
       // filterIndexByDeckFilter, but the dashboard's homeScope estimate — visible before a
@@ -5731,7 +5752,9 @@ describe('LexiconPractice', () => {
           <LexiconPractice initialDeck={customDeckMixedFixture()} autoStart={false} />,
         );
 
+        await user.click(screen.getByTestId('practice-settings-toggle'));
         await user.click(screen.getByRole('button', { name: /Дві слова/i }));
+        await user.click(screen.getByTestId('settings-drawer-close'));
         await user.click(container.querySelector<HTMLButtonElement>('[data-mode="mixed"]')!);
 
         const clozeStage = screen.queryByTestId('practice-cloze');
@@ -5777,7 +5800,9 @@ describe('LexiconPractice', () => {
       // Narrowing to a 1-word custom deck (no cloze) must narrow the counts too, not just
       // the session-size estimate — a mixed session from this deck has nothing to draw
       // from cloze, and the grid should say so for THIS deck, not the full level.
+      await user.click(screen.getByTestId('practice-settings-toggle'));
       await user.click(screen.getByRole('button', { name: /Лічильник/i }));
+      await user.click(screen.getByTestId('settings-drawer-close'));
 
       await waitFor(() =>
         expect(screen.getByTestId('practice-mode-count-flashcards')).toHaveTextContent('1'),
@@ -6512,6 +6537,234 @@ describe('LexiconPractice', () => {
       } finally {
         localStorage.removeItem('learn_uk_google_client_id');
       }
+    });
+  });
+
+  describe('#8277 Practice Hub UX 3-Track Overhaul & Deep Mechanics Integration', () => {
+    test('renders all 8 deep mechanics parts of speech cards in Track 2', async () => {
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+      const grammarTrack = await screen.findByTestId('practice-track-grammar');
+      expect(grammarTrack).toBeInTheDocument();
+
+      const posGrid = within(grammarTrack).getByTestId('practice-pos-mechanics-grid');
+      expect(posGrid).toBeInTheDocument();
+
+      const mechanicsPosKeys = [
+        'noun',
+        'adjective',
+        'verb',
+        'pronoun',
+        'numeral',
+        'adverb',
+        'function_words',
+        'interjection',
+      ];
+
+      for (const pos of mechanicsPosKeys) {
+        const card = within(posGrid).getByTestId(`practice-card-mechanics-${pos}`);
+        expect(card).toBeInTheDocument();
+        expect(card).toHaveAttribute('data-mechanics-mode', pos);
+        expect(card).toHaveAttribute('data-pos-mechanics', pos);
+        expect(within(posGrid).getByTestId(`practice-mode-count-mechanics-${pos}`)).toBeInTheDocument();
+      }
+    });
+
+    test('clicking a mechanics card launches mechanics drill session and allows returning to tracks', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const nounCard = await screen.findByTestId('practice-card-mechanics-noun');
+      await user.click(nounCard);
+
+      const session = await screen.findByTestId('practice-mechanics-session');
+      expect(session).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mechanics-prompt')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mechanics-blank')).toBeInTheDocument();
+      expect(screen.getByTestId('practice-mechanics-counter')).toBeInTheDocument();
+
+      // Return back to tracks
+      const backBtn = screen.getByTestId('practice-mechanics-back-button');
+      await user.click(backBtn);
+
+      expect(screen.queryByTestId('practice-mechanics-session')).not.toBeInTheDocument();
+      expect(await screen.findByTestId('practice-track-grammar')).toBeInTheDocument();
+    });
+
+    test('settings drawer opens and closes without disturbing idle dashboard', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      expect(settingsToggle).toBeInTheDocument();
+
+      const drawer = screen.getByTestId('practice-settings-drawer');
+      // In closed state, drawer must be inert and aria-hidden
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).not.toHaveClass('open');
+
+      // Open drawer
+      await user.click(settingsToggle);
+
+      expect(drawer).toHaveClass('open');
+      expect(drawer).not.toHaveAttribute('aria-hidden', 'true');
+      expect(drawer).not.toHaveAttribute('inert');
+      expect(screen.getByTestId('practice-settings-backdrop')).toBeInTheDocument();
+
+      // Close drawer via Escape key
+      await user.keyboard('{Escape}');
+
+      expect(drawer).not.toHaveClass('open');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+      expect(drawer).toHaveAttribute('inert');
+      expect(screen.queryByTestId('practice-settings-backdrop')).not.toBeInTheDocument();
+      expect(screen.getByTestId('practice-track-grammar')).toBeInTheDocument();
+    });
+
+    test('settings drawer focus trap cycles correctly with details open and collapsed', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      await user.click(settingsToggle);
+
+      const closeBtn = screen.getByTestId('settings-drawer-close');
+      const details = screen.getByTestId('practice-secondary-tools');
+      const summary = details.querySelector('summary')!;
+
+      // With details open: Tab from closeBtn moves to next focusable inside details
+      closeBtn.focus();
+      expect(document.activeElement).toBe(closeBtn);
+
+      // Now collapse details
+      await user.click(summary);
+      expect(details).not.toHaveAttribute('open');
+
+      // With details collapsed: focus trap cycles between closeBtn and summary only
+      summary.focus();
+      // Tab from summary wraps back to closeBtn
+      await user.tab();
+      expect(document.activeElement).toBe(closeBtn);
+
+      // Shift+Tab from closeBtn wraps back to summary
+      await user.tab({ shift: true });
+      expect(document.activeElement).toBe(summary);
+    });
+
+    test('settings drawer suspends focus trap and makes drawer inert during Custom Deck Studio modal handoff', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      await user.click(settingsToggle);
+
+      const drawer = screen.getByTestId('practice-settings-drawer');
+      expect(drawer).toHaveClass('open');
+      expect(drawer).not.toHaveAttribute('inert');
+      expect(drawer).not.toHaveAttribute('aria-hidden', 'true');
+
+      // Click "Manage Decks / Import" to open Custom Deck Studio
+      const manageDecksBtn = screen.getByRole('button', { name: /Менеджер колод \/ Імпорт/i });
+      await user.click(manageDecksBtn);
+
+      // Verify studio modal is open
+      const studioModal = await screen.findByRole('dialog', { name: /Студія власних колод|Custom Deck Studio/i });
+      const studioCloseBtn = screen.getByTestId('custom-deck-studio-close');
+      expect(studioCloseBtn).toBeInTheDocument();
+
+      // Settings drawer must now be suspended: inert and aria-hidden
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+
+      // 1. Initial focus: focus moves inside Custom Deck Studio automatically
+      await waitFor(() => {
+        expect(document.activeElement).toBe(studioCloseBtn);
+      });
+
+      // 2. Bidirectional focus trap containment:
+      // Shift+Tab from close button (first element) wraps to last focusable element in Studio
+      await user.tab({ shift: true });
+      expect(studioModal).toContainElement(document.activeElement as HTMLElement);
+      expect(drawer).not.toContainElement(document.activeElement as HTMLElement);
+      expect(document.activeElement).not.toBe(studioCloseBtn);
+
+      // Forward Tab from last element wraps back to close button
+      await user.tab();
+      expect(document.activeElement).toBe(studioCloseBtn);
+
+      // 3. Escape dismissal & focus restoration to drawer opener button:
+      await user.keyboard('{Escape}');
+      expect(screen.queryByTestId('custom-deck-studio-close')).not.toBeInTheDocument();
+
+      // Drawer is unsuspended and active again
+      expect(drawer).not.toHaveAttribute('inert');
+      expect(drawer).not.toHaveAttribute('aria-hidden', 'true');
+
+      // Focus restored to the opener button inside the drawer
+      expect(document.activeElement).toBe(manageDecksBtn);
+
+      // 4. Close settings drawer via Escape: focus restores to practice-settings-toggle
+      await user.keyboard('{Escape}');
+      expect(drawer).not.toHaveClass('open');
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+      expect(document.activeElement).toBe(settingsToggle);
+    });
+
+    test('deck-switch request with resumable session closes settings drawer and focuses confirmation offer', async () => {
+      // Seed a resumable mixed session
+      writePracticeSessionSnapshot('mixed', {
+        sessionSeed: 12345,
+        history: [],
+        budget: 10,
+        completed: 2,
+        modeFilter: 'mixed',
+        level: 'A1',
+        deckId: 'all',
+        dateSeed: dateSeed(new Date()),
+        startedAt: Date.now(),
+        plannedTotal: 10,
+      });
+
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      // Open settings drawer
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      await user.click(settingsToggle);
+
+      const drawer = screen.getByTestId('practice-settings-drawer');
+      expect(drawer).toHaveClass('open');
+      expect(drawer).not.toHaveAttribute('inert');
+
+      // Click another deck inside the drawer (e.g. virtual teacher lesson curated deck)
+      const virtualTeacherBtn = screen.getByTestId('practice-settings-deck-virtual_teacher_lesson');
+      await user.click(virtualTeacherBtn);
+
+      // Verify drawer closes and becomes inert
+      expect(drawer).not.toHaveClass('open');
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+
+      // Verify switch session offer is visible on dashboard
+      const offer = await screen.findByTestId('practice-switch-session-offer');
+      expect(offer).toBeInTheDocument();
+
+      const acceptBtn = screen.getByTestId('practice-switch-session-accept');
+      const declineBtn = screen.getByTestId('practice-switch-session-decline');
+
+      // Verify focus is placed directly on the accept confirmation button
+      await waitFor(() => {
+        expect(document.activeElement).toBe(acceptBtn);
+      });
+
+      // Declining the offer dismisses it and returns focus to practice-settings-toggle
+      await user.click(declineBtn);
+      expect(screen.queryByTestId('practice-switch-session-offer')).not.toBeInTheDocument();
+      expect(document.activeElement).toBe(settingsToggle);
+
+      // Clean up snapshot
+      localStorage.removeItem(PRACTICE_SESSION_STORAGE_KEY);
     });
   });
 });

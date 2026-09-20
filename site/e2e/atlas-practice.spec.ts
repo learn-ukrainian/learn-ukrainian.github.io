@@ -1057,3 +1057,39 @@ test.describe('daily preview UTC boundary', () => {
     }
   });
 });
+
+test('practice hub renders 3-track layout, launches 10 POS mechanics drill, and toggles settings drawer', async ({ page }) => {
+  await page.goto('/words-of-the-day/practice/');
+
+  // 1. Verify Track 2 & 10 POS Mechanics grid
+  const grammarTrack = page.getByTestId('practice-track-grammar');
+  await expect(grammarTrack).toBeVisible();
+
+  const nounCard = page.getByTestId('practice-card-mechanics-noun');
+  await expect(nounCard).toBeVisible();
+
+  // 2. Launch noun mechanics drill
+  await nounCard.click();
+  const session = page.getByTestId('practice-mechanics-session');
+  await expect(session).toBeVisible();
+  await expect(page.getByTestId('practice-mechanics-prompt')).toBeVisible();
+
+  // Return back to tracks
+  await page.getByTestId('practice-mechanics-back-button').click();
+  await expect(session).toHaveCount(0);
+  await expect(grammarTrack).toBeVisible();
+
+  // 3. Settings drawer toggle
+  const settingsToggle = page.getByTestId('practice-settings-toggle');
+  await expect(settingsToggle).toBeVisible();
+  await settingsToggle.click();
+
+  const drawer = page.getByTestId('practice-settings-drawer');
+  await expect(drawer).toHaveClass(/open/);
+  await expect(page.getByTestId('practice-settings-backdrop')).toBeVisible();
+
+  // Close drawer
+  await page.getByTestId('settings-drawer-close').click();
+  await expect(drawer).not.toHaveClass(/open/);
+  await expect(page.getByTestId('practice-settings-backdrop')).toHaveCount(0);
+});

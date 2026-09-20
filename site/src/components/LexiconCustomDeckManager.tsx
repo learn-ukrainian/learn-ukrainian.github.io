@@ -8,7 +8,7 @@
  * - Zero-backend client-side execution & Google Drive AppData Sync
  */
 
-import React, { useState, useCallback, useRef, useMemo } from 'react';
+import React, { useState, useCallback, useRef, useMemo, useEffect } from 'react';
 import {
   type CustomSet,
   readLocalCustomSets,
@@ -85,6 +85,89 @@ export function LexiconCustomDeckManager({
 }: LexiconCustomDeckManagerProps) {
   const [customSets, setCustomSets] = useState<CustomSet[]>(() => readLocalCustomSets());
   const [activeTab, setActiveTab] = useState<'decks' | 'wizard'>('decks');
+
+  const modalRef = useRef<HTMLDivElement | null>(null);
+  const closeButtonRef = useRef<HTMLButtonElement | null>(null);
+  const previousFocusRef = useRef<HTMLElement | null>(null);
+  const onCloseRef = useRef(onClose);
+  onCloseRef.current = onClose;
+
+  const getFocusableElements = (): HTMLElement[] => {
+    if (!modalRef.current) return [];
+    const elements = Array.from(
+      modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), [href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"]), details summary'
+      )
+    );
+    return elements.filter((el) => {
+      const closedDetails = el.closest('details:not([open])');
+      if (closedDetails && !el.matches('summary')) {
+        return false;
+      }
+      const hasLayout = el.offsetWidth > 0 || el.offsetHeight > 0 || el.getClientRects().length > 0;
+      if (hasLayout) return true;
+      return el.style.display !== 'none' && el.style.visibility !== 'hidden' && !el.hidden;
+    });
+  };
+
+  useEffect(() => {
+    previousFocusRef.current = document.activeElement as HTMLElement | null;
+    closeButtonRef.current?.focus();
+    const timer = setTimeout(() => {
+      if (
+        document.activeElement !== closeButtonRef.current &&
+        modalRef.current &&
+        !modalRef.current.contains(document.activeElement)
+      ) {
+        closeButtonRef.current?.focus();
+      }
+    }, 50);
+
+    return () => {
+      clearTimeout(timer);
+      if (previousFocusRef.current && typeof previousFocusRef.current.focus === 'function') {
+        previousFocusRef.current.focus();
+      }
+    };
+  }, []);
+
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        e.preventDefault();
+        onCloseRef.current();
+        return;
+      }
+
+      if (e.key === 'Tab') {
+        const focusables = getFocusableElements();
+        if (focusables.length === 0) {
+          e.preventDefault();
+          return;
+        }
+
+        const firstElement = focusables[0];
+        const lastElement = focusables[focusables.length - 1];
+
+        if (e.shiftKey) {
+          if (document.activeElement === firstElement || !modalRef.current?.contains(document.activeElement)) {
+            e.preventDefault();
+            lastElement?.focus();
+          }
+        } else {
+          if (document.activeElement === lastElement || !modalRef.current?.contains(document.activeElement)) {
+            e.preventDefault();
+            firstElement?.focus();
+          }
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, []);
 
   // Wizard state: 1 = Upload/Paste, 2 = Inspect & Filter, 3 = Save & Sync
   const [wizardStep, setWizardStep] = useState<1 | 2 | 3>(1);
@@ -299,6 +382,7 @@ export function LexiconCustomDeckManager({
 
   return (
     <div
+      ref={modalRef}
       tabIndex={-1}
       role="dialog"
       aria-modal="true"
@@ -339,8 +423,11 @@ export function LexiconCustomDeckManager({
             </div>
           </div>
           <button
+            ref={closeButtonRef}
             type="button"
             className="btn btn-sm"
+            data-testid="custom-deck-studio-close"
+            aria-label={chromeLocale === 'uk' ? 'Закрити студію колод' : 'Close deck studio'}
             onClick={onClose}
             style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.5rem', cursor: 'pointer' }}
           >
