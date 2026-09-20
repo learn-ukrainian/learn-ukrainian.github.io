@@ -452,12 +452,16 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
         pages[str(n)] = mdx
         cards.append(f'- [{n}. {lesson["title"]}]({base}{n}/) — {lesson["minutes"]} min')
         tab_links.append((n, lesson["title"]))
+    landing_plan = dict(plan)
+    if _is_a1(level) and slug == "sounds-letters-and-hello":
+        landing_plan["title"] = "Sounds and First Letters"
+        landing_plan["subtitle"] = "All 33 Ukrainian letters, six vowel sounds, stress, and your first spoken greetings"
     intro = _landing_intro(
-        level, module_dir, slug, cards, plan=plan, lessons=lessons,
+        level, module_dir, slug, cards, plan=landing_plan, lessons=lessons,
     )
     landing = generate_mdx(
         intro, int(plan.get("sequence", 1)), yaml_activities=workbook,
-        meta_data=dict(plan, level=level), vocab_items=list(vocabulary.values()),
+        meta_data=dict(landing_plan, level=level), vocab_items=list(vocabulary.values()),
         external_resources={"books": list(resources.values())}, level=level,
         pipeline_version="v7-upgrade", build_status="validated",
     ).replace("\n{/**/}\n", "\n")

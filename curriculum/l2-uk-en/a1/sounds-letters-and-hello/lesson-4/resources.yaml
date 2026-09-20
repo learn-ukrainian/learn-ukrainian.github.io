@@ -1,0 +1,48 @@
+- title: Авра́менко 10 клас, с. 76
+  role: textbook
+  chunk_id: 10-klas-ukrajinska-mova-avramenko-2018_s0117
+  notes: 'Осно́вні пра́вила вимо́ви зву́ків: дзвінкі́ при́голосні в кінці́ слова́ не оглушуються
+    (гриб, не грип); вимо́ва ненаголо́шених голосни́х.'
+- title: Кравцо́ва 4 клас, с. 5–6
+  role: textbook
+  chunk_id: 4-klas-ukrayinska-mova-kravtsova-2021-1_s0003
+  notes: 'Пра́вило: дзвінкі́ при́голосні зву́ки в кінці́ слова́ та скла́ду пере́д глухи́м вимовля́ємо
+    дзві́нко.'
+- title: Вашуленко 2 клас, с. 10
+  role: textbook
+  chunk_id: 2-klas-ukrmova-vashulenko-2019-1_s0008
+  notes: 'Дзвінкі́ при́голосні зву́ки в кінці́ слова́ вимовля́ються дзві́нко, вира́зно, чі́тко:
+    сад, виногра́д, мед.'
+- title: Авра́менко 5 клас, с. 73
+  role: textbook
+  chunk_id: 5-klas-ukrmova-avramenko-2022_s0074
+  notes: Бу́ква ґ познача́є проривни́й звук [ґ] (ґа́ва, а́ґрус); бу́ква г передає́ протя́жний
+    звук [г] (гора́, Га́ля); розрі́знення пар гра́ти / ґра́ти.
+- title: Большако́ва 2 клас, с. 35, 48
+  role: textbook
+  chunk_id: 2-klas-ukrmova-bolshakova-2019-1_s0035
+  notes: Бу́ква ї за́вжди познача́є два зву́ки [йі]; знак м'я́кшення ь не познача́є зву́ка.
+- title: Погрібни́й 1992 (Украї́нська літерату́рна вимо́ва), с. 9
+  role: lexicon
+  chunk_id: pohribnyi-ukrainska-literaturna-vymova-1992_p09
+  notes: Вимо́ва зву́ка [и] та розрі́знення голосни́х [и] та [і].
+- title: Заболо́тний 5 клас, с. 100
+  role: textbook
+  chunk_id: 5-klas-ukrmova-zabolotnyi-2023_s0076
+  notes: Чітка́ вимо́ва голосни́х зву́ків та особли́вості ненаголо́шених [о], [е], [и].
+- title: 'Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Г'
+  role: youtube
+  url: https://www.youtube.com/watch?v=gVnclpSI0DU
+  notes: Pronunciation video for the letter Г.
+- title: 'Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Ґ'
+  role: youtube
+  url: https://www.youtube.com/watch?v=gNjHqjTW9WQ
+  notes: Pronunciation video for the letter Ґ.
+- title: 'Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Ь'
+  role: youtube
+  url: https://www.youtube.com/watch?v=cJlal8XKBxo
+  notes: Pronunciation video for the soft sign Ь.
+- title: 'Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Ї'
+  role: youtube
+  url: https://www.youtube.com/watch?v=UcjdjQXhAY8
+  notes: Pronunciation video for the letter Ї.

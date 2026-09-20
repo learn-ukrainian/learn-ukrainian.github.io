@@ -1,0 +1,116 @@
+- lemma: звук
+  translation: sound
+  pos: noun
+  usage: Це звук [а].
+- lemma: лі́тера
+  translation: letter
+  pos: noun
+  usage: Це лі́тера П.
+- lemma: абе́тка
+  translation: alphabet
+  pos: noun
+  usage: Украї́нська абе́тка ма́є 33 лі́тери.
+- lemma: голосни́й звук
+  translation: vowel sound
+  pos: noun phrase
+  usage: '[а] — голосни́й звук.'
+- lemma: при́голосний звук
+  translation: consonant sound
+  pos: noun phrase
+  usage: '[п] — при́голосний звук.'
+- lemma: склад
+  translation: syllable
+  pos: noun
+  usage: У сло́ві «ма́ма» два склади́.
+- lemma: на́голос
+  translation: stress
+  pos: noun
+  usage: У сло́ві «Приві́т» на́голос на і.
+- lemma: м'яки́й знак
+  translation: soft sign
+  pos: noun phrase
+  usage: Ь — це м'яки́й знак.
+- lemma: апо́строф
+  translation: apostrophe
+  pos: noun
+  usage: У сло́ві «ім'я́» є апо́строф.
+- lemma: Приві́т
+  translation: Hi
+  pos: phrase
+  usage: Приві́т!
+- lemma: До́брий день
+  translation: Hello / Good day
+  pos: phrase
+  usage: До́брий день!
+- lemma: До́брого ра́нку
+  translation: Good morning
+  pos: phrase
+  usage: До́брого ра́нку!
+- lemma: До́брий ве́чір
+  translation: Good evening
+  pos: phrase
+  usage: До́брий ве́чір!
+- lemma: Як спра́ви?
+  translation: How are you?
+  pos: phrase
+  usage: Як спра́ви?
+- lemma: До́бре
+  translation: Fine / good
+  pos: phrase
+  usage: До́бре, дя́кую.
+- lemma: Чудо́во
+  translation: Great / wonderful
+  pos: phrase
+  usage: Чудо́во!
+- lemma: Норма́льно
+  translation: Okay / normal
+  pos: phrase
+  usage: Норма́льно.
+- lemma: А у те́бе?
+  translation: And you? (after How are you?)
+  pos: phrase
+  usage: До́бре. А у те́бе?
+- lemma: Як тебе́ зва́ти?
+  translation: What is your name?
+  pos: phrase
+  usage: Як тебе́ зва́ти?
+- lemma: Мене́ зва́ти ...
+  translation: My name is ...
+  pos: phrase
+  usage: Мене́ зва́ти Софі́я.
+- lemma: А тебе́?
+  translation: And you? (after a name question)
+  pos: phrase
+  usage: Мене́ зва́ти Софі́я. А тебе́?
+- lemma: До поба́чення
+  translation: Goodbye
+  pos: phrase
+  usage: До поба́чення!
+- lemma: На все до́бре
+  translation: All the best
+  pos: phrase
+  usage: На все до́бре!
+- lemma: Ра́дий тебе́ ба́чити
+  translation: Glad to see you (male speaker)
+  pos: phrase
+  usage: Ра́дий тебе́ ба́чити.
+- lemma: Ра́да тебе́ ба́чити
+  translation: Glad to see you (female speaker)
+  pos: phrase
+  usage: Ра́да тебе́ ба́чити.
+- lemma: ма́ма
+  translation: mother
+  pos: noun
+  usage: Ма́ма чита́є.
+- lemma: та́то
+  translation: father
+  pos: noun
+  usage: Та́то вдо́ма.
+- lemma: молоко́
+  translation: milk
+  pos: noun
+  usage: Сві́же молоко́.
+- lemma: дім
+  translation: house / home
+  pos: noun
+  usage: Наш дім.

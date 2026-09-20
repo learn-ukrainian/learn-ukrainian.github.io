@@ -1,0 +1,960 @@
+{
+  "passed": true,
+  "diagnostics": [],
+  "blocking": [],
+  "warnings": [
+    "lesson 4: 1 stressed forms absent from the stress dictionary (typos or fragments): ['малако́: undeclared unverified stress']",
+    "lesson 5: 1 multi-syllable words without stress mark (not in unverified_stress): ['локо']",
+    "lesson 1: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 6, 'vocab_entries': 21, 'uk_example_sentences': 54, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+    "lesson 2: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 2, 'vocab_entries': 18, 'uk_example_sentences': 45, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+    "lesson 3: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 3}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['А́нна Приві́т Марко́ Приві́т А́нна Як спра́ви Марко́ До́бре А у тебе́ А́нна Чудо́во', 'Марко́ Приві́т Як тебе́ зва́ти Софі́я Приві́т Мене́ зва́ти Софі́я А тебе́ Марко́ Мене́ зва́ти Марко́', 'Вчи́тель До́брий день У́чні До́брий день Вчи́тель Як спра́ви У́чні До́бре'], 'policy': 'a1-m01-03'}",
+    "lesson 4: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Марко́ Приві́т Софі́є Як спра́ви Софі́я Приві́т Ма́рку До́бре дя́кую А у тебе́ Марко́ Чудо́во Погля́нь ось дуб і вели́кий сад Софі́я А бі́ля де́рева росте́ бі́лий гриб Марко́ Головне́ гриб а не грип Вимовля́й звук б дзві́нко Софі́я Зві́сно ...'], 'policy': 'a1-m01-03'}",
+    "lesson 5: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 12, 'vocab_entries': 15, 'uk_example_sentences': 70, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+    "lesson 5: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Марко́ До́брий день Софі́є Софі́я До́брий день Ма́рку Як спра́ви Марко́ Чудо́во дя́кую А у тебе́ Софі́я До́бре Ра́да тебе́ ба́чити Марко́ Я теж ра́дий тебе́ ба́чити Підготу́ємося до переві́рки Скі́льки зву́ків в украї́нській мо́ві Софі́я Три́дцять ві́сім зву́ків і ...'], 'policy': 'a1-m01-03'}"
+  ],
+  "facts": {
+    "baseline": {
+      "commit": null,
+      "prose_tokens": 2233,
+      "long_paragraphs": 63,
+      "activities": {
+        "inline": 4,
+        "workbook": 6
+      },
+      "vocab": 32
+    },
+    "lessons": {
+      "1": {
+        "prose_tokens": 1390,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 14,
+        "lemma_list": [
+          "звук",
+          "літера",
+          "абетка",
+          "голосний звук",
+          "приголосний звук",
+          "склад",
+          "привіт",
+          "мама",
+          "тато",
+          "молоко",
+          "око",
+          "дім",
+          "ніс",
+          "сон"
+        ],
+        "resources": 12,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 59
+      },
+      "2": {
+        "prose_tokens": 1237,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 14,
+        "lemma_list": [
+          "наголос",
+          "м'який знак",
+          "апостроф",
+          "склад",
+          "звук",
+          "літера",
+          "абетка",
+          "голосний звук",
+          "приголосний звук",
+          "привіт",
+          "мама",
+          "тато",
+          "молоко",
+          "дім"
+        ],
+        "resources": 39,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 57
+      },
+      "3": {
+        "prose_tokens": 1632,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 15,
+        "lemma_list": [
+          "добрий день",
+          "доброго ранку",
+          "добрий вечір",
+          "як справи?",
+          "добре",
+          "чудово",
+          "нормально",
+          "а у тебе?",
+          "як тебе звати?",
+          "мене звати ...",
+          "а тебе?",
+          "до побачення",
+          "на все добре",
+          "радий тебе бачити",
+          "рада тебе бачити"
+        ],
+        "resources": 6,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 69
+      },
+      "4": {
+        "prose_tokens": 1592,
+        "inline": 5,
+        "workbook": 7,
+        "vocab": 15,
+        "lemma_list": [
+          "молоко",
+          "м'який знак",
+          "дім",
+          "звук",
+          "літера",
+          "голосний звук",
+          "приголосний звук",
+          "наголос",
+          "привіт",
+          "добрий день",
+          "радий тебе бачити",
+          "рада тебе бачити",
+          "ніс",
+          "сон",
+          "око"
+        ],
+        "resources": 11,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 68
+      },
+      "5": {
+        "prose_tokens": 1756,
+        "inline": 4,
+        "workbook": 6,
+        "vocab": 29,
+        "lemma_list": [
+          "звук",
+          "літера",
+          "абетка",
+          "голосний звук",
+          "приголосний звук",
+          "склад",
+          "наголос",
+          "м'який знак",
+          "апостроф",
+          "привіт",
+          "добрий день",
+          "доброго ранку",
+          "добрий вечір",
+          "як справи?",
+          "добре",
+          "чудово",
+          "нормально",
+          "а у тебе?",
+          "як тебе звати?",
+          "мене звати ...",
+          "а тебе?",
+          "до побачення",
+          "на все добре",
+          "радий тебе бачити",
+          "рада тебе бачити",
+          "мама",
+          "тато",
+          "молоко",
+          "дім"
+        ],
+        "resources": 8,
+        "unverified_stress": 0,
+        "unverified_lemmas": 0,
+        "est_minutes": 65
+      }
+    },
+    "total_prose_tokens": 7607,
+    "preservation": {
+      "long_paragraphs": 63,
+      "lost": 37,
+      "duplicated": 0,
+      "misplaced": 0
+    },
+    "immersion": {
+      "1": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 15.77,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": false,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 6,
+            "vocab_entries": 21,
+            "uk_example_sentences": 54,
+            "uk_tab3_activities": 4
+          },
+          "reason": "too_few_uk_tab3_activities",
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "2": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 14.16,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": false,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 2,
+            "vocab_entries": 18,
+            "uk_example_sentences": 45,
+            "uk_tab3_activities": 4
+          },
+          "reason": "too_few_uk_tab3_activities",
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": true,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 0
+          },
+          "reason": null,
+          "offending_runs": [],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "3": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 21.87,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 12,
+            "vocab_entries": 27,
+            "uk_example_sentences": 71,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": false,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 3
+          },
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "А́нна Приві́т Марко́ Приві́т А́нна Як спра́ви Марко́ До́бре А у тебе́ А́нна Чудо́во",
+            "Марко́ Приві́т Як тебе́ зва́ти Софі́я Приві́т Мене́ зва́ти Софі́я А тебе́ Марко́ Мене́ зва́ти Марко́",
+            "Вчи́тель До́брий день У́чні До́брий день Вчи́тель Як спра́ви У́чні До́бре"
+          ],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "4": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 20.46,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": true,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 6,
+            "vocab_entries": 11,
+            "uk_example_sentences": 52,
+            "uk_tab3_activities": 5
+          },
+          "reason": null,
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": false,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 1
+          },
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "Марко́ Приві́т Софі́є Як спра́ви Софі́я Приві́т Ма́рку До́бре дя́кую А у тебе́ Марко́ Чудо́во Погля́нь ось дуб і вели́кий сад Софі́я А бі́ля де́рева росте́ бі́лий гриб Марко́ Головне́ гриб а не грип Вимовля́й звук б дзві́нко Софі́я Зві́сно ..."
+          ],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      },
+      "5": {
+        "ratio_advisory": {
+          "passed": true,
+          "pct": 25.12,
+          "min_pct": 40,
+          "max_pct": 55,
+          "policy": "a1-m01-03"
+        },
+        "l2_exposure_floor": {
+          "passed": false,
+          "required": {
+            "uk_dialogue_lines": 0,
+            "vocab_entries": 0,
+            "uk_example_sentences": 0,
+            "uk_tab3_activities": 5
+          },
+          "observed": {
+            "uk_dialogue_lines": 12,
+            "vocab_entries": 15,
+            "uk_example_sentences": 70,
+            "uk_tab3_activities": 4
+          },
+          "reason": "too_few_uk_tab3_activities",
+          "policy": "a1-m01-03"
+        },
+        "long_uk_ceiling": {
+          "passed": false,
+          "required": {
+            "max_unsupported_uk_words": 10,
+            "support_proximity": 8
+          },
+          "observed": {
+            "offending_runs": 1
+          },
+          "reason": "long_uk_without_gloss",
+          "offending_runs": [
+            "Марко́ До́брий день Софі́є Софі́я До́брий день Ма́рку Як спра́ви Марко́ Чудо́во дя́кую А у тебе́ Софі́я До́бре Ра́да тебе́ ба́чити Марко́ Я теж ра́дий тебе́ ба́чити Підготу́ємося до переві́рки Скі́льки зву́ків в украї́нській мо́ві Софі́я Три́дцять ві́сім зву́ків і ..."
+          ],
+          "policy": "a1-m01-03"
+        },
+        "component_density": {
+          "passed": true,
+          "required": {
+            "DialogueBox": [
+              95,
+              100
+            ],
+            "RuleBox": [
+              0,
+              30
+            ]
+          },
+          "observed": [],
+          "reason": null,
+          "mismatches": [],
+          "ignored_components": [],
+          "policy": "a1-m01-03"
+        }
+      }
+    }
+  },
+  "mode": "upgrade",
+  "gates": {
+    "passed": true,
+    "lesson_split": {
+      "passed": true,
+      "diagnostics": [],
+      "blocking": [],
+      "warnings": [
+        "lesson 4: 1 stressed forms absent from the stress dictionary (typos or fragments): ['малако́: undeclared unverified stress']",
+        "lesson 5: 1 multi-syllable words without stress mark (not in unverified_stress): ['локо']",
+        "lesson 1: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 6, 'vocab_entries': 21, 'uk_example_sentences': 54, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+        "lesson 2: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 2, 'vocab_entries': 18, 'uk_example_sentences': 45, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+        "lesson 3: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 3}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['А́нна Приві́т Марко́ Приві́т А́нна Як спра́ви Марко́ До́бре А у тебе́ А́нна Чудо́во', 'Марко́ Приві́т Як тебе́ зва́ти Софі́я Приві́т Мене́ зва́ти Софі́я А тебе́ Марко́ Мене́ зва́ти Марко́', 'Вчи́тель До́брий день У́чні До́брий день Вчи́тель Як спра́ви У́чні До́бре'], 'policy': 'a1-m01-03'}",
+        "lesson 4: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Марко́ Приві́т Софі́є Як спра́ви Софі́я Приві́т Ма́рку До́бре дя́кую А у тебе́ Марко́ Чудо́во Погля́нь ось дуб і вели́кий сад Софі́я А бі́ля де́рева росте́ бі́лий гриб Марко́ Головне́ гриб а не грип Вимовля́й звук б дзві́нко Софі́я Зві́сно ...'], 'policy': 'a1-m01-03'}",
+        "lesson 5: l2_exposure_floor advisory for letter modules: {'passed': False, 'required': {'uk_dialogue_lines': 0, 'vocab_entries': 0, 'uk_example_sentences': 0, 'uk_tab3_activities': 5}, 'observed': {'uk_dialogue_lines': 12, 'vocab_entries': 15, 'uk_example_sentences': 70, 'uk_tab3_activities': 4}, 'reason': 'too_few_uk_tab3_activities', 'policy': 'a1-m01-03'}",
+        "lesson 5: long_uk_ceiling advisory for letter modules: {'passed': False, 'required': {'max_unsupported_uk_words': 10, 'support_proximity': 8}, 'observed': {'offending_runs': 1}, 'reason': 'long_uk_without_gloss', 'offending_runs': ['Марко́ До́брий день Софі́є Софі́я До́брий день Ма́рку Як спра́ви Марко́ Чудо́во дя́кую А у тебе́ Софі́я До́бре Ра́да тебе́ ба́чити Марко́ Я теж ра́дий тебе́ ба́чити Підготу́ємося до переві́рки Скі́льки зву́ків в украї́нській мо́ві Софі́я Три́дцять ві́сім зву́ків і ...'], 'policy': 'a1-m01-03'}"
+      ],
+      "facts": {
+        "baseline": {
+          "commit": null,
+          "prose_tokens": 2233,
+          "long_paragraphs": 63,
+          "activities": {
+            "inline": 4,
+            "workbook": 6
+          },
+          "vocab": 32
+        },
+        "lessons": {
+          "1": {
+            "prose_tokens": 1390,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 14,
+            "lemma_list": [
+              "звук",
+              "літера",
+              "абетка",
+              "голосний звук",
+              "приголосний звук",
+              "склад",
+              "привіт",
+              "мама",
+              "тато",
+              "молоко",
+              "око",
+              "дім",
+              "ніс",
+              "сон"
+            ],
+            "resources": 12,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 59
+          },
+          "2": {
+            "prose_tokens": 1237,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 14,
+            "lemma_list": [
+              "наголос",
+              "м'який знак",
+              "апостроф",
+              "склад",
+              "звук",
+              "літера",
+              "абетка",
+              "голосний звук",
+              "приголосний звук",
+              "привіт",
+              "мама",
+              "тато",
+              "молоко",
+              "дім"
+            ],
+            "resources": 39,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 57
+          },
+          "3": {
+            "prose_tokens": 1632,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 15,
+            "lemma_list": [
+              "добрий день",
+              "доброго ранку",
+              "добрий вечір",
+              "як справи?",
+              "добре",
+              "чудово",
+              "нормально",
+              "а у тебе?",
+              "як тебе звати?",
+              "мене звати ...",
+              "а тебе?",
+              "до побачення",
+              "на все добре",
+              "радий тебе бачити",
+              "рада тебе бачити"
+            ],
+            "resources": 6,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 69
+          },
+          "4": {
+            "prose_tokens": 1592,
+            "inline": 5,
+            "workbook": 7,
+            "vocab": 15,
+            "lemma_list": [
+              "молоко",
+              "м'який знак",
+              "дім",
+              "звук",
+              "літера",
+              "голосний звук",
+              "приголосний звук",
+              "наголос",
+              "привіт",
+              "добрий день",
+              "радий тебе бачити",
+              "рада тебе бачити",
+              "ніс",
+              "сон",
+              "око"
+            ],
+            "resources": 11,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 68
+          },
+          "5": {
+            "prose_tokens": 1756,
+            "inline": 4,
+            "workbook": 6,
+            "vocab": 29,
+            "lemma_list": [
+              "звук",
+              "літера",
+              "абетка",
+              "голосний звук",
+              "приголосний звук",
+              "склад",
+              "наголос",
+              "м'який знак",
+              "апостроф",
+              "привіт",
+              "добрий день",
+              "доброго ранку",
+              "добрий вечір",
+              "як справи?",
+              "добре",
+              "чудово",
+              "нормально",
+              "а у тебе?",
+              "як тебе звати?",
+              "мене звати ...",
+              "а тебе?",
+              "до побачення",
+              "на все добре",
+              "радий тебе бачити",
+              "рада тебе бачити",
+              "мама",
+              "тато",
+              "молоко",
+              "дім"
+            ],
+            "resources": 8,
+            "unverified_stress": 0,
+            "unverified_lemmas": 0,
+            "est_minutes": 65
+          }
+        },
+        "total_prose_tokens": 7607,
+        "preservation": {
+          "long_paragraphs": 63,
+          "lost": 37,
+          "duplicated": 0,
+          "misplaced": 0
+        },
+        "immersion": {
+          "1": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 15.77,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": false,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 6,
+                "vocab_entries": 21,
+                "uk_example_sentences": 54,
+                "uk_tab3_activities": 4
+              },
+              "reason": "too_few_uk_tab3_activities",
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "2": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 14.16,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": false,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 2,
+                "vocab_entries": 18,
+                "uk_example_sentences": 45,
+                "uk_tab3_activities": 4
+              },
+              "reason": "too_few_uk_tab3_activities",
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": true,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 0
+              },
+              "reason": null,
+              "offending_runs": [],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "3": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 21.87,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 12,
+                "vocab_entries": 27,
+                "uk_example_sentences": 71,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": false,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 3
+              },
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "А́нна Приві́т Марко́ Приві́т А́нна Як спра́ви Марко́ До́бре А у тебе́ А́нна Чудо́во",
+                "Марко́ Приві́т Як тебе́ зва́ти Софі́я Приві́т Мене́ зва́ти Софі́я А тебе́ Марко́ Мене́ зва́ти Марко́",
+                "Вчи́тель До́брий день У́чні До́брий день Вчи́тель Як спра́ви У́чні До́бре"
+              ],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "4": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 20.46,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": true,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 6,
+                "vocab_entries": 11,
+                "uk_example_sentences": 52,
+                "uk_tab3_activities": 5
+              },
+              "reason": null,
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": false,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 1
+              },
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "Марко́ Приві́т Софі́є Як спра́ви Софі́я Приві́т Ма́рку До́бре дя́кую А у тебе́ Марко́ Чудо́во Погля́нь ось дуб і вели́кий сад Софі́я А бі́ля де́рева росте́ бі́лий гриб Марко́ Головне́ гриб а не грип Вимовля́й звук б дзві́нко Софі́я Зві́сно ..."
+              ],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          },
+          "5": {
+            "ratio_advisory": {
+              "passed": true,
+              "pct": 25.12,
+              "min_pct": 40,
+              "max_pct": 55,
+              "policy": "a1-m01-03"
+            },
+            "l2_exposure_floor": {
+              "passed": false,
+              "required": {
+                "uk_dialogue_lines": 0,
+                "vocab_entries": 0,
+                "uk_example_sentences": 0,
+                "uk_tab3_activities": 5
+              },
+              "observed": {
+                "uk_dialogue_lines": 12,
+                "vocab_entries": 15,
+                "uk_example_sentences": 70,
+                "uk_tab3_activities": 4
+              },
+              "reason": "too_few_uk_tab3_activities",
+              "policy": "a1-m01-03"
+            },
+            "long_uk_ceiling": {
+              "passed": false,
+              "required": {
+                "max_unsupported_uk_words": 10,
+                "support_proximity": 8
+              },
+              "observed": {
+                "offending_runs": 1
+              },
+              "reason": "long_uk_without_gloss",
+              "offending_runs": [
+                "Марко́ До́брий день Софі́є Софі́я До́брий день Ма́рку Як спра́ви Марко́ Чудо́во дя́кую А у тебе́ Софі́я До́бре Ра́да тебе́ ба́чити Марко́ Я теж ра́дий тебе́ ба́чити Підготу́ємося до переві́рки Скі́льки зву́ків в украї́нській мо́ві Софі́я Три́дцять ві́сім зву́ків і ..."
+              ],
+              "policy": "a1-m01-03"
+            },
+            "component_density": {
+              "passed": true,
+              "required": {
+                "DialogueBox": [
+                  95,
+                  100
+                ],
+                "RuleBox": [
+                  0,
+                  30
+                ]
+              },
+              "observed": [],
+              "reason": null,
+              "mismatches": [],
+              "ignored_components": [],
+              "policy": "a1-m01-03"
+            }
+          }
+        }
+      }
+    }
+  }
+}

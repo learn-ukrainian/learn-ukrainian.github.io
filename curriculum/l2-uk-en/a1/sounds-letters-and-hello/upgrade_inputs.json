@@ -1,0 +1,10 @@
+{
+  "mode": "upgrade",
+  "sha256": {
+    "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/module.md": "50db6d1024783251d61f0452afb892ec8aaef280494175383d32f940c952c388",
+    "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/activities.yaml": "f29906d7e668234e5bea0a82a0106d982036bc5c2e71e12c9c679433cfd0d52b",
+    "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/vocabulary.yaml": "dce9bd395c42577ebc6e6c606d4f4f5a177967ee2691e639bf6b8ee49b879f83",
+    "curriculum/l2-uk-en/a1-v1/sounds-letters-and-hello/resources.yaml": "8c2a01a66949717df6fe2cd89255089b1eb4a7b029064b05149d2b6b3b6d9441",
+    "curriculum/l2-uk-en/plans/a1/sounds-letters-and-hello.yaml": "59ffa52e229274c014cd63b1e0e2fb9d1b6e26680bbd32a7fb8f998e6ed36194"
+  }
+}

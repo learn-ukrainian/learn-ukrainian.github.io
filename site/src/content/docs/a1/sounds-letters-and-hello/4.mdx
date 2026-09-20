@@ -1,0 +1,331 @@
+---
+title: First Pronunciation Traps
+description: Перші 7 літер (А, О, У, М, Л, С, Н), відкриті й закриті склади та перші
+  слова
+sidebar:
+  order: 4
+  label: 04. First Pronunciation Traps
+pipeline: v7-upgrade
+build_status: validated
+draft: false
+prev: /a1/sounds-letters-and-hello/3/
+next: /a1/sounds-letters-and-hello/5/
+lesson: 4
+module_slug: sounds-letters-and-hello
+---
+
+import Quiz from '@site/src/components/Quiz';
+import MatchUp from '@site/src/components/MatchUp';
+import FillIn from '@site/src/components/FillIn';
+import TrueFalse from '@site/src/components/TrueFalse';
+import Unjumble from '@site/src/components/Unjumble';
+import GroupSort from '@site/src/components/GroupSort';
+import Anagram from '@site/src/components/Anagram';
+import ErrorCorrection from '@site/src/components/ErrorCorrection';
+import { ErrorCorrectionItem } from '@site/src/components/ErrorCorrection';
+import Cloze from '@site/src/components/Cloze';
+import Select from '@site/src/components/Select';
+import Translate from '@site/src/components/Translate';
+import MarkTheWords from '@site/src/components/MarkTheWords';
+import { MarkTheWordsActivity } from '@site/src/components/MarkTheWords';
+import HighlightMorphemes from '@site/src/components/HighlightMorphemes';
+import { HighlightMorphemesActivity } from '@site/src/components/HighlightMorphemes';
+import EssayResponse from '@site/src/components/EssayResponse';
+import ComparativeStudy from '@site/src/components/ComparativeStudy';
+import ReadingActivity from '@site/src/components/ReadingActivity';
+import CriticalAnalysis from '@site/src/components/CriticalAnalysis';
+import AuthorialIntent from '@site/src/components/AuthorialIntent';
+import SourceEvaluation from '@site/src/components/SourceEvaluation';
+import Debate from '@site/src/components/Debate';
+import EtymologyTrace from '@site/src/components/EtymologyTrace';
+import GrammarIdentify from '@site/src/components/GrammarIdentify';
+import PaleographyAnalysis from '@site/src/components/PaleographyAnalysis';
+import DialectComparison from '@site/src/components/DialectComparison';
+import TranslationCritique from '@site/src/components/TranslationCritique';
+import Transcription from '@site/src/components/Transcription';
+import Observe from '@site/src/components/Observe';
+import Order from '@site/src/components/Order';
+import CountSyllables from '@site/src/components/CountSyllables';
+import DivideWords from '@site/src/components/DivideWords';
+import OddOneOut from '@site/src/components/OddOneOut';
+import PickSyllables from '@site/src/components/PickSyllables';
+import LetterGrid from '@site/src/components/LetterGrid';
+import FlashcardDeck from '@site/src/components/FlashcardDeck';
+import VocabCard from '@site/src/components/VocabCard';
+import DialogueBox from '@site/src/components/DialogueBox';
+import HashTabSync from '@site/src/components/HashTabSync';
+import ActivityHelp from '@site/src/components/ActivityHelp';
+import YouTubeVideo from '@site/src/components/YouTubeVideo';
+import WatchAndRepeat from '@site/src/components/WatchAndRepeat';
+import Classify from '@site/src/components/Classify';
+import ImageToLetter from '@site/src/components/ImageToLetter';
+import ActivityPlaceholder from '@site/src/components/ActivityPlaceholder';
+import { Tabs, TabItem } from '@astrojs/starlight/components';
+
+<Tabs syncKey="module-tab">
+<TabItem label="Урок — Lesson">
+
+In our earlier lessons, you met the foundational architecture of Ukrainian speech: the six cardinal vowel sounds, thirty-two consonant sounds, the principle of musical euphony (**милозву́чність**), and your first conversational greetings.
+
+Now you are ready to protect your Ukrainian from the most common pronunciation pitfalls. Foreign learners—especially those coming from English—naturally bring their native speech habits to new sounds. In English, unstressed vowels frequently collapse into a lazy, neutral murmur, and word-final consonants often lose their crisp voice. In Ukrainian, however, every sound holds its ground. Mastering these core phonetic habits today will ensure your speech sounds clear, natural, and authentically Ukrainian from day one.
+
+---
+
+## First Pronunciation Traps
+
+### Розми́нка — Warm-up and Retrieval
+
+Before tackling new pronunciation contrasts, let us retrieve what your ear and mouth already know. Remember the golden distinction from Ukrainian schoolrooms: **зву́ки ми чу́ємо й вимовля́ємо, а бу́кви ба́чимо й пи́шемо** (sounds we hear and pronounce, letters we see and write).
+
+Ukrainian spelling is remarkably faithful to its sounds. When you see a written vowel, your voice articulates that exact vowel sound. When you see a consonant, your lips, teeth, or tongue form a definite boundary. Refresh your foundational instincts with this quick warm-up:
+
+### Phonetic warm-up: sounds, letters, and vowels
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "What is the fundamental difference between a звук and a лі́тера?", "options": [{"text": "We hear and pronounce sounds; we see and write letters.", "correct": true}, {"text": "Sounds exist only in books; letters are spoken aloud.", "correct": false}, {"text": "There is no difference; the terms are interchangeable.", "correct": false}], "explanation": "As Ukrainian textbooks emphasize from first grade: sounds belong to the ear and mouth, while letters belong to the eye and pen."}, {"question": "How many basic vowel sounds does Ukrainian have?", "options": [{"text": "6", "correct": true}, {"text": "10", "correct": false}, {"text": "33", "correct": false}], "explanation": "Ukrainian has exactly 6 vowel sounds ([а], [о], [у], [е], [и], [і]), represented by 10 vowel letters."}, {"question": "What does Ukrainian stress (на́голос) do to a vowel in a word?", "options": [{"text": "It makes that vowel longer, louder, and more prominent.", "correct": true}, {"text": "It turns the vowel into a consonant.", "correct": false}, {"text": "It makes the vowel silent.", "correct": false}], "explanation": "Ukrainian stress highlights the stressed vowel with greater energy and duration."}, {"question": "In the informal greeting 'Приві́т!', which syllable carries the stress?", "options": [{"text": "The second syllable: -ві́т", "correct": true}, {"text": "The first syllable: При-", "correct": false}, {"text": "Both syllables equally", "correct": false}], "explanation": "In 'Приві́т!', the stress falls squarely on the second syllable: При-ві́т."}, {"question": "What is the primary purpose of Ukrainian euphony (милозву́чність)?", "options": [{"text": "To avoid harsh consonant clusters and keep speech melodious", "correct": true}, {"text": "To replace all consonants with vowels", "correct": false}, {"text": "To make words as short as possible", "correct": false}], "explanation": "Euphony alternates У/В and І/Й to ensure a natural, rhythmic flow of sounds."}, {"question": "Which response correctly answers the question 'Як спра́ви?'?", "options": [{"text": "До́бре. А у те́бе?", "correct": true}, {"text": "До́бре. А тебе́?", "correct": false}, {"text": "Мене́ зва́ти Марко́.", "correct": false}], "explanation": "After 'Як спра́ви?', the correct reciprocal check is 'А у те́бе?'. 'А тебе́?' is used when exchanging names."}]`)} instruction={"Choose the correct answer based on what you have learned so far."} isUkrainian={true} />
+
+---
+
+### The Six Golden Safety Rules
+
+Here are the six essential pronunciation traps to recognize and master:
+
+| Trap | Safer habit |
+| --- | --- |
+| Blurring **о** in **молоко́** | Keep every **о** clean: **мо-ло-ко́** |
+| Mixing **и** and **і** | In **Приві́т**, **и** and **і** are different |
+| Pronouncing **ь** as a separate sound | In **день**, **ь** only softens **н** |
+| Saying final voiced consonants as voiceless | Keep the written voiced sound; do not automatically devoice it |
+| Treating **Ї** like **І** | **Ї** is **[йі]** |
+| Mixing **Г** and **Ґ** | **Г** is h-like; **Ґ** is hard **g** |
+
+Keep Ukrainian sound categories independent. Do not use another language as the shortcut for **И**, **Е**, **О**, or **Г**. Use the Ukrainian mouth model here: **И** has its own position, unstressed **О** stays **О**, **До́брий день** is the neutral greeting, **Приві́т** is the everyday informal greeting, and **Г** is the Ukrainian h-like sound.
+
+### Pronunciation safety check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In молоко́, every о stays clean.", "isTrue": true, "explanation": "Ukrainian о does not blur into а in this beginner model."}, {"statement": "The letters и and і always sound the same.", "isTrue": false, "explanation": "Приві́т contains both [и] and [і]."}, {"statement": "Ь has no sound of its own.", "isTrue": true, "explanation": "Ь softens the previous consonant."}, {"statement": "Ї is always [йі].", "isTrue": true, "explanation": "Treat Ї as [йі] at this level."}, {"statement": "Г and Ґ are the same letter.", "isTrue": false, "explanation": "Г is h-like; Ґ is hard g."}, {"statement": "Щ is [шч].", "isTrue": true, "explanation": "Щ represents two sounds together."}]`)} instruction={"Choose true or false."} isUkrainian={true} />
+
+---
+
+### Deep Dive into the Traps
+
+Let us examine each trap closely so your mouth and ear know exactly what to do.
+
+#### Trap 1: The Clean, Unreduced О
+
+In many languages, vowels in unstressed syllables lose their clarity and blur into a weak "uh" (a phenomenon linguists call vowel reduction or *а́кання*). Ukrainian strictly rejects this reduction. Every **о** remains an authentic, rounded **[о]**, whether it carries the main stress or sits quietly in an unstressed syllable.
+
+- **мо-ло-ко́ — milk**: Notice all three syllables. The stress lands on the final **-ко́**, but the first two syllables are still pure, rounded **[о]** sounds: **мо-ло-ко́**, never *ма-ла-ко́*.
+- **До́брого ра́нку! — Good morning!**: In **До́брого**, both unstressed vowels remain round and clear. Shape your lips into an open circle and keep the sound steady.
+
+#### Trap 2: Keeping И and І Strictly Apart
+
+English speakers often struggle to differentiate Ukrainian **и** and **і**. They are distinct phonemes that completely change the meaning of a word:
+
+- **[і]** is a high, front, tense vowel. Stretch the corners of your lips into a broad smile, just like the vowel in **Приві́т!** or **дім — house / home**.
+- **[и]** is a high-mid / near-close, retracted vowel. Relax your lips, keep your tongue pulled slightly back and down compared to **[і]**, and never replace it with English short *i*. It is the vowel heard in **сир — cheese**, **син — son**, or the first syllable of **Приві́т!**.
+
+Observe how swapping these two vowels changes the word entirely:
+- **дим — smoke** vs **дім — house / home**
+- **лис — fox** vs **ліс — forest**
+
+#### Trap 3: The Silent Soft Sign (Ь)
+
+The soft sign (**знак м'я́кшення — ь**) is a letter, but it produces **no sound of its own** (не познача́є зву́ка). Its sole duty is to tell you that the consonant immediately before it must be pronounced softly:
+
+- In **день — day**, the letter **н** is softened into **[н′]**. Your tongue flattens against the hard palate as you finish the syllable. You soften the consonant and stop immediately. Never add a tiny phantom vowel or English "yuh" sound after it.
+
+#### Trap 4: Voiced Consonants Never Devoice at the End of Words
+
+In many neighbouring languages, voiced consonants at the end of words or before voiceless consonants lose their voice and become voiceless (for example, *b* turning into *p*, or *d* into *t*). In Ukrainian, voiced consonants (**дзвінкі́ при́голосні**) stay fully voiced, resonant, and energetic:
+
+- **гриб — mushroom**: Finish the word with a clear, resonant voiced **[б]**. If you let your voice drop into voiceless **[п]**, you have accidentally said **грип — flu**!
+- **дуб — oak**: The final **[б]** vibrates your vocal cords right to the end of the word.
+- **сад — garden**: The final **[д]** remains fully voiced.
+- **зуб — tooth**: The final **[б]** stays voiced.
+- **лід — ice**: The final **[д]** stays voiced.
+- **ніж — knife**: The final **[ж]** remains a voiced buzz, never turning into voiceless **[ш]**.
+- **ка́зка — fairy tale**: Even before voiceless **к**, the letter **з** stays voiced: **ка[з]ка**, never *ка[с]ка* (which would mean **ка́ска — helmet**!).
+
+#### Trap 5: The Throat Fricative Г vs The Plosive Ґ
+
+Ukrainian has two distinct letters that foreigners frequently confuse:
+
+- **Г г** represents a voiced glottal or pharyngeal fricative **[ɦ]**. It is a warm, flowing breath sound produced deep in the throat, as in **гора́ — mountain** or **го́лос — voice**.
+- **Ґ ґ** represents a voiced velar stop **[ɡ]**. It is a crisp, explosive sound created when the back of the tongue blocks and releases airflow, identical to the hard *g* in English *garden*. Ukrainian words with **ґ** are relatively few, but they are precise: **ґу́дзик — button**, **ґа́ва — crow**, and **а́ґрус — gooseberry**.
+
+Notice how the choice of letter distinguishes words:
+- **гра́ти — to play** (with throat fricative **г**)
+- **ґра́ти — metal bars / lattice** (with plosive **ґ**)
+
+#### Trap 6: Ї and Щ Always Represent Two Sounds
+
+Unlike other vowels that can sometimes indicate softness, **Ї** has only one job: it always represents the two sounds **[й] + [і] = [йі]**:
+- **їжа́к — hedgehog**: Starts with crisp **[йі]**.
+
+Similarly, **Щ** always represents the two consonant sounds **[ш] + [ч] = [шч]** spoken in seamless succession:
+- **щу́ка — pike**: Opens with **[шч]**.
+
+---
+
+### Діало́г і розбі́р — Dialogue and Breakdown
+
+Listen to Marko and Sofia as they take a walk outside and practice their Ukrainian sounds in conversation. Notice how they keep their vowels pure and their consonants voiced:
+
+<DialogueBox
+  client:only="react"
+  title="Діалог"
+  exchanges={JSON.parse('[{"speaker":"Марко́","text":"Приві́т, Софі́є! Як спра́ви?"},{"speaker":"Софі́я","text":"Приві́т, Ма́рку! До́бре, дя́кую. А у те́бе?"},{"speaker":"Марко́","text":"Чудо́во! Погля́нь, ось дуб і вели́кий сад."},{"speaker":"Софі́я","text":"А бі́ля де́рева росте́ бі́лий гриб!"},{"speaker":"Марко́","text":"Головне́ — гриб, а не грип. Вимовля́й звук [б] дзві́нко!"},{"speaker":"Софі́я","text":"Зві́сно: гриб, сад, лід. Усе́ дзві́нко й чи́сто!"}]')}
+/>
+
+#### Dialogue Breakdown
+
+| Ukrainian line | English meaning | Pronunciation focus |
+| :--- | :--- | :--- |
+| **Марко́: Приві́т, Софі́є! Як спра́ви?** | Marko: Hi, Sofia! How are you? | Stress on **-ві́т**; pure **[и]** and smiling **[і]**. |
+| **Софі́я: Приві́т, Ма́рку! До́бре, дя́кую. А у те́бе?** | Sofia: Hi, Marko! Fine, thank you. And with you? | Round **[о]** in **До́бре**; proper reciprocal **А у те́бе?**. |
+| **Марко́: Чудо́во! Погля́нь, ось дуб і вели́кий сад.** | Marko: Great! Look, here is an oak and a big garden. | Voiced **[б]** in **дуб**; voiced **[д]** in **сад**. |
+| **Софі́я: А бі́ля де́рева росте́ бі́лий гриб!** | Sofia: And near the tree grows a white mushroom! | Final **[б]** in **гриб** stays fully voiced. |
+| **Марко́: Головне́ — гриб, а не грип. Вимовля́й звук [б] дзві́нко!** | Marko: The main thing is mushroom, not flu. Pronounce the sound [б] with voice! | Direct contrast between voiced **гриб** and voiceless **грип**. |
+| **Софі́я: Зві́сно: гриб, сад, лід. Усе́ дзві́нко й чи́сто!** | Sofia: Of course: mushroom, garden, ice. Everything voiced and clear! | Clear voiced endings **[б]**, **[д]**, **[д]** with no devoicing. |
+
+### Sound contrast: choose the correct letter
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Ді́ти п'ють мол____ко́ ко́жного ра́нку.", "answer": "о", "options": ["о", "а", "у"], "explanation": "In Ukrainian, unstressed 'о' never reduces to 'а'; 'молоко́' has three pure 'о' sounds."}, {"sentence": "У лі́сі росте́ вели́кий гр____б.", "answer": "и", "options": ["и", "і", "е"], "explanation": "The word for mushroom is 'гриб' with vowel [и]; keep [и] distinct from [і]."}, {"sentence": "Сього́дні я́сний і со́нячний де____.", "answer": "нь", "options": ["нь", "н", "ні"], "explanation": "The soft sign ь in 'день' softens the preceding [н] without adding any vowel sound."}, {"sentence": "На столі́ лежи́ть сві́жий с____р.", "answer": "и", "options": ["и", "і", "е"], "explanation": "'Сир' (cheese) uses the relaxed, open vowel [и]."}, {"sentence": "У па́рку росте́ столі́тній д____б.", "answer": "у", "options": ["у", "о", "а"], "explanation": "'Дуб' (oak) contains the vowel [у] followed by voiced consonant [б]."}, {"sentence": "Бабу́ся розповіда́є ді́тям ціка́ву ка́з____у.", "answer": "к", "options": ["к", "х", "п"], "explanation": "In 'ка́зка', voiced 'з' is clearly pronounced before voiceless 'к'."}]`)} instruction={"Select the correct letter to complete each word accurately."} isUkrainian={true} />
+
+---
+
+### Керо́вана пра́ктика — Guided Practice
+
+Now it is time to connect these acoustic models to active recognition. Train your ear to match each trap with its safe Ukrainian habit:
+
+### Pronunciation trap to safe habit
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "Blurring unstressed О into А", "right": "Keep every О clear and rounded: мо-ло-ко́"}, {"left": "Confusing И and І", "right": "Spread lips for smiling І; relax tongue for open И"}, {"left": "Adding a tiny vowel after Ь", "right": "Soften the consonant and stop immediately: день"}, {"left": "Devoicing final consonants", "right": "Keep the final consonant voiced and resonant: гриб"}, {"left": "Treating Ї as a single vowel", "right": "Pronounce two distinct sounds: [й] + [і]"}, {"left": "Confusing Г with Ґ", "right": "Pronounce Г deep in throat; keep Ґ as a crisp plosive"}]`)} instruction={"Match each common pronunciation trap to its safe Ukrainian habit."} isUkrainian={true} />
+
+---
+
+### Самості́йна пра́ктика — Independent Practice
+
+Apply your critical ear to spot words that break phonetic patterns or belong to contrasting sound categories:
+
+### Find the phonetic odd-one-out
+
+<OddOneOut client:only='react' instruction={"Identify the word or letter that does not share the phonetic rule with the others."} items={JSON.parse(`[{"words": ["дім", "день", "кінь"], "correct": 0, "explanation": "'Дім' ends with hard [м], while 'день' and 'кінь' end with softened consonants marked by ь.", "prompt": "Which word does NOT have the soft sign (знак м'я́кшення)?"}, {"words": ["гриб", "пес", "кіт"], "correct": 0, "explanation": "'Гриб' ends with voiced [б], which must remain voiced. 'Пес' ends with [с] and 'кіт' ends with [т], both inherently voiceless.", "prompt": "Which word ends with a VOICED consonant that must NOT be devoiced?"}, {"words": ["Ї", "І", "И"], "correct": 0, "explanation": "'Ї' always represents [йі], while 'І' and 'И' represent a single vowel sound each.", "prompt": "Which letter always represents TWO sounds together?"}, {"words": ["ґу́дзик", "гора́", "головни́й"], "correct": 0, "explanation": "'Ґу́дзик' is spelled with 'Ґ' (plosive [ɡ]), while 'гора́' and 'головни́й' use 'Г' (glottal fricative [ɦ]).", "prompt": "Which word features the rare plosive letter Ґ?"}, {"words": ["ліс", "лис", "сир"], "correct": 0, "explanation": "'Ліс' has the high front vowel [і], whereas 'лис' and 'сир' contain the near-close, retracted vowel [и].", "prompt": "Which word contains the smiling, high front vowel [і]?"}, {"words": ["молоко́", "ма́ма", "та́то"], "correct": 0, "explanation": "'Молоко́' has three pure [о] vowels, none of which reduce to [а].", "prompt": "Which word preserves three clean unstressed or stressed [о] sounds?"}]`)} />
+
+---
+
+### Пі́дсумок уро́ку — Recap and Next Step
+
+You have fortified your Ukrainian pronunciation with six vital habits:
+- **Clean vowels**: Every **о** remains rounded **[о]**, avoiding the trap of English or foreign vowel reduction.
+- **Vowel contrast**: Smiling **[і]** and relaxed **[и]** stay distinct, protecting the meaning of words like **дім** and **дим**.
+- **The silent soft sign**: **Ь** adds no sound of its own; in words like **день**, it softens the consonant and stops.
+- **Voiced endings**: Final consonants in words like **гриб**, **дуб**, **сад**, and **лід** never lose their voice.
+- **Throat vs plosive**: Throat fricative **Г** (**гора́**) stands clearly apart from plosive **Ґ** (**ґу́дзик**).
+- **Two-sound letters**: **Ї** is always **[йі]**, and **Щ** is always **[шч]**.
+
+In Lesson 5, "Textbook Check", you will bring all four foundational lessons together in a comprehensive review pass across sounds, letters, stress, euphony, and conversational greetings.
+
+</TabItem>
+<TabItem label="Словник — Vocabulary">
+
+<span id="vocabulary"></span>
+
+<VocabCard client:only="react" words={JSON.parse(`[{"word":"звук","translation":"sound","pos":"noun","example":"Це звук [а].","examples":["Це звук [а]."],"atlas_href":"/lexicon/звук/"},{"word":"лі́тера","translation":"letter","pos":"noun","example":"Це лі́тера П.","examples":["Це лі́тера П."],"atlas_href":"/lexicon/літера/"},{"word":"абе́тка","translation":"alphabet","pos":"noun","example":"Украї́нська абе́тка ма́є 33 лі́тери.","examples":["Украї́нська абе́тка ма́є 33 лі́тери."],"atlas_href":"/lexicon/абетка/"},{"word":"голосни́й звук","translation":"vowel sound","pos":"noun phrase","example":"[а] - голосни́й звук.","examples":["[а] - голосни́й звук."]},{"word":"при́голосний звук","translation":"consonant sound","pos":"noun phrase","example":"[п] - при́голосний звук.","examples":["[п] - при́голосний звук."]},{"word":"склад","translation":"syllable","pos":"noun","example":"У сло́ві ма́ма два склади́.","examples":["У сло́ві ма́ма два склади́."],"atlas_href":"/lexicon/склад/"},{"word":"Приві́т","translation":"Hi","pos":"phrase","example":"Приві́т!","examples":["Приві́т!"],"atlas_href":"/lexicon/привіт/"},{"word":"ма́ма","translation":"mother","pos":"noun","example":"Ма́ма.","examples":["Ма́ма."],"atlas_href":"/lexicon/мама/"},{"word":"та́то","translation":"father","pos":"noun","example":"Та́то.","examples":["Та́то."],"atlas_href":"/lexicon/тато/"},{"word":"молоко́","translation":"milk","pos":"noun","example":"Молоко́.","examples":["Молоко́."],"atlas_href":"/lexicon/молоко/"},{"word":"о́ко","translation":"eye","pos":"noun","example":"О́ко.","examples":["О́ко."],"atlas_href":"/lexicon/око/"},{"word":"дім","translation":"house / home","pos":"noun","example":"Дім.","examples":["Дім."],"atlas_href":"/lexicon/дім/"},{"word":"ніс","translation":"nose","pos":"noun","example":"Ніс.","examples":["Ніс."],"atlas_href":"/lexicon/ніс/"},{"word":"сон","translation":"sleep / dream","pos":"noun","example":"Сон.","examples":["Сон."],"atlas_href":"/lexicon/сон/"},{"word":"на́голос","translation":"stress","pos":"noun","example":"У сло́ві Приві́т на́голос на і.","examples":["У сло́ві Приві́т на́голос на і."],"atlas_href":"/lexicon/наголос/"},{"word":"м'яки́й знак","translation":"soft sign","pos":"noun phrase","example":"Ь - м'яки́й знак.","examples":["Ь - м'яки́й знак."]},{"word":"апо́строф","translation":"apostrophe","pos":"noun","example":"У сло́ві «ім'я́» є апо́строф.","examples":["У сло́ві «ім'я́» є апо́строф."],"atlas_href":"/lexicon/апостроф/"},{"word":"До́брий день","translation":"Hello / Good day","pos":"phrase","example":"До́брий день!","examples":["До́брий день!"],"atlas_href":"/lexicon/добрий-день/"},{"word":"До́брого ра́нку","translation":"Good morning","pos":"phrase","example":"До́брого ра́нку!","examples":["До́брого ра́нку!"],"atlas_href":"/lexicon/доброго-ранку/"},{"word":"До́брий ве́чір","translation":"Good evening","pos":"phrase","example":"До́брий ве́чір!","examples":["До́брий ве́чір!"],"atlas_href":"/lexicon/добрий-вечір/"},{"word":"Як спра́ви?","translation":"How are you?","pos":"phrase","example":"Як спра́ви?","examples":["Як спра́ви?"],"atlas_href":"/lexicon/як-справи/"},{"word":"До́бре","translation":"Fine / good","pos":"phrase","example":"До́бре.","examples":["До́бре."],"atlas_href":"/lexicon/добре/"},{"word":"Чудо́во","translation":"Great / wonderful","pos":"phrase","example":"Чудо́во.","examples":["Чудо́во."],"atlas_href":"/lexicon/чудово/"},{"word":"Норма́льно","translation":"Okay / normal","pos":"phrase","example":"Норма́льно.","examples":["Норма́льно."],"atlas_href":"/lexicon/нормально/"},{"word":"А у те́бе?","translation":"And you? (after How are you?)","pos":"phrase","example":"До́бре. А у те́бе?","examples":["До́бре. А у те́бе?"]},{"word":"Як тебе́ зва́ти?","translation":"What is your name?","pos":"phrase","example":"Як тебе́ зва́ти?","examples":["Як тебе́ зва́ти?"],"atlas_href":"/lexicon/як-тебе-звати/"},{"word":"Мене́ зва́ти ...","translation":"My name is ...","pos":"phrase","example":"Мене́ зва́ти А́нна.","examples":["Мене́ зва́ти А́нна."]},{"word":"А тебе́?","translation":"And you? (after a name question)","pos":"phrase","example":"Мене́ зва́ти Софі́я. А тебе́?","examples":["Мене́ зва́ти Софі́я. А тебе́?"]},{"word":"До поба́чення","translation":"Goodbye","pos":"phrase","example":"До поба́чення!","examples":["До поба́чення!"]},{"word":"На все до́бре","translation":"All the best","pos":"phrase","example":"На все до́бре!","examples":["На все до́бре!"],"atlas_href":"/lexicon/на-все-добре/"},{"word":"Ра́дий тебе́ ба́чити","translation":"Glad to see you (male speaker)","pos":"phrase","example":"Ра́дий тебе́ ба́чити.","examples":["Ра́дий тебе́ ба́чити."]},{"word":"Ра́да тебе́ ба́чити","translation":"Glad to see you (female speaker)","pos":"phrase","example":"Ра́да тебе́ ба́чити.","examples":["Ра́да тебе́ ба́чити."]}]`)} title="Vocabulary" />
+
+<FlashcardDeck client:only="react" cards={JSON.parse(`[{"front":"звук","back":"sound"},{"front":"лі́тера","back":"letter"},{"front":"абе́тка","back":"alphabet"},{"front":"голосни́й звук","back":"vowel sound"},{"front":"при́голосний звук","back":"consonant sound"},{"front":"склад","back":"syllable"},{"front":"Приві́т","back":"Hi"},{"front":"ма́ма","back":"mother"},{"front":"та́то","back":"father"},{"front":"молоко́","back":"milk"},{"front":"о́ко","back":"eye"},{"front":"дім","back":"house / home"},{"front":"ніс","back":"nose"},{"front":"сон","back":"sleep / dream"},{"front":"на́голос","back":"stress"},{"front":"м'яки́й знак","back":"soft sign"},{"front":"апо́строф","back":"apostrophe"},{"front":"До́брий день","back":"Hello / Good day"},{"front":"До́брого ра́нку","back":"Good morning"},{"front":"До́брий ве́чір","back":"Good evening"},{"front":"Як спра́ви?","back":"How are you?"},{"front":"До́бре","back":"Fine / good"},{"front":"Чудо́во","back":"Great / wonderful"},{"front":"Норма́льно","back":"Okay / normal"},{"front":"А у те́бе?","back":"And you? (after How are you?)"},{"front":"Як тебе́ зва́ти?","back":"What is your name?"},{"front":"Мене́ зва́ти ...","back":"My name is ..."},{"front":"А тебе́?","back":"And you? (after a name question)"},{"front":"До поба́чення","back":"Goodbye"},{"front":"На все до́бре","back":"All the best"},{"front":"Ра́дий тебе́ ба́чити","back":"Glad to see you (male speaker)"},{"front":"Ра́да тебе́ ба́чити","back":"Glad to see you (female speaker)"}]`)} />
+
+</TabItem>
+<TabItem label="Вправи — Activities">
+
+<span id="activities"></span>
+
+### Phonetic warm-up: sounds, letters, and vowels
+
+*(див. розділ, §Розми́нка — Warm-up and Retrieval)*
+
+### Pronunciation safety check
+
+*(див. розділ, §The Six Golden Safety Rules)*
+
+### Sound contrast: choose the correct letter
+
+*(див. розділ, §Діало́г і розбі́р — Dialogue and Breakdown)*
+
+### Pronunciation trap to safe habit
+
+*(див. розділ, §Керо́вана пра́ктика — Guided Practice)*
+
+### Find the phonetic odd-one-out
+
+*(див. розділ, §Самості́йна пра́ктика — Independent Practice)*
+
+### See a letter, hear a sound
+
+<MatchUp client:only='react' pairs={JSON.parse(`[{"left": "А", "right": "[а]"}, {"left": "О", "right": "[о]"}, {"left": "У", "right": "[у]"}, {"left": "М", "right": "[м]"}, {"left": "Н", "right": "[н]"}, {"left": "Г", "right": "h-like [г]"}, {"left": "Ґ", "right": "hard [g]"}, {"left": "Ї", "right": "[йі]"}, {"left": "Ь", "right": "no sound"}]`)} instruction={"Match each letter with its beginner sound clue."} isUkrainian={true} />
+
+### Preserve the voiced consonant: choose the ending
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "Він знайшо́в у лі́сі вели́кий гри____.", "answer": "б", "options": ["б", "п", "в"], "explanation": "The word for mushroom is 'гриб' ending in voiced 'б'. It must be pronounced [гриб], never devoiced to [грип]."}, {"sentence": "Бі́ля на́шого буди́нку росте́ стари́й ду____.", "answer": "б", "options": ["б", "п", "т"], "explanation": "'Дуб' (oak) ends in voiced 'б'; keep it voiced to maintain correct Ukrainian phonetics."}, {"sentence": "Діду́сь посади́в вели́кий і краси́вий са____.", "answer": "д", "options": ["д", "т", "с"], "explanation": "'Сад' (garden) ends in voiced 'д'. In Ukrainian, final consonants do not devoice."}, {"sentence": "У дити́ни заболі́в зу____.", "answer": "б", "options": ["б", "п", "в"], "explanation": "'Зуб' (tooth) ends in voiced 'б'. Pronounce it clearly with vocal cord vibration."}, {"sentence": "Взи́мку на о́зері блищи́ть слизьки́й лі____.", "answer": "д", "options": ["д", "т", "с"], "explanation": "'Лід' (ice) ends in voiced 'д'. Keep the consonant fully voiced."}, {"sentence": "На ку́хні лежи́ть го́стрий ні____.", "answer": "ж", "options": ["ж", "ш", "ч"], "explanation": "'Ніж' (knife) ends in voiced 'ж'. Never turn it into voiceless [ш]."}]`)} instruction={"Choose the correct voiced consonant letter to complete the word."} isUkrainian={true} />
+
+### Deeper phonetic rules
+
+<Quiz client:only='react' questions={JSON.parse(`[{"question": "Why is pronouncing 'молоко́' as 'малако́' considered an error in Ukrainian?", "options": [{"text": "Ukrainian has no vowel reduction (а́кання); unstressed [о] remains clearly [о].", "correct": true}, {"text": "Because 'молоко́' is borrowed from English.", "correct": false}, {"text": "Because [а] cannot appear in three-syllable words.", "correct": false}], "explanation": "Ukrainian orthoepy demands clean, unreduced vowels. Unstressed 'о' stays 'о'."}, {"question": "What happens to your tongue position when you switch from [і] to [и]?", "options": [{"text": "The tongue lowers slightly and pulls back from the upper teeth.", "correct": true}, {"text": "The tongue sticks out past the lips.", "correct": false}, {"text": "The tongue stays glued to the palate.", "correct": false}], "explanation": "[і] is a close high front vowel with spread lips; [и] is more open and relaxed."}, {"question": "What role does the soft sign (Ь) play in the word 'день'?", "options": [{"text": "It indicates that the consonant 'н' is soft, without making any sound itself.", "correct": true}, {"text": "It adds an extra syllable to the word.", "correct": false}, {"text": "It lengthens the vowel 'е'.", "correct": false}], "explanation": "The soft sign ь represents no independent sound; it is a graphic modifier showing softness."}, {"question": "How does the sound of 'Г' differ from the sound of 'Ґ'?", "options": [{"text": "'Г' is a voiced throat fricative [ɦ]; 'Ґ' is a crisp plosive [ɡ].", "correct": true}, {"text": "'Г' is silent, while 'Ґ' is always loud.", "correct": false}, {"text": "'Г' is only used in foreign words; 'Ґ' is in all words.", "correct": false}], "explanation": "'Г' is a pharyngeal/glottal fricative; 'Ґ' is a velar stop/plosive."}, {"question": "Why does the letter 'Ї' always count as two sounds?", "options": [{"text": "It consistently represents the combination of glide [й] and vowel [і].", "correct": true}, {"text": "It can soften any preceding consonant.", "correct": false}, {"text": "It has two dots, so it is spoken twice.", "correct": false}], "explanation": "Unlike 'Я', 'Ю', and 'Є', 'Ї' never acts as a softening indicator; it is always [йі]."}, {"question": "How do you pronounce the final consonant in 'сад' compared to English 'sad'?", "options": [{"text": "With vocal cord vibration maintained until the end of the sound.", "correct": true}, {"text": "By whispering the sound quietly.", "correct": false}, {"text": "By replacing it with [т].", "correct": false}], "explanation": "Ukrainian voiced consonants never devoice at the end of words; voice is maintained throughout."}]`)} instruction={"Choose the correct explanation for each phonetic trap."} isUkrainian={true} />
+
+### Phonetic sorting: voiced endings vs soft endings
+
+<GroupSort client:only='react' groups={JSON.parse(`{"Ends in voiced consonant (no devoicing)": ["гриб", "дуб", "сад", "лід"], "Ends in soft consonant with Ь": ["день", "кінь", "сіль", "мідь"]}`)} instruction={"Sort each word according to whether it features a final voiced consonant or a soft sign (ь)."} isUkrainian={true} />
+
+### Ukrainian orthoepy check
+
+<TrueFalse client:only='react' items={JSON.parse(`[{"statement": "In Ukrainian, the letter Ґ is far more common than the letter Г.", "isTrue": false, "explanation": "The letter Ґ is relatively rare (found in about 100 words), while Г is very common."}, {"statement": "The word 'ка́зка' is pronounced with a voiced [з], not a voiceless [с].", "isTrue": true, "explanation": "In Ukrainian, voiced consonants before voiceless consonants remain voiced: ка[з]ка."}, {"statement": "Ukrainian vowels in unstressed positions blur into a neutral 'uh' sound like in English.", "isTrue": false, "explanation": "Ukrainian maintains vowel clarity; unstressed vowels do not undergo English-style schwa reduction."}, {"statement": "The words 'гра́ти' (to play) and 'ґра́ти' (metal lattice/bars) have different meanings based on the letter Г vs Ґ.", "isTrue": true, "explanation": "Г and Ґ distinguish completely different words: гра́ти (to play) vs ґра́ти (lattice/bars)."}, {"statement": "The soft sign (ь) can begin a word in Ukrainian.", "isTrue": false, "explanation": "Ь never appears at the beginning of a word because it only modifies a preceding consonant."}, {"statement": "The letter Щ always represents the two sounds [шч] together.", "isTrue": true, "explanation": "In standard Ukrainian pronunciation, Щ is always the combination [шч]."}]`)} instruction={"Determine whether each statement about Ukrainian pronunciation is true or false."} isUkrainian={true} />
+
+### Translate essential contrast pairs
+
+<Translate client:only='react' questions={JSON.parse(`[{"source": "гриб", "options": [{"text": "mushroom", "correct": true}, {"text": "flu", "correct": false}, {"text": "tree", "correct": false}], "explanation": "'Гриб' means mushroom. The word for flu is 'грип'."}, {"source": "грип", "options": [{"text": "flu", "correct": true}, {"text": "mushroom", "correct": false}, {"text": "garden", "correct": false}], "explanation": "'Грип' means flu. Remember to distinguish voiced [б] in 'гриб' from voiceless [п] in 'грип'."}, {"source": "дим", "options": [{"text": "smoke", "correct": true}, {"text": "house / home", "correct": false}, {"text": "day", "correct": false}], "explanation": "'Дим' with vowel [и] means smoke; 'дім' with vowel [і] means house or home."}, {"source": "дім", "options": [{"text": "house / home", "correct": true}, {"text": "smoke", "correct": false}, {"text": "forest", "correct": false}], "explanation": "'Дім' with vowel [і] means house or home."}, {"source": "лис", "options": [{"text": "fox", "correct": true}, {"text": "forest", "correct": false}, {"text": "cheese", "correct": false}], "explanation": "'Лис' with vowel [и] means fox; 'ліс' with vowel [і] means forest."}, {"source": "ліс", "options": [{"text": "forest", "correct": true}, {"text": "fox", "correct": false}, {"text": "mountain", "correct": false}], "explanation": "'Ліс' with vowel [і] means forest."}]`)} instruction={"Choose the correct English translation for each Ukrainian word."} isUkrainian={true} />
+
+### Complete the dialogue with safe pronunciation forms
+
+<FillIn client:only='react' items={JSON.parse(`[{"sentence": "— Що ти ба́чиш у саду́? — Я ба́чу вели́кий ____.", "answer": "дуб", "options": ["дуб", "зуб", "дим"], "explanation": "'Дуб' (oak) fits the context of a garden; pronounce final 'б' voiced."}, {"sentence": "— Окса́но, ти ра́да мене́ ба́чити? — Так, я ду́же ____ тебе́ ба́чити!", "answer": "ра́да", "options": ["ра́да", "ра́дий", "до́бре"], "explanation": "Oksana is female, so she uses the feminine form 'ра́да'."}, {"sentence": "— Ма́рку, що росте́ бі́ля де́рева? — Там росте́ бі́лий ____.", "answer": "гриб", "options": ["гриб", "грип", "ніж"], "explanation": "'Гриб' (mushroom) grows near a tree; remember voiced [б]."}, {"sentence": "— Скі́льки зву́ків познача́є лі́тера Ї? — Вона́ за́вжди познача́є ____ зву́ки.", "answer": "два", "options": ["два", "оди́н", "три"], "explanation": "The letter Ї always represents two sounds: [й] + [і]."}, {"sentence": "— Як пра́вильно сказа́ти сло́во 'молоко́'? — Вимовля́й усі́ три зву́ки ____ чи́сто.", "answer": "о", "options": ["о", "а", "у"], "explanation": "In 'молоко́', all three 'о' sounds remain pure [о]."}, {"sentence": "— До поба́чення, Софі́є! — До поба́чення! На все ____!", "answer": "до́бре", "options": ["до́бре", "ра́да", "сад"], "explanation": "'На все до́бре!' is the warm farewell formula."}]`)} instruction={"Choose the correct form to complete the line."} isUkrainian={true} />
+
+</TabItem>
+<TabItem label="Ресурси — Resources">
+
+<span id="resources"></span>
+
+:::info[🎧 🔗 External Resources]
+
+**📚 Books:**
+- 📚 **Авра́менко 10 клас, с. 76**
+  Осно́вні пра́вила вимо́ви зву́ків: дзвінкі́ при́голосні в кінці́ слова́ не оглушуються (гриб, не грип); вимо́ва ненаголо́шених голосни́х.
+- 📚 **Авра́менко 5 клас, с. 73**
+  Бу́ква ґ познача́є проривни́й звук [ґ] (ґа́ва, а́ґрус); бу́ква г передає́ протя́жний звук [г] (гора́, Га́ля); розрі́знення пар гра́ти / ґра́ти.
+- 📚 **Большако́ва 2 клас, с. 35, 48**
+  Бу́ква ї за́вжди познача́є два зву́ки [йі]; знак м'я́кшення ь не познача́є зву́ка.
+- 📚 **Вашуленко 2 клас, с. 10**
+  Дзвінкі́ при́голосні зву́ки в кінці́ слова́ вимовля́ються дзві́нко, вира́зно, чі́тко: сад, виногра́д, мед.
+- 📚 **Заболо́тний 5 клас, с. 100**
+  Чітка́ вимо́ва голосни́х зву́ків та особли́вості ненаголо́шених [о], [е], [и].
+- 📚 **Кравцо́ва 4 клас, с. 5–6**
+  Пра́вило: дзвінкі́ при́голосні зву́ки в кінці́ слова́ та скла́ду пере́д глухи́м вимовля́ємо дзві́нко.
+
+**📺 Videos:**
+- 📺 [Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Г](https://www.youtube.com/watch?v=gVnclpSI0DU) — Pronunciation video for the letter Г.
+- 📺 [Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Ь](https://www.youtube.com/watch?v=cJlal8XKBxo) — Pronunciation video for the soft sign Ь.
+- 📺 [Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Ї](https://www.youtube.com/watch?v=UcjdjQXhAY8) — Pronunciation video for the letter Ї.
+- 📺 [Anna Ohoiko — Ukrainian Alphabet Pronunciation: Letter Ґ](https://www.youtube.com/watch?v=gNjHqjTW9WQ) — Pronunciation video for the letter Ґ.
+
+**🔗 Online resources:**
+- 🔗 **Погрібни́й 1992 (Украї́нська літерату́рна вимо́ва), с. 9** — Вимо́ва зву́ка [и] та розрі́знення голосни́х [и] та [і].
+:::
+
+</TabItem>
+</Tabs>
+
+<HashTabSync />
+
+<nav aria-label="Lesson navigation">
+
+[Previous](/a1/sounds-letters-and-hello/3/) · [Module](/a1/sounds-letters-and-hello/) · [Next](/a1/sounds-letters-and-hello/5/)
+
+</nav>

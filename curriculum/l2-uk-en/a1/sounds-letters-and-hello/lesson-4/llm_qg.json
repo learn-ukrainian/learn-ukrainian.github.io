@@ -1,0 +1,71 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 5.0,
+      "evidence": "Unglossed exercise vocabulary and overlapping sorting categories undermine progression; lesson 4 correctly defers module closure, but baseline preservation remains unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Sort each word according to whether it features a final voiced consonant",
+        "In Lesson 5, \"Textbook Check\", you will bring all four foundational lessons together"
+      ]
+    },
+    "naturalness": {
+      "score": 6.0,
+      "evidence": "VESUM and sources calls were denied by the approval policy, leaving gender, government and example attestation unverified rather than demonstrated incorrect.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Oksana is female, so she uses the feminine form 'ра́да'.",
+        "The main thing is mushroom, not flu. Pronounce the sound [б] with voice!"
+      ]
+    },
+    "decolonization": {
+      "score": 8.0,
+      "evidence": "The framing establishes Ukrainian sound categories independently and lists Ukrainian authorities without centering Russian.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "Keep Ukrainian sound categories independent. Do not use another language as the shortcut"
+      ]
+    },
+    "engagement": {
+      "score": 7.0,
+      "evidence": "Varied activity formats and a bilingual dialogue help, but repeated rule recognition outweighs supported listening and meaningful speaking.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Now it is time to connect these acoustic models to active recognition.",
+        "Listen to Marko and Sofia as they take a walk outside and practice their Ukrainian sounds in conversation."
+      ]
+    },
+    "tone": {
+      "score": 6.0,
+      "evidence": "There is no named narrator, but disparaging sound descriptions and promises of immediate authenticity weaken the supportive beginner tone.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "In English, unstressed vowels frequently collapse into a lazy, neutral murmur",
+        "will ensure your speech sounds clear, natural, and authentically Ukrainian from day one."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "rejected_dims": [
+      "pedagogical"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement",
+      "tone"
+    ],
+    "min_score": 5.0,
+    "min_dim": "pedagogical"
+  }
+}

@@ -1,0 +1,67 @@
+{
+  "dimensions": {
+    "pedagogical": {
+      "score": 4.0,
+      "evidence": "Sections follow the split, but exercises test untaught open/closed syllables, misclassify склад as a modifier, and contradict the брати meanings; baseline preservation and lesson-5 closure remain unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "You do not need to count syllables confidently yet. M02 teaches that reading rule.",
+        "Sort each item by whether it represents an independent sound or acts"
+      ]
+    },
+    "naturalness": {
+      "score": 5.0,
+      "evidence": "The prose and workbook reverse the брати meanings, while VESUM and СУМ-20 calls returned approval-policy errors, leaving morphology and usage grounding unverified.",
+      "verdict": "REJECT",
+      "evidence_quotes": [
+        "Sometimes stress changes meaning. You do not need to use these words yet, but notice the pattern:"
+      ]
+    },
+    "decolonization": {
+      "score": 7.0,
+      "evidence": "Ukrainian authorities receive attribution and Resources entries, but neighboring-language contrasts cannot substitute for the required successful source audit.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Unlike some neighboring languages, Ukrainian speakers do not devoice final consonants"
+      ]
+    },
+    "engagement": {
+      "score": 7.0,
+      "evidence": "Articulation and video practice invite participation, but repetitive recognition tasks and uniformly first-position quiz answers weaken meaningful practice.",
+      "verdict": "REVISE",
+      "evidence_quotes": [
+        "Listen first, then repeat the letter and the example word."
+      ]
+    },
+    "tone": {
+      "score": 8.0,
+      "evidence": "The voice is reassuring, dialogue speakers are not narrators, and no text-fenced examples or three-sentence Ukrainian passages trigger the specified formatting violations.",
+      "verdict": "PASS",
+      "evidence_quotes": [
+        "This is your first full pass through the alphabet. The goal is not to memorize everything today."
+      ]
+    }
+  },
+  "aggregate": {
+    "verdict": "REJECT",
+    "terminal_verdict": "PASS",
+    "failing_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement"
+    ],
+    "rejected_dims": [
+      "pedagogical",
+      "naturalness"
+    ],
+    "warning_dims": [
+      "pedagogical",
+      "naturalness",
+      "decolonization",
+      "engagement"
+    ],
+    "min_score": 4.0,
+    "min_dim": "pedagogical"
+  }
+}
