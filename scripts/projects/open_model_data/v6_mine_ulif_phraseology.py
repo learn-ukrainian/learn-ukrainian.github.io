@@ -1117,7 +1117,8 @@ def clean_raw_html_and_tags(text: str) -> str:
     # Preserve inner text of other ≤word≥ markup (characters, emphasis)
     text = re.sub(r"≤([^≥]+)≥", r"\1", text)
     text = re.sub(r"[≤≥\{\}\[\]]", "", text)
-    text = re.sub(r"\s+([,;:])", r"\1", text)
+    # Collapse stray whitespace before punctuation marks when preceded by word or digit
+    text = re.sub(r"(?<=[а-яіїєґА-ЯІЇЄҐ\d])\s+([.,;:?!])", r"\1", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -1246,10 +1247,13 @@ SPEECH_VERB_RE = re.compile(
 SPLICE_PUNCTUATION_RE = re.compile(
     r"(?:…|\.{2,})[?!]?\s*[,;:]"  # ellipsis followed by comma, semicolon, or colon (e.g. '..,', '…;', '…,')
     r"|…[?!]?\s*\."                # Unicode ellipsis followed by a dot (e.g. '?… .', '… .', '….')
-    r"|\.{2,}\s+\."                # ASCII ellipsis followed by space and dot (e.g. '.. .', '.... .')
+    r"|\.\s+\."                    # lone dot or ellipsis followed by space and dot (e.g. '. .', '.. .')
     r"|\.{4,}"                     # 4 or more dots in a row (e.g. '....')
     r"|\s+\.\s+[-—–]"             # stray dot-dash (e.g. ' . —', ' . -')
 )
+
+SPACE_BEFORE_PUNCT_RE = re.compile(r"[а-яіїєґА-ЯІЇЄҐ]\s+[.,;:?!](?:\s|$)")
+
 
 
 def is_headword_header(s: str, word: str) -> bool:
@@ -2855,6 +2859,8 @@ def verify_receipt_invariants(
         rec_str = json.dumps(rec, ensure_ascii=False)
         if SPLICE_PUNCTUATION_RE.search(rec_str):
             raise AssertionError(f"Broken ellipsis splice in eval record {rec.get('eval_id')}: {rec_str}")
+        if SPACE_BEFORE_PUNCT_RE.search(rec_str):
+            raise AssertionError(f"Space before punctuation in eval record {rec.get('eval_id')}: {rec_str}")
 
         cit = rec.get("classical_citation", "")
         cat = rec.get("eval_category", "")
@@ -2943,6 +2949,8 @@ def verify_receipt_invariants(
                 # Universal corpus invariant: no ellipsis splices or stray dot-dash punctuation
                 if SPLICE_PUNCTUATION_RE.search(line):
                     raise AssertionError(f"Broken ellipsis splice in SFT {shard_path.name}:{line_no}")
+                if SPACE_BEFORE_PUNCT_RE.search(line):
+                    raise AssertionError(f"Space before punctuation in SFT {shard_path.name}:{line_no}")
 
                 total_sft_trajectories += 1
                 row = json.loads(line)
@@ -3032,6 +3040,8 @@ def verify_receipt_invariants(
                 # Universal corpus invariant: no ellipsis splices or stray dot-dash punctuation
                 if SPLICE_PUNCTUATION_RE.search(line):
                     raise AssertionError(f"Broken ellipsis splice in DPO {shard_path.name}:{line_no}")
+                if SPACE_BEFORE_PUNCT_RE.search(line):
+                    raise AssertionError(f"Space before punctuation in DPO {shard_path.name}:{line_no}")
 
                 total_dpo_pairs += 1
                 row = json.loads(line)

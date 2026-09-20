@@ -31,6 +31,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     HELD_OUT_CURATED_CALQUE_PAIRS,
     SCHEMA_EVAL_PATH,
     SCHEMA_RECEIPT_PATH,
+    SPACE_BEFORE_PUNCT_RE,
     SPEECH_VERB_RE,
     SPLICE_PUNCTUATION_RE,
     CalquePair,
@@ -1048,7 +1049,8 @@ def test_parse_frazeolohichnyi_extracts_real_definition_not_orphaned_label():
 
 
 def test_splice_regex_catches_no_space_ellipsis_splices():
-    """CF R10/R12: Ensure SPLICE_PUNCTUATION_RE catches Unicode ellipsis splices, '..[,;:]', and '… .'."""
+    """CF R10/R12/R13: Ensure SPLICE_PUNCTUATION_RE catches Unicode ellipsis splices, '..[,;:]', '… .', and '. .'."""
+    assert SPLICE_PUNCTUATION_RE.search("з газетами. . Ов, а се що таке ?") is not None
     assert SPLICE_PUNCTUATION_RE.search("…то що, що громада?… . Скретар глянув,") is not None
     assert SPLICE_PUNCTUATION_RE.search("кинув той… .З мене такий бригадир") is not None
     assert SPLICE_PUNCTUATION_RE.search("діла…. .і спроваджено") is not None
@@ -1061,7 +1063,9 @@ def test_splice_regex_catches_no_space_ellipsis_splices():
     assert SPLICE_PUNCTUATION_RE.search("ця історія.. .складається таке") is not None
     assert SPLICE_PUNCTUATION_RE.search("щось . — сказав він") is not None
 
-    # Normal ellipses should not trigger false positives
+    # Normal ellipses and initials should not trigger false positives
+    assert SPLICE_PUNCTUATION_RE.search("М. Зарудний") is None
+    assert SPLICE_PUNCTUATION_RE.search("І. І. Франко") is None
     assert SPLICE_PUNCTUATION_RE.search("Він пішов… і не повернувся.") is None
     assert SPLICE_PUNCTUATION_RE.search("Що буде... те й буде.") is None
     assert SPLICE_PUNCTUATION_RE.search("Хто там?.. Нікого!") is None
@@ -1092,7 +1096,7 @@ def test_corpus_invariants_no_broken_definitions():
 
 
 def test_corpus_invariants_no_spliced_quotes():
-    """CF R10/R11/R12: Verify 0 spliced quotes across all release shards (SFT, eval, DPO)."""
+    """CF R10/R11/R12/R13: Verify 0 spliced quotes and 0 space-before-punct across all release shards (SFT, eval, DPO)."""
     release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
     if not release_dir.exists():
         pytest.skip("Release shards not yet generated")
@@ -1113,6 +1117,9 @@ def test_corpus_invariants_no_spliced_quotes():
             for line_no, line in enumerate(f, 1):
                 assert not SPLICE_PUNCTUATION_RE.search(line), (
                     f"Spliced quote/punctuation matching SPLICE_PUNCTUATION_RE in {shard.name}:{line_no}: {line[:120]}"
+                )
+                assert not SPACE_BEFORE_PUNCT_RE.search(line), (
+                    f"Space before punctuation matching SPACE_BEFORE_PUNCT_RE in {shard.name}:{line_no}: {line[:120]}"
                 )
 
 
@@ -1160,3 +1167,26 @@ def test_parse_frazeolohichnyi_rejects_unicode_ellipsis_dot_splice():
     if unit is not None:
         assert not SPLICE_PUNCTUATION_RE.search(unit.citation_text)
         assert "Скретар глянув" not in unit.citation_text
+
+
+def test_parse_frazeolohichnyi_rejects_lone_dot_space_dot_splice():
+    """CF R13 Finding 1: Ensure entries with lone-dot splice '. . ' are rejected."""
+    raw_word = "ні слихом слихати, ні у вічі не видати {{</fras>}}"
+    raw_def = (
+        "ані (ні) слихом не слихати, ані (ні) видом (у вічі) не видати кого. "
+        "Хто-небудь зник безслідно; про кого-небудь зовсім невідомо нічого. "
+        "Його ексцеленція приступив до стола з газетами. . Ов, а се що таке ? Другого опозиційника, «Сінника Польського» ні видом видати, ні слихом слихати ! (І. Франко)."
+    )
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    if unit is not None:
+        assert not SPLICE_PUNCTUATION_RE.search(unit.citation_text)
+        assert "газетами. . Ов" not in unit.citation_text
+        assert not SPACE_BEFORE_PUNCT_RE.search(unit.citation_text)
+
+
+def test_clean_raw_html_collapses_whitespace_before_punctuation():
+    """CF R13 Finding 2: Ensure stray whitespace before ?, !, ., ,, ;, : is collapsed."""
+    assert clean_raw_html_and_tags("а се що таке ?") == "а се що таке?"
+    assert clean_raw_html_and_tags("ні слихом слихати !") == "ні слихом слихати!"
+    assert clean_raw_html_and_tags("не видати кого .") == "не видати кого."
+    assert clean_raw_html_and_tags("не слихати , Видом") == "не слихати, Видом"
