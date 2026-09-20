@@ -360,7 +360,7 @@ const SLICE_RUNNERS = {
 function toMarkdown(report) {
   const L = [`# Scouting report — slice ${report.slice}`, '', `- Target: ${report.base}${report.live ? ' (live)' : ' (local)'}`, `- Timestamp: ${report.timestamp}`, `- Commit: ${report.commit ?? 'unknown'}`, `- WebKit probe: ${report.webkit.available ? 'available' : 'unavailable'}${report.webkit.note ? ' — ' + report.webkit.note : ''}`, ''];
   L.push('## Journeys', '', '| Profile | Journey | Outcome | Errors |', '|---|---|---|---|');
-  const cell = (v) => String(v ?? '').replace(/\|/g, '\\|');
+  const cell = (v) => String(v ?? '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
   for (const r of report.results) {
     const { journey, profile, trace, consoleErrors, failedRequests, error, ...rest } = r;
     const outcome = error ? `ERROR: ${error}` : JSON.stringify(rest);
