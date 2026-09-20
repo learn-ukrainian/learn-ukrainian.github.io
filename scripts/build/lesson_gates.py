@@ -434,6 +434,7 @@ def _skip_stress_token(tok: str) -> bool:
 
 
 _IOTATED_SOUND_RE = re.compile(r"й[аеуі]")
+_SHCHA_SOUND_RE = re.compile(r"шч")
 _SOFTNESS_MARK_RE = re.compile(r"'(?![яюєї])")
 
 
@@ -441,12 +442,14 @@ def _is_phonetic_token(tok: str) -> bool:
     """Sound transcription in an alphabet lesson, not a dictionary word.
 
     Letter lessons spell я/ю/є/ї by sound (``йа́блуко``, ``мойа́``) and mark
-    softness with ``'`` (``л'у́ди``, ``па́л'ц'і``). Ukrainian spelling writes
-    neither ``й`` + а/е/у/і nor an apostrophe anywhere but before я/ю/є/ї, so a
-    real word (``сім'я́``, ``бур'я́н``, ``його́``) never matches.
+    softness with ``'`` (``л'у́ди``, ``па́л'ц'і``), and щ as ``шч`` (``шчу́ка``,
+    ``пло́шча``). Ukrainian spelling writes neither ``й`` + а/е/у/і, nor ``шч``
+    (always ``щ``), nor an apostrophe anywhere but before я/ю/є/ї, so a real word
+    (``сім'я́``, ``бур'я́н``, ``його́``, ``щу́ка``) never matches.
     """
     core = strip_acute(nfc(tok)).lower().replace("’", "'").strip("_").strip("'-")
-    return bool(_IOTATED_SOUND_RE.search(core) or _SOFTNESS_MARK_RE.search(core))
+    return bool(_IOTATED_SOUND_RE.search(core) or _SHCHA_SOUND_RE.search(core)
+                or _SOFTNESS_MARK_RE.search(core))
 
 
 _ERROR_KEYS = frozenset({"error", "errorword", "incorrect", "error_word"})
@@ -538,6 +541,25 @@ def pedagogical_error_forms(acts: dict) -> set[str]:
                     if key and key not in correct_keys:
                         out.add(key)
     return {form for form in out if form}
+
+
+def pedagogical_misspellings(acts: dict) -> set[str]:
+    """Lesson-wide error forms the stress dictionary does not know (``сімя``, ``стілец``).
+
+    Alphabet prose quotes the wrong spelling its activities drill, so these skip
+    the stress gates in module.md too. A distractor that is a real word
+    (``но́вий``, ``пі́сня``) stays out: it is exempt only inside its own activity.
+    """
+    from scripts.verification.stress import verify_stress  # type: ignore
+
+    out: set[str] = set()
+    for form in pedagogical_error_forms(acts):
+        form = form.replace("’", "'")
+        bare = strip_acute(form)
+        if " " in bare or (verify_stress(bare).get("status") in ("ok", "ambiguous")):
+            continue
+        out.update({form, bare})
+    return out
 
 
 _EC_META_STEM_RE = re.compile(
@@ -1205,13 +1227,19 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
         # but NOT in wrong-stress allow — otherwise Киї́в vs Ки́їв is invisible.
         unverified_allow = {strip_acute(w).lower() for w in u_stress}
         allow = unverified_allow | {w.lower() for w in proper}
+        misspelt: set[str] = set()
         try:
+            if alphabet:
+                misspelt = pedagogical_misspellings(acts)
+                # bare forms: prose may mark a misspelling the activity leaves unmarked
+                unverified_allow = unverified_allow | {strip_acute(w) for w in misspelt}
             wrong = wrong_stress(
                 learner_text(lesson_md_clean[n]) + "\n" + "\n".join(
                     str(x) for x in leaves(vocab) if isinstance(x, str)
                 ),
                 unverified_allow,
                 proper,
+                exact_skip=misspelt,
                 phonetic=alphabet,
             )
             for activity in (acts.get("inline") or []) + (acts.get("workbook") or []):
@@ -1220,7 +1248,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 errors = pedagogical_error_forms({"inline": [activity], "workbook": []})
                 blob = "\n".join(str(x) for x in leaves(activity) if isinstance(x, str))
                 wrong += wrong_stress(
-                    blob, unverified_allow, proper, exact_skip={nfc(w).lower() for w in errors},
+                    blob, unverified_allow, proper, exact_skip={nfc(w).lower() for w in errors} | misspelt,
                     phonetic=alphabet,
                 )
         except Exception as exc:
@@ -1228,6 +1256,7 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             wrong = []
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
+        allow = allow | {strip_acute(w) for w in misspelt}
         bad = sorted(set(missing_stress(_blank_avoid_cells(lesson_md_clean[n]), allow, phonetic=alphabet)
                          + missing_stress("\n".join(str(x) for x in leaves(vocab) if isinstance(x, str)), allow,
                                           phonetic=alphabet)))
