@@ -4,6 +4,6 @@
     "model": "gemini-3.8-flash-high",
     "effort": "high"
   },
-  "prompt_sha256": "cd7e9ae9b345ec258647e63c022324a1ece16842a9934be812ae3fc722b043f8",
-  "response_sha256": "ed5e4ddb16b4ee99fe905b01c50f6b18c62b108eff50f0928440985d3efbc4c5"
+  "prompt_sha256": "8ab5c51f7ea0692574e011d211baa7343b771abb09204c6e0346a24e8edbdb3f",
+  "response_sha256": "b28b26cef5aafce875e611b9714f0775325949cfbeb036a31be89a65d56da0a5"
 }

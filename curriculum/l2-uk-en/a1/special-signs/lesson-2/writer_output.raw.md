@@ -1,3 +1,6 @@
+I have initiated a search to inspect how vocabulary files are structured across upgraded modules in the repository and will inspect the results shortly.
+I am waiting for the background search task to complete.
+I am waiting for the search for special-signs directories to complete.
 ```markdown file=module.md
 # Йото́вані лі́тери та напівголосни́й: Лі́тери Й, Я, Ю, Є · Iotated Vowels and Semivowel: Letters Й, Я, Ю, Є
 
@@ -21,7 +24,7 @@ At beginner level, use this rule:
 
 Compare two words:
 
-| Сло́во | Reading effect |
+| Слово́ | Reading effect |
 | --- | --- |
 | **буря́к** | no apostrophe; **р** softens before **я** |
 | **бур'я́н** | apostrophe; **р** stays hard, then you hear **[йа]** |
@@ -365,57 +368,57 @@ Notice that even when counting on your **па́льці** (fingers), each word f
       "instruction": "Fill in the blank with the appropriate word.",
       "items": [
         {
-          "sentence": "У ча́шці гаря́чий ___ . — In the cup is hot […].",
+          "sentence": "У ча́шці гаря́чий ___ .",
           "answer": "чай",
           "options": [
             "чай",
-            "рис",
-            "час"
+            "час",
+            "рис"
           ],
           "explanation": "У ча́шці нали́тий гаря́чий чай; лі́тера й познача́є напівголосни́й звук [й]. — In the cup there is hot tea; the letter й represents the semivowel sound [j]."
         },
         {
-          "sentence": "На столі́ лежи́ть сві́же сокови́те ___ . — On the table lies fresh juicy […].",
+          "sentence": "На столі́ лежи́ть сві́же сокови́те ___ .",
           "answer": "я́блуко",
           "options": [
             "я́блуко",
             "ю́шка",
             "єно́т"
           ],
-          "explanation": "Сло́во «я́блуко» почина́ється з лі́тери я, яка́ на поча́тку сло́ва познача́є два зву́ки [йа]. — The word «я́блуко» begins with letter я, which represents two sounds [йа] at word start."
+          "explanation": "Сло́во я́блуко почина́ється з лі́тери я, яка́ на поча́тку сло́ва познача́є два зву́ки [йа]. — The word я́блуко begins with letter я, which represents two sounds [йа] at the word start."
         },
         {
-          "sentence": "У зоопа́рку живе́ смуга́стий ___ . — In the zoo lives a striped […].",
+          "sentence": "У зоопа́рку живе́ смуга́стий ___ .",
           "answer": "єно́т",
           "options": [
             "єно́т",
             "кінь",
             "лань"
           ],
-          "explanation": "Сло́во «єно́т» почина́ється з лі́тери є, яка́ на поча́тку сло́ва дає́ два зву́ки [йе]. — The word «єно́т» begins with letter є, which gives two sounds [йе] at word start."
+          "explanation": "Сло́во єно́т почина́ється з лі́тери є, яка́ на поча́тку сло́ва дає́ два зву́ки [йе]. — The word єно́т begins with letter є, which gives two sounds [йе] at the word start."
         },
         {
-          "sentence": "Сього́дні в селі́ весе́ле ___ . — Today in the village there is a merry […].",
+          "sentence": "Сього́дні в селі́ весе́ле ___ .",
           "answer": "свя́то",
           "options": [
             "свя́то",
             "день",
             "чай"
           ],
-          "explanation": "Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа пі́сля збі́гу при́голосних св. — The word «свя́то» is written with letter я without an apostrophe after the consonant cluster св."
+          "explanation": "Сло́во свя́то пи́шеться з лі́терою я без апо́строфа пі́сля збі́гу при́голосних св. — The word свя́то is written with letter я without an apostrophe after the consonant cluster св."
         },
         {
-          "sentence": "У ба́бці на горо́ді росте́ черво́ний ___ . — In grandma's garden grows red […].",
+          "sentence": "У ба́бці на горо́ді росте́ черво́ний ___ .",
           "answer": "буря́к",
           "options": [
             "буря́к",
             "я́блуко",
             "ю́шка"
           ],
-          "explanation": "Сло́во «буря́к» пи́шеться з лі́терою я без апо́строфа, при́голосний [р'] м'яки́й. — The word «буря́к» is written with letter я without an apostrophe; consonant [р'] is soft."
+          "explanation": "Сло́во буря́к пи́шеться з лі́терою я без апо́строфа, при́голосний [р'] м'яки́й. — The word буря́к is written with letter я without an apostrophe; consonant [р'] is soft."
         },
         {
-          "sentence": "Наш ___ пока́зує ціка́вий малю́нок. — Our […] is showing an interesting drawing.",
+          "sentence": "Наш ___ пока́зує ціка́вий малю́нок.",
           "answer": "вчи́тель",
           "options": [
             "вчи́тель",
@@ -497,70 +500,70 @@ Notice that even when counting on your **па́льці** (fingers), each word f
       "instruction": "Знайді́ть орфографі́чну поми́лку в ко́жному ре́ченні. — Find the spelling error in each sentence.",
       "items": [
         {
-          "sentence": "Вра́нці я пив чаі з лимо́ном. — In the morning I drank tea with lemon.",
+          "sentence": "Вра́нці я пив чаі з лимо́ном.",
           "error": "чаі",
           "correction": "чай",
           "options": [
             "чай",
-            "чаі",
-            "чаї"
+            "чаї́",
+            "чаю"
           ],
-          "explanation": "Напівголосни́й звук [й] познача́ється лі́терою й: чай. — The semivowel sound [j] is written with letter й: чай."
+          "explanation": "Напівголосни́й звук [й] наприкінці́ сло́ва познача́ється лі́терою й: чай. — The semivowel sound [j] at the end of a word is written with letter й: чай."
         },
         {
-          "sentence": "На столі́ лежи́ть смачне́ йа́блуко. — A tasty apple is on the table.",
+          "sentence": "На столі́ лежи́ть смачне́ йа́блуко.",
           "error": "йа́блуко",
           "correction": "я́блуко",
           "options": [
             "я́блуко",
-            "йа́блуко",
-            "а́блуко"
+            "а́блуко",
+            "ьа́блуко"
           ],
-          "explanation": "Сполу́ка зву́ків [йа] на поча́тку сло́ва познача́ється лі́терою я: я́блуко. — The sound blend [ja] at the word start is written with letter я: я́блуко."
+          "explanation": "Сполу́ка зву́ків [йа] на поча́тку сло́ва передає́ться одніє́ю лі́терою я: я́блуко. — The sound combination [ja] at the beginning of a word is written with the single letter я: я́блуко."
         },
         {
-          "sentence": "У тарі́лці те́пла йу́шка. — There is warm soup in the bowl.",
+          "sentence": "У тарі́лці те́пла йу́шка.",
           "error": "йу́шка",
           "correction": "ю́шка",
           "options": [
             "ю́шка",
-            "йу́шка",
-            "у́шка"
+            "у́шка",
+            "ьу́шка"
           ],
-          "explanation": "Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound blend [ju] at the word start is written with letter ю: ю́шка."
+          "explanation": "Сполу́ка зву́ків [йу] на поча́тку сло́ва познача́ється лі́терою ю: ю́шка. — The sound combination [ju] at the beginning of a word is written with letter ю: ю́шка."
         },
         {
-          "sentence": "У лі́сі живе́ смуга́стий йено́т. — A striped raccoon lives in the forest.",
+          "sentence": "У лі́сі живе́ смуга́стий йено́т.",
           "error": "йено́т",
           "correction": "єно́т",
           "options": [
             "єно́т",
-            "йено́т",
-            "ено́т"
+            "ено́т",
+            "ьено́т"
           ],
-          "explanation": "Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound blend [je] at the word start is written with letter є: єно́т."
+          "explanation": "Сполу́ка зву́ків [йе] на поча́тку сло́ва познача́ється лі́терою є: єно́т. — The sound combination [je] at the beginning of a word is written with letter є: єно́т."
         },
         {
-          "sentence": "На по́лі росте́ сокови́тий буряік. — A juicy beet grows in the field.",
+          "sentence": "На по́лі росте́ сокови́тий буряік.",
           "error": "буряік",
           "correction": "буря́к",
           "options": [
             "буря́к",
-            "буряік",
-            "бурьак"
+            "бур'я́к",
+            "бурья́к"
           ],
-          "explanation": "Сло́во «буря́к» пи́шеться з лі́терою я: буря́к. — The word «буря́к» is written with the letter я: буря́к."
+          "explanation": "Сло́во буря́к пи́шеться з лі́терою я без апо́строфа: буря́к. — The word буря́к is written with the letter я without an apostrophe: буря́к."
         },
         {
-          "sentence": "Сього́дні в мі́сті вели́ке свиа́то. — Today there is a big holiday in the city.",
+          "sentence": "Сього́дні в мі́сті вели́ке свиа́то.",
           "error": "свиа́то",
           "correction": "свя́то",
           "options": [
             "свя́то",
-            "свиа́то",
-            "св'ято"
+            "св'я́то",
+            "сьвя́то"
           ],
-          "explanation": "Сло́во «свя́то» пи́шеться з лі́терою я без апо́строфа: свя́то. — The word «свя́то» is written with letter я without an apostrophe: свя́то."
+          "explanation": "Сло́во свя́то пи́шеться з лі́терою я без апо́строфа: свя́то. — The word свя́то is written with letter я without an apostrophe: свя́то."
         }
       ]
     },
@@ -803,6 +806,14 @@ Notice that even when counting on your **па́льці** (fingers), each word f
     "year": 2018,
     "publisher": "Гра́мота",
     "url": "https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html"
+  },
+  {
+    "title": "Украї́нська мо́ва. 5 клас (Заболо́тний)",
+    "author": "Заболо́тний О. В., Заболо́тний В. В.",
+    "year": 2023,
+    "publisher": "Гене́за",
+    "chunk_id": "5-klas-ukrmova-zabolotnyi-2023_s0063",
+    "source": "Заболотний, 5 клас, с. 84"
   },
   {
     "title": "Pronunciation Video Series (Letter Й)",

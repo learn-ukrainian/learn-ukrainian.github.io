@@ -1,71 +1,65 @@
 {
   "dimensions": {
     "pedagogical": {
-      "score": 5.0,
-      "evidence": "Eleven activities exceed the mapped ten, core vocabulary entries are missing, headings lack English, and preservation and lesson-5 closure remain unverified.",
+      "score": 6.0,
+      "evidence": "First-use vocabulary coverage is incomplete, apostrophe instruction overlaps lesson 4, and preservation and lesson-5 closure remain unverified from these artifacts.",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "Here you only need the quick review that makes **ь** and apostrophe readable.",
-        "At the beginning of a word: **я́блуко** (apple) has two sounds: [й] + [а]."
+        "The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant;",
+        "At the beginning of a word: **я́блуко** (apple) has two sounds:"
       ]
     },
     "naturalness": {
-      "score": 4.0,
-      "evidence": "Attempted VESUM and sources calls were blocked by approval policy, leaving gender, government, and example authenticity unverified under the required audit.",
+      "score": 6.0,
+      "evidence": "The dialogue jumps abruptly from greeting to farewell, while attempted VESUM and sources checks returned approval errors, leaving gender, government, and usage unverified.",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "**Ра́дий тебе́ ба́чити.** | Glad to see you (masculine). |",
-        "**Ось гаря́чий чай та сві́же я́блуко.** | Here is hot tea and a fresh apple."
+        "**Софі́я:** Смачно́го! На все до́бре! *(Bon appetit! All the best!)*"
       ]
     },
     "decolonization": {
-      "score": 6.0,
-      "evidence": "The framing treats Ukrainian independently, but blocked sources checks prevent certifying freedom from Russian-pattern usage.",
+      "score": 7.0,
+      "evidence": "The framing centers Ukrainian, but listed resources cannot establish authentic usage or exclude calques when the requested sources checks produced no evidence.",
       "verdict": "REVISE",
       "evidence_quotes": [
         "The apostrophe is a Ukrainian reading instruction: do not soften the previous consonant;"
       ]
     },
     "engagement": {
-      "score": 6.0,
-      "evidence": "Videos and dialogue provide variety, but repeated recognition quizzes dominate and every supposedly scrambled word already appears in correct letter order.",
+      "score": 7.0,
+      "evidence": "Video practice adds variety, but repeated recognition quizzes and already-ordered unjumble inputs provide little independent production or meaningful challenge.",
       "verdict": "REVISE",
       "evidence_quotes": [
         "Watch the pronunciation video and repeat each word aloud.",
-        "Складі́ть пра́вильні украї́нські слова́ з лі́тер. — Arrange the letters to form correct Ukrainian words."
+        "Arrange the letters to form correct Ukrainian words."
       ]
     },
     "tone": {
-      "score": 7.0,
-      "evidence": "The voice avoids a named narrator and supplies bilingual dialogue support, but its closing assurance assumes mastery without evidence.",
-      "verdict": "REVISE",
+      "score": 8.0,
+      "evidence": "The voice is direct and supportive without a named narrator, although the closing claim of effortless mastery is premature.",
+      "verdict": "PASS",
       "evidence_quotes": [
         "Today you can read every one of these combinations with ease."
       ]
     }
   },
   "aggregate": {
-    "verdict": "REJECT",
+    "verdict": "REVISE",
     "terminal_verdict": "PASS",
     "failing_dims": [
       "pedagogical",
       "naturalness",
       "decolonization",
-      "engagement",
-      "tone"
+      "engagement"
     ],
-    "rejected_dims": [
-      "pedagogical",
-      "naturalness"
-    ],
+    "rejected_dims": [],
     "warning_dims": [
       "pedagogical",
       "naturalness",
       "decolonization",
-      "engagement",
-      "tone"
+      "engagement"
     ],
-    "min_score": 4.0,
-    "min_dim": "naturalness"
+    "min_score": 6.0,
+    "min_dim": "pedagogical"
   }
 }

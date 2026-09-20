@@ -1,355 +1,316 @@
-I have launched the validation check and will wait for it to finish.
-I have launched the parse verification check and will wait for it to complete.
 ```markdown file=module.md
-# Пра́вила перено́су слів та си́нтез особли́вих зна́ків · Word Hyphenation Rules and Special Signs Synthesis
+# Си́нтез особли́вих зна́ків та підсу́мок мо́дуля · Special Signs Synthesis and Module Summary
 
-You have now met all the letters of the Ukrainian alphabet and the punctuation mark of the apostrophe (**апо́строф**). You can confidently read Ukrainian words, distinguish hard (**тверди́й**) and soft (**м'яки́й**) consonants, and apply the correct pronunciation to iotated vowels and affricates. Today (**сього́дні**) our **вчи́тель** (teacher) guides us through hyphenation rules for line breaks, handwriting cues, and synthesis of the entire module.
+Віта́ємо у підсумко́вому п'я́тому уро́ці мо́дуля про особли́ві зна́ки украї́нської мо́ви — welcome to the fifth and concluding lesson of the module on Ukrainian special signs! Throughout this module, you have explored the essential mechanics of reading and writing Ukrainian letters and signs: the soft sign (**м'яки́й знак** — **ь**), the apostrophe (**апо́строф** — **'**), and the four iotated vowels (**я**, **ю**, **є**, **ї**).
 
-## Перено́с і письмо́
-
-You will sometimes see words split across a line in printed Ukrainian. At this
-level, use only prepared models:
-
-| Whole word | Safe line-break model |
-| --- | --- |
-| **Мар'я́на** | `Мар'-яна` |
-| **дерев'я́ний** | `дере-в'яний` |
-| **бур'я́н** | `бур'-ян` |
-| **па́льці** | `паль-ці` |
-
-The simple idea: **ь** and apostrophe stay with the letter before them. Also,
-do not leave one single letter alone on a line.
-
-Pay attention to the two standard prohibitions when hyphenating words across lines in Ukrainian. The soft sign (**м'яки́й знак**) and the apostrophe (**апо́строф**) are never separated from the preceding consonant. They belong to the letter before them: we hyphenate `паль-ці` (not `пал-ьці`) and `Мар'-яна` (not `Мар-'яна`). Furthermore, a single letter cannot be left alone at the end of a line or carried alone to the next line.
-
-<!-- INJECT_ACTIVITY: act-5 -->
-
-Reading before writing: first recognize the printed word, then copy the sign in
-a notebook cue.
-
-Use original text on this page, your own notebook, or live handwriting from a
-teacher/tutor.
-
-| Printed word | Notebook cue |
-| --- | --- |
-| **день** | find the soft sign at the end |
-| **сім'я́** | find the apostrophe before **я** |
-| **п'ять** | find both apostrophe and soft sign |
-| **свя́то** | confirm there is no apostrophe |
-
-Notice how common objects follow these exact patterns. A **дерев'я́ний** (wooden) table or a simple metal **ло́жка** (spoon) follow regular phonetic rules. When copying into your notebook, verify that each **мале́нький** (small) **знак** (sign) sits in its exact position.
-
-<!-- INJECT_ACTIVITY: act-502 -->
+Today we bring everything together into a unified, confident reading and spelling routine. You will review how these signs function, practice identifying them in natural contexts, and master the core decision-making patterns that prevent beginner spelling traps.
 
 ## Да́лі
 
-Ask a native Ukrainian teacher or tutor to listen to a short read-aloud:
-**день, сім'я́, буря́к, бур'я́н, свя́то**. The feedback target is small:
-soft ending, clear **й**, no invented pause.
-
-Before you leave the lesson tab, check that you can do these things:
-
-- say that **ь** has no sound of its own;
-- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding **і**;
-- say that apostrophe keeps the previous consonant hard;
-- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with **й** after
-  the apostrophe;
-- explain **буря́к** and **бур'я́н** with the support table;
-- remember that **свя́то** and **цвях** have no apostrophe;
-- choose the correct sign in short prepared words;
-- identify missing-apostrophe, missing-soft-sign, and invented-soft-sign
-  errors.
-
-Use the signs as reading instructions, not decorations. Before moving on,
-choose one word from each contrast and do a final sign check: name the sign,
-state its effect, then read the word.
-
-**Да́лі** means next. Go to Vocabulary and Activities; those drills reuse the
+**Далі** means next. Go to Vocabulary and Activities; those drills reuse the
 same six contrast words: **день**, **сім'я́**, **буря́к**, **бур'я́н**,
 **свя́то**, **цвях**.
 
-<!-- INJECT_ACTIVITY: act-503 -->
+When you see a Ukrainian word on the page or hear it spoken aloud, your mouth and ear follow a simple three-way decision tree:
 
-<!-- INJECT_ACTIVITY: act-504 -->
+| Phonetic situation | Written sign | Model word | How to read |
+| --- | --- | --- | --- |
+| Soft consonant before pause or consonant | **м'яки́й знак** (**ь**) | **день**, **сіль**, **вчи́тель** | The consonant softens smoothly; no extra vowel sound is added. |
+| Hard labial or **р** before iotated vowel | **апо́строф** (**'**) | **сім'я́**, **п'ять**, **бур'я́н** | The consonant stays hard, followed immediately by crisp **[й]** + vowel. |
+| Consonant cluster or soft **[р']** before **я** | **без зна́ка** (no sign) | **буря́к**, **свя́то**, **цвях** | The sounds blend naturally; no apostrophe is written. |
 
-## Підсу́мок мо́дуля — Module summary
+<!-- INJECT_ACTIVITY: act-5-1 -->
 
-We have successfully completed our study of the first three modules of Ukrainian! You now possess a comprehensive command of the complete 33-letter Ukrainian alphabet:
-- Vowel letters: **А, О, У, Е, И, І**
-- Iotated vowel letters: **Я, Ю, Є, Ї**
-- Consonant letters, including the affricates **Ц, Ч** and the labiodental fricative **Ф**
-- The softening sign: **м'яки́й знак (Ь)**
-- The graphic separation sign: **апо́строф (')**
+Listen to this dialogue between Taras and Mariana as they review their study materials and discuss everyday plans in Kyiv:
 
-Whether reading about a bright sunny **день** (day), an authentic Ukrainian **свя́то** (holiday), a thriving garden where **бур'я́н** (weed) is removed, or a gathering of your whole beloved **сім'я́** (family), you have established a reliable foundation for all future Ukrainian learning.
-
-> **Мар'я́на:** До́брий день, вчи́телю! Дя́кую за ціка́вий уро́к. *(Good day, teacher! Thank you for the interesting lesson.)*
-> **Вчи́тель:** До́брий день, Мар'я́но! Ти сього́дні чудо́во працюва́ла. *(Good day, Mariana! You worked wonderfully today.)*
-> **Мар'я́на:** На все до́бре! До поба́чення! *(All the best! Goodbye!)*
+> Тара́с: До́брий день, Мар'я́но! Що ти сього́дні ро́биш?
+> Мар'я́на: До́брий день, Тара́се! Я повто́рюю пра́вила про особли́ві зна́ки.
+> Тара́с: Чудо́во! Чи пам'ята́єш ти, коли́ пи́шемо апо́строф?
+> Мар'я́на: Так, зві́сно! Апо́строф пи́шемо пі́сля губни́х лі́тер та лі́тери р, коли́ чу́ти розді́льний звук [й]. Напри́клад: сім'я́, м'я́со, п'ять, бур'я́н.
+> Тара́с: А що відбува́ється у слова́х буря́к та свя́то?
+> Мар'я́на: У сло́ві буря́к звук [р'] м'яки́й, а в сло́ві свя́то є корене́вий збіг св, тому́ тут зна́ка нема́є.
+> Тара́с: Дя́кую, Мар'я́но! Ти чудо́во зна́єш усі́ моде́лі. Смачно́го обі́ду та га́рного дня!
+> Мар'я́на: Дя́кую щи́ро, Тара́се! До поба́чення!
 
 English support after the dialogue:
 
-| Ukrainian | English |
+| Ukrainian | English support |
 | --- | --- |
-| **До́брий день, вчи́телю!** | Good day, teacher! |
-| **Дя́кую за ціка́вий уро́к.** | Thank you for the interesting lesson. |
-| **До́брий день, Мар'я́но!** | Good day, Mariana! |
-| **Ти сього́дні чудо́во працюва́ла.** | You worked wonderfully today. |
-| **На все до́бре!** | All the best! |
-| **До поба́чення!** | Goodbye! |
+| **До́брий день, Мар'я́но! Що ти сього́дні ро́биш?** | Good day, Mariana! What are you doing today? |
+| **До́брий день, Тара́се! Я повто́рюю пра́вила про особли́ві зна́ки.** | Good day, Taras! I am reviewing the rules about special signs. |
+| **Чудо́во! Чи пам'ята́єш ти, коли́ пи́шемо апо́строф?** | Wonderful! Do you remember when we write an apostrophe? |
+| **Так, зві́сно! Апо́строф пи́шемо пі́сля губни́х лі́тер та лі́тери р, коли́ чу́ти розді́льний звук [й]. Напри́клад: сім'я́, м'я́со, п'ять, бур'я́н.** | Yes, of course! We write an apostrophe after labial letters and the letter р when a separated [j] sound is heard. For example: сім'я́, м'я́со, п'ять, бур'я́н. |
+| **А що відбува́ється у слова́х буря́к та свя́то?** | And what happens in the words буря́к and свя́то? |
+| **У сло́ві буря́к звук [р'] м'яки́й, а в сло́ві свя́то є корене́вий збіг св, тому́ тут зна́ка нема́є.** | In the word буря́к the sound [р'] is soft, and in the word свя́то there is a root cluster св, so there is no sign here. |
+| **Дя́кую, Мар'я́но! Ти чудо́во зна́єш усі́ моде́лі. Смачно́го обі́ду та га́рного дня!** | Thank you, Mariana! You know all the models wonderfully. Enjoy your lunch and have a nice day! |
+| **Дя́кую щи́ро, Тара́се! До поба́чення!** | Thank you sincerely, Taras! Goodbye! |
 
-<!-- INJECT_ACTIVITY: act-505 -->
+<!-- INJECT_ACTIVITY: act-5-2 -->
 
-### Підсу́мок мо́дуля — Module summary
+## Підсу́мок мо́дуля
 
-- **Ви розрізня́єте м'яки́й знак та апо́строф** — You distinguish the soft sign and the apostrophe in everyday Ukrainian words.
-- **Ви чита́єте слова́ з м'яки́м зна́ком без за́йвих голосни́х** — You read words with ь without adding extra vowels.
-- **Ви вимовля́єте апо́строф із розді́льним зву́ком [й]** — You pronounce the apostrophe with a distinct [й] sound.
-- **Ви зна́єте контра́сти «буря́к», «бур'я́н», «свя́то»** — You know the contrasts «буря́к», «бур'я́н», «свя́то».
-- **Ви пра́вильно перено́сите слова́ з особли́вими зна́ками** — You correctly hyphenate words with special signs.
+Now let us synthesize the complete system of special signs that you have learned throughout these five lessons. In Ukrainian, writing is remarkably consistent with pronunciation once you understand the instructions encoded by **ь** and **'**.
+
+| Озна́ка | М'яки́й знак (ь) | Апо́строф (') |
+| --- | --- | --- |
+| **Звукове́ зна́чення** | Не ма́є вла́сного зву́ка — Has no sound of its own. | Не ма́є вла́сного зву́ка — Has no sound of its own. |
+| **Вплив на при́голосний** | Пом'я́кшує попере́дній при́голосний — Softens the previous consonant. | Зберіга́є тверді́сть попере́днього при́голосного — Keeps previous consonant hard. |
+| **Вплив на голосни́й** | Не вплива́є на насту́пний звук — Does not affect following vowel. | Зму́шує я, ю, є, ї звуча́ти розді́льно з [й] — Forces я, ю, є, ї to sound separately with [й]. |
+| **Типо́ві лі́тери пе́ред зна́ком** | Зубні́: д, т, з, с, ц, л, н | Губні́: б, п, в, м, ф та вібра́нт р |
+| **Ключові́ прикла́ди** | **день**, **кінь**, **сіль**, **вчи́тель** | **сім'я́**, **м'я́со**, **п'ять**, **комп'ю́тер** |
+
+<!-- INJECT_ACTIVITY: act-5-3 -->
+
+Remember the most frequent traps and the habits that protect you:
+
+1. **The soft sign trap**: English speakers often drop the soft sign because English has no soft consonants at the end of words. Always write **день**, not **ден**; write **кінь**, not **кін**; write **сіль**, not **сіл**.
+2. **The apostrophe omission trap**: In words like **сім'я́**, do not blend the labial [m] with the vowel. The apostrophe stands as a shield protecting the hard consonant and preserving the clear **[й]** glide: [сімйа́].
+3. **The false analogy trap**: Do not insert an apostrophe mechanically whenever you see the letter **я**. In **свя́то** and **цвях**, the root consonant before the labial prevents an apostrophe. In **буря́к**, the soft **[р']** merges smoothly with [а].
+4. **The invented letter trap**: In words like **ло́жка**, never invent a soft sign after **л**. The consonant **л** is hard.
+
+<!-- INJECT_ACTIVITY: act-5-4 -->
+
+### Підсумок модуля — Module summary
+
+By completing this module, you have built foundational phonological and orthographic literacy in Ukrainian:
+- **Розпізнава́ти особли́ві зна́ки**: recognize and name the soft sign (**м'яки́й знак**) and the apostrophe (**апо́строф**) in common written Ukrainian words.
+- **Вимовля́ти м'які́ кінце́ві при́голосні**: read **день**, **кінь**, **сіль** та **вчи́тель** with an accurate soft consonant ending and no extra vowel sound.
+- **Чита́ти розді́льну вимо́ву з апо́строфом**: read **сім'я́**, **м'я́со**, **п'ять**, **де́в'ять** та **комп'ю́тер** with a hard consonant followed by a clear, continuous **[й]** glide.
+- **Розрізня́ти три ключові́ контра́сти**: accurately differentiate softness without an apostrophe (**буря́к**), separated pronunciation with an apostrophe (**бур'я́н**), and root consonant clusters without a sign (**свя́то**, **цвях**).
+- **Запобіга́ти ти́повим по́милкам**: confidently avoid common beginner traps such as writing **ден** for **день**, omitting the apostrophe in **сім'я́**, or adding unnecessary signs in **свя́то** and **ло́жка**.
+
+Віта́ємо з успі́шним заве́ршенням мо́дуля! — Congratulations on successfully completing the module! Тепе́р ви впе́внено володі́єте базо́вими моде́лями чита́ння та пись́ма особли́вих зна́ків украї́нської мо́ви — now you confidently use the basic reading and writing patterns for Ukrainian special signs!
 ```
 ```json file=activities.yaml
 {
   "inline": [
     {
-      "id": "act-5",
-      "type": "divide-words",
-      "title": "Пра́ктика перено́су слів — Hyphenation practice",
-      "instruction": "Обери́ підгото́влену моде́ль перено́су. — Choose the prepared hyphenation model.",
-      "items": [
-        {
-          "word": "Мар'я́на",
-          "answer": "Мар'-яна"
-        },
-        {
-          "word": "дерев'я́ний",
-          "answer": "дере-в'яний"
-        },
-        {
-          "word": "бур'я́н",
-          "answer": "бур'-ян"
-        },
-        {
-          "word": "па́льці",
-          "answer": "паль-ці"
-        }
-      ]
-    },
-    {
-      "id": "act-502",
-      "type": "divide-words",
-      "title": "Пра́вила перено́су: нови́й спектр слів — Hyphenation rules: New words",
-      "instruction": "Обері́ть пра́вильний варіа́нт перено́су для ко́жного сло́ва. — Choose the correct hyphenation option for each word.",
-      "items": [
-        {
-          "word": "вчи́тель",
-          "answer": "вчи-тель"
-        },
-        {
-          "word": "мале́нький",
-          "answer": "малень-кий"
-        },
-        {
-          "word": "комп'ю́тер",
-          "answer": "комп'-ютер"
-        },
-        {
-          "word": "здоро́в'я",
-          "answer": "здо-ров'я"
-        },
-        {
-          "word": "свя́то",
-          "answer": "свя-то"
-        },
-        {
-          "word": "буря́к",
-          "answer": "бу-ряк"
-        }
-      ]
-    },
-    {
-      "id": "act-503",
+      "id": "act-5-1",
       "type": "match-up",
-      "title": "Етике́тні ви́рази та проща́ння — Etiquette formulas and farewells",
-      "instruction": "З'єдна́йте украї́нську фо́рмулу з її́ англі́йським пере́кладом. — Match the Ukrainian formula with its English translation.",
+      "title": "З'єдна́йте сло́во з пра́вилом — Match word with rule",
+      "instruction": "З'єдна́йте ко́жне сло́во з йо́го орфографі́чним поя́сненням. — Match each word with its spelling explanation.",
       "pairs": [
         {
-          "left": "До поба́чення!",
-          "right": "Goodbye!"
+          "left": "день",
+          "right": "м'яки́й знак наприкінці́ сло́ва — soft sign at the end of the word"
         },
         {
-          "left": "На все до́бре!",
-          "right": "All the best!"
+          "left": "сім'я́",
+          "right": "апо́строф пі́сля губно́го м — apostrophe after labial м"
         },
         {
-          "left": "Щи́ро дя́кую!",
-          "right": "Thank you very much!"
+          "left": "буря́к",
+          "right": "м'яки́й [р'] пе́ред я без зна́ка — soft [р'] before я without sign"
         },
         {
-          "left": "Будь ла́ска!",
-          "right": "You are welcome! / Please!"
+          "left": "бур'я́н",
+          "right": "тверди́й [р] та [йа] з апо́строфом — hard [р] and [йа] with apostrophe"
         },
         {
-          "left": "Як спра́ви?",
-          "right": "How are things?"
+          "left": "свя́то",
+          "right": "корене́вий збіг св пе́ред я — root cluster св before я"
         },
         {
-          "left": "Чудо́во, дя́кую!",
-          "right": "Wonderful, thank you!"
+          "left": "ло́жка",
+          "right": "тверди́й [л] без м'яко́го зна́ка — hard [л] without soft sign"
         }
       ]
     },
     {
-      "id": "act-504",
-      "type": "quiz",
-      "title": "Етике́тний діало́г: розумі́ння розмо́ви — Etiquette dialogue check",
-      "instruction": "Обері́ть пра́вильний варіа́нт ві́дповіді за конте́кстом діало́гу. — Choose the correct answer based on dialogue context.",
+      "id": "act-5-2",
+      "type": "fill-in",
+      "title": "Ви́беріть пра́вильний знак — Choose the correct sign",
+      "instruction": "Вста́вте ь, апо́строф або́ залиште́ про́пуск поро́жнім. — Insert ь, an apostrophe, or leave the blank empty.",
       "items": [
         {
-          "prompt": "Як Мар'я́на віта́є вчи́теля на уро́ці? — How does Mariana greet the teacher in the lesson?",
-          "options": [
-            {
-              "text": "До́брий день, вчи́телю! — Good day, teacher!",
-              "correct": true
-            },
-            {
-              "text": "До́брий ве́чір, вчи́телю! — Good evening, teacher!",
-              "correct": false
-            },
-            {
-              "text": "До поба́чення, вчи́телю! — Goodbye, teacher!",
-              "correct": false
-            }
-          ],
-          "explanation": "«До́брий день!» — станда́ртне де́нне віта́ння в украї́нській мо́ві. — \"До́брий день!\" is the standard daytime greeting in Ukrainian."
+          "sentence": "Моя́ дру́жна сім___я живе́ дру́жно. — My family lives in harmony.",
+          "answer": "'",
+          "options": ["'", "ь", ""],
+          "explanation": "У сло́ві «сім'я́» пи́шеться апо́строф пі́сля губно́го [м]. — In the word сім'я́ an apostrophe is written after the labial [m]."
         },
         {
-          "prompt": "Як вчи́тель зверта́ється до Мар'я́ни? — How does the teacher address Mariana?",
-          "options": [
-            {
-              "text": "Мар'я́но — Mariana (vocative)",
-              "correct": true
-            },
-            {
-              "text": "Мар'я́на — Mariana (nominative)",
-              "correct": false
-            },
-            {
-              "text": "Марко́ — Marko",
-              "correct": false
-            }
-          ],
-          "explanation": "В украї́нській мо́ві у зверта́нні вжива́ється кли́чний відмі́нок: Мар'я́но. — In Ukrainian, the vocative case is used in direct address: Мар'я́но."
+          "sentence": "Сього́дні ду́же га́рний ден___ . — Today is a very nice day.",
+          "answer": "ь",
+          "options": ["ь", "'", ""],
+          "explanation": "У сло́ві «день» наприкінці́ пи́шеться м'яки́й знак: день. — At the end of the word день a soft sign is written: день."
         },
         {
-          "prompt": "За що Мар'я́на дя́кує вчи́телю? — What does Mariana thank the teacher for?",
-          "options": [
-            {
-              "text": "Дя́кую за ціка́вий уро́к. — Thank you for the interesting lesson.",
-              "correct": true
-            },
-            {
-              "text": "Дя́кую за смачну́ ка́ву. — Thank you for the tasty coffee.",
-              "correct": false
-            },
-            {
-              "text": "Дя́кую за нови́й зо́шит. — Thank you for the new notebook.",
-              "correct": false
-            }
-          ],
-          "explanation": "Мар'я́на дя́кує вчи́телю за ціка́вий уро́к. — Mariana thanks the teacher for the interesting lesson."
+          "sentence": "У руці́ рі́вно п___ять па́льців. — In the hand there are exactly five fingers.",
+          "answer": "'",
+          "options": ["'", "ь", ""],
+          "explanation": "У сло́ві «п'ять» пи́шеться апо́строф пі́сля губно́го [п]. — In the word п'ять an apostrophe is written after labial [p]."
         },
         {
-          "prompt": "Що ка́же вчи́тель про робо́ту Мар'я́ни? — What does the teacher say about Mariana's work?",
-          "options": [
-            {
-              "text": "Ти сього́дні чудо́во працюва́ла. — You worked wonderfully today.",
-              "correct": true
-            },
-            {
-              "text": "Ти сього́дні відпочива́ла. — You rested today.",
-              "correct": false
-            },
-            {
-              "text": "Ти запізни́лася на уро́к. — You were late for the lesson.",
-              "correct": false
-            }
-          ],
-          "explanation": "Вчи́тель хва́лить учени́цю за чудо́ву пра́цю на уро́ці. — The teacher praises the student for wonderful work in the lesson."
+          "sentence": "Черво́ний бур___як росте́ на горо́ді. — Red beetroot grows in the garden.",
+          "answer": "",
+          "options": ["", "'", "ь"],
+          "explanation": "У сло́ві «буря́к» апо́строф не потрі́бен, бо звук [р'] м'яки́й. — In the word буря́к no apostrophe is needed because [r'] is soft."
         },
         {
-          "prompt": "Яку́ фо́рмулу вві́чливого проща́ння вжива́є Мар'я́на? — Which polite farewell formula does Mariana use?",
-          "options": [
-            {
-              "text": "На все до́бре! До поба́чення! — All the best! Goodbye!",
-              "correct": true
-            },
-            {
-              "text": "До́брий ра́нок! Будь ла́ска! — Good morning! Please!",
-              "correct": false
-            },
-            {
-              "text": "Як спра́ви? Чудо́во! — How are things? Great!",
-              "correct": false
-            }
-          ],
-          "explanation": "«На все до́бре!» та «До поба́чення!» — станда́ртні украї́нські фо́рмули проща́ння. — \"На все до́бре!\" and \"До поба́чення!\" are standard Ukrainian farewell formulas."
+          "sentence": "Зеле́ний бур___ян росте́ бі́ля доро́ги. — Green weed grows near the road.",
+          "answer": "'",
+          "options": ["'", "ь", ""],
+          "explanation": "У сло́ві «бур'я́н» пи́шеться апо́строф пі́сля твердо́го [р]. — In the word бур'я́н an apostrophe is written after hard [r]."
         },
         {
-          "prompt": "Чому́ в і́мені Мар'я́на пи́шеться апо́строф? — Why is an apostrophe written in the name Mariana?",
-          "options": [
-            {
-              "text": "Пі́сля р пе́ред я чу́ти [йа], тому́ пи́шеться апо́строф. — After р before я [йа] is heard, so an apostrophe is written.",
-              "correct": true
-            },
-            {
-              "text": "Бо р пом'я́кшується пе́ред я. — Because р is softened before я.",
-              "correct": false
-            },
-            {
-              "text": "Бо в імена́х за́вжди ста́виться м'яки́й знак. — Because names always use a soft sign.",
-              "correct": false
-            }
-          ],
-          "explanation": "В і́мені Мар'я́на тверди́й при́голосний р розділя́ється апо́строфом пе́ред я. — In the name Мар'я́на the hard consonant р is separated by an apostrophe before я."
+          "sentence": "Сього́дні у мі́сті вели́ке св___ято. — Today there is a big holiday in the city.",
+          "answer": "",
+          "options": ["", "'", "ь"],
+          "explanation": "У сло́ві «свя́то» апо́строф не пи́шеться че́рез збіг св. — In the word свя́то no apostrophe is written due to cluster св."
         }
       ]
     },
     {
-      "id": "act-505",
-      "type": "group-sort",
-      "title": "Си́нтез: класифіка́ція за зна́ками — Synthesis: Classification by signs",
-      "instruction": "Розподілі́ть слова́ у три гру́пи за ї́хньою фонети́чною структу́рою. — Sort the words into three groups by their phonetic structure.",
-      "groups": [
+      "id": "act-5-3",
+      "type": "quiz",
+      "title": "Переві́рка знань про особли́ві зна́ки — Check your knowledge of special signs",
+      "instruction": "Обері́ть пра́вильний варіа́нт ві́дповіді. — Choose the correct answer option.",
+      "items": [
         {
-          "label": "Знак Ь (пом'я́кшення) — Soft sign Ь (softening)",
-          "items": [
-            "день",
-            "кінь",
-            "сіль",
-            "вчи́тель"
+          "prompt": "Яка́ головна́ фу́нкція м'яко́го зна́ка (ь)? — What is the main function of the soft sign (ь)?",
+          "options": [
+            {
+              "text": "Пом'я́кшувати попере́дній при́голосний звук. — Soften the preceding consonant sound.",
+              "correct": true
+            },
+            {
+              "text": "Познача́ти окре́мий голосни́й звук. — Represent an independent vowel sound.",
+              "correct": false
+            },
+            {
+              "text": "Розділя́ти склад на дві части́ни. — Divide a syllable into two parts.",
+              "correct": false
+            }
           ],
-          "name": "Знак Ь (пом'я́кшення) — Soft sign Ь (softening)"
+          "explanation": "М'яки́й знак не ма́є вла́сного зву́ка; він ли́ше вка́зує на м'я́кість попере́днього при́голосного. — The soft sign has no sound of its own; it only indicates the softness of the preceding consonant."
         },
         {
-          "label": "Апо́строф (розді́льність) — Apostrophe (separation)",
-          "items": [
-            "сім'я́",
-            "м'я́со",
-            "п'ять",
-            "бур'я́н"
+          "prompt": "Яка́ головна́ фу́нкція апо́строфа (')? — What is the main function of the apostrophe (')?",
+          "options": [
+            {
+              "text": "Зберіга́ти тверді́сть при́голосного та розді́льну вимо́ву [й]. — Keep consonant hard and ensure separated [й] pronunciation.",
+              "correct": true
+            },
+            {
+              "text": "Пом'я́кшувати губні́ при́голосні. — Soften labial consonants.",
+              "correct": false
+            },
+            {
+              "text": "Роби́ти па́узу всереди́ні сло́ва. — Make a pause inside the word.",
+              "correct": false
+            }
           ],
-          "name": "Апо́строф (розді́льність) — Apostrophe (separation)"
+          "explanation": "Апо́строф забороня́є пом'я́кшення й вка́зує на розді́льну вимо́ву йо́тованого зву́ка [йа, йу, йе, йі]. — The apostrophe prevents softening and indicates separate pronunciation of iotated sounds."
         },
         {
-          "label": "Без зна́ка (зли́те чита́ння) — No sign (smooth reading)",
-          "items": [
-            "буря́к",
-            "свя́то",
-            "цвях",
-            "ло́жка"
+          "prompt": "Чому́ в сло́ві «буря́к» нема́є апо́строфа? — Why is there no apostrophe in «буря́к»?",
+          "options": [
+            {
+              "text": "Звук [р'] м'яки́й, вимо́ва зли́та: [бур'а́к]. — Sound [р'] is soft, pronunciation is smooth: [бур'а́к].",
+              "correct": true
+            },
+            {
+              "text": "Пі́сля р за́вжди пи́шеться ь. — After р a soft sign is always written.",
+              "correct": false
+            },
+            {
+              "text": "Це ви́няток з пра́вила. — This is an exception to the rule.",
+              "correct": false
+            }
           ],
-          "name": "Без зна́ка (зли́те чита́ння) — No sign (smooth reading)"
+          "explanation": "У сло́ві «буря́к» звучи́ть м'яки́й [р'], тому́ апо́строф не ста́виться. — In «буря́к» the soft sound [р'] is heard, so no apostrophe is written."
+        },
+        {
+          "prompt": "Чому́ в сло́ві «бур'я́н» пи́шеться апо́строф? — Why is an apostrophe written in «бур'я́н»?",
+          "options": [
+            {
+              "text": "Звук [р] тверди́й, вимо́ва розді́льна: [бурйа́н]. — Sound [р] is hard, pronunciation is separate: [бурйа́н].",
+              "correct": true
+            },
+            {
+              "text": "Звук [р] пом'я́кшується пе́ред я. — Sound [р] softens before я.",
+              "correct": false
+            },
+            {
+              "text": "Це сло́во іншомо́вного похо́дження. — This is a loanword.",
+              "correct": false
+            }
+          ],
+          "explanation": "У сло́ві «бур'я́н» апо́строф утри́мує тверді́сть [р] і відокре́млює [йа]. — In «бур'я́н» the apostrophe keeps [р] hard and separates [йа]."
+        },
+        {
+          "prompt": "Чому́ в сло́ві «свя́то» нема́є апо́строфа? — Why is there no apostrophe in «свя́то»?",
+          "options": [
+            {
+              "text": "Пе́ред губни́м в є корене́вий при́голосний с. — Before labial в stands root consonant с.",
+              "correct": true
+            },
+            {
+              "text": "Губни́й в за́вжди м'яки́й. — Labial в is always soft.",
+              "correct": false
+            },
+            {
+              "text": "Лі́тера я мовчи́ть. — Letter я is silent.",
+              "correct": false
+            }
+          ],
+          "explanation": "Коли́ пе́ред губни́м стої́ть і́нший корене́вий при́голосний (крім р), апо́строф не ста́виться. — When another root consonant (except р) precedes the labial, no apostrophe is written."
+        },
+        {
+          "prompt": "Яке́ сло́во напи́сано помилко́во? — Which word is written incorrectly?",
+          "options": [
+            {
+              "text": "льо́жка",
+              "correct": true
+            },
+            {
+              "text": "ло́жка",
+              "correct": false
+            },
+            {
+              "text": "день",
+              "correct": false
+            }
+          ],
+          "explanation": "У сло́ві «ло́жка» нема́є м'яко́го зна́ка пі́сля л: пра́вильно «ло́жка». — In the word ло́жка there is no soft sign after л: correctly «ло́жка»."
+        }
+      ]
+    },
+    {
+      "id": "act-5-4",
+      "type": "true-false",
+      "title": "Пра́вда чи непра́вда — True or false",
+      "instruction": "Ви́значте, чи є тве́рдження пра́вильним. — Decide whether each statement is correct.",
+      "items": [
+        {
+          "statement": "М'яки́й знак (ь) ма́є свій вла́сний голосни́й звук. — The soft sign (ь) has its own vowel sound.",
+          "isTrue": false,
+          "explanation": "М'яки́й знак не познача́є жо́дного зву́ка; він ли́ше пом'я́кшує попере́дній при́голосний. — The soft sign represents no sound; it only softens the preceding consonant."
+        },
+        {
+          "statement": "Апо́строф ста́виться пе́ред я, ю, є, ї пі́сля губни́х б, п, в, м, ф та р при розді́льній вимо́ві. — The apostrophe is placed before я, ю, є, ї after labials б, п, в, м, ф and р with separate pronunciation.",
+          "isTrue": true,
+          "explanation": "Це ба́зове пра́вило вжива́ння украї́нського апо́строфа. — This is the basic rule of Ukrainian apostrophe usage."
+        },
+        {
+          "statement": "У сло́ві «буря́к» пи́шеться апо́строф. — In the word «буря́к» an apostrophe is written.",
+          "isTrue": false,
+          "explanation": "У сло́ві «буря́к» звук [р'] є м'яки́м, тому́ апо́строф не пи́шеться. — In «буря́к» the sound [р'] is soft, so no apostrophe is written."
+        },
+        {
+          "statement": "У сло́ві «цвях» нема́є апо́строфа. — In the word «цвях» there is no apostrophe.",
+          "isTrue": true,
+          "explanation": "Че́рез корене́вий збіг при́голосних цв апо́строф не пи́шеться. — Due to the root consonant cluster цв no apostrophe is written."
+        },
+        {
+          "statement": "Пі́сля апо́строфа лі́тери я, ю, є за́вжди познача́ють два зву́ки: [йа], [йу], [йе]. — After an apostrophe, letters я, ю, є always represent two sounds: [йа], [йу], [йе].",
+          "isTrue": true,
+          "explanation": "Апо́строф зберіга́є розді́льну вимо́ву та звук [й]. — The apostrophe preserves separate pronunciation and the [j] sound."
+        },
+        {
+          "statement": "В украї́нській мо́ві є тве́рдий знак (ъ). — In Ukrainian there is a hard sign (ъ).",
+          "isTrue": false,
+          "explanation": "В украї́нській мо́ві тве́рдого зна́ка нема́є; розді́льну вимо́ву передає́ виклю́чно апо́строф. — In Ukrainian there is no hard sign; separate pronunciation is conveyed exclusively by the apostrophe."
         }
       ]
     }
@@ -358,66 +319,46 @@ English support after the dialogue:
     {
       "id": "act-w5",
       "type": "fill-in",
-      "title": "Дода́й знак у нови́х слова́х — Add a sign in new words",
-      "instruction": "Обери́ ь, апо́строф або́ без зна́ка. — Choose ь, an apostrophe, or no sign.",
+      "title": "Додай знак у нових словах — Add a sign in new words",
+      "instruction": "Обери ь, апо́строф або без знака. — Choose ь, an apostrophe, or no sign.",
       "items": [
         {
           "sentence": "бур___ян",
           "answer": "'",
-          "options": [
-            "'",
-            "ь",
-            "без зна́ка — no sign"
-          ],
-          "explanation": "Апо́строф пи́шеться пі́сля твердо́го р пе́ред я: бур'я́н. — An apostrophe is written after hard р before я: бур'я́н."
+          "options": ["'", "ь", ""],
+          "explanation": "У сло́ві «бур'я́н» пи́шеться апо́строф пі́сля твердо́го [р] пе́ред я. — In the word бур'я́н an apostrophe is written after hard [r] before я."
         },
         {
           "sentence": "комп___ютер",
           "answer": "'",
-          "options": [
-            "'",
-            "ь",
-            "без зна́ка — no sign"
-          ],
-          "explanation": "Апо́строф пи́шеться пі́сля губно́го п пе́ред ю: комп'ю́тер. — An apostrophe is written after labial п before ю: комп'ю́тер."
+          "options": ["'", "ь", ""],
+          "explanation": "У сло́ві «комп'ю́тер» пи́шеться апо́строф пі́сля твердо́го губно́го [п] пе́ред ю. — In the word комп'ю́тер an apostrophe is written after hard labial [p] before ю."
         },
         {
           "sentence": "ім___я",
           "answer": "'",
-          "options": [
-            "'",
-            "ь",
-            "без зна́ка — no sign"
-          ],
-          "explanation": "Апо́строф пи́шеться пі́сля губно́го м пе́ред я: ім'я́. — An apostrophe is written after labial м before я: ім'я́."
+          "options": ["'", "ь", ""],
+          "explanation": "У сло́ві «ім'я́» пи́шеться апо́строф пі́сля губно́го [м] пе́ред я. — In the word ім'я́ an apostrophe is written after labial [m] before я."
         },
         {
-          "sentence": "У сло́ві мален_кий потрі́бен ___ . — In the word \"мален_кий\", […] is needed.",
+          "sentence": "У слові мален_кий потрібен ___ . — In the word \"мален_кий\", […] is needed.",
           "answer": "ь",
-          "options": [
-            "ь",
-            "'",
-            "без зна́ка — no sign"
-          ],
-          "explanation": "М'яки́й знак пом'я́кшує при́голосний н: мале́нький. — The soft sign softens the consonant н: мале́нький."
+          "options": ["ь", "'", ""],
+          "explanation": "У сло́ві «мале́нький» пи́шеться м'яки́й знак пі́сля н пе́ред к. — In the word мале́нький a soft sign is written after н before к."
         },
         {
-          "sentence": "У сло́ві цвях пра́вильний ви́бір — ___ . — In the word \"цвях\", the correct choice is […].",
-          "answer": "без зна́ка — no sign",
-          "options": [
-            "без зна́ка — no sign",
-            "'",
-            "ь"
-          ],
-          "explanation": "У сло́ві цвях збіг при́голосних цв пе́ред я пи́шеться без зна́ка. — In the word цвях the consonant cluster цв before я is written without a sign."
+          "sentence": "У слові цвях правильний вибір — ___ . — In the word \"цвях\", the correct choice is […].",
+          "answer": "",
+          "options": ["", "'", "ь"],
+          "explanation": "У сло́ві «цвях» апо́строф не пи́шеться че́рез корене́вий збіг цв. — In the word цвях no apostrophe is written due to the root consonant cluster цв."
         }
       ]
     },
     {
       "id": "act-w6",
       "type": "quiz",
-      "title": "Пра́вильна фо́рма — Correct form",
-      "instruction": "Обери́ пра́вильно напи́сане сло́во. — Choose the correctly spelled word.",
+      "title": "Правильна форма — Correct form",
+      "instruction": "Обери правильно написане слово. — Choose the correctly spelled word.",
       "items": [
         {
           "prompt": "Сім'я́ — яка́ фо́рма пра́вильна? — Сім'я́ — which form is correct?",
@@ -431,7 +372,7 @@ English support after the dialogue:
               "correct": false
             }
           ],
-          "explanation": "Сім'я́ потребу́є апо́строфа. — Сім'я́ requires an apostrophe."
+          "explanation": "Сім'я́ потребує апо́строфа після губного [м] перед я. — Сім'я́ requires an apostrophe after labial [m] before я."
         },
         {
           "prompt": "День — яка́ фо́рма пра́вильна? — День — which form is correct?",
@@ -445,7 +386,7 @@ English support after the dialogue:
               "correct": true
             }
           ],
-          "explanation": "День потребу́є м'яко́го зна́ка. — День requires a soft sign."
+          "explanation": "День потребує м'якого знака для позначення м'якості [н']. — День requires a soft sign to indicate the softness of [n']."
         },
         {
           "prompt": "Сло́во без апо́строфа? — Which word is without an apostrophe?",
@@ -459,263 +400,132 @@ English support after the dialogue:
               "correct": true
             }
           ],
-          "explanation": "У сло́ві свя́то нема́є апо́строфа. — In the word свя́то there is no apostrophe."
+          "explanation": "У слові свя́то немає апо́строфа через збіг приголосних св у корені. — In the word свя́то there is no apostrophe due to the consonant cluster св in the root."
         }
       ]
     },
     {
       "id": "act-w7",
       "type": "odd-one-out",
-      "title": "За́йве за зна́ком — Odd sign out",
-      "instruction": "Обери́ сло́во, яке́ не ма́є тако́го са́мого зна́ка, як і́нші. — Choose the word that does not have the same sign as the others.",
+      "title": "Зайве за знаком — Odd one out by sign",
+      "instruction": "Обери слово, яке не має такого самого знака, як інші. — Choose the word that does not have the same sign as the others.",
       "items": [
         {
-          "words": [
-            "сім'я́",
-            "м'я́со",
-            "п'ять",
-            "буря́к"
-          ],
+          "words": ["сім'я́", "м'я́со", "п'ять", "буря́к"],
           "answer": "буря́к",
-          "explanation": "Буря́к без апо́строфа; і́нші слова́ ма́ють апо́строф. — Буря́к is without an apostrophe; the other words have an apostrophe."
+          "explanation": "Буря́к без апо́строфа; інші слова мають апо́строф. — Буря́к is without an apostrophe; other words have an apostrophe."
         },
         {
-          "words": [
-            "день",
-            "кінь",
-            "сіль",
-            "свя́то"
-          ],
+          "words": ["день", "кінь", "сіль", "свя́то"],
           "answer": "свя́то",
-          "explanation": "Свя́то без ь; і́нші слова́ ма́ють м'яки́й знак. — Свя́то is without ь; the other words have a soft sign."
+          "explanation": "Свя́то без ь; інші слова мають м'який знак. — Свя́то has no ь; other words have a soft sign."
         },
         {
-          "words": [
-            "буря́к",
-            "свя́то",
-            "цвях",
-            "бур'я́н"
-          ],
+          "words": ["буря́к", "свя́то", "цвях", "бур'я́н"],
           "answer": "бур'я́н",
-          "explanation": "Бур'я́н ма́є апо́строф; і́нші слова́ тут без зна́ка. — Бур'я́н has an apostrophe; the other words here have no sign."
+          "explanation": "Бур'я́н має апо́строф; інші слова тут без знака. — Бур'я́н has an apostrophe; other words here have no sign."
         }
       ]
     },
     {
-      "id": "act-506",
+      "id": "act-w8",
+      "type": "group-sort",
+      "title": "Сортува́ння за зна́ками — Sorting by signs",
+      "instruction": "Розподілі́ть слова́ на три гру́пи: з м'яки́м зна́ком, з апо́строфом та без зна́ка. — Sort the words into three groups: with soft sign, with apostrophe, and without sign.",
+      "groups": [
+        {
+          "label": "Є м'яки́й знак (ь) — Has soft sign",
+          "items": ["день", "кінь", "сіль", "вчи́тель"]
+        },
+        {
+          "label": "Є апо́строф (') — Has apostrophe",
+          "items": ["сім'я́", "м'я́со", "п'ять", "комп'ю́тер"]
+        },
+        {
+          "label": "Нема́є зна́ка — No sign",
+          "items": ["буря́к", "свя́то", "цвях", "ло́жка"]
+        }
+      ]
+    },
+    {
+      "id": "act-w9",
+      "type": "error-correction",
+      "title": "Знайди́ та ви́прав по́милку — Find and fix the mistake",
+      "instruction": "Знайді́ть помилко́ве сло́во в ре́ченні та ви́правте його́. — Find the misspelled word in the sentence and fix it.",
+      "items": [
+        {
+          "sentence": "Моя́ дру́жна сімя живе́ у Ки́єві.",
+          "error": "сімя",
+          "correction": "сім'я́",
+          "options": ["сім'я́", "сімья", "сі́м'я"],
+          "explanation": "У сло́ві «сім'я́» потрі́бен апо́строф пі́сля губно́го [м] пе́ред я. — In the word сім'я́ an apostrophe is needed after the labial [m] before я."
+        },
+        {
+          "sentence": "Сього́дні ду́же те́плий ден.",
+          "error": "ден",
+          "correction": "день",
+          "options": ["день", "дєнь", "дінь"],
+          "explanation": "Сло́во «день» пи́шеться з м'яки́м зна́ком на кінці́. — The word день is written with a soft sign at the end."
+        },
+        {
+          "sentence": "У руці́ рі́вно пять па́льців.",
+          "error": "пять",
+          "correction": "п'ять",
+          "options": ["п'ять", "пьять", "піть"],
+          "explanation": "У сло́ві «п'ять» пі́сля губно́го [п] пе́ред я пи́шеться апо́строф. — In the word п'ять an apostrophe is written after labial [p] before я."
+        },
+        {
+          "sentence": "На по́лі росте́ зеле́ний бурян.",
+          "error": "бурян",
+          "correction": "бур'я́н",
+          "options": ["бур'я́н", "бурья́н", "бу́р'ян"],
+          "explanation": "У сло́ві «бур'я́н» потрі́бен апо́строф пі́сля твердо́го [р] пе́ред я. — In the word бур'я́н an apostrophe is needed after hard [r] before я."
+        },
+        {
+          "sentence": "Сього́дні у мі́сті вели́ке св'ято.",
+          "error": "св'ято",
+          "correction": "свя́то",
+          "options": ["свя́то", "сьвя́то", "сві́то"],
+          "explanation": "У сло́ві «свя́то» нема́є апо́строфа че́рез збіг при́голосних св у ко́рені. — In the word свя́то there is no apostrophe due to the consonant cluster св in the root."
+        },
+        {
+          "sentence": "На столі́ лежи́ть вели́ка льожка.",
+          "error": "льожка",
+          "correction": "ло́жка",
+          "options": ["ло́жка", "ложка́", "лі́жка"],
+          "explanation": "Сло́во «ло́жка» не ма́є м'яко́го зна́ка пі́сля л. — The word ло́жка has no soft sign after л."
+        }
+      ]
+    },
+    {
+      "id": "act-w10",
       "type": "unjumble",
-      "title": "Складі́ть слова́ — Unjumble: Words with special signs",
-      "instruction": "Складі́ть пра́вильні украї́нські слова́ з по́даних лі́тер. — Form correct Ukrainian words from the given letters.",
+      "title": "Складі́ть ре́чення — Unjumble the sentences",
+      "instruction": "Розста́вте слова́ у пра́вильному поря́дку, щоб утвори́ти ре́чення. — Arrange the words in the correct order to form a sentence.",
       "items": [
         {
-          "words": [
-            "д",
-            "е",
-            "н",
-            "ь"
-          ],
-          "answer": "день"
+          "jumbled": "Сього́дні / у / мі́сті / вели́ке / свя́то.",
+          "answer": "Сього́дні у мі́сті вели́ке свя́то."
         },
         {
-          "words": [
-            "к",
-            "і",
-            "н",
-            "ь"
-          ],
-          "answer": "кінь"
+          "jumbled": "Моя́ / дру́жна / сім'я́ / живе́ / у / Ки́єві.",
+          "answer": "Моя́ дру́жна сім'я́ живе́ у Ки́єві."
         },
         {
-          "words": [
-            "с",
-            "і",
-            "л",
-            "ь"
-          ],
-          "answer": "сіль"
+          "jumbled": "Наш / вчи́тель / пи́ше / пра́вило / на / до́шці.",
+          "answer": "Наш вчи́тель пи́ше пра́вило на до́шці."
         },
         {
-          "words": [
-            "б",
-            "у",
-            "р",
-            "я",
-            "к"
-          ],
-          "answer": "буря́к"
+          "jumbled": "Мар'я́на / купу́є / сві́же / м'я́со / та / буря́к.",
+          "answer": "Мар'я́на купу́є сві́же м'я́со та буря́к."
         },
         {
-          "words": [
-            "с",
-            "в",
-            "я",
-            "т",
-            "о"
-          ],
-          "answer": "свя́то"
+          "jumbled": "На / столі́ / стої́ть / нови́й / комп'ю́тер.",
+          "answer": "На столі́ стої́ть нови́й комп'ю́тер."
         },
         {
-          "words": [
-            "ц",
-            "в",
-            "я",
-            "х"
-          ],
-          "answer": "цвях"
-        }
-      ]
-    },
-    {
-      "id": "act-507",
-      "type": "true-false",
-      "title": "Підсумко́ві те́зи мо́дуля — Final module statements",
-      "instruction": "Ви́значте, чи пра́вильне ко́жне тве́рдження про украї́нські зна́ки. — Determine whether each statement about Ukrainian signs is true or false.",
-      "items": [
-        {
-          "statement": "Знак Ь ніко́ли не відрива́ється від попере́дньої лі́тери при перено́сі. — The soft sign Ь is never separated from the preceding letter during hyphenation.",
-          "correct": true,
-          "explanation": "Знак Ь за́вжди залиша́ється з попере́днім при́голосним: паль-ці. — The soft sign Ь always stays with the preceding consonant: паль-ці."
-        },
-        {
-          "statement": "Апо́строф при перено́сі за́вжди залиша́ється з попере́дньою лі́терою. — The apostrophe always stays with the preceding letter during hyphenation.",
-          "correct": true,
-          "explanation": "Апо́строф не перено́ситься на насту́пний рядо́к: Мар'-яна, бур'-ян. — The apostrophe is never moved alone to the next line: Мар'-яна, бур'-ян."
-        },
-        {
-          "statement": "Мо́жна залиша́ти одну́ лі́теру на рядку́ при перено́сі сло́ва. — You may leave a single letter on a line when hyphenating a word.",
-          "correct": false,
-          "explanation": "Одну́ лі́теру ніко́ли не залиша́ють і не перево́дять на і́нший рядо́к. — A single letter is never left alone or carried alone to another line."
-        },
-        {
-          "statement": "М'яки́й знак (ь) ма́є вла́сний голосни́й звук. — The soft sign (ь) has its own vowel sound.",
-          "correct": false,
-          "explanation": "М'яки́й знак не ма́є вла́сного зву́ка; він лише́ пом'я́кшує попере́дній при́голосний. — The soft sign has no sound of its own; it only softens the preceding consonant."
-        },
-        {
-          "statement": "Апо́строф вка́зує, що попере́дній при́голосний залиша́ється тверди́м. — The apostrophe indicates that the preceding consonant remains hard.",
-          "correct": true,
-          "explanation": "Апо́строф розділя́є зву́ки: при́голосний звучи́ть тве́рдо, а по́тім чу́ти [й] + голосни́й. — The apostrophe separates sounds: the consonant sounds hard, followed by [j] + vowel."
-        },
-        {
-          "statement": "У сло́ві «свя́то» пи́шеться апо́строф. — An apostrophe is written in the word «свя́то».",
-          "correct": false,
-          "explanation": "У сло́ві «свя́то» апо́строфа нема́є, бо пе́ред [в] стої́ть [с]. — There is no apostrophe in «свя́то» because [с] precedes [в]."
-        }
-      ]
-    },
-    {
-      "id": "act-508",
-      "type": "quiz",
-      "title": "Си́нтез пра́вил перено́су та зна́ків — Synthesis Quiz",
-      "instruction": "Переві́рте знання́ особли́вих зна́ків та перено́су слів. — Test your knowledge of special signs and word hyphenation.",
-      "items": [
-        {
-          "prompt": "Чи мо́жна відрива́ти апо́строф від попере́дньої бу́кви при перено́сі? — Can the apostrophe be separated from the preceding letter during hyphenation?",
-          "options": [
-            {
-              "text": "Ні, не мо́жна. — No, you cannot.",
-              "correct": true
-            },
-            {
-              "text": "Так, за́вжди мо́жна. — Yes, you always can.",
-              "correct": false
-            },
-            {
-              "text": "Лише́ у до́вгих слова́х. — Only in long words.",
-              "correct": false
-            }
-          ],
-          "explanation": "Апо́строф за́вжди залиша́ється з попере́дньою лі́терою: Мар'-яна. — The apostrophe always stays with the preceding letter: Мар'-яна."
-        },
-        {
-          "prompt": "Чи мо́жна відрива́ти м'яки́й знак від попере́дньої бу́кви при перено́сі? — Can the soft sign be separated from the preceding letter during hyphenation?",
-          "options": [
-            {
-              "text": "Ні, не мо́жна. — No, you cannot.",
-              "correct": true
-            },
-            {
-              "text": "Так, за́вжди мо́жна. — Yes, you always can.",
-              "correct": false
-            },
-            {
-              "text": "Лише́ на поча́тку рядка́. — Only at the beginning of a line.",
-              "correct": false
-            }
-          ],
-          "explanation": "М'яки́й знак за́вжди залиша́ється з попере́дньою лі́терою: паль-ці. — The soft sign always stays with the preceding letter: паль-ці."
-        },
-        {
-          "prompt": "Як пра́вильно перенести́ сло́во «па́льці»? — What is the correct hyphenation for «па́льці»?",
-          "options": [
-            {
-              "text": "паль-ці",
-              "correct": true
-            },
-            {
-              "text": "пал-ьці",
-              "correct": false
-            },
-            {
-              "text": "па-льці",
-              "correct": false
-            }
-          ],
-          "explanation": "М'яки́й знак не відрива́ється від лі́тери л: паль-ці. — The soft sign is not separated from the letter л: паль-ці."
-        },
-        {
-          "prompt": "Як пра́вильно перенести́ сло́во «Мар'я́на»? — What is the correct hyphenation for «Мар'я́на»?",
-          "options": [
-            {
-              "text": "Мар'-яна",
-              "correct": true
-            },
-            {
-              "text": "Мар-'яна",
-              "correct": false
-            },
-            {
-              "text": "Ма-р'яна",
-              "correct": false
-            }
-          ],
-          "explanation": "Апо́строф не відрива́ється від лі́тери р: Мар'-яна. — The apostrophe is not separated from the letter р: Мар'-яна."
-        },
-        {
-          "prompt": "Як пра́вильно перенести́ сло́во «бур'я́н»? — What is the correct hyphenation for «бур'я́н»?",
-          "options": [
-            {
-              "text": "бур'-ян",
-              "correct": true
-            },
-            {
-              "text": "бур-'ян",
-              "correct": false
-            },
-            {
-              "text": "бу-р'ян",
-              "correct": false
-            }
-          ],
-          "explanation": "Апо́строф залиша́ється з попере́дньою лі́терою р: бур'-ян. — The apostrophe stays with the preceding letter р: бур'-ян."
-        },
-        {
-          "prompt": "Як пра́вильно перенести́ сло́во «дерев'я́ний»? — What is the correct hyphenation for «дерев'я́ний»?",
-          "options": [
-            {
-              "text": "дере-в'яний",
-              "correct": true
-            },
-            {
-              "text": "дерев-'яний",
-              "correct": false
-            },
-            {
-              "text": "де-рев'яний",
-              "correct": false
-            }
-          ],
-          "explanation": "Безпе́чна моде́ль перено́су — дере-в'яний. — The safe hyphenation model is дере-в'яний."
+          "jumbled": "У / руці́ / є / п'ять / па́льців.",
+          "answer": "У руці́ є п'ять па́льців."
         }
       ]
     }
@@ -725,22 +535,130 @@ English support after the dialogue:
 ```json file=vocabulary.yaml
 [
   {
-    "lemma": "Мар'я́на",
-    "translation": "Mariana",
-    "pos": "proper noun",
-    "usage": "Мар'я́на."
+    "lemma": "м'яки́й знак",
+    "translation": "soft sign",
+    "pos": "noun phrase",
+    "usage": "Ь — м'яки́й знак."
   },
   {
-    "lemma": "дерев'я́ний",
-    "translation": "wooden",
-    "pos": "adjective",
-    "usage": "Дерев'я́ний стіл."
-  },
-  {
-    "lemma": "па́льці",
-    "translation": "fingers",
+    "lemma": "апо́строф",
+    "translation": "apostrophe",
     "pos": "noun",
-    "usage": "Па́льці."
+    "usage": "У сло́ві «сім'я́» є апо́строф."
+  },
+  {
+    "lemma": "знак",
+    "translation": "sign",
+    "pos": "noun",
+    "usage": "Це знак."
+  },
+  {
+    "lemma": "м'яки́й",
+    "translation": "soft",
+    "pos": "adjective",
+    "usage": "Це м'яки́й звук."
+  },
+  {
+    "lemma": "тверди́й",
+    "translation": "hard",
+    "pos": "adjective",
+    "usage": "Це тверди́й звук."
+  },
+  {
+    "lemma": "день",
+    "translation": "day",
+    "pos": "noun",
+    "usage": "День."
+  },
+  {
+    "lemma": "кінь",
+    "translation": "horse",
+    "pos": "noun",
+    "usage": "Кінь."
+  },
+  {
+    "lemma": "сіль",
+    "translation": "salt",
+    "pos": "noun",
+    "usage": "Сіль."
+  },
+  {
+    "lemma": "вчи́тель",
+    "translation": "teacher",
+    "pos": "noun",
+    "usage": "Вчи́тель."
+  },
+  {
+    "lemma": "сім'я́",
+    "translation": "family",
+    "pos": "noun",
+    "usage": "Сім'я́."
+  },
+  {
+    "lemma": "м'я́со",
+    "translation": "meat",
+    "pos": "noun",
+    "usage": "М'я́со."
+  },
+  {
+    "lemma": "п'ять",
+    "translation": "five",
+    "pos": "numeral",
+    "usage": "П'ять."
+  },
+  {
+    "lemma": "де́в'ять",
+    "translation": "nine",
+    "pos": "numeral",
+    "usage": "Де́в'ять."
+  },
+  {
+    "lemma": "ім'я́",
+    "translation": "name",
+    "pos": "noun",
+    "usage": "Ім'я́."
+  },
+  {
+    "lemma": "здоро́в'я",
+    "translation": "health",
+    "pos": "noun",
+    "usage": "Здоро́в'я."
+  },
+  {
+    "lemma": "комп'ю́тер",
+    "translation": "computer",
+    "pos": "noun",
+    "usage": "Комп'ю́тер."
+  },
+  {
+    "lemma": "буря́к",
+    "translation": "beetroot",
+    "pos": "noun",
+    "usage": "Буря́к."
+  },
+  {
+    "lemma": "бур'я́н",
+    "translation": "weed",
+    "pos": "noun",
+    "usage": "Бур'я́н."
+  },
+  {
+    "lemma": "свя́то",
+    "translation": "holiday",
+    "pos": "noun",
+    "usage": "Свя́то."
+  },
+  {
+    "lemma": "цвях",
+    "translation": "nail",
+    "pos": "noun",
+    "usage": "Цвях."
+  },
+  {
+    "lemma": "мале́нький",
+    "translation": "small",
+    "pos": "adjective",
+    "usage": "Мале́нький знак."
   },
   {
     "lemma": "сього́дні",
@@ -755,90 +673,58 @@ English support after the dialogue:
     "usage": "Ло́жка."
   },
   {
-    "lemma": "день",
-    "translation": "day",
+    "lemma": "па́льці",
+    "translation": "fingers",
     "pos": "noun",
-    "usage": "День."
+    "usage": "Па́льці."
   },
   {
-    "lemma": "сім'я́",
-    "translation": "family",
-    "pos": "noun",
-    "usage": "Сім'я́."
+    "lemma": "зли́то",
+    "translation": "together / smoothly",
+    "pos": "adverb",
+    "usage": "Чита́й зли́то."
   },
   {
-    "lemma": "апо́строф",
-    "translation": "apostrophe",
-    "pos": "noun",
-    "usage": "У сло́ві «сім'я́» є апо́строф."
-  },
-  {
-    "lemma": "м'яки́й знак",
-    "translation": "soft sign",
-    "pos": "noun phrase",
-    "usage": "Ь - м'яки́й знак."
-  },
-  {
-    "lemma": "знак",
-    "translation": "sign",
-    "pos": "noun",
-    "usage": "Це знак."
-  },
-  {
-    "lemma": "мале́нький",
-    "translation": "small",
-    "pos": "adjective",
-    "usage": "Мале́нький знак."
-  },
-  {
-    "lemma": "вчи́тель",
-    "translation": "teacher",
-    "pos": "noun",
-    "usage": "Вчи́тель."
-  },
-  {
-    "lemma": "свя́то",
-    "translation": "holiday",
-    "pos": "noun",
-    "usage": "Свя́то."
-  },
-  {
-    "lemma": "бур'я́н",
-    "translation": "weed",
-    "pos": "noun",
-    "usage": "Бур'я́н."
+    "lemma": "розді́льно",
+    "translation": "separately",
+    "pos": "adverb",
+    "usage": "Чита́й розді́льно."
   }
 ]
 ```
 ```json file=resources.yaml
 [
   {
-    "title": "Украї́нська мо́ва. Буква́р. 1 клас",
-    "author": "Большако́ва І. О., При́стинська М. С.",
-    "year": 2018,
-    "publisher": "Ра́нок",
-    "url": "https://pidruchnyk.com.ua/1179-bukvar-1-klas-bolshakova.html"
+    "title": "Український правопис (2019), § 7 (Апостроф) та § 26 (Вживання м'якого знака)",
+    "role": "reference",
+    "url": "https://2019.pravopys.net/sections/7/",
+    "notes": "Офіційні правила правопису для вживання апострофа та знака м'якшення (ь)."
   },
   {
-    "title": "Украї́нська мо́ва. Буква́р. 1 клас",
-    "author": "Захарійчук М. Д.",
-    "year": 2018,
-    "publisher": "Гра́мота",
-    "url": "https://pidruchnyk.com.ua/1181-bukvar-1-klas-zahariychuk.html"
+    "title": "Большакова І. О., Пристинська М. С. — Українська мова. Буквар. 1 клас (2019), с. 48, 57",
+    "role": "textbook",
+    "source": "2-klas-ukrmova-bolshakova-2019-1",
+    "chunk_id": "2-klas-ukrmova-bolshakova-2019-1_s0057",
+    "notes": "Пояснення ролі апострофа та знака м'якшення для початкових класів НУШ."
   },
   {
-    "title": "Украї́нська мо́ва. Буква́р. 1 клас",
-    "author": "Вашуленко М. С., Вашуленко О. В.",
-    "year": 2018,
-    "publisher": "Осві́та",
-    "url": "https://pidruchnyk.com.ua/1180-bukvar-1-klas-vashulenko.html"
+    "title": "Авраменко О. М. — Українська мова. 5 клас (2022), § 57–58, с. 131",
+    "role": "textbook",
+    "source": "5-klas-ukrmova-avramenko-2022",
+    "chunk_id": "5-klas-ukrmova-avramenko-2022_s0133",
+    "notes": "Фонетичні моделі буряк / бур'ян та правила вживання апострофа."
   },
   {
-    "title": "Украї́нська мо́ва. 5 клас",
-    "author": "Авра́менко О. М.",
-    "year": 2018,
-    "publisher": "Гра́мота",
-    "url": "https://pidruchnyk.com.ua/1126-ukrainska-mova-5-klas-avramenko.html"
+    "title": "Захарійчук М. Д. — Українська мова. Буквар. 1 клас (НУШ 2025), с. 97",
+    "role": "textbook",
+    "source": "Захарійчук, 1 клас (НУШ 2025), с. 97",
+    "notes": "Базове правило апострофа після губних перед я, ю, є, ї."
+  },
+  {
+    "title": "Anna Ohoiko — Ukrainian Lessons Podcast: Soft Sign and Apostrophe",
+    "role": "audio",
+    "url": "https://www.ukrainianlessons.com/",
+    "notes": "ULP audio contrasts: hard vs soft consonants and apostrophe separation."
   }
 ]
 ```

@@ -2,42 +2,42 @@
   "dimensions": {
     "pedagogical": {
       "score": 4.0,
-      "evidence": "Closure and bilingual dialogue support pass, but act-504 precedes its dialogue, п'ять defeats exclusive sign grouping, and the summary incorrectly assigns pronunciation to the apostrophe.",
-      "verdict": "REVISE",
+      "evidence": "Required closure and dialogue translations appear, but mapped hyphenation instruction and preserved act-5 are missing, while added vocabulary lacks demonstrated cumulative introduction.",
+      "verdict": "REJECT",
       "evidence_quotes": [
-        "You pronounce the apostrophe with a distinct [й] sound."
+        "Today we bring everything together into a unified, confident reading and spelling routine."
       ]
     },
     "naturalness": {
       "score": 5.0,
-      "evidence": "Attempted VESUM, government, and orthography lookups were blocked by approval policy, leaving gender agreement, vocatives, and example usage unverified.",
-      "verdict": "REVISE",
+      "evidence": "Repetitive example phrasing needs revision; attempted VESUM and dictionary calls were blocked by approval policy, leaving gender, government, and authentic usage unverified.",
+      "verdict": "REJECT",
       "evidence_quotes": [
-        "Дя́кую за ціка́вий уро́к. *(Thank you for the interesting lesson.)*"
+        "Моя́ дру́жна сім___я живе́ дру́жно. — My family lives in harmony."
       ]
     },
     "decolonization": {
       "score": 6.0,
-      "evidence": "Ukrainian-centered framing avoids explicit Russian mediation, but blocked sources calls prevent passing the required authenticity audit.",
+      "evidence": "Ukrainian framing is present, but blocked sources calls prevent certifying the required Ukrainian-source grounding or freedom from calques.",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "Ask a native Ukrainian teacher or tutor to listen to a short read-aloud:"
+        "In Ukrainian, writing is remarkably consistent with pronunciation once you understand the instructions encoded by **ь** and **'**."
       ]
     },
     "engagement": {
-      "score": 8.0,
-      "evidence": "Notebook practice, varied activities, and focused tutor feedback give learners concrete ways to rehearse and assess reading.",
-      "verdict": "PASS",
+      "score": 6.0,
+      "evidence": "Activity formats vary, but every unjumble is already ordered and the promised everyday-plans dialogue instead rehearses spelling rules.",
+      "verdict": "REVISE",
       "evidence_quotes": [
-        "Before moving on, choose one word from each contrast and do a final sign check:"
+        "Listen to this dialogue between Taras and Mariana as they review their study materials and discuss everyday plans in Kyiv:"
       ]
     },
     "tone": {
-      "score": 6.0,
-      "evidence": "No named narrator appears, but claims of comprehensive mastery overstate what this beginner lesson establishes.",
+      "score": 7.0,
+      "evidence": "The voice is encouraging and has no named narrator, but technical abstractions and confident mastery claims exceed this beginner lesson's demonstrated outcomes.",
       "verdict": "REVISE",
       "evidence_quotes": [
-        "You now possess a comprehensive command of the complete 33-letter Ukrainian alphabet:"
+        "By completing this module, you have built foundational phonological and orthographic literacy in Ukrainian:"
       ]
     }
   },
@@ -48,6 +48,7 @@
       "pedagogical",
       "naturalness",
       "decolonization",
+      "engagement",
       "tone"
     ],
     "rejected_dims": [
@@ -58,6 +59,7 @@
       "pedagogical",
       "naturalness",
       "decolonization",
+      "engagement",
       "tone"
     ],
     "min_score": 4.0,

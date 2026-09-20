@@ -1,8 +1,8 @@
 # Апо́строф і три ключові́ контра́сти: буря́к, бур'я́н, свя́то · The Apostrophe and Three Key Contrasts: буря́к, бур'я́н, свя́то
 
-In this lesson, we study the most distinctive punctuation mark in Ukrainian orthography: the **апо́строф** — apostrophe. Unlike alphabet letters, the apostrophe has no sound of its own, but it plays a crucial role in shaping pronunciation: it forbids softening of the preceding consonant and instructs you to pronounce the following iotated vowel with a full, crisp [j] glide.
+У попере́дніх уро́ках ви дізна́лися, як м'яки́й знак (**ь**) пом'я́кшує при́голосні (**день**, **кінь**, **сіль**), а йото́вані лі́тери (**я, ю, є**) пом'я́кшують звук пе́ред собо́ю (**зли́то**). Тепе́р ми вивча́ємо і́нший важли́вий знак: украї́нський апо́строф (**апо́строф**).
 
-In addition to the basic rules, we master three classic phonetic contrasts that often challenge beginners: why we write **буря́к** — beetroot without a sign, **бур'я́н** — weed with an apostrophe, and **свя́то** — holiday or **цвях** — nail with no sign at all.
+In Ukrainian, the apostrophe is a strict phonetic instruction: keep the preceding consonant hard (**тверди́й**) and pronounce the following iotated vowel with a clear, separate **[й]** glide (**розді́льно**). Today's focus stabilizes three foundational contrasts: **буря́к**, **бур'я́н**, and **свя́то**.
 
 ## Апо́строф
 
@@ -13,7 +13,7 @@ previous consonant hard and lets the next **я, ю, є, ї** start with **[й]**
 
 The first A1 model is:
 
-**б, п, в, м, ф, р + апо́строф + я, ю, є, ї** — labials/р + apostrophe before iotated vowels
+**б, п, в, м, ф, р + апо́строф + я, ю, є, ї**
 
 Start with these words:
 
@@ -33,41 +33,38 @@ For now, do not build a large system from loanwords. **Комп'ю́тер** is 
 because learners know the object, but the lesson target is the apostrophe
 itself.
 
-In Ukrainian schools, teachers often help children remember the labial consonants using the friendly mnemonic phrase «Ма́впа Буф» (the monkey Boof), representing the consonants **м, в, п, б, ф**, to which the dental sonant **р** is added. After these six hard consonants before **я, ю, є, ї**, an apostrophe is always written when you hear a distinct initial [j] sound.
+As formulated in standard Ukrainian textbooks (Zabolotnyi, 5th grade, p. 135: «Апо́строф пи́шемо пе́ред я, ю, є, ї: пі́сля букв б, п, в, м, ф та пі́сля р, що познача́є тверди́й звук»), the apostrophe reliably signals that labial consonants (**б, п, в, м, ф**) do not soften before iotated vowels. The continuous stream of air carries straight from the firm consonant into **[й]**.
 
-<!-- INJECT_ACTIVITY: act-1 -->
-
-Compare the pronunciation of words read separately (**розді́льно** — separately) versus words read smoothly together (**зли́то** — together). When an apostrophe is present, we pronounce the consonant hard (**тверди́й** — hard) and immediately follow with [j] + vowel, without blending or softening (**м'яки́й** — soft):
-- **м'яч** — ball: pronounce [м] hard, then [йа].
-- **м'я́та** — mint: pronounce [м] hard, then [йа].
-- **здоро́в'я** — health: the labial [в] remains hard before [йа].
-- **ім'я́** — name: pronounce hard [м] followed by clear [йа].
-
-Notice that even for a **мале́нький** (small) **знак** (sign), its presence completely changes the syllable dynamic.
+Notice how this applies to everyday items, numbers, and descriptions:
+- **сім'я́** — family (hard **м** + **[йа]**)
+- **м'я́со** — meat (hard **м** + **[йа]**)
+- **п'ять** — five (hard **п** + **[йа]**)
+- **де́в'ять** — nine (hard **в** + **[йа]**)
+- **ім'я́** — name (hard **м** + **[йа]**)
+- **здоро́в'я** — health (hard **в** + **[йа]**)
+- **дерев'я́ний** — wooden (hard **в** + **[йа]**)
 
 <!-- INJECT_ACTIVITY: act-3 -->
 
-Notice how these words and sounds appear in everyday Ukrainian dialogue when talking with friends about family and preparing for a holiday:
+In conversational practice, listen to how speakers pronounce these words naturally:
 
 > **Тара́с:** До́брий день, Мар'я́но! Як твоє́ здоро́в'я? *(Good day, Mariana! How is your health?)*
-> **Мар'я́на:** До́брий день, Тара́се! Дя́кую, все до́бре. *(Good day, Taras! Thank you, all is well.)*
-> **Тара́с:** Чудо́во! Що ти готу́єш на свя́то? *(Wonderful! What are you preparing for the holiday?)*
-> **Мар'я́на:** Готу́ю борщ: купу́ю сві́же м'я́со та черво́ний буря́к. *(I am making borscht: I am buying fresh meat and red beetroot.)*
-> **Тара́с:** Смачно́го вам і га́рного свя́та! *(Enjoy your meal and have a great holiday!)*
-> **Мар'я́на:** Дя́кую щи́ро, Тара́се! *(Thank you sincerely, Taras!)*
+> **Мар'я́на:** До́брий день, Тара́се! Дя́кую, все чудо́во. Моя́ сім'я́ сього́дні святку́є. *(Good day, Taras! Thank you, everything is great. My family is celebrating today.)*
+> **Тара́с:** Чудо́во! Що ви купу́єте на свя́то? *(Wonderful! What are you buying for the holiday?)*
+> **Мар'я́на:** Ми купу́ємо сві́же м'я́со, хліб і о́вочі. *(We are buying fresh meat, bread, and vegetables.)*
+> **Тара́с:** А де тві́й комп'ю́тер? *(And where is your computer?)*
+> **Мар'я́на:** Мій комп'ю́тер стої́ть там, де вели́кий дерев'я́ний стіл. *(My computer is sitting where the large wooden table is.)*
 
-English support after the dialogue:
-
-| Ukrainian | English |
+| Украї́нська ре́пліка | English breakdown |
 | --- | --- |
-| **До́брий день, Мар'я́но!** | Good day, Mariana! |
-| **Як твоє́ здоро́в'я?** | How is your health? |
-| **До́брий день, Тара́се!** | Good day, Taras! |
-| **Дя́кую, все до́бре.** | Thank you, all is well. |
-| **Чудо́во! Що ти готу́єш на свя́то?** | Wonderful! What are you preparing for the holiday? |
-| **Готу́ю борщ: купу́ю сві́же м'я́со та черво́ний буря́к.** | I am making borscht: I am buying fresh meat and red beetroot. |
-| **Смачно́го вам і га́рного свя́та!** | Enjoy your meal and have a great holiday! |
-| **Дя́кую щи́ро, Тара́се!** | Thank you sincerely, Taras! |
+| **До́брий день, Мар'я́но! Як твоє́ здоро́в'я?** | Good day, Mariana! How is your health? |
+| **До́брий день, Тара́се! Дя́кую, все чудо́во. Моя́ сім'я́ сього́дні святку́є.** | Good day, Taras! Thank you, everything is great. My family is celebrating today. |
+| **Чудо́во! Що ви купу́єте на свя́то?** | Wonderful! What are you buying for the holiday? |
+| **Ми купу́ємо сві́же м'я́со, хліб і о́вочі.** | We are buying fresh meat, bread, and vegetables. |
+| **А де тві́й комп'ю́тер?** | And where is your computer? |
+| **Мій комп'ю́тер стої́ть там, де вели́кий дерев'я́ний стіл.** | My computer is sitting where the large wooden table is. |
+
+<!-- INJECT_ACTIVITY: act-401 -->
 
 ## Контра́ст і па́стки
 
@@ -102,16 +99,45 @@ Common learner traps:
 | inventing a soft-sign version of **ло́жка** | do not invent a soft sign or soft **л** |
 | treating apostrophe as a hard stop | keep airflow and pronounce **й** |
 
-Stay inside Ukrainian for this lesson. The apostrophe and soft sign already
-have Ukrainian jobs, so you do not need another alphabet or another sign to
-explain them.
+To master these patterns, analyze each scenario carefully:
+1. **Зли́та вимо́ва — Blended softness:** In **буря́к**, the consonant **р** softens directly before **я** ([р'ак]). There is no separate **[й]** glide, so no apostrophe is written.
+2. **Розді́льна вимо́ва — Separated hardness:** In **бур'я́н**, the consonant **р** stays hard, followed by the two sounds **[й] + [а]** ([бур-йа́н]). The apostrophe marks this explicit separation.
+3. **Збіг при́голосних — Consonant clusters:** In words like **свя́то** and **цвях**, a root consonant precedes the labial (**с** before **в**, **ц** before **в**). Under standard Ukrainian orthography, this cluster blocks the apostrophe.
+
+<!-- INJECT_ACTIVITY: act-1 -->
 
 <!-- INJECT_ACTIVITY: act-4 -->
 
-Let us examine the exact nature of the trap in the word **свя́то** — holiday. Why is there no apostrophe here, even though **в** is a labial consonant? The Ukrainian spelling rule states that if a root labial consonant is preceded by another same-root consonant other than **р** (in **свя́то**, the letter **с**), then no apostrophe is written. The consonant [в] simply softens together with the preceding [s']. The exact same rule applies to the word **цвях** — nail, where [ц] precedes the labial [в].
+Reading before writing: first recognize the printed word, then copy the sign in
+a notebook cue.
 
-<!-- INJECT_ACTIVITY: act-404 -->
+Use original text on this page, your own notebook, or live handwriting from a
+teacher/tutor.
 
-By contrast, in the agricultural pair **буря́к** and **бур'я́н**, the difference lies in the consonant **р**. In **буря́к** — beetroot, the sonant [r'] is soft, so **я** represents a single vowel sound [а] and softens the consonant. In **бур'я́н** — weed, the consonant [r] is hard, so an apostrophe is required to preserve the distinct separation [йа]. Finally, beware of false analogies: in common everyday words like **ло́жка** — spoon, never add unnecessary soft signs.
+| Printed word | Notebook cue |
+| --- | --- |
+| **день** | find the soft sign at the end |
+| **сім'я́** | find the apostrophe before **я** |
+| **п'ять** | find both apostrophe and soft sign |
+| **свя́то** | confirm there is no apostrophe |
 
-<!-- INJECT_ACTIVITY: act-405 -->
+Ask a native Ukrainian teacher or tutor to listen to a short read-aloud:
+**день, сім'я́, буря́к, бур'я́н, свя́то**. The feedback target is small:
+soft ending, clear **й**, no invented pause.
+
+- say that **ь** has no sound of its own;
+- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding **і**;
+- say that apostrophe keeps the previous consonant hard;
+- read **сім'я́**, **м'я́со**, **п'ять**, and **комп'ю́тер** with **й** after
+  the apostrophe;
+- explain **буря́к** and **бур'я́н** with the support table;
+- remember that **свя́то** and **цвях** have no apostrophe;
+- choose the correct sign in short prepared words;
+- identify missing-apostrophe, missing-soft-sign, and invented-soft-sign
+  errors.
+
+Use the signs as reading instructions, not decorations. Before moving on,
+choose one word from each contrast and do a final sign check: name the sign,
+state its effect, then read the word.
+
+<!-- INJECT_ACTIVITY: act-402 -->

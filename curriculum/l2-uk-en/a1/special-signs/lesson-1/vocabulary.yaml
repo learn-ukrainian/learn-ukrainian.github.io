@@ -34,19 +34,15 @@
   translation: small
   pos: adjective
   usage: Мале́нький знак.
-- lemma: па́льці
-  translation: fingers
-  pos: noun
-  usage: Па́льці.
 - lemma: сього́дні
   translation: today
   pos: adverb
   usage: Сього́дні свя́то.
-- lemma: зли́то
-  translation: together / smoothly
-  pos: adverb
-  usage: Чита́й зли́то.
-- lemma: розді́льно
-  translation: separately
-  pos: adverb
-  usage: Чита́й розді́льно.
+- lemma: ло́жка
+  translation: spoon
+  pos: noun
+  usage: Ло́жка.
+- lemma: па́льці
+  translation: fingers
+  pos: noun
+  usage: Па́льці.
