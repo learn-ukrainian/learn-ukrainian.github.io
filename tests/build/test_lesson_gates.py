@@ -614,7 +614,7 @@ def test_name_substring_of_archived_citation_is_still_unattributed(gold):
         (source / "module.md").read_text() + "\nQuoted from Anna Ohoiko.\n"
     )
     path = module / "lesson-1/module.md"
-    path.write_text(path.read_text() + "\nAnna\n")
+    path.write_text(path.read_text() + "\nOhoiko\n")
     report = gates.run_lesson_gates(module, source, plan)
     assert any("unattributed reference-name" in d for d in report["blocking"])
 
