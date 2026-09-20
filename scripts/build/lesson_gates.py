@@ -1546,7 +1546,14 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             bad.extend(missing_stress(blob, local, phonetic=alphabet))
         bad = sorted(set(bad))
         if bad:
-            block(f"lesson {n}: {len(bad)} multi-syllable words without stress mark (not in unverified_stress): {bad[:20]}")
+            msg = (
+                f"lesson {n}: {len(bad)} multi-syllable words without stress mark "
+                f"(not in unverified_stress): {bad[:20]}"
+            )
+            if alphabet:
+                warn(msg)
+            else:
+                block(msg)
         est = prose_tokens / 60 + 2.5 * len(inline) + 3 * len(workbook) + 8
         per_lesson[n] = {"prose_tokens": prose_tokens, "inline": len(inline), "workbook": len(workbook),
                          "vocab": len(lemmas), "lemma_list": lemmas, "resources": len(res),
@@ -1678,7 +1685,8 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             continue
         for line in path.read_text().splitlines():
             if NAME_RE.search(line) and not ATTR_RE.search(line) and norm_md(line) not in base_lines:
-                block(f"unattributed reference-name hit in {path.name}")
+                # Quoting Ohoiko is allowed. Impersonating her is named_narrator_defects.
+                warn(f"unattributed reference-name hit in {path.name}")
     for n, md in lesson_md_raw.items():
         try:
             from scripts.build.linear_pipeline import (

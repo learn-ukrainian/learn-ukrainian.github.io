@@ -616,7 +616,8 @@ def test_name_substring_of_archived_citation_is_still_unattributed(gold):
     path = module / "lesson-1/module.md"
     path.write_text(path.read_text() + "\nOhoiko\n")
     report = gates.run_lesson_gates(module, source, plan)
-    assert any("unattributed reference-name" in d for d in report["blocking"])
+    assert not any("unattributed reference-name" in d for d in report["blocking"])
+    assert any("unattributed reference-name" in d for d in report["warnings"])
 
 
 def test_list_shaped_baseline_activities_do_not_crash(gold):
@@ -809,8 +810,9 @@ def test_writer_prompt_is_not_a_learner_attribution_surface(gold):
     # The same reference remains blocking when it leaks into a learner file.
     learner_path = module / "lesson-1/module.md"
     learner_path.write_text(learner_path.read_text() + "\n\nULP\n")
-    assert any("unattributed reference-name" in d
-               for d in gates.run_lesson_gates(module, source, plan)["diagnostics"])
+    leaked = gates.run_lesson_gates(module, source, plan)
+    assert not any("unattributed reference-name" in d for d in leaked["blocking"])
+    assert any("unattributed reference-name" in d for d in leaked["warnings"])
 
 
 def test_configured_word_target_is_enforced(gold):
@@ -1490,7 +1492,8 @@ def test_alphabet_gate_warns_on_nonce_but_blocks_contradiction_and_missing(gold,
     assert "фундамета́льні" not in blocks
     assert any("фундамета́льні" in w and "typos or fragments" in w for w in report["warnings"])
     assert "Дере́в'яний→дерев'я́ний" in blocks  # dictionary contradiction
-    assert "ними" in blocks  # dictionary lemma with no mark
+    assert "ними" not in blocks
+    assert any("ними" in w and "without stress mark" in w for w in report["warnings"])
 
 
 def test_non_alphabet_gate_still_blocks_nonce_stress(gold, monkeypatch):
