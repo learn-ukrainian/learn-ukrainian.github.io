@@ -30,11 +30,12 @@ How "pattern" is measured, so the figures can be reproduced: take the plain text
 run of digits with `#`, and count distinct results. Whether the control rows and the rows marked as
 corrections are linguistically right was **not** checked here — that is the language reviewers' job.
 
-No training result exists in the repository. Issue #8054 ("alignment training and 5-gate
-evaluation") was closed by PR #8112, which changed an evaluation harness, a contradiction audit and
-their tests — no training run and no scorecard. The one result on file (Phase 3.6 pilot, #8010)
-does not substantiate a fine-tune of the model it names: the saved adapter has 32 tensors of shape
-16×256 across 4 layers, where Gemma 3 4B has 34 layers of width 2,560, and the producing script
+No validated training result for the claimed model exists in the repository. Issue #8054
+("alignment training and 5-gate evaluation") was closed by PR #8112, which changed an evaluation
+harness, a contradiction audit and their tests — no training run and no scorecard. The one result on
+file (Phase 3.6 pilot, #8010) does not substantiate a fine-tune of the model it names: the saved
+adapter has 32 tensors across 4 layers (sixteen of shape 16×256 and sixteen of shape 256×16), where
+Gemma 3 4B has 34 layers of width 2,560, and the producing script
 (`v4_pilot_canary_evaluation.py`) builds a 4-layer, 256-wide stand-in model.
 
 **The risk** this creates: a model trained on heavily copied and patterned data may learn the
