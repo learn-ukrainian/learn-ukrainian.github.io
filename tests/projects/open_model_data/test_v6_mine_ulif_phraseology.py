@@ -32,6 +32,7 @@ from scripts.projects.open_model_data.v6_mine_ulif_phraseology import (
     SCHEMA_EVAL_PATH,
     SCHEMA_RECEIPT_PATH,
     SPEECH_VERB_RE,
+    SPLICE_PUNCTUATION_RE,
     CalquePair,
     PhraseologyUnit,
     SynonymGroup,
@@ -1047,18 +1048,24 @@ def test_parse_frazeolohichnyi_extracts_real_definition_not_orphaned_label():
 
 
 def test_splice_regex_catches_no_space_ellipsis_splices():
-    """CF R10 Finding 1: Ensure regex catches no-space '..,' and other spliced quotes."""
-    splice_re = re.compile(r"\.\.\s*[,;:]")
-    assert splice_re.search("…озвалася тітка..,— писав чоловік…") is not None
-    assert splice_re.search("…на цю поліцію..,— а користі від них…") is not None
-    assert splice_re.search("Князь оповістив..: — Хто хоче") is not None
-    assert splice_re.search("води сплило.., але пригадуються") is not None
-    assert splice_re.search("ця історія.. .складається таке") is None  # caught by \\.\\.\\s+\\.
-    assert re.search(r"\.\.\s+\.", "ця історія.. .складається таке") is not None
+    """CF R10/R12: Ensure SPLICE_PUNCTUATION_RE catches Unicode ellipsis splices, '..[,;:]', and '… .'."""
+    assert SPLICE_PUNCTUATION_RE.search("…то що, що громада?… . Скретар глянув,") is not None
+    assert SPLICE_PUNCTUATION_RE.search("кинув той… .З мене такий бригадир") is not None
+    assert SPLICE_PUNCTUATION_RE.search("діла…. .і спроваджено") is not None
+    assert SPLICE_PUNCTUATION_RE.search("цього…. .Бо й ти") is not None
+    assert SPLICE_PUNCTUATION_RE.search("заступило…, людей") is not None
+    assert SPLICE_PUNCTUATION_RE.search("…озвалася тітка..,— писав чоловік…") is not None
+    assert SPLICE_PUNCTUATION_RE.search("…на цю поліцію..,— а користі від них…") is not None
+    assert SPLICE_PUNCTUATION_RE.search("Князь оповістив..: — Хто хоче") is not None
+    assert SPLICE_PUNCTUATION_RE.search("води сплило.., але пригадуються") is not None
+    assert SPLICE_PUNCTUATION_RE.search("ця історія.. .складається таке") is not None
+    assert SPLICE_PUNCTUATION_RE.search("щось . — сказав він") is not None
 
     # Normal ellipses should not trigger false positives
-    assert splice_re.search("Він пішов… і не повернувся.") is None
-    assert splice_re.search("Що буде... те й буде.") is None
+    assert SPLICE_PUNCTUATION_RE.search("Він пішов… і не повернувся.") is None
+    assert SPLICE_PUNCTUATION_RE.search("Що буде... те й буде.") is None
+    assert SPLICE_PUNCTUATION_RE.search("Хто там?.. Нікого!") is None
+    assert SPLICE_PUNCTUATION_RE.search("Хворий, чи що?...»") is None
 
 
 def test_corpus_invariants_no_broken_definitions():
@@ -1085,7 +1092,7 @@ def test_corpus_invariants_no_broken_definitions():
 
 
 def test_corpus_invariants_no_spliced_quotes():
-    """CF R10/R11: Verify 0 spliced quotes across all release shards (SFT, eval, DPO)."""
+    """CF R10/R11/R12: Verify 0 spliced quotes across all release shards (SFT, eval, DPO)."""
     release_dir = Path("data/projects/open_model_data/release/uldr_v06_ulif_phraseology")
     if not release_dir.exists():
         pytest.skip("Release shards not yet generated")
@@ -1093,8 +1100,6 @@ def test_corpus_invariants_no_spliced_quotes():
     sft_dir = release_dir / "sft"
     eval_dir = release_dir / "eval"
     dpo_dir = release_dir / "dpo"
-    splice_re = re.compile(r"\.\.\s*[,;:]")
-    dot_space_dot_re = re.compile(r"\.\.\s+\.")
 
     all_shards = (
         sorted(list(sft_dir.glob("sft_shard_*.jsonl")))
@@ -1106,11 +1111,9 @@ def test_corpus_invariants_no_spliced_quotes():
     for shard in all_shards:
         with shard.open("r", encoding="utf-8") as f:
             for line_no, line in enumerate(f, 1):
-                assert not splice_re.search(line), f"Spliced quote with ..[,;:] in {shard.name}:{line_no}: {line[:120]}"
-                assert not dot_space_dot_re.search(line), f"Spliced quote with .. . in {shard.name}:{line_no}: {line[:120]}"
-                assert ".. ." not in line, f"Spliced quote with '.. .' in {shard.name}:{line_no}: {line[:120]}"
-                assert " . —" not in line, f"Stray dot-dash in {shard.name}:{line_no}: {line[:120]}"
-                assert " . -" not in line, f"Stray dot-dash in {shard.name}:{line_no}: {line[:120]}"
+                assert not SPLICE_PUNCTUATION_RE.search(line), (
+                    f"Spliced quote/punctuation matching SPLICE_PUNCTUATION_RE in {shard.name}:{line_no}: {line[:120]}"
+                )
 
 
 def test_parse_frazeolohichnyi_dirka_z_bublyka_definition_not_dialogue_splice():
@@ -1128,5 +1131,32 @@ def test_parse_frazeolohichnyi_dirka_z_bublyka_definition_not_dialogue_splice():
     assert "Мовчи, Марино" not in unit.definition
     assert unit.citation_text == "Ця справа не варта дірки з бублика"
     assert unit.author == "М. Зарудний"
-    assert not re.search(r"\.\.\s*[,;:]", unit.definition)
-    assert not re.search(r"\.\.\s*[,;:]", unit.citation_text)
+    assert not SPLICE_PUNCTUATION_RE.search(unit.definition)
+    assert not SPLICE_PUNCTUATION_RE.search(unit.citation_text)
+
+
+def test_clean_raw_html_strips_pronoun_editorial_insertions():
+    """CF R12: Ensure editorial glosses after pronouns are stripped cleanly without creating ungrammatical joins."""
+    raw = "— пригрозив він йому ≤сину≥, — а то пропадеш"
+    cleaned = clean_raw_html_and_tags(raw)
+    assert "він йому, —" in cleaned
+    assert "йому сину" not in cleaned
+
+    raw_she = "Вони ≤шведи≥ пропали б тут"
+    cleaned_she = clean_raw_html_and_tags(raw_she)
+    assert cleaned_she == "Вони пропали б тут"
+
+
+def test_parse_frazeolohichnyi_rejects_unicode_ellipsis_dot_splice():
+    """CF R12 Finding 1: Ensure entries with '?… . ' dialogue splices are rejected or advance to clean alternative quotes."""
+    raw_word = "як п'ятака дав {{</fras>}}"
+    raw_def = (
+        "як (мов, ніби і т.ін.) п'ятака дав (подарував), зі сл. глянув, подивився і т.ін. Неприязно, непривітно, сердито, вороже. "
+        "— Нічого не буде! — віддаючи назад прошеніє, одказав секретар.. — Як? — здивувався той. — Так… документів нема! "
+        "— Та нам же громада цю землю одсудила… — То що, що громада?… . Скретар глянув, як п'ятака дав (Панас Мирний); "
+        "Він так зиркнув на мене мов п'ятака подарував (Ю. Збанацький)."
+    )
+    unit = parse_frazeolohichnyi_entry(raw_word, raw_def)
+    if unit is not None:
+        assert not SPLICE_PUNCTUATION_RE.search(unit.citation_text)
+        assert "Скретар глянув" not in unit.citation_text

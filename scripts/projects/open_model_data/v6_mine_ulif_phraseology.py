@@ -1112,9 +1112,12 @@ def clean_raw_html_and_tags(text: str) -> str:
     # Strip drama speaker labels: ≤Speaker:≥ or ≤Speaker≥:
     text = re.sub(r"≤[^≥]*:≥:?\s*", "", text)
     text = re.sub(r"≤[^≥]+≥:\s*", "", text)
+    # Strip editorial pronoun explanations (e.g. 'йому ≤сину≥' -> 'йому', 'Вони ≤шведи≥' -> 'Вони')
+    text = re.sub(r"\b(він|вона|воно|вони|його|йому|їй|їх|їм|ним|нею|ними|себе|собі)\s+≤[^≥]+≥", r"\1", text, flags=re.IGNORECASE)
     # Preserve inner text of other ≤word≥ markup (characters, emphasis)
     text = re.sub(r"≤([^≥]+)≥", r"\1", text)
     text = re.sub(r"[≤≥\{\}\[\]]", "", text)
+    text = re.sub(r"\s+([,;:])", r"\1", text)
     return re.sub(r"\s+", " ", text).strip()
 
 
@@ -1238,6 +1241,14 @@ SPEECH_VERB_RE = re.compile(
     r"скрикнув|скрикнула|скрикнули|додав|додала|додали|"
     r"гукнув|гукнула|гукнули|відказав|відказала|відказали|"
     r"озвався|озвалася|озвалися)\s+[.:—–-]"
+)
+
+SPLICE_PUNCTUATION_RE = re.compile(
+    r"(?:…|\.{2,})[?!]?\s*[,;:]"  # ellipsis followed by comma, semicolon, or colon (e.g. '..,', '…;', '…,')
+    r"|…[?!]?\s*\."                # Unicode ellipsis followed by a dot (e.g. '?… .', '… .', '….')
+    r"|\.{2,}\s+\."                # ASCII ellipsis followed by space and dot (e.g. '.. .', '.... .')
+    r"|\.{4,}"                     # 4 or more dots in a row (e.g. '....')
+    r"|\s+\.\s+[-—–]"             # stray dot-dash (e.g. ' . —', ' . -')
 )
 
 
@@ -1368,7 +1379,7 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
         return None
     if len(defn) < 8 or len(defn) > 300 or "зі сл." in defn or re.search(r"\b\d+\.\s*", defn):
         return None
-    if re.search(r"\.\.\s*[,;:]", defn) or re.search(r"\.\.\s+\.", defn) or ".. ." in defn:
+    if SPLICE_PUNCTUATION_RE.search(defn):
         return None
 
     raw_defn_stripped = defn.rstrip(".")
@@ -1411,10 +1422,8 @@ def parse_frazeolohichnyi_entry(word_raw: str, def_raw: str) -> PhraseologyUnit 
             continue
         if len(q) < 15 or len(q) > 400:
             continue
-        # No spliced quotes or broken punctuation (CF R9/R10 Finding 2: regex catches no-space '..,' splices)
-        if re.search(r"\.\.\s*[,;:]", q) or re.search(r"\.\.\s+\.", q) or ".. ." in q:
-            continue
-        if " . —" in q or " . -" in q:
+        # No spliced quotes or broken punctuation (CF R9/R10/R12: regex catches Unicode ellipsis splices)
+        if SPLICE_PUNCTUATION_RE.search(q):
             continue
         if SPEECH_VERB_RE.search(q):
             continue
@@ -2844,10 +2853,8 @@ def verify_receipt_invariants(
     # 0. Corpus-wide quote and attestation invariants across all eval records (Findings 1, 2, 5)
     for rec in eval_records:
         rec_str = json.dumps(rec, ensure_ascii=False)
-        if re.search(r"\.\.\s*[,;:]", rec_str) or re.search(r"\.\.\s+\.", rec_str) or ".. ." in rec_str:
+        if SPLICE_PUNCTUATION_RE.search(rec_str):
             raise AssertionError(f"Broken ellipsis splice in eval record {rec.get('eval_id')}: {rec_str}")
-        if " . —" in rec_str or " . -" in rec_str:
-            raise AssertionError(f"Stray dot-dash punctuation in eval record {rec.get('eval_id')}: {rec_str}")
 
         cit = rec.get("classical_citation", "")
         cat = rec.get("eval_category", "")
@@ -2934,10 +2941,8 @@ def verify_receipt_invariants(
         with shard_path.open("r", encoding="utf-8") as f:
             for line_no, line in enumerate(f, 1):
                 # Universal corpus invariant: no ellipsis splices or stray dot-dash punctuation
-                if re.search(r"\.\.\s*[,;:]", line) or re.search(r"\.\.\s+\.", line) or ".. ." in line:
+                if SPLICE_PUNCTUATION_RE.search(line):
                     raise AssertionError(f"Broken ellipsis splice in SFT {shard_path.name}:{line_no}")
-                if " . —" in line or " . -" in line:
-                    raise AssertionError(f"Stray dot-dash punctuation in SFT {shard_path.name}:{line_no}")
 
                 total_sft_trajectories += 1
                 row = json.loads(line)
@@ -3025,10 +3030,8 @@ def verify_receipt_invariants(
         with shard_path.open("r", encoding="utf-8") as f:
             for line_no, line in enumerate(f, 1):
                 # Universal corpus invariant: no ellipsis splices or stray dot-dash punctuation
-                if re.search(r"\.\.\s*[,;:]", line) or re.search(r"\.\.\s+\.", line) or ".. ." in line:
+                if SPLICE_PUNCTUATION_RE.search(line):
                     raise AssertionError(f"Broken ellipsis splice in DPO {shard_path.name}:{line_no}")
-                if " . —" in line or " . -" in line:
-                    raise AssertionError(f"Stray dot-dash punctuation in DPO {shard_path.name}:{line_no}")
 
                 total_dpo_pairs += 1
                 row = json.loads(line)
