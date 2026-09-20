@@ -3,7 +3,7 @@
 > **Parent Epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
 > **Specific Issues:** [#8342](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8342) (Grammar set redo), [#8339](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8339) (Acceptance checker), [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338) (Training & diagnostic scorecard)
 > **Target Model:** Gemma 3 4B fine-tuning on Hugging Face (Pro GPU infrastructure)
-> **Established Date:** 2026-09-20 (Cross-Model Deliberation: Astra, Grok 4.6, Gemini 3.1 Pro; Revised per Round 3 CF Review)
+> **Established Date:** 2026-09-20 (Cross-Model Deliberation: Astra, Grok 4.6, Gemini 3.1 Pro; Revised per Round 4 CF Review)
 
 ---
 
@@ -46,11 +46,13 @@ This document defines the binding specification, composition ratios, rights boun
 
 * **Pinned Source & Closed In-Scope Tag Set:**
   * Source: Upstream UA-GEC repository pinned to commit [`4757f72f192c4a41e4c8fb1d9690a948f87cf6d6`](https://github.com/grammarly/ua-gec/commit/4757f72f192c4a41e4c8fb1d9690a948f87cf6d6) (as tracked in `docs/projects/ua-eval-harness/THIRD_PARTY_NOTICES.md`).
-  * Annotation Layer: Extracted from `gec-fluency` (which annotates both grammatical errors and calques/collocations). The 45 documents double-annotated across `gec-only` and `gec-fluency` in `train` are uniqued strictly by document ID (`doc_id`).
+  * Annotation Layer: Extracted **exclusively from `gec-fluency/train`** (1,706 documents), which annotates grammatical errors as well as authentic Ukrainian calques and collocations.
+  * Multi-Annotator Handling: The 45 documents in `gec-fluency/train` annotated by two independent annotators (sharing `doc_id` but differing in `doc.meta.annotator_id`) keep **both annotator targets as parallel valid corrections** (matching `THIRD_PARTY_NOTICES.md` and the evaluation harness convention).
   * Closed list of in-scope error tags (matching the exact upstream UA-GEC inventory):
     * **Grammar (`G/*`):** `G/Case`, `G/Gender`, `G/Number`, `G/Aspect`, `G/Tense`, `G/VerbVoice`, `G/PartVoice`, `G/VerbAForm`, `G/Prep`, `G/Participle`, `G/UngrammaticalStructure`, `G/Comparison`, `G/Conjunction`, `G/Other`
     * **Grammaticalized Lexicon (`F/*`):** `F/Calque`, `F/Collocation`
-  * Excluded tags: Non-grammatical categories (`Punctuation`, `Spelling`, `F/Other`) are excluded from this dataset.
+  * Excluded Complement Tags: All remaining non-grammatical categories (`Punctuation`, `Spelling`, `F/Other`, `F/Style`, `F/PoorFlow`, `F/Repetition`) are excluded.
+  * Co-Occurring Out-of-Scope Edits: When an in-scope grammar error co-occurs with an out-of-scope edit (e.g. `G/Case` + `Spelling` in the same sentence), only the in-scope grammatical edit is applied to form the training pair, preserving evaluation-harness isolation.
   * The extracted unique sentence count from this closed tag set on the UA-GEC `train` split forms the immutable baseline denominator $N_{\text{raw}}$.
 * **Thin Categories (<50 examples in UA-GEC):**
   * **Preserve natural distribution. Zero synthetic reverse-corruption.**
@@ -83,9 +85,10 @@ This document defines the binding specification, composition ratios, rights boun
 * **Official UA-GEC Test Firewall:**
   * All documents in the official UA-GEC `test` partition (`gec-fluency/test` and `gec-only/test`) are **frozen as held-out evaluation**.
   * No text, original sentence, or corrected target from the `test` partition may enter the training dataset, whether as a correction or as a clean control.
-* **Document-Level Split:**
-  * Training and validation splits are partitioned **strictly by document ID (`doc_id`)**, never by sentence shuffling.
-  * 0 shared document IDs across train and test.
+* **Document-Level Train/Validation Partition:**
+  * Training and validation sets are partitioned **strictly by document ID (`doc_id`)** from `gec-fluency/train` at a frozen 90:10 ratio (or explicit seed-frozen partition).
+  * 0 shared document IDs between train and validation splits.
+  * 0 shared document IDs between training/validation and the official held-out `test` partition.
 * **Near-Duplicate & Lemma Firewall:**
   * MinHash / Jaccard similarity $\ge 0.80$ against held-out evaluation documents is forbidden.
   * Per #8339 item 6, focal lexical items and verbal government pairs are evaluated by dictionary lemma base (e.g. *робити вигляд* and *зробити вигляд* are unified) to prevent train/test leakage through trivial aspectual prefixes.
@@ -121,7 +124,7 @@ The automated acceptance checker built under [#8339](https://github.com/learn-uk
 | **Concentration** | Top 10 Skeletons Combined | **≤25.0%** of rows in that field | Fail if >25.0% |
 | **Concentration** | Normalized Skeleton Entropy | $H_{\text{norm}} \ge 0.80$, with $K \ge 50$ unique skeletons | Fail if $H_{\text{norm}} < 0.80$ or $K < 50$ |
 | **Multi-field Check** | Skeletons Measured Separately | Question, reasoning, and answer evaluated independently | Fail if any single field collapses |
-| **Split Integrity** | Document Leakage | **0** shared `doc_id`s between train and held-out test | Fail if >0 |
+| **Split Integrity** | Document Leakage | **0** shared `doc_id`s between train, val, and held-out test | Fail if >0 |
 | **Split Integrity** | Lemma-Normalized Overlap | **0** lemma-level overlap on focal constructions | Fail if detected |
 | **Split Integrity** | MinHash Cross-Split Distance | **0** sentences with Jaccard similarity $\ge 0.80$ to test suite | Fail if detected |
 | **Citations** | Resolvable Citation Hit Rate | **100.0%** of explained rows cite verified authorities | Fail if <100% |
@@ -145,15 +148,16 @@ To provide exact reproducibility for the concentration check:
 
 ## 4. Model Training & Behavioral Diagnostic Targets (#8338 Gate)
 
-Static dataset acceptance (#8339) qualifies the dataset files. Behavioral verification of the fine-tuned Gemma 3 4B model occurs in [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338):
+Static dataset acceptance (#8339) qualifies the dataset files. Behavioral verification of the fine-tuned Gemma 3 4B model occurs under [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338):
 
 1. **Relation to Production Gate 3 (Non-Negotiable Qualification):**
    * **Gate 3 (`PRODUCTION_RELEASE_PLAN.md` §3.2) remains binding for final production qualification:** $k = 0$ harmful edits on $N = 300$ clean sentences (Clopper-Pearson 95% upper bound $\le 0.994\%$).
    * The metrics below are intermediate diagnostic training targets for #8338 on development splits; they do **not** relax, replace, or supersede Gate 3.
-2. **Intermediate Diagnostic Targets on Development Set (Carved from UA-GEC Train):**
-   * Tested on an independent development validation split (strictly disjoint from training controls):
-     * Diagnostic unnecessary-edit rate on verified clean sentences: point estimate $\le 1.0\%$, one-sided 95% Clopper-Pearson upper bound $< 2.0\%$.
-   * Precision and recall must be reported separately across coarse and fine error categories on the development split.
+2. **Intermediate Diagnostic Targets on Development Split (Carved from `gec-fluency/train`):**
+   * Checkpoint selection during training is guided strictly by the document-level development validation split, never by the official test set.
+   * Tested on a dedicated evaluation slice containing **at least $N \ge 1,000$ verified clean Ukrainian sentences** (disjoint by `doc_id` from training data and controls):
+     * Diagnostic unnecessary-edit rate on clean sentences: point estimate $\le 1.0\%$, one-sided 95% Clopper-Pearson upper bound $< 2.0\%$.
+   * Edit-level $F_{0.5}$ on in-scope tags must be monitored on the validation split across training epochs.
 3. **Frozen Final Scorecard (Post-Training Stop):**
-   * Only after training is stopped and checkpoint selection is finalized, the official UA-GEC held-out `test` partition is evaluated once for the published scorecard.
+   * Only after training is stopped and checkpoint selection is frozen, the official held-out UA-GEC `test` partition is evaluated once for the published repository scorecard.
    * Edit-level $F_{0.5}$ on the official test set must demonstrate measurable improvement over the baseline Gemma 3 4B checkpoint.
