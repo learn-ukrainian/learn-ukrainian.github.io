@@ -254,7 +254,7 @@ def _render_error_correction(act: dict) -> str:
             "sentence": item.get("sentence", ""),
             "errorWord": item.get("error", ""),
             "correctForm": correct_form,
-            "options": options,
+            "options": unique_error_correction_options(options),
             "explanation": item.get("explanation", ""),
         }
         items.append(entry)
@@ -447,6 +447,17 @@ def error_correction_render_values(
             for option in options
         ]
     return correct_form or correction, rendered_options
+
+
+def unique_error_correction_options(options: object) -> object:
+    """Drop exact repeat chips, first occurrence kept (a cloned winner is one choice)."""
+    if not isinstance(options, list):
+        return options
+    out: list = []
+    for option in options:
+        if option not in out:
+            out.append(option)
+    return out
 
 
 def _render_anagram(act: dict) -> str:

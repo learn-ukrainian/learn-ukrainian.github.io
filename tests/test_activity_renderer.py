@@ -167,7 +167,8 @@ class TestErrorCorrection:
 
         parsed = _extract_prop(render_activity_to_jsx(act), "items")
         assert parsed[0]["correctForm"] == "вчитель"
-        assert parsed[0]["options"] == ["вчитель", "вчителька", "вчитель"]
+        # Sentence variants that reduce to the same form render as one chip.
+        assert parsed[0]["options"] == ["вчитель", "вчителька"]
 
     def test_derives_phrase_replacement(self):
         act = {

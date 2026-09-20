@@ -648,18 +648,57 @@ def _ec_option_labels(options) -> list[str]:
     return out
 
 
+def _ec_rendered_chips(item: dict) -> tuple[object, list | None, list[str]]:
+    """``(correct_form, rendered_options, chip_labels)`` as the learner sees them."""
+    sentence = item.get("sentence")
+    correction = _ec_item_correction_token(item)
+    raw_options = item.get("options")
+    labels = _ec_option_labels(raw_options)
+    rendered_options: list | None = None
+    correct_form: object = correction
+    try:
+        from scripts.build.activity_renderer import error_correction_render_values
+    except Exception:  # pragma: no cover
+        error_correction_render_values = None  # type: ignore[assignment]
+    if labels and error_correction_render_values is not None:
+        correct_form, rendered_options = error_correction_render_values(
+            sentence if isinstance(sentence, str) else "",
+            _ec_item_error_token(item) or "",
+            correction or item.get("correction") or "",
+            raw_options if isinstance(raw_options, list) else [],
+        )
+    chip_labels = labels
+    if isinstance(rendered_options, list):
+        chip_labels = _ec_option_labels(rendered_options) or labels
+    return correct_form, rendered_options, chip_labels
+
+
+def _ec_distinct_chips(chip_labels: list[str]) -> list[str]:
+    """Chips unique by nfc + strip_acute identity, first occurrence kept."""
+    seen: set[str] = set()
+    out: list[str] = []
+    for lab in chip_labels:
+        key = strip_acute(nfc(lab)).lower()
+        if key not in seen:
+            seen.add(key)
+            out.append(lab)
+    return out
+
+
 def error_correction_item_warnings(
     item: dict,
     *,
     activity_id: str = "",
     level: str | None = None,
     require_en_scaffold: bool | None = None,
+    alphabet: bool = False,
 ) -> list[str]:
     """Non-blocking Find-and-Fix advisories.
 
     A1 English support belongs in ``explanation``, not in ``sentence``.
     The sentence is the form the learner corrects. Asking for an em-dash
     gloss on that sentence fights ``check_error_correction_stem_quality``.
+    On alphabet slugs a two-chip choice set (after unique) passes with a warning.
     """
     if not isinstance(item, dict):
         return []
@@ -670,6 +709,26 @@ def error_correction_item_warnings(
         item.get("correction") or item.get("correctForm") or item.get("answer")
     ):
         return []
+    prefix = f"{activity_id}: " if activity_id else ""
+    out: list[str] = []
+    if alphabet:
+        distinct = _ec_distinct_chips(_ec_rendered_chips(item)[2])
+        if len(distinct) == 2:
+            out.append(
+                f"{prefix}error-correction has 2 distinct options (want >=3): {distinct}"
+            )
+    return out + _ec_en_scaffold_warnings(
+        item, prefix=prefix, level=level, require_en_scaffold=require_en_scaffold
+    )
+
+
+def _ec_en_scaffold_warnings(
+    item: dict,
+    *,
+    prefix: str,
+    level: str | None,
+    require_en_scaffold: bool | None,
+) -> list[str]:
     sentence = item.get("sentence")
     if not (isinstance(sentence, str) and sentence.strip()):
         return []
@@ -680,7 +739,6 @@ def error_correction_item_warnings(
     explanation = item.get("explanation")
     if isinstance(explanation, str) and _LATIN_RE.search(explanation):
         return []
-    prefix = f"{activity_id}: " if activity_id else ""
     return [
         f"{prefix}error-correction A1 explanation should include a short English "
         "scaffold (not in the sentence)"
@@ -693,6 +751,7 @@ def error_correction_item_defects(
     activity_id: str = "",
     level: str | None = None,
     require_en_scaffold: bool | None = None,
+    alphabet: bool = False,
 ) -> list[str]:
     """Return blocking defects for one Find-and-Fix item (empty = ok).
 
@@ -711,6 +770,12 @@ def error_correction_item_defects(
     three real choices). Shared by upgrade lesson gates and fresh-build
     python QG. A1 English belongs in ``explanation`` (advisory warning),
     not as a gloss on the sentence, and is not a hard fail on legacy gold.
+
+    ``alphabet=True`` (alphabet slugs, #7994): chips are counted unique by
+    nfc + strip_acute identity. Two distinct chips pass (three is a warning,
+    see ``error_correction_item_warnings``) and a repeated winner chip alone
+    does not block: the archive originals were ``[correction, error]``, so
+    a writer who drops ``error`` has one real distractor to offer.
     """
     if not isinstance(item, dict):
         return [f"{activity_id}: error-correction item must be a mapping"]
@@ -734,43 +799,29 @@ def error_correction_item_defects(
                 "use a natural Ukrainian carrier and put English in explanation"
             )
     correction = _ec_item_correction_token(item)
-    raw_options = item.get("options")
-    labels = _ec_option_labels(raw_options)
-    if not labels:
+    # Prefer the same chip list the MDX/React path shows the learner.
+    correct_form, rendered_options, chip_labels = _ec_rendered_chips(item)
+    if not chip_labels:
         defects.append(f"{prefix}error-correction options empty (reveal-only is forbidden)")
         return defects
 
-    # Prefer the same chip list the MDX/React path shows the learner.
-    rendered_options: list | None = None
-    correct_form: object = correction
-    try:
-        from scripts.build.activity_renderer import error_correction_render_values
-    except Exception:  # pragma: no cover
-        error_correction_render_values = None  # type: ignore[assignment]
-    if error_correction_render_values is not None:
-        correct_form, rendered_options = error_correction_render_values(
-            sentence if isinstance(sentence, str) else "",
-            error or "",
-            correction or item.get("correction") or "",
-            raw_options if isinstance(raw_options, list) else [],
-        )
-
-    chip_labels = labels
-    if isinstance(rendered_options, list):
-        rendered_labels = _ec_option_labels(rendered_options)
-        if rendered_labels:
-            chip_labels = rendered_labels
-
-    if len(chip_labels) < 3:
-        defects.append(
-            f"{prefix}error-correction needs >=3 options (got {len(chip_labels)}); "
-            "tautological [correction, error] is not a real choice"
-        )
-
     # Stress-sensitive surfaces: acute placement is a real pedagogical contrast.
     surfaces = [nfc(x).lower() for x in chip_labels]
-    if len(set(surfaces)) < len(surfaces):
-        defects.append(f"{prefix}error-correction options contain duplicates")
+    if alphabet:
+        distinct = _ec_distinct_chips(chip_labels)
+        if len(distinct) < 2:
+            defects.append(
+                f"{prefix}error-correction needs >=2 distinct options (got {len(distinct)}); "
+                "a repeated winner chip is not a real choice"
+            )
+    else:
+        if len(chip_labels) < 3:
+            defects.append(
+                f"{prefix}error-correction needs >=3 options (got {len(chip_labels)}); "
+                "tautological [correction, error] is not a real choice"
+            )
+        if len(set(surfaces)) < len(surfaces):
+            defects.append(f"{prefix}error-correction options contain duplicates")
 
     if isinstance(correct_form, str) and correct_form.strip():
         if not any(opt == correct_form for opt in (rendered_options or chip_labels)):
@@ -838,6 +889,7 @@ def error_correction_activity_defects(
     *,
     level: str | None = None,
     require_en_scaffold: bool | None = None,
+    alphabet: bool = False,
 ) -> list[str]:
     """Blocking Find-and-Fix defects for one activity (all items)."""
     if not isinstance(activity, dict) or activity.get("type") != "error-correction":
@@ -851,6 +903,7 @@ def error_correction_activity_defects(
                 activity_id=f"{aid}[{idx}]",
                 level=level,
                 require_en_scaffold=require_en_scaffold,
+                alphabet=alphabet,
             )
         )
     return out
@@ -861,6 +914,7 @@ def error_correction_activity_warnings(
     *,
     level: str | None = None,
     require_en_scaffold: bool | None = None,
+    alphabet: bool = False,
 ) -> list[str]:
     """Non-blocking Find-and-Fix advisories for one activity."""
     if not isinstance(activity, dict) or activity.get("type") != "error-correction":
@@ -874,6 +928,7 @@ def error_correction_activity_warnings(
                 activity_id=f"{aid}[{idx}]",
                 level=level,
                 require_en_scaffold=require_en_scaffold,
+                alphabet=alphabet,
             )
         )
     return out
@@ -1298,13 +1353,13 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
                 for c in contradictions({k: v for k, v in a.items() if k in LIST_FIELDS}, aid):
                     block(f"lesson {n}: contradictory payload in {c}")
                 for defect in error_correction_activity_defects(
-                    a, level=str(plan.get("level") or "").lower()
+                    a, level=str(plan.get("level") or "").lower(), alphabet=alphabet
                 ):
                     block(f"lesson {n}: {defect}")
                 for defect in fill_in_activity_defects(a):
                     block(f"lesson {n}: {defect}")
                 for advisory in error_correction_activity_warnings(
-                    a, level=str(plan.get("level") or "").lower()
+                    a, level=str(plan.get("level") or "").lower(), alphabet=alphabet
                 ):
                     warn(f"lesson {n}: {advisory}")
         for defect in alphabet_line_break_defects(
