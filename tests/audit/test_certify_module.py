@@ -123,7 +123,7 @@ def test_build_checks_use_project_venv_python() -> None:
 def test_build_checks_include_standard_certification_guards() -> None:
     target = certify_module.ModuleTarget(
         lang_pair="l2-uk-en",
-        level="a1",
+        level="a1-v1",
         slug="my-family",
         local_num=6,
     )
@@ -140,7 +140,7 @@ def test_build_checks_include_standard_certification_guards() -> None:
     assert all("vocabulary.yaml" in arg for arg in vocab_check.command[2:])
     vocab_files = certify_module.vocabulary_source_files(target)
     assert vocab_files
-    assert any("lesson-" in path.as_posix() for path in vocab_files)
+    assert any(path.name == "vocabulary.yaml" for path in vocab_files)
 
 
 def test_build_checks_do_not_add_vocabulary_validator_for_missing_file() -> None:
