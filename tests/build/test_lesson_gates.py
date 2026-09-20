@@ -1492,7 +1492,8 @@ def test_alphabet_gate_warns_on_nonce_but_blocks_contradiction_and_missing(gold,
     assert "фундамета́льні" not in blocks
     assert any("фундамета́льні" in w and "typos or fragments" in w for w in report["warnings"])
     assert "Дере́в'яний→дерев'я́ний" in blocks  # dictionary contradiction
-    assert "ними" in blocks  # dictionary lemma with no mark
+    assert "ними" not in blocks
+    assert any("ними" in w and "without stress mark" in w for w in report["warnings"])
 
 
 def test_non_alphabet_gate_still_blocks_nonce_stress(gold, monkeypatch):
