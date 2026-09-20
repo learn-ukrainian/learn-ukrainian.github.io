@@ -1125,10 +1125,22 @@ def test_alphabet_dirty_archive_copy_still_fails_fill_in_and_ec_gates(gold):
     blocking = gates.run_lesson_gates(module, source, plan)["blocking"]
     for aid in ("act-3", "act-w5"):
         assert any(f" {aid}[" in d and "words the empty choice" in d for d in blocking), blocking
-    for aid in ("act-4", "act-w3"):
-        # Alphabet slugs count unique chips (>=2 passes), so the archive's
-        # [correction, error] blocks on the error chip, not on the count.
-        assert any(f" {aid}[" in d and "must not contain the spotted error" in d for d in blocking), blocking
+    # Repair drops the spotted-error chip before the gate (and MDX) see options;
+    # assert repaired alphabet chips exclude the error while fill-in still blocks.
+    by_id = {}
+    for path in module.glob("lesson-*/activities.yaml"):
+        data = yaml.safe_load(path.read_text())
+        for placement in ("inline", "workbook"):
+            for act in data.get(placement) or []:
+                if act.get("id") in ("act-4", "act-w3"):
+                    by_id[act["id"]] = act
+    assert set(by_id) == {"act-4", "act-w3"}
+    for aid, act in by_id.items():
+        for item in act["items"]:
+            error = item["error"]
+            _, _, chips = gates._ec_rendered_chips(item, alphabet=True)
+            keys = {gates.strip_acute(gates.nfc(c)).lower() for c in chips}
+            assert gates.strip_acute(gates.nfc(error)).lower() not in keys, (aid, error, chips)
 
 
 def test_non_alphabet_preservation_still_compares_the_raw_archive(gold):
