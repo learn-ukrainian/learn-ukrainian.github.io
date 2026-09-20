@@ -341,6 +341,8 @@ export function LexiconCustomDeckManager({
           <button
             type="button"
             className="btn btn-sm"
+            data-testid="custom-deck-studio-close"
+            aria-label={chromeLocale === 'uk' ? 'Закрити студію колод' : 'Close deck studio'}
             onClick={onClose}
             style={{ background: 'transparent', border: 'none', color: '#94a3b8', fontSize: '1.5rem', cursor: 'pointer' }}
           >

@@ -6648,5 +6648,52 @@ describe('LexiconPractice', () => {
       await user.tab({ shift: true });
       expect(document.activeElement).toBe(summary);
     });
+
+    test('settings drawer suspends focus trap and makes drawer inert during Custom Deck Studio modal handoff', async () => {
+      const user = userEvent.setup();
+      render(<LexiconPractice initialDeck={sampleDeck()} />);
+
+      const settingsToggle = await screen.findByTestId('practice-settings-toggle');
+      await user.click(settingsToggle);
+
+      const drawer = screen.getByTestId('practice-settings-drawer');
+      expect(drawer).toHaveClass('open');
+      expect(drawer).not.toHaveAttribute('inert');
+      expect(drawer).not.toHaveAttribute('aria-hidden', 'true');
+
+      // Click "Manage Decks / Import" to open Custom Deck Studio
+      const manageDecksBtn = screen.getByRole('button', { name: /Менеджер колод \/ Імпорт/i });
+      await user.click(manageDecksBtn);
+
+      // Verify studio modal is open
+      const studioCloseBtn = await screen.findByTestId('custom-deck-studio-close');
+      expect(studioCloseBtn).toBeInTheDocument();
+
+      // Settings drawer must now be suspended: inert and aria-hidden
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+
+      // Focus the studio close button and press Tab: focus must NOT jump to settings-drawer-close behind the modal
+      studioCloseBtn.focus();
+      expect(document.activeElement).toBe(studioCloseBtn);
+
+      await user.tab();
+      expect(document.activeElement).not.toBe(screen.getByTestId('settings-drawer-close'));
+      expect(drawer).not.toContainElement(document.activeElement as HTMLElement);
+
+      // Close the studio modal
+      await user.click(studioCloseBtn);
+      expect(screen.queryByTestId('custom-deck-studio-close')).not.toBeInTheDocument();
+
+      // Drawer is unsuspended and active again
+      expect(drawer).not.toHaveAttribute('inert');
+      expect(drawer).not.toHaveAttribute('aria-hidden', 'true');
+
+      // Close settings drawer via Escape: focus restores to practice-settings-toggle
+      await user.keyboard('{Escape}');
+      expect(drawer).not.toHaveClass('open');
+      expect(drawer).toHaveAttribute('inert');
+      expect(drawer).toHaveAttribute('aria-hidden', 'true');
+    });
   });
 });

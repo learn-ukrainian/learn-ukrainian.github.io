@@ -5,6 +5,7 @@ import { getTeacherTableVirtualDeck } from '../../lib/lexicon/custom-decks';
 
 export interface SettingsDrawerProps {
   isOpen: boolean;
+  isSuspended?: boolean;
   onClose: () => void;
   chromeLocale: 'uk' | 'en';
   isDriveConfigured: boolean;
@@ -21,6 +22,7 @@ export interface SettingsDrawerProps {
 
 export default function SettingsDrawer({
   isOpen,
+  isSuspended = false,
   onClose,
   chromeLocale,
   isDriveConfigured,
@@ -40,6 +42,8 @@ export default function SettingsDrawer({
   const wasOpenRef = useRef(false);
   const onCloseRef = useRef(onClose);
   onCloseRef.current = onClose;
+
+  const isEffectivelyOpen = isOpen && !isSuspended;
 
   const getFocusableElements = (): HTMLElement[] => {
     if (!drawerRef.current) return [];
@@ -69,7 +73,7 @@ export default function SettingsDrawer({
       return;
     }
 
-    if (!wasOpenRef.current) {
+    if (!wasOpenRef.current && isEffectivelyOpen) {
       wasOpenRef.current = true;
       previousFocusRef.current = document.activeElement as HTMLElement | null;
       const timer = setTimeout(() => {
@@ -77,10 +81,10 @@ export default function SettingsDrawer({
       }, 50);
       return () => clearTimeout(timer);
     }
-  }, [isOpen]);
+  }, [isOpen, isEffectivelyOpen]);
 
   useEffect(() => {
-    if (!isOpen) return;
+    if (!isEffectivelyOpen) return;
 
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
@@ -117,12 +121,12 @@ export default function SettingsDrawer({
     return () => {
       window.removeEventListener('keydown', handleKeyDown);
     };
-  }, [isOpen]);
+  }, [isEffectivelyOpen]);
 
   return (
     <>
       {/* Slide-over Drawer Backdrop */}
-      {isOpen ? (
+      {isEffectivelyOpen ? (
         <div
           className="k3-settings-backdrop"
           data-testid="practice-settings-backdrop"
@@ -143,9 +147,9 @@ export default function SettingsDrawer({
         className={`k3-settings-drawer ${isOpen ? 'open' : ''}`}
         data-testid="practice-settings-drawer"
         role="dialog"
-        aria-modal={isOpen}
-        aria-hidden={!isOpen}
-        inert={!isOpen ? true : undefined}
+        aria-modal={isEffectivelyOpen}
+        aria-hidden={!isEffectivelyOpen}
+        inert={!isEffectivelyOpen ? true : undefined}
         aria-label={chromeLocale === 'uk' ? 'Налаштування практики' : 'Practice settings'}
         style={{
           position: 'fixed',
@@ -158,7 +162,7 @@ export default function SettingsDrawer({
           boxShadow: isOpen ? '-4px 0 24px rgba(0, 0, 0, 0.4)' : 'none',
           zIndex: 999,
           transform: isOpen ? 'translateX(0)' : 'translateX(100%)',
-          visibility: isOpen ? 'visible' : 'hidden',
+          visibility: isEffectivelyOpen ? 'visible' : 'hidden',
           transition: 'transform 0.25s ease-in-out, visibility 0.25s ease-in-out',
           overflowY: 'auto',
           padding: '1.5rem',

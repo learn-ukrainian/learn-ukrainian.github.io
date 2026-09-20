@@ -4964,6 +4964,7 @@ function LexiconPracticeIsland({
            */}
           <SettingsDrawer
             isOpen={isSettingsOpen}
+            isSuspended={showCreateModal}
             onClose={() => setIsSettingsOpen(false)}
             chromeLocale={chromeLocale}
             isDriveConfigured={isGoogleSyncConfigured()}
