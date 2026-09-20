@@ -211,6 +211,31 @@ def test_a1_landing_outcomes_only_from_writer_overview(gold, tmp_path):
     assert "## Уроки — Lessons" in lesson_tab
 
 
+def test_extract_outcomes_keeps_wrapped_by_the_end_bullets():
+    """Indented wrap lines after a bullet stay in the outcomes block."""
+    from scripts.build.lesson_assembler import _extract_outcomes_block
+
+    text = (
+        "Teacher Oksana's routine is short.\n\n"
+        "By the end, you can:\n\n"
+        "- recognize **ь** and apostrophe in common A1 words;\n"
+        "- read **день**, **кінь**, **сіль**, and **вчи́тель** without adding an extra\n"
+        "  vowel;\n"
+        "- read **сім'я́** with **й** after the apostrophe;\n"
+        "- sort words into **м'яки́й знак** and **апо́строф**;\n"
+        "- choose the safer form when a visual habit creates a mistake.\n\n"
+        "Keep the scope small.\n"
+    )
+    block = _extract_outcomes_block(text)
+    assert block is not None
+    assert "without adding an extra\n  vowel;" in block
+    assert "read **сім'я́** with **й** after the apostrophe;" in block
+    assert "sort words into **м'яки́й знак** and **апо́строф**;" in block
+    assert "choose the safer form when a visual habit creates a mistake." in block
+    assert "Teacher Oksana" not in block
+    assert "Keep the scope small" not in block
+
+
 def test_a1_landing_five_lessons_from_map_excludes_teacher_oksana(tmp_path, monkeypatch):
     """Generated landing lists all five lesson titles + By the end; never Teacher Oksana."""
     from scripts.generate_mdx import atlas_links

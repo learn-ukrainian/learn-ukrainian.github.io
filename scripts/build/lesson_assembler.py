@@ -162,6 +162,10 @@ def _extract_outcomes_block(text: str) -> str | None:
             seen_bullet = True
             lines.append(line.rstrip())
             continue
+        # Wrapped bullet bodies are indented continuations of the prior item.
+        if seen_bullet and line[:1] in (" ", "\t"):
+            lines.append(line.rstrip())
+            continue
         break
     while lines and not lines[-1].strip():
         lines.pop()
