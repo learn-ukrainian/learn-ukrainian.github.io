@@ -125,7 +125,9 @@ Every ACP runtime worktree is locked at creation with a reason of the form
 start time is field 22 of `/proc/<pid>/stat`. Any later process can prove the
 owner dead without the owner's cooperation: pid absent, or pid recycled with
 a different start time. Hosts without `/proc` record `start=unknown` and are
-treated as unknown, never as dead.
+treated as unknown, never as dead. The proof assumes the ask and the reaper
+share one PID namespace; a live owner inside a container or private namespace
+can read as absent, so do not rely on it across namespace boundaries.
 
 `reap_worktrees` reaps a `.worktrees/dispatch/acp/runtime-*` worktree under
 `--apply` and `--safe-only` when it is detached, locked by an ACP reason, and:
@@ -147,7 +149,13 @@ Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
 zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`
 subdirectories) are reported as `would_remove` husks and removed under
 `--apply`. A directory containing any file, symlink, or git metadata is never
-removed by this rule.
+removed by this rule. The rule fails closed on every other guard too: an
+unavailable process-CWD probe skips the directory, a live process cwd inside
+preserves it, and it must be at least one hour old measured by the newest
+mtime anywhere in its subtree — a directory a concurrent `delegate.py` is
+still provisioning (created before `git worktree add` registers it) is never
+"old". Husk removals, dry-run observations, and skips are recorded through
+the same `reaper_lifecycle` journal as every other reaper action.
 - `delegate._release_stale_branch_holders` performs a non-force release after
   clean, synced, terminal-owner checks so a blocked dispatch may reattach its
   branch. Its normal completed-worktree cleanup still uses the P0 reaper.

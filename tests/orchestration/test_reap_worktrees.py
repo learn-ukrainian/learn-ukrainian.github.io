@@ -3052,6 +3052,7 @@ def test_dispatch_husk_reported_under_dry_run_and_removed_under_apply(
     husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-bare"
     for sub in ("site", "node_modules", "data"):
         (husk / sub).mkdir(parents=True)
+    _backdate_tree(husk, 2)
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
 
     dry = rw.reap_worktrees(repo_root=repo, apply=False, live_cwds=set())
@@ -3098,3 +3099,143 @@ def test_dispatch_husk_with_symlink_is_never_removed(
 
     assert all(Path(r.path).resolve() != husk.resolve() for r in results)
     assert (husk / "data" / "link").is_symlink()
+
+
+# --- #8344 round 2: husk fail-closed guards, minimum age, journal ---
+
+
+def _backdate_tree(path: Path, hours: float) -> None:
+    """Set every directory mtime in the tree ``hours`` into the past."""
+    old = time.time() - hours * 3600
+    for dirpath, _dirnames, _filenames in os.walk(path):
+        os.utime(dirpath, (old, old))
+    os.utime(path, (old, old))
+
+
+def test_dispatch_husk_fails_closed_when_cwd_probe_unavailable(
+    tmp_path: Path,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-noprobe"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+
+    results = rw._reap_dispatch_husks(
+        repo,
+        registered=set(),
+        apply=True,
+        live_cwds=None,
+        targets=None,
+    )
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert result.reason == "process-CWD activity probe unavailable"
+    assert husk.exists()
+
+
+def test_dispatch_husk_with_live_process_cwd_inside_is_preserved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-busy"
+    (husk / "site").mkdir(parents=True)
+    _backdate_tree(husk, 2)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds={husk / "site"})
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "live process cwd inside unregistered empty directory" in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_younger_than_min_age_is_preserved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-fresh"
+    (husk / "site").mkdir(parents=True)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert "old" in result.reason
+    assert f"{rw._DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum" in result.reason
+    assert husk.exists()
+
+
+def test_dispatch_husk_with_recently_touched_subtree_is_preserved(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-touched"
+    (husk / "site").mkdir(parents=True)
+    # Only the top-level directory reads as old; a subdirectory was created
+    # just now. Age must be measured by the newest mtime in the subtree.
+    old = time.time() - 2 * 3600
+    os.utime(husk, (old, old))
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    result = result_for(results, husk)
+    assert result.action == "skipped"
+    assert husk.exists()
+
+
+def test_dispatch_husk_removal_and_skip_are_journaled(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    old_husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-journaled"
+    (old_husk / "site").mkdir(parents=True)
+    _backdate_tree(old_husk, 2)
+    young_husk = repo / ".worktrees" / "dispatch" / "codex" / "ww-journaled-young"
+    (young_husk / "site").mkdir(parents=True)
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+
+    rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set())
+
+    rows = [
+        json.loads(line)
+        for line in reaper_lifecycle.journal_path(repo).read_text(encoding="utf-8").splitlines()
+    ]
+    old_rows = [row for row in rows if row.get("path") == str(old_husk)]
+    assert {row["event"] for row in old_rows} >= {"plan", "reap"}
+    assert any(row.get("action") == "removed" for row in old_rows)
+    young_rows = [row for row in rows if row.get("path") == str(young_husk)]
+    assert any(row["event"] == "skip" for row in young_rows)
+
+
+def test_acp_runtime_cleanup_recheck_failure_deletes_nothing(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_acp_runtime(
+        repo,
+        "runtime-recheck",
+        build_lock_reason("ask-8344", pid=_dead_pid(), start_time=1),
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(
+        rw,
+        "_acp_runtime_cleanup_recheck",
+        lambda _repo, _info: "injected recheck failure",
+    )
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set(), safe_only=True)
+
+    result = result_for(results, worktree)
+    assert result.action == "skipped"
+    assert result.reason == "injected recheck failure"
+    assert worktree.exists()

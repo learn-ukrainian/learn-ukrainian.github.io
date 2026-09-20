@@ -54,7 +54,11 @@ Three independent layers, each sufficient alone:
    dead-owner `runtime-*` worktrees (legacy no-owner locks only past 24h with
    a conclusive no-live-cwd probe), plus the zero-file husk rule for
    unregistered placeholder directories. Both fail closed: alive/unknown
-   owners, unexpected files, and unavailable probes all preserve.
+   owners, unexpected files, and unavailable probes all preserve. The husk
+   rule additionally requires a minimum age of one hour, measured by the
+   newest mtime anywhere in the subtree, so a directory a concurrent
+   `delegate.py` is still provisioning (created before `git worktree add`
+   registers it) never reads as old.
 
 Defence in depth: the ask entry path converts SIGTERM into an orderly unwind
 (`SystemExit(143)`, previous handler restored, signal not swallowed) so the

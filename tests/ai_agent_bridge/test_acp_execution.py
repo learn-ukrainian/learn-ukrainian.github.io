@@ -6,11 +6,13 @@ import os
 import signal
 import subprocess
 import sys
+import threading
 from pathlib import Path
 
 import pytest
 
 import scripts
+from scripts.ai_agent_bridge import _acp_execution
 from scripts.ai_agent_bridge._acp_execution import (
     AcpExecutionWorkspaceError,
     acp_execution_cwd,
@@ -227,3 +229,43 @@ def test_sigterm_unwinds_and_leaves_nothing_behind(tmp_path: Path) -> None:
     assert str(workspace) not in listed
     stderr = proc.stderr.read() if proc.stderr is not None else ""
     assert "ACP execution worktree cleanup failed" not in stderr
+
+
+def test_sweep_preserves_dead_owner_worktree_with_unexpected_files(
+    tmp_path: Path,
+) -> None:
+    primary = _make_primary(tmp_path)
+    proc = subprocess.Popen(["true"])
+    dead_pid = proc.pid
+    proc.wait(timeout=30)
+    stale = _plant_locked_runtime(
+        primary,
+        "runtime-dead-with-files",
+        build_lock_reason("dead-8344", pid=dead_pid, start_time=1),
+    )
+    (stale / "stray.txt").write_text("keep\n", encoding="utf-8")
+
+    swept = _acp_execution.sweep_dead_acp_runtime_worktrees(primary)
+
+    assert swept == []
+    assert (stale / "stray.txt").read_text(encoding="utf-8") == "keep\n"
+    listed = _git(primary, "worktree", "list", "--porcelain").stdout
+    assert f"worktree {stale}" in listed
+
+
+def test_install_orderly_sigterm_from_non_main_thread_is_noop() -> None:
+    previous = signal.getsignal(signal.SIGTERM)
+    outcome: list[object] = []
+
+    def worker() -> None:
+        try:
+            outcome.append(_acp_execution._install_orderly_sigterm())
+        except Exception as exc:
+            outcome.append(exc)
+
+    thread = threading.Thread(target=worker)
+    thread.start()
+    thread.join(timeout=30)
+
+    assert outcome == [None]
+    assert signal.getsignal(signal.SIGTERM) == previous

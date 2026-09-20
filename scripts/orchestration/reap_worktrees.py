@@ -31,6 +31,9 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.common.acp_runtime_lock import (
+    holds_only_git_pointer,
+)
+from scripts.common.acp_runtime_lock import (
     owner_alive as acp_lock_owner_alive,
 )
 from scripts.common.acp_runtime_lock import (
@@ -764,6 +767,12 @@ def _dispatch_owner(repo_root: Path, info: WorktreeInfo) -> str:
 
 _ACP_RUNTIME_REASON_PREFIX = "acp runtime "
 _ACP_LEGACY_LOCK_MIN_AGE_HOURS = 24.0
+# Minimum age for a zero-file dispatch husk before it may be removed.
+# ``delegate.py`` creates the dispatch directory before ``git worktree add``
+# registers it, so an unregistered empty directory can be mid-creation; the
+# provisioning window is seconds, and one hour bounds it with a wide margin
+# while still reaping same-day debris.
+_DISPATCH_HUSK_MIN_AGE_HOURS = 1.0
 
 
 def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
@@ -774,14 +783,6 @@ def _is_acp_runtime_path(repo_root: Path, path: Path) -> bool:
     except (OSError, ValueError):
         return False
     return len(relative.parts) == 1 and relative.parts[0].startswith("runtime-")
-
-
-def _acp_runtime_only_git_pointer(path: Path) -> bool:
-    """A no-checkout ACP runtime directory holds exactly its ``.git`` pointer."""
-    try:
-        return {entry.name for entry in path.iterdir()} == {".git"}
-    except OSError:
-        return False
 
 
 def _acp_dead_owner_reason(
@@ -846,7 +847,7 @@ def _acp_runtime_cleanup_recheck(repo_root: Path, info: WorktreeInfo) -> str | N
         live_cwds=live_cwds,
     ) is None:
         return "acp runtime lock owner changed during cleanup"
-    if not _acp_runtime_only_git_pointer(info.path):
+    if not holds_only_git_pointer(info.path):
         return "acp runtime worktree gained files during cleanup"
     return None
 
@@ -870,6 +871,34 @@ def _tree_has_any_file_or_symlink(root: Path) -> bool:
     return False
 
 
+def _tree_newest_age_hours(root: Path, now: float | None = None) -> float | None:
+    """Age in hours of the newest mtime anywhere in ``root``'s subtree.
+
+    A directory whose subtree was touched recently must not read as old, so
+    the top-level mtime alone is not sufficient. ``None`` when any directory
+    is unreadable, so callers fail closed.
+    """
+    try:
+        newest = root.stat().st_mtime
+    except OSError:
+        return None
+    stack = [root]
+    while stack:
+        current = stack.pop()
+        try:
+            with os.scandir(current) as entries:
+                for entry in entries:
+                    try:
+                        if entry.is_dir(follow_symlinks=False):
+                            newest = max(newest, entry.stat(follow_symlinks=False).st_mtime)
+                            stack.append(Path(entry.path))
+                    except OSError:
+                        return None
+        except OSError:
+            return None
+    return ((now or time.time()) - newest) / 3600
+
+
 def _reap_dispatch_husks(
     repo_root: Path,
     *,
@@ -877,6 +906,7 @@ def _reap_dispatch_husks(
     apply: bool,
     live_cwds: set[Path] | None,
     targets: set[Path] | None,
+    now: float | None = None,
 ) -> list[ReapResult]:
     """Report — and with ``apply`` remove — zero-file dispatch husks (#8344).
 
@@ -884,7 +914,10 @@ def _reap_dispatch_husks(
     (only empty subdirectories, e.g. ``site/ node_modules/ data/``) are
     invisible to ``git worktree list`` and accumulate forever. A directory
     containing any file, symlink, or git metadata is never touched by this
-    rule.
+    rule. Every other guard fails closed too: an unavailable process-CWD
+    probe, a live process cwd inside, or a youngest-mtime age below
+    ``_DISPATCH_HUSK_MIN_AGE_HOURS`` (measured across the whole subtree, so a
+    directory still being provisioned is never "old") all preserve.
     """
     results: list[ReapResult] = []
     dispatch_root = repo_root / ".worktrees" / "dispatch"
@@ -905,9 +938,19 @@ def _reap_dispatch_husks(
             if _tree_has_any_file_or_symlink(resolved):
                 continue
             reason = "unregistered dispatch directory contains zero files (empty placeholder husk)"
-            if live_cwds is not None and any(
-                _path_contains(resolved, cwd) for cwd in live_cwds
-            ):
+            if live_cwds is None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason="process-CWD activity probe unavailable",
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
+            if any(_path_contains(resolved, cwd) for cwd in live_cwds):
                 results.append(
                     ReapResult(
                         path=str(child),
@@ -919,7 +962,44 @@ def _reap_dispatch_husks(
                     )
                 )
                 continue
+            age_hours = _tree_newest_age_hours(resolved, now=now)
+            if age_hours is None:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason="could not determine husk age; treating as in use",
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
+            if age_hours < _DISPATCH_HUSK_MIN_AGE_HOURS:
+                results.append(
+                    ReapResult(
+                        path=str(child),
+                        branch=None,
+                        action="skipped",
+                        reason=(
+                            f"empty placeholder husk is only {age_hours:.1f}h old "
+                            f"(< {_DISPATCH_HUSK_MIN_AGE_HOURS:g}h minimum)"
+                        ),
+                        dirty=None,
+                        owner=owner,
+                    )
+                )
+                continue
             if not apply:
+                reaper_lifecycle.append_journal(
+                    repo_root,
+                    "observe",
+                    path=str(child),
+                    branch=None,
+                    head=None,
+                    reason=reason,
+                    pr=None,
+                )
                 results.append(
                     ReapResult(
                         path=str(child),
@@ -943,6 +1023,15 @@ def _reap_dispatch_husks(
                     )
                 )
                 continue
+            reaper_lifecycle.append_journal(
+                repo_root,
+                "plan",
+                path=str(child),
+                branch=None,
+                head=None,
+                reason=reason,
+                pr=None,
+            )
             try:
                 target = assert_delete_target(child, repo_root=repo_root)
                 shutil.rmtree(target)
@@ -2134,7 +2223,7 @@ def reap_worktrees(
                 live_cwds=live_cwds,
             )
             if acp_reason is not None:
-                if not _acp_runtime_only_git_pointer(info.path):
+                if not holds_only_git_pointer(info.path):
                     results.append(
                         ReapResult(
                             path=str(info.path),
@@ -2321,6 +2410,7 @@ def reap_worktrees(
                 apply=apply,
                 live_cwds=live_cwds,
                 targets=targets,
+                now=now,
             )
         )
 

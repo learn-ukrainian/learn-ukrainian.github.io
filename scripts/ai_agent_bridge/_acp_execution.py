@@ -23,6 +23,7 @@ from typing import Any
 
 from scripts.common.acp_runtime_lock import (
     build_lock_reason,
+    holds_only_git_pointer,
     owner_alive,
     parse_lock_owner,
 )
@@ -75,14 +76,6 @@ def _acp_runtime_root(main_root: Path) -> Path:
     return (main_root / ".worktrees" / "dispatch" / "acp").resolve()
 
 
-def _only_git_pointer(path: Path) -> bool:
-    """A no-checkout ACP runtime directory holds exactly its ``.git`` pointer."""
-    try:
-        return {entry.name for entry in path.iterdir()} == {".git"}
-    except OSError:
-        return False
-
-
 def sweep_dead_acp_runtime_worktrees(main_root: Path) -> list[Path]:
     """Remove locked ACP runtime worktrees whose owner is provably dead.
 
@@ -122,7 +115,7 @@ def sweep_dead_acp_runtime_worktrees(main_root: Path) -> list[Path]:
                 return
             if owner_alive(pid, start_time) is not False:
                 return
-            if not _only_git_pointer(resolved):
+            if not holds_only_git_pointer(resolved):
                 logger.warning(
                     "ACP runtime sweep: %s holds unexpected files; left for the reaper",
                     resolved,

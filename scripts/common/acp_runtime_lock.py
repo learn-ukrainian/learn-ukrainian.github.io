@@ -6,6 +6,13 @@ time: any later process can then prove the owner is dead (pid absent, or the
 pid was recycled and now reports a different start time) without the owner's
 cooperation. Hosts without ``/proc`` degrade to "unknown owner" — never to
 "dead".
+
+The liveness proof assumes the asking process and the reaper share one PID
+namespace. If an ask runs inside a container or private PID namespace, the
+recorded pid is namespace-local: from the host, a live owner can read as
+absent — or as a recycled pid with a different start time — and therefore as
+provably dead. ACP asks on this host run in the host PID namespace; do not
+rely on this mechanism across namespace boundaries.
 """
 
 from __future__ import annotations
@@ -19,6 +26,14 @@ LOCK_REASON_PREFIX = "active ACP execution "
 _OWNER_RE = re.compile(r"\(owner pid=(\d+) start=(\d+|unknown)\)\s*$")
 
 _PROC_ROOT = Path("/proc")
+
+
+def holds_only_git_pointer(path: Path) -> bool:
+    """A no-checkout ACP runtime directory holds exactly its ``.git`` pointer."""
+    try:
+        return {entry.name for entry in path.iterdir()} == {".git"}
+    except OSError:
+        return False
 
 
 def process_start_time(pid: int) -> int | None:
