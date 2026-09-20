@@ -313,6 +313,11 @@ def test_linear_pipeline_stress_annotation_marks_module_and_vocabulary(
         "- word: мама\n  translation: mother\n  example_uk: Моя мама читає.\n",
         encoding="utf-8",
     )
+    (tmp_path / "activities.yaml").write_text(
+        "inline:\n- type: error-correction\n  items:\n"
+        "  - sentence: Моя сімя читає.\n    error: сімя\n    correction: сім'я\n",
+        encoding="utf-8",
+    )
 
     first = linear_pipeline.run_stress_annotation(tmp_path)
     second = linear_pipeline.run_stress_annotation(tmp_path)
@@ -322,6 +327,9 @@ def test_linear_pipeline_stress_annotation_marks_module_and_vocabulary(
     assert second["total_added"] == 0
     assert STRESS_MARK in (tmp_path / "module.md").read_text(encoding="utf-8")
     assert STRESS_MARK in (tmp_path / "vocabulary.yaml").read_text(encoding="utf-8")
+    activities = (tmp_path / "activities.yaml").read_text(encoding="utf-8")
+    assert f"correction: сім'я{STRESS_MARK}" in activities
+    assert "error: сімя\n" in activities
 
 
 def test_v7_resume_artifact_passes_for_stress_and_ulp_gate(tmp_path: Path) -> None:

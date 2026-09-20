@@ -24,6 +24,7 @@ from scripts.pipeline.stress_annotator import (
     _build_skip_mask,
     _count_syllables,
     _in_skip_range,
+    annotate_file,
     annotate_stress,
 )
 
@@ -602,3 +603,81 @@ class TestModelDownloadLock:
 
         # No lost updates → every worker's increment landed.
         assert counter.read_text(encoding="utf-8") == str(worker_count)
+
+
+_EC_ACTIVITIES = """\
+inline:
+- type: error-correction
+  instruction: Find the word that lost its apostrophe.
+  items:
+  - sentence: "Це моя сімя."
+    error: сімя
+    correction: "сім'я"
+    options:
+    - сімя
+    - "сім'я"
+    - мама
+    explanation: "Apostrophe before я: сім'я."
+workbook:
+- type: fill-in
+  items:
+  - sentence: "Мене звати ___."
+    answer: "ім'я"
+  - sentence: "Це дере\u0301в'яний стіл."
+    answer: стіл
+"""
+
+
+class TestActivitiesYaml:
+    """activities.yaml: dictionary stress everywhere except error chips (#7994)."""
+
+    @pytest.fixture
+    def annotated(self, tmp_path: Path) -> str:
+        path = tmp_path / "activities.yaml"
+        path.write_text(_EC_ACTIVITIES, encoding="utf-8")
+        assert annotate_file(path) > 0
+        return path.read_text(encoding="utf-8")
+
+    def test_correction_and_explanation_gain_stress(self, annotated: str):
+        marked = f"сім'я{STRESS_MARK}"
+        assert f'correction: "{marked}"' in annotated
+        assert f'    - "{marked}"' in annotated
+        assert f"before я: {marked}." in annotated
+        assert f'answer: "ім\'я{STRESS_MARK}"' in annotated
+
+    def test_error_chip_and_its_copies_unchanged(self, annotated: str):
+        assert "    error: сімя\n" in annotated
+        assert "    - сімя\n" in annotated
+        assert ' сімя."\n' in annotated  # the sentence keeps the spotted misspelling
+        assert f"сімя{STRESS_MARK}" not in annotated
+
+    def test_repairs_dictionary_contradicting_mark(self, annotated: str):
+        assert f"дере{STRESS_MARK}в'яний" not in annotated
+        assert f"дерев'я{STRESS_MARK}ний" in annotated
+
+    def test_yaml_shape_and_idempotence(self, annotated: str, tmp_path: Path):
+        import yaml
+
+        original = yaml.safe_load(_EC_ACTIVITIES)
+        parsed = yaml.safe_load(annotated)
+        assert parsed["inline"][0]["items"][0]["error"] == original["inline"][0]["items"][0]["error"]
+        assert parsed["inline"][0]["instruction"] == original["inline"][0]["instruction"]
+        assert annotate_file(tmp_path / "activities.yaml") == 0
+
+    def test_error_word_outside_its_item_is_not_protected(self, tmp_path: Path):
+        path = tmp_path / "activities.yaml"
+        path.write_text(
+            "inline:\n- items:\n  - sentence: Це мама.\n    error: мама\n"
+            "  - sentence: Це мама.\n    answer: мама\n",
+            encoding="utf-8",
+        )
+        annotate_file(path)
+        first, second = path.read_text(encoding="utf-8").split("  - sentence:")[1:]
+        assert STRESS_MARK not in first
+        assert second.count(f"ма{STRESS_MARK}ма") == 2
+
+    def test_other_files_are_not_error_masked(self, tmp_path: Path):
+        path = tmp_path / "vocabulary.yaml"
+        path.write_text("- error: мама\n", encoding="utf-8")
+        annotate_file(path)
+        assert f"ма{STRESS_MARK}ма" in path.read_text(encoding="utf-8")

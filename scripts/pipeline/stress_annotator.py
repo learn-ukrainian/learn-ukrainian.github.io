@@ -184,9 +184,11 @@ def _oracle_choice(word: str) -> str | None:
     return transfer_stress_marks(pedagogical_stressed_form(matches[0]), clean)
 
 
-def _build_skip_mask(text: str) -> list[tuple[int, int]]:
+def _build_skip_mask(
+    text: str, extra_ranges: list[tuple[int, int]] | None = None,
+) -> list[tuple[int, int]]:
     """Build list of (start, end) ranges to skip (comments, code, URLs)."""
-    ranges = []
+    ranges = list(extra_ranges or [])
     for pattern in _SKIP_PATTERNS:
         for m in pattern.finditer(text):
             ranges.append((m.start(), m.end()))
@@ -298,10 +300,13 @@ def _annotate_dialoguebox_uk_attrs(text: str) -> tuple[str, int]:
     return _DIALOGUEBOX_UK_ATTR_RE.sub(replace, text), total
 
 
-def annotate_stress(text: str) -> tuple[str, int]:
+def annotate_stress(
+    text: str, *, protected_ranges: list[tuple[int, int]] | None = None,
+) -> tuple[str, int]:
     """Add and repair stress marks on Ukrainian words in text.
 
-    Returns (annotated_text, count_of_words_changed).
+    Returns (annotated_text, count_of_words_changed). Words starting inside
+    ``protected_ranges`` (character offsets) are left untouched.
 
     Strategy:
     - Only stress words with 2+ syllables (single-syllable = obvious)
@@ -313,7 +318,7 @@ def annotate_stress(text: str) -> tuple[str, int]:
     """
     from scripts.verification.stress import transfer_stress_marks
 
-    skip_ranges = _build_skip_mask(text)
+    skip_ranges = _build_skip_mask(text, protected_ranges)
     matches = list(_CYRILLIC_WORD_RE.finditer(text))
     replacements: dict[int, str] = {}
     unresolved: list[re.Match[str]] = []
@@ -369,8 +374,67 @@ def annotate_stress(text: str) -> tuple[str, int]:
     return annotated, count + attr_count
 
 
+# Same spotted-misspelling keys as lesson_gates._ERROR_KEYS (compared lowercased).
+_ACTIVITY_ERROR_KEYS = frozenset({"error", "errorword", "incorrect", "error_word"})
+
+
+def activity_error_ranges(text: str) -> list[tuple[int, int]]:
+    """Character ranges of intentional misspellings in an activities.yaml text.
+
+    Covers every value under an error key plus each whole-word copy of that
+    value inside the same item (the sentence that carries it, option chips
+    that repeat it). Works on YAML node positions, so the file is never
+    re-serialized.
+    """
+    import yaml
+
+    try:
+        root = yaml.compose(text)
+    except yaml.YAMLError:
+        return []
+
+    ranges: list[tuple[int, int]] = []
+
+    def scalars(node) -> list:
+        if isinstance(node, yaml.ScalarNode):
+            return [node]
+        if isinstance(node, yaml.SequenceNode):
+            return [s for child in node.value for s in scalars(child)]
+        if isinstance(node, yaml.MappingNode):
+            return [s for _, child in node.value for s in scalars(child)]
+        return []
+
+    def walk(node) -> None:
+        if isinstance(node, yaml.SequenceNode):
+            for child in node.value:
+                walk(child)
+            return
+        if not isinstance(node, yaml.MappingNode):
+            return
+        for key, value in node.value:
+            if isinstance(key, yaml.ScalarNode) and str(key.value).lower() in _ACTIVITY_ERROR_KEYS:
+                for scalar in scalars(value):
+                    ranges.append((scalar.start_mark.index, scalar.end_mark.index))
+                    form = str(scalar.value).strip()
+                    if not _CYRILLIC_WORD_RE.search(form):
+                        continue
+                    copy_re = re.compile(
+                        rf"(?<![{_CYRILLIC_LETTER_CLASS}ʼ']){re.escape(form)}(?![{_CYRILLIC_LETTER_CLASS}ʼ'])"
+                    )
+                    start = node.start_mark.index
+                    for m in copy_re.finditer(text[start:node.end_mark.index]):
+                        ranges.append((start + m.start(), start + m.end()))
+            else:
+                walk(value)
+
+    walk(root)
+    return ranges
+
+
 def annotate_file(path: Path) -> int:
-    """Add stress marks to a content .md file in-place.
+    """Add stress marks to a content file in-place.
+
+    ``activities.yaml`` keeps its intentional misspellings (error chips) as-is.
 
     Returns count of words stressed.
     """
@@ -379,7 +443,8 @@ def annotate_file(path: Path) -> int:
 
     text = path.read_text("utf-8")
 
-    annotated, count = annotate_stress(text)
+    protected = activity_error_ranges(text) if path.name == "activities.yaml" else None
+    annotated, count = annotate_stress(text, protected_ranges=protected)
 
     if count > 0:
         path.write_text(annotated, "utf-8")
