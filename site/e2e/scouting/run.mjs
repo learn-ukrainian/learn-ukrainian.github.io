@@ -177,6 +177,9 @@ async function flashcardSession(page, shot) {
 
 async function landingTtfi(page, shot) {
   const t0 = now();
+  // Measure load independently so the bounded enablement wait below cannot inflate it.
+  const loadPromise = page.waitForLoadState('load').then(() => now() - t0);
+  loadPromise.catch(() => {});
   await page.goto(PRACTICE, { waitUntil: 'commit' });
   const ctl = page.locator('main button:visible, main a[href]:visible, main input:visible, main select:visible, main summary:visible').first();
   await ctl.waitFor({ state: 'visible', timeout: 20000 });
@@ -200,8 +203,7 @@ async function landingTtfi(page, shot) {
     firstControlEnabled = false;
     ttfcEnabled = null;
   }
-  await page.waitForLoadState('load');
-  const loadMs = now() - t0;
+  const loadMs = await loadPromise;
   const info = await page.evaluate(() => {
     const vis = (el) => { const r = el.getBoundingClientRect(); return r.width > 0 && r.height > 0; };
     return {
