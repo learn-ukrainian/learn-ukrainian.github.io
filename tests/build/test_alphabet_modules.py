@@ -436,3 +436,69 @@ def test_upgrade_prompt_prose_drops_banned_phrase_paragraphs_only():
     assert "leave the lesson" not in shown
     assert "or no sign at all" in shown and "- read день" in shown
     assert linear_pipeline._original_artifact_for_prompt({"slug": "my-family"}, "module.md", text) == text
+
+
+def _chai_is_word(form: str) -> bool:
+    from scripts.build.alphabet_modules import _chip_key
+
+    return _chip_key(form) in {"чаю", "чаї"}
+
+
+def test_repair_drops_vesum_legal_neighbors():
+    repaired = am.repair_error_correction_options(
+        "чаі", "чай", ["чай", "чаї́", "чаю"], is_word=_chai_is_word,
+    )
+    keys = {am._chip_key(c) for c in repaired}
+    assert "чай" in keys
+    assert "чаю" not in keys and "чаї" not in keys
+    assert len(repaired) >= 2
+    assert repaired[0] == "чай"
+
+
+def test_repair_never_clones_winner_or_error():
+    repaired = am.repair_error_correction_options(
+        "чаі", "чай", ["чай", "чаі", "чай"], is_word=lambda _w: False,
+    )
+    keys = [am._chip_key(c) for c in repaired]
+    assert keys.count("чай") == 1
+    assert "чаі" not in keys
+
+
+def test_repair_mutants_keep_stress_and_are_deterministic():
+    first = am.repair_error_correction_options(
+        "лошка", "ло́жка", ["ло́жка", "ложка"], is_word=lambda w: am._chip_key(w) == "ложка",
+    )
+    second = am.repair_error_correction_options(
+        "лошка", "ло́жка", ["ло́жка", "ложка"], is_word=lambda w: am._chip_key(w) == "ложка",
+    )
+    assert first == second
+    assert first[0] == "ло́жка"
+    assert "\u0301" in first[0]
+    for chip in first[1:]:
+        # Mutants of a stressed winner keep the acute on the same vowel beat.
+        assert "\u0301" in chip or chip == first[0]
+
+
+def test_repair_returns_winner_only_when_no_illegal_mutant():
+    # Every mutant is declared a word → no illegal second chip.
+    repaired = am.repair_error_correction_options(
+        "х", "а", ["а"], is_word=lambda _w: True,
+    )
+    assert repaired == ["а"]
+
+
+def test_repair_chai_neighbors_are_vesum_words_and_mutants_are_not():
+    """Real-VESUM proof for the чай case (#7994); skip if VESUM is unavailable."""
+    try:
+        assert am.vesum_is_word("чаю")
+        assert am.vesum_is_word("чаї")
+    except Exception as exc:  # pragma: no cover - environment without VESUM
+        pytest.skip(f"VESUM unavailable: {exc}")
+    repaired = am.repair_error_correction_options(
+        "чаі", "чай", ["чай", "чаї́", "чаю"], is_word=am.vesum_is_word,
+    )
+    assert repaired[0] == "чай"
+    assert am._chip_key("чаю") not in {am._chip_key(c) for c in repaired}
+    assert am._chip_key("чаї") not in {am._chip_key(c) for c in repaired}
+    for chip in repaired[1:]:
+        assert not am.vesum_is_word(chip)

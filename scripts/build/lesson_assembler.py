@@ -134,6 +134,22 @@ def _clean_a1_landing_prose(body: str) -> str | None:
     return body
 
 
+def lift_landing_overview(module_md: str) -> str | None:
+    """Copy lesson 1's opening outcomes into a landing overview, or None.
+
+    Takes the text before the first ``## `` heading, drops the H1, and returns
+    it only when it carries ``By the end, you can`` and survives
+    ``_clean_a1_landing_prose``. Does not strip the block from lesson 1.
+    """
+    from scripts.build.lesson_gates import _LANDING_OUTCOMES_RE
+
+    opening = re.split(r"^## ", module_md, maxsplit=1, flags=re.MULTILINE)[0]
+    without_h1 = re.sub(r"^# [^\n]+\n?", "", opening, count=1)
+    if not _LANDING_OUTCOMES_RE.search(without_h1):
+        return None
+    return _clean_a1_landing_prose(without_h1)
+
+
 def _original_intro(module_dir: Path, slug: str) -> str | None:
     """Usable A1 landing prose from the previous edition, or None if there is none."""
     candidates = [module_dir.parent.parent / "a1-v1" / slug / "module.md"]
@@ -277,6 +293,9 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     ``output_dir`` is the module directory under the canonical site level. Source
     artifacts remain in ``module_dir/lesson-N``; no source content is rewritten.
     """
+    from scripts.build.activity_renderer import error_correction_render_values
+    from scripts.build.alphabet_modules import is_alphabet_slug
+
     manifest = yaml.safe_load((module_dir / "lessons.yaml").read_text(encoding="utf-8"))
     plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
     lessons = manifest["lessons"]
@@ -287,6 +306,7 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     if not isinstance(slug, str) or not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", slug):
         raise ValueError("Plan slug must be a lowercase URL slug")
     level = _plan_level(plan)
+    alphabet = is_alphabet_slug(slug)
     base = f"/{level}/{slug}/"
     pages: dict[str, str] = {}
     vocabulary: dict[str, dict] = {}
@@ -294,10 +314,31 @@ def assemble_lessons(module_dir: Path, output_dir: Path, plan_path: Path, *, val
     resources: dict[str, dict] = {}
     cards = []
     tab_links = []
+
+    def _repair_alphabet_ec(activities: list) -> None:
+        """In-memory chip repair so MDX matches the alphabet gate (disk untouched)."""
+        if not alphabet:
+            return
+        for act in activities:
+            if getattr(act, "type", None) != "error-correction":
+                continue
+            for item in getattr(act, "items", []) or []:
+                _, repaired = error_correction_render_values(
+                    getattr(item, "sentence", ""),
+                    getattr(item, "error", "") or "",
+                    getattr(item, "answer", "") or "",
+                    list(getattr(item, "options", []) or []),
+                    alphabet=True,
+                )
+                if isinstance(repaired, list):
+                    item.options = repaired
+
     for offset, lesson in enumerate(lessons):
         n = lesson["n"]
         source = module_dir / f"lesson-{n}"
         activities, lesson_workbook = _activities(source / "activities.yaml")
+        _repair_alphabet_ec(activities)
+        _repair_alphabet_ec(lesson_workbook)
         for item in _rows(source / "vocabulary.yaml", "vocabulary"):
             vocabulary.setdefault(_lemma(item), item)
         lesson_resources = _rows(source / "resources.yaml", "resources")
