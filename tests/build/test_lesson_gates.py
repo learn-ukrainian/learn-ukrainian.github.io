@@ -1455,6 +1455,39 @@ def test_alphabet_gate_passes_marked_form_and_attested_inflections(gold, monkeyp
     assert any("ньо́го" in w and "Мар'я́ною" in w for w in report["warnings"])
 
 
+_NONCE_LESSON = "\n\nЦе фундамета́льні пра́вила. Дере́в'яний стіл стоїть перед ними.\n"
+
+
+def test_split_nonce_undeclared_keeps_contradictions_blocking():
+    wrong = gates.wrong_stress("фундамета́льні, дере́в'яний", set())
+    blocking, nonce = gates.split_nonce_undeclared(wrong)
+    assert nonce == ["фундамета́льні: undeclared unverified stress"]
+    assert len(blocking) == 1 and blocking[0].startswith("дере́в'яний→")
+
+
+def test_alphabet_gate_warns_on_nonce_but_blocks_contradiction_and_missing(gold, monkeypatch, vesum_stub):
+    monkeypatch.setattr(gates, "wrong_stress", _REAL_WRONG_STRESS)
+    module, source, plan = _alphabet_gold(gold)
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + _NONCE_LESSON)
+    report = gates.run_lesson_gates(module, source, plan)
+    assert not any("invalid lesson artifacts" in d for d in report["blocking"])
+    blocks = "\n".join(_stress_blocks(report))
+    assert "фундамета́льні" not in blocks
+    assert any("фундамета́льні" in w and "typos or fragments" in w for w in report["warnings"])
+    assert "Дере́в'яний→дерев'я́ний" in blocks  # dictionary contradiction
+    assert "ними" in blocks  # dictionary lemma with no mark
+
+
+def test_non_alphabet_gate_still_blocks_nonce_stress(gold, monkeypatch):
+    monkeypatch.setattr(gates, "wrong_stress", _REAL_WRONG_STRESS)
+    module, source, plan = gold
+    path = module / "lesson-1/module.md"
+    path.write_text(path.read_text() + _NONCE_LESSON)
+    blocks = "\n".join(_stress_blocks(gates.run_lesson_gates(module, source, plan)))
+    assert "фундамета́льні: undeclared unverified stress" in blocks
+
+
 def test_non_alphabet_gate_still_blocks_unmarked_copy_and_undeclared_inflection(gold, monkeypatch):
     monkeypatch.setattr(gates, "wrong_stress", _REAL_WRONG_STRESS)
     module, source, plan = gold

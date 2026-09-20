@@ -1069,6 +1069,18 @@ def split_citation_surnames(wrong: list[str], surnames: set[str]) -> tuple[list[
     return blocking, cited
 
 
+def split_nonce_undeclared(wrong: list[str]) -> tuple[list[str], list[str]]:
+    """Alphabet slugs: (dictionary contradictions, undeclared forms the dictionary lacks).
+
+    A marked token the stress dictionary does not know (``фундамета́льні``) is a
+    typo or fragment, not a lemma with a wrong mark, so it warns. A form the
+    dictionary stresses differently (``дере́в'яний→дерев'я́ний``) still blocks.
+    """
+    blocking = [e for e in wrong if not e.endswith(_UNDECLARED_SUFFIX)]
+    nonce = [e for e in wrong if e.endswith(_UNDECLARED_SUFFIX)]
+    return blocking, nonce
+
+
 def _acute_positions(form: str) -> list[int]:
     out, i = [], 0
     for ch in unicodedata.normalize("NFD", form):
@@ -1369,8 +1381,11 @@ def _run_lesson_gates(module_dir: Path, source_dir: Path, plan: dict,
             )))
             if cited:
                 warn(f"lesson {n}: {len(cited)} textbook-citation surnames with undeclared stress: {sorted(set(cited))[:15]}")
+            wrong, nonce = split_nonce_undeclared(wrong)
             if attested:
                 warn(f"lesson {n}: {len(attested)} inflected forms attested in VESUM but absent from the stress dictionary: {sorted(set(attested))[:15]}")
+            if nonce:
+                warn(f"lesson {n}: {len(nonce)} stressed forms absent from the stress dictionary (typos or fragments): {sorted(set(nonce))[:15]}")
         if wrong:
             block(f"lesson {n}: {len(wrong)} stressed forms contradict the stress dictionary: {wrong[:15]}")
         allow = allow | {strip_acute(w) for w in misspelt}
