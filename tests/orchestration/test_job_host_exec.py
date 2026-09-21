@@ -13,6 +13,8 @@ import pytest
 from scripts.fleet_comms.paths import RETIRED_LOCAL_MARKER
 from scripts.orchestration import job_host_exec as jh
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture(autouse=True)
 def _clear_occupancy_pin(monkeypatch: pytest.MonkeyPatch) -> None:

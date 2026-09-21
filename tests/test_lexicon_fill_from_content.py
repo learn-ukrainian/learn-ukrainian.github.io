@@ -4,7 +4,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from scripts.lexicon.fill_from_content import fill_manifest_from_vocab
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_fill_manifest_from_folk_vocab_adds_only_vesum_verified_single_token_lemmas(

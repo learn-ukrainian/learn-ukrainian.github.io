@@ -2,11 +2,15 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.build.phases.wiki_manifest import (
     WIKI_MANIFEST_SCHEMA,
     _normalize_external_role,
     extract_manifest,
 )
+
+pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
 

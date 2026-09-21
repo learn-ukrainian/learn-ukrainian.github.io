@@ -12,6 +12,8 @@ from scripts.level_config import resolve_content_track, resolve_manifest_module_
 from scripts.pipeline import learner_state
 from tests.helpers.archive_slug import pick_archive_only_slug as _pick_archive_only_slug
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.mark.parametrize("canonical", [[], ["shared"]])
 def test_manifest_resolution_preserves_rosters_and_canonical_precedence(canonical):

@@ -3,7 +3,11 @@ from __future__ import annotations
 from dataclasses import dataclass
 from pathlib import Path
 
+import pytest
+
 from scripts.audit import track_deterministic_audit as audit
+
+pytestmark = pytest.mark.reads_content
 
 
 @dataclass

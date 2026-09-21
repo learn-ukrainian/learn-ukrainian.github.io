@@ -8,6 +8,8 @@ import pytest
 
 from scripts.generate_mdx.dsl_to_mdx import convert_dsl_to_mdx
 
+pytestmark = pytest.mark.reads_content
+
 
 class TestV6Quiz:
     """V6 :::quiz format."""

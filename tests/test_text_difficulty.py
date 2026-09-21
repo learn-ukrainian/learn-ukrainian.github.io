@@ -9,6 +9,8 @@ import pytest
 
 from scripts.audit import text_difficulty
 
+pytestmark = pytest.mark.reads_content
+
 
 def _write_module(root: Path, track: str, slug: str, content: str) -> Path:
     module_path = root / track / slug / "module.md"

@@ -10,6 +10,7 @@ from __future__ import annotations
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
 import yaml
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
@@ -21,6 +22,8 @@ from scripts.api.knowledge_router import router as knowledge_router
 from scripts.api.monitor_context import fixture_context
 from scripts.api.reviewer_ghosts_router import router as reviewer_ghosts_router
 from scripts.audit import check_adrs
+
+pytestmark = pytest.mark.reads_content
 
 
 def _cluster_client(tmp_path: Path) -> TestClient:

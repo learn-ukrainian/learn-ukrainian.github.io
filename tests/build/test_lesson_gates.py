@@ -6,6 +6,8 @@ import yaml
 from scripts.build import lesson_gates as gates
 from tests.build.upgrade_fixtures import fixture_text
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def gold(tmp_path, monkeypatch):

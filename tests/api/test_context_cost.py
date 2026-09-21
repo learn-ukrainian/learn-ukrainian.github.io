@@ -9,11 +9,14 @@ from dataclasses import replace
 from pathlib import Path
 from unittest.mock import AsyncMock, Mock
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api import config, git_hygiene_router, images_router, monitor_context, wiki_router, work_router
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context, production_context
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_production_context_is_constructed_once_until_cache_clear(monkeypatch) -> None:

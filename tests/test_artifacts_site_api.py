@@ -11,11 +11,14 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.artifacts_router as artifacts_router
 import scripts.api.main as api_main
 import scripts.api.site_router as site_router
+
+pytestmark = pytest.mark.reads_content
 
 client = TestClient(api_main.app, raise_server_exceptions=False)
 

@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import pytest
+
 from scripts.audit import strip_internal_resource_entries as strip
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_removes_internal_roles_keeps_real_resources() -> None:

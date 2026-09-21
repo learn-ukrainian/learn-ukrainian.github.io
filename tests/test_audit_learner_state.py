@@ -1,9 +1,12 @@
 """Tests for learner-state audit checks."""
 
+import pytest
 import yaml
 
 from scripts.audit.checks import learner_state as learner_state_checks
 from scripts.pipeline import learner_state
+
+pytestmark = pytest.mark.reads_content
 
 UKRAINIAN_ALPHABET = "абвгдеєжзиіїйклмнопрстуфхцчшщьюя"
 

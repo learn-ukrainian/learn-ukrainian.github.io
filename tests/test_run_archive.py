@@ -4,7 +4,11 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from scripts.build import run_archive
+
+pytestmark = pytest.mark.reads_content
 
 
 def _start_archive(tmp_path: Path) -> tuple[run_archive.RunArchive, Path]:

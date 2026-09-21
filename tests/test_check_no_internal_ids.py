@@ -4,6 +4,8 @@ import pytest
 
 from scripts.audit import check_no_internal_ids
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_clean_fixture_has_no_findings(tmp_path: Path) -> None:
     clean = tmp_path / "clean.mdx"

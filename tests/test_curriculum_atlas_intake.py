@@ -8,6 +8,8 @@ from scripts.audit.source_inventory_intake import read_source_inventory
 from scripts.audit.source_inventory_review_decisions import validate_decision_file
 from scripts.lexicon import curriculum_atlas_intake as intake
 
+pytestmark = pytest.mark.reads_content
+
 
 def write_fixture_curriculum(root: Path) -> Path:
     curriculum = root / "curriculum" / "l2-uk-en"

@@ -20,6 +20,8 @@ from scripts.common.release_layout import MANIFEST_NAME, is_release_root
 from scripts.common.repo_root import main_checkout_root
 from scripts.path_safety import safe_join
 
+pytestmark = pytest.mark.reads_content
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 VENV_PYTHON = main_checkout_root(PROJECT_ROOT) / ".venv" / "bin" / "python"
 

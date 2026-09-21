@@ -19,6 +19,8 @@ from unittest.mock import patch
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 # ==================== review_parsing ====================
 
 

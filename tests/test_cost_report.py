@@ -8,8 +8,12 @@ import subprocess
 from datetime import UTC, datetime
 from pathlib import Path
 
+import pytest
+
 import scripts.analytics.cost_report as cost_report
 from tests.project_python import project_python
+
+pytestmark = pytest.mark.reads_content
 
 
 def _write_meta(

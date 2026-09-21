@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import pytest
+
 from scripts.audit.content_surface_gates import scan_module_surface, scan_surface_text
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_a1_english_scaffolding_is_allowed() -> None:

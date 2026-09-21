@@ -10,6 +10,8 @@ from scripts.build import promote_quality_gate
 from scripts.common.thresholds import seminar_promote_floors_for
 from scripts.sync import promote_module
 
+pytestmark = pytest.mark.reads_content
+
 
 def _git(
     repo: Path,

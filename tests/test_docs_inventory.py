@@ -9,6 +9,8 @@ from jsonschema import validate
 
 from scripts.docs.docs_inventory import build, canonical, digest, main, metadata
 
+pytestmark = pytest.mark.reads_content
+
 
 def git(repo, *args):
     return subprocess.check_output(['git', '-C', str(repo), *args], stderr=subprocess.DEVNULL, timeout=30)

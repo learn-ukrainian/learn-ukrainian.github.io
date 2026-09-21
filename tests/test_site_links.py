@@ -24,7 +24,7 @@ import yaml
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 # Mark all tests in this module
-pytestmark = pytest.mark.website
+pytestmark = [pytest.mark.website, pytest.mark.reads_content]
 
 SITE_DIR = Path(__file__).parent.parent / "site"
 DOCS_DIR = SITE_DIR / "src" / "content" / "docs"

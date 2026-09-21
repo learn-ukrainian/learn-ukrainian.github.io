@@ -22,6 +22,8 @@ from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
 from scripts.common.thresholds import QG_DIMS
 
+pytestmark = pytest.mark.reads_content
+
 REFERENCE_PLANS: tuple[tuple[str, str], ...] = (
     ("a1", "my-morning"),
     ("a2", "a2-bridge"),

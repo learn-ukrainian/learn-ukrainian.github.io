@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 
 import scripts.audit.wiki_coverage_gate as gate
@@ -18,6 +19,8 @@ from scripts.build.phases.implementation_map import (
     write_implementation_map,
 )
 from scripts.build.phases.wiki_manifest import extract_manifest
+
+pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 PROPOSAL_KEYS = {

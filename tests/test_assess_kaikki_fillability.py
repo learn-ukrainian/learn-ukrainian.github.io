@@ -3,12 +3,15 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.lexicon.assess_kaikki_fillability import (
     is_clean_lemma,
     normalize_stress,
 )
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_normalize_stress():

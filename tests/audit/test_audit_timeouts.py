@@ -9,6 +9,8 @@ from unittest.mock import patch
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 
 def _completed(
     args: list[str] | None = None,

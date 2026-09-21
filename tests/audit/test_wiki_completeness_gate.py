@@ -3,6 +3,7 @@ from __future__ import annotations
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 
 from scripts.audit.wiki_completeness_gate import (
@@ -10,6 +11,8 @@ from scripts.audit.wiki_completeness_gate import (
     thresholds_for_level,
     thresholds_for_module,
 )
+
+pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[2]
 

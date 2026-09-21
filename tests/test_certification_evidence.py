@@ -19,6 +19,8 @@ import yaml
 
 from scripts.audit import llm_reviewer_dispatch, qg_workflow
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = (
     ROOT

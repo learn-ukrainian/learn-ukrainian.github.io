@@ -37,6 +37,8 @@ from tests.project_python import project_python
 from wiki import backfill_generated_by_model as backfill
 from wiki import mlx_bridge, rebuild
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 SYSCTL_TIMEOUT_S = 10
 

@@ -15,6 +15,8 @@ from jsonschema import Draft202012Validator, ValidationError
 from scripts.audit import post_build_review as pbr
 from tests.helpers.archive_slug import pick_archive_only_slug
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[2]
 SKILL = ROOT / "agents_extensions" / "shared" / "skills" / "post-build-review"
 FIXTURES = ROOT / "tests" / "fixtures" / "post_build_review"

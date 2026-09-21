@@ -20,6 +20,8 @@ import jsonschema
 import pytest
 import yaml
 
+pytestmark = pytest.mark.reads_content
+
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 SCHEMA_PATH = PROJECT_ROOT / "schemas" / "activity-v2.schema.json"
 

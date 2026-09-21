@@ -8,6 +8,8 @@ from scripts.audit import check_promote_quality_changed as check_changed
 from scripts.build import promote_quality_gate
 from scripts.common.thresholds import seminar_promote_floors_for
 
+pytestmark = pytest.mark.reads_content
+
 SLUG = "koliadky-shchedrivky"
 
 

@@ -9,6 +9,8 @@ import pytest
 
 from scripts.build import linear_pipeline
 
+pytestmark = pytest.mark.reads_content
+
 FIXTURES = Path(__file__).parent / "fixtures" / "textbook_grounding"
 
 SEARCH_TEXT = (

@@ -7,6 +7,8 @@ import yaml
 from scripts import generate_landing_pages
 from scripts.level_config import base_level
 
+pytestmark = pytest.mark.reads_content
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DOCS_ROOT = PROJECT_ROOT / "site" / "src" / "content" / "docs"
 CONTENT_CONFIG_PATH = PROJECT_ROOT / "site" / "src" / "content.config.ts"

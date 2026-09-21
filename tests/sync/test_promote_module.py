@@ -4,7 +4,11 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts.sync import promote_module
+
+pytestmark = pytest.mark.reads_content
 
 
 def _git(repo: Path, *args: str, env: dict[str, str] | None = None) -> subprocess.CompletedProcess[str]:
