@@ -1,9 +1,10 @@
 # Fresh lesson-based build — A2 arc (module grain)
 
-> Sub-epic #8397, issue #8424. Status: **draft r2** by the curriculum-upgrade driver, 2026-09-21.
+> Sub-epic #8397, issue #8424. Status: **accepted by the operator 2026-09-21** (r2, by the curriculum-upgrade driver).
 > r1 was reviewed by AGY `gemini-3.8-flash-high` (task `plan-review-8424-a2-arc-r1`): APPROVE with
 > three minor findings; r2 corrects the ULP counts in D7 (the driver re-measured them) and tightens
-> position 43. Not yet accepted by the operator: the five open questions of §8 stand with their defaults. Same method and table format as
+> position 43. The operator accepted the arc as written, including the driver's proposal on each of
+> the five questions in §8, which are therefore decisions. Same method and table format as
 > the A1 arc ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md)); requirements:
 > [`fresh-build-requirements.md`](fresh-build-requirements.md); schema:
 > [`fresh-build-plan-schema.md`](fresh-build-plan-schema.md). This document becomes
@@ -256,8 +257,8 @@ a number, not stretched to fill one. The module plan decides the count; the plan
 directions, cramming and dragging. Position 43 is the largest on purpose: ULP spends eight lessons
 on the prefixes of motion verbs (81–84 and 86–89). It is also the densest module of the level, so
 its plan keeps 43 to the verbs themselves and sends the travel situations and connected travel
-narration to position 45, its theme partner (review finding, r1); whether 43 stays one module is
-open question 2 in §8.
+narration to position 45, its theme partner (review finding, r1); that 43 stays one module is
+decision 2 in §8.
 
 ## 6. Coverage against the Standard's catalogues
 
@@ -296,20 +297,20 @@ change in the Ukrainian share of ULP's lesson notes is between Season 3 and Seas
 89.3 %), not between Season 1 and Season 2 as `docs/best-practices/ulp-presentation-pattern.md`
 states. Our A2 is already more immersive than ULP Seasons 2–3; the operator's setting stands.
 
-## 8. Open questions for the operator (each with the driver's proposed default)
+## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently agreed with all five)
 
-1. **Keep all 69 slugs and positions (D1)?** Default: yes. The alternative — re-ordering A2 to ULP's
+1. **Keep all 69 slugs and positions (D1):** yes. The alternative — re-ordering A2 to ULP's
    exact order (plural first, accusative block between dative and instrumental) — would break URL
    parity with `/a2-v1/` and shift immersion bands for no gain the three decisions D2–D4 do not
    already deliver.
-2. **Prefixed motion verbs: one large module (43) or two?** Default: one module of about seven
+2. **Prefixed motion verbs:** one large module (43), not two — one module of about seven
    lessons, because a slug for a second one does not exist and R-02 forbids squeezing. If the plan
    review finds it too long, lessons on travel situations move into 45, which is its theme partner.
-3. **Metalanguage at the point of need (D4)?** Default: yes. It changes the job of positions 61–66
+3. **Metalanguage at the point of need (D4):** yes. It changes the job of positions 61–66
    from "first teaching of grammar terms" to "reading grammar explanations as a Ukrainian textbook
    words them".
-4. **Participles and the conditional stay in B1 (D5)** although ULP Season 3 has them. Default: yes.
-5. **`свій` as a system, `себе` as set phrases (D7).** Default: yes; the language lanes confirm from
+4. **Participles and the conditional stay in B1 (D5)** although ULP Season 3 has them: yes.
+5. **`свій` as a system, `себе` as set phrases (D7):** yes; the language lanes confirm from
    the sources which fixed expressions with `себе` are frequent enough for A2.
 
 ## 9. Follow-ups outside this document
