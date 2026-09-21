@@ -20,6 +20,7 @@ import contextlib
 import hashlib
 import json
 import os
+import shlex
 import signal
 import sqlite3
 import stat
@@ -941,7 +942,10 @@ class HomonymFetcher:
         )
         size = _register_size(html)
         if size is not None:
+            prior = self.ledger.meta("register_size")
             self.ledger.set_meta("register_size", str(size))
+            if not prior:
+                print(f"discovered register size: {size}", file=sys.stderr, flush=True)
 
 
 def _matching(rows: Sequence[Mapping[str, Any]], spelling: str) -> list[dict[str, Any]]:
@@ -1206,16 +1210,11 @@ def prepare_database(db_path: Path) -> sqlite3.Connection:
 
 def _spellings_from_file(path: Path) -> list[str]:
     found: list[str] = []
-    seen: set[str] = set()
     for line in path.read_text(encoding="utf-8").splitlines():
         text = line.split("\t", 1)[0].strip()
         if not text or text.startswith("#"):
             continue
-        key = normalize_ulif_spelling(text)
-        if key in seen:
-            continue
-        seen.add(key)
-        found.append(key)
+        found.append(text)
     return found
 
 
@@ -1296,12 +1295,23 @@ def _format_progress_line(
 def _print_stop_summary(
     *,
     reason: str,
-    ledger: SpellingLedger,
+    ledger: SpellingLedger | None = None,
     requests_in_process: int,
     elapsed_seconds: float,
     resume_cmd: str,
 ) -> None:
-    counts = ledger.counts()
+    if ledger is not None:
+        counts = ledger.counts()
+    else:
+        counts = {
+            "spellings_total": 0,
+            "stored": 0,
+            "absent_from_ulif": 0,
+            "retry_scheduled": 0,
+            "error": 0,
+            "pending": 0,
+            "entries_stored": 0,
+        }
     h = int(elapsed_seconds // 3600)
     m = int((elapsed_seconds % 3600) // 60)
     s = int(elapsed_seconds % 60)
@@ -1353,7 +1363,7 @@ def run_fetch(
         resolved_resume_cmd = resume_cmd
     else:
         cmd_parts = [
-            ".venv/bin/python",
+            sys.executable,
             "-m",
             "scripts.lexicon.runner.fetch_ulif_homonyms",
             "run",
@@ -1362,11 +1372,21 @@ def run_fetch(
             "--db",
             str(db_path),
             "--delay",
-            f"{delay_seconds:.1f}",
+            f"{delay_seconds:g}",
         ]
         if spellings_file:
             cmd_parts.extend(["--spellings-file", str(spellings_file)])
-        resolved_resume_cmd = " ".join(cmd_parts)
+        if max_spellings is not None:
+            cmd_parts.extend(["--max-spellings", str(max_spellings)])
+        if max_requests is not None:
+            cmd_parts.extend(["--max-requests", str(max_requests)])
+        if refetch:
+            cmd_parts.append("--refetch")
+        if break_stale_lock:
+            cmd_parts.append("--break-stale-lock")
+        if quiet:
+            cmd_parts.append("--quiet")
+        resolved_resume_cmd = shlex.join(cmd_parts)
 
     stop_reason = "finished"
     return_code = EXIT_OK
@@ -1579,17 +1599,21 @@ def run_fetch(
                 break
 
         return return_code
+    except (KeyboardInterrupt, InterruptedByOperator):
+        stop_reason = "interrupted by operator"
+        return_code = EXIT_INTERRUPTED
+        return return_code
     finally:
         elapsed = clock() - start_time
         if old_sigterm is not None:
             with contextlib.suppress(ValueError, OSError):
                 signal.signal(signal.SIGTERM, old_sigterm)
-        if client is not None and ledger is not None:
-            delta = client.requests_made - persisted_requests
-            if delta > 0:
-                ledger.add_requests(delta)
-                persisted_requests = client.requests_made
-        if ledger is not None:
+        try:
+            if client is not None and ledger is not None:
+                delta = client.requests_made - persisted_requests
+                if delta > 0:
+                    ledger.add_requests(delta)
+                    persisted_requests = client.requests_made
             _print_stop_summary(
                 reason=stop_reason,
                 ledger=ledger,
@@ -1597,11 +1621,17 @@ def run_fetch(
                 elapsed_seconds=elapsed,
                 resume_cmd=resolved_resume_cmd,
             )
-        if cache is not None:
-            cache.close()
-        if ledger is not None:
-            ledger.close()
-        lock.release()
+        except (KeyboardInterrupt, InterruptedByOperator):
+            stop_reason = "interrupted by operator"
+            return_code = EXIT_INTERRUPTED
+        finally:
+            if cache is not None:
+                with contextlib.suppress(Exception):
+                    cache.close()
+            if ledger is not None:
+                with contextlib.suppress(Exception):
+                    ledger.close()
+            lock.release()
 
 
 def build_a1_a2_spellings(
@@ -1713,6 +1743,11 @@ Exit codes:
   2: Retry storm (3 consecutive spellings failed)
   3: HTTP 403 Forbidden from server
   4: Interrupted by operator (SIGINT / SIGTERM)
+
+Related:
+  Runbook: issue #8423 (Step 3)
+  Master plan: issue #8400 (Step c)
+  Spec: issue #8429
 """,
     )
     run.add_argument(
@@ -1785,6 +1820,11 @@ Outputs:
 Exit codes:
   0: Parsing completed successfully
   1: Database or ledger error
+
+Related:
+  Runbook: issue #8423 (Step 5)
+  Master plan: issue #8400 (Step c)
+  Spec: issue #8429
 """,
     )
     parse.add_argument(
@@ -1818,6 +1858,12 @@ Outputs:
 
 Exit codes:
   0: Success
+  1: Invalid arguments
+
+Related:
+  Runbook: issue #8423
+  Master plan: issue #8400
+  Spec: issue #8429
 """,
     )
     status.add_argument(
@@ -1849,6 +1895,18 @@ Examples:
   .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms build-suspects \\
       --dump data/ulif_dump_all.db --vesum data/vesum.db \\
       --out batch_state/ulif-homonyms/suspects.txt
+
+Outputs:
+  Suspect spellings written to output text file
+
+Exit codes:
+  0: Report written successfully
+  1: Input database error or invalid arguments
+
+Related:
+  Runbook: issue #8423 (Step 2)
+  Master plan: issue #8400 (Step c)
+  Spec: issue #8429
 """,
     )
     suspects.add_argument(
@@ -1881,6 +1939,18 @@ Examples:
       --sources-db data/sources.db --vesum data/vesum.db \\
       --state-dir batch_state/ulif-homonyms/state \\
       --out batch_state/ulif-homonyms/a1a2.txt
+
+Outputs:
+  A1-A2 spellings written to output text file
+
+Exit codes:
+  0: Spelling list generated successfully
+  1: Database or ledger error
+
+Related:
+  Runbook: issue #8423 (Step 4)
+  Master plan: issue #8400 (Step c)
+  Spec: issue #8429
 """,
     )
     a1.add_argument(
@@ -1912,7 +1982,7 @@ Examples:
     if args.command == "run":
         spellings = _spellings_from_file(args.spellings_file)
         cmd_parts = [
-            ".venv/bin/python",
+            sys.executable,
             "-m",
             "scripts.lexicon.runner.fetch_ulif_homonyms",
             "run",
@@ -1923,27 +1993,42 @@ Examples:
             "--db",
             str(args.db),
             "--delay",
-            f"{args.delay:.1f}",
+            f"{args.delay:g}",
         ]
-        code = run_fetch(
-            spellings=spellings,
-            state_dir=args.state_dir,
-            db_path=args.db,
-            delay_seconds=args.delay,
-            max_spellings=args.max_spellings,
-            max_requests=args.max_requests,
-            refetch=args.refetch,
-            break_stale_lock=args.break_stale_lock,
-            quiet=args.quiet,
-            spellings_file=args.spellings_file,
-            resume_cmd=" ".join(cmd_parts),
-        )
-        ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
+        if args.max_spellings is not None:
+            cmd_parts.extend(["--max-spellings", str(args.max_spellings)])
+        if args.max_requests is not None:
+            cmd_parts.extend(["--max-requests", str(args.max_requests)])
+        if args.refetch:
+            cmd_parts.append("--refetch")
+        if args.break_stale_lock:
+            cmd_parts.append("--break-stale-lock")
+        if args.quiet:
+            cmd_parts.append("--quiet")
+        resume_cmd = shlex.join(cmd_parts)
         try:
-            print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
-        finally:
-            ledger.close()
-        return code
+            code = run_fetch(
+                spellings=spellings,
+                state_dir=args.state_dir,
+                db_path=args.db,
+                delay_seconds=args.delay,
+                max_spellings=args.max_spellings,
+                max_requests=args.max_requests,
+                refetch=args.refetch,
+                break_stale_lock=args.break_stale_lock,
+                quiet=args.quiet,
+                spellings_file=args.spellings_file,
+                resume_cmd=resume_cmd,
+            )
+            if code != EXIT_INTERRUPTED:
+                ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
+                try:
+                    print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
+                finally:
+                    ledger.close()
+            return code
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return EXIT_INTERRUPTED
     if args.command == "parse":
         cache = prepare_database(args.db)
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import os
+import shlex
 import sqlite3
 import subprocess
 import sys
@@ -1211,7 +1212,7 @@ def test_stop_summary_on_keyboard_interrupt(tmp_path, capsys):
     assert "Reason:               interrupted by operator" in err
     assert "Spellings total:      2" in err
     assert "Pending:              1" in err
-    assert "Resume command:       .venv/bin/python" in err
+    assert f"Resume command:       {shlex.quote(sys.executable)}" in err
     assert "===============================" in err
 
     ledger = _ledger(tmp_path)
@@ -1321,8 +1322,108 @@ def test_parse_stored_progress_logging(tmp_path, capsys):
         ledger.close()
 
 
-def test_cli_help_options():
+def test_cli_help_options(capsys):
     for subcmd in ["run", "parse", "status", "build-suspects", "build-a1a2"]:
         with pytest.raises(SystemExit) as exc:
             main([subcmd, "--help"])
         assert exc.value.code == 0
+        out = capsys.readouterr().out
+        assert "Examples:" in out
+        assert "Outputs:" in out
+        assert "Exit codes:" in out
+        assert "Related:" in out
+
+
+def test_start_banner_reports_counts_and_case_duplicates_via_cli(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(m: str, d: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms._requests_transport", lambda ua: handler)
+
+    spellings_file = _write_spellings(tmp_path / "spellings.txt", ["Замок", "замок", "будинок"])
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+            "--delay",
+            "1.0",
+        ]
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "Spellings in file:             3" in err
+    assert "Distinct after normalisation:  2 (1 duplicates)" in err
+    assert "To do in this run:             2" in err
+
+
+def test_resume_command_faithful_options_and_quoting(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    calls = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        calls["n"] += 1
+        if calls["n"] > 1:
+            raise KeyboardInterrupt()
+        return HttpResult(200, page, {})
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms._requests_transport", lambda ua: handler)
+    spellings_file = _write_spellings(tmp_path / "my spellings.txt", ["перше", "друге"])
+    state_dir = tmp_path / "state with space"
+    db_file = tmp_path / "cache with space.db"
+
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_file),
+            "--delay",
+            "1.25",
+            "--max-spellings",
+            "5",
+            "--quiet",
+        ]
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert shlex.quote(str(spellings_file)) in err
+    assert shlex.quote(str(state_dir)) in err
+    assert shlex.quote(str(db_file)) in err
+    assert "--delay 1.25" in err
+    assert "--max-spellings 5" in err
+    assert "--quiet" in err
+
+
+def test_discovered_register_size_emitted_to_stderr(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(m: str, d: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["тест"], _Scripted(handler))
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "discovered register size: 262812" in err
+
+
+def test_operator_interrupt_during_setup_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    def fake_prepare(db_path):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms.prepare_database", fake_prepare)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, "", {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
