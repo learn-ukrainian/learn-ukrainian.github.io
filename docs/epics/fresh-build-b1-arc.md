@@ -1,10 +1,10 @@
 # Fresh lesson-based build — B1 arc (module grain)
 
-> Sub-epic #8397, issue #8427. Status: **draft r2** by the curriculum-upgrade driver, 2026-09-21.
+> Sub-epic #8397, issue #8427. Status: **accepted by the operator 2026-09-21** (r2, by the curriculum-upgrade driver).
 > r1 was reviewed by AGY `gemini-3.8-flash-high` (task `plan-review-8427-b1-arc-r1`): APPROVE with two
 > MAJOR and four MINOR findings; r2 folds in five of the six and states the sixth — possessive
-> adjectives, where reviewer and driver disagree — as open question 2 with both positions. Not yet
-> accepted by the operator. Same method and table format as
+> adjectives, where reviewer and driver disagreed — as question 2 with both positions. The operator
+> accepted the driver's proposal on all five questions of §8, which are therefore decisions. Same method and table format as
 > the accepted A1 and A2 arcs ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md),
 > [`fresh-build-a2-arc.md`](fresh-build-a2-arc.md)); requirements:
 > [`fresh-build-requirements.md`](fresh-build-requirements.md); schema:
@@ -59,7 +59,7 @@ plan review checks each of them for it.
 | Possessive adjectives | school textbooks grade 6 (Авраменко, Літвінова, Голуб 2023 — three chunks each); **no ULP lesson teaches them and the Standard lists them at no level** | not in the Standard | 49 |
 
 Position 30 stays a recognition module: the B2 arc owns the passive system (its first ten modules).
-Position 49 is open question 2 in §8.
+Position 49 is decision 2 in §8.
 
 **D4 — The theme Суспільні відносини is owned on purpose, not in passing.** The Standard's B1 adds
 a theme the lower levels do not have: social institutions, social problems, the structure of the
@@ -118,7 +118,7 @@ the Standard's B1 sizes.
 | Comparison constructions with `ніж`, `за`, `від`, `як` | system | 44, 46 | `:2131`, `:2178`, `:2208`, `:2449-2450` |
 | Word formation: agent nouns, verbal nouns, place nouns | system | 50, 31 | `:2320-2327` |
 | Word formation: adjectives from nouns; adverbs from adjectives | system | 48, 46 | `:2330-2334` |
-| Possessive adjectives | system (small) — D3, open question 2 | 49 | not in the Standard |
+| Possessive adjectives | system (small) — D3, decision 2 in §8 | 49 | not in the Standard |
 | Verb formation with suffixes | system | 32 | `:2270-2271` (the `-увати` pattern) |
 | Prefixed verbs of motion | recycled from A2 (D2); **new at B1:** the aspect pair of each prefixed verb (the Standard's own examples: A2 `:1381`, B1 `:2336-2338`), the preposition and case each prefix takes (`:2159-2176`, `:2202-2209`), further base verbs, figurative uses | 35–42 | `:2336-2338` |
 | Simple sentence: statement and negation; the three question types, with `який?` and `яка?` added; requests, advice and proposals | recycled from A2 | 1, 26 | `:2344-2348`, `:2354-2365` |
@@ -280,20 +280,20 @@ One band for the whole level: every position 1–94 maps to `b1-core`, 100 % Ukr
 (`IMMERSION_POLICIES["b1"]`). Nothing is re-tuned (R-30). A module split or merged later stays in
 the same band.
 
-## 8. Open questions for the operator (each with the driver's proposed default)
+## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21)
 
-1. **Keep all 94 slugs and positions (D1)?** Default: yes.
-2. **Possessive adjectives (49): a module of their own, or folded into 48?** Neither the Standard
-   (at any level) nor ULP has them; the grade 6 school textbooks do. **The driver's default:** keep
+1. **Keep all 94 slugs and positions (D1):** yes.
+2. **Possessive adjectives (49) are a module of their own, two lessons — not folded into 48.** Neither the Standard
+   (at any level) nor ULP has them; the grade 6 school textbooks do. **Decided as the driver proposed:** keep
    a two-lesson module — R-08 makes the school textbooks a legitimate source of teaching points,
    and R-32 limits only teaching something *earlier than the Standard places it*, which does not
-   apply to something the Standard places nowhere. **The reviewer's position (r1, MAJOR):** a
+   apply to something the Standard places nowhere. **The reviewer's position (r1 and r2, MAJOR — recorded, not adopted):** a
    dedicated module on textbook evidence alone stretches R-32 and adds weight; fold the formation
-   into 48 and make 49 a consolidation practice module. Both keep the slug. The operator decides.
+   into 48 and make 49 a consolidation practice module. The operator chose the separate module.
 3. **The theme Суспільні відносини, війна і мир included, is owned by 73, 92 and 91 (D4)**, with
-   every text about the war taken from the corpus and sourced. Default: yes.
-4. **Passive and impersonal forms at 30 are recognition only**; the system is B2's. Default: yes.
-5. **The motion block keeps ten positions** although A2 now teaches the common prefixes. Default:
+   every text about the war taken from the corpus and sourced: yes.
+4. **Passive and impersonal forms at 30 are recognition only**; the system is B2's: yes.
+5. **The motion block keeps ten positions** although A2 now teaches the common prefixes:
    yes for the arc, with the prefix positions cut to two lessons each (r1 review); the plan review
    of 35–40 decides whether two of them should be merged.
 
