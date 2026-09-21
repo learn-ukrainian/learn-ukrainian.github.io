@@ -3057,7 +3057,7 @@ def verify_complete(
                 )
             )
 
-            # Check page continuity
+            # Check page continuity and reconcile row page references against page records
             page_records = list(
                 ledger.conn.execute("SELECT page_num, state, error FROM register_pages ORDER BY page_num")
             )
@@ -3072,6 +3072,20 @@ def verify_complete(
                         page_continuity_errors.append(
                             f"gap in page sequence between page {curr_p['page_num']} and {next_p['page_num']}"
                         )
+
+            completed_page_set = {int(p["page_num"]) for p in page_records if str(p["state"]) == "completed"}
+            row_page_set = {
+                int(row[0])
+                for row in ledger.conn.execute("SELECT DISTINCT page_num FROM register_rows WHERE state = 'completed'")
+            }
+            missing_page_records = sorted(row_page_set - completed_page_set)
+            if missing_page_records:
+                page_continuity_errors.append(
+                    f"completed rows reference missing or uncompleted pages: {missing_page_records}"
+                )
+            pages_without_rows = sorted(completed_page_set - row_page_set)
+            if pages_without_rows:
+                page_continuity_errors.append(f"completed pages have no completed rows recorded: {pages_without_rows}")
 
             # Reconcile completed rows with persisted database entries
             table_exists = (

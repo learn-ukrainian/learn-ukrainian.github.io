@@ -849,6 +849,33 @@ def test_verify_complete_fails_on_page_continuity_gap(tmp_path: Path):
     assert code == EXIT_USAGE
 
 
+def test_verify_complete_fails_when_final_page_record_deleted(tmp_path: Path):
+    server = MockULIFServer()
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+
+    # Delete page 3 from register_pages (final page)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.conn.execute("DELETE FROM register_pages WHERE page_num = 3")
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+
+    # verify_complete must fail because page 3 rows have no completed page record
+    code = verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8)
+    assert code == EXIT_USAGE
+
+
 def test_exhausted_retries_does_not_corrupt_page_numbering(tmp_path: Path):
     server = MockULIFServer()
     orig_call = server.__call__
