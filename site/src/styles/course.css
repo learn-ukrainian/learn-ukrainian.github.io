@@ -220,7 +220,7 @@ body {
   padding: 0 24px;
   display: flex;
   align-items: center;
-  gap: 22px;
+  gap: 16px;
 }
 
 .lu-logo {
@@ -251,10 +251,17 @@ body {
   gap: 2px;
   min-width: 0;
   flex: 1;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+}
+
+.lu-nav::-webkit-scrollbar {
+  display: none;
 }
 
 .lu-nav a {
-  padding: 6px 12px;
+  padding: 6px 8px;
   border-radius: 8px;
   color: var(--lu-gray-600);
   font-size: 0.82rem;
@@ -276,7 +283,7 @@ body {
 .lu-nav-divider {
   width: 1px;
   height: 22px;
-  margin: 0 6px;
+  margin: 0 4px;
   background: var(--lu-border);
 }
 
