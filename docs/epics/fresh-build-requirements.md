@@ -26,7 +26,9 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-01 Lessons.** A module is split into lessons of roughly one hour of learner time each.
 - **R-02 No lesson cap.** A module has as many lessons as its content needs. Nobody pads a module
   to reach a count or squeezes one to stay under a count.
-- **R-03 Recap close.** The last lesson of a module is a learner recap of *that* module. It is not a
+- **R-03 Recap close.** A module closes with a learner recap of *that* module: normally its last
+  lesson; for a short module, a recap section closing its last lesson, if the plan review agrees
+  (so a short module is not dragged out). It is not a
   "Textbook Check", not a school-system explainer and not another presentation-practice-production
   cycle.
 - **R-04 Targets per lesson.** Word targets are set per lesson and remain minimums.
@@ -90,12 +92,18 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   patterns its activities drill); the deck is generated deterministically from the plan and the
   level word store, in the same build as the lesson — not a later phase. Spaced scheduling across
   lessons and modules is the existing Practice Hub's job (#4387); modules feed it and do not
-  re-implement it.
+  re-implement it. **Honest gap (verified 2026-09-21):** `scripts/audit/generate_practice_deck.py`
+  only builds whole-level decks from `data/atlas.db`, and the Practice Hub only consumes those
+  level shards and daily pools. A per-lesson deck generator and a Practice Hub feed for module
+  decks do not exist yet; both are build prerequisites and get their own child issues.
 - **R-34 Every taught word has an Atlas entry.** A vocabulary card links to the word's Atlas
   dictionary entry. If the entry is missing when a module is built, the build triggers Atlas
   enrichment for that word through the Atlas pipeline — deterministic, from dictionary sources, never
   LLM-written (decision 2026-09-11) — and reports any word that still has no entry instead of
-  linking to nothing.
+  linking to nothing. **Honest gap (verified 2026-09-21):** `scripts/lexicon/enrich_manifest.py` is a
+  full-batch generator with no single-word entry point, and `scripts/atlas/fill_local.py --slug`
+  only enriches articles that already exist. Admitting one new lemma, enriching it and exporting
+  its shard on demand must be built (Atlas lane, #4387) before the build can trigger it.
 
 ### Scope and order
 

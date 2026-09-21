@@ -16,7 +16,7 @@
 | State Standard 2024, A1 | `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:221-747`; machine map `docs/l2-uk-en/state-standard-2024-mapping.yaml:16-132` | the **minimum** A1 must cover (operator, 2026-09-21: the Standard is a floor, not a ceiling): four cases (називний, знахідний, місцевий, кличний); present, past, compound future and a few perfective futures; imperative 2nd person only; ordinal numerals; grammar "sporadic, based on reproducing ready communicative models" (`:562-567`); 17 speech intentions (`:453-477`), 12 themes (`:479-556`); writing of forms, postcards, SMS (`:338-377`); dialogue of 4–6 turns (`:432`) |
 | ULP Season 1–2 | `data/sources.db` `textbook_sections` (`ulp-1-00-lesson-notes` …), `external_articles` (`ulp_youtube`, full transcripts), `docs/best-practices/ulp-presentation-pattern.md`, `audit/ulp-calibration-2026-05-13/raw.jsonl` | the **method and order**: a case first as a lexical chunk, later as a system (S1 chunk → S2 system); conjugations before the accusative; past and future inside the first season; review lesson = first-person bilingual story + Ukrainian-only questions + one translation task; a pronunciation trainer at regular intervals |
 | Primers | Захарійчук, Буквар 2025, parts 1–2 (`textbooks`, subject `bukvar`, 223 page chunks); Большакова 2025 reading notes `docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md` | the **literacy lesson shape**: letter + key word → locate the sound → syllable tables (CV → CVC) → words → short connected text; звук before літера; sound models for vowel / hard / soft |
-| Project decisions | `docs/l2-uk-en/A1-CURRICULUM-V3.md:31-37, 242-252`; `ulp-presentation-pattern.md:17` | no dative or instrumental as grammar at A1; imperative 2nd person only; Ukrainian approach to the alphabet (звуки / літери), not the English-centric "true friends / false friends" grouping |
+| Project decisions | `docs/l2-uk-en/A1-CURRICULUM-V3.md:31-37, 242-252` (case scope, alphabet approach); `docs/best-practices/ulp-presentation-pattern.md` §"Why this matters" (operator's preference for the Ukrainian approach) | no dative or instrumental as grammar at A1; imperative 2nd person only; Ukrainian approach to the alphabet (звуки / літери), not the English-centric "true friends / false friends" grouping |
 
 ## 2. Decisions
 
@@ -25,8 +25,8 @@ from the Standard and, read module by module, stays inside its A1 ceiling: genit
 instrumental appear only as marked chunks (`у мене є`, `мені подобається`, `з/без + noun`,
 `автобусом`, `вітаю з …`). Keeping positions means: `/a1/<slug>/` parallels `/a1-v1/<slug>/`; the
 immersion bands, which are keyed by module number (R-30), keep working unchanged; and review
-effort goes into lessons, not into re-arguing order. **One exception (r2): position 45 is
-re-targeted** — see D6.
+effort goes into lessons, not into re-arguing order. Position 45 keeps its v1 job and gains the
+home theme (D6).
 
 **D2 — What was actually broken, and is fixed by this arc:**
 1. *Literacy scope.* Module 1's subtitle promised seven letters while its body listed all 33
@@ -79,7 +79,7 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Gender of nouns; adjective agreement (hard and soft group), nominative | system | 8–10 | §4.2.1 `:603-650` |
 | Adjective agreement in the **locative** and **accusative** (hard and soft group) | system | locative 29–30; accusative 31, 37, 40 | `:633-650`, examples `:680`, `:691` |
 | Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 5) | `:656-657` |
-| Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, `мені потрібен`); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
+| Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, and the "I need" chunk); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
 | Demonstratives, possessives, nominative | system | 6, 12 | `:659-667` |
 | Nominative plural (nouns, adjectives, demonstratives) | system | 13 | `:603-631` |
 | Present tense, conjugations I and II, modal + infinitive, reflexive verbs | system | 15–20 | `:703-719` |
@@ -90,19 +90,19 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Accusative: direction, inanimate object, animate object | system | 31, 37, 40 | `:678-688` |
 | `про` + accusative with думати, мріяти | system (small) | 40, recycled 51 | `:687-688` |
 | Locative with months; accusative with days of the week | chunk at 23, recognised as system after 29 / 31 | 23 | `:678-695` |
-| Clock time `о / об` + locative ordinal | chunk at 22, recognised after 29 | 22 | — |
-| `грати у` + sport, `грати на` + instrument | chunk | 26 | — |
-| Date formulas (ordinal + month, both in the genitive) | **chunk only** | 23, 46 | genitive is A2 |
+| Clock time `о / об` + locative ordinal | chunk at 22, recognised after 29 | 22 | inside the Standard's A1 (time with у / в `:693`, ordinals `:652-654`); ULP systematises it at S2 L67 |
+| `грати у` + sport, `грати на` + instrument | chunk (vocabulary-level, no case taught) | 26 | ULP lesson to be cited by the module's evidence pack; if none is found the chunk stays lexical only |
+| Date formulas (ordinal + month, both in the genitive) | **chunk only** | 23, 46 | genitive is A2; ULP meets "of"-genitive in dates at S1 L15 and teaches dates at S2 L68 |
 | Vocative | system | 42 | `:697-699` |
 | Imperative, 2nd person singular and plural | system | 43 (first met as chunks at 33) | `:721-725` |
 | Coordination і (й) / а / але; cause бо / тому що | system | 44 | `:741-747` |
 | Clauses with що, де / куди / звідки, коли | met unexplained in texts from early on (ULP S1 L5 / L17 / L20); **system at 45** | 45 | beyond the Standard's A1 minimum (A2 `:1408-1411`, коли B1 `:2406`); taught here on ULP evidence (D0, D6) |
 | Past tense | system | 48–49 | `:713-714` |
-| Compound future (буду + infinitive) | system | 50–51 | `:715-717` |
+| Compound future (буду + infinitive) | system | 50–51 | `:715-717` — the Standard's A1 names only the compound form; the synthetic future is B1 (`:2287-2289`) and ULP S3 L98 |
 | A few perfective futures | chunk | 50–52 | `:718-719` |
-| Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 6, 34, 36, 39 | first systematic at A2 |
-| Dative (`мені подобається`, `мені … років`, `мені потрібен`) | **chunk only** | 11, 15, 54 | not allowed as grammar at A1 (mapping `:97-102`) |
-| Instrumental (`автобусом`, `з молоком`, `вітаю з …`) | **chunk only** | 32, 36, 46 | not allowed as grammar at A1 |
+| Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 6, 34, 36, 39 | first systematic at A2; ULP uses it as a chunk from S1 L6 (`у мене є`) and L15, system at S2 L46–49 |
+| Dative (`мені подобається`, `мені … років`, the "I need" chunk) | **chunk only** | 11, 15, 54 | noun dative is A2 (mapping `:97-102`); ULP S1 L14 (`подобається` + dative pronouns), system at S2 L51–53 |
+| Instrumental (`автобусом`, `з молоком`, `вітаю з …`) | **chunk only** | 32, 36, 46 | noun instrumental is A2; ULP S1 L21 (`українською`), system at S2 L61–62 |
 | Verb aspect | **first awareness only**, tied to the perfective futures and past narration — ULP introduces the imperfective / perfective idea at S1 L34 | 49–52 | system is A2 |
 | Comparison of adjectives; 3rd-person imperative; oblique forms of він / вона / воно / вони; genitive, dative, instrumental of nouns as systems | **not in A1** — ULP itself systematises these in Season 2 lessons 46–62, which map to our A2 | — | A2 |
 
@@ -217,8 +217,18 @@ household objects already met at 9 and 12.
 
 ## 7. Follow-ups outside this document
 
-- `docs/l2-uk-en/state-standard-2024-mapping.yaml:126` attributes `що / де / коли` clauses to A1, and
-  `:84` lists `за`, `через` under the A1 accusative; the Standard text has them at A2 / B1
+- **Wording of the "I need" chunk (position 54) is for the language lanes.** v1 used the short
+  adjective form with `мені`; the Ukrainian-language reviewer flagged it as a possible calque and
+  suggested `мені треба` or the full adjective form. The style-guide tool has no entry against the
+  short form and quotes it without criticism (Антоненко-Давидович, «Спостереження митця»), and notes
+  that a missing entry proves nothing. The arc therefore names the function, not the wording; the
+  module's evidence pack settles it with sources.
+- Counts of clause markers in §2 D6 are whitespace-tolerant (`,\s*що\b`), so they include matches
+  split across line breaks in the lesson notes (76 on one line + 6 across breaks = 82).
+
+- `docs/l2-uk-en/state-standard-2024-mapping.yaml:126` attributes `що / де / коли` clauses to A1,
+  `:84` lists `за`, `через` under the A1 accusative, and `:91` lists `по` under the A1 locative (the
+  Standard's A1 locative has only `в / у`, `на`, `:690-695`; `по` first appears at A2 `:1330`); the Standard text has them at A2 / B1
   (`:1408-1411`, `:2406`, `:2205`). The file should state what the Standard says, and the
   compliance gate and the plan-review skill that read it must treat the Standard as a **minimum**
   (D0): "taught earlier on ULP evidence" is not a violation. To be settled before A1 module plans

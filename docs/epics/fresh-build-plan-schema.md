@@ -3,7 +3,7 @@
 > Sub-epic #8397, child 3. Status: **design draft r2** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
 > `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
-> R-24…R-28, R-30 of [`fresh-build-requirements.md`](fresh-build-requirements.md). No code yet.
+> R-24…R-28, R-30, R-32, R-33, R-34 of [`fresh-build-requirements.md`](fresh-build-requirements.md). No code yet.
 
 ## 1. Three artifacts, one owner each
 
@@ -39,7 +39,9 @@ lessons:
     job: "One sentence: what the learner can do after this lesson that they could not before."
     rationale: "Why here, why in this order; what English speakers get wrong."   # replaces wiki prose
     minutes: 60                             # plan estimate, not a gate
-    word_target: 1200                       # minimum, per lesson (R-04)
+    word_target: <n>                        # minimum, per lesson (R-04). NOT v1's 1,200, which was a
+                                            # whole module; lesson-grain values are calibrated from
+                                            # the first built pilot, per level, then fixed in config
     inventory:
       phonetics: { letters: [А, О, У], sounds: [] }   # optional block; A1 letter modules only
       grammar: []                           # named points, each traceable to an evidence id
@@ -84,8 +86,11 @@ lessons:
 
 Rules the validator enforces (all deterministic):
 
-1. `lessons` is non-empty; `n` is 1..N contiguous; exactly one lesson has `kind: recap` and it is
-   the last (checkpoint modules: all lessons `checkpoint`, no new inventory).
+1. `lessons` is non-empty; `n` is 1..N contiguous. The module closes with a recap (R-03) in exactly
+   one of two shapes: (a) the last lesson has `kind: recap`; or (b) the last lesson is `teach` and
+   carries `closes_with_recap: true` with a final `recap` step that introduces nothing — allowed
+   only when the module has at most two teach lessons, and flagged for the plan review to confirm.
+   Checkpoint modules: all lessons `checkpoint`, no new inventory.
 2. The recap lesson has empty `inventory.vocabulary.core`, empty `phonetics` and `grammar`, and no `teach` steps that introduce material.
 3. Every `evidence` id exists in the locked pack; the pack hash matches `evidence_ref.sha256`.
 4. Every `inventory.vocabulary.recycled` lemma and every grammar point used but not introduced is
@@ -201,7 +206,8 @@ the only place built content is an input, and only within the module being built
 | plan-validate | §2 rules 1–7 |
 | pack-verify | every quote matches its chunk; every word record re-verifies against current sources; every video URL answers |
 | coverage | every evidence id cited by the lesson plan appears in the lesson and in Ресурси |
-| inventory | lesson introduces exactly its `inventory.new`; nothing outside learner state + new |
+| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses nothing outside planned learner state + this lesson's `core` and `incidental` |
+| standard-coverage | R-32: every State Standard requirement the arc assigns to this module is cited by at least one lesson (`standard:` ids in the pack); an item taught earlier than the Standard places it must carry a ULP evidence id. Teaching early is never a failure by itself. Reads the corrected mapping file (#8404) |
 | stress | every stressed form in the lesson matches the pack's form record for that grammatical context |
 | practice | the generated deck contains every `practice` item of the lesson plan and nothing outside the lesson's inventory + learner state |
 | atlas-link | every core lemma resolves to an Atlas entry; a miss triggers Atlas enrichment and is reported, never linked blind (R-34) |
