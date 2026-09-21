@@ -262,6 +262,7 @@ class SpellingLedger:
                 error TEXT NOT NULL DEFAULT '',
                 straddled_boundary INTEGER NOT NULL DEFAULT 0,
                 attempts INTEGER NOT NULL DEFAULT 0,
+                duplicate_content INTEGER NOT NULL DEFAULT 0,
                 updated_at TEXT NOT NULL
             );
             CREATE TABLE IF NOT EXISTS responses (
@@ -282,6 +283,15 @@ class SpellingLedger:
             """
         )
         self.conn.commit()
+        self._ensure_duplicate_content_column()
+
+    def _ensure_duplicate_content_column(self) -> None:
+        columns = {str(row[1]) for row in self.conn.execute("PRAGMA table_info(spellings)")}
+        if "duplicate_content" not in columns:
+            self.conn.execute(
+                "ALTER TABLE spellings ADD COLUMN duplicate_content INTEGER NOT NULL DEFAULT 0"
+            )
+            self.conn.commit()
 
     def close(self) -> None:
         self.conn.close()
@@ -309,15 +319,46 @@ class SpellingLedger:
         entry_count: int = 0,
         error: str = "",
         straddled: bool = False,
+        duplicate_content: bool | None = None,
     ) -> None:
+        if duplicate_content is None:
+            self.conn.execute(
+                """
+                UPDATE spellings
+                SET state = ?, entry_count = ?, error = ?, straddled_boundary = ?,
+                    attempts = attempts + 1, updated_at = ?
+                WHERE spelling = ?
+                """,
+                (state, entry_count, error, 1 if straddled else 0, _now_iso(), spelling),
+            )
+        else:
+            self.conn.execute(
+                """
+                UPDATE spellings
+                SET state = ?, entry_count = ?, error = ?, straddled_boundary = ?,
+                    duplicate_content = ?, attempts = attempts + 1, updated_at = ?
+                WHERE spelling = ?
+                """,
+                (
+                    state,
+                    entry_count,
+                    error,
+                    1 if straddled else 0,
+                    1 if duplicate_content else 0,
+                    _now_iso(),
+                    spelling,
+                ),
+            )
+        self.conn.commit()
+
+    def set_duplicate_content(self, spelling: str, duplicate_content: bool) -> None:
         self.conn.execute(
             """
             UPDATE spellings
-            SET state = ?, entry_count = ?, error = ?, straddled_boundary = ?,
-                attempts = attempts + 1, updated_at = ?
+            SET duplicate_content = ?, updated_at = ?
             WHERE spelling = ?
             """,
-            (state, entry_count, error, 1 if straddled else 0, _now_iso(), spelling),
+            (1 if duplicate_content else 0, _now_iso(), spelling),
         )
         self.conn.commit()
 
@@ -543,13 +584,24 @@ class PoliteClient:
 
     def exchange(self, method: str, fields: dict[str, str] | None) -> tuple[str, bytes]:
         """Return ``(body, redacted_request)``. Raises on 403, exhaustion, or a dead session."""
+        import requests
+
         redacted = _redact_payload(fields, method=method)
         last_code = "http_error"
         for attempt in range(1, MAX_HTTP_ATTEMPTS + 1):
             self._wait_turn()
             if self.max_requests is not None and self.requests_made >= self.max_requests:
                 raise RequestCap(str(self.max_requests))
-            result = self.transport(method, fields)
+            try:
+                result = self.transport(method, fields)
+            except requests.RequestException:
+                self.requests_made += 1
+                self._last_at = self.clock()
+                last_code = "transport_error"
+                if attempt == MAX_HTTP_ATTEMPTS:
+                    raise RequestExhausted(last_code) from None
+                self.sleep(_retry_after_seconds({}, attempt))
+                continue
             self.requests_made += 1
             self._last_at = self.clock()
             code = result.status_code
@@ -658,7 +710,9 @@ class HomonymFetcher:
                 after, next_tokens = self._adjacent(spelling, search_tokens, "next", 1)
                 if next_tokens is not None:
                     page_tokens["1"] = next_tokens
-        ordered = _dedupe_stressed([*before, *({**row, "page_delta": 0} for row in matches), *after])
+        ordered = _dedupe_register_rows(
+            [*before, *({**row, "page_delta": 0} for row in matches), *after]
+        )
         if not ordered:
             return UnitOutcome("absent_from_ulif", 0, straddled)
         for index, row in enumerate(ordered, start=1):
@@ -758,11 +812,19 @@ def _matching(rows: Sequence[Mapping[str, Any]], spelling: str) -> list[dict[str
     return [dict(row) for row in rows if normalize_ulif_spelling(str(row["unstressed"])) == target]
 
 
-def _dedupe_stressed(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
-    seen: set[str] = set()
+def _dedupe_register_rows(rows: Iterable[Mapping[str, Any]]) -> list[dict[str, Any]]:
+    """Keep register order; drop only a repeated physical row identity.
+
+    Identity is ``(page_delta, select)`` — the page fork plus the ``Select$N``
+    postback ``_open_entry`` sends. Display text is never a key: same-stress
+    homonyms share stressed spelling but have different ``select`` values.
+    Adjacent pages observed so far do not repeat a row; this still collapses
+    a duplicated identity if page composition ever overlapped.
+    """
+    seen: set[tuple[int, str]] = set()
     ordered: list[dict[str, Any]] = []
     for row in rows:
-        key = str(row["stressed"])
+        key = (int(row["page_delta"]), str(row["select"]))
         if key in seen:
             continue
         seen.add(key)
@@ -819,8 +881,20 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
             section_sets.append(sections)
             raw_sets.append(raw)
         differing += _write_group(cache, spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
+        ledger.set_duplicate_content(spelling, _duplicate_content(parsed_rows))
     ledger.set_meta("differing_content_hashes", str(differing))
     return differing
+
+
+def _duplicate_content(parsed_rows: Sequence[Mapping[str, Any]]) -> bool:
+    """True when two entries share both sense_gloss and content_sha256."""
+    seen: set[tuple[str, str]] = set()
+    for row in parsed_rows:
+        key = (str(row.get("sense_gloss", "")), str(row.get("content_sha256", "")))
+        if key in seen:
+            return True
+        seen.add(key)
+    return False
 
 
 def _write_group(
@@ -872,28 +946,33 @@ def _write_group(
         )
         if int(row[1]) not in keep
     ]
-    if stale_ids:
-        marks = ",".join("?" for _ in stale_ids)
-        cache.execute(f"DELETE FROM ulif_dictua_sections WHERE entry_id IN ({marks})", stale_ids)
-        cache.execute(f"DELETE FROM ulif_dictua_entries WHERE id IN ({marks})", stale_ids)
+    try:
+        if stale_ids:
+            marks = ",".join("?" for _ in stale_ids)
+            cache.execute(f"DELETE FROM ulif_dictua_sections WHERE entry_id IN ({marks})", stale_ids)
+            cache.execute(f"DELETE FROM ulif_dictua_entries WHERE id IN ({marks})", stale_ids)
+        for parsed, sections, raw in zip(parsed_rows, section_sets, raw_sets, strict=True):
+            store(
+                word=normalized,
+                canonical_headword=str(parsed["canonical_headword"]),
+                sections=sections,
+                raw_responses=raw,
+                retrieved_at=_now_iso(),
+                parser_version=ULIF_PARSER_VERSION,
+                status="ok",
+                homonym_index=int(parsed["homonym_index"]),
+                grammatical_label=str(parsed["grammatical_label"]),
+                sense_gloss=str(parsed["sense_gloss"]),
+                register_position=str(parsed["register_position"]),
+                homonym_checked=1,
+                content_sha256=str(parsed["content_sha256"]),
+                db_path=_db_path(cache),
+                conn=cache,
+            )
         cache.commit()
-    for parsed, sections, raw in zip(parsed_rows, section_sets, raw_sets, strict=True):
-        store(
-            word=normalized,
-            canonical_headword=str(parsed["canonical_headword"]),
-            sections=sections,
-            raw_responses=raw,
-            retrieved_at=_now_iso(),
-            parser_version=ULIF_PARSER_VERSION,
-            status="ok",
-            homonym_index=int(parsed["homonym_index"]),
-            grammatical_label=str(parsed["grammatical_label"]),
-            sense_gloss=str(parsed["sense_gloss"]),
-            register_position=str(parsed["register_position"]),
-            homonym_checked=1,
-            content_sha256=str(parsed["content_sha256"]),
-            db_path=_db_path(cache),
-        )
+    except Exception:
+        cache.rollback()
+        raise
     return differing
 
 

@@ -555,11 +555,16 @@ def store_ulif_dictua_entry(
     homonym_checked: int = 0,
     content_sha256: str = "",
     db_path: str | Path | None = None,
+    conn: sqlite3.Connection | None = None,
 ) -> dict | None:
     """Persist one complete DictUA response and return its materialized form.
 
     Transient failures are intentionally never persisted: a network outage is
     not evidence that a Ukrainian word does not exist.
+
+    Pass ``conn`` to join a caller's open transaction: this function then does
+    not commit or close. Without ``conn``, behaviour is unchanged (own
+    connection, commit, close).
     """
     if status == "transient_error":
         return None
@@ -573,8 +578,12 @@ def store_ulif_dictua_entry(
     if not normalized:
         return None
 
-    conn = _ulif_dictua_conn(db_path, create=True)
+    owns_conn = conn is None
+    if owns_conn:
+        conn = _ulif_dictua_conn(db_path, create=True)
     assert conn is not None
+    prior_factory = conn.row_factory
+    conn.row_factory = sqlite3.Row
     try:
         raw_refs: dict[str, str] = {}
         for kind, response in sorted(raw_responses.items()):
@@ -673,10 +682,13 @@ def store_ulif_dictua_entry(
                             json.dumps(payload, ensure_ascii=False, sort_keys=True),
                         ),
                     )
-        conn.commit()
+        if owns_conn:
+            conn.commit()
         return _materialize_ulif_dictua_entry(conn, entry)
     finally:
-        conn.close()
+        conn.row_factory = prior_factory
+        if owns_conn:
+            conn.close()
 
 
 def extract_ulif_dictua_snapshot(

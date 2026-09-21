@@ -674,9 +674,10 @@ def _direct_text(node: Tag) -> str:
 def parse_register_list(html: str) -> list[dict[str, Any]]:
     """Read DictUA's register rows in list order.
 
-    Each row's visible link text is the stressed headword. Distinction on the
-    list is that text (stress and capitalisation). There is no homonym number
-    column.
+    Each row's visible link text is the stressed headword. Rows are distinct by
+    their ``Select$N`` postback target, not by display text: the register can
+    list two senses with identical stress and capitalisation. There is no
+    homonym number column on the list itself.
     """
     soup = BeautifulSoup(html, "html.parser")
     grid = soup.find(id="ContentPlaceHolder1_dgv")

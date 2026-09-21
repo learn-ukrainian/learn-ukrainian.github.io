@@ -19,6 +19,8 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_USAGE,
     HttpResult,
     SpellingLedger,
+    _dedupe_register_rows,
+    _write_group,
     build_a1_a2_spellings,
     declared_user_agent,
     main,
@@ -582,3 +584,300 @@ def test_build_suspects_cli_delegates(tmp_path, monkeypatch):
     )
     assert code == EXIT_OK
     assert out.read_text(encoding="utf-8").startswith("замок")
+
+
+def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
+    """Ішим: two register rows, identical stressed text, distinct Select$N."""
+    entry = {
+        "Select$4": _html("ishym-entry-1.html"),
+        "Select$5": _html("ishym-entry-2.html"),
+    }
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, _html("ishym-seed.html"), {})
+        assert data is not None
+        if any(key.endswith("search.x") for key in data):
+            return HttpResult(200, _html("ishym-tsearch.html"), {})
+        argument = data.get("__EVENTARGUMENT", "")
+        if argument in entry:
+            return HttpResult(200, entry[argument], {})
+        # paradigm tab reuses the entry body (as on the wire for entry-1)
+        return HttpResult(200, entry.get(data.get("__EVENTARGUMENT", ""), next(iter(entry.values()))), {})
+
+    scripted = _Scripted(handler)
+    assert _run(tmp_path, ["ішим"], scripted) == EXIT_OK
+    select_args = [
+        data.get("__EVENTARGUMENT")
+        for _method, data in scripted.calls
+        if data and data.get("__EVENTARGUMENT", "").startswith("Select$")
+    ]
+    assert select_args == ["Select$4", "Select$5"]
+    ledger = _ledger(tmp_path)
+    try:
+        row = ledger.conn.execute(
+            "SELECT state, entry_count FROM spellings WHERE spelling = 'ішим'"
+        ).fetchone()
+        assert (row["state"], row["entry_count"]) == ("stored", 2)
+        cache = sqlite3.connect(tmp_path / "cache.db")
+        cache.row_factory = sqlite3.Row
+        differing = parse_stored(ledger, cache)
+        rows = cache.execute(
+            """
+            SELECT homonym_index, sense_gloss, homonym_checked
+            FROM ulif_dictua_entries WHERE normalized_query = 'ішим'
+            ORDER BY homonym_index
+            """
+        ).fetchall()
+        duplicate = ledger.conn.execute(
+            "SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'"
+        ).fetchone()["duplicate_content"]
+        cache.close()
+    finally:
+        ledger.close()
+    assert differing == 0
+    assert duplicate == 0
+    assert [(r["homonym_index"], r["sense_gloss"], r["homonym_checked"]) for r in rows] == [
+        (1, "(місто в Росії)", 1),
+        (2, "(річка)", 1),
+    ]
+
+
+def test_same_stress_homonym_indexes_stable_across_rerun(tmp_path):
+    entry = {
+        "Select$4": _html("ishym-entry-1.html"),
+        "Select$5": _html("ishym-entry-2.html"),
+    }
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, _html("ishym-seed.html"), {})
+        assert data is not None
+        if any(key.endswith("search.x") for key in data):
+            return HttpResult(200, _html("ishym-tsearch.html"), {})
+        argument = data.get("__EVENTARGUMENT", "")
+        if argument in entry:
+            return HttpResult(200, entry[argument], {})
+        return HttpResult(200, next(iter(entry.values())), {})
+
+    assert _run(tmp_path, ["ішим"], _Scripted(handler)) == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        cache = sqlite3.connect(tmp_path / "cache.db")
+        cache.row_factory = sqlite3.Row
+        parse_stored(ledger, cache)
+        first = {
+            str(row["content_sha256"]): int(row["homonym_index"])
+            for row in cache.execute(
+                "SELECT content_sha256, homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'"
+            )
+        }
+        cache.close()
+    finally:
+        ledger.close()
+
+    assert _run(tmp_path, ["ішим"], _Scripted(handler), refetch=True) == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        cache = sqlite3.connect(tmp_path / "cache.db")
+        cache.row_factory = sqlite3.Row
+        parse_stored(ledger, cache)
+        second = {
+            str(row["content_sha256"]): int(row["homonym_index"])
+            for row in cache.execute(
+                "SELECT content_sha256, homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'"
+            )
+        }
+        cache.close()
+    finally:
+        ledger.close()
+    assert first == second
+    assert set(first.values()) == {1, 2}
+
+
+def test_overlapping_register_identity_opened_once(tmp_path):
+    """Duplicate (page_delta, select) collapses; physical row opened once."""
+    duplicated = _dedupe_register_rows(
+        [
+            {
+                "row_index": 24,
+                "select": "Select$24",
+                "stressed": "Кра́й",
+                "unstressed": "Край",
+                "page_delta": 0,
+            },
+            {
+                "row_index": 24,
+                "select": "Select$24",
+                "stressed": "Кра́й",
+                "unstressed": "Край",
+                "page_delta": 0,
+            },
+            {
+                "row_index": 0,
+                "select": "Select$0",
+                "stressed": "край",
+                "unstressed": "край",
+                "page_delta": 1,
+            },
+        ]
+    )
+    assert [(row["page_delta"], row["select"]) for row in duplicated] == [
+        (0, "Select$24"),
+        (1, "Select$0"),
+    ]
+
+    fillers = [f"слово{index}" for index in range(24)]
+    # Current page ends with Кра́й; a second link repeats Select$24 (overlapping identity).
+    rows = []
+    for index, word in enumerate([*fillers, "Кра́й"]):
+        rows.append(
+            "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
+            f"&#39;Select${index}&#39;)\">{word}</a></td></tr>"
+        )
+    rows.append(
+        "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
+        "&#39;Select$24&#39;)\">Кра́й</a></td></tr>"
+    )
+    page = (
+        '<input type="hidden" name="__VIEWSTATE" value="page-a" />'
+        '<input type="hidden" name="__VIEWSTATEGENERATOR" value="GEN" />'
+        '<input type="hidden" name="__EVENTVALIDATION" value="EV-page-a" />'
+        '<input type="image" name="ctl00$ContentPlaceHolder1$backpage" />'
+        '<input type="image" name="ctl00$ContentPlaceHolder1$nextpage" />'
+        f'<table id="ContentPlaceHolder1_dgv">{"".join(rows)}</table>'
+        '<span id="ContentPlaceHolder1_rlength">Реєстрових слів - 262812</span>'
+    )
+    entry = _entry("Кра́й", "(одне)", "entry-a", '<input type="image" name="ctl00$ContentPlaceHolder1$par" />')
+    opens: list[str] = []
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, page, {})
+        assert data is not None
+        if any(key.endswith("search.x") for key in data):
+            return HttpResult(200, page, {})
+        if any(key.endswith("nextpage.x") for key in data):
+            return HttpResult(200, _register(["інше"], "page-b", paging=False), {})
+        argument = data.get("__EVENTARGUMENT", "")
+        if argument.startswith("Select$"):
+            opens.append(argument)
+            return HttpResult(200, entry, {})
+        return HttpResult(200, entry, {})
+
+    assert _run(tmp_path, ["край"], _Scripted(handler)) == EXIT_OK
+    assert opens == ["Select$24"]
+
+
+def test_write_group_failure_rolls_back_leaving_legacy_unchecked(tmp_path):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import ULIF_PARSER_VERSION, prepare_database
+    from scripts.wiki import sources_db
+
+    db_path = tmp_path / "cache.db"
+    cache = prepare_database(db_path)
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="замок",
+        sections={},
+        raw_responses={},
+        retrieved_at="2026-01-01T00:00:00+00:00",
+        parser_version=ULIF_PARSER_VERSION,
+        status="ok",
+        homonym_index=1,
+        sense_gloss="(legacy)",
+        register_position="0:0",
+        homonym_checked=0,
+        content_sha256="legacy-hash",
+        db_path=db_path,
+        conn=cache,
+    )
+    cache.commit()
+    ledger = SpellingLedger(tmp_path / "state" / "ledger.sqlite")
+    ledger.ensure("замок")
+    assert ledger.state_of("замок") == "pending"
+
+    calls = {"n": 0}
+
+    def store(**kwargs):
+        calls["n"] += 1
+        if calls["n"] > 1:
+            raise RuntimeError("injected failure after first entry")
+        return sources_db.store_ulif_dictua_entry(**kwargs)
+
+    parsed_rows = [
+        {
+            "canonical_headword": f"замок-{index}",
+            "grammatical_label": "іменник",
+            "sense_gloss": f"(sense {index})",
+            "register_position": f"0:{index}",
+            "homonym_index": index,
+            "content_sha256": f"hash-{index}",
+        }
+        for index in (1, 2, 3)
+    ]
+    with pytest.raises(RuntimeError, match="injected failure"):
+        _write_group(
+            cache,
+            "замок",
+            parsed_rows,
+            [{}, {}, {}],
+            [{}, {}, {}],
+            store,
+        )
+    after = [
+        (int(row[0]), str(row[1]), int(row[2]), str(row[3]))
+        for row in cache.execute(
+            "SELECT homonym_index, sense_gloss, homonym_checked, content_sha256 FROM ulif_dictua_entries"
+        )
+    ]
+    state = ledger.state_of("замок")
+    cache.close()
+    ledger.close()
+    assert after == [(1, "(legacy)", 0, "legacy-hash")]
+    assert state != "stored"
+
+
+def test_transport_exception_retries_then_succeeds(tmp_path):
+    import requests
+
+    page = _register(["інше"], "seed", paging=False)
+    hits = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        hits["n"] += 1
+        if hits["n"] <= 2:
+            raise requests.ConnectionError("reset")
+        return HttpResult(200, page, {})
+
+    sleeps: list[float] = []
+    assert _run(tmp_path, ["нема"], _Scripted(handler), sleep=sleeps.append) == EXIT_OK
+    # Two ConnectionError on the seed GET, then GET + tsearch POST succeed.
+    assert hits["n"] == 4
+    assert sleeps  # back-off and/or inter-request delay
+    ledger = _ledger(tmp_path)
+    try:
+        assert ledger.state_of("нема") == "absent_from_ulif"
+    finally:
+        ledger.close()
+
+
+def test_transport_exception_exhausts_to_retry_scheduled(tmp_path):
+    import requests
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        raise requests.Timeout("slow")
+
+    code = _run(tmp_path, ["а", "б", "в", "г"], _Scripted(handler))
+    assert code == EXIT_RETRY_STORM
+    ledger = _ledger(tmp_path)
+    try:
+        states = {
+            row["spelling"]: (row["state"], row["error"])
+            for row in ledger.conn.execute("SELECT spelling, state, error FROM spellings")
+        }
+    finally:
+        ledger.close()
+    assert states["а"] == ("retry_scheduled", "transport_error")
+    assert states["б"] == ("retry_scheduled", "transport_error")
+    assert states["в"] == ("retry_scheduled", "transport_error")
+    assert states["г"] == ("pending", "")
