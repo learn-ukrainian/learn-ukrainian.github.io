@@ -188,7 +188,6 @@ class StallWatcher:
         self._report = report
         self._terminate = terminate
         self.now = now
-        self._now = now
         self._stop_event = threading.Event()
         self._thread: threading.Thread | None = None
         self._state: dict[str, tuple[str, float]] = {}
@@ -211,8 +210,6 @@ class StallWatcher:
                 report_stall(stalled, stall_budget=self.stall_budget, raw_fd=self._real_stderr_fd)
             self._terminate()
         return stalled
-
-    poll = poll_once
 
     def start(self) -> StallWatcher:
         if self.breadcrumb_dir is not None:
