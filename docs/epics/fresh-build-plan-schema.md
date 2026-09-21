@@ -1,10 +1,10 @@
 # Fresh lesson-based build — plan and evidence-pack schema (design)
 
-> Sub-epic #8397, child 3. Status: **design draft r6** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
+> Sub-epic #8397, child 3. Status: **design draft r7** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
 > `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
 > R-24…R-28, R-30, R-32, R-33, R-34, R-35 of [`fresh-build-requirements.md`](fresh-build-requirements.md).
-> **Revisions 3–6 (2026-09-21):** §2a added — the semantics the plan validator needs, found while briefing
+> **Revisions 3–7 (2026-09-21):** §2a added — the semantics the plan validator needs, found while briefing
 > #8412 (a pre-dispatch critic showed that rules 1–7 could not be implemented without guessing). The
 > first code against this design is the arc data file (#8411, merged). Revision 4 folds in two independent
 > reviews of revision 3 (`design-review-8412-r3`, Gemini lane, 10 findings; `critic-8412-design-r3`, Kimi seat, 5);
@@ -120,7 +120,8 @@ Rules the validator enforces (all deterministic):
    one of two shapes: (a) the last lesson has `kind: recap`; or (b) the last lesson is `teach` and
    carries `closes_with_recap: true` with a final `recap` step that introduces nothing — allowed
    only when the module has at most two teach lessons, and flagged for the plan review to confirm.
-   Checkpoint modules: all lessons `checkpoint`, no new inventory.
+   Checkpoint modules are exempt from the closing-recap shapes: all their lessons are
+   `checkpoint`, with no new inventory.
 2. The recap lesson has empty `inventory.vocabulary.core`, empty `phonetics` and `grammar`, and no `teach` steps (§2a).
 3. Every `evidence` id exists in the locked pack; the pack hash matches `evidence_ref.sha256`.
    Word ids (`W-…`) resolve in the shared level word store `evidence/<level>/_words.yaml`, which
@@ -208,7 +209,9 @@ passes silently and never invents a value.
   the letter count and list, the grammar-point count and ids, and the core-lemma count, and —
   once it can be computed — each lesson's `minutes`. A `scope` key inside the plan file fails. The
   landing page and the arc review read the sidecar.
-- **Title check.** In `title` and `subtitle`, a run of two or more enumerated single letters must
+- **Title check.** This check reads the **module's** `title` and `subtitle` only; a lesson's title
+  may name just that lesson's letters and is not compared with the module-wide `scope`. In the
+  module `title` and `subtitle`, a run of two or more enumerated single letters must
   equal the `scope` letter list, or validation fails — that is the unambiguous case (the Module 1
   subtitle that enumerated seven letters over lessons teaching 33). Numbers are not parsed: a
   natural title may count something that is not inventory (days of the week), and a number that
