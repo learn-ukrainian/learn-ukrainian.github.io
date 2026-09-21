@@ -1,0 +1,12 @@
+{
+  "url": "https://lcorp.ulif.org.ua/dictua/",
+  "method": "POST",
+  "status_code": 200,
+  "payload": {
+    "__VIEWSTATEGENERATOR": "7AC6B68E",
+    "__EVENTTARGET": "ctl00$ContentPlaceHolder1$dgv",
+    "__EVENTARGUMENT": "Select$5",
+    "ctl00$ContentPlaceHolder1$tsearch": "замок"
+  },
+  "bytes": 29124
+}
