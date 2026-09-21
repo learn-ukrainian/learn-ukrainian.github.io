@@ -478,6 +478,7 @@ def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
                 "profile_sha256": "profile_hash_def",
                 "sample_size_reviewed": 10,
                 "blocker_defect_count": 0,
+                "minor_defect_count": 0,
                 "reviewer_id": "linguist_1",
                 "reviewer_family": "independent_human",
             }
@@ -501,6 +502,7 @@ def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
                 "profile_sha256": "profile_hash_def",
                 "sample_size_reviewed": 10,
                 "blocker_defect_count": 0,
+                "minor_defect_count": 0,
                 "reviewer_id": "linguist_1",
                 "reviewer_family": "independent_human",
             }
@@ -523,6 +525,7 @@ def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
                 "profile_sha256": "profile_hash_def",
                 "sample_size_reviewed": 10,
                 "blocker_defect_count": 2,
+                "minor_defect_count": 0,
                 "reviewer_id": "linguist_1",
                 "reviewer_family": "independent_human",
             }
@@ -545,6 +548,7 @@ def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
                 "profile_sha256": "profile_hash_def",
                 "sample_size_reviewed": 10,
                 "blocker_defect_count": -1,
+                "minor_defect_count": 0,
                 "reviewer_id": "linguist_1",
                 "reviewer_family": "independent_human",
             }
@@ -640,6 +644,7 @@ def test_signoff_verification_compares_against_actual_drawn_count(tmp_path, defa
                 "profile_sha256": "p_sha",
                 "sample_size_reviewed": 15,
                 "blocker_defect_count": 0,
+                "minor_defect_count": 0,
                 "reviewer_id": "rev1",
                 "reviewer_family": "human",
             }
@@ -660,6 +665,7 @@ def test_signoff_verification_compares_against_actual_drawn_count(tmp_path, defa
                 "profile_sha256": "p_sha",
                 "sample_size_reviewed": 14,
                 "blocker_defect_count": 0,
+                "minor_defect_count": 0,
                 "reviewer_id": "rev1",
                 "reviewer_family": "human",
             }
@@ -933,6 +939,7 @@ def test_sample_size_floor_and_strict_signoff_verification(tmp_path, default_thr
                 "profile_sha256": "p_sha",
                 "sample_size_reviewed": 0,
                 "blocker_defect_count": 0,
+                "minor_defect_count": 0,
                 "reviewer_id": "rev1",
                 "reviewer_family": "human",
             }
@@ -952,6 +959,7 @@ def test_sample_size_floor_and_strict_signoff_verification(tmp_path, default_thr
                 "profile_sha256": "p_sha",
                 "sample_size_reviewed": True,
                 "blocker_defect_count": 0,
+                "minor_defect_count": 0,
                 "reviewer_id": "rev1",
                 "reviewer_family": "human",
             }
@@ -973,6 +981,7 @@ def test_sample_size_floor_and_strict_signoff_verification(tmp_path, default_thr
                 "profile_sha256": "p_sha",
                 "sample_size_reviewed": 10,
                 "blocker_defect_count": True,
+                "minor_defect_count": 0,
                 "reviewer_id": "rev1",
                 "reviewer_family": "human",
             }
@@ -1061,6 +1070,104 @@ def test_check5_pravopys_requires_2019_and_r2u_rejected(default_thresholds):
     res_2019 = audit_check_5_source_rules([rec_2019_a, rec_2019_b, rec_2019_c], default_thresholds)
     assert res_2019.status == "PASS"
     assert res_2019.metrics["unapproved_authorities_violations"] == 0
+
+
+def test_manifest_partial_splits_does_not_collide_on_same_basename(tmp_path):
+    """R4-F1: Manifest key with directory does not cause basename collision across directories."""
+    d = tmp_path / "dataset_partial_splits"
+    d.mkdir()
+    train_dir = d / "train"
+    eval_dir = d / "eval"
+    train_dir.mkdir()
+    eval_dir.mkdir()
+
+    # Both directories contain 'data.jsonl'
+    (train_dir / "data.jsonl").write_text(
+        '{"query": "Яка столиця України?", "final_response": "Столиця України — Київ."}\n', encoding="utf-8"
+    )
+    (eval_dir / "data.jsonl").write_text(
+        '{"query": "Скільки літер в українській абетці?", "final_response": "В українській абетці 33 літери."}\n',
+        encoding="utf-8",
+    )
+
+    # Manifest only declares train/data.jsonl; eval/data.jsonl is not in manifest
+    (d / "manifest.json").write_text(
+        json.dumps(
+            {
+                "has_evaluation_split": True,
+                "splits": {
+                    "train/data.jsonl": "train",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report, code = run_acceptance_audit(d, sample_size=10)
+    assert code == 0
+    # eval/data.jsonl MUST be identified as eval via directory inspection, NOT matched to train via basename!
+    assert report.train_records == 1
+    assert report.eval_records == 1
+
+
+def test_record_split_conflict_with_manifest_fails_closed(tmp_path):
+    """R4-F2: Record-level split conflicting with manifest split fails closed with exit code 2."""
+    d = tmp_path / "dataset_split_conflict"
+    d.mkdir()
+    train_dir = d / "train"
+    train_dir.mkdir()
+
+    # Record declares split="eval", but manifest declares train/data.jsonl as "train"
+    (train_dir / "data.jsonl").write_text(
+        '{"query": "Яка столиця України?", "final_response": "Столиця України — Київ.", "split": "eval"}\n',
+        encoding="utf-8",
+    )
+    (d / "manifest.json").write_text(
+        json.dumps(
+            {
+                "splits": {
+                    "train/data.jsonl": "train",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report, code = run_acceptance_audit(d, sample_size=10)
+    assert code == 2
+    assert report.overall_status == "OPERATIONAL_ERROR"
+
+
+def test_signoff_verification_requires_minor_defect_count(tmp_path, default_thresholds):
+    """R4-F3: Signoff validation strictly requires minor_defect_count."""
+    records = [
+        parse_dataset_record({"query": f"q_{i}", "final_response": f"a_{i}"}, Path("shard.jsonl"), i) for i in range(10)
+    ]
+    sample_md = tmp_path / "sample.md"
+    default_thresholds["sample_size"] = 10
+    _, _, seed = audit_check_7_sample_drawer(records, default_thresholds, "d_sha", "p_sha", sample_md)
+
+    # Signoff missing minor_defect_count
+    signoff_missing_minor = tmp_path / "signoff_missing_minor.json"
+    signoff_missing_minor.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": 0,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_missing_minor
+    )
+    assert res.status == "FAIL"
+    assert any("minor_defect_count" in f for f in res.failures)
 
 
 # ── Empirical Baseline Reproduction Tests (#6321, Roadmap §2) ───────────────

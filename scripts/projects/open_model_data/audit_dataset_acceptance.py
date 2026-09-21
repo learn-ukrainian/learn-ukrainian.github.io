@@ -358,7 +358,6 @@ def parse_dataset_record(
     rel_str = str(rel_path).replace("\\", "/")
 
     # 1. Explicit record field or manifest split declaration
-    explicit_split = str(raw.get("split", "")).strip().lower()
     manifest_split_val = None
     if manifest_splits:
         if rel_str in manifest_splits:
@@ -366,23 +365,28 @@ def parse_dataset_record(
         elif file_path.name in manifest_splits:
             manifest_split_val = manifest_splits[file_path.name]
 
+    raw_split_val = raw.get("split")
+    explicit_split = str(raw_split_val).strip().lower() if raw_split_val is not None else None
+    norm_explicit = None
     if explicit_split:
-        raw_split = explicit_split
-        split_source = f"line {line_number} in {file_path.name}"
-    elif manifest_split_val is not None:
-        raw_split = str(manifest_split_val).strip().lower()
-        split_source = f"manifest.json for {rel_str}"
-    else:
-        raw_split = None
-        split_source = None
-
-    if raw_split is not None:
-        if raw_split in ("eval", "test", "validation", "val", "dev", "evaluation"):
-            split = "eval"
-        elif raw_split in ("train", "training"):
-            split = "train"
+        if explicit_split in ("eval", "test", "validation", "val", "dev", "evaluation"):
+            norm_explicit = "eval"
+        elif explicit_split in ("train", "training"):
+            norm_explicit = "train"
         else:
-            raise ValueError(f"Unknown split {raw_split!r} in {split_source}")
+            raise ValueError(f"Unknown split {explicit_split!r} in line {line_number} of {file_path.name}")
+
+    if norm_explicit is not None and manifest_split_val is not None:
+        if norm_explicit != manifest_split_val:
+            raise ValueError(
+                f"Conflicting split declaration for {rel_str}:{line_number} — "
+                f"record declares {explicit_split!r} ({norm_explicit}), but manifest.json declares {manifest_split_val!r}"
+            )
+        split = norm_explicit
+    elif norm_explicit is not None:
+        split = norm_explicit
+    elif manifest_split_val is not None:
+        split = manifest_split_val
     else:
         # 2. Relative path inspection (never absolute path substring match)
         rel_parts = [p.lower() for p in rel_path.parent.parts]
@@ -1288,11 +1292,14 @@ def audit_check_7_sample_drawer(
                     elif blockers > 0:
                         failures.append(f"Signoff reports {blockers} unresolved BLOCKER defect(s)")
 
-                    minors = signoff_data.get("minor_defect_count")
-                    if minors is not None and (type(minors) is not int or isinstance(minors, bool) or minors < 0):
-                        failures.append(
-                            f"Signoff minor_defect_count must be a non-negative integer, got {minors!r} of type {type(minors).__name__}"
-                        )
+                    if "minor_defect_count" not in signoff_data:
+                        failures.append("Signoff missing required 'minor_defect_count'")
+                    else:
+                        minors = signoff_data.get("minor_defect_count")
+                        if type(minors) is not int or isinstance(minors, bool) or minors < 0:
+                            failures.append(
+                                f"Signoff minor_defect_count must be a non-negative integer, got {minors!r} of type {type(minors).__name__}"
+                            )
 
                     reviewer_id = signoff_data.get("reviewer_id")
                     reviewer_family = signoff_data.get("reviewer_family")
@@ -1444,10 +1451,12 @@ def run_acceptance_audit(
                         raise ValueError(f"Unknown split {s_val!r} declared in manifest.json for {f_key}")
                     norm_val = valid_splits[s_str]
                     norm_k = str(f_key).replace("\\", "/")
-                    base_k = Path(f_key).name
                     manifest_splits[norm_k] = norm_val
-                    if base_k not in manifest_splits:
-                        manifest_splits[base_k] = norm_val
+                    if "/" not in norm_k:
+                        base_k = Path(f_key).name
+                        matching_files = [p for p in jsonl_files if p.name == base_k]
+                        if len(matching_files) <= 1:
+                            manifest_splits[base_k] = norm_val
         except Exception as exc:
             print(f"❌ Error reading manifest.json: {exc}", file=sys.stderr)
             return AcceptanceReport(
