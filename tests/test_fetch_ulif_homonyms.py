@@ -1661,3 +1661,54 @@ def test_interrupt_during_lock_release_cleans_up_lock(tmp_path, capsys, monkeypa
     )
     assert code == EXIT_INTERRUPTED
     assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_invalid_delay_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        delay_seconds=0.5,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
+
+
+def test_final_accounting_database_locked_error_still_produces_stop_summary(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_set = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set(self, count):
+        calls[0] += 1
+        # Call 1: mid-fetch update
+        # Call 2: final accounting -> database is locked
+        if calls[0] >= 2:
+            raise sqlite3.OperationalError("database is locked")
+        orig_set(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "warning: failed to persist final requests_made" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()

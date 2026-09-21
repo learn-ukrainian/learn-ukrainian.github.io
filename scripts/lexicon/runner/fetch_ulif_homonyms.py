@@ -1373,10 +1373,6 @@ def run_fetch(
     clock: ClockFn = time.monotonic,
     scanner: Scanner = scan_for_legacy_crawler,
 ) -> int:
-    if delay_seconds < MIN_DELAY_SECONDS:
-        print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
-        return EXIT_USAGE
-
     if resume_cmd:
         resolved_resume_cmd = resume_cmd
     else:
@@ -1685,13 +1681,28 @@ def run_fetch(
                 except (KeyboardInterrupt, InterruptedByOperator):
                     stop_reason = "interrupted by operator"
                     return_code = EXIT_INTERRUPTED
+                except Exception as exc:
+                    print(
+                        f"warning: failed to persist final requests_made ({base_requests + client.requests_made}): {exc}",
+                        file=sys.stderr,
+                    )
+                    break
             if not written:
-                with contextlib.suppress(Exception):
+                try:
                     ledger.conn.execute(
                         "INSERT INTO meta (key, value) VALUES ('requests_made', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
                         (str(base_requests + client.requests_made),),
                     )
                     ledger.conn.commit()
+                except Exception as exc:
+                    print(
+                        f"warning: direct execute failed to persist requests_made ({base_requests + client.requests_made}): {exc}",
+                        file=sys.stderr,
+                    )
+                    if stop_reason == "finished":
+                        stop_reason = f"persistence error: {exc}"
+                    if return_code == EXIT_OK:
+                        return_code = EXIT_INTERRUPTED
 
         summary_printed = False
         for _ in range(3):
