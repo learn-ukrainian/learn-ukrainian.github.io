@@ -2,7 +2,8 @@
 
 > Sub-epic [#8397](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8397), parent #7994.
 > Source: operator direction, 2026-09-21. Status: **accepted by the operator 2026-09-21** (requirements
-> R-01…R-34 and the defaults in §4, with Q7 and Q8 changed as recorded there). This file is the frozen input for the plan schema, the arcs, the plans and
+> R-01…R-34 and the defaults in §4, with Q7 and Q8 changed as recorded there; R-35 added by operator
+> ruling the same day). This file is the frozen input for the plan schema, the arcs, the plans and
 > the build prompts. A later change to a requirement is made here first, then downstream.
 
 ## 1. What changes and what does not
@@ -75,6 +76,23 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-16 Simple Ukrainian.** In A1 and A2 the Ukrainian itself is very simple and fits the level of
   the learner that the specific lesson is aimed at — vocabulary and grammar the learner has met, plus
   what this lesson introduces.
+- **R-35 The sources are the single source of truth for Ukrainian; they override any model,
+  including the Ukrainian expert seat** (operator ruling 2026-09-21).
+  - The authorities are the project's own corpus and reference data: the school textbooks in the
+    corpus, Правопис 2019, VESUM, and the ULIF database (paradigms, per-form stress, homonyms,
+    phraseology), with the dictionaries and the style guide already in `data/sources.db` behind
+    them.
+  - A model — Gemini in the AGY lane, or any other seat — is the reader and judge of those
+    sources, not an authority beside them. A language claim from a model is accepted only with
+    the source that supports it (tool output, chunk id or entry id). A claim that contradicts a
+    source loses. A claim the sources are silent on is recorded as *unsupported by source* and
+    stays open; it is never promoted to fact because a model said it, and never applied to
+    learner content on that basis alone.
+  - Where two sources disagree, the disagreement is reported with both citations and goes to the
+    operator; nobody averages them.
+  - This applies to every artifact: arcs, plans, evidence packs, lessons, activities, reviews. It
+    refines, and does not replace, the existing rule that Ukrainian forms, stress and morphology
+    are tool-verified and never recalled from memory.
 
 ### Learner experience
 
@@ -166,7 +184,8 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 ## 3. Roles
 
 Design and planning sit with the curriculum-upgrade driver seat. Other fleet agents implement from
-the driver's briefs. Ukrainian language questions are settled by the sanctioned language lanes.
+the driver's briefs. Ukrainian language questions are settled from the sources (R-35): the
+sanctioned language lanes read and apply those sources and cite them; they do not outrank them.
 Every review of record is cross-family at the exact head.
 
 ## 4. Open questions for the operator
