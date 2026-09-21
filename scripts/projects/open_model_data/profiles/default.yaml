@@ -11,6 +11,7 @@ thresholds:
   # Check 2: Form Letters
   max_query_top5_share: 0.80
   min_query_unique_skeletons: 20
+  min_query_entropy: 0.60
   max_reasoning_top1_share: 0.10
   max_reasoning_top5_share: 0.25
   max_reasoning_top20_share: 0.50
@@ -43,6 +44,7 @@ thresholds:
   max_target_phenomenon_leakage: 0
   max_high_containment_share: 0.02
   containment_threshold: 0.50
+  require_held_out_split: true
 
   # Check 7: Sampling
   sample_size: 300

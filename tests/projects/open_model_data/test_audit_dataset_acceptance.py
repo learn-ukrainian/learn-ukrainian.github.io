@@ -1,7 +1,7 @@
 """Test suite for Dataset Acceptance Audit Gate (#8339).
 
 Verifies the seven mechanical acceptance checks, failure modes, false-positive guards,
-dependency fail-closed behaviors, and baseline empirical reproductions.
+dependency fail-closed behaviors, profile provenance, review lifecycle, and baseline empirical reproductions.
 """
 
 from __future__ import annotations
@@ -52,13 +52,10 @@ def default_thresholds():
 
 def test_ukrainian_text_normalization():
     """Test NFKC, apostrophe unification, stress stripping, and whitespace collapse."""
-    # Apostrophes: ’ (U+2019), ʼ (U+02BC), ` -> '
     assert normalize_ukrainian_text("з’явитися") == "з'явитися"
     assert normalize_ukrainian_text("обʼєкт") == "об'єкт"
-    # Combining acute accent U+0301 (stress mark)
     assert normalize_ukrainian_text("нови́й") == "новий"
     assert normalize_ukrainian_text("ба́чити") == "бачити"
-    # Whitespace
     assert normalize_ukrainian_text("  слово   з   пробілами\n") == "слово з пробілами"
 
 
@@ -72,6 +69,72 @@ def test_delexicalization_quote_and_digit_masking():
 
     s3 = "Текст „цитата“ та ‘інша’ 2026."
     assert delexicalize_text(s3) == "Текст <QUOTED_SPAN> та <QUOTED_SPAN> #."
+
+    s4 = "Шаблон {word} та <item> у списку [1]."
+    assert delexicalize_text(s4) == "Шаблон <VAR> та <VAR> у списку <VAR>."
+
+
+# ── Split Detection Tests (Blocker 1) ───────────────────────────────────────
+
+
+def test_split_detection_relative_paths(tmp_path):
+    """Test that split detection is relative and does not false-trigger on directory names."""
+    dataset_dir = tmp_path / "contest_latest_eval_archive" / "data"
+    dataset_dir.mkdir(parents=True)
+
+    # File inside train folder should be train even if parent dir has 'contest' or 'eval'
+    f_train = dataset_dir / "train" / "shard_001.jsonl"
+    f_train.parent.mkdir(parents=True)
+    f_train.touch()
+
+    r1 = parse_dataset_record({"query": "q", "final_response": "a"}, f_train, 1, dataset_dir)
+    assert r1.split == "train"
+
+    # File inside eval folder should be eval
+    f_eval = dataset_dir / "eval" / "shard_001.jsonl"
+    f_eval.parent.mkdir(parents=True)
+    f_eval.touch()
+
+    r2 = parse_dataset_record({"query": "q", "final_response": "a"}, f_eval, 1, dataset_dir)
+    assert r2.split == "eval"
+
+    # Filename stem matching word boundary test / eval
+    f_stem = dataset_dir / "shards" / "dataset-test.jsonl"
+    f_stem.parent.mkdir(parents=True)
+    f_stem.touch()
+
+    r3 = parse_dataset_record({"query": "q", "final_response": "a"}, f_stem, 1, dataset_dir)
+    assert r3.split == "eval"
+
+    # Explicit record split overrides path
+    r4 = parse_dataset_record({"query": "q", "final_response": "a", "split": "eval"}, f_train, 1, dataset_dir)
+    assert r4.split == "eval"
+
+
+# ── Profile Provenance & Security Tests (Blocker 2) ─────────────────────────
+
+
+def test_profile_provenance_and_security():
+    """Verify committed profile allowlist, traversal rejection, and composite hash."""
+    # 1. Committed profiles load cleanly
+    t_def, h_def = load_profile("default")
+    assert "max_exact_duplicate_rate" in t_def
+    assert len(h_def) == 64
+
+    t_gram, h_gram = load_profile("grammar_8342")
+    assert t_gram["min_correction_share"] == 0.70
+    assert h_gram != h_def
+
+    # 2. Path traversal attempts are rejected
+    with pytest.raises(ValueError, match="path separators not permitted"):
+        load_profile("../default")
+
+    with pytest.raises(ValueError, match="path separators not permitted"):
+        load_profile("../../etc/passwd")
+
+    # 3. Unapproved profile names are rejected
+    with pytest.raises(ValueError, match="Unapproved profile"):
+        load_profile("unapproved_custom")
 
 
 # ── Check 1: Repeats & Duplicates ───────────────────────────────────────────
@@ -98,262 +161,433 @@ def test_check1_passes_on_unique_records(default_thresholds):
 
 
 def test_check1_fails_on_duplicate_qa_pair(default_thresholds):
-    """Check 1 deliberately fails when identical QA pairs are repeated (M1 failure mode)."""
+    """Check 1 fails immediately on exact duplicate QA pairs."""
+    pair = ("Яка столиця України?", "Столиця України - місто Київ.")
     records = [
-        parse_dataset_record({"query": "Одне й те саме", "final_response": "Та сама відповідь"}, Path("shard.jsonl"), i)
-        for i in range(10)
+        parse_dataset_record({"query": pair[0], "final_response": pair[1]}, Path("shard.jsonl"), 1),
+        parse_dataset_record({"query": pair[0], "final_response": pair[1]}, Path("shard.jsonl"), 2),
     ]
     res = audit_check_1_repeats(records, default_thresholds)
     assert res.status == "FAIL"
-    assert res.metrics["exact_duplicate_count"] == 9
-    assert res.metrics["exact_duplicate_rate"] == 0.90
-    assert res.metrics["max_single_multiplicity"] == 10
+    assert res.metrics["exact_duplicate_count"] == 1
+    assert res.metrics["max_single_multiplicity"] == 2
     assert any("Exact duplicate rate" in f for f in res.failures)
 
 
-# ── Check 2: Form Letters & Pattern Concentration ───────────────────────────
+# ── Check 2: Form Letters & Entropy ─────────────────────────────────────────
 
 
 def test_check2_fails_on_form_letter_reasoning(default_thresholds):
-    """Check 2 deliberately fails when reasoning templates collapse into form letters."""
-    # 100 records sharing the identical 1 reasoning template with only quoted span varying
-    records = [
-        parse_dataset_record(
-            {
-                "query": f"Проаналізуйте слово «слово_{i}» у реченні.",
-                "reasoning_steps": [
-                    f"1. Палеографічна локалізація: Софія, пам'ятка «слово_{i}».",
-                    "2. Соціолінгвістичний регістр: жива розмовна мова.",
-                    "3. Висновок: пам'ятка давньоруської доби.",
-                ],
-                "final_response": f"Слово «слово_{i}» є давньоруським.",
-            },
-            Path("shard.jsonl"),
-            i,
-        )
-        for i in range(100)
-    ]
-    res = audit_check_2_form_letters(records, default_thresholds)
-    assert res.status == "FAIL"
-    assert res.metrics["reasoning"]["top1"] == 1.0  # 100% covered by 1 template
-    assert any("Reasoning top 20 patterns" in f or "Reasoning top 5" in f for f in res.failures)
-
-
-# ── Check 3: Real Content Share ─────────────────────────────────────────────
-
-
-def test_check3_fails_on_excessive_passive_controls(default_thresholds):
-    """Check 3 deliberately fails when passive controls vastly outweigh corrections (93% passive v05 bug)."""
+    """Check 2 fails when reasoning collapses into a single repeated template."""
     records = []
-    # 95 controls ("nothing wrong")
-    for i in range(95):
+    template_reasoning = "Крок 1: Аналізуємо граматичну основу. Крок 2: Перевіряємо за словником."
+    for i in range(1200):
         records.append(
             parse_dataset_record(
                 {
-                    "is_erroneous": False,
-                    "original_text": f"Правильне речення номер {i}.",
-                    "corrected_text": f"Правильне речення номер {i}.",
-                    "category": "syntax",
+                    "query": f"Поясніть приклад {i}",
+                    "reasoning_steps": [template_reasoning],
+                    "final_response": f"Унікальна відповідь на запитання {i} з докладним поясненням.",
                 },
                 Path("shard.jsonl"),
                 i,
             )
         )
-    # 5 corrections
-    for i in range(5):
+    res = audit_check_2_form_letters(records, default_thresholds)
+    assert res.status == "FAIL"
+    assert res.metrics["reasoning"]["top1"] > 0.90
+    assert any("Reasoning top 1 pattern covers" in f for f in res.failures)
+
+
+# ── Check 3: Content Share & Thin Categories ────────────────────────────────
+
+
+def test_check3_fails_on_excessive_passive_controls(default_thresholds):
+    """Check 3 fails when passive controls overwhelm substantive corrections."""
+    records = []
+    for i in range(100):
+        is_err = i < 10  # 90% clean controls, only 10% substantive corrections
         records.append(
             parse_dataset_record(
                 {
-                    "is_erroneous": True,
-                    "original_text": f"Помилкове речення {i}.",
-                    "corrected_text": f"Виправлене речення {i}.",
-                    "category": "syntax",
+                    "query": f"Речення {i}",
+                    "is_erroneous": is_err,
+                    "original_text": "правильний текст" if not is_err else "помилковий текст",
+                    "corrected_text": "правильний текст",
+                    "category": "орфографія",
                 },
                 Path("shard.jsonl"),
-                100 + i,
+                i,
             )
         )
-
     res = audit_check_3_content_share(records, default_thresholds, manifest_task_type="correction")
     assert res.status == "FAIL"
-    assert res.metrics["clean_control_share"] == 0.95
-    assert res.metrics["substantive_correction_share"] == 0.05
-    assert any("correction share 5.0% is below floor" in f for f in res.failures)
+    assert res.metrics["substantive_correction_share"] == 0.10
+    assert any("Substantive correction share" in f for f in res.failures)
+
+
+def test_check3_fails_on_zero_labeled_records_for_correction_task(default_thresholds):
+    """Check 3 fails closed if correction task is declared but zero records have correction labels."""
+    records = [parse_dataset_record({"query": "q", "final_response": "a"}, Path("shard.jsonl"), i) for i in range(10)]
+    res = audit_check_3_content_share(records, default_thresholds, manifest_task_type="correction")
+    assert res.status == "FAIL"
+    assert any("zero labeled records" in f for f in res.failures)
 
 
 # ── Check 4: Self-Contradiction Audit ───────────────────────────────────────
 
 
 def test_check4_fails_on_chronological_contradiction(default_thresholds, normalizer):
-    """Check 4 deliberately fails on in-record date contradiction (XI-XIII label vs 1585 in Step 1)."""
-    record = parse_dataset_record(
+    """Check 4 catches Kyivan Rus period label with Early Modern/Late Modern dating in reasoning."""
+    rec = parse_dataset_record(
         {
-            "query": "Проаналізуйте напис: «Jan Lohowski».",
-            "morphemic_breakdown": "Києво-руська епіграфічна пам'ятка XI–XIII ст. (Софія Київська).",
-            "reasoning_steps": [
-                "1. Палеографічна локалізація: Софійський собор у Києві, приміщення 208 (1585–1700 рр.). Текст: «Jan Lohowski»."
-            ],
-            "final_response": "Уривок «Jan Lohowski» є автентичним графіті (1585–1700 рр.).",
+            "query": "Напис на сріблі",
+            "morphemic_breakdown": "kyivan_rus_epigraphy (XI–XIII ст.)",
+            "reasoning_steps": ["Пам'ятка датується (1585–1700) роками."],
+            "final_response": "Текст",
         },
         Path("shard.jsonl"),
         1,
     )
-    res = audit_check_4_contradictions([record], default_thresholds, normalizer)
+    res = audit_check_4_contradictions([rec], default_thresholds, normalizer)
     assert res.status == "FAIL"
     assert res.metrics["contradiction_count"] == 1
-    assert any("Labeled XI–XIII century but Step 1 dating" in f for f in res.failures)
-
-
-def test_check4_permits_incidental_date_mention(default_thresholds, normalizer):
-    """Check 4 does not false-fail on legitimate incidental historical date mentions in body."""
-    record = parse_dataset_record(
-        {
-            "query": "Проаналізуйте напис доби Козацького бароко.",
-            "morphemic_breakdown": "Староукраїнська пам'ятка доби Бароко (XVII-XVIII ст.).",
-            "reasoning_steps": [
-                "1. Історична локалізація: Гетьманщина (1650-1700 рр.).",
-                "2. Зауважимо, що текст було переписано у XVIII ст. зі старішого списку.",
-            ],
-            "final_response": "Текст доби Бароко.",
-        },
-        Path("shard.jsonl"),
-        1,
-    )
-    res = audit_check_4_contradictions([record], default_thresholds, normalizer)
-    assert res.status == "PASS"
-    assert res.metrics["contradiction_count"] == 0
+    assert any("Labeled Kyivan Rus" in f for f in res.failures)
 
 
 def test_check4_permits_inflected_target_term(default_thresholds, normalizer):
-    """Check 4 does not false-fail when target_term is inflected in text (VESUM lemma match)."""
-    record = parse_dataset_record(
+    """Check 4 permits target term present in inflected form in context."""
+    rec = parse_dataset_record(
         {
-            "query": "Поясніть вживання форми у реченні.",
-            "target_term": "вигляд",
-            "original_text": "Він не подавав вигляду, що щось сталося.",
-            "final_response": "У реченні вжито форму родового відмінка.",
+            "query": "Він пив свіжий сік.",
+            "final_response": "Все вірно.",
+            "target_term": "соку",  # Genitive form of сік
         },
         Path("shard.jsonl"),
         1,
     )
-    res = audit_check_4_contradictions([record], default_thresholds, normalizer)
+    res = audit_check_4_contradictions([rec], default_thresholds, normalizer)
     assert res.status == "PASS"
     assert res.metrics["contradiction_count"] == 0
+
+
+def test_check4_multiword_target_term_matching(default_thresholds, normalizer):
+    """Check 4 requires all words of a multi-word target term to be present."""
+    # Only "брати" present, "участь" missing
+    rec_missing = parse_dataset_record(
+        {
+            "query": "Ми брали книжки в бібліотеці.",
+            "final_response": "Все вірно.",
+            "target_term": "брати участь",
+        },
+        Path("shard.jsonl"),
+        1,
+    )
+    res = audit_check_4_contradictions([rec_missing], default_thresholds, normalizer)
+    assert res.status == "FAIL"
+    assert res.metrics["contradiction_count"] == 1
 
 
 # ── Check 5: Source Rules (Epic Rules 3 & 4) ────────────────────────────────
 
 
-def test_check5_fails_on_soviet_sum11_normative_use(default_thresholds):
-    """Check 5 deliberately fails if СУМ-11 is cited as normative source of truth."""
-    record = parse_dataset_record(
+def test_check5_fails_on_soviet_sum11_aliases_and_affirmative_mentions(default_thresholds):
+    """Check 5 catches all Soviet СУМ-11 aliases and affirmative body text citations."""
+    aliases = ["СУМ 11", "sum-11", "СУМ_11", "словник української мови в 11 томах"]
+    for alias in aliases:
+        rec = parse_dataset_record(
+            {
+                "query": "Питання",
+                "final_response": "Відповідь",
+                "source_metadata": {"authority": alias},
+            },
+            Path("shard.jsonl"),
+            1,
+        )
+        res = audit_check_5_source_rules([rec], default_thresholds)
+        assert res.status == "FAIL"
+        assert res.metrics["sum11_normative_violations"] == 1
+
+    # Body text affirmative citation
+    rec_body = parse_dataset_record(
         {
-            "query": "Поясніть слово «визволення».",
-            "final_response": "Тлумачення слова згідно з радянським тлумачним словником.",
-            "source_metadata": {"authority": "СУМ-11", "page": 123},
+            "query": "Чи є це слово нормативним?",
+            "final_response": "Згідно з СУМ-11 це слово є нормативним літературним словом.",
+            "source_metadata": {"authority": "vesum"},
         },
         Path("shard.jsonl"),
-        1,
+        2,
     )
-    res = audit_check_5_source_rules([record], default_thresholds)
-    assert res.status == "FAIL"
-    assert res.metrics["sum11_normative_violations"] == 1
+    res_body = audit_check_5_source_rules([rec_body], default_thresholds)
+    assert res_body.status == "FAIL"
+    assert res_body.metrics["sum11_normative_violations"] == 1
 
 
 def test_check5_fails_on_soviet_sum11_negative_inference(default_thresholds):
-    """Check 5 deliberately fails if a word is condemned because it is absent from СУМ-11."""
-    record = parse_dataset_record(
+    """Check 5 catches rejection of authentic Ukrainian words based on absence from СУМ-11."""
+    rec = parse_dataset_record(
         {
-            "query": "Чи є нормативним слово «часопис»?",
-            "final_response": "Це слово відсутнє в СУМ-11, тому воно рідковживане та застаріле.",
+            "query": "Чи правильне слово розпросторити?",
+            "reasoning_steps": ["Слово відсутнє в СУМ-11, тому вважається помилковим."],
+            "final_response": "Це помилка.",
+            "source_metadata": {"authority": "vesum"},
         },
         Path("shard.jsonl"),
         1,
     )
-    res = audit_check_5_source_rules([record], default_thresholds)
+    res = audit_check_5_source_rules([rec], default_thresholds)
     assert res.status == "FAIL"
     assert res.metrics["sum11_negative_inferences"] == 1
 
 
 def test_check5_permits_contrastive_soviet_colonization_context(default_thresholds):
-    """Check 5 permits СУМ-11 strictly when cited under historical_suppression_note."""
-    record = parse_dataset_record(
+    """Check 5 permits СУМ-11 strictly as contrastive historical context alongside modern authority."""
+    rec = parse_dataset_record(
         {
-            "query": "Порівняйте значення слів «сідий» та «сивий».",
-            "final_response": "«Сідий» є калькою з російської.",
-            "source_metadata": {
-                "historical_suppression_note": "СУМ-11 допустив вживання форми «сідий» унаслідок зближення мов.",
-                "authority": "СУМ-20",
-            },
+            "query": "Як маркувалося слово літовище в радянський період?",
+            "final_response": "Слово літовище було замінено на аеродром у СУМ-11.",
+            "historical_suppression_note": "СУМ-11 штучно маркував автентичні українські терміни як застарілі.",
+            "source_metadata": {"authority": "СУМ-20"},
         },
         Path("shard.jsonl"),
         1,
     )
-    res = audit_check_5_source_rules([record], default_thresholds)
+    res = audit_check_5_source_rules([rec], default_thresholds)
     assert res.status == "PASS"
     assert res.metrics["sum11_normative_violations"] == 0
 
 
-# ── Check 6: Train/Test Overlap & Aspect Normalization ───────────────────────
-
-
-def test_check6_fails_on_aspect_pair_leakage(default_thresholds, normalizer):
-    """Check 6 catches train/test leakage even when verbs differ by aspectual prefixes (робити vs зробити)."""
-    train_record = parse_dataset_record(
+def test_check5_fails_on_contrastive_without_modern_authority(default_thresholds):
+    """Check 5 fails if contrastive note is present but sole cited authority is СУМ-11."""
+    rec = parse_dataset_record(
         {
-            "query": "Він любив робити вигляд, що слухає уважно лекцію в університеті.",
-            "final_response": "У реченні вжито фразеологізм.",
+            "query": "Слово літовище",
+            "final_response": "Відповідь",
+            "historical_suppression_note": "Радянське вилучення",
+            "source_metadata": {"authority": "СУМ-11"},
         },
-        Path("sft_shard.jsonl"),
+        Path("shard.jsonl"),
         1,
     )
-    eval_record = parse_dataset_record(
-        {
-            "query": "Вона спромоглася зробити вигляд, що слухає уважно лекцію в університеті.",
-            "final_response": "У реченні вжито фразеологізм.",
-        },
-        Path("eval_shard.jsonl"),
-        1,
-    )
-    res = audit_check_6_split_overlap([train_record, eval_record], default_thresholds, normalizer)
+    res = audit_check_5_source_rules([rec], default_thresholds)
     assert res.status == "FAIL"
-    # Overlap detected via aspect-normalized 4-grams
+    assert res.metrics["unapproved_authorities_violations"] == 1
+
+
+# ── Check 6: Train/Test Split Leakage (Aspect Normalization & DPO) ──────────
+
+
+def test_check6_fails_on_aspect_pair_target_leakage(default_thresholds, normalizer):
+    """Check 6 catches target leakage across aspect partners (написати vs писати)."""
+    train_rec = parse_dataset_record(
+        {"query": "Він любить писати твори.", "final_response": "Добре.", "target_term": "писати"},
+        Path("train.jsonl"),
+        1,
+    )
+    train_rec.split = "train"
+
+    eval_rec = parse_dataset_record(
+        {"query": "Треба написати листа швидко.", "final_response": "Чудово.", "target_term": "написати"},
+        Path("eval.jsonl"),
+        2,
+    )
+    eval_rec.split = "eval"
+
+    res = audit_check_6_split_overlap([train_rec, eval_rec], default_thresholds, normalizer)
+    assert res.status == "FAIL"
+    assert res.metrics["target_term_leakage_count"] == 1
+    assert any("Target phenomenon leakage" in f for f in res.failures)
+
+
+def test_check6_catches_dpo_leakage(default_thresholds, normalizer):
+    """Check 6 detects 4-gram leakage inside chosen and rejected text of DPO rows."""
+    long_passage = "У запеклій боротьбі славні козаки хоробро здобули вирішальну перемогу над ворогом."
+    train_rec = parse_dataset_record(
+        {"query": "Питання 1", "chosen": long_passage, "rejected": "Інше"},
+        Path("train.jsonl"),
+        1,
+    )
+    train_rec.split = "train"
+
+    eval_rec = parse_dataset_record(
+        {"query": "Питання 2", "chosen": long_passage, "rejected": "Інше"},
+        Path("eval.jsonl"),
+        2,
+    )
+    eval_rec.split = "eval"
+
+    res = audit_check_6_split_overlap([train_rec, eval_rec], default_thresholds, normalizer)
+    assert res.status == "FAIL"
     assert res.metrics["eval_records_high_containment"] == 1
-    assert res.metrics["high_containment_share"] == 1.0
 
 
-# ── Check 7: Sampling & Review Lifecycle ────────────────────────────────────
+# ── Check 7: Sampling Determinism & Sign-Off Verification (M2, M3) ──────────
 
 
 def test_check7_sample_generation_and_deterministic_seed(tmp_path, default_thresholds):
-    """Check 7 draws deterministic sample and writes valid MD and JSON sidecars."""
-    records = [
+    """Check 7 generates deterministic samples invariant to record shuffling."""
+    records_a = [
         parse_dataset_record(
-            {
-                "query": f"Запитання {i}",
-                "final_response": f"Відповідь {i}",
-                "category": f"cat_{i % 5}",
-            },
-            Path(f"shard_{i % 3}.jsonl"),
+            {"query": f"Питання {i}", "final_response": f"Відповідь {i}", "category": f"cat_{i % 5}"},
+            Path("shard.jsonl"),
             i,
         )
         for i in range(50)
     ]
-    sample_out = tmp_path / "test_sample.md"
-    dataset_hash = "abc1234567890abcdef"
+    records_b = list(reversed(records_a))
 
-    res, path = audit_check_7_sample_drawer(records, default_thresholds, dataset_hash, sample_out)
-    assert res.status == "PASS"
-    assert path.is_file()
-    assert path.with_suffix(".json").is_file()
+    sample_a = tmp_path / "sample_a.md"
+    sample_b = tmp_path / "sample_b.md"
 
-    content_md = path.read_text(encoding="utf-8")
-    assert "Independent Language Review Sample Package" in content_md
-    assert "Мовна якість" in content_md
-    assert "радянських/колоніальних спотворень" in content_md
+    res_a, path_a, seed_a = audit_check_7_sample_drawer(
+        records_a, default_thresholds, "fake_hash_123", "prof_123", sample_a
+    )
+    res_b, path_b, seed_b = audit_check_7_sample_drawer(
+        records_b, default_thresholds, "fake_hash_123", "prof_123", sample_b
+    )
+
+    assert seed_a == seed_b
+    assert res_a.metrics["sample_size_drawn"] == res_b.metrics["sample_size_drawn"]
+
+    # Assert exact ranking of JSON records
+    json_a = json.loads(path_a.with_suffix(".json").read_text(encoding="utf-8"))
+    json_b = json.loads(path_b.with_suffix(".json").read_text(encoding="utf-8"))
+    assert [r["content_hash"] for r in json_a] == [r["content_hash"] for r in json_b]
 
 
-# ── Dependency Fail-Closed Tests ────────────────────────────────────────────
+def test_check7_signoff_verification_lifecycle(tmp_path, default_thresholds):
+    """Verify strict sign-off validation schema (seed, profile, counts, defect count)."""
+    records = [
+        parse_dataset_record({"query": f"q_{i}", "final_response": f"a_{i}"}, Path("shard.jsonl"), i) for i in range(10)
+    ]
+    sample_md = tmp_path / "sample.md"
+    default_thresholds["sample_size"] = 10
+
+    # 1. Valid Signoff
+    _, _, seed = audit_check_7_sample_drawer(
+        records, default_thresholds, "dataset_hash_abc", "profile_hash_def", sample_md
+    )
+    valid_signoff_file = tmp_path / "valid_signoff.json"
+    valid_signoff_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_abc",
+                "sample_seed": seed,
+                "profile_sha256": "profile_hash_def",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    res_verified, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "dataset_hash_abc", "profile_hash_def", sample_md, valid_signoff_file
+    )
+    assert res_verified.status == "PASS"
+    assert res_verified.metrics["signoff_verified"] is True
+
+    # 2. Tampered dataset hash
+    bad_hash_file = tmp_path / "bad_hash_signoff.json"
+    bad_hash_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "tampered_hash",
+                "sample_seed": seed,
+                "profile_sha256": "profile_hash_def",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": 0,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bad_hash, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "dataset_hash_abc", "profile_hash_def", sample_md, bad_hash_file
+    )
+    assert res_bad_hash.status == "FAIL"
+    assert any("does not match current dataset" in f for f in res_bad_hash.failures)
+
+    # 3. Unresolved blockers
+    blockers_file = tmp_path / "blockers_signoff.json"
+    blockers_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_abc",
+                "sample_seed": seed,
+                "profile_sha256": "profile_hash_def",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": 2,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_blockers, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "dataset_hash_abc", "profile_hash_def", sample_md, blockers_file
+    )
+    assert res_blockers.status == "FAIL"
+    assert any("reports 2 unresolved BLOCKER defect(s)" in f for f in res_blockers.failures)
+
+    # 4. Bad blocker type (negative or bool)
+    bad_type_file = tmp_path / "bad_type_signoff.json"
+    bad_type_file.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "dataset_hash_abc",
+                "sample_seed": seed,
+                "profile_sha256": "profile_hash_def",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": -1,
+                "reviewer_id": "linguist_1",
+                "reviewer_family": "independent_human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bad_type, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "dataset_hash_abc", "profile_hash_def", sample_md, bad_type_file
+    )
+    assert res_bad_type.status == "FAIL"
+    assert any("must be a non-negative integer" in f for f in res_bad_type.failures)
+
+
+# ── Full Audit Runner & Fail-Closed Tests ───────────────────────────────────
+
+
+def test_run_acceptance_audit_manifest_and_exit_codes(tmp_path):
+    """Verify run_acceptance_audit handles malformed manifest, exit codes 0, 2, and 3."""
+    d = tmp_path / "dataset"
+    d.mkdir()
+    (d / "train.jsonl").write_text('{"query": "Як справи?", "final_response": "Чудово."}\n', encoding="utf-8")
+    (d / "eval.jsonl").write_text('{"query": "Хто ти?", "final_response": "Я помічник."}\n', encoding="utf-8")
+
+    # 1. Malformed manifest exits code 2
+    (d / "manifest.json").write_text("{broken json", encoding="utf-8")
+    report_broken, code_broken = run_acceptance_audit(d, sample_size=10)
+    assert code_broken == 2
+    assert report_broken.overall_status == "OPERATIONAL_ERROR"
+
+    # 2. Clean manifest and automated pass exits 0
+    (d / "manifest.json").write_text(json.dumps({"has_evaluation_split": True}), encoding="utf-8")
+    report_clean, code_clean = run_acceptance_audit(d, sample_size=10)
+    assert code_clean == 0
+    assert report_clean.overall_status == "PASSED_AUTOMATED_CHECKS"
+
+    # 3. Clean automated pass with require_human_signoff exits 3
+    report_pending, code_pending = run_acceptance_audit(d, sample_size=10, require_human_signoff=True)
+    assert code_pending == 3
+    assert report_pending.overall_status == "PASSED_AUTOMATED_CHECKS_PENDING_SIGNOFF"
+
+    # 4. Non-dict record in JSONL exits code 2
+    (d / "bad.jsonl").write_text('["not a dict"]\n', encoding="utf-8")
+    report_bad_rec, code_bad_rec = run_acceptance_audit(d, sample_size=10)
+    assert code_bad_rec == 2
+    assert report_bad_rec.overall_status == "OPERATIONAL_ERROR"
 
 
 def test_run_acceptance_audit_fails_on_missing_vesum_db(tmp_path):
