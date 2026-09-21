@@ -122,6 +122,10 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   targets that tighten through the level; A2 runs 75–100 % at the bridge, 85–100 % through the
   ramp and first 20 modules, 90–100 % to module 50 and 95–100 % to the end, with a little English
   support. B1 onward is full immersion. Nobody re-tunes these numbers as part of this epic.
+- **R-32 The State Standard is a minimum, ULP is the schedule.** Every A1–B2 requirement of the
+  State Standard 2024 must be covered at its level. Teaching something earlier than the Standard
+  places it is allowed when ULP does so at the matching point of its course; the arc records the
+  ULP evidence. Gates and reviews treat the Standard as a floor, not a ceiling.
 - **R-31 ULP / Anna Ohoiko pedagogy is the model.** `docs/best-practices/ulp-presentation-pattern.md`
   (her seven practices and the S1→S6 progression) and the 2026-05-13 immersion decision stay
   binding for plans, evidence packs and lessons.

@@ -1,8 +1,9 @@
 # Fresh lesson-based build — A1 arc (module grain)
 
-> Sub-epic #8397, child 4. Status: **draft r2** by the curriculum-upgrade driver. r1 was reviewed by
+> Sub-epic #8397, child 4. Status: **draft r3** by the curriculum-upgrade driver. r1 was reviewed by
 > AGY `gemini-3.8-flash-high` (task `plan-review-8397-a1-arc-r1`): REVISE, 9 findings; the driver
-> verified findings 1 and 3 against the Standard text and folded all nine in. For operator correction. Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
+> verified findings 1 and 3 against the Standard text and folded all nine in. **r3:** operator ruled
+> the Standard is a minimum and ULP is the schedule (D0); position 45 restored on ULP evidence (D6). Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
 > schema: [`fresh-build-plan-schema.md`](fresh-build-plan-schema.md). This document becomes
 > `curriculum/l2-uk-en/plans/a1/_arc.yaml` once accepted. It contains no Ukrainian word facts
 > beyond module titles already published in the reviewed v1 plans; every form, stress and example
@@ -12,7 +13,7 @@
 
 | Strand | Source in the repo | What it fixes |
 | --- | --- | --- |
-| State Standard 2024, A1 | `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:221-747`; machine map `docs/l2-uk-en/state-standard-2024-mapping.yaml:16-132` | the **ceiling**: four cases only (називний, знахідний, місцевий, кличний); present, past, compound future and a few perfective futures; imperative 2nd person only; ordinal numerals; grammar "sporadic, based on reproducing ready communicative models" (`:562-567`); 17 speech intentions (`:453-477`), 12 themes (`:479-556`); writing of forms, postcards, SMS (`:338-377`); dialogue of 4–6 turns (`:432`) |
+| State Standard 2024, A1 | `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:221-747`; machine map `docs/l2-uk-en/state-standard-2024-mapping.yaml:16-132` | the **minimum** A1 must cover (operator, 2026-09-21: the Standard is a floor, not a ceiling): four cases (називний, знахідний, місцевий, кличний); present, past, compound future and a few perfective futures; imperative 2nd person only; ordinal numerals; grammar "sporadic, based on reproducing ready communicative models" (`:562-567`); 17 speech intentions (`:453-477`), 12 themes (`:479-556`); writing of forms, postcards, SMS (`:338-377`); dialogue of 4–6 turns (`:432`) |
 | ULP Season 1–2 | `data/sources.db` `textbook_sections` (`ulp-1-00-lesson-notes` …), `external_articles` (`ulp_youtube`, full transcripts), `docs/best-practices/ulp-presentation-pattern.md`, `audit/ulp-calibration-2026-05-13/raw.jsonl` | the **method and order**: a case first as a lexical chunk, later as a system (S1 chunk → S2 system); conjugations before the accusative; past and future inside the first season; review lesson = first-person bilingual story + Ukrainian-only questions + one translation task; a pronunciation trainer at regular intervals |
 | Primers | Захарійчук, Буквар 2025, parts 1–2 (`textbooks`, subject `bukvar`, 223 page chunks); Большакова 2025 reading notes `docs/l2-uk-direct/textbook-reading-notes/bolshakova-bukvar-mapping.md` | the **literacy lesson shape**: letter + key word → locate the sound → syllable tables (CV → CVC) → words → short connected text; звук before літера; sound models for vowel / hard / soft |
 | Project decisions | `docs/l2-uk-en/A1-CURRICULUM-V3.md:31-37, 242-252`; `ulp-presentation-pattern.md:17` | no dative or instrumental as grammar at A1; imperative 2nd person only; Ukrainian approach to the alphabet (звуки / літери), not the English-centric "true friends / false friends" grouping |
@@ -49,13 +50,23 @@ first-person story side by side in Ukrainian and English, Ukrainian-only questio
 production task. Checkpoint modules are made of such lessons plus a self-check and introduce
 nothing new.
 
-**D6 — Position 45 changes its job (slug to be renamed).** v1 `when-and-where` teaches complex
-sentences with `що`, `де`, `коли`. The Standard's A1 syntax (§4.3.2, `:741-747`) contains only
-coordination with `і (й)`, `але` and cause with `тому що`, `бо`; clauses with `де / куди / звідки`
-and `що` are A2 (`:1408-1411`) and `коли` is B1 (`:2406`). The error comes from a wrong summary
-line in `state-standard-2024-mapping.yaml:126`, which v1 followed. Position 45 becomes the owner of
-the Standard theme **Дім, помешкання** (`:489-493`), which had no owner. The position number, and
-therefore the immersion band, does not change.
+**D0 — The Standard is the minimum; ULP is the schedule (operator, 2026-09-21).** Everything the
+Standard lists for A1 must be owned by a position. Teaching something *earlier* than the Standard
+places it is allowed when Anna Ohoiko's ULP does so at the matching point of its course, and the
+arc records the ULP evidence next to it. The level→season map is
+`docs/best-practices/ulp-presentation-pattern.md:256-268`: positions 1–40 ≈ ULP Season 1,
+positions 41–55 ≈ the Season 2 transition. "Earlier than the Standard" without ULP evidence is
+still not done.
+
+**D6 — Position 45 keeps its v1 job and gains the home theme.** r2 of this arc removed the
+`що / де / коли` clauses from A1 because the Standard first lists them at A2 (`:1408-1411`) and B1
+(`:2406`). Under D0 that was the wrong test. Measured in the ULP lesson notes (`data/sources.db`,
+`ulp-1-00…`, `ulp-2-00…`): Season 1 already uses these clauses in running text, unexplained —
+`, що` from lesson 5, `, де` from lesson 17, `, коли` from lesson 20 — and Season 2 uses `, що` 82
+times from lesson 41 on. Position 45 sits in the Season 2 band, so first complex sentences belong
+there. ULP's lesson 45 is the review story «Мій дім»; position 45 therefore carries the Standard
+theme **Дім, помешкання** (`:489-493`), which had no owner, as the content its clauses talk about.
+The slug `when-and-where` and the position number stay.
 
 **D5 — A pronunciation strand runs through the whole level**, not only the first four modules:
 a short trainer inside a lesson roughly every sixth module (и; soft consonants; р; intonation;
@@ -85,14 +96,15 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Vocative | system | 42 | `:697-699` |
 | Imperative, 2nd person singular and plural | system | 43 (first met as chunks at 33) | `:721-725` |
 | Coordination і (й) / а / але; cause бо / тому що | system | 44 | `:741-747` |
-| Clauses with що, де / куди / звідки, коли | **not at A1** (A2 `:1408-1411`; коли B1 `:2406`) | — | v1 position 45 taught these; removed (D6) |
+| Clauses with що, де / куди / звідки, коли | met unexplained in texts from early on (ULP S1 L5 / L17 / L20); **system at 45** | 45 | beyond the Standard's A1 minimum (A2 `:1408-1411`, коли B1 `:2406`); taught here on ULP evidence (D0, D6) |
 | Past tense | system | 48–49 | `:713-714` |
 | Compound future (буду + infinitive) | system | 50–51 | `:715-717` |
 | A few perfective futures | chunk | 50–52 | `:718-719` |
 | Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 6, 34, 36, 39 | first systematic at A2 |
 | Dative (`мені подобається`, `мені … років`, `мені потрібен`) | **chunk only** | 11, 15, 54 | not allowed as grammar at A1 (mapping `:97-102`) |
 | Instrumental (`автобусом`, `з молоком`, `вітаю з …`) | **chunk only** | 32, 36, 46 | not allowed as grammar at A1 |
-| Verb aspect as a system; comparison of adjectives; 3rd-person imperative; oblique forms of він / вона / воно / вони | **not at A1** | — | A2 (`:1245-1247` and following) |
+| Verb aspect | **first awareness only**, tied to the perfective futures and past narration — ULP introduces the imperfective / perfective idea at S1 L34 | 49–52 | system is A2 |
+| Comparison of adjectives; 3rd-person imperative; oblique forms of він / вона / воно / вони; genitive, dative, instrumental of nouns as systems | **not in A1** — ULP itself systematises these in Season 2 lessons 46–62, which map to our A2 | — | A2 |
 
 ## 4. Literacy phase (positions 1–4): honest inventory
 
@@ -166,7 +178,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
 | 43 | `please-do-this` | A1.7 | Ask someone to do something: imperative, ти and ви | R (signs, prohibitions) | 3 |
 | 44 | `linking-ideas` | A1.7 | Join ideas: і, а, але, бо, тому що | W | 2 |
-| 45 | *(new slug; was `when-and-where`)* | A1.7 | Describe your home: kinds of housing, rooms, furniture, what is where (`:489-493`) — recycles locative, adjectives, цей / той | W (describe your room) | 3 |
+| 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where (`:489-493`) | W (describe your room) | 4 |
 | 46 | `holidays` | A1.7 | Greet people on holidays; family and state holidays | W (postcard) | 3 |
 | 47 | `checkpoint-communication` | A1.7 | Self-check: address, ask, connect | R, W | 2 |
 | 48 | `what-happened` | A1.8 | Say what happened: past tense and gender | — | 4 |
@@ -198,16 +210,18 @@ household objects already met at 9 and 12.
 2. **Past and future stay at positions 48–51** for A1; the order is reconsidered when A2 is planned.
 3. **Locative before accusative:** place (29–30) → direction (31) → object (37, 40).
 4. **Cardinal numerals are vocabulary only;** no numeral + noun agreement system at A1.
-5. **Дім / помешкання** is owned by the re-targeted position 45 (D6); household objects are already
-   met at 9 and 12.
+5. **Дім / помешкання** is owned by position 45 as the theme of its complex sentences (D6);
+   household objects are already met at 9 and 12.
 6. **Letter order authority is Захарійчук,** the primer ingested page by page. It is not reopened for
    A1 if another primer is ingested later.
 
 ## 7. Follow-ups outside this document
 
-- `docs/l2-uk-en/state-standard-2024-mapping.yaml:126` wrongly attributes `що / де / коли` clauses to
-  A1, and `:84` lists `за`, `через` under the A1 accusative although the Standard first has them at
-  B1 (`:2205`). The mapping file is what the pipelines and the plan-review skill read, so it must be
-  corrected against the Standard text before any A1 module plan is reviewed.
+- `docs/l2-uk-en/state-standard-2024-mapping.yaml:126` attributes `що / де / коли` clauses to A1, and
+  `:84` lists `за`, `через` under the A1 accusative; the Standard text has them at A2 / B1
+  (`:1408-1411`, `:2406`, `:2205`). The file should state what the Standard says, and the
+  compliance gate and the plan-review skill that read it must treat the Standard as a **minimum**
+  (D0): "taught earlier on ULP evidence" is not a violation. To be settled before A1 module plans
+  are reviewed.
 - `curriculum/l2-uk-en/plans/a1.yaml:34-40` and `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` contradict
   the Standard (genitive, five cases, cardinals 1–1000 as grammar); replaced by §3 here.
