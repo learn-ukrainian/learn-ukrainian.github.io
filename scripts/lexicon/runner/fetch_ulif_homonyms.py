@@ -16,12 +16,15 @@ uses. View-state fields are replaced by their sha256 in the stored payload.
 from __future__ import annotations
 
 import argparse
+import contextlib
 import hashlib
 import json
 import os
+import signal
 import sqlite3
 import stat
 import sys
+import threading
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
 from dataclasses import dataclass
@@ -81,6 +84,11 @@ SleepFn = Callable[[float], None]
 ClockFn = Callable[[], float]
 Scanner = Callable[[], bool | None]
 Transport = Callable[[str, dict[str, str] | None], "HttpResult"]
+HeartbeatFn = Callable[[str], float | None]
+
+
+class InterruptedByOperator(KeyboardInterrupt):
+    """SIGINT or SIGTERM received."""
 
 
 def declared_user_agent() -> str:
@@ -253,9 +261,7 @@ class RunnerLock:
             if pid is None or alive is None:
                 raise SystemExit(f"refusing to start: lock {self.path} is unreadable or its pid is uncertain")
             if alive:
-                raise SystemExit(
-                    f"refusing to start: runner lock held by live pid {pid} since {started} ({self.path})"
-                )
+                raise SystemExit(f"refusing to start: runner lock held by live pid {pid} since {started} ({self.path})")
             print(
                 f"stale lock: pid {pid} is not alive (started {started}) at {self.path}",
                 file=sys.stderr,
@@ -344,9 +350,7 @@ class SpellingLedger:
     def _ensure_duplicate_content_column(self) -> None:
         columns = {str(row[1]) for row in self.conn.execute("PRAGMA table_info(spellings)")}
         if "duplicate_content" not in columns:
-            self.conn.execute(
-                "ALTER TABLE spellings ADD COLUMN duplicate_content INTEGER NOT NULL DEFAULT 0"
-            )
+            self.conn.execute("ALTER TABLE spellings ADD COLUMN duplicate_content INTEGER NOT NULL DEFAULT 0")
             self.conn.commit()
 
     def close(self) -> None:
@@ -514,21 +518,64 @@ class SpellingLedger:
         return {str(row["spelling"]) for row in rows}
 
 
-def status_text(ledger: SpellingLedger, *, delay_seconds: float) -> str:
+def status_text(
+    ledger: SpellingLedger,
+    *,
+    delay_seconds: float,
+    state_dir: Path | None = None,
+) -> str:
     counts = ledger.counts()
     requests_made = int(ledger.meta("requests_made", "0") or "0")
     finished = counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
     mean = (requests_made / finished) if finished else 0.0
     remaining = counts["pending"] + counts["retry_scheduled"] + counts["error"]
+
+    timed_units = int(ledger.meta("cumulative_timed_units", "0") or "0")
+    wall_seconds = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0")
     if remaining == 0:
         eta: str | float = 0
-    elif finished == 0:
+    elif timed_units == 0:
         eta = "unknown"
     else:
-        eta = round(remaining * mean * delay_seconds, 1)
+        mean_wall = wall_seconds / timed_units
+        eta = round(remaining * mean_wall, 1)
+
     register = ledger.meta("register_size", "") or "unknown"
-    complete = counts["pending"] == 0 and counts["retry_scheduled"] == 0 and counts["error"] == 0
+    if counts["spellings_total"] == 0:
+        complete = "not_started"
+    elif counts["pending"] == 0 and counts["retry_scheduled"] == 0 and counts["error"] == 0:
+        complete = "yes"
+    else:
+        complete = "no"
+
     differing = ledger.meta("differing_content_hashes", "0")
+
+    dir_path = state_dir or ledger.path.parent
+    lock_path = dir_path / LOCK_NAME
+    if lock_path.exists():
+        pid, started, _ = _read_lock(lock_path)
+        alive = None if pid is None else _pid_alive(pid)
+        if alive is True:
+            runner_str = f"running pid={pid} since={started}"
+        elif alive is False:
+            runner_str = f"stale_lock pid={pid}"
+        else:
+            runner_str = f"stale_lock pid={pid if pid is not None else 'unknown'}"
+    else:
+        runner_str = "not_running"
+
+    row = ledger.conn.execute("SELECT MAX(updated_at) FROM spellings").fetchone()
+    last_update = str(row[0]) if row is not None and row[0] else "none"
+    if last_update != "none":
+        try:
+            dt = datetime.fromisoformat(last_update)
+            secs = int(max(0.0, (datetime.now(UTC) - dt).total_seconds()))
+            seconds_since = str(secs)
+        except Exception:
+            seconds_since = "unknown"
+    else:
+        seconds_since = "unknown"
+
     lines = [
         f"spellings_total={counts['spellings_total']}",
         f"stored={counts['stored']}",
@@ -540,8 +587,11 @@ def status_text(ledger: SpellingLedger, *, delay_seconds: float) -> str:
         f"mean_requests_per_spelling={mean:.2f}",
         f"estimated_time_remaining_seconds={eta}",
         f"register_size={register}",
-        f"complete={'yes' if complete else 'no'}",
+        f"complete={complete}",
         f"differing_content_hashes={differing}",
+        f"runner={runner_str}",
+        f"last_update={last_update}",
+        f"seconds_since_last_update={seconds_since}",
     ]
     return "\n".join(lines)
 
@@ -627,6 +677,7 @@ class PoliteClient:
         sleep: SleepFn = _default_sleep,
         clock: ClockFn = time.monotonic,
         max_requests: int | None = None,
+        heartbeat: HeartbeatFn | None = None,
     ) -> None:
         if delay_seconds < MIN_DELAY_SECONDS:
             raise ValueError(f"delay must be >= {MIN_DELAY_SECONDS}, got {delay_seconds}")
@@ -635,8 +686,26 @@ class PoliteClient:
         self.sleep = sleep
         self.clock = clock
         self.max_requests = max_requests
+        self.heartbeat = heartbeat
         self.requests_made = 0
         self._last_at = 0.0
+
+    def _sleep_with_heartbeat(self, seconds: float, msg_fn: Callable[[float], str]) -> None:
+        if seconds <= 0:
+            return
+        if self.heartbeat is None:
+            self.sleep(seconds)
+            return
+        rem = seconds
+        while rem > 0:
+            until_due = self.heartbeat(msg_fn(rem))
+            if until_due is None or until_due <= 0:
+                until_due = 60.0
+            if rem <= until_due:
+                self.sleep(rem)
+                break
+            self.sleep(until_due)
+            rem -= until_due
 
     def exchange(self, method: str, fields: dict[str, str] | None) -> tuple[str, bytes]:
         """Return ``(body, redacted_request)``. Raises on 403, exhaustion, or a dead session."""
@@ -648,6 +717,8 @@ class PoliteClient:
             self._wait_turn()
             if self.max_requests is not None and self.requests_made >= self.max_requests:
                 raise RequestCap(str(self.max_requests))
+            if self.heartbeat is not None:
+                self.heartbeat("waiting for response")
             try:
                 result = self.transport(method, fields)
             except requests.RequestException:
@@ -656,7 +727,11 @@ class PoliteClient:
                 last_code = "transport_error"
                 if attempt == MAX_HTTP_ATTEMPTS:
                     raise RequestExhausted(last_code) from None
-                self.sleep(_retry_after_seconds({}, attempt))
+                wait_sec = _retry_after_seconds({}, attempt)
+                self._sleep_with_heartbeat(
+                    wait_sec,
+                    lambda rem, att=attempt: f"waiting for back-off: {rem:.0f}s remaining (attempt {att})",
+                )
                 continue
             self.requests_made += 1
             self._last_at = self.clock()
@@ -669,13 +744,21 @@ class PoliteClient:
                 last_code = f"http_{code}"
                 if attempt == MAX_HTTP_ATTEMPTS:
                     raise RequestExhausted(last_code)
-                self.sleep(_retry_after_seconds(result.headers, attempt))
+                wait_sec = _retry_after_seconds(result.headers, attempt)
+                self._sleep_with_heartbeat(
+                    wait_sec,
+                    lambda rem, att=attempt: f"waiting for back-off: {rem:.0f}s remaining (attempt {att})",
+                )
                 continue
             if code != 200:
                 last_code = f"http_{code}"
                 if attempt == MAX_HTTP_ATTEMPTS:
                     raise RequestExhausted(last_code)
-                self.sleep(_retry_after_seconds(result.headers, attempt))
+                wait_sec = _retry_after_seconds(result.headers, attempt)
+                self._sleep_with_heartbeat(
+                    wait_sec,
+                    lambda rem, att=attempt: f"waiting for back-off: {rem:.0f}s remaining (attempt {att})",
+                )
                 continue
             return result.text, redacted
         raise RequestExhausted(last_code)
@@ -685,7 +768,7 @@ class PoliteClient:
             return
         elapsed = self.clock() - self._last_at
         if elapsed < self.delay_seconds:
-            self.sleep(self.delay_seconds - elapsed)
+            self._sleep_with_heartbeat(self.delay_seconds - elapsed, lambda _rem: "waiting for response")
 
 
 def _form_fields(
@@ -766,9 +849,7 @@ class HomonymFetcher:
                 after, next_tokens = self._adjacent(spelling, search_tokens, "next", 1)
                 if next_tokens is not None:
                     page_tokens["1"] = next_tokens
-        ordered = _dedupe_register_rows(
-            [*before, *({**row, "page_delta": 0} for row in matches), *after]
-        )
+        ordered = _dedupe_register_rows([*before, *({**row, "page_delta": 0} for row in matches), *after])
         if not ordered:
             return UnitOutcome("absent_from_ulif", 0, straddled)
         for index, row in enumerate(ordered, start=1):
@@ -908,7 +989,18 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
         str(row["spelling"])
         for row in ledger.conn.execute("SELECT spelling FROM spellings WHERE state = 'stored' ORDER BY spelling")
     ]
-    for spelling in spellings:
+    total_spellings = len(spellings)
+    entries_written = 0
+    mismatch_errors = 0
+
+    for idx, spelling in enumerate(spellings, start=1):
+        if idx % 500 == 0:
+            pct = (idx / total_spellings * 100.0) if total_spellings else 100.0
+            print(
+                f"[parse] {idx}/{total_spellings} spellings parsed ({pct:.1f}%)",
+                file=sys.stderr,
+                flush=True,
+            )
         parsed_rows: list[dict[str, Any]] = []
         section_sets: list[dict[str, object]] = []
         raw_sets: list[dict[str, str]] = []
@@ -939,6 +1031,7 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
         _record_printed_numbers(ledger, spelling, parsed_rows)
         mismatch = _printed_number_mismatch(parsed_rows)
         if mismatch is not None:
+            mismatch_errors += 1
             register, printed = mismatch
             row = ledger.conn.execute(
                 "SELECT entry_count, straddled_boundary FROM spellings WHERE spelling = ?",
@@ -949,15 +1042,19 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
                 "error",
                 entry_count=int(row["entry_count"]) if row is not None else len(parsed_rows),
                 straddled=bool(row["straddled_boundary"]) if row is not None else False,
-                error=(
-                    "printed_number_mismatch "
-                    f"register={list(register)} printed={list(printed)}"
-                ),
+                error=(f"printed_number_mismatch register={list(register)} printed={list(printed)}"),
             )
             continue
         differing += _write_group(cache, spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
+        entries_written += len(parsed_rows)
         ledger.set_duplicate_content(spelling, _duplicate_content(parsed_rows))
     ledger.set_meta("differing_content_hashes", str(differing))
+    print(
+        f"parse complete: {total_spellings} spellings parsed, {entries_written} entries written, "
+        f"{differing} groups differed, {mismatch_errors} printed_number_mismatch errors",
+        file=sys.stderr,
+        flush=True,
+    )
     return differing
 
 
@@ -1135,6 +1232,95 @@ def _requests_transport(user_agent: str) -> Transport:
     return send
 
 
+HEARTBEAT_INTERVAL_SECONDS = 60.0
+
+
+def _print_start_banner(
+    *,
+    raw_count: int,
+    distinct_count: int,
+    dup_count: int,
+    already_finished: int,
+    to_do: int,
+    delay_seconds: float,
+    state_dir: Path,
+    db_path: Path,
+    register_size: str,
+) -> None:
+    print("=== ULIF Homonym Fetch Runner ===", file=sys.stderr)
+    print(f"Spellings in file:             {raw_count}", file=sys.stderr)
+    if dup_count > 0:
+        print(f"Distinct after normalisation:  {distinct_count} ({dup_count} duplicates)", file=sys.stderr)
+    else:
+        print(f"Distinct after normalisation:  {distinct_count}", file=sys.stderr)
+    print(f"Already finished (skipped):    {already_finished}", file=sys.stderr)
+    print(f"To do in this run:             {to_do}", file=sys.stderr)
+    print(f"Delay between requests:        {delay_seconds:.1f}s", file=sys.stderr)
+    print(f"State directory:               {state_dir}", file=sys.stderr)
+    print(f"Database path:                 {db_path}", file=sys.stderr)
+    print(f"Register size:                 {register_size}", file=sys.stderr)
+    print("=================================", file=sys.stderr, flush=True)
+
+
+def _format_progress_line(
+    *,
+    finished_count: int,
+    total_count: int,
+    state: str,
+    entry_count: int,
+    req_count: int,
+    total_req: int,
+    err_count: int,
+    retry_count: int,
+    elapsed_seconds: float,
+    eta_str: str,
+    spelling: str,
+) -> str:
+    pct = (finished_count / total_count * 100.0) if total_count else 0.0
+    h = int(elapsed_seconds // 3600)
+    m = int((elapsed_seconds % 3600) // 60)
+    s = int(elapsed_seconds % 60)
+    elapsed_str = f"{h}:{m:02d}:{s:02d}"
+
+    state_str = f"{state:<13}" if len(state) <= 13 else f"{state} "
+
+    return (
+        f"[{finished_count:5d}/{total_count:<5d} {pct:5.1f}%] {state_str}"
+        f"entries={entry_count} req={req_count}  "
+        f"total_req={total_req} err={err_count} retry={retry_count}  "
+        f"elapsed={elapsed_str}  eta={eta_str}  "
+        f"{spelling}"
+    )
+
+
+def _print_stop_summary(
+    *,
+    reason: str,
+    ledger: SpellingLedger,
+    requests_in_process: int,
+    elapsed_seconds: float,
+    resume_cmd: str,
+) -> None:
+    counts = ledger.counts()
+    h = int(elapsed_seconds // 3600)
+    m = int((elapsed_seconds % 3600) // 60)
+    s = int(elapsed_seconds % 60)
+    elapsed_str = f"{h}:{m:02d}:{s:02d}"
+    print("=== ULIF Fetch Stop Summary ===", file=sys.stderr)
+    print(f"Reason:               {reason}", file=sys.stderr)
+    print(f"Spellings total:      {counts['spellings_total']}", file=sys.stderr)
+    print(f"Stored:               {counts['stored']}", file=sys.stderr)
+    print(f"Absent from ULIF:     {counts['absent_from_ulif']}", file=sys.stderr)
+    print(f"Retry scheduled:      {counts['retry_scheduled']}", file=sys.stderr)
+    print(f"Errors:               {counts['error']}", file=sys.stderr)
+    print(f"Pending:              {counts['pending']}", file=sys.stderr)
+    print(f"Entries stored:       {counts['entries_stored']}", file=sys.stderr)
+    print(f"Requests in run:      {requests_in_process}", file=sys.stderr)
+    print(f"Elapsed time:         {elapsed_str}", file=sys.stderr)
+    print(f"Resume command:       {resume_cmd}", file=sys.stderr)
+    print("===============================", file=sys.stderr, flush=True)
+
+
 def run_fetch(
     *,
     spellings: Sequence[str],
@@ -1145,6 +1331,9 @@ def run_fetch(
     max_requests: int | None = None,
     refetch: bool = False,
     break_stale_lock: bool = False,
+    quiet: bool = False,
+    spellings_file: Path | None = None,
+    resume_cmd: str | None = None,
     transport: Transport | None = None,
     sleep: SleepFn = _default_sleep,
     clock: ClockFn = time.monotonic,
@@ -1159,6 +1348,55 @@ def run_fetch(
     ledger: SpellingLedger | None = None
     cache: sqlite3.Connection | None = None
     client: PoliteClient | None = None
+
+    if resume_cmd:
+        resolved_resume_cmd = resume_cmd
+    else:
+        cmd_parts = [
+            ".venv/bin/python",
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "run",
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--delay",
+            f"{delay_seconds:.1f}",
+        ]
+        if spellings_file:
+            cmd_parts.extend(["--spellings-file", str(spellings_file)])
+        resolved_resume_cmd = " ".join(cmd_parts)
+
+    stop_reason = "finished"
+    return_code = EXIT_OK
+    start_time = clock()
+    persisted_requests = 0
+    process_units_finished = 0
+    process_wall_time = 0.0
+    last_progress_time = [clock()]
+    last_heartbeat_time = [clock()]
+
+    old_sigterm = None
+    if threading.current_thread() is threading.main_thread():
+
+        def _on_sigterm(signum: int, frame: Any) -> None:
+            raise InterruptedByOperator("SIGTERM")
+
+        with contextlib.suppress(ValueError, OSError):
+            old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+
+    def on_heartbeat(what: str) -> float:
+        now = clock()
+        due_in_progress = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_progress_time[0]))
+        due_in_heartbeat = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_heartbeat_time[0]))
+        time_until_due = max(due_in_progress, due_in_heartbeat)
+        if time_until_due <= 0.0:
+            print(f"heartbeat: {what}", file=sys.stderr, flush=True)
+            last_heartbeat_time[0] = now
+            return HEARTBEAT_INTERVAL_SECONDS
+        return time_until_due
+
     try:
         try:
             cache = prepare_database(db_path)
@@ -1167,70 +1405,198 @@ def run_fetch(
             return EXIT_USAGE
         ledger = SpellingLedger(state_dir / "ledger.sqlite")
         ledger.set_meta("delay_seconds", str(delay_seconds))
-        for spelling in spellings:
+
+        raw_count = len(spellings)
+        normalized_list: list[str] = []
+        seen: set[str] = set()
+        dup_count = 0
+        for s in spellings:
+            key = normalize_ulif_spelling(s)
+            if not key:
+                continue
+            if key in seen:
+                dup_count += 1
+                continue
+            seen.add(key)
+            normalized_list.append(key)
+        distinct_count = len(normalized_list)
+
+        for spelling in normalized_list:
             ledger.ensure(spelling)
+
+        already_finished = 0
+        for spelling in normalized_list:
+            st = ledger.state_of(spelling)
+            if st in COMPLETE_STATES and not refetch:
+                already_finished += 1
+        to_do = distinct_count - already_finished
+        if max_spellings is not None:
+            to_do = min(to_do, max_spellings)
+
+        register_size_str = ledger.meta("register_size", "") or "unknown"
+        _print_start_banner(
+            raw_count=raw_count,
+            distinct_count=distinct_count,
+            dup_count=dup_count,
+            already_finished=already_finished,
+            to_do=to_do,
+            delay_seconds=delay_seconds,
+            state_dir=state_dir,
+            db_path=db_path,
+            register_size=register_size_str,
+        )
+
         client = PoliteClient(
             transport or _requests_transport(declared_user_agent()),
             delay_seconds=delay_seconds,
             sleep=sleep,
             clock=clock,
             max_requests=max_requests,
+            heartbeat=on_heartbeat,
         )
         fetcher = HomonymFetcher(client, ledger, cache)
         consecutive_retries = 0
         processed = 0
-        for spelling in spellings:
+
+        for spelling in normalized_list:
             state = ledger.state_of(spelling)
             if state in COMPLETE_STATES and not refetch:
                 continue
             if max_spellings is not None and processed >= max_spellings:
+                stop_reason = "max spellings"
                 break
+
+            unit_start_clock = clock()
+            unit_start_requests = client.requests_made
+            outcome: UnitOutcome | None = None
+            unit_state = ""
+
             try:
                 outcome = fetcher.fetch(spelling)
+                unit_state = outcome.state
             except RequestCap:
+                stop_reason = "request cap"
                 break
             except Forbidden:
                 ledger.mark(spelling, "error", error="http_403")
+                unit_state = "error"
+                stop_reason = "HTTP 403"
+                return_code = EXIT_FORBIDDEN
                 print("stopping: HTTP 403 from ULIF", file=sys.stderr)
-                return EXIT_FORBIDDEN
             except RequestExhausted as exc:
+                unit_state = "retry_scheduled"
                 ledger.mark(spelling, "retry_scheduled", error=exc.code)
-                consecutive_retries += 1
-                processed += 1
-                if consecutive_retries >= CONSECUTIVE_RETRY_STOP:
-                    print(
-                        "stopping: three consecutive spellings ended retry_scheduled",
-                        file=sys.stderr,
-                    )
-                    return EXIT_RETRY_STORM
-                continue
             except SessionInvalid as exc:
+                unit_state = "retry_scheduled"
                 ledger.mark(spelling, "retry_scheduled", error=str(exc))
+            except (KeyboardInterrupt, InterruptedByOperator):
+                stop_reason = "interrupted by operator"
+                return_code = EXIT_INTERRUPTED
+                break
+            except Exception as exc:
+                stop_reason = str(exc)
+                return_code = EXIT_INTERRUPTED
+                print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
+                break
+
+            if outcome is not None:
+                ledger.mark(
+                    spelling,
+                    outcome.state,
+                    entry_count=outcome.entry_count,
+                    straddled=outcome.straddled,
+                )
+
+            unit_wall = clock() - unit_start_clock
+            process_wall_time += unit_wall
+            process_units_finished += 1
+            processed += 1
+
+            delta = client.requests_made - persisted_requests
+            if delta > 0:
+                ledger.add_requests(delta)
+                persisted_requests = client.requests_made
+
+            cum_wall = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0") + unit_wall
+            cum_units = int(ledger.meta("cumulative_timed_units", "0") or "0") + 1
+            ledger.set_meta("cumulative_wall_seconds", str(cum_wall))
+            ledger.set_meta("cumulative_timed_units", str(cum_units))
+
+            if not quiet:
+                counts = ledger.counts()
+                finished_total = (
+                    counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
+                )
+                total_planned = counts["spellings_total"]
+                unit_req = client.requests_made - unit_start_requests
+                tot_req = int(ledger.meta("requests_made", "0") or "0")
+                if process_units_finished < 5:
+                    eta_s = "?"
+                else:
+                    rem_units = max(0, total_planned - finished_total)
+                    if rem_units == 0:
+                        eta_s = "0:00:00"
+                    else:
+                        mean_w = process_wall_time / process_units_finished
+                        eta_sec = rem_units * mean_w
+                        eh = int(eta_sec // 3600)
+                        em = int((eta_sec % 3600) // 60)
+                        es = int(eta_sec % 60)
+                        eta_s = f"{eh}:{em:02d}:{es:02d}"
+
+                line = _format_progress_line(
+                    finished_count=finished_total,
+                    total_count=total_planned,
+                    state=unit_state,
+                    entry_count=outcome.entry_count if outcome else 0,
+                    req_count=unit_req,
+                    total_req=tot_req,
+                    err_count=counts["error"],
+                    retry_count=counts["retry_scheduled"],
+                    elapsed_seconds=clock() - start_time,
+                    eta_str=eta_s,
+                    spelling=spelling,
+                )
+                print(line, file=sys.stderr, flush=True)
+
+            last_progress_time[0] = clock()
+            last_heartbeat_time[0] = clock()
+
+            if unit_state == "retry_scheduled":
                 consecutive_retries += 1
-                processed += 1
                 if consecutive_retries >= CONSECUTIVE_RETRY_STOP:
+                    stop_reason = "retry storm"
+                    return_code = EXIT_RETRY_STORM
                     print(
                         "stopping: three consecutive spellings ended retry_scheduled",
                         file=sys.stderr,
                     )
-                    return EXIT_RETRY_STORM
-                continue
-            except Exception as exc:
-                print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
-                return EXIT_INTERRUPTED
-            ledger.mark(
-                spelling,
-                outcome.state,
-                entry_count=outcome.entry_count,
-                straddled=outcome.straddled,
-            )
-            if outcome.state in COMPLETE_STATES:
+                    break
+            elif unit_state in COMPLETE_STATES:
                 consecutive_retries = 0
-            processed += 1
-        return EXIT_OK
+
+            if return_code != EXIT_OK:
+                break
+
+        return return_code
     finally:
-        if ledger is not None and client is not None:
-            ledger.add_requests(client.requests_made)
+        elapsed = clock() - start_time
+        if old_sigterm is not None:
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(signal.SIGTERM, old_sigterm)
+        if client is not None and ledger is not None:
+            delta = client.requests_made - persisted_requests
+            if delta > 0:
+                ledger.add_requests(delta)
+                persisted_requests = client.requests_made
+        if ledger is not None:
+            _print_stop_summary(
+                reason=stop_reason,
+                ledger=ledger,
+                requests_in_process=client.requests_made if client else 0,
+                elapsed_seconds=elapsed,
+                resume_cmd=resolved_resume_cmd,
+            )
         if cache is not None:
             cache.close()
         if ledger is not None:
@@ -1292,41 +1658,273 @@ def _positive_delay(value: str) -> float:
 
 
 def main(argv: Sequence[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description=__doc__)
+    parser = argparse.ArgumentParser(
+        description="Resumable targeted ULIF homonym fetch and offline parser.\nUse to fetch homonym-safe entries and relation tabs from DictUA into SQLite cache.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms run \\
+      --spellings-file batch_state/ulif-homonyms/suspects.txt \\
+      --state-dir batch_state/ulif-homonyms/state \\
+      --db data/sources.db --delay 1.0
+
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms status \\
+      --state-dir batch_state/ulif-homonyms/state
+
+Outputs:
+  Raw response blobs in ulif_dictua_raw_responses (sources.db)
+  Parsed homonym entries in ulif_dictua_entries and ulif_dictua_sections
+  Progress ledger in <state-dir>/ledger.sqlite
+
+Exit codes:
+  0: Success / completed
+  1: Usage error or unmigrated database
+  2: Retry storm (3 consecutive spellings failed)
+  3: HTTP 403 Forbidden
+  4: Interrupted by operator (SIGINT / SIGTERM)
+
+Related:
+  Runbook: issue #8423
+  Master plan: issue #8400
+  Spec: issue #8429
+""",
+    )
     sub = parser.add_subparsers(dest="command", required=True)
 
-    run = sub.add_parser("run", help="Fetch spellings into the raw cache")
-    run.add_argument("--spellings-file", type=Path, required=True)
-    run.add_argument("--state-dir", type=Path, required=True)
-    run.add_argument("--db", type=Path, required=True)
-    run.add_argument("--delay", type=_positive_delay, default=MIN_DELAY_SECONDS)
-    run.add_argument("--max-spellings", type=int, default=None)
-    run.add_argument("--max-requests", type=int, default=None)
-    run.add_argument("--refetch", action="store_true")
-    run.add_argument("--break-stale-lock", action="store_true")
+    run = sub.add_parser(
+        "run",
+        help="Fetch spellings into the raw cache",
+        description="Fetch homonym-safe entries from ULIF DictUA into SQLite raw cache.\nUse during targeted runs or whole-index crawls; do not use while another runner holds the lock.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms run \\
+      --spellings-file batch_state/ulif-homonyms/suspects.txt \\
+      --state-dir batch_state/ulif-homonyms/state \\
+      --db data/sources.db --delay 1.0
 
-    parse = sub.add_parser("parse", help="Parse stored bodies offline")
-    parse.add_argument("--state-dir", type=Path, required=True)
-    parse.add_argument("--db", type=Path, required=True)
+Outputs:
+  Raw HTML responses in ulif_dictua_raw_responses (sources.db)
+  Progress and attempt state in <state-dir>/ledger.sqlite
 
-    status = sub.add_parser("status", help="Print ledger progress")
-    status.add_argument("--state-dir", type=Path, required=True)
-    status.add_argument("--delay", type=_positive_delay, default=MIN_DELAY_SECONDS)
+Exit codes:
+  0: All spellings finished successfully
+  1: Usage error, invalid arguments, or unmigrated database
+  2: Retry storm (3 consecutive spellings failed)
+  3: HTTP 403 Forbidden from server
+  4: Interrupted by operator (SIGINT / SIGTERM)
+""",
+    )
+    run.add_argument(
+        "--spellings-file",
+        type=Path,
+        required=True,
+        help="Path to text file containing spellings, one per line (format: 'слово\\tinfo' or 'слово')",
+    )
+    run.add_argument(
+        "--state-dir",
+        type=Path,
+        required=True,
+        help="Directory storing runner.lock and ledger.sqlite (e.g. batch_state/ulif-homonyms/state)",
+    )
+    run.add_argument(
+        "--db",
+        type=Path,
+        required=True,
+        help="Target SQLite database holding ulif_dictua_* tables (e.g. data/sources.db)",
+    )
+    run.add_argument(
+        "--delay",
+        type=_positive_delay,
+        default=MIN_DELAY_SECONDS,
+        help="Seconds to wait between requests (must be >= 1.0; default: 1.0)",
+    )
+    run.add_argument(
+        "--max-spellings",
+        type=int,
+        default=None,
+        help="Stop after processing this many spellings in this process invocation (default: None, process all)",
+    )
+    run.add_argument(
+        "--max-requests",
+        type=int,
+        default=None,
+        help="Stop after making this many HTTP requests in this process invocation (default: None, unlimited)",
+    )
+    run.add_argument(
+        "--refetch",
+        action="store_true",
+        help="Refetch spellings even if already marked 'stored' or 'absent_from_ulif' in ledger (default: False)",
+    )
+    run.add_argument(
+        "--break-stale-lock",
+        action="store_true",
+        help="Break existing runner lock if holding PID is dead (default: False)",
+    )
+    run.add_argument(
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Suppress per-spelling progress lines (start banner, heartbeat, stop summary always print; default: False)",
+    )
 
-    suspects = sub.add_parser("build-suspects", help="Write the homonym-suspect spelling list")
-    suspects.add_argument("--dump", type=Path, required=True)
-    suspects.add_argument("--vesum", type=Path, required=True)
-    suspects.add_argument("--out", type=Path, required=True)
+    parse = sub.add_parser(
+        "parse",
+        help="Parse stored bodies offline",
+        description="Parse stored raw ULIF HTML responses into structured entries and sections.\nUse offline after fetch completes or during checkpoint verification; does not make network requests.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms parse \\
+      --state-dir batch_state/ulif-homonyms/state --db data/sources.db
 
-    a1 = sub.add_parser("build-a1a2", help="Write A1–A2 lemmas minus spellings already stored")
-    a1.add_argument("--sources-db", type=Path, required=True)
-    a1.add_argument("--vesum", type=Path, required=True)
-    a1.add_argument("--state-dir", type=Path, required=True)
-    a1.add_argument("--out", type=Path, required=True)
+Outputs:
+  Populates ulif_dictua_entries and ulif_dictua_sections (sources.db)
+  Marks homonym_checked = 1 on stored entries
+
+Exit codes:
+  0: Parsing completed successfully
+  1: Database or ledger error
+""",
+    )
+    parse.add_argument(
+        "--state-dir",
+        type=Path,
+        required=True,
+        help="Directory storing ledger.sqlite with stored raw response hashes (e.g. batch_state/ulif-homonyms/state)",
+    )
+    parse.add_argument(
+        "--db",
+        type=Path,
+        required=True,
+        help="SQLite database containing ulif_dictua_raw_responses to parse into entries (e.g. data/sources.db)",
+    )
+
+    status = sub.add_parser(
+        "status",
+        help="Print ledger progress",
+        description="Inspect progress and health of a ULIF fetch run.\nUse anytime to monitor runner state, counts, requests, and ETA without interrupting the crawl.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms status \\
+      --state-dir batch_state/ulif-homonyms/state
+
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms status \\
+      --state-dir batch_state/ulif-homonyms/state --watch 10
+
+Outputs:
+  Key=value progress report on stdout
+
+Exit codes:
+  0: Success
+""",
+    )
+    status.add_argument(
+        "--state-dir",
+        type=Path,
+        required=True,
+        help="Directory storing runner.lock and ledger.sqlite (e.g. batch_state/ulif-homonyms/state)",
+    )
+    status.add_argument(
+        "--delay",
+        type=_positive_delay,
+        default=MIN_DELAY_SECONDS,
+        help="Expected delay in seconds between requests for remaining time calculation (default: 1.0)",
+    )
+    status.add_argument(
+        "--watch",
+        type=int,
+        default=None,
+        help="Reprint status every SECONDS (minimum 5) until interrupted (default: None, run once)",
+    )
+
+    suspects = sub.add_parser(
+        "build-suspects",
+        help="Write the homonym-suspect spelling list",
+        description="Identify spellings in legacy dump that are suspect for homonym collisions.\nUse before starting a targeted homonym crawl to produce suspects.txt.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms build-suspects \\
+      --dump data/ulif_dump_all.db --vesum data/vesum.db \\
+      --out batch_state/ulif-homonyms/suspects.txt
+""",
+    )
+    suspects.add_argument(
+        "--dump",
+        type=Path,
+        required=True,
+        help="Path to legacy ULIF database (e.g. data/ulif_dump_all.db)",
+    )
+    suspects.add_argument(
+        "--vesum",
+        type=Path,
+        required=True,
+        help="Path to VESUM database (e.g. data/vesum.db)",
+    )
+    suspects.add_argument(
+        "--out",
+        type=Path,
+        required=True,
+        help="Output path for suspect spellings list (e.g. batch_state/ulif-homonyms/suspects.txt)",
+    )
+
+    a1 = sub.add_parser(
+        "build-a1a2",
+        help="Write A1–A2 lemmas minus spellings already stored",
+        description="Extract A1–A2 CEFR vocabulary lemmas not yet stored in the ledger.\nUse to generate the secondary targeted crawl list.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms build-a1a2 \\
+      --sources-db data/sources.db --vesum data/vesum.db \\
+      --state-dir batch_state/ulif-homonyms/state \\
+      --out batch_state/ulif-homonyms/a1a2.txt
+""",
+    )
+    a1.add_argument(
+        "--sources-db",
+        type=Path,
+        required=True,
+        help="Path to sources.db containing puls_cefr table (e.g. data/sources.db)",
+    )
+    a1.add_argument(
+        "--vesum",
+        type=Path,
+        required=True,
+        help="Path to VESUM database (e.g. data/vesum.db)",
+    )
+    a1.add_argument(
+        "--state-dir",
+        type=Path,
+        required=True,
+        help="Directory storing ledger.sqlite to check already stored spellings",
+    )
+    a1.add_argument(
+        "--out",
+        type=Path,
+        required=True,
+        help="Output path for A1-A2 spellings list (e.g. batch_state/ulif-homonyms/a1a2.txt)",
+    )
 
     args = parser.parse_args(argv)
     if args.command == "run":
         spellings = _spellings_from_file(args.spellings_file)
+        cmd_parts = [
+            ".venv/bin/python",
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "run",
+            "--spellings-file",
+            str(args.spellings_file),
+            "--state-dir",
+            str(args.state_dir),
+            "--db",
+            str(args.db),
+            "--delay",
+            f"{args.delay:.1f}",
+        ]
         code = run_fetch(
             spellings=spellings,
             state_dir=args.state_dir,
@@ -1336,10 +1934,13 @@ def main(argv: Sequence[str] | None = None) -> int:
             max_requests=args.max_requests,
             refetch=args.refetch,
             break_stale_lock=args.break_stale_lock,
+            quiet=args.quiet,
+            spellings_file=args.spellings_file,
+            resume_cmd=" ".join(cmd_parts),
         )
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
         try:
-            print(status_text(ledger, delay_seconds=args.delay))
+            print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
         finally:
             ledger.close()
         return code
@@ -1354,32 +1955,63 @@ def main(argv: Sequence[str] | None = None) -> int:
         print(f"differing_content_hashes={differing}")
         return EXIT_OK
     if args.command == "status":
-        ledger_path = args.state_dir / "ledger.sqlite"
-        if not ledger_path.exists():
-            print(
-                "\n".join(
-                    [
-                        "spellings_total=0",
-                        "stored=0",
-                        "absent_from_ulif=0",
-                        "retry_scheduled=0",
-                        "error=0",
-                        "entries_stored=0",
-                        "requests_made=0",
-                        "mean_requests_per_spelling=0.00",
-                        "estimated_time_remaining_seconds=0",
-                        "register_size=unknown",
-                        "complete=yes",
-                        "differing_content_hashes=0",
-                    ]
+        watch_interval = args.watch
+        if watch_interval is not None and watch_interval < 5:
+            print("warning: --watch interval must be at least 5s, using 5s", file=sys.stderr)
+            watch_interval = 5
+
+        def _print_status_once() -> None:
+            ledger_path = args.state_dir / "ledger.sqlite"
+            if not ledger_path.exists():
+                lock_path = args.state_dir / LOCK_NAME
+                if lock_path.exists():
+                    pid, started, _ = _read_lock(lock_path)
+                    alive = None if pid is None else _pid_alive(pid)
+                    if alive is True:
+                        runner_str = f"running pid={pid} since={started}"
+                    elif alive is False:
+                        runner_str = f"stale_lock pid={pid}"
+                    else:
+                        runner_str = f"stale_lock pid={pid if pid is not None else 'unknown'}"
+                else:
+                    runner_str = "not_running"
+
+                print(
+                    "\n".join(
+                        [
+                            "spellings_total=0",
+                            "stored=0",
+                            "absent_from_ulif=0",
+                            "retry_scheduled=0",
+                            "error=0",
+                            "entries_stored=0",
+                            "requests_made=0",
+                            "mean_requests_per_spelling=0.00",
+                            "estimated_time_remaining_seconds=0",
+                            "register_size=unknown",
+                            "complete=not_started",
+                            "differing_content_hashes=0",
+                            f"runner={runner_str}",
+                            "last_update=none",
+                            "seconds_since_last_update=unknown",
+                        ]
+                    )
                 )
-            )
-            return EXIT_OK
-        ledger = SpellingLedger(ledger_path)
-        try:
-            print(status_text(ledger, delay_seconds=args.delay))
-        finally:
-            ledger.close()
+            else:
+                ledger = SpellingLedger(ledger_path)
+                try:
+                    print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
+                finally:
+                    ledger.close()
+
+        while True:
+            _print_status_once()
+            if watch_interval is None:
+                break
+            try:
+                time.sleep(watch_interval)
+            except KeyboardInterrupt:
+                break
         return EXIT_OK
     if args.command == "build-suspects":
         from scripts.lexicon.tools.report_ulif_homonym_suspects import build_report

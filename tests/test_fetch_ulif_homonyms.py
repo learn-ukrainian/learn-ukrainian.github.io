@@ -57,8 +57,8 @@ def _register(words: list[str], viewstate: str, *, paging: bool = True) -> str:
     rows = []
     for index, word in enumerate(words):
         rows.append(
-            "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
-            f"&#39;Select${index}&#39;)\">{word}</a></td></tr>"
+            '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+            f'&#39;Select${index}&#39;)">{word}</a></td></tr>'
         )
     paging_html = ""
     if paging:
@@ -182,9 +182,7 @@ def test_zamok_group_stores_three_entries_and_tab_sets(tmp_path):
             (3, "phraseology"),
             (3, "synonyms"),
         ]
-        request = ledger.conn.execute(
-            "SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1"
-        ).fetchone()
+        request = ledger.conn.execute("SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1").fetchone()
         cache = sqlite3.connect(tmp_path / "cache.db")
         payload = cache.execute(
             "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
@@ -226,9 +224,9 @@ def test_invariable_duzhe_records_one_entry_and_its_tabs(tmp_path):
     cache = sqlite3.connect(tmp_path / "cache.db")
     ledger = _ledger(tmp_path)
     try:
-        digest = ledger.conn.execute(
-            "SELECT response_sha256 FROM responses WHERE role = 'entry'"
-        ).fetchone()["response_sha256"]
+        digest = ledger.conn.execute("SELECT response_sha256 FROM responses WHERE role = 'entry'").fetchone()[
+            "response_sha256"
+        ]
         body = cache.execute(
             "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
             (digest,),
@@ -278,9 +276,7 @@ def test_boundary_group_fetches_the_next_page_from_the_pristine_viewstate(tmp_pa
     assert next_posts[0]["__EVENTARGUMENT"] == ""
     ledger = _ledger(tmp_path)
     try:
-        row = ledger.conn.execute(
-            "SELECT state, entry_count, straddled_boundary FROM spellings"
-        ).fetchone()
+        row = ledger.conn.execute("SELECT state, entry_count, straddled_boundary FROM spellings").fetchone()
         positions = [
             row["register_position"]
             for row in ledger.conn.execute(
@@ -308,10 +304,7 @@ def test_resume_after_injected_failure_mid_spelling(tmp_path):
     assert _run(tmp_path, ["нема", "теж"], scripted) == EXIT_INTERRUPTED
     ledger = _ledger(tmp_path)
     try:
-        states = {
-            row["spelling"]: row["state"]
-            for row in ledger.conn.execute("SELECT spelling, state FROM spellings")
-        }
+        states = {row["spelling"]: row["state"] for row in ledger.conn.execute("SELECT spelling, state FROM spellings")}
     finally:
         ledger.close()
     assert states == {"нема": "absent_from_ulif", "теж": "pending"}
@@ -494,10 +487,7 @@ def test_ledger_state_transitions_and_three_retry_scheduled_stop(tmp_path):
     assert any(value >= 7 for value in sleeps)
     ledger = _ledger(tmp_path)
     try:
-        states = {
-            row["spelling"]: row["state"]
-            for row in ledger.conn.execute("SELECT spelling, state FROM spellings")
-        }
+        states = {row["spelling"]: row["state"] for row in ledger.conn.execute("SELECT spelling, state FROM spellings")}
         text = status_text(ledger, delay_seconds=1.0)
     finally:
         ledger.close()
@@ -596,9 +586,7 @@ def test_equal_content_hash_marks_checked_without_rewriting(tmp_path):
         )
         cache.commit()
         assert parse_stored(ledger, cache) == 0
-        row = cache.execute(
-            "SELECT canonical_headword, homonym_checked FROM ulif_dictua_entries"
-        ).fetchone()
+        row = cache.execute("SELECT canonical_headword, homonym_checked FROM ulif_dictua_entries").fetchone()
         assert row == ("KEEP", 1)
         cache.execute("UPDATE ulif_dictua_entries SET content_sha256 = 'different', homonym_checked = 0")
         cache.commit()
@@ -724,9 +712,7 @@ def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
     assert select_args == ["Select$4", "Select$5"]
     ledger = _ledger(tmp_path)
     try:
-        row = ledger.conn.execute(
-            "SELECT state, entry_count FROM spellings WHERE spelling = 'ішим'"
-        ).fetchone()
+        row = ledger.conn.execute("SELECT state, entry_count FROM spellings WHERE spelling = 'ішим'").fetchone()
         assert (row["state"], row["entry_count"]) == ("stored", 2)
         cache = sqlite3.connect(tmp_path / "cache.db")
         cache.row_factory = sqlite3.Row
@@ -738,18 +724,16 @@ def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
             ORDER BY homonym_index
             """
         ).fetchall()
-        duplicate = ledger.conn.execute(
-            "SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'"
-        ).fetchone()["duplicate_content"]
+        duplicate = ledger.conn.execute("SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'").fetchone()[
+            "duplicate_content"
+        ]
         printed_meta = ledger.meta("printed_homonym_numbers:ішим")
         cache.close()
     finally:
         ledger.close()
     assert differing == 0
     assert duplicate == 0
-    assert [
-        (r["homonym_index"], r["canonical_headword"], r["sense_gloss"], r["homonym_checked"]) for r in rows
-    ] == [
+    assert [(r["homonym_index"], r["canonical_headword"], r["sense_gloss"], r["homonym_checked"]) for r in rows] == [
         (1, "Іши́м", gloss1, 1),
         (2, "Іши́м", gloss2, 1),
     ]
@@ -849,12 +833,8 @@ def test_printed_number_mismatch_refuses_group_write(tmp_path, monkeypatch):
     cache.row_factory = sqlite3.Row
     try:
         differing = parse_stored(ledger, cache)
-        row = ledger.conn.execute(
-            "SELECT state, error FROM spellings WHERE spelling = 'ішим'"
-        ).fetchone()
-        entries = list(
-            cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'")
-        )
+        row = ledger.conn.execute("SELECT state, error FROM spellings WHERE spelling = 'ішим'").fetchone()
+        entries = list(cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'"))
         meta = ledger.meta("printed_homonym_numbers:ішим")
     finally:
         cache.close()
@@ -905,12 +885,12 @@ def test_overlapping_register_identity_opened_once(tmp_path):
     rows = []
     for index, word in enumerate([*fillers, "Кра́й"]):
         rows.append(
-            "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
-            f"&#39;Select${index}&#39;)\">{word}</a></td></tr>"
+            '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+            f'&#39;Select${index}&#39;)">{word}</a></td></tr>'
         )
     rows.append(
-        "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
-        "&#39;Select$24&#39;)\">Кра́й</a></td></tr>"
+        '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+        '&#39;Select$24&#39;)">Кра́й</a></td></tr>'
     )
     page = (
         '<input type="hidden" name="__VIEWSTATE" value="page-a" />'
@@ -1054,3 +1034,295 @@ def test_transport_exception_exhausts_to_retry_scheduled(tmp_path):
     assert states["б"] == ("retry_scheduled", "transport_error")
     assert states["в"] == ("retry_scheduled", "transport_error")
     assert states["г"] == ("pending", "")
+
+
+def test_start_banner_reports_counts_and_case_duplicates(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["Замок", "замок", "будинок"], _Scripted(handler))
+    assert code == EXIT_OK
+    captured = capsys.readouterr()
+    err = captured.err
+    assert "=== ULIF Homonym Fetch Runner ===" in err
+    assert "Spellings in file:             3" in err
+    assert "Distinct after normalisation:  2 (1 duplicates)" in err
+    assert "Already finished (skipped):    0" in err
+    assert "To do in this run:             2" in err
+    assert "Delay between requests:        1.0s" in err
+    assert f"State directory:               {tmp_path / 'state'}" in err
+    assert f"Database path:                 {tmp_path / 'cache.db'}" in err
+    assert "Register size:                 unknown" in err
+    assert "=================================" in err
+
+
+def test_progress_lines_for_all_four_outcomes(tmp_path, capsys):
+    page_zamok = _register(["за́мок"], "seed", paging=False)
+    page_other = _register(["інше"], "seed", paging=False)
+    entry_zamok = _entry("за́мок", "(будівля)", "entry_vs", "")
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, page_zamok, {})
+        assert data is not None
+        query = data.get("ctl00$ContentPlaceHolder1$tsearch", "")
+        if query == "замок":
+            if data.get("__EVENTARGUMENT") == "Select$0":
+                return HttpResult(200, entry_zamok, {})
+            return HttpResult(200, page_zamok, {})
+        if query == "нема":
+            return HttpResult(200, page_other, {})
+        if query == "помилка":
+            return HttpResult(500, "internal server error", {})
+        if query == "заборонено":
+            return HttpResult(403, "forbidden", {})
+        return HttpResult(200, page_other, {})
+
+    code = _run(
+        tmp_path,
+        ["замок", "нема", "помилка", "заборонено"],
+        _Scripted(handler),
+    )
+    assert code == EXIT_FORBIDDEN
+    captured = capsys.readouterr()
+    err = captured.err
+
+    assert "stored       entries=1 req=" in err
+    assert "absent_from_ulif entries=0 req=" in err
+    assert "retry_scheduled entries=0 req=" in err
+    assert "error        entries=0 req=" in err
+    assert "total_req=" in err
+    assert "замок" in err
+    assert "нема" in err
+    assert "помилка" in err
+    assert "заборонено" in err
+
+
+def test_progress_numbering_continues_across_resume(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code1 = _run(tmp_path, ["а", "б"], _Scripted(handler), max_spellings=1)
+    assert code1 == EXIT_OK
+    err1 = capsys.readouterr().err
+    assert "[    1/2      50.0%]" in err1
+    assert "Already finished (skipped):    0" in err1
+    assert "To do in this run:             1" in err1
+
+    code2 = _run(tmp_path, ["а", "б"], _Scripted(handler))
+    assert code2 == EXIT_OK
+    err2 = capsys.readouterr().err
+    assert "Already finished (skipped):    1" in err2
+    assert "To do in this run:             1" in err2
+    assert "[    2/2     100.0%]" in err2
+
+
+def test_eta_question_mark_then_clock_calculation(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+    sim_time = [1000.0]
+
+    def fake_clock() -> float:
+        return sim_time[0]
+
+    def fake_sleep(sec: float) -> None:
+        sim_time[0] += sec
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        sim_time[0] += 10.0
+        return HttpResult(200, page, {})
+
+    spellings = ["а", "б", "в", "г", "д", "е"]
+    code = _run(
+        tmp_path,
+        spellings,
+        _Scripted(handler),
+        clock=fake_clock,
+        sleep=fake_sleep,
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+
+    lines = [line for line in err.splitlines() if line.startswith("[")]
+    assert len(lines) == 6
+    assert "eta=?" in lines[0]
+    assert "eta=?" in lines[1]
+    assert "eta=?" in lines[2]
+    assert "eta=?" in lines[3]
+    assert "eta=?" not in lines[4]
+    assert "eta=" in lines[4]
+    assert "eta=0:00:00" in lines[5]
+
+
+def test_heartbeat_during_long_backoff(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+    sim_time = [1000.0]
+
+    def fake_clock() -> float:
+        return sim_time[0]
+
+    def fake_sleep(sec: float) -> None:
+        sim_time[0] += sec
+
+    attempts = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        attempts["n"] += 1
+        if attempts["n"] == 1:
+            return HttpResult(429, "Too Many Requests", {"Retry-After": "150"})
+        return HttpResult(200, page, {})
+
+    code = _run(
+        tmp_path,
+        ["тест"],
+        _Scripted(handler),
+        clock=fake_clock,
+        sleep=fake_sleep,
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "heartbeat: waiting for back-off: 90s remaining (attempt 1)" in err
+    assert "heartbeat: waiting for back-off: 30s remaining (attempt 1)" in err
+
+
+def test_stop_summary_on_keyboard_interrupt(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+    calls = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        calls["n"] += 1
+        if calls["n"] > 2:
+            raise KeyboardInterrupt()
+        return HttpResult(200, page, {})
+
+    code = _run(
+        tmp_path,
+        ["перше", "друге"],
+        _Scripted(handler),
+    )
+    assert code == EXIT_INTERRUPTED
+    captured = capsys.readouterr()
+    err = captured.err
+
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Spellings total:      2" in err
+    assert "Pending:              1" in err
+    assert "Resume command:       .venv/bin/python" in err
+    assert "===============================" in err
+
+    ledger = _ledger(tmp_path)
+    try:
+        assert ledger.state_of("перше") == "absent_from_ulif"
+        assert ledger.state_of("друге") == "pending"
+    finally:
+        ledger.close()
+
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_truthful_requests_made_mid_run_and_no_double_counting(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    mid_requests: list[str] = []
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        ledger = _ledger(tmp_path)
+        try:
+            mid_requests.append(ledger.meta("requests_made", "0") or "0")
+        finally:
+            ledger.close()
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["перше", "друге"], _Scripted(handler))
+    assert code == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        final_requests = int(ledger.meta("requests_made", "0") or "0")
+    finally:
+        ledger.close()
+
+    assert mid_requests[0] == "0"
+    assert any(int(val) > 0 for val in mid_requests[2:])
+    assert final_requests == 4
+
+
+def test_status_text_empty_ledger_and_lock_states(tmp_path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger_path = state_dir / "ledger.sqlite"
+    ledger = SpellingLedger(ledger_path)
+    try:
+        text = status_text(ledger, delay_seconds=1.0, state_dir=state_dir)
+        assert "complete=not_started" in text
+        assert "runner=not_running" in text
+        assert "last_update=none" in text
+        assert "seconds_since_last_update=unknown" in text
+        assert "estimated_time_remaining_seconds=0" in text
+
+        lock_path = state_dir / "runner.lock"
+        pid = os.getpid()
+        iso = "2026-09-21T12:00:00+00:00"
+        lock_path.write_text(f"{pid}\n{iso}\n", encoding="utf-8")
+        orig_bytes = lock_path.read_bytes()
+        orig_stat = lock_path.stat().st_mode
+
+        text_running = status_text(ledger, delay_seconds=1.0, state_dir=state_dir)
+        assert f"runner=running pid={pid} since={iso}" in text_running
+        assert lock_path.read_bytes() == orig_bytes
+        assert lock_path.stat().st_mode == orig_stat
+
+        lock_path.write_text(f"99999999\n{iso}\n", encoding="utf-8")
+        text_stale = status_text(ledger, delay_seconds=1.0, state_dir=state_dir)
+        assert "runner=stale_lock pid=99999999" in text_stale
+        assert lock_path.read_text(encoding="utf-8") == f"99999999\n{iso}\n"
+    finally:
+        ledger.close()
+
+
+def test_quiet_flag_suppresses_progress_lines(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["тихо"], _Scripted(handler), quiet=True)
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "=== ULIF Homonym Fetch Runner ===" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "[    1/1" not in err
+
+
+def test_parse_stored_progress_logging(tmp_path, capsys):
+    page = _register(["ду́же"], "seed", paging=False)
+    entry = _html("duzhe.html")
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if data and data.get("__EVENTARGUMENT"):
+            return HttpResult(200, entry, {})
+        return HttpResult(200, page, {})
+
+    assert _run(tmp_path, ["дуже"], _Scripted(handler)) == EXIT_OK
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    ledger = _ledger(tmp_path)
+    try:
+        capsys.readouterr()
+        differing = parse_stored(ledger, cache)
+        assert differing == 0
+        err = capsys.readouterr().err
+        assert (
+            "parse complete: 1 spellings parsed, 1 entries written, 0 groups differed, 0 printed_number_mismatch errors"
+        ) in err
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_cli_help_options():
+    for subcmd in ["run", "parse", "status", "build-suspects", "build-a1a2"]:
+        with pytest.raises(SystemExit) as exc:
+            main([subcmd, "--help"])
+        assert exc.value.code == 0
