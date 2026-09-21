@@ -242,6 +242,7 @@ def _full(shard_count: int, *, frontend: str = "true") -> dict[str, str]:
     return {
         "docs_only": "false",
         "frontend": frontend,
+        "backend": "true",
         "shards": json.dumps(list(range(1, shard_count + 1))),
         "pytest_mode": "full",
         "shard_count": str(shard_count),
@@ -253,6 +254,7 @@ def _docs() -> dict[str, str]:
     return {
         "docs_only": "true",
         "frontend": "false",
+        "backend": "true",
         "shards": "[1]",
         "pytest_mode": "docs",
         "shard_count": "1",
@@ -267,6 +269,7 @@ def _content() -> dict[str, str]:
     return {
         "docs_only": "false",
         "frontend": "true",
+        "backend": "true",
         "shards": "[1]",
         "pytest_mode": "content",
         "shard_count": "1",
@@ -278,10 +281,36 @@ def _selected(candidates: Sequence[str]) -> dict[str, str]:
     return {
         "docs_only": "false",
         "frontend": "false",
+        "backend": "true",
         "shards": "[1]",
         "pytest_mode": "selected",
         "shard_count": "1",
         "pytest_candidates": json.dumps(sorted(candidates), separators=(",", ":")),
+    }
+
+
+# Site and activity-kit changes are exercised by the Frontend job (npm test).
+# Learner docs under site/src/content/docs stay on the content lane instead.
+_PURE_FRONTEND_PREFIXES = ("site/", "packages/activity-kit/")
+
+
+def is_pure_frontend_path(path: str) -> bool:
+    """True for a frontend tree path that is not a content-class learner page."""
+    p = _norm(path)
+    if is_content_class_path(p):
+        return False
+    return p.startswith(_PURE_FRONTEND_PREFIXES)
+
+
+def _frontend_only() -> dict[str, str]:
+    return {
+        "docs_only": "false",
+        "frontend": "true",
+        "backend": "false",
+        "shards": "[]",
+        "pytest_mode": "frontend",
+        "shard_count": "0",
+        "pytest_candidates": "[]",
     }
 
 
@@ -304,25 +333,19 @@ def classify(
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
-    if event == "merge_group":
-        # The merge queue is the integration gate (#8399 D1): before the
-        # content class existed, every merge-group run was full by design.
-        # A group whose changed paths are ALL content class pays the content
-        # lane once; anything else — including what would be `docs` or
-        # `selected` on a pull request — resolves to the full tier exactly
-        # as on main.
-        if all(is_content_class_path(path) for path in paths):
-            return _content()
-        return _full(shard_count)
+    # Operator 2026-09-21 (#8437): pull_request and merge_group use the same
+    # path classes. A docs or backend-only change must not rebuild the site,
+    # and a frontend-only change must not run the Python shards. The nightly
+    # schedule and an unknown event still enter through the full return above.
+    if all(is_pure_frontend_path(path) for path in paths):
+        return _frontend_only()
     if all(is_content_class_path(path) for path in paths) and any(
         _norm(path).startswith("site/src/content/docs/") for path in paths
     ):
-        # pull_request only (#8399 D2): a PR touching only curriculum/** or
-        # wiki/** keeps today's docs_only fast path — the queue run is the
-        # safety net, and per the branch above it pays the content lane
-        # there. The PR content class exists for all-content changes that
-        # today fall to full because `frontend` is true, i.e. they include
-        # at least one site/src/content/docs/** path (PR #8384).
+        # Learner pages under site/src/content/docs render through the site
+        # and are read by the reads_content pytest lane (#8399). Curriculum
+        # and wiki markdown that never touch those pages stay on the docs
+        # lane, including on the merge queue (#8437).
         return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:
