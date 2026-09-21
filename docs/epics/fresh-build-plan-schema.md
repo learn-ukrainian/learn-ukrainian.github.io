@@ -1,10 +1,10 @@
 # Fresh lesson-based build — plan and evidence-pack schema (design)
 
-> Sub-epic #8397, child 3. Status: **design draft r5** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
+> Sub-epic #8397, child 3. Status: **design draft r6** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
 > `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
 > R-24…R-28, R-30, R-32, R-33, R-34, R-35 of [`fresh-build-requirements.md`](fresh-build-requirements.md).
-> **Revisions 3–5 (2026-09-21):** §2a added — the semantics the plan validator needs, found while briefing
+> **Revisions 3–6 (2026-09-21):** §2a added — the semantics the plan validator needs, found while briefing
 > #8412 (a pre-dispatch critic showed that rules 1–7 could not be implemented without guessing). The
 > first code against this design is the arc data file (#8411, merged). Revision 4 folds in two independent
 > reviews of revision 3 (`design-review-8412-r3`, Gemini lane, 10 findings; `critic-8412-design-r3`, Kimi seat, 5);
@@ -107,7 +107,8 @@ lessons:
       target_grammar: "…"                   # what the dialogue exists to show
       evidence: [T-010]
     practice:                               # R-33: the deck is generated from this + the word store
-      vocabulary: core                      # every core lemma of this lesson, in its authorised forms
+      vocabulary: core                      # every core lemma of this lesson, in its authorised forms;
+                                            # the deck generator adds this lesson's `recycled` ids itself
       stress: [W-012, W-019]                # word records whose stress placement is drilled
       patterns: [a2, a5]                    # activity ids whose pattern is recycled into the deck
     reading_passages: []                    # optional; B2+ and seminar tracks later
@@ -132,9 +133,10 @@ Rules the validator enforces (all deterministic):
    more, nothing less (limited today to what the arc carries as data — §2a). A generated,
    structured `scope` (letter count and list, grammar points, core-lemma count) is **derived from
    the lessons by the validator, never typed**, and kept as a sidecar file (§2a); the landing page
-   renders its numbers from it. Deterministic title check is
-   limited to explicit quantities and enumerated letter lists found in `title`/`subtitle`, which
-   must equal `scope` (a subtitle enumerating seven letters over lessons that teach 33 fails here).
+   renders its numbers from it. The deterministic title check is
+   limited to enumerated letter lists found in `title`/`subtitle`, which must equal the `scope`
+   letter list (a subtitle enumerating seven letters over lessons that teach 33 fails here);
+   digit quantities are not parsed and are reported as not checked (§2a).
    Broader "does the title describe the job" is judged in the cross-family plan review.
 6. Every `teach` step has at least one practice activity; activity types are in the level's
    allowlist; inline/workbook counts meet the per-lesson minimums (uncalibrated today — §2a).
@@ -170,11 +172,17 @@ passes silently and never invents a value.
   a later one replaces). A plan may introduce only an id that the
   registry assigns to that position and lesson with the same `point`; an id is never removed or
   renumbered. `plan-validate` checks the plan against the registry and the registry for duplicate
-  ids. Append-only is mechanical, not a review courtesy: `plan-validate --strict` compares the
-  registry with the same file at the merge base with `main` and fails unless every record there
-  is still present, unchanged (`id`, `point`, `introduced_at`) and in the same order, with new
-  records only after them. Correcting a merged point's wording is therefore a deliberate act: a new
-  id, and the old record kept and marked `superseded_by`.
+  ids. Append-only is mechanical, not a review courtesy. `plan-validate --strict` compares
+  the registry with the same file at `git merge-base HEAD origin/main`: every record present there
+  must still be present, in the same order, with `id`, `point` and `introduced_at` unchanged; new
+  records come only after them. The single permitted change to an existing record is adding
+  `superseded_by: <id>`, where that id exists in the registry and is not itself superseded; a
+  plan may not introduce or use a superseded id. Correcting a merged point's wording is therefore
+  a deliberate act: a new id, and the old record kept and marked. Edge cases: if the file does not
+  exist at the merge base (first registry, or a new level) every record is new and the check
+  passes; on `main` itself the merge base is `HEAD` and the check passes; if no merge base can be
+  computed (a shallow clone), `--strict` **fails** and says to fetch full history — the CI job
+  that runs it checks out with full history.
   "Used but not introduced" (rule 4) means: every id in a step's `uses.grammar` or
   `uses.vocabulary` must have been introduced in an earlier step of the same lesson, an earlier
   lesson of the same plan, or a plan at an earlier arc position.
@@ -202,11 +210,13 @@ passes silently and never invents a value.
   landing page and the arc review read the sidecar.
 - **Title check.** In `title` and `subtitle`, a run of two or more enumerated single letters must
   equal the `scope` letter list, or validation fails — that is the unambiguous case (the Module 1
-  subtitle that enumerated seven letters over lessons teaching 33). An ASCII-digit quantity that
-  equals none of the three `scope` counts does **not** fail, because a natural title may count
-  something that is not inventory (days of the week); it is printed as
-  `attention: title_quantity_unmatched` with the number, and the cross-family plan review must
-  clear it. Which noun a number modifies, and quantities written as number words, are not parsed.
+  subtitle that enumerated seven letters over lessons teaching 33). Numbers are not parsed: a
+  natural title may count something that is not inventory (days of the week), and a number that
+  happens to equal a `scope` count proves nothing about the noun it modifies. The validator
+  therefore always reports `not_checked: title_quantities_not_parsed`, quoting any ASCII digits it
+  found in the title and subtitle, and the cross-family plan review checks stated quantities,
+  digits or words, against the `scope` sidecar. There is no separate "attention" status: the
+  validator's outcomes are failure, `not_checked` and `waived`, nothing else.
 - **`minutes` is not a plan field.** Decision 7.3 stands: it is computed. Until the constants it
   needs exist (reading speed, per-type activity time), it is not computed either, and the
   validator reports `not_checked: minutes_constants_undefined`. A `minutes` key in a plan fails.
@@ -228,7 +238,7 @@ passes silently and never invents a value.
   the cross-family plan review, which checks them against the sources (R-35).
 - **A v1 plan** is any file without `plan_schema: 2`, or with a `content_outline` key. It is
   rejected with a message saying v1 plans are not read or converted (§7.4).
-- **Failure and not-checked codes are a registry**, one constant per code in the validator
+- **Failure, not-checked and waiver codes are a registry**, one constant per code in the validator
   package, listed in its `--help`; tests assert the exact set of codes a fixture produces.
 
 ## 3. Evidence pack
@@ -306,7 +316,7 @@ Two layers, because a plan cannot know everything a built lesson will contain:
   lemmas. `incidental` items never enter it. Planned state is the writer's allowlist, as before.
   A lesson's `vocabulary.recycled` list (§2a) is a **subset** of it with a different job: the words
   this lesson *commits* to bringing back — the plan's steps may rely on them, the practice deck
-  includes them, and the coverage gate can check they really appear. A writer may still use any
+  includes them, and the inventory gate checks they really appear. A writer may still use any
   other word in planned state without the plan listing it.
 - **Observed state** (after a lesson is built): a post-build index of what the lesson actually
   exposed — forms and exposure counts. It feeds recycling decisions and later lessons' exposure
