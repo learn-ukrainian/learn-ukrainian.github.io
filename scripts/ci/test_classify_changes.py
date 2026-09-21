@@ -35,6 +35,7 @@ class ClassifierTests(unittest.TestCase):
             {
                 "docs_only": "false",
                 "frontend": frontend,
+                "backend": "true",
                 "shards": "[1, 2, 3, 4]",
                 "pytest_mode": "full",
                 "shard_count": "4",
@@ -48,6 +49,7 @@ class ClassifierTests(unittest.TestCase):
             {
                 "docs_only": "true",
                 "frontend": "false",
+                "backend": "true",
                 "shards": "[1]",
                 "pytest_mode": "docs",
                 "shard_count": "1",
@@ -58,10 +60,25 @@ class ClassifierTests(unittest.TestCase):
     def assert_selected(self, result, candidates):
         self.assertEqual(result["docs_only"], "false")
         self.assertEqual(result["frontend"], "false")
+        self.assertEqual(result["backend"], "true")
         self.assertEqual(result["shards"], "[1]")
         self.assertEqual(result["pytest_mode"], "selected")
         self.assertEqual(result["shard_count"], "1")
         self.assertEqual(json.loads(result["pytest_candidates"]), sorted(candidates))
+
+    def assert_frontend_only(self, result):
+        self.assertEqual(
+            result,
+            {
+                "docs_only": "false",
+                "frontend": "true",
+                "backend": "false",
+                "shards": "[]",
+                "pytest_mode": "frontend",
+                "shard_count": "0",
+                "pytest_candidates": "[]",
+            },
+        )
 
     def assert_content(self, result):
         self.assertEqual(
@@ -69,6 +86,7 @@ class ClassifierTests(unittest.TestCase):
             {
                 "docs_only": "false",
                 "frontend": "true",
+                "backend": "true",
                 "shards": "[1]",
                 "pytest_mode": "content",
                 "shard_count": "1",
@@ -91,11 +109,9 @@ class ClassifierTests(unittest.TestCase):
         # curriculum/ outside the class roots (e.g. example.yaml at the
         # curriculum root) is full on the queue.
         self.assert_docs(self.classify(["wiki/example.yaml"]))
-        self.assert_content(self.classify(["wiki/example.yaml"], event="merge_group"))
+        self.assert_docs(self.classify(["wiki/example.yaml"], event="merge_group"))
         self.assert_docs(self.classify(["curriculum/example.yaml"]))
-        self.assert_full(
-            self.classify(["curriculum/example.yaml"], event="merge_group"), frontend="true"
-        )
+        self.assert_docs(self.classify(["curriculum/example.yaml"], event="merge_group"))
 
     def test_content_class_roots(self):
         content_paths = [
@@ -114,7 +130,10 @@ class ClassifierTests(unittest.TestCase):
             self.assert_content(self.classify(list(reversed(content_paths))))
         with self.subTest(change="single", event="merge_group"):
             for path in content_paths:
-                self.assert_content(self.classify([path], event="merge_group"))
+                if path.startswith("site/"):
+                    self.assert_content(self.classify([path], event="merge_group"))
+                else:
+                    self.assert_docs(self.classify([path], event="merge_group"))
         with self.subTest(change="single-pr-curriculum-wiki-keeps-docs"):
             for path in content_paths:
                 if path.startswith("site/"):
@@ -159,7 +178,7 @@ class ClassifierTests(unittest.TestCase):
                             [path, "curriculum/l2-uk-en/a1/module/lesson-1/module.md"],
                             event=event,
                         ),
-                        frontend="true" if event == "merge_group" else "false",
+                        frontend="false",
                     )
 
     def test_content_outside_roots(self):
@@ -168,7 +187,7 @@ class ClassifierTests(unittest.TestCase):
         # docs path on PR; the merge queue pays full for it.
         pr_docs = ["curriculum/l1-uk/a1/module.md", "wiki/figures/example.md"]
         self.assert_docs(self.classify(pr_docs))
-        self.assert_full(self.classify(pr_docs, event="merge_group"), frontend="true")
+        self.assert_docs(self.classify(pr_docs, event="merge_group"))
         # site/ paths outside src/content/docs hit the frontend denominator
         # and are not content class: full on both events.
         for path in ("site/src/content/readings/a1/x.mdx", "site/src/components/X.astro"):
@@ -188,21 +207,19 @@ class ClassifierTests(unittest.TestCase):
         with_site = [*curriculum_only, "site/src/content/docs/a1/module/1.mdx"]
         self.assert_docs(self.classify(curriculum_only))
         self.assert_content(self.classify(with_site))
-        for paths in (curriculum_only, with_site):
-            self.assert_content(self.classify(paths, event="merge_group"))
+        self.assert_docs(self.classify(curriculum_only, event="merge_group"))
+        self.assert_content(self.classify(with_site, event="merge_group"))
 
     def test_merge_group_content_class(self):
-        # D1 (#8399): a merge group resolves to content or full only.
-        self.assert_content(
+        # #8437: curriculum markdown without learner pages stays on the docs lane.
+        self.assert_docs(
             self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event="merge_group")
         )
 
-    def test_merge_group_docs_only_forces_full(self):
-        # D1 (#8399): what would be `docs` on a pull request is full on the
-        # queue, exactly as on main (frontend included).
-        self.assert_full(
+    def test_merge_group_docs_only_stays_docs(self):
+        # #8437: a docs merge does not rebuild the site or run four shards.
+        self.assert_docs(
             self.classify(["docs/guide.md", "README.md"], event="merge_group"),
-            frontend="true",
         )
 
     def test_merge_group_script_and_test_forces_full(self):
@@ -214,13 +231,11 @@ class ClassifierTests(unittest.TestCase):
             "tests/test_ci_shard_partition.py",
         )
         paths = ["scripts/delegate.py", "tests/test_delegate.py"]
+        expected = ["tests/test_ci_shard_partition.py", "tests/test_delegate.py"]
+        self.assert_selected(self.classify(paths, tree_paths=tree), expected)
         self.assert_selected(
-            self.classify(paths, tree_paths=tree),
-            ["tests/test_ci_shard_partition.py", "tests/test_delegate.py"],
-        )
-        self.assert_full(
             self.classify(paths, event="merge_group", tree_paths=tree),
-            frontend="true",
+            expected,
         )
 
     def test_merge_group_mixed_forces_full(self):
@@ -237,7 +252,7 @@ class ClassifierTests(unittest.TestCase):
                 event="merge_group",
                 tree_paths=tree,
             ),
-            frontend="true",
+            frontend="false",
         )
 
     def test_merge_group_compare_failure_fails_closed(self):
@@ -266,7 +281,7 @@ class ClassifierTests(unittest.TestCase):
             "curriculum/l2-uk-en/a1/module/lesson-1/module.md",
             "curriculum/l2-uk-en/a1/module/lesson-1/module-renamed.md",
         ]
-        self.assert_content(self.classify(paths, event="merge_group"))
+        self.assert_docs(self.classify(paths, event="merge_group"))
 
     def test_rename_from_content_root_to_outside_forces_full(self):
         # D6 (#8399): the rename destination is outside every docs/content
@@ -276,7 +291,7 @@ class ClassifierTests(unittest.TestCase):
             "dashboards/moved.md",
         ]
         self.assert_full(self.classify(paths), frontend="false")
-        self.assert_full(self.classify(paths, event="merge_group"), frontend="true")
+        self.assert_full(self.classify(paths, event="merge_group"), frontend="false")
 
     def test_content_change_plus_deleted_reads_content_test_forces_full(self):
         # D6 (#8399): a content change that also deletes a reads_content test
@@ -292,7 +307,7 @@ class ClassifierTests(unittest.TestCase):
         ]
         self.assert_full(self.classify(paths, tree_paths=tree), frontend="false")
         self.assert_full(
-            self.classify(paths, event="merge_group", tree_paths=tree), frontend="true"
+            self.classify(paths, event="merge_group", tree_paths=tree), frontend="false"
         )
 
     def test_full_ci_label_forces_full_over_content(self):
@@ -335,8 +350,11 @@ class ClassifierTests(unittest.TestCase):
         for entry in load_denominator()["paths"]:
             path = entry + "README.md" if entry.endswith("/") else entry
             with self.subTest(path=path):
-                self.assert_full(self.classify([path]), frontend="true")
-        self.assert_full(self.classify(["packages/activity-kit/src/index.ts"]), frontend="true")
+                if entry in {"site/", "packages/activity-kit/"}:
+                    self.assert_frontend_only(self.classify([path]))
+                else:
+                    self.assert_full(self.classify([path]), frontend="true")
+        self.assert_frontend_only(self.classify(["packages/activity-kit/src/index.ts"]))
 
     def test_event_and_label_overrides(self):
         # Only pull_request and merge_group classify by changed paths (#8399);
@@ -346,8 +364,8 @@ class ClassifierTests(unittest.TestCase):
                 self.assert_full(self.classify(["docs/guide.md"], event=event), frontend="true")
         self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]), frontend="true")
         self.assert_docs(self.classify(["docs/guide.md"], labels=["unrelated"]))
-        # D1 (#8399): merge groups never resolve to docs — full as on main.
-        self.assert_full(self.classify(["docs/guide.md"], event="merge_group"), frontend="true")
+        # #8437: a docs merge stays on the docs lane.
+        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
 
     def test_empty_and_capped_changes(self):
         for paths in ([], [f"docs/{i}.md" for i in range(300)]):
@@ -395,7 +413,7 @@ class ClassifierTests(unittest.TestCase):
                 "REPO": "owner/repo",
             }
             full_line = (
-                "docs_only=false\nfrontend=true\nshards=[1, 2, 3, 4]\n"
+                "docs_only=false\nfrontend=true\nbackend=true\nshards=[1, 2, 3, 4]\n"
                 "pytest_mode=full\nshard_count=4\npytest_candidates=[]\n"
             )
             for error in (
@@ -419,7 +437,7 @@ class ClassifierTests(unittest.TestCase):
                 scope.main()
                 self.assertEqual(
                     output.read_text(),
-                    "docs_only=true\nfrontend=false\nshards=[1]\n"
+                    "docs_only=true\nfrontend=false\nbackend=true\nshards=[1]\n"
                     "pytest_mode=docs\nshard_count=1\npytest_candidates=[]\n",
                 )
 
