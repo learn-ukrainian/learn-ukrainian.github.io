@@ -1,0 +1,608 @@
+arc_schema: 1
+source:
+  path: docs/epics/fresh-build-a1-arc.md
+  sha256: 319bd259d43fd6f917e2f720285c38d33d59b850561f3dd186ead12f0226df13
+est_lessons_total: 162
+positions:
+- position: 1
+  slug: sounds-letters-and-hello
+  est_lessons: 5
+  job: Hear and say first greetings; grasp звук vs літера, голосні vs приголосні; read and write the first letter group in syllables and short words
+  inventory_text: '**13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р'
+  phase: A1.1
+  skills_text: Li, W (copying, own name)
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  letters:
+  - А
+  - О
+  - У
+  - И
+  - М
+  - І
+  - Н
+  - В
+  - Л
+  - С
+  - К
+  - П
+  - Р
+- position: 2
+  slug: reading-ukrainian
+  est_lessons: 5
+  job: Read words, then short sentences aloud, with most of the alphabet
+  inventory_text: '**12 letters**: Т Е Д З Б (end of primer part 1; ь, which the primer places before Б, is held for position 3), then Г Ґ Ч Й Х Ж Ш'
+  phase: A1.1
+  skills_text: Li, W (copying, own name)
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  letters:
+  - Т
+  - Е
+  - Д
+  - З
+  - Б
+  - Г
+  - Ґ
+  - Ч
+  - Й
+  - Х
+  - Ж
+  - Ш
+- position: 3
+  slug: special-signs
+  est_lessons: 4
+  job: Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft
+  inventory_text: '**8 letters**: Ї Я Ю Є Ц Щ Ф and ь; апостроф, дж, дз; hard / soft contrast. The alphabet in its dictionary order with the letter names; capital and small letters (`:571-572`)'
+  phase: A1.1
+  skills_text: Li, W (copying, own name)
+  skills:
+  - Li
+  - W
+  standard_line_refs:
+  - - 571
+    - 572
+  letters:
+  - Ї
+  - Я
+  - Ю
+  - Є
+  - Ц
+  - Щ
+  - Ф
+  - ь
+- position: 4
+  slug: stress-and-melody
+  est_lessons: 3
+  job: Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и; recognise handwritten and italic letter shapes; divide words into syllables for line breaks
+  inventory_text: наголос, інтонація, склад і перенос (`:588`), писані літери (`:571`); no new letters
+  phase: A1.1
+  skills_text: Li, W (copying, own name)
+  skills:
+  - Li
+  - W
+  standard_line_refs:
+  - - 588
+    - 588
+  - - 571
+    - 571
+  letters: []
+- position: 5
+  slug: who-am-i
+  est_lessons: 3
+  job: Introduce yourself and ask who someone is; common professions (`:485`)
+  inventory_text: null
+  phase: A1.1
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs:
+  - - 485
+    - 485
+- position: 6
+  slug: my-family
+  est_lessons: 3
+  job: Show a family photo and say who is who
+  inventory_text: null
+  phase: A1.1
+  skills_text: W (captions)
+  skills:
+  - W
+  standard_line_refs: []
+- position: 7
+  slug: checkpoint-first-contact
+  est_lessons: 2
+  job: 'Self-check: read aloud, greet, introduce yourself and family'
+  inventory_text: null
+  phase: A1.1
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+- position: 8
+  slug: things-have-gender
+  est_lessons: 3
+  job: Tell the gender of a noun and pick він / вона / воно, мій / моя / моє
+  inventory_text: null
+  phase: A1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 9
+  slug: what-is-it-like
+  est_lessons: 3
+  job: Describe a thing with an agreeing adjective
+  inventory_text: null
+  phase: A1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 10
+  slug: colors
+  est_lessons: 2
+  job: Name colours; soft-group adjectives
+  inventory_text: null
+  phase: A1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 11
+  slug: how-many
+  est_lessons: 4
+  job: Understand and say numbers for prices, age, phone numbers
+  inventory_text: null
+  phase: A1.2
+  skills_text: Li (numbers by ear)
+  skills:
+  - Li
+  standard_line_refs: []
+- position: 12
+  slug: this-and-that
+  est_lessons: 2
+  job: 'Point at things: цей / той in three genders'
+  inventory_text: null
+  phase: A1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 13
+  slug: many-things
+  est_lessons: 3
+  job: 'Go from one to many: nominative plural'
+  inventory_text: null
+  phase: A1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 14
+  slug: checkpoint-my-world
+  est_lessons: 2
+  job: 'Self-check: describe, count, point'
+  inventory_text: null
+  phase: A1.2
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+- position: 15
+  slug: what-i-like
+  est_lessons: 3
+  job: 'Say what you like doing: infinitive, люблю + infinitive'
+  inventory_text: null
+  phase: A1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 16
+  slug: verbs-group-one
+  est_lessons: 3
+  job: Conjugate first-conjugation verbs in the present
+  inventory_text: null
+  phase: A1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 17
+  slug: verbs-group-two
+  est_lessons: 3
+  job: Conjugate second-conjugation verbs; tell the two apart
+  inventory_text: null
+  phase: A1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 18
+  slug: i-want-i-can
+  est_lessons: 3
+  job: Say what you want, can and must do
+  inventory_text: null
+  phase: A1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 19
+  slug: questions
+  est_lessons: 3
+  job: Ask and answer simple questions; negate
+  inventory_text: null
+  phase: A1.3
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs: []
+- position: 20
+  slug: my-morning
+  est_lessons: 3
+  job: Describe a morning routine with reflexive verbs
+  inventory_text: null
+  phase: A1.3
+  skills_text: W (short note)
+  skills:
+  - W
+  standard_line_refs: []
+- position: 21
+  slug: checkpoint-actions
+  est_lessons: 2
+  job: 'Self-check: say what you do, want, ask'
+  inventory_text: null
+  phase: A1.3
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+- position: 22
+  slug: what-time
+  est_lessons: 3
+  job: Ask and tell the time
+  inventory_text: null
+  phase: A1.4
+  skills_text: Li, R (timetable)
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+- position: 23
+  slug: days-and-months
+  est_lessons: 4
+  job: Use days, months, seasons and dates in set phrases
+  inventory_text: null
+  phase: A1.4
+  skills_text: R (calendar)
+  skills:
+  - R
+  standard_line_refs: []
+- position: 24
+  slug: weather
+  est_lessons: 3
+  job: 'Talk about the weather and the natural world around you: animals, plants, landscape (`:549-551`)'
+  inventory_text: null
+  phase: A1.4
+  skills_text: Li (forecast)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 549
+    - 551
+- position: 25
+  slug: my-day
+  est_lessons: 3
+  job: Tell your day in order
+  inventory_text: null
+  phase: A1.4
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+- position: 26
+  slug: free-time
+  est_lessons: 3
+  job: Talk about leisure; invite someone
+  inventory_text: null
+  phase: A1.4
+  skills_text: W (SMS invitation)
+  skills:
+  - W
+  standard_line_refs: []
+- position: 27
+  slug: checkpoint-time-nature
+  est_lessons: 2
+  job: 'Self-check: time, week plan, weather'
+  inventory_text: null
+  phase: A1.4
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+- position: 28
+  slug: euphony
+  est_lessons: 2
+  job: Choose у / в, і / й, з / із / зі
+  inventory_text: null
+  phase: A1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 29
+  slug: where-is-it
+  est_lessons: 4
+  job: 'Say where something is: locative of nouns with agreeing adjectives'
+  inventory_text: null
+  phase: A1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 30
+  slug: my-city
+  est_lessons: 3
+  job: Name places in a city and say what is where
+  inventory_text: null
+  phase: A1.5
+  skills_text: R (signs, map)
+  skills:
+  - R
+  standard_line_refs: []
+- position: 31
+  slug: where-to
+  est_lessons: 3
+  job: 'Say where you are going: accusative of direction; де vs куди'
+  inventory_text: null
+  phase: A1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 32
+  slug: transport
+  est_lessons: 3
+  job: 'Get around: transport phrases'
+  inventory_text: null
+  phase: A1.5
+  skills_text: R (tickets, stops), Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+- position: 33
+  slug: around-the-city
+  est_lessons: 3
+  job: Ask for and follow directions
+  inventory_text: null
+  phase: A1.5
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs: []
+- position: 34
+  slug: where-from
+  est_lessons: 3
+  job: Say where you and things are from; compass points; at the border (`:523-525`)
+  inventory_text: null
+  phase: A1.5
+  skills_text: 'W (form: country, city; address an envelope `:361`)'
+  skills:
+  - W
+  standard_line_refs:
+  - - 523
+    - 525
+  - - 361
+    - 361
+- position: 35
+  slug: checkpoint-places
+  est_lessons: 2
+  job: 'Self-check: find your way'
+  inventory_text: null
+  phase: A1.5
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+- position: 36
+  slug: food-and-drink
+  est_lessons: 3
+  job: Name food and drink; say what Ukrainians eat
+  inventory_text: null
+  phase: A1.6
+  skills_text: R (menu)
+  skills:
+  - R
+  standard_line_refs: []
+- position: 37
+  slug: i-eat-i-drink
+  est_lessons: 3
+  job: 'Say what you eat and drink: accusative, inanimate, with agreeing adjectives'
+  inventory_text: null
+  phase: A1.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 38
+  slug: at-the-cafe
+  est_lessons: 3
+  job: Order and pay in a café
+  inventory_text: null
+  phase: A1.6
+  skills_text: Li, R (menu, bill)
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+- position: 39
+  slug: shopping
+  est_lessons: 3
+  job: 'Ask prices and buy things: food, toiletries, stationery; weight and volume (`:531-533`)'
+  inventory_text: null
+  phase: A1.6
+  skills_text: R (price tags), Li
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 531
+    - 533
+- position: 40
+  slug: people-around-me
+  est_lessons: 3
+  job: 'Talk about people you see, know and think about: accusative, animate; мене / тебе / нас / вас; `про` + accusative'
+  inventory_text: null
+  phase: A1.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 41
+  slug: checkpoint-food-shopping
+  est_lessons: 2
+  job: 'Self-check: order and buy'
+  inventory_text: null
+  phase: A1.6
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+- position: 42
+  slug: hey-friend
+  est_lessons: 2
+  job: 'Address people by name: vocative'
+  inventory_text: null
+  phase: A1.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 43
+  slug: please-do-this
+  est_lessons: 3
+  job: 'Ask someone to do something: imperative, ти and ви'
+  inventory_text: null
+  phase: A1.7
+  skills_text: R (signs, prohibitions)
+  skills:
+  - R
+  standard_line_refs: []
+- position: 44
+  slug: linking-ideas
+  est_lessons: 2
+  job: 'Join ideas: і, а, але, бо, тому що'
+  inventory_text: null
+  phase: A1.7
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+- position: 45
+  slug: when-and-where
+  est_lessons: 4
+  job: 'Build first complex sentences with що, де, коли — talking about your home: housing, rooms, furniture, what is where (`:489-493`)'
+  inventory_text: null
+  phase: A1.7
+  skills_text: W (describe your room)
+  skills:
+  - W
+  standard_line_refs:
+  - - 489
+    - 493
+- position: 46
+  slug: holidays
+  est_lessons: 3
+  job: Greet people on holidays; family and state holidays
+  inventory_text: null
+  phase: A1.7
+  skills_text: W (postcard)
+  skills:
+  - W
+  standard_line_refs: []
+- position: 47
+  slug: checkpoint-communication
+  est_lessons: 2
+  job: 'Self-check: address, ask, connect'
+  inventory_text: null
+  phase: A1.7
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+- position: 48
+  slug: what-happened
+  est_lessons: 4
+  job: 'Say what happened: past tense and gender'
+  inventory_text: null
+  phase: A1.8
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 49
+  slug: yesterday
+  est_lessons: 3
+  job: Tell yesterday as a connected story
+  inventory_text: null
+  phase: A1.8
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+- position: 50
+  slug: what-will-happen
+  est_lessons: 3
+  job: 'Say what will happen: compound future'
+  inventory_text: null
+  phase: A1.8
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+- position: 51
+  slug: my-plans
+  est_lessons: 3
+  job: Make plans and arrange to meet
+  inventory_text: null
+  phase: A1.8
+  skills_text: W (SMS)
+  skills:
+  - W
+  standard_line_refs: []
+- position: 52
+  slug: my-story
+  est_lessons: 3
+  job: Tell your life in three tenses
+  inventory_text: null
+  phase: A1.8
+  skills_text: W (short biography, form)
+  skills:
+  - W
+  standard_line_refs: []
+- position: 53
+  slug: health
+  est_lessons: 3
+  job: Say what hurts; at the pharmacy and doctor
+  inventory_text: null
+  phase: A1.8
+  skills_text: Li, R
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+- position: 54
+  slug: emergencies
+  est_lessons: 2
+  job: Get help in an emergency
+  inventory_text: null
+  phase: A1.8
+  skills_text: Li, R (signs)
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+- position: 55
+  slug: a1-finale
+  est_lessons: 3
+  job: 'One full day in a Ukrainian city: everything together'
+  inventory_text: null
+  phase: A1.8
+  skills_text: all
+  skills:
+  - W
+  - Li
+  - R
+  standard_line_refs: []
