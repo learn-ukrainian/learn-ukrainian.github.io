@@ -15,6 +15,19 @@ from scripts.ci.frontend_change_scope import load_denominator, path_in_denominat
 
 # Content CI owns these trees. Other exemptions are Markdown in known docs trees.
 CONTENT_PREFIXES = ("wiki/", "curriculum/")
+
+# Events classified by changed paths. Everything else (schedule, dispatch,
+# unknown) forces the full tier without touching the compare API.
+_PATH_CLASSIFIED_EVENTS = frozenset({"pull_request", "merge_group"})
+
+# Content class (#8399): learner-facing content with no imported code surface.
+# Every changed path must live under one of these roots for the class to apply.
+CONTENT_CLASS_PREFIXES = (
+    "curriculum/l2-uk-en/",
+    "curriculum/l2-uk-direct/",
+    "site/src/content/docs/",
+    "wiki/",
+)
 DOC_PREFIXES = (
     "docs/", "agents_extensions/shared/skills/", ".claude/", ".codex/", ".agent/",
 )
@@ -26,9 +39,30 @@ _TEST_FILE_RE = re.compile(r"(?:^|/)(?:test_[^/]+\.py|[^/]+_test\.py)$")
 
 
 def is_docs(path: str) -> bool:
+    if path.startswith("curriculum/") and PurePosixPath(path).name == "curriculum.yaml":
+        # Code-imported track manifest, not content: never a docs skip (#8399).
+        return False
     if path.startswith(CONTENT_PREFIXES):
         return True
     return path.endswith(".md") and ("/" not in path or path.startswith(DOC_PREFIXES))
+
+
+def is_content_class_path(path: str) -> bool:
+    """True when a path is learner content with no code-imported surface.
+
+    Exclusions inside the content roots (each forces the full tier instead):
+    - ``curriculum/**/curriculum.yaml``: generated track manifest imported by
+      runtime code (scripts/level_config.py, scripts/pipeline,
+      scripts/generate_mdx, scripts/sync) — not just read by tests.
+    Schemas live outside the roots (``schemas/``, ``docs/**/*.yaml``) and
+    already miss the prefix check; everything else under the roots is gated
+    by the Contracts job, Content CI, or the ``reads_content`` pytest lane,
+    all of which still run for this class.
+    """
+    p = _norm(path)
+    if not p.startswith(CONTENT_CLASS_PREFIXES):
+        return False
+    return not (p.startswith("curriculum/") and PurePosixPath(p).name == "curriculum.yaml")
 
 
 def _norm(path: str) -> str:
@@ -167,6 +201,20 @@ def _docs() -> dict[str, str]:
     }
 
 
+def _content() -> dict[str, str]:
+    # docs_only=false keeps Ruff and Contracts on (cheap content gates).
+    # Frontend is forced on: curriculum/wiki content renders through the site
+    # build even though only site/ paths match the frontend denominator.
+    return {
+        "docs_only": "false",
+        "frontend": "true",
+        "shards": "[1]",
+        "pytest_mode": "content",
+        "shard_count": "1",
+        "pytest_candidates": "[]",
+    }
+
+
 def _selected(candidates: Sequence[str]) -> dict[str, str]:
     return {
         "docs_only": "false",
@@ -188,15 +236,17 @@ def classify(
     tree_paths: Iterable[str] | None = None,
     repo_root: Path | None = None,
 ) -> dict[str, str]:
-    """Unknown paths run every pytest shard; only explicit docs may skip."""
+    """Unknown paths run every pytest shard; only explicit docs/content may skip."""
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
 
-    # Non-PR / full-ci / empty / capped: force full including frontend (P1.1).
-    if event != "pull_request" or "full-ci" in labels or not paths or len(paths) >= 300:
+    # Non-classified event / full-ci / empty / capped: force full (P1.1).
+    if event not in _PATH_CLASSIFIED_EVENTS or "full-ci" in labels or not paths or len(paths) >= 300:
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
+    if all(is_content_class_path(path) for path in paths):
+        return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:
         return _docs()
@@ -251,17 +301,21 @@ def main() -> None:
     denominator: list[str] = []
     tree_paths: set[str] | None = None
     try:
-        payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
         if event == "pull_request":
+            payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
             labels = [label["name"] for label in payload["pull_request"]["labels"]]
-            if "full-ci" not in labels:
-                denominator = load_denominator()["paths"]
-                paths = compare_paths(
-                    os.environ.get("BASE", ""),
-                    os.environ.get("HEAD", ""),
-                    os.environ["REPO"],
-                )
-                tree_paths = git_tree_paths(Path.cwd())
+        if event in _PATH_CLASSIFIED_EVENTS and "full-ci" not in labels:
+            # pull_request and merge_group both classify by changed paths;
+            # the workflow maps pull_request.base/head or merge_group
+            # .base_sha/.head_sha (group union) into BASE/HEAD. Any failure
+            # here leaves paths empty → fail closed to full.
+            denominator = load_denominator()["paths"]
+            paths = compare_paths(
+                os.environ.get("BASE", ""),
+                os.environ.get("HEAD", ""),
+                os.environ["REPO"],
+            )
+            tree_paths = git_tree_paths(Path.cwd())
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
         # Missing/malformed event, denominator, API response, or git tree → full.
         paths = []
