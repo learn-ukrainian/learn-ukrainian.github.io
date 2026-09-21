@@ -8,7 +8,9 @@
 > #8412 (a pre-dispatch critic showed that rules 1–7 could not be implemented without guessing). The
 > first code against this design is the arc data file (#8411, merged). Revision 4 folds in two independent
 > reviews of revision 3 (`design-review-8412-r3`, Gemini lane, 10 findings; `critic-8412-design-r3`, Kimi seat, 5);
-> revision 5 folds in the six findings of the confirming review (`design-review-8412-r4`).
+> revision 5 folds in the six findings of the confirming review (`design-review-8412-r4`). On its finding about
+> `recycled` versus planned learner state, the accepted §4 and §5 are kept: planned state remains the writer's
+> allowlist, and `recycled` is defined as the subset a lesson commits to re-expose.
 
 ## 1. Three artifacts, one owner each
 
@@ -301,16 +303,16 @@ Two layers, because a plan cannot know everything a built lesson will contain:
   a project-wide base layer of closed-class function words and proper-noun handling (as
   `scripts/audit/checks/learner_state.py` already does) + all `core` items of earlier modules and
   of lessons `1..n−1`, held as word-store record ids with their authorised form tags, not as bare
-  lemmas. `incidental` items never enter it. Planned state is the **superset a lesson may draw
-  from**; what a given lesson actually draws is its `vocabulary.recycled` list (§2a). The writer's
-  allowlist for a lesson is therefore the base layer plus that lesson's own `core`, `incidental`
-  and `recycled` — not the whole planned state.
+  lemmas. `incidental` items never enter it. Planned state is the writer's allowlist, as before.
+  A lesson's `vocabulary.recycled` list (§2a) is a **subset** of it with a different job: the words
+  this lesson *commits* to bringing back — the plan's steps may rely on them, the practice deck
+  includes them, and the coverage gate can check they really appear. A writer may still use any
+  other word in planned state without the plan listing it.
 - **Observed state** (after a lesson is built): a post-build index of what the lesson actually
   exposed — forms and exposure counts. It feeds recycling decisions and later lessons' exposure
-  counts. A built lesson that uses a word-store record, or a form of one, outside the base layer
-  and its own `core`, `incidental` and `recycled` fails the inventory gate; it does not silently
-  extend the state. A word the writer needs and the plan did not list is a plan change, not a
-  writer's choice.
+  counts. A built lesson that uses a word-store record, or a form of one, outside planned state
+  plus its own `core` and `incidental` fails the inventory gate; it does not silently extend the
+  state.
 
 **Immersion.** Thresholds are carried over unchanged (R-30). What changes is grain and key:
 
@@ -326,9 +328,9 @@ Two layers, because a plan cannot know everything a built lesson will contain:
 
 ## 5. What the lesson writer receives (R-26)
 
-Exactly four things: the lesson's plan entry; the evidence records that entry cites; the
-allowlist for that lesson as §4 defines it (base layer plus the lesson's own `core`, `incidental`
-and `recycled`) with the immersion rule for that position; the fixed style card (ULP practices, voice,
+Exactly four things: the lesson's plan entry; the evidence records that entry cites; the learner
+state for that position (planned state as §4 defines it, held as word-store ids) with the
+immersion rule for it; the fixed style card (ULP practices, voice,
 four tabs). Not the other lessons' plans, not the whole pack, not any earlier edition.
 
 The recap writer additionally receives the **built** lessons `1..N−1` of the same module — this is
@@ -341,7 +343,7 @@ the only place built content is an input, and only within the module being built
 | plan-validate | §2 rules 1–7 with the semantics of §2a; not-checked items are reported, never passed silently. The build preflight and CI run it with `--strict`, which refuses any waiver |
 | pack-verify | every quote matches its chunk; every word record re-verifies against current sources; every video URL answers |
 | coverage | every evidence id cited by the lesson plan appears in the lesson and in Ресурси |
-| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses no word-store record or form outside the base layer and this lesson's `core`, `incidental` and `recycled` (§4) |
+| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses no word-store record or form outside planned learner state + this lesson's `core` and `incidental`; every `recycled` id actually appears (§4) |
 | standard-coverage | R-32: every State Standard requirement the arc assigns to this module is cited by at least one lesson (`standard:` ids in the pack); an item taught earlier than the Standard places it must carry a ULP evidence id. Teaching early is never a failure by itself. Reads the corrected mapping file (#8404) |
 | stress | every stressed form in the lesson matches the pack's form record for that grammatical context |
 | practice | the generated deck contains every `practice` item of the lesson plan and nothing outside the lesson's inventory + learner state |
