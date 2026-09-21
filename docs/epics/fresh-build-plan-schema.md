@@ -11,7 +11,7 @@
 | --- | --- | --- | --- |
 | **Level arc** | `curriculum/l2-uk-en/plans/<level>/_arc.yaml` | module order, one-sentence job per module, the progression table (letters/sounds, grammar, vocabulary themes), learner-position checkpoints | lesson detail |
 | **Module plan** (schema v2) | `curriculum/l2-uk-en/plans/<level>/<slug>.yaml` | `lessons[]`: each lesson's job, inventory, steps, activities, videos, rationale, targets | source text, word facts |
-| **Evidence pack** | `curriculum/l2-uk-en/evidence/<level>/<slug>.yaml` + `.lock` (sha256) | the frozen source material and verified word records that lessons cite by id | sequence, pedagogy decisions |
+| **Evidence pack** | `curriculum/l2-uk-en/evidence/<level>/<slug>.yaml` + `.lock` (sha256), plus the shared level word store `evidence/<level>/_words.yaml` | the frozen source material and verified word records that lessons cite by id | sequence, pedagogy decisions |
 
 Sequence exists in exactly one place (the plan). Facts exist in exactly one place (the pack). That
 is the structural answer to the Module 1 failure, where plan, derived lesson map and content each
@@ -202,17 +202,27 @@ the only place built content is an input, and only within the module being built
 | immersion | existing structural gates, keyed by learner position |
 | review | cross-family content review (LLM) — the only non-deterministic gate |
 
-## 7. Open design questions for the reviewer
+## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)
 
-0. *(resolved in r2)* form-grain vocabulary, core vs incidental, observed vs planned learner state,
-   lesson-grain immersion, deterministic title check limited to quantities, dialogue fields,
-   `examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
-1. Should `steps` be mandatory structure or guidance? Proposed: mandatory ids and evidence, free
-   prose inside them.
-2. One pack per module, or a shared level pack with per-module views, given heavy word reuse?
-   Proposed: per-module pack for texts/exercises/videos, a shared **level word store** for `words`,
-   referenced by id, to avoid 55 copies of `мама`.
-3. Is `minutes` worth keeping if no gate reads it? Proposed: keep; the arc review uses it to spot
-   overloaded lessons.
-4. Migration: nothing is migrated. v1 plans stay in place for `/a1-v1/` provenance and are never
-   read by the new engine (R-11).
+1. **Steps are fixed structure.** Which steps exist, their order, their evidence and their practice
+   activities are binding and machine-checked; the wording inside a step is the writer's. An awkward
+   step order is fixed in the plan, not improvised around.
+2. **Shared word store per level.** `curriculum/l2-uk-en/evidence/<level>/_words.yaml` (+ `.lock`)
+   holds one record per lemma sense for the whole level, with where it is first introduced. Module
+   packs keep texts, exercises, examples, errors, videos and standard lines, and reference words by
+   id. A correction (for example a ULIF stress fix) is made once. The store is versioned; a change
+   lists the modules whose plans cite the changed records so they can be re-verified.
+3. **`minutes` is kept and computed**, not typed: reading time from the word target, a per-type time
+   per activity, and the video durations from the pack. The arc review uses it to spot overloaded
+   lessons; no gate fails on it.
+4. **Start clean.** No v1 plan is converted. v1 plans stay on disk as the record of `/a1-v1/` and
+   are never read by the new engine. The arc author may look up which textbook pages they cited and
+   re-verifies each citation through the MCP before using it (R-11).
+
+Resolved earlier in r2: form-grain vocabulary, core vs incidental, planned vs observed learner
+state, lesson-grain immersion, quantity-only deterministic title check, dialogue fields,
+`examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
+
+Added after #8403: a text quote is anchored by **verbatim text + content hash + (source file,
+page)**. `chunk_id` is a convenience locator only — textbook chunk ids shifted on a re-chunk and
+left 93 wiki registries dangling, so an id alone is not a stable reference.
