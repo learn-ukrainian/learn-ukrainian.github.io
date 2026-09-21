@@ -29,25 +29,25 @@
 
 ## 2. Complete Finding Ledger (AC-01)
 
-### Breakdown by Observation, Status, and Severity
+### Breakdown by Observation, Status, and Severity (Exact Counts)
 
 | Dimension | Category | Count | Notes |
 |---|---|---|---|
 | **Observation** | `none` | 16 | Flawless interactions verified across modes & settings |
-| | `defect` | 7 | Layout overflow, 404 missing manifests/shards |
-| | `friction` | 7 | Missing level-switch guidance, un-subtitled course cards |
+| | `defect` | 10 | Layout overflow, 404 missing manifests/shards |
+| | `friction` | 9 | Level-switch guidance, mobile mixed transition, course labels |
 | | `content` | 1 | ЗНО/Culture audience mismatch for A2 persona |
-| **Status** | `live` | 27 | Present on live deployed production site |
-| | `fixed / resolved` | 2 | C1-01 (/practice/ route) & C1-02 (header nav link) |
+| **Status** | `live` | 31 | Present on live deployed production site |
+| | `fixed / resolved` | 3 | C1-01 (/practice/ route), C1-02 (header nav), C1-03 (home card) |
 | | `announced-unfinished`| 2 | Synonym & Imperative tiles display "0 · No exercises yet" |
 | **Severity** | `S1` | 2 | Both resolved and verified live by #8328 |
-| | `S2` | 13 | Layout overflow, console 404s, level-gate friction |
-| | `S3` | 16 | Verified working flows, minor touch targets, polish |
-| **Total Rows** | | **31** | Denominator-complete across all 8 slices |
+| | `S2` | 15 | Layout overflow, console 404s, level-gate friction |
+| | `S3` | 19 | Working flows (16), announced-unfinished (2), mobile touch targets (1) |
+| **Total Rows** | | **36** | Denominator-complete across all 8 slices (7+5+5+4+4+4+3+4) |
 
 ### Itemized Finding Matrix
 
-| ID | Slice | Surface | Viewport | Obs | Status | Sev | Description | Disposition |
+| ID | Slice | Surface | Viewport | Obs | Status | Sev | Description | Dedup / Tracking |
 |---|---|---|---|---|---|---|---|---|
 | C1-01 | C1 | `/practice/` | All | `defect` | `fixed` | S1 | Direct `/practice/` returned 404 | Resolved in PR #8364; verified HTTP 200 live |
 | C1-02 | C1 | Nav Header | Desktop | `defect` | `fixed` | S1 | Practice link missing in header nav | Resolved in PR #8364; verified 1-click live |
@@ -56,25 +56,25 @@
 | C1-05 | C1 | Word Pages | All | `friction`| `live` | S2 | Lexicon entry pages lack CTA to practice | Routed to #8316 (Atlas entry enrichment) |
 | C1-06 | C1 | Flashcards | All | `none` | `live` | S3 | 8-card A1 session completes to end-screen | Verified with score & streak counters |
 | C1-07 | C1 | Landing TTFI | All | `none` | `live` | S3 | First control visible in ~1.1s, enabled ~1.4s | Verified prompt skeleton replacement |
-| C2-01 | C2 | Main session | Desktop | `defect` | `live` | S2 | Horizontal scrollbar on desktop during session | Filed as issue #8377 |
-| C2-02 | C2 | Pronunciation | All | `defect` | `live` | S2 | 404 on `/audio/pronunciation/manifest.json` | Filed as issue #8378 |
-| C2-03 | C2 | Imperative shards | All | `defect` | `live` | S2 | Background 404s for imperative shards | Filed as issue #8379 |
-| C2-04 | C2 | Mixed mode button | Phone | `friction`| `live` | S2 | Mixed click remains on daily hero | Filed as issue #8382 |
+| C2-01 | C2 | Main session | Desktop | `defect` | `live` | S2 | Horizontal scrollbar on desktop during session | Primary for #8377 (desktop overflow) |
+| C2-02 | C2 | Pronunciation | All | `defect` | `live` | S2 | 404 on `/audio/pronunciation/manifest.json` | Primary for #8378 (audio manifest 404) |
+| C2-03 | C2 | Imperative shards | All | `defect` | `live` | S2 | Background 404s for imperative shards | Primary for #8379 (imperative shard 404s) |
+| C2-04 | C2 | Mixed mode button | Phone | `friction`| `live` | S2 | Mixed click remains on daily hero | Primary for #8382 (mobile mixed transition) |
 | C2-05 | C2 | Core modes | All | `none` | `live` | S3 | Flashcards, Matching, Choice interactive | Verified state updates and transitions |
-| C3-01 | C3 | Synonym tile | All | `friction`| `announced`| S3 | Tile disabled with "0 · No exercises yet" | Expected announced state; tracked in #8326 |
-| C3-02 | C3 | Paronym tile | All | `friction`| `live` | S2 | Enabled at A1 but clicks do not launch session | Filed as issue #8380 |
-| C3-03 | C3 | Heritage tile | All | `friction`| `live` | S2 | Enabled at A1 with 2 items but no session start | Filed as issue #8380 |
+| C3-01 | C3 | Synonym tile | All | `friction`| `announced`| S3 | Tile disabled with "0 · No exercises yet" | Known announced state; tracked in #8326 |
+| C3-02 | C3 | Paronym tile | All | `friction`| `live` | S2 | Enabled at A1 but clicks do not launch session | Primary for #8380 (level-gate feedback) |
+| C3-03 | C3 | Heritage tile | All | `friction`| `live` | S2 | Enabled at A1 with 2 items but no session start | Deduplicated into #8380 (level-gate feedback) |
 | C3-04 | C3 | Cloze mode | All | `none` | `live` | S3 | Sentences render with textbook citations | Verified textbook source attribution |
-| C3-05 | C3 | Imperative shards | All | `defect` | `live` | S2 | Background 404 on imperative shards | Deduplicated into issue #8379 |
+| C3-05 | C3 | Imperative shards | All | `defect` | `live` | S2 | Background 404 on imperative shards | Deduplicated into #8379 |
 | C4-01 | C4 | Paradigm mode | All | `none` | `live` | S3 | Case selector chips and prompt interactive | Verified case filtering mechanics |
-| C4-02 | C4 | Imperative tile | Phone | `friction`| `announced`| S3 | Disabled on mobile with "0 · No exercises yet"| Expected announced state |
-| C4-03 | C4 | Imperative shards | All | `defect` | `live` | S2 | Background 404 on imperative shards | Deduplicated into issue #8379 |
-| C4-04 | C4 | Paradigm layout | Desktop | `defect` | `live` | S2 | Desktop horizontal overflow in paradigm | Deduplicated into issue #8377 |
+| C4-02 | C4 | Imperative tile | Phone | `friction`| `announced`| S3 | Disabled on mobile with "0 · No exercises yet"| Known announced state |
+| C4-03 | C4 | Imperative shards | All | `defect` | `live` | S2 | Background 404 on imperative shards | Deduplicated into #8379 |
+| C4-04 | C4 | Paradigm layout | Desktop | `defect` | `live` | S2 | Desktop horizontal overflow in paradigm | Deduplicated into #8377 |
 | C5-01 | C5 | Classify mode | All | `none` | `live` | S3 | Category selection chips function cleanly | Verified grammar category updates |
 | C5-02 | C5 | Stress mode | All | `none` | `live` | S3 | Stress stage renders clickable syllables | Verified syllable target responsiveness |
-| C5-03 | C5 | Classify layout | Desktop | `defect` | `live` | S2 | Desktop horizontal overflow in classify | Deduplicated into issue #8377 |
-| C5-04 | C5 | Imperative shards | All | `defect` | `live` | S2 | Background 404 on imperative shards | Deduplicated into issue #8379 |
-| C6-01 | C6 | Course tiles | All | `friction`| `live` | S2 | 10 tile labels Ukrainian-only on English UI | Filed as issue #8381 |
+| C5-03 | C5 | Classify layout | Desktop | `defect` | `live` | S2 | Desktop horizontal overflow in classify | Deduplicated into #8377 |
+| C5-04 | C5 | Imperative shards | All | `defect` | `live` | S2 | Background 404 on imperative shards | Deduplicated into #8379 |
+| C6-01 | C6 | Course tiles | All | `friction`| `live` | S2 | 10 tile labels Ukrainian-only on English UI | Primary for #8381 (course subtitles) |
 | C6-02 | C6 | Culture of Speech| All | `none` | `live` | S3 | Error-correction sentence options interactive | Verified selection and error highlights |
 | C6-03 | C6 | 9 ЗНО decks | All | `none` | `live` | S3 | Authentic Ukrainian exam questions render | Verified question counters and options |
 | C6-04 | C6 | Exam audience | All | `content` | `live` | S2 | All 10 decks judged advanced-only (B2–C1) | Routed to #8381 (difficulty badges/subtitles) |
@@ -84,7 +84,7 @@
 | C8-01 | C8 | Phone loading | Phone | `none` | `live` | S3 | TTFI 553–669ms; skeleton resolves promptly | Refutes seed observation |
 | C8-02 | C8 | Phone Flashcards | Phone | `none` | `live` | S3 | Complete 8-card session completed | Verified score and streak progression |
 | C8-03 | C8 | Phone Matching | Phone | `none` | `live` | S3 | Touch selection and pair resolution work | Verified responsive mobile matching |
-| C8-04 | C8 | Header targets | Phone | `friction`| `live` | S3 | Two buttons in header measure <44px | Filed as issue #8383 |
+| C8-04 | C8 | Header targets | Phone | `friction`| `live` | S3 | Two buttons in header measure <44px | Primary for #8383 (mobile touch targets) |
 
 ---
 
@@ -94,28 +94,28 @@
 
 ### Five Held-Out Journeys
 
-| Journey | Description | Result | Verdict |
-|---|---|---|---|
-| **H1: Session budget 20** | Selected budget 20, started Flashcards; verified card count respects available card pool | Budget 20 active, progress 0/8 (capped to available due cards) | **PASS** |
-| **H2: Interruption & Resumption** | Completed 1 card, navigated away to `/`, returned to `/practice/`; verified storage state | Progress 1/8 before nav; `hasStorage: true` preserved on return | **PASS** |
-| **H3: Secondary tools in Settings** | Opened settings drawer, expanded secondary tools summary | Expanded successfully; revealed custom deck studio, import/export controls | **PASS** |
-| **H4: Theme & Locale toggle** | Toggled theme and language on `/practice/`; verified DOM classes and bilingual headers | Dark mode toggled; language toggle active; zero broken layout | **PASS** |
-| **H5: Keyboard-only navigation** | Focused card, pressed `Space` to flip, rated, pressed `Enter` to advance | Card flipped cleanly with `Space`, advanced via `Enter` | **PASS** |
+| Journey | Description | Result | Verdict | Evidence Assets (Release `practice-scouting`) |
+|---|---|---|---|---|
+| **H1: Session budget 20** | Selected budget 20, started Flashcards; verified card count respects available card pool | Budget 20 active, progress 0/8 (capped to available due cards) | **PASS** | `2026-09-21T06-57-37-427Z-eval-H1-session-budget-20-budget-20-started.png`, `2026-09-21T06-57-37-427Z-eval-H1-session-budget-20.zip` |
+| **H2: Interruption & Resumption** | Completed 1 card, navigated away to `/`, returned to `/practice/`; verified storage state | Progress 1/8 before nav; `hasStorage: true` preserved on return | **PASS** | `2026-09-21T06-57-37-427Z-eval-H2-interruption-resumption-mid-session.png`, `2026-09-21T06-57-37-427Z-eval-H2-interruption-resumption-after-return.png`, `2026-09-21T06-57-37-427Z-eval-H2-interruption-resumption.zip` |
+| **H3: Secondary tools in Settings** | Opened settings drawer, expanded secondary tools summary | Expanded successfully; revealed custom deck studio, import/export controls | **PASS** | `2026-09-21T06-57-37-427Z-eval-H3-settings-secondary-tools-secondary-tools-open.png`, `2026-09-21T06-57-37-427Z-eval-H3-settings-secondary-tools.zip` |
+| **H4: Theme & Locale toggle** | Toggled theme and language on `/practice/`; verified DOM classes and bilingual headers | Dark mode toggled; language toggle active; zero broken layout | **PASS** | `2026-09-21T06-57-37-427Z-eval-H4-theme-locale-toggle-theme-locale-state.png`, `2026-09-21T06-57-37-427Z-eval-H4-theme-locale-toggle.zip` |
+| **H5: Keyboard-only navigation** | Focused card, pressed `Space` to flip, rated, pressed `Enter` to advance | Card flipped cleanly with `Space`, advanced via `Enter` | **PASS** | `2026-09-21T06-57-37-427Z-eval-H5-keyboard-navigation-keyboard-session-advance.png`, `2026-09-21T06-57-37-427Z-eval-H5-keyboard-navigation.zip` |
 
 ### Ten Spot-Checks of "None" Findings
 
-| Check | Target Finding | Evaluator Observation | Verdict |
-|---|---|---|---|
-| **SC-01** | C1-06 (Flashcards complete) | Flashcards session completes with summary screen and continue links | **AGREE** |
-| **SC-02** | C2-05 (Matching mode) | Matching tiles render and resolve matching pairs cleanly | **AGREE** |
-| **SC-03** | C2-05 (Choice mode) | Choice options render and submit selection state | **AGREE** |
-| **SC-04** | C3-04 (Cloze citations) | Cloze displays textbook citation: "Ukrainian school textbook — Kravtsova 2021" | **AGREE** |
-| **SC-05** | C4-01 (Paradigm cases) | Paradigm mode displays active case selection chips | **AGREE** |
-| **SC-06** | C5-01 (Classify mode) | Classify mode renders grammatical category options | **AGREE** |
-| **SC-07** | C5-02 (Stress stage) | Stress stage renders interactive syllable targets | **AGREE** |
-| **SC-08** | C6-02 (Culture of Speech) | Culture of Speech displays interactive sentence error-correction prompt | **AGREE** |
-| **SC-09** | C6-03 (ЗНО exam deck) | ЗНО Orthography session renders authentic exam multiple-choice item | **AGREE** |
-| **SC-10** | C7-02 (Settings Escape) | Settings drawer dismissed immediately by Escape key | **AGREE** |
+| Check | Target Finding | Evaluator Observation | Verdict | Evidence Assets (Release `practice-scouting`) |
+|---|---|---|---|---|
+| **SC-01** | C1-06 (Flashcards complete) | Flashcards session completes with summary screen and continue links | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC1-flashcards-complete-end-screen.png`, `2026-09-21T06-57-37-427Z-eval-SC1-flashcards-complete.zip` |
+| **SC-02** | C2-05 (Matching mode) | Matching tiles render and resolve matching pairs cleanly | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC2-matching-mode-matching-active.png`, `2026-09-21T06-57-37-427Z-eval-SC2-matching-mode.zip` |
+| **SC-03** | C2-05 (Choice mode) | Choice options render and submit selection state | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC3-choice-mode-choice-selected.png`, `2026-09-21T06-57-37-427Z-eval-SC3-choice-mode.zip` |
+| **SC-04** | C3-04 (Cloze citations) | Cloze displays textbook citation: "Ukrainian school textbook — Kravtsova 2021" | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC4-cloze-citations-cloze-citation.png`, `2026-09-21T06-57-37-427Z-eval-SC4-cloze-citations.zip` |
+| **SC-05** | C4-01 (Paradigm cases) | Paradigm mode displays active case selection chips | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC5-paradigm-cases-paradigm-cases.png`, `2026-09-21T06-57-37-427Z-eval-SC5-paradigm-cases.zip` |
+| **SC-06** | C5-01 (Classify mode) | Classify mode renders grammatical category options | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC6-classify-mode-classify-active.png`, `2026-09-21T06-57-37-427Z-eval-SC6-classify-mode.zip` |
+| **SC-07** | C5-02 (Stress stage) | Stress stage renders interactive syllable targets | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC7-stress-stage-stress-stage.png`, `2026-09-21T06-57-37-427Z-eval-SC7-stress-stage.zip` |
+| **SC-08** | C6-02 (Culture of Speech) | Culture of Speech displays interactive sentence error-correction prompt | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC8-culture-speech-culture-session.png`, `2026-09-21T06-57-37-427Z-eval-SC8-culture-speech.zip` |
+| **SC-09** | C6-03 (ЗНО exam deck) | ЗНО Orthography session renders authentic exam multiple-choice item | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC9-zno-deck-zno-session.png`, `2026-09-21T06-57-37-427Z-eval-SC9-zno-deck.zip` |
+| **SC-10** | C7-02 (Settings Escape) | Settings drawer dismissed immediately by Escape key: true | **AGREE** | `2026-09-21T06-57-37-427Z-eval-SC10-settings-escape.zip` |
 
 ### Rejected Findings Audit
 - **Audit result:** Zero S1 or S2 findings were rejected or hidden. All real defect and friction observations were captured in the ledger.
@@ -139,6 +139,6 @@ The following 7 task cards have been formally created on GitHub under stream epi
 ## 5. Status of Blocking (S1) Findings (AC-04)
 
 - **Finding C1-01 / C1-02**: In the pre-#8328 baseline, Practice was not discoverable from main navigation and direct URL `/practice/` returned a 404.
-- **Resolution**: Implemented in PR #8364 (#8328), reviewed and approved by Codex (`gpt-6-astra`), merged to `main` at commit `dde9bfed6a`.
+- **Resolution**: Implemented in PR #8364 (#8328), reviewed and approved by Codex (`review-8328-codex-r2` / `gpt-6-astra`), merged to `main` at commit `dde9bfed6a`.
 - **Live Deployment & Verification**: Deployed to GitHub Pages at commit `e4efde4fde`. Re-run C1 test suite verified that `/practice/` returns HTTP 200, is 1 click from home, 1 click from header nav, 1 click from mobile drawer, and 1 click from footer across all device profiles.
 - **Residual S1**: **Zero unresolved S1 blockers remain.**
