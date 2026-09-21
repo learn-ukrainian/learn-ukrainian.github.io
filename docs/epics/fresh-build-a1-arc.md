@@ -191,7 +191,7 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 55 | `a1-finale` | A1.8 | One full day in a Ukrainian city: everything together | all | 3 |
 
 **Sizing (operator, 2026-09-21): nothing is forced.** The lesson counts above are estimates for
-orientation only and total 161. A module gets the lessons its content needs — not compressed to hit
+orientation only and total 162. A module gets the lessons its content needs — not compressed to hit
 a number, not stretched to fill one. The module plan decides the count; the plan review checks two
 things in both directions: no lesson that crams (too much new inventory for an hour) and no lesson
 that drags (a lesson whose job could be a step inside its neighbour). The reviewer's note that
