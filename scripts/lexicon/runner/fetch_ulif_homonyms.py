@@ -18,6 +18,7 @@ from __future__ import annotations
 import argparse
 import contextlib
 import hashlib
+import itertools
 import json
 import os
 import shlex
@@ -2729,17 +2730,13 @@ def run_walk(
                             break
 
                         if not page_success:
-                            consecutive_retries += 1
-                            if consecutive_retries >= CONSECUTIVE_RETRY_STOP:
-                                stop_reason = "retry storm"
-                                return_code = EXIT_RETRY_STORM
-                                print(
-                                    "stopping: three consecutive pages ended retry_scheduled",
-                                    file=sys.stderr,
-                                )
-                                break
-                            current_page += 1
-                            continue
+                            stop_reason = f"page {current_page} exhausted retries"
+                            return_code = EXIT_RETRY_STORM
+                            print(
+                                f"stopping: page {current_page} ended retry_scheduled after {MAX_UNIT_RESEEDS} attempts",
+                                file=sys.stderr,
+                            )
+                            break
 
                         consecutive_retries = 0
 
@@ -2795,11 +2792,14 @@ def run_walk(
                             current_page=current_page + 1,
                         )
                         next_rows = parse_register_list(next_html)
-                        if not next_rows:
-                            _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
-                            ledger.mark_page(current_page, "completed")
-                            process_pages_finished += 1
-                            stop_reason = "finished"
+                        if not next_rows or _tokens(next_html) is None or _validation_failure(next_html):
+                            ledger.mark_page(current_page, "retry_scheduled", error="invalid_next_page")
+                            print(
+                                f"stopping: page transition from page {current_page} returned invalid next page register",
+                                file=sys.stderr,
+                            )
+                            stop_reason = "invalid_next_page"
+                            return_code = EXIT_USAGE
                             break
 
                         ledger.ensure_page(
@@ -3039,7 +3039,6 @@ def verify_complete(
                 "SELECT COUNT(*) FROM register_rows WHERE state = 'completed'"
             ).fetchone()[0]
 
-            entries_count = cache.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0]
             diff = target_size - stored_rows_count
 
             incomplete_pages = list(
@@ -3058,11 +3057,68 @@ def verify_complete(
                 )
             )
 
+            # Check page continuity
+            page_records = list(
+                ledger.conn.execute("SELECT page_num, state, error FROM register_pages ORDER BY page_num")
+            )
+            page_continuity_errors: list[str] = []
+            if not page_records:
+                page_continuity_errors.append("no pages recorded in ledger")
+            else:
+                if page_records[0]["page_num"] != 1:
+                    page_continuity_errors.append(f"pages start at {page_records[0]['page_num']} instead of 1")
+                for curr_p, next_p in itertools.pairwise(page_records):
+                    if next_p["page_num"] != curr_p["page_num"] + 1:
+                        page_continuity_errors.append(
+                            f"gap in page sequence between page {curr_p['page_num']} and {next_p['page_num']}"
+                        )
+
+            # Reconcile completed rows with persisted database entries
+            table_exists = (
+                cache.execute(
+                    "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ulif_dictua_entries'"
+                ).fetchone()
+                is not None
+            )
+            if table_exists:
+                entries_count = cache.execute(
+                    "SELECT COUNT(*) FROM ulif_dictua_entries WHERE status = 'ok'"
+                ).fetchone()[0]
+                db_entries = {
+                    (str(row[0]), int(row[1]))
+                    for row in cache.execute(
+                        "SELECT normalized_query, homonym_index FROM ulif_dictua_entries WHERE status = 'ok'"
+                    )
+                }
+            else:
+                entries_count = 0
+                db_entries = set()
+
+            completed_rows = ledger.conn.execute(
+                """
+                SELECT page_num, row_index, select_arg, stressed_headword, normalized_spelling, homonym_index
+                FROM register_rows
+                WHERE state = 'completed'
+                ORDER BY page_num, row_index
+                """
+            ).fetchall()
+
+            missing_db_entries = []
+            for r in completed_rows:
+                h_idx = r["homonym_index"]
+                if h_idx is None or (str(r["normalized_spelling"]), int(h_idx)) not in db_entries:
+                    missing_db_entries.append(r)
+
             print("=== ULIF Verification Report ===", file=sys.stderr)
             print(f"Printed register size: {target_size}", file=sys.stderr)
             print(f"Completed rows:        {stored_rows_count}", file=sys.stderr)
             print(f"Stored entries in DB:  {entries_count}", file=sys.stderr)
             print(f"Difference:            {diff}", file=sys.stderr)
+
+            if page_continuity_errors:
+                print(f"Page continuity errors ({len(page_continuity_errors)}):", file=sys.stderr)
+                for err in page_continuity_errors:
+                    print(f"  {err}", file=sys.stderr)
 
             if incomplete_pages:
                 print(f"Incomplete pages ({len(incomplete_pages)}):", file=sys.stderr)
@@ -3078,7 +3134,26 @@ def verify_complete(
                         file=sys.stderr,
                     )
 
-            if diff == 0 and not incomplete_pages and not incomplete_rows:
+            if missing_db_entries:
+                print(f"Missing entries in database ({len(missing_db_entries)}):", file=sys.stderr)
+                for m in missing_db_entries[:20]:
+                    print(
+                        f"  page {m['page_num']} row {m['row_index']} ({m['select_arg']}): "
+                        f"headword={m['stressed_headword']} spelling={m['normalized_spelling']} "
+                        f"homonym_index={m['homonym_index']}",
+                        file=sys.stderr,
+                    )
+                if len(missing_db_entries) > 20:
+                    print(f"  ... and {len(missing_db_entries) - 20} more", file=sys.stderr)
+
+            if (
+                diff == 0
+                and not incomplete_pages
+                and not incomplete_rows
+                and not page_continuity_errors
+                and not missing_db_entries
+                and entries_count >= target_size
+            ):
                 print("Status: VERIFIED_COMPLETE (stored entries match printed register size)", file=sys.stderr)
                 return EXIT_OK
             else:

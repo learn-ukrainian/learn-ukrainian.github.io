@@ -791,3 +791,150 @@ def test_cli_walk_and_verify_complete_subcommands(tmp_path: Path):
     )
     assert res_status.returncode == 0
     assert "complete=not_started" in res_status.stdout
+
+
+def test_verify_complete_fails_when_db_entries_deleted(tmp_path: Path):
+    server = MockULIFServer()
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+
+    # Verifies complete when intact
+    assert verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8) == EXIT_OK
+
+    # Delete entries from ulif_dictua_entries in database
+    conn = sqlite3.connect(db_path)
+    try:
+        conn.execute("DELETE FROM ulif_dictua_entries")
+        conn.commit()
+    finally:
+        conn.close()
+
+    # verify_complete must fail and report missing entries
+    code = verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8)
+    assert code == EXIT_USAGE
+
+
+def test_verify_complete_fails_on_page_continuity_gap(tmp_path: Path):
+    server = MockULIFServer()
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+
+    # Delete page 2 from register_pages, creating a gap: pages 1, 3
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.conn.execute("DELETE FROM register_pages WHERE page_num = 2")
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+
+    code = verify_complete(state_dir=state_dir, db_path=db_path, expected_size=8)
+    assert code == EXIT_USAGE
+
+
+def test_exhausted_retries_does_not_corrupt_page_numbering(tmp_path: Path):
+    server = MockULIFServer()
+    orig_call = server.__call__
+
+    def failing_call(method: str, data: dict[str, str] | None) -> HttpResult:
+        if (
+            data
+            and data.get("__EVENTTARGET") == "ctl00$ContentPlaceHolder1$dgv"
+            and data.get("__EVENTARGUMENT") == "Select$0"
+        ):
+            return HttpResult(500, "Internal Server Error", {})
+        return orig_call(method, data)
+
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=failing_call,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    # Must exit non-zero due to exhausted retries
+    assert code != EXIT_OK
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        pages = list(ledger.conn.execute("SELECT page_num, state FROM register_pages").fetchall())
+        # Exactly 1 page must be recorded, not 4 pages!
+        assert len(pages) == 1
+        assert pages[0][0] == 1
+        assert pages[0][1] == "retry_scheduled"
+
+        rows = list(ledger.conn.execute("SELECT page_num, row_index FROM register_rows").fetchall())
+        # Only page 1 rows (3 rows), not 11 rows!
+        assert len(rows) == 3
+        for r in rows:
+            assert r[0] == 1
+    finally:
+        ledger.close()
+
+
+def test_invalid_next_page_html_does_not_finish_with_exit_zero(tmp_path: Path):
+    server = MockULIFServer()
+    orig_call = server.__call__
+
+    def invalid_next_call(method: str, data: dict[str, str] | None) -> HttpResult:
+        if data and ("ctl00$ContentPlaceHolder1$nextpage.x" in data or "ctl00$ContentPlaceHolder1$nextpage" in data):
+            # Return HTTP 200 with temporary unavailability page (no register table)
+            return HttpResult(200, "<html><body>Service Temporarily Unavailable</body></html>", {})
+        return orig_call(method, data)
+
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=invalid_next_call,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    # Must exit non-zero (EXIT_USAGE)
+    assert code == EXIT_USAGE
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        # Page 1 must NOT be marked completed
+        p1 = ledger.get_page(1)
+        assert p1 is not None
+        assert p1["state"] == "retry_scheduled"
+        assert p1["error"] == "invalid_next_page"
+
+        # Straddling homonym group on rows[-1] (замо́к) must NOT be committed yet
+        conn = sqlite3.connect(db_path)
+        try:
+            entries = conn.execute("SELECT normalized_query FROM ulif_dictua_entries").fetchall()
+            entry_words = {e[0] for e in entries}
+            # 'дуже' was committed because next word was 'замок' (spelling changed)
+            assert "дуже" in entry_words
+            # 'замок' should NOT have been committed yet because it was the trailing group!
+            assert "замок" not in entry_words
+        finally:
+            conn.close()
+    finally:
+        ledger.close()
