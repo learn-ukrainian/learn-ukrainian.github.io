@@ -1,7 +1,10 @@
 # Fresh lesson-based build — B1 arc (module grain)
 
-> Sub-epic #8397, issue #8427. Status: **draft r1** by the curriculum-upgrade driver, 2026-09-21 —
-> not yet reviewed cross-family, not yet accepted by the operator. Same method and table format as
+> Sub-epic #8397, issue #8427. Status: **draft r2** by the curriculum-upgrade driver, 2026-09-21.
+> r1 was reviewed by AGY `gemini-3.8-flash-high` (task `plan-review-8427-b1-arc-r1`): APPROVE with two
+> MAJOR and four MINOR findings; r2 folds in five of the six and states the sixth — possessive
+> adjectives, where reviewer and driver disagree — as open question 2 with both positions. Not yet
+> accepted by the operator. Same method and table format as
 > the accepted A1 and A2 arcs ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md),
 > [`fresh-build-a2-arc.md`](fresh-build-a2-arc.md)); requirements:
 > [`fresh-build-requirements.md`](fresh-build-requirements.md); schema:
@@ -20,7 +23,7 @@ Every row was read from the source on 2026-09-21.
 | State Standard 2024, B1 | `docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt:1434-2450` | the **minimum** B1 must cover (R-32). Skills `:1441-1775`: dialogue of 10–12 turns in less familiar situations (`:1746-1747`), phone call (`:1749`), written description of 50–70 words of a book, article, film or event (`:1642-1645`), theses of a talk with reasons and a conclusion (`:1646-1647`, `:1741-1742`), retelling (`:1629-1630`), letters and the most frequent documents — application, CV, autobiography, explanatory note (`:1631-1632`), lecture notes (`:1615-1617`), unadapted prose excerpts (`:1472-1473`, `:1579-1580`). 43 speech intentions (`:1777-1851`), **15 themes** (`:1853-1979`). Grammar `:1981-2450`: see §3 |
 | The accepted A2 arc | `docs/epics/fresh-build-a2-arc.md` D5, D6 | what B1 receives: **handed over** — participles and adverbial participles, conditional mood, first-person-plural imperative, declension of cardinal numerals and of demonstratives, the full `себе`; **already taught at A2 on ULP evidence, so recycled and deepened here, never introduced again** — synthetic future, prefixed verbs of motion, clauses with `якщо`, `хоча`, `коли`, `який`, `щоб` + past, adverb formation, indefinite and negative pronouns |
 | ULP Seasons 4–6 | `data/sources.db` `textbook_sections`, `ulp-4-00-lesson-notes`, `ulp-5-00-lesson-notes`, `ulp-6-00-lesson-notes` (lessons 121–240) | the **lesson shape**, not a grammar order (D0). The 120 lessons are topical — personal essays, interviews, state symbols, history, proverbs, slang, dialects, poetry — Ukrainian only, with grammar in small boxes scattered across them. Measured with stress marks removed: case terminology in 68 lessons, `якби` in 25, suffixes in 17, aspect terms in 16, numerals in 12, the imperative in 11, passive and impersonal forms in 13, participles in 9, adverbial participles in 6, the conditional in 6 |
-| School textbooks in the corpus | `data/sources.db` `textbooks`, subject `ukrmova`: grade 5–8 Авраменко, Заболотний, Літвінова, Голуб | the **grammar order and wording** of B1 (D0): participles are grade 7 (33 chunks in Авраменко 2024, 21 in Авраменко 2025, 16 in Заболотний 2025), impersonal sentences grades 7–8, possessive adjectives grade 6 (three textbooks) |
+| School textbooks in the corpus | `data/sources.db` `textbooks`, subject `ukrmova`: grade 5–8 Авраменко, Заболотний, Літвінова, Голуб | the **grammar order and wording** of B1 (D0): participles are introduced in grade 7 (33 chunks in Авраменко 2024) and return inside syntax in grade 8 (21 chunks in Авраменко 2025, 16 in Заболотний 2025), impersonal sentences grades 7–8, possessive adjectives grade 6 (three textbooks) |
 | Live immersion policy | `scripts/config.py` `IMMERSION_POLICIES["b1"]` | one band, `b1-core`, 100 % Ukrainian. Carried over unchanged (R-30) |
 | Current B1 manifest | `curriculum/l2-uk-en/curriculum.yaml`, level `b1`: 94 modules in 10 groups | the slugs and positions this arc keeps (D1) |
 
@@ -117,7 +120,8 @@ the Standard's B1 sizes.
 | Word formation: adjectives from nouns; adverbs from adjectives | system | 48, 46 | `:2330-2334` |
 | Possessive adjectives | system (small) — D3, open question 2 | 49 | not in the Standard |
 | Verb formation with suffixes | system | 32 | `:2270-2271` (the `-увати` pattern) |
-| Prefixed verbs of motion | recycled from A2 (D2); widened: further prefixes, flying and swimming verbs, figurative uses | 35–42 | `:2336-2338` |
+| Prefixed verbs of motion | recycled from A2 (D2); **new at B1:** the aspect pair of each prefixed verb (the Standard's own examples: A2 `:1381`, B1 `:2336-2338`), the preposition and case each prefix takes (`:2159-2176`, `:2202-2209`), further base verbs, figurative uses | 35–42 | `:2336-2338` |
+| Simple sentence: statement and negation; the three question types, with `який?` and `яка?` added; requests, advice and proposals | recycled from A2 | 1, 26 | `:2344-2348`, `:2354-2365` |
 | Negation with `немає`, `не було`, `не буде`; double negation | system | 8 | `:2349-2352` |
 | Homogeneous parts of the sentence | system | 52 | `:2368-2371` |
 | Participles; participle phrases | system | 65–67 | `:2372-2373` |
@@ -156,20 +160,20 @@ manifest.
 | 6 | `aspect-in-narration` | B1.0 | Tell a story in which background and events use different aspects | W (retelling `:1629-1630`) | 4 |
 | 7 | `daily-life-and-routines` | B1.0 | Talk about living conditions and lifestyle, hairdresser and beauty services (`:1876-1881`) | Li (phone call `:1749`), R | 3 |
 | 8 | `aspect-in-negation` | B1.0 | Say what did not happen, is not there and will not be: aspect under negation, `немає / не було / не буде`, double negation | — | 3 |
-| 9 | `work-and-career` | B1.0 | Talk about official employment and contract work, working hours, leave and pay (`:1930-1936`) | W (CV, application `:1631-1632`), R (job advert) | 4 |
+| 9 | `work-and-career` | B1.0 | Talk about official employment and contract work, working hours, leave and pay (`:1930-1936`) | W (the facts of a working life, as connected text; the document forms are position 85), R (job advert) | 4 |
 | 10 | `checkpoint-aspect` | B1.0 | Self-check: narrate, plan and deny with the right aspect | Li, W | 2 |
 | 11 | `alternation-vowels` | B1.1 | Predict the vowel changes between forms of one word | — | 3 |
 | 12 | `alternation-consonants-nouns` | B1.1 | Predict the consonant changes in the dative, locative and vocative and in word formation | — | 3 |
 | 13 | `alternation-consonants-verbs` | B1.1 | Predict the consonant changes in verb forms | — | 3 |
 | 14 | `health-at-the-doctor` | B1.1 | Describe symptoms, understand a diagnosis, tests and examinations, deal with the pharmacy (`:1912-1919`) | Li, R (instructions for use `:1545-1546`) | 4 |
 | 15 | `simplification-consonants` | B1.1 | Spell and say words with simplified consonant groups | — | 2 |
-| 16 | `noun-subclasses-masculine` | B1.1 | Decline the masculine noun types the Standard adds, surnames included | W (address an envelope `:1633`) | 4 |
+| 16 | `noun-subclasses-masculine` | B1.1 | Decline the masculine noun types the Standard adds, surnames included | W (address an envelope `:1633`) | 5 |
 | 17 | `noun-subclasses-hissing` | B1.1 | Decline nouns with sibilant stems | — | 2 |
 | 18 | `restaurant-and-food` | B1.1 | Eat out: dishes, tableware, places to eat, taste preferences; make a complaint (`:1947-1952`, `:1709-1710`) | R (menu, recipe `:1570`), Li | 4 |
-| 19 | `noun-subclasses-feminine` | B1.1 | Decline feminine nouns with a zero ending and in `-ість`, and the neuter types | — | 3 |
+| 19 | `noun-subclasses-feminine` | B1.1 | Decline feminine nouns with a zero ending and in `-ість`, and the neuter types | — | 4 |
 | 20 | `pluralia-tantum` | B1.1 | Use nouns that have only a plural, with numerals and adjectives | — | 2 |
 | 21 | `checkpoint-morphophonemics` | B1.1 | Self-check: forms that change their sounds | R, W | 2 |
-| 22 | `conditionals-real` | B1.2 | State conditions and their results in all tenses | W (invitation with a condition) | 3 |
+| 22 | `conditionals-real` | B1.2 | State conditions and their results in all tenses — a short step up from A2 position 51 | W (invitation with a condition) | 2 |
 | 23 | `conditionals-unreal` | B1.2 | Say what would happen and what would have happened: the conditional mood, `якби`, `коли б` | — | 4 |
 | 24 | `aspect-in-conditionals` | B1.2 | Choose the aspect inside conditions and wishes | — | 3 |
 | 25 | `shopping-and-services` | B1.2 | Buy consumer and industrial goods, pay by cash or card, return faulty goods; bank, post office, insurance (`:1938-1945`, `:1954-1960`) | Li, W (form at the post office or bank `:1623-1624`) | 4 |
@@ -182,18 +186,18 @@ manifest.
 | 32 | `verb-formation-suffixes` | B1.2 | Recognise how suffixes build verbs and conjugate the resulting patterns | — | 3 |
 | 33 | `checkpoint-verbs` | B1.2 | Self-check: conditions, requests, reflexive verbs | Li, W | 2 |
 | 34 | `prepositions-spatial-review` | B1.3 | Place and move things in space with every preposition and case met so far; directions of the compass (`:1831-1832`) | Li (detailed directions `:1481`, navigation `:1485-1486`) | 3 |
-| 35 | `motion-base-review` | B1.3 | Use the unprefixed pairs of motion verbs in all tenses without hesitation | — | 3 |
-| 36 | `motion-prefixes-arrival` | B1.3 | Arrive, come up to, reach and drop in | — | 3 |
+| 35 | `motion-base-review` | B1.3 | Use the unprefixed pairs in all tenses: one trip versus a habit, there and back versus on the way | — | 2 |
+| 36 | `motion-prefixes-arrival` | B1.3 | Arriving, coming up to, reaching, dropping in: the aspect pair of each prefixed verb and the preposition and case it takes | — | 2 |
 | 37 | `traveling-ukraine` | B1.3 | Plan and handle a trip in Ukraine: transport, stations, airport, booking, car service and fuel, border and customs, sights (`:1892-1903`, `:1711-1713`) | R (timetable, brochure), Li (announcements) | 5 |
-| 38 | `motion-prefixes-departure` | B1.3 | Leave, set off, move away | — | 3 |
-| 39 | `motion-prefixes-in-out` | B1.3 | Go in, go out, go up and go down | — | 3 |
-| 40 | `motion-prefixes-transit` | B1.3 | Cross, pass, go around and go through | — | 3 |
+| 38 | `motion-prefixes-departure` | B1.3 | Leaving, setting off, moving away: aspect pairs, prepositions and cases | — | 2 |
+| 39 | `motion-prefixes-in-out` | B1.3 | Going in, out, up and down: aspect pairs, prepositions and cases | — | 2 |
+| 40 | `motion-prefixes-transit` | B1.3 | Crossing, passing, going around and through: aspect pairs, prepositions and cases | — | 2 |
 | 41 | `motion-flight-swim` | B1.3 | Extend the system to flying, swimming, running, carrying and leading | — | 3 |
 | 42 | `figurative-motion` | B1.3 | Understand motion verbs used of time, events and states | R (newspaper article `:1566`) | 3 |
 | 43 | `checkpoint-motion` | B1.3 | Self-check: a journey told and planned | Li, W | 2 |
 | 44 | `adjectives-comparative` | B1.4 | Compare people, things and events with every comparative form and construction | W (compare alternatives `:1718-1719`) | 3 |
 | 45 | `adjectives-superlative` | B1.4 | Single out the most and the least | R (advertising `:1569`) | 2 |
-| 46 | `adverbs-comparison-formation` | B1.4 | Form adverbs and compare ways of doing things | — | 3 |
+| 46 | `adverbs-comparison-formation` | B1.4 | Compare ways of doing things: the comparison of adverbs, which A2 did not teach | — | 2 |
 | 47 | `nature-and-environment` | B1.4 | Talk about weather, seasons and climate, plants, farm and wild animals, natural features (`:1968-1973`) | Li (documentary excerpt `:1489`), R | 4 |
 | 48 | `word-formation-adjectives` | B1.4 | Form adjectives from nouns and place names | — | 3 |
 | 49 | `possessive-adjectives` | B1.4 | Say whose something is with an adjective formed from a person's name or a kinship word | — | 2 |
@@ -202,14 +206,14 @@ manifest.
 | 52 | `homogeneous-members` | B1.5 | Build sentences with several subjects, predicates or objects; use the nominative in all its listed roles | W | 3 |
 | 53 | `genitive-nuances` | B1.5 | Use the genitive for a part of a whole, a feature, a wish, and with the full B1 preposition list | — | 4 |
 | 54 | `dative-nuances` | B1.5 | Use the dative for states, needs and addressees | W (personal letter `:1621-1622`) | 3 |
-| 55 | `education-and-university` | B1.5 | Talk about institutions of education, fields and specialities, lectures, seminars, credits and exams (`:1921-1928`) | Li (lecture `:1457-1458`), W (lecture notes `:1615-1617`) | 4 |
+| 55 | `education-and-university` | B1.5 | Talk about institutions of education, fields and specialities, lectures, seminars, credits and exams (`:1921-1928`) | Li (lecture `:1457-1458`), R (course description, timetable) | 4 |
 | 56 | `instrumental-nuances` | B1.5 | Use the instrumental for the path, the manner and the object of state verbs | — | 3 |
 | 57 | `vocative-formal` | B1.5 | Address people formally, in all four functions the Standard lists, with the right sound changes | W (open and close a formal letter) | 3 |
 | 58 | `prepositions-temporal` | B1.5 | Say when, for how long, within what time and at what hour | R (timetable, schedule) | 3 |
 | 59 | `places-and-locations` | B1.5 | Describe a locality: its type and position, institutions and public places, monuments and sights (`:1962-1966`) | R (brochure, poster `:1578`), Li | 3 |
 | 60 | `prepositions-cause-purpose` | B1.5 | Give the cause and the purpose with prepositions | — | 3 |
 | 61 | `cases-with-ordinal-numerals` | B1.5 | Use ordinals, compound ones included, in every case; dates in full | Li (dates and years by ear) | 3 |
-| 62 | `cases-with-quantity-expressions` | B1.5 | Decline `два`, `три`, `чотири` and the indefinite numerals; count people and things in every case | — | 4 |
+| 62 | `cases-with-quantity-expressions` | B1.5 | Decline `два`, `три`, `чотири` and the indefinite numerals; count people and things in every case | — | 5 |
 | 63 | `advanced-pronouns` | B1.5 | Use `себе`, the demonstratives and the relative pronouns in all cases | — | 4 |
 | 64 | `checkpoint-cases` | B1.5 | Self-check: every case in its B1 meanings | R, W | 2 |
 | 65 | `participles-active` | B1.6 | Recognise and form active participles; tell them from adjectives | R | 3 |
@@ -232,7 +236,7 @@ manifest.
 | 82 | `complex-subordinate-concess` | B1.7 | Concede a point and still hold your view | — | 3 |
 | 83 | `reported-speech` | B1.7 | Turn direct speech into reported speech and back | W (report a conversation) | 3 |
 | 84 | `checkpoint-syntax` | B1.7 | Self-check: one argument, every clause type | R, W | 2 |
-| 85 | `text-register-formal` | B1.8 | Write the most frequent documents: application, autobiography, explanatory note, formal letter | W (`:1631-1632`), R (short official documents `:1549-1550`) | 4 |
+| 85 | `text-register-formal` | B1.8 | Write the most frequent documents: application, CV, autobiography, explanatory note, formal letter | W (`:1631-1632`), R (short official documents `:1549-1550`) | 5 |
 | 86 | `text-register-informal` | B1.8 | Hold an informal conversation and correspondence: compliments, sympathy, joy, disappointment, indifference (`:1786-1787`, `:1821-1829`) | W (personal letter, social-network message), Li | 3 |
 | 87 | `text-compression` | B1.8 | Take notes, shorten a text and read abbreviations | W (lecture notes, theses `:1646-1647`), R | 3 |
 | 88 | `reading-literature` | B1.8 | Read an unadapted prose excerpt, a diary or memoir page, and say what the author thinks (`:1558-1559`, `:1579-1582`) | R, W (short review `:1620`) | 4 |
@@ -244,10 +248,12 @@ manifest.
 | 94 | `practice-exam` | B1.9 | Take a practice exam in the four skills at the Standard's B1 sizes: dialogue of 10–12 turns, description of 50–70 words, prepared talk with theses | all | 3 |
 
 **Sizing (operator, 2026-09-21): nothing is forced.** The lesson counts above are estimates for
-orientation only and total 289. A module gets the lessons its content needs — not compressed to hit
+orientation only and total 286. A module gets the lessons its content needs — not compressed to hit
 a number, not stretched to fill one. The module plan decides the count; the plan review checks both
-directions, cramming and dragging. The motion block (34–43) is the first place to look for
-dragging, because A2 position 43 already taught the common prefixes (D2).
+directions, cramming and dragging. The motion block (34–43) was cut after the r1 review, which found it dragging: A2 position 43
+already teaches the common prefixes, so 35, 36 and 38–40 are two lessons each and spend them on
+what A2 did not teach. Positions 16, 19, 62 and 85 were raised by one lesson each for the opposite
+reason.
 
 ## 6. Coverage against the Standard's catalogues
 
@@ -277,15 +283,19 @@ the same band.
 ## 8. Open questions for the operator (each with the driver's proposed default)
 
 1. **Keep all 94 slugs and positions (D1)?** Default: yes.
-2. **Possessive adjectives (49) stay in B1** although neither the Standard nor ULP has them —
-   grounded in the grade 6 school textbooks only. Default: yes, as a two-lesson module; R-32 limits
-   teaching something *earlier than the Standard places it*, and the Standard places this nowhere.
-   The alternative is to fold it into 48 and leave position 49 as a practice module.
+2. **Possessive adjectives (49): a module of their own, or folded into 48?** Neither the Standard
+   (at any level) nor ULP has them; the grade 6 school textbooks do. **The driver's default:** keep
+   a two-lesson module — R-08 makes the school textbooks a legitimate source of teaching points,
+   and R-32 limits only teaching something *earlier than the Standard places it*, which does not
+   apply to something the Standard places nowhere. **The reviewer's position (r1, MAJOR):** a
+   dedicated module on textbook evidence alone stretches R-32 and adds weight; fold the formation
+   into 48 and make 49 a consolidation practice module. Both keep the slug. The operator decides.
 3. **The theme Суспільні відносини, війна і мир included, is owned by 73, 92 and 91 (D4)**, with
    every text about the war taken from the corpus and sourced. Default: yes.
 4. **Passive and impersonal forms at 30 are recognition only**; the system is B2's. Default: yes.
 5. **The motion block keeps ten positions** although A2 now teaches the common prefixes. Default:
-   yes for the arc; the plan review of 35–40 decides whether two of them should be merged.
+   yes for the arc, with the prefix positions cut to two lessons each (r1 review); the plan review
+   of 35–40 decides whether two of them should be merged.
 
 ## 9. Follow-ups outside this document
 
