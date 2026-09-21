@@ -1,7 +1,9 @@
 # Fresh lesson-based build — A2 arc (module grain)
 
-> Sub-epic #8397, issue #8424. Status: **draft r1** by the curriculum-upgrade driver, 2026-09-21 —
-> not yet reviewed cross-family, not yet accepted by the operator. Same method and table format as
+> Sub-epic #8397, issue #8424. Status: **draft r2** by the curriculum-upgrade driver, 2026-09-21.
+> r1 was reviewed by AGY `gemini-3.8-flash-high` (task `plan-review-8424-a2-arc-r1`): APPROVE with
+> three minor findings; r2 corrects the ULP counts in D7 (the driver re-measured them) and tightens
+> position 43. Not yet accepted by the operator: the five open questions of §8 stand with their defaults. Same method and table format as
 > the A1 arc ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md)); requirements:
 > [`fresh-build-requirements.md`](fresh-build-requirements.md); schema:
 > [`fresh-build-plan-schema.md`](fresh-build-plan-schema.md). This document becomes
@@ -85,9 +87,11 @@ in a quoted authentic text as glossed, unanalysed forms.
 **D7 — `свій` is a small system at A2; `себе` is set phrases only.** The Standard does not list
 `свій` among the A2 possessives (`:1248-1254`), but its own A2 text types require the learner to
 speak and write «про … свій дім, своє місто й рідну країну» (`:930`, `:1000-1001`), and ULP uses
-forms of `свій` 65 times in Season 2 and 117 times in Season 3, glossing it at lesson 44. `себе` is
-B1 in the Standard (`:2107`); ULP uses it 12 times in Season 2 and 54 in Season 3 and explains it
-only late in Season 3. Position 56 keeps its slug: `свій` versus `мій` / `його` as a system, the
+forms of `свій` 66 times in Season 2 and 123 times in Season 3, glossing it at lesson 44. `себе` is
+B1 in the Standard (`:2107`); ULP uses its forms 16 times in Season 2 and 61 in Season 3 and explains
+it only late in Season 3. (Counts are whole-word matches in the lesson notes after removing the
+combining stress marks, which the notes print on many forms; without that step a pattern misses
+the stressed forms — draft r1 of this arc and its reviewer both undercounted for that reason.) Position 56 keeps its slug: `свій` versus `мій` / `його` as a system, the
 forms of `себе` inside fixed expressions chosen by the evidence pack.
 
 **D8 — Numerals at A2 are agreement, not declension.** The Standard's A2 has the genitive after
@@ -250,8 +254,10 @@ manifest.
 orientation only and total 224. A module gets the lessons its content needs — not compressed to hit
 a number, not stretched to fill one. The module plan decides the count; the plan review checks both
 directions, cramming and dragging. Position 43 is the largest on purpose: ULP spends eight lessons
-on the prefixes of motion verbs (81–84 and 86–89), and whether it stays one module or its lessons are shared
-with 45 is open question 2 in §8.
+on the prefixes of motion verbs (81–84 and 86–89). It is also the densest module of the level, so
+its plan keeps 43 to the verbs themselves and sends the travel situations and connected travel
+narration to position 45, its theme partner (review finding, r1); whether 43 stays one module is
+open question 2 in §8.
 
 ## 6. Coverage against the Standard's catalogues
 
