@@ -26,6 +26,7 @@ import contextvars
 import hashlib
 import json
 import sqlite3
+import sys
 from collections import defaultdict
 from collections.abc import Iterator
 from concurrent.futures import ThreadPoolExecutor
@@ -44,6 +45,15 @@ from scripts.lexicon.runner.ulif_dictua_store import (
     ULIF_DICTUA_ENTRIES_DDL,
     ulif_dictua_entries_table_sql,
 )
+
+# ``python -m scripts.wiki.sources_db`` puts the repository root on sys.path.
+# The top-level ``audit/`` tree is a namespace package, so ``import audit``
+# never reaches ``scripts/audit`` and ``from audit.config`` dies before
+# argparse. Other ``python -m scripts…`` entry points insert ``scripts/``
+# first (``scripts/wiki/review.py``, ``scripts/wiki/rebuild.py``).
+_SCRIPTS_DIR = str(Path(__file__).resolve().parents[1])
+if _SCRIPTS_DIR not in sys.path:
+    sys.path.insert(0, _SCRIPTS_DIR)
 
 from . import slovnyk_me
 from .channels import rank_external_hits
@@ -94,6 +104,10 @@ ULIF_DICTUA_ATTRIBUTION_LABEL = (
     "«Словники України» (Український мовно-інформаційний фонд НАН України)"
 )
 ULIF_DICTUA_SECTION_KINDS = ("paradigm", "synonyms", "antonyms", "phraseology")
+ULIF_DICTUA_MIGRATE_MESSAGE = (
+    "ulif_dictua_entries is not on the homonym-safe schema; "
+    "run `python -m scripts.wiki.sources_db --migrate` on this database"
+)
 
 # DictUA is a live ASP.NET source.  The source DB stores the parsed material
 # and its exact HTML separately: keeping only the parsed JSON made cache rows
@@ -306,6 +320,9 @@ def _ulif_dictua_conn(
         path.parent.mkdir(parents=True, exist_ok=True)
     conn = _open_conn(path)
     if create:
+        if _ulif_table_exists(conn, "ulif_dictua_entries") and not _ulif_dictua_schema_current(conn):
+            conn.close()
+            raise RuntimeError(ULIF_DICTUA_MIGRATE_MESSAGE)
         ensure_ulif_dictua_schema(conn)
     return conn
 
@@ -538,11 +555,16 @@ def store_ulif_dictua_entry(
     homonym_checked: int = 0,
     content_sha256: str = "",
     db_path: str | Path | None = None,
+    conn: sqlite3.Connection | None = None,
 ) -> dict | None:
     """Persist one complete DictUA response and return its materialized form.
 
     Transient failures are intentionally never persisted: a network outage is
     not evidence that a Ukrainian word does not exist.
+
+    Pass ``conn`` to join a caller's open transaction: this function then does
+    not commit or close. Without ``conn``, behaviour is unchanged (own
+    connection, commit, close).
     """
     if status == "transient_error":
         return None
@@ -556,14 +578,13 @@ def store_ulif_dictua_entry(
     if not normalized:
         return None
 
-    conn = _ulif_dictua_conn(db_path, create=True)
+    owns_conn = conn is None
+    if owns_conn:
+        conn = _ulif_dictua_conn(db_path, create=True)
     assert conn is not None
+    prior_factory = conn.row_factory
+    conn.row_factory = sqlite3.Row
     try:
-        if not _ulif_dictua_schema_current(conn):
-            raise RuntimeError(
-                "ulif_dictua_entries is not on the homonym-safe schema; "
-                "run `python -m scripts.wiki.sources_db --migrate` on this database"
-            )
         raw_refs: dict[str, str] = {}
         for kind, response in sorted(raw_responses.items()):
             if kind not in ULIF_DICTUA_SECTION_KINDS:
@@ -640,7 +661,8 @@ def store_ulif_dictua_entry(
         conn.execute("DELETE FROM ulif_dictua_sections WHERE entry_id = ?", (entry["id"],))
         if status in {"ok", "parse_error"}:
             for kind in ULIF_DICTUA_SECTION_KINDS:
-                for source_order, payload in enumerate(_ulif_dictua_payloads(sections.get(kind))):
+                for source_order, original in enumerate(_ulif_dictua_payloads(sections.get(kind))):
+                    payload = dict(original)
                     payload.setdefault("source_order", source_order)
                     payload.setdefault("sense_or_group_id", f"{kind}:{source_order + 1}")
                     raw_ref = raw_refs.get(kind)
@@ -660,10 +682,13 @@ def store_ulif_dictua_entry(
                             json.dumps(payload, ensure_ascii=False, sort_keys=True),
                         ),
                     )
-        conn.commit()
+        if owns_conn:
+            conn.commit()
         return _materialize_ulif_dictua_entry(conn, entry)
     finally:
-        conn.close()
+        conn.row_factory = prior_factory
+        if owns_conn:
+            conn.close()
 
 
 def extract_ulif_dictua_snapshot(

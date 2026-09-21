@@ -674,9 +674,10 @@ def _direct_text(node: Tag) -> str:
 def parse_register_list(html: str) -> list[dict[str, Any]]:
     """Read DictUA's register rows in list order.
 
-    Each row's visible link text is the stressed headword. Distinction on the
-    list is that text (stress and capitalisation). There is no homonym number
-    column.
+    Each row's visible link text is the stressed headword. Rows are distinct by
+    their ``Select$N`` postback target, not by display text: the register can
+    list two senses with identical stress and capitalisation. There is no
+    homonym number column on the list itself.
     """
     soup = BeautifulSoup(html, "html.parser")
     grid = soup.find(id="ContentPlaceHolder1_dgv")
@@ -711,22 +712,43 @@ def homonym_group(rows: list[dict[str, Any]], spelling: str) -> list[dict[str, A
     return group
 
 
+_PRINTED_HOMONYM_TRAILING_RE = re.compile(r"^(.*?)\s+(\d+)\s*$")
+_PRINTED_HOMONYM_LABEL_RE = re.compile(
+    r"(?:омонім\w*|homonym)\s*[№#]?\s*(\d+)|№\s*(\d+)",
+    re.IGNORECASE,
+)
+
+
+def _split_printed_homonym(headword: str) -> tuple[str, str | None]:
+    """Strip a trailing printed homonym digit from a ``word_style`` headword."""
+    match = _PRINTED_HOMONYM_TRAILING_RE.match(headword)
+    if match is None:
+        return headword, None
+    return match.group(1), match.group(2)
+
+
 def printed_homonym_number(html: str) -> str | None:
     """Return ULIF's own homonym number when the entry header prints one.
 
-    Sense glosses such as ``(будівля)`` are not numbers. ``None`` means the
-    page does not print one.
+    DictUA often appends the digit to ``word_style`` (``Іши́м 1``). Sense glosses
+    such as ``(будівля)`` are not numbers. ``None`` means the page does not
+    print one.
     """
     soup = BeautifulSoup(html, "html.parser")
     article = soup.find(id="ContentPlaceHolder1_article")
     if article is None:
         return None
+    word_node = article.select_one(".word_style")
+    if word_node is not None:
+        _, printed = _split_printed_homonym(_direct_text(word_node))
+        if printed is not None:
+            return printed
     chunks: list[str] = []
     for selector in (".word_style", ".gram_style", ".comment_style"):
         for node in article.select(selector):
             chunks.append(_ulif_text(node))
     header = " ".join(chunks)
-    match = re.search(r"(?:омонім\w*|homonym)\s*[№#]?\s*(\d+)|№\s*(\d+)", header, re.IGNORECASE)
+    match = _PRINTED_HOMONYM_LABEL_RE.search(header)
     if match is None:
         return None
     return next(group for group in match.groups() if group)
@@ -743,10 +765,14 @@ def _article_identity(html: str) -> dict[str, Any]:
             "invariable_phrase": False,
             "paradigm_table": None,
             "content_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
+            "printed_homonym_number": None,
         }
     word_node = article.select_one(".word_style")
     gram_node = article.select_one(".gram_style")
-    headword = _direct_text(word_node) if word_node is not None else ""
+    raw_headword = _direct_text(word_node) if word_node is not None else ""
+    headword, printed = _split_printed_homonym(raw_headword)
+    if printed is None:
+        printed = printed_homonym_number(html)
     grammar = _LEADING_DASH_RE.sub("", _ulif_text(gram_node)).strip() if gram_node is not None else ""
     notes = []
     for node in article.select(".comment_style"):
@@ -761,6 +787,7 @@ def _article_identity(html: str) -> dict[str, Any]:
         "invariable_phrase": _INVARIABLE_PHRASE in article_text,
         "paradigm_table": _find_paradigm_table(article),
         "content_sha256": hashlib.sha256(str(article).encode("utf-8")).hexdigest(),
+        "printed_homonym_number": printed,
     }
 
 
@@ -930,7 +957,7 @@ def parse_ulif_entry(
         "sense_gloss": identity["sense_gloss"],
         "content_sha256": identity["content_sha256"],
         "register_position": register_position,
-        "printed_homonym_number": printed_homonym_number(html),
+        "printed_homonym_number": identity.get("printed_homonym_number"),
         "is_invariable": invariable,
         "parser_version": ULIF_FORMS_PARSER_VERSION,
         "forms": forms,

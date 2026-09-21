@@ -75,9 +75,9 @@ repos:
         args: [--maxkb=2000]
       - id: check-merge-conflict
       - id: end-of-file-fixer
-        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/)
+        exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)
       - id: trailing-whitespace
-        exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|site/node_modules/|\.venv/)
+        exclude: ^(curriculum/|wiki/|docs/references/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)
 
   # --- Local hooks (project-specific) ---
   - repo: local
