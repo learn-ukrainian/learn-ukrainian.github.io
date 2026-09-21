@@ -66,7 +66,7 @@ COMMITTED_PROFILES = {"default", "grammar_8342"}
 APPROVED_AUTHORITY_PATTERNS = [
     r"vesum",
     r"весум",
-    r"правопис\s*(2019)?",
+    r"(?:(?:український|новий|чинний)\s+)?правопис\s*\(?2019(?:\s*р(?:оку)?\.?)?\)?",
     r"сум[- ]?20",
     r"sum[- ]?20",
     r"втс\b",
@@ -84,7 +84,6 @@ APPROVED_AUTHORITY_PATTERNS = [
     r"esum\b",
     r"уліф\b",
     r"ulif\b",
-    r"r2u\b",
     r"пулс\b",
     r"puls\b",
     r"підручник\s+(?:для\s+\d+|з\s+української|автор)",
@@ -353,22 +352,39 @@ def parse_dataset_record(
         raise TypeError(f"Line {line_number} in {file_path.name} is not a JSON object: {type(raw).__name__}")
 
     # Determine split:
-    # 1. Explicit record field
+    rel_path = (
+        file_path.relative_to(dataset_dir) if dataset_dir and file_path.is_relative_to(dataset_dir) else file_path
+    )
+    rel_str = str(rel_path).replace("\\", "/")
+
+    # 1. Explicit record field or manifest split declaration
     explicit_split = str(raw.get("split", "")).strip().lower()
+    manifest_split_val = None
+    if manifest_splits:
+        if rel_str in manifest_splits:
+            manifest_split_val = manifest_splits[rel_str]
+        elif file_path.name in manifest_splits:
+            manifest_split_val = manifest_splits[file_path.name]
+
     if explicit_split:
-        if explicit_split in ("eval", "test", "validation", "val", "dev", "evaluation"):
+        raw_split = explicit_split
+        split_source = f"line {line_number} in {file_path.name}"
+    elif manifest_split_val is not None:
+        raw_split = str(manifest_split_val).strip().lower()
+        split_source = f"manifest.json for {rel_str}"
+    else:
+        raw_split = None
+        split_source = None
+
+    if raw_split is not None:
+        if raw_split in ("eval", "test", "validation", "val", "dev", "evaluation"):
             split = "eval"
-        elif explicit_split in ("train", "training"):
+        elif raw_split in ("train", "training"):
             split = "train"
         else:
-            raise ValueError(f"Unknown split {explicit_split!r} in line {line_number} of {file_path.name}")
-    elif manifest_splits and file_path.name in manifest_splits:
-        split = manifest_splits[file_path.name]
+            raise ValueError(f"Unknown split {raw_split!r} in {split_source}")
     else:
         # 2. Relative path inspection (never absolute path substring match)
-        rel_path = (
-            file_path.relative_to(dataset_dir) if dataset_dir and file_path.is_relative_to(dataset_dir) else file_path
-        )
         rel_parts = [p.lower() for p in rel_path.parent.parts]
         stem = rel_path.stem.lower()
         if any(p in ("eval", "evaluation", "test", "val", "validation", "dev") for p in rel_parts) or re.search(
@@ -1066,6 +1082,12 @@ def audit_check_7_sample_drawer(
         return CheckResult("check_7_sample_drawer", "Review Sample & Human Lifecycle", "NOT_APPLICABLE"), None, ""
 
     sample_size = thresholds.get("sample_size", 300)
+    min_sample_floor = thresholds.get("min_sample_floor", 50)
+    effective_floor = min(min_sample_floor, total)
+    if sample_size < effective_floor:
+        raise ValueError(
+            f"Sample size {sample_size} is below required minimum floor of {effective_floor} (total records: {total})"
+        )
     salt = "open_model_data_acceptance_salt_2026"
     seed_hash = hashlib.sha256(f"{dataset_sha256}_{salt}".encode()).hexdigest()
 
@@ -1215,7 +1237,7 @@ def audit_check_7_sample_drawer(
         "sample_seed": seed_hash,
         "profile_sha256": profile_sha256,
         "sample_size_drawn": actual_drawn_count,
-        "sample_size_reviewed": actual_drawn_count,
+        "sample_size_reviewed": 0,
         "blocker_defect_count": 0,
         "minor_defect_count": 0,
         "reviewer_id": "",
@@ -1225,7 +1247,7 @@ def audit_check_7_sample_drawer(
     }
     signoff_template_path.write_text(json.dumps(signoff_template, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Strict Signoff Validation (Fixes Blocker 3 & R2-F2)
+    # Strict Signoff Validation (Fixes Blocker 3, R2-F2, R3-F2, R3-F5)
     failures = []
     signoff_verified = False
 
@@ -1248,18 +1270,29 @@ def audit_check_7_sample_drawer(
                         failures.append("Signoff profile_sha256 does not match current profile hash")
 
                     reviewed_count = signoff_data.get("sample_size_reviewed")
-                    if not isinstance(reviewed_count, int) or reviewed_count < actual_drawn_count:
+                    if (
+                        type(reviewed_count) is not int
+                        or isinstance(reviewed_count, bool)
+                        or reviewed_count <= 0
+                        or reviewed_count < actual_drawn_count
+                    ):
                         failures.append(
-                            f"Signoff sample_size_reviewed must be an integer >= actual sample size drawn ({actual_drawn_count}), got {reviewed_count!r}"
+                            f"Signoff sample_size_reviewed must be an integer >= actual sample size drawn ({actual_drawn_count}) and > 0, got {reviewed_count!r}"
                         )
 
                     blockers = signoff_data.get("blocker_defect_count")
-                    if type(blockers) is not int or blockers < 0:
+                    if type(blockers) is not int or isinstance(blockers, bool) or blockers < 0:
                         failures.append(
                             f"Signoff blocker_defect_count must be a non-negative integer, got {blockers!r} of type {type(blockers).__name__}"
                         )
                     elif blockers > 0:
                         failures.append(f"Signoff reports {blockers} unresolved BLOCKER defect(s)")
+
+                    minors = signoff_data.get("minor_defect_count")
+                    if minors is not None and (type(minors) is not int or isinstance(minors, bool) or minors < 0):
+                        failures.append(
+                            f"Signoff minor_defect_count must be a non-negative integer, got {minors!r} of type {type(minors).__name__}"
+                        )
 
                     reviewer_id = signoff_data.get("reviewer_id")
                     reviewer_family = signoff_data.get("reviewer_family")
@@ -1347,6 +1380,21 @@ def run_acceptance_audit(
         return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
 
     if sample_size is not None:
+        if sample_size <= 0:
+            print(f"❌ Error: --sample-size must be > 0, got {sample_size}", file=sys.stderr)
+            return (
+                AcceptanceReport(
+                    str(dataset_dir),
+                    "",
+                    profile_name,
+                    profile_sha256,
+                    0,
+                    0,
+                    0,
+                    overall_status="OPERATIONAL_ERROR",
+                ),
+                2,
+            )
         thresholds["sample_size"] = sample_size
 
     # Scan all JSONL shards (excluding sample outputs or review files)
@@ -1376,8 +1424,30 @@ def run_acceptance_audit(
                 raise ValueError("manifest.json must be a JSON object")
             manifest_task_type = m_data.get("task_type")
             manifest_declares_eval = bool(m_data.get("has_evaluation_split", False))
-            if "splits" in m_data and isinstance(m_data["splits"], dict):
-                manifest_splits = {Path(f).name: s for f, s in m_data["splits"].items()}
+            if "splits" in m_data:
+                if not isinstance(m_data["splits"], dict):
+                    raise ValueError("manifest.json 'splits' field must be a dictionary")
+                manifest_splits = {}
+                valid_splits = {
+                    "train": "train",
+                    "training": "train",
+                    "eval": "eval",
+                    "evaluation": "eval",
+                    "test": "eval",
+                    "validation": "eval",
+                    "val": "eval",
+                    "dev": "eval",
+                }
+                for f_key, s_val in m_data["splits"].items():
+                    s_str = str(s_val).strip().lower()
+                    if s_str not in valid_splits:
+                        raise ValueError(f"Unknown split {s_val!r} declared in manifest.json for {f_key}")
+                    norm_val = valid_splits[s_str]
+                    norm_k = str(f_key).replace("\\", "/")
+                    base_k = Path(f_key).name
+                    manifest_splits[norm_k] = norm_val
+                    if base_k not in manifest_splits:
+                        manifest_splits[base_k] = norm_val
         except Exception as exc:
             print(f"❌ Error reading manifest.json: {exc}", file=sys.stderr)
             return AcceptanceReport(
@@ -1462,11 +1532,17 @@ def run_acceptance_audit(
         train_records=train_records,
         eval_records=eval_records,
     )
-
-    normalizer = LinguisticNormalizer(vesum_db, ASPECT_PAIRS_FILE)
     actual_sample_out = sample_out or (dataset_dir / "acceptance_review_sample.md")
 
+    normalizer = None
     try:
+        try:
+            normalizer = LinguisticNormalizer(vesum_db, ASPECT_PAIRS_FILE)
+        except Exception as exc:
+            print(f"❌ Error initializing linguistic normalizer: {exc}", file=sys.stderr)
+            report.overall_status = "OPERATIONAL_ERROR"
+            return report, 2
+
         checks = [
             ("check_1_repeats", lambda: audit_check_1_repeats(records, thresholds)),
             ("check_2_form_letters", lambda: audit_check_2_form_letters(records, thresholds)),
@@ -1505,8 +1581,13 @@ def run_acceptance_audit(
             report.sample_seed = seed_hash
             if res7.status == "FAIL":
                 has_failure = True
+    except (OSError, sqlite3.Error, ValueError, TypeError, KeyError) as exc:
+        print(f"❌ Operational error during audit checks: {exc}", file=sys.stderr)
+        report.overall_status = "OPERATIONAL_ERROR"
+        return report, 2
     finally:
-        normalizer.close()
+        if normalizer:
+            normalizer.close()
 
     # Determine overall lifecycle status and exit code (Fixes Blocker 3)
     signoff_verified = report.checks.get("check_7_sample_drawer", CheckResult("", "", "")).metrics.get(

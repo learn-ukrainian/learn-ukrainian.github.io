@@ -755,6 +755,7 @@ def test_sample_drawer_includes_dpo_and_correction_fields_and_signoff_template(t
     template_data = json.loads(template_path.read_text(encoding="utf-8"))
     assert template_data["dataset_sha256"] == "ds_123"
     assert template_data["sample_size_drawn"] == 1
+    assert template_data["sample_size_reviewed"] == 0
 
 
 def test_dataset_hash_includes_manifest_and_profile_hash_includes_aspect_pairs(tmp_path):
@@ -830,6 +831,236 @@ def test_fair_thin_category_boost_and_dev_split(tmp_path, default_thresholds):
 
     rec_dev_path = parse_dataset_record({"query": "q", "final_response": "a"}, Path("dev/shard.jsonl"), 2)
     assert rec_dev_path.split == "eval"
+
+
+def test_manifest_splits_normalization_and_validation(tmp_path):
+    """R3-F1: Manifest splits normalized, validated against allowlist, and disambiguated by relative path."""
+    d = tmp_path / "dataset_manifest_splits"
+    d.mkdir()
+    train_dir = d / "train"
+    eval_dir = d / "eval"
+    train_dir.mkdir()
+    eval_dir.mkdir()
+
+    # Same basename 'data.jsonl' in both train/ and eval/
+    (train_dir / "data.jsonl").write_text(
+        '{"query": "Яка столиця України?", "final_response": "Столиця України — Київ."}\n', encoding="utf-8"
+    )
+    (eval_dir / "data.jsonl").write_text(
+        '{"query": "Скільки літер в українській абетці?", "final_response": "В українській абетці 33 літери."}\n',
+        encoding="utf-8",
+    )
+
+    # Manifest maps relative paths
+    (d / "manifest.json").write_text(
+        json.dumps(
+            {
+                "has_evaluation_split": True,
+                "splits": {
+                    "train/data.jsonl": "training",
+                    "eval/data.jsonl": "validation",
+                },
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    report, code = run_acceptance_audit(d, sample_size=10)
+    assert code == 0
+    assert report.train_records == 1
+    assert report.eval_records == 1
+
+    # Unknown split value in manifest triggers operational error exit code 2
+    (d / "manifest.json").write_text(
+        json.dumps(
+            {
+                "splits": {
+                    "train/data.jsonl": "train",
+                    "eval/data.jsonl": "unknown_split",
+                }
+            }
+        ),
+        encoding="utf-8",
+    )
+    report_bad, code_bad = run_acceptance_audit(d, sample_size=10)
+    assert code_bad == 2
+    assert report_bad.overall_status == "OPERATIONAL_ERROR"
+
+    # Non-dict splits in manifest triggers operational error exit code 2
+    (d / "manifest.json").write_text(
+        json.dumps({"splits": ["not", "a", "dict"]}),
+        encoding="utf-8",
+    )
+    report_bad_dict, code_bad_dict = run_acceptance_audit(d, sample_size=10)
+    assert code_bad_dict == 2
+    assert report_bad_dict.overall_status == "OPERATIONAL_ERROR"
+
+
+def test_sample_size_floor_and_strict_signoff_verification(tmp_path, default_thresholds):
+    """R3-F2 & R3-F5: Sample size floor enforcement and strict int typing in signoff verification."""
+    d = tmp_path / "dataset_sample_floor"
+    d.mkdir()
+
+    # Create 60 records
+    lines = [f'{{"query": "Запит {i}", "final_response": "Відповідь {i}"}}\n' for i in range(60)]
+    (d / "data.jsonl").write_text("".join(lines), encoding="utf-8")
+
+    # 1. --sample-size 0 fails closed with exit code 2
+    report_zero, code_zero = run_acceptance_audit(d, sample_size=0)
+    assert code_zero == 2
+    assert report_zero.overall_status == "OPERATIONAL_ERROR"
+
+    # 2. --sample-size 10 on 60 records (floor is 50) fails closed with exit code 2
+    report_subfloor, code_subfloor = run_acceptance_audit(d, sample_size=10)
+    assert code_subfloor == 2
+    assert report_subfloor.overall_status == "OPERATIONAL_ERROR"
+
+    # 3. Signoff validation: strict type checking (reject boolean True) and zero-review bypass
+    records = [
+        parse_dataset_record({"query": f"q_{i}", "final_response": f"a_{i}"}, Path("shard.jsonl"), i) for i in range(10)
+    ]
+    sample_md = tmp_path / "sample.md"
+    default_thresholds["sample_size"] = 10
+    _, _, seed = audit_check_7_sample_drawer(records, default_thresholds, "d_sha", "p_sha", sample_md)
+
+    # Rejects zero reviewed count
+    signoff_zero = tmp_path / "signoff_zero.json"
+    signoff_zero.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": 0,
+                "blocker_defect_count": 0,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_zero, _, _ = audit_check_7_sample_drawer(records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_zero)
+    assert res_zero.status == "FAIL"
+
+    # Rejects boolean True for sample_size_reviewed
+    signoff_bool_reviewed = tmp_path / "signoff_bool_reviewed.json"
+    signoff_bool_reviewed.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": True,
+                "blocker_defect_count": 0,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bool_reviewed, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_bool_reviewed
+    )
+    assert res_bool_reviewed.status == "FAIL"
+
+    # Rejects boolean True for blocker_defect_count
+    signoff_bool_blocker = tmp_path / "signoff_bool_blocker.json"
+    signoff_bool_blocker.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": True,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bool_blocker, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_bool_blocker
+    )
+    assert res_bool_blocker.status == "FAIL"
+
+    # Rejects boolean True or negative for minor_defect_count
+    signoff_bool_minor = tmp_path / "signoff_bool_minor.json"
+    signoff_bool_minor.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": 10,
+                "blocker_defect_count": 0,
+                "minor_defect_count": True,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_bool_minor, _, _ = audit_check_7_sample_drawer(
+        records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_bool_minor
+    )
+    assert res_bool_minor.status == "FAIL"
+
+
+def test_operational_error_on_unwritable_sample_out_and_db_errors(tmp_path):
+    """R3-F3: Unwritable sample-out path and DB errors exit code 2."""
+    d = tmp_path / "dataset_op_error"
+    d.mkdir()
+    (d / "data.jsonl").write_text('{"query": "Привіт", "final_response": "Привіт"}\n', encoding="utf-8")
+
+    # Unwritable sample-out path (directory cannot be created under a file)
+    dummy_file = tmp_path / "regular_file.txt"
+    dummy_file.write_text("not a directory", encoding="utf-8")
+    unwritable_sample = dummy_file / "subfolder" / "sample.md"
+
+    report, code = run_acceptance_audit(d, sample_out=unwritable_sample, sample_size=10)
+    assert code == 2
+    assert report.overall_status == "OPERATIONAL_ERROR"
+
+
+def test_check5_pravopys_requires_2019_and_r2u_rejected(default_thresholds):
+    """R3-F4: Pravopys 1933/1960 and bare Pravopys rejected; r2u rejected; 2019 accepted."""
+    # 1. Pravopys 1933 rejected
+    rec_1933 = parse_dataset_record(
+        {"query": "q", "final_response": "a", "authority": "Правопис 1933"}, Path("shard.jsonl"), 1
+    )
+    res_1933 = audit_check_5_source_rules([rec_1933], default_thresholds)
+    assert res_1933.status == "FAIL"
+    assert res_1933.metrics["unapproved_authorities_violations"] == 1
+
+    # 2. Bare Pravopys rejected
+    rec_bare = parse_dataset_record(
+        {"query": "q", "final_response": "a", "authority": "Правопис"}, Path("shard.jsonl"), 2
+    )
+    res_bare = audit_check_5_source_rules([rec_bare], default_thresholds)
+    assert res_bare.status == "FAIL"
+    assert res_bare.metrics["unapproved_authorities_violations"] == 1
+
+    # 3. r2u rejected (translation dictionary and unapproved authority)
+    rec_r2u = parse_dataset_record(
+        {"query": "q", "final_response": "a", "authority": "r2u.org.ua"}, Path("shard.jsonl"), 3
+    )
+    res_r2u = audit_check_5_source_rules([rec_r2u], default_thresholds)
+    assert res_r2u.status == "FAIL"
+
+    # 4. Valid 2019 authorities accepted
+    rec_2019_a = parse_dataset_record(
+        {"query": "q", "final_response": "a", "authority": "Правопис 2019"}, Path("shard.jsonl"), 4
+    )
+    rec_2019_b = parse_dataset_record(
+        {"query": "q", "final_response": "a", "authority": "Український правопис (2019 року)"}, Path("shard.jsonl"), 5
+    )
+    rec_2019_c = parse_dataset_record(
+        {"query": "q", "final_response": "a", "authority": "чинний правопис 2019"}, Path("shard.jsonl"), 6
+    )
+    res_2019 = audit_check_5_source_rules([rec_2019_a, rec_2019_b, rec_2019_c], default_thresholds)
+    assert res_2019.status == "PASS"
+    assert res_2019.metrics["unapproved_authorities_violations"] == 0
 
 
 # ── Empirical Baseline Reproduction Tests (#6321, Roadmap §2) ───────────────
