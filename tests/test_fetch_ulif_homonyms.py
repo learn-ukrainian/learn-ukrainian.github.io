@@ -1522,3 +1522,142 @@ def test_requests_made_idempotent_no_double_counting_across_interruption(tmp_pat
         assert int(ledger.meta("requests_made", "0") or "0") == 6
     finally:
         ledger.close()
+
+
+def test_final_accounting_retains_requests_on_interruption_after_request_cap(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.set_meta("requests_made", "7")
+    ledger.close()
+
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_set_requests = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set_requests(self, count):
+        calls[0] += 1
+        # Calls 1 & 2: live updates during requests
+        # Call 3+: final write under interrupt
+        if calls[0] >= 3:
+            raise KeyboardInterrupt()
+        orig_set_requests(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set_requests)
+
+    code = run_fetch(
+        spellings=["замок"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+        max_requests=2,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+    check_ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert check_ledger.meta("requests_made") == "9"
+    finally:
+        check_ledger.close()
+
+
+def test_stop_summary_guaranteed_on_db_setup_failure(tmp_path, capsys):
+    from tests.test_ulif_dictua import _write_old_ulif_db
+
+    db_path = _write_old_ulif_db(tmp_path / "old.db")
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=db_path,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               database error:" in err
+    assert "Resume command:" in err
+
+
+def test_stop_summary_guaranteed_on_lock_refusal(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    lock = state_dir / "runner.lock"
+    lock.write_text(f"{os.getpid()}\n2026-09-21T00:00:00+00:00\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="live pid"):
+        run_fetch(
+            spellings=["тест"],
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            transport=lambda m, d: HttpResult(200, "", {}),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               refusing to start: runner lock held by live pid" in err
+    assert "Resume command:" in err
+
+
+def test_stop_summary_guaranteed_when_summary_printing_interrupted(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    def flaky_summary(*args, **kwargs):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms._print_stop_summary", flaky_summary)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+
+def test_interrupt_during_lock_release_cleans_up_lock(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_read_lock = "scripts.lexicon.runner.fetch_ulif_homonyms._read_lock"
+    calls = [0]
+
+    def flaky_read_lock(path):
+        calls[0] += 1
+        # During release, inject KeyboardInterrupt
+        if calls[0] >= 1:
+            raise KeyboardInterrupt()
+        return os.getpid(), "2026-09-21T00:00:00+00:00", ""
+
+    monkeypatch.setattr(orig_read_lock, flaky_read_lock)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    assert not (tmp_path / "state" / "runner.lock").exists()

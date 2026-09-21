@@ -287,11 +287,19 @@ class RunnerLock:
     def release(self) -> None:
         if not self._held or not self.path.exists():
             return
-        pid, _started, _raw = _read_lock(self.path)
-        if pid == os.getpid():
-            with contextlib.suppress(OSError):
-                self.path.unlink()
-        self._held = False
+        for _ in range(3):
+            try:
+                pid, _started, _raw = _read_lock(self.path)
+                if pid == os.getpid() or not _raw.strip():
+                    with contextlib.suppress(OSError):
+                        self.path.unlink()
+                self._held = False
+                break
+            except (KeyboardInterrupt, InterruptedByOperator, BaseException):
+                with contextlib.suppress(OSError):
+                    self.path.unlink()
+                self._held = False
+                raise
 
 
 def _read_lock(path: Path) -> tuple[int | None, str, str]:
@@ -688,6 +696,7 @@ class PoliteClient:
         clock: ClockFn = time.monotonic,
         max_requests: int | None = None,
         heartbeat: HeartbeatFn | None = None,
+        on_request: Callable[[int], None] | None = None,
     ) -> None:
         if delay_seconds < MIN_DELAY_SECONDS:
             raise ValueError(f"delay must be >= {MIN_DELAY_SECONDS}, got {delay_seconds}")
@@ -697,8 +706,16 @@ class PoliteClient:
         self.clock = clock
         self.max_requests = max_requests
         self.heartbeat = heartbeat
+        self.on_request = on_request
         self.requests_made = 0
         self._last_at = 0.0
+
+    def _record_request(self) -> None:
+        self.requests_made += 1
+        self._last_at = self.clock()
+        if self.on_request is not None:
+            with contextlib.suppress(Exception):
+                self.on_request(self.requests_made)
 
     def _sleep_with_heartbeat(self, seconds: float, msg_fn: Callable[[float], str]) -> None:
         if seconds <= 0:
@@ -732,8 +749,7 @@ class PoliteClient:
             try:
                 result = self.transport(method, fields)
             except requests.RequestException:
-                self.requests_made += 1
-                self._last_at = self.clock()
+                self._record_request()
                 last_code = "transport_error"
                 if attempt == MAX_HTTP_ATTEMPTS:
                     raise RequestExhausted(last_code) from None
@@ -743,8 +759,7 @@ class PoliteClient:
                     lambda rem, att=attempt: f"waiting for back-off: {rem:.0f}s remaining (attempt {att})",
                 )
                 continue
-            self.requests_made += 1
-            self._last_at = self.clock()
+            self._record_request()
             code = result.status_code
             if code == 403:
                 raise Forbidden("http_403")
@@ -1391,6 +1406,17 @@ def run_fetch(
             cmd_parts.append("--quiet")
         resolved_resume_cmd = shlex.join(cmd_parts)
 
+    if delay_seconds < MIN_DELAY_SECONDS:
+        print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
+        _print_stop_summary(
+            reason=f"delay must be >= {MIN_DELAY_SECONDS}",
+            ledger=None,
+            requests_in_process=0,
+            elapsed_seconds=0.0,
+            resume_cmd=resolved_resume_cmd,
+        )
+        return EXIT_USAGE
+
     stop_reason = "finished"
     return_code = EXIT_OK
     start_time = clock()
@@ -1436,7 +1462,7 @@ def run_fetch(
             except RuntimeError as exc:
                 print(str(exc), file=sys.stderr)
                 return_code = EXIT_USAGE
-                stop_reason = str(exc)
+                stop_reason = f"database error: {exc}"
             else:
                 ledger = SpellingLedger(state_dir / "ledger.sqlite")
                 ledger.set_meta("delay_seconds", str(delay_seconds))
@@ -1482,6 +1508,11 @@ def run_fetch(
                     register_size=register_size_str,
                 )
 
+                def _on_request(req_in_proc: int) -> None:
+                    if ledger is not None:
+                        with contextlib.suppress(Exception):
+                            ledger.set_requests_made(base_requests + req_in_proc)
+
                 client = PoliteClient(
                     transport or _requests_transport(declared_user_agent()),
                     delay_seconds=delay_seconds,
@@ -1489,6 +1520,7 @@ def run_fetch(
                     clock=clock,
                     max_requests=max_requests,
                     heartbeat=on_heartbeat,
+                    on_request=_on_request,
                 )
                 fetcher = HomonymFetcher(client, ledger, cache)
                 consecutive_retries = 0
@@ -1612,6 +1644,29 @@ def run_fetch(
                     if return_code != EXIT_OK:
                         break
 
+        except SystemExit as exc:
+            stop_reason = str(exc)
+            summary_printed = False
+            for _ in range(3):
+                try:
+                    _print_stop_summary(
+                        reason=stop_reason,
+                        ledger=ledger,
+                        requests_in_process=client.requests_made if client else 0,
+                        elapsed_seconds=clock() - start_time,
+                        resume_cmd=resolved_resume_cmd,
+                    )
+                    summary_printed = True
+                    break
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    pass
+            if not summary_printed:
+                with contextlib.suppress(Exception):
+                    sys.stderr.write(
+                        f"=== ULIF Fetch Stop Summary ===\nReason:               {stop_reason}\nResume command:       {resolved_resume_cmd}\n===============================\n"
+                    )
+                    sys.stderr.flush()
+            raise
         except (KeyboardInterrupt, InterruptedByOperator):
             stop_reason = "interrupted by operator"
             return_code = EXIT_INTERRUPTED
@@ -1620,14 +1675,26 @@ def run_fetch(
             return_code = EXIT_INTERRUPTED
             print(f"interrupted: {exc}", file=sys.stderr)
 
-        try:
-            if client is not None and ledger is not None:
-                ledger.set_requests_made(base_requests + client.requests_made)
-        except (KeyboardInterrupt, InterruptedByOperator):
-            stop_reason = "interrupted by operator"
-            return_code = EXIT_INTERRUPTED
+        if client is not None and ledger is not None:
+            written = False
+            for _ in range(5):
+                try:
+                    ledger.set_requests_made(base_requests + client.requests_made)
+                    written = True
+                    break
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    stop_reason = "interrupted by operator"
+                    return_code = EXIT_INTERRUPTED
+            if not written:
+                with contextlib.suppress(Exception):
+                    ledger.conn.execute(
+                        "INSERT INTO meta (key, value) VALUES ('requests_made', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                        (str(base_requests + client.requests_made),),
+                    )
+                    ledger.conn.commit()
 
-        if return_code != EXIT_USAGE:
+        summary_printed = False
+        for _ in range(3):
             try:
                 _print_stop_summary(
                     reason=stop_reason,
@@ -1636,9 +1703,21 @@ def run_fetch(
                     elapsed_seconds=clock() - start_time,
                     resume_cmd=resolved_resume_cmd,
                 )
+                summary_printed = True
+                break
             except (KeyboardInterrupt, InterruptedByOperator):
                 stop_reason = "interrupted by operator"
                 return_code = EXIT_INTERRUPTED
+
+        if not summary_printed:
+            with contextlib.suppress(Exception):
+                lines = [
+                    "=== ULIF Fetch Stop Summary ===",
+                    f"Reason:               {stop_reason}",
+                    f"Resume command:       {resolved_resume_cmd}",
+                    "===============================",
+                ]
+                print("\n".join(lines), file=sys.stderr, flush=True)
     finally:
         try:
             if cache is not None:
@@ -1646,6 +1725,9 @@ def run_fetch(
                     cache.close()
         except (KeyboardInterrupt, InterruptedByOperator):
             return_code = EXIT_INTERRUPTED
+            with contextlib.suppress(Exception):
+                if cache is not None:
+                    cache.close()
 
         try:
             if ledger is not None:
@@ -1653,13 +1735,22 @@ def run_fetch(
                     ledger.close()
         except (KeyboardInterrupt, InterruptedByOperator):
             return_code = EXIT_INTERRUPTED
+            with contextlib.suppress(Exception):
+                if ledger is not None:
+                    ledger.close()
 
-        try:
-            if lock is not None:
-                with contextlib.suppress(Exception):
+        if lock is not None:
+            for _ in range(5):
+                try:
                     lock.release()
-        except (KeyboardInterrupt, InterruptedByOperator):
-            return_code = EXIT_INTERRUPTED
+                    break
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    return_code = EXIT_INTERRUPTED
+                    if lock.path.exists() and lock._held:
+                        with contextlib.suppress(OSError):
+                            lock.path.unlink()
+                        lock._held = False
+                    break
 
         if old_sigterm is not None:
             with contextlib.suppress(ValueError, OSError):
