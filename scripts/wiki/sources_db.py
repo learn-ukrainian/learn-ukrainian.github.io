@@ -799,16 +799,30 @@ def search_ulif_dictua_sections(
     limit: int = 20,
     db_path: str | Path | None = None,
 ) -> list[dict]:
-    """Return an ordered, structured DictUA relation result for a cached word."""
+    """Return structured DictUA relation results, one record per homonym.
+
+    A spelling stored as several entries used to come back empty: the single
+    getter reports ``status="ambiguous"`` and this function treated that as a
+    miss. Each entry with status ``ok`` and a non-empty ``kind`` section is
+    returned in ``homonym_index`` order, up to ``limit``. The nested group
+    payload stays on the record.
+    """
     if kind not in ULIF_DICTUA_SECTION_KINDS or limit < 1:
         return []
-    record = get_ulif_dictua_entry(word, db_path=db_path)
-    if not record or record["status"] != "ok" or not record["sections"].get(kind):
-        return []
-    record["matched_section"] = kind
-    # Keep the original nested group payload in metadata instead of reducing
-    # relations to an unattributed comma-separated word list.
-    return [record]
+    matches: list[dict] = []
+    for record in get_ulif_dictua_entries(word, db_path=db_path):
+        sections = record.get("sections")
+        if (
+            record.get("status") != "ok"
+            or not isinstance(sections, dict)
+            or not sections.get(kind)
+        ):
+            continue
+        record["matched_section"] = kind
+        matches.append(record)
+        if len(matches) >= limit:
+            break
+    return matches
 
 
 #: Max wait (ms) for SQLite to acquire a shared read lock when another

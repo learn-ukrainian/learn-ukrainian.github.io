@@ -909,6 +909,144 @@ def test_sources_db_stores_two_homonyms_for_one_spelling(tmp_path, monkeypatch):
     assert single["homonym_index"] == 1
 
 
+def _store_zamok_entry(db_path: Path, html_name: str, homonym_index: int, sections: dict) -> dict:
+    """Cache one замок entry page in a temporary database."""
+    parsed = _forms(html_name, homonym_index, str(3 + homonym_index))
+    sources_db.store_ulif_dictua_entry(
+        word=parsed["normalized_spelling"],
+        canonical_headword=parsed["canonical_headword"],
+        sections=sections,
+        raw_responses={kind: _fixture(html_name) for kind in sections},
+        retrieved_at="2026-09-21T00:00:00+00:00",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        homonym_index=parsed["homonym_index"],
+        grammatical_label=parsed["grammatical_label"],
+        sense_gloss=parsed["sense_gloss"],
+        register_position=parsed["register_position"],
+        homonym_checked=1,
+        content_sha256=parsed["content_sha256"],
+        db_path=db_path,
+    )
+    return parsed
+
+
+def _prechange_section_search(word: str, kind: str, db_path: Path) -> list[dict]:
+    """The search body at 615a864837: one getter, empty on an ambiguous spelling."""
+    record = sources_db.get_ulif_dictua_entry(word, db_path=db_path)
+    if not record or record["status"] != "ok" or not record["sections"].get(kind):
+        return []
+    record["matched_section"] = kind
+    return [record]
+
+
+def test_search_ulif_sections_returns_each_homonym_that_has_the_section(tmp_path):
+    db_path = tmp_path / "sources.db"
+    first = _store_zamok_entry(
+        db_path,
+        "zamok-entry-1.html",
+        1,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-1.html"))},
+    )
+    second = _store_zamok_entry(
+        db_path,
+        "zamok-entry-2.html",
+        2,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-2.html"))},
+    )
+
+    # This spelling is ambiguous to the single getter, so the old search returned [].
+    ambiguous = sources_db.get_ulif_dictua_entry("замок", db_path=db_path)
+    assert ambiguous is not None and ambiguous["status"] == "ambiguous"
+    results = sources_db.search_ulif_dictua_sections("замок", "paradigm", db_path=db_path)
+
+    assert results, "homonym spellings must not search as empty"
+    assert [row["homonym_index"] for row in results] == [1, 2]
+    assert [row["canonical_headword"] for row in results] == [
+        first["canonical_headword"],
+        second["canonical_headword"],
+    ]
+    assert [row["sense_gloss"] for row in results] == [
+        first["sense_gloss"],
+        second["sense_gloss"],
+    ]
+    assert [row["matched_section"] for row in results] == ["paradigm", "paradigm"]
+    assert results[0]["sections"]["paradigm"]["rows"][1][1] == "За́мок"
+    assert results[1]["sections"]["paradigm"]["rows"][1][1] == "за́мок"
+    assert isinstance(results[0]["sections"]["paradigm"], dict)
+
+
+def test_search_ulif_sections_returns_only_the_homonym_with_that_section(tmp_path):
+    db_path = tmp_path / "sources.db"
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-1.html",
+        1,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-1.html"))},
+    )
+    second = _store_zamok_entry(
+        db_path,
+        "zamok-entry-2.html",
+        2,
+        {
+            "paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-2.html")),
+            "synonyms": ulif_parse.parse_ulif_relation_groups(
+                _fixture("zamok-entry-2-syn.html"), "synonyms"
+            ),
+        },
+    )
+
+    results = sources_db.search_ulif_dictua_sections("замок", "synonyms", db_path=db_path)
+
+    assert len(results) == 1
+    assert results[0]["homonym_index"] == 2
+    assert results[0]["canonical_headword"] == second["canonical_headword"]
+    assert results[0]["sense_gloss"] == second["sense_gloss"]
+    assert results[0]["matched_section"] == "synonyms"
+    assert results[0]["sections"]["synonyms"][0]["terms"][0]["text"] == "КРЕМЛЬ"
+
+
+def test_search_ulif_sections_single_entry_matches_prechange_record(tmp_path):
+    db_path = tmp_path / "sources.db"
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-2.html",
+        1,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-2.html"))},
+    )
+
+    current = sources_db.search_ulif_dictua_sections("замок", "paradigm", db_path=db_path)
+    previous = _prechange_section_search("замок", "paradigm", db_path)
+
+    assert len(current) == 1
+    assert current == previous
+    assert set(current[0]) == set(previous[0])
+
+
+def test_search_ulif_sections_limit_one_returns_the_first_matching_homonym(tmp_path):
+    db_path = tmp_path / "sources.db"
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-1.html",
+        1,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-1.html"))},
+    )
+    _store_zamok_entry(
+        db_path,
+        "zamok-entry-2.html",
+        2,
+        {"paradigm": ulif_parse.parse_ulif_paradigm(_fixture("zamok-entry-2.html"))},
+    )
+
+    results = sources_db.search_ulif_dictua_sections(
+        "замок", "paradigm", limit=1, db_path=db_path
+    )
+
+    assert len(results) == 1
+    assert results[0]["homonym_index"] == 1
+    assert results[0]["canonical_headword"] == "За́мок"
+
+
 def test_homonym_suspect_report_combines_trie_vesum_and_capitalisation():
     rows = homonym_report.collect_suspects(
         [("замок", "за́мок"), ("бостон", "Бо́стон"), ("стіл", "стіл")],
