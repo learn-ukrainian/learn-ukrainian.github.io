@@ -1,7 +1,8 @@
 # Fresh lesson-based build — A1 arc (module grain)
 
-> Sub-epic #8397, child 4. Status: **draft r1** by the curriculum-upgrade driver, for cross-family
-> plan review and operator correction. Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
+> Sub-epic #8397, child 4. Status: **draft r2** by the curriculum-upgrade driver. r1 was reviewed by
+> AGY `gemini-3.8-flash-high` (task `plan-review-8397-a1-arc-r1`): REVISE, 9 findings; the driver
+> verified findings 1 and 3 against the Standard text and folded all nine in. For operator correction. Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
 > schema: [`fresh-build-plan-schema.md`](fresh-build-plan-schema.md). This document becomes
 > `curriculum/l2-uk-en/plans/a1/_arc.yaml` once accepted. It contains no Ukrainian word facts
 > beyond module titles already published in the reviewed v1 plans; every form, stress and example
@@ -23,8 +24,8 @@ from the Standard and, read module by module, stays inside its A1 ceiling: genit
 instrumental appear only as marked chunks (`у мене є`, `мені подобається`, `з/без + noun`,
 `автобусом`, `вітаю з …`). Keeping positions means: `/a1/<slug>/` parallels `/a1-v1/<slug>/`; the
 immersion bands, which are keyed by module number (R-30), keep working unchanged; and review
-effort goes into lessons, not into re-arguing order. Two order questions are raised in §6 for the
-reviewer rather than decided here.
+effort goes into lessons, not into re-arguing order. **One exception (r2): position 45 is
+re-targeted** — see D6.
 
 **D2 — What was actually broken, and is fixed by this arc:**
 1. *Literacy scope.* Module 1's subtitle promised seven letters while its body listed all 33
@@ -48,6 +49,14 @@ first-person story side by side in Ukrainian and English, Ukrainian-only questio
 production task. Checkpoint modules are made of such lessons plus a self-check and introduce
 nothing new.
 
+**D6 — Position 45 changes its job (slug to be renamed).** v1 `when-and-where` teaches complex
+sentences with `що`, `де`, `коли`. The Standard's A1 syntax (§4.3.2, `:741-747`) contains only
+coordination with `і (й)`, `але` and cause with `тому що`, `бо`; clauses with `де / куди / звідки`
+and `що` are A2 (`:1408-1411`) and `коли` is B1 (`:2406`). The error comes from a wrong summary
+line in `state-standard-2024-mapping.yaml:126`, which v1 followed. Position 45 becomes the owner of
+the Standard theme **Дім, помешкання** (`:489-493`), which had no owner. The position number, and
+therefore the immersion band, does not change.
+
 **D5 — A pronunciation strand runs through the whole level**, not only the first four modules:
 a short trainer inside a lesson roughly every sixth module (и; soft consonants; р; intonation;
 `-шся` / `-ться`; unstressed е / и), using the ULP trainer videos that are in the corpus.
@@ -57,6 +66,9 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Item | Status at A1 | Where (position) | Standard |
 | --- | --- | --- | --- |
 | Gender of nouns; adjective agreement (hard and soft group), nominative | system | 8–10 | §4.2.1 `:603-650` |
+| Adjective agreement in the **locative** and **accusative** (hard and soft group) | system | locative 29–30; accusative 31, 37, 40 | `:633-650`, examples `:680`, `:691` |
+| Personal pronouns 1st / 2nd person, accusative forms (мене, тебе, нас, вас) | system | 40 (first met in the chunk `мене звати` at 5) | `:656-657` |
+| Personal pronouns 1st / 2nd person, dative forms (мені, тобі, нам, вам) | **forms taught as pronoun forms inside their constructions** (`мені подобається`, `мені … років`, `мені потрібен`); no noun dative | 11, 15, 43, 54 | `:656-657`; noun dative stays A2 (mapping `:97-102`) |
 | Demonstratives, possessives, nominative | system | 6, 12 | `:659-667` |
 | Nominative plural (nouns, adjectives, demonstratives) | system | 13 | `:603-631` |
 | Present tense, conjugations I and II, modal + infinitive, reflexive verbs | system | 15–20 | `:703-719` |
@@ -65,17 +77,22 @@ a short trainer inside a lesson roughly every sixth module (и; soft consonants;
 | Cardinal numerals | **lexical items only** (prices, age, phone numbers) — no numeral + noun agreement system | 11, 39 | cardinals with nouns are A2 `:1271-1272` |
 | Locative: place | system | 29–30 | `:690-695` |
 | Accusative: direction, inanimate object, animate object | system | 31, 37, 40 | `:678-688` |
+| `про` + accusative with думати, мріяти | system (small) | 40, recycled 51 | `:687-688` |
 | Locative with months; accusative with days of the week | chunk at 23, recognised as system after 29 / 31 | 23 | `:678-695` |
+| Clock time `о / об` + locative ordinal | chunk at 22, recognised after 29 | 22 | — |
+| `грати у` + sport, `грати на` + instrument | chunk | 26 | — |
+| Date formulas (ordinal + month, both in the genitive) | **chunk only** | 23, 46 | genitive is A2 |
 | Vocative | system | 42 | `:697-699` |
 | Imperative, 2nd person singular and plural | system | 43 (first met as chunks at 33) | `:721-725` |
-| Coordination і / а / але; cause бо / тому що; що / де / коли clauses | system | 44–45 | `:741-747` |
+| Coordination і (й) / а / але; cause бо / тому що | system | 44 | `:741-747` |
+| Clauses with що, де / куди / звідки, коли | **not at A1** (A2 `:1408-1411`; коли B1 `:2406`) | — | v1 position 45 taught these; removed (D6) |
 | Past tense | system | 48–49 | `:713-714` |
 | Compound future (буду + infinitive) | system | 50–51 | `:715-717` |
 | A few perfective futures | chunk | 50–52 | `:718-719` |
 | Genitive (`у мене є`, `з України`, `без …`, quantities) | **chunk only** | 6, 34, 36, 39 | first systematic at A2 |
 | Dative (`мені подобається`, `мені … років`, `мені потрібен`) | **chunk only** | 11, 15, 54 | not allowed as grammar at A1 (mapping `:97-102`) |
 | Instrumental (`автобусом`, `з молоком`, `вітаю з …`) | **chunk only** | 32, 36, 46 | not allowed as grammar at A1 |
-| Verb aspect as a system; comparison of adjectives; 3rd-person imperative; full pronoun paradigms | **not at A1** | — | A2 |
+| Verb aspect as a system; comparison of adjectives; 3rd-person imperative; oblique forms of він / вона / воно / вони | **not at A1** | — | A2 (`:1245-1247` and following) |
 
 ## 4. Literacy phase (positions 1–4): honest inventory
 
@@ -88,10 +105,10 @@ notes), so neither is used as an authority until one is ingested.
 
 | Pos | Slug | Job | Inventory (letters / signs) | Est. lessons |
 | --- | --- | --- | --- | --- |
-| 1 | `sounds-letters-and-hello` | Hear and say first greetings; grasp звук vs літера, голосні vs приголосні; read and write the first letter group in syllables and short words | the six vowel letters for the six vowel sounds, then the first consonant group — **18 letters**: primer part 1 order А О У И М І Н В Л С К П Р Т Е Д З Б (ь, which the primer places before Б, is held for position 3) | 5 |
-| 2 | `reading-ukrainian` | Finish the alphabet; read words, then short sentences aloud | remaining **14 letters**: Г Ґ Ч Й Х Ж Ш Ї Я Ю Є Ц Щ Ф; the two-sound letters (Я Ю Є Ї) and Щ as the primer teaches them | 5 |
-| 3 | `special-signs` | Read and write words with ь, the apostrophe, дж / дз; hear hard vs soft | ь, апостроф, дж, дз; hard / soft contrast; Г vs Ґ consolidation | 4 |
-| 4 | `stress-and-melody` | Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и | наголос, інтонація; no new letters | 3 |
+| 1 | `sounds-letters-and-hello` | Hear and say first greetings; grasp звук vs літера, голосні vs приголосні; read and write the first letter group in syllables and short words | **13 letters**, primer part 1 order: А О У И М І Н В Л С К П Р | 5 |
+| 2 | `reading-ukrainian` | Read words, then short sentences aloud, with most of the alphabet | **12 letters**: Т Е Д З Б (end of primer part 1; ь, which the primer places before Б, is held for position 3), then Г Ґ Ч Й Х Ж Ш | 5 |
+| 3 | `special-signs` | Finish the alphabet; read and write words with the two-sound letters, ь, the apostrophe, дж / дз; hear hard vs soft | **8 letters**: Ї Я Ю Є Ц Щ Ф and ь; апостроф, дж, дз; hard / soft contrast. The alphabet in its dictionary order with the letter names; capital and small letters (`:571-572`) | 4 |
+| 4 | `stress-and-melody` | Use stress marks as a reading aid; statement vs question melody; first contact with unstressed е / и; recognise handwritten and italic letter shapes; divide words into syllables for line breaks | наголос, інтонація, склад і перенос (`:588`), писані літери (`:571`); no new letters | 3 |
 
 The module title and subtitle are generated from this inventory by the plan validator's `scope`
 block (schema §2 rule 5), so the v1 contradiction cannot recur.
@@ -109,13 +126,13 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | Pos | Slug | Phase | One-sentence job | Skills duty | L |
 | --- | --- | --- | --- | --- | --- |
 | 1–4 | *(see §4)* | A1.1 | Literacy | Li, W (copying, own name) | 17 |
-| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is | Li | 3 |
+| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions (`:485`) | Li | 3 |
 | 6 | `my-family` | A1.1 | Show a family photo and say who is who | W (captions) | 3 |
 | 7 | `checkpoint-first-contact` | A1.1 | Self-check: read aloud, greet, introduce yourself and family | R, W | 2 |
 | 8 | `things-have-gender` | A1.2 | Tell the gender of a noun and pick він / вона / воно, мій / моя / моє | — | 3 |
 | 9 | `what-is-it-like` | A1.2 | Describe a thing with an agreeing adjective | — | 3 |
 | 10 | `colors` | A1.2 | Name colours; soft-group adjectives | — | 2 |
-| 11 | `how-many` | A1.2 | Understand and say numbers for prices, age, phone numbers | Li (numbers by ear) | 3 |
+| 11 | `how-many` | A1.2 | Understand and say numbers for prices, age, phone numbers | Li (numbers by ear) | 4 |
 | 12 | `this-and-that` | A1.2 | Point at things: цей / той in three genders | — | 2 |
 | 13 | `many-things` | A1.2 | Go from one to many: nominative plural | — | 3 |
 | 14 | `checkpoint-my-world` | A1.2 | Self-check: describe, count, point | R | 2 |
@@ -127,29 +144,29 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 20 | `my-morning` | A1.3 | Describe a morning routine with reflexive verbs | W (short note) | 3 |
 | 21 | `checkpoint-actions` | A1.3 | Self-check: say what you do, want, ask | R | 2 |
 | 22 | `what-time` | A1.4 | Ask and tell the time | Li, R (timetable) | 3 |
-| 23 | `days-and-months` | A1.4 | Use days, months, seasons in set phrases | R (calendar) | 3 |
-| 24 | `weather` | A1.4 | Talk about the weather | Li (forecast) | 2 |
+| 23 | `days-and-months` | A1.4 | Use days, months, seasons and dates in set phrases | R (calendar) | 4 |
+| 24 | `weather` | A1.4 | Talk about the weather and the natural world around you: animals, plants, landscape (`:549-551`) | Li (forecast) | 3 |
 | 25 | `my-day` | A1.4 | Tell your day in order | W | 3 |
 | 26 | `free-time` | A1.4 | Talk about leisure; invite someone | W (SMS invitation) | 3 |
 | 27 | `checkpoint-time-nature` | A1.4 | Self-check: time, week plan, weather | R | 2 |
 | 28 | `euphony` | A1.5 | Choose у / в, і / й, з / із / зі | — | 2 |
-| 29 | `where-is-it` | A1.5 | Say where something is: locative | — | 4 |
+| 29 | `where-is-it` | A1.5 | Say where something is: locative of nouns with agreeing adjectives | — | 4 |
 | 30 | `my-city` | A1.5 | Name places in a city and say what is where | R (signs, map) | 3 |
 | 31 | `where-to` | A1.5 | Say where you are going: accusative of direction; де vs куди | — | 3 |
 | 32 | `transport` | A1.5 | Get around: transport phrases | R (tickets, stops), Li | 3 |
 | 33 | `around-the-city` | A1.5 | Ask for and follow directions | Li | 3 |
-| 34 | `where-from` | A1.5 | Say where you and things are from | W (form: country, city) | 2 |
+| 34 | `where-from` | A1.5 | Say where you and things are from; compass points; at the border (`:523-525`) | W (form: country, city; address an envelope `:361`) | 3 |
 | 35 | `checkpoint-places` | A1.5 | Self-check: find your way | R | 2 |
 | 36 | `food-and-drink` | A1.6 | Name food and drink; say what Ukrainians eat | R (menu) | 3 |
-| 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: accusative, inanimate | — | 3 |
+| 37 | `i-eat-i-drink` | A1.6 | Say what you eat and drink: accusative, inanimate, with agreeing adjectives | — | 3 |
 | 38 | `at-the-cafe` | A1.6 | Order and pay in a café | Li, R (menu, bill) | 3 |
-| 39 | `shopping` | A1.6 | Ask prices and buy things | R (price tags), Li | 3 |
-| 40 | `people-around-me` | A1.6 | Talk about people you see and know: accusative, animate | — | 3 |
+| 39 | `shopping` | A1.6 | Ask prices and buy things: food, toiletries, stationery; weight and volume (`:531-533`) | R (price tags), Li | 3 |
+| 40 | `people-around-me` | A1.6 | Talk about people you see, know and think about: accusative, animate; мене / тебе / нас / вас; `про` + accusative | — | 3 |
 | 41 | `checkpoint-food-shopping` | A1.6 | Self-check: order and buy | R | 2 |
-| 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 3 |
+| 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |
 | 43 | `please-do-this` | A1.7 | Ask someone to do something: imperative, ти and ви | R (signs, prohibitions) | 3 |
 | 44 | `linking-ideas` | A1.7 | Join ideas: і, а, але, бо, тому що | W | 2 |
-| 45 | `when-and-where` | A1.7 | Build first complex sentences with що, де, коли | — | 3 |
+| 45 | *(new slug; was `when-and-where`)* | A1.7 | Describe your home: kinds of housing, rooms, furniture, what is where (`:489-493`) — recycles locative, adjectives, цей / той | W (describe your room) | 3 |
 | 46 | `holidays` | A1.7 | Greet people on holidays; family and state holidays | W (postcard) | 3 |
 | 47 | `checkpoint-communication` | A1.7 | Self-check: address, ask, connect | R, W | 2 |
 | 48 | `what-happened` | A1.8 | Say what happened: past tense and gender | — | 4 |
@@ -161,31 +178,36 @@ Skills duty = the Standard skill the module must exercise beyond its language po
 | 54 | `emergencies` | A1.8 | Get help in an emergency | Li, R (signs) | 2 |
 | 55 | `a1-finale` | A1.8 | One full day in a Ukrainian city: everything together | all | 3 |
 
-**Sizing.** 158 lessons by this estimate. At roughly an hour each this is on the order of 158 learner hours
-for A1, against roughly 55–70 hours in v1. That is a consequence of R-01/R-02, not an accident;
-it is flagged in §6 because it changes what "finishing A1" means for a learner.
+**Sizing (operator, 2026-09-21): nothing is forced.** The lesson counts above are estimates for
+orientation only and total 161. A module gets the lessons its content needs — not compressed to hit
+a number, not stretched to fill one. The module plan decides the count; the plan review checks two
+things in both directions: no lesson that crams (too much new inventory for an hour) and no lesson
+that drags (a lesson whose job could be a step inside its neighbour). The reviewer's note that
+recap and checkpoint lessons are a large share of the total is a drag risk to watch: a short module
+may close with a recap *section* of its last lesson rather than a separate recap lesson, if the
+plan review agrees.
 
 **Theme coverage against the Standard's 12:** Людина 5–6 · Дім 8–9, 12 · Місто 29–33 · Побут 20, 25 ·
 Діяльність 15–18 · Дозвілля 26 · Подорожі 32–34 · Купівля 39 · Ресторан / кафе 36–38 ·
-Здоров'я 53–54 · Природне середовище 24 · Традиції / свята 46. *Дім / помешкання* is the thinnest:
-no module owns rooms and furniture; §6 asks whether position 9 or 30 should own it.
+Здоров'я 53–54 · Природне середовище 24 · Традиції / свята 46 · Дім / помешкання 45 (D6), with
+household objects already met at 9 and 12.
 
-## 6. Questions for the reviewer and the operator
+## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
 
-1. **Total size.** Is about 158 lessons the intended scale for A1, or should lessons per module be
-   held nearer two to three (about 120)?
-2. **Past and future at the very end.** ULP reaches past tense at lesson 26 of 40 and future at 28;
-   v1 keeps both for positions 48–51. Moving them earlier (after A1.5) would let modules 36–47 use
-   three tenses. It would also shift immersion bands, because positions change. Proposed: keep
-   positions for A1; reconsider when A2 is planned.
-3. **Accusative before or after locative.** ULP systematises the accusative (S1 L32–33) before the
-   locative (S2 L66–68); v1 does locative first (29), then accusative of direction (31), then object
-   accusative (37, 40). Proposed: keep v1's order — it follows the place → direction → object
-   thread of the city phase.
-4. **Cardinal numerals.** The Standard lists only ordinals at A1; ULP teaches cardinals in lesson 5
-   and a learner cannot shop without them. Proposed: cardinals as vocabulary, no agreement system
-   (§3), which is what v1 did.
-5. **Дім / помешкання** has no owner module. Proposed: give rooms and furniture to position 9 and
-   household objects to 12, no new position.
-6. **Letter order authority.** Proposed: Захарійчук, because it is in the corpus page by page. If
-   the Большакова primer is ingested later, the order is not reopened for A1.
+1. **Size:** flexible — see Sizing above. No target total.
+2. **Past and future stay at positions 48–51** for A1; the order is reconsidered when A2 is planned.
+3. **Locative before accusative:** place (29–30) → direction (31) → object (37, 40).
+4. **Cardinal numerals are vocabulary only;** no numeral + noun agreement system at A1.
+5. **Дім / помешкання** is owned by the re-targeted position 45 (D6); household objects are already
+   met at 9 and 12.
+6. **Letter order authority is Захарійчук,** the primer ingested page by page. It is not reopened for
+   A1 if another primer is ingested later.
+
+## 7. Follow-ups outside this document
+
+- `docs/l2-uk-en/state-standard-2024-mapping.yaml:126` wrongly attributes `що / де / коли` clauses to
+  A1, and `:84` lists `за`, `через` under the A1 accusative although the Standard first has them at
+  B1 (`:2205`). The mapping file is what the pipelines and the plan-review skill read, so it must be
+  corrected against the Standard text before any A1 module plan is reviewed.
+- `curriculum/l2-uk-en/plans/a1.yaml:34-40` and `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23` contradict
+  the Standard (genitive, five cases, cardinals 1–1000 as grammar); replaced by §3 here.
