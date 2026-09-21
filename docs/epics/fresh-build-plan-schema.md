@@ -3,7 +3,10 @@
 > Sub-epic #8397, child 3. Status: **design draft r2** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
 > `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
-> R-24…R-28, R-30, R-32, R-33, R-34 of [`fresh-build-requirements.md`](fresh-build-requirements.md). No code yet.
+> R-24…R-28, R-30, R-32, R-33, R-34, R-35 of [`fresh-build-requirements.md`](fresh-build-requirements.md).
+> **Revision 3 (2026-09-21):** §2a added — the semantics the plan validator needs, found while briefing
+> #8412 (a pre-dispatch critic showed that rules 1–7 could not be implemented without guessing). The
+> first code against this design is the arc data file (#8411, merged).
 
 ## 1. Three artifacts, one owner each
 
@@ -51,13 +54,13 @@ lessons:
     kind: teach                             # teach | practice | recap | checkpoint
     job: "One sentence: what the learner can do after this lesson that they could not before."
     rationale: "Why here, why in this order; what English speakers get wrong."   # replaces wiki prose
-    minutes: 60                             # plan estimate, not a gate
     word_target: <n>                        # minimum, per lesson (R-04). NOT v1's 1,200, which was a
                                             # whole module; lesson-grain values are calibrated from
                                             # the first built pilot, per level, then fixed in config
     inventory:
       phonetics: { letters: [А, О, У], sounds: [] }   # optional block; A1 letter modules only
-      grammar: []                           # named points, each traceable to an evidence id
+      grammar:                              # named points; ids are stable within the level (§2a)
+        - { id: G-a1-001, point: "One sentence naming the point.", evidence: [T-003] }
       vocabulary:
         core:                               # actively taught; enters learner state as "known"
           - lemma: мама
@@ -68,7 +71,10 @@ lessons:
         recycled: [ … ]                     # must already be core in learner state
     steps:                                  # textbook shape: theory step → practice, repeated (R-27)
       - id: s1
+        kind: teach                         # teach | recap (§2a)
         teach: "Point taught, in one sentence."
+        introduces: { letters: [А], grammar: [G-a1-001], vocabulary: [W-012] }   # §2a
+        uses: { grammar: [], vocabulary: [] }                                     # §2a
         evidence: [T-003, T-007]            # pack ids; every id must be used and cited (R-28)
         practice: [a1, a2]                  # activity ids below
       - id: s2
@@ -106,19 +112,80 @@ Rules the validator enforces (all deterministic):
    Checkpoint modules: all lessons `checkpoint`, no new inventory.
 2. The recap lesson has empty `inventory.vocabulary.core`, empty `phonetics` and `grammar`, and no `teach` steps that introduce material.
 3. Every `evidence` id exists in the locked pack; the pack hash matches `evidence_ref.sha256`.
+   Word ids (`W-…`) resolve in the shared level word store `evidence/<level>/_words.yaml`, which
+   has its own `.lock` (§7.2); every other id resolves in the module pack.
 4. Every `inventory.vocabulary.recycled` lemma and every grammar point used but not introduced is
    present in the learner state computed from the arc and earlier lessons.
 5. Union of lesson `core` inventories equals what the arc says this module introduces — nothing
-   more, nothing less. The plan carries a generated, structured `scope` block (letter count and
-   list, grammar points, core-lemma count) **derived from the lessons by the validator, never
-   typed**; the landing page renders its numbers from `scope`. Deterministic title check is
+   more, nothing less (limited today to what the arc carries as data — §2a). A generated,
+   structured `scope` (letter count and list, grammar points, core-lemma count) is **derived from
+   the lessons by the validator, never typed**, and kept as a sidecar file (§2a); the landing page
+   renders its numbers from it. Deterministic title check is
    limited to explicit quantities and enumerated letter lists found in `title`/`subtitle`, which
    must equal `scope` (a subtitle naming seven letters over lessons teaching 33 fails here).
    Broader "does the title describe the job" is judged in the cross-family plan review.
 6. Every `teach` step has at least one practice activity; activity types are in the level's
-   allowlist; inline/workbook counts meet the per-lesson minimums.
+   allowlist; inline/workbook counts meet the per-lesson minimums (uncalibrated today — §2a).
 7. No Ukrainian word form, stress or morphology appears in a plan except as a reference to a pack
    word record; every `forms` tag cited in a lesson must exist in that word record.
+
+### 2a. Semantics the validator needs (revision 3, 2026-09-21)
+
+Rules 1–7 above use words that were not yet mechanical. They are defined here; where a number or
+a data source does not exist yet, the validator **reports the rule as not checked** — it never
+passes silently and never invents a value.
+
+- **"Introduces" is declared, not inferred.** Every step has `kind: teach | recap`. A `teach` step
+  carries `introduces: { letters, grammar, vocabulary }` (ids, any list may be empty) and may carry
+  `uses: { grammar, vocabulary }`. A lesson's `inventory` must equal the union of its steps'
+  `introduces`: `phonetics.letters` ↔ letters, `grammar[].id` ↔ grammar, `vocabulary.core[].evidence`
+  ↔ vocabulary. An item introduced in two steps, or present in the inventory and in no step, fails.
+  A `recap` step has no `introduces`, or an empty one. "A recap lesson introduces nothing" (rule 2)
+  and "a final `recap` step that introduces nothing" (rule 1b) mean exactly this.
+- **Grammar points** are records `{ id, point, evidence }`. The id is `G-<level>-<nnn>`, unique
+  within the level and never reused; `point` is one English sentence; `evidence` lists pack ids.
+  "Used but not introduced" (rule 4) means: every id in any step's `uses.grammar`, and every id in
+  `uses.vocabulary` and `vocabulary.recycled`, must have been introduced in an earlier step of the
+  same lesson, an earlier lesson of the same plan, or a plan at an earlier arc position.
+- **Missing earlier plans fail closed.** If rule 4 needs the plan of an earlier position and that
+  file does not exist under `lesson-plans/<level>/`, validation fails with the missing positions
+  listed. `--allow-missing-prior` turns that failure into a printed, machine-readable waiver
+  (`waived: prior_plans_missing`) for pilots written out of order; a waived run is never reported
+  as a clean pass, and a plan may not be locked with a waiver.
+- **The arc side of rule 5 is limited by the arc's data.** The arc file carries structured
+  `letters` for the literacy positions and prose for everything else. Rule 5 therefore checks
+  `arc_ref`, the slug, and letter equality (and that non-literacy plans introduce no letters), and
+  reports `not_checked: arc_has_no_structured_grammar_or_vocabulary` until the arc gains such
+  fields. Lesson counts are not compared with the arc's estimate; the module plan decides.
+- **`scope` is a generated sidecar, never part of the hand-written plan:**
+  `lesson-plans/<level>/<slug>.scope.yaml`, written by `plan-validate --write-scope` and checked
+  byte-for-byte by `plan-validate` (the same generate-and-check pattern as `_arc.yaml`). It holds
+  the letter count and list, the grammar-point count and ids, and the core-lemma count. A `scope`
+  key inside the plan file fails. The landing page reads the sidecar.
+- **Title check.** Only ASCII-digit quantities and enumerated single letters in `title` and
+  `subtitle` are compared with `scope`. Quantities written as Ukrainian number words are not
+  parsed; the cross-family plan review covers them.
+- **`minutes` is not a plan field.** Decision 7.3 stands: it is computed. Until the constants it
+  needs exist (reading speed, per-type activity time), it is not computed either, and the
+  validator reports `not_checked: minutes_constants_undefined`. A `minutes` key in a plan fails.
+- **`word_target`** is a required positive integer per lesson. Its calibrated per-level minimum
+  does not exist until the first pilot is built; until then the validator checks presence and type
+  and reports `not_checked: word_target_not_calibrated`.
+- **Activity count minimums** at lesson grain are uncalibrated (§4): reported as
+  `not_checked: lesson_activity_minimums_not_calibrated`. The type allowlist is the set of
+  definitions in `schemas/activities-<level>.schema.json`, read at run time.
+- **Rule 7, precisely.** A plan names a word only as `{ lemma, evidence, forms }` where `evidence`
+  resolves to a word-store record, `lemma` equals that record's lemma, and every tag in `forms`
+  exists in that record. Cyrillic text is otherwise allowed only in the prose fields a reviewer
+  reads (`title`, `subtitle`, `job`, `rationale`, `teach`, `focus`, `use`, the `dialogue` text
+  fields and speaker names) and as single letters in `phonetics.letters` and `introduces.letters`.
+  A combining acute or grave accent (U+0301, U+0300) anywhere in a plan fails: stress lives in the
+  word store. Word forms quoted inside prose fields are not machine-checked; they are in scope for
+  the cross-family plan review, which checks them against the sources (R-35).
+- **A v1 plan** is any file without `plan_schema: 2`, or with a `content_outline` key. It is
+  rejected with a message saying v1 plans are not read or converted (§7.4).
+- **Failure and not-checked codes are a registry**, one constant per code in the validator
+  package, listed in its `--help`; tests assert the exact set of codes a fixture produces.
 
 ## 3. Evidence pack
 
@@ -216,7 +283,7 @@ the only place built content is an input, and only within the module being built
 
 | Gate | Checks |
 | --- | --- |
-| plan-validate | §2 rules 1–7 |
+| plan-validate | §2 rules 1–7 with the semantics of §2a; not-checked items are reported, never passed silently |
 | pack-verify | every quote matches its chunk; every word record re-verifies against current sources; every video URL answers |
 | coverage | every evidence id cited by the lesson plan appears in the lesson and in Ресурси |
 | inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses nothing outside planned learner state + this lesson's `core` and `incidental` |
