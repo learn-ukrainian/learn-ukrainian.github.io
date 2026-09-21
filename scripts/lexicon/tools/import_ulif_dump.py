@@ -31,42 +31,12 @@ def normalize_query(word: str) -> str:
 
 def ensure_target_schema(conn: sqlite3.Connection) -> None:
     """Ensure ulif_dictua_* tables exist in the target database."""
-    conn.execute("PRAGMA foreign_keys=ON")
-    conn.executescript(
-        """
-        CREATE TABLE IF NOT EXISTS ulif_dictua_raw_responses (
-            response_sha256 TEXT PRIMARY KEY,
-            body BLOB NOT NULL,
-            content_type TEXT NOT NULL DEFAULT 'text/html; charset=utf-8',
-            stored_at TEXT NOT NULL DEFAULT ''
-        );
+    try:
+        from scripts.wiki.sources_db import ensure_ulif_dictua_schema
+    except ImportError:
+        from wiki.sources_db import ensure_ulif_dictua_schema
 
-        CREATE TABLE IF NOT EXISTS ulif_dictua_entries (
-            id INTEGER PRIMARY KEY,
-            normalized_query TEXT NOT NULL UNIQUE,
-            canonical_headword TEXT NOT NULL DEFAULT '',
-            raw_response_ref TEXT NOT NULL DEFAULT '',
-            retrieved_at TEXT NOT NULL DEFAULT '',
-            response_sha256 TEXT NOT NULL DEFAULT '',
-            parser_version TEXT NOT NULL DEFAULT '',
-            status TEXT NOT NULL CHECK (status IN ('ok', 'not_found', 'transient_error', 'parse_error'))
-        );
-        CREATE INDEX IF NOT EXISTS idx_ulif_dictua_entries_status
-            ON ulif_dictua_entries(status, normalized_query);
-
-        CREATE TABLE IF NOT EXISTS ulif_dictua_sections (
-            id INTEGER PRIMARY KEY,
-            entry_id INTEGER NOT NULL REFERENCES ulif_dictua_entries(id) ON DELETE CASCADE,
-            kind TEXT NOT NULL CHECK (kind IN ('paradigm', 'synonyms', 'antonyms', 'phraseology')),
-            source_order INTEGER NOT NULL CHECK (source_order >= 0),
-            sense_or_group_id TEXT NOT NULL DEFAULT '',
-            payload_json TEXT NOT NULL,
-            UNIQUE(entry_id, kind, source_order)
-        );
-        CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
-            ON ulif_dictua_sections(entry_id, kind, source_order);
-        """
-    )
+    ensure_ulif_dictua_schema(conn)
     conn.commit()
 
 
@@ -79,11 +49,12 @@ def import_batch(
 ) -> dict[str, int]:
     """Import new or updated entries from dump_db to target_db."""
     # Find existing entries in target to skip identical ones
-    existing_records = dict(
-        target_conn.execute(
-            "SELECT normalized_query, retrieved_at FROM ulif_dictua_entries"
-        ).fetchall()
-    )
+    existing_records = {
+        (row[0], row[1]): row[2]
+        for row in target_conn.execute(
+            "SELECT normalized_query, homonym_index, retrieved_at FROM ulif_dictua_entries"
+        )
+    }
 
     query = (
         "SELECT lemma, canonical_headword, status, retrieved_at, "
@@ -116,7 +87,7 @@ def import_batch(
             tally["skipped"] += 1
             continue
 
-        existing_retrieved = existing_records.get(normalized)
+        existing_retrieved = existing_records.get((normalized, 1))
         if existing_retrieved and existing_retrieved == retrieved_at:
             tally["skipped"] += 1
             continue
@@ -166,15 +137,17 @@ def import_batch(
             status,
             sections_dict,
         ) in entries_to_insert:
-            is_new = normalized not in existing_records
+            is_new = (normalized, 1) not in existing_records
             target_conn.execute(
                 """
                 INSERT INTO ulif_dictua_entries
-                    (normalized_query, canonical_headword, raw_response_ref,
+                    (normalized_query, homonym_index, canonical_headword, grammatical_label,
+                     content_sha256, register_position, homonym_checked, raw_response_ref,
                      retrieved_at, response_sha256, parser_version, status)
-                VALUES (?, ?, ?, ?, ?, ?, ?)
-                ON CONFLICT(normalized_query) DO UPDATE SET
+                VALUES (?, 1, ?, '', ?, '', 0, ?, ?, ?, ?, ?)
+                ON CONFLICT(normalized_query, homonym_index) DO UPDATE SET
                     canonical_headword = excluded.canonical_headword,
+                    content_sha256 = excluded.content_sha256,
                     raw_response_ref = excluded.raw_response_ref,
                     retrieved_at = excluded.retrieved_at,
                     response_sha256 = excluded.response_sha256,
@@ -184,6 +157,7 @@ def import_batch(
                 (
                     normalized,
                     canonical_headword,
+                    digest,
                     raw_ref,
                     retrieved_at,
                     digest,
@@ -192,7 +166,10 @@ def import_batch(
                 ),
             )
             entry_row = target_conn.execute(
-                "SELECT id FROM ulif_dictua_entries WHERE normalized_query = ?",
+                """
+                SELECT id FROM ulif_dictua_entries
+                WHERE normalized_query = ? AND homonym_index = 1
+                """,
                 (normalized,),
             ).fetchone()
             if not entry_row:
