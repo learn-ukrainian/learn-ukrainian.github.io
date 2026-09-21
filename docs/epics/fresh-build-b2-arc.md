@@ -1,7 +1,9 @@
 # Fresh lesson-based build — B2 arc (module grain)
 
-> Sub-epic #8397, issue #8427. Status: **draft r1 — not yet reviewed, not yet accepted** (by the
-> curriculum-upgrade driver, 2026-09-21). Same method and table format as the accepted A1, A2 and B1
+> Sub-epic #8397, issue #8427. Status: **draft r2 — reviewed, not yet accepted by the operator** (by the
+> curriculum-upgrade driver, 2026-09-21). r1 was reviewed by AGY `gemini-3.8-flash-high` (task
+> `plan-review-8427-b2-arc-r1`): APPROVE with one MAJOR (position 63 crammed) and four MINOR findings;
+> r2 folds in all five. Same method and table format as the accepted A1, A2 and B1
 > arcs ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md),
 > [`fresh-build-a2-arc.md`](fresh-build-a2-arc.md),
 > [`fresh-build-b1-arc.md`](fresh-build-b1-arc.md)); requirements:
@@ -25,8 +27,8 @@ error recorded in the B1 arc (D3 there).
 | State Standard 2024, B1, C1, C2 | same file, `:1434-2450`, `:3481-4601`, `:4602-` | what B2 **receives** (the B1 catalogue, read for the comparison in §3) and what the Standard places **after** B2: rhetorical questions at C1 (`:4596`), authorial neologisms at C2 (`:5689`) — see D4 |
 | The accepted B1 arc | `docs/epics/fresh-build-b1-arc.md` D3 and the last row of §3 | what B1 **hands over**: the passive system, impersonal sentences, possessive adjectives as a declined system, diminutives as a system, text-structuring parentheticals as a system. B1 positions 30 and 49 were recognition only |
 | ULP | `data/sources.db` `textbook_sections`: six files, `ulp-1-00-lesson-notes` … `ulp-6-00-lesson-notes`, 40 lessons each; **the corpus holds nothing after lesson 240** | **there is no ULP schedule for B2** (D0): Seasons 4–6 are the B1 arc's evidence. What ULP still fixes is the lesson shape, and it is the R-32 evidence for the items of D4. Measured with stress marks removed (U+0301, U+0300): phraseology terms in 96 lessons (Seasons 3–6), proverbs in 46 (Seasons 2–6), synonyms in 43, word order and inversion in 8, abbreviations in 6, rhetorical questions in 2, neologisms in 2, borrowings in 2, collective or fractional numerals in 1, the pluperfect in **0**, parcelling in **0** |
-| School textbooks in the corpus | `data/sources.db` `textbooks`, subject `ukrmova`, grades 8–11: Авраменко 8 (2025), Заболотний 8 (2025), Авраменко 9 (2017), Авраменко 10 (2018), Глазова 10 (2018), Караман 10 (2018), Авраменко 11 (2019), Глазова 11 (2019) | the **grammar order and wording** of B2 (D0). Chunks that use the term, by grade: one-member sentences 8 → 75; detached members 8 → 65, 11 → 26; parenthetical words 8 → 35, 11 → 25; impersonal sentences 8 → 20, 10 → 11, 11 → 12; asyndetic complex sentences 9 → 25, 11 → 18; passive 10 → 14, 11 → 30; style 10 → 227, 11 → 156; phraseology 10 → 108; synonyms 10 → 92; numerals 6 → 109, 10 → 45, 11 → 33; possessive adjectives 6 → 15, 10 → 11, 11 → 8. The pluperfect occurs in **no** school textbook chunk (only in 12 university-level chunks); parcelling in one grade-11 chunk |
-| Live immersion policy | `scripts/config.py` `IMMERSION_POLICIES["default"]`, band `b2+`; `LEVEL_CONFIG["b2"]["immersion_range"] = [1.0, 1.0]` | one band, 100 % Ukrainian, sentences of at most 35 words. Carried over unchanged (R-30) |
+| School textbooks in the corpus | `data/sources.db` `textbooks`, subject `ukrmova`, grades 8–11: Авраменко 8 (2025), Заболотний 8 (2025), Авраменко 9 (2017), Авраменко 10 (2018), Глазова 10 (2018), Караман 10 (2018), Авраменко 11 (2019), Глазова 11 (2019) | the **grammar order and wording** of B2 (D0). Chunks that use the term, by grade: one-member sentences 8 → 75; detached members 8 → 65, 11 → 26; parenthetical words 8 → 35, 11 → 25; impersonal sentences 8 → 20, 10 → 11, 11 → 12; asyndetic complex sentences 9 → 25, 11 → 18; passive 10 → 14, 11 → 30; style 10 → 227, 11 → 156; phraseology 10 → 108; synonyms 10 → 92; numerals 6 → 109, 10 → 45, 11 → 33; possessive adjectives 6 → 15, 10 → 11, 11 → 8. The pluperfect occurs in **no** school textbook chunk (only in 12 university-level chunks); parcelling in one grade-11 chunk. These are counts of chunks whose lower-cased text contains the term's stem; the reviewer, using its own stems, confirmed the zeros and the grade distribution and got counts within about a tenth of these. They show where the textbooks treat a topic; nothing in this arc is sized from them |
+| Live immersion policy | `scripts/config.py` `IMMERSION_POLICIES["default"]`, band `b2+`; `TRACK_CONFIG["b2"]["immersion_range"] = [1.0, 1.0]` | one band, 100 % Ukrainian, sentences of at most 35 words. Carried over unchanged (R-30) |
 | Current B2 manifest | `curriculum/l2-uk-en/curriculum.yaml`, level `b2`: 93 modules in 9 groups | the slugs and positions this arc keeps (D1). The 93 v1 plans under `curriculum/l2-uk-en/plans/b2/` were read for their titles only, to learn what each slug was meant to be; they are **not** an input to any plan, pack or lesson (R-11) |
 
 ## 2. Decisions
@@ -217,7 +219,7 @@ current manifest.
 | 9 | `active-participles-present` | B2.0 | Recognise present active participles and use the constructions Ukrainian prefers instead (D4) | R | 2 |
 | 10 | `checkpoint-passive-voice` | B2.0 | Self-check: report events without naming the doer, in the right style | R, W | 2 |
 | 11 | `active-participles-past` | B2.1 | Recognise and form past active participles — a short step up from B1 position 65 | R | 2 |
-| 12 | `participles-vs-relative-clauses` | B2.1 | Choose between a participle phrase and a clause with `який`, `котрий`, `що` in any case; describe a person's looks, character, habits and aims (`:2882-2883`) | W (detailed description of a person `:2674`) | 3 |
+| 12 | `participles-vs-relative-clauses` | B2.1 | Choose between a participle phrase and an attributive clause — `котрий` and `що` appear here only as alternatives to a participle; the clause system is 65's; describe a person's looks, character, habits and aims (`:2882-2883`) | W (detailed description of a person `:2674`) | 3 |
 | 13 | `zdorovya-i-medytsyna` | B2.1 | Talk about diagnostics, emergency help, addictions, folk and conventional medicine (`:2964-2967`) | Li, R (description of a medicine `:2588-2589`), S (patient) | 4 |
 | 14 | `phrases-word-combinations` | B2.1 | Get agreement and government right: which case a verb, a noun or an adjective requires | — | 3 |
 | 15 | `predicate-types` | B2.1 | Build simple and compound predicates, the compound nominal predicate included (`:3173-3174`, `:3252-3253`) | — | 3 |
@@ -264,11 +266,11 @@ current manifest.
 | 56 | `pluperfect-tense` | B2.5 | Recognise and understand the pluperfect in literary texts (D4) | R | 2 |
 | 57 | `conditional-mood-particles` | B2.5 | Use the conditional for politeness, wish, advice and hypothesis (`:2830`, `:3323-3324`) | S | 3 |
 | 58 | `numeral-declension-time-dates` | B2.5 | Say and write any time and date in any case (`:3132-3144`) | Li (dates and times by ear) | 3 |
-| 59 | `numeral-declension-compound-numbers` | B2.5 | Decline cardinals from 5 to 100 and compound cardinals (`:3145-3149`) | R (statistics in an article) | 5 |
+| 59 | `numeral-declension-compound-numbers` | B2.5 | Decline cardinals from 5 to 100 and compound cardinals (`:3145-3149`); the five lessons are for these alone — collective and fractional numerals, if the pack admits them (D4), get a lesson beyond the five | R (statistics in an article) | 5 |
 | 60 | `word-formation-person-suffixes` | B2.5 | Form and understand names of people by what they do (`:3356-3357`) | — | 3 |
 | 61 | `word-formation-abstract-nouns` | B2.5 | Form activity nouns with a suffix and with a zero suffix, and abstract nouns (`:3359-3364`) | R (scientific article `:2681`) | 3 |
 | 62 | `word-formation-place-object-names` | B2.5 | Form and understand names of places by what happens there (`:3366-3367`) | — | 2 |
-| 63 | `word-formation-adjective-adverbs` | B2.5 | Form and **decline** possessive adjectives; decline compound adjectives; form adjectives from nouns and adverbs from adjectives (`:3121-3129`, `:3369-3373`) | R | 5 |
+| 63 | `word-formation-adjective-adverbs` | B2.5 | Form and **decline** possessive adjectives — at least three lessons of their own: formation, singular, plural; decline compound adjectives; recycle adjectives from nouns and adverbs from adjectives (`:3121-3129`, `:3369-3373`) | R | 7 |
 | 64 | `advanced-conjunctions-i` | B2.6 | Join clauses as equals with the full conjunction set | — | 2 |
 | 65 | `advanced-conjunctions-ii` | B2.6 | Build every subordinate clause type the Standard lists, with `котрий`, `що` and `доки` (`:3422-3445`) | W (report or essay with reasoning `:2647-2649`) | 4 |
 | 66 | `checkpoint-morphology` | B2.6 | Self-check: verbs, numerals, word formation, conjunctions | R, W | 2 |
@@ -301,11 +303,12 @@ current manifest.
 | 93 | `b2-final-exam` | B2.8 | Take a practice exam in the four skills at the Standard's B2 sizes: listening of up to 700 words, writing of 150–200 words, a dialogue of 12–15 turns, a talk before an audience | all | 3 |
 
 **Sizing (operator, 2026-09-21): nothing is forced.** The lesson counts above are estimates for
-orientation only and total 296. A module gets the lessons its content needs — not compressed to hit
+orientation only and total 298. A module gets the lessons its content needs — not compressed to hit
 a number, not stretched to fill one. The module plan decides the count; the plan review checks both
 directions, cramming and dragging. Places where this arc expects the plan review to look hard: 14–16, which carry the school-grammar
-frame, and 47–51, whose case meanings are almost all B1's (D2) — both could drag; 63, which carries
-three of D3's additions, could cram.
+frame, and 47–51, whose case meanings are almost all B1's (D2) — both could drag, as could 57, where only uses are new; 63 was raised from five lessons to seven after the r1 review found
+it crammed, and possessive adjectives may not shrink to a mention there; 59, 33 and 35 are the next
+candidates for cramming.
 
 ## 6. Coverage against the Standard's catalogues
 
@@ -347,8 +350,8 @@ Each has the driver's proposal; the arc is written to the proposals.
 3. **The pluperfect (56).** The Standard lists it at no level, ULP never teaches it and no school
    textbook in the corpus has it. Proposal: keep the slug as a two-lesson recognition module.
    Alternative: drop it from B2 and leave it to C1.
-4. **Possessive adjectives are owned by 63** and get lessons of their own there, instead of a new
-   position. Proposal: yes.
+4. **Possessive adjectives are owned by 63** and get at least three lessons of their own there,
+   instead of a new position. Proposal: yes. The reviewer agreed and asked for the larger estimate.
 5. **Collective and fractional numerals (59)** are taught only if the evidence pack shows from the
    corpus that a B2 reader meets them often. Proposal: yes.
 
