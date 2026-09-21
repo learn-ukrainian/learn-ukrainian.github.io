@@ -5,7 +5,7 @@
 > verified findings 1 and 3 against the Standard text and folded all nine in. **r3:** operator ruled
 > the Standard is a minimum and ULP is the schedule (D0); position 45 restored on ULP evidence (D6). Requirements: [`fresh-build-requirements.md`](fresh-build-requirements.md);
 > schema: [`fresh-build-plan-schema.md`](fresh-build-plan-schema.md). This document becomes
-> `curriculum/l2-uk-en/plans/a1/_arc.yaml` once accepted. It contains no Ukrainian word facts
+> `curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml` once accepted. It contains no Ukrainian word facts
 > beyond module titles already published in the reviewed v1 plans; every form, stress and example
 > is settled later, in the evidence packs, by tools and the language lanes.
 

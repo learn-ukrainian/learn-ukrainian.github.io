@@ -9,9 +9,22 @@
 
 | Artifact | Path | Owns | Does not own |
 | --- | --- | --- | --- |
-| **Level arc** | `curriculum/l2-uk-en/plans/<level>/_arc.yaml` | module order, one-sentence job per module, the progression table (letters/sounds, grammar, vocabulary themes), learner-position checkpoints | lesson detail |
-| **Module plan** (schema v2) | `curriculum/l2-uk-en/plans/<level>/<slug>.yaml` | `lessons[]`: each lesson's job, inventory, steps, activities, videos, rationale, targets | source text, word facts |
+| **Level arc** | `curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml` | module order, one-sentence job per module, the progression table (letters/sounds, grammar, vocabulary themes), learner-position checkpoints | lesson detail |
+| **Module plan** (schema v2) | `curriculum/l2-uk-en/lesson-plans/<level>/<slug>.yaml` | `lessons[]`: each lesson's job, inventory, steps, activities, videos, rationale, targets | source text, word facts |
 | **Evidence pack** | `curriculum/l2-uk-en/evidence/<level>/<slug>.yaml` + `.lock` (sha256), plus the shared level word store `evidence/<level>/_words.yaml` | the frozen source material and verified word records that lessons cite by id | sequence, pedagogy decisions |
+
+**Why `lesson-plans/` and not `plans/`.** `curriculum/l2-uk-en/plans/<level>/` already holds the
+old-format plans — for A1, 55 files whose names equal all 55 slugs of the new arc — and §7.4 keeps
+them on disk unconverted. Seven existing tools also read every `*.yaml` in that directory as an
+old-format plan (`scripts/build/vocab_gen.py`, `scripts/build/plan_tracking.py`,
+`scripts/generate_mdx/generate_objectives.py`, `scripts/generate_mdx/generate_plan_markdown.py`,
+`scripts/rewrite_activity_hints.py`, `scripts/tools/fix_plans_phase1.py`,
+`scripts/tools/enrich_summary_points.py`). The new artifacts therefore live under their own root,
+named for what it holds rather than for a schema version. Rules that follow: the new validator
+and every new reader are scoped to `lesson-plans/` and refuse files outside it; any lookup of "the
+plan for slug X" takes the root explicitly and never searches both; the evidence-to-plan join by
+slug names `lesson-plans/` explicitly. (Found 2026-09-21 while implementing #8411; decided on the
+sanctioned design consult recorded on #8397.)
 
 Sequence exists in exactly one place (the plan). Facts exist in exactly one place (the pack). That
 is the structural answer to the Module 1 failure, where plan, derived lesson map and content each
