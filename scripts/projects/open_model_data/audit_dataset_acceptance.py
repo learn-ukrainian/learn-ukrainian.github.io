@@ -226,7 +226,7 @@ def parse_bool(value: Any) -> bool | None:
 class LinguisticNormalizer:
     """VESUM lemmatizer and curated verbal aspect pair normalizer."""
 
-    def __init__(self, vesum_db_path: Path, aspect_pairs_path: Path | None = None):
+    def __init__(self, vesum_db_path: Path, aspect_pairs_path: Path | None = ASPECT_PAIRS_FILE):
         self.vesum_db_path = vesum_db_path
         if not self.vesum_db_path.is_file():
             raise FileNotFoundError(f"VESUM database missing: {vesum_db_path}")
@@ -239,7 +239,6 @@ class LinguisticNormalizer:
         self._conn = sqlite3.connect(f"file:{self.vesum_db_path}?mode=ro", uri=True)
         self._cur = self._conn.cursor()
         self._lemma_cache: dict[str, list[dict[str, str]]] = {}
-        self.common_prefixes = ["з", "с", "по", "на", "про", "ви", "за", "пере", "до", "під", "від"]
 
     def lookup_form(self, word: str) -> list[dict[str, str]]:
         w = word.strip().lower()
@@ -252,19 +251,10 @@ class LinguisticNormalizer:
         return results
 
     def normalize_verb_aspect(self, lemma: str, tags: str) -> str:
-        """Map perfective/imperfective partners to their canonical base."""
+        """Map perfective/imperfective partners to their canonical base using curated pairs."""
         low_lemma = lemma.lower()
         if low_lemma in self.aspect_pairs:
             return self.aspect_pairs[low_lemma]
-
-        if ":perf:" in tags:
-            for p in self.common_prefixes:
-                if low_lemma.startswith(p) and len(low_lemma) - len(p) >= 4:
-                    stem = low_lemma[len(p) :]
-                    analyses = self.lookup_form(stem)
-                    for an in analyses:
-                        if an["pos"] == "verb" and ":imperf:" in an["tags"]:
-                            return stem
         return low_lemma
 
     def get_canonical_tokens(self, text: str) -> list[str]:
@@ -334,10 +324,16 @@ def _load_profile_chain(
     return thresholds, chain_bytes
 
 
-def load_profile(profile_name: str, profiles_dir: Path = PROFILES_DIR) -> tuple[dict[str, Any], str]:
+def load_profile(
+    profile_name: str,
+    profiles_dir: Path = PROFILES_DIR,
+    aspect_pairs_file: Path = ASPECT_PAIRS_FILE,
+) -> tuple[dict[str, Any], str]:
     """Load and resolve profile YAML; return thresholds and composite SHA-256 hash."""
     visited: set[str] = set()
     thresholds, chain_bytes = _load_profile_chain(profile_name, profiles_dir, visited)
+    if aspect_pairs_file.is_file():
+        chain_bytes.append(b"\n---ASPECT_PAIRS---\n" + aspect_pairs_file.read_bytes())
     composite_sha256 = hashlib.sha256(b"\n---CHAIN---\n".join(chain_bytes)).hexdigest()
     return thresholds, composite_sha256
 
@@ -359,10 +355,13 @@ def parse_dataset_record(
     # Determine split:
     # 1. Explicit record field
     explicit_split = str(raw.get("split", "")).strip().lower()
-    if explicit_split in ("eval", "test", "validation", "val"):
-        split = "eval"
-    elif explicit_split in ("train", "training"):
-        split = "train"
+    if explicit_split:
+        if explicit_split in ("eval", "test", "validation", "val", "dev", "evaluation"):
+            split = "eval"
+        elif explicit_split in ("train", "training"):
+            split = "train"
+        else:
+            raise ValueError(f"Unknown split {explicit_split!r} in line {line_number} of {file_path.name}")
     elif manifest_splits and file_path.name in manifest_splits:
         split = manifest_splits[file_path.name]
     else:
@@ -372,8 +371,8 @@ def parse_dataset_record(
         )
         rel_parts = [p.lower() for p in rel_path.parent.parts]
         stem = rel_path.stem.lower()
-        if any(p in ("eval", "evaluation", "test", "val", "validation") for p in rel_parts) or re.search(
-            r"(?:^|[_\-.])(eval|test|val|validation)(?:[_\-.]|$)", stem
+        if any(p in ("eval", "evaluation", "test", "val", "validation", "dev") for p in rel_parts) or re.search(
+            r"(?:^|[_\-.])(eval|evaluation|test|val|validation|dev)(?:[_\-.]|$)", stem
         ):
             split = "eval"
         else:
@@ -387,8 +386,12 @@ def parse_dataset_record(
 
     if "messages" in raw and isinstance(raw["messages"], list):
         for msg in raw["messages"]:
+            if not isinstance(msg, dict):
+                raise TypeError(
+                    f"Message item in line {line_number} of {file_path.name} is not a JSON object: {type(msg).__name__}"
+                )
             role = msg.get("role")
-            content = msg.get("content", "")
+            content = str(msg.get("content", ""))
             if role == "user" and not query:
                 query = content
             elif role == "assistant":
@@ -553,12 +556,14 @@ def audit_check_2_form_letters(records: list[DatasetRecord], thresholds: dict[st
     max_q_top5 = thresholds.get("max_query_top5_share", 0.80)
     min_q_k = thresholds.get("min_query_unique_skeletons", 20)
     min_q_entropy = thresholds.get("min_query_entropy", 0.60)
-    if total >= 1000 and q_stats["top5"] > max_q_top5:
-        failures.append(f"Query top 5 patterns cover {q_stats['top5']:.1%}, exceeding limit {max_q_top5:.1%}")
-    if total >= 1000 and q_stats["K"] < min_q_k:
-        failures.append(f"Query unique patterns K={q_stats['K']} is below limit {min_q_k}")
-    if q_stats["K"] >= 10 and q_stats["entropy"] < min_q_entropy:
-        failures.append(f"Query normalized entropy {q_stats['entropy']} is below floor {min_q_entropy}")
+    if total >= 20:
+        if total >= 50 and q_stats["top5"] > max_q_top5:
+            failures.append(f"Query top 5 patterns cover {q_stats['top5']:.1%}, exceeding limit {max_q_top5:.1%}")
+        effective_min_q_k = min(min_q_k, max(3, total // 5))
+        if q_stats["K"] < effective_min_q_k:
+            failures.append(f"Query unique patterns K={q_stats['K']} is below limit {effective_min_q_k}")
+        if q_stats["entropy"] < min_q_entropy:
+            failures.append(f"Query normalized entropy {q_stats['entropy']} is below floor {min_q_entropy}")
 
     # Reasoning limits
     if has_reasoning:
@@ -568,26 +573,28 @@ def audit_check_2_form_letters(records: list[DatasetRecord], thresholds: dict[st
         min_r_perp = thresholds.get("min_reasoning_perplexity", 25.0)
         min_r_entropy = thresholds.get("min_reasoning_entropy", 0.80)
         min_r_k = thresholds.get("min_reasoning_unique_skeletons", 50)
+        r_total = sum(1 for r in records if r.reasoning_text)
 
-        if total >= 1000:
-            if r_stats["top1"] > max_r_top1:
+        if r_total >= 10:
+            if r_total >= int(1.0 / max_r_top1) and r_stats["top1"] > max_r_top1:
                 failures.append(
                     f"Reasoning top 1 pattern covers {r_stats['top1']:.1%}, exceeding limit {max_r_top1:.1%}"
                 )
-            if r_stats["top20"] > max_r_top20:
-                failures.append(
-                    f"Reasoning top 20 patterns cover {r_stats['top20']:.1%}, exceeding limit {max_r_top20:.1%}"
-                )
-            if r_stats["top5"] > max_r_top5:
+            if r_total >= 20 and r_stats["top5"] > max_r_top5:
                 failures.append(
                     f"Reasoning top 5 patterns cover {r_stats['top5']:.1%}, exceeding limit {max_r_top5:.1%}"
                 )
-            if r_stats["perplexity"] < min_r_perp:
+            if r_total >= 40 and r_stats["top20"] > max_r_top20:
+                failures.append(
+                    f"Reasoning top 20 patterns cover {r_stats['top20']:.1%}, exceeding limit {max_r_top20:.1%}"
+                )
+            if r_total >= 50 and r_stats["perplexity"] < min_r_perp:
                 failures.append(f"Reasoning perplexity {r_stats['perplexity']} is below floor {min_r_perp}")
-            if r_stats["K"] < min_r_k:
-                failures.append(f"Reasoning unique patterns K={r_stats['K']} is below floor {min_r_k}")
-        if r_stats["K"] >= 10 and r_stats["entropy"] < min_r_entropy:
-            failures.append(f"Reasoning normalized entropy {r_stats['entropy']} is below floor {min_r_entropy}")
+            effective_min_r_k = min(min_r_k, max(5, r_total // 10))
+            if r_total >= 20 and r_stats["K"] < effective_min_r_k:
+                failures.append(f"Reasoning unique patterns K={r_stats['K']} is below floor {effective_min_r_k}")
+            if r_total >= 20 and r_stats["entropy"] < min_r_entropy:
+                failures.append(f"Reasoning normalized entropy {r_stats['entropy']} is below floor {min_r_entropy}")
 
     # Answer limits
     max_a_top1 = thresholds.get("max_answer_top1_share", 0.05)
@@ -597,19 +604,20 @@ def audit_check_2_form_letters(records: list[DatasetRecord], thresholds: dict[st
     min_a_entropy = thresholds.get("min_answer_entropy", 0.80)
     min_a_k = thresholds.get("min_answer_unique_skeletons", 50)
 
-    if total >= 1000:
-        if a_stats["top1"] > max_a_top1:
+    if total >= 10:
+        if total >= int(1.0 / max_a_top1) and a_stats["top1"] > max_a_top1:
             failures.append(f"Answer top 1 pattern covers {a_stats['top1']:.1%}, exceeding limit {max_a_top1:.1%}")
-        if a_stats["top20"] > max_a_top20:
-            failures.append(f"Answer top 20 patterns cover {a_stats['top20']:.1%}, exceeding limit {max_a_top20:.1%}")
-        if a_stats["top5"] > max_a_top5:
+        if total >= 35 and a_stats["top5"] > max_a_top5:
             failures.append(f"Answer top 5 patterns cover {a_stats['top5']:.1%}, exceeding limit {max_a_top5:.1%}")
-        if a_stats["perplexity"] < min_a_perp:
+        if total >= 67 and a_stats["top20"] > max_a_top20:
+            failures.append(f"Answer top 20 patterns cover {a_stats['top20']:.1%}, exceeding limit {max_a_top20:.1%}")
+        if total >= 50 and a_stats["perplexity"] < min_a_perp:
             failures.append(f"Answer perplexity {a_stats['perplexity']} is below floor {min_a_perp}")
-        if a_stats["K"] < min_a_k:
-            failures.append(f"Answer unique patterns K={a_stats['K']} is below floor {min_a_k}")
-    if a_stats["K"] >= 10 and a_stats["entropy"] < min_a_entropy:
-        failures.append(f"Answer normalized entropy {a_stats['entropy']} is below floor {min_a_entropy}")
+        effective_min_a_k = min(min_a_k, max(5, total // 10))
+        if total >= 20 and a_stats["K"] < effective_min_a_k:
+            failures.append(f"Answer unique patterns K={a_stats['K']} is below floor {effective_min_a_k}")
+        if total >= 20 and a_stats["entropy"] < min_a_entropy:
+            failures.append(f"Answer normalized entropy {a_stats['entropy']} is below floor {min_a_entropy}")
 
     return CheckResult(
         check_id="check_2_form_letters",
@@ -842,13 +850,15 @@ def audit_check_5_source_rules(records: list[DatasetRecord], thresholds: dict[st
     for r in records:
         meta_str = str(r.source_metadata or "").lower()
         full_text = f"{r.query} {r.reasoning_text} {r.final_response} {r.chosen or ''} {r.rejected or ''}".lower()
+        authorities = _extract_authorities(r.source_metadata, r.raw)
+        all_sources_lower = [meta_str] + [a.lower() for a in authorities]
 
         # 1. Check for contrastive notes
         contrastive_note = r.raw.get("historical_suppression_note") or r.raw.get("soviet_colonization_context")
         is_contrastive_context = bool(contrastive_note and str(contrastive_note).strip())
 
-        # Check for СУМ-11 cited as normative authority
-        has_sum11_in_meta = any(alias in meta_str for alias in SOVIET_SUM11_ALIASES)
+        # Check for СУМ-11 cited in metadata, authorities, or affirmative body text
+        has_sum11_in_sources = any(any(alias in s for alias in SOVIET_SUM11_ALIASES) for s in all_sources_lower)
         has_affirmative_citation = bool(
             re.search(
                 r"\b(?:згідно з|за|відповідно до|у|в)\s+(?:сум[- ]?11|словник[уі]\s+української\s+мови\s+(?:\(1970|в\s+11))\b",
@@ -857,7 +867,7 @@ def audit_check_5_source_rules(records: list[DatasetRecord], thresholds: dict[st
             or re.search(r"\b(?:сум[- ]?11|словник\s+1970[-–]1980)\s+(?:фіксує|подає|визначає|зазначає)\b", full_text)
         )
 
-        if (has_sum11_in_meta or has_affirmative_citation) and not is_contrastive_context:
+        if (has_sum11_in_sources or has_affirmative_citation) and not is_contrastive_context:
             sum11_normative_hits.append(f"Line {r.line_number}: cites Soviet СУМ-11 as normative authority")
 
         # 2. Check for negative inference from СУМ-11 absence
@@ -868,28 +878,40 @@ def audit_check_5_source_rules(records: list[DatasetRecord], thresholds: dict[st
                 f"Line {r.line_number}: claims word is wrong/rare because absent from СУМ-11"
             )
 
-        # 3. Check for bilingual translation dictionaries
-        for trans_id in TRANSLATION_DICT_IDS:
-            if trans_id in meta_str:
-                translation_dict_hits.append(f"Line {r.line_number}: sourced from translation dictionary '{trans_id}'")
+        # 3. Check for bilingual translation dictionaries across metadata and authorities
+        for s in all_sources_lower:
+            matched_trans = None
+            for trans_id in TRANSLATION_DICT_IDS:
+                if trans_id in s:
+                    matched_trans = trans_id
+                    break
+            if matched_trans:
+                translation_dict_hits.append(
+                    f"Line {r.line_number}: sourced from translation dictionary '{matched_trans}'"
+                )
                 break
 
         # 4. Check that explicit authorities match approved list
-        authorities = _extract_authorities(r.source_metadata, r.raw)
+        # A compound citation containing Soviet SUM-11 is never an approved modern authority
         for auth in authorities:
-            is_approved = any(re.search(pat, auth, re.IGNORECASE) for pat in APPROVED_AUTHORITY_PATTERNS)
-            if not is_approved:
-                # If the authority is СУМ-11 in a contrastive context, check whether a modern approved authority is also present
-                if is_contrastive_context and any(alias in auth.lower() for alias in SOVIET_SUM11_ALIASES):
-                    has_approved_companion = any(
+            auth_lower = auth.lower()
+            auth_has_sum11 = any(alias in auth_lower for alias in SOVIET_SUM11_ALIASES)
+            if auth_has_sum11:
+                if is_contrastive_context:
+                    # In contrastive context, SUM-11 citation is valid only if an independent, modern approved authority is also present
+                    has_clean_approved = any(
                         any(re.search(pat, a, re.IGNORECASE) for pat in APPROVED_AUTHORITY_PATTERNS)
+                        and not any(alias in a.lower() for alias in SOVIET_SUM11_ALIASES)
                         for a in authorities
                     )
-                    if not has_approved_companion:
+                    if not has_clean_approved:
                         unapproved_authority_hits.append(
                             f"Line {r.line_number}: contrastive СУМ-11 citation lacks approved modern Ukrainian authority"
                         )
-                else:
+                # If not contrastive, already captured in sum11_normative_hits above
+            else:
+                is_approved = any(re.search(pat, auth, re.IGNORECASE) for pat in APPROVED_AUTHORITY_PATTERNS)
+                if not is_approved:
                     unapproved_authority_hits.append(f"Line {r.line_number}: unapproved authority '{auth}'")
 
     failures = []
@@ -902,7 +924,9 @@ def audit_check_5_source_rules(records: list[DatasetRecord], thresholds: dict[st
     if translation_dict_hits:
         failures.append(f"Using bilingual translation dictionaries in {len(translation_dict_hits)} records (0 allowed)")
     if unapproved_authority_hits:
-        failures.append(f"Unapproved authorities cited in {len(unapproved_authority_hits)} records")
+        failures.append(
+            f"Unapproved authorities cited in {len(unapproved_authority_hits)} records ({unapproved_authority_hits[0]})"
+        )
 
     return CheckResult(
         check_id="check_5_source_rules",
@@ -1062,22 +1086,39 @@ def audit_check_7_sample_drawer(
     thin_categories = sorted([cat for cat, c in category_counts.items() if c < min_cat])
 
     selected_hashes = {r.content_hash for r in selected}
-    thin_additions = []
+    thin_by_cat: dict[str, list[DatasetRecord]] = {}
     for cat in thin_categories:
         cat_recs = [r for r in records if r.category == cat and r.content_hash not in selected_hashes]
         # Sort additions by deterministic rank hash, never file order
         cat_recs.sort(key=lambda r: hashlib.sha256(f"{seed_hash}:{r.content_hash}".encode()).hexdigest())
-        thin_additions.extend(cat_recs[:thin_cap])
+        thin_by_cat[cat] = cat_recs[:thin_cap]
 
-    all_sampled = selected + thin_additions[:100]
+    # Fair round-robin allocation across thin categories up to 100 total
+    thin_additions: list[DatasetRecord] = []
+    max_round = thin_cap
+    max_total_thin = 100
+    for round_idx in range(max_round):
+        if len(thin_additions) >= max_total_thin:
+            break
+        for cat in thin_categories:
+            if len(thin_additions) >= max_total_thin:
+                break
+            recs = thin_by_cat[cat]
+            if round_idx < len(recs):
+                thin_additions.append(recs[round_idx])
 
-    # Resolve output paths safely (Fixes Minor Finding 14)
+    all_sampled = selected + thin_additions
+    actual_drawn_count = len(all_sampled)
+
+    # Resolve output paths safely
     if sample_out_path.suffix == ".json":
         md_file_path = sample_out_path.with_suffix(".md")
         json_sidecar_path = sample_out_path
     else:
         md_file_path = sample_out_path
         json_sidecar_path = sample_out_path.with_suffix(".json")
+
+    signoff_template_path = md_file_path.with_name(f"{md_file_path.stem}.signoff_template.json")
 
     md_file_path.parent.mkdir(parents=True, exist_ok=True)
     md_lines = [
@@ -1086,7 +1127,7 @@ def audit_check_7_sample_drawer(
         f"- **Dataset SHA-256:** `{dataset_sha256}`",
         f"- **Deterministic Sampling Seed Hash:** `{seed_hash}`",
         f"- **Profile SHA-256:** `{profile_sha256}`",
-        f"- **Sampled Rows:** {len(all_sampled)} (Base {len(selected)} + Thin Category Boost {len(all_sampled) - len(selected)})",
+        f"- **Sampled Rows:** {actual_drawn_count} (Base {len(selected)} + Thin Category Boost {len(thin_additions)})",
         "",
         "## Reviewer Instructions & Rubric",
         "For each instance below, evaluate the text using authentic Ukrainian linguistic tools (СУМ-20, Правопис 2019, VESUM, Антоненко-Давидович).",
@@ -1103,15 +1144,32 @@ def audit_check_7_sample_drawer(
         if r.target_term:
             md_lines.append(f"**Target Term:** `{r.target_term}`")
         md_lines.append("")
-        md_lines.append(f"**Запитання / Завдання:**\n> {r.query}")
-        md_lines.append("")
+        if r.query:
+            md_lines.append(f"**Запитання / Завдання:**\n> {r.query}")
+            md_lines.append("")
+        if r.original_text:
+            md_lines.append(f"**Вихідний текст (Original):**\n> {r.original_text}")
+            md_lines.append("")
+        if r.corrected_text:
+            md_lines.append(f"**Виправлений текст (Corrected):**\n```\n{r.corrected_text}\n```")
+            md_lines.append("")
+        if r.chosen:
+            md_lines.append(f"**Еталонна відповідь (Chosen):**\n```\n{r.chosen}\n```")
+            md_lines.append("")
+        if r.rejected:
+            md_lines.append(f"**Відхилена відповідь (Rejected):**\n```\n{r.rejected}\n```")
+            md_lines.append("")
         if r.reasoning_steps:
             md_lines.append("**Міркування (Reasoning):**")
             for step in r.reasoning_steps:
                 md_lines.append(f"- {step}")
             md_lines.append("")
-        md_lines.append(f"**Відповідь / Редагування:**\n```\n{r.final_response}\n```")
-        md_lines.append("")
+        if r.final_response and not r.chosen and not r.corrected_text:
+            md_lines.append(f"**Відповідь / Редагування:**\n```\n{r.final_response}\n```")
+            md_lines.append("")
+        elif r.final_response and (r.chosen or r.corrected_text):
+            md_lines.append(f"**Відповідь:**\n```\n{r.final_response}\n```")
+            md_lines.append("")
         if r.source_metadata:
             md_lines.append(f"**Джерело / Авторитет:** `{r.source_metadata}`")
             md_lines.append("")
@@ -1139,6 +1197,11 @@ def audit_check_7_sample_drawer(
                 "reasoning_steps": r.reasoning_steps,
                 "target_term": r.target_term,
                 "category": r.category,
+                "original_text": r.original_text,
+                "corrected_text": r.corrected_text,
+                "chosen": r.chosen,
+                "rejected": r.rejected,
+                "is_erroneous": r.is_erroneous,
                 "content_hash": r.content_hash,
             }
         )
@@ -1146,7 +1209,23 @@ def audit_check_7_sample_drawer(
     md_file_path.write_text("\n".join(md_lines), encoding="utf-8")
     json_sidecar_path.write_text(json.dumps(json_records, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    # Strict Signoff Validation (Fixes Blocker 3)
+    # Emit signoff template
+    signoff_template = {
+        "dataset_sha256": dataset_sha256,
+        "sample_seed": seed_hash,
+        "profile_sha256": profile_sha256,
+        "sample_size_drawn": actual_drawn_count,
+        "sample_size_reviewed": actual_drawn_count,
+        "blocker_defect_count": 0,
+        "minor_defect_count": 0,
+        "reviewer_id": "",
+        "reviewer_family": "",
+        "signoff_date": "",
+        "comments": "",
+    }
+    signoff_template_path.write_text(json.dumps(signoff_template, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Strict Signoff Validation (Fixes Blocker 3 & R2-F2)
     failures = []
     signoff_verified = False
 
@@ -1169,9 +1248,9 @@ def audit_check_7_sample_drawer(
                         failures.append("Signoff profile_sha256 does not match current profile hash")
 
                     reviewed_count = signoff_data.get("sample_size_reviewed")
-                    if not isinstance(reviewed_count, int) or reviewed_count < sample_size:
+                    if not isinstance(reviewed_count, int) or reviewed_count < actual_drawn_count:
                         failures.append(
-                            f"Signoff sample_size_reviewed must be an integer >= sample_size ({sample_size}), got {reviewed_count!r}"
+                            f"Signoff sample_size_reviewed must be an integer >= actual sample size drawn ({actual_drawn_count}), got {reviewed_count!r}"
                         )
 
                     blockers = signoff_data.get("blocker_defect_count")
@@ -1205,6 +1284,7 @@ def audit_check_7_sample_drawer(
                 "sample_size_drawn": len(all_sampled),
                 "sample_file_md": str(md_file_path),
                 "sample_file_json": str(json_sidecar_path),
+                "signoff_template_path": str(signoff_template_path),
                 "signoff_verified": signoff_verified,
             },
             thresholds={"sample_size": sample_size},
@@ -1219,8 +1299,14 @@ def audit_check_7_sample_drawer(
 
 
 def compute_dataset_sha256(jsonl_files: list[Path], dataset_dir: Path) -> str:
-    """Compute deterministic SHA-256 over all sorted relative paths and file contents."""
+    """Compute deterministic SHA-256 over manifest.json (if present) and all sorted relative paths and file contents."""
     hasher = hashlib.sha256()
+    manifest_path = dataset_dir / "manifest.json"
+    if manifest_path.is_file():
+        hasher.update(b"manifest.json\n")
+        hasher.update(manifest_path.read_bytes())
+        hasher.update(b"\n---END_MANIFEST---\n")
+
     for p in sorted(jsonl_files):
         rel_str = str(p.relative_to(dataset_dir)).replace("\\", "/")
         hasher.update(rel_str.encode("utf-8"))
@@ -1308,30 +1394,62 @@ def run_acceptance_audit(
     # Parse records
     records: list[DatasetRecord] = []
     for f in jsonl_files:
-        with f.open("r", encoding="utf-8") as fp:
-            for idx, line in enumerate(fp, start=1):
-                if line.strip():
-                    try:
-                        raw = json.loads(line)
-                        rec = parse_dataset_record(raw, f, idx, dataset_dir, manifest_splits)
-                        records.append(rec)
-                    except (json.JSONDecodeError, TypeError) as exc:
-                        print(f"❌ Record error in {f}:{idx}: {exc}", file=sys.stderr)
-                        return (
-                            AcceptanceReport(
-                                str(dataset_dir),
-                                dataset_sha256,
-                                profile_name,
-                                profile_sha256,
-                                0,
-                                0,
-                                0,
-                                overall_status="OPERATIONAL_ERROR",
-                            ),
-                            2,
-                        )
+        try:
+            with f.open("r", encoding="utf-8") as fp:
+                for idx, line in enumerate(fp, start=1):
+                    if line.strip():
+                        try:
+                            raw = json.loads(line)
+                            rec = parse_dataset_record(raw, f, idx, dataset_dir, manifest_splits)
+                            records.append(rec)
+                        except (json.JSONDecodeError, TypeError, ValueError, AttributeError) as exc:
+                            print(f"❌ Record error in {f}:{idx}: {exc}", file=sys.stderr)
+                            return (
+                                AcceptanceReport(
+                                    str(dataset_dir),
+                                    dataset_sha256,
+                                    profile_name,
+                                    profile_sha256,
+                                    0,
+                                    0,
+                                    0,
+                                    overall_status="OPERATIONAL_ERROR",
+                                ),
+                                2,
+                            )
+        except (UnicodeDecodeError, OSError) as exc:
+            print(f"❌ File read error in {f}: {exc}", file=sys.stderr)
+            return (
+                AcceptanceReport(
+                    str(dataset_dir),
+                    dataset_sha256,
+                    profile_name,
+                    profile_sha256,
+                    0,
+                    0,
+                    0,
+                    overall_status="OPERATIONAL_ERROR",
+                ),
+                2,
+            )
 
     total_records = len(records)
+    if total_records == 0:
+        print(f"❌ Error: Dataset {dataset_dir} contains zero valid records", file=sys.stderr)
+        return (
+            AcceptanceReport(
+                str(dataset_dir),
+                dataset_sha256,
+                profile_name,
+                profile_sha256,
+                0,
+                0,
+                0,
+                overall_status="OPERATIONAL_ERROR",
+            ),
+            2,
+        )
+
     train_records = sum(1 for r in records if r.split == "train")
     eval_records = sum(1 for r in records if r.split == "eval")
 

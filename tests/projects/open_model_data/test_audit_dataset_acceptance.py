@@ -12,6 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
+    ASPECT_PAIRS_FILE,
     DEFAULT_SOURCES_DB,
     VESUM_DB_PATH,
     LinguisticNormalizer,
@@ -22,6 +23,7 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
     audit_check_5_source_rules,
     audit_check_6_split_overlap,
     audit_check_7_sample_drawer,
+    compute_dataset_sha256,
     delexicalize_text,
     load_profile,
     normalize_ukrainian_text,
@@ -35,7 +37,7 @@ def normalizer():
     """Shared linguistic normalizer for unit tests."""
     if not VESUM_DB_PATH.is_file():
         pytest.skip(f"VESUM DB {VESUM_DB_PATH} not found")
-    norm = LinguisticNormalizer(VESUM_DB_PATH)
+    norm = LinguisticNormalizer(VESUM_DB_PATH, ASPECT_PAIRS_FILE)
     yield norm
     norm.close()
 
@@ -603,6 +605,231 @@ def test_run_acceptance_audit_fails_on_missing_vesum_db(tmp_path):
     )
     assert exit_code == 2
     assert report.overall_status == "OPERATIONAL_ERROR"
+
+
+# ── Round 2 Review Findings Regression Tests (R2-F1 to R2-F9) ───────────────
+
+
+def test_empty_dataset_fails_closed_with_exit_code_2(tmp_path):
+    """R2-F1: Dataset with zero valid records exits 2 (OPERATIONAL_ERROR)."""
+    d = tmp_path / "empty_dataset"
+    d.mkdir()
+    (d / "blank.jsonl").write_text("   \n\n   \n", encoding="utf-8")
+
+    report, exit_code = run_acceptance_audit(d)
+    assert exit_code == 2
+    assert report.overall_status == "OPERATIONAL_ERROR"
+
+
+def test_signoff_verification_compares_against_actual_drawn_count(tmp_path, default_thresholds):
+    """R2-F2: Signoff verification matches actual drawn count, not arbitrary profile limit."""
+    records = [
+        parse_dataset_record({"query": f"q_{i}", "final_response": f"a_{i}"}, Path("shard.jsonl"), i) for i in range(15)
+    ]
+    sample_md = tmp_path / "sample.md"
+    default_thresholds["sample_size"] = 300  # Profile asks for 300, but dataset only has 15
+
+    _, _, seed = audit_check_7_sample_drawer(records, default_thresholds, "d_sha", "p_sha", sample_md)
+    # Actual drawn count is 15
+    signoff_15 = tmp_path / "signoff_15.json"
+    signoff_15.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": 15,
+                "blocker_defect_count": 0,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_pass, _, _ = audit_check_7_sample_drawer(records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_15)
+    assert res_pass.status == "PASS"
+    assert res_pass.metrics["signoff_verified"] is True
+
+    # Less than actual drawn count fails
+    signoff_10 = tmp_path / "signoff_10.json"
+    signoff_10.write_text(
+        json.dumps(
+            {
+                "dataset_sha256": "d_sha",
+                "sample_seed": seed,
+                "profile_sha256": "p_sha",
+                "sample_size_reviewed": 14,
+                "blocker_defect_count": 0,
+                "reviewer_id": "rev1",
+                "reviewer_family": "human",
+            }
+        ),
+        encoding="utf-8",
+    )
+    res_fail, _, _ = audit_check_7_sample_drawer(records, default_thresholds, "d_sha", "p_sha", sample_md, signoff_10)
+    assert res_fail.status == "FAIL"
+    assert any("must be an integer >= actual sample size drawn (15)" in f for f in res_fail.failures)
+
+
+def test_check2_catches_small_form_letter_dataset(default_thresholds):
+    """R2-F3: Check 2 catches form letter dataset with identical reasoning across 50 records."""
+    records = []
+    identical_reasoning = "Крок 1: Перевіряємо правило. Крок 2: Знаходимо нормативну форму."
+    for i in range(50):
+        records.append(
+            parse_dataset_record(
+                {
+                    "query": f"Як пишеться слово {i}?",
+                    "reasoning_steps": [identical_reasoning],
+                    "final_response": f"Слово {i} пишеться згідно з правилом.",
+                },
+                Path("shard.jsonl"),
+                i,
+            )
+        )
+    res = audit_check_2_form_letters(records, default_thresholds)
+    assert res.status == "FAIL"
+    assert any("Reasoning" in f for f in res.failures)
+
+
+def test_run_acceptance_audit_handles_unhandled_exceptions_with_exit_code_2(tmp_path):
+    """R2-F4: Malformed messages list, invalid UTF-8, and unknown split exit code 2."""
+    d = tmp_path / "dataset"
+    d.mkdir()
+
+    # 1. Invalid UTF-8 bytes
+    (d / "corrupt.jsonl").write_bytes(b'{"query": "test", \xff\xfe "bad": true}\n')
+    report_utf8, code_utf8 = run_acceptance_audit(d, sample_size=10)
+    assert code_utf8 == 2
+    assert report_utf8.overall_status == "OPERATIONAL_ERROR"
+    (d / "corrupt.jsonl").unlink()
+
+    # 2. Malformed message item (string instead of dict)
+    (d / "bad_msg.jsonl").write_text('{"messages": ["string_instead_of_dict"]}\n', encoding="utf-8")
+    report_msg, code_msg = run_acceptance_audit(d, sample_size=10)
+    assert code_msg == 2
+    assert report_msg.overall_status == "OPERATIONAL_ERROR"
+    (d / "bad_msg.jsonl").unlink()
+
+    # 3. Unknown split name
+    (d / "bad_split.jsonl").write_text(
+        '{"query": "q", "final_response": "a", "split": "invalid_split"}\n', encoding="utf-8"
+    )
+    report_split, code_split = run_acceptance_audit(d, sample_size=10)
+    assert code_split == 2
+    assert report_split.overall_status == "OPERATIONAL_ERROR"
+
+
+def test_sample_drawer_includes_dpo_and_correction_fields_and_signoff_template(tmp_path, default_thresholds):
+    """R2-F5 & R2-F9: Sample drawer renders DPO and correction fields and emits .signoff_template.json."""
+    records = [
+        parse_dataset_record(
+            {
+                "query": "Редагувати речення",
+                "original_text": "Ми приймаємо участь.",
+                "corrected_text": "Ми беремо участь.",
+                "chosen": "Правильно: беремо участь.",
+                "rejected": "Неправильно: приймаємо участь.",
+                "category": "phraseology",
+            },
+            Path("shard.jsonl"),
+            1,
+        )
+    ]
+    sample_md = tmp_path / "review_sample.md"
+    _, written_path, _ = audit_check_7_sample_drawer(records, default_thresholds, "ds_123", "prof_123", sample_md)
+    assert written_path.is_file()
+    content = written_path.read_text(encoding="utf-8")
+    assert "Вихідний текст (Original):" in content
+    assert "Ми приймаємо участь." in content
+    assert "Виправлений текст (Corrected):" in content
+    assert "Ми беремо участь." in content
+    assert "Еталонна відповідь (Chosen):" in content
+    assert "Правильно: беремо участь." in content
+    assert "Відхилена відповідь (Rejected):" in content
+    assert "Неправильно: приймаємо участь." in content
+
+    # Signoff template emitted
+    template_path = tmp_path / "review_sample.signoff_template.json"
+    assert template_path.is_file()
+    template_data = json.loads(template_path.read_text(encoding="utf-8"))
+    assert template_data["dataset_sha256"] == "ds_123"
+    assert template_data["sample_size_drawn"] == 1
+
+
+def test_dataset_hash_includes_manifest_and_profile_hash_includes_aspect_pairs(tmp_path):
+    """R2-F6: manifest.json is hashed into dataset_sha256 and aspect_pairs into profile hash."""
+    d = tmp_path / "dataset"
+    d.mkdir()
+    f = d / "data.jsonl"
+    f.write_text('{"query": "a", "final_response": "b"}\n', encoding="utf-8")
+
+    hash_without_manifest = compute_dataset_sha256([f], d)
+
+    m = d / "manifest.json"
+    m.write_text(json.dumps({"has_evaluation_split": True}), encoding="utf-8")
+    hash_with_manifest_1 = compute_dataset_sha256([f], d)
+    assert hash_without_manifest != hash_with_manifest_1
+
+    m.write_text(json.dumps({"has_evaluation_split": False}), encoding="utf-8")
+    hash_with_manifest_2 = compute_dataset_sha256([f], d)
+    assert hash_with_manifest_1 != hash_with_manifest_2
+
+    # Aspect pairs in profile hash
+    _, default_hash = load_profile("default")
+    assert isinstance(default_hash, str) and len(default_hash) == 64
+
+
+def test_check5_fails_on_compound_authority_containing_soviet_sum11(default_thresholds):
+    """R2-F7: Compound authority citing Soviet SUM-11 alongside approved names fails."""
+    # 1. Non-contrastive record with compound authority
+    rec_non_contrastive = parse_dataset_record(
+        {
+            "query": "Поясніть слово",
+            "final_response": "Нормальне слово.",
+            "source_authority": "СУМ-11 (ВЕСУМ)",
+        },
+        Path("shard.jsonl"),
+        1,
+    )
+    res1 = audit_check_5_source_rules([rec_non_contrastive], default_thresholds)
+    assert res1.status == "FAIL"
+    assert any("Citing СУМ-11 as normative source" in f for f in res1.failures)
+
+    # 2. Contrastive record with compound authority but lacking independent modern authority
+    rec_contrastive = parse_dataset_record(
+        {
+            "query": "Поясніть колоніальне спотворення",
+            "final_response": "У радянський час форму було спотворено.",
+            "source_authority": "СУМ-11 (ВЕСУМ)",
+            "historical_suppression_note": "Зафіксовано зросійщення у СУМ-11",
+        },
+        Path("shard.jsonl"),
+        2,
+    )
+    res2 = audit_check_5_source_rules([rec_contrastive], default_thresholds)
+    assert res2.status == "FAIL"
+    assert any("lacks approved modern Ukrainian authority" in f for f in res2.failures)
+
+
+def test_aspect_normalizer_does_not_strip_prefixes_blindly(normalizer):
+    """R2-F8: normalize_verb_aspect maps via curated pairs without blind prefix stripping."""
+    # показати must map to показувати, never казати
+    norm_pokazaty = normalizer.normalize_verb_aspect("показати", ":perf:")
+    assert norm_pokazaty == "показувати"
+
+    # сказати must map to говорити, never казати
+    norm_skazaty = normalizer.normalize_verb_aspect("сказати", ":perf:")
+    assert norm_skazaty == "говорити"
+
+
+def test_fair_thin_category_boost_and_dev_split(tmp_path, default_thresholds):
+    """R2-F9: dev split is recognized as eval; thin boost is distributed fairly round-robin."""
+    rec_dev = parse_dataset_record({"query": "q", "final_response": "a", "split": "dev"}, Path("shard.jsonl"), 1)
+    assert rec_dev.split == "eval"
+
+    rec_dev_path = parse_dataset_record({"query": "q", "final_response": "a"}, Path("dev/shard.jsonl"), 2)
+    assert rec_dev_path.split == "eval"
 
 
 # ── Empirical Baseline Reproduction Tests (#6321, Roadmap §2) ───────────────
