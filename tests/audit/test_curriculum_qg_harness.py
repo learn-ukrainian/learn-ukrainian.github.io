@@ -3,6 +3,8 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.curriculum_qg_harness import (
     CHECKER_VERSION,
     EVIDENCE_SCHEMA_VERSION,
@@ -11,6 +13,8 @@ from scripts.audit.curriculum_qg_harness import (
     run_fixtures,
     scan_curriculum_module,
 )
+
+pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 FIXTURE_FILE = PROJECT_ROOT / "tests" / "fixtures" / "curriculum_qg" / "fixtures.yaml"

@@ -10,6 +10,8 @@ import yaml
 from scripts.audit import atlas_source_census as census
 from scripts.audit.source_inventory_intake import SourceInventoryError
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_module_census_separates_content_activities_and_vocabulary(tmp_path: Path) -> None:
     module_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1" / "demo"

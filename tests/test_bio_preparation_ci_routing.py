@@ -34,7 +34,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[1]
 CI_WORKFLOW = REPO_ROOT / ".github/workflows/ci.yml"
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 VALIDATOR_STEP_NAME = "Validate BIO preparation capsules and active holds"
 CONTRACTS_TIER_IF = "needs.changes.outputs.docs_only == 'false'"

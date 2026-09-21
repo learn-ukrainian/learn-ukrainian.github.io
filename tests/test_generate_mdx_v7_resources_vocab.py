@@ -1,6 +1,10 @@
 from __future__ import annotations
 
+import pytest
+
 from scripts.generate_mdx.resources import format_resources_for_mdx, vocab_items_to_components
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_vocab_items_to_components_emits_flashcards_and_vocab_card():

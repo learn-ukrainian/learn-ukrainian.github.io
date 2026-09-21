@@ -19,6 +19,10 @@ from __future__ import annotations
 import subprocess
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 LOCAL_LAUNCHER = ROOT / "scripts" / "lexicon" / "runner" / "launch_reenrich_class_b.sh"
 
@@ -196,4 +200,3 @@ def test_source_query_goroh_translate_importable_without_bs4() -> None:
             else:
                 sys.modules[key] = prior
         sys.modules.update(saved_source_query)
-

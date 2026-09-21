@@ -12,6 +12,8 @@ from typing import Any
 import pytest
 import yaml
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "agents_extensions" / "shared" / "skills" / "track-completion" / "scripts" / "track_completion.py"
 SPEC = importlib.util.spec_from_file_location("track_completion_for_tests", SCRIPT)

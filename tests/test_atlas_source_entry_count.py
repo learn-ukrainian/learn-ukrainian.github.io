@@ -12,6 +12,8 @@ from scripts.audit import atlas_source_census
 from scripts.audit import atlas_source_entry_count as entry_count
 from scripts.audit.source_inventory_intake import SourceInventoryError
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_vesum_backed_lane_counts_existing_and_backlog_without_form_aliases(tmp_path: Path) -> None:
     module_dir = tmp_path / "curriculum" / "l2-uk-en" / "a1" / "demo"

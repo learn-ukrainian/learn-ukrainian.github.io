@@ -13,6 +13,10 @@ Issue: #520, #596
 import sys
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.russicism_detection import (

@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from typing import Any
 
+import pytest
+
 from scripts.audit.wiki_coverage_gate import check_wiki_coverage
+
+pytestmark = pytest.mark.reads_content
 
 
 def _sequence_step_manifest() -> dict[str, Any]:

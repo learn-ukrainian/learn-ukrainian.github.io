@@ -7,6 +7,8 @@ import sys
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, os.path.join(os.path.dirname(os.path.dirname(os.path.abspath(__file__))), "scripts"))
 
 from wiki import sources_db

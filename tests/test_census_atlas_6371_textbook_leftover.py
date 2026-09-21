@@ -5,6 +5,7 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.lexicon.build_data_manifest import _lemma_key
@@ -22,6 +23,8 @@ from scripts.lexicon.census_atlas_6371_textbook_leftover import (
     refuse_invented_lemmas,
     render_report,
 )
+
+pytestmark = pytest.mark.reads_content
 
 FIXTURE_INVENTORY = """
 version: 1

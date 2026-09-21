@@ -5,10 +5,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.analytics.cost_report as cost_report
 from scripts.api.main import app
+
+pytestmark = pytest.mark.reads_content
 
 client = TestClient(app, raise_server_exceptions=False)
 

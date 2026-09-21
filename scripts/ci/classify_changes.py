@@ -15,6 +15,36 @@ from scripts.ci.frontend_change_scope import load_denominator, path_in_denominat
 
 # Content CI owns these trees. Other exemptions are Markdown in known docs trees.
 CONTENT_PREFIXES = ("wiki/", "curriculum/")
+
+# Events classified by changed paths. Everything else (schedule, dispatch,
+# unknown) forces the full tier without touching the compare API.
+_PATH_CLASSIFIED_EVENTS = frozenset({"pull_request", "merge_group"})
+
+# Content class (#8399): learner-facing content with no imported code surface.
+# Every changed path must live under one of these roots for the class to apply.
+CONTENT_CLASS_PREFIXES = (
+    "curriculum/l2-uk-en/",
+    "curriculum/l2-uk-direct/",
+    "site/src/content/docs/",
+    "wiki/",
+)
+
+# Track roots whose top level also carries code-imported manifests/data.
+_CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
+
+# Data/code extensions that are never prose content anywhere under the roots.
+_CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
+
+# Exact code-imported files inside the content roots (#8399 D3). Each forces
+# the full tier on both events and is excluded from the docs exemption; the
+# importing modules are listed in is_code_load_bearing_content's docstring.
+_CONTENT_CODE_PATHS = frozenset({
+    "curriculum/l2-uk-direct/manifest.yaml",
+    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+    "curriculum/l2-uk-en/module-mapping.json",
+    "curriculum/l2-uk-en/vocabulary.db",
+})
+
 DOC_PREFIXES = (
     "docs/", "agents_extensions/shared/skills/", ".claude/", ".codex/", ".agent/",
 )
@@ -25,10 +55,73 @@ SELECTED_CANDIDATE_CEILING = 80
 _TEST_FILE_RE = re.compile(r"(?:^|/)(?:test_[^/]+\.py|[^/]+_test\.py)$")
 
 
+def is_code_load_bearing_content(path: str) -> bool:
+    """True for code-imported files that live inside the content roots.
+
+    Each of these forces the full tier on both pull_request and merge_group
+    and is also excluded from the docs exemption (#8399 D3): neither the
+    content lane nor the docs lane runs the code that imports them. Verified
+    importers (``grep -rln`` over ``scripts/``):
+
+    - ``curriculum/**/curriculum.yaml``: generated track manifest imported by
+      scripts/level_config.py, scripts/pipeline/{config_tables,
+      learner_state}.py, scripts/generate_mdx/*, scripts/sync/*,
+      scripts/manifest_utils.py.
+    - ``curriculum/l2-uk-direct/manifest.yaml``: imported by
+      scripts/build/build_module_direct.py,
+      scripts/generate_mdx/generate_mdx_direct.py,
+      scripts/validate/validate_direct.py, scripts/api/agent_router.py,
+      scripts/audit/layerb_qualify.py, scripts/audit/atlas_source_census.py.
+    - ``curriculum/l2-uk-direct/bolshakova-letter-order.yaml``: imported by
+      scripts/audit/atlas_source_census.py.
+    - ``curriculum/l2-uk-en/module-mapping.json``: imported by
+      scripts/legacy/typescript/{migrate-modules,merge-levels}.ts.
+    - ``curriculum/l2-uk-en/vocabulary.db``: SQLite imported by
+      scripts/vocab/*, scripts/practice/numeral_agreement_engine.py,
+      scripts/audit/checks/vocabulary.py,
+      scripts/lexicon/backfill_course_usage.py.
+    - Any ``*.py`` / ``*.db`` / ``*.sqlite`` under the content roots, and any
+      ``*.json`` at a track root: code/data surface by extension, even before
+      a specific importer is named.
+
+    Schemas live outside the roots (``schemas/``, ``docs/**/*.yaml``) and
+    already miss the prefix check; everything else under the roots is gated
+    by the Contracts job, Content CI, or the ``reads_content`` pytest lane,
+    all of which still run for the content class.
+    """
+    p = _norm(path)
+    if p.startswith("curriculum/") and PurePosixPath(p).name == "curriculum.yaml":
+        return True
+    if p in _CONTENT_CODE_PATHS:
+        return True
+    if not p.startswith(CONTENT_CLASS_PREFIXES):
+        return False
+    if p.endswith(_CONTENT_CODE_SUFFIXES):
+        return True
+    return any(
+        p.startswith(root) and "/" not in p[len(root):] and p.endswith(".json")
+        for root in _CONTENT_TRACK_ROOTS
+    )
+
+
 def is_docs(path: str) -> bool:
     if path.startswith(CONTENT_PREFIXES):
-        return True
+        # Code-imported files inside the content roots are never a docs skip
+        # (#8399 D3): the docs lane runs no pytest at all, so they force full.
+        return not is_code_load_bearing_content(path)
     return path.endswith(".md") and ("/" not in path or path.startswith(DOC_PREFIXES))
+
+
+def is_content_class_path(path: str) -> bool:
+    """True when a path is learner content with no code-imported surface.
+
+    Exclusions inside the content roots — each forces the full tier on both
+    events instead — are exactly is_code_load_bearing_content().
+    """
+    p = _norm(path)
+    if not p.startswith(CONTENT_CLASS_PREFIXES):
+        return False
+    return not is_code_load_bearing_content(p)
 
 
 def _norm(path: str) -> str:
@@ -167,6 +260,20 @@ def _docs() -> dict[str, str]:
     }
 
 
+def _content() -> dict[str, str]:
+    # docs_only=false keeps Ruff and Contracts on (cheap content gates).
+    # Frontend is forced on: curriculum/wiki content renders through the site
+    # build even though only site/ paths match the frontend denominator.
+    return {
+        "docs_only": "false",
+        "frontend": "true",
+        "shards": "[1]",
+        "pytest_mode": "content",
+        "shard_count": "1",
+        "pytest_candidates": "[]",
+    }
+
+
 def _selected(candidates: Sequence[str]) -> dict[str, str]:
     return {
         "docs_only": "false",
@@ -188,15 +295,35 @@ def classify(
     tree_paths: Iterable[str] | None = None,
     repo_root: Path | None = None,
 ) -> dict[str, str]:
-    """Unknown paths run every pytest shard; only explicit docs may skip."""
+    """Unknown paths run every pytest shard; only explicit docs/content may skip."""
     if shard_count < 1:
         raise ValueError("shard_count must be positive")
 
-    # Non-PR / full-ci / empty / capped: force full including frontend (P1.1).
-    if event != "pull_request" or "full-ci" in labels or not paths or len(paths) >= 300:
+    # Non-classified event / full-ci / empty / capped: force full (P1.1).
+    if event not in _PATH_CLASSIFIED_EVENTS or "full-ci" in labels or not paths or len(paths) >= 300:
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
+    if event == "merge_group":
+        # The merge queue is the integration gate (#8399 D1): before the
+        # content class existed, every merge-group run was full by design.
+        # A group whose changed paths are ALL content class pays the content
+        # lane once; anything else — including what would be `docs` or
+        # `selected` on a pull request — resolves to the full tier exactly
+        # as on main.
+        if all(is_content_class_path(path) for path in paths):
+            return _content()
+        return _full(shard_count)
+    if all(is_content_class_path(path) for path in paths) and any(
+        _norm(path).startswith("site/src/content/docs/") for path in paths
+    ):
+        # pull_request only (#8399 D2): a PR touching only curriculum/** or
+        # wiki/** keeps today's docs_only fast path — the queue run is the
+        # safety net, and per the branch above it pays the content lane
+        # there. The PR content class exists for all-content changes that
+        # today fall to full because `frontend` is true, i.e. they include
+        # at least one site/src/content/docs/** path (PR #8384).
+        return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:
         return _docs()
@@ -251,17 +378,21 @@ def main() -> None:
     denominator: list[str] = []
     tree_paths: set[str] | None = None
     try:
-        payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
         if event == "pull_request":
+            payload = json.loads(Path(os.environ["GITHUB_EVENT_PATH"]).read_text(encoding="utf-8"))
             labels = [label["name"] for label in payload["pull_request"]["labels"]]
-            if "full-ci" not in labels:
-                denominator = load_denominator()["paths"]
-                paths = compare_paths(
-                    os.environ.get("BASE", ""),
-                    os.environ.get("HEAD", ""),
-                    os.environ["REPO"],
-                )
-                tree_paths = git_tree_paths(Path.cwd())
+        if event in _PATH_CLASSIFIED_EVENTS and "full-ci" not in labels:
+            # pull_request and merge_group both classify by changed paths;
+            # the workflow maps pull_request.base/head or merge_group
+            # .base_sha/.head_sha (group union) into BASE/HEAD. Any failure
+            # here leaves paths empty → fail closed to full.
+            denominator = load_denominator()["paths"]
+            paths = compare_paths(
+                os.environ.get("BASE", ""),
+                os.environ.get("HEAD", ""),
+                os.environ["REPO"],
+            )
+            tree_paths = git_tree_paths(Path.cwd())
     except (OSError, ValueError, KeyError, TypeError, subprocess.SubprocessError):
         # Missing/malformed event, denominator, API response, or git tree → full.
         paths = []

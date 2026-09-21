@@ -2,8 +2,12 @@ from __future__ import annotations
 
 import json
 
+import pytest
+
 import scripts.audit.wiki_coverage_gate as gate
 from scripts.audit.wiki_coverage_gate import check_wiki_coverage, parse_implementation_map
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_load_manifest_parses_json_blob_without_filesystem_access() -> None:

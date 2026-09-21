@@ -25,6 +25,8 @@ from unittest.mock import patch
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 import delegate

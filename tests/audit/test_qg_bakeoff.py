@@ -10,6 +10,8 @@ import pytest
 
 from scripts.audit import llm_reviewer_dispatch, qg_bakeoff, qg_factcheck_scoring, qg_schema
 
+pytestmark = pytest.mark.reads_content
+
 _DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
 

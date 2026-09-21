@@ -3,11 +3,14 @@ import subprocess
 import time
 from pathlib import Path
 
+import pytest
 from fastapi.testclient import TestClient
 
 from scripts.api import git_hygiene_router
 from scripts.api.main import app
 from tests.latency_budget import assert_under_budget
+
+pytestmark = pytest.mark.reads_content
 
 client = TestClient(app, raise_server_exceptions=False)
 

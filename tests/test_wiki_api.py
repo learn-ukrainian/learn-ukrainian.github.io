@@ -2,12 +2,15 @@
 
 import sqlite3
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.wiki_router as wiki_router
 from scripts.api.main import app
 from scripts.api.monitor_context import fixture_context
 from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH
+
+pytestmark = pytest.mark.reads_content
 
 client = TestClient(app, raise_server_exceptions=False)
 

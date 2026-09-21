@@ -4,10 +4,14 @@ import json
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.check_static_practice_assets import check_assets
 from scripts.audit.daily_cefr import CEFR_LEVELS
 from scripts.audit.generate_daily_pool import CEFR_LEVELS as GENERATOR_CEFR_LEVELS
 from tests.project_python import project_python
+
+pytestmark = pytest.mark.reads_content
 
 DRILL_MODES = ("stress", "classify", "paradigm", "synonym", "heritage", "paronym", "antonym")
 

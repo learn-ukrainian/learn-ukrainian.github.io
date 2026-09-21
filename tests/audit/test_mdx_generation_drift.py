@@ -4,6 +4,8 @@ import pytest
 
 from scripts.audit import check_mdx_generation_drift as drift
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_archive_keys_are_filtered_but_native_a2_remains(monkeypatch, capsys):
     keys = drift.affected_module_keys([

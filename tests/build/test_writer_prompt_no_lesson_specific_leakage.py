@@ -14,6 +14,8 @@ from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
 from scripts.build.phases.wiki_manifest import extract_manifest
 
+pytestmark = pytest.mark.reads_content
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 CHUNK_ID_RE = re.compile(r"chunk_id:\s*([A-Za-z0-9_-]+)")
 CYRILLIC_WORD_RE = re.compile(r"[А-ЯІЇЄҐа-яіїєґ][А-ЯІЇЄҐа-яіїєґ'’ʼ-]{3,}")

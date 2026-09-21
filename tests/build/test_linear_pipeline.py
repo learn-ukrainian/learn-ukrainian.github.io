@@ -11,6 +11,8 @@ import yaml
 from scripts.build import linear_pipeline
 from scripts.common.thresholds import QG_DIMS
 
+pytestmark = pytest.mark.reads_content
+
 
 def _write_yaml(path: Path, payload: object) -> None:
     path.write_text(

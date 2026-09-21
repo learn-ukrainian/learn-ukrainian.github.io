@@ -27,6 +27,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_PATH = REPO_ROOT / "agents_extensions/shared" / "hooks" / "guard-primary-checkout-write.py"
 

@@ -8,6 +8,8 @@ from fastapi.testclient import TestClient
 from scripts.api import state_build, state_router
 from scripts.api.main import app
 
+pytestmark = pytest.mark.reads_content
+
 
 def _write_module_files(root: Path, slug: str) -> None:
     module_dir = root / "curriculum" / "l2-uk-en" / "b2" / slug

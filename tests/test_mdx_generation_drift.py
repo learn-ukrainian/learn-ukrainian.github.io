@@ -2,8 +2,12 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.audit import check_mdx_generation_drift as mdx_drift
 from scripts.audit.check_mdx_generation_drift import PROJECT_ROOT, ModuleTarget, affected_module_keys
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_detects_folder_module_source() -> None:

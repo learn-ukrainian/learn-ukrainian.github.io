@@ -11,6 +11,8 @@ import sys
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from scripts.audit.core import (

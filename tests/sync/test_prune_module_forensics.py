@@ -5,8 +5,12 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
+
 from scripts.sync import prune_module_forensics
 from scripts.sync.promote_module import FORENSICS_FILES, LESSON_SOURCE_FILES
+
+pytestmark = pytest.mark.reads_content
 
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:

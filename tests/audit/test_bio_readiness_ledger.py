@@ -11,6 +11,8 @@ import yaml
 
 from scripts.audit import bio_readiness_ledger as ledger
 
+pytestmark = pytest.mark.reads_content
+
 
 def _gates() -> dict[str, dict[str, str]]:
     return {

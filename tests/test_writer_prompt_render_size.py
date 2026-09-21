@@ -1,11 +1,15 @@
 import json
 
+import pytest
+
 from scripts.audit.check_writer_prompt_size import (
     WRITER_PROMPT_CEILING_BYTES,
     render_fixture_writer_prompt,
 )
 from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
+
+pytestmark = pytest.mark.reads_content
 
 
 def _stub_manifest(level: str, slug: str) -> dict:

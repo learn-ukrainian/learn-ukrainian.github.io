@@ -11,6 +11,8 @@ import pytest
 
 from scripts.orchestration import curriculum_lifecycle_pilot as pilot
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 

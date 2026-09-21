@@ -13,6 +13,8 @@ from scripts.module_dashboard import (
     dashboard,
 )
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def level_tree(tmp_path, monkeypatch):

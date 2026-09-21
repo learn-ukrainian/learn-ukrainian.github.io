@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from unittest.mock import MagicMock, patch
 
+import pytest
+
 from scripts.audit import hermes_nightly_audit as audit
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_build_markdown_report():

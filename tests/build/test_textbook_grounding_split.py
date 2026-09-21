@@ -3,9 +3,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.build import linear_pipeline
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_is_publishable_ref():

@@ -24,7 +24,7 @@ from scripts.api.opsec_sanitize import REDACTED_ABSOLUTE_PATH, opsec_path_saniti
 from scripts.api.resilience import resilience_middleware
 from tests.api.opsec_sweep import registry
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 DB_ACCESS_PATTERNS = (

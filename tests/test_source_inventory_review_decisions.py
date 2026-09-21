@@ -12,6 +12,8 @@ import yaml
 from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import SourceInventoryError, SourceInventoryRecord
 
+pytestmark = pytest.mark.reads_content
+
 FIRST_BATCH = (
     decisions.DEFAULT_DECISION_DIR / "2026-06-29-first-approved-publish-batch.yaml"
 )

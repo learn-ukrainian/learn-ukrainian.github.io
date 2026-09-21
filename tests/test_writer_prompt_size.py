@@ -2,12 +2,16 @@
 
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.check_writer_prompt_size import (
     FIXTURE_MODULES,
     WRITER_PROMPT_CEILING_BYTES,
     render_fixture_writer_prompt,
 )
 from scripts.level_config import resolve_content_track
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_ceiling_is_130kb() -> None:

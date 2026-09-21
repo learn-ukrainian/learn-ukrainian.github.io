@@ -16,6 +16,8 @@ from scripts.build.module_size_policy import (
 )
 from scripts.build.phases.implementation_map import seed_implementation_map
 
+pytestmark = pytest.mark.reads_content
+
 PROMPT_FIXTURES = (
     ("a1", "sounds-letters-and-hello"),
     ("a2", "a2-bridge"),

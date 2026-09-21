@@ -3,12 +3,16 @@ from __future__ import annotations
 import sqlite3
 from pathlib import Path
 
+import pytest
+
 from scripts.readings.generate_readings import (
     CorpusText,
     PrimaryReadingCandidate,
     VerificationResult,
     generate_for_modules,
 )
+
+pytestmark = pytest.mark.reads_content
 
 OI_SYVA_TEXT = """ОЙ СИВАЯ ТА І ЗОЗУЛЕЧКА
 

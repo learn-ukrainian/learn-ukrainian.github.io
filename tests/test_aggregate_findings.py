@@ -17,6 +17,8 @@ from scripts.aggregate_review_findings import (
     parse_findings_from_yaml,
 )
 
+pytestmark = pytest.mark.reads_content
+
 
 class TestNormalizeDimension:
     def test_canonical(self):

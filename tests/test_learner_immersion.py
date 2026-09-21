@@ -2,9 +2,12 @@ import os
 import time
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.build import learner_immersion
+
+pytestmark = pytest.mark.reads_content
 
 
 def _write_yaml(path: Path, data: object) -> None:

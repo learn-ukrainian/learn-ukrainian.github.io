@@ -10,6 +10,8 @@ import pytest
 
 from scripts.audit import certify_module
 
+pytestmark = pytest.mark.reads_content
+
 
 def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
     env = {k: v for k, v in os.environ.items() if not k.startswith(("GIT_", "PRE_COMMIT"))}

@@ -18,6 +18,8 @@ from scripts.agent_runtime.result import ParseResult
 from scripts.agent_runtime.telemetry import InvocationTelemetry
 from scripts.build import linear_pipeline, v7_build
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture(autouse=True)
 def _simulate_worktree_child(monkeypatch: pytest.MonkeyPatch) -> None:

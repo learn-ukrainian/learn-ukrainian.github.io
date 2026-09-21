@@ -1,9 +1,12 @@
 """Tests for V7 learner-state layout support."""
 
+import pytest
 import yaml
 
 from scripts import config
 from scripts.pipeline import learner_state
+
+pytestmark = pytest.mark.reads_content
 
 
 def _write_yaml(path, data):

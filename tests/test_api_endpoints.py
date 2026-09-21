@@ -22,12 +22,15 @@ import time
 from pathlib import Path
 from unittest.mock import patch
 
+import pytest
 from fastapi.testclient import TestClient
 
 import scripts.api.dashboard_router as dashboard_router
 import scripts.api.state_helpers as state_helpers
 from scripts.api.main import app
 from tests.latency_budget import assert_under_budget
+
+pytestmark = pytest.mark.reads_content
 
 client = TestClient(app, raise_server_exceptions=False)
 

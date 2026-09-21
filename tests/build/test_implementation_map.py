@@ -5,6 +5,7 @@ from pathlib import Path
 from typing import Any
 
 import jsonschema
+import pytest
 
 from scripts.audit.wiki_coverage_gate import validate_obligations
 from scripts.build.phases.implementation_map import (
@@ -16,6 +17,8 @@ from scripts.build.phases.implementation_map import (
     write_implementation_map,
 )
 from scripts.build.phases.wiki_manifest import extract_manifest
+
+pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 M20_BAN_1_RULE = (

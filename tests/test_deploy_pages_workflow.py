@@ -14,6 +14,8 @@ from scripts.deploy.auto_deploy_eligibility import (
     write_step_summary,
 )
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[1]
 WORKFLOW = REPO_ROOT / ".github" / "workflows" / "deploy-pages.yml"
 REQUIREMENTS_LOCK = REPO_ROOT / "requirements-lock.txt"

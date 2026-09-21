@@ -36,6 +36,8 @@ sys.path.insert(0, str(ROOT / "scripts"))
 
 from wiki import dense_rerank, ukrainian_wiki_corpus
 
+pytestmark = pytest.mark.reads_content
+
 
 def _ensure_enrich_fixture() -> None:
     needed = (

@@ -15,6 +15,10 @@ Covers:
 import sys
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 # Add scripts/ to path
 SCRIPTS_DIR = str(Path(__file__).parent.parent / "scripts")
 if SCRIPTS_DIR not in sys.path:

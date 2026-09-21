@@ -4,6 +4,8 @@ import pytest
 
 from scripts.build import linear_pipeline
 
+pytestmark = pytest.mark.reads_content
+
 BAD_URLS = [
     "https://www.ukrlib.com.ua/narod/book.php?id=11",
     "https://www.ukrlib.com.ua/narod/",

@@ -11,6 +11,8 @@ from scripts.audit.check_module_continuity import (
     module_order,
 )
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_repeated_concept_without_bridge_is_reported() -> None:
     modules = [

@@ -13,6 +13,8 @@ from tests.build.upgrade_fixtures import (
     load_upgrade_fixtures,
 )
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def baseline():

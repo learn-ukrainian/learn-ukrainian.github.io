@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.validate import validate_plan_ordering
+
+pytestmark = pytest.mark.reads_content
 
 
 def _write_plan(path: Path, slug: str, *, intentional: bool = False) -> None:

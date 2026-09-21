@@ -10,6 +10,8 @@ import yaml
 from scripts.audit import source_inventory_review_decisions as decisions
 from scripts.audit.source_inventory_intake import read_source_inventory
 
+pytestmark = pytest.mark.reads_content
+
 SAFE_YAML_LOADER = getattr(yaml, "CSafeLoader", yaml.SafeLoader)
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
