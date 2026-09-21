@@ -72,7 +72,7 @@ ijson==3.5.1
 iniconfig==2.3.0
 inscriptis==2.7.3
 ipa-uk @ git+https://github.com/lang-uk/ipa-uk.git@e7fc944faca090ca985d5ca09a24c59154d9dea1
-ir_datasets==0.5.11
+ir_datasets==0.6.3
 itsdangerous==2.2.0
 jaraco.classes==3.4.0
 jaraco.context==6.1.2
