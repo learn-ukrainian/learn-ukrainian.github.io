@@ -1,10 +1,10 @@
 """Tests for the A1 arc generator, generated YAML, and loader (issue #8411).
 
 The arc document docs/epics/fresh-build-a1-arc.md is the reviewed source of
-truth; curriculum/l2-uk-en/arc/a1/_arc.yaml must stay byte-identical to a
-fresh run of scripts/curriculum/arc/generate_arc.py. Mutation tests run the
-generator against temporary copies of the document — the real document and
-the committed YAML are never touched.
+truth; curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml must stay byte-identical
+to a fresh run of scripts/curriculum/arc/generate_arc.py. Mutation tests run
+the generator against temporary copies of the document — the real document
+and the committed YAML are never touched.
 """
 
 from __future__ import annotations
@@ -14,6 +14,7 @@ import shutil
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.curriculum.arc import generate_arc, loader
 
@@ -21,12 +22,14 @@ pytestmark = [pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ARC_DOC = REPO_ROOT / "docs/epics/fresh-build-a1-arc.md"
-ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/arc/a1/_arc.yaml"
+ARC_YAML = REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
 
 ROLLUP_ROW = "| 1–4 | *(see §4)* | A1.1 | Literacy | Li, W (copying, own name) | 17 |"
 POS1_ROW_FRAGMENT = "**13 letters**, primer part 1 order"
 POS42_ROW = "| 42 | `hey-friend` | A1.7 | Address people by name: vocative | — | 2 |"
 POS5_ROW = "| 5 | `who-am-i` | A1.1 | Introduce yourself and ask who someone is; common professions (`:485`) | Li | 3 |"
+STATED_TOTAL_ANCHOR = "orientation only and total 162"
+STATED_TOTAL_SENTENCE = "The lesson counts above are estimates for\norientation only and total 162."
 
 
 def _records(doc_path: Path = ARC_DOC) -> list[dict]:
@@ -95,9 +98,10 @@ def test_mutation_one_slug_breaks_check(tmp_path: Path) -> None:
     assert generate_arc.main(["--level", "a1", "--check", "--doc", str(mutated)]) == 1
 
 
-def test_mutation_one_lesson_count_breaks_check(tmp_path: Path) -> None:
+def test_mutation_one_lesson_count_fails_stated_total_check(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, POS42_ROW, POS42_ROW.replace("| — | 2 |", "| — | 5 |"))
-    assert generate_arc.main(["--level", "a1", "--check", "--doc", str(mutated)]) == 1
+    with pytest.raises(generate_arc.ArcGenerationError, match="stated lesson total"):
+        generate_arc.generate_yaml(mutated)
 
 
 def test_mutation_deleted_row_breaks_check(tmp_path: Path) -> None:
@@ -114,6 +118,24 @@ def test_bolded_count_mismatch_fails_generation(tmp_path: Path) -> None:
 def test_rollup_total_mismatch_fails_generation(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, ROLLUP_ROW, ROLLUP_ROW.replace("| 17 |", "| 16 |"))
     with pytest.raises(generate_arc.ArcGenerationError):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_est_lessons_total_emitted_and_matches_stated_total() -> None:
+    data = yaml.safe_load(generate_arc.generate_yaml(ARC_DOC))
+    assert data["est_lessons_total"] == 162
+    assert data["est_lessons_total"] == sum(r["est_lessons"] for r in data["positions"])
+
+
+def test_stated_total_mismatch_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, STATED_TOTAL_ANCHOR, "orientation only and total 161")
+    with pytest.raises(generate_arc.ArcGenerationError, match="stated lesson total"):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_stated_total_sentence_removed_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, STATED_TOTAL_SENTENCE + " ", "")
+    with pytest.raises(generate_arc.ArcGenerationError, match="no stated lesson total"):
         generate_arc.generate_yaml(mutated)
 
 
@@ -157,3 +179,22 @@ def test_loader_raises_when_document_changed(tmp_path: Path) -> None:
         handle.write("\n")
     with pytest.raises(loader.ArcStaleError):
         loader.load_arc("a1", doc_path=changed_doc)
+
+
+def test_loader_never_reads_plans_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """An _arc.yaml under plans/<level>/ is invisible to load_arc.
+
+    Scoping rule (fresh-build-plan-schema.md §1): load_arc resolves only
+    curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml and never searches or
+    falls back to plans/. With a repo root that has the arc only under
+    plans/a1/, load_arc must fail with FileNotFoundError.
+    """
+    root = tmp_path / "repo"
+    (root / "schemas").mkdir(parents=True)
+    shutil.copy(REPO_ROOT / "schemas/arc.schema.json", root / "schemas/arc.schema.json")
+    plans_dir = root / "curriculum/l2-uk-en/plans/a1"
+    plans_dir.mkdir(parents=True)
+    shutil.copy(ARC_YAML, plans_dir / "_arc.yaml")
+    monkeypatch.setattr(loader, "REPO_ROOT", root)
+    with pytest.raises(FileNotFoundError):
+        loader.load_arc("a1")

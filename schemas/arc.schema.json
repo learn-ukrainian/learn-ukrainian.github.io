@@ -2,11 +2,12 @@
   "$schema": "https://json-schema.org/draft/2020-12/schema",
   "$id": "https://learn-ukrainian.github.io/schemas/arc.schema.json",
   "title": "Level Arc",
-  "description": "Machine-readable level arc (arc/{level}/_arc.yaml), generated from docs/epics/fresh-build-{level}-arc.md by scripts/curriculum/arc/generate_arc.py. Never edited by hand.",
+  "description": "Machine-readable level arc (lesson-plans/{level}/_arc.yaml), generated from docs/epics/fresh-build-{level}-arc.md by scripts/curriculum/arc/generate_arc.py. Never edited by hand.",
   "type": "object",
   "required": [
     "arc_schema",
     "source",
+    "est_lessons_total",
     "positions"
   ],
   "additionalProperties": false,
@@ -33,6 +34,11 @@
           "description": "SHA-256 of the arc document bytes at generation time; loaders must re-verify it"
         }
       }
+    },
+    "est_lessons_total": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Sum of all positions' est_lessons; the generator checks it equals the lesson total stated in the arc document's sizing paragraph"
     },
     "positions": {
       "type": "array",

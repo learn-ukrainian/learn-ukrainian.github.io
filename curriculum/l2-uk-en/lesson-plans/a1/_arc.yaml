@@ -1,7 +1,8 @@
 arc_schema: 1
 source:
   path: docs/epics/fresh-build-a1-arc.md
-  sha256: 7d6acc6402e6ee6413e9f6be13f4aee7f1b7e56da8e4861cdb849267976d67f2
+  sha256: 319bd259d43fd6f917e2f720285c38d33d59b850561f3dd186ead12f0226df13
+est_lessons_total: 162
 positions:
 - position: 1
   slug: sounds-letters-and-hello

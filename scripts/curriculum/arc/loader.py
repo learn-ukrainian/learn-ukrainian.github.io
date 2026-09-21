@@ -1,9 +1,14 @@
 """Typed loader for the generated level arc YAML.
 
-Reads curriculum/l2-uk-en/arc/<level>/_arc.yaml, validates it against
-schemas/arc.schema.json, and re-verifies source.sha256 against the current
-arc document so a stale generated file fails loudly instead of feeding old
-data to the gates that consume the arc.
+Reads curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml, validates it
+against schemas/arc.schema.json, and re-verifies source.sha256 against the
+current arc document so a stale generated file fails loudly instead of
+feeding old data to the gates that consume the arc.
+
+Scoping rule (docs/epics/fresh-build-plan-schema.md §1): load_arc resolves
+only curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml. It never searches
+curriculum/l2-uk-en/plans/ and never falls back to it; the arc_path /
+doc_path overrides exist for tests and must be passed explicitly.
 """
 
 from __future__ import annotations
@@ -18,7 +23,7 @@ from jsonschema import Draft202012Validator
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
-ARC_PATH = "curriculum/l2-uk-en/arc/{level}/_arc.yaml"
+ARC_PATH = "curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml"
 SCHEMA_PATH = "schemas/arc.schema.json"
 
 

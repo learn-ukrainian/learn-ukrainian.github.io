@@ -3,9 +3,10 @@
 
 The arc document (docs/epics/fresh-build-<level>-arc.md) is the reviewed
 source of truth. This script parses its position tables deterministically and
-emits curriculum/l2-uk-en/arc/<level>/_arc.yaml. No arc content is typed by
-hand: every string in the YAML is copied from the document by the parser, and
-any table cell the parser cannot read fails generation with the row quoted.
+emits curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml. No arc content is
+typed by hand: every string in the YAML is copied from the document by the
+parser, and any table cell the parser cannot read fails generation with the
+row quoted.
 """
 
 from __future__ import annotations
@@ -21,7 +22,7 @@ import yaml
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 ARC_DOC_REL = "docs/epics/fresh-build-{level}-arc.md"
-ARC_OUT_REL = "curriculum/l2-uk-en/arc/{level}/_arc.yaml"
+ARC_OUT_REL = "curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml"
 SUPPORTED_LEVELS = ("a1",)
 
 LITERACY_HEADER = ["Pos", "Slug", "Job", "Inventory (letters / signs)", "Est. lessons"]
@@ -38,6 +39,8 @@ PAREN_GROUP_RE = re.compile(r"\([^)]*\)")
 BOLD_LETTER_COUNT_RE = re.compile(r"\*\*(\d+) letters\*\*")
 POSITION_INT_RE = re.compile(r"^\d+$")
 POSITION_RANGE_RE = re.compile(r"^(\d+)\s*[–-]\s*(\d+)$")
+STATED_TOTAL_RE = re.compile(r"orientation only and total (\d+)")
+STATED_TOTAL_SENTENCE_RE = re.compile(r"[^.]*orientation only and total \d+\.", re.S)
 
 
 class ArcGenerationError(Exception):
@@ -87,6 +90,52 @@ def _find_position_tables(doc_text: str) -> dict[str, list[tuple[str, list[str]]
     if missing:
         raise ArcGenerationError(f"position table(s) not found in the arc document: {sorted(missing)}")
     return found
+
+
+def _stated_lesson_total(doc_text: str) -> tuple[int, str]:
+    """The lesson total stated in the sizing paragraph after the main table.
+
+    The paragraph immediately following the main position table must contain
+    the sentence "… orientation only and total <N>." exactly once. Returns
+    (N, sentence). Any deviation fails generation: the stated total is a
+    review anchor, not decoration.
+    """
+    lines = doc_text.splitlines()
+    table_end: int | None = None
+    i = 0
+    while i < len(lines):
+        if lines[i].strip().startswith("|") and i + 1 < len(lines) and TABLE_SEPARATOR_RE.match(lines[i + 1]):
+            header = _split_row(lines[i])
+            j = i + 2
+            while j < len(lines) and lines[j].strip().startswith("|"):
+                j += 1
+            if header == MAIN_HEADER:
+                table_end = j
+                break
+            i = j
+        else:
+            i += 1
+    if table_end is None:
+        raise ArcGenerationError("main position table not found; cannot locate the stated lesson total")
+    paragraph_lines: list[str] = []
+    for line in lines[table_end:]:
+        if not line.strip():
+            if paragraph_lines:
+                break
+            continue
+        paragraph_lines.append(line)
+    paragraph = "\n".join(paragraph_lines)
+    matches = list(STATED_TOTAL_RE.finditer(paragraph))
+    if not matches:
+        raise ArcGenerationError(
+            "no stated lesson total (…orientation only and total <N>…) found "
+            "in the paragraph after the main position table"
+        )
+    if len(matches) > 1:
+        raise ArcGenerationError(f"multiple stated lesson totals in the sizing paragraph: {[m.group(0) for m in matches]!r}")
+    sentence_match = STATED_TOTAL_SENTENCE_RE.search(paragraph)
+    sentence = " ".join(sentence_match.group(0).split()) if sentence_match else paragraph
+    return int(matches[0].group(1)), sentence
 
 
 def _position_int(cell: str, raw_row: str) -> int:
@@ -250,18 +299,28 @@ def parse_positions(doc_text: str) -> list[dict]:
     if len(set(slugs)) != len(slugs):
         duplicates = sorted({slug for slug in slugs if slugs.count(slug) > 1})
         raise ArcGenerationError(f"duplicate slugs in the arc document: {duplicates!r}")
+
+    stated_total, stated_sentence = _stated_lesson_total(doc_text)
+    computed_total = sum(record["est_lessons"] for record in records)
+    if computed_total != stated_total:
+        raise ArcGenerationError(
+            f"the stated lesson total is {stated_total} but the est_lessons cells sum to {computed_total}\n"
+            f"  sentence: {stated_sentence}"
+        )
     return records
 
 
 def render_arc_yaml(doc_bytes: bytes, doc_rel_path: str) -> str:
     """Render the full _arc.yaml text for an arc document (bytes + repo-relative path)."""
+    records = parse_positions(doc_bytes.decode("utf-8"))
     data = {
         "arc_schema": 1,
         "source": {
             "path": doc_rel_path,
             "sha256": hashlib.sha256(doc_bytes).hexdigest(),
         },
-        "positions": parse_positions(doc_bytes.decode("utf-8")),
+        "est_lessons_total": sum(record["est_lessons"] for record in records),
+        "positions": records,
     }
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=10**6)
 
@@ -279,7 +338,7 @@ def generate_yaml(doc_path: Path) -> str:
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description=(
-            "Generate curriculum/l2-uk-en/arc/<level>/_arc.yaml from the reviewed arc document "
+            "Generate curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml from the reviewed arc document "
             "(docs/epics/fresh-build-<level>-arc.md) by parsing its position tables.\n"
             "Use it after the arc document changes; never edit _arc.yaml by hand — the committed YAML must be "
             "byte-identical to a fresh run of this generator."
@@ -289,7 +348,7 @@ def build_parser() -> argparse.ArgumentParser:
   .venv/bin/python scripts/curriculum/arc/generate_arc.py --level a1 --check
 
 Outputs:
-  --write   writes curriculum/l2-uk-en/arc/<level>/_arc.yaml (overwrites)
+  --write   writes curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml (overwrites)
   --check   writes nothing; compares a fresh generation against the committed file
 Exit codes:
   0  generation succeeded / committed file is byte-identical
@@ -306,7 +365,7 @@ Related:
         default="a1",
         choices=SUPPORTED_LEVELS,
         help="Level whose arc is generated; selects docs/epics/fresh-build-<level>-arc.md and "
-        "curriculum/l2-uk-en/arc/<level>/_arc.yaml (default: a1; only a1 exists today)",
+        "curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml (default: a1; only a1 exists today)",
     )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument(
@@ -317,7 +376,7 @@ Related:
     mode.add_argument(
         "--write",
         action="store_true",
-        help="Write the generated YAML to curriculum/l2-uk-en/arc/<level>/_arc.yaml, overwriting it",
+        help="Write the generated YAML to curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml, overwriting it",
     )
     parser.add_argument(
         "--doc",
@@ -331,7 +390,7 @@ Related:
         type=Path,
         default=None,
         help="Override the _arc.yaml path that --write writes and --check compares against "
-        "(default: curriculum/l2-uk-en/arc/<level>/_arc.yaml)",
+        "(default: curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml)",
     )
     return parser
 
