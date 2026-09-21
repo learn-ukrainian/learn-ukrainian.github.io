@@ -3,9 +3,12 @@
 from __future__ import annotations
 
 import os
+import shlex
+import signal
 import sqlite3
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -17,7 +20,10 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_OK,
     EXIT_RETRY_STORM,
     EXIT_USAGE,
+    HomonymFetcher,
     HttpResult,
+    InterruptedByOperator,
+    PoliteClient,
     SpellingLedger,
     _dedupe_register_rows,
     _write_group,
@@ -57,8 +63,8 @@ def _register(words: list[str], viewstate: str, *, paging: bool = True) -> str:
     rows = []
     for index, word in enumerate(words):
         rows.append(
-            "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
-            f"&#39;Select${index}&#39;)\">{word}</a></td></tr>"
+            '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+            f'&#39;Select${index}&#39;)">{word}</a></td></tr>'
         )
     paging_html = ""
     if paging:
@@ -182,9 +188,7 @@ def test_zamok_group_stores_three_entries_and_tab_sets(tmp_path):
             (3, "phraseology"),
             (3, "synonyms"),
         ]
-        request = ledger.conn.execute(
-            "SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1"
-        ).fetchone()
+        request = ledger.conn.execute("SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1").fetchone()
         cache = sqlite3.connect(tmp_path / "cache.db")
         payload = cache.execute(
             "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
@@ -226,9 +230,9 @@ def test_invariable_duzhe_records_one_entry_and_its_tabs(tmp_path):
     cache = sqlite3.connect(tmp_path / "cache.db")
     ledger = _ledger(tmp_path)
     try:
-        digest = ledger.conn.execute(
-            "SELECT response_sha256 FROM responses WHERE role = 'entry'"
-        ).fetchone()["response_sha256"]
+        digest = ledger.conn.execute("SELECT response_sha256 FROM responses WHERE role = 'entry'").fetchone()[
+            "response_sha256"
+        ]
         body = cache.execute(
             "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
             (digest,),
@@ -278,9 +282,7 @@ def test_boundary_group_fetches_the_next_page_from_the_pristine_viewstate(tmp_pa
     assert next_posts[0]["__EVENTARGUMENT"] == ""
     ledger = _ledger(tmp_path)
     try:
-        row = ledger.conn.execute(
-            "SELECT state, entry_count, straddled_boundary FROM spellings"
-        ).fetchone()
+        row = ledger.conn.execute("SELECT state, entry_count, straddled_boundary FROM spellings").fetchone()
         positions = [
             row["register_position"]
             for row in ledger.conn.execute(
@@ -308,10 +310,7 @@ def test_resume_after_injected_failure_mid_spelling(tmp_path):
     assert _run(tmp_path, ["нема", "теж"], scripted) == EXIT_INTERRUPTED
     ledger = _ledger(tmp_path)
     try:
-        states = {
-            row["spelling"]: row["state"]
-            for row in ledger.conn.execute("SELECT spelling, state FROM spellings")
-        }
+        states = {row["spelling"]: row["state"] for row in ledger.conn.execute("SELECT spelling, state FROM spellings")}
     finally:
         ledger.close()
     assert states == {"нема": "absent_from_ulif", "теж": "pending"}
@@ -494,10 +493,7 @@ def test_ledger_state_transitions_and_three_retry_scheduled_stop(tmp_path):
     assert any(value >= 7 for value in sleeps)
     ledger = _ledger(tmp_path)
     try:
-        states = {
-            row["spelling"]: row["state"]
-            for row in ledger.conn.execute("SELECT spelling, state FROM spellings")
-        }
+        states = {row["spelling"]: row["state"] for row in ledger.conn.execute("SELECT spelling, state FROM spellings")}
         text = status_text(ledger, delay_seconds=1.0)
     finally:
         ledger.close()
@@ -571,9 +567,28 @@ def test_unmigrated_database_stops_before_requests(tmp_path):
     assert _sqlite_master_bytes(db_path) == before
 
 
-def test_delay_below_one_second_is_rejected():
-    with pytest.raises(SystemExit):
-        main(["run", "--spellings-file", "x", "--state-dir", "y", "--db", "z", "--delay", "0.5"])
+def test_delay_below_one_second_is_rejected(tmp_path, capsys):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+            "--delay",
+            "0.5",
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
 
 
 def test_equal_content_hash_marks_checked_without_rewriting(tmp_path):
@@ -596,9 +611,7 @@ def test_equal_content_hash_marks_checked_without_rewriting(tmp_path):
         )
         cache.commit()
         assert parse_stored(ledger, cache) == 0
-        row = cache.execute(
-            "SELECT canonical_headword, homonym_checked FROM ulif_dictua_entries"
-        ).fetchone()
+        row = cache.execute("SELECT canonical_headword, homonym_checked FROM ulif_dictua_entries").fetchone()
         assert row == ("KEEP", 1)
         cache.execute("UPDATE ulif_dictua_entries SET content_sha256 = 'different', homonym_checked = 0")
         cache.commit()
@@ -724,9 +737,7 @@ def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
     assert select_args == ["Select$4", "Select$5"]
     ledger = _ledger(tmp_path)
     try:
-        row = ledger.conn.execute(
-            "SELECT state, entry_count FROM spellings WHERE spelling = 'ішим'"
-        ).fetchone()
+        row = ledger.conn.execute("SELECT state, entry_count FROM spellings WHERE spelling = 'ішим'").fetchone()
         assert (row["state"], row["entry_count"]) == ("stored", 2)
         cache = sqlite3.connect(tmp_path / "cache.db")
         cache.row_factory = sqlite3.Row
@@ -738,18 +749,16 @@ def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
             ORDER BY homonym_index
             """
         ).fetchall()
-        duplicate = ledger.conn.execute(
-            "SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'"
-        ).fetchone()["duplicate_content"]
+        duplicate = ledger.conn.execute("SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'").fetchone()[
+            "duplicate_content"
+        ]
         printed_meta = ledger.meta("printed_homonym_numbers:ішим")
         cache.close()
     finally:
         ledger.close()
     assert differing == 0
     assert duplicate == 0
-    assert [
-        (r["homonym_index"], r["canonical_headword"], r["sense_gloss"], r["homonym_checked"]) for r in rows
-    ] == [
+    assert [(r["homonym_index"], r["canonical_headword"], r["sense_gloss"], r["homonym_checked"]) for r in rows] == [
         (1, "Іши́м", gloss1, 1),
         (2, "Іши́м", gloss2, 1),
     ]
@@ -849,12 +858,8 @@ def test_printed_number_mismatch_refuses_group_write(tmp_path, monkeypatch):
     cache.row_factory = sqlite3.Row
     try:
         differing = parse_stored(ledger, cache)
-        row = ledger.conn.execute(
-            "SELECT state, error FROM spellings WHERE spelling = 'ішим'"
-        ).fetchone()
-        entries = list(
-            cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'")
-        )
+        row = ledger.conn.execute("SELECT state, error FROM spellings WHERE spelling = 'ішим'").fetchone()
+        entries = list(cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'"))
         meta = ledger.meta("printed_homonym_numbers:ішим")
     finally:
         cache.close()
@@ -905,12 +910,12 @@ def test_overlapping_register_identity_opened_once(tmp_path):
     rows = []
     for index, word in enumerate([*fillers, "Кра́й"]):
         rows.append(
-            "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
-            f"&#39;Select${index}&#39;)\">{word}</a></td></tr>"
+            '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+            f'&#39;Select${index}&#39;)">{word}</a></td></tr>'
         )
     rows.append(
-        "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
-        "&#39;Select$24&#39;)\">Кра́й</a></td></tr>"
+        '<tr><td><a href="javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,'
+        '&#39;Select$24&#39;)">Кра́й</a></td></tr>'
     )
     page = (
         '<input type="hidden" name="__VIEWSTATE" value="page-a" />'
@@ -1054,3 +1059,1199 @@ def test_transport_exception_exhausts_to_retry_scheduled(tmp_path):
     assert states["б"] == ("retry_scheduled", "transport_error")
     assert states["в"] == ("retry_scheduled", "transport_error")
     assert states["г"] == ("pending", "")
+
+
+def test_start_banner_reports_counts_and_case_duplicates(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["Замок", "замок", "будинок"], _Scripted(handler))
+    assert code == EXIT_OK
+    captured = capsys.readouterr()
+    err = captured.err
+    assert "=== ULIF Homonym Fetch Runner ===" in err
+    assert "Spellings in file:             3" in err
+    assert "Distinct after normalisation:  2 (1 duplicates)" in err
+    assert "Already finished (skipped):    0" in err
+    assert "To do in this run:             2" in err
+    assert "Delay between requests:        1.0s" in err
+    assert f"State directory:               {tmp_path / 'state'}" in err
+    assert f"Database path:                 {tmp_path / 'cache.db'}" in err
+    assert "Register size:                 unknown" in err
+    assert "=================================" in err
+
+
+def test_progress_lines_for_all_four_outcomes(tmp_path, capsys):
+    page_zamok = _register(["за́мок"], "seed", paging=False)
+    page_other = _register(["інше"], "seed", paging=False)
+    entry_zamok = _entry("за́мок", "(будівля)", "entry_vs", "")
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, page_zamok, {})
+        assert data is not None
+        query = data.get("ctl00$ContentPlaceHolder1$tsearch", "")
+        if query == "замок":
+            if data.get("__EVENTARGUMENT") == "Select$0":
+                return HttpResult(200, entry_zamok, {})
+            return HttpResult(200, page_zamok, {})
+        if query == "нема":
+            return HttpResult(200, page_other, {})
+        if query == "помилка":
+            return HttpResult(500, "internal server error", {})
+        if query == "заборонено":
+            return HttpResult(403, "forbidden", {})
+        return HttpResult(200, page_other, {})
+
+    code = _run(
+        tmp_path,
+        ["замок", "нема", "помилка", "заборонено"],
+        _Scripted(handler),
+    )
+    assert code == EXIT_FORBIDDEN
+    captured = capsys.readouterr()
+    err = captured.err
+
+    assert "stored       entries=1 req=" in err
+    assert "absent_from_ulif entries=0 req=" in err
+    assert "retry_scheduled entries=0 req=" in err
+    assert "error        entries=0 req=" in err
+    assert "total_req=" in err
+    assert "замок" in err
+    assert "нема" in err
+    assert "помилка" in err
+    assert "заборонено" in err
+
+
+def test_progress_numbering_continues_across_resume(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code1 = _run(tmp_path, ["а", "б"], _Scripted(handler), max_spellings=1)
+    assert code1 == EXIT_OK
+    err1 = capsys.readouterr().err
+    assert "[    1/2      50.0%]" in err1
+    assert "Already finished (skipped):    0" in err1
+    assert "To do in this run:             1" in err1
+
+    code2 = _run(tmp_path, ["а", "б"], _Scripted(handler))
+    assert code2 == EXIT_OK
+    err2 = capsys.readouterr().err
+    assert "Already finished (skipped):    1" in err2
+    assert "To do in this run:             1" in err2
+    assert "[    2/2     100.0%]" in err2
+
+
+def test_eta_question_mark_then_clock_calculation(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+    sim_time = [1000.0]
+
+    def fake_clock() -> float:
+        return sim_time[0]
+
+    def fake_sleep(sec: float) -> None:
+        sim_time[0] += sec
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        sim_time[0] += 10.0
+        return HttpResult(200, page, {})
+
+    spellings = ["а", "б", "в", "г", "д", "е"]
+    code = _run(
+        tmp_path,
+        spellings,
+        _Scripted(handler),
+        clock=fake_clock,
+        sleep=fake_sleep,
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+
+    lines = [line for line in err.splitlines() if line.startswith("[")]
+    assert len(lines) == 6
+    assert "eta=?" in lines[0]
+    assert "eta=?" in lines[1]
+    assert "eta=?" in lines[2]
+    assert "eta=?" in lines[3]
+    assert "eta=?" not in lines[4]
+    assert "eta=" in lines[4]
+    assert "eta=0:00:00" in lines[5]
+
+
+def test_heartbeat_during_long_backoff(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+    sim_time = [1000.0]
+
+    def fake_clock() -> float:
+        return sim_time[0]
+
+    def fake_sleep(sec: float) -> None:
+        sim_time[0] += sec
+
+    attempts = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        attempts["n"] += 1
+        if attempts["n"] == 1:
+            return HttpResult(429, "Too Many Requests", {"Retry-After": "150"})
+        return HttpResult(200, page, {})
+
+    code = _run(
+        tmp_path,
+        ["тест"],
+        _Scripted(handler),
+        clock=fake_clock,
+        sleep=fake_sleep,
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "heartbeat: waiting for back-off: 90s remaining (attempt 1)" in err
+    assert "heartbeat: waiting for back-off: 30s remaining (attempt 1)" in err
+
+
+def test_stop_summary_on_keyboard_interrupt(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+    calls = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        calls["n"] += 1
+        if calls["n"] > 2:
+            raise KeyboardInterrupt()
+        return HttpResult(200, page, {})
+
+    code = _run(
+        tmp_path,
+        ["перше", "друге"],
+        _Scripted(handler),
+    )
+    assert code == EXIT_INTERRUPTED
+    captured = capsys.readouterr()
+    err = captured.err
+
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Spellings total:      2" in err
+    assert "Pending:              1" in err
+    assert f"Resume command:       {shlex.quote(sys.executable)}" in err
+    assert "===============================" in err
+
+    ledger = _ledger(tmp_path)
+    try:
+        assert ledger.state_of("перше") == "absent_from_ulif"
+        assert ledger.state_of("друге") == "pending"
+    finally:
+        ledger.close()
+
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_truthful_requests_made_mid_run_and_no_double_counting(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    mid_requests: list[str] = []
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        ledger = _ledger(tmp_path)
+        try:
+            mid_requests.append(ledger.meta("requests_made", "0") or "0")
+        finally:
+            ledger.close()
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["перше", "друге"], _Scripted(handler))
+    assert code == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        final_requests = int(ledger.meta("requests_made", "0") or "0")
+    finally:
+        ledger.close()
+
+    assert mid_requests[0] == "0"
+    assert any(int(val) > 0 for val in mid_requests[2:])
+    assert final_requests == 4
+
+
+def test_status_text_empty_ledger_and_lock_states(tmp_path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger_path = state_dir / "ledger.sqlite"
+    ledger = SpellingLedger(ledger_path)
+    try:
+        text = status_text(ledger, delay_seconds=1.0, state_dir=state_dir)
+        assert "complete=not_started" in text
+        assert "runner=not_running" in text
+        assert "last_update=none" in text
+        assert "seconds_since_last_update=unknown" in text
+        assert "estimated_time_remaining_seconds=0" in text
+
+        lock_path = state_dir / "runner.lock"
+        pid = os.getpid()
+        iso = "2026-09-21T12:00:00+00:00"
+        lock_path.write_text(f"{pid}\n{iso}\n", encoding="utf-8")
+        orig_bytes = lock_path.read_bytes()
+        orig_stat = lock_path.stat().st_mode
+
+        text_running = status_text(ledger, delay_seconds=1.0, state_dir=state_dir)
+        assert f"runner=running pid={pid} since={iso}" in text_running
+        assert lock_path.read_bytes() == orig_bytes
+        assert lock_path.stat().st_mode == orig_stat
+
+        lock_path.write_text(f"99999999\n{iso}\n", encoding="utf-8")
+        text_stale = status_text(ledger, delay_seconds=1.0, state_dir=state_dir)
+        assert "runner=stale_lock pid=99999999" in text_stale
+        assert lock_path.read_text(encoding="utf-8") == f"99999999\n{iso}\n"
+    finally:
+        ledger.close()
+
+
+def test_quiet_flag_suppresses_progress_lines(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["тихо"], _Scripted(handler), quiet=True)
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "=== ULIF Homonym Fetch Runner ===" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "[    1/1" not in err
+
+
+def test_parse_stored_progress_logging(tmp_path, capsys):
+    page = _register(["ду́же"], "seed", paging=False)
+    entry = _html("duzhe.html")
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if data and data.get("__EVENTARGUMENT"):
+            return HttpResult(200, entry, {})
+        return HttpResult(200, page, {})
+
+    assert _run(tmp_path, ["дуже"], _Scripted(handler)) == EXIT_OK
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    ledger = _ledger(tmp_path)
+    try:
+        capsys.readouterr()
+        differing = parse_stored(ledger, cache)
+        assert differing == 0
+        err = capsys.readouterr().err
+        assert (
+            "parse complete: 1 spellings parsed, 1 entries written, 0 groups differed, 0 printed_number_mismatch errors"
+        ) in err
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_cli_help_options(capsys):
+    for subcmd in ["run", "parse", "status", "build-suspects", "build-a1a2"]:
+        with pytest.raises(SystemExit) as exc:
+            main([subcmd, "--help"])
+        assert exc.value.code == 0
+        out = capsys.readouterr().out
+        assert "Examples:" in out
+        assert "Outputs:" in out
+        assert "Exit codes:" in out
+        assert "Related:" in out
+
+
+def test_start_banner_reports_counts_and_case_duplicates_via_cli(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(m: str, d: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms._requests_transport", lambda ua: handler)
+
+    spellings_file = _write_spellings(tmp_path / "spellings.txt", ["Замок", "замок", "будинок"])
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+            "--delay",
+            "1.0",
+        ]
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "Spellings in file:             3" in err
+    assert "Distinct after normalisation:  2 (1 duplicates)" in err
+    assert "To do in this run:             2" in err
+
+
+def test_resume_command_faithful_options_and_quoting(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    calls = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        calls["n"] += 1
+        if calls["n"] > 1:
+            raise KeyboardInterrupt()
+        return HttpResult(200, page, {})
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms._requests_transport", lambda ua: handler)
+    spellings_file = _write_spellings(tmp_path / "my spellings.txt", ["перше", "друге"])
+    state_dir = tmp_path / "state with space"
+    db_file = tmp_path / "cache with space.db"
+
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_file),
+            "--delay",
+            "1.25",
+            "--max-spellings",
+            "5",
+            "--quiet",
+        ]
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert shlex.quote(str(spellings_file)) in err
+    assert shlex.quote(str(state_dir)) in err
+    assert shlex.quote(str(db_file)) in err
+    assert "--delay 1.25" in err
+    assert "--max-spellings 5" in err
+    assert "--quiet" in err
+
+
+def test_discovered_register_size_emitted_to_stderr(tmp_path, capsys):
+    page = _register(["інше"], "seed", paging=False)
+
+    def handler(m: str, d: dict[str, str] | None) -> HttpResult:
+        return HttpResult(200, page, {})
+
+    code = _run(tmp_path, ["тест"], _Scripted(handler))
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    assert "discovered register size: 262812" in err
+
+
+def test_operator_interrupt_during_setup_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    def fake_prepare(db_path):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms.prepare_database", fake_prepare)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, "", {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+
+
+def test_operator_interrupt_during_lock_acquire_cleans_up_and_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    lock_file = tmp_path / "state" / "runner.lock"
+
+    def fake_fdopen(fd, *args, **kwargs):
+        os.close(fd)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(os, "fdopen", fake_fdopen)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, "", {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+    assert not lock_file.exists()
+
+
+def test_operator_interrupt_during_final_accounting_prints_summary_and_returns_exit_interrupted(
+    tmp_path, capsys, monkeypatch
+):
+    page = _register(["інше"], "seed", paging=False)
+    orig_set_requests = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set_requests(self, count):
+        calls[0] += 1
+        # Call 1: mid-run after spelling fetch succeeds
+        # Call 2: final accounting -> raise KeyboardInterrupt
+        if calls[0] >= 2:
+            raise KeyboardInterrupt()
+        orig_set_requests(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set_requests)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, page, {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_requests_made_idempotent_no_double_counting_across_interruption(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    # Run 1 spelling and interrupt during the second spelling
+    orig_fetch = HomonymFetcher.fetch
+    fetch_count = [0]
+
+    def interrupted_fetch(self, spelling):
+        fetch_count[0] += 1
+        if fetch_count[0] > 1:
+            raise KeyboardInterrupt()
+        return orig_fetch(self, spelling)
+
+    code = run_fetch(
+        spellings=["перше", "друге"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    # The first run without mock runs both to completion (2 spellings * 2 requests = 4)
+    assert code == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        assert int(ledger.meta("requests_made", "0") or "0") == 4
+    finally:
+        ledger.close()
+
+    # Now simulate a resumed run where 1 spelling is fetched, then interrupted
+    fetch_count[0] = 0
+    from unittest.mock import patch
+
+    with patch.object(HomonymFetcher, "fetch", interrupted_fetch):
+        code2 = run_fetch(
+            spellings=["перше", "третє", "четверте"],
+            state_dir=tmp_path / "state",
+            db_path=tmp_path / "cache.db",
+            transport=handler,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+    assert code2 == EXIT_INTERRUPTED
+
+    # "перше" was already stored (skipped). "третє" made 2 requests and was stored.
+    # "четверте" raised KeyboardInterrupt before any requests.
+    # Total requests across all runs should be exactly 4 (from run 1) + 2 (from run 2) = 6.
+    ledger = _ledger(tmp_path)
+    try:
+        assert int(ledger.meta("requests_made", "0") or "0") == 6
+    finally:
+        ledger.close()
+
+
+def test_final_accounting_retains_requests_on_interruption_after_request_cap(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.set_meta("requests_made", "7")
+    ledger.close()
+
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_set_requests = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set_requests(self, count):
+        calls[0] += 1
+        # Calls 1 & 2: live updates during requests
+        # Call 3+: final write under interrupt
+        if calls[0] >= 3:
+            raise KeyboardInterrupt()
+        orig_set_requests(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set_requests)
+
+    code = run_fetch(
+        spellings=["замок"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+        max_requests=2,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+    check_ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert check_ledger.meta("requests_made") == "9"
+    finally:
+        check_ledger.close()
+
+
+def test_stop_summary_guaranteed_on_db_setup_failure(tmp_path, capsys):
+    from tests.test_ulif_dictua import _write_old_ulif_db
+
+    db_path = _write_old_ulif_db(tmp_path / "old.db")
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=db_path,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               database error:" in err
+    assert "Resume command:" in err
+
+
+def test_stop_summary_guaranteed_on_lock_refusal(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    lock = state_dir / "runner.lock"
+    lock.write_text(f"{os.getpid()}\n2026-09-21T00:00:00+00:00\n", encoding="utf-8")
+
+    with pytest.raises(SystemExit, match="live pid"):
+        run_fetch(
+            spellings=["тест"],
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            transport=lambda m, d: HttpResult(200, "", {}),
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               refusing to start: runner lock held by live pid" in err
+    assert "Resume command:" in err
+
+
+def test_stop_summary_guaranteed_when_summary_printing_interrupted(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    def flaky_summary(*args, **kwargs):
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr("scripts.lexicon.runner.fetch_ulif_homonyms._print_stop_summary", flaky_summary)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+
+def test_interrupt_during_lock_release_cleans_up_lock(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_read_lock = "scripts.lexicon.runner.fetch_ulif_homonyms._read_lock"
+    calls = [0]
+
+    def flaky_read_lock(path):
+        calls[0] += 1
+        # During release, inject KeyboardInterrupt
+        if calls[0] >= 1:
+            raise KeyboardInterrupt()
+        return os.getpid(), "2026-09-21T00:00:00+00:00", ""
+
+    monkeypatch.setattr(orig_read_lock, flaky_read_lock)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_invalid_delay_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        delay_seconds=0.5,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
+
+
+def test_final_accounting_database_locked_error_still_produces_stop_summary(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_set = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set(self, count):
+        calls[0] += 1
+        # Call 1: mid-fetch update
+        # Call 2: final accounting -> database is locked
+        if calls[0] >= 2:
+            raise sqlite3.OperationalError("database is locked")
+        orig_set(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "warning: failed to persist final requests_made" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_invalid_delay_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    db_path = tmp_path / "cache.db"
+    prepare_database(db_path).close()
+    state_dir = tmp_path / "state"
+
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--delay",
+            "0.5",
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
+
+
+def test_fallback_accounting_operator_interrupt_produces_stop_summary(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_init = SpellingLedger.__init__
+
+    def wrapped_init(self, *args, **kwargs):
+        orig_init(self, *args, **kwargs)
+        real_conn = self.conn
+
+        class Proxy:
+            def __init__(self, conn):
+                self._conn = conn
+
+            def execute(self, sql, *a, **kw):
+                if "INSERT INTO meta" in str(sql) and "requests_made" in str(a):
+                    raise KeyboardInterrupt()
+                return self._conn.execute(sql, *a, **kw)
+
+            def __getattr__(self, name):
+                return getattr(self._conn, name)
+
+        self.conn = Proxy(real_conn)
+
+    monkeypatch.setattr(SpellingLedger, "__init__", wrapped_init)
+
+    orig_set = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def failing_set(self, count):
+        calls[0] += 1
+        if calls[0] >= 2:
+            raise sqlite3.OperationalError("database is locked")
+        orig_set(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", failing_set)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_interrupted_refetch_restores_pending_state(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.mark("тест", "stored", entry_count=2)
+    assert ledger.state_of("тест") == "stored"
+    ledger.record_response(spelling="тест", role="seed", response_sha256="hash123", request_sha256="req123")
+    ledger.close()
+
+    def interrupt_transport(method, data):
+        raise KeyboardInterrupt()
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=True,
+        transport=interrupt_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("тест") == "pending"
+        counts = ledger.counts()
+        assert counts["pending"] == 1
+        assert counts["stored"] == 0
+        responses_count = ledger.conn.execute("SELECT COUNT(*) FROM responses WHERE spelling = 'тест'").fetchone()[0]
+        assert responses_count == 0
+    finally:
+        ledger.close()
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Pending:              1" in err
+    assert "Stored:               0" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_interrupted_resumed_retry_restores_pending_state(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.mark("тест", "retry_scheduled", error="503")
+    assert ledger.state_of("тест") == "retry_scheduled"
+    ledger.close()
+
+    def interrupt_transport(method, data):
+        raise KeyboardInterrupt()
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=interrupt_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("тест") == "pending"
+        counts = ledger.counts()
+        assert counts["pending"] == 1
+        assert counts["retry_scheduled"] == 0
+    finally:
+        ledger.close()
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Pending:              1" in err
+    assert "Retry scheduled:      0" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_interrupted_refetch_preparation_stops_run(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.mark("тест", "stored", entry_count=2)
+    assert ledger.state_of("тест") == "stored"
+    ledger.close()
+
+    orig_clear = SpellingLedger.clear_responses
+
+    def interrupt_clear(self, spelling):
+        orig_clear(self, spelling)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(SpellingLedger, "clear_responses", interrupt_clear)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=True,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_missing_spellings_file_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(tmp_path / "nonexistent.txt"),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "failed to read spellings file" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               failed to read spellings file" in err
+    assert "Resume command:" in err
+
+
+def test_request_cap_interruption_during_cleanup_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.close()
+
+    calls = [0]
+    orig_clear = SpellingLedger.clear_responses
+
+    def interrupt_clear(self, spelling):
+        calls[0] += 1
+        orig_clear(self, spelling)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(SpellingLedger, "clear_responses", interrupt_clear)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        max_requests=0,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_resumed_retries_produce_truthful_eta_not_zero(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    spellings = [f"слово{i}" for i in range(6)]
+    for s in spellings:
+        ledger.ensure(s)
+        ledger.mark(s, "retry_scheduled", error="503")
+    ledger.close()
+
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    cur_time = [0.0]
+
+    def fake_clock():
+        cur_time[0] += 10.0
+        return cur_time[0]
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=fake_clock,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    lines = [line for line in err.splitlines() if "absent_from_ulif" in line]
+    assert len(lines) == 6
+    assert "eta=0:00:00" not in lines[4]
+    assert "eta=0:00:00" in lines[5]
+
+
+def test_directory_as_spellings_file_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(tmp_path),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "failed to read spellings file" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Resume command:" in err
+
+
+def test_sigterm_during_input_reading_cli_produces_stop_summary_and_exit_interrupted(tmp_path, capsys, monkeypatch):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    def kill_sigterm(path):
+        os.kill(os.getpid(), signal.SIGTERM)
+
+    monkeypatch.setattr(mod, "_spellings_from_file", kill_sigterm)
+
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+
+def test_sigterm_during_input_reading_subprocess_boundary(tmp_path):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    proc = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "run",
+            "--spellings-file",
+            str(fifo_path),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ],
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        time.sleep(0.3)
+        proc.send_signal(signal.SIGTERM)
+        _, err = proc.communicate(timeout=5)
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait()
+
+    assert proc.returncode == EXIT_INTERRUPTED
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+
+def test_interrupted_request_counts_attempt_and_updates_ledger(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("слово")
+    ledger.set_requests_made(7)
+    ledger.close()
+
+    dispatched = [0]
+
+    def interrupting_transport(method, fields):
+        dispatched[0] += 1
+        os.kill(os.getpid(), signal.SIGTERM)
+
+    code = run_fetch(
+        spellings=["слово"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        transport=interrupting_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    assert dispatched[0] == 1
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Requests in run:      1" in err
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert int(ledger.meta("requests_made", "0")) == 8
+    finally:
+        ledger.close()
+
+
+def test_polite_client_exchange_interrupted_records_request_and_timing():
+    clock_val = [100.0]
+
+    def fake_clock():
+        return clock_val[0]
+
+    recorded = []
+
+    def on_request(count):
+        recorded.append(count)
+
+    def interrupting_transport(method, fields):
+        clock_val[0] += 1.5
+        raise InterruptedByOperator("SIGTERM")
+
+    client = PoliteClient(
+        transport=interrupting_transport,
+        delay_seconds=2.0,
+        clock=fake_clock,
+        sleep=_noop_sleep,
+        on_request=on_request,
+    )
+
+    with pytest.raises(InterruptedByOperator):
+        client.exchange("GET", None)
+
+    assert client.requests_made == 1
+    assert recorded == [1]
+    assert client._last_at == 101.5
+
+    slept = []
+    client.sleep = lambda s: slept.append(s)
+    client._wait_turn()
+    assert slept == [pytest.approx(2.0)]
+
+
+def test_interruption_during_outcome_persistence_restores_pending_and_clears_responses(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("слово")
+    ledger.mark("слово", "retry_scheduled", error="503")
+    ledger.close()
+
+    page = _register(["слово"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_mark = SpellingLedger.mark
+
+    def interrupt_on_mark(self, spelling, state, **kwargs):
+        if state == "stored":
+            raise InterruptedByOperator("SIGTERM")
+        return orig_mark(self, spelling, state, **kwargs)
+
+    monkeypatch.setattr(SpellingLedger, "mark", interrupt_on_mark)
+
+    code = run_fetch(
+        spellings=["слово"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Pending:              1" in err
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("слово") == "pending"
+        cur = ledger.conn.execute("SELECT COUNT(*) FROM responses WHERE spelling = ?", ("слово",))
+        assert cur.fetchone()[0] == 0
+    finally:
+        ledger.close()
+
+
+def test_quiet_mode_emits_heartbeats_during_steady_progress(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    spellings = [f"слово{i}" for i in range(10)]
+
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    cur_time = [0.0]
+
+    def fake_clock():
+        cur_time[0] += 5.5
+        return cur_time[0]
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        quiet=True,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=fake_clock,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_OK
+
+    err = capsys.readouterr().err
+    assert "absent_from_ulif" not in err
+    heartbeats = [line for line in err.splitlines() if "heartbeat:" in line]
+    assert len(heartbeats) >= 2
+    for hb in heartbeats:
+        assert "heartbeat: waiting for response" in hb
+    assert "=== ULIF Homonym Fetch Runner ===" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
