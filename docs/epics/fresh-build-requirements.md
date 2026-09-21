@@ -91,6 +91,45 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-21 Wiki and workflow.** Plans, the wiki and the build workflow are all improved as part of
   this work, not only the prompts.
 
+### Pipeline (accepted by the operator 2026-09-21)
+
+- **R-24 Build order.** Arc → module **plan** with `lessons[]` → **evidence pack** → module
+  structure (landing, lesson skeletons, learner state per lesson) → lessons, one writer call per
+  lesson → recap lesson, written last from the module's actual lessons → gates → cross-family
+  review → publish.
+- **R-25 Evidence pack replaces the wiki essay as pipeline input.** One pack per module, built
+  with the sources MCP, then frozen and hashed. It is structured data, not prose: per teaching
+  point, verbatim textbook quotes with chunk ids, model exercises from the textbooks, example
+  sentences, known learner errors, verified word records with form-grain stress, videos. The
+  reasoning the old wiki carried (why this order, what English speakers get wrong) lives in the
+  plan as a short rationale per lesson. A human-readable wiki page may be rendered from the pack;
+  it is not an input.
+- **R-26 The writer does not search.** A lesson writer receives that lesson's plan entry, that
+  lesson's evidence, and the learner state "completed lessons 1..n−1". The MCP is used after the
+  draft, for verification.
+- **R-27 Lesson shape follows the textbooks.** Theory in small steps, each followed by practice,
+  then a larger practice block — the exercise density of the school textbooks in the corpus.
+- **R-28 Coverage is deterministic.** Every evidence id a lesson plan lists must be used and cited
+  in that lesson. This replaces the LLM wiki-coverage judge and its correction loops.
+- **R-29 Seminars later.** The same structure will reshape seminar modules; that is out of scope
+  until A1 is done.
+
+### Immersion and pedagogy (carried over unchanged)
+
+- **R-30 Keep the immersion settings that worked.** The live policy in `scripts/config.py`
+  (`IMMERSION_POLICIES`, `USE_ULP_IMMERSION_DERIVATION = True`) is carried into the new build as
+  is: A1 is ULP-derived and student-aware with a 40–55 % Ukrainian advisory share and structural
+  targets that tighten through the level; A2 runs 75–100 % at the bridge, 85–100 % through the
+  ramp and first 20 modules, 90–100 % to module 50 and 95–100 % to the end, with a little English
+  support. B1 onward is full immersion. Nobody re-tunes these numbers as part of this epic.
+- **R-31 ULP / Anna Ohoiko pedagogy is the model.** `docs/best-practices/ulp-presentation-pattern.md`
+  (her seven practices and the S1→S6 progression) and the 2026-05-13 immersion decision stay
+  binding for plans, evidence packs and lessons.
+- **Design note for the schema child.** The bands are keyed by *module number* today. With lessons,
+  and an arc that may renumber modules, the key has to become the learner's position in the
+  course (cumulative lessons and vocabulary), not a module index — otherwise a renamed or split
+  module silently changes its immersion band.
+
 ### Sequencing
 
 - **R-23 Planning does not wait; implementation waits for data.** Atlas and the ULIF intake are a
