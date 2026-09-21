@@ -380,21 +380,25 @@ def test_lock_file_mode_is_owner_only_after_acquire(tmp_path):
 def test_prepare_database_leaves_preexisting_db_and_parent_modes(tmp_path, capsys):
     from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
 
-    old_umask = os.umask(0o022)
+    # umask 0o027 → mkdir 0o750 / file 0o640 (group-accessible, no world bits).
+    # No chmod: CodeQL py/overly-permissive-file flags world *and* group r/w on chmod/open.
+    old_umask = os.umask(0o027)
     try:
         parent = tmp_path / "data"
-        parent.mkdir(mode=0o755)
-        os.chmod(parent, 0o755)
+        parent.mkdir()
         db_path = parent / "sources.db"
         db_path.write_bytes(b"")
-        os.chmod(db_path, 0o644)
         parent_before = parent.stat().st_mode & 0o777
         db_before = db_path.stat().st_mode & 0o777
+        assert parent_before == 0o750, f"expected 0o750, got {oct(parent_before)}"
+        assert db_before == 0o640, f"expected 0o640, got {oct(db_before)}"
+        assert parent_before & 0o077
+        assert db_before & 0o077
 
         conn = prepare_database(db_path)
         try:
-            assert parent.stat().st_mode & 0o777 == parent_before == 0o755
-            assert db_path.stat().st_mode & 0o777 == db_before == 0o644
+            assert parent.stat().st_mode & 0o777 == parent_before
+            assert db_path.stat().st_mode & 0o777 == db_before
         finally:
             conn.close()
         assert "warning" not in capsys.readouterr().err
@@ -421,17 +425,20 @@ def test_prepare_database_creates_new_db_owner_only(tmp_path):
 def test_ensure_private_dir_warns_on_permissive_existing_keeps_mode(tmp_path, capsys):
     from scripts.lexicon.runner.fetch_ulif_homonyms import _ensure_private_dir
 
-    old_umask = os.umask(0o022)
+    # umask 0o027 → mkdir yields 0o750 (group r-x). Avoid chmod: CodeQL flags group r/w too.
+    old_umask = os.umask(0o027)
     try:
         existing = tmp_path / "state"
-        existing.mkdir(mode=0o755)
-        os.chmod(existing, 0o755)
+        existing.mkdir()
+        before = existing.stat().st_mode & 0o777
+        assert before == 0o750, f"expected 0o750, got {oct(before)}"
+        assert before & 0o077
         _ensure_private_dir(existing)
-        assert existing.stat().st_mode & 0o777 == 0o755
+        assert existing.stat().st_mode & 0o777 == before
         err = capsys.readouterr().err
         assert "warning" in err
         assert str(existing) in err
-        assert "0o755" in err
+        assert oct(before) in err
 
         fresh = tmp_path / "new-state"
         _ensure_private_dir(fresh)
