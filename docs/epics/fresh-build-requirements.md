@@ -59,6 +59,11 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   responses, one "word card" call for morphology + stress + level + meaning (#8398). VESUM alone is
   not enough; ULIF data and the Atlas dictionary are part of the evidence base.
 
+- **R-22 Stress is per form.** Each inflected form of a Ukrainian word may carry a different
+  stress (`рука́`, `ру́ку`; `руки́` genitive singular vs `ру́ки` plural). Plans, word cards, gates
+  and lessons treat stress at word-form grain, keyed by the form's grammatical tags — never one
+  stress per lemma.
+
 ### Language and immersion
 
 - **R-14 A1 immerses gradually.** English scaffolding in A1 is by design and recedes lesson by
