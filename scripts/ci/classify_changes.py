@@ -28,6 +28,23 @@ CONTENT_CLASS_PREFIXES = (
     "site/src/content/docs/",
     "wiki/",
 )
+
+# Track roots whose top level also carries code-imported manifests/data.
+_CONTENT_TRACK_ROOTS = ("curriculum/l2-uk-en/", "curriculum/l2-uk-direct/")
+
+# Data/code extensions that are never prose content anywhere under the roots.
+_CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
+
+# Exact code-imported files inside the content roots (#8399 D3). Each forces
+# the full tier on both events and is excluded from the docs exemption; the
+# importing modules are listed in is_code_load_bearing_content's docstring.
+_CONTENT_CODE_PATHS = frozenset({
+    "curriculum/l2-uk-direct/manifest.yaml",
+    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+    "curriculum/l2-uk-en/module-mapping.json",
+    "curriculum/l2-uk-en/vocabulary.db",
+})
+
 DOC_PREFIXES = (
     "docs/", "agents_extensions/shared/skills/", ".claude/", ".codex/", ".agent/",
 )
@@ -38,31 +55,73 @@ SELECTED_CANDIDATE_CEILING = 80
 _TEST_FILE_RE = re.compile(r"(?:^|/)(?:test_[^/]+\.py|[^/]+_test\.py)$")
 
 
-def is_docs(path: str) -> bool:
-    if path.startswith("curriculum/") and PurePosixPath(path).name == "curriculum.yaml":
-        # Code-imported track manifest, not content: never a docs skip (#8399).
-        return False
-    if path.startswith(CONTENT_PREFIXES):
+def is_code_load_bearing_content(path: str) -> bool:
+    """True for code-imported files that live inside the content roots.
+
+    Each of these forces the full tier on both pull_request and merge_group
+    and is also excluded from the docs exemption (#8399 D3): neither the
+    content lane nor the docs lane runs the code that imports them. Verified
+    importers (``grep -rln`` over ``scripts/``):
+
+    - ``curriculum/**/curriculum.yaml``: generated track manifest imported by
+      scripts/level_config.py, scripts/pipeline/{config_tables,
+      learner_state}.py, scripts/generate_mdx/*, scripts/sync/*,
+      scripts/manifest_utils.py.
+    - ``curriculum/l2-uk-direct/manifest.yaml``: imported by
+      scripts/build/build_module_direct.py,
+      scripts/generate_mdx/generate_mdx_direct.py,
+      scripts/validate/validate_direct.py, scripts/api/agent_router.py,
+      scripts/audit/layerb_qualify.py, scripts/audit/atlas_source_census.py.
+    - ``curriculum/l2-uk-direct/bolshakova-letter-order.yaml``: imported by
+      scripts/audit/atlas_source_census.py.
+    - ``curriculum/l2-uk-en/module-mapping.json``: imported by
+      scripts/legacy/typescript/{migrate-modules,merge-levels}.ts.
+    - ``curriculum/l2-uk-en/vocabulary.db``: SQLite imported by
+      scripts/vocab/*, scripts/practice/numeral_agreement_engine.py,
+      scripts/audit/checks/vocabulary.py,
+      scripts/lexicon/backfill_course_usage.py.
+    - Any ``*.py`` / ``*.db`` / ``*.sqlite`` under the content roots, and any
+      ``*.json`` at a track root: code/data surface by extension, even before
+      a specific importer is named.
+
+    Schemas live outside the roots (``schemas/``, ``docs/**/*.yaml``) and
+    already miss the prefix check; everything else under the roots is gated
+    by the Contracts job, Content CI, or the ``reads_content`` pytest lane,
+    all of which still run for the content class.
+    """
+    p = _norm(path)
+    if p.startswith("curriculum/") and PurePosixPath(p).name == "curriculum.yaml":
         return True
+    if p in _CONTENT_CODE_PATHS:
+        return True
+    if not p.startswith(CONTENT_CLASS_PREFIXES):
+        return False
+    if p.endswith(_CONTENT_CODE_SUFFIXES):
+        return True
+    return any(
+        p.startswith(root) and "/" not in p[len(root):] and p.endswith(".json")
+        for root in _CONTENT_TRACK_ROOTS
+    )
+
+
+def is_docs(path: str) -> bool:
+    if path.startswith(CONTENT_PREFIXES):
+        # Code-imported files inside the content roots are never a docs skip
+        # (#8399 D3): the docs lane runs no pytest at all, so they force full.
+        return not is_code_load_bearing_content(path)
     return path.endswith(".md") and ("/" not in path or path.startswith(DOC_PREFIXES))
 
 
 def is_content_class_path(path: str) -> bool:
     """True when a path is learner content with no code-imported surface.
 
-    Exclusions inside the content roots (each forces the full tier instead):
-    - ``curriculum/**/curriculum.yaml``: generated track manifest imported by
-      runtime code (scripts/level_config.py, scripts/pipeline,
-      scripts/generate_mdx, scripts/sync) — not just read by tests.
-    Schemas live outside the roots (``schemas/``, ``docs/**/*.yaml``) and
-    already miss the prefix check; everything else under the roots is gated
-    by the Contracts job, Content CI, or the ``reads_content`` pytest lane,
-    all of which still run for this class.
+    Exclusions inside the content roots — each forces the full tier on both
+    events instead — are exactly is_code_load_bearing_content().
     """
     p = _norm(path)
     if not p.startswith(CONTENT_CLASS_PREFIXES):
         return False
-    return not (p.startswith("curriculum/") and PurePosixPath(p).name == "curriculum.yaml")
+    return not is_code_load_bearing_content(p)
 
 
 def _norm(path: str) -> str:
@@ -245,7 +304,25 @@ def classify(
         return _full(shard_count)
 
     frontend = any(path_in_denominator(path, denominator) for path in paths)
-    if all(is_content_class_path(path) for path in paths):
+    if event == "merge_group":
+        # The merge queue is the integration gate (#8399 D1): before the
+        # content class existed, every merge-group run was full by design.
+        # A group whose changed paths are ALL content class pays the content
+        # lane once; anything else — including what would be `docs` or
+        # `selected` on a pull request — resolves to the full tier exactly
+        # as on main.
+        if all(is_content_class_path(path) for path in paths):
+            return _content()
+        return _full(shard_count)
+    if all(is_content_class_path(path) for path in paths) and any(
+        _norm(path).startswith("site/src/content/docs/") for path in paths
+    ):
+        # pull_request only (#8399 D2): a PR touching only curriculum/** or
+        # wiki/** keeps today's docs_only fast path — the queue run is the
+        # safety net, and per the branch above it pays the content lane
+        # there. The PR content class exists for all-content changes that
+        # today fall to full because `frontend` is true, i.e. they include
+        # at least one site/src/content/docs/** path (PR #8384).
         return _content()
     docs_only = all(is_docs(path) for path in paths) and not frontend
     if docs_only:

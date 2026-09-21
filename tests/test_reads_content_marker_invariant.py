@@ -30,13 +30,22 @@ _TESTS_ROOT = Path(__file__).resolve().parent
 #   "curriculum/l2-uk-en/..." literals and Path("curriculum") / "l2-uk-en"
 #   joins are caught.
 # - site/src/content/docs: the learner-docs MDX tree.
-# - CURRICULUM_DIR / CURRICULUM_ROOT: path constants scripts define over the
-#   curriculum tree.
+# - CURRICULUM_DIR / CURRICULUM_ROOT / CURRICULUM_PATH / PLANS_DIR: path
+#   constants scripts define over the curriculum tree.
+# - _vocabulary_modules / expected_vocabulary_coverage: helpers in
+#   scripts/lexicon/check_manifest_vocabulary_coverage.py that walk the real
+#   curriculum tree; importing them means reading content.
+# - Path("curriculum") / Path("wiki") literals and / "curriculum" / "wiki"
+#   joins: indirect root construction that the slug patterns above miss.
 # - wiki/ at a string boundary (not openwiki/, wikipedia URLs, or a/b/wiki/):
 #   the compiled-wiki content tree.
 CONTENT_REFERENCE_RE = re.compile(
     r"l2-uk-en|l2-uk-direct|site/src/content/docs|"
-    r"CURRICULUM_DIR|CURRICULUM_ROOT|(?<![\w/.-])wiki/"
+    r"CURRICULUM_DIR|CURRICULUM_ROOT|CURRICULUM_PATH|PLANS_DIR|"
+    r"_vocabulary_modules|expected_vocabulary_coverage|"
+    r"Path\([\"']curriculum[\"']\)|Path\([\"']wiki[\"']\)|"
+    r"/\s*[\"']curriculum[\"']|/\s*[\"']wiki[\"']|"
+    r"(?<![\w/.-])wiki/"
 )
 
 MARKER_RE = re.compile(r"reads_content")

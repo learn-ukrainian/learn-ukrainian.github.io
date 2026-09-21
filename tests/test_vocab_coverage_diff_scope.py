@@ -9,12 +9,16 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.lexicon.check_manifest_vocabulary_coverage import (
     ROOT,
     _vocabulary_modules,
     check_vocabulary_coverage,
     expected_vocabulary_coverage,
 )
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_empty_restrict_is_a_noop_pass():

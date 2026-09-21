@@ -32,6 +32,8 @@ from wiki.compiler import (
 )
 from wiki.sources_schema import extract_short_citation_ids
 
+pytestmark = pytest.mark.reads_content
+
 
 def _stub_attr(file_name: str) -> dict:
     """Build the attribution dict returned for a recognized chunk."""

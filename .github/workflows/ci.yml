@@ -266,12 +266,14 @@ jobs:
             # content (reads_content marker; enforced by
             # tests/test_reads_content_marker_invariant.py), plus the shard
             # safety net run explicitly so it cannot marker-drift away.
+            # Marker filter and timeout mirror the full PR tier below (D5).
             mkdir -p ci-artifacts
-            .venv/bin/python -m pytest tests -m reads_content --strict-markers \
-              -n logical --dist=loadfile --max-worker-restart=0 --timeout=300 \
+            .venv/bin/python -m pytest tests \
+              -m 'reads_content and not slow and not atlas_release' --strict-markers \
+              -n logical --dist=loadfile --max-worker-restart=0 --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v --durations=25 \
               --junitxml="ci-artifacts/pytest-shard-${SHARD}.xml"
-            .venv/bin/python -m pytest tests/test_ci_shard_partition.py --timeout=300 \
+            .venv/bin/python -m pytest tests/test_ci_shard_partition.py --timeout=120 \
               --timeout-method=thread --override-ini addopts=-v
             exit 0
           fi

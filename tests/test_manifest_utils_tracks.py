@@ -1,5 +1,9 @@
+import pytest
+
 from scripts import manifest_utils
 from scripts.generate_mdx.core import get_modules_from_manifest
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_track_constant_covers_manifest_tracks():

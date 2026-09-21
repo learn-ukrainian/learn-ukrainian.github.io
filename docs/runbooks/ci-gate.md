@@ -11,7 +11,7 @@ replacement, not the old two-tier merge-queue file.
 | Changes | always (`docs_only` / `frontend` / `shards` / `pytest_mode` / `shard_count` / `pytest_candidates`) |
 | Ruff | not docs-only |
 | Secret scan | always |
-| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard; `content` → 1 shard: `-m reads_content` + shard safety net) |
+| pytest | always (`full` → 4 shards; `selected` → 1 shard over candidates; `docs` → 1 `docs_skills` shard; `content` → 1 shard: `-m 'reads_content and not slow and not atlas_release'` `--timeout=120` + shard safety net) |
 | Contracts | not docs-only |
 | Frontend | when frontend paths changed (always on for the content class: content renders through the site build) |
 | TypeSafe triage | always (advisory during soak, #8232: CI Gate accepts success/skipped/**failure**, so a red TypeSafe check is visible but does not fail the gate. Missing `TYPESAFE_API_KEY`, API/transport errors and malformed responses skip green; only a `broken` verdict with choice confidence or `high_risk` >= 0.8 turns the job red) |
@@ -20,7 +20,8 @@ replacement, not the old two-tier merge-queue file.
 The Changes job uses `scripts/ci/classify_changes.py`. Ordinary PRs skip
 ruff/contracts and run one `docs_skills` pytest leg only when every path is
 Markdown in docs/, shared skills, agent deploy trees, or the repository root,
-or belongs to curriculum/ outside the content-class roots (e.g. l1-uk).
+or belongs to curriculum/ or wiki/ without a `site/` path (the curriculum/wiki
+fast path predates the content class; the queue run is its safety net).
 Frontend denominator matches always override the docs exemption, including
 `packages/activity-kit/`. Unknown paths, including Markdown under unrecognized
 or executable trees, run the full pytest shard set and ruff/contracts;
@@ -28,21 +29,36 @@ frontend follows its denominator. All docs YAML, schemas, packages, dashboards,
 dependency manifests/locks, Python/pre-commit configuration, and scripts/config
 or scripts/ci changes therefore run the full PR-tier floor.
 
-Content class (#8399): when **every** changed path is learner content under
-`curriculum/l2-uk-en/`, `curriculum/l2-uk-direct/`, `site/src/content/docs/`,
-or `wiki/` — and none is a code-imported manifest (`curriculum/**/curriculum.yaml`,
-which is also excluded from the docs exemption) — the classifier emits
-`pytest_mode=content`: one shard running the `reads_content` marker selection
-plus `tests/test_ci_shard_partition.py`, with Ruff, Contracts and the Frontend
-build still on (`docs_only=false`, `frontend=true`). The marker is
-load-bearing: `tests/test_reads_content_marker_invariant.py` fails when a test
-module references those content roots without carrying `reads_content`, so new
+Content class (#8399): learner content under `curriculum/l2-uk-en/`,
+`curriculum/l2-uk-direct/`, `site/src/content/docs/`, or `wiki/`, minus the
+code-imported files inside those roots (each forces full on both events and
+is excluded from the docs exemption): any `curriculum/**/curriculum.yaml`,
+`curriculum/l2-uk-direct/manifest.yaml`,
+`curriculum/l2-uk-direct/bolshakova-letter-order.yaml`,
+`curriculum/l2-uk-en/module-mapping.json`, `curriculum/l2-uk-en/vocabulary.db`,
+and any `*.py`/`*.db`/`*.sqlite` or track-root `*.json` under the roots (the
+importers are listed in `is_code_load_bearing_content`'s docstring). The
+events then differ deliberately:
+
+- **pull_request**: the content class applies only when every changed path is
+  content class AND at least one is `site/src/content/docs/**` — the case
+  that used to fall to full because `frontend` was true (PR #8384). A PR
+  touching only `curriculum/**`/`wiki/**` keeps the docs fast path.
+- **merge_group**: the queue is the integration gate, so a group resolves to
+  `content` (all paths content class) or `full` exactly as on main — never
+  `docs` or `selected`.
+
+The content class emits `pytest_mode=content`: one shard running
+`-m 'reads_content and not slow and not atlas_release'` (same filters and
+`--timeout=120` as the full PR tier) plus `tests/test_ci_shard_partition.py`,
+with Ruff, Contracts and the Frontend build still on (`docs_only=false`,
+`frontend=true`). The marker is load-bearing:
+`tests/test_reads_content_marker_invariant.py` fails when a test module
+references those content roots without carrying `reads_content`, so new
 content-reading tests cannot silently fall out of the class.
 
-Merge groups classify by the same changed-path rules as PRs, computed from
-`merge_group.base_sha..head_sha` (the union of the group's PRs) via the
-compare API. Previously every merge-group run was forced full; now a
-content-only group pays the content class once. A PR carrying `full-ci` still
+Merge groups compute changed paths from `merge_group.base_sha..head_sha` (the
+union of the group's PRs) via the compare API. A PR carrying `full-ci` still
 forces the full tier; adding a label triggers a fresh run.
 Manual runs and the daily 03:30 UTC schedule in `ci.yml` use that same full
 floor (`not atlas_release and not slow`). `pytest-slow-nightly.yml` remains the

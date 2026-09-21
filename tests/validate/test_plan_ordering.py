@@ -8,6 +8,8 @@ import pytest
 
 from scripts.validate import validate_plan_ordering as validator
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_legacy_ci_entry_point_validates_parallel_level():
     result = subprocess.run(

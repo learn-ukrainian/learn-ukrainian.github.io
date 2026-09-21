@@ -4,6 +4,10 @@ import os
 import sys
 from unittest.mock import patch
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 _project_root = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 sys.path.insert(0, os.path.join(_project_root, "scripts"))
 

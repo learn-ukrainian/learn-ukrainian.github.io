@@ -85,10 +85,17 @@ class ClassifierTests(unittest.TestCase):
         ):
             with self.subTest(path=path):
                 self.assert_docs(self.classify([path]))
-        # wiki/ and curriculum/ docs trees moved to the content class (#8399).
-        for path in ("wiki/example.yaml", "curriculum/example.yaml"):
-            with self.subTest(path=path):
-                self.assertNotEqual(self.classify([path])["pytest_mode"], "full")
+        # D2 (#8399): curriculum/wiki-only PRs keep the pre-existing docs
+        # fast path; the merge queue pays the content lane for them instead.
+        # wiki/ is a content-class root, so a wiki-only group is content;
+        # curriculum/ outside the class roots (e.g. example.yaml at the
+        # curriculum root) is full on the queue.
+        self.assert_docs(self.classify(["wiki/example.yaml"]))
+        self.assert_content(self.classify(["wiki/example.yaml"], event="merge_group"))
+        self.assert_docs(self.classify(["curriculum/example.yaml"]))
+        self.assert_full(
+            self.classify(["curriculum/example.yaml"], event="merge_group"), frontend="true"
+        )
 
     def test_content_class_roots(self):
         content_paths = [
@@ -100,13 +107,20 @@ class ClassifierTests(unittest.TestCase):
             "wiki/periods/kyivan-rus.sources.yaml",
         ]
         # Additions and deletions reach the classifier as the same path list.
+        # The PR content class requires a site/src/content/docs path (D2).
         with self.subTest(change="addition"):
             self.assert_content(self.classify(content_paths))
         with self.subTest(change="deletion"):
             self.assert_content(self.classify(list(reversed(content_paths))))
-        with self.subTest(change="single", event="pull_request"):
+        with self.subTest(change="single", event="merge_group"):
             for path in content_paths:
-                self.assert_content(self.classify([path]))
+                self.assert_content(self.classify([path], event="merge_group"))
+        with self.subTest(change="single-pr-curriculum-wiki-keeps-docs"):
+            for path in content_paths:
+                if path.startswith("site/"):
+                    self.assert_content(self.classify([path]))
+                else:
+                    self.assert_docs(self.classify([path]))
 
     def test_content_plus_script_forces_full(self):
         tree = _tree(
@@ -122,31 +136,92 @@ class ClassifierTests(unittest.TestCase):
             frontend="false",
         )
 
-    def test_content_plus_curriculum_yaml_forces_full(self):
+    def test_content_plus_code_load_bearing_file_forces_full(self):
+        # D3 (#8399): real code-imported files inside the content roots.
         for path in (
             "curriculum/l2-uk-en/curriculum.yaml",
-            "curriculum/l2-uk-direct/curriculum.yaml",
+            "curriculum/l2-uk-direct/manifest.yaml",
+            "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+            "curriculum/l2-uk-en/module-mapping.json",
+            "curriculum/l2-uk-en/vocabulary.db",
+            # Extension rules: code/data surface anywhere under the roots,
+            # JSON at a track root.
+            "curriculum/l2-uk-en/tools/build.py",
+            "curriculum/l2-uk-direct/state.sqlite",
+            "curriculum/l2-uk-en/new-track-root.json",
         ):
-            with self.subTest(path=path):
-                self.assert_full(
-                    self.classify([path, "curriculum/l2-uk-en/a1/module/lesson-1/module.md"]),
-                )
+            for event in ("pull_request", "merge_group"):
+                with self.subTest(path=path, event=event):
+                    self.assertFalse(scope.is_docs(path))
+                    self.assertFalse(scope.is_content_class_path(path))
+                    self.assert_full(
+                        self.classify(
+                            [path, "curriculum/l2-uk-en/a1/module/lesson-1/module.md"],
+                            event=event,
+                        ),
+                        frontend="true" if event == "merge_group" else "false",
+                    )
 
-    def test_content_outside_roots_forces_full(self):
-        for path in (
-            "curriculum/l1-uk/a1/module.md",
-            "site/src/content/readings/a1/x.mdx",
-            "site/src/components/X.astro",
-        ):
-            with self.subTest(path=path):
-                result = self.classify([path, "wiki/figures/example.md"])
-                self.assertNotEqual(result["pytest_mode"], "content")
+    def test_content_outside_roots(self):
+        # D2 (#8399): assert the real expected class per case, per event.
+        # curriculum/l1-uk is outside the content-class roots but still a
+        # docs path on PR; the merge queue pays full for it.
+        pr_docs = ["curriculum/l1-uk/a1/module.md", "wiki/figures/example.md"]
+        self.assert_docs(self.classify(pr_docs))
+        self.assert_full(self.classify(pr_docs, event="merge_group"), frontend="true")
+        # site/ paths outside src/content/docs hit the frontend denominator
+        # and are not content class: full on both events.
+        for path in ("site/src/content/readings/a1/x.mdx", "site/src/components/X.astro"):
+            for event in ("pull_request", "merge_group"):
+                with self.subTest(path=path, event=event):
+                    self.assert_full(
+                        self.classify([path, "wiki/figures/example.md"], event=event),
+                        frontend="true",
+                    )
+
+    def test_content_pr_requires_site_docs_path(self):
+        # D2 (#8399): the PR content class exists for all-content changes that
+        # today fall to full because frontend is true (PR #8384). Without a
+        # site/src/content/docs path a PR keeps the docs fast path; the queue
+        # pays the content lane either way.
+        curriculum_only = ["curriculum/l2-uk-en/a1/module/lesson-1/module.md"]
+        with_site = [*curriculum_only, "site/src/content/docs/a1/module/1.mdx"]
+        self.assert_docs(self.classify(curriculum_only))
+        self.assert_content(self.classify(with_site))
+        for paths in (curriculum_only, with_site):
+            self.assert_content(self.classify(paths, event="merge_group"))
 
     def test_merge_group_content_class(self):
+        # D1 (#8399): a merge group resolves to content or full only.
         self.assert_content(
             self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event="merge_group")
         )
-        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
+
+    def test_merge_group_docs_only_forces_full(self):
+        # D1 (#8399): what would be `docs` on a pull request is full on the
+        # queue, exactly as on main (frontend included).
+        self.assert_full(
+            self.classify(["docs/guide.md", "README.md"], event="merge_group"),
+            frontend="true",
+        )
+
+    def test_merge_group_script_and_test_forces_full(self):
+        # D1 (#8399): what would be `selected` on a pull request is full on
+        # the queue.
+        tree = _tree(
+            "scripts/delegate.py",
+            "tests/test_delegate.py",
+            "tests/test_ci_shard_partition.py",
+        )
+        paths = ["scripts/delegate.py", "tests/test_delegate.py"]
+        self.assert_selected(
+            self.classify(paths, tree_paths=tree),
+            ["tests/test_ci_shard_partition.py", "tests/test_delegate.py"],
+        )
+        self.assert_full(
+            self.classify(paths, event="merge_group", tree_paths=tree),
+            frontend="true",
+        )
 
     def test_merge_group_mixed_forces_full(self):
         tree = _tree(
@@ -154,13 +229,15 @@ class ClassifierTests(unittest.TestCase):
             "tests/test_delegate.py",
             "tests/test_ci_shard_partition.py",
         )
+        # Non-content merge groups resolve to full exactly as on main:
+        # frontend is forced on.
         self.assert_full(
             self.classify(
                 ["curriculum/l2-uk-en/a1/module/lesson-1/module.md", "scripts/delegate.py"],
                 event="merge_group",
                 tree_paths=tree,
             ),
-            frontend="false",
+            frontend="true",
         )
 
     def test_merge_group_compare_failure_fails_closed(self):
@@ -181,6 +258,42 @@ class ClassifierTests(unittest.TestCase):
         self.assertIn("files=0", stdout.getvalue())
         self.assertIn("pytest_mode=full", stdout.getvalue())
         self.assertIn("docs_only=false", stdout.getvalue())
+
+    def test_content_rename_within_roots(self):
+        # D6 (#8399): compare_paths emits both rename endpoints; a rename that
+        # stays inside the content roots is still content class on the queue.
+        paths = [
+            "curriculum/l2-uk-en/a1/module/lesson-1/module.md",
+            "curriculum/l2-uk-en/a1/module/lesson-1/module-renamed.md",
+        ]
+        self.assert_content(self.classify(paths, event="merge_group"))
+
+    def test_rename_from_content_root_to_outside_forces_full(self):
+        # D6 (#8399): the rename destination is outside every docs/content
+        # exemption, so the change is full on both events.
+        paths = [
+            "curriculum/l2-uk-en/a1/module/lesson-1/module.md",
+            "dashboards/moved.md",
+        ]
+        self.assert_full(self.classify(paths), frontend="false")
+        self.assert_full(self.classify(paths, event="merge_group"), frontend="true")
+
+    def test_content_change_plus_deleted_reads_content_test_forces_full(self):
+        # D6 (#8399): a content change that also deletes a reads_content test
+        # module must not run the content lane that relies on it. The deleted
+        # path is absent from the HEAD tree.
+        tree = _tree(
+            "curriculum/l2-uk-en/a1/module/lesson-1/module.md",
+            "tests/test_ci_shard_partition.py",
+        )
+        paths = [
+            "curriculum/l2-uk-en/a1/module/lesson-1/module.md",
+            "tests/test_reads_content_marker_invariant.py",
+        ]
+        self.assert_full(self.classify(paths, tree_paths=tree), frontend="false")
+        self.assert_full(
+            self.classify(paths, event="merge_group", tree_paths=tree), frontend="true"
+        )
 
     def test_full_ci_label_forces_full_over_content(self):
         self.assert_full(
@@ -233,7 +346,8 @@ class ClassifierTests(unittest.TestCase):
                 self.assert_full(self.classify(["docs/guide.md"], event=event), frontend="true")
         self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]), frontend="true")
         self.assert_docs(self.classify(["docs/guide.md"], labels=["unrelated"]))
-        self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
+        # D1 (#8399): merge groups never resolve to docs — full as on main.
+        self.assert_full(self.classify(["docs/guide.md"], event="merge_group"), frontend="true")
 
     def test_empty_and_capped_changes(self):
         for paths in ([], [f"docs/{i}.md" for i in range(300)]):

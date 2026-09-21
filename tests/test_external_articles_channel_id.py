@@ -27,6 +27,10 @@ import sqlite3
 import sys
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 
 _SPEC = importlib.util.spec_from_file_location(
