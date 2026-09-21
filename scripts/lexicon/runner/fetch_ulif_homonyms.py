@@ -20,6 +20,7 @@ import hashlib
 import json
 import os
 import sqlite3
+import stat
 import sys
 import time
 from collections.abc import Callable, Iterable, Mapping, Sequence
@@ -129,13 +130,54 @@ def _now_iso() -> str:
 
 
 def _ensure_private_dir(path: Path) -> None:
-    """Create *path* (and parents) mode ``0o700``, even when it already exists."""
-    path.mkdir(mode=0o700, parents=True, exist_ok=True)
-    os.chmod(path, 0o700)
+    """Create *path* (and missing parents) mode ``0o700``; never re-chmod existing.
+
+    If *path* already exists and is group- or world-accessible, print one warning
+    naming the path and mode, then continue without changing it.
+    """
+    if path.exists():
+        mode = stat.S_IMODE(path.stat().st_mode)
+        if mode & 0o077:
+            print(
+                f"warning: existing directory {path} has mode {oct(mode)}; leaving unchanged",
+                file=sys.stderr,
+            )
+        return
+    missing: list[Path] = []
+    current = path
+    while not current.exists():
+        missing.append(current)
+        parent = current.parent
+        if parent == current:
+            break
+        current = parent
+    for directory in reversed(missing):
+        if directory.exists():
+            mode = stat.S_IMODE(directory.stat().st_mode)
+            if mode & 0o077:
+                print(
+                    f"warning: existing directory {directory} has mode {oct(mode)}; leaving unchanged",
+                    file=sys.stderr,
+                )
+            continue
+        try:
+            directory.mkdir(mode=0o700)
+        except FileExistsError:
+            mode = stat.S_IMODE(directory.stat().st_mode)
+            if mode & 0o077:
+                print(
+                    f"warning: existing directory {directory} has mode {oct(mode)}; leaving unchanged",
+                    file=sys.stderr,
+                )
+            continue
+        os.chmod(directory, 0o700)
 
 
 def _ensure_private_file(path: Path) -> None:
-    """Narrow an existing file to owner-only read/write."""
+    """Narrow a runner-created file to owner-only read/write.
+
+    Call only for files this runner just created. Never call for pre-existing paths.
+    """
     os.chmod(path, 0o600)
 
 
@@ -228,7 +270,6 @@ class RunnerLock:
             raise SystemExit(f"refusing to start: lock appeared at {self.path}") from exc
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
             handle.write(payload)
-        _ensure_private_file(self.path)
         self._held = True
 
     def release(self) -> None:
@@ -262,8 +303,10 @@ class SpellingLedger:
     def __init__(self, path: Path) -> None:
         _ensure_private_dir(path.parent)
         self.path = path
+        created = not path.exists()
         self.conn = sqlite3.connect(path)
-        _ensure_private_file(path)
+        if created:
+            _ensure_private_file(path)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.executescript(
@@ -1056,9 +1099,11 @@ def prepare_database(db_path: Path) -> sqlite3.Connection:
 
     if not db_path.parent.exists():
         _ensure_private_dir(db_path.parent)
+    created = not db_path.exists()
     conn = _ulif_dictua_conn(db_path, create=True)
     assert conn is not None
-    _ensure_private_file(db_path)
+    if created:
+        _ensure_private_file(db_path)
     return conn
 
 
@@ -1353,10 +1398,12 @@ def main(argv: Sequence[str] | None = None) -> int:
         spellings = build_a1_a2_spellings(sources_db=args.sources_db, vesum_db=args.vesum, stored=stored)
         if not args.out.parent.exists():
             _ensure_private_dir(args.out.parent)
+        created = not args.out.exists()
         fd = os.open(args.out, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
             handle.write("".join(f"{spelling}\n" for spelling in spellings))
-        _ensure_private_file(args.out)
+        if created:
+            _ensure_private_file(args.out)
         print(f"a1a2_spellings={len(spellings)}")
         return EXIT_OK
     return EXIT_USAGE

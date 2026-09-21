@@ -364,13 +364,80 @@ def test_lock_refuses_a_second_runner(tmp_path):
 def test_lock_file_mode_is_owner_only_after_acquire(tmp_path):
     from scripts.lexicon.runner.fetch_ulif_homonyms import RunnerLock
 
-    held = RunnerLock(tmp_path / "state", break_stale=False, scanner=lambda: False)
-    held.acquire()
+    old_umask = os.umask(0o022)
     try:
-        mode = (tmp_path / "state" / "runner.lock").stat().st_mode & 0o777
-        assert mode == 0o600, f"expected 0o600, got {oct(mode)}"
+        held = RunnerLock(tmp_path / "state", break_stale=False, scanner=lambda: False)
+        held.acquire()
+        try:
+            mode = (tmp_path / "state" / "runner.lock").stat().st_mode & 0o777
+            assert mode == 0o600, f"expected 0o600, got {oct(mode)}"
+        finally:
+            held.release()
     finally:
-        held.release()
+        os.umask(old_umask)
+
+
+def test_prepare_database_leaves_preexisting_db_and_parent_modes(tmp_path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    old_umask = os.umask(0o022)
+    try:
+        parent = tmp_path / "data"
+        parent.mkdir(mode=0o755)
+        os.chmod(parent, 0o755)
+        db_path = parent / "sources.db"
+        db_path.write_bytes(b"")
+        os.chmod(db_path, 0o644)
+        parent_before = parent.stat().st_mode & 0o777
+        db_before = db_path.stat().st_mode & 0o777
+
+        conn = prepare_database(db_path)
+        try:
+            assert parent.stat().st_mode & 0o777 == parent_before == 0o755
+            assert db_path.stat().st_mode & 0o777 == db_before == 0o644
+        finally:
+            conn.close()
+        assert "warning" not in capsys.readouterr().err
+    finally:
+        os.umask(old_umask)
+
+
+def test_prepare_database_creates_new_db_owner_only(tmp_path):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    old_umask = os.umask(0o022)
+    try:
+        db_path = tmp_path / "fresh" / "cache.db"
+        conn = prepare_database(db_path)
+        try:
+            assert db_path.stat().st_mode & 0o777 == 0o600
+            assert db_path.parent.stat().st_mode & 0o777 == 0o700
+        finally:
+            conn.close()
+    finally:
+        os.umask(old_umask)
+
+
+def test_ensure_private_dir_warns_on_permissive_existing_keeps_mode(tmp_path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import _ensure_private_dir
+
+    old_umask = os.umask(0o022)
+    try:
+        existing = tmp_path / "state"
+        existing.mkdir(mode=0o755)
+        os.chmod(existing, 0o755)
+        _ensure_private_dir(existing)
+        assert existing.stat().st_mode & 0o777 == 0o755
+        err = capsys.readouterr().err
+        assert "warning" in err
+        assert str(existing) in err
+        assert "0o755" in err
+
+        fresh = tmp_path / "new-state"
+        _ensure_private_dir(fresh)
+        assert fresh.stat().st_mode & 0o777 == 0o700
+    finally:
+        os.umask(old_umask)
 
 
 def test_stale_lock_is_reported_and_kept_until_break_stale_lock(tmp_path, capsys):
