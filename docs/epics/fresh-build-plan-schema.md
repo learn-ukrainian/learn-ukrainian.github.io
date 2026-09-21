@@ -75,6 +75,10 @@ lessons:
       register: informal                    # informal | formal
       target_grammar: "…"                   # what the dialogue exists to show
       evidence: [T-010]
+    practice:                               # R-33: the deck is generated from this + the word store
+      vocabulary: core                      # every core lemma of this lesson, in its authorised forms
+      stress: [W-012, W-019]                # word records whose stress placement is drilled
+      patterns: [a2, a5]                    # activity ids whose pattern is recycled into the deck
     reading_passages: []                    # optional; B2+ and seminar tracks later
 ```
 
@@ -199,6 +203,8 @@ the only place built content is an input, and only within the module being built
 | coverage | every evidence id cited by the lesson plan appears in the lesson and in Ресурси |
 | inventory | lesson introduces exactly its `inventory.new`; nothing outside learner state + new |
 | stress | every stressed form in the lesson matches the pack's form record for that grammatical context |
+| practice | the generated deck contains every `practice` item of the lesson plan and nothing outside the lesson's inventory + learner state |
+| atlas-link | every core lemma resolves to an Atlas entry; a miss triggers Atlas enrichment and is reported, never linked blind (R-34) |
 | immersion | existing structural gates, keyed by learner position |
 | review | cross-family content review (LLM) — the only non-deterministic gate |
 

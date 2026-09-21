@@ -1,8 +1,8 @@
 # Fresh lesson-based build — requirements
 
 > Sub-epic [#8397](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8397), parent #7994.
-> Source: operator direction, 2026-09-21. Status: **draft for operator correction**. Once the
-> operator accepts it, this file is the frozen input for the plan schema, the arcs, the plans and
+> Source: operator direction, 2026-09-21. Status: **accepted by the operator 2026-09-21** (requirements
+> R-01…R-34 and the defaults in §4, with Q7 and Q8 changed as recorded there). This file is the frozen input for the plan schema, the arcs, the plans and
 > the build prompts. A later change to a requirement is made here first, then downstream.
 
 ## 1. What changes and what does not
@@ -85,6 +85,18 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
   cross-family design discussion, because it changes `docs/best-practices/activity-pedagogy.md`,
   the activity schemas and the site components.
 
+- **R-33 Practice decks are part of the plan and are built with the module.** Each lesson plan
+  names what goes into practice (its core vocabulary and authorised forms, stress items, and the
+  patterns its activities drill); the deck is generated deterministically from the plan and the
+  level word store, in the same build as the lesson — not a later phase. Spaced scheduling across
+  lessons and modules is the existing Practice Hub's job (#4387); modules feed it and do not
+  re-implement it.
+- **R-34 Every taught word has an Atlas entry.** A vocabulary card links to the word's Atlas
+  dictionary entry. If the entry is missing when a module is built, the build triggers Atlas
+  enrichment for that word through the Atlas pipeline — deterministic, from dictionary sources, never
+  LLM-written (decision 2026-09-11) — and reports any word that still has no entry instead of
+  linking to nothing.
+
 ### Scope and order
 
 - **R-20 Levels.** A1 first, then A2, B1, B2, using the same schema, engine and workflow.
@@ -162,8 +174,8 @@ each has a proposed default that applies unless corrected.
 | Q4 | May the new arc rename, split, merge or reorder the 55 A1 modules? | Yes, where the arc review agrees; slugs of published `/a1-v1/` pages do not change. |
 | Q5 | Checkpoint modules: keep them, and do they follow the same lesson layout? | Keep; a checkpoint is lessons of mixed review and a self-check, no new material. |
 | Q6 | Which video sources are acceptable? | Channels already in the corpus first (ULP and the others in `data/external_articles/`); anything else needs a recorded reason. Link rot is checked by a gate. |
-| Q7 | Should vocabulary cards link to the Atlas dictionary entry for the word? | Yes once the Atlas entry exists; until then the card stands alone. |
-| Q8 | Should lessons feed spaced review (practice decks) across lessons and modules? | Yes as a later child; the plan schema reserves the field now. |
+| Q7 | Should vocabulary cards link to the Atlas dictionary entry for the word? | **Operator:** yes, and a missing entry is generated through the Atlas pipeline — see R-34. |
+| Q8 | Should lessons feed spaced review (practice decks) across lessons and modules? | **Operator:** not later — decks are planned and built with the module — see R-33. |
 | Q9 | Audio: is recorded or synthesized pronunciation in scope for A1? | Out of scope here; videos carry pronunciation. Revisit after A1. |
 | Q10 | What does "better wiki" mean concretely? | One wiki packet per module that the plan cites, regenerated from the corpus with the same verification rules as plans. To be specified in its own child. |
 | Q11 | When A2 is rebuilt, is the current A2 archived like A1 (`/a2-v1/`)? | Yes, same pattern. |
