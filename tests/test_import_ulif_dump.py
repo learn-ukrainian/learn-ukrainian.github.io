@@ -84,3 +84,37 @@ def test_import_batch_inserts_entries_and_sections() -> None:
     assert tally2["inserted"] == 0
     assert tally2["updated"] == 0
     assert tally2["skipped"] == 2
+
+
+def test_import_ulif_dump_unmigrated_target_names_migrate(tmp_path, capsys):
+    from scripts.lexicon.tools.import_ulif_dump import main
+
+    dump = tmp_path / "dump.db"
+    sqlite3.connect(dump).close()
+    target = tmp_path / "sources.db"
+    conn = sqlite3.connect(target)
+    conn.execute(
+        """
+        CREATE TABLE ulif_dictua_entries (
+            id INTEGER PRIMARY KEY,
+            normalized_query TEXT NOT NULL UNIQUE,
+            canonical_headword TEXT NOT NULL DEFAULT '',
+            raw_response_ref TEXT NOT NULL DEFAULT '',
+            retrieved_at TEXT NOT NULL DEFAULT '',
+            response_sha256 TEXT NOT NULL DEFAULT '',
+            parser_version TEXT NOT NULL DEFAULT '',
+            status TEXT NOT NULL
+        )
+        """
+    )
+    conn.commit()
+    conn.close()
+    code = main(["--dump-db", str(dump), "--sources-db", str(target)])
+    assert code == 1
+    assert "--migrate" in capsys.readouterr().err
+    check = sqlite3.connect(target)
+    sql = check.execute(
+        "SELECT sql FROM sqlite_master WHERE name = 'ulif_dictua_entries'"
+    ).fetchone()[0]
+    check.close()
+    assert "homonym_index" not in sql

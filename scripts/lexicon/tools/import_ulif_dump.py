@@ -40,6 +40,25 @@ def ensure_target_schema(conn: sqlite3.Connection) -> None:
     conn.commit()
 
 
+def require_homonym_schema(conn: sqlite3.Connection) -> None:
+    """Refuse an un-migrated spelling-only table before any ``homonym_index`` query."""
+    try:
+        from scripts.wiki.sources_db import (
+            ULIF_DICTUA_MIGRATE_MESSAGE,
+            _ulif_dictua_schema_current,
+            _ulif_table_exists,
+        )
+    except ImportError:
+        from wiki.sources_db import (
+            ULIF_DICTUA_MIGRATE_MESSAGE,
+            _ulif_dictua_schema_current,
+            _ulif_table_exists,
+        )
+
+    if _ulif_table_exists(conn, "ulif_dictua_entries") and not _ulif_dictua_schema_current(conn):
+        raise RuntimeError(ULIF_DICTUA_MIGRATE_MESSAGE)
+
+
 def import_batch(
     dump_conn: sqlite3.Connection,
     target_conn: sqlite3.Connection,
@@ -48,6 +67,7 @@ def import_batch(
     dry_run: bool = False,
 ) -> dict[str, int]:
     """Import new or updated entries from dump_db to target_db."""
+    require_homonym_schema(target_conn)
     # Find existing entries in target to skip identical ones
     existing_records = {
         (row[0], row[1]): row[2]
@@ -214,7 +234,7 @@ def import_batch(
     return tally
 
 
-def main() -> int:
+def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Stream entries from ULIF crawler dump DB into sources.db."
     )
@@ -249,7 +269,7 @@ def main() -> int:
         help="Scan and report counts without modifying sources.db",
     )
 
-    args = parser.parse_args()
+    args = parser.parse_args(argv)
 
     if not args.dump_db.exists():
         print(f"Error: dump database not found at {args.dump_db}", file=sys.stderr)
@@ -258,9 +278,9 @@ def main() -> int:
     dump_conn = sqlite3.connect(str(args.dump_db))
     target_conn = sqlite3.connect(str(args.sources_db))
 
-    ensure_target_schema(target_conn)
-
     try:
+        require_homonym_schema(target_conn)
+        ensure_target_schema(target_conn)
         while True:
             t0 = time.monotonic()
             tally = import_batch(
@@ -277,6 +297,9 @@ def main() -> int:
             if args.watch is None:
                 break
             time.sleep(args.watch)
+    except RuntimeError as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
     finally:
         dump_conn.close()
         target_conn.close()
