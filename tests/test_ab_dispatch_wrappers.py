@@ -312,6 +312,35 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
     assert "--require-review-verdict" in calls[0][0]
     assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
     assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
+    assert "--branch" not in calls[0][0]
+
+
+def test_run_ask_review_dispatch_attaches_author_branch(monkeypatch, tmp_path):
+    result_file = tmp_path / "result.md"
+    result_file.write_text("VERDICT: APPROVE\n", encoding="utf-8")
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append(cmd)
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    wrappers.run_ask_review_dispatch(
+        "claude",
+        "review this",
+        task_id="review-1",
+        branch="agy/impl-8419-stall-clock",
+    )
+    dispatch = calls[0]
+    assert dispatch[dispatch.index("--branch") + 1] == "agy/impl-8419-stall-clock"
 
 
 def test_run_ask_review_dispatch_without_verdict_is_no_deliverable(monkeypatch, tmp_path):
