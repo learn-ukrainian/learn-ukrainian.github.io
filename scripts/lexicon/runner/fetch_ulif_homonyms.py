@@ -880,10 +880,64 @@ def parse_stored(ledger: SpellingLedger, cache: sqlite3.Connection) -> int:
             parsed_rows.append(parsed)
             section_sets.append(sections)
             raw_sets.append(raw)
+        _record_printed_numbers(ledger, spelling, parsed_rows)
+        mismatch = _printed_number_mismatch(parsed_rows)
+        if mismatch is not None:
+            register, printed = mismatch
+            row = ledger.conn.execute(
+                "SELECT entry_count, straddled_boundary FROM spellings WHERE spelling = ?",
+                (spelling,),
+            ).fetchone()
+            ledger.mark(
+                spelling,
+                "error",
+                entry_count=int(row["entry_count"]) if row is not None else len(parsed_rows),
+                straddled=bool(row["straddled_boundary"]) if row is not None else False,
+                error=(
+                    "printed_number_mismatch "
+                    f"register={list(register)} printed={list(printed)}"
+                ),
+            )
+            continue
         differing += _write_group(cache, spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
         ledger.set_duplicate_content(spelling, _duplicate_content(parsed_rows))
     ledger.set_meta("differing_content_hashes", str(differing))
     return differing
+
+
+def _printed_number_mismatch(
+    parsed_rows: Sequence[Mapping[str, Any]],
+) -> tuple[list[int], list[int]] | None:
+    """When every entry prints a number, it must equal register-order indexes."""
+    if not parsed_rows:
+        return None
+    printed_raw = [row.get("printed_homonym_number") for row in parsed_rows]
+    if any(value is None or str(value).strip() == "" for value in printed_raw):
+        return None
+    register = [int(row["homonym_index"]) for row in parsed_rows]
+    printed = [int(str(value)) for value in printed_raw]
+    if printed == register:
+        return None
+    return register, printed
+
+
+def _record_printed_numbers(
+    ledger: SpellingLedger,
+    spelling: str,
+    parsed_rows: Sequence[Mapping[str, Any]],
+) -> None:
+    """Persist printed numbers in the ledger; ``ulif_dictua_entries`` has no column."""
+    payload = {
+        "register": [int(row["homonym_index"]) for row in parsed_rows],
+        "printed": [
+            None if row.get("printed_homonym_number") is None else str(row["printed_homonym_number"])
+            for row in parsed_rows
+        ],
+    }
+    ledger.set_meta(
+        f"printed_homonym_numbers:{normalize_ulif_spelling(spelling)}",
+        json.dumps(payload, ensure_ascii=False, sort_keys=True),
+    )
 
 
 def _duplicate_content(parsed_rows: Sequence[Mapping[str, Any]]) -> bool:

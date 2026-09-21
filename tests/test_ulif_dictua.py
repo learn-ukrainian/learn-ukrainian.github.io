@@ -460,6 +460,40 @@ def test_zamok_entry_pages_print_no_homonym_number_and_distinct_keys():
     assert entries[0]["register_position"] == "4"
 
 
+def test_ishym_entry_pages_print_homonym_number_excluded_from_canonical_headword():
+    """Real Ішим captures: word_style ends in the printed digit; headword does not."""
+    from bs4 import BeautifulSoup
+
+    def _word_and_gloss(name: str) -> tuple[str, str]:
+        html = _fixture(name)
+        article = BeautifulSoup(html, "html.parser").find(id="ContentPlaceHolder1_article")
+        assert article is not None
+        word = article.select_one(".word_style")
+        comment = article.select_one(".comment_style")
+        assert word is not None and comment is not None
+        return word.get_text(), comment.get_text(" ", strip=True)
+
+    word1, gloss1 = _word_and_gloss("ishym-entry-1.html")
+    word2, gloss2 = _word_and_gloss("ishym-entry-2.html")
+    assert word1.strip().endswith("1")
+    assert word2.strip().endswith("2")
+    assert gloss1 == "(місто в Росії)"
+    assert gloss2 == "(річка в Росії та Казахстані)"
+
+    first = _forms("ishym-entry-1.html", 1, "0:4")
+    second = _forms("ishym-entry-2.html", 2, "0:5")
+    assert first["printed_homonym_number"] == "1"
+    assert second["printed_homonym_number"] == "2"
+    assert first["canonical_headword"] == "Іши́м"
+    assert second["canonical_headword"] == "Іши́м"
+    assert "1" not in first["canonical_headword"]
+    assert "2" not in second["canonical_headword"]
+    assert first["sense_gloss"] == gloss1
+    assert second["sense_gloss"] == gloss2
+    assert first["homonym_index"] == 1
+    assert second["homonym_index"] == 2
+
+
 def test_zamok_lock_has_mobile_stress_locative_preposition_and_vocative_star():
     entry = _forms("zamok-entry-3.html", 3, "6")
     nominative = _tagged(entry, "замо́к")

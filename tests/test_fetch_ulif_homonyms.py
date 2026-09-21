@@ -247,6 +247,7 @@ def test_invariable_duzhe_records_one_entry_and_its_tabs(tmp_path):
 
 
 def test_boundary_group_fetches_the_next_page_from_the_pristine_viewstate(tmp_path):
+    """Synthetic two-page register boundary built in test code (not an HTML fixture)."""
     fillers = [f"слово{index}" for index in range(24)]
     page = _register([*fillers, "Кра́й"], "page-a")
     nxt = _register(["край", "інше"], "page-b", paging=False)
@@ -587,7 +588,28 @@ def test_build_suspects_cli_delegates(tmp_path, monkeypatch):
 
 
 def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
-    """Ішим: two register rows, identical stressed text, distinct Select$N."""
+    """Ішим: two register rows, identical stressed text, distinct Select$N.
+
+    Headword and sense glosses are copied from the real fixture HTML. The live
+    one-spelling run for this word reported ``entries_stored=2``.
+    """
+    from bs4 import BeautifulSoup
+
+    def _from_fixture(name: str) -> tuple[str, str]:
+        article = BeautifulSoup(_html(name), "html.parser").find(id="ContentPlaceHolder1_article")
+        assert article is not None
+        word = article.select_one(".word_style")
+        comment = article.select_one(".comment_style")
+        assert word is not None and comment is not None
+        return word.get_text(), comment.get_text(" ", strip=True)
+
+    word1, gloss1 = _from_fixture("ishym-entry-1.html")
+    word2, gloss2 = _from_fixture("ishym-entry-2.html")
+    assert word1.strip().endswith("1")
+    assert word2.strip().endswith("2")
+    assert gloss1 == "(місто в Росії)"
+    assert gloss2 == "(річка в Росії та Казахстані)"
+
     entry = {
         "Select$4": _html("ishym-entry-1.html"),
         "Select$5": _html("ishym-entry-2.html"),
@@ -624,7 +646,7 @@ def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
         differing = parse_stored(ledger, cache)
         rows = cache.execute(
             """
-            SELECT homonym_index, sense_gloss, homonym_checked
+            SELECT homonym_index, canonical_headword, sense_gloss, homonym_checked
             FROM ulif_dictua_entries WHERE normalized_query = 'ішим'
             ORDER BY homonym_index
             """
@@ -632,15 +654,20 @@ def test_same_stress_homonyms_keep_two_indexes_and_glosses(tmp_path):
         duplicate = ledger.conn.execute(
             "SELECT duplicate_content FROM spellings WHERE spelling = 'ішим'"
         ).fetchone()["duplicate_content"]
+        printed_meta = ledger.meta("printed_homonym_numbers:ішим")
         cache.close()
     finally:
         ledger.close()
     assert differing == 0
     assert duplicate == 0
-    assert [(r["homonym_index"], r["sense_gloss"], r["homonym_checked"]) for r in rows] == [
-        (1, "(місто в Росії)", 1),
-        (2, "(річка)", 1),
+    assert [
+        (r["homonym_index"], r["canonical_headword"], r["sense_gloss"], r["homonym_checked"]) for r in rows
+    ] == [
+        (1, "Іши́м", gloss1, 1),
+        (2, "Іши́м", gloss2, 1),
     ]
+    assert '"printed": ["1", "2"]' in printed_meta
+    assert '"register": [1, 2]' in printed_meta
 
 
 def test_same_stress_homonym_indexes_stable_across_rerun(tmp_path):
@@ -693,6 +720,65 @@ def test_same_stress_homonym_indexes_stable_across_rerun(tmp_path):
         ledger.close()
     assert first == second
     assert set(first.values()) == {1, 2}
+
+
+def test_printed_number_mismatch_refuses_group_write(tmp_path, monkeypatch):
+    """Fail closed when every entry prints a number that disagrees with register order.
+
+    The mismatch is built in test code by altering the parsed value — fixtures
+    stay real captures.
+    """
+    import scripts.lexicon.runner.fetch_ulif_homonyms as runner
+
+    entry = {
+        "Select$4": _html("ishym-entry-1.html"),
+        "Select$5": _html("ishym-entry-2.html"),
+    }
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, _html("ishym-seed.html"), {})
+        assert data is not None
+        if any(key.endswith("search.x") for key in data):
+            return HttpResult(200, _html("ishym-tsearch.html"), {})
+        argument = data.get("__EVENTARGUMENT", "")
+        if argument in entry:
+            return HttpResult(200, entry[argument], {})
+        return HttpResult(200, next(iter(entry.values())), {})
+
+    assert _run(tmp_path, ["ішим"], _Scripted(handler)) == EXIT_OK
+
+    real_parse = runner.parse_ulif_entry
+
+    def flipped(html: str, *, homonym_index: int, register_position: str = ""):
+        parsed = real_parse(html, homonym_index=homonym_index, register_position=register_position)
+        parsed["printed_homonym_number"] = "2" if homonym_index == 1 else "1"
+        return parsed
+
+    monkeypatch.setattr(runner, "parse_ulif_entry", flipped)
+
+    ledger = _ledger(tmp_path)
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    cache.row_factory = sqlite3.Row
+    try:
+        differing = parse_stored(ledger, cache)
+        row = ledger.conn.execute(
+            "SELECT state, error FROM spellings WHERE spelling = 'ішим'"
+        ).fetchone()
+        entries = list(
+            cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'ішим'")
+        )
+        meta = ledger.meta("printed_homonym_numbers:ішим")
+    finally:
+        cache.close()
+        ledger.close()
+
+    assert differing == 0
+    assert row["state"] == "error"
+    assert row["error"] == "printed_number_mismatch register=[1, 2] printed=[2, 1]"
+    assert entries == []
+    assert '"printed": ["2", "1"]' in meta
+    assert '"register": [1, 2]' in meta
 
 
 def test_overlapping_register_identity_opened_once(tmp_path):
