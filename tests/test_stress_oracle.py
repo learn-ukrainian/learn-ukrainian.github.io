@@ -17,12 +17,14 @@ from __future__ import annotations
 from unittest.mock import patch
 
 from scripts.verification.stress import (
+    STRESS_BATCH_CAP,
     _load_trie,
     _parse_dictionary_value,
     _trie_value,
     pedagogical_stressed_form,
     transfer_stress_marks,
     verify_stress,
+    verify_stresses,
 )
 
 STRESS = "́"
@@ -263,3 +265,53 @@ class TestStressGolden:
                 (tuple(sorted(["Number=Sing", "upos=VERB"])), (4,)),
             ]
         )
+
+
+class TestVerifyStresses:
+    """Batch stress: compact readings, one source envelope, 500-word cap."""
+
+    def test_heteronym_returns_every_reading(self):
+        batch = verify_stresses(["замок", "любов"], pos=None)
+        assert set(batch) >= {"words", "source"}
+        assert "note" not in batch
+        assert batch["source"]["dictionary"] == "ukrainian-word-stress (ULIF-derived)"
+        by_input = {row["input"]: row for row in batch["words"]}
+        zamok = by_input["замок"]
+        assert zamok["status"] == "ambiguous"
+        assert len(zamok["readings"]) >= 2
+        stresses = {reading["stressed_form"] for reading in zamok["readings"]}
+        assert len(stresses) >= 2
+        for reading in zamok["readings"]:
+            assert "stressed_form" in reading
+            assert "vowel_indices" in reading
+            assert "required_tags" in reading
+            assert "override_applied" in reading
+        love = by_input["любов"]
+        assert love["status"] == "ok"
+        assert len(love["readings"]) == 1
+        assert love["readings"][0]["override_applied"] is True
+
+    def test_optional_pos_is_applied_to_every_word(self):
+        single = verify_stress("замок", pos="VERB")
+        batch = verify_stresses(["замок"], pos="VERB")
+        assert batch["words"][0]["status"] == single["status"]
+        assert [reading["stressed_form"] for reading in batch["words"][0]["readings"]] == [
+            match["stressed_form"] for match in single["matches"]
+        ]
+
+    def test_501_words_truncates_with_note(self):
+        words = ["я"] * (STRESS_BATCH_CAP + 1)
+        batch = verify_stresses(words)
+        assert len(batch["words"]) == STRESS_BATCH_CAP
+        assert batch["note"] == (
+            f"Note: received {STRESS_BATCH_CAP + 1} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
+        )
+        assert batch["source"]["digest"]
+        assert all(row["status"] == "invalid_input" for row in batch["words"])
+        assert all(row["readings"] == [] for row in batch["words"])
+
+    def test_source_envelope_is_not_repeated_per_word(self):
+        batch = verify_stresses(["село", "замок"])
+        assert "source" not in batch["words"][0]
+        assert "source" not in batch["words"][1]
+        assert str(batch).count(batch["source"]["digest"]) == 1

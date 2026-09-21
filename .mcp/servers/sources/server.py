@@ -16,7 +16,7 @@ with imports; rename there is a follow-up.
 Tools:
     - search_sources, search_text, search_literary, search_external, get_chunk_context
     - verify_word, verify_words, verify_lemma, vet_vocabulary (VESUM)
-    - verify_stress (stress oracle: ukrainian-word-stress trie + override layer + VESUM join)
+    - verify_stress, verify_stresses (stress oracle: ukrainian-word-stress trie + override layer + VESUM join)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
     - search_slovnyk_me, search_heritage
@@ -530,8 +530,8 @@ async def list_tools() -> list[Tool]:
                 "unstressed form (same convention as generate_practice_deck.py / PracticeStress.tsx). "
                 "status is 'ok' (single reading), 'ambiguous' (heteronym — pass pos/tags to disambiguate; "
                 "see each match's required_tags), 'not_found' (valid word, not in the dictionary), or "
-                "'invalid_input' (empty/multi-word/non-Cyrillic/single-syllable). Returns JSON (unlike the "
-                "prose-formatted verify_word/verify_lemma) so bake-off scoring can consume it directly."
+                "'invalid_input' (empty/multi-word/non-Cyrillic/single-syllable). The text channel is a "
+                "one-line summary; the structured result keeps the full oracle payload."
             ),
             inputSchema={
                 "type": "object",
@@ -550,6 +550,34 @@ async def list_tools() -> list[Tool]:
                     },
                 },
                 "required": ["word"]
+            },
+        ),
+        Tool(
+            name="verify_stresses",
+            description=(
+                "Batch stress oracle. One compact record per word (input, status, readings with "
+                "stressed_form, vowel_indices, required_tags, vesum when joined, override_applied) "
+                "and a single source envelope for the whole response. Hard cap: 500 words; a longer "
+                "list is truncated to the first 500 and the response includes a note saying so. "
+                "Optional pos is applied to every word in the call."
+            ),
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "words": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": (
+                            "Ukrainian words to check (bare, inflected, or stress-marked). "
+                            "At most 500 are processed; extra words are dropped with a response note."
+                        ),
+                    },
+                    "pos": {
+                        "type": "string",
+                        "description": "Optional POS applied to every word (e.g. 'NOUN' or 'upos=NOUN').",
+                    },
+                },
+                "required": ["words"],
             },
         ),
         # ── Live source query tools ──────────────────────────────
@@ -1417,6 +1445,13 @@ def _v4_server_code_digest() -> str:
 
 
 def _vesum_source_version() -> str:
+    """SHA-256 of vesum.db. Cached by ``_sha256_of_file``.
+
+    The cache key is the resolved path, size, and mtime_ns, plus ctime and
+    inode so an atomic replace still changes the version. An unchanged
+    database returns the same digest, so evidence identifiers stay
+    byte-identical to a fresh hash of that file.
+    """
     try:
         from scripts.rag.config import VESUM_DB_PATH
 
@@ -1490,6 +1525,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             "inspect_words": lambda: handle_inspect_words(arguments),
             "inspect_lemma": lambda: handle_inspect_lemma(arguments),
             "verify_stress": lambda: handle_verify_stress(arguments),
+            "verify_stresses": lambda: handle_verify_stresses(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
             "query_ulif": lambda: handle_query_ulif(arguments),
@@ -1834,9 +1870,12 @@ async def handle_collection_stats(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(stats, indent=2))]
 
 
-# Cache key: (canonical_path, mtime_ns, ctime_ns, size, inode)
-# Covers content edits, metadata changes (ctime), and atomic replacements (inode).
-# Serialized via lock to prevent redundant multi-gigabyte disk reads on concurrent cold calls.
+# Cache key: (resolved path, mtime_ns, ctime_ns, size, inode).
+# The required identity is (resolved path, st_size, st_mtime_ns); ctime and
+# inode are included so a same-size, same-mtime replace still recomputes.
+# ``mcp_server_identity`` hashes server code, sources.db, and vesum.db
+# through this same cache. The lock stops concurrent cold calls from
+# re-reading a multi-gigabyte file.
 _FILE_HASH_CACHE: dict[tuple[str, int, int, int, int], str] = {}
 _FILE_HASH_LOCK = threading.Lock()
 
@@ -2074,6 +2113,30 @@ async def handle_inspect_word(args: dict):
     return [TextContent(type="text", text=prose)]
 
 
+def _compact_inspect_words_payload(results: dict) -> dict[str, Any]:
+    """Hoist shared provenance out of every per-word inspection record."""
+    words_out: dict[str, Any] = {}
+    versions: list[Any] = []
+    identities: list[Any] = []
+    for word, inspection in results.items():
+        record = inspection.as_dict()
+        versions.append(record.pop("source_version", None))
+        identities.append(record.pop("pipeline_identity", None))
+        words_out[word] = record
+    payload: dict[str, Any] = {"words": words_out}
+    uniform = bool(versions) and all(item == versions[0] for item in versions)
+    uniform = uniform and bool(identities) and all(item == identities[0] for item in identities)
+    if uniform:
+        payload["source_version"] = versions[0]
+        payload["pipeline_identity"] = identities[0]
+        return payload
+    for word, inspection in results.items():
+        raw = inspection.as_dict()
+        words_out[word]["source_version"] = raw.get("source_version")
+        words_out[word]["pipeline_identity"] = raw.get("pipeline_identity")
+    return payload
+
+
 async def handle_inspect_words(args: dict):
     from scripts.verification.vesum import inspect_words
 
@@ -2090,7 +2153,7 @@ async def handle_inspect_words(args: dict):
             lines.append(f"- **{w}** — {r.status.value}{markers_str} (clean={len(r.clean_analyses)}, marked={len(r.marked_analyses)})")
         else:
             lines.append(f"- **{w}** — NOT FOUND")
-    payload = {w: r.as_dict() for w, r in results.items()}
+    payload = _compact_inspect_words_payload(results)
     lines.append(f"\nRaw payload:\n{json.dumps(payload, ensure_ascii=False, indent=2)}")
     return [TextContent(type="text", text="\n".join(lines))]
 
@@ -2114,7 +2177,47 @@ async def handle_inspect_lemma(args: dict):
 
 
 async def handle_verify_stress(args: dict):
-    return await v4_handlers.handle_verify_stress(args)
+    from scripts.verification.stress import stress_call_summary
+
+    content_outcome = await v4_handlers.handle_verify_stress(args)
+    if not (isinstance(content_outcome, tuple) and len(content_outcome) == 2):
+        return content_outcome
+    _content, outcome = content_outcome
+    word = args.get("word") if isinstance(args, dict) else None
+    payload = outcome.get("result") if isinstance(outcome, dict) else None
+    prose = stress_call_summary(
+        payload if isinstance(payload, dict) else None,
+        word=word if isinstance(word, str) else None,
+    )
+    if isinstance(outcome, dict):
+        outcome["summary_prose"] = prose
+    return [TextContent(type="text", text=prose)], outcome
+
+
+async def handle_verify_stresses(args: dict) -> list[TextContent]:
+    """Batch stress. Compact records, one source envelope, 500-word cap."""
+    from scripts.verification.stress import verify_stresses
+
+    words = args.get("words") if isinstance(args, dict) else None
+    pos = args.get("pos") if isinstance(args, dict) else None
+    if not isinstance(words, list) or not words or not all(isinstance(word, str) for word in words):
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: words must be a nonempty list of strings. Expected arguments: words.",
+            "expected_arguments": ["words"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+    if pos is not None and not isinstance(pos, str):
+        payload = {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: pos must be a string. Expected arguments: words, pos.",
+            "expected_arguments": ["words", "pos"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+    result = await asyncio.to_thread(verify_stresses, words, pos if pos else None)
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 
 
@@ -2461,7 +2564,17 @@ async def handle_query_e2u(args: dict) -> list[TextContent]:
 
 async def handle_query_sum20(args: dict) -> list[TextContent]:
     """Read every exact-match official СУМ-20 article from sources.db."""
-    word = args["word"]
+    word = args.get("word") if isinstance(args, dict) else None
+    if not isinstance(word, str) or not word.strip():
+        payload = {
+            "tool": "query_sum20",
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: word is required. Expected arguments: word.",
+            "expected_arguments": ["word"],
+        }
+        return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
+    word = word.strip()
 
     from wiki import sources_db as sdb
 
@@ -2550,7 +2663,19 @@ async def handle_query_slovnyk_me(args: dict) -> list[TextContent]:
 
 
 async def handle_query_pravopys(args: dict):
-    topic = args["topic"]
+    topic = args.get("topic") if isinstance(args, dict) else None
+    if not isinstance(topic, str) or not topic.strip():
+        prose = "invalid_input: topic is required. Expected arguments: topic."
+        envelope = build_search_envelope(
+            tool="query_pravopys",
+            query={"topic": topic},
+            hits=[],
+            summary_prose=prose,
+            status="error",
+            error_code="invalid_input",
+        )
+        return [TextContent(type="text", text=prose)], envelope
+    topic = topic.strip()
     query_obj = {"topic": topic}
 
     from rag.source_query import pravopys_lookup, pravopys_section
