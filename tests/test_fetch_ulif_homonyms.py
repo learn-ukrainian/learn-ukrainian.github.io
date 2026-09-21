@@ -4,9 +4,11 @@ from __future__ import annotations
 
 import os
 import shlex
+import signal
 import sqlite3
 import subprocess
 import sys
+import time
 from pathlib import Path
 
 import pytest
@@ -20,6 +22,8 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_USAGE,
     HomonymFetcher,
     HttpResult,
+    InterruptedByOperator,
+    PoliteClient,
     SpellingLedger,
     _dedupe_register_rows,
     _write_group,
@@ -2035,3 +2039,138 @@ def test_directory_as_spellings_file_cli_produces_stop_summary_and_exit_usage(tm
     assert "failed to read spellings file" in err
     assert "=== ULIF Fetch Stop Summary ===" in err
     assert "Resume command:" in err
+
+
+def test_sigterm_during_input_reading_cli_produces_stop_summary_and_exit_interrupted(tmp_path, capsys, monkeypatch):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+
+    import scripts.lexicon.runner.fetch_ulif_homonyms as mod
+
+    def kill_sigterm(path):
+        os.kill(os.getpid(), signal.SIGTERM)
+
+    monkeypatch.setattr(mod, "_spellings_from_file", kill_sigterm)
+
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+
+def test_sigterm_during_input_reading_subprocess_boundary(tmp_path):
+    fifo_path = tmp_path / "spellings_fifo"
+    os.mkfifo(fifo_path)
+    proc = subprocess.Popen(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "run",
+            "--spellings-file",
+            str(fifo_path),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ],
+        stderr=subprocess.PIPE,
+        text=True,
+    )
+    try:
+        time.sleep(0.3)
+        proc.send_signal(signal.SIGTERM)
+        _, err = proc.communicate(timeout=5)
+    finally:
+        if proc.poll() is None:
+            proc.kill()
+            proc.wait()
+
+    assert proc.returncode == EXIT_INTERRUPTED
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+
+
+def test_interrupted_request_counts_attempt_and_updates_ledger(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("слово")
+    ledger.set_requests_made(7)
+    ledger.close()
+
+    dispatched = [0]
+
+    def interrupting_transport(method, fields):
+        dispatched[0] += 1
+        os.kill(os.getpid(), signal.SIGTERM)
+
+    code = run_fetch(
+        spellings=["слово"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        transport=interrupting_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    assert dispatched[0] == 1
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Requests in run:      1" in err
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert int(ledger.meta("requests_made", "0")) == 8
+    finally:
+        ledger.close()
+
+
+def test_polite_client_exchange_interrupted_records_request_and_timing():
+    clock_val = [100.0]
+
+    def fake_clock():
+        return clock_val[0]
+
+    recorded = []
+
+    def on_request(count):
+        recorded.append(count)
+
+    def interrupting_transport(method, fields):
+        clock_val[0] += 1.5
+        raise InterruptedByOperator("SIGTERM")
+
+    client = PoliteClient(
+        transport=interrupting_transport,
+        delay_seconds=2.0,
+        clock=fake_clock,
+        sleep=_noop_sleep,
+        on_request=on_request,
+    )
+
+    with pytest.raises(InterruptedByOperator):
+        client.exchange("GET", None)
+
+    assert client.requests_made == 1
+    assert recorded == [1]
+    assert client._last_at == 101.5
+
+    slept = []
+    client.sleep = lambda s: slept.append(s)
+    client._wait_turn()
+    assert slept == [pytest.approx(2.0)]

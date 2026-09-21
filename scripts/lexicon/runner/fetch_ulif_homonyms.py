@@ -747,9 +747,11 @@ class PoliteClient:
             if self.heartbeat is not None:
                 self.heartbeat("waiting for response")
             try:
-                result = self.transport(method, fields)
+                try:
+                    result = self.transport(method, fields)
+                finally:
+                    self._record_request()
             except requests.RequestException:
-                self._record_request()
                 last_code = "transport_error"
                 if attempt == MAX_HTTP_ATTEMPTS:
                     raise RequestExhausted(last_code) from None
@@ -759,7 +761,6 @@ class PoliteClient:
                     lambda rem, att=attempt: f"waiting for back-off: {rem:.0f}s remaining (attempt {att})",
                 )
                 continue
-            self._record_request()
             code = result.status_code
             if code == 403:
                 raise Forbidden("http_403")
@@ -2174,51 +2175,65 @@ Related:
             cmd_parts.append("--quiet")
         resume_cmd = shlex.join(cmd_parts)
 
+        old_sigterm = None
+        if threading.current_thread() is threading.main_thread():
+
+            def _on_sigterm(signum: int, frame: Any) -> None:
+                raise InterruptedByOperator("SIGTERM")
+
+            with contextlib.suppress(ValueError, OSError):
+                old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+
         try:
-            spellings = _spellings_from_file(args.spellings_file)
-        except (KeyboardInterrupt, InterruptedByOperator):
-            _print_stop_summary(
-                reason="interrupted by operator",
-                ledger=None,
-                requests_in_process=0,
-                elapsed_seconds=0.0,
-                resume_cmd=resume_cmd,
-            )
-            return EXIT_INTERRUPTED
-        except Exception as exc:
-            err_msg = f"failed to read spellings file: {exc}"
-            print(err_msg, file=sys.stderr)
-            _print_stop_summary(
-                reason=err_msg,
-                ledger=None,
-                requests_in_process=0,
-                elapsed_seconds=0.0,
-                resume_cmd=resume_cmd,
-            )
-            return EXIT_USAGE
-        try:
-            code = run_fetch(
-                spellings=spellings,
-                state_dir=args.state_dir,
-                db_path=args.db,
-                delay_seconds=args.delay,
-                max_spellings=args.max_spellings,
-                max_requests=args.max_requests,
-                refetch=args.refetch,
-                break_stale_lock=args.break_stale_lock,
-                quiet=args.quiet,
-                spellings_file=args.spellings_file,
-                resume_cmd=resume_cmd,
-            )
-            if code == EXIT_OK:
-                ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
-                try:
-                    print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
-                finally:
-                    ledger.close()
-            return code
-        except (KeyboardInterrupt, InterruptedByOperator):
-            return EXIT_INTERRUPTED
+            try:
+                spellings = _spellings_from_file(args.spellings_file)
+            except (KeyboardInterrupt, InterruptedByOperator):
+                _print_stop_summary(
+                    reason="interrupted by operator",
+                    ledger=None,
+                    requests_in_process=0,
+                    elapsed_seconds=0.0,
+                    resume_cmd=resume_cmd,
+                )
+                return EXIT_INTERRUPTED
+            except Exception as exc:
+                err_msg = f"failed to read spellings file: {exc}"
+                print(err_msg, file=sys.stderr)
+                _print_stop_summary(
+                    reason=err_msg,
+                    ledger=None,
+                    requests_in_process=0,
+                    elapsed_seconds=0.0,
+                    resume_cmd=resume_cmd,
+                )
+                return EXIT_USAGE
+            try:
+                code = run_fetch(
+                    spellings=spellings,
+                    state_dir=args.state_dir,
+                    db_path=args.db,
+                    delay_seconds=args.delay,
+                    max_spellings=args.max_spellings,
+                    max_requests=args.max_requests,
+                    refetch=args.refetch,
+                    break_stale_lock=args.break_stale_lock,
+                    quiet=args.quiet,
+                    spellings_file=args.spellings_file,
+                    resume_cmd=resume_cmd,
+                )
+                if code == EXIT_OK:
+                    ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
+                    try:
+                        print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
+                    finally:
+                        ledger.close()
+                return code
+            except (KeyboardInterrupt, InterruptedByOperator):
+                return EXIT_INTERRUPTED
+        finally:
+            if old_sigterm is not None:
+                with contextlib.suppress(ValueError, OSError):
+                    signal.signal(signal.SIGTERM, old_sigterm)
     if args.command == "parse":
         cache = prepare_database(args.db)
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
