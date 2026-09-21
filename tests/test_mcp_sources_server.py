@@ -453,9 +453,9 @@ class TestVerifyWordsHandler:
 
 
 class TestVerifyStressHandler:
-    """Test the verify_stress handler wires args through and emits JSON (#6515)."""
+    """Test the verify_stress handler wires args through. The text channel is a one-line summary while the structured result keeps the full payload (#6515)."""
 
-    def test_returns_json_envelope(self, server_module):
+    def test_returns_summary_prose_and_retains_structured_result(self, server_module):
         payload = {
             "input": "замок",
             "lookup_key": "замок",
