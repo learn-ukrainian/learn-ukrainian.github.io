@@ -2090,7 +2090,7 @@ def test_sigterm_during_input_reading_subprocess_boundary(tmp_path):
         text=True,
     )
     try:
-        time.sleep(0.3)
+        time.sleep(0.8)
         proc.send_signal(signal.SIGTERM)
         _, err = proc.communicate(timeout=5)
     finally:
