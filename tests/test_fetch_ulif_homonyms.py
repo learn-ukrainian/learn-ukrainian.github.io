@@ -1,0 +1,584 @@
+"""Offline tests for the targeted ULIF homonym runner (#8400 step c)."""
+
+from __future__ import annotations
+
+import os
+import sqlite3
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from scripts.lexicon.runner.fetch_ulif_20k import DictUAClient
+from scripts.lexicon.runner.fetch_ulif_homonyms import (
+    EXIT_FORBIDDEN,
+    EXIT_INTERRUPTED,
+    EXIT_OK,
+    EXIT_RETRY_STORM,
+    EXIT_USAGE,
+    HttpResult,
+    SpellingLedger,
+    build_a1_a2_spellings,
+    declared_user_agent,
+    main,
+    parse_stored,
+    run_fetch,
+    status_text,
+)
+from scripts.lexicon.runner.ulif_dictua_parse import parse_ulif_entry
+
+ROOT = Path(__file__).resolve().parents[1]
+FIXTURES = ROOT / "tests" / "fixtures" / "ulif_dictua"
+
+
+def _html(name: str) -> str:
+    return (FIXTURES / name).read_text(encoding="utf-8")
+
+
+def _tokens(html: str) -> dict[str, str]:
+    tokens = DictUAClient._tokens(html)
+    assert tokens is not None
+    return tokens
+
+
+def _noop_sleep(_seconds: float) -> None:
+    return None
+
+
+def _write_spellings(path: Path, spellings: list[str]) -> Path:
+    path.write_text("".join(f"{spelling}\n" for spelling in spellings), encoding="utf-8")
+    return path
+
+
+def _register(words: list[str], viewstate: str, *, paging: bool = True) -> str:
+    rows = []
+    for index, word in enumerate(words):
+        rows.append(
+            "<tr><td><a href=\"javascript:__doPostBack(&#39;ctl00$ContentPlaceHolder1$dgv&#39;,"
+            f"&#39;Select${index}&#39;)\">{word}</a></td></tr>"
+        )
+    paging_html = ""
+    if paging:
+        paging_html = (
+            '<input type="image" name="ctl00$ContentPlaceHolder1$backpage" />'
+            '<input type="image" name="ctl00$ContentPlaceHolder1$nextpage" />'
+        )
+    return (
+        f'<input type="hidden" name="__VIEWSTATE" value="{viewstate}" />'
+        '<input type="hidden" name="__VIEWSTATEGENERATOR" value="GEN" />'
+        f'<input type="hidden" name="__EVENTVALIDATION" value="EV-{viewstate}" />'
+        f"{paging_html}"
+        f'<table id="ContentPlaceHolder1_dgv">{"".join(rows)}</table>'
+        '<span id="ContentPlaceHolder1_rlength">Реєстрових слів - 262812</span>'
+    )
+
+
+def _entry(headword: str, gloss: str, viewstate: str, tabs: str) -> str:
+    return (
+        f'<input type="hidden" name="__VIEWSTATE" value="{viewstate}" />'
+        '<input type="hidden" name="__VIEWSTATEGENERATOR" value="GEN" />'
+        f'<input type="hidden" name="__EVENTVALIDATION" value="EV-{viewstate}" />'
+        f"{tabs}"
+        '<div id="ContentPlaceHolder1_article">'
+        f'<span class="word_style">{headword}</span>'
+        '<span class="gram_style">– іменник</span>'
+        f'<div class="comment_style">{gloss}</div>'
+        "</div>"
+        '<span id="ContentPlaceHolder1_rlength">Реєстрових слів - 262812</span>'
+    )
+
+
+def _run(tmp_path: Path, spellings: list[str], transport, **kwargs) -> int:
+    return run_fetch(
+        spellings=spellings,
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        delay_seconds=kwargs.pop("delay_seconds", 1.0),
+        transport=transport,
+        sleep=kwargs.pop("sleep", _noop_sleep),
+        scanner=kwargs.pop("scanner", lambda: False),
+        **kwargs,
+    )
+
+
+def _ledger(tmp_path: Path) -> SpellingLedger:
+    return SpellingLedger(tmp_path / "state" / "ledger.sqlite")
+
+
+class _Scripted:
+    def __init__(self, handler) -> None:
+        self.calls: list[tuple[str, dict[str, str] | None]] = []
+        self.handler = handler
+
+    def __call__(self, method: str, data: dict[str, str] | None) -> HttpResult:
+        self.calls.append((method, data))
+        return self.handler(method, data)
+
+
+def test_declared_user_agent_is_the_20k_client():
+    client = DictUAClient(delay_seconds=1.0, timeout_seconds=20)
+    assert declared_user_agent() == client.headers["User-Agent"]
+
+
+def test_zamok_group_stores_three_entries_and_tab_sets(tmp_path):
+    entry = {
+        "Select$4": _html("zamok-entry-1.html"),
+        "Select$5": _html("zamok-entry-2.html"),
+        "Select$6": _html("zamok-entry-3.html"),
+    }
+    entry_view = {key: _tokens(html)["__VIEWSTATE"] for key, html in entry.items()}
+    tabs = {
+        entry_view["Select$4"]: {"paradigm": _html("zamok-entry-1-par.html")},
+        entry_view["Select$5"]: {
+            "paradigm": _html("zamok-entry-2-par.html"),
+            "synonyms": _html("zamok-entry-2-syn.html"),
+            "phraseology": _html("zamok-entry-2-phras.html"),
+        },
+        entry_view["Select$6"]: {
+            "paradigm": _html("zamok-entry-3.html"),
+            "synonyms": _html("zamok-entry-3.html"),
+            "phraseology": _html("zamok-entry-3.html"),
+        },
+    }
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, _html("zamok-seed.html"), {})
+        assert data is not None
+        if f"{'ctl00$ContentPlaceHolder1$search'}.x" in data:
+            return HttpResult(200, _html("zamok-tsearch.html"), {})
+        argument = data.get("__EVENTARGUMENT", "")
+        if argument in entry:
+            return HttpResult(200, entry[argument], {})
+        viewstate = data["__VIEWSTATE"]
+        for kind, control in (
+            ("paradigm", "ctl00$ContentPlaceHolder1$par"),
+            ("synonyms", "ctl00$ContentPlaceHolder1$syn"),
+            ("phraseology", "ctl00$ContentPlaceHolder1$phras"),
+            ("antonyms", "ctl00$ContentPlaceHolder1$ant"),
+        ):
+            if f"{control}.x" in data:
+                return HttpResult(200, tabs[viewstate][kind], {})
+        raise AssertionError(data)
+
+    scripted = _Scripted(handler)
+    assert _run(tmp_path, ["замок"], scripted) == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        row = ledger.conn.execute("SELECT state, entry_count, straddled_boundary FROM spellings").fetchone()
+        assert (row["state"], row["entry_count"], row["straddled_boundary"]) == ("stored", 3, 0)
+        tab_rows = ledger.conn.execute(
+            "SELECT homonym_index, tab_kind FROM responses WHERE role = 'tab' ORDER BY homonym_index, tab_kind"
+        ).fetchall()
+        assert [(row["homonym_index"], row["tab_kind"]) for row in tab_rows] == [
+            (1, "paradigm"),
+            (2, "paradigm"),
+            (2, "phraseology"),
+            (2, "synonyms"),
+            (3, "paradigm"),
+            (3, "phraseology"),
+            (3, "synonyms"),
+        ]
+        request = ledger.conn.execute(
+            "SELECT request_sha256 FROM responses WHERE role = 'entry' LIMIT 1"
+        ).fetchone()
+        cache = sqlite3.connect(tmp_path / "cache.db")
+        payload = cache.execute(
+            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
+            (request["request_sha256"],),
+        ).fetchone()[0]
+        text = bytes(payload).decode("utf-8")
+        assert "__VIEWSTATE" in text
+        assert "/wEPDw" not in text
+        differing = parse_stored(ledger, cache)
+        rows = cache.execute(
+            """
+            SELECT homonym_index, canonical_headword, sense_gloss, homonym_checked
+            FROM ulif_dictua_entries ORDER BY homonym_index
+            """
+        ).fetchall()
+        cache.close()
+    finally:
+        ledger.close()
+    assert differing == 0
+    assert rows == [
+        (1, "За́мок", "(населений пункт в Україні)", 1),
+        (2, "за́мок", "(будівля)", 1),
+        (3, "замо́к", "(пристрій для замикання тощо)", 1),
+    ]
+
+
+def test_invariable_duzhe_records_one_entry_and_its_tabs(tmp_path):
+    page = _register(["інше", "ду́же", "ще"], "seed", paging=False)
+    entry = _html("duzhe.html")
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET" or (data and "search.x" in "".join(data)):
+            return HttpResult(200, page, {})
+        if data and data.get("__EVENTARGUMENT") == "Select$1":
+            return HttpResult(200, entry, {})
+        return HttpResult(200, entry, {})
+
+    assert _run(tmp_path, ["дуже"], _Scripted(handler)) == EXIT_OK
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    ledger = _ledger(tmp_path)
+    try:
+        digest = ledger.conn.execute(
+            "SELECT response_sha256 FROM responses WHERE role = 'entry'"
+        ).fetchone()["response_sha256"]
+        body = cache.execute(
+            "SELECT body FROM ulif_dictua_raw_responses WHERE response_sha256 = ?",
+            (digest,),
+        ).fetchone()[0]
+        parsed = parse_ulif_entry(bytes(body).decode("utf-8"), homonym_index=1)
+        tabs = [
+            row["tab_kind"]
+            for row in ledger.conn.execute("SELECT tab_kind FROM responses WHERE role = 'tab' ORDER BY tab_kind")
+        ]
+        assert parsed["is_invariable"] is True
+        assert tabs == ["paradigm", "synonyms"]
+        assert ledger.conn.execute("SELECT entry_count FROM spellings").fetchone()["entry_count"] == 1
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_boundary_group_fetches_the_next_page_from_the_pristine_viewstate(tmp_path):
+    fillers = [f"слово{index}" for index in range(24)]
+    page = _register([*fillers, "Кра́й"], "page-a")
+    nxt = _register(["край", "інше"], "page-b", paging=False)
+    entry_a = _entry("Кра́й", "(перше)", "entry-a", '<input type="image" name="ctl00$ContentPlaceHolder1$par" />')
+    entry_b = _entry("край", "(друге)", "entry-b", '<input type="image" name="ctl00$ContentPlaceHolder1$par" />')
+    payloads: list[dict[str, str]] = []
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(200, page, {})
+        assert data is not None
+        payloads.append(data)
+        if any(key.endswith("search.x") for key in data):
+            return HttpResult(200, page, {})
+        if any(key.endswith("nextpage.x") for key in data):
+            return HttpResult(200, nxt, {})
+        if data.get("__EVENTARGUMENT") == "Select$24":
+            return HttpResult(200, entry_a, {})
+        if data.get("__EVENTARGUMENT") == "Select$0":
+            return HttpResult(200, entry_b, {})
+        return HttpResult(200, entry_a if data.get("__VIEWSTATE") == "entry-a" else entry_b, {})
+
+    assert _run(tmp_path, ["край"], _Scripted(handler)) == EXIT_OK
+    next_posts = [data for data in payloads if any(key.endswith("nextpage.x") for key in data)]
+    assert len(next_posts) == 1
+    assert next_posts[0]["__VIEWSTATE"] == "page-a"
+    assert next_posts[0]["__EVENTTARGET"] == ""
+    assert next_posts[0]["__EVENTARGUMENT"] == ""
+    ledger = _ledger(tmp_path)
+    try:
+        row = ledger.conn.execute(
+            "SELECT state, entry_count, straddled_boundary FROM spellings"
+        ).fetchone()
+        positions = [
+            row["register_position"]
+            for row in ledger.conn.execute(
+                "SELECT register_position FROM responses WHERE role = 'entry' ORDER BY homonym_index"
+            )
+        ]
+    finally:
+        ledger.close()
+    assert (row["state"], row["entry_count"], row["straddled_boundary"]) == ("stored", 2, 1)
+    assert positions == ["0:24", "1:0"]
+
+
+def test_resume_after_injected_failure_mid_spelling(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    phase = {"fail": True}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET" and phase["fail"] and data is None and phase.get("saw_post"):
+            raise RuntimeError("injected failure")
+        if method == "POST":
+            phase["saw_post"] = True
+        return HttpResult(200, page, {})
+
+    scripted = _Scripted(handler)
+    assert _run(tmp_path, ["нема", "теж"], scripted) == EXIT_INTERRUPTED
+    ledger = _ledger(tmp_path)
+    try:
+        states = {
+            row["spelling"]: row["state"]
+            for row in ledger.conn.execute("SELECT spelling, state FROM spellings")
+        }
+    finally:
+        ledger.close()
+    assert states == {"нема": "absent_from_ulif", "теж": "pending"}
+    phase["fail"] = False
+    second = _Scripted(handler)
+    assert _run(tmp_path, ["нема", "теж"], second) == EXIT_OK
+    assert [data.get("ctl00$ContentPlaceHolder1$tsearch") for _method, data in second.calls if data] == ["теж"]
+    ledger = _ledger(tmp_path)
+    try:
+        states = {
+            row["spelling"]: row["state"]
+            for row in ledger.conn.execute("SELECT spelling, state FROM spellings ORDER BY spelling")
+        }
+    finally:
+        ledger.close()
+    assert states == {"нема": "absent_from_ulif", "теж": "absent_from_ulif"}
+
+
+def test_http_403_stops_the_run(tmp_path):
+    seen: list[str | None] = []
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        seen.append(None if data is None else data.get("ctl00$ContentPlaceHolder1$tsearch"))
+        return HttpResult(403, "forbidden", {})
+
+    assert _run(tmp_path, ["перше", "друге"], _Scripted(handler)) == EXIT_FORBIDDEN
+    assert seen == [None]
+    ledger = _ledger(tmp_path)
+    try:
+        rows = {
+            row["spelling"]: (row["state"], row["error"])
+            for row in ledger.conn.execute("SELECT spelling, state, error FROM spellings")
+        }
+    finally:
+        ledger.close()
+    assert rows == {"перше": ("error", "http_403"), "друге": ("pending", "")}
+
+
+def test_lock_refuses_a_second_runner(tmp_path):
+    state = tmp_path / "state"
+    state.mkdir()
+    lock = state / "runner.lock"
+    lock.write_text(f"{os.getpid()}\n2026-09-21T00:00:00+00:00\n", encoding="utf-8")
+    before = lock.read_bytes()
+    with pytest.raises(SystemExit, match="live pid"):
+        _run(tmp_path, ["замок"], _Scripted(lambda *_args: HttpResult(200, "", {})))
+    assert lock.read_bytes() == before
+
+
+def test_stale_lock_is_reported_and_kept_until_break_stale_lock(tmp_path, capsys):
+    state = tmp_path / "state"
+    state.mkdir()
+    lock = state / "runner.lock"
+    dead = 2**22
+    while True:
+        try:
+            os.kill(dead, 0)
+        except ProcessLookupError:
+            break
+        except PermissionError:
+            dead += 1
+            continue
+        dead += 1
+    original = f"{dead}\n2026-09-21T00:00:00+00:00\n"
+    lock.write_text(original, encoding="utf-8")
+    with pytest.raises(SystemExit, match="stale lock"):
+        _run(tmp_path, ["замок"], _Scripted(lambda *_args: HttpResult(200, "", {})))
+    assert "stale lock" in capsys.readouterr().err
+    assert lock.read_text(encoding="utf-8") == original
+    assert _run(tmp_path, [], _Scripted(lambda *_args: HttpResult(200, "", {})), break_stale_lock=True) == EXIT_OK
+    assert not lock.exists()
+
+
+def test_legacy_crawler_and_uncertain_scan_refuse_to_start(tmp_path):
+    with pytest.raises(SystemExit, match=r"dump_ulif\.py"):
+        _run(tmp_path, [], _Scripted(lambda *_args: HttpResult(200, "", {})), scanner=lambda: True)
+    with pytest.raises(SystemExit, match="could not scan"):
+        _run(tmp_path, [], _Scripted(lambda *_args: HttpResult(200, "", {})), scanner=lambda: None)
+
+
+def test_ledger_state_transitions_and_three_retry_scheduled_stop(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    sleeps: list[float] = []
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        spelling = "" if data is None else data.get("ctl00$ContentPlaceHolder1$tsearch", "")
+        if spelling in {"блок", "ще", "далі"}:
+            return HttpResult(429, "slow", {"Retry-After": "7"})
+        return HttpResult(200, page, {})
+
+    spellings = ["нема", "блок", "ще", "далі"]
+    code = _run(tmp_path, spellings, _Scripted(handler), sleep=sleeps.append)
+    assert code == EXIT_RETRY_STORM
+    assert any(value >= 7 for value in sleeps)
+    ledger = _ledger(tmp_path)
+    try:
+        states = {
+            row["spelling"]: row["state"]
+            for row in ledger.conn.execute("SELECT spelling, state FROM spellings")
+        }
+        text = status_text(ledger, delay_seconds=1.0)
+    finally:
+        ledger.close()
+    assert states["нема"] == "absent_from_ulif"
+    assert states["блок"] == "retry_scheduled"
+    assert states["ще"] == "retry_scheduled"
+    assert states["далі"] == "retry_scheduled"
+    assert "retry_scheduled=3" in text
+
+
+def test_five_attempts_then_retry_scheduled_and_third_stops(tmp_path):
+    calls = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        calls["n"] += 1
+        return HttpResult(503, "down", {})
+
+    code = _run(tmp_path, ["а", "б", "в", "г"], _Scripted(handler))
+    assert code == EXIT_RETRY_STORM
+    assert calls["n"] == 15
+    ledger = _ledger(tmp_path)
+    try:
+        states = [row["state"] for row in ledger.conn.execute("SELECT state FROM spellings ORDER BY spelling")]
+    finally:
+        ledger.close()
+    assert states == ["retry_scheduled", "retry_scheduled", "retry_scheduled", "pending"]
+
+
+def test_session_reseed_then_absent(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    gets = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            gets["n"] += 1
+            if gets["n"] < 3:
+                return HttpResult(500, "boom", {})
+        return HttpResult(200, page, {})
+
+    assert _run(tmp_path, ["нема"], _Scripted(handler)) == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        state = ledger.conn.execute("SELECT state FROM spellings").fetchone()["state"]
+    finally:
+        ledger.close()
+    assert gets["n"] == 3
+    assert state == "absent_from_ulif"
+
+
+def test_unmigrated_database_stops_before_requests(tmp_path):
+    from tests.test_ulif_dictua import _sqlite_master_bytes, _write_old_ulif_db
+
+    db_path = _write_old_ulif_db(tmp_path / "old.db")
+    before = _sqlite_master_bytes(db_path)
+    calls = {"n": 0}
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        calls["n"] += 1
+        return HttpResult(200, "", {})
+
+    code = run_fetch(
+        spellings=["замок"],
+        state_dir=tmp_path / "state",
+        db_path=db_path,
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    assert calls["n"] == 0
+    assert _sqlite_master_bytes(db_path) == before
+
+
+def test_delay_below_one_second_is_rejected():
+    with pytest.raises(SystemExit):
+        main(["run", "--spellings-file", "x", "--state-dir", "y", "--db", "z", "--delay", "0.5"])
+
+
+def test_equal_content_hash_marks_checked_without_rewriting(tmp_path):
+    page = _register(["ду́же"], "seed", paging=False)
+    entry = _html("duzhe.html")
+
+    def handler(method: str, data: dict[str, str] | None) -> HttpResult:
+        if data and data.get("__EVENTARGUMENT"):
+            return HttpResult(200, entry, {})
+        return HttpResult(200, page, {})
+
+    assert _run(tmp_path, ["дуже"], _Scripted(handler)) == EXIT_OK
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    ledger = _ledger(tmp_path)
+    try:
+        parse_stored(ledger, cache)
+        digest = cache.execute("SELECT content_sha256 FROM ulif_dictua_entries").fetchone()[0]
+        cache.execute(
+            "UPDATE ulif_dictua_entries SET canonical_headword = 'KEEP', homonym_checked = 0 WHERE normalized_query = 'дуже'"
+        )
+        cache.commit()
+        assert parse_stored(ledger, cache) == 0
+        row = cache.execute(
+            "SELECT canonical_headword, homonym_checked FROM ulif_dictua_entries"
+        ).fetchone()
+        assert row == ("KEEP", 1)
+        cache.execute("UPDATE ulif_dictua_entries SET content_sha256 = 'different', homonym_checked = 0")
+        cache.commit()
+        assert parse_stored(ledger, cache) == 1
+        rewritten = cache.execute("SELECT canonical_headword, homonym_checked FROM ulif_dictua_entries").fetchone()
+        assert rewritten[1] == 1
+        assert rewritten[0] != "KEEP"
+        assert ledger.meta("differing_content_hashes") == "1"
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_build_a1a2_lemmatises_and_skips_stored(tmp_path):
+    sources = tmp_path / "sources.db"
+    vesum = tmp_path / "vesum.db"
+    src = sqlite3.connect(sources)
+    src.execute("CREATE TABLE puls_cefr (word TEXT, level TEXT)")
+    src.executemany(
+        "INSERT INTO puls_cefr VALUES (?, ?)",
+        [("яблуко", "A1"), ("яблука", "A2"), ("будинок", "B1"), ("вже", "A1"), ("Як справи?", "A1")],
+    )
+    src.commit()
+    src.close()
+    ves = sqlite3.connect(vesum)
+    ves.execute("CREATE TABLE forms_all (word_form TEXT, lemma TEXT)")
+    ves.executemany(
+        "INSERT INTO forms_all VALUES (?, ?)",
+        [("яблуко", "яблуко"), ("яблука", "яблуко"), ("вже", "вже")],
+    )
+    ves.commit()
+    ves.close()
+    assert build_a1_a2_spellings(sources_db=sources, vesum_db=vesum, stored={"вже"}) == ["яблуко"]
+
+
+def test_homonym_runner_cli_subprocess_clean_env(tmp_path):
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    proc = subprocess.run(
+        [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "status",
+            "--state-dir",
+            str(tmp_path),
+        ],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert "spellings_total=0" in proc.stdout
+    assert "register_size=unknown" in proc.stdout
+
+
+def test_build_suspects_cli_delegates(tmp_path, monkeypatch):
+    from scripts.lexicon.tools import report_ulif_homonym_suspects
+
+    def fake_build(dump, vesum, out):
+        out.write_text("замок\ttrie_stress\n", encoding="utf-8")
+        return 1
+
+    monkeypatch.setattr(report_ulif_homonym_suspects, "build_report", fake_build)
+    out = tmp_path / "suspects.txt"
+    code = main(
+        ["build-suspects", "--dump", str(tmp_path / "dump"), "--vesum", str(tmp_path / "vesum"), "--out", str(out)]
+    )
+    assert code == EXIT_OK
+    assert out.read_text(encoding="utf-8").startswith("замок")

@@ -1054,3 +1054,232 @@ def test_homonym_suspect_report_combines_trie_vesum_and_capitalisation():
         stress_position_sets=lambda spelling: {(1,), (3,)} if spelling == "замок" else {(1,)},
     )
     assert rows == [("бостон", "capitalisation"), ("замок", "trie_stress,vesum_comment")]
+
+
+def test_store_ulif_dictua_entry_unmigrated_raises_and_leaves_sqlite_master(tmp_path):
+    db_path = _write_old_ulif_db(tmp_path / "old.db")
+    before = _sqlite_master_bytes(db_path)
+    with pytest.raises(RuntimeError, match="--migrate"):
+        sources_db.store_ulif_dictua_entry(
+            word="замок",
+            canonical_headword="за́мок",
+            sections={"paradigm": [{"rows": [["називний", "за́мок"]]}]},
+            raw_responses={"paradigm": "<p>за́мок</p>"},
+            retrieved_at="2026-09-21T00:00:00+00:00",
+            parser_version="ulif-dictua-v2",
+            status="ok",
+            homonym_index=1,
+            db_path=db_path,
+        )
+    assert _sqlite_master_bytes(db_path) == before
+
+
+def test_store_ulif_dictua_entry_does_not_mutate_caller_sections(tmp_path):
+    import copy
+
+    db_path = tmp_path / "sources.db"
+    sections = {"synonyms": [{"terms": [{"text": "фортеця"}]}]}
+    snapshot = copy.deepcopy(sections)
+    sources_db.store_ulif_dictua_entry(
+        word="замок",
+        canonical_headword="за́мок",
+        sections=sections,
+        raw_responses={},
+        retrieved_at="2026-09-21T00:00:00+00:00",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+        db_path=db_path,
+    )
+    assert sections == snapshot
+
+
+def _entry_table(conn: sqlite3.Connection, columns: str) -> None:
+    conn.executescript(
+        f"""
+        CREATE TABLE ulif_dictua_entries ({columns});
+        CREATE TABLE ulif_dictua_raw_responses (
+            response_sha256 TEXT PRIMARY KEY,
+            body BLOB NOT NULL,
+            content_type TEXT NOT NULL DEFAULT 'text/html',
+            stored_at TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER NOT NULL,
+            kind TEXT NOT NULL,
+            source_order INTEGER NOT NULL,
+            sense_or_group_id TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL
+        );
+        """
+    )
+
+
+def _restore_roundtrip(tmp_path: Path, name: str):
+    source = tmp_path / f"{name}-source.db"
+    dest = sqlite3.connect(tmp_path / f"{name}-dest.db")
+    raw, entries, sections = sources_db.extract_ulif_dictua_snapshot(source)
+    sources_db.restore_ulif_dictua_snapshot(dest, raw, entries, sections)
+    dest.commit()
+    return entries, dest
+
+
+def test_snapshot_extract_restore_width_14(tmp_path):
+    source = sqlite3.connect(tmp_path / "width-14-source.db")
+    source.executescript(ulif_store.ULIF_DICTUA_ENTRIES_DDL)
+    source.executescript(
+        """
+        CREATE TABLE ulif_dictua_raw_responses (
+            response_sha256 TEXT PRIMARY KEY,
+            body BLOB NOT NULL,
+            content_type TEXT NOT NULL DEFAULT 'text/html',
+            stored_at TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER NOT NULL,
+            kind TEXT NOT NULL,
+            source_order INTEGER NOT NULL,
+            sense_or_group_id TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL
+        );
+        """
+    )
+    source.execute(
+        """
+        INSERT INTO ulif_dictua_entries (
+            normalized_query, homonym_index, canonical_headword, grammatical_label,
+            sense_gloss, content_sha256, register_position, homonym_checked,
+            raw_response_ref, retrieved_at, response_sha256, parser_version, status
+        ) VALUES ('замок', 2, 'замо́к', 'іменник', '(пристрій)', 'abc', '0:6', 1,
+                  '', '2026-09-21T00:00:00+00:00', 'abc', 'ulif-dictua-v2', 'ok')
+        """
+    )
+    source.commit()
+    source.close()
+    entries, dest = _restore_roundtrip(tmp_path, "width-14")
+    assert len(entries) == 1
+    assert len(entries[0]) == 14
+    row = dest.execute(
+        """
+        SELECT homonym_index, sense_gloss, canonical_headword, homonym_checked
+        FROM ulif_dictua_entries
+        """
+    ).fetchone()
+    dest.close()
+    assert row == (2, "(пристрій)", "замо́к", 1)
+
+
+def test_snapshot_extract_restore_width_13(tmp_path):
+    source = sqlite3.connect(tmp_path / "width-13-source.db")
+    _entry_table(
+        source,
+        """
+        id INTEGER PRIMARY KEY,
+        normalized_query TEXT NOT NULL,
+        homonym_index INTEGER NOT NULL,
+        canonical_headword TEXT NOT NULL DEFAULT '',
+        grammatical_label TEXT NOT NULL DEFAULT '',
+        content_sha256 TEXT NOT NULL DEFAULT '',
+        register_position TEXT NOT NULL DEFAULT '',
+        homonym_checked INTEGER NOT NULL DEFAULT 0,
+        raw_response_ref TEXT NOT NULL DEFAULT '',
+        retrieved_at TEXT NOT NULL DEFAULT '',
+        response_sha256 TEXT NOT NULL DEFAULT '',
+        parser_version TEXT NOT NULL DEFAULT '',
+        status TEXT NOT NULL
+        """,
+    )
+    source.execute(
+        """
+        INSERT INTO ulif_dictua_entries (
+            normalized_query, homonym_index, canonical_headword, grammatical_label,
+            content_sha256, register_position, homonym_checked, raw_response_ref,
+            retrieved_at, response_sha256, parser_version, status
+        ) VALUES ('замок', 3, 'За́мок', 'іменник', 'def', '0:4', 0, '',
+                  '2026-09-21T00:00:00+00:00', 'def', 'ulif-dictua-v2', 'ok')
+        """
+    )
+    source.commit()
+    source.close()
+    entries, dest = _restore_roundtrip(tmp_path, "width-13")
+    assert len(entries[0]) == 13
+    row = dest.execute(
+        "SELECT homonym_index, sense_gloss, canonical_headword FROM ulif_dictua_entries"
+    ).fetchone()
+    dest.close()
+    assert row == (3, "", "За́мок")
+
+
+def test_snapshot_extract_restore_width_8(tmp_path):
+    source = sqlite3.connect(tmp_path / "width-8-source.db")
+    source.executescript(_OLD_ULIF_ENTRIES)
+    source.executescript(
+        """
+        CREATE TABLE ulif_dictua_raw_responses (
+            response_sha256 TEXT PRIMARY KEY,
+            body BLOB NOT NULL,
+            content_type TEXT NOT NULL DEFAULT 'text/html',
+            stored_at TEXT NOT NULL DEFAULT ''
+        );
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER NOT NULL,
+            kind TEXT NOT NULL,
+            source_order INTEGER NOT NULL,
+            sense_or_group_id TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL
+        );
+        """
+    )
+    source.execute(
+        """
+        INSERT INTO ulif_dictua_entries (
+            normalized_query, canonical_headword, raw_response_ref, retrieved_at,
+            response_sha256, parser_version, status
+        ) VALUES ('дуже', 'ду́же', '', '2026-09-21T00:00:00+00:00', 'eee', 'ulif-dictua-v2', 'ok')
+        """
+    )
+    source.commit()
+    source.close()
+    entries, dest = _restore_roundtrip(tmp_path, "width-8")
+    assert entries
+    row = dest.execute(
+        """
+        SELECT normalized_query, homonym_index, canonical_headword, sense_gloss, homonym_checked
+        FROM ulif_dictua_entries
+        """
+    ).fetchone()
+    dest.close()
+    assert row == ("дуже", 1, "ду́же", "", 0)
+
+
+def test_sources_db_migrate_cli_subprocess_clean_env(tmp_path):
+    import os
+    import subprocess
+
+    db_path = _write_old_ulif_db(tmp_path / "cli.db")
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    proc = subprocess.run(
+        [sys.executable, "-m", "scripts.wiki.sources_db", "--migrate", "--db", str(db_path)],
+        cwd=ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+    )
+    assert proc.returncode == 0, proc.stderr
+    assert proc.stdout.strip() == "migrated"
+    conn = sqlite3.connect(db_path)
+    columns = {row[1] for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
+    unique = [
+        [row[2] for row in conn.execute(f"PRAGMA index_info({index[1]!r})")]
+        for index in conn.execute("PRAGMA index_list(ulif_dictua_entries)")
+        if index[2] == 1
+    ]
+    homonym = conn.execute("SELECT homonym_index, homonym_checked FROM ulif_dictua_entries").fetchone()
+    conn.close()
+    assert {"homonym_index", "sense_gloss", "homonym_checked"} <= columns
+    assert ["normalized_query", "homonym_index"] in unique
+    assert homonym == (1, 0)
