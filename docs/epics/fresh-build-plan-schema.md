@@ -84,7 +84,7 @@ lessons:
             evidence: W-012
             forms: ["noun:anim:f:v_naz", "noun:anim:f:v_zna"]   # forms this lesson teaches and drills (r8; R-22)
         incidental:                         # allowed in dialogues/situations, glossed inline,
-          - { lemma: кава, evidence: W-040, forms: ["noun:inanim:f:v_zna"] }  # NOT counted as known
+          - { lemma: кава, evidence: W-040 }  # NOT counted as known; no `forms` — nothing is taught or drilled (r8)
         recycled: [W-003, W-007]            # word-store ids introduced in an earlier lesson or plan (§2a)
     steps:                                  # textbook shape: theory step → practice, repeated (R-27)
       - id: s1
@@ -238,7 +238,10 @@ passes silently and never invents a value.
   definitions in `schemas/activities-<level>.schema.json`, read at run time.
 - **Rule 7, precisely.** An inventory entry (`vocabulary.core` and `vocabulary.incidental`) names a
   word as `{ lemma, evidence, forms }` where `evidence` resolves to a word-store record, `lemma`
-  equals that record's lemma, and every tag in `forms` exists in that record. Everywhere else —
+  equals that record's lemma, and every tag in `forms` exists in that record. Since revision 8 `forms`
+  is **required on `core`** (the forms the lesson teaches and drills) and **absent on `incidental`**
+  (an incidental word is neither taught nor drilled, and any of its forms may be used — §4); the
+  validator fails a `forms` list on an incidental entry, so that nobody reads it as a restriction. Everywhere else —
   `recycled`, a step's `introduces` and `uses`, `practice.stress` — a word is a bare `W-…` id. Cyrillic text is otherwise allowed only in the prose fields a reviewer
   reads (module `title`, `subtitle`, `focus` and `objectives`; lesson `title`, `job`, `rationale`,
   `teach`, activity `focus`, video `use`, the `dialogue` text fields and speaker names) and as single letters in `phonetics.letters` and `introduces.letters`. `connects_to` and
@@ -309,8 +312,11 @@ Rules:
 
 - Built by a tool run (MCP batch calls), never typed from memory. The builder records the exact
   source hashes in `built_with`.
-- Frozen by `.lock`. Any edit changes the hash and invalidates the plan's `evidence_ref` until the
-  plan is re-reviewed.
+- Frozen by `.lock` — two separate locks (§2 rule 3). An edit to a **module pack** changes its hash
+  and invalidates the plan's `evidence_ref` until the plan is re-reviewed. An edit to the **level word
+  store** changes `_words.yaml.lock`; it lists the plans that cite the changed records (§7.2) and
+  those are re-verified. `built_with` is recorded in both files; `ulif_forms` is meaningful for the
+  word store, which since revision 8 holds full paradigms and is therefore the larger of the two.
 - `stress_source: pending` is legal while the ULIF base is not ready (R-23); a build refuses a
   lesson whose cited forms are still `pending` — and, since r8, a lesson whose **built text uses** a
   form that is still `pending`. Planning is not blocked; building is.
@@ -344,9 +350,13 @@ form for that word; a writer held to listed forms cannot write natural Ukrainian
   inside it.
 - A form whose grammatical category the learner has not yet been taught is **used, not explained**:
   no rule, no table and no terminology for a category the arc places later. The learner memorises it,
-  as with anything the arc marks a chunk, and meets the system when the arc reaches it. Whether a
-  lesson overloads the learner with such forms is a judgement for the lesson review (learner fit),
-  not a gate.
+  as with anything the arc marks a chunk, and meets the system when the arc reaches it.
+- **The risk this opens, named:** nothing mechanical now stops a writer from filling an A1 dialogue
+  with case forms the learner has never seen. The **only** check is the lesson review's learner-fit
+  dimension (review contract, #8430, Contract 2 point 3: constructions, sentence length and clause
+  depth fit the position). The observed state (below) records every form a built lesson exposed, so
+  the share of not-yet-taught forms per lesson can be **reported** by script; turning that report
+  into a gate with a threshold is a decision for after the pilot has shown real numbers.
 - A lesson's `forms` lists (§2) keep a narrower job: the forms this lesson **teaches and drills**.
   The practice deck (R-33) and the inventory gate's "every core item appears" check use them.
 - The price is in the word store (§3): it holds the **full paradigm** of every lemma it admits, each
@@ -384,7 +394,7 @@ the only place built content is an input, and only within the module being built
 | plan-validate | §2 rules 1–7 with the semantics of §2a; not-checked items are reported, never passed silently. The build preflight and CI run it with `--strict`, which refuses any waiver |
 | pack-verify | every quote matches its chunk; every word record re-verifies against current sources; every video URL answers |
 | coverage | every evidence id cited by the lesson plan appears in the lesson and in Ресурси |
-| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses no word-store record (lemma sense) outside planned learner state + this lesson's `core` and `incidental` — any form of an allowed record is allowed (r8, §4); every form the built text uses has a non-`pending` stressed form; every `recycled` id actually appears (§4) |
+| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses no word-store record (lemma sense) outside planned learner state + this lesson's `core` and `incidental` — any form of an allowed record is allowed (r8, §4); every form the built text uses has a non-`pending` stressed form; a token that VESUM analyses as a form of several records is **admissible** when at least one of them is allowed, and is then resolved to one record as the writer contract specifies (#8431 §3: what VESUM tags prove first, then one constrained question) — it passes only if the resolved record is allowed, and an unresolved token fails, because the gate never guesses; every `recycled` id actually appears (§4) |
 | standard-coverage | R-32: every State Standard requirement the arc assigns to this module is cited by at least one lesson (`standard:` ids in the pack); an item taught earlier than the Standard places it must carry a ULP evidence id. Teaching early is never a failure by itself. Reads the corrected mapping file (#8404) |
 | stress | every stressed form in the lesson matches the pack's form record for that grammatical context |
 | practice | the generated deck contains every `practice` item of the lesson plan and nothing outside the lesson's inventory + learner state |
@@ -409,7 +419,7 @@ the only place built content is an input, and only within the module being built
    are never read by the new engine. The arc author may look up which textbook pages they cited and
    re-verifies each citation through the MCP before using it (R-11).
 
-Resolved earlier in r2: form-grain vocabulary, core vs incidental, planned vs observed learner
+Resolved earlier in r2: form-grain vocabulary (kept for stress and for what a lesson teaches; as a limit on what a writer may use it was lifted in revision 8, §4), core vs incidental, planned vs observed learner
 state, lesson-grain immersion, quantity-only deterministic title check, dialogue fields,
 `examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
 
