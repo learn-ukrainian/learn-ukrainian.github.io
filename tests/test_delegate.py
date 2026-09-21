@@ -2248,6 +2248,7 @@ def _run_successful_worker_for_deliverable_test(
     commits_ahead: int | None,
     tmp_path,
     monkeypatch,
+    require_review_verdict: bool = False,
 ):
     """Run a clean successful worker with controllable delivery signals."""
     worktree = tmp_path / "worktree"
@@ -2290,6 +2291,7 @@ def _run_successful_worker_for_deliverable_test(
             model=None,
             hard_timeout=60,
             effort="medium",
+            require_review_verdict=require_review_verdict,
         )
 
     state = delegate._read_state(state_path)
@@ -2317,6 +2319,73 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     assert state["needs_finalize"] is False
     assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
     assert state["last_error"] == state["no_deliverable_reason"]
+
+
+def test_run_worker_review_without_verdict_is_no_deliverable(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """A review dispatch whose reply has no VERDICT: line is not done (#8421)."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="review-missing-verdict",
+        mode="read-only",
+        response="I will wait for the background command to finish and then report.",
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+
+    assert rc == 1
+    assert state["status"] == "no_deliverable"
+    assert state["needs_finalize"] is False
+    assert state["no_deliverable_reason"] == "review_missing_verdict_line"
+    assert state["last_error"] == state["no_deliverable_reason"]
+
+
+@pytest.mark.parametrize("verdict", ["APPROVE", "APPROVED", "CHANGES_REQUESTED", "BLOCKED"])
+def test_run_worker_review_with_verdict_stays_done(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    verdict,
+):
+    """Every verdict token the live review parsers accept completes as done."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id=f"review-verdict-{verdict.lower().replace('_', '-')}",
+        mode="read-only",
+        response=f"Findings: none, evidence cited at scripts/foo.py:1.\nVERDICT: {verdict}\n",
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=True,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
+
+
+def test_run_worker_non_review_read_only_without_verdict_stays_done(
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+):
+    """Ordinary read-only asks never require a VERDICT: marker line."""
+    rc, state = _run_successful_worker_for_deliverable_test(
+        task_id="plain-read-only-ask",
+        mode="read-only",
+        response="The answer is 42, derived from the configuration in scripts/foo.py.",
+        commits_ahead=None,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        require_review_verdict=False,
+    )
+
+    assert rc == 0
+    assert state["status"] == "done"
+    assert state["no_deliverable_reason"] is None
 
 
 def test_run_worker_does_not_flag_committed_change_without_declaration(

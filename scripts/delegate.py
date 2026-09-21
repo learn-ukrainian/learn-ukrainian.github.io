@@ -1418,6 +1418,16 @@ _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
 _NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
 _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
+_NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
+# Verdict vocabulary mirrors the live review parsers — no third vocabulary
+# (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
+# APPROVED / CHANGES_REQUESTED / BLOCKED by
+# scripts/ai_agent_bridge/_review_verdict.py and
+# scripts/fleet_comms/review_publication.py.
+_REVIEW_VERDICT_LINE_RE = re.compile(
+    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|BLOCKED)\b",
+    re.IGNORECASE,
+)
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
 # A declaration is an optional positive signal, so tolerate a few closing
 # lines after it — but do not scan the whole report, or a quoted example of
@@ -1568,6 +1578,21 @@ def _delivery_failure_reason(
     if len(response) <= DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX:
         return _NO_DELIVERABLE_SHORT_RESPONSE_REASON
     return None
+
+
+def _review_verdict_failure_reason(response: str) -> str | None:
+    """Return the failure reason when a review-typed reply has no verdict line.
+
+    Applies only to dispatches that opt in via ``--require-review-verdict``
+    (the ask-* review wrapper); ordinary asks and implement dispatches never
+    require a magic marker. A review reply that never states
+    ``VERDICT: <APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED>`` is not a
+    completed review — on 2026-09-21 several review tasks settled ``done``
+    with a promise to wait for a background command as the whole body (#8421).
+    """
+    if _REVIEW_VERDICT_LINE_RE.search(response):
+        return None
+    return _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON
 
 
 def _load_worktree_containment():
@@ -4813,6 +4838,7 @@ def _run_worker(
     runtime_tmp_root: str | None = None,
     runtime_tmp_namespace_root: str | None = None,
     run_nonce: str | None = None,
+    require_review_verdict: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -5219,6 +5245,23 @@ def _run_worker(
                 delivery_declaration,
                 commits_ahead=commits_ahead,
             )
+            no_deliverable = no_deliverable_reason is not None
+
+        # A review-typed dispatch (#8421) that settled ``done`` must actually
+        # state a verdict. A reviewer that backgrounds its work and replies
+        # with a promise to keep waiting exits 0 with an intent-only body; the
+        # observable-facts rule above does not cover read-only review tasks, so
+        # without this gate the false ``done`` reported success to ask-* review
+        # drivers. Opt-in via ``--require-review-verdict`` (the ask-* review
+        # wrapper only) — ordinary asks and implement dispatches are unchanged.
+        if (
+            require_review_verdict
+            and final_status == "done"
+            and returncode == 0
+            and not needs_finalize
+            and no_deliverable_reason is None
+        ):
+            no_deliverable_reason = _review_verdict_failure_reason(response)
             no_deliverable = no_deliverable_reason is not None
 
         if needs_finalize:
@@ -6657,6 +6700,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             cmd.extend(["--harness", requested_harness])
         if keep_worktree:
             cmd.append("--keep-worktree")
+        if bool(getattr(args, "require_review_verdict", False)):
+            cmd.append("--require-review-verdict")
         if max_budget_usd is not None:
             cmd.extend(["--max-budget-usd", str(max_budget_usd)])
         if output_schema_path is not None:
@@ -7650,6 +7695,7 @@ def cmd_worker(args: argparse.Namespace) -> int:
             DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
         ),
         keep_worktree=bool(getattr(args, "keep_worktree", False)),
+        require_review_verdict=bool(getattr(args, "require_review_verdict", False)),
         runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
         runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
         run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
@@ -7860,6 +7906,16 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Keep a successful clean dispatch worktree instead of reaping it "
             "after the branch is recoverable from origin or PR state."
+        ),
+    )
+    d.add_argument(
+        "--require-review-verdict",
+        action="store_true",
+        help=(
+            "Review-typed dispatch: a run that settles done without a "
+            "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
+            "reply terminalizes as no_deliverable instead (#8421). Used by the "
+            "ask-* review wrapper; ordinary dispatches are unaffected."
         ),
     )
     d.add_argument(
@@ -8177,6 +8233,7 @@ def build_parser() -> argparse.ArgumentParser:
         default=DEFAULT_INITIAL_RESPONSE_TIMEOUT_S,
     )
     wk.add_argument("--keep-worktree", action="store_true")
+    wk.add_argument("--require-review-verdict", action="store_true")
     wk.add_argument("--max-budget-usd", type=float, default=None)
     wk.add_argument("--output-schema", default=None)
     wk.add_argument("--output-schema-sha256", default=None)

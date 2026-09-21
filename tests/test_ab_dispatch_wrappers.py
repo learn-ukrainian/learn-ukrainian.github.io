@@ -287,7 +287,7 @@ def test_run_ask_review_dispatch_wait_timeout_raises_runtime_error(monkeypatch):
 
 def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path):
     result_file = tmp_path / "result.md"
-    result_file.write_text("LGTM", encoding="utf-8")
+    result_file.write_text("Reviewed the diff.\nVERDICT: APPROVED\n", encoding="utf-8")
     calls = []
 
     def fake_run(cmd, **kwargs):
@@ -298,7 +298,7 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
             return subprocess.CompletedProcess(
                 cmd,
                 0,
-                stdout=json.dumps({"status": "completed", "result_file": str(result_file)}),
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
             )
         raise AssertionError(f"unexpected cmd: {cmd}")
 
@@ -307,7 +307,54 @@ def test_run_ask_review_dispatch_passes_expected_timeouts(monkeypatch, tmp_path)
         "claude", "review this", task_id="task-123", hard_timeout=600
     )
     assert state["ok"] is True
-    assert state["response"] == "LGTM"
+    assert state["status"] == "done"
+    assert state["response"] == "Reviewed the diff.\nVERDICT: APPROVED\n"
+    assert "--require-review-verdict" in calls[0][0]
     assert calls[0][1].get("timeout") == wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS
     assert calls[1][1].get("timeout") == 600 + wrappers.ASK_REVIEW_WAIT_GRACE_SECONDS
 
+
+def test_run_ask_review_dispatch_without_verdict_is_no_deliverable(monkeypatch, tmp_path):
+    """A verdict-less review reply must not report ok even when wait exits 0 (#8421)."""
+    result_file = tmp_path / "result.md"
+    result_file.write_text("I will wait for the background command to finish.\n", encoding="utf-8")
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
+    assert state["ok"] is False
+    assert state["status"] == "no_deliverable"
+    assert state["no_deliverable_reason"] == "review_missing_verdict_line"
+
+
+def test_run_ask_review_dispatch_with_approve_verdict_stays_done(monkeypatch, tmp_path):
+    """VERDICT: APPROVE (no D) is accepted by the live review parsers (#8421)."""
+    result_file = tmp_path / "result.md"
+    result_file.write_text("Findings: none.\nVERDICT: APPROVE\n", encoding="utf-8")
+
+    def fake_run(cmd, **kwargs):
+        if "dispatch" in cmd:
+            return subprocess.CompletedProcess(cmd, 0)
+        if "wait" in cmd:
+            return subprocess.CompletedProcess(
+                cmd,
+                0,
+                stdout=json.dumps({"status": "done", "result_file": str(result_file)}),
+            )
+        raise AssertionError(f"unexpected cmd: {cmd}")
+
+    monkeypatch.setattr(wrappers.subprocess, "run", fake_run)
+    state = wrappers.run_ask_review_dispatch("claude", "review this", task_id="task-123")
+    assert state["ok"] is True
+    assert state["status"] == "done"
+    assert state.get("no_deliverable_reason") is None
