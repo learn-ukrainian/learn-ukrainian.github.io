@@ -1,6 +1,7 @@
 # Fresh lesson-based build — plan and evidence-pack schema (design)
 
-> Sub-epic #8397, child 3. Status: **design draft** by the curriculum-upgrade driver, for
+> Sub-epic #8397, child 3. Status: **design draft r2** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
+> `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
 > R-24…R-28, R-30 of [`fresh-build-requirements.md`](fresh-build-requirements.md). No code yet.
 
@@ -40,12 +41,16 @@ lessons:
     minutes: 60                             # plan estimate, not a gate
     word_target: 1200                       # minimum, per lesson (R-04)
     inventory:
-      letters: [А, О, У]                    # letter modules only
-      sounds: []
+      phonetics: { letters: [А, О, У], sounds: [] }   # optional block; A1 letter modules only
       grammar: []                           # named points, each traceable to an evidence id
       vocabulary:
-        new: [ { lemma: мама, evidence: W-012 } ]
-        recycled: [ … ]                     # must already be in learner state
+        core:                               # actively taught; enters learner state as "known"
+          - lemma: мама
+            evidence: W-012
+            forms: ["noun:anim:f:v_naz", "noun:anim:f:v_zna"]   # authorised forms this lesson (R-22)
+        incidental:                         # allowed in dialogues/situations, glossed inline,
+          - { lemma: кава, evidence: W-040, forms: ["noun:inanim:f:v_zna"] }  # NOT counted as known
+        recycled: [ … ]                     # must already be core in learner state
     steps:                                  # textbook shape: theory step → practice, repeated (R-27)
       - id: s1
         teach: "Point taught, in one sentence."
@@ -63,7 +68,14 @@ lessons:
     videos:
       - evidence: V-002                     # never a bare URL; the pack verifies it (R-18)
         use: "Where in the lesson and why."
-    dialogue: { situation: "…", evidence: [T-010] }
+    dialogue:
+      situation: "…"
+      setting: "…"                          # place and objects, as v1 required
+      speakers: [ { name: Оксана, role: waiter, gender: f }, { name: Тарас, role: customer, gender: m } ]
+      register: informal                    # informal | formal
+      target_grammar: "…"                   # what the dialogue exists to show
+      evidence: [T-010]
+    reading_passages: []                    # optional; B2+ and seminar tracks later
 ```
 
 Rules the validator enforces (all deterministic):
@@ -74,13 +86,17 @@ Rules the validator enforces (all deterministic):
 3. Every `evidence` id exists in the locked pack; the pack hash matches `evidence_ref.sha256`.
 4. Every `inventory.vocabulary.recycled` lemma and every grammar point used but not introduced is
    present in the learner state computed from the arc and earlier lessons.
-5. Union of lesson inventories equals what the arc says this module introduces — nothing more,
-   nothing less. **Title/subtitle claims are checked against this union** (a subtitle naming seven
-   letters with lessons teaching 33 fails here).
+5. Union of lesson `core` inventories equals what the arc says this module introduces — nothing
+   more, nothing less. The plan carries a generated, structured `scope` block (letter count and
+   list, grammar points, core-lemma count) **derived from the lessons by the validator, never
+   typed**; the landing page renders its numbers from `scope`. Deterministic title check is
+   limited to explicit quantities and enumerated letter lists found in `title`/`subtitle`, which
+   must equal `scope` (a subtitle naming seven letters over lessons teaching 33 fails here).
+   Broader "does the title describe the job" is judged in the cross-family plan review.
 6. Every `teach` step has at least one practice activity; activity types are in the level's
    allowlist; inline/workbook counts meet the per-lesson minimums.
 7. No Ukrainian word form, stress or morphology appears in a plan except as a reference to a pack
-   word record.
+   word record; every `forms` tag cited in a lesson must exist in that word record.
 
 ## 3. Evidence pack
 
@@ -99,7 +115,18 @@ exercises:    # X-…  model exercises from textbooks (theory→practice density
     source: { … }
     pattern: "What the exercise makes the learner do."
     items_sample: [ "…" ]
+examples:     # EX-… corpus sentences usable as models
+  - id: EX-001
+    sentence_ref: { words: [W-…] }          # surface text lives here once, verified at build
+    text: "…"
+    translation_en: "…"
+    source: { kind: textbook, chunk_id: … }
 errors:       # E-…  learner-error evidence (UA-GEC, style guide)
+  - id: E-001
+    pattern: "What goes wrong, in one sentence."
+    incorrect: "…"
+    correct: "…"
+    source: { kind: ua-gec|style-guide, ref: … }
 words:        # W-…  one record per lemma **sense** (homonym-safe)
   - id: W-012
     lemma: мама
@@ -131,14 +158,28 @@ Rules:
 
 ## 4. Learner state at lesson grain (R-14, R-30)
 
-`learner_state(level, module, lesson)` = everything introduced by all earlier modules plus lessons
-`1..n−1` of this module: lemmas (with counts of exposures), grammar points, letters. It is computed
-from the arc and the plans, not from built content, so it is available at plan time.
+Two layers, because a plan cannot know everything a built lesson will contain:
 
-Immersion band lookup changes key from *module number* to *learner position*
-(cumulative lessons + cumulative vocabulary). The thresholds themselves are carried over unchanged
-from `IMMERSION_POLICIES`; the mapping table from today's module ranges to learner positions is
-part of the arc deliverable and is reviewed with it.
+- **Planned state** (available at plan time, used by plan-validate and as the writer's allowlist):
+  a project-wide base layer of closed-class function words and proper-noun handling (as
+  `scripts/audit/checks/learner_state.py` already does) + all `core` items of earlier modules and
+  of lessons `1..n−1`. `incidental` items never enter it.
+- **Observed state** (after a lesson is built): a post-build index of what the lesson actually
+  exposed — forms and exposure counts. It feeds recycling decisions and later lessons' exposure
+  counts. A built lesson that uses a lemma outside planned state + its own inventory fails the
+  inventory gate; it does not silently extend the state.
+
+**Immersion.** Thresholds are carried over unchanged (R-30). What changes is grain and key:
+
+- A1 stays ULP-derived from cumulative vocabulary, now evaluated at the lesson's learner position.
+- A2 keeps its module-indexed ramp (`compute_immersion_band` returns the module band for A2 today);
+  the arc maps each new module to the band of the old module range it replaces, so a split module
+  inherits, not shifts, its band. That mapping table is part of the arc deliverable.
+- Structural minimums (`min_uk_dialogue_lines`, `min_uk_example_sentences`, `min_vocab_entries`,
+  …) are **module-level today**. They need lesson-level equivalents, defined by dividing through a
+  calibrated built module rather than by guess, in a new
+  `compute_lesson_immersion_band(track, arc_position, lesson_n, cumulative_vocab)`. Until that is
+  calibrated, the module-level minimums are checked on the module as a whole.
 
 ## 5. What the lesson writer receives (R-26)
 
@@ -163,6 +204,9 @@ the only place built content is an input, and only within the module being built
 
 ## 7. Open design questions for the reviewer
 
+0. *(resolved in r2)* form-grain vocabulary, core vs incidental, observed vs planned learner state,
+   lesson-grain immersion, deterministic title check limited to quantities, dialogue fields,
+   `examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
 1. Should `steps` be mandatory structure or guidance? Proposed: mandatory ids and evidence, free
    prose inside them.
 2. One pack per module, or a shared level pack with per-module views, given heavy word reuse?
