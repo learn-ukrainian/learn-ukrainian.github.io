@@ -2344,7 +2344,10 @@ def test_run_worker_review_without_verdict_is_no_deliverable(
     assert state["last_error"] == state["no_deliverable_reason"]
 
 
-@pytest.mark.parametrize("verdict", ["APPROVE", "APPROVED", "CHANGES_REQUESTED", "BLOCKED"])
+@pytest.mark.parametrize(
+    "verdict",
+    ["APPROVE", "APPROVED", "CHANGES_REQUESTED", "REQUEST_CHANGES", "BLOCKED"],
+)
 def test_run_worker_review_with_verdict_stays_done(
     tmp_tasks_dir,
     tmp_path,

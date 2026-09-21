@@ -1423,9 +1423,10 @@ _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
 # (#8421): APPROVE is accepted by scripts/build/cf_preflight.py, and
 # APPROVED / CHANGES_REQUESTED / BLOCKED by
 # scripts/ai_agent_bridge/_review_verdict.py and
-# scripts/fleet_comms/review_publication.py.
+# scripts/fleet_comms/review_publication.py. REQUEST_CHANGES is the token
+# cf_preflight.py and the review prompts actually ask reviewers to write.
 _REVIEW_VERDICT_LINE_RE = re.compile(
-    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|BLOCKED)\b",
+    r"\bVERDICT\s*:\s*(?:APPROVED?|CHANGES_REQUESTED|REQUEST_CHANGES|BLOCKED)\b",
     re.IGNORECASE,
 )
 _DELIVERY_DECLARATION_PREFIX = "DELIVERABLE:"
