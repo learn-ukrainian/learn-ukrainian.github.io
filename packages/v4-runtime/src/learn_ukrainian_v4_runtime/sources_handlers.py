@@ -275,7 +275,9 @@ async def handle_verify_stress(args: dict):
     tags = args.get("tags")
     query = {"word": word, "pos": pos, "tags": tags}
     if not isinstance(word, str) or not word.strip():
-        prose = json.dumps({"status": "invalid_input"}, ensure_ascii=False)
+        from scripts.verification.stress import stress_call_summary
+
+        prose = stress_call_summary(None, word=word if isinstance(word, str) else None)
         outcome = {
             "tool": "verify_stress",
             "disposition": "invalid_input",
@@ -308,8 +310,16 @@ async def handle_verify_stress(args: dict):
     else:
         disposition = "supported"
     identifiers = [_typed_identifier("sources", payload)] if success else []
+    # ``hits`` stays: the v1 envelope requires match_count == len(hits), and a
+    # zero count forces status=empty on a supported lookup. ``result`` is the
+    # oracle payload. ``summary_prose`` is one line, not a third copy of it.
     hits = list(payload.get("matches") or []) if isinstance(payload, dict) else []
-    prose = json.dumps(payload, indent=2, ensure_ascii=False)
+    from scripts.verification.stress import stress_call_summary
+
+    prose = stress_call_summary(
+        payload if isinstance(payload, dict) else None,
+        word=word if isinstance(word, str) else None,
+    )
     outcome = {
         "tool": "verify_stress",
         "disposition": disposition,

@@ -61,7 +61,7 @@ class TestListTools:
             "get_full_text", "get_chunk_context", "collection_stats", "mcp_server_identity",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
             "inspect_word", "inspect_words", "inspect_lemma",
-            "verify_stress",
+            "verify_stress", "verify_stresses",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
             "query_ulif_antonyms", "query_ulif_phraseology",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",
@@ -467,7 +467,12 @@ class TestVerifyStressHandler:
         with patch("scripts.verification.stress.verify_stress", return_value=payload) as mock:
             content, outcome = _run(server_module.handle_verify_stress({"word": "замок"}))
             mock.assert_called_once_with("замок", None, None)
-            assert json.loads(content[0].text) == payload
+            assert outcome["result"] == payload
+            assert outcome["summary_prose"] == content[0].text
+            assert "\n" not in content[0].text
+            assert not content[0].text.lstrip().startswith("{")
+            assert "замок" in content[0].text
+            assert "ambiguous" in content[0].text
             assert outcome["disposition"] == "ambiguous"
             assert outcome["success"] is False
 
@@ -477,7 +482,9 @@ class TestVerifyStressHandler:
                 server_module.handle_verify_stress({"word": "замок", "pos": "VERB", "tags": "Number=Sing"})
             )
             mock.assert_called_once_with("замок", "VERB", "Number=Sing")
-            assert json.loads(content[0].text) == {}
+            assert outcome["result"] == {}
+            assert outcome["summary_prose"] == content[0].text
+            assert not content[0].text.lstrip().startswith("{")
             assert outcome["disposition"] == "negative"
             assert outcome["success"] is False
 

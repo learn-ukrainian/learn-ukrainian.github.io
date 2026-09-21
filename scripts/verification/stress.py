@@ -433,3 +433,91 @@ def verify_stress(word: str, pos: str | None = None, tags: str | list[str] | Non
         "unresolvable_by_tags": status == "ambiguous" and _readings_unresolvable_by_tags(matches),
         "source": source,
     }
+
+
+def stress_call_summary(payload: dict[str, Any] | None, *, word: str | None = None) -> str:
+    """One-line human summary of a ``verify_stress`` payload.
+
+    The MCP text channel used to pretty-print the whole payload, which
+    duplicated ``result`` and ``hits``. Callers that need the readings
+    still read those structured fields.
+    """
+    if not isinstance(payload, dict) or not payload:
+        if isinstance(word, str) and word.strip():
+            return f"{word.strip()} — no result"
+        return "invalid_input: word is required"
+
+    label = str(payload.get("input") or (word.strip() if isinstance(word, str) else "") or "word")
+    status = str(payload.get("status") or "unknown")
+    if status == "invalid_input":
+        reason = payload.get("error") or "word is required"
+        line = f"{label} — invalid_input: {reason}"
+    else:
+        matches = payload.get("matches") if isinstance(payload.get("matches"), list) else []
+        forms = [
+            str(match.get("stressed_form"))
+            for match in matches
+            if isinstance(match, dict) and match.get("stressed_form")
+        ]
+        if forms:
+            shown = ", ".join(forms[:3])
+            if len(forms) > 3:
+                shown += f" (+{len(forms) - 3} more)"
+            line = f"{label} — {status}: {shown}"
+        else:
+            line = f"{label} — {status}"
+    return " ".join(line.split())
+
+
+STRESS_BATCH_CAP = 500
+
+
+def _compact_stress_reading(match: dict[str, Any]) -> dict[str, Any]:
+    reading: dict[str, Any] = {
+        "stressed_form": match.get("stressed_form"),
+        "vowel_indices": list(match.get("vowel_indices") or []),
+        "required_tags": list(match.get("required_tags") or []),
+        "override_applied": bool(match.get("override_applied")),
+    }
+    vesum = match.get("vesum")
+    if vesum is not None:
+        reading["vesum"] = vesum
+    return reading
+
+
+def verify_stresses(words: list[str], pos: str | None = None) -> dict[str, Any]:
+    """Batch stress lookup. One compact record per word; source envelope once.
+
+    Processes at most ``STRESS_BATCH_CAP`` words. A longer list is truncated
+    and the response carries the same style of note as ``vet_vocabulary``.
+    ``pos``, when set, is applied to every word in the batch.
+    """
+    if not isinstance(words, list) or not all(isinstance(word, str) for word in words):
+        raise TypeError("words must be a list of strings")
+
+    submitted = len(words)
+    batch = words[:STRESS_BATCH_CAP]
+    records: list[dict[str, Any]] = []
+    source: dict[str, Any] | None = None
+    for word in batch:
+        result = verify_stress(word, pos=pos)
+        if source is None:
+            source = result.get("source")
+        matches = result.get("matches") if isinstance(result.get("matches"), list) else []
+        records.append(
+            {
+                "input": result.get("input", word),
+                "status": result.get("status"),
+                "readings": [
+                    _compact_stress_reading(match) for match in matches if isinstance(match, dict)
+                ],
+            }
+        )
+    if source is None:
+        source = source_info()
+    payload: dict[str, Any] = {"words": records, "source": source}
+    if submitted > STRESS_BATCH_CAP:
+        payload["note"] = (
+            f"Note: received {submitted} words; processed the first {STRESS_BATCH_CAP} (hard cap)."
+        )
+    return payload
