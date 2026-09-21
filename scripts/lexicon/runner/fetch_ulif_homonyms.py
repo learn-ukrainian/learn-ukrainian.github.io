@@ -73,6 +73,9 @@ TAB_BUTTONS = (
     ("phraseology", "ctl00$ContentPlaceHolder1$phras"),
     ("antonyms", "ctl00$ContentPlaceHolder1$ant"),
 )
+KNOWN_PLACEHOLDER_CONTROLS = frozenset(
+    {"search", "par", "syn", "phras", "ant", "nextpage", "backpage", "artnext", "artback"}
+)
 TERMINAL_STATES = ("stored", "absent_from_ulif", "retry_scheduled", "error")
 COMPLETE_STATES = ("stored", "absent_from_ulif")
 _VALIDATION_MARKERS = (
@@ -357,6 +360,34 @@ class SpellingLedger:
                 key TEXT PRIMARY KEY,
                 value TEXT NOT NULL
             );
+            CREATE TABLE IF NOT EXISTS register_pages (
+                page_num INTEGER PRIMARY KEY,
+                state TEXT NOT NULL,
+                start_headword TEXT NOT NULL DEFAULT '',
+                end_headword TEXT NOT NULL DEFAULT '',
+                row_count INTEGER NOT NULL DEFAULT 0,
+                register_size INTEGER,
+                error TEXT NOT NULL DEFAULT '',
+                attempts INTEGER NOT NULL DEFAULT 0,
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL
+            );
+            CREATE TABLE IF NOT EXISTS register_rows (
+                page_num INTEGER NOT NULL,
+                row_index INTEGER NOT NULL,
+                select_arg TEXT NOT NULL,
+                stressed_headword TEXT NOT NULL,
+                normalized_spelling TEXT NOT NULL,
+                state TEXT NOT NULL,
+                entry_sha256 TEXT NOT NULL DEFAULT '',
+                homonym_index INTEGER,
+                unknown_controls TEXT NOT NULL DEFAULT '',
+                paradigm_source TEXT NOT NULL DEFAULT '',
+                error TEXT NOT NULL DEFAULT '',
+                created_at TEXT NOT NULL,
+                updated_at TEXT NOT NULL,
+                PRIMARY KEY (page_num, row_index)
+            );
             """
         )
         self.conn.commit()
@@ -535,13 +566,273 @@ class SpellingLedger:
         rows = self.conn.execute("SELECT spelling FROM spellings WHERE state = 'stored'")
         return {str(row["spelling"]) for row in rows}
 
+    def ensure_page(
+        self,
+        page_num: int,
+        *,
+        start_headword: str = "",
+        end_headword: str = "",
+        row_count: int = 0,
+        register_size: int | None = None,
+        state: str = "in_progress",
+    ) -> None:
+        now = _now_iso()
+        self.conn.execute(
+            """
+            INSERT INTO register_pages (
+                page_num, state, start_headword, end_headword, row_count, register_size, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            ON CONFLICT(page_num) DO UPDATE SET
+                start_headword = CASE WHEN excluded.start_headword != '' THEN excluded.start_headword ELSE register_pages.start_headword END,
+                end_headword = CASE WHEN excluded.end_headword != '' THEN excluded.end_headword ELSE register_pages.end_headword END,
+                row_count = CASE WHEN excluded.row_count > 0 THEN excluded.row_count ELSE register_pages.row_count END,
+                register_size = COALESCE(excluded.register_size, register_pages.register_size),
+                updated_at = excluded.updated_at
+            """,
+            (page_num, state, start_headword, end_headword, row_count, register_size, now, now),
+        )
+        self.conn.commit()
+
+    def mark_page(self, page_num: int, state: str, *, error: str = "") -> None:
+        self.conn.execute(
+            """
+            UPDATE register_pages
+            SET state = ?, error = ?, attempts = attempts + 1, updated_at = ?
+            WHERE page_num = ?
+            """,
+            (state, error, _now_iso(), page_num),
+        )
+        self.conn.commit()
+
+    def get_page(self, page_num: int) -> sqlite3.Row | None:
+        return self.conn.execute("SELECT * FROM register_pages WHERE page_num = ?", (page_num,)).fetchone()
+
+    def first_unfinished_page(self) -> int | None:
+        row = self.conn.execute(
+            "SELECT page_num FROM register_pages WHERE state != 'completed' ORDER BY page_num LIMIT 1"
+        ).fetchone()
+        if row is not None:
+            return int(row["page_num"])
+        max_row = self.conn.execute("SELECT MAX(page_num) FROM register_pages").fetchone()
+        if max_row is not None and max_row[0] is not None:
+            return int(max_row[0]) + 1
+        return None
+
+    def ensure_row(
+        self,
+        page_num: int,
+        row_index: int,
+        *,
+        select_arg: str,
+        stressed_headword: str,
+        normalized_spelling: str,
+    ) -> None:
+        now = _now_iso()
+        self.conn.execute(
+            """
+            INSERT INTO register_rows (
+                page_num, row_index, select_arg, stressed_headword, normalized_spelling, state, created_at, updated_at
+            ) VALUES (?, ?, ?, ?, ?, 'pending', ?, ?)
+            ON CONFLICT(page_num, row_index) DO NOTHING
+            """,
+            (page_num, row_index, select_arg, stressed_headword, normalized_spelling, now, now),
+        )
+        self.conn.commit()
+
+    def mark_row(
+        self,
+        page_num: int,
+        row_index: int,
+        state: str,
+        *,
+        entry_sha256: str = "",
+        homonym_index: int | None = None,
+        unknown_controls: str = "",
+        paradigm_source: str = "",
+        error: str = "",
+    ) -> None:
+        self.conn.execute(
+            """
+            UPDATE register_rows
+            SET state = ?, entry_sha256 = ?, homonym_index = ?, unknown_controls = ?, paradigm_source = ?, error = ?, updated_at = ?
+            WHERE page_num = ? AND row_index = ?
+            """,
+            (
+                state,
+                entry_sha256,
+                homonym_index,
+                unknown_controls,
+                paradigm_source,
+                error,
+                _now_iso(),
+                page_num,
+                row_index,
+            ),
+        )
+        self.conn.commit()
+
+    def page_rows(self, page_num: int) -> list[sqlite3.Row]:
+        return list(
+            self.conn.execute(
+                "SELECT * FROM register_rows WHERE page_num = ? ORDER BY row_index",
+                (page_num,),
+            )
+        )
+
+    def completed_rows_for_spelling(self, normalized_spelling: str) -> list[sqlite3.Row]:
+        return list(
+            self.conn.execute(
+                """
+                SELECT * FROM register_rows
+                WHERE normalized_spelling = ? AND state = 'completed'
+                ORDER BY page_num, row_index
+                """,
+                (normalized_spelling,),
+            )
+        )
+
+    def walk_counts(self) -> dict[str, Any]:
+        pages_done = self.conn.execute("SELECT COUNT(*) FROM register_pages WHERE state = 'completed'").fetchone()[0]
+        entries_stored = self.conn.execute("SELECT COUNT(*) FROM register_rows WHERE state = 'completed'").fetchone()[0]
+        spellings = self.conn.execute(
+            "SELECT COUNT(DISTINCT normalized_spelling) FROM register_rows WHERE state = 'completed'"
+        ).fetchone()[0]
+        multi_row = self.conn.execute(
+            """
+            SELECT COUNT(*) FROM (
+                SELECT normalized_spelling FROM register_rows
+                WHERE state = 'completed'
+                GROUP BY normalized_spelling
+                HAVING COUNT(*) > 1
+            )
+            """
+        ).fetchone()[0]
+        par_entry = self.conn.execute(
+            "SELECT COUNT(*) FROM register_rows WHERE paradigm_source = 'entry' AND state = 'completed'"
+        ).fetchone()[0]
+        par_req = self.conn.execute(
+            "SELECT COUNT(*) FROM register_rows WHERE paradigm_source = 'tab' AND state = 'completed'"
+        ).fetchone()[0]
+        unknown_ctrl = self.conn.execute(
+            "SELECT COUNT(*) FROM register_rows WHERE unknown_controls != '' AND state = 'completed'"
+        ).fetchone()[0]
+
+        reg_size_raw = self.meta("register_size")
+        reg_size = int(reg_size_raw) if reg_size_raw and reg_size_raw.isdigit() else None
+        pages_total = (reg_size + REGISTER_PAGE_SIZE - 1) // REGISTER_PAGE_SIZE if reg_size else 0
+
+        return {
+            "pages_done": int(pages_done),
+            "pages_total": pages_total,
+            "entries_stored": int(entries_stored),
+            "spellings": int(spellings),
+            "multi_entry_spellings": int(multi_row),
+            "paradigm_from_entry": int(par_entry),
+            "paradigm_requested": int(par_req),
+            "unknown_control_entries": int(unknown_ctrl),
+            "register_size": reg_size_raw or "unknown",
+            "differing_groups": int(self.meta("differing_groups", "0") or "0"),
+            "register_size_changes": int(self.meta("register_size_changes_count", "0") or "0"),
+        }
+
 
 def status_text(
     ledger: SpellingLedger,
     *,
     delay_seconds: float,
     state_dir: Path | None = None,
+    mode: str = "auto",
 ) -> str:
+    has_walk_pages = False
+    with contextlib.suppress(Exception):
+        r = ledger.conn.execute("SELECT COUNT(*) FROM register_pages").fetchone()
+        if r and r[0] > 0:
+            has_walk_pages = True
+    is_walk = (mode == "walk") or (mode == "auto" and (ledger.meta("mode") == "walk" or has_walk_pages))
+
+    dir_path = state_dir or ledger.path.parent
+    lock_path = dir_path / LOCK_NAME
+    if lock_path.exists():
+        pid, started, _ = _read_lock(lock_path)
+        alive = None if pid is None else _pid_alive(pid)
+        if alive is True:
+            runner_str = f"running pid={pid} since={started}"
+        elif alive is False:
+            runner_str = f"stale_lock pid={pid}"
+        else:
+            runner_str = f"stale_lock pid={pid if pid is not None else 'unknown'}"
+    else:
+        runner_str = "not_running"
+
+    if is_walk:
+        w_counts = ledger.walk_counts()
+        requests_made = int(ledger.meta("requests_made", "0") or "0")
+        pages_done = w_counts["pages_done"]
+        pages_total = w_counts["pages_total"]
+        entries_stored = w_counts["entries_stored"]
+        spellings = w_counts["spellings"]
+        multi_entry = w_counts["multi_entry_spellings"]
+        par_entry = w_counts["paradigm_from_entry"]
+        par_req = w_counts["paradigm_requested"]
+        unknown_ctrl = w_counts["unknown_control_entries"]
+        differing_groups = w_counts["differing_groups"]
+        reg_changes = w_counts["register_size_changes"]
+        reg_size = w_counts["register_size"]
+
+        mean_req = (requests_made / entries_stored) if entries_stored > 0 else 0.0
+
+        timed_pages = int(ledger.meta("cumulative_timed_pages", "0") or "0")
+        wall_seconds = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0")
+        remaining_pages = max(0, pages_total - pages_done) if pages_total else 0
+        if remaining_pages == 0 and pages_total > 0:
+            eta: str | float = 0
+        elif timed_pages == 0:
+            eta = "unknown"
+        else:
+            mean_wall = wall_seconds / timed_pages
+            eta = round(remaining_pages * mean_wall, 1)
+
+        if pages_total == 0 and pages_done == 0:
+            complete = "not_started"
+        elif pages_total > 0 and pages_done >= pages_total:
+            complete = "yes"
+        else:
+            complete = "no"
+
+        row = ledger.conn.execute("SELECT MAX(updated_at) FROM register_pages").fetchone()
+        last_update = str(row[0]) if row is not None and row[0] else "none"
+        if last_update != "none":
+            try:
+                dt = datetime.fromisoformat(last_update)
+                secs = int(max(0.0, (datetime.now(UTC) - dt).total_seconds()))
+                seconds_since = str(secs)
+            except Exception:
+                seconds_since = "unknown"
+        else:
+            seconds_since = "unknown"
+
+        lines = [
+            f"pages_done={pages_done}",
+            f"pages_total={pages_total}",
+            f"entries_stored={entries_stored}",
+            f"spellings={spellings}",
+            f"multi_entry_spellings={multi_entry}",
+            f"paradigm_from_entry={par_entry}",
+            f"paradigm_requested={par_req}",
+            f"unknown_control_entries={unknown_ctrl}",
+            f"requests_made={requests_made}",
+            f"mean_requests_per_entry={mean_req:.2f}",
+            f"estimated_time_remaining_seconds={eta}",
+            f"register_size={reg_size}",
+            f"register_size_changes={reg_changes}",
+            f"differing_groups={differing_groups}",
+            f"complete={complete}",
+            f"runner={runner_str}",
+            f"last_update={last_update}",
+            f"seconds_since_last_update={seconds_since}",
+        ]
+        return "\n".join(lines)
+
     counts = ledger.counts()
     requests_made = int(ledger.meta("requests_made", "0") or "0")
     finished = counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
@@ -551,7 +842,7 @@ def status_text(
     timed_units = int(ledger.meta("cumulative_timed_units", "0") or "0")
     wall_seconds = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0")
     if remaining == 0:
-        eta: str | float = 0
+        eta = 0
     elif timed_units == 0:
         eta = "unknown"
     else:
@@ -567,20 +858,6 @@ def status_text(
         complete = "no"
 
     differing = ledger.meta("differing_content_hashes", "0")
-
-    dir_path = state_dir or ledger.path.parent
-    lock_path = dir_path / LOCK_NAME
-    if lock_path.exists():
-        pid, started, _ = _read_lock(lock_path)
-        alive = None if pid is None else _pid_alive(pid)
-        if alive is True:
-            runner_str = f"running pid={pid} since={started}"
-        elif alive is False:
-            runner_str = f"stale_lock pid={pid}"
-        else:
-            runner_str = f"stale_lock pid={pid if pid is not None else 'unknown'}"
-    else:
-        runner_str = "not_running"
 
     row = ledger.conn.execute("SELECT MAX(updated_at) FROM spellings").fetchone()
     last_update = str(row[0]) if row is not None and row[0] else "none"
@@ -634,6 +911,21 @@ def _has_control(html: str, name: str) -> bool:
 
 def _present_tabs(html: str) -> list[tuple[str, str]]:
     return [(kind, name) for kind, name in TAB_BUTTONS if _has_control(html, name)]
+
+
+def find_unknown_controls(html: str) -> list[str]:
+    """Identify image or submit controls inside content placeholder not in known set."""
+    soup = BeautifulSoup(html, "html.parser")
+    unknown: list[str] = []
+    for inp in soup.find_all("input"):
+        inp_type = str(inp.get("type") or "").lower()
+        if inp_type in ("image", "submit"):
+            name = str(inp.get("name") or "")
+            if "ContentPlaceHolder1" in name or name.startswith("ctl00$"):
+                short = name.split("$")[-1].lower()
+                if short not in KNOWN_PLACEHOLDER_CONTROLS and short not in unknown:
+                    unknown.append(short)
+    return unknown
 
 
 def _validation_failure(html: str) -> bool:
@@ -1154,24 +1446,23 @@ def _write_group(
         )
     )
     differing = 0
-    unchanged = (
-        len(parsed_rows) == 1
-        and len(existing) == 1
-        and str(existing[0][1] or "") == str(parsed_rows[0]["content_sha256"])
-        and str(existing[0][1] or "") != ""
-    )
-    if unchanged:
-        cache.execute(
-            """
-            UPDATE ulif_dictua_entries
-            SET homonym_checked = 1
-            WHERE normalized_query = ? AND homonym_index = ?
-            """,
-            (normalized, int(existing[0][0])),
+    if existing:
+        same_count = len(existing) == len(parsed_rows)
+        same_hashes = same_count and all(
+            str(ex[1] or "") == str(pr["content_sha256"]) and str(ex[1] or "") != ""
+            for ex, pr in zip(existing, parsed_rows, strict=True)
         )
-        cache.commit()
-        return 0
-    if len(parsed_rows) == 1 and len(existing) == 1:
+        if same_hashes:
+            cache.execute(
+                """
+                UPDATE ulif_dictua_entries
+                SET homonym_checked = 1
+                WHERE normalized_query = ?
+                """,
+                (normalized,),
+            )
+            cache.commit()
+            return 0
         differing = 1
     keep = {int(row["homonym_index"]) for row in parsed_rows}
     stale_ids = [
@@ -1257,6 +1548,140 @@ def _requests_transport(user_agent: str) -> Transport:
 
 
 HEARTBEAT_INTERVAL_SECONDS = 60.0
+
+
+def _keep_walk(
+    ledger: SpellingLedger,
+    cache: sqlite3.Connection,
+    spelling: str,
+    role: str,
+    html: str,
+    request: bytes,
+    *,
+    homonym_index: int | None = None,
+    tab_kind: str = "",
+    register_position: str = "",
+    current_page: int | None = None,
+) -> None:
+    body = html.encode("utf-8")
+    response_sha = _sha256(body)
+    request_sha = _sha256(request)
+    _store_blob(cache, response_sha, body, "text/html; charset=utf-8")
+    _store_blob(cache, request_sha, request, "application/json")
+    cache.commit()
+    ledger.record_response(
+        spelling=spelling,
+        role=role,
+        response_sha256=response_sha,
+        request_sha256=request_sha,
+        homonym_index=homonym_index,
+        tab_kind=tab_kind,
+        register_position=register_position,
+    )
+    size = _register_size(html)
+    if size is not None:
+        prior_str = ledger.meta("register_size")
+        if not prior_str:
+            ledger.set_meta("register_size", str(size))
+            print(f"discovered register size: {size}", file=sys.stderr, flush=True)
+        elif prior_str.isdigit():
+            prior = int(prior_str)
+            if size != prior:
+                ledger.set_meta("register_size", str(size))
+                p_num = current_page if current_page is not None else 0
+                changes_raw = ledger.meta("register_size_changes", "[]")
+                try:
+                    changes = json.loads(changes_raw)
+                except Exception:
+                    changes = []
+                changes.append({"page": p_num, "old": prior, "new": size, "recorded_at": _now_iso()})
+                ledger.set_meta("register_size_changes", json.dumps(changes))
+                ledger.set_meta("register_size_changes_count", str(len(changes)))
+                print(f"warning: register size changed on page {p_num}: {prior} -> {size}", file=sys.stderr, flush=True)
+
+
+def _commit_spelling_group(
+    ledger: SpellingLedger,
+    cache: sqlite3.Connection,
+    normalized_spelling: str,
+) -> int:
+    """Atomically persist a completed spelling group from walk ledger into cache."""
+    completed_rows = ledger.completed_rows_for_spelling(normalized_spelling)
+    if not completed_rows:
+        return 0
+
+    if ledger.state_of(normalized_spelling) == "stored":
+        return 0
+
+    parsed_rows: list[dict[str, Any]] = []
+    section_sets: list[dict[str, object]] = []
+    raw_sets: list[dict[str, str]] = []
+
+    for homonym_index, r in enumerate(completed_rows, start=1):
+        p_num = int(r["page_num"])
+        r_idx = int(r["row_index"])
+        reg_pos = f"{p_num}:{r_idx}"
+
+        ledger.conn.execute(
+            "UPDATE register_rows SET homonym_index = ? WHERE page_num = ? AND row_index = ?",
+            (homonym_index, p_num, r_idx),
+        )
+        ledger.conn.execute(
+            "UPDATE responses SET homonym_index = ? WHERE spelling = ? AND register_position = ?",
+            (homonym_index, normalized_spelling, reg_pos),
+        )
+
+        entry_html = _load_body(cache, str(r["entry_sha256"]))
+        parsed = parse_ulif_entry(entry_html, homonym_index=homonym_index, register_position=reg_pos)
+
+        sections: dict[str, object] = {}
+        raw: dict[str, str] = {}
+        for tab in ledger.tab_responses(normalized_spelling, homonym_index):
+            kind = str(tab["tab_kind"])
+            tab_html = _load_body(cache, str(tab["response_sha256"]))
+            raw[kind] = tab_html
+            if kind == "paradigm":
+                paradigm = parse_ulif_paradigm(tab_html)
+                if paradigm is not None:
+                    sections["paradigm"] = paradigm
+            elif kind in {"synonyms", "antonyms", "phraseology"}:
+                groups = parse_ulif_relation_groups(tab_html, kind)
+                if groups:
+                    sections[kind] = groups
+
+        parsed_rows.append(parsed)
+        section_sets.append(sections)
+        raw_sets.append(raw)
+
+    ledger.conn.commit()
+
+    _record_printed_numbers(ledger, normalized_spelling, parsed_rows)
+    mismatch = _printed_number_mismatch(parsed_rows)
+    if mismatch is not None:
+        register, printed = mismatch
+        ledger.conn.execute(
+            "UPDATE register_rows SET error = ? WHERE normalized_spelling = ?",
+            (f"printed_number_mismatch register={list(register)} printed={list(printed)}", normalized_spelling),
+        )
+        ledger.conn.commit()
+        raise RuntimeError(
+            f"printed_number_mismatch for {normalized_spelling}: register={list(register)} printed={list(printed)}"
+        )
+
+    from scripts.wiki.sources_db import store_ulif_dictua_entry
+
+    differing = _write_group(cache, normalized_spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
+    if differing > 0:
+        cur_diff = int(ledger.meta("differing_groups", "0") or "0")
+        ledger.set_meta("differing_groups", str(cur_diff + differing))
+
+    pages_seen = {int(r["page_num"]) for r in completed_rows}
+    straddled = len(pages_seen) > 1
+
+    ledger.ensure(normalized_spelling)
+    ledger.mark(normalized_spelling, "stored", entry_count=len(parsed_rows), straddled=straddled)
+    ledger.set_duplicate_content(normalized_spelling, _duplicate_content(parsed_rows))
+    return differing
 
 
 def _print_start_banner(
@@ -1354,6 +1779,92 @@ def _print_stop_summary(
     print(f"Elapsed time:         {elapsed_str}", file=sys.stderr)
     print(f"Resume command:       {resume_cmd}", file=sys.stderr)
     print("===============================", file=sys.stderr, flush=True)
+
+
+def _print_walk_start_banner(
+    *,
+    start_page: int,
+    pages_done: int,
+    pages_total: int,
+    to_do_pages: int,
+    delay_seconds: float,
+    state_dir: Path,
+    db_path: Path,
+    register_size: str,
+) -> None:
+    print("=== ULIF Register Walk Runner ===", file=sys.stderr)
+    print(f"Starting page:                 {start_page}", file=sys.stderr)
+    print(f"Already finished pages:        {pages_done}", file=sys.stderr)
+    print(f"Total pages in register:       {pages_total if pages_total else 'unknown'}", file=sys.stderr)
+    print(f"Pages to do in this run:       {to_do_pages}", file=sys.stderr)
+    print(f"Delay between requests:        {delay_seconds:.1f}s", file=sys.stderr)
+    print(f"State directory:               {state_dir}", file=sys.stderr)
+    print(f"Database path:                 {db_path}", file=sys.stderr)
+    print(f"Register size:                 {register_size}", file=sys.stderr)
+    print("=================================", file=sys.stderr, flush=True)
+
+
+def _format_walk_progress_line(
+    *,
+    pages_done: int,
+    pages_total: int,
+    entries_stored: int,
+    page_req: int,
+    total_req: int,
+    err_count: int,
+    retry_count: int,
+    elapsed_seconds: float,
+    eta_str: str,
+    page_num: int,
+) -> str:
+    pct = (pages_done / pages_total * 100.0) if pages_total else 0.0
+    h = int(elapsed_seconds // 3600)
+    m = int((elapsed_seconds % 3600) // 60)
+    s = int(elapsed_seconds % 60)
+    elapsed_str = f"{h}:{m:02d}:{s:02d}"
+    return (
+        f"[{pages_done:5d}/{pages_total:<5d} {pct:5.1f}%] page_completed "
+        f"entries={entries_stored} req={page_req}  "
+        f"total_req={total_req} err={err_count} retry={retry_count}  "
+        f"elapsed={elapsed_str}  eta={eta_str}  "
+        f"page={page_num}"
+    )
+
+
+def _print_walk_stop_summary(
+    *,
+    reason: str,
+    ledger: SpellingLedger | None = None,
+    requests_in_process: int,
+    elapsed_seconds: float,
+    resume_cmd: str,
+) -> None:
+    if ledger is not None:
+        counts = ledger.walk_counts()
+    else:
+        counts = {
+            "pages_done": 0,
+            "pages_total": 0,
+            "entries_stored": 0,
+            "spellings": 0,
+            "multi_entry_spellings": 0,
+            "differing_groups": 0,
+        }
+    h = int(elapsed_seconds // 3600)
+    m = int((elapsed_seconds % 3600) // 60)
+    s = int(elapsed_seconds % 60)
+    elapsed_str = f"{h}:{m:02d}:{s:02d}"
+    print("=== ULIF Walk Stop Summary ===", file=sys.stderr)
+    print(f"Reason:                 {reason}", file=sys.stderr)
+    print(f"Pages done / total:     {counts['pages_done']} / {counts['pages_total']}", file=sys.stderr)
+    print(f"Entries stored:         {counts['entries_stored']}", file=sys.stderr)
+    print(f"Spellings:              {counts['spellings']}", file=sys.stderr)
+    print(f"Multi-entry spellings:  {counts['multi_entry_spellings']}", file=sys.stderr)
+    print(f"Differing groups:       {counts['differing_groups']}", file=sys.stderr)
+    print(f"Requests in run:        {requests_in_process}", file=sys.stderr)
+    print(f"Elapsed time:           {elapsed_str}", file=sys.stderr)
+    print(f"Resume command:         {resume_cmd}", file=sys.stderr)
+    print("==============================", file=sys.stderr, flush=True)
 
 
 def _restore_pending(ledger: SpellingLedger, spelling: str) -> None:
@@ -1797,6 +2308,788 @@ def run_fetch(
     return return_code
 
 
+def run_walk(
+    *,
+    state_dir: Path,
+    db_path: Path,
+    delay_seconds: float = MIN_DELAY_SECONDS,
+    max_pages: int | None = None,
+    max_requests: int | None = None,
+    break_stale_lock: bool = False,
+    quiet: bool = False,
+    start_headword: str = "а",
+    resume_cmd: str | None = None,
+    transport: Transport | None = None,
+    sleep: SleepFn = _default_sleep,
+    clock: ClockFn = time.monotonic,
+    scanner: Scanner = scan_for_legacy_crawler,
+) -> int:
+    if resume_cmd:
+        resolved_resume_cmd = resume_cmd
+    else:
+        cmd_parts = [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "walk",
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--delay",
+            f"{delay_seconds:g}",
+        ]
+        if max_pages is not None:
+            cmd_parts.extend(["--max-pages", str(max_pages)])
+        if max_requests is not None:
+            cmd_parts.extend(["--max-requests", str(max_requests)])
+        if break_stale_lock:
+            cmd_parts.append("--break-stale-lock")
+        if quiet:
+            cmd_parts.append("--quiet")
+        resolved_resume_cmd = shlex.join(cmd_parts)
+
+    if delay_seconds < MIN_DELAY_SECONDS:
+        print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
+        _print_walk_stop_summary(
+            reason=f"delay must be >= {MIN_DELAY_SECONDS}",
+            ledger=None,
+            requests_in_process=0,
+            elapsed_seconds=0.0,
+            resume_cmd=resolved_resume_cmd,
+        )
+        return EXIT_USAGE
+
+    stop_reason = "finished"
+    return_code = EXIT_OK
+    start_time = clock()
+    base_requests = 0
+    process_pages_finished = 0
+    process_wall_time = 0.0
+    last_progress_time = [clock()]
+    last_heartbeat_time = [clock()]
+
+    lock: RunnerLock | None = None
+    ledger: SpellingLedger | None = None
+    cache: sqlite3.Connection | None = None
+    client: PoliteClient | None = None
+
+    old_sigterm = None
+    if threading.current_thread() is threading.main_thread():
+
+        def _on_sigterm(signum: int, frame: Any) -> None:
+            raise InterruptedByOperator("SIGTERM")
+
+        with contextlib.suppress(ValueError, OSError):
+            old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+
+    def on_heartbeat(what: str) -> float:
+        now = clock()
+        due_in_progress = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_progress_time[0]))
+        due_in_heartbeat = max(0.0, HEARTBEAT_INTERVAL_SECONDS - (now - last_heartbeat_time[0]))
+        time_until_due = max(due_in_progress, due_in_heartbeat)
+        if time_until_due <= 0.0:
+            print(f"heartbeat: {what}", file=sys.stderr, flush=True)
+            last_heartbeat_time[0] = now
+            return HEARTBEAT_INTERVAL_SECONDS
+        return time_until_due
+
+    try:
+        try:
+            _ensure_private_dir(state_dir)
+            lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
+            lock.acquire()
+
+            try:
+                cache = prepare_database(db_path)
+            except RuntimeError as exc:
+                print(str(exc), file=sys.stderr)
+                return_code = EXIT_USAGE
+                stop_reason = f"database error: {exc}"
+            else:
+                ledger = SpellingLedger(state_dir / "ledger.sqlite")
+                ledger.set_meta("mode", "walk")
+                ledger.set_meta("delay_seconds", str(delay_seconds))
+                base_requests = int(ledger.meta("requests_made", "0") or "0")
+
+                def _on_request(req_in_proc: int) -> None:
+                    if ledger is not None:
+                        with contextlib.suppress(Exception):
+                            ledger.set_requests_made(base_requests + req_in_proc)
+
+                client = PoliteClient(
+                    transport or _requests_transport(declared_user_agent()),
+                    delay_seconds=delay_seconds,
+                    sleep=sleep,
+                    clock=clock,
+                    max_requests=max_requests,
+                    heartbeat=on_heartbeat,
+                    on_request=_on_request,
+                )
+
+                seed_html, seed_req = client.exchange("GET", None)
+                _keep_walk(ledger, cache, "", "seed", seed_html, seed_req)
+                seed_tokens = _tokens(seed_html)
+                if seed_tokens is None:
+                    raise SessionInvalid("seed_missing_viewstate")
+
+                first_unfinished = ledger.first_unfinished_page()
+                is_resume = False
+                if first_unfinished is not None:
+                    p_rec = ledger.get_page(first_unfinished)
+                    if p_rec is not None:
+                        is_resume = True
+                        start_page = first_unfinished
+                    else:
+                        start_page = first_unfinished
+                else:
+                    completed_count = ledger.conn.execute(
+                        "SELECT COUNT(*) FROM register_pages WHERE state = 'completed'"
+                    ).fetchone()[0]
+                    if completed_count > 0:
+                        _print_walk_start_banner(
+                            start_page=completed_count,
+                            pages_done=completed_count,
+                            pages_total=completed_count,
+                            to_do_pages=0,
+                            delay_seconds=delay_seconds,
+                            state_dir=state_dir,
+                            db_path=db_path,
+                            register_size=ledger.meta("register_size", "") or "unknown",
+                        )
+                        _print_walk_stop_summary(
+                            reason="all pages already completed",
+                            ledger=ledger,
+                            requests_in_process=0,
+                            elapsed_seconds=0.0,
+                            resume_cmd=resolved_resume_cmd,
+                        )
+                        return EXIT_OK
+                    start_page = 1
+
+                if is_resume:
+                    p_rec = ledger.get_page(start_page)
+                    assert p_rec is not None
+                    exp_start = str(p_rec["start_headword"])
+                    exp_end = str(p_rec["end_headword"])
+                    search_fields = _form_fields(
+                        seed_tokens,
+                        spelling=exp_start,
+                        extra=_image_click(SEARCH_BUTTON),
+                    )
+                    page_html, page_req = client.exchange("POST", search_fields)
+                    _keep_walk(
+                        ledger, cache, "", f"tsearch:resume:{start_page}", page_html, page_req, current_page=start_page
+                    )
+                    landed_rows = parse_register_list(page_html)
+                    if not landed_rows:
+                        raise SessionInvalid("resume_missing_register")
+                    if landed_rows[0]["stressed"] != exp_start or landed_rows[-1]["stressed"] != exp_end:
+                        ledger.mark_page(start_page, "error", error="resume_mismatch")
+                        print(
+                            f"stopping: resume_mismatch on page {start_page} (expected {exp_start}..{exp_end}, landed {landed_rows[0]['stressed']}..{landed_rows[-1]['stressed']})",
+                            file=sys.stderr,
+                        )
+                        stop_reason = "resume_mismatch"
+                        return_code = EXIT_USAGE
+                    current_page_html = page_html
+                else:
+                    search_fields = _form_fields(
+                        seed_tokens,
+                        spelling=start_headword,
+                        extra=_image_click(SEARCH_BUTTON),
+                    )
+                    page_html, page_req = client.exchange("POST", search_fields)
+                    _keep_walk(ledger, cache, "", "tsearch:start", page_html, page_req, current_page=1)
+                    landed_rows = parse_register_list(page_html)
+                    if not landed_rows:
+                        raise SessionInvalid("start_missing_register")
+                    start_page = 1
+                    current_page_html = page_html
+                    reg_sz = _register_size(page_html)
+                    ledger.ensure_page(
+                        1,
+                        start_headword=landed_rows[0]["stressed"],
+                        end_headword=landed_rows[-1]["stressed"],
+                        row_count=len(landed_rows),
+                        register_size=reg_sz,
+                    )
+                    for r in landed_rows:
+                        ledger.ensure_row(
+                            1,
+                            int(r["row_index"]),
+                            select_arg=str(r["select"]),
+                            stressed_headword=str(r["stressed"]),
+                            normalized_spelling=normalize_ulif_spelling(str(r["unstressed"])),
+                        )
+
+                w_counts = ledger.walk_counts()
+                pages_done = w_counts["pages_done"]
+                pages_total = w_counts["pages_total"]
+                to_do_pages = max(0, pages_total - pages_done) if pages_total else 0
+                if max_pages is not None:
+                    to_do_pages = min(to_do_pages, max_pages)
+
+                _print_walk_start_banner(
+                    start_page=start_page,
+                    pages_done=pages_done,
+                    pages_total=pages_total,
+                    to_do_pages=to_do_pages,
+                    delay_seconds=delay_seconds,
+                    state_dir=state_dir,
+                    db_path=db_path,
+                    register_size=ledger.meta("register_size", "") or "unknown",
+                )
+
+                if return_code == EXIT_OK:
+                    current_page = start_page
+                    consecutive_retries = 0
+
+                    while True:
+                        if max_pages is not None and process_pages_finished >= max_pages:
+                            stop_reason = "max pages"
+                            break
+
+                        page_start_clock = clock()
+                        page_start_reqs = client.requests_made
+                        page_success = False
+
+                        for page_attempt in range(MAX_UNIT_RESEEDS):
+                            try:
+                                page_tokens = _tokens(current_page_html)
+                                if page_tokens is None or _validation_failure(current_page_html):
+                                    raise SessionInvalid(f"page_{current_page}_viewstate")
+
+                                rows = parse_register_list(current_page_html)
+                                if not rows:
+                                    raise SessionInvalid(f"page_{current_page}_empty")
+
+                                ledger.ensure_page(
+                                    current_page,
+                                    start_headword=rows[0]["stressed"],
+                                    end_headword=rows[-1]["stressed"],
+                                    row_count=len(rows),
+                                    register_size=_register_size(current_page_html),
+                                )
+                                for r in rows:
+                                    ledger.ensure_row(
+                                        current_page,
+                                        int(r["row_index"]),
+                                        select_arg=str(r["select"]),
+                                        stressed_headword=str(r["stressed"]),
+                                        normalized_spelling=normalize_ulif_spelling(str(r["unstressed"])),
+                                    )
+
+                                existing_rows = {r["row_index"]: r for r in ledger.page_rows(current_page)}
+
+                                for i, r in enumerate(rows):
+                                    r_idx = int(r["row_index"])
+                                    r_norm = normalize_ulif_spelling(str(r["unstressed"]))
+                                    ex = existing_rows.get(r_idx)
+                                    if ex is not None and str(ex["state"]) == "completed":
+                                        if (
+                                            i < len(rows) - 1
+                                            and normalize_ulif_spelling(str(rows[i + 1]["unstressed"])) != r_norm
+                                        ):
+                                            _commit_spelling_group(ledger, cache, r_norm)
+                                        continue
+
+                                    entry_fields = _form_fields(
+                                        page_tokens,
+                                        spelling=str(r["unstressed"]),
+                                        event_target=GRID_TARGET,
+                                        event_argument=str(r["select"]),
+                                    )
+                                    entry_html, entry_req = client.exchange("POST", entry_fields)
+                                    entry_sha = _sha256(entry_html.encode("utf-8"))
+                                    _keep_walk(
+                                        ledger,
+                                        cache,
+                                        r_norm,
+                                        "entry",
+                                        entry_html,
+                                        entry_req,
+                                        register_position=f"{current_page}:{r_idx}",
+                                        current_page=current_page,
+                                    )
+
+                                    unknowns = find_unknown_controls(entry_html)
+                                    unknown_str = ",".join(unknowns) if unknowns else ""
+
+                                    paradigm = parse_ulif_paradigm(entry_html)
+                                    if paradigm is not None:
+                                        paradigm_source = "entry"
+                                        ledger.record_response(
+                                            spelling=r_norm,
+                                            role="tab",
+                                            response_sha256=entry_sha,
+                                            request_sha256=_sha256(entry_req),
+                                            tab_kind="paradigm",
+                                            register_position=f"{current_page}:{r_idx}",
+                                        )
+                                    else:
+                                        if _has_control(entry_html, "ctl00$ContentPlaceHolder1$par"):
+                                            paradigm_source = "tab"
+                                            par_tokens = _tokens(entry_html)
+                                            if par_tokens is None:
+                                                raise SessionInvalid("entry_tokens_missing")
+                                            tab_fields = _form_fields(
+                                                par_tokens,
+                                                spelling=str(r["unstressed"]),
+                                                extra=_image_click("ctl00$ContentPlaceHolder1$par"),
+                                            )
+                                            tab_html, tab_req = client.exchange("POST", tab_fields)
+                                            _keep_walk(
+                                                ledger,
+                                                cache,
+                                                r_norm,
+                                                "tab",
+                                                tab_html,
+                                                tab_req,
+                                                tab_kind="paradigm",
+                                                register_position=f"{current_page}:{r_idx}",
+                                                current_page=current_page,
+                                            )
+                                        else:
+                                            paradigm_source = ""
+
+                                    entry_tokens = _tokens(entry_html)
+                                    if entry_tokens is not None:
+                                        for kind, control in (
+                                            ("synonyms", "ctl00$ContentPlaceHolder1$syn"),
+                                            ("phraseology", "ctl00$ContentPlaceHolder1$phras"),
+                                            ("antonyms", "ctl00$ContentPlaceHolder1$ant"),
+                                        ):
+                                            if _has_control(entry_html, control):
+                                                tab_fields = _form_fields(
+                                                    entry_tokens,
+                                                    spelling=str(r["unstressed"]),
+                                                    extra=_image_click(control),
+                                                )
+                                                tab_html, tab_req = client.exchange("POST", tab_fields)
+                                                _keep_walk(
+                                                    ledger,
+                                                    cache,
+                                                    r_norm,
+                                                    "tab",
+                                                    tab_html,
+                                                    tab_req,
+                                                    tab_kind=kind,
+                                                    register_position=f"{current_page}:{r_idx}",
+                                                    current_page=current_page,
+                                                )
+
+                                    ledger.mark_row(
+                                        current_page,
+                                        r_idx,
+                                        "completed",
+                                        entry_sha256=entry_sha,
+                                        unknown_controls=unknown_str,
+                                        paradigm_source=paradigm_source,
+                                    )
+
+                                    if (
+                                        i < len(rows) - 1
+                                        and normalize_ulif_spelling(str(rows[i + 1]["unstressed"])) != r_norm
+                                    ):
+                                        _commit_spelling_group(ledger, cache, r_norm)
+
+                                page_success = True
+                                break
+                            except SessionInvalid as exc:
+                                if page_attempt == MAX_UNIT_RESEEDS - 1:
+                                    ledger.mark_page(current_page, "retry_scheduled", error=str(exc))
+                                    break
+                                seed_html, seed_req = client.exchange("GET", None)
+                                _keep_walk(ledger, cache, "", "seed:reseed", seed_html, seed_req)
+                                seed_tokens = _tokens(seed_html)
+                                if seed_tokens is None:
+                                    continue
+                                p_rec = ledger.get_page(current_page)
+                                if p_rec is None:
+                                    continue
+                                exp_start = str(p_rec["start_headword"])
+                                exp_end = str(p_rec["end_headword"])
+                                search_fields = _form_fields(
+                                    seed_tokens,
+                                    spelling=exp_start,
+                                    extra=_image_click(SEARCH_BUTTON),
+                                )
+                                reseed_page_html, _reseed_page_req = client.exchange("POST", search_fields)
+                                landed = parse_register_list(reseed_page_html)
+                                if landed and landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end:
+                                    current_page_html = reseed_page_html
+                                else:
+                                    ledger.mark_page(current_page, "error", error="resume_mismatch")
+                                    stop_reason = "resume_mismatch"
+                                    return_code = EXIT_USAGE
+                                    break
+
+                        if return_code != EXIT_OK or stop_reason == "resume_mismatch":
+                            break
+
+                        if not page_success:
+                            consecutive_retries += 1
+                            if consecutive_retries >= CONSECUTIVE_RETRY_STOP:
+                                stop_reason = "retry storm"
+                                return_code = EXIT_RETRY_STORM
+                                print(
+                                    "stopping: three consecutive pages ended retry_scheduled",
+                                    file=sys.stderr,
+                                )
+                                break
+                            current_page += 1
+                            continue
+
+                        consecutive_retries = 0
+
+                        if not _has_control(current_page_html, PAGE_BUTTONS["next"]):
+                            _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
+                            ledger.mark_page(current_page, "completed")
+                            process_pages_finished += 1
+                            page_wall = clock() - page_start_clock
+                            process_wall_time += page_wall
+
+                            cum_wall = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0") + page_wall
+                            cum_pages = int(ledger.meta("cumulative_timed_pages", "0") or "0") + 1
+                            ledger.set_meta("cumulative_page_wall_seconds", str(cum_wall))
+                            ledger.set_meta("cumulative_timed_pages", str(cum_pages))
+
+                            if not quiet:
+                                w_cnt = ledger.walk_counts()
+                                p_done = w_cnt["pages_done"]
+                                p_total = w_cnt["pages_total"]
+                                pg_req = client.requests_made - page_start_reqs
+                                tot_req = base_requests + client.requests_made
+                                line = _format_walk_progress_line(
+                                    pages_done=p_done,
+                                    pages_total=p_total,
+                                    entries_stored=w_cnt["entries_stored"],
+                                    page_req=pg_req,
+                                    total_req=tot_req,
+                                    err_count=consecutive_retries,
+                                    retry_count=0,
+                                    elapsed_seconds=clock() - start_time,
+                                    eta_str="0:00:00",
+                                    page_num=current_page,
+                                )
+                                print(line, file=sys.stderr, flush=True)
+                                last_progress_time[0] = clock()
+
+                            stop_reason = "finished"
+                            break
+
+                        next_fields = _form_fields(
+                            page_tokens,
+                            spelling=str(rows[-1]["unstressed"]),
+                            extra=_image_click(PAGE_BUTTONS["next"]),
+                        )
+                        next_html, next_req = client.exchange("POST", next_fields)
+                        _keep_walk(
+                            ledger,
+                            cache,
+                            "",
+                            f"page:next:{current_page + 1}",
+                            next_html,
+                            next_req,
+                            current_page=current_page + 1,
+                        )
+                        next_rows = parse_register_list(next_html)
+                        if not next_rows:
+                            _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
+                            ledger.mark_page(current_page, "completed")
+                            process_pages_finished += 1
+                            stop_reason = "finished"
+                            break
+
+                        ledger.ensure_page(
+                            current_page + 1,
+                            start_headword=next_rows[0]["stressed"],
+                            end_headword=next_rows[-1]["stressed"],
+                            row_count=len(next_rows),
+                            register_size=_register_size(next_html),
+                        )
+                        for nr in next_rows:
+                            ledger.ensure_row(
+                                current_page + 1,
+                                int(nr["row_index"]),
+                                select_arg=str(nr["select"]),
+                                stressed_headword=str(nr["stressed"]),
+                                normalized_spelling=normalize_ulif_spelling(str(nr["unstressed"])),
+                            )
+
+                        last_norm = normalize_ulif_spelling(str(rows[-1]["unstressed"]))
+                        next_norm = normalize_ulif_spelling(str(next_rows[0]["unstressed"]))
+                        if last_norm != next_norm:
+                            _commit_spelling_group(ledger, cache, last_norm)
+
+                        ledger.mark_page(current_page, "completed")
+                        process_pages_finished += 1
+                        page_wall = clock() - page_start_clock
+                        process_wall_time += page_wall
+
+                        cum_wall = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0") + page_wall
+                        cum_pages = int(ledger.meta("cumulative_timed_pages", "0") or "0") + 1
+                        ledger.set_meta("cumulative_page_wall_seconds", str(cum_wall))
+                        ledger.set_meta("cumulative_timed_pages", str(cum_pages))
+
+                        if not quiet:
+                            w_cnt = ledger.walk_counts()
+                            p_done = w_cnt["pages_done"]
+                            p_total = w_cnt["pages_total"]
+                            pg_req = client.requests_made - page_start_reqs
+                            tot_req = base_requests + client.requests_made
+                            if process_pages_finished < 5:
+                                eta_s = "?"
+                            else:
+                                rem_p = max(0, p_total - p_done)
+                                if rem_p == 0:
+                                    eta_s = "0:00:00"
+                                else:
+                                    mean_w = process_wall_time / process_pages_finished
+                                    eta_sec = rem_p * mean_w
+                                    eh = int(eta_sec // 3600)
+                                    em = int((eta_sec % 3600) // 60)
+                                    es = int(eta_sec % 60)
+                                    eta_s = f"{eh}:{em:02d}:{es:02d}"
+
+                            line = _format_walk_progress_line(
+                                pages_done=p_done,
+                                pages_total=p_total,
+                                entries_stored=w_cnt["entries_stored"],
+                                page_req=pg_req,
+                                total_req=tot_req,
+                                err_count=consecutive_retries,
+                                retry_count=0,
+                                elapsed_seconds=clock() - start_time,
+                                eta_str=eta_s,
+                                page_num=current_page,
+                            )
+                            print(line, file=sys.stderr, flush=True)
+                            last_progress_time[0] = clock()
+
+                        current_page += 1
+                        current_page_html = next_html
+
+        except RequestCap:
+            stop_reason = "request cap"
+        except Forbidden:
+            stop_reason = "HTTP 403"
+            return_code = EXIT_FORBIDDEN
+            print("stopping: HTTP 403 from ULIF", file=sys.stderr)
+        except SystemExit as exc:
+            stop_reason = str(exc)
+            summary_printed = False
+            for _ in range(3):
+                try:
+                    _print_walk_stop_summary(
+                        reason=stop_reason,
+                        ledger=ledger,
+                        requests_in_process=client.requests_made if client else 0,
+                        elapsed_seconds=clock() - start_time,
+                        resume_cmd=resolved_resume_cmd,
+                    )
+                    summary_printed = True
+                    break
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    pass
+            if not summary_printed:
+                with contextlib.suppress(Exception):
+                    sys.stderr.write(
+                        f"=== ULIF Walk Stop Summary ===\nReason:                 {stop_reason}\nResume command:         {resolved_resume_cmd}\n==============================\n"
+                    )
+                    sys.stderr.flush()
+            raise
+        except (KeyboardInterrupt, InterruptedByOperator):
+            stop_reason = "interrupted by operator"
+            return_code = EXIT_INTERRUPTED
+        except Exception as exc:
+            stop_reason = str(exc)
+            return_code = EXIT_INTERRUPTED
+            print(f"interrupted: {exc}", file=sys.stderr)
+
+        if client is not None and ledger is not None:
+            written = False
+            for _ in range(5):
+                try:
+                    ledger.set_requests_made(base_requests + client.requests_made)
+                    written = True
+                    break
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    stop_reason = "interrupted by operator"
+                    return_code = EXIT_INTERRUPTED
+                except Exception as exc:
+                    print(
+                        f"warning: failed to persist final requests_made ({base_requests + client.requests_made}): {exc}",
+                        file=sys.stderr,
+                    )
+                    break
+            if not written:
+                try:
+                    ledger.conn.execute(
+                        "INSERT INTO meta (key, value) VALUES ('requests_made', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                        (str(base_requests + client.requests_made),),
+                    )
+                    ledger.conn.commit()
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    stop_reason = "interrupted by operator"
+                    return_code = EXIT_INTERRUPTED
+                except Exception as exc:
+                    if stop_reason == "finished":
+                        stop_reason = f"persistence error: {exc}"
+                    if return_code == EXIT_OK:
+                        return_code = EXIT_INTERRUPTED
+
+        summary_printed = False
+        for _ in range(3):
+            try:
+                _print_walk_stop_summary(
+                    reason=stop_reason,
+                    ledger=ledger,
+                    requests_in_process=client.requests_made if client else 0,
+                    elapsed_seconds=clock() - start_time,
+                    resume_cmd=resolved_resume_cmd,
+                )
+                summary_printed = True
+                break
+            except (KeyboardInterrupt, InterruptedByOperator):
+                stop_reason = "interrupted by operator"
+                return_code = EXIT_INTERRUPTED
+
+        if not summary_printed:
+            with contextlib.suppress(BaseException):
+                lines = [
+                    "=== ULIF Walk Stop Summary ===",
+                    f"Reason:                 {stop_reason}",
+                    f"Resume command:         {resolved_resume_cmd}",
+                    "==============================",
+                ]
+                print("\n".join(lines), file=sys.stderr, flush=True)
+
+    finally:
+        try:
+            if cache is not None:
+                with contextlib.suppress(Exception):
+                    cache.close()
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return_code = EXIT_INTERRUPTED
+            with contextlib.suppress(Exception):
+                if cache is not None:
+                    cache.close()
+
+        try:
+            if ledger is not None:
+                with contextlib.suppress(Exception):
+                    ledger.close()
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return_code = EXIT_INTERRUPTED
+            with contextlib.suppress(Exception):
+                if ledger is not None:
+                    ledger.close()
+
+        if lock is not None:
+            for _ in range(5):
+                try:
+                    lock.release()
+                    break
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    return_code = EXIT_INTERRUPTED
+                    if lock.path.exists() and lock._held:
+                        with contextlib.suppress(OSError):
+                            lock.path.unlink()
+                        lock._held = False
+                    break
+
+        if old_sigterm is not None:
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(signal.SIGTERM, old_sigterm)
+
+    return return_code
+
+
+def verify_complete(
+    *,
+    state_dir: Path,
+    db_path: Path,
+    expected_size: int | None = None,
+) -> int:
+    """Compare stored entries against printed ULIF register size and itemise differences."""
+    ledger_path = state_dir / "ledger.sqlite"
+    if not ledger_path.exists():
+        print(f"error: ledger not found at {ledger_path}", file=sys.stderr)
+        return EXIT_USAGE
+    if not db_path.exists():
+        print(f"error: database not found at {db_path}", file=sys.stderr)
+        return EXIT_USAGE
+
+    ledger = SpellingLedger(ledger_path)
+    try:
+        cache = sqlite3.connect(f"file:{db_path.resolve()}?mode=ro", uri=True)
+        try:
+            reg_size_str = ledger.meta("register_size")
+            if expected_size is not None:
+                target_size = expected_size
+            elif reg_size_str and reg_size_str.isdigit():
+                target_size = int(reg_size_str)
+            else:
+                print("error: unknown register size in ledger meta; pass --register-size", file=sys.stderr)
+                return EXIT_USAGE
+
+            stored_rows_count = ledger.conn.execute(
+                "SELECT COUNT(*) FROM register_rows WHERE state = 'completed'"
+            ).fetchone()[0]
+
+            entries_count = cache.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0]
+            diff = target_size - stored_rows_count
+
+            incomplete_pages = list(
+                ledger.conn.execute(
+                    "SELECT page_num, state, error FROM register_pages WHERE state != 'completed' ORDER BY page_num"
+                )
+            )
+            incomplete_rows = list(
+                ledger.conn.execute(
+                    """
+                    SELECT page_num, row_index, select_arg, stressed_headword, state, error
+                    FROM register_rows
+                    WHERE state != 'completed'
+                    ORDER BY page_num, row_index
+                    """
+                )
+            )
+
+            print("=== ULIF Verification Report ===", file=sys.stderr)
+            print(f"Printed register size: {target_size}", file=sys.stderr)
+            print(f"Completed rows:        {stored_rows_count}", file=sys.stderr)
+            print(f"Stored entries in DB:  {entries_count}", file=sys.stderr)
+            print(f"Difference:            {diff}", file=sys.stderr)
+
+            if incomplete_pages:
+                print(f"Incomplete pages ({len(incomplete_pages)}):", file=sys.stderr)
+                for p in incomplete_pages:
+                    print(f"  page {p['page_num']}: state={p['state']} error={p['error']}", file=sys.stderr)
+
+            if incomplete_rows:
+                print(f"Incomplete rows ({len(incomplete_rows)}):", file=sys.stderr)
+                for r in incomplete_rows:
+                    print(
+                        f"  page {r['page_num']} row {r['row_index']} ({r['select_arg']}): "
+                        f"headword={r['stressed_headword']} state={r['state']} error={r['error']}",
+                        file=sys.stderr,
+                    )
+
+            if diff == 0 and not incomplete_pages and not incomplete_rows:
+                print("Status: VERIFIED_COMPLETE (stored entries match printed register size)", file=sys.stderr)
+                return EXIT_OK
+            else:
+                print("Status: INCOMPLETE", file=sys.stderr)
+                return EXIT_USAGE
+        finally:
+            cache.close()
+    finally:
+        ledger.close()
+
+
 def build_a1_a2_spellings(
     *,
     sources_db: Path,
@@ -1959,6 +3252,87 @@ Related:
         help="Suppress per-spelling progress lines (start banner, heartbeat, stop summary always print; default: False)",
     )
 
+    walk = sub.add_parser(
+        "walk",
+        help="Full register walk across all ULIF entries",
+        description="Sequential register walk across all ULIF entries into SQLite cache.\nUse to crawl the entire ULIF index via nextpage; do not use concurrently with another runner.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms walk \\
+      --state-dir batch_state/ulif-homonyms/state \\
+      --db data/sources.db --delay 1.0
+
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms walk \\
+      --state-dir batch_state/ulif-homonyms/state \\
+      --db data/sources.db --max-pages 5 --quiet
+
+Outputs:
+  Raw HTML responses in ulif_dictua_raw_responses (sources.db)
+  Parsed homonym entries in ulif_dictua_entries and ulif_dictua_sections (sources.db)
+  Walk progress and register pages/rows in <state-dir>/ledger.sqlite
+
+Exit codes:
+  0: All pages finished successfully or walk completed
+  1: Usage error, invalid arguments, or resume mismatch
+  2: Retry storm (3 consecutive pages failed)
+  3: HTTP 403 Forbidden from server
+  4: Interrupted by operator (SIGINT / SIGTERM)
+
+Related:
+  Runbook: issue #8423
+  Master plan: issue #8400 (Step e)
+  Spec: issue #8429 (Part 2)
+""",
+    )
+    walk.add_argument(
+        "--state-dir",
+        type=Path,
+        required=True,
+        help="Directory storing runner.lock and ledger.sqlite (e.g. batch_state/ulif-homonyms/state)",
+    )
+    walk.add_argument(
+        "--db",
+        type=Path,
+        required=True,
+        help="Target SQLite database holding ulif_dictua_* tables (e.g. data/sources.db)",
+    )
+    walk.add_argument(
+        "--delay",
+        type=float,
+        default=MIN_DELAY_SECONDS,
+        help="Seconds to wait between requests (must be >= 1.0; default: 1.0)",
+    )
+    walk.add_argument(
+        "--max-pages",
+        type=int,
+        default=None,
+        help="Stop after processing this many register pages in this process invocation (default: None, process all)",
+    )
+    walk.add_argument(
+        "--max-requests",
+        type=int,
+        default=None,
+        help="Stop after making this many HTTP requests in this process invocation (default: None, unlimited)",
+    )
+    walk.add_argument(
+        "--break-stale-lock",
+        action="store_true",
+        help="Break existing runner lock if holding PID is dead (default: False)",
+    )
+    walk.add_argument(
+        "--quiet",
+        "-q",
+        action="store_true",
+        help="Suppress per-page progress lines (start banner, heartbeat, stop summary always print; default: False)",
+    )
+    walk.add_argument(
+        "--start-headword",
+        type=str,
+        default="а",
+        help="Initial search headword for page 1 on fresh crawl (default: 'а')",
+    )
+
     parse = sub.add_parser(
         "parse",
         help="Parse stored bodies offline",
@@ -2039,6 +3413,57 @@ Related:
         type=int,
         default=None,
         help="Reprint status every SECONDS (minimum 5) until interrupted (default: None, run once)",
+    )
+    status.add_argument(
+        "--mode",
+        choices=["auto", "walk", "targeted"],
+        default="auto",
+        help="Status formatting mode: auto (detect from ledger), walk (walk metrics), targeted (targeted metrics; default: auto)",
+    )
+
+    verify = sub.add_parser(
+        "verify-complete",
+        help="Verify stored entries match printed register size",
+        description="Verify stored entries in ledger/database match printed ULIF register size.\nUse after completing the register walk to ensure zero missing pages or rows; do not use mid-crawl.",
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog="""
+Examples:
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms verify-complete \\
+      --state-dir batch_state/ulif-homonyms/state --db data/sources.db
+
+  .venv/bin/python -m scripts.lexicon.runner.fetch_ulif_homonyms verify-complete \\
+      --state-dir batch_state/ulif-homonyms/state --db data/sources.db --register-size 262812
+
+Outputs:
+  Detailed verification report on stderr itemising incomplete pages/rows if any
+
+Exit codes:
+  0: Verified complete (stored entries match printed register size, 0 incomplete pages/rows)
+  1: Incomplete, missing rows/pages, or database/ledger error
+
+Related:
+  Runbook: issue #8423
+  Master plan: issue #8400 (Step e)
+  Spec: issue #8429 (Part 2)
+""",
+    )
+    verify.add_argument(
+        "--state-dir",
+        type=Path,
+        required=True,
+        help="Directory storing ledger.sqlite (e.g. batch_state/ulif-homonyms/state)",
+    )
+    verify.add_argument(
+        "--db",
+        type=Path,
+        required=True,
+        help="Target SQLite database holding ulif_dictua_* tables (e.g. data/sources.db)",
+    )
+    verify.add_argument(
+        "--register-size",
+        type=int,
+        default=None,
+        help="Expected register size to verify against (default: None, reads from ledger metadata)",
     )
 
     suspects = sub.add_parser(
@@ -2221,6 +3646,65 @@ Related:
             if old_sigterm is not None:
                 with contextlib.suppress(ValueError, OSError):
                     signal.signal(signal.SIGTERM, old_sigterm)
+    if args.command == "walk":
+        cmd_parts = [
+            sys.executable,
+            "-m",
+            "scripts.lexicon.runner.fetch_ulif_homonyms",
+            "walk",
+            "--state-dir",
+            str(args.state_dir),
+            "--db",
+            str(args.db),
+            "--delay",
+            f"{args.delay:g}",
+        ]
+        if args.max_pages is not None:
+            cmd_parts.extend(["--max-pages", str(args.max_pages)])
+        if args.max_requests is not None:
+            cmd_parts.extend(["--max-requests", str(args.max_requests)])
+        if args.break_stale_lock:
+            cmd_parts.append("--break-stale-lock")
+        if args.quiet:
+            cmd_parts.append("--quiet")
+        if args.start_headword != "а":
+            cmd_parts.extend(["--start-headword", args.start_headword])
+        resume_cmd = shlex.join(cmd_parts)
+
+        old_sigterm = None
+        if threading.current_thread() is threading.main_thread():
+
+            def _on_sigterm(signum: int, frame: Any) -> None:
+                raise InterruptedByOperator("SIGTERM")
+
+            with contextlib.suppress(ValueError, OSError):
+                old_sigterm = signal.signal(signal.SIGTERM, _on_sigterm)
+
+        try:
+            code = run_walk(
+                state_dir=args.state_dir,
+                db_path=args.db,
+                delay_seconds=args.delay,
+                max_pages=args.max_pages,
+                max_requests=args.max_requests,
+                break_stale_lock=args.break_stale_lock,
+                quiet=args.quiet,
+                start_headword=args.start_headword,
+                resume_cmd=resume_cmd,
+            )
+            if code == EXIT_OK:
+                ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
+                try:
+                    print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir, mode="walk"))
+                finally:
+                    ledger.close()
+            return code
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return EXIT_INTERRUPTED
+        finally:
+            if old_sigterm is not None:
+                with contextlib.suppress(ValueError, OSError):
+                    signal.signal(signal.SIGTERM, old_sigterm)
     if args.command == "parse":
         cache = prepare_database(args.db)
         ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
@@ -2231,6 +3715,12 @@ Related:
             ledger.close()
         print(f"differing_content_hashes={differing}")
         return EXIT_OK
+    if args.command == "verify-complete":
+        return verify_complete(
+            state_dir=args.state_dir,
+            db_path=args.db,
+            expected_size=args.register_size,
+        )
     if args.command == "status":
         watch_interval = args.watch
         if watch_interval is not None and watch_interval < 5:
@@ -2253,31 +3743,57 @@ Related:
                 else:
                     runner_str = "not_running"
 
-                print(
-                    "\n".join(
-                        [
-                            "spellings_total=0",
-                            "stored=0",
-                            "absent_from_ulif=0",
-                            "retry_scheduled=0",
-                            "error=0",
-                            "entries_stored=0",
-                            "requests_made=0",
-                            "mean_requests_per_spelling=0.00",
-                            "estimated_time_remaining_seconds=0",
-                            "register_size=unknown",
-                            "complete=not_started",
-                            "differing_content_hashes=0",
-                            f"runner={runner_str}",
-                            "last_update=none",
-                            "seconds_since_last_update=unknown",
-                        ]
+                if args.mode == "walk":
+                    print(
+                        "\n".join(
+                            [
+                                "pages_done=0",
+                                "pages_total=0",
+                                "entries_stored=0",
+                                "spellings=0",
+                                "multi_entry_spellings=0",
+                                "paradigm_from_entry=0",
+                                "paradigm_requested=0",
+                                "unknown_control_entries=0",
+                                "requests_made=0",
+                                "mean_requests_per_entry=0.00",
+                                "estimated_time_remaining_seconds=unknown",
+                                "register_size=unknown",
+                                "register_size_changes=0",
+                                "differing_groups=0",
+                                "complete=not_started",
+                                f"runner={runner_str}",
+                                "last_update=none",
+                                "seconds_since_last_update=unknown",
+                            ]
+                        )
                     )
-                )
+                else:
+                    print(
+                        "\n".join(
+                            [
+                                "spellings_total=0",
+                                "stored=0",
+                                "absent_from_ulif=0",
+                                "retry_scheduled=0",
+                                "error=0",
+                                "entries_stored=0",
+                                "requests_made=0",
+                                "mean_requests_per_spelling=0.00",
+                                "estimated_time_remaining_seconds=0",
+                                "register_size=unknown",
+                                "complete=not_started",
+                                "differing_content_hashes=0",
+                                f"runner={runner_str}",
+                                "last_update=none",
+                                "seconds_since_last_update=unknown",
+                            ]
+                        )
+                    )
             else:
                 ledger = SpellingLedger(ledger_path)
                 try:
-                    print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
+                    print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir, mode=args.mode))
                 finally:
                     ledger.close()
 
