@@ -56,11 +56,20 @@ def load_arc(level: str, *, arc_path: Path | None = None, doc_path: Path | None 
     arc_path / doc_path overrides exist for tests.
     """
     arc_path = arc_path or REPO_ROOT / ARC_PATH.format(level=level)
+    plans_root = (REPO_ROOT / "curriculum/l2-uk-en/plans").resolve()
+    resolved_arc = arc_path.resolve()
+    if resolved_arc == plans_root or plans_root in resolved_arc.parents:
+        raise ValueError(
+            f"arc_path {arc_path} lies under curriculum/l2-uk-en/plans/; arcs live under "
+            "curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml (lesson-plans/, never plans/)"
+        )
     schema = json.loads((REPO_ROOT / SCHEMA_PATH).read_text(encoding="utf-8"))
     data = yaml.safe_load(arc_path.read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(data), key=str)
     if errors:
-        details = "\n".join(f"  - at {'/'.join(str(p) for p in e.absolute_path) or '<root>'}: {e.message}" for e in errors)
+        details = "\n".join(
+            f"  - at {'/'.join(str(p) for p in e.absolute_path) or '<root>'}: {e.message}" for e in errors
+        )
         raise ValueError(f"{arc_path} fails {SCHEMA_PATH}:\n{details}")
 
     source = data["source"]
@@ -72,6 +81,14 @@ def load_arc(level: str, *, arc_path: Path | None = None, doc_path: Path | None 
             f"current {actual[:12]}…) but {arc_path} was not regenerated; run "
             f".venv/bin/python scripts/curriculum/arc/generate_arc.py --level {level} --write"
         )
+
+    for record in data["positions"]:
+        for ref in record["standard_line_refs"]:
+            if ref[0] > ref[1]:
+                raise ValueError(
+                    f"{arc_path} position {record['position']} has an inverted standard_line_refs range "
+                    f"{ref} (start > end); the schema cannot express start <= end, so the loader checks it"
+                )
 
     return [
         ArcPosition(

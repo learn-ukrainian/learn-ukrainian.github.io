@@ -16,6 +16,7 @@ import hashlib
 import re
 import sys
 from pathlib import Path
+from typing import NoReturn
 
 import yaml
 
@@ -35,6 +36,7 @@ SKILLS_ALL = "all"
 TABLE_SEPARATOR_RE = re.compile(r"^\|[\s:|-]*-[\s:|-]*\|?\s*$")
 BACKTICK_RE = re.compile(r"`([^`]*)`")
 LINE_REF_RE = re.compile(r"^:(\d+)(?:-(\d+))?$")
+UNBACKTICKED_LINE_REF_RE = re.compile(r"(?<![\w`]):\d+(?:[-–]\d+)?")
 PAREN_GROUP_RE = re.compile(r"\([^)]*\)")
 BOLD_LETTER_COUNT_RE = re.compile(r"\*\*(\d+) letters\*\*")
 POSITION_INT_RE = re.compile(r"^\d+$")
@@ -47,7 +49,7 @@ class ArcGenerationError(Exception):
     """The arc document cannot be parsed deterministically."""
 
 
-def _fail(raw_row: str, message: str) -> None:
+def _fail(raw_row: str, message: str) -> NoReturn:
     raise ArcGenerationError(f"{message}\n  row: {raw_row.strip()}")
 
 
@@ -132,7 +134,9 @@ def _stated_lesson_total(doc_text: str) -> tuple[int, str]:
             "in the paragraph after the main position table"
         )
     if len(matches) > 1:
-        raise ArcGenerationError(f"multiple stated lesson totals in the sizing paragraph: {[m.group(0) for m in matches]!r}")
+        raise ArcGenerationError(
+            f"multiple stated lesson totals in the sizing paragraph: {[m.group(0) for m in matches]!r}"
+        )
     sentence_match = STATED_TOTAL_SENTENCE_RE.search(paragraph)
     sentence = " ".join(sentence_match.group(0).split()) if sentence_match else paragraph
     return int(matches[0].group(1)), sentence
@@ -144,7 +148,6 @@ def _position_int(cell: str, raw_row: str) -> int:
     if POSITION_RANGE_RE.match(cell):
         _fail(raw_row, f"position cell {cell!r} is a range; only the first row of the main table may be a range")
     _fail(raw_row, f"position cell {cell!r} is not an integer")
-    raise AssertionError("unreachable")
 
 
 def _int_cell(cell: str, raw_row: str, what: str) -> int:
@@ -165,7 +168,9 @@ def _slug(cell: str, raw_row: str) -> str:
 def _standard_line_refs(raw_row: str) -> list[list[int]]:
     """All backticked ``:NNN`` / ``:NNN-NNN`` references in the row, in order.
 
-    Any backticked span starting with ``:`` that has another form fails.
+    A backticked span starting with ``:`` in any other form fails, an inverted
+    range (start > end) fails, and a ``:NNN`` reference outside backticks
+    fails: line references must be backticked.
     """
     refs: list[list[int]] = []
     for span in BACKTICK_RE.findall(raw_row):
@@ -176,15 +181,20 @@ def _standard_line_refs(raw_row: str) -> list[list[int]]:
             _fail(raw_row, f"backticked reference `{span}` is not of the form `:NNN` or `:NNN-NNN` (ASCII hyphen)")
         start = int(match.group(1))
         end = int(match.group(2)) if match.group(2) else start
+        if start > end:
+            _fail(raw_row, f"backticked reference `{span}` is an inverted range ({start} > {end})")
         refs.append([start, end])
+    stray = UNBACKTICKED_LINE_REF_RE.search(BACKTICK_RE.sub("", raw_row))
+    if stray:
+        _fail(raw_row, f"line reference {stray.group(0)!r} must be backticked")
     return refs
 
 
 def _parse_skills(cell: str, raw_row: str) -> list[str]:
     text = PAREN_GROUP_RE.sub("", cell)
-    tokens = [token.strip() for token in text.split(",") if token.strip()]
-    if not tokens:
-        _fail(raw_row, f"skills-duty cell {cell!r} has no skill tokens")
+    tokens = [token.strip() for token in text.split(",")]
+    if any(not token for token in tokens):
+        _fail(raw_row, f"skills-duty cell {cell!r} has an empty skill token (trailing, leading, or doubled comma)")
     if tokens == [SKILLS_NONE]:
         return []
     if tokens == [SKILLS_ALL]:
@@ -192,7 +202,11 @@ def _parse_skills(cell: str, raw_row: str) -> list[str]:
     skills: list[str] = []
     for token in tokens:
         if token not in SKILL_CODES:
-            _fail(raw_row, f"skills-duty token {token!r} is not one of {SKILL_CODES}, {SKILLS_NONE!r}, or {SKILLS_ALL!r}")
+            _fail(
+                raw_row, f"skills-duty token {token!r} is not one of {SKILL_CODES}, {SKILLS_NONE!r}, or {SKILLS_ALL!r}"
+            )
+        if token in skills:
+            _fail(raw_row, f"skills-duty cell {cell!r} repeats skill code {token!r}")
         skills.append(token)
     return skills
 
@@ -213,7 +227,7 @@ def _parse_letters(inventory_cell: str, raw_row: str) -> list[str]:
     if not match:
         return []
     expected = int(match.group(1))
-    text = PAREN_GROUP_RE.sub("", inventory_cell[match.end():])
+    text = PAREN_GROUP_RE.sub("", inventory_cell[match.end() :])
     text = text.split(";", 1)[0]
     letters: list[str] = []
     for token in text.split():

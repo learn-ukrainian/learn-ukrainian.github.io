@@ -145,6 +145,42 @@ def test_unknown_skills_code_fails_generation(tmp_path: Path) -> None:
         generate_arc.generate_yaml(mutated)
 
 
+def test_skills_trailing_comma_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| Li, | 3 |"))
+    with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_skills_double_comma_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| Li,, W | 3 |"))
+    with pytest.raises(generate_arc.ArcGenerationError, match="empty skill token"):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_skills_duplicate_code_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, POS5_ROW, POS5_ROW.replace("| Li | 3 |", "| Li, Li | 3 |"))
+    with pytest.raises(generate_arc.ArcGenerationError, match="repeats skill code"):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_unbackticked_line_ref_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, "(`:485`)", "(:485)")
+    with pytest.raises(generate_arc.ArcGenerationError, match="must be backticked"):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_backticked_ref_en_dash_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, "`:571-572`", "`:571–572`")
+    with pytest.raises(generate_arc.ArcGenerationError, match="ASCII hyphen"):
+        generate_arc.generate_yaml(mutated)
+
+
+def test_inverted_line_ref_range_fails_generation(tmp_path: Path) -> None:
+    mutated = _mutated_doc(tmp_path, "`:571-572`", "`:572-571`")
+    with pytest.raises(generate_arc.ArcGenerationError, match="inverted range"):
+        generate_arc.generate_yaml(mutated)
+
+
 def test_non_range_position_row_range_fails(tmp_path: Path) -> None:
     mutated = _mutated_doc(tmp_path, POS42_ROW, POS42_ROW.replace("| 42 |", "| 42–43 |"))
     with pytest.raises(generate_arc.ArcGenerationError):
@@ -179,6 +215,32 @@ def test_loader_raises_when_document_changed(tmp_path: Path) -> None:
         handle.write("\n")
     with pytest.raises(loader.ArcStaleError):
         loader.load_arc("a1", doc_path=changed_doc)
+
+
+def test_loader_raises_on_schema_invalid_yaml(tmp_path: Path) -> None:
+    data = yaml.safe_load(ARC_YAML.read_text(encoding="utf-8"))
+    data["bogus_key"] = 1
+    invalid = tmp_path / "_arc.yaml"
+    invalid.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match="bogus_key"):
+        loader.load_arc("a1", arc_path=invalid)
+
+
+def test_loader_raises_on_inverted_line_ref_range(tmp_path: Path) -> None:
+    """The schema cannot express start <= end with prefixItems; the loader checks it."""
+    data = yaml.safe_load(ARC_YAML.read_text(encoding="utf-8"))
+    refs = data["positions"][2]["standard_line_refs"]
+    assert refs == [[571, 572]]
+    refs[0] = [572, 571]
+    inverted = tmp_path / "_arc.yaml"
+    inverted.write_text(yaml.safe_dump(data, allow_unicode=True), encoding="utf-8")
+    with pytest.raises(ValueError, match="inverted standard_line_refs range"):
+        loader.load_arc("a1", arc_path=inverted)
+
+
+def test_loader_refuses_arc_path_under_plans() -> None:
+    with pytest.raises(ValueError, match="lesson-plans/"):
+        loader.load_arc("a1", arc_path=REPO_ROOT / "curriculum/l2-uk-en/plans/a1/_arc.yaml")
 
 
 def test_loader_never_reads_plans_directory(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
