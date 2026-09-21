@@ -76,6 +76,10 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-16 Simple Ukrainian.** In A1 and A2 the Ukrainian itself is very simple and fits the level of
   the learner that the specific lesson is aimed at — vocabulary and grammar the learner has met, plus
   what this lesson introduces.
+  *Reading fixed by the operator, 2026-09-21 (plan schema revision 8):* the limit is on the
+  **words** a lesson uses and on the grammar it **explains**. A form of a known word whose category
+  has not been taught yet may be used; the learner memorises it and learns the system later
+  ("it is normal. later he will learn about it").
 - **R-35 The sources are the single source of truth for Ukrainian; they override any model,
   including the Ukrainian expert seat** (operator ruling 2026-09-21).
   - The authorities are the project's own corpus and reference data: the school textbooks in the
