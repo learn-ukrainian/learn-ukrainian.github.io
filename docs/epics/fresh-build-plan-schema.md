@@ -1,6 +1,6 @@
 # Fresh lesson-based build — plan and evidence-pack schema (design)
 
-> Sub-epic #8397, child 3. Status: **design draft r7** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
+> Sub-epic #8397, child 3. Status: **design draft r8** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
 > `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
 > R-24…R-28, R-30, R-32, R-33, R-34, R-35 of [`fresh-build-requirements.md`](fresh-build-requirements.md).
@@ -11,6 +11,13 @@
 > revision 5 folds in the six findings of the confirming review (`design-review-8412-r4`). On its finding about
 > `recycled` versus planned learner state, the accepted §4 and §5 are kept: planned state remains the writer's
 > allowlist, and `recycled` is defined as the subset a lesson commits to re-expose.
+> **Revision 8 (2026-09-21) — forms are not restricted, lemmas are (operator decision).** Asked which forms a
+> lesson writer may use (#8431, question 1), the operator answered: *"allow yes, if something is have not
+> tought yet the student has to memorize it. it is normal. later he will learn about it."* A writer may use
+> **any form of an allowed lemma**; a form whose category the learner has not been taught is met as something
+> to memorise and is not explained. Changed: §2 (the meaning of a lesson's `forms` list), §3 (the word store
+> holds full paradigms), §4 (planned state; the new paragraph on forms), §6 (the inventory gate). R-16 is read
+> accordingly: its limit is on vocabulary and on what a lesson *explains*, not on the forms of known words.
 
 ## 1. Three artifacts, one owner each
 
@@ -75,7 +82,7 @@ lessons:
         core:                               # actively taught; enters learner state as "known"
           - lemma: мама
             evidence: W-012
-            forms: ["noun:anim:f:v_naz", "noun:anim:f:v_zna"]   # authorised forms this lesson (R-22)
+            forms: ["noun:anim:f:v_naz", "noun:anim:f:v_zna"]   # forms this lesson teaches and drills (r8; R-22)
         incidental:                         # allowed in dialogues/situations, glossed inline,
           - { lemma: кава, evidence: W-040, forms: ["noun:inanim:f:v_zna"] }  # NOT counted as known
         recycled: [W-003, W-007]            # word-store ids introduced in an earlier lesson or plan (§2a)
@@ -107,7 +114,7 @@ lessons:
       target_grammar: "…"                   # what the dialogue exists to show
       evidence: [T-010]
     practice:                               # R-33: the deck is generated from this + the word store
-      vocabulary: core                      # every core lemma of this lesson, in its authorised forms;
+      vocabulary: core                      # every core lemma of this lesson, in the forms it teaches;
                                             # the deck generator adds this lesson's `recycled` ids itself
       stress: [W-012, W-019]                # word records whose stress placement is drilled
       patterns: [a2, a5]                    # activity ids whose pattern is recycled into the deck
@@ -292,7 +299,7 @@ words:        # W-…  one record per lemma **sense** (homonym-safe); ids are le
     entry: { source: ulif|vesum|atlas, key: [мама, 1] }   # (spelling, homonym_index) per #8400
     pos: noun
     cefr: { level: A1, source: puls }
-    forms:                                  # only the forms this module uses
+    forms:                                  # the full paradigm of the lemma (r8); a form may be `pending`
       - { form: мама, tags: "noun:anim:f:v_naz", stressed: "ма́ма", stress_source: ulif|trie|pending }
     gloss_en: "mom"
     shadow: { russian_shadow: false }
@@ -305,7 +312,8 @@ Rules:
 - Frozen by `.lock`. Any edit changes the hash and invalidates the plan's `evidence_ref` until the
   plan is re-reviewed.
 - `stress_source: pending` is legal while the ULIF base is not ready (R-23); a build refuses a
-  lesson whose cited forms are still `pending`. Planning is not blocked; building is.
+  lesson whose cited forms are still `pending` — and, since r8, a lesson whose **built text uses** a
+  form that is still `pending`. Planning is not blocked; building is.
 - The pack contains **no sequencing and no pedagogy prose**.
 
 ## 4. Learner state at lesson grain (R-14, R-30)
@@ -315,7 +323,7 @@ Two layers, because a plan cannot know everything a built lesson will contain:
 - **Planned state** (available at plan time, used by plan-validate and as the writer's allowlist):
   a project-wide base layer of closed-class function words and proper-noun handling (as
   `scripts/audit/checks/learner_state.py` already does) + all `core` items of earlier modules and
-  of lessons `1..n−1`, held as word-store record ids with their authorised form tags, not as bare
+  of lessons `1..n−1`, held as word-store record ids (one per lemma **sense**), not as bare
   lemmas. `incidental` items never enter it. Planned state is the writer's allowlist, as before.
   A lesson's `vocabulary.recycled` list (§2a) is a **subset** of it with a different job: the words
   this lesson *commits* to bringing back — the plan's steps may rely on them, the practice deck
@@ -323,9 +331,29 @@ Two layers, because a plan cannot know everything a built lesson will contain:
   other word in planned state without the plan listing it.
 - **Observed state** (after a lesson is built): a post-build index of what the lesson actually
   exposed — forms and exposure counts. It feeds recycling decisions and later lessons' exposure
-  counts. A built lesson that uses a word-store record, or a form of one, outside planned state
+  counts. A built lesson that uses a word-store record outside planned state
   plus its own `core` and `incidental` fails the inventory gate; it does not silently extend the
   state.
+
+**Forms (revision 8).** The allowlist restricts **lemmas**, not forms. A sentence needs the case its
+verb or preposition governs and the agreement its noun imposes, whether or not the plan listed that
+form for that word; a writer held to listed forms cannot write natural Ukrainian. So:
+
+- A built lesson may use **any form** of a word-store record that is in planned state or in its own
+  `core` or `incidental`. The inventory gate fails a lemma outside that set, never a form of a lemma
+  inside it.
+- A form whose grammatical category the learner has not yet been taught is **used, not explained**:
+  no rule, no table and no terminology for a category the arc places later. The learner memorises it,
+  as with anything the arc marks a chunk, and meets the system when the arc reaches it. Whether a
+  lesson overloads the learner with such forms is a judgement for the lesson review (learner fit),
+  not a gate.
+- A lesson's `forms` lists (§2) keep a narrower job: the forms this lesson **teaches and drills**.
+  The practice deck (R-33) and the inventory gate's "every core item appears" check use them.
+- The price is in the word store (§3): it holds the **full paradigm** of every lemma it admits, each
+  form with its stressed spelling (R-22), because any form may now be printed and none may be printed
+  with a guessed stress. A form may be `pending` in the store; a lesson that uses it does not build
+  (R-23). This widens the dependence on the ULIF base from the cited forms to all forms of all
+  admitted lemmas.
 
 **Immersion.** Thresholds are carried over unchanged (R-30). What changes is grain and key:
 
@@ -356,7 +384,7 @@ the only place built content is an input, and only within the module being built
 | plan-validate | §2 rules 1–7 with the semantics of §2a; not-checked items are reported, never passed silently. The build preflight and CI run it with `--strict`, which refuses any waiver |
 | pack-verify | every quote matches its chunk; every word record re-verifies against current sources; every video URL answers |
 | coverage | every evidence id cited by the lesson plan appears in the lesson and in Ресурси |
-| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses no word-store record or form outside planned learner state + this lesson's `core` and `incidental`; every `recycled` id actually appears (§4) |
+| inventory | lesson introduces exactly its `inventory.vocabulary.core` plus its new `phonetics` and `grammar` items; uses no word-store record (lemma sense) outside planned learner state + this lesson's `core` and `incidental` — any form of an allowed record is allowed (r8, §4); every form the built text uses has a non-`pending` stressed form; every `recycled` id actually appears (§4) |
 | standard-coverage | R-32: every State Standard requirement the arc assigns to this module is cited by at least one lesson (`standard:` ids in the pack); an item taught earlier than the Standard places it must carry a ULP evidence id. Teaching early is never a failure by itself. Reads the corrected mapping file (#8404) |
 | stress | every stressed form in the lesson matches the pack's form record for that grammatical context |
 | practice | the generated deck contains every `practice` item of the lesson plan and nothing outside the lesson's inventory + learner state |
