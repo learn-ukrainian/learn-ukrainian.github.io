@@ -1,7 +1,8 @@
 # Fresh lesson-based build — B2 arc (module grain)
 
-> Sub-epic #8397, issue #8427. Status: **draft r2 — reviewed, not yet accepted by the operator** (by the
-> curriculum-upgrade driver, 2026-09-21). r1 was reviewed by AGY `gemini-3.8-flash-high` (task
+> Sub-epic #8397, issue #8427. Status: **accepted by the operator 2026-09-21** (r3, by the
+> curriculum-upgrade driver). The operator accepted the driver's proposal on each of the five questions
+> of §8 ("i accept the defaults"), which are therefore decisions. r1 was reviewed by AGY `gemini-3.8-flash-high` (task
 > `plan-review-8427-b2-arc-r1`): APPROVE with one MAJOR (position 63 crammed) and four MINOR findings;
 > r2 folds in all five. Same method and table format as the accepted A1, A2 and B1
 > arcs ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md),
@@ -78,7 +79,7 @@ checks each row above for it.
 | One-member sentences: definite-personal, indefinite-personal, impersonal, nominative | `:3409-3418` | 18, with 3 and 6. The order is deliberate: 3 and 6 teach the impersonal and the indefinite-personal sentence first, each as one way of leaving the doer unnamed, because that is where a reader of news meets them; 18 then names the four types and brings them together. 3 and 6 need nothing from 18 |
 | Possessive adjectives as a declined system: "adjectives of masculine gender with a zero ending" and their plural | `:3121-3122`, `:3125-3126` | **63** — the slug `possessive-adjectives` exists only at B1 (49, recognition); at B2 the formation and the declension get lessons of their own inside 63 |
 | Compound adjectives in `-лиций`; compound adjectives whose first part is a cardinal numeral | `:3123-3124`, `:3128-3129` | 63 |
-| Noun types new at B2: masculine in `-а` (`:3089-3090`), masculine soft stems in `-о` (`:3092-3093`), feminine and neuter nouns of adjectival origin (`:3101-3102`, `:3109-3110`), `матір` among the feminine zero-ending nouns (`:3103-3104`), neuter nouns with the suffixes `-ат-`, `-ят-`, `-ен-` (`:3106-3108`), nouns of common gender (`:3112`), abbreviations and clipped compounds (`:3113-3114`), place names of two words (`:3085-3086`) | as cited | **no v1 slug owns them.** 47 (masculine types), 48 (neuter with a suffix, `матір`), 49 (adjectival nouns, common gender), 37 (abbreviations) — one lesson each, counted in L. See question 2 in §8 |
+| Noun types new at B2: masculine in `-а` (`:3089-3090`), masculine soft stems in `-о` (`:3092-3093`), feminine and neuter nouns of adjectival origin (`:3101-3102`, `:3109-3110`), `матір` among the feminine zero-ending nouns (`:3103-3104`), neuter nouns with the suffixes `-ат-`, `-ят-`, `-ен-` (`:3106-3108`), nouns of common gender (`:3112`), abbreviations and clipped compounds (`:3113-3114`), place names of two words (`:3085-3086`) | as cited | **no v1 slug owns them.** 47 (masculine types), 48 (neuter with a suffix, `матір`), 49 (adjectival nouns, common gender), 37 (abbreviations) — one lesson each, counted in L. See decision 2 in §8 |
 | Declension of cardinal numerals from 5 to 100 and of compound cardinals | `:3145-3149` | 59 |
 | `скільки` and the indefinite pronouns in all cases | `:3161-3165` | 52 |
 | Diminutives, and with them the other stylistic means of vocabulary the B2 list adds to B1's (`:2437-2442`): homonyms, shortenings, compound words, onomatopoeia | `:3462`, `:3465-3469` | 33, recycled as reading in 39 |
@@ -95,7 +96,7 @@ stress marks irrelevant (the Standard prints none).
 
 | Item | Position | Standard | Evidence | This arc |
 | --- | --- | --- | --- | --- |
-| The pluperfect | 56 | **listed at no level.** Searched: the terms `давноминул`, `давньоминул`, `передминул`; the form pattern of a past form of `бути` next to another past form, in both orders. Only hits: `був хворий` (`:1070`), `була неймовірна спека` (`:3277`), a book title (`:5769`) — none is a pluperfect | ULP: no lesson. School textbooks: no chunk. University-level chunks: 12 | **recognition only**, two lessons: the learner meets and understands it in literary texts. Question 3 in §8 |
+| The pluperfect | 56 | **listed at no level.** Searched: the terms `давноминул`, `давньоминул`, `передминул`; the form pattern of a past form of `бути` next to another past form, in both orders. Only hits: `був хворий` (`:1070`), `була неймовірна спека` (`:3277`), a book title (`:5769`) — none is a pluperfect | ULP: no lesson. School textbooks: no chunk. University-level chunks: 12 | **recognition only**, two lessons: the learner meets and understands it in literary texts. Decision 3 in §8 |
 | Parcelling | 29 | listed at no level (term `парцел`) | ULP: none. Textbooks: one grade-11 chunk | recognition only, inside 29; the rest of the module is ellipsis, which the Standard lists at B1 (`:2446-2447`) and again at B2 (`:3472-3473`), so 29 is a small module |
 | Rhetorical questions | 50 | **C1** (`:4596`) | ULP: 2 lessons of Season 4. Textbooks: grade 10 → 19 chunks, grade 11 → 35 | recognition and guided use; the system content of 50 is the Standard's B2 question types, the question with a shade of invitation included (`:3383-3389`) |
 | Collective and fractional numerals | 59 | listed at no level. Searched: the terms `збірн`, `дробов`; **search strings** `двоє`, `троє`, `четверо`, `обидва`, `обидві`, `обоє`, `півтора`, `третин`, `половин`, `чверт`. Only hit: `півтори тисячі років` (`:1291`), inside an A2 example of another point | ULP: 1 lesson of Season 4. Textbooks: grade 6 → 22 chunks, grades 10–11 → 16 | one lesson inside 59 **if** the evidence pack shows from the corpus that a B2 reader meets them often; otherwise recognition. The arc does not assert their frequency |
@@ -114,7 +115,7 @@ v1 has theme modules for sixteen themes. Людина (`:2876-2889`), Подор
 What B2 adds to them is small and specific — career and professional growth, conflicts in the family
 and between generations, the history of a family; tour companies, green and rural tourism; ecology —
 and each addition gets a named owner in §6 instead of a new position. Because every B2 lesson is
-built on a text (D0), a grammar module can carry a theme without losing its focus. Question 1 in §8.
+built on a text (D0), a grammar module can carry a theme without losing its focus. Decision 1 in §8.
 
 **D6 — Суспільні відносини is again owned on purpose.** The Standard's B2 widens the theme: social
 and political events and movements, youth subcultures, rights and duties, crime, law enforcement,
@@ -336,24 +337,22 @@ One band for the whole level: every position 1–93 maps to `b2+`, 100 % Ukraini
 (`IMMERSION_POLICIES["default"]`). Nothing is re-tuned (R-30). A module split or merged later stays
 in the same band.
 
-## 8. Open questions for the operator
+## 8. Decisions on the five open questions (operator, 2026-09-21)
 
-Each has the driver's proposal; the arc is written to the proposals.
+The operator accepted the driver's proposal on each ("i accept the defaults"). The cross-family
+reviewer had agreed with all five.
 
-1. **Three themes without a module of their own (D5).** Proposal: keep the 93 positions and own
-   Людина, Подорожі and Природне середовище as duties of the positions named in §6. Alternative:
-   add up to three theme modules, which shifts every later position.
-2. **Noun types new at B2 have no slug (D3).** Proposal: they become the main new content of 47,
-   48 and 49, with abbreviations in 37. The B2 case catalogue adds almost no meaning to B1's (D2),
-   so these positions have the room, and without the noun types they would drag. Alternative: one
-   new module for the noun types before 47, and fewer lessons in 47–49.
-3. **The pluperfect (56).** The Standard lists it at no level, ULP never teaches it and no school
-   textbook in the corpus has it. Proposal: keep the slug as a two-lesson recognition module.
-   Alternative: drop it from B2 and leave it to C1.
-4. **Possessive adjectives are owned by 63** and get at least three lessons of their own there,
-   instead of a new position. Proposal: yes. The reviewer agreed and asked for the larger estimate.
+1. **Three themes without a module of their own (D5):** the 93 positions stay; Людина, Подорожі and
+   Природне середовище are owned as duties of the positions named in §6. No theme module is added.
+2. **Noun types new at B2 (D3):** they are the main new content of 47, 48 and 49, with abbreviations
+   in 37. The B2 case catalogue adds almost no meaning to B1's (D2), so these positions have the
+   room, and without the noun types they would drag. No new module.
+3. **The pluperfect (56):** the slug stays as a two-lesson recognition module. The Standard lists it
+   at no level, ULP never teaches it and no school textbook in the corpus has it.
+4. **Possessive adjectives are owned by 63**, with at least three lessons of their own there, and
+   get no position of their own.
 5. **Collective and fractional numerals (59)** are taught only if the evidence pack shows from the
-   corpus that a B2 reader meets them often. Proposal: yes.
+   corpus that a B2 reader meets them often; otherwise recognition.
 
 ## 9. Follow-ups outside this document
 
