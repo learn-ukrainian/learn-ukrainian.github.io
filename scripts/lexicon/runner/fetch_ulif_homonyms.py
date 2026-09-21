@@ -275,16 +275,22 @@ class RunnerLock:
             fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
         except FileExistsError as exc:
             raise SystemExit(f"refusing to start: lock appeared at {self.path}") from exc
-        with os.fdopen(fd, "w", encoding="utf-8") as handle:
-            handle.write(payload)
-        self._held = True
+        try:
+            with os.fdopen(fd, "w", encoding="utf-8") as handle:
+                handle.write(payload)
+            self._held = True
+        except BaseException:
+            with contextlib.suppress(OSError):
+                self.path.unlink()
+            raise
 
     def release(self) -> None:
         if not self._held or not self.path.exists():
             return
         pid, _started, _raw = _read_lock(self.path)
         if pid == os.getpid():
-            self.path.unlink()
+            with contextlib.suppress(OSError):
+                self.path.unlink()
         self._held = False
 
 
@@ -472,6 +478,9 @@ class SpellingLedger:
     def add_requests(self, count: int) -> None:
         current = int(self.meta("requests_made", "0") or "0")
         self.set_meta("requests_made", str(current + count))
+
+    def set_requests_made(self, count: int) -> None:
+        self.set_meta("requests_made", str(count))
 
     def counts(self) -> dict[str, int]:
         rows = self.conn.execute("SELECT state, COUNT(*) AS n FROM spellings GROUP BY state").fetchall()
@@ -1352,12 +1361,6 @@ def run_fetch(
     if delay_seconds < MIN_DELAY_SECONDS:
         print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
         return EXIT_USAGE
-    _ensure_private_dir(state_dir)
-    lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
-    lock.acquire()
-    ledger: SpellingLedger | None = None
-    cache: sqlite3.Connection | None = None
-    client: PoliteClient | None = None
 
     if resume_cmd:
         resolved_resume_cmd = resume_cmd
@@ -1391,11 +1394,16 @@ def run_fetch(
     stop_reason = "finished"
     return_code = EXIT_OK
     start_time = clock()
-    persisted_requests = 0
+    base_requests = 0
     process_units_finished = 0
     process_wall_time = 0.0
     last_progress_time = [clock()]
     last_heartbeat_time = [clock()]
+
+    lock: RunnerLock | None = None
+    ledger: SpellingLedger | None = None
+    cache: sqlite3.Connection | None = None
+    client: PoliteClient | None = None
 
     old_sigterm = None
     if threading.current_thread() is threading.main_thread():
@@ -1419,219 +1427,245 @@ def run_fetch(
 
     try:
         try:
-            cache = prepare_database(db_path)
-        except RuntimeError as exc:
-            print(str(exc), file=sys.stderr)
-            return EXIT_USAGE
-        ledger = SpellingLedger(state_dir / "ledger.sqlite")
-        ledger.set_meta("delay_seconds", str(delay_seconds))
-
-        raw_count = len(spellings)
-        normalized_list: list[str] = []
-        seen: set[str] = set()
-        dup_count = 0
-        for s in spellings:
-            key = normalize_ulif_spelling(s)
-            if not key:
-                continue
-            if key in seen:
-                dup_count += 1
-                continue
-            seen.add(key)
-            normalized_list.append(key)
-        distinct_count = len(normalized_list)
-
-        for spelling in normalized_list:
-            ledger.ensure(spelling)
-
-        already_finished = 0
-        for spelling in normalized_list:
-            st = ledger.state_of(spelling)
-            if st in COMPLETE_STATES and not refetch:
-                already_finished += 1
-        to_do = distinct_count - already_finished
-        if max_spellings is not None:
-            to_do = min(to_do, max_spellings)
-
-        register_size_str = ledger.meta("register_size", "") or "unknown"
-        _print_start_banner(
-            raw_count=raw_count,
-            distinct_count=distinct_count,
-            dup_count=dup_count,
-            already_finished=already_finished,
-            to_do=to_do,
-            delay_seconds=delay_seconds,
-            state_dir=state_dir,
-            db_path=db_path,
-            register_size=register_size_str,
-        )
-
-        client = PoliteClient(
-            transport or _requests_transport(declared_user_agent()),
-            delay_seconds=delay_seconds,
-            sleep=sleep,
-            clock=clock,
-            max_requests=max_requests,
-            heartbeat=on_heartbeat,
-        )
-        fetcher = HomonymFetcher(client, ledger, cache)
-        consecutive_retries = 0
-        processed = 0
-
-        for spelling in normalized_list:
-            state = ledger.state_of(spelling)
-            if state in COMPLETE_STATES and not refetch:
-                continue
-            if max_spellings is not None and processed >= max_spellings:
-                stop_reason = "max spellings"
-                break
-
-            unit_start_clock = clock()
-            unit_start_requests = client.requests_made
-            outcome: UnitOutcome | None = None
-            unit_state = ""
+            _ensure_private_dir(state_dir)
+            lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
+            lock.acquire()
 
             try:
-                outcome = fetcher.fetch(spelling)
-                unit_state = outcome.state
-            except RequestCap:
-                stop_reason = "request cap"
-                break
-            except Forbidden:
-                ledger.mark(spelling, "error", error="http_403")
-                unit_state = "error"
-                stop_reason = "HTTP 403"
-                return_code = EXIT_FORBIDDEN
-                print("stopping: HTTP 403 from ULIF", file=sys.stderr)
-            except RequestExhausted as exc:
-                unit_state = "retry_scheduled"
-                ledger.mark(spelling, "retry_scheduled", error=exc.code)
-            except SessionInvalid as exc:
-                unit_state = "retry_scheduled"
-                ledger.mark(spelling, "retry_scheduled", error=str(exc))
-            except (KeyboardInterrupt, InterruptedByOperator):
-                stop_reason = "interrupted by operator"
-                return_code = EXIT_INTERRUPTED
-                break
-            except Exception as exc:
+                cache = prepare_database(db_path)
+            except RuntimeError as exc:
+                print(str(exc), file=sys.stderr)
+                return_code = EXIT_USAGE
                 stop_reason = str(exc)
-                return_code = EXIT_INTERRUPTED
-                print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
-                break
+            else:
+                ledger = SpellingLedger(state_dir / "ledger.sqlite")
+                ledger.set_meta("delay_seconds", str(delay_seconds))
+                base_requests = int(ledger.meta("requests_made", "0") or "0")
 
-            if outcome is not None:
-                ledger.mark(
-                    spelling,
-                    outcome.state,
-                    entry_count=outcome.entry_count,
-                    straddled=outcome.straddled,
+                raw_count = len(spellings)
+                normalized_list: list[str] = []
+                seen: set[str] = set()
+                dup_count = 0
+                for s in spellings:
+                    key = normalize_ulif_spelling(s)
+                    if not key:
+                        continue
+                    if key in seen:
+                        dup_count += 1
+                        continue
+                    seen.add(key)
+                    normalized_list.append(key)
+                distinct_count = len(normalized_list)
+
+                for spelling in normalized_list:
+                    ledger.ensure(spelling)
+
+                already_finished = 0
+                for spelling in normalized_list:
+                    st = ledger.state_of(spelling)
+                    if st in COMPLETE_STATES and not refetch:
+                        already_finished += 1
+                to_do = distinct_count - already_finished
+                if max_spellings is not None:
+                    to_do = min(to_do, max_spellings)
+
+                register_size_str = ledger.meta("register_size", "") or "unknown"
+                _print_start_banner(
+                    raw_count=raw_count,
+                    distinct_count=distinct_count,
+                    dup_count=dup_count,
+                    already_finished=already_finished,
+                    to_do=to_do,
+                    delay_seconds=delay_seconds,
+                    state_dir=state_dir,
+                    db_path=db_path,
+                    register_size=register_size_str,
                 )
 
-            unit_wall = clock() - unit_start_clock
-            process_wall_time += unit_wall
-            process_units_finished += 1
-            processed += 1
-
-            delta = client.requests_made - persisted_requests
-            if delta > 0:
-                ledger.add_requests(delta)
-                persisted_requests = client.requests_made
-
-            cum_wall = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0") + unit_wall
-            cum_units = int(ledger.meta("cumulative_timed_units", "0") or "0") + 1
-            ledger.set_meta("cumulative_wall_seconds", str(cum_wall))
-            ledger.set_meta("cumulative_timed_units", str(cum_units))
-
-            if not quiet:
-                counts = ledger.counts()
-                finished_total = (
-                    counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
+                client = PoliteClient(
+                    transport or _requests_transport(declared_user_agent()),
+                    delay_seconds=delay_seconds,
+                    sleep=sleep,
+                    clock=clock,
+                    max_requests=max_requests,
+                    heartbeat=on_heartbeat,
                 )
-                total_planned = counts["spellings_total"]
-                unit_req = client.requests_made - unit_start_requests
-                tot_req = int(ledger.meta("requests_made", "0") or "0")
-                if process_units_finished < 5:
-                    eta_s = "?"
-                else:
-                    rem_units = max(0, total_planned - finished_total)
-                    if rem_units == 0:
-                        eta_s = "0:00:00"
-                    else:
-                        mean_w = process_wall_time / process_units_finished
-                        eta_sec = rem_units * mean_w
-                        eh = int(eta_sec // 3600)
-                        em = int((eta_sec % 3600) // 60)
-                        es = int(eta_sec % 60)
-                        eta_s = f"{eh}:{em:02d}:{es:02d}"
-
-                line = _format_progress_line(
-                    finished_count=finished_total,
-                    total_count=total_planned,
-                    state=unit_state,
-                    entry_count=outcome.entry_count if outcome else 0,
-                    req_count=unit_req,
-                    total_req=tot_req,
-                    err_count=counts["error"],
-                    retry_count=counts["retry_scheduled"],
-                    elapsed_seconds=clock() - start_time,
-                    eta_str=eta_s,
-                    spelling=spelling,
-                )
-                print(line, file=sys.stderr, flush=True)
-
-            last_progress_time[0] = clock()
-            last_heartbeat_time[0] = clock()
-
-            if unit_state == "retry_scheduled":
-                consecutive_retries += 1
-                if consecutive_retries >= CONSECUTIVE_RETRY_STOP:
-                    stop_reason = "retry storm"
-                    return_code = EXIT_RETRY_STORM
-                    print(
-                        "stopping: three consecutive spellings ended retry_scheduled",
-                        file=sys.stderr,
-                    )
-                    break
-            elif unit_state in COMPLETE_STATES:
+                fetcher = HomonymFetcher(client, ledger, cache)
                 consecutive_retries = 0
+                processed = 0
 
-            if return_code != EXIT_OK:
-                break
+                for spelling in normalized_list:
+                    state = ledger.state_of(spelling)
+                    if state in COMPLETE_STATES and not refetch:
+                        continue
+                    if max_spellings is not None and processed >= max_spellings:
+                        stop_reason = "max spellings"
+                        break
 
-        return return_code
-    except (KeyboardInterrupt, InterruptedByOperator):
-        stop_reason = "interrupted by operator"
-        return_code = EXIT_INTERRUPTED
-        return return_code
-    finally:
-        elapsed = clock() - start_time
-        if old_sigterm is not None:
-            with contextlib.suppress(ValueError, OSError):
-                signal.signal(signal.SIGTERM, old_sigterm)
-        try:
-            if client is not None and ledger is not None:
-                delta = client.requests_made - persisted_requests
-                if delta > 0:
-                    ledger.add_requests(delta)
-                    persisted_requests = client.requests_made
-            _print_stop_summary(
-                reason=stop_reason,
-                ledger=ledger,
-                requests_in_process=client.requests_made if client else 0,
-                elapsed_seconds=elapsed,
-                resume_cmd=resolved_resume_cmd,
-            )
+                    unit_start_clock = clock()
+                    unit_start_requests = client.requests_made
+                    outcome: UnitOutcome | None = None
+                    unit_state = ""
+
+                    try:
+                        outcome = fetcher.fetch(spelling)
+                        unit_state = outcome.state
+                    except RequestCap:
+                        stop_reason = "request cap"
+                        break
+                    except Forbidden:
+                        ledger.mark(spelling, "error", error="http_403")
+                        unit_state = "error"
+                        stop_reason = "HTTP 403"
+                        return_code = EXIT_FORBIDDEN
+                        print("stopping: HTTP 403 from ULIF", file=sys.stderr)
+                    except RequestExhausted as exc:
+                        unit_state = "retry_scheduled"
+                        ledger.mark(spelling, "retry_scheduled", error=exc.code)
+                    except SessionInvalid as exc:
+                        unit_state = "retry_scheduled"
+                        ledger.mark(spelling, "retry_scheduled", error=str(exc))
+                    except (KeyboardInterrupt, InterruptedByOperator):
+                        stop_reason = "interrupted by operator"
+                        return_code = EXIT_INTERRUPTED
+                        break
+                    except Exception as exc:
+                        stop_reason = str(exc)
+                        return_code = EXIT_INTERRUPTED
+                        print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
+                        break
+
+                    if outcome is not None:
+                        ledger.mark(
+                            spelling,
+                            outcome.state,
+                            entry_count=outcome.entry_count,
+                            straddled=outcome.straddled,
+                        )
+
+                    unit_wall = clock() - unit_start_clock
+                    process_wall_time += unit_wall
+                    process_units_finished += 1
+                    processed += 1
+
+                    if client.requests_made > 0:
+                        ledger.set_requests_made(base_requests + client.requests_made)
+
+                    cum_wall = float(ledger.meta("cumulative_wall_seconds", "0.0") or "0.0") + unit_wall
+                    cum_units = int(ledger.meta("cumulative_timed_units", "0") or "0") + 1
+                    ledger.set_meta("cumulative_wall_seconds", str(cum_wall))
+                    ledger.set_meta("cumulative_timed_units", str(cum_units))
+
+                    if not quiet:
+                        counts = ledger.counts()
+                        finished_total = (
+                            counts["stored"] + counts["absent_from_ulif"] + counts["retry_scheduled"] + counts["error"]
+                        )
+                        total_planned = counts["spellings_total"]
+                        unit_req = client.requests_made - unit_start_requests
+                        tot_req = base_requests + client.requests_made
+                        if process_units_finished < 5:
+                            eta_s = "?"
+                        else:
+                            rem_units = max(0, total_planned - finished_total)
+                            if rem_units == 0:
+                                eta_s = "0:00:00"
+                            else:
+                                mean_w = process_wall_time / process_units_finished
+                                eta_sec = rem_units * mean_w
+                                eh = int(eta_sec // 3600)
+                                em = int((eta_sec % 3600) // 60)
+                                es = int(eta_sec % 60)
+                                eta_s = f"{eh}:{em:02d}:{es:02d}"
+
+                        line = _format_progress_line(
+                            finished_count=finished_total,
+                            total_count=total_planned,
+                            state=unit_state,
+                            entry_count=outcome.entry_count if outcome else 0,
+                            req_count=unit_req,
+                            total_req=tot_req,
+                            err_count=counts["error"],
+                            retry_count=counts["retry_scheduled"],
+                            elapsed_seconds=clock() - start_time,
+                            eta_str=eta_s,
+                            spelling=spelling,
+                        )
+                        print(line, file=sys.stderr, flush=True)
+
+                    last_progress_time[0] = clock()
+                    last_heartbeat_time[0] = clock()
+
+                    if unit_state == "retry_scheduled":
+                        consecutive_retries += 1
+                        if consecutive_retries >= CONSECUTIVE_RETRY_STOP:
+                            stop_reason = "retry storm"
+                            return_code = EXIT_RETRY_STORM
+                            print(
+                                "stopping: three consecutive spellings ended retry_scheduled",
+                                file=sys.stderr,
+                            )
+                            break
+                    elif unit_state in COMPLETE_STATES:
+                        consecutive_retries = 0
+
+                    if return_code != EXIT_OK:
+                        break
+
         except (KeyboardInterrupt, InterruptedByOperator):
             stop_reason = "interrupted by operator"
             return_code = EXIT_INTERRUPTED
-        finally:
+        except Exception as exc:
+            stop_reason = str(exc)
+            return_code = EXIT_INTERRUPTED
+            print(f"interrupted: {exc}", file=sys.stderr)
+
+        try:
+            if client is not None and ledger is not None:
+                ledger.set_requests_made(base_requests + client.requests_made)
+        except (KeyboardInterrupt, InterruptedByOperator):
+            stop_reason = "interrupted by operator"
+            return_code = EXIT_INTERRUPTED
+
+        if return_code != EXIT_USAGE:
+            try:
+                _print_stop_summary(
+                    reason=stop_reason,
+                    ledger=ledger,
+                    requests_in_process=client.requests_made if client else 0,
+                    elapsed_seconds=clock() - start_time,
+                    resume_cmd=resolved_resume_cmd,
+                )
+            except (KeyboardInterrupt, InterruptedByOperator):
+                stop_reason = "interrupted by operator"
+                return_code = EXIT_INTERRUPTED
+    finally:
+        try:
             if cache is not None:
                 with contextlib.suppress(Exception):
                     cache.close()
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return_code = EXIT_INTERRUPTED
+
+        try:
             if ledger is not None:
                 with contextlib.suppress(Exception):
                     ledger.close()
-            lock.release()
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return_code = EXIT_INTERRUPTED
+
+        try:
+            if lock is not None:
+                with contextlib.suppress(Exception):
+                    lock.release()
+        except (KeyboardInterrupt, InterruptedByOperator):
+            return_code = EXIT_INTERRUPTED
+
+        if old_sigterm is not None:
+            with contextlib.suppress(ValueError, OSError):
+                signal.signal(signal.SIGTERM, old_sigterm)
+
+    return return_code
 
 
 def build_a1_a2_spellings(

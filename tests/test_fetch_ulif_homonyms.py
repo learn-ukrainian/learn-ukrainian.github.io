@@ -18,6 +18,7 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_OK,
     EXIT_RETRY_STORM,
     EXIT_USAGE,
+    HomonymFetcher,
     HttpResult,
     SpellingLedger,
     _dedupe_register_rows,
@@ -1427,3 +1428,97 @@ def test_operator_interrupt_during_setup_returns_exit_interrupted(tmp_path, caps
     assert code == EXIT_INTERRUPTED
     err = capsys.readouterr().err
     assert "Reason:               interrupted by operator" in err
+
+
+def test_operator_interrupt_during_lock_acquire_cleans_up_and_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    lock_file = tmp_path / "state" / "runner.lock"
+
+    def fake_fdopen(fd, *args, **kwargs):
+        os.close(fd)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(os, "fdopen", fake_fdopen)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, "", {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+    assert not lock_file.exists()
+
+
+def test_operator_interrupt_during_final_accounting_prints_summary_and_returns_exit_interrupted(
+    tmp_path, capsys, monkeypatch
+):
+    page = _register(["інше"], "seed", paging=False)
+    orig_set_requests = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def flaky_set_requests(self, count):
+        calls[0] += 1
+        # Call 1: mid-run after spelling fetch succeeds
+        # Call 2: final accounting -> raise KeyboardInterrupt
+        if calls[0] >= 2:
+            raise KeyboardInterrupt()
+        orig_set_requests(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", flaky_set_requests)
+    code = _run(tmp_path, ["тест"], lambda m, d: HttpResult(200, page, {}))
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_requests_made_idempotent_no_double_counting_across_interruption(tmp_path):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    # Run 1 spelling and interrupt during the second spelling
+    orig_fetch = HomonymFetcher.fetch
+    fetch_count = [0]
+
+    def interrupted_fetch(self, spelling):
+        fetch_count[0] += 1
+        if fetch_count[0] > 1:
+            raise KeyboardInterrupt()
+        return orig_fetch(self, spelling)
+
+    code = run_fetch(
+        spellings=["перше", "друге"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    # The first run without mock runs both to completion (2 spellings * 2 requests = 4)
+    assert code == EXIT_OK
+    ledger = _ledger(tmp_path)
+    try:
+        assert int(ledger.meta("requests_made", "0") or "0") == 4
+    finally:
+        ledger.close()
+
+    # Now simulate a resumed run where 1 spelling is fetched, then interrupted
+    fetch_count[0] = 0
+    from unittest.mock import patch
+
+    with patch.object(HomonymFetcher, "fetch", interrupted_fetch):
+        code2 = run_fetch(
+            spellings=["перше", "третє", "четверте"],
+            state_dir=tmp_path / "state",
+            db_path=tmp_path / "cache.db",
+            transport=handler,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+    assert code2 == EXIT_INTERRUPTED
+
+    # "перше" was already stored (skipped). "третє" made 2 requests and was stored.
+    # "четверте" raised KeyboardInterrupt before any requests.
+    # Total requests across all runs should be exactly 4 (from run 1) + 2 (from run 2) = 6.
+    ledger = _ledger(tmp_path)
+    try:
+        assert int(ledger.meta("requests_made", "0") or "0") == 6
+    finally:
+        ledger.close()
