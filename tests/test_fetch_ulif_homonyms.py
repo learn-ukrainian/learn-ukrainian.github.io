@@ -1942,7 +1942,96 @@ def test_missing_spellings_file_cli_produces_stop_summary_and_exit_usage(tmp_pat
     )
     assert code == EXIT_USAGE
     err = capsys.readouterr().err
-    assert "spellings file not found" in err
+    assert "failed to read spellings file" in err
     assert "=== ULIF Fetch Stop Summary ===" in err
-    assert "Reason:               spellings file not found" in err
+    assert "Reason:               failed to read spellings file" in err
+    assert "Resume command:" in err
+
+
+def test_request_cap_interruption_during_cleanup_returns_exit_interrupted(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.close()
+
+    calls = [0]
+    orig_clear = SpellingLedger.clear_responses
+
+    def interrupt_clear(self, spelling):
+        calls[0] += 1
+        orig_clear(self, spelling)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(SpellingLedger, "clear_responses", interrupt_clear)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        max_requests=0,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_resumed_retries_produce_truthful_eta_not_zero(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    spellings = [f"слово{i}" for i in range(6)]
+    for s in spellings:
+        ledger.ensure(s)
+        ledger.mark(s, "retry_scheduled", error="503")
+    ledger.close()
+
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    cur_time = [0.0]
+
+    def fake_clock():
+        cur_time[0] += 10.0
+        return cur_time[0]
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=fake_clock,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_OK
+    err = capsys.readouterr().err
+    lines = [line for line in err.splitlines() if "absent_from_ulif" in line]
+    assert len(lines) == 6
+    assert "eta=0:00:00" not in lines[4]
+    assert "eta=0:00:00" in lines[5]
+
+
+def test_directory_as_spellings_file_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(tmp_path),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "failed to read spellings file" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
     assert "Resume command:" in err

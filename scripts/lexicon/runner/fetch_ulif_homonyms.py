@@ -1557,8 +1557,14 @@ def run_fetch(
                         outcome = fetcher.fetch(spelling)
                         unit_state = outcome.state
                     except RequestCap:
-                        with contextlib.suppress(BaseException):
+                        try:
                             _restore_pending(ledger, spelling)
+                        except (KeyboardInterrupt, InterruptedByOperator):
+                            stop_reason = "interrupted by operator"
+                            return_code = EXIT_INTERRUPTED
+                            break
+                        except Exception:
+                            pass
                         stop_reason = "request cap"
                         break
                     except Forbidden:
@@ -1580,8 +1586,14 @@ def run_fetch(
                         return_code = EXIT_INTERRUPTED
                         break
                     except Exception as exc:
-                        with contextlib.suppress(BaseException):
+                        try:
                             _restore_pending(ledger, spelling)
+                        except (KeyboardInterrupt, InterruptedByOperator):
+                            stop_reason = "interrupted by operator"
+                            return_code = EXIT_INTERRUPTED
+                            break
+                        except Exception:
+                            pass
                         stop_reason = str(exc)
                         return_code = EXIT_INTERRUPTED
                         print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
@@ -1619,7 +1631,7 @@ def run_fetch(
                         if process_units_finished < 5:
                             eta_s = "?"
                         else:
-                            rem_units = max(0, total_planned - finished_total)
+                            rem_units = max(0, to_do - process_units_finished)
                             if rem_units == 0:
                                 eta_s = "0:00:00"
                             else:
@@ -2162,8 +2174,19 @@ Related:
             cmd_parts.append("--quiet")
         resume_cmd = shlex.join(cmd_parts)
 
-        if not args.spellings_file.exists():
-            err_msg = f"spellings file not found: {args.spellings_file}"
+        try:
+            spellings = _spellings_from_file(args.spellings_file)
+        except (KeyboardInterrupt, InterruptedByOperator):
+            _print_stop_summary(
+                reason="interrupted by operator",
+                ledger=None,
+                requests_in_process=0,
+                elapsed_seconds=0.0,
+                resume_cmd=resume_cmd,
+            )
+            return EXIT_INTERRUPTED
+        except Exception as exc:
+            err_msg = f"failed to read spellings file: {exc}"
             print(err_msg, file=sys.stderr)
             _print_stop_summary(
                 reason=err_msg,
@@ -2173,8 +2196,6 @@ Related:
                 resume_cmd=resume_cmd,
             )
             return EXIT_USAGE
-
-        spellings = _spellings_from_file(args.spellings_file)
         try:
             code = run_fetch(
                 spellings=spellings,
