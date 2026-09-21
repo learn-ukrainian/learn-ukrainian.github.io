@@ -17,6 +17,7 @@ ULIF_DICTUA_ENTRY_COLUMNS: tuple[str, ...] = (
     "homonym_index",
     "canonical_headword",
     "grammatical_label",
+    "sense_gloss",
     "content_sha256",
     "register_position",
     "homonym_checked",
@@ -42,6 +43,7 @@ CREATE TABLE IF NOT EXISTS {table_name} (
     homonym_index INTEGER NOT NULL DEFAULT 1 CHECK (homonym_index >= 1),
     canonical_headword TEXT NOT NULL DEFAULT '',
     grammatical_label TEXT NOT NULL DEFAULT '',
+    sense_gloss TEXT NOT NULL DEFAULT '',
     content_sha256 TEXT NOT NULL DEFAULT '',
     register_position TEXT NOT NULL DEFAULT '',
     homonym_checked INTEGER NOT NULL DEFAULT 0 CHECK (homonym_checked IN (0, 1)),
@@ -93,6 +95,7 @@ def upsert_runner_ulif_entry(
     homonym_index: int,
     canonical_headword: str,
     grammatical_label: str = "",
+    sense_gloss: str = "",
     content_sha256: str = "",
     register_position: str = "",
     homonym_checked: int = 0,
@@ -110,12 +113,13 @@ def upsert_runner_ulif_entry(
         """
         INSERT INTO ulif_dictua_entries (
             normalized_query, homonym_index, canonical_headword, grammatical_label,
-            content_sha256, register_position, homonym_checked, raw_response_ref,
-            retrieved_at, response_sha256, parser_version, status
-        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            sense_gloss, content_sha256, register_position, homonym_checked,
+            raw_response_ref, retrieved_at, response_sha256, parser_version, status
+        ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         ON CONFLICT(normalized_query, homonym_index) DO UPDATE SET
             canonical_headword = excluded.canonical_headword,
             grammatical_label = excluded.grammatical_label,
+            sense_gloss = excluded.sense_gloss,
             content_sha256 = excluded.content_sha256,
             register_position = excluded.register_position,
             homonym_checked = excluded.homonym_checked,
@@ -130,6 +134,7 @@ def upsert_runner_ulif_entry(
             homonym_index,
             canonical_headword,
             grammatical_label,
+            sense_gloss,
             content_sha256,
             register_position,
             homonym_checked,

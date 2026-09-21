@@ -451,7 +451,12 @@ def test_zamok_entry_pages_print_no_homonym_number_and_distinct_keys():
     assert [entry["entry_key"] for entry in entries] == ["замок#1", "замок#2", "замок#3"]
     assert [entry["canonical_headword"] for entry in entries] == ["За́мок", "за́мок", "замо́к"]
     assert {entry["printed_homonym_number"] for entry in entries} == {None}
-    assert entries[1]["grammatical_label"].endswith("(будівля)")
+    assert [entry["sense_gloss"] for entry in entries] == [
+        "(населений пункт в Україні)",
+        "(будівля)",
+        "(пристрій для замикання тощо)",
+    ]
+    assert {entry["grammatical_label"] for entry in entries} == {"іменник чоловічого роду"}
     assert entries[0]["register_position"] == "4"
 
 
@@ -476,18 +481,56 @@ def test_zamok_lock_has_mobile_stress_locative_preposition_and_vocative_star():
     assert [row["form_stressed"] for row in dative] == ["замку́", "замко́ві"]
 
 
+def test_fixture_cells_keep_each_attested_preposition_out_of_the_form():
+    """Every preposition prefix that actually occurs in the fixtures is a field."""
+    seen: set[str] = set()
+    for path in sorted(FIXTURES.glob("*.html")):
+        entry = ulif_parse.parse_ulif_entry(path.read_text(encoding="utf-8"), homonym_index=1)
+        for row in entry["forms"]:
+            preposition = row["preposition"]
+            if not preposition:
+                continue
+            seen.add(preposition)
+            assert preposition not in row["form_stressed"]
+            assert preposition not in row["form_unstressed"]
+            assert not row["form_stressed"].startswith(preposition)
+    assert seen == {"на/у"}
+
+
+@pytest.mark.parametrize(
+    ("prefix", "form"),
+    [
+        ("на/у", "замку́"),
+        ("у/в", "лісі́"),
+        ("в/у", "шко́лі"),
+        ("на", "столі́"),
+        ("в", "мі́сті"),
+        ("у", "лі́сі"),
+        ("по", "шляху́"),
+    ],
+)
+def test_accepted_preposition_prefixes_stay_out_of_the_form(prefix: str, form: str):
+    rows = ulif_parse._split_cell_surface(f"{prefix} {form}")
+    assert rows[0]["preposition"] == prefix
+    assert rows[0]["form_stressed"] == form
+    assert prefix not in rows[0]["form_unstressed"]
+
+
 def test_hovoryty_sections_rowspan_and_adverbial_participles():
     entry = _forms("hovoryty-paradigm.html")
-    assert _tagged(entry, "говорі́мо")[0]["grammatical_tags"] == ["impr", "1", "p"]
+    assert _tagged(entry, "говорі́мо")[0]["grammatical_tags"] == ["impr", "p", "1"]
     assert _tagged(entry, "говорі́м")[0]["variant_order"] == 2
-    assert _tagged(entry, "говори́тиму")[0]["grammatical_tags"] == ["futr", "1", "s"]
+    assert _tagged(entry, "говори́тиму")[0]["grammatical_tags"] == ["futr", "s", "1"]
+    assert ":".join(_tagged(entry, "говори́тиму")[0]["grammatical_tags"]) == "futr:s:1"
+    assert ":".join(_tagged(entry, "говорі́мо")[0]["grammatical_tags"]) == "impr:p:1"
     assert _tagged(entry, "говори́в")[0]["grammatical_tags"] == ["past", "m", "s"]
     plural = _tagged(entry, "говори́ли")
     assert len(plural) == 1
     assert plural[0]["grammatical_tags"] == ["past", "p"]
     assert "m" not in plural[0]["grammatical_tags"]
-    assert _tagged(entry, "гово́рячи")[0]["grammatical_tags"] == ["advp"]
-    assert _tagged(entry, "говори́вши")[0]["grammatical_tags"] == ["advp"]
+    assert _tagged(entry, "гово́рячи")[0]["grammatical_tags"] == ["pres", "advp"]
+    assert _tagged(entry, "говори́вши")[0]["grammatical_tags"] == ["past", "advp"]
+    assert _tagged(entry, "гово́рений")[0]["grammatical_tags"] == ["past", "adjp", "pasv"]
     assert entry["forms"][0]["is_lemma"] is True
     assert entry["forms"][0]["is_invariable"] is False
 
@@ -520,6 +563,12 @@ def test_duzhe_invariable_entry_emits_only_the_base_row():
     assert base["is_invariable"] is True
     assert base["grammatical_tags"] == ["adv"]
     assert base["pedagogical_stressed_form"] == "ду́же"
+
+
+def test_number_precedes_person_in_one_normaliser():
+    assert ulif_parse.canonical_grammatical_tags(["futr", "1", "s"]) == ["futr", "s", "1"]
+    assert ulif_parse.canonical_grammatical_tags(["impr", "1", "p"]) == ["impr", "p", "1"]
+    assert ulif_parse.canonical_grammatical_tags(["past", "m", "s"]) == ["past", "m", "s"]
 
 
 def test_unknown_header_is_kept_raw_and_dual_stress_uses_pedagogical_form():
@@ -586,7 +635,10 @@ def test_migration_on_a_db_copy_keeps_rows_and_flags_them_unchecked(tmp_path):
     after = copy.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0]
     sections_after = copy.execute("SELECT COUNT(*) FROM ulif_dictua_sections").fetchone()[0]
     flags = copy.execute(
-        "SELECT homonym_index, homonym_checked, content_sha256 FROM ulif_dictua_entries ORDER BY id"
+        """
+        SELECT homonym_index, homonym_checked, content_sha256, sense_gloss
+        FROM ulif_dictua_entries ORDER BY id
+        """
     ).fetchall()
     assert sources_db.migrate_ulif_dictua_entries(copy) is False
     after_second = copy.execute("SELECT COUNT(*) FROM ulif_dictua_entries").fetchone()[0]
@@ -610,8 +662,141 @@ def test_migration_on_a_db_copy_keeps_rows_and_flags_them_unchecked(tmp_path):
     assert after == before
     assert after_second == before
     assert sections_before == sections_after == 1
-    assert flags == [(1, 0, "a" * 64), (1, 0, "b" * 64)]
+    assert flags == [(1, 0, "a" * 64, ""), (1, 0, "b" * 64, "")]
     assert joined == "замок"
+
+
+def _sqlite_master_bytes(path: Path) -> bytes:
+    conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+    try:
+        rows = conn.execute(
+            "SELECT type, name, tbl_name, sql FROM sqlite_master ORDER BY type, name, sql"
+        ).fetchall()
+    finally:
+        conn.close()
+    return "\n".join(repr(row) for row in rows).encode()
+
+
+def _write_old_ulif_db(path: Path) -> Path:
+    conn = sqlite3.connect(path)
+    conn.executescript(_OLD_ULIF_ENTRIES + """
+        CREATE TABLE ulif_dictua_sections (
+            id INTEGER PRIMARY KEY,
+            entry_id INTEGER NOT NULL,
+            kind TEXT NOT NULL,
+            source_order INTEGER NOT NULL,
+            sense_or_group_id TEXT NOT NULL DEFAULT '',
+            payload_json TEXT NOT NULL
+        );
+    """)
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_entries
+            (normalized_query, canonical_headword, raw_response_ref, retrieved_at,
+             response_sha256, parser_version, status)
+        VALUES ('замок', 'За́мок', '', '2026-09-01T00:00:00+00:00', ?, 'ulif-dictua-v2', 'ok')
+        """,
+        ("c" * 64,),
+    )
+    conn.execute(
+        """
+        INSERT INTO ulif_dictua_sections
+            (entry_id, kind, source_order, sense_or_group_id, payload_json)
+        VALUES (1, 'paradigm', 0, 'paradigm:1', '{}')
+        """
+    )
+    conn.commit()
+    conn.close()
+    return path
+
+
+def test_read_connection_does_not_migrate_an_old_schema(tmp_path, monkeypatch):
+    db_path = _write_old_ulif_db(tmp_path / "old.db")
+    before = _sqlite_master_bytes(db_path)
+
+    def fail(*_args, **_kwargs):
+        raise AssertionError("read path must not create or migrate the schema")
+
+    monkeypatch.setattr(sources_db, "ensure_ulif_dictua_schema", fail)
+    monkeypatch.setattr(sources_db, "migrate_ulif_dictua_entries", fail)
+    conn = sources_db._ulif_dictua_conn(db_path, create=False)
+    assert conn is not None
+    conn.close()
+    entry = sources_db.get_ulif_dictua_entry("замок", db_path=db_path)
+    listed = sources_db.get_ulif_dictua_entries("замок", db_path=db_path)
+
+    assert _sqlite_master_bytes(db_path) == before
+    assert entry is not None
+    assert entry["status"] == "ok"
+    assert entry["homonym_index"] == 1
+    assert entry["canonical_headword"] == "За́мок"
+    assert entry["sense_gloss"] == ""
+    assert entry["grammatical_label"] == ""
+    assert [row["homonym_index"] for row in listed] == [1]
+    assert sources_db.get_ulif_dictua_entry("замок", homonym_index=2, db_path=db_path) is None
+
+
+def test_migration_failure_between_copy_and_rename_keeps_the_original_table(tmp_path):
+    source = _write_old_ulif_db(tmp_path / "legacy.db")
+    copy_path = tmp_path / "legacy-copy.db"
+    copy_path.write_bytes(source.read_bytes())
+    copy = sqlite3.connect(copy_path)
+    original_sql = copy.execute(
+        "SELECT sql FROM sqlite_master WHERE name = 'ulif_dictua_entries'"
+    ).fetchone()[0]
+    original_rows = copy.execute(
+        "SELECT * FROM ulif_dictua_entries ORDER BY id"
+    ).fetchall()
+
+    class _FailBeforeDrop:
+        def __init__(self, inner: sqlite3.Connection) -> None:
+            self._inner = inner
+
+        def __getattr__(self, name: str):
+            return getattr(self._inner, name)
+
+        def __setattr__(self, name: str, value: object) -> None:
+            if name == "_inner":
+                object.__setattr__(self, name, value)
+                return
+            setattr(self._inner, name, value)
+
+        def execute(self, sql, *args, **kwargs):
+            compact = " ".join(str(sql).split()).casefold()
+            if compact == "drop table ulif_dictua_entries":
+                raise sqlite3.OperationalError("simulated failure before rename")
+            return self._inner.execute(sql, *args, **kwargs)
+
+    with pytest.raises(sqlite3.OperationalError, match="simulated failure before rename"):
+        sources_db.migrate_ulif_dictua_entries(_FailBeforeDrop(copy))  # type: ignore[arg-type]
+    copy.close()
+
+    check = sqlite3.connect(copy_path)
+    survived_sql = check.execute(
+        "SELECT sql FROM sqlite_master WHERE name = 'ulif_dictua_entries'"
+    ).fetchone()[0]
+    survived_rows = check.execute("SELECT * FROM ulif_dictua_entries ORDER BY id").fetchall()
+    leftover = check.execute(
+        "SELECT name FROM sqlite_master WHERE name = 'ulif_dictua_entries_mig'"
+    ).fetchone()
+    check.close()
+    assert survived_sql == original_sql
+    assert survived_rows == original_rows
+    assert leftover is None
+
+
+def test_migrate_cli_is_idempotent(tmp_path, capsys):
+    db_path = _write_old_ulif_db(tmp_path / "cli.db")
+    assert sources_db.main(["--migrate", "--db", str(db_path)]) == 0
+    assert capsys.readouterr().out.strip() == "migrated"
+    assert sources_db.main(["--migrate", "--db", str(db_path)]) == 0
+    assert capsys.readouterr().out.strip() == "already current"
+    conn = sqlite3.connect(db_path)
+    gloss = {
+        row[1] for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")
+    }
+    conn.close()
+    assert "sense_gloss" in gloss
 
 
 def test_runner_store_keeps_homonym_identity_off_the_legacy_dump_table(tmp_path):
@@ -661,7 +846,8 @@ def test_sources_db_stores_two_homonyms_for_one_spelling(tmp_path, monkeypatch):
         parser_version="ulif-dictua-v2",
         status="ok",
         homonym_index=1,
-        grammatical_label="іменник чоловічого роду (будівля)",
+        grammatical_label="іменник чоловічого роду",
+        sense_gloss="(будівля)",
         register_position="5",
         homonym_checked=1,
     )
@@ -674,18 +860,53 @@ def test_sources_db_stores_two_homonyms_for_one_spelling(tmp_path, monkeypatch):
         parser_version="ulif-dictua-v2",
         status="ok",
         homonym_index=2,
-        grammatical_label="іменник чоловічого роду (пристрій)",
+        grammatical_label="іменник чоловічого роду",
+        sense_gloss="(пристрій для замикання тощо)",
         register_position="6",
         homonym_checked=1,
     )
-    first = sources_db.get_ulif_dictua_entry("ЗАМОК")
+    ambiguous = sources_db.get_ulif_dictua_entry("ЗАМОК")
+    first = sources_db.get_ulif_dictua_entry("замок", homonym_index=1)
     second = sources_db.get_ulif_dictua_entry("замок", homonym_index=2)
-    assert first is not None and second is not None
+    listed = sources_db.get_ulif_dictua_entries("замок")
+    assert ambiguous is not None and first is not None and second is not None
+    assert ambiguous["status"] == "ambiguous"
+    assert ambiguous["entries"] == [
+        {
+            "homonym_index": 1,
+            "canonical_headword": "за́мок",
+            "grammatical_label": "іменник чоловічого роду",
+            "sense_gloss": "(будівля)",
+        },
+        {
+            "homonym_index": 2,
+            "canonical_headword": "замо́к",
+            "grammatical_label": "іменник чоловічого роду",
+            "sense_gloss": "(пристрій для замикання тощо)",
+        },
+    ]
+    assert [row["homonym_index"] for row in listed] == [1, 2]
+    assert first["status"] == "ok"
     assert first["homonym_index"] == 1
     assert first["canonical_headword"] == "за́мок"
+    assert first["sense_gloss"] == "(будівля)"
     assert second["canonical_headword"] == "замо́к"
+    assert second["sense_gloss"] == "(пристрій для замикання тощо)"
     assert second["register_position"] == "6"
     assert second["homonym_checked"] == 1
+    sources_db.store_ulif_dictua_entry(
+        word="стіл",
+        canonical_headword="стіл",
+        sections={},
+        raw_responses={},
+        retrieved_at="2026-09-21T00:00:00+00:00",
+        parser_version="ulif-dictua-v2",
+        status="ok",
+    )
+    single = sources_db.get_ulif_dictua_entry("стіл")
+    assert single is not None
+    assert single["status"] == "ok"
+    assert single["homonym_index"] == 1
 
 
 def test_homonym_suspect_report_combines_trie_vesum_and_capitalisation():

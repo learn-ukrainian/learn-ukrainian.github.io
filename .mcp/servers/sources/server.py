@@ -2492,13 +2492,31 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
             except Exception:
                 payload = {"status": "unavailable", "entry": None}
             else:
-                payload = {"status": "attested" if entry else "not_found", "entry": entry}
+                if entry and entry.get("status") == "ambiguous":
+                    payload = {
+                        "status": "ambiguous",
+                        "entry": None,
+                        "entries": entry.get("entries", []),
+                    }
+                else:
+                    payload = {"status": "attested" if entry else "not_found", "entry": entry}
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
     if "sections" not in args:
         from rag.source_query import ulif_paradigm
 
         result = await asyncio.to_thread(ulif_paradigm, word)
-        if not result:
+        if isinstance(result, dict) and result.get("status") == "ambiguous":
+            lines = [f"Ambiguous ULIF spelling '{word}':"]
+            for item in result.get("entries", []):
+                gloss = item.get("sense_gloss") or ""
+                label = item.get("grammatical_label") or ""
+                detail = " ".join(part for part in (label, gloss) if part)
+                lines.append(
+                    f"- {item.get('homonym_index')}: {item.get('canonical_headword', '')}"
+                    + (f" {detail}" if detail else "")
+                )
+            return [TextContent(type="text", text="\n".join(lines))]
+        if not result or "rows" not in result:
             return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
         lines = [f"Paradigm for '{word}':\n"]

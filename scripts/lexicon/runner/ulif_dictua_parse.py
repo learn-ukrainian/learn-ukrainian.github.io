@@ -383,9 +383,13 @@ def summarize_artifacts(artifacts: list[dict[str, Any]]) -> dict[str, Any]:
 
 _ACUTE = "\u0301"
 _SELECT_RE = re.compile(r"Select\$(\d+)")
-_PREPOSITION_RE = re.compile(r"^(на/у|в|на)\s+")
+# Fixture paradigm cells attest only ``на/у``. Also accept the locative
+# prepositions named for this parser. Longer alternatives come first so
+# ``на/у`` is not consumed as ``на``.
+_PREPOSITION_RE = re.compile(r"^(на/у|у/в|в/у|на|по|в|у)\s+")
 _LEADING_DASH_RE = re.compile(r"^[–—-]\s*")
-_PARENTHETICAL_RE = re.compile(r"\s*\([^)]*\)")
+_NUMBER_TAGS = frozenset({"s", "p"})
+_PERSON_TAGS = frozenset({"1", "2", "3"})
 _INVARIABLE_PHRASE = "незмінювана словникова одиниця"
 _SECTION_ROLES = frozenset({"mood", "tense", "verbform"})
 _HEADER_ROLES = frozenset({"axis", "number", "gender"})
@@ -500,8 +504,9 @@ def _stress_record(stressed: str) -> dict[str, Any]:
 def _split_cell_surface(text: str) -> list[dict[str, Any]]:
     """Split one paradigm cell into variant rows.
 
-    A leading ``на/у `` / ``в `` / ``на `` and a trailing ``*`` are fields,
-    not part of the form. Commas separate variants.
+    A leading ``на/у``, ``у/в``, ``в/у``, ``на``, ``в``, ``у``, or ``по``
+    and a trailing ``*`` are fields, not part of the form. Commas separate
+    variants.
     """
     surface = re.sub(r"\s+", " ", text).strip()
     preposition = ""
@@ -617,10 +622,31 @@ def _map_label(text: str) -> tuple[list[str], list[str]]:
     return list(mapping.tags), []
 
 
+def canonical_grammatical_tags(tags: list[str]) -> list[str]:
+    """Place number immediately before person, matching VESUM ``futr:s:1``.
+
+    Tags that are neither number nor person stay in source order. When no
+    person tag is present, number stays where the paradigm table put it
+    (``past`` + gender + number is left as ``past:m:s``).
+    """
+    if not any(tag in _NUMBER_TAGS for tag in tags) or not any(tag in _PERSON_TAGS for tag in tags):
+        return list(tags)
+    ordered: list[str] = []
+    placed = False
+    for tag in tags:
+        if tag in _NUMBER_TAGS or tag in _PERSON_TAGS:
+            if not placed:
+                ordered.extend(tag for tag in tags if tag in _NUMBER_TAGS)
+                ordered.extend(tag for tag in tags if tag in _PERSON_TAGS)
+                placed = True
+            continue
+        ordered.append(tag)
+    return ordered
+
+
 def _grammar_tags(grammatical_label: str) -> tuple[list[str], list[str]]:
     """Map a whole grammar line. Unknown lines stay raw; no tag is guessed."""
-    without_notes = _PARENTHETICAL_RE.sub("", grammatical_label)
-    cleaned = normalize_ulif_label(without_notes)
+    cleaned = normalize_ulif_label(grammatical_label)
     if not cleaned:
         return [], []
     mapping = ULIF_LABEL_TAGS.get(cleaned)
@@ -713,6 +739,7 @@ def _article_identity(html: str) -> dict[str, Any]:
         return {
             "canonical_headword": "",
             "grammatical_label": "",
+            "sense_gloss": "",
             "invariable_phrase": False,
             "paradigm_table": None,
             "content_sha256": hashlib.sha256(html.encode("utf-8")).hexdigest(),
@@ -726,12 +753,11 @@ def _article_identity(html: str) -> dict[str, Any]:
         note = _ulif_text(node)
         if note:
             notes.append(note)
-    if notes:
-        grammar = f"{grammar} {' '.join(notes)}".strip()
     article_text = _ulif_text(article)
     return {
         "canonical_headword": headword,
         "grammatical_label": grammar,
+        "sense_gloss": " ".join(notes).strip(),
         "invariable_phrase": _INVARIABLE_PHRASE in article_text,
         "paradigm_table": _find_paradigm_table(article),
         "content_sha256": hashlib.sha256(str(article).encode("utf-8")).hexdigest(),
@@ -752,7 +778,7 @@ def _form_row(
         "form_unstressed": surface["form_unstressed"],
         "form_stressed": surface["form_stressed"],
         "stress_vowel_indices": list(surface["stress_vowel_indices"]),
-        "grammatical_tags": list(grammatical_tags),
+        "grammatical_tags": canonical_grammatical_tags(grammatical_tags),
         "unmapped_labels": list(unmapped_labels),
         "variant_order": surface["variant_order"],
         "preposition": surface["preposition"],
@@ -771,7 +797,10 @@ def _paradigm_form_rows(table: Tag, entry_key: str) -> list[dict[str, Any]]:
     width = len(grid[0])
     column_headers: dict[int, list[str]] = {}
     stacking = False
-    section = ""
+    # A tense or mood banner is the parent. A participle line under it is a
+    # subsection and must not erase that parent (``гово́рячи`` stays present).
+    parent_section = ""
+    verbform_section = ""
     forms: list[dict[str, Any]] = []
     for row_index, row in enumerate(grid):
         origins = _origin_cells(row, row_index)
@@ -790,7 +819,13 @@ def _paradigm_form_rows(table: Tag, entry_key: str) -> list[dict[str, Any]]:
         stacking = False
         section_text = _section_label(origins, width)
         if section_text is not None:
-            section = section_text
+            mapping = lookup_ulif_label(section_text)
+            role = mapping.role if mapping is not None else ""
+            if role == "verbform":
+                verbform_section = section_text
+            else:
+                parent_section = section_text
+                verbform_section = ""
             continue
         label = ""
         form_cells = origins
@@ -826,8 +861,13 @@ def _paradigm_form_rows(table: Tag, entry_key: str) -> list[dict[str, Any]]:
                     unmapped.append(label)
                 elif not skip_gender:
                     row_tags.extend(mapping.tags)
-            section_tags, section_unmapped = _map_label(section) if section else ([], [])
-            unmapped.extend(section_unmapped)
+            section_tags: list[str] = []
+            for section_label in (parent_section, verbform_section):
+                if not section_label:
+                    continue
+                mapped, raw = _map_label(section_label)
+                section_tags.extend(mapped)
+                unmapped.extend(raw)
             tags = [*section_tags, *row_tags, *header_tags]
             for surface in _split_cell_surface(cell.text):
                 forms.append(
@@ -887,6 +927,7 @@ def parse_ulif_entry(
         "entry_key": key,
         "canonical_headword": headword,
         "grammatical_label": identity["grammatical_label"],
+        "sense_gloss": identity["sense_gloss"],
         "content_sha256": identity["content_sha256"],
         "register_position": register_position,
         "printed_homonym_number": printed_homonym_number(html),

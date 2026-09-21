@@ -122,6 +122,7 @@ CREATE INDEX IF NOT EXISTS idx_ulif_dictua_sections_entry_kind_order
 _ULIF_ENTRY_MIGRATION_COLUMNS = frozenset({
     "homonym_index",
     "grammatical_label",
+    "sense_gloss",
     "content_sha256",
     "register_position",
     "homonym_checked",
@@ -133,7 +134,16 @@ def normalize_ulif_dictua_query(word: str) -> str:
     return " ".join(word.split()).casefold()
 
 
+def _ulif_table_exists(conn: sqlite3.Connection, name: str) -> bool:
+    return conn.execute(
+        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = ?",
+        (name,),
+    ).fetchone() is not None
+
+
 def _ulif_entry_columns(conn: sqlite3.Connection) -> set[str]:
+    if not _ulif_table_exists(conn, "ulif_dictua_entries"):
+        return set()
     return {str(row[1]) for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
 
 
@@ -147,96 +157,134 @@ def _ulif_has_homonym_unique(conn: sqlite3.Connection) -> bool:
     return False
 
 
-def migrate_ulif_dictua_entries(conn: sqlite3.Connection) -> bool:
-    """Rebuild ``ulif_dictua_entries`` onto ``UNIQUE(normalized_query, homonym_index)``.
-
-    Existing rows become ``homonym_index = 1`` and ``homonym_checked = 0``.
-    ``content_sha256`` is filled from ``response_sha256`` when the old table
-    has no separate content hash. The entry ids stay put so section rows keep
-    their foreign keys. A second call is a no-op. This does not touch a legacy
-    ``ulif_entries`` dump table.
-    """
-    present = conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ulif_dictua_entries'"
-    ).fetchone()
-    if present is None:
-        conn.executescript(ULIF_DICTUA_ENTRIES_DDL)
-        return False
+def _ulif_dictua_schema_current(conn: sqlite3.Connection) -> bool:
     columns = _ulif_entry_columns(conn)
-    if columns >= _ULIF_ENTRY_MIGRATION_COLUMNS and _ulif_has_homonym_unique(conn):
-        return False
+    return columns >= _ULIF_ENTRY_MIGRATION_COLUMNS and _ulif_has_homonym_unique(conn)
 
-    def expr(name: str, fallback: str) -> str:
-        if name not in columns:
-            return fallback
-        if name == "content_sha256":
-            return "CASE WHEN content_sha256 != '' THEN content_sha256 ELSE response_sha256 END"
-        if name == "homonym_index":
-            return "COALESCE(homonym_index, 1)"
-        if name == "homonym_checked":
-            return "COALESCE(homonym_checked, 0)"
-        return f"COALESCE({name}, {fallback})"
 
-    select_list = ", ".join(
-        (
-            "id",
-            "normalized_query",
-            expr("homonym_index", "1"),
-            "canonical_headword",
-            expr("grammatical_label", "''"),
-            expr("content_sha256", "response_sha256"),
-            expr("register_position", "''"),
-            expr("homonym_checked", "0"),
-            "raw_response_ref",
-            "retrieved_at",
-            "response_sha256",
-            "parser_version",
-            "status",
-        )
-    )
+def migrate_ulif_dictua_entries(conn: sqlite3.Connection) -> bool:
+    """Rebuild ``ulif_dictua_entries`` onto the homonym-safe schema.
+
+    Existing rows become ``homonym_index = 1`` and ``homonym_checked = 0``
+    when those columns are absent. ``sense_gloss`` is copied or stored as
+    ``''``. ``content_sha256`` is filled from ``response_sha256`` when the
+    old table has no separate content hash. Entry ids stay put so section
+    rows keep their foreign keys. A second call is a no-op. This does not
+    touch a legacy ``ulif_entries`` dump table.
+
+    The rebuild is one transaction: ``BEGIN IMMEDIATE``, then individual
+    ``execute`` calls for create, copy, drop, and rename. ``executescript``
+    is not used, because it commits before the first statement. Any failure
+    rolls the transaction back, so a crash between the copy and the rename
+    leaves the original table in place.
+
+    This function is the migration entry point. Read connections must not
+    call it.
+    """
+    previous_isolation = conn.isolation_level
+    conn.isolation_level = None
     previous_fk = conn.execute("PRAGMA foreign_keys").fetchone()[0]
     conn.execute("PRAGMA foreign_keys=OFF")
     try:
-        conn.execute("DROP TABLE IF EXISTS ulif_dictua_entries_mig")
-        conn.executescript(ulif_dictua_entries_table_sql("ulif_dictua_entries_mig"))
-        conn.execute(
-            f"""
-            INSERT INTO ulif_dictua_entries_mig (
-                id, normalized_query, homonym_index, canonical_headword,
-                grammatical_label, content_sha256, register_position, homonym_checked,
-                raw_response_ref, retrieved_at, response_sha256, parser_version, status
+        if not _ulif_table_exists(conn, "ulif_dictua_entries"):
+            conn.execute(ulif_dictua_entries_table_sql())
+            conn.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_ulif_dictua_entries_status
+                ON ulif_dictua_entries(status, normalized_query)
+                """
             )
-            SELECT {select_list}
-            FROM ulif_dictua_entries
-            """
+            return False
+        if _ulif_dictua_schema_current(conn):
+            return False
+
+        columns = _ulif_entry_columns(conn)
+
+        def expr(name: str, fallback: str) -> str:
+            if name not in columns:
+                return fallback
+            if name == "content_sha256":
+                return (
+                    "CASE WHEN content_sha256 != '' THEN content_sha256 "
+                    "ELSE response_sha256 END"
+                )
+            if name == "homonym_index":
+                return "COALESCE(homonym_index, 1)"
+            if name == "homonym_checked":
+                return "COALESCE(homonym_checked, 0)"
+            return f"COALESCE({name}, {fallback})"
+
+        select_list = ", ".join(
+            (
+                "id",
+                "normalized_query",
+                expr("homonym_index", "1"),
+                "canonical_headword",
+                expr("grammatical_label", "''"),
+                expr("sense_gloss", "''"),
+                expr("content_sha256", "response_sha256"),
+                expr("register_position", "''"),
+                expr("homonym_checked", "0"),
+                "raw_response_ref",
+                "retrieved_at",
+                "response_sha256",
+                "parser_version",
+                "status",
+            )
         )
-        conn.execute("DROP TABLE ulif_dictua_entries")
-        conn.execute("ALTER TABLE ulif_dictua_entries_mig RENAME TO ulif_dictua_entries")
-        conn.execute(
-            """
-            CREATE INDEX IF NOT EXISTS idx_ulif_dictua_entries_status
-            ON ulif_dictua_entries(status, normalized_query)
-            """
-        )
-        conn.commit()
+        begun = False
+        try:
+            conn.execute("BEGIN IMMEDIATE")
+            begun = True
+            conn.execute("DROP TABLE IF EXISTS ulif_dictua_entries_mig")
+            conn.execute(ulif_dictua_entries_table_sql("ulif_dictua_entries_mig"))
+            conn.execute(
+                f"""
+                INSERT INTO ulif_dictua_entries_mig (
+                    id, normalized_query, homonym_index, canonical_headword,
+                    grammatical_label, sense_gloss, content_sha256, register_position,
+                    homonym_checked, raw_response_ref, retrieved_at, response_sha256,
+                    parser_version, status
+                )
+                SELECT {select_list}
+                FROM ulif_dictua_entries
+                """
+            )
+            conn.execute("DROP TABLE ulif_dictua_entries")
+            conn.execute("ALTER TABLE ulif_dictua_entries_mig RENAME TO ulif_dictua_entries")
+            conn.execute(
+                """
+                CREATE INDEX IF NOT EXISTS idx_ulif_dictua_entries_status
+                ON ulif_dictua_entries(status, normalized_query)
+                """
+            )
+            conn.execute("COMMIT")
+            begun = False
+        except Exception:
+            if begun:
+                conn.execute("ROLLBACK")
+            raise
+        return True
     finally:
         conn.execute(f"PRAGMA foreign_keys={'ON' if previous_fk else 'OFF'}")
-    return True
+        conn.isolation_level = previous_isolation
 
 
 def ensure_ulif_dictua_schema(conn: sqlite3.Connection) -> None:
-    """Create the live DictUA cache schema on new and legacy sources DBs."""
+    """Create DictUA cache tables when they are absent.
+
+    Does not migrate or rebuild an entries table that already exists.
+    Call ``migrate_ulif_dictua_entries`` (or ``python -m scripts.wiki.sources_db
+    --migrate``) for that. A write against an old table raises instead of
+    dropping it.
+    """
     conn.execute("PRAGMA foreign_keys=ON")
-    entries_exist = conn.execute(
-        "SELECT 1 FROM sqlite_master WHERE type = 'table' AND name = 'ulif_dictua_entries'"
-    ).fetchone()
-    if entries_exist is None:
+    if not _ulif_table_exists(conn, "ulif_dictua_entries"):
         conn.executescript(ULIF_DICTUA_ENTRIES_DDL)
     # Sections reference entries, so the entry table has to exist first.
-    # The script's CREATE TABLE for sections is IF NOT EXISTS and does not
-    # rewrite an entries table that still has the spelling-only unique key.
+    # CREATE TABLE IF NOT EXISTS does not rewrite an entries table that
+    # still has the spelling-only unique key.
     conn.executescript(ULIF_DICTUA_SCHEMA)
-    migrate_ulif_dictua_entries(conn)
     conn.commit()
 
 
@@ -245,15 +293,20 @@ def _ulif_dictua_conn(
     *,
     create: bool = False,
 ) -> sqlite3.Connection | None:
-    """Open a dedicated connection and ensure the DictUA cache schema exists."""
+    """Open a DictUA connection.
+
+    ``create=False`` is the read path: it never creates tables and never
+    migrates. ``create=True`` creates missing tables for a write and still
+    does not migrate an existing table.
+    """
     path = Path(db_path) if db_path is not None else SOURCES_DB_PATH
     if not path.exists():
         if not create:
             return None
         path.parent.mkdir(parents=True, exist_ok=True)
     conn = _open_conn(path)
-    ensure_ulif_dictua_schema(conn)
-    conn.commit()
+    if create:
+        ensure_ulif_dictua_schema(conn)
     return conn
 
 
@@ -284,15 +337,18 @@ def _materialize_ulif_dictua_entry(
     entry: sqlite3.Row,
 ) -> dict:
     """Hydrate one DictUA entry without flattening its relation groups."""
-    section_rows = conn.execute(
-        """
-        SELECT kind, source_order, sense_or_group_id, payload_json
-        FROM ulif_dictua_sections
-        WHERE entry_id = ?
-        ORDER BY kind, source_order
-        """,
-        (entry["id"],),
-    ).fetchall()
+    if _ulif_table_exists(conn, "ulif_dictua_sections"):
+        section_rows = conn.execute(
+            """
+            SELECT kind, source_order, sense_or_group_id, payload_json
+            FROM ulif_dictua_sections
+            WHERE entry_id = ?
+            ORDER BY kind, source_order
+            """,
+            (entry["id"],),
+        ).fetchall()
+    else:
+        section_rows = []
     sections: dict[str, list[dict]] = {}
     for row in section_rows:
         try:
@@ -322,6 +378,7 @@ def _materialize_ulif_dictua_entry(
         "normalized_query": entry["normalized_query"],
         "homonym_index": entry["homonym_index"] if "homonym_index" in keys else 1,
         "grammatical_label": entry["grammatical_label"] if "grammatical_label" in keys else "",
+        "sense_gloss": entry["sense_gloss"] if "sense_gloss" in keys else "",
         "register_position": entry["register_position"] if "register_position" in keys else "",
         "homonym_checked": entry["homonym_checked"] if "homonym_checked" in keys else 0,
         # These conventional dictionary keys keep ULIF rows consumable by
@@ -335,16 +392,91 @@ def _materialize_ulif_dictua_entry(
     }
 
 
+def _ulif_entry_index(row: sqlite3.Row) -> int:
+    keys = row.keys()
+    if "homonym_index" not in keys or row["homonym_index"] is None:
+        return 1
+    return int(row["homonym_index"])
+
+
+def _ulif_entry_identity(row: sqlite3.Row) -> dict:
+    keys = row.keys()
+    return {
+        "homonym_index": _ulif_entry_index(row),
+        "canonical_headword": row["canonical_headword"],
+        "grammatical_label": row["grammatical_label"] if "grammatical_label" in keys else "",
+        "sense_gloss": row["sense_gloss"] if "sense_gloss" in keys else "",
+    }
+
+
+def _load_ulif_dictua_rows(conn: sqlite3.Connection, normalized: str) -> list[sqlite3.Row]:
+    """Rows for one spelling. An un-migrated table has no ``homonym_index``."""
+    if not _ulif_table_exists(conn, "ulif_dictua_entries"):
+        return []
+    if "homonym_index" in _ulif_entry_columns(conn):
+        return list(conn.execute(
+            """
+            SELECT * FROM ulif_dictua_entries
+            WHERE normalized_query = ?
+            ORDER BY homonym_index
+            """,
+            (normalized,),
+        ))
+    return list(conn.execute(
+        """
+        SELECT * FROM ulif_dictua_entries
+        WHERE normalized_query = ?
+        """,
+        (normalized,),
+    ))
+
+
+def _ulif_dictua_ambiguous(normalized: str, rows: list[sqlite3.Row]) -> dict:
+    return {
+        "status": "ambiguous",
+        "normalized_query": normalized,
+        "entries": [_ulif_entry_identity(row) for row in rows],
+    }
+
+
+def get_ulif_dictua_entries(
+    word: str,
+    *,
+    db_path: str | Path | None = None,
+) -> list[dict]:
+    """Return every cached entry for *word*, ordered by ``homonym_index``.
+
+    Each row includes ``canonical_headword``, ``grammatical_label``, and
+    ``sense_gloss``. An un-migrated spelling-only row is reported as
+    ``homonym_index = 1``.
+    """
+    normalized = normalize_ulif_dictua_query(word)
+    if not normalized:
+        return []
+    conn = _ulif_dictua_conn(db_path)
+    if conn is None:
+        return []
+    try:
+        return [
+            _materialize_ulif_dictua_entry(conn, row)
+            for row in _load_ulif_dictua_rows(conn, normalized)
+        ]
+    finally:
+        conn.close()
+
+
 def get_ulif_dictua_entry(
     word: str,
     *,
     homonym_index: int | None = None,
     db_path: str | Path | None = None,
 ) -> dict | None:
-    """Return a cached, materialized DictUA lookup for *word*, if present.
+    """Return one cached DictUA entry, or an ambiguous listing.
 
-    Without ``homonym_index``, the lowest stored index is returned. Spellings
-    that were migrated and not yet re-fetched have only index 1.
+    Pass ``homonym_index`` to select one entry of a spelling group. Without
+    it, a single stored entry is returned (an un-migrated row counts as index
+    1). Two or more entries return ``{"status": "ambiguous", "entries": [...]}``
+    instead of silently using index 1.
     """
     normalized = normalize_ulif_dictua_query(word)
     if not normalized:
@@ -353,25 +485,17 @@ def get_ulif_dictua_entry(
     if conn is None:
         return None
     try:
-        if homonym_index is None:
-            entry = conn.execute(
-                """
-                SELECT * FROM ulif_dictua_entries
-                WHERE normalized_query = ?
-                ORDER BY homonym_index
-                LIMIT 1
-                """,
-                (normalized,),
-            ).fetchone()
-        else:
-            entry = conn.execute(
-                """
-                SELECT * FROM ulif_dictua_entries
-                WHERE normalized_query = ? AND homonym_index = ?
-                """,
-                (normalized, homonym_index),
-            ).fetchone()
-        return _materialize_ulif_dictua_entry(conn, entry) if entry else None
+        rows = _load_ulif_dictua_rows(conn, normalized)
+        if homonym_index is not None:
+            for row in rows:
+                if _ulif_entry_index(row) == homonym_index:
+                    return _materialize_ulif_dictua_entry(conn, row)
+            return None
+        if not rows:
+            return None
+        if len(rows) == 1:
+            return _materialize_ulif_dictua_entry(conn, rows[0])
+        return _ulif_dictua_ambiguous(normalized, rows)
     finally:
         conn.close()
 
@@ -409,6 +533,7 @@ def store_ulif_dictua_entry(
     status: str,
     homonym_index: int = 1,
     grammatical_label: str = "",
+    sense_gloss: str = "",
     register_position: str = "",
     homonym_checked: int = 0,
     content_sha256: str = "",
@@ -434,6 +559,11 @@ def store_ulif_dictua_entry(
     conn = _ulif_dictua_conn(db_path, create=True)
     assert conn is not None
     try:
+        if not _ulif_dictua_schema_current(conn):
+            raise RuntimeError(
+                "ulif_dictua_entries is not on the homonym-safe schema; "
+                "run `python -m scripts.wiki.sources_db --migrate` on this database"
+            )
         raw_refs: dict[str, str] = {}
         for kind, response in sorted(raw_responses.items()):
             if kind not in ULIF_DICTUA_SECTION_KINDS:
@@ -467,12 +597,13 @@ def store_ulif_dictua_entry(
             """
             INSERT INTO ulif_dictua_entries
                 (normalized_query, homonym_index, canonical_headword, grammatical_label,
-                 content_sha256, register_position, homonym_checked, raw_response_ref,
-                 retrieved_at, response_sha256, parser_version, status)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                 sense_gloss, content_sha256, register_position, homonym_checked,
+                 raw_response_ref, retrieved_at, response_sha256, parser_version, status)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             ON CONFLICT(normalized_query, homonym_index) DO UPDATE SET
                 canonical_headword = excluded.canonical_headword,
                 grammatical_label = excluded.grammatical_label,
+                sense_gloss = excluded.sense_gloss,
                 content_sha256 = excluded.content_sha256,
                 register_position = excluded.register_position,
                 homonym_checked = excluded.homonym_checked,
@@ -487,6 +618,7 @@ def store_ulif_dictua_entry(
                 homonym_index,
                 canonical_headword,
                 grammatical_label,
+                sense_gloss,
                 stored_content_sha256,
                 register_position,
                 homonym_checked,
@@ -552,7 +684,16 @@ def extract_ulif_dictua_snapshot(
             """
         ))
         columns = {str(row[1]) for row in conn.execute("PRAGMA table_info(ulif_dictua_entries)")}
-        if "homonym_index" in columns:
+        if "homonym_index" in columns and "sense_gloss" in columns:
+            entry_sql = """
+            SELECT id, normalized_query, homonym_index, canonical_headword,
+                   grammatical_label, sense_gloss, content_sha256, register_position,
+                   homonym_checked, raw_response_ref, retrieved_at, response_sha256,
+                   parser_version, status
+            FROM ulif_dictua_entries
+            ORDER BY id
+            """
+        elif "homonym_index" in columns:
             entry_sql = """
             SELECT id, normalized_query, homonym_index, canonical_headword,
                    grammatical_label, content_sha256, register_position, homonym_checked,
@@ -603,7 +744,19 @@ def restore_ulif_dictua_snapshot(
         )
     if entry_rows:
         width = len(entry_rows[0])
-        if width == 13:
+        if width == 14:
+            conn.executemany(
+                """
+                INSERT OR IGNORE INTO ulif_dictua_entries
+                    (id, normalized_query, homonym_index, canonical_headword,
+                     grammatical_label, sense_gloss, content_sha256, register_position,
+                     homonym_checked, raw_response_ref, retrieved_at, response_sha256,
+                     parser_version, status)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                entry_rows,
+            )
+        elif width == 13:
             conn.executemany(
                 """
                 INSERT OR IGNORE INTO ulif_dictua_entries
@@ -3349,3 +3502,33 @@ def list_tables() -> dict[str, int]:
         for t in CONTENT_TABLES
         if t in existing
     }
+
+
+def main(argv: list[str] | None = None) -> int:
+    """Explicit DictUA migration. Reads never call this."""
+    import argparse
+
+    parser = argparse.ArgumentParser(description="ULIF DictUA cache maintenance")
+    parser.add_argument(
+        "--migrate",
+        action="store_true",
+        help="Atomically rebuild ulif_dictua_entries onto the homonym-safe schema",
+    )
+    parser.add_argument("--db", type=Path, default=None, help="Path to sources.db")
+    args = parser.parse_args(argv)
+    if not args.migrate:
+        parser.error("pass --migrate; this command does not change a database otherwise")
+    path = args.db if args.db is not None else SOURCES_DB_PATH
+    if not path.exists():
+        path.parent.mkdir(parents=True, exist_ok=True)
+    conn = _open_conn(path)
+    try:
+        changed = migrate_ulif_dictua_entries(conn)
+    finally:
+        conn.close()
+    print("migrated" if changed else "already current")
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())
