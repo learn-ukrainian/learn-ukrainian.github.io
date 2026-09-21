@@ -91,6 +91,15 @@ Each requirement has an id so plans, prompts, gates and reviews can cite it.
 - **R-21 Wiki and workflow.** Plans, the wiki and the build workflow are all improved as part of
   this work, not only the prompts.
 
+### Sequencing
+
+- **R-23 Planning does not wait; implementation waits for data.** Atlas and the ULIF intake are a
+  parallel project and the ULIF intake is slow. Curriculum planning (requirements, plan schema,
+  arcs, module and lesson plans for every level) proceeds now. Module builds start only when the
+  data base is ready for that level ("base ready for A1" is defined on #8400). Plan fields that
+  need form-grain stress or a word card are marked pending and filled from the base when it lands;
+  nothing is filled from memory in the meantime.
+
 ## 3. Roles
 
 Design and planning sit with the curriculum-upgrade driver seat. Other fleet agents implement from
