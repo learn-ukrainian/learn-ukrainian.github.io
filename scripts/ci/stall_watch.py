@@ -94,11 +94,12 @@ def find_stalled_nodes(
     *,
     stall_budget: float,
     state: dict[str, tuple[str, float]],
+    now: Callable[[], float] = time.monotonic,
 ) -> list[StalledNode]:
     """One poll pass. `state` persists worker_id -> (nodeid, first_seen) across calls."""
     if not breadcrumb_dir.exists():
         return []
-    now = time.monotonic()
+    current_time = now()
     stalled: list[StalledNode] = []
     seen_workers: set[str] = set()
     for path in sorted(breadcrumb_dir.glob("breadcrumb_*.txt")):
@@ -111,9 +112,9 @@ def find_stalled_nodes(
         nodeid = event[1]
         tracked = state.get(worker_id)
         if tracked is None or tracked[0] != nodeid:
-            state[worker_id] = (nodeid, now)
+            state[worker_id] = (nodeid, current_time)
             continue
-        elapsed = now - tracked[1]
+        elapsed = current_time - tracked[1]
         if elapsed >= stall_budget:
             stalled.append(StalledNode(worker_id=worker_id, nodeid=nodeid, stalled_for=elapsed))
     for worker_id in [worker_id for worker_id in state if worker_id not in seen_workers]:
@@ -177,6 +178,7 @@ class StallWatcher:
         poll_interval: float | None = None,
         report: Callable[[list[StalledNode]], None] | None = None,
         terminate: Callable[[], None] = kill_current_process_group,
+        now: Callable[[], float] = time.monotonic,
     ) -> None:
         self.breadcrumb_dir = breadcrumb_dir
         self.stall_budget = stall_budget if stall_budget is not None else stall_budget_seconds()
@@ -185,10 +187,29 @@ class StallWatcher:
         )
         self._report = report
         self._terminate = terminate
+        self.now = now
         self._stop_event = threading.Event()
         self._thread: threading.Thread | None = None
         self._state: dict[str, tuple[str, float]] = {}
         self._real_stderr_fd: int | None = None
+
+    def poll_once(self) -> list[StalledNode]:
+        """One poll pass: detect stalls, trigger report and terminate if stalled."""
+        if self.breadcrumb_dir is None:
+            return []
+        stalled = find_stalled_nodes(
+            self.breadcrumb_dir,
+            stall_budget=self.stall_budget,
+            state=self._state,
+            now=self.now,
+        )
+        if stalled:
+            if self._report is not None:
+                self._report(stalled)
+            else:
+                report_stall(stalled, stall_budget=self.stall_budget, raw_fd=self._real_stderr_fd)
+            self._terminate()
+        return stalled
 
     def start(self) -> StallWatcher:
         if self.breadcrumb_dir is not None:
@@ -218,13 +239,8 @@ class StallWatcher:
     def _run(self) -> None:
         assert self.breadcrumb_dir is not None
         while not self._stop_event.is_set():
-            stalled = find_stalled_nodes(self.breadcrumb_dir, stall_budget=self.stall_budget, state=self._state)
+            stalled = self.poll_once()
             if stalled:
-                if self._report is not None:
-                    self._report(stalled)
-                else:
-                    report_stall(stalled, stall_budget=self.stall_budget, raw_fd=self._real_stderr_fd)
-                self._terminate()
                 return
             self._stop_event.wait(self.poll_interval)
 
