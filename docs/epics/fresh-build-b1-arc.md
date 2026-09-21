@@ -1,10 +1,12 @@
 # Fresh lesson-based build — B1 arc (module grain)
 
-> Sub-epic #8397, issue #8427. Status: **accepted by the operator 2026-09-21** (r2, by the curriculum-upgrade driver).
+> Sub-epic #8397, issue #8427. Status: **r3 — accepted by the operator 2026-09-21 except question 2 of §8, which the driver reopened** (see there).
 > r1 was reviewed by AGY `gemini-3.8-flash-high` (task `plan-review-8427-b1-arc-r1`): APPROVE with two
 > MAJOR and four MINOR findings; r2 folds in five of the six and states the sixth — possessive
 > adjectives, where reviewer and driver disagreed — as question 2 with both positions. The operator
-> accepted the driver's proposal on all five questions of §8, which are therefore decisions. Same method and table format as
+> accepted the driver's proposal on all five questions of §8. **r3:** while reading the Standard's B2
+> catalogue the driver found that its statement on possessive adjectives — the premise of question 2 —
+> was false; that question is reopened and the other four stand as decisions. Same method and table format as
 > the accepted A1 and A2 arcs ([`fresh-build-a1-arc.md`](fresh-build-a1-arc.md),
 > [`fresh-build-a2-arc.md`](fresh-build-a2-arc.md)); requirements:
 > [`fresh-build-requirements.md`](fresh-build-requirements.md); schema:
@@ -51,15 +53,19 @@ on what B1 adds: all persons and irregular stems, the Standard's wider meaning l
 conjunctions. A position whose whole job A2 already did would be a drag; none was found, but the
 plan review checks each of them for it.
 
-**D3 — Two blocks go beyond the Standard's B1, each with its evidence.**
+**D3 — Two blocks go beyond the Standard's B1; both are recognition only.**
 
 | Item | Evidence | Standard | Position |
 | --- | --- | --- | --- |
 | Passive and impersonal forms, first contact | ULP Seasons 4–6: the terms occur in 13 lessons (121, 141, 153, 162, 163, 169, 172, 174, 186, 189, 190, 204 and one more); school textbooks grades 7–8 | impersonal sentences first at B2 (`:3414`) | 30 |
-| Possessive adjectives | school textbooks grade 6 (Авраменко, Літвінова, Голуб 2023 — three chunks each); **no ULP lesson teaches them and the Standard lists them at no level** | not in the Standard | 49 |
+| Possessive adjectives | named and taught in the school textbooks (Авраменко grade 6, 2023, p. 136; Караман grade 10, 2018, p. 131); **no ULP lesson teaches them**; ULP texts use a few (an unambiguous sample of stems gives under twenty uses across Seasons 2–6) | **B2** `:3121-3126` — "adjectives of masculine gender with a zero ending" and their plurals; the Standard's own examples are possessive adjectives, though it does not use the term | 49 |
 
 Position 30 stays a recognition module: the B2 arc owns the passive system (its first ten modules).
-Position 49 is decision 2 in §8.
+Position 49 likewise: the Standard places the declension of possessive adjectives at B2, and R-32
+allows teaching something earlier than the Standard places it only on ULP evidence, which does not
+exist here. **Correction (r3):** r1 and r2 of this arc said the Standard lists possessive adjectives at
+no level. That was false. The driver and the reviewer both searched the Standard for the *term* and
+not for the forms; the forms are at `:3121-3126`. See question 2 in §8.
 
 **D4 — The theme Суспільні відносини is owned on purpose, not in passing.** The Standard's B1 adds
 a theme the lower levels do not have: social institutions, social problems, the structure of the
@@ -118,7 +124,7 @@ the Standard's B1 sizes.
 | Comparison constructions with `ніж`, `за`, `від`, `як` | system | 44, 46 | `:2131`, `:2178`, `:2208`, `:2449-2450` |
 | Word formation: agent nouns, verbal nouns, place nouns | system | 50, 31 | `:2320-2327` |
 | Word formation: adjectives from nouns; adverbs from adjectives | system | 48, 46 | `:2330-2334` |
-| Possessive adjectives | system (small) — D3, decision 2 in §8 | 49 | not in the Standard |
+| Possessive adjectives | **recognition only** — D3, question 2 in §8 | 49 | B2 `:3121-3126` |
 | Verb formation with suffixes | system | 32 | `:2270-2271` (the `-увати` pattern) |
 | Prefixed verbs of motion | recycled from A2 (D2); **new at B1:** the aspect pair of each prefixed verb (the Standard's own examples: A2 `:1381`, B1 `:2336-2338`), the preposition and case each prefix takes (`:2159-2176`, `:2202-2209`), further base verbs, figurative uses | 35–42 | `:2336-2338` |
 | Simple sentence: statement and negation; the three question types, with `який?` and `яка?` added; requests, advice and proposals | recycled from A2 | 1, 26 | `:2344-2348`, `:2354-2365` |
@@ -137,7 +143,7 @@ the Standard's B1 sizes.
 | Concessive clauses with `хоч`, `дарма що`, `незважаючи на те що` | system | 82 | `:2423-2425` |
 | Direct and reported speech | system | 83 | `:2426-2431` |
 | Official and unofficial communication; stylistic means of vocabulary and syntax, incl. comparison | system | 85, 86 | `:2435-2450` |
-| The passive system; impersonal sentences; diminutives as a system; text-structuring parentheticals (`по-перше`) as a system | **not in B1** — B2 owns them | — | B2 `:3414`, `:3466`, `:3478` |
+| The passive system; impersonal sentences; possessive adjectives as a declined system; diminutives as a system; text-structuring parentheticals (`по-перше`) as a system | **not in B1** — B2 owns them | — | B2 `:3414`, `:3121-3126`, `:3466`, `:3478` |
 
 ## 4. No literacy phase
 
@@ -200,7 +206,7 @@ manifest.
 | 46 | `adverbs-comparison-formation` | B1.4 | Compare ways of doing things: the comparison of adverbs, which A2 did not teach | — | 2 |
 | 47 | `nature-and-environment` | B1.4 | Talk about weather, seasons and climate, plants, farm and wild animals, natural features (`:1968-1973`) | Li (documentary excerpt `:1489`), R | 4 |
 | 48 | `word-formation-adjectives` | B1.4 | Form adjectives from nouns and place names | — | 3 |
-| 49 | `possessive-adjectives` | B1.4 | Say whose something is with an adjective formed from a person's name or a kinship word | — | 2 |
+| 49 | `possessive-adjectives` | B1.4 | Recognise and understand adjectives that say whose something is, formed from a person's name or a kinship word; consolidate the adjective formation of 48 | R | 2 |
 | 50 | `word-formation-nouns` | B1.4 | Form names of people by what they do and names of places by what happens there | — | 3 |
 | 51 | `checkpoint-comparison` | B1.4 | Self-check: compare, and build new words | R, W | 2 |
 | 52 | `homogeneous-members` | B1.5 | Build sentences with several subjects, predicates or objects; use the nominative in all its listed roles | W | 3 |
@@ -280,16 +286,20 @@ One band for the whole level: every position 1–94 maps to `b1-core`, 100 % Ukr
 (`IMMERSION_POLICIES["b1"]`). Nothing is re-tuned (R-30). A module split or merged later stays in
 the same band.
 
-## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21)
+## 8. Four decisions (operator accepted the driver's proposals, 2026-09-21) and one reopened question
 
 1. **Keep all 94 slugs and positions (D1):** yes.
-2. **Possessive adjectives (49) are a module of their own, two lessons — not folded into 48.** Neither the Standard
-   (at any level) nor ULP has them; the grade 6 school textbooks do. **Decided as the driver proposed:** keep
-   a two-lesson module — R-08 makes the school textbooks a legitimate source of teaching points,
-   and R-32 limits only teaching something *earlier than the Standard places it*, which does not
-   apply to something the Standard places nowhere. **The reviewer's position (r1 and r2, MAJOR — recorded, not adopted):** a
-   dedicated module on textbook evidence alone stretches R-32 and adds weight; fold the formation
-   into 48 and make 49 a consolidation practice module. The operator chose the separate module.
+2. **REOPENED — possessive adjectives (49).** The operator accepted the driver's proposal of a
+   dedicated two-lesson teaching module. The driver had told him that the Standard lists possessive
+   adjectives at no level, so that R-32's limit on teaching something early did not apply. **That
+   was false:** the Standard places their declension at B2 (`:3121-3126`). With that, R-32 applies,
+   there is no ULP evidence, and a teaching module at B1 is not licensed. **The driver's corrected
+   proposal:** position 49 keeps its slug and its two lessons as a *recognition* module — the
+   learner meets and understands these adjectives in texts and consolidates the adjective formation
+   of 48 — and the B2 arc owns them as a system. This is in substance what the reviewer asked for
+   (r1 and r2, MAJOR), for a stronger reason than the one it gave. **Alternative, open only to the
+   operator:** waive R-32 for this one item and keep the teaching module on textbook evidence. The
+   arc is written to the corrected proposal; the operator's answer is still needed.
 3. **The theme Суспільні відносини, війна і мир included, is owned by 73, 92 and 91 (D4)**, with
    every text about the war taken from the corpus and sourced: yes.
 4. **Passive and impersonal forms at 30 are recognition only**; the system is B2's: yes.
