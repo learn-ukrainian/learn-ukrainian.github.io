@@ -1302,6 +1302,7 @@ def test_sources_db_migrate_cli_subprocess_clean_env(tmp_path):
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert proc.returncode == 0, proc.stderr
     assert proc.stdout.strip() == "migrated"

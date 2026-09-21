@@ -128,6 +128,17 @@ def _now_iso() -> str:
     return datetime.now(UTC).isoformat()
 
 
+def _ensure_private_dir(path: Path) -> None:
+    """Create *path* (and parents) mode ``0o700``, even when it already exists."""
+    path.mkdir(mode=0o700, parents=True, exist_ok=True)
+    os.chmod(path, 0o700)
+
+
+def _ensure_private_file(path: Path) -> None:
+    """Narrow an existing file to owner-only read/write."""
+    os.chmod(path, 0o600)
+
+
 def _default_sleep(seconds: float) -> None:
     if seconds > 0:
         time.sleep(seconds)
@@ -188,7 +199,7 @@ class RunnerLock:
         self._held = False
 
     def acquire(self) -> None:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
+        _ensure_private_dir(self.path.parent)
         legacy = self.scanner()
         if legacy is None:
             raise SystemExit("refusing to start: could not scan process command lines for dump_ulif.py")
@@ -212,11 +223,12 @@ class RunnerLock:
             self.path.unlink()
         payload = f"{os.getpid()}\n{_now_iso()}\n"
         try:
-            fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o644)
+            fd = os.open(self.path, os.O_CREAT | os.O_EXCL | os.O_WRONLY, 0o600)
         except FileExistsError as exc:
             raise SystemExit(f"refusing to start: lock appeared at {self.path}") from exc
         with os.fdopen(fd, "w", encoding="utf-8") as handle:
             handle.write(payload)
+        _ensure_private_file(self.path)
         self._held = True
 
     def release(self) -> None:
@@ -248,9 +260,10 @@ class SpellingLedger:
     """Per-spelling states: pending, stored, absent_from_ulif, retry_scheduled, error."""
 
     def __init__(self, path: Path) -> None:
-        path.parent.mkdir(parents=True, exist_ok=True)
+        _ensure_private_dir(path.parent)
         self.path = path
         self.conn = sqlite3.connect(path)
+        _ensure_private_file(path)
         self.conn.row_factory = sqlite3.Row
         self.conn.execute("PRAGMA journal_mode=WAL")
         self.conn.executescript(
@@ -1041,10 +1054,11 @@ def prepare_database(db_path: Path) -> sqlite3.Connection:
     """Open the cache, creating the current schema, or raise before any DDL on an old one."""
     from scripts.wiki.sources_db import _ulif_dictua_conn
 
-    if not db_path.exists():
-        db_path.parent.mkdir(parents=True, exist_ok=True)
+    if not db_path.parent.exists():
+        _ensure_private_dir(db_path.parent)
     conn = _ulif_dictua_conn(db_path, create=True)
     assert conn is not None
+    _ensure_private_file(db_path)
     return conn
 
 
@@ -1094,7 +1108,7 @@ def run_fetch(
     if delay_seconds < MIN_DELAY_SECONDS:
         print(f"delay must be >= {MIN_DELAY_SECONDS}", file=sys.stderr)
         return EXIT_USAGE
-    state_dir.mkdir(parents=True, exist_ok=True)
+    _ensure_private_dir(state_dir)
     lock = RunnerLock(state_dir, break_stale=break_stale_lock, scanner=scanner)
     lock.acquire()
     ledger: SpellingLedger | None = None
@@ -1337,8 +1351,12 @@ def main(argv: Sequence[str] | None = None) -> int:
             finally:
                 ledger.close()
         spellings = build_a1_a2_spellings(sources_db=args.sources_db, vesum_db=args.vesum, stored=stored)
-        args.out.parent.mkdir(parents=True, exist_ok=True)
-        args.out.write_text("".join(f"{spelling}\n" for spelling in spellings), encoding="utf-8")
+        if not args.out.parent.exists():
+            _ensure_private_dir(args.out.parent)
+        fd = os.open(args.out, os.O_WRONLY | os.O_CREAT | os.O_TRUNC, 0o600)
+        with os.fdopen(fd, "w", encoding="utf-8") as handle:
+            handle.write("".join(f"{spelling}\n" for spelling in spellings))
+        _ensure_private_file(args.out)
         print(f"a1a2_spellings={len(spellings)}")
         return EXIT_OK
     return EXIT_USAGE

@@ -361,6 +361,18 @@ def test_lock_refuses_a_second_runner(tmp_path):
     assert lock.read_bytes() == before
 
 
+def test_lock_file_mode_is_owner_only_after_acquire(tmp_path):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import RunnerLock
+
+    held = RunnerLock(tmp_path / "state", break_stale=False, scanner=lambda: False)
+    held.acquire()
+    try:
+        mode = (tmp_path / "state" / "runner.lock").stat().st_mode & 0o777
+        assert mode == 0o600, f"expected 0o600, got {oct(mode)}"
+    finally:
+        held.release()
+
+
 def test_stale_lock_is_reported_and_kept_until_break_stale_lock(tmp_path, capsys):
     state = tmp_path / "state"
     state.mkdir()
@@ -565,6 +577,7 @@ def test_homonym_runner_cli_subprocess_clean_env(tmp_path):
         capture_output=True,
         text=True,
         check=False,
+        timeout=60,
     )
     assert proc.returncode == 0, proc.stderr
     assert "spellings_total=0" in proc.stdout
