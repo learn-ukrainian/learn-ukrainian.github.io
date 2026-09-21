@@ -1555,31 +1555,31 @@ def run_fetch(
                     try:
                         if refetch and state in COMPLETE_STATES:
                             _restore_pending(ledger, spelling)
-                        outcome = fetcher.fetch(spelling)
-                        unit_state = outcome.state
-                    except RequestCap:
                         try:
+                            outcome = fetcher.fetch(spelling)
+                            unit_state = outcome.state
+                            ledger.mark(
+                                spelling,
+                                outcome.state,
+                                entry_count=outcome.entry_count,
+                                straddled=outcome.straddled,
+                            )
+                        except RequestCap:
                             _restore_pending(ledger, spelling)
-                        except (KeyboardInterrupt, InterruptedByOperator):
-                            stop_reason = "interrupted by operator"
-                            return_code = EXIT_INTERRUPTED
+                            stop_reason = "request cap"
                             break
-                        except Exception:
-                            pass
-                        stop_reason = "request cap"
-                        break
-                    except Forbidden:
-                        ledger.mark(spelling, "error", error="http_403")
-                        unit_state = "error"
-                        stop_reason = "HTTP 403"
-                        return_code = EXIT_FORBIDDEN
-                        print("stopping: HTTP 403 from ULIF", file=sys.stderr)
-                    except RequestExhausted as exc:
-                        unit_state = "retry_scheduled"
-                        ledger.mark(spelling, "retry_scheduled", error=exc.code)
-                    except SessionInvalid as exc:
-                        unit_state = "retry_scheduled"
-                        ledger.mark(spelling, "retry_scheduled", error=str(exc))
+                        except Forbidden:
+                            ledger.mark(spelling, "error", error="http_403")
+                            unit_state = "error"
+                            stop_reason = "HTTP 403"
+                            return_code = EXIT_FORBIDDEN
+                            print("stopping: HTTP 403 from ULIF", file=sys.stderr)
+                        except RequestExhausted as exc:
+                            unit_state = "retry_scheduled"
+                            ledger.mark(spelling, "retry_scheduled", error=exc.code)
+                        except SessionInvalid as exc:
+                            unit_state = "retry_scheduled"
+                            ledger.mark(spelling, "retry_scheduled", error=str(exc))
                     except (KeyboardInterrupt, InterruptedByOperator):
                         with contextlib.suppress(BaseException):
                             _restore_pending(ledger, spelling)
@@ -1587,26 +1587,15 @@ def run_fetch(
                         return_code = EXIT_INTERRUPTED
                         break
                     except Exception as exc:
-                        try:
+                        with contextlib.suppress(BaseException):
                             _restore_pending(ledger, spelling)
-                        except (KeyboardInterrupt, InterruptedByOperator):
-                            stop_reason = "interrupted by operator"
-                            return_code = EXIT_INTERRUPTED
-                            break
-                        except Exception:
-                            pass
                         stop_reason = str(exc)
                         return_code = EXIT_INTERRUPTED
                         print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
                         break
 
-                    if outcome is not None:
-                        ledger.mark(
-                            spelling,
-                            outcome.state,
-                            entry_count=outcome.entry_count,
-                            straddled=outcome.straddled,
-                        )
+                    if stop_reason == "request cap":
+                        break
 
                     unit_wall = clock() - unit_start_clock
                     process_wall_time += unit_wall
@@ -1657,9 +1646,7 @@ def run_fetch(
                             spelling=spelling,
                         )
                         print(line, file=sys.stderr, flush=True)
-
-                    last_progress_time[0] = clock()
-                    last_heartbeat_time[0] = clock()
+                        last_progress_time[0] = clock()
 
                     if unit_state == "retry_scheduled":
                         consecutive_retries += 1

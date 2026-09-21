@@ -2174,3 +2174,84 @@ def test_polite_client_exchange_interrupted_records_request_and_timing():
     client.sleep = lambda s: slept.append(s)
     client._wait_turn()
     assert slept == [pytest.approx(2.0)]
+
+
+def test_interruption_during_outcome_persistence_restores_pending_and_clears_responses(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("слово")
+    ledger.mark("слово", "retry_scheduled", error="503")
+    ledger.close()
+
+    page = _register(["слово"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_mark = SpellingLedger.mark
+
+    def interrupt_on_mark(self, spelling, state, **kwargs):
+        if state == "stored":
+            raise InterruptedByOperator("SIGTERM")
+        return orig_mark(self, spelling, state, **kwargs)
+
+    monkeypatch.setattr(SpellingLedger, "mark", interrupt_on_mark)
+
+    code = run_fetch(
+        spellings=["слово"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Pending:              1" in err
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("слово") == "pending"
+        cur = ledger.conn.execute("SELECT COUNT(*) FROM responses WHERE spelling = ?", ("слово",))
+        assert cur.fetchone()[0] == 0
+    finally:
+        ledger.close()
+
+
+def test_quiet_mode_emits_heartbeats_during_steady_progress(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    spellings = [f"слово{i}" for i in range(10)]
+
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    cur_time = [0.0]
+
+    def fake_clock():
+        cur_time[0] += 5.5
+        return cur_time[0]
+
+    code = run_fetch(
+        spellings=spellings,
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        quiet=True,
+        transport=handler,
+        sleep=_noop_sleep,
+        clock=fake_clock,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_OK
+
+    err = capsys.readouterr().err
+    assert "absent_from_ulif" not in err
+    heartbeats = [line for line in err.splitlines() if "heartbeat:" in line]
+    assert len(heartbeats) >= 2
+    for hb in heartbeats:
+        assert "heartbeat: waiting for response" in hb
+    assert "=== ULIF Homonym Fetch Runner ===" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
