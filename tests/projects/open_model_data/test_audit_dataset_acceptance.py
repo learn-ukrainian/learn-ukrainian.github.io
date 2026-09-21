@@ -7,13 +7,13 @@ dependency fail-closed behaviors, profile provenance, review lifecycle, and base
 from __future__ import annotations
 
 import json
+import sqlite3
 from pathlib import Path
 
 import pytest
 
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     ASPECT_PAIRS_FILE,
-    DEFAULT_SOURCES_DB,
     VESUM_DB_PATH,
     LinguisticNormalizer,
     audit_check_1_repeats,
@@ -32,12 +32,53 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
 )
 
 
+@pytest.fixture(scope="session")
+def test_vesum_db(tmp_path_factory) -> Path:
+    """Provide a hermetic VESUM SQLite database with required tables and forms for unit tests."""
+    if VESUM_DB_PATH.is_file():
+        return VESUM_DB_PATH
+    db_path = tmp_path_factory.mktemp("hermetic_vesum") / "vesum.db"
+    with sqlite3.connect(db_path) as conn:
+        conn.execute("CREATE TABLE forms_all (word_form TEXT, lemma TEXT, pos TEXT, tags TEXT)")
+        sample_forms = [
+            ("соку", "сік", "noun", "noun:inanim:m:v_rod"),
+            ("соком", "сік", "noun", "noun:inanim:m:v_oru"),
+            ("соку", "сік", "noun", "noun:inanim:m:v_mis"),
+            ("соки", "сік", "noun", "noun:inanim:m:v_naz"),
+            ("соків", "сік", "noun", "noun:inanim:m:v_rod"),
+            ("сокам", "сік", "noun", "noun:inanim:m:v_dav"),
+            ("сік", "сік", "noun", "noun:inanim:m:v_naz"),
+            ("брати", "брати", "verb", "verb:imperf:inf"),
+            ("брав", "брати", "verb", "verb:imperf:past:m"),
+            ("брали", "брати", "verb", "verb:imperf:past:p"),
+            ("участь", "участь", "noun", "noun:inanim:f:v_naz"),
+            ("участі", "участь", "noun", "noun:inanim:f:v_rod"),
+            ("писати", "писати", "verb", "verb:imperf:inf"),
+            ("пише", "писати", "verb", "verb:imperf:pres:s:3"),
+            ("написати", "написати", "verb", "verb:perf:inf"),
+            ("написав", "написати", "verb", "verb:perf:past:m"),
+            ("показати", "показати", "verb", "verb:perf:inf"),
+            ("показувати", "показувати", "verb", "verb:imperf:inf"),
+            ("сказати", "сказати", "verb", "verb:perf:inf"),
+            ("говорити", "говорити", "verb", "verb:imperf:inf"),
+        ]
+        conn.executemany("INSERT INTO forms_all VALUES (?, ?, ?, ?)", sample_forms)
+        conn.commit()
+    return db_path
+
+
+@pytest.fixture(autouse=True)
+def _patch_vesum_db_path(monkeypatch, test_vesum_db):
+    """Ensure VESUM_DB_PATH points to a valid DB in environments without data/vesum.db (e.g. CI)."""
+    import scripts.projects.open_model_data.audit_dataset_acceptance as audit_mod
+
+    monkeypatch.setattr(audit_mod, "VESUM_DB_PATH", test_vesum_db)
+
+
 @pytest.fixture(scope="module")
-def normalizer():
+def normalizer(test_vesum_db):
     """Shared linguistic normalizer for unit tests."""
-    if not VESUM_DB_PATH.is_file():
-        pytest.skip(f"VESUM DB {VESUM_DB_PATH} not found")
-    norm = LinguisticNormalizer(VESUM_DB_PATH, ASPECT_PAIRS_FILE)
+    norm = LinguisticNormalizer(test_vesum_db, ASPECT_PAIRS_FILE)
     yield norm
     norm.close()
 
@@ -605,7 +646,20 @@ def test_run_acceptance_audit_fails_on_missing_vesum_db(tmp_path):
     report, exit_code = run_acceptance_audit(
         dataset_dir=dummy_dir,
         vesum_db=Path("/nonexistent/vesum.db"),
-        sources_db=DEFAULT_SOURCES_DB,
+    )
+    assert exit_code == 2
+    assert report.overall_status == "OPERATIONAL_ERROR"
+
+
+def test_run_acceptance_audit_fails_on_missing_explicit_sources_db(tmp_path):
+    """Acceptance audit exits 2 if explicit sources_db is missing."""
+    dummy_dir = tmp_path / "data"
+    dummy_dir.mkdir()
+    (dummy_dir / "sample.jsonl").write_text('{"query": "a", "final_response": "b"}\n', encoding="utf-8")
+
+    report, exit_code = run_acceptance_audit(
+        dataset_dir=dummy_dir,
+        sources_db=Path("/nonexistent/sources.db"),
     )
     assert exit_code == 2
     assert report.overall_status == "OPERATIONAL_ERROR"

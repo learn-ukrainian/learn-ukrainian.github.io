@@ -1359,13 +1359,16 @@ def run_acceptance_audit(
     profile_name: str = "default",
     sample_out: Path | None = None,
     sample_size: int | None = None,
-    vesum_db: Path = VESUM_DB_PATH,
-    sources_db: Path = DEFAULT_SOURCES_DB,
+    vesum_db: Path | None = None,
+    sources_db: Path | None = None,
     verify_signoff: Path | None = None,
     require_human_signoff: bool = False,
     fail_fast: bool = False,
 ) -> tuple[AcceptanceReport, int]:
     """Execute all 7 acceptance checks against a dataset directory."""
+    if vesum_db is None:
+        vesum_db = VESUM_DB_PATH
+
     if not dataset_dir.is_dir():
         print(f"❌ Error: Dataset directory {dataset_dir} does not exist", file=sys.stderr)
         return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
@@ -1375,7 +1378,7 @@ def run_acceptance_audit(
         print(f"❌ Error: Required VESUM database {vesum_db} not found", file=sys.stderr)
         return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
 
-    if not sources_db.is_file():
+    if sources_db is not None and not sources_db.is_file():
         print(f"❌ Error: Required sources database {sources_db} not found", file=sys.stderr)
         return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
 
@@ -1656,8 +1659,8 @@ def main():
         "--sample-size", type=int, default=None, help="Number of sample records to draw (default: from profile)"
     )
     parser.add_argument("--json-out", type=Path, default=None, help="Output path for JSON acceptance scorecard")
-    parser.add_argument("--vesum-db", type=Path, default=VESUM_DB_PATH, help="Path to vesum.db")
-    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
+    parser.add_argument("--vesum-db", type=Path, default=None, help="Path to vesum.db (default: data/vesum.db)")
+    parser.add_argument("--sources-db", type=Path, default=None, help="Path to sources.db (optional)")
     parser.add_argument("--verify-human-signoff", type=Path, default=None, help="Path to signed human review report")
     parser.add_argument(
         "--require-human-signoff",

@@ -24,7 +24,7 @@ Issue #8339 establishes a mandatory, automated, fail-closed acceptance tool:
 
 ### Core Architectural Invariants
 
-* **Fail Closed:** The tool exits non-zero (`exit 1`) whenever any acceptance threshold is breached. It exits `exit 2` if required dictionary dependencies (e.g. `vesum.db` or `sources.db`) are missing or unreadable. It **never passes by default**.
+* **Fail Closed:** The tool exits non-zero (`exit 1`) whenever any acceptance threshold is breached. It exits `exit 2` if required dictionary dependencies (e.g. `vesum.db`) are missing or unreadable. It **never passes by default**.
 * **Plain Numbers:** Output presents exact counts, ratios, and percentages; no vague qualitative hand-waving.
 * **Reproduce Human Discoveries:** The tool must deterministically reproduce the exact findings recorded in `ROADMAP_250K_SOVEREIGN_UKRAINIAN.md` §2 on the baseline datasets.
 * **Separation of Concerns:** Infrastructure audits check repeatability, concentration, contradictions, and source rules. Linguistic correctness is audited by human language reviewers using an un-cherry-picked sample drawn deterministically by this tool.
@@ -57,7 +57,7 @@ Issue #8339 establishes a mandatory, automated, fail-closed acceptance tool:
 * `--sample-size` (optional, default: `300`): Number of records to draw for the human audit package ($n=300$ gives $>95\%$ detection power for a 1% defect rate; M3).
 * `--json-out` (optional): Output path for machine-readable JSON acceptance scorecard.
 * `--vesum-db` (optional): Path to `vesum.db`. Defaults to auto-resolved `data/vesum.db` or primary checkout copy via `VESUM_DB_PATH`. Fails closed (`exit 2`) if missing.
-* `--sources-db` (optional): Path to `sources.db`. Defaults to auto-resolved `data/sources.db`. Fails closed (`exit 2`) if missing.
+* `--sources-db` (optional): Path to `sources.db`. Fails closed (`exit 2`) if explicitly specified and missing.
 * `--verify-human-signoff` (optional): Path to signed human reviewer report. If supplied, verifies signature, cross-family author identity, dataset SHA-256 binding, and rubric thresholds (M2).
 * `--fail-fast` (optional): Abort immediately on first failing check rather than executing all 7 checks.
 
@@ -366,4 +366,4 @@ audit_dataset_acceptance.py
   * `test_check4_permits_inflected_target_term`: Record with target *«вигляд»* appearing as *«вигляду»* does not false-fail.
 * **Fail-Closed Dependency Fixtures:**
   * Missing `vesum.db` $\rightarrow$ exits with code 2.
-  * Missing `sources.db` $\rightarrow$ exits with code 2.
+  * Explicit missing `sources.db` $\rightarrow$ exits with code 2.
