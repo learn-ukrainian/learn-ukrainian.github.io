@@ -138,7 +138,7 @@ pydantic==2.13.4
 pydantic_core==2.46.4
 pyee==13.0.1
 Pygments==2.21.0
-PyJWT==2.13.0
+PyJWT==2.14.0
 pymorphy2-dicts-ru==2.4.417127.4579844
 pymorphy2-dicts-uk==2.4.1.1.1460299261
 pymorphy2==0.9.1
