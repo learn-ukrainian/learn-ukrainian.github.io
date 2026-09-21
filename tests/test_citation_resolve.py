@@ -7,6 +7,8 @@ import yaml
 
 from scripts.build import linear_pipeline
 
+pytestmark = pytest.mark.reads_content
+
 
 def _result(source_ref: str, title: str = "Караман Grade 10, p.176") -> dict[str, Any]:
     return linear_pipeline._citation_gate(

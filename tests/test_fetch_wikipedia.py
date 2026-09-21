@@ -22,6 +22,8 @@ from unittest.mock import patch
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 
 # Load the module directly since it's not on sys.path normally

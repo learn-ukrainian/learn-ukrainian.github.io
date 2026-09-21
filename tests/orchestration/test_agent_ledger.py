@@ -11,6 +11,8 @@ from fastapi import HTTPException
 from scripts.api import coordination_router
 from scripts.orchestration import agent_ledger
 
+pytestmark = pytest.mark.reads_content
+
 
 def test_upsert_task_records_parallel_agent_metadata(tmp_path: Path):
     task = agent_ledger.upsert_task(

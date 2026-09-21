@@ -6,7 +6,10 @@ import os
 import subprocess
 from pathlib import Path
 
+import pytest
 import yaml
+
+pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parent.parent
 HOOK_SCRIPT = REPO_ROOT / "scripts" / "pre_commit" / "check_plan_immutability.py"

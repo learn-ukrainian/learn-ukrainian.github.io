@@ -5,10 +5,13 @@ from collections import Counter
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 
 from scripts.audit.source_inventory_intake import read_source_inventory
 from scripts.audit.source_inventory_review_decisions import source_inventory_key
+
+pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 BOLSHAKOVA_INVENTORY = (

@@ -5,6 +5,8 @@ import pytest
 
 from scripts.tools import migrate_legacy_state_to_v6 as migrate
 
+pytestmark = pytest.mark.reads_content
+
 
 def _write_json(path: Path, payload: dict) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)

@@ -65,6 +65,8 @@ from scripts.audit.generate_practice_deck import (
     write_shards,
 )
 
+pytestmark = pytest.mark.reads_content
+
 FIXTURES = Path("tests/fixtures")
 MANIFEST = FIXTURES / "lexicon-practice-manifest.json"
 ALLOWLIST = FIXTURES / "lexicon-practice-reviewed-allowlist.json"

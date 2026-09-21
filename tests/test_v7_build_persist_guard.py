@@ -9,6 +9,8 @@ import pytest
 
 from scripts.build import run_archive, v7_build
 
+pytestmark = pytest.mark.reads_content
+
 _REAL_RUN = subprocess.run
 _RUN_ID = "20260611-120000"
 

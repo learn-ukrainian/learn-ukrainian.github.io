@@ -11,6 +11,8 @@ from scripts.projects.open_model_data import (
     inventory_existing_assets as inventory,
 )
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 FIXTURE = (
     ROOT

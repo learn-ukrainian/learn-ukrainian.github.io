@@ -12,6 +12,8 @@ import yaml
 from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 from scripts.audit.curriculum_qg_harness import CHECKER_VERSION
 
+pytestmark = pytest.mark.reads_content
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_FILE = PROJECT_ROOT / "tests" / "fixtures" / "curriculum_qg" / "fixtures.yaml"
 B1_27_DIR = PROJECT_ROOT / "curriculum" / "l2-uk-en" / "b1" / "aspect-in-imperatives"

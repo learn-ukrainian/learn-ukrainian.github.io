@@ -2,7 +2,11 @@ from __future__ import annotations
 
 import copy
 
+import pytest
+
 from scripts.build.phases.implementation_map import render_for_writer_prompt
+
+pytestmark = pytest.mark.reads_content
 
 
 def _payload_with_scaffolding() -> dict:

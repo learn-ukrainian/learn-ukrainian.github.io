@@ -12,6 +12,8 @@ import pytest
 from scripts.ai_agent_bridge._opencode import OpencodeStreamParse, _extract_tool_event
 from scripts.audit import llm_qg_store, llm_reviewer, llm_reviewer_dispatch, qg_schema, qg_workflow
 
+pytestmark = pytest.mark.reads_content
+
 _DISPATCH = "scripts.audit.llm_reviewer_dispatch"
 
 

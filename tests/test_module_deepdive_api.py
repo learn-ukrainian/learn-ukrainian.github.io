@@ -20,6 +20,8 @@ import scripts.api.main as api_main
 import scripts.api.state_router as state_router
 from scripts.api.monitor_context import fixture_context
 
+pytestmark = pytest.mark.reads_content
+
 client = TestClient(api_main.app, raise_server_exceptions=False)
 
 

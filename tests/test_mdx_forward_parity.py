@@ -2,7 +2,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
+
 from scripts.audit import check_mdx_forward_parity as forward_parity
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_detects_folk_module_source() -> None:

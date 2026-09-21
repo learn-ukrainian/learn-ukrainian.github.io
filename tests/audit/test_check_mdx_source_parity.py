@@ -12,6 +12,8 @@ from scripts.audit.check_mdx_source_parity import (
     main,
 )
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def mock_env():

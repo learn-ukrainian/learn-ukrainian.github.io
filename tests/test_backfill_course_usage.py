@@ -5,9 +5,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.lexicon import backfill_course_usage as backfill
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_backfill_matches_exact_vesum_apostrophe_stress_and_multiword(tmp_path: Path) -> None:

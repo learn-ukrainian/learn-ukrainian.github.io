@@ -15,6 +15,8 @@ from fastapi.testclient import TestClient
 
 from scripts.api.monitor_context import fixture_context
 
+pytestmark = pytest.mark.reads_content
+
 
 def _write_bundle(
     curriculum_root: Path,

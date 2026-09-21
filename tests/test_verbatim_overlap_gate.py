@@ -21,6 +21,8 @@ import sqlite3
 import tempfile
 from pathlib import Path
 
+import pytest
+
 from scripts.audit.verbatim_overlap_gate import (
     EXTRACTION_SPEC_VERSION,
     ExtractedSpan,
@@ -33,6 +35,8 @@ from scripts.audit.verbatim_overlap_gate import (
     normalize_text,
     tokenize,
 )
+
+pytestmark = pytest.mark.reads_content
 
 A1_FREE_TIME = Path("curriculum/l2-uk-en/a1-v1/free-time")
 B1_NARRATIVE = Path("curriculum/l2-uk-en/b1/narrative-mastery")

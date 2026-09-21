@@ -1,6 +1,10 @@
 from pathlib import Path
 
+import pytest
+
 from scripts.audit import check_locked_module_not_published
+
+pytestmark = pytest.mark.reads_content
 
 
 def _write_track_fixture(tmp_path: Path, *, locked_frontmatter: str) -> Path:

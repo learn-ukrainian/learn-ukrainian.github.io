@@ -4,6 +4,8 @@ from pathlib import Path
 
 import pytest
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[1]
 DASHBOARDS = ROOT / "dashboards"
 PRIMARY_NAV_HREFS = [

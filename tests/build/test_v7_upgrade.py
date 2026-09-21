@@ -13,6 +13,8 @@ from scripts.build import linear_pipeline, v7_build
 from scripts.level_config import base_level
 from tests.build.upgrade_fixtures import ORIGINAL, UPGRADED, extract_upgrade_fixtures, fixture_text
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def upgrade_root(tmp_path, monkeypatch):

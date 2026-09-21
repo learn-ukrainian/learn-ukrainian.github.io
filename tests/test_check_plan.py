@@ -5,6 +5,10 @@ from __future__ import annotations
 import sys
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from audit.check_plan import check_plan, check_russicisms, detect_plan_type, main  # noqa: I001

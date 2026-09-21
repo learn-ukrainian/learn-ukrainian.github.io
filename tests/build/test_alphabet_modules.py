@@ -12,6 +12,8 @@ from scripts.build import alphabet_modules as am
 from scripts.build import linear_pipeline
 from scripts.build.phases.wiki_compressor import _build_scenario_tokens, compress_wiki_packet
 
+pytestmark = pytest.mark.reads_content
+
 # Pre-M3 published map: L5 still lists «Перенос і письмо» (and a hyphenation
 # title). Post-upgrade live lessons.yaml is synthesis-only; upgrade-prompt
 # tests must not treat that published output as the upgrade *input*.

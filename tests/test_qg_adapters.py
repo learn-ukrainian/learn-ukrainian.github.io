@@ -4,6 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
 import yaml
 
 from scripts.audit import qg_schema
@@ -14,6 +15,8 @@ from scripts.audit.qg_adapters import (
     UaGecGoldFixtureAdapter,
     dimensions_from_findings,
 )
+
+pytestmark = pytest.mark.reads_content
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 FIXTURE_FILE = PROJECT_ROOT / "tests" / "fixtures" / "curriculum_qg" / "fixtures.yaml"

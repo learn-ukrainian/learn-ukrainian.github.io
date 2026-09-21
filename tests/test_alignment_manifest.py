@@ -10,6 +10,8 @@ from pathlib import Path
 import pytest
 import yaml
 
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from build import alignment_manifest

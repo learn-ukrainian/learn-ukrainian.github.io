@@ -15,6 +15,8 @@ import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+pytestmark = pytest.mark.reads_content
+
 # ---------------------------------------------------------------------------
 # Fixtures: create a test app with all three routers mounted
 # ---------------------------------------------------------------------------

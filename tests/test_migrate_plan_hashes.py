@@ -5,9 +5,12 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.build import migrate_plan_hashes as migrate
+
+pytestmark = pytest.mark.reads_content
 
 
 def _write_plan(curriculum_root: Path, *, level: str, slug: str, title: str = "Demo") -> Path:

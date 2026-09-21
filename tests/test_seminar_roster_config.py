@@ -2,10 +2,13 @@
 
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.api import config, state_helpers
 from scripts.orchestration import curriculum_readiness
+
+pytestmark = pytest.mark.reads_content
 
 
 def test_seminar_track_ids_derived_from_curriculum_manifest() -> None:

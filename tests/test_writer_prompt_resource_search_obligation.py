@@ -1,7 +1,11 @@
 import json
 
+import pytest
+
 from scripts.build import linear_pipeline
 from scripts.build.phases.implementation_map import seed_implementation_map
+
+pytestmark = pytest.mark.reads_content
 
 
 def _render_prompt(level: str, slug: str, *, validate: bool = True) -> str:

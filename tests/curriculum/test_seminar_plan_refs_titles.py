@@ -5,6 +5,8 @@ import pytest
 from scripts.build.linear_pipeline import LinearPipelineError, plan_check
 from scripts.curriculum.backfill_seminar_ref_titles import derive_title
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.mark.slow
 def test_all_seminar_plans_pass_validate_plan():

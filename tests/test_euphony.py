@@ -14,6 +14,10 @@ Issue: #624, #593
 import sys
 from pathlib import Path
 
+import pytest
+
+pytestmark = pytest.mark.reads_content
+
 sys.path.insert(0, str(Path(__file__).parent.parent / "scripts"))
 
 from audit.checks.euphony import (

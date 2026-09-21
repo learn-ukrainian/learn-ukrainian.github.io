@@ -31,7 +31,7 @@ from common.thresholds import (
 
 SCRIPTS_ROOT = Path(__file__).resolve().parent.parent / "scripts"
 SOURCE_OF_TRUTH = SCRIPTS_ROOT / "common" / "thresholds.py"
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 # Canonical names that must never be redeclared outside the source-of-truth.
 # The values are the source-of-truth values — any other file claiming to

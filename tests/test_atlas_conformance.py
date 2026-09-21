@@ -12,6 +12,8 @@ from scripts.audit.validate_atlas_conformance import HeritageLemmaLookup, VesumL
 from scripts.lexicon.build_kaikki_lookup import KAIKKI_SOURCE
 from scripts.lexicon.migrate_source_labels import migrate_manifest
 
+pytestmark = pytest.mark.reads_content
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 MANIFEST_PATH = PROJECT_ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 POINTER_PATH = MANIFEST_PATH.with_name("lexicon-manifest.pointer.json")

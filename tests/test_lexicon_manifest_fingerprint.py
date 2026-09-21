@@ -9,7 +9,7 @@ from scripts.lexicon.check_manifest_freshness import check_freshness
 from scripts.lexicon.check_manifest_vocabulary_coverage import check_vocabulary_coverage
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, sidecar_payload, write_fingerprint
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 _GIT_SCOPE_ENV_VARS = ("GIT_COMMON_DIR", "GIT_DIR", "GIT_INDEX_FILE", "GIT_PREFIX", "GIT_WORK_TREE")

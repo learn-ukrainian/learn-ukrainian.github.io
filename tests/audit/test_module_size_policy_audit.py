@@ -3,10 +3,13 @@ from __future__ import annotations
 import json
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.audit import module_size_policy_audit as audit
 from scripts.audit import post_build_review as pbr
+
+pytestmark = pytest.mark.reads_content
 
 
 def _patch_roots(monkeypatch, root: Path) -> None:

@@ -25,6 +25,8 @@ from scripts.audit import llm_reviewer, qg_schema
 from scripts.build import build_module_direct as direct
 from scripts.build import linear_pipeline as linear
 
+pytestmark = pytest.mark.reads_content
+
 ROOT = Path(__file__).resolve().parents[2]
 ROUTES = ("claude", "codex", "gemini", "grok", "cursor", "deepseek", "glm", "agy", "acpx_agy")
 SUPPORTED = ("claude", "codex", "grok", "agy")

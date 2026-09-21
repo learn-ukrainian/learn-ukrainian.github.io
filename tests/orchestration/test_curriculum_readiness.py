@@ -15,6 +15,8 @@ from scripts.orchestration.prompt_contracts import (
     resolve_profile_selectors,
 )
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 BIO_SLUG = "borys-hrinchenko"
 

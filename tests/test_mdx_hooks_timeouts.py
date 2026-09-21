@@ -18,6 +18,8 @@ from scripts.hooks import hook_timing, measure_hook_stack
 from scripts.lib import session_record
 from scripts.review import snapshot
 
+pytestmark = pytest.mark.reads_content
+
 
 def _raise_timeout(calls: list[dict[str, Any]]):
     def fake_run(*args: object, **kwargs: Any) -> Any:

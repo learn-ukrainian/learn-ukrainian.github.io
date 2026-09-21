@@ -9,6 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Any
 
+import pytest
 from fastapi.testclient import TestClient
 from jsonschema import Draft202012Validator
 
@@ -16,6 +17,8 @@ from scripts.api import preparation_state
 from scripts.api.main import app
 from scripts.api.repository_authority import build_repository_authority, cwd_role, preparation_data_root
 from scripts.orchestration import curriculum_readiness
+
+pytestmark = pytest.mark.reads_content
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = json.loads((ROOT / "schemas/agent-preparation-state.v1.schema.json").read_text(encoding="utf-8"))

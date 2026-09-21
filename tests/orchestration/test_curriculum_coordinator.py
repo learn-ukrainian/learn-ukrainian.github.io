@@ -13,6 +13,8 @@ import yaml
 
 from scripts.orchestration import curriculum_coordinator as coordinator
 
+pytestmark = pytest.mark.reads_content
+
 BUNDLE_FILES = ("module.md", "activities.yaml", "vocabulary.yaml", "resources.yaml")
 ROOT = Path(__file__).resolve().parents[2]
 BOUNDED_SCRIPT = ROOT / "agents_extensions/shared/skills/track-completion/scripts/bounded_completion.py"

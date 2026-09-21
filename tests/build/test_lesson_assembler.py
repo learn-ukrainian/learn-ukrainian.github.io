@@ -8,6 +8,8 @@ import yaml
 from scripts.build.lesson_assembler import assemble_lessons
 from tests.build.upgrade_fixtures import UPGRADED, extract_upgrade_fixtures, fixture_text
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def gold(tmp_path, monkeypatch):

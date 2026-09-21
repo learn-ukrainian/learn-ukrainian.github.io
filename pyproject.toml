@@ -26,6 +26,7 @@ markers = [
     "live_network: opt-out of socket-guard for integration tests requiring outbound network",
     "postgres: needs LEARN_UKRAINIAN_CP_PG_DSN (live Postgres); skips when unset",
     "docs_skills: docs/skills-only CI lane (contract linters for markdown/skills PRs)",
+    "reads_content: tests that read curriculum/site-content/wiki files (content CI class lane, #8399)",
 ]
 
 [tool.ruff]

@@ -4,12 +4,16 @@ import json
 from pathlib import Path
 from typing import Any
 
+import pytest
+
 from scripts.audit.wiki_coverage_gate import (
     build_obligation_checklist_object,
     check_wiki_coverage,
     parse_implementation_map,
 )
 from scripts.build.phases.implementation_map import seed_implementation_map
+
+pytestmark = pytest.mark.reads_content
 
 FIXTURES_DIR = Path(__file__).with_name("fixtures")
 M20_ERR_SEAM_FIXTURES_DIR = FIXTURES_DIR / "m20-wiki-coverage-err-seam"
