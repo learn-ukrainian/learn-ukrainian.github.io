@@ -730,6 +730,8 @@ def ulif_lookup(word: str) -> dict[str, object]:
 
     sources_db = _ulif_sources_db()
     cached = sources_db.get_ulif_dictua_entry(requested_word)
+    if cached is not None and cached.get("status") == "ambiguous":
+        return cached
     if cached is not None and not (
         cached["status"] == "parse_error"
         and cached["parser_version"] != ULIF_PARSER_VERSION
@@ -890,10 +892,15 @@ def query_ulif(
     if unknown:
         raise ValueError(f"Unknown ULIF sections: {', '.join(sorted(unknown))}")
     result = ulif_lookup(word)
+    if result.get("status") == "ambiguous":
+        return result
+    section_map = result.get("sections")
+    if not isinstance(section_map, dict):
+        section_map = {}
     selected = {
-        kind: result["sections"][kind]
+        kind: section_map[kind]
         for kind in requested_sections
-        if kind in result["sections"]
+        if kind in section_map
     }
     return {**result, "sections": selected}
 
@@ -916,7 +923,10 @@ def query_ulif_phraseology(word: str) -> dict[str, object]:
 def ulif_paradigm(word: str) -> dict[str, Any] | None:
     """Backward-compatible ``{'word', 'rows'}`` ULIF paradigm lookup."""
     result = query_ulif(word, ("paradigm",))
-    paradigm = result["sections"].get("paradigm")
+    if result.get("status") == "ambiguous":
+        return result
+    sections = result.get("sections")
+    paradigm = sections.get("paradigm") if isinstance(sections, dict) else None
     if result["status"] not in {"ok", "parse_error"} or not isinstance(paradigm, dict):
         return None
     rows = paradigm.get("rows")
@@ -1485,7 +1495,7 @@ def verify_word_sources(word: str) -> dict[str, Any]:
         results["grac"] = freq
 
     paradigm = ulif_paradigm(word)
-    if paradigm:
+    if isinstance(paradigm, dict) and paradigm.get("rows"):
         results["ulif"] = paradigm
 
     wiki = wikipedia_search(word, limit=3)

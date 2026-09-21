@@ -2492,13 +2492,31 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
             except Exception:
                 payload = {"status": "unavailable", "entry": None}
             else:
-                payload = {"status": "attested" if entry else "not_found", "entry": entry}
+                if entry and entry.get("status") == "ambiguous":
+                    payload = {
+                        "status": "ambiguous",
+                        "entry": None,
+                        "entries": entry.get("entries", []),
+                    }
+                else:
+                    payload = {"status": "attested" if entry else "not_found", "entry": entry}
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
     if "sections" not in args:
         from rag.source_query import ulif_paradigm
 
         result = await asyncio.to_thread(ulif_paradigm, word)
-        if not result:
+        if isinstance(result, dict) and result.get("status") == "ambiguous":
+            lines = [f"Ambiguous ULIF spelling '{word}':"]
+            for item in result.get("entries", []):
+                gloss = item.get("sense_gloss") or ""
+                label = item.get("grammatical_label") or ""
+                detail = " ".join(part for part in (label, gloss) if part)
+                lines.append(
+                    f"- {item.get('homonym_index')}: {item.get('canonical_headword', '')}"
+                    + (f" {detail}" if detail else "")
+                )
+            return [TextContent(type="text", text="\n".join(lines))]
+        if not result or "rows" not in result:
             return [TextContent(type="text", text=f"No ULIF paradigm found for: '{word}'")]
 
         lines = [f"Paradigm for '{word}':\n"]
@@ -2511,25 +2529,50 @@ async def handle_query_ulif(args: dict) -> list[TextContent]:
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
 
 
+def _render_ulif_relation_records(records: list[dict], kind: str) -> str:
+    """Label each homonym and keep its nested relation groups."""
+    blocks: list[str] = []
+    for record in records:
+        head = str(record.get("canonical_headword") or record.get("word") or "")
+        gloss = str(record.get("sense_gloss") or "").strip()
+        index = record.get("homonym_index")
+        title = f"{index}: {head}" if index else head
+        if gloss:
+            title = f"{title} {gloss}"
+        sections = record.get("sections")
+        payload = sections.get(kind) if isinstance(sections, dict) else None
+        blocks.append(f"{title}\n{json.dumps(payload, ensure_ascii=False, indent=2)}")
+    return "\n\n".join(blocks)
+
+
+async def _handle_ulif_relation(word: str, kind: str, lookup) -> list[TextContent]:
+    """Render every cached homonym that has *kind*, or the single lookup record."""
+    result = await asyncio.to_thread(lookup, word)
+    if isinstance(result, dict) and result.get("status") == "ambiguous":
+        from wiki.sources_db import search_ulif_dictua_sections
+
+        records = await asyncio.to_thread(search_ulif_dictua_sections, word, kind)
+        if records:
+            return [TextContent(type="text", text=_render_ulif_relation_records(records, kind))]
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+
+
 async def handle_query_ulif_synonyms(args: dict) -> list[TextContent]:
     from rag.source_query import query_ulif_synonyms
 
-    result = await asyncio.to_thread(query_ulif_synonyms, args["word"])
-    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+    return await _handle_ulif_relation(args["word"], "synonyms", query_ulif_synonyms)
 
 
 async def handle_query_ulif_antonyms(args: dict) -> list[TextContent]:
     from rag.source_query import query_ulif_antonyms
 
-    result = await asyncio.to_thread(query_ulif_antonyms, args["word"])
-    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+    return await _handle_ulif_relation(args["word"], "antonyms", query_ulif_antonyms)
 
 
 async def handle_query_ulif_phraseology(args: dict) -> list[TextContent]:
     from rag.source_query import query_ulif_phraseology
 
-    result = await asyncio.to_thread(query_ulif_phraseology, args["word"])
-    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+    return await _handle_ulif_relation(args["word"], "phraseology", query_ulif_phraseology)
 
 
 async def handle_query_r2u(args: dict) -> list[TextContent]:
@@ -2785,6 +2828,9 @@ async def handle_dict_search(args: dict, collection: str, label: str):
         word = hit.get("word", hit.get("words", ""))
         if word:
             lines.append(f"- **Headword**: {word}")
+        gloss = hit.get("sense_gloss")
+        if isinstance(gloss, str) and gloss.strip():
+            lines.append(f"- **Sense**: {gloss.strip()}")
         if hit.get("source"):
             lines.append(f"- **Source**: {hit['source']}")
         # Sovietization flag (СУМ-11 only — issue #1659). Surfaced prominently

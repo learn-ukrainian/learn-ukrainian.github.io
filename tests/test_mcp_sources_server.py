@@ -946,6 +946,51 @@ class TestDictSearchQuoteBalance:
             assert envelope["match_count"] == 1
             assert envelope["tool"] == "search_definitions"
 
+    def test_handle_dict_search_labels_each_homonym_sense(self, server_module):
+        hits = [
+            {"word": "За́мок", "sense_gloss": "(населений пункт в Україні)", "definition": "місто"},
+            {"word": "за́мок", "sense_gloss": "(будівля)", "definition": "фортеця"},
+        ]
+        with patch("wiki.sources_db.search_idioms", return_value=hits):
+            content, envelope = _run(
+                server_module.handle_dict_search({"query": "замок"}, "frazeolohichnyi", "Фразеологічний")
+            )
+        text = content[0].text
+        assert "Found 2 results" in text
+        assert "- **Headword**: За́мок" in text
+        assert "- **Sense**: (населений пункт в Україні)" in text
+        assert "- **Headword**: за́мок" in text
+        assert "- **Sense**: (будівля)" in text
+        assert envelope["match_count"] == 2
+
+    def test_ulif_relation_tools_render_every_ambiguous_homonym(self, server_module):
+        ambiguous = {"status": "ambiguous", "entries": [{"homonym_index": 1}, {"homonym_index": 2}]}
+        records = [
+            {
+                "homonym_index": 1,
+                "canonical_headword": "За́мок",
+                "sense_gloss": "(населений пункт в Україні)",
+                "sections": {"synonyms": [{"terms": [{"text": "МІСТО"}]}]},
+            },
+            {
+                "homonym_index": 2,
+                "canonical_headword": "за́мок",
+                "sense_gloss": "(будівля)",
+                "sections": {"synonyms": [{"terms": [{"text": "КРЕМЛЬ"}]}]},
+            },
+        ]
+        with (
+            patch("rag.source_query.query_ulif_synonyms", return_value=ambiguous),
+            patch("wiki.sources_db.search_ulif_dictua_sections", return_value=records),
+        ):
+            content = _run(server_module.handle_query_ulif_synonyms({"word": "замок"}))
+        text = content[0].text
+        assert "1: За́мок (населений пункт в Україні)" in text
+        assert "2: за́мок (будівля)" in text
+        assert "КРЕМЛЬ" in text
+        assert "МІСТО" in text
+        assert '"terms"' in text
+
 
 class TestHealthEndpoint:
     """Test health endpoint contract (#7026)."""
