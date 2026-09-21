@@ -82,7 +82,7 @@ Rules the validator enforces (all deterministic):
 
 1. `lessons` is non-empty; `n` is 1..N contiguous; exactly one lesson has `kind: recap` and it is
    the last (checkpoint modules: all lessons `checkpoint`, no new inventory).
-2. The recap lesson has empty `inventory.*.new` and no `teach` steps that introduce material.
+2. The recap lesson has empty `inventory.vocabulary.core`, empty `phonetics` and `grammar`, and no `teach` steps that introduce material.
 3. Every `evidence` id exists in the locked pack; the pack hash matches `evidence_ref.sha256`.
 4. Every `inventory.vocabulary.recycled` lemma and every grammar point used but not introduced is
    present in the learner state computed from the arc and earlier lessons.
