@@ -1,0 +1,12 @@
+profile_name: "grammar_8342"
+profile_version: "1.0.0"
+inherits: "default"
+
+thresholds:
+  # Calibrated for UA-GEC Redo per #8342 & GRAMMAR_DATASET_SPEC_8342.md
+  min_clean_control_share: 0.20
+  max_clean_control_share: 0.30
+  min_correction_share: 0.70
+  max_correction_share: 0.80
+  min_examples_per_category: 50
+  max_single_category_share: 0.40

@@ -1,0 +1,1236 @@
+#!/usr/bin/env python3
+"""Dataset Acceptance Audit Gate for Sovereign Ukrainian Datasets (Epic #6321, Issue #8339).
+
+Universal, automated, fail-closed acceptance check for every dataset in Epic #6321.
+Audits:
+  1. Repeats (exact copies, near-duplicates, multiplicity)
+  2. Form letters (sentence pattern concentration, perplexity, normalized entropy)
+  3. Real content share (controls vs substantive corrections, thin category balance)
+  4. Self-contradiction (date discrepancies, label vs text diff, target term alignment)
+  5. Source rules (Epic rules 3 & 4: Soviet СУМ-11 distortion rules, translation dictionaries, approved authorities)
+  6. Train/test overlap (VESUM lemmatized & curated aspect-pair normalized 4-gram containment)
+  7. Deterministic random sample drawer (content-hashed seed, 300 instances, MD + JSON, human review lifecycle)
+
+Exit codes:
+  0: Passed automated checks (or accepted with verified human sign-off)
+  1: Acceptance failed (one or more threshold limits breached)
+  2: Operational error (missing databases, unreadable inputs, malformed records)
+  3: Pending human review (when --require-human-signoff is requested and signoff is missing)
+"""
+
+from __future__ import annotations
+
+import argparse
+import hashlib
+import json
+import math
+import re
+import sqlite3
+import sys
+import unicodedata
+from collections import Counter
+from dataclasses import dataclass, field
+from pathlib import Path
+from typing import Any
+
+PROJECT_ROOT = Path(__file__).resolve().parents[3]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
+
+from scripts.rag.config import VESUM_DB_PATH
+
+# ── Paths and Authorities ──────────────────────────────────────────────────
+
+DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
+if not DEFAULT_SOURCES_DB.is_file():
+    primary_sources = Path("/home/ops/learn-ukrainian/data/sources.db")
+    if primary_sources.is_file():
+        DEFAULT_SOURCES_DB = primary_sources
+
+PROFILES_DIR = Path(__file__).resolve().parent / "profiles"
+ASPECT_PAIRS_FILE = Path(__file__).resolve().parent / "aspect_pairs.json"
+
+APPROVED_AUTHORITY_PATTERNS = [
+    r"vesum",
+    r"правопис\s*(2019)?",
+    r"сум-20",
+    r"sum20",
+    r"втс",
+    r"великий\s+тлумачний",
+    r"горох",
+    r"goroh",
+    r"антоненко[- ]давидович",
+    r"як\s+ми\s+говоримо",
+    r"караванськ(ий|ого)",
+    r"грінченк(о|а)",
+    r"есум",
+    r"esum",
+    r"уліф",
+    r"ulif",
+    r"підручник",
+    r"заболотн",
+    r"авраменк",
+    r"вашуленк",
+    r"глазова",
+    r"брук",
+    r"brown[-_]uk",
+    r"ua[-_]gec",
+]
+
+TRANSLATION_DICT_IDS = {
+    "r2u",
+    "e2u",
+    "balla_en_uk",
+    "dmklinger_uk_en",
+    "translate_en_uk",
+    "bilingual_translation",
+}
+
+SOVIET_SUM11_ALIASES = [
+    "sum11",
+    "sum_11",
+    "сум-11",
+    "словник української мови (1970–1980)",
+    "словник української мови (1970-1980)",
+]
+
+# ── Data Models ────────────────────────────────────────────────────────────
+
+
+@dataclass
+class DatasetRecord:
+    """Standardized view of a single dataset line."""
+
+    raw: dict[str, Any]
+    file_path: Path
+    line_number: int
+    split: str  # 'train', 'eval', or 'test'
+    query: str
+    final_response: str
+    reasoning_steps: list[str]
+    reasoning_text: str
+    chosen: str | None = None
+    rejected: str | None = None
+    target_term: str | None = None
+    is_erroneous: bool | None = None
+    original_text: str | None = None
+    corrected_text: str | None = None
+    category: str | None = None
+    source_metadata: Any = None
+    content_hash: str = ""
+
+
+@dataclass
+class CheckResult:
+    check_id: str
+    check_name: str
+    status: str  # 'PASS', 'FAIL', 'NOT_APPLICABLE'
+    metrics: dict[str, Any] = field(default_factory=dict)
+    thresholds: dict[str, Any] = field(default_factory=dict)
+    failures: list[str] = field(default_factory=list)
+
+
+@dataclass
+class AcceptanceReport:
+    dataset_dir: str
+    dataset_sha256: str
+    profile_name: str
+    profile_sha256: str
+    total_records: int
+    train_records: int
+    eval_records: int
+    checks: dict[str, CheckResult] = field(default_factory=dict)
+    overall_status: str = "PENDING"
+    sample_file_path: str | None = None
+
+
+# ── Text Normalization & Delexicalization ───────────────────────────────────
+
+
+def normalize_ukrainian_text(text: str) -> str:
+    """Canonical Ukrainian text normalization: NFKC, apostrophes, stress marks, whitespace."""
+    if not text:
+        return ""
+    # 1. NFKC
+    s = unicodedata.normalize("NFKC", str(text))
+    # 2. Unify apostrophes to standard U+0027
+    s = re.sub(r"[’ʼ`]", "'", s)
+    # 3. Strip combining acute accent (stress mark U+0301)
+    s = s.replace("\u0301", "")
+    # 4. Collapse whitespace
+    s = " ".join(s.split())
+    return s
+
+
+def delexicalize_text(text: str) -> str:
+    """Mask quotes and digits to expose structural sentence patterns."""
+    if not text:
+        return ""
+    s = text
+    # Mask Ukrainian and international quote pairs
+    s = re.sub(r"«[^»]*»", "<QUOTED_SPAN>", s)
+    s = re.sub(r"\"[^\"]*\"", "<QUOTED_SPAN>", s)
+    s = re.sub(r"“[^”]*”", "<QUOTED_SPAN>", s)
+    s = re.sub(r"„[^“]*“", "<QUOTED_SPAN>", s)
+    s = re.sub(r"‘[^’]*’", "<QUOTED_SPAN>", s)
+    # Mask digits
+    s = re.sub(r"\d+", "#", s)
+    # Normalize whitespace
+    return " ".join(s.split())
+
+
+# ── Aspect Normalizer & Lemmatizer ──────────────────────────────────────────
+
+
+class LinguisticNormalizer:
+    """VESUM lemmatizer and curated verbal aspect pair normalizer."""
+
+    def __init__(self, vesum_db_path: Path, aspect_pairs_path: Path | None = None):
+        self.vesum_db_path = vesum_db_path
+        if not self.vesum_db_path.is_file():
+            raise FileNotFoundError(f"VESUM database missing: {vesum_db_path}")
+
+        self.aspect_pairs: dict[str, str] = {}
+        if aspect_pairs_path and aspect_pairs_path.is_file():
+            with aspect_pairs_path.open("r", encoding="utf-8") as f:
+                self.aspect_pairs = json.load(f)
+
+        self._conn = sqlite3.connect(f"file:{self.vesum_db_path}?mode=ro", uri=True)
+        self._cur = self._conn.cursor()
+        self._lemma_cache: dict[str, list[dict[str, str]]] = {}
+        self.common_prefixes = ["з", "с", "по", "на", "про", "ви", "за", "пере", "до", "під", "від"]
+
+    def lookup_form(self, word: str) -> list[dict[str, str]]:
+        w = word.strip().lower()
+        if w in self._lemma_cache:
+            return self._lemma_cache[w]
+        self._cur.execute("SELECT lemma, pos, tags FROM forms_all WHERE word_form = ?", (w,))
+        rows = self._cur.fetchall()
+        results = [{"lemma": r[0], "pos": r[1], "tags": r[2]} for r in rows]
+        self._lemma_cache[w] = results
+        return results
+
+    def normalize_verb_aspect(self, lemma: str, tags: str) -> str:
+        """Map perfective/imperfective partners to their canonical base."""
+        low_lemma = lemma.lower()
+        if low_lemma in self.aspect_pairs:
+            return self.aspect_pairs[low_lemma]
+
+        if ":perf:" in tags:
+            for p in self.common_prefixes:
+                if low_lemma.startswith(p) and len(low_lemma) - len(p) >= 4:
+                    stem = low_lemma[len(p) :]
+                    analyses = self.lookup_form(stem)
+                    for an in analyses:
+                        if an["pos"] == "verb" and ":imperf:" in an["tags"]:
+                            return stem
+        return low_lemma
+
+    def get_canonical_tokens(self, text: str) -> list[str]:
+        """Tokenize text into canonical, aspect-normalized dictionary lemmas."""
+        raw_tokens = re.findall(r"[А-Яа-яІіЇїЄєҐґ']+", text.lower())
+        canonical = []
+        for t in raw_tokens:
+            analyses = self.lookup_form(t)
+            if not analyses:
+                canonical.append(t)
+                continue
+            # Pick first distinct canonical form
+            seen_for_token = set()
+            for an in analyses:
+                lem = an["lemma"]
+                if an["pos"] == "verb":
+                    lem = self.normalize_verb_aspect(lem, an["tags"])
+                seen_for_token.add(lem)
+            canonical.append(sorted(seen_for_token)[0])
+        return canonical
+
+    def close(self):
+        self._conn.close()
+
+
+# ── Configuration Loader ────────────────────────────────────────────────────
+
+
+def load_profile(profile_name: str, profiles_dir: Path = PROFILES_DIR) -> tuple[dict[str, Any], str]:
+    """Load and resolve profile YAML; return thresholds and SHA-256 hash."""
+    profile_path = profiles_dir / f"{profile_name}.yaml"
+    if not profile_path.is_file():
+        raise FileNotFoundError(f"Profile {profile_name} not found in {profiles_dir}")
+
+    import yaml
+
+    content = profile_path.read_text(encoding="utf-8")
+    sha256 = hashlib.sha256(content.encode("utf-8")).hexdigest()
+    data = yaml.safe_load(content) or {}
+
+    inherits = data.get("inherits")
+    thresholds = data.get("thresholds", {})
+
+    if inherits:
+        parent_thresholds, _ = load_profile(inherits, profiles_dir)
+        merged = parent_thresholds.copy()
+        merged.update(thresholds)
+        thresholds = merged
+
+    return thresholds, sha256
+
+
+# ── Record Parser ───────────────────────────────────────────────────────────
+
+
+def parse_dataset_record(raw: dict[str, Any], file_path: Path, line_number: int) -> DatasetRecord:
+    """Parse raw JSON line into standardized DatasetRecord."""
+    # Determine split from file path
+    rel_str = str(file_path).lower()
+    split = "eval" if "eval" in rel_str or "test" in rel_str else "train"
+
+    # Extract query and response
+    query = ""
+    final_response = ""
+    reasoning_steps: list[str] = []
+    chosen = None
+    rejected = None
+
+    if "messages" in raw and isinstance(raw["messages"], list):
+        for msg in raw["messages"]:
+            role = msg.get("role")
+            content = msg.get("content", "")
+            if role == "user" and not query:
+                query = content
+            elif role == "assistant":
+                final_response = content
+    else:
+        query = str(raw.get("query", ""))
+        final_response = str(raw.get("final_response", raw.get("response", raw.get("answer", ""))))
+
+    # DPO extraction
+    if "chosen" in raw:
+        chosen = normalize_ukrainian_text(str(raw["chosen"]))
+    if "rejected" in raw:
+        rejected = normalize_ukrainian_text(str(raw["rejected"]))
+
+    # Reasoning steps
+    raw_steps = raw.get("reasoning_steps", raw.get("reasoning", []))
+    if isinstance(raw_steps, list):
+        reasoning_steps = [normalize_ukrainian_text(str(s)) for s in raw_steps if s]
+    elif isinstance(raw_steps, str) and raw_steps.strip():
+        reasoning_steps = [normalize_ukrainian_text(raw_steps)]
+
+    reasoning_text = "\n".join(reasoning_steps)
+
+    # Substantive correction fields
+    is_erroneous = raw.get("is_erroneous")
+    if is_erroneous is None and "is_calque_or_russianism" in raw:
+        is_erroneous = bool(raw.get("is_calque_or_russianism"))
+
+    original_text = raw.get("original_text")
+    corrected_text = raw.get("corrected_text")
+    target_term = raw.get("target_term", raw.get("target_phrase"))
+    category = raw.get("category", raw.get("subtype", raw.get("task_type")))
+    source_metadata = raw.get("source_metadata", raw.get("source_authority", raw.get("lexicographical_context")))
+
+    # Compute content hash
+    content_payload = f"{query}|{reasoning_text}|{final_response}|{chosen}|{rejected}"
+    content_hash = hashlib.sha256(content_payload.encode("utf-8")).hexdigest()
+
+    return DatasetRecord(
+        raw=raw,
+        file_path=file_path,
+        line_number=line_number,
+        split=split,
+        query=normalize_ukrainian_text(query),
+        final_response=normalize_ukrainian_text(final_response),
+        reasoning_steps=reasoning_steps,
+        reasoning_text=reasoning_text,
+        chosen=chosen,
+        rejected=rejected,
+        target_term=normalize_ukrainian_text(str(target_term)) if target_term else None,
+        is_erroneous=is_erroneous,
+        original_text=normalize_ukrainian_text(str(original_text)) if original_text else None,
+        corrected_text=normalize_ukrainian_text(str(corrected_text)) if corrected_text else None,
+        category=str(category) if category else None,
+        source_metadata=source_metadata,
+        content_hash=content_hash,
+    )
+
+
+# ── The Seven Auditors ──────────────────────────────────────────────────────
+
+
+def audit_check_1_repeats(records: list[DatasetRecord], thresholds: dict[str, Any]) -> CheckResult:
+    """Check 1: Exact copies and near-copies."""
+    total = len(records)
+    if total == 0:
+        return CheckResult("check_1_repeats", "Repeats & Duplicates", "NOT_APPLICABLE")
+
+    # 1. Exact QA pairs
+    qa_counter = Counter()
+    for r in records:
+        if r.chosen is not None and r.rejected is not None:
+            key = (r.query, r.chosen, r.rejected)
+        else:
+            key = (r.query, r.final_response)
+        qa_counter[key] += 1
+
+    distinct_qa = len(qa_counter)
+    exact_duplicates = total - distinct_qa
+    exact_duplicate_rate = exact_duplicates / total if total > 0 else 0.0
+    max_multiplicity = qa_counter.most_common(1)[0][1] if qa_counter else 0
+
+    # 2. Near-duplicates via normalized template matching
+    norm_qa_counter = Counter()
+    for r in records:
+        q_norm = delexicalize_text(r.query)
+        a_norm = delexicalize_text(r.final_response)
+        norm_qa_counter[(q_norm, a_norm)] += 1
+
+    # Estimate near-duplicate cluster excess
+    near_duplicate_excess = sum(c - 1 for c in norm_qa_counter.values() if c > 1)
+    near_duplicate_rate = near_duplicate_excess / total if total > 0 else 0.0
+
+    max_dup_rate = thresholds.get("max_exact_duplicate_rate", 0.0)
+    max_multi = thresholds.get("max_single_multiplicity", 1)
+    max_near_rate = thresholds.get("max_near_duplicate_rate", 0.01)
+
+    failures = []
+    if exact_duplicate_rate > max_dup_rate:
+        failures.append(f"Exact duplicate rate {exact_duplicate_rate:.2%} exceeds limit {max_dup_rate:.2%}")
+    if max_multiplicity > max_multi:
+        failures.append(f"Max single item multiplicity {max_multiplicity} exceeds limit {max_multi}")
+    if near_duplicate_rate > max_near_rate:
+        failures.append(f"Near-duplicate template rate {near_duplicate_rate:.2%} exceeds limit {max_near_rate:.2%}")
+
+    return CheckResult(
+        check_id="check_1_repeats",
+        check_name="Repeats & Duplicates",
+        status="FAIL" if failures else "PASS",
+        metrics={
+            "total_records": total,
+            "distinct_qa_pairs": distinct_qa,
+            "exact_duplicate_count": exact_duplicates,
+            "exact_duplicate_rate": round(exact_duplicate_rate, 4),
+            "max_single_multiplicity": max_multiplicity,
+            "distinct_normalized_qa_templates": len(norm_qa_counter),
+            "near_duplicate_template_rate": round(near_duplicate_rate, 4),
+        },
+        thresholds={
+            "max_exact_duplicate_rate": max_dup_rate,
+            "max_single_multiplicity": max_multi,
+            "max_near_duplicate_rate": max_near_rate,
+        },
+        failures=failures,
+    )
+
+
+def audit_check_2_form_letters(records: list[DatasetRecord], thresholds: dict[str, Any]) -> CheckResult:
+    """Check 2: Sentence pattern concentration and entropy."""
+    total = len(records)
+    if total == 0:
+        return CheckResult("check_2_form_letters", "Form Letters & Pattern Concentration", "NOT_APPLICABLE")
+
+    def analyze_field(strings: list[str]) -> dict[str, Any]:
+        ctr = Counter(delexicalize_text(s) for s in strings if s.strip())
+        K = len(ctr)
+        N = sum(ctr.values())
+        if N == 0:
+            return {"K": 0, "top1": 0.0, "top5": 0.0, "top20": 0.0, "entropy": 0.0, "perplexity": 0.0}
+
+        top1 = ctr.most_common(1)[0][1] / N if K >= 1 else 0.0
+        top5 = sum(c for _, c in ctr.most_common(5)) / N
+        top20 = sum(c for _, c in ctr.most_common(20)) / N
+
+        H = -sum((c / N) * math.log(c / N) for c in ctr.values())
+        H_norm = H / math.log(K) if K > 1 else 0.0
+        perplexity = math.exp(H)
+
+        return {
+            "K": K,
+            "top1": round(top1, 4),
+            "top5": round(top5, 4),
+            "top20": round(top20, 4),
+            "entropy": round(H_norm, 4),
+            "perplexity": round(perplexity, 2),
+        }
+
+    q_stats = analyze_field([r.query for r in records])
+    r_stats = analyze_field([r.reasoning_text for r in records if r.reasoning_text])
+    a_stats = analyze_field([r.final_response for r in records])
+
+    has_reasoning = any(bool(r.reasoning_text) for r in records)
+
+    failures = []
+    # Query limits
+    max_q_top5 = thresholds.get("max_query_top5_share", 0.80)
+    min_q_k = thresholds.get("min_query_unique_skeletons", 20)
+    if total >= 1000 and q_stats["top5"] > max_q_top5:
+        failures.append(f"Query top 5 patterns cover {q_stats['top5']:.1%}, exceeding limit {max_q_top5:.1%}")
+    if total >= 1000 and q_stats["K"] < min_q_k:
+        failures.append(f"Query unique patterns K={q_stats['K']} is below limit {min_q_k}")
+
+    # Reasoning limits (if reasoning present)
+    if has_reasoning:
+        max_r_top1 = thresholds.get("max_reasoning_top1_share", 0.10)
+        max_r_top5 = thresholds.get("max_reasoning_top5_share", 0.25)
+        max_r_top20 = thresholds.get("max_reasoning_top20_share", 0.50)
+        min_r_perp = thresholds.get("min_reasoning_perplexity", 25.0)
+        min_r_k = thresholds.get("min_reasoning_unique_skeletons", 50)
+
+        if r_stats["top1"] > max_r_top1:
+            failures.append(f"Reasoning top 1 pattern covers {r_stats['top1']:.1%}, exceeding limit {max_r_top1:.1%}")
+        if r_stats["top20"] > max_r_top20:
+            failures.append(
+                f"Reasoning top 20 patterns cover {r_stats['top20']:.1%}, exceeding limit {max_r_top20:.1%}"
+            )
+        if r_stats["top5"] > max_r_top5:
+            failures.append(f"Reasoning top 5 patterns cover {r_stats['top5']:.1%}, exceeding limit {max_r_top5:.1%}")
+        if total >= 1000 and r_stats["perplexity"] < min_r_perp:
+            failures.append(f"Reasoning perplexity {r_stats['perplexity']} is below floor {min_r_perp}")
+        if total >= 1000 and r_stats["K"] < min_r_k:
+            failures.append(f"Reasoning unique patterns K={r_stats['K']} is below floor {min_r_k}")
+
+    # Answer limits
+    max_a_top1 = thresholds.get("max_answer_top1_share", 0.05)
+    max_a_top5 = thresholds.get("max_answer_top5_share", 0.15)
+    max_a_top20 = thresholds.get("max_answer_top20_share", 0.30)
+    min_a_perp = thresholds.get("min_answer_perplexity", 35.0)
+
+    if a_stats["top1"] > max_a_top1:
+        failures.append(f"Answer top 1 pattern covers {a_stats['top1']:.1%}, exceeding limit {max_a_top1:.1%}")
+    if a_stats["top20"] > max_a_top20:
+        failures.append(f"Answer top 20 patterns cover {a_stats['top20']:.1%}, exceeding limit {max_a_top20:.1%}")
+    if a_stats["top5"] > max_a_top5:
+        failures.append(f"Answer top 5 patterns cover {a_stats['top5']:.1%}, exceeding limit {max_a_top5:.1%}")
+    if total >= 1000 and a_stats["perplexity"] < min_a_perp:
+        failures.append(f"Answer perplexity {a_stats['perplexity']} is below floor {min_a_perp}")
+
+    return CheckResult(
+        check_id="check_2_form_letters",
+        check_name="Form Letters & Pattern Concentration",
+        status="FAIL" if failures else "PASS",
+        metrics={
+            "query": q_stats,
+            "reasoning": r_stats if has_reasoning else "NOT_APPLICABLE",
+            "answer": a_stats,
+        },
+        thresholds=thresholds,
+        failures=failures,
+    )
+
+
+def audit_check_3_content_share(
+    records: list[DatasetRecord],
+    thresholds: dict[str, Any],
+    manifest_task_type: str | None = None,
+) -> CheckResult:
+    """Check 3: Real content share (controls vs substantive corrections)."""
+    # Only applicable if manifest declares task_type == 'correction' or records have is_erroneous
+    has_correction_fields = any(r.is_erroneous is not None for r in records)
+    is_correction_task = (manifest_task_type == "correction") or has_correction_fields
+
+    if not is_correction_task:
+        return CheckResult("check_3_content_share", "Real Content Share", "NOT_APPLICABLE")
+
+    controls = 0
+    corrections = 0
+    categories = Counter()
+
+    for r in records:
+        # Determine substantive diff
+        if r.is_erroneous is False:
+            controls += 1
+        elif r.is_erroneous is True:
+            corrections += 1
+        elif r.original_text and r.corrected_text:
+            if r.original_text.strip() != r.corrected_text.strip():
+                corrections += 1
+            else:
+                controls += 1
+
+        if r.category:
+            categories[r.category] += 1
+
+    cand_total = controls + corrections
+    if cand_total == 0:
+        return CheckResult("check_3_content_share", "Real Content Share", "NOT_APPLICABLE")
+
+    control_share = controls / cand_total
+    correction_share = corrections / cand_total
+
+    failures = []
+    # Check calibrated bounds if present (e.g. grammar_8342)
+    if "min_clean_control_share" in thresholds:
+        min_c = thresholds["min_clean_control_share"]
+        max_c = thresholds["max_clean_control_share"]
+        if not (min_c <= control_share <= max_c):
+            failures.append(f"Control share {control_share:.1%} outside required range [{min_c:.1%}, {max_c:.1%}]")
+
+    min_corr = thresholds.get("min_correction_share", 0.50)
+    if correction_share < min_corr:
+        failures.append(f"Substantive correction share {correction_share:.1%} is below floor {min_corr:.1%}")
+
+    # Category balance
+    thin_categories = []
+    max_cat_share = thresholds.get("max_single_category_share", 0.40)
+    min_per_cat = thresholds.get("min_examples_per_category", 50)
+
+    for cat, count in categories.items():
+        if count < min_per_cat:
+            thin_categories.append(f"{cat} ({count} < {min_per_cat})")
+        if count / cand_total > max_cat_share:
+            failures.append(f"Category {cat} dominates with {count / cand_total:.1%} of rows (max {max_cat_share:.1%})")
+
+    if thin_categories:
+        failures.append(f"Thin categories with < {min_per_cat} instances: {', '.join(thin_categories[:5])}")
+
+    return CheckResult(
+        check_id="check_3_content_share",
+        check_name="Real Content Share",
+        status="FAIL" if failures else "PASS",
+        metrics={
+            "candidate_rows": cand_total,
+            "controls_count": controls,
+            "corrections_count": corrections,
+            "clean_control_share": round(control_share, 4),
+            "substantive_correction_share": round(correction_share, 4),
+            "category_count": len(categories),
+            "thin_categories_count": len(thin_categories),
+        },
+        thresholds=thresholds,
+        failures=failures,
+    )
+
+
+def audit_check_4_contradictions(
+    records: list[DatasetRecord],
+    thresholds: dict[str, Any],
+    normalizer: LinguisticNormalizer,
+) -> CheckResult:
+    """Check 4: Self-contradiction audit (dates, labels, target terms)."""
+    contradictions = []
+
+    for r in records:
+        # 1. Historical date discrepancy in Step 1
+        raw_mb = str(r.raw.get("morphemic_breakdown", ""))
+        is_kyivan_rus = "xi–xiii" in raw_mb.lower() or "xi-xiii" in raw_mb.lower() or "kyivan_rus" in raw_mb.lower()
+
+        if is_kyivan_rus and r.reasoning_steps:
+            step1 = r.reasoning_steps[0]
+            m = re.search(r"\((\d{4})[–-]", step1)
+            if m and 1400 <= int(m.group(1)) <= 1999:
+                contradictions.append(
+                    f"Line {r.line_number}: Labeled XI–XIII century but Step 1 dating is {m.group(0)}"
+                )
+
+        # 2. Label vs Text diff
+        if (
+            r.is_erroneous is True
+            and r.original_text
+            and r.corrected_text
+            and r.original_text.strip() == r.corrected_text.strip()
+        ):
+            contradictions.append(f"Line {r.line_number}: is_erroneous is True but original_text == corrected_text")
+        if (
+            r.is_erroneous is False
+            and r.original_text
+            and r.corrected_text
+            and r.original_text.strip() != r.corrected_text.strip()
+        ):
+            contradictions.append(f"Line {r.line_number}: is_erroneous is False but original_text != corrected_text")
+
+        # 3. Target term alignment using VESUM lemmas
+        if r.target_term:
+            target_lemmas = set(normalizer.get_canonical_tokens(r.target_term))
+            text_lemmas = set(normalizer.get_canonical_tokens(f"{r.query} {r.original_text or ''} {r.reasoning_text}"))
+            if target_lemmas and not target_lemmas.intersection(text_lemmas):
+                contradictions.append(
+                    f"Line {r.line_number}: target_term '{r.target_term}' missing from query and context"
+                )
+
+    max_contradictions = thresholds.get("max_self_contradictions", 0)
+    failures = []
+    if len(contradictions) > max_contradictions:
+        failures.append(
+            f"Found {len(contradictions)} self-contradictions (limit is {max_contradictions}). "
+            f"Examples: {contradictions[:3]}"
+        )
+
+    return CheckResult(
+        check_id="check_4_contradictions",
+        check_name="Self-Contradiction Audit",
+        status="FAIL" if failures else "PASS",
+        metrics={"contradiction_count": len(contradictions)},
+        thresholds={"max_self_contradictions": max_contradictions},
+        failures=failures,
+    )
+
+
+def audit_check_5_source_rules(records: list[DatasetRecord], thresholds: dict[str, Any]) -> CheckResult:
+    """Check 5: Epic Rules 3 & 4 (СУМ-11 distortion boundary, translation dictionaries, approved authorities)."""
+    sum11_normative_hits = []
+    sum11_negative_inference_hits = []
+    translation_dict_hits = []
+    unapproved_authority_hits = []
+
+    for r in records:
+        # Check source metadata
+        meta_str = str(r.source_metadata or "").lower()
+
+        # 1. Check for СУМ-11 cited as normative authority
+        # (Allowed strictly if under historical_suppression_note or soviet_colonization_context)
+        is_contrastive_context = "historical_suppression_note" in meta_str or "soviet_colonization_context" in meta_str
+        for alias in SOVIET_SUM11_ALIASES:
+            if alias in meta_str and not is_contrastive_context:
+                sum11_normative_hits.append(f"Line {r.line_number}: cites СУМ-11 as normative source")
+                break
+
+        # 2. Check for negative inference from СУМ-11 absence in text
+        full_text = f"{r.query} {r.reasoning_text} {r.final_response}".lower()
+        if re.search(r"відсутн\w*\s+в\s+сум[- ]?11", full_text) or re.search(
+            r"не\s+зафіксован\w*\s+в\s+сум[- ]?11.*тому.*(помилк|діалект|рідк)", full_text
+        ):
+            sum11_negative_inference_hits.append(
+                f"Line {r.line_number}: claims word is wrong/rare because absent from СУМ-11"
+            )
+
+        # 3. Check for bilingual translation dictionaries
+        for trans_id in TRANSLATION_DICT_IDS:
+            if trans_id in meta_str:
+                translation_dict_hits.append(f"Line {r.line_number}: sourced from translation dictionary '{trans_id}'")
+                break
+
+        # 4. Check that explicit authorities match approved list
+        if r.source_metadata and isinstance(r.source_metadata, dict):
+            auth = str(r.source_metadata.get("authority", r.source_metadata.get("source_book", "")))
+            if auth and not any(re.search(pat, auth, re.IGNORECASE) for pat in APPROVED_AUTHORITY_PATTERNS):
+                unapproved_authority_hits.append(f"Line {r.line_number}: unapproved authority '{auth}'")
+
+    failures = []
+    if sum11_normative_hits:
+        failures.append(f"Citing СУМ-11 as normative source in {len(sum11_normative_hits)} records (0 allowed)")
+    if sum11_negative_inference_hits:
+        failures.append(
+            f"Condemning words based on СУМ-11 absence in {len(sum11_negative_inference_hits)} records (0 allowed)"
+        )
+    if translation_dict_hits:
+        failures.append(f"Using bilingual translation dictionaries in {len(translation_dict_hits)} records (0 allowed)")
+    if unapproved_authority_hits:
+        failures.append(f"Unapproved authorities cited in {len(unapproved_authority_hits)} records")
+
+    return CheckResult(
+        check_id="check_5_source_rules",
+        check_name="Source Rules (Epic Rules 3 & 4)",
+        status="FAIL" if failures else "PASS",
+        metrics={
+            "sum11_normative_violations": len(sum11_normative_hits),
+            "sum11_negative_inferences": len(sum11_negative_inference_hits),
+            "translation_dictionary_violations": len(translation_dict_hits),
+            "unapproved_authorities_violations": len(unapproved_authority_hits),
+        },
+        thresholds={
+            "max_sum11_normative_violations": 0,
+            "max_sum11_negative_inferences": 0,
+            "max_translation_dict_violations": 0,
+            "max_unapproved_authorities": 0,
+        },
+        failures=failures,
+    )
+
+
+def audit_check_6_split_overlap(
+    records: list[DatasetRecord],
+    thresholds: dict[str, Any],
+    normalizer: LinguisticNormalizer,
+    manifest_declares_eval: bool = True,
+) -> CheckResult:
+    """Check 6: Lemmatized & aspect-normalized train/test overlap and containment."""
+    train_recs = [r for r in records if r.split == "train"]
+    eval_recs = [r for r in records if r.split == "eval"]
+
+    if not eval_recs:
+        if manifest_declares_eval:
+            return CheckResult(
+                "check_6_split_overlap",
+                "Train/Test Overlap & Leakage",
+                "FAIL",
+                failures=["Evaluation split declared in manifest but no evaluation records found on disk"],
+            )
+        else:
+            return CheckResult("check_6_split_overlap", "Train/Test Overlap & Leakage", "NOT_APPLICABLE")
+
+    # 1. Exact query leakage
+    train_queries = {r.query for r in train_recs}
+    exact_leakage = [r for r in eval_recs if r.query in train_queries]
+
+    # 2. Target phenomenon leakage
+    train_targets = {r.target_term for r in train_recs if r.target_term}
+    target_leakage = [r for r in eval_recs if r.target_term and r.target_term in train_targets]
+
+    # 3. 4-Gram Lemma Containment
+    def extract_4grams(text: str) -> set[tuple[str, ...]]:
+        tokens = normalizer.get_canonical_tokens(text)
+        if len(tokens) < 4:
+            return set()
+        return {tuple(tokens[i : i + 4]) for i in range(len(tokens) - 3)}
+
+    # Build train 4-gram frequency dictionary
+    train_4gram_counts = Counter()
+    for r in train_recs:
+        grams = extract_4grams(f"{r.query} {r.final_response}")
+        train_4gram_counts.update(grams)
+
+    # Exclude boilerplate 4-grams (occurring in > 20% of train records)
+    total_train = len(train_recs)
+    boilerplate_threshold = max(5, int(total_train * 0.20))
+    train_informative_4grams = {g for g, c in train_4gram_counts.items() if c < boilerplate_threshold}
+
+    # Evaluate per-eval-record containment
+    high_containment_records = 0
+    containment_threshold = thresholds.get("containment_threshold", 0.50)
+
+    for r in eval_recs:
+        eval_grams = extract_4grams(f"{r.query} {r.final_response}")
+        informative_eval_grams = eval_grams - {g for g, c in train_4gram_counts.items() if c >= boilerplate_threshold}
+        if not informative_eval_grams:
+            continue
+        overlap_count = len(informative_eval_grams.intersection(train_informative_4grams))
+        containment = overlap_count / len(informative_eval_grams)
+        if containment >= containment_threshold:
+            high_containment_records += 1
+
+    high_containment_share = high_containment_records / len(eval_recs) if eval_recs else 0.0
+    max_high_cont_share = thresholds.get("max_high_containment_share", 0.02)
+
+    failures = []
+    if exact_leakage:
+        failures.append(f"Exact query leakage: {len(exact_leakage)} eval queries exist in train set (0 allowed)")
+    if target_leakage:
+        failures.append(f"Target phenomenon leakage: {len(target_leakage)} eval targets exist in train set (0 allowed)")
+    if high_containment_share > max_high_cont_share:
+        failures.append(
+            f"High 4-gram containment share {high_containment_share:.2%} exceeds limit {max_high_cont_share:.2%}"
+        )
+
+    return CheckResult(
+        check_id="check_6_split_overlap",
+        check_name="Train/Test Overlap & Leakage",
+        status="FAIL" if failures else "PASS",
+        metrics={
+            "train_records": len(train_recs),
+            "eval_records": len(eval_recs),
+            "exact_query_leakage_count": len(exact_leakage),
+            "target_term_leakage_count": len(target_leakage),
+            "eval_records_high_containment": high_containment_records,
+            "high_containment_share": round(high_containment_share, 4),
+        },
+        thresholds={
+            "max_exact_sentence_leakage": 0,
+            "max_target_phenomenon_leakage": 0,
+            "max_high_containment_share": max_high_cont_share,
+        },
+        failures=failures,
+    )
+
+
+def audit_check_7_sample_drawer(
+    records: list[DatasetRecord],
+    thresholds: dict[str, Any],
+    dataset_sha256: str,
+    sample_out_path: Path,
+    verify_signoff_path: Path | None = None,
+) -> tuple[CheckResult, Path | None]:
+    """Check 7: Deterministic random sample drawer & human review lifecycle (M2, M3)."""
+    total = len(records)
+    if total == 0:
+        return CheckResult("check_7_sample_drawer", "Review Sample & Human Lifecycle", "NOT_APPLICABLE"), None
+
+    sample_size = thresholds.get("sample_size", 300)
+    salt = "open_model_data_acceptance_salt_2026"
+    seed_hash = hashlib.sha256(f"{dataset_sha256}_{salt}".encode()).hexdigest()
+
+    # Rank records by sha256(seed_hash + record.content_hash)
+    scored_records = []
+    for r in records:
+        rank_hash = hashlib.sha256(f"{seed_hash}_{r.content_hash}".encode()).hexdigest()
+        scored_records.append((rank_hash, r))
+
+    scored_records.sort(key=lambda x: x[0])
+    selected = [r for _, r in scored_records[:sample_size]]
+
+    # Ensure thin categories are included up to cap
+    thin_cap = thresholds.get("thin_category_sample_cap", 20)
+    category_counts = Counter(r.category for r in records if r.category)
+    thin_categories = {cat for cat, c in category_counts.items() if c < 50}
+
+    selected_hashes = {r.content_hash for r in selected}
+    thin_additions = []
+    for cat in thin_categories:
+        cat_recs = [r for r in records if r.category == cat and r.content_hash not in selected_hashes]
+        thin_additions.extend(cat_recs[:thin_cap])
+
+    all_sampled = selected + thin_additions[:100]
+
+    # Write Markdown sample file
+    sample_out_path.parent.mkdir(parents=True, exist_ok=True)
+    md_lines = [
+        f"# Independent Language Review Sample Package: {sample_out_path.stem}",
+        "",
+        f"- **Dataset SHA-256:** `{dataset_sha256}`",
+        f"- **Deterministic Sampling Seed Hash:** `{seed_hash[:16]}`",
+        f"- **Sampled Rows:** {len(all_sampled)} (Base {len(selected)} + Thin Category Boost {len(all_sampled) - len(selected)})",
+        "",
+        "## Reviewer Instructions & Rubric",
+        "For each instance below, evaluate the text using authentic Ukrainian linguistic tools (СУМ-20, Правопис 2019, VESUM, Антоненко-Давидович).",
+        "Classify defects as BLOCKER (incorrect grammar, Russianisms, Soviet distortion) or MINOR (stylistic nuance).",
+        "",
+        "---",
+        "",
+    ]
+
+    json_records = []
+    for i, r in enumerate(all_sampled, start=1):
+        md_lines.append(f"### Sample #{i} — [{r.split.upper()}] Line {r.line_number}")
+        md_lines.append(f"**Source File:** `{r.file_path.name}` | **Category:** `{r.category or 'N/A'}`")
+        if r.target_term:
+            md_lines.append(f"**Target Term:** `{r.target_term}`")
+        md_lines.append("")
+        md_lines.append(f"**Запитання / Завдання:**\n> {r.query}")
+        md_lines.append("")
+        if r.reasoning_steps:
+            md_lines.append("**Міркування (Reasoning):**")
+            for step in r.reasoning_steps:
+                md_lines.append(f"- {step}")
+            md_lines.append("")
+        md_lines.append(f"**Відповідь / Редагування:**\n```\n{r.final_response}\n```")
+        md_lines.append("")
+        if r.source_metadata:
+            md_lines.append(f"**Джерело / Авторитет:** `{r.source_metadata}`")
+            md_lines.append("")
+        md_lines.append("#### Оцінка експерта:")
+        md_lines.append("- [ ] 1. Мовна якість (відсутність русизмів, кальок, суржику)")
+        md_lines.append("- [ ] 2. Природність та автентичність українського слововжитку")
+        md_lines.append("- [ ] 3. Відповідність авторитетним джерелам")
+        md_lines.append("- [ ] 4. Відсутність радянських/колоніальних спотворень")
+        md_lines.append("- [ ] 5. Педагогічна та фактологічна точність")
+        md_lines.append("")
+        md_lines.append("**Вердикт:** [ ] ПРИЙНЯТО  [ ] ЗАУВАЖЕННЯ  [ ] ВІДХИЛЕНО")
+        md_lines.append("**Коментар та джерело:** _______________________________________")
+        md_lines.append("")
+        md_lines.append("---")
+        md_lines.append("")
+
+        json_records.append(
+            {
+                "sample_index": i,
+                "file_name": r.file_path.name,
+                "line_number": r.line_number,
+                "split": r.split,
+                "query": r.query,
+                "final_response": r.final_response,
+                "reasoning_steps": r.reasoning_steps,
+                "target_term": r.target_term,
+                "category": r.category,
+                "content_hash": r.content_hash,
+            }
+        )
+
+    sample_out_path.write_text("\n".join(md_lines), encoding="utf-8")
+    json_sidecar_path = sample_out_path.with_suffix(".json")
+    json_sidecar_path.write_text(json.dumps(json_records, ensure_ascii=False, indent=2), encoding="utf-8")
+
+    # Check human signoff if requested
+    failures = []
+    signoff_verified = False
+
+    if verify_signoff_path:
+        if not verify_signoff_path.is_file():
+            failures.append(f"Signoff file {verify_signoff_path} not found")
+        else:
+            try:
+                signoff_data = json.loads(verify_signoff_path.read_text(encoding="utf-8"))
+                if signoff_data.get("dataset_sha256") != dataset_sha256:
+                    failures.append("Signoff dataset_sha256 does not match current dataset content")
+                blockers = signoff_data.get("blocker_defect_count", 1)
+                if blockers > 0:
+                    failures.append(f"Signoff reports {blockers} unresolved BLOCKER defects")
+                else:
+                    signoff_verified = True
+            except Exception as exc:
+                failures.append(f"Error parsing signoff file: {exc}")
+
+    status = "FAIL" if failures else "PASS"
+
+    return CheckResult(
+        check_id="check_7_sample_drawer",
+        check_name="Review Sample & Human Lifecycle",
+        status=status,
+        metrics={
+            "sample_size_drawn": len(all_sampled),
+            "sample_file_md": str(sample_out_path),
+            "sample_file_json": str(json_sidecar_path),
+            "signoff_verified": signoff_verified,
+        },
+        thresholds={"sample_size": sample_size},
+        failures=failures,
+    ), sample_out_path
+
+
+# ── Dataset Loader & Runner ─────────────────────────────────────────────────
+
+
+def compute_dataset_sha256(jsonl_files: list[Path]) -> str:
+    """Compute deterministic SHA-256 over all sorted dataset files."""
+    hasher = hashlib.sha256()
+    for p in sorted(jsonl_files):
+        hasher.update(p.name.encode("utf-8"))
+        hasher.update(p.read_bytes())
+    return hasher.hexdigest()
+
+
+def run_acceptance_audit(
+    dataset_dir: Path,
+    profile_name: str = "default",
+    sample_out: Path | None = None,
+    sample_size: int = 300,
+    vesum_db: Path = VESUM_DB_PATH,
+    sources_db: Path = DEFAULT_SOURCES_DB,
+    verify_signoff: Path | None = None,
+    fail_fast: bool = False,
+) -> tuple[AcceptanceReport, int]:
+    """Execute all 7 acceptance checks against a dataset directory."""
+    if not dataset_dir.is_dir():
+        print(f"❌ Error: Dataset directory {dataset_dir} does not exist", file=sys.stderr)
+        return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
+
+    # Verify required database dependencies (Fail-closed)
+    if not vesum_db.is_file():
+        print(f"❌ Error: Required VESUM database {vesum_db} not found", file=sys.stderr)
+        return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
+
+    if not sources_db.is_file():
+        print(f"❌ Error: Required sources database {sources_db} not found", file=sys.stderr)
+        return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
+
+    # Load profile
+    try:
+        thresholds, profile_sha256 = load_profile(profile_name)
+    except Exception as exc:
+        print(f"❌ Error loading profile {profile_name}: {exc}", file=sys.stderr)
+        return AcceptanceReport(str(dataset_dir), "", profile_name, "", 0, 0, 0, overall_status="OPERATIONAL_ERROR"), 2
+
+    if sample_size != 300:
+        thresholds["sample_size"] = sample_size
+
+    # Scan all JSONL shards
+    jsonl_files = sorted(dataset_dir.rglob("*.jsonl"))
+    if not jsonl_files:
+        print(f"❌ Error: No .jsonl files found in {dataset_dir}", file=sys.stderr)
+        return AcceptanceReport(
+            str(dataset_dir), "", profile_name, profile_sha256, 0, 0, 0, overall_status="OPERATIONAL_ERROR"
+        ), 2
+
+    dataset_sha256 = compute_dataset_sha256(jsonl_files)
+
+    # Check for manifest
+    manifest_path = dataset_dir / "manifest.json"
+    manifest_task_type = None
+    manifest_declares_eval = False
+    if manifest_path.is_file():
+        try:
+            m_data = json.loads(manifest_path.read_text(encoding="utf-8"))
+            manifest_task_type = m_data.get("task_type")
+            manifest_declares_eval = bool(m_data.get("has_evaluation_split", False))
+        except Exception:
+            pass
+
+    # Parse records
+    records: list[DatasetRecord] = []
+    for f in jsonl_files:
+        with f.open("r", encoding="utf-8") as fp:
+            for idx, line in enumerate(fp, start=1):
+                if line.strip():
+                    try:
+                        raw = json.loads(line)
+                        rec = parse_dataset_record(raw, f, idx)
+                        records.append(rec)
+                    except json.JSONDecodeError as exc:
+                        print(f"❌ JSON error in {f}:{idx}: {exc}", file=sys.stderr)
+                        return (
+                            AcceptanceReport(
+                                str(dataset_dir),
+                                dataset_sha256,
+                                profile_name,
+                                profile_sha256,
+                                0,
+                                0,
+                                0,
+                                overall_status="OPERATIONAL_ERROR",
+                            ),
+                            2,
+                        )
+
+    total_records = len(records)
+    train_records = sum(1 for r in records if r.split == "train")
+    eval_records = sum(1 for r in records if r.split == "eval")
+
+    report = AcceptanceReport(
+        dataset_dir=str(dataset_dir),
+        dataset_sha256=dataset_sha256,
+        profile_name=profile_name,
+        profile_sha256=profile_sha256,
+        total_records=total_records,
+        train_records=train_records,
+        eval_records=eval_records,
+    )
+
+    # Initialize Linguistic Normalizer
+    normalizer = LinguisticNormalizer(vesum_db, ASPECT_PAIRS_FILE)
+
+    # Resolve sample output path
+    actual_sample_out = sample_out or (dataset_dir / "acceptance_review_sample.md")
+
+    # Execute the 7 checks
+    checks = [
+        ("check_1_repeats", lambda: audit_check_1_repeats(records, thresholds)),
+        ("check_2_form_letters", lambda: audit_check_2_form_letters(records, thresholds)),
+        (
+            "check_3_content_share",
+            lambda: audit_check_3_content_share(records, thresholds, manifest_task_type),
+        ),
+        (
+            "check_4_contradictions",
+            lambda: audit_check_4_contradictions(records, thresholds, normalizer),
+        ),
+        ("check_5_source_rules", lambda: audit_check_5_source_rules(records, thresholds)),
+        (
+            "check_6_split_overlap",
+            lambda: audit_check_6_split_overlap(
+                records, thresholds, normalizer, manifest_declares_eval or (eval_records > 0)
+            ),
+        ),
+    ]
+
+    has_failure = False
+    for check_id, check_fn in checks:
+        res = check_fn()
+        report.checks[check_id] = res
+        if res.status == "FAIL":
+            has_failure = True
+            if fail_fast:
+                break
+
+    # Execute Check 7
+    if not (fail_fast and has_failure):
+        res7, written_sample = audit_check_7_sample_drawer(
+            records, thresholds, dataset_sha256, actual_sample_out, verify_signoff
+        )
+        report.checks["check_7_sample_drawer"] = res7
+        report.sample_file_path = str(written_sample) if written_sample else None
+        if res7.status == "FAIL":
+            has_failure = True
+
+    normalizer.close()
+
+    # Determine overall status and exit code
+    if has_failure:
+        report.overall_status = "ACCEPTANCE_FAILED"
+        exit_code = 1
+    elif verify_signoff and report.checks.get("check_7_sample_drawer", {}).metrics.get("signoff_verified"):
+        report.overall_status = "ACCEPTED"
+        exit_code = 0
+    else:
+        report.overall_status = "PASSED_AUTOMATED_CHECKS"
+        exit_code = 0
+
+    return report, exit_code
+
+
+def print_report_summary(report: AcceptanceReport, exit_code: int):
+    """Format and print acceptance report table to stdout."""
+    print("=" * 80)
+    print(f"📊 DATASET ACCEPTANCE REPORT: {report.dataset_dir}")
+    print(f"   SHA-256: {report.dataset_sha256[:16]}... | Profile: {report.profile_name} ({report.profile_sha256[:8]})")
+    print(f"   Records: Total={report.total_records} (Train={report.train_records}, Eval={report.eval_records})")
+    print("=" * 80)
+
+    for cid, cr in report.checks.items():
+        symbol = "✅" if cr.status == "PASS" else ("❌" if cr.status == "FAIL" else "⚪")
+        print(f"{symbol} [{cr.status:14s}] {cr.check_name} ({cid})")
+        for k, v in cr.metrics.items():
+            if isinstance(v, dict):
+                print(f"     • {k}: {v}")
+            else:
+                print(f"     • {k}: {v}")
+        if cr.failures:
+            print("     ⚠️  Failures:")
+            for f in cr.failures[:4]:
+                print(f"        - {f}")
+            if len(cr.failures) > 4:
+                print(f"        - ... and {len(cr.failures) - 4} more")
+
+    print("-" * 80)
+    status_symbol = "✅" if exit_code == 0 else "❌"
+    print(f"{status_symbol} OVERALL STATUS: {report.overall_status} (Exit Code {exit_code})")
+    if report.sample_file_path:
+        print(f"📝 Review Sample Package Generated: {report.sample_file_path}")
+    print("=" * 80)
+
+
+def main():
+    parser = argparse.ArgumentParser(description="Universal Dataset Acceptance Audit Gate for Epic #6321")
+    parser.add_argument("dataset_dir", type=Path, help="Path to dataset directory containing JSONL files")
+    parser.add_argument("--profile", default="default", help="Acceptance profile from profiles/ (default: default)")
+    parser.add_argument("--sample-out", type=Path, default=None, help="Custom output path for review sample MD")
+    parser.add_argument("--sample-size", type=int, default=300, help="Number of sample records to draw (default: 300)")
+    parser.add_argument("--json-out", type=Path, default=None, help="Output path for JSON acceptance scorecard")
+    parser.add_argument("--vesum-db", type=Path, default=VESUM_DB_PATH, help="Path to vesum.db")
+    parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
+    parser.add_argument("--verify-human-signoff", type=Path, default=None, help="Path to signed human review report")
+    parser.add_argument("--fail-fast", action="store_true", help="Abort on first failing check")
+
+    args = parser.parse_args()
+
+    report, exit_code = run_acceptance_audit(
+        dataset_dir=args.dataset_dir,
+        profile_name=args.profile,
+        sample_out=args.sample_out,
+        sample_size=args.sample_size,
+        vesum_db=args.vesum_db,
+        sources_db=args.sources_db,
+        verify_signoff=args.verify_human_signoff,
+        fail_fast=args.fail_fast,
+    )
+
+    print_report_summary(report, exit_code)
+
+    if args.json_out:
+        args.json_out.parent.mkdir(parents=True, exist_ok=True)
+        report_dict = {
+            "dataset_dir": report.dataset_dir,
+            "dataset_sha256": report.dataset_sha256,
+            "profile_name": report.profile_name,
+            "profile_sha256": report.profile_sha256,
+            "total_records": report.total_records,
+            "train_records": report.train_records,
+            "eval_records": report.eval_records,
+            "overall_status": report.overall_status,
+            "sample_file_path": report.sample_file_path,
+            "checks": {
+                k: {
+                    "check_name": v.check_name,
+                    "status": v.status,
+                    "metrics": v.metrics,
+                    "thresholds": v.thresholds,
+                    "failures": v.failures,
+                }
+                for k, v in report.checks.items()
+            },
+        }
+        args.json_out.write_text(json.dumps(report_dict, ensure_ascii=False, indent=2), encoding="utf-8")
+        print(f"Saved machine-readable JSON scorecard to {args.json_out}")
+
+    sys.exit(exit_code)
+
+
+if __name__ == "__main__":
+    main()

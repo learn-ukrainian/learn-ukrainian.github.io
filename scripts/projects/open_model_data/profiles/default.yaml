@@ -1,0 +1,49 @@
+profile_name: "default"
+profile_version: "1.0.0"
+
+thresholds:
+  # Check 1: Repeats
+  max_exact_duplicate_rate: 0.0
+  max_single_multiplicity: 1
+  max_near_duplicate_rate: 0.01
+  near_duplicate_jaccard_threshold: 0.85
+
+  # Check 2: Form Letters
+  max_query_top5_share: 0.80
+  min_query_unique_skeletons: 20
+  max_reasoning_top1_share: 0.10
+  max_reasoning_top5_share: 0.25
+  max_reasoning_top20_share: 0.50
+  min_reasoning_perplexity: 25.0
+  min_reasoning_entropy: 0.80
+  min_reasoning_unique_skeletons: 50
+  max_answer_top1_share: 0.05
+  max_answer_top5_share: 0.15
+  max_answer_top20_share: 0.30
+  min_answer_perplexity: 35.0
+  min_answer_entropy: 0.80
+  min_answer_unique_skeletons: 50
+
+  # Check 3: Content Share (applied when task_type == 'correction')
+  min_correction_share: 0.50
+  min_examples_per_category: 50
+  max_single_category_share: 0.40
+
+  # Check 4: Self-Contradiction
+  max_self_contradictions: 0
+
+  # Check 5: Source Rules
+  max_sum11_normative_violations: 0
+  max_sum11_negative_inferences: 0
+  max_translation_dict_violations: 0
+  max_unapproved_authorities: 0
+
+  # Check 6: Overlap
+  max_exact_sentence_leakage: 0
+  max_target_phenomenon_leakage: 0
+  max_high_containment_share: 0.02
+  containment_threshold: 0.50
+
+  # Check 7: Sampling
+  sample_size: 300
+  thin_category_sample_cap: 20
