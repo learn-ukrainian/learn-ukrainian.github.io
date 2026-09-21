@@ -563,9 +563,14 @@ def test_unmigrated_database_stops_before_requests(tmp_path):
     assert _sqlite_master_bytes(db_path) == before
 
 
-def test_delay_below_one_second_is_rejected():
-    with pytest.raises(SystemExit):
-        main(["run", "--spellings-file", "x", "--state-dir", "y", "--db", "z", "--delay", "0.5"])
+def test_delay_below_one_second_is_rejected(capsys):
+    code = main(["run", "--spellings-file", "x", "--state-dir", "y", "--db", "z", "--delay", "0.5"])
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
 
 
 def test_equal_content_hash_marks_checked_without_rewriting(tmp_path):
@@ -1712,3 +1717,161 @@ def test_final_accounting_database_locked_error_still_produces_stop_summary(tmp_
     assert "=== ULIF Fetch Stop Summary ===" in err
     assert "Resume command:" in err
     assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_invalid_delay_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    db_path = tmp_path / "cache.db"
+    prepare_database(db_path).close()
+    state_dir = tmp_path / "state"
+
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(state_dir),
+            "--db",
+            str(db_path),
+            "--delay",
+            "0.5",
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "delay must be >= 1.0" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               delay must be >= 1.0" in err
+    assert "Resume command:" in err
+
+
+def test_fallback_accounting_operator_interrupt_produces_stop_summary(tmp_path, capsys, monkeypatch):
+    page = _register(["інше"], "seed", paging=False)
+    handler = _Scripted(lambda m, d: HttpResult(200, page, {}))
+
+    orig_init = SpellingLedger.__init__
+
+    def wrapped_init(self, *args, **kwargs):
+        orig_init(self, *args, **kwargs)
+        real_conn = self.conn
+
+        class Proxy:
+            def __init__(self, conn):
+                self._conn = conn
+
+            def execute(self, sql, *a, **kw):
+                if "INSERT INTO meta" in str(sql) and "requests_made" in str(a):
+                    raise KeyboardInterrupt()
+                return self._conn.execute(sql, *a, **kw)
+
+            def __getattr__(self, name):
+                return getattr(self._conn, name)
+
+        self.conn = Proxy(real_conn)
+
+    monkeypatch.setattr(SpellingLedger, "__init__", wrapped_init)
+
+    orig_set = SpellingLedger.set_requests_made
+    calls = [0]
+
+    def failing_set(self, count):
+        calls[0] += 1
+        if calls[0] >= 2:
+            raise sqlite3.OperationalError("database is locked")
+        orig_set(self, count)
+
+    monkeypatch.setattr(SpellingLedger, "set_requests_made", failing_set)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=tmp_path / "state",
+        db_path=tmp_path / "cache.db",
+        transport=handler,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert "Resume command:" in err
+    assert not (tmp_path / "state" / "runner.lock").exists()
+
+
+def test_interrupted_refetch_restores_pending_state(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.mark("тест", "stored", entry_count=2)
+    ledger.record_response(spelling="тест", role="seed", response_sha256="hash123", request_sha256="req123")
+    ledger.close()
+
+    def interrupt_transport(method, data):
+        raise KeyboardInterrupt()
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=True,
+        transport=interrupt_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("тест") == "pending"
+        counts = ledger.counts()
+        assert counts["pending"] == 1
+        assert counts["stored"] == 0
+        responses_count = ledger.conn.execute("SELECT COUNT(*) FROM responses WHERE spelling = 'тест'").fetchone()[0]
+        assert responses_count == 0
+    finally:
+        ledger.close()
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Pending:              1" in err
+    assert "Stored:               0" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_interrupted_resumed_retry_restores_pending_state(tmp_path, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.mark("тест", "retry_scheduled", error="503")
+    ledger.close()
+
+    def interrupt_transport(method, data):
+        raise KeyboardInterrupt()
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=False,
+        transport=interrupt_transport,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.state_of("тест") == "pending"
+        counts = ledger.counts()
+        assert counts["pending"] == 1
+        assert counts["retry_scheduled"] == 0
+    finally:
+        ledger.close()
+
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Pending:              1" in err
+    assert "Retry scheduled:      0" in err
+    assert not (state_dir / "runner.lock").exists()

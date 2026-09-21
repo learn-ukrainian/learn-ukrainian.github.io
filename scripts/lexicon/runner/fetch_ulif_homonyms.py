@@ -1355,6 +1355,19 @@ def _print_stop_summary(
     print("===============================", file=sys.stderr, flush=True)
 
 
+def _restore_pending(ledger: SpellingLedger, spelling: str) -> None:
+    """Safely restore a spelling to pending and clear partial responses across interrupts."""
+    for _ in range(3):
+        try:
+            ledger.clear_responses(spelling)
+            ledger.mark(spelling, "pending")
+            return
+        except (KeyboardInterrupt, InterruptedByOperator):
+            pass
+        except Exception:
+            break
+
+
 def run_fetch(
     *,
     spellings: Sequence[str],
@@ -1530,6 +1543,9 @@ def run_fetch(
                         stop_reason = "max spellings"
                         break
 
+                    if refetch and state in COMPLETE_STATES:
+                        _restore_pending(ledger, spelling)
+
                     unit_start_clock = clock()
                     unit_start_requests = client.requests_made
                     outcome: UnitOutcome | None = None
@@ -1539,6 +1555,7 @@ def run_fetch(
                         outcome = fetcher.fetch(spelling)
                         unit_state = outcome.state
                     except RequestCap:
+                        _restore_pending(ledger, spelling)
                         stop_reason = "request cap"
                         break
                     except Forbidden:
@@ -1554,10 +1571,12 @@ def run_fetch(
                         unit_state = "retry_scheduled"
                         ledger.mark(spelling, "retry_scheduled", error=str(exc))
                     except (KeyboardInterrupt, InterruptedByOperator):
+                        _restore_pending(ledger, spelling)
                         stop_reason = "interrupted by operator"
                         return_code = EXIT_INTERRUPTED
                         break
                     except Exception as exc:
+                        _restore_pending(ledger, spelling)
                         stop_reason = str(exc)
                         return_code = EXIT_INTERRUPTED
                         print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
@@ -1694,6 +1713,9 @@ def run_fetch(
                         (str(base_requests + client.requests_made),),
                     )
                     ledger.conn.commit()
+                except (KeyboardInterrupt, InterruptedByOperator):
+                    stop_reason = "interrupted by operator"
+                    return_code = EXIT_INTERRUPTED
                 except Exception as exc:
                     print(
                         f"warning: direct execute failed to persist requests_made ({base_requests + client.requests_made}): {exc}",
@@ -1721,7 +1743,7 @@ def run_fetch(
                 return_code = EXIT_INTERRUPTED
 
         if not summary_printed:
-            with contextlib.suppress(Exception):
+            with contextlib.suppress(BaseException):
                 lines = [
                     "=== ULIF Fetch Stop Summary ===",
                     f"Reason:               {stop_reason}",
@@ -1816,13 +1838,6 @@ def _vesum_lemmas(conn: sqlite3.Connection, word: str) -> list[str]:
     return [str(row[0]) for row in rows if str(row[0]).strip()]
 
 
-def _positive_delay(value: str) -> float:
-    delay = float(value)
-    if delay < MIN_DELAY_SECONDS:
-        raise argparse.ArgumentTypeError(f"delay must be >= {MIN_DELAY_SECONDS} seconds")
-    return delay
-
-
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         description="Resumable targeted ULIF homonym fetch and offline parser.\nUse to fetch homonym-safe entries and relation tabs from DictUA into SQLite cache.",
@@ -1906,7 +1921,7 @@ Related:
     )
     run.add_argument(
         "--delay",
-        type=_positive_delay,
+        type=float,
         default=MIN_DELAY_SECONDS,
         help="Seconds to wait between requests (must be >= 1.0; default: 1.0)",
     )
@@ -2010,7 +2025,7 @@ Related:
     )
     status.add_argument(
         "--delay",
-        type=_positive_delay,
+        type=float,
         default=MIN_DELAY_SECONDS,
         help="Expected delay in seconds between requests for remaining time calculation (default: 1.0)",
     )
@@ -2116,7 +2131,14 @@ Related:
 
     args = parser.parse_args(argv)
     if args.command == "run":
-        spellings = _spellings_from_file(args.spellings_file)
+        if not args.spellings_file.exists():
+            if args.delay < MIN_DELAY_SECONDS:
+                spellings = []
+            else:
+                print(f"spellings file not found: {args.spellings_file}", file=sys.stderr)
+                return EXIT_USAGE
+        else:
+            spellings = _spellings_from_file(args.spellings_file)
         cmd_parts = [
             sys.executable,
             "-m",
