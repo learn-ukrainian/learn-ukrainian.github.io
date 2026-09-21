@@ -563,8 +563,22 @@ def test_unmigrated_database_stops_before_requests(tmp_path):
     assert _sqlite_master_bytes(db_path) == before
 
 
-def test_delay_below_one_second_is_rejected(capsys):
-    code = main(["run", "--spellings-file", "x", "--state-dir", "y", "--db", "z", "--delay", "0.5"])
+def test_delay_below_one_second_is_rejected(tmp_path, capsys):
+    spellings_file = tmp_path / "spellings.txt"
+    spellings_file.write_text("тест\n", encoding="utf-8")
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(spellings_file),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+            "--delay",
+            "0.5",
+        ]
+    )
     assert code == EXIT_USAGE
     err = capsys.readouterr().err
     assert "delay must be >= 1.0" in err
@@ -1806,7 +1820,9 @@ def test_interrupted_refetch_restores_pending_state(tmp_path, capsys):
     state_dir = tmp_path / "state"
     state_dir.mkdir(parents=True, exist_ok=True)
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
     ledger.mark("тест", "stored", entry_count=2)
+    assert ledger.state_of("тест") == "stored"
     ledger.record_response(spelling="тест", role="seed", response_sha256="hash123", request_sha256="req123")
     ledger.close()
 
@@ -1845,7 +1861,9 @@ def test_interrupted_resumed_retry_restores_pending_state(tmp_path, capsys):
     state_dir = tmp_path / "state"
     state_dir.mkdir(parents=True, exist_ok=True)
     ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
     ledger.mark("тест", "retry_scheduled", error="503")
+    assert ledger.state_of("тест") == "retry_scheduled"
     ledger.close()
 
     def interrupt_transport(method, data):
@@ -1875,3 +1893,56 @@ def test_interrupted_resumed_retry_restores_pending_state(tmp_path, capsys):
     assert "Pending:              1" in err
     assert "Retry scheduled:      0" in err
     assert not (state_dir / "runner.lock").exists()
+
+
+def test_interrupted_refetch_preparation_stops_run(tmp_path, capsys, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    ledger.ensure("тест")
+    ledger.mark("тест", "stored", entry_count=2)
+    assert ledger.state_of("тест") == "stored"
+    ledger.close()
+
+    orig_clear = SpellingLedger.clear_responses
+
+    def interrupt_clear(self, spelling):
+        orig_clear(self, spelling)
+        raise KeyboardInterrupt()
+
+    monkeypatch.setattr(SpellingLedger, "clear_responses", interrupt_clear)
+
+    code = run_fetch(
+        spellings=["тест"],
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        refetch=True,
+        transport=lambda m, d: HttpResult(200, "", {}),
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_INTERRUPTED
+    err = capsys.readouterr().err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               interrupted by operator" in err
+    assert not (state_dir / "runner.lock").exists()
+
+
+def test_missing_spellings_file_cli_produces_stop_summary_and_exit_usage(tmp_path, capsys):
+    code = main(
+        [
+            "run",
+            "--spellings-file",
+            str(tmp_path / "nonexistent.txt"),
+            "--state-dir",
+            str(tmp_path / "state"),
+            "--db",
+            str(tmp_path / "cache.db"),
+        ]
+    )
+    assert code == EXIT_USAGE
+    err = capsys.readouterr().err
+    assert "spellings file not found" in err
+    assert "=== ULIF Fetch Stop Summary ===" in err
+    assert "Reason:               spellings file not found" in err
+    assert "Resume command:" in err

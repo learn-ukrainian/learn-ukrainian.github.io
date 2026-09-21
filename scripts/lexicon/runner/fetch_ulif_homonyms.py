@@ -1357,15 +1357,18 @@ def _print_stop_summary(
 
 def _restore_pending(ledger: SpellingLedger, spelling: str) -> None:
     """Safely restore a spelling to pending and clear partial responses across interrupts."""
+    interrupted = False
     for _ in range(3):
         try:
             ledger.clear_responses(spelling)
             ledger.mark(spelling, "pending")
-            return
+            break
         except (KeyboardInterrupt, InterruptedByOperator):
-            pass
+            interrupted = True
         except Exception:
             break
+    if interrupted:
+        raise InterruptedByOperator()
 
 
 def run_fetch(
@@ -1543,19 +1546,19 @@ def run_fetch(
                         stop_reason = "max spellings"
                         break
 
-                    if refetch and state in COMPLETE_STATES:
-                        _restore_pending(ledger, spelling)
-
                     unit_start_clock = clock()
                     unit_start_requests = client.requests_made
                     outcome: UnitOutcome | None = None
                     unit_state = ""
 
                     try:
+                        if refetch and state in COMPLETE_STATES:
+                            _restore_pending(ledger, spelling)
                         outcome = fetcher.fetch(spelling)
                         unit_state = outcome.state
                     except RequestCap:
-                        _restore_pending(ledger, spelling)
+                        with contextlib.suppress(BaseException):
+                            _restore_pending(ledger, spelling)
                         stop_reason = "request cap"
                         break
                     except Forbidden:
@@ -1571,12 +1574,14 @@ def run_fetch(
                         unit_state = "retry_scheduled"
                         ledger.mark(spelling, "retry_scheduled", error=str(exc))
                     except (KeyboardInterrupt, InterruptedByOperator):
-                        _restore_pending(ledger, spelling)
+                        with contextlib.suppress(BaseException):
+                            _restore_pending(ledger, spelling)
                         stop_reason = "interrupted by operator"
                         return_code = EXIT_INTERRUPTED
                         break
                     except Exception as exc:
-                        _restore_pending(ledger, spelling)
+                        with contextlib.suppress(BaseException):
+                            _restore_pending(ledger, spelling)
                         stop_reason = str(exc)
                         return_code = EXIT_INTERRUPTED
                         print(f"interrupted on {spelling}: {exc}", file=sys.stderr)
@@ -2131,14 +2136,6 @@ Related:
 
     args = parser.parse_args(argv)
     if args.command == "run":
-        if not args.spellings_file.exists():
-            if args.delay < MIN_DELAY_SECONDS:
-                spellings = []
-            else:
-                print(f"spellings file not found: {args.spellings_file}", file=sys.stderr)
-                return EXIT_USAGE
-        else:
-            spellings = _spellings_from_file(args.spellings_file)
         cmd_parts = [
             sys.executable,
             "-m",
@@ -2164,6 +2161,20 @@ Related:
         if args.quiet:
             cmd_parts.append("--quiet")
         resume_cmd = shlex.join(cmd_parts)
+
+        if not args.spellings_file.exists():
+            err_msg = f"spellings file not found: {args.spellings_file}"
+            print(err_msg, file=sys.stderr)
+            _print_stop_summary(
+                reason=err_msg,
+                ledger=None,
+                requests_in_process=0,
+                elapsed_seconds=0.0,
+                resume_cmd=resume_cmd,
+            )
+            return EXIT_USAGE
+
+        spellings = _spellings_from_file(args.spellings_file)
         try:
             code = run_fetch(
                 spellings=spellings,
@@ -2178,7 +2189,7 @@ Related:
                 spellings_file=args.spellings_file,
                 resume_cmd=resume_cmd,
             )
-            if code != EXIT_INTERRUPTED:
+            if code == EXIT_OK:
                 ledger = SpellingLedger(args.state_dir / "ledger.sqlite")
                 try:
                     print(status_text(ledger, delay_seconds=args.delay, state_dir=args.state_dir))
