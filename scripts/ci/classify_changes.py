@@ -177,22 +177,9 @@ def git_tree_paths(repo_root: Path | None = None) -> set[str]:
     return {line for line in raw.splitlines() if line}
 
 
-def _stem_map_tests(stem: str, tree: Iterable[str], stems: dict[str, list[str]] | None = None) -> list[str] | None:
+def _stem_map_tests(stem: str, tree: Iterable[str]) -> list[str]:
     """Map scripts/.../FOO.py to tests/**/test_{FOO,foo}.py and test_{FOO,foo}_*.py."""
     variants = {stem, stem.lower()}
-    if stem.startswith("_"):
-        stripped = stem.lstrip("_")
-        if stripped:
-            if stems is not None:
-                has_collision = bool(stems.get(stripped))
-            else:
-                has_collision = any(
-                    path.startswith("scripts/") and path.endswith(".py") and PurePosixPath(path).stem == stripped
-                    for path in tree
-                )
-            if has_collision:
-                return None
-            variants.update({stripped, stripped.lower()})
     out: list[str] = []
     for path in tree:
         if not path.startswith("tests/") or not path.endswith(".py"):
@@ -205,34 +192,6 @@ def _stem_map_tests(stem: str, tree: Iterable[str], stems: dict[str, list[str]] 
                 name.startswith(f"test_{variant}_") and name.endswith(".py")
             ):
                 out.append(path)
-                break
-    return sorted(set(out))
-
-
-def _package_map_tests(script_path: str, tree: Iterable[str]) -> list[str]:
-    """Map changed scripts/<pkg>/.../<mod>.py to tests/<pkg>/test_<mod>*.py only (same package path)."""
-    p = PurePosixPath(_norm(script_path))
-    if len(p.parts) < 3 or p.parts[0] != "scripts" or not p.name.endswith(".py"):
-        return []
-    pkg = p.parts[1]
-    stem = p.stem
-    variants = {stem, stem.lower()}
-    if stem.startswith("_"):
-        stripped = stem.lstrip("_")
-        if stripped:
-            variants.update({stripped, stripped.lower()})
-    prefix = f"tests/{pkg}/"
-    out: list[str] = []
-    for path in tree:
-        norm_path = _norm(path)
-        if not norm_path.startswith(prefix) or not norm_path.endswith(".py"):
-            continue
-        name = PurePosixPath(norm_path).name
-        for variant in variants:
-            if not variant:
-                continue
-            if name == f"test_{variant}.py" or (name.startswith(f"test_{variant}_") and name.endswith(".py")):
-                out.append(norm_path)
                 break
     return sorted(set(out))
 
@@ -271,12 +230,7 @@ def build_selected_candidates(paths: Sequence[str], tree: Iterable[str]) -> list
             stem = PurePosixPath(p).stem
             if len(stems.get(stem, [])) > 1:
                 return None
-            mapped = _stem_map_tests(stem, tree_set, stems=stems)
-            if mapped is None:
-                # Leading-underscore stem collision treats as unmapped -> None (full).
-                return None
-            if not mapped:
-                mapped = _package_map_tests(p, tree_set)
+            mapped = _stem_map_tests(stem, tree_set)
             if not mapped:
                 # Unmapped script — safety-net does not exempt.
                 return None

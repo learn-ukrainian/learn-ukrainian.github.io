@@ -578,81 +578,20 @@ class ClassifierTests(unittest.TestCase):
         full = self.classify(["unknown.bin"])
         self.assertEqual(len(json.loads(full["shards"])), int(full["shard_count"]))
 
-    def test_inbox_watch_selected(self):
-        tree = _tree(
-            "scripts/ai_agent_bridge/_inbox_watch.py",
-            "tests/ai_agent_bridge/test_inbox_watch.py",
-            "tests/test_ci_shard_partition.py",
-        )
-        # PR #8496 pattern: changed script and test file
-        result = self.classify(
+    def test_inbox_watch_with_current_tree_classifies_full(self):
+        # Regression for PR #8501: stem widening under-selects (_inbox_watch.py
+        # skipped tests/test_remote_supervisor.py). With leading-underscore stem
+        # widening removed, unmapped script changes fall back to FULL.
+        tree = scope.git_tree_paths()
+        result = self.classify(["scripts/ai_agent_bridge/_inbox_watch.py"], tree_paths=tree)
+        self.assert_full(result, frontend="false")
+
+        # Even when paired with its namesake test (PR #8496 diff), it falls back to FULL.
+        result_with_test = self.classify(
             ["scripts/ai_agent_bridge/_inbox_watch.py", "tests/ai_agent_bridge/test_inbox_watch.py"],
             tree_paths=tree,
         )
-        self.assert_selected(
-            result,
-            [
-                "tests/ai_agent_bridge/test_inbox_watch.py",
-                "tests/test_ci_shard_partition.py",
-            ],
-        )
-        # Script change alone finds matching test in tree
-        result_script_only = self.classify(
-            ["scripts/ai_agent_bridge/_inbox_watch.py"],
-            tree_paths=tree,
-        )
-        self.assert_selected(
-            result_script_only,
-            [
-                "tests/ai_agent_bridge/test_inbox_watch.py",
-                "tests/test_ci_shard_partition.py",
-            ],
-        )
-
-    def test_leading_underscore_stem_collision_forces_full(self):
-        tree = _tree(
-            "scripts/ai_agent_bridge/_inbox_watch.py",
-            "scripts/other/inbox_watch.py",
-            "tests/ai_agent_bridge/test_inbox_watch.py",
-            "tests/test_ci_shard_partition.py",
-        )
-        # Stripped stem 'inbox_watch' collides with scripts/other/inbox_watch.py
-        self.assert_full(
-            self.classify(["scripts/ai_agent_bridge/_inbox_watch.py"], tree_paths=tree),
-            frontend="false",
-        )
-
-    def test_package_mapping_positive_and_negative(self):
-        tree_pos = _tree(
-            "scripts/ai_agent_bridge/custom_worker.py",
-            "tests/ai_agent_bridge/test_custom_worker.py",
-            "tests/test_ci_shard_partition.py",
-        )
-        self.assertEqual(
-            scope._package_map_tests("scripts/ai_agent_bridge/custom_worker.py", tree_pos),
-            ["tests/ai_agent_bridge/test_custom_worker.py"],
-        )
-        self.assert_selected(
-            self.classify(["scripts/ai_agent_bridge/custom_worker.py"], tree_paths=tree_pos),
-            [
-                "tests/ai_agent_bridge/test_custom_worker.py",
-                "tests/test_ci_shard_partition.py",
-            ],
-        )
-
-        tree_neg = _tree(
-            "scripts/pkg_a/worker.py",
-            "tests/pkg_b/test_worker.py",
-            "tests/test_ci_shard_partition.py",
-        )
-        self.assertEqual(
-            scope._package_map_tests("scripts/pkg_a/worker.py", tree_neg),
-            [],
-        )
-        self.assertEqual(
-            scope._package_map_tests("scripts/delegate.py", tree_pos),
-            [],
-        )
+        self.assert_full(result_with_test, frontend="false")
 
     def test_new_fail_closed_triggers_force_full(self):
         triggers = (
