@@ -15,11 +15,13 @@ build metadata), and ``stress.source_info`` (the trie digest).
 
 from __future__ import annotations
 
+import fcntl
 import hashlib
 import json
 import os
 import re
 import threading
+from contextlib import contextmanager
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -67,6 +69,21 @@ class ReceiptNotFound(LedgerError):
     """``lookup`` did not find this receipt id in a readable ledger."""
 
 
+class LedgerHashStaleLastLine(LedgerError):
+    """The sidecar matches the ledger minus its last complete line (crash recovery state)."""
+
+
+@contextmanager
+def _flock_path(lock_path: Path):
+    lock_path.parent.mkdir(parents=True, exist_ok=True)
+    with open(lock_path, "a") as f:
+        fcntl.flock(f.fileno(), fcntl.LOCK_EX)
+        try:
+            yield
+        finally:
+            fcntl.flock(f.fileno(), fcntl.LOCK_UN)
+
+
 def _token(value: str) -> bool:
     return bool(re.fullmatch(_TOKEN, value))
 
@@ -93,22 +110,32 @@ def _digest(content: bytes) -> str:
     return hashlib.sha256(content).hexdigest()
 
 
-def _read_verified(path: Path) -> bytes:
-    """Return ledger bytes, or b'' when the file has not been created yet.
+def _read_verified(path: Path, *, allow_missing: bool = False) -> bytes:
+    """Return ledger bytes, or b'' when allow_missing=True and the file is not yet created.
 
-    A present file whose sidecar is missing or different is refused.
+    A missing ledger without allow_missing=True raises LedgerError.
+    A present file whose sidecar is missing or different is refused, reporting
+    LedgerHashStaleLastLine if the hash matches the ledger minus its last complete line.
     """
     path = Path(path)
     if not path.exists():
         if _sidecar(path).exists():
             raise LedgerError(f"sidecar without ledger: {path}")
-        return b""
+        if allow_missing:
+            return b""
+        raise LedgerError(f"ledger missing: {path}")
     content = path.read_bytes()
     side = _sidecar(path)
     if not side.is_file():
         raise LedgerError(f"ledger sidecar missing: {side}")
     recorded = side.read_text(encoding="ascii")
-    if recorded != _digest(content) + "\n":
+    expected_digest = _digest(content) + "\n"
+    if recorded != expected_digest:
+        if content.endswith(b"\n"):
+            prev_newline = content.rfind(b"\n", 0, -1)
+            content_minus_last = content[: prev_newline + 1] if prev_newline != -1 else b""
+            if recorded == _digest(content_minus_last) + "\n":
+                raise LedgerHashStaleLastLine(f"ledger hash stale by last line: {side}")
         raise LedgerError(f"ledger sidecar mismatch: {side}")
     return content
 
@@ -119,6 +146,17 @@ def _write_verified(path: Path, content: bytes) -> None:
     for target in (path, _sidecar(path)):
         if (target.stat().st_mode & 0o777) != 0o644:
             os.chmod(target, 0o644)
+
+
+def create_empty_ledger(path: Path | str) -> Path:
+    """Create an empty ledger file (0 bytes) and its .sha256 sidecar.
+
+    Sets permissions to 0o644.
+    """
+    target = Path(path)
+    target.parent.mkdir(parents=True, exist_ok=True)
+    _write_verified(target, b"")
+    return target
 
 
 def append(
@@ -147,8 +185,9 @@ def append(
 
         outcome_facts = classify_outcome(tool, status, result)
     path = Path(ledger_path)
-    with _LOCK:
-        existing = _read_verified(path)
+    lock_path = path.with_name(path.name + ".lock")
+    with _LOCK, _flock_path(lock_path):
+        existing = _read_verified(path, allow_missing=True)
         if existing and not existing.endswith(b"\n"):
             raise LedgerError(f"ledger {path} does not end in a newline")
         seq = existing.count(b"\n") + 1

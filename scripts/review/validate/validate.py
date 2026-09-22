@@ -20,7 +20,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.curriculum.resolver.codes import TABS
-from scripts.review.receipts.ledger import LedgerError, records
+from scripts.review.receipts.ledger import LedgerError, LedgerHashStaleLastLine, records
 
 from . import codes
 
@@ -510,6 +510,8 @@ def validate_review(
     current: dict[str, dict[str, Any]] = {}
     try:
         current = _index_ledger(ledger_path)
+    except LedgerHashStaleLastLine as exc:
+        check.add(codes.LEDGER_HASH_STALE_LAST_LINE, f"{ledger_path}: {exc}")
     except (LedgerError, json.JSONDecodeError, OSError) as exc:
         check.add(codes.LEDGER_UNREADABLE, f"{ledger_path}: {exc}")
 
@@ -523,8 +525,11 @@ def validate_review(
     if previous_attempt_id and previous_path is not None and Path(previous_path).exists():
         try:
             previous = _index_ledger(Path(previous_path))
+        except LedgerHashStaleLastLine as exc:
+            check.add(codes.LEDGER_HASH_STALE_LAST_LINE, f"{previous_path}: {exc}")
         except (LedgerError, json.JSONDecodeError, OSError) as exc:
             check.add(codes.LEDGER_UNREADABLE, f"{previous_path}: {exc}")
+
 
     review_id = attempt.get("review_id") if isinstance(attempt.get("review_id"), str) else ""
     attempt_id = attempt.get("attempt_id") if isinstance(attempt.get("attempt_id"), str) else ""

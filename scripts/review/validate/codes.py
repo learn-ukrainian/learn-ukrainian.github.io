@@ -9,6 +9,7 @@ MANIFEST_HASH_MISMATCH = "manifest_hash_mismatch"
 MANIFEST_UNREADABLE = "manifest_unreadable"
 RECEIPT_NOT_IN_LEDGER = "receipt_not_in_ledger"
 LEDGER_UNREADABLE = "ledger_unreadable"
+LEDGER_HASH_STALE_LAST_LINE = "ledger_hash_stale_last_line"
 EXPECTED_NOT_IN_RESULT = "expected_not_in_result"
 QUOTE_EMPTY = "quote_empty"
 QUOTE_NOT_IN_UNIT = "quote_not_in_unit"
@@ -35,7 +36,9 @@ DESCRIPTIONS: dict[str, str] = {
     MANIFEST_UNREADABLE: "failure: the manifest file is missing or not a YAML mapping",
     RECEIPT_NOT_IN_LEDGER: "failure: a cited receipt is not in this attempt (or the previous attempt, for resolved/persisting)",
     LEDGER_UNREADABLE: "failure: the ledger or its sha256 sidecar is missing, mismatched, or malformed",
+    LEDGER_HASH_STALE_LAST_LINE: "failure: the ledger hash file is stale by exactly one trailing line (crash recovery state)",
     EXPECTED_NOT_IN_RESULT: "failure: expected is not a substring of any cited receipt's stored result",
+
     QUOTE_EMPTY: "failure: a location quote is empty after NFC and stress-stripping",
     QUOTE_NOT_IN_UNIT: "failure: the quote does not occur inside the named tab, activity, and item",
     LOCATION_NOT_IN_LESSON: "failure: the named tab, activity, or item is not in the expanded lesson",

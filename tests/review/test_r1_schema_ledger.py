@@ -24,8 +24,10 @@ from scripts.review.receipts.ledger import (
     ENV_KEYS,
     REVIEW_TOOLS,
     LedgerError,
+    LedgerHashStaleLastLine,
     append,
     collect_snapshots,
+    create_empty_ledger,
     dumps,
     lookup,
     records,
@@ -196,7 +198,9 @@ def _layout(tmp_path: Path, *, recap: bool = False) -> dict:
     ledger = tmp_path / "attempt-1.jsonl"
     digest = _write_manifest(manifest, recap=recap)
     _dump(lesson, _lesson())
+    create_empty_ledger(ledger)
     return {"manifest": manifest, "lesson": lesson, "review": review, "ledger": ledger, "digest": digest}
+
 
 
 def _validate(paths: dict) -> object:
@@ -763,3 +767,47 @@ def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
     )
     mixed_rej = _validate(mixed_paths)
     assert not mixed_rej.ok and codes.OUTCOME_NOT_IN_LEDGER in _codes(mixed_rej)
+
+
+def test_missing_ledger_is_ledger_unreadable(tmp_path: Path) -> None:
+    paths = _layout(tmp_path)
+    # Remove the created ledger
+    paths["ledger"].unlink()
+    paths["ledger"].with_name(paths["ledger"].name + ".sha256").unlink(missing_ok=True)
+    _dump(paths["review"], _plan(paths["digest"]))
+    validated = _validate(paths)
+    assert not validated.ok
+    assert codes.LEDGER_UNREADABLE in _codes(validated)
+
+
+def test_create_empty_ledger_helper(tmp_path: Path) -> None:
+    target = tmp_path / "empty" / "attempt-1.jsonl"
+    created = create_empty_ledger(target)
+    assert created == target
+    assert target.is_file() and target.stat().st_size == 0
+    sidecar = target.with_name(target.name + ".sha256")
+    assert sidecar.is_file()
+    assert (target.stat().st_mode & 0o777) == 0o644
+    assert (sidecar.stat().st_mode & 0o777) == 0o644
+    assert records(target) == []
+
+
+def test_ledger_stale_last_line_recovery(tmp_path: Path) -> None:
+    paths = _layout(tmp_path)
+    r1 = _record(paths["ledger"], manifest=paths["digest"], result="result-one")
+    # Capture hash of ledger with 1 line
+    sidecar = paths["ledger"].with_name(paths["ledger"].name + ".sha256")
+    sidecar_1 = sidecar.read_text()
+    # Now append a second line
+    r2 = _record(paths["ledger"], manifest=paths["digest"], result="result-two")
+    assert r1 != r2
+    # Simulate crash before sidecar update: overwrite sidecar with sidecar_1
+    sidecar.write_text(sidecar_1)
+
+    _dump(paths["review"], _plan(paths["digest"]))
+    with pytest.raises(LedgerHashStaleLastLine):
+        records(paths["ledger"])
+    validated = _validate(paths)
+    assert not validated.ok
+    assert codes.LEDGER_HASH_STALE_LAST_LINE in _codes(validated)
+    assert codes.LEDGER_UNREADABLE not in _codes(validated)
