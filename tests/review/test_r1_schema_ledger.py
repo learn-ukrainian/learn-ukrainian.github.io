@@ -204,8 +204,6 @@ def _layout(tmp_path: Path, *, recap: bool = False) -> dict:
     return {"manifest": manifest, "lesson": lesson, "review": review, "ledger": ledger, "digest": digest}
 
 
-
-
 def _validate(paths: dict) -> object:
     return validate_review(
         paths["review"],
@@ -701,18 +699,40 @@ def test_review_tool_error_is_recorded(server_module, tmp_path: Path, monkeypatc
 
 
 TOOL_NO_RESULT_FIXTURES: list[tuple[str, str]] = [
-    ("check_russian_shadow", json.dumps({"matches_russian": False, "russian_lemma": None, "ukrainian_alternative": None, "confidence": 0.0})),
-    ("verify_quote", json.dumps({"matched": False, "best_confidence": 0.0, "matched_lines": [], "search_normalized": {"author_query": "author", "text_query": "text"}})),
+    (
+        "check_russian_shadow",
+        json.dumps({"matches_russian": False, "russian_lemma": None, "ukrainian_alternative": None, "confidence": 0.0}),
+    ),
+    (
+        "verify_quote",
+        json.dumps(
+            {
+                "matched": False,
+                "best_confidence": 0.0,
+                "matched_lines": [],
+                "search_normalized": {"author_query": "author", "text_query": "text"},
+            }
+        ),
+    ),
     ("search_text", "No results found."),
     ("search_ua_gec_errors", 'No UA-GEC results found for: "деякі речі"'),
     ("verify_words", "Batch verification: 1 words\nFound: 0/1\n\n- **неслово** — NOT FOUND"),
-    ("inspect_word", "'неслово' — Status: NOT_FOUND\n- Effective markers: none\n- Clean analyses: 0\n- Marked analyses: 0\n- Raw payload: {\"word\": \"неслово\", \"status\": \"NOT_FOUND\"}"),
-    ("inspect_words", "Batch inspection: 1 words\n\n- **неслово** — NOT FOUND\n\nRaw payload:\n{\"words\": {\"неслово\": {\"status\": \"NOT_FOUND\"}}}"),
+    (
+        "inspect_word",
+        '\'неслово\' — Status: NOT_FOUND\n- Effective markers: none\n- Clean analyses: 0\n- Marked analyses: 0\n- Raw payload: {"word": "неслово", "status": "NOT_FOUND"}',
+    ),
+    (
+        "inspect_words",
+        'Batch inspection: 1 words\n\n- **неслово** — NOT FOUND\n\nRaw payload:\n{"words": {"неслово": {"status": "NOT_FOUND"}}}',
+    ),
     ("verify_stress", "неслово — not_found"),
     ("query_grac", "**неслово**: frequency = 0, relative = 0.00 per million"),
     ("query_ulif", "No ULIF paradigm found for: 'кицяневідома'"),
     ("query_r2u", "No r2u translation found for: 'неслово'"),
-    ("query_sum20", "No official offline СУМ-20 entry is currently ingested for 'неслово'. This tool does not make a live request or use a fallback source."),
+    (
+        "query_sum20",
+        "No official offline СУМ-20 entry is currently ingested for 'неслово'. This tool does not make a live request or use a fallback source.",
+    ),
     ("query_pravopys", "No pravopys section found for: 'невідома_тема'"),
     ("search_style_guide", 'No results in Антоненко-Давидович for: "невідомо"'),
     ("query_cefr_level", 'No results in PULS CEFR for: "невідомо"'),
@@ -740,7 +760,12 @@ def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
         finding_no_hits.pop("expected", None)
         _dump(
             paths["review"],
-            _review(kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_no_hits]),
+            _review(
+                kind="lesson",
+                manifest_hash=paths["digest"],
+                checks=_lesson_checks(["F-01"]),
+                findings=[finding_no_hits],
+            ),
         )
         validated = _validate(paths)
         assert validated.ok, f"tool {tool_name} failed no_hits check: {[r.message for r in validated.rejections]}"
@@ -754,7 +779,9 @@ def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
         finding_hits.pop("expected", None)
         _dump(
             paths["review"],
-            _review(kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_hits]),
+            _review(
+                kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_hits]
+            ),
         )
         rejected = _validate(paths)
         assert not rejected.ok and codes.OUTCOME_NOT_IN_LEDGER in _codes(rejected)
@@ -783,7 +810,12 @@ def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
     finding_mixed_support.pop("expected", None)
     _dump(
         mixed_paths["review"],
-        _review(kind="lesson", manifest_hash=mixed_paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_mixed_support]),
+        _review(
+            kind="lesson",
+            manifest_hash=mixed_paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[finding_mixed_support],
+        ),
     )
     mixed_val = _validate(mixed_paths)
     assert mixed_val.ok
@@ -797,7 +829,12 @@ def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
     finding_mixed_no_hits.pop("expected", None)
     _dump(
         mixed_paths["review"],
-        _review(kind="lesson", manifest_hash=mixed_paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_mixed_no_hits]),
+        _review(
+            kind="lesson",
+            manifest_hash=mixed_paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[finding_mixed_no_hits],
+        ),
     )
     mixed_rej = _validate(mixed_paths)
     assert not mixed_rej.ok and codes.OUTCOME_NOT_IN_LEDGER in _codes(mixed_rej)
@@ -980,8 +1017,7 @@ def test_http_mode_refuses_recording(
             assert server_module._review_env_engaged() is False
             # Verify the error was logged
             assert any(
-                "Review recording is disabled in standalone/HTTP mode" in record.message
-                for record in caplog.records
+                "Review recording is disabled in standalone/HTTP mode" in record.message for record in caplog.records
             )
             # Second call should not log another error (logged once)
             record_count = len(caplog.records)
@@ -1115,9 +1151,7 @@ def test_active_finding_cites_previous_receipt_rejected(tmp_path: Path) -> None:
     assert val_persisting.ok
 
 
-def test_v4_and_review_both_record(
-    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
+def test_v4_and_review_both_record(server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     from mcp.types import TextContent
 
     ledger = tmp_path / "review-1" / "attempt-1.jsonl"

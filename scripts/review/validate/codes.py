@@ -40,8 +40,6 @@ DESCRIPTIONS: dict[str, str] = {
     LEDGER_HASH_STALE_LAST_LINE: "failure: the ledger hash file is stale by exactly one trailing line (crash recovery state)",
     EXPECTED_NOT_IN_RESULT: "failure: expected is not a substring of any cited receipt's stored result",
     EVIDENCE_RECEIPT_INVALID: "failure: positive evidence requires a receipt with status: ok from a tool in the review tool list",
-
-
     QUOTE_EMPTY: "failure: a location quote is empty after NFC and stress-stripping",
     QUOTE_NOT_IN_UNIT: "failure: the quote does not occur inside the named tab, activity, and item",
     LOCATION_NOT_IN_LESSON: "failure: the named tab, activity, or item is not in the expanded lesson",
@@ -51,7 +49,6 @@ DESCRIPTIONS: dict[str, str] = {
     UNSUPPORTED_SEVERITY_ABOVE_MINOR: "failure: unsupported_by_source finding has severity above MINOR (capped at MINOR)",
     OUTCOME_NOT_IN_LEDGER: "failure: the claimed search outcome is not shown by the stored result and status",
     LANGUAGE_SUB_DIMENSION_MISSING: "failure: a language finding has no sub_dimension",
-
     SUB_DIMENSION_INVALID: "failure: sub_dimension is not in the taxonomy list for language",
     CHECK_MISSING: "failure: a taxonomy check for this kind is neither clean nor a list of finding ids",
     CHECK_NOT_APPLICABLE: "failure: a recap-only check is present on a review whose manifest is not a recap",

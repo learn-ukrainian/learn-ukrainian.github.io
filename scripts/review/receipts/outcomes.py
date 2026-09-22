@@ -107,9 +107,7 @@ REVIEW_TOOL_NO_RESULT_PATTERNS: dict[str, dict[str, Any]] = {
 
 def _extract_json(text: str) -> Any | None:
     stripped = text.strip()
-    if (stripped.startswith("{") and stripped.endswith("}")) or (
-        stripped.startswith("[") and stripped.endswith("]")
-    ):
+    if (stripped.startswith("{") and stripped.endswith("}")) or (stripped.startswith("[") and stripped.endswith("]")):
         try:
             return json.loads(stripped)
         except Exception:
@@ -172,8 +170,7 @@ def _classify_tool_hits(tool: str, text: str, parsed: Any | None) -> int:
     if tool == "inspect_words":
         if isinstance(parsed, dict) and isinstance(parsed.get("words"), dict):
             found_words = [
-                w for w, d in parsed["words"].items()
-                if isinstance(d, dict) and d.get("status") != "NOT_FOUND"
+                w for w, d in parsed["words"].items() if isinstance(d, dict) and d.get("status") != "NOT_FOUND"
             ]
             return len(found_words)
         lines = [line.strip() for line in text.splitlines() if line.strip().startswith("- **")]
@@ -293,9 +290,8 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     parsed = _extract_json(text)
 
     # Check for unavailable status / marker
-    unavailable = (
-        "unavailable" in text.casefold()
-        or (isinstance(parsed, dict) and parsed.get("status") == "unavailable")
+    unavailable = "unavailable" in text.casefold() or (
+        isinstance(parsed, dict) and parsed.get("status") == "unavailable"
     )
     if unavailable:
         return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}

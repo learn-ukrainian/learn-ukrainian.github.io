@@ -214,7 +214,6 @@ def append(
         return receipt_id
 
 
-
 def records(ledger_path: Path) -> list[dict[str, Any]]:
     """Return every record. A missing file is an empty ledger; a bad sidecar is an error."""
     content = _read_verified(Path(ledger_path))
@@ -315,7 +314,6 @@ class ReviewSession:
             result=result,
             outcome_facts=outcome_facts,
         )
-
 
 
 def session_from_environ(environ: Any = None) -> ReviewSession | None:

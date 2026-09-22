@@ -129,7 +129,6 @@ def _outcome_shown(outcome: str, record: dict[str, Any]) -> bool:
     return False
 
 
-
 def _units(document: Any) -> list[dict[str, Any]]:
     if not isinstance(document, dict) or not isinstance(document.get("units"), list):
         raise ValueError("expanded document needs a units list")
@@ -563,7 +562,6 @@ def validate_review(
             check.add(codes.LEDGER_HASH_STALE_LAST_LINE, f"{previous_path}: {exc}")
         except (LedgerError, json.JSONDecodeError, OSError) as exc:
             check.add(codes.LEDGER_UNREADABLE, f"{previous_path}: {exc}")
-
 
     review_id = attempt.get("review_id") if isinstance(attempt.get("review_id"), str) else ""
     attempt_id = attempt.get("attempt_id") if isinstance(attempt.get("attempt_id"), str) else ""
