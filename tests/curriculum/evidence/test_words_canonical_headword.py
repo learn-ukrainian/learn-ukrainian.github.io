@@ -20,10 +20,11 @@ def test_empty_canonical_headword_falls_back_to_lemma(synthetic_vesum, synthetic
 
     # Insert a ULIF entry with empty canonical_headword
     with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("DELETE FROM ulif_dictua_entries")
         conn.execute(
             """INSERT INTO ulif_dictua_entries
             (id, normalized_query, homonym_index, canonical_headword, grammatical_label, sense_gloss, homonym_checked, status, retrieved_at)
-            VALUES (1, 'тест', 1, '', 'ч', 'перевірка', 1, 'present', '2026-01-01')"""
+            VALUES (1, 'тест', 1, '', 'ч', 'перевірка', 1, 'ok', '2026-01-01')"""
         )
 
     req_path = tmp_path / "req.yaml"
