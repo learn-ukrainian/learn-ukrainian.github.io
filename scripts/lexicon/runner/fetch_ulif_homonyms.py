@@ -120,6 +120,10 @@ class SessionInvalid(Exception):
     """500 or an event-validation failure. The unit must be re-seeded."""
 
 
+class ResumeMismatchError(Exception):
+    """Landed register page does not match expected page boundary headwords."""
+
+
 class RequestCap(Exception):
     """The invocation's request ceiling was reached before this send."""
 
@@ -2383,6 +2387,79 @@ def _fast_forward_to_page(
     return current_html, landed_rows
 
 
+def _reseed_to_page(
+    client: PoliteClient,
+    ledger: SpellingLedger,
+    cache: sqlite3.Connection | None,
+    *,
+    target_page: int,
+    start_headword: str,
+    quiet: bool = False,
+    marker_prefix: str = "reseed",
+) -> tuple[str, list[dict[str, Any]]]:
+    """Fetch a fresh seed and navigate to target_page, raising SessionInvalid on network/validation errors
+    or ResumeMismatchError if register boundaries do not match."""
+    seed_html, seed_req = client.exchange("GET", None)
+    _keep_walk(ledger, cache, "", f"seed:{marker_prefix}:{target_page}", seed_html, seed_req)
+    seed_tokens = _tokens(seed_html)
+    if seed_tokens is None:
+        raise SessionInvalid(f"{marker_prefix}_seed_missing_viewstate")
+
+    p_rec = ledger.get_page(target_page)
+    exp_start = str(p_rec["start_headword"]) if p_rec and p_rec["start_headword"] else None
+    exp_end = str(p_rec["end_headword"]) if p_rec and p_rec["end_headword"] else None
+
+    # If we have expected boundaries, try direct search as a fast path
+    if exp_start and exp_end:
+        search_fields = _form_fields(
+            seed_tokens,
+            spelling=exp_start,
+            extra=_image_click(SEARCH_BUTTON),
+        )
+        search_html, search_req = client.exchange("POST", search_fields)
+        _keep_walk(
+            ledger,
+            cache,
+            "",
+            f"tsearch:{marker_prefix}:{target_page}",
+            search_html,
+            search_req,
+            current_page=target_page,
+        )
+        landed = parse_register_list(search_html)
+        if not landed:
+            raise SessionInvalid(f"{marker_prefix}_missing_register")
+
+        if landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end:
+            return search_html, landed
+
+    if target_page > 1:
+        # Fallback: Real ULIF search offsets the target word by several entries.
+        # Fast-forward from page 1 using canonical nextpage pagination to preserve
+        # the exact 25-row grid alignment and server ViewState sequence.
+        ff_html, ff_rows = _fast_forward_to_page(
+            client,
+            ledger,
+            cache,
+            seed_tokens,
+            start_headword,
+            target_page,
+            quiet=quiet,
+        )
+        if exp_start and exp_end and (ff_rows[0]["stressed"] != exp_start or ff_rows[-1]["stressed"] != exp_end):
+            raise ResumeMismatchError(
+                f"expected {exp_start}..{exp_end}, landed {ff_rows[0]['stressed']}..{ff_rows[-1]['stressed']}"
+            )
+        return ff_html, ff_rows
+
+    if exp_start and exp_end:
+        raise ResumeMismatchError(
+            f"expected {exp_start}..{exp_end}, landed {landed[0]['stressed']}..{landed[-1]['stressed']}"
+        )
+
+    raise SessionInvalid(f"{marker_prefix}_unable_to_reach_page_{target_page}")
+
+
 def run_walk(
     *,
     state_dir: Path,
@@ -2502,12 +2579,6 @@ def run_walk(
                     on_request=_on_request,
                 )
 
-                seed_html, seed_req = client.exchange("GET", None)
-                _keep_walk(ledger, cache, "", "seed", seed_html, seed_req)
-                seed_tokens = _tokens(seed_html)
-                if seed_tokens is None:
-                    raise SessionInvalid("seed_missing_viewstate")
-
                 first_unfinished = ledger.first_unfinished_page()
                 is_resume = False
                 if first_unfinished is not None:
@@ -2542,85 +2613,89 @@ def run_walk(
                         return EXIT_OK
                     start_page = 1
 
+                current_page_html = ""
                 if is_resume:
-                    p_rec = ledger.get_page(start_page)
-                    assert p_rec is not None
-                    exp_start = str(p_rec["start_headword"])
-                    exp_end = str(p_rec["end_headword"])
-                    search_fields = _form_fields(
-                        seed_tokens,
-                        spelling=exp_start,
-                        extra=_image_click(SEARCH_BUTTON),
-                    )
-                    page_html, page_req = client.exchange("POST", search_fields)
-                    _keep_walk(
-                        ledger, cache, "", f"tsearch:resume:{start_page}", page_html, page_req, current_page=start_page
-                    )
-                    landed_rows = parse_register_list(page_html)
-                    if not landed_rows:
-                        raise SessionInvalid("resume_missing_register")
-
-                    # Check if direct search landed on exact page boundaries (fast path / test mocks)
-                    if landed_rows[0]["stressed"] == exp_start and landed_rows[-1]["stressed"] == exp_end:
-                        current_page_html = page_html
-                    elif start_page > 1:
-                        # Fallback: Real ULIF search offsets the target word by several entries.
-                        # Fast-forward from page 1 using canonical nextpage pagination to preserve
-                        # the exact 25-row grid alignment and server ViewState sequence.
-                        current_page_html, landed_rows = _fast_forward_to_page(
-                            client,
-                            ledger,
-                            cache,
-                            seed_tokens,
-                            start_headword,
-                            start_page,
-                            quiet=quiet,
-                        )
-                        if landed_rows[0]["stressed"] != exp_start or landed_rows[-1]["stressed"] != exp_end:
+                    for resume_attempt in range(MAX_UNIT_RESEEDS):
+                        try:
+                            current_page_html, landed_rows = _reseed_to_page(
+                                client,
+                                ledger,
+                                cache,
+                                target_page=start_page,
+                                start_headword=start_headword,
+                                quiet=quiet,
+                                marker_prefix="resume",
+                            )
+                            break
+                        except ResumeMismatchError as exc:
                             ledger.mark_page(start_page, "error", error="resume_mismatch")
                             print(
-                                f"stopping: resume_mismatch on page {start_page} (expected {exp_start}..{exp_end}, landed {landed_rows[0]['stressed']}..{landed_rows[-1]['stressed']})",
+                                f"stopping: resume_mismatch on page {start_page} ({exc})",
                                 file=sys.stderr,
                             )
                             stop_reason = "resume_mismatch"
                             return_code = EXIT_USAGE
-                    else:
-                        ledger.mark_page(start_page, "error", error="resume_mismatch")
-                        print(
-                            f"stopping: resume_mismatch on page {start_page} (expected {exp_start}..{exp_end}, landed {landed_rows[0]['stressed']}..{landed_rows[-1]['stressed']})",
-                            file=sys.stderr,
-                        )
-                        stop_reason = "resume_mismatch"
-                        return_code = EXIT_USAGE
+                            break
+                        except SessionInvalid as exc:
+                            if resume_attempt == MAX_UNIT_RESEEDS - 1:
+                                ledger.mark_page(start_page, "retry_scheduled", error=str(exc))
+                                print(
+                                    f"stopping: startup resume for page {start_page} ended retry_scheduled after {MAX_UNIT_RESEEDS} attempts ({exc})",
+                                    file=sys.stderr,
+                                )
+                                stop_reason = f"page {start_page} exhausted retries"
+                                return_code = EXIT_RETRY_STORM
+                                break
+                            continue
                 else:
-                    search_fields = _form_fields(
-                        seed_tokens,
-                        spelling=start_headword,
-                        extra=_image_click(SEARCH_BUTTON),
-                    )
-                    page_html, page_req = client.exchange("POST", search_fields)
-                    _keep_walk(ledger, cache, "", "tsearch:start", page_html, page_req, current_page=1)
-                    landed_rows = parse_register_list(page_html)
-                    if not landed_rows:
-                        raise SessionInvalid("start_missing_register")
-                    start_page = 1
-                    current_page_html = page_html
-                    reg_sz = _register_size(page_html)
-                    ledger.ensure_page(
-                        1,
-                        start_headword=landed_rows[0]["stressed"],
-                        end_headword=landed_rows[-1]["stressed"],
-                        row_count=len(landed_rows),
-                        register_size=reg_sz,
-                    )
-                    for r in landed_rows:
-                        ledger.ensure_row(
-                            1,
-                            int(r["row_index"]),
-                            select_arg=str(r["select"]),
-                            stressed_headword=str(r["stressed"]),
-                            normalized_spelling=normalize_ulif_spelling(str(r["unstressed"])),
-                        )
+                    for start_attempt in range(MAX_UNIT_RESEEDS):
+                        try:
+                            seed_html, seed_req = client.exchange("GET", None)
+                            _keep_walk(ledger, cache, "", f"seed:start:{start_attempt}", seed_html, seed_req)
+                            seed_tokens = _tokens(seed_html)
+                            if seed_tokens is None:
+                                raise SessionInvalid("seed_missing_viewstate")
+                            search_fields = _form_fields(
+                                seed_tokens,
+                                spelling=start_headword,
+                                extra=_image_click(SEARCH_BUTTON),
+                            )
+                            page_html, page_req = client.exchange("POST", search_fields)
+                            _keep_walk(ledger, cache, "", "tsearch:start", page_html, page_req, current_page=1)
+                            landed_rows = parse_register_list(page_html)
+                            if not landed_rows:
+                                raise SessionInvalid("start_missing_register")
+                            start_page = 1
+                            current_page_html = page_html
+                            reg_sz = _register_size(page_html)
+                            ledger.ensure_page(
+                                1,
+                                start_headword=landed_rows[0]["stressed"],
+                                end_headword=landed_rows[-1]["stressed"],
+                                row_count=len(landed_rows),
+                                register_size=reg_sz,
+                            )
+                            for r in landed_rows:
+                                ledger.ensure_row(
+                                    1,
+                                    int(r["row_index"]),
+                                    select_arg=str(r["select"]),
+                                    stressed_headword=str(r["stressed"]),
+                                    normalized_spelling=normalize_ulif_spelling(str(r["unstressed"])),
+                                )
+                            break
+                        except SessionInvalid as exc:
+                            if start_attempt == MAX_UNIT_RESEEDS - 1:
+                                ledger.ensure_page(1, start_headword=start_headword, end_headword=start_headword, row_count=0)
+                                ledger.mark_page(1, "retry_scheduled", error=str(exc))
+                                print(
+                                    f"stopping: startup on page 1 ended retry_scheduled after {MAX_UNIT_RESEEDS} attempts ({exc})",
+                                    file=sys.stderr,
+                                )
+                                stop_reason = "page 1 exhausted retries"
+                                return_code = EXIT_RETRY_STORM
+                                break
+                            continue
 
                 w_counts = ledger.walk_counts()
                 pages_done = w_counts["pages_done"]
@@ -2655,13 +2730,24 @@ def run_walk(
 
                         for page_attempt in range(MAX_UNIT_RESEEDS):
                             try:
+                                if page_attempt > 0:
+                                    current_page_html, rows = _reseed_to_page(
+                                        client,
+                                        ledger,
+                                        cache,
+                                        target_page=current_page,
+                                        start_headword=start_headword,
+                                        quiet=quiet,
+                                        marker_prefix="reseed",
+                                    )
+                                else:
+                                    rows = parse_register_list(current_page_html)
+                                    if not rows:
+                                        raise SessionInvalid(f"page_{current_page}_empty")
+
                                 page_tokens = _tokens(current_page_html)
                                 if page_tokens is None or _validation_failure(current_page_html):
                                     raise SessionInvalid(f"page_{current_page}_viewstate")
-
-                                rows = parse_register_list(current_page_html)
-                                if not rows:
-                                    raise SessionInvalid(f"page_{current_page}_empty")
 
                                 ledger.ensure_page(
                                     current_page,
@@ -2795,49 +2881,21 @@ def run_walk(
 
                                 page_success = True
                                 break
+                            except ResumeMismatchError as exc:
+                                ledger.mark_page(current_page, "error", error="resume_mismatch")
+                                stop_reason = "resume_mismatch"
+                                return_code = EXIT_USAGE
+                                print(
+                                    f"stopping: resume_mismatch on page {current_page} ({exc})",
+                                    file=sys.stderr,
+                                )
+                                break
                             except SessionInvalid as exc:
+                                consecutive_retries += 1
                                 if page_attempt == MAX_UNIT_RESEEDS - 1:
                                     ledger.mark_page(current_page, "retry_scheduled", error=str(exc))
                                     break
-                                seed_html, seed_req = client.exchange("GET", None)
-                                _keep_walk(ledger, cache, "", "seed:reseed", seed_html, seed_req)
-                                seed_tokens = _tokens(seed_html)
-                                if seed_tokens is None:
-                                    continue
-                                p_rec = ledger.get_page(current_page)
-                                if p_rec is None:
-                                    continue
-                                exp_start = str(p_rec["start_headword"])
-                                exp_end = str(p_rec["end_headword"])
-                                search_fields = _form_fields(
-                                    seed_tokens,
-                                    spelling=exp_start,
-                                    extra=_image_click(SEARCH_BUTTON),
-                                )
-                                reseed_page_html, _reseed_page_req = client.exchange("POST", search_fields)
-                                landed = parse_register_list(reseed_page_html)
-                                if landed and landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end:
-                                    current_page_html = reseed_page_html
-                                elif current_page > 1:
-                                    current_page_html, landed = _fast_forward_to_page(
-                                        client,
-                                        ledger,
-                                        cache,
-                                        seed_tokens,
-                                        start_headword,
-                                        current_page,
-                                        quiet=quiet,
-                                    )
-                                    if not (landed and landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end):
-                                        ledger.mark_page(current_page, "error", error="resume_mismatch")
-                                        stop_reason = "resume_mismatch"
-                                        return_code = EXIT_USAGE
-                                        break
-                                else:
-                                    ledger.mark_page(current_page, "error", error="resume_mismatch")
-                                    stop_reason = "resume_mismatch"
-                                    return_code = EXIT_USAGE
-                                    break
+                                continue
 
                         if return_code != EXIT_OK or stop_reason == "resume_mismatch":
                             break

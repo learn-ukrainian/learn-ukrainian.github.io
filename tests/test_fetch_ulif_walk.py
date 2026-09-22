@@ -14,6 +14,7 @@ import pytest
 from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_FORBIDDEN,
     EXIT_OK,
+    EXIT_RETRY_STORM,
     EXIT_USAGE,
     HttpResult,
     RunnerLock,
@@ -93,6 +94,8 @@ class MockULIFServer:
         resume_mismatch: bool = False,
         search_offsets: bool = False,
         inject_unknown_control: bool = False,
+        fail_nextpage_500_times: int = 0,
+        fail_page2_row1_500_times: int = 0,
     ) -> None:
         self.page1_size = page1_size
         self.page2_size = page2_size
@@ -103,6 +106,8 @@ class MockULIFServer:
         self.resume_mismatch = resume_mismatch
         self.search_offsets = search_offsets
         self.inject_unknown_control = inject_unknown_control
+        self.fail_nextpage_500_times = fail_nextpage_500_times
+        self.fail_page2_row1_500_times = fail_page2_row1_500_times
         self.requests_log: list[tuple[str, dict[str, str] | None]] = []
 
     def _fix_html(self, html: str, size: int | None = None) -> str:
@@ -131,7 +136,10 @@ class MockULIFServer:
         if "ctl00$ContentPlaceHolder1$search.x" in data or "ctl00$ContentPlaceHolder1$search" in data:
             search_word = data.get("ctl00$ContentPlaceHolder1$tsearch", "")
             if search_word in ("а", "ду́же"):
-                self.current_page = 1
+                if search_word == "а" and self.current_page >= 2:
+                    self.is_fast_forwarding = True
+                else:
+                    self.is_fast_forwarding = False
                 p1_html = _register_html(
                     ["ду́же", "за́мок", "замо́к"],
                     "VS-p1",
@@ -181,6 +189,9 @@ class MockULIFServer:
 
         # Paging via nextpage
         if "ctl00$ContentPlaceHolder1$nextpage.x" in data or "ctl00$ContentPlaceHolder1$nextpage" in data:
+            if getattr(self, "is_fast_forwarding", False) and self.fail_nextpage_500_times > 0:
+                self.fail_nextpage_500_times -= 1
+                return HttpResult(500, "Injected nextpage 500", {})
             if self.resume_mismatch:
                 mismatch_html = _register_html(
                     ["а", "б"],
@@ -192,6 +203,7 @@ class MockULIFServer:
                 return HttpResult(200, mismatch_html, {})
             if vs == "VS-p1":
                 self.current_page = 2
+                self.is_fast_forwarding = False
                 p2_html = _register_html(
                     ["замо́к", "Іши́м", "Іши́м"],
                     "VS-p2",
@@ -246,6 +258,9 @@ class MockULIFServer:
                 # замо́к (homonym 3, straddled from Page 1)
                 return HttpResult(200, self._fix_html(_html("zamok-entry-3.html")), {})
             if arg == "Select$1":
+                if self.fail_page2_row1_500_times > 0:
+                    self.fail_page2_row1_500_times -= 1
+                    return HttpResult(500, "Injected page2 row1 500", {})
                 if self.fail_on_page2_row1:
                     raise RuntimeError("Injected mid-page failure on page 2 row 1")
                 # Іши́м (homonym 1)
@@ -604,6 +619,158 @@ def test_resume_fast_forward_when_search_offsets(tmp_path: Path):
         if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
     ]
     assert len(ff_searches) == 1
+
+
+def test_startup_resume_fast_forward_recovers_after_injected_session_invalid(tmp_path: Path):
+    """Fast-forward on startup resume catches SessionInvalid, restarts from a fresh seed, and completes."""
+    server1 = MockULIFServer(fail_on_page2_row1=True)
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    # Run 1 fails on page 2 row 1, leaving page 2 in_progress
+    run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server1,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+
+    # Resume with server that offsets search AND fails first nextpage click with 500
+    server2 = MockULIFServer(search_offsets=True, fail_nextpage_500_times=1)
+    code2 = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server2,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code2 == 0
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p2 = ledger.get_page(2)
+        assert p2 is not None
+        assert p2["state"] == "completed"
+    finally:
+        ledger.close()
+
+    # Verify that fast-forward was attempted twice (two searches for "а" from fresh seeds)
+    ff_searches = [
+        req
+        for method, req in server2.requests_log
+        if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
+    ]
+    assert len(ff_searches) == 2
+
+
+def test_startup_resume_fast_forward_exhaustion_marks_retry_scheduled(tmp_path: Path):
+    """Fast-forward on startup resume marks retry_scheduled when all reseed attempts fail."""
+    server1 = MockULIFServer(fail_on_page2_row1=True)
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    # Run 1 fails on page 2 row 1, leaving page 2 in_progress
+    run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server1,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+
+    # Resume with server that offsets search AND fails all nextpage clicks with 500
+    server2 = MockULIFServer(search_offsets=True, fail_nextpage_500_times=10)
+    code2 = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server2,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code2 == EXIT_RETRY_STORM
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p2 = ledger.get_page(2)
+        assert p2 is not None
+        assert p2["state"] == "retry_scheduled"
+        assert p2["error"] == "http_500"
+    finally:
+        ledger.close()
+
+
+def test_mid_walk_fast_forward_recovers_after_injected_session_invalid(tmp_path: Path):
+    """Mid-walk reseed with fast-forward catches SessionInvalid, restarts from fresh seed, and completes."""
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    # Server fails page 2 row 1 with 500 (triggering reseed), offsets search, and fails first reseed nextpage with 500
+    server = MockULIFServer(
+        search_offsets=True,
+        fail_page2_row1_500_times=1,
+        fail_nextpage_500_times=1,
+    )
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == 0
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p2 = ledger.get_page(2)
+        assert p2 is not None
+        assert p2["state"] == "completed"
+    finally:
+        ledger.close()
+
+    # Page 1 normal search ("а") + reseed attempt 1 fast-forward ("а") + reseed attempt 2 fast-forward ("а") >= 2
+    ff_searches = [
+        req
+        for method, req in server.requests_log
+        if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
+    ]
+    assert len(ff_searches) >= 2
+
+
+def test_mid_walk_fast_forward_exhaustion_marks_retry_scheduled(tmp_path: Path):
+    """Mid-walk reseed with fast-forward marks retry_scheduled on exhaustion."""
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    # Server fails page 2 row 1 with 500, offsets search, and fails all reseed nextpage attempts with 500
+    server = MockULIFServer(
+        search_offsets=True,
+        fail_page2_row1_500_times=1,
+        fail_nextpage_500_times=10,
+    )
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p2 = ledger.get_page(2)
+        assert p2 is not None
+        assert p2["state"] == "retry_scheduled"
+        assert p2["error"] == "http_500"
+    finally:
+        ledger.close()
 
 
 def test_unknown_control_is_recorded_and_counted(tmp_path: Path):
