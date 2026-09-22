@@ -591,8 +591,17 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON result to stdout")
     parser.add_argument("--evidence-dir", type=Path, default=None, help="Override evidence output directory")
     parser.add_argument("--plans-dir", type=Path, default=None, help="Override lesson plans directory")
+    parser.add_argument(
+        "--sources-db", type=Path, default=None, help="Override sources database path (default: data/sources.db)"
+    )
+    parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
 
     args = parser.parse_args(argv)
+
+    report = lambda msg: print(f"progress: {msg}", file=sys.stderr)  # noqa: E731
+    explicit_sources = None
+    if args.sources_db is not None or args.vesum_db is not None:
+        explicit_sources = sources.Sources(sources_db=args.sources_db, vesum_db=args.vesum_db, report=report)
 
     try:
         result = build_words(
@@ -600,9 +609,10 @@ def main(argv: list[str] | None = None) -> int:
             args.request,
             evidence_dir=args.evidence_dir,
             plans_dir=args.plans_dir,
+            sources_instance=explicit_sources,
             dry_run=args.dry_run,
             stamp=args.stamp,
-            report=lambda msg: print(f"progress: {msg}", file=sys.stderr),
+            report=report,
         )
     except Exception as exc:
         if args.json:
@@ -610,6 +620,9 @@ def main(argv: list[str] | None = None) -> int:
         else:
             print(f"Error: {exc}", file=sys.stderr)
         return 1
+    finally:
+        if explicit_sources is not None:
+            explicit_sources.close()
 
     if args.json:
         # store dict might be large; output clean JSON summary with store

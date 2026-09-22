@@ -370,16 +370,30 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON result to stdout")
     parser.add_argument("--evidence-dir", type=Path, default=None, help="Override evidence output directory")
     parser.add_argument("--plans-dir", type=Path, default=None, help="Override lesson plans directory")
+    parser.add_argument(
+        "--sources-db", type=Path, default=None, help="Override sources database path (default: data/sources.db)"
+    )
+    parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
 
     args = parser.parse_args(argv)
 
-    result = verify_words_store(
-        args.level,
-        evidence_dir=args.evidence_dir,
-        plans_dir=args.plans_dir,
-        strict=args.strict,
-        report=lambda msg: print(f"progress: {msg}", file=sys.stderr),
-    )
+    report = lambda msg: print(f"progress: {msg}", file=sys.stderr)  # noqa: E731
+    explicit_sources = None
+    if args.sources_db is not None or args.vesum_db is not None:
+        explicit_sources = sources.Sources(sources_db=args.sources_db, vesum_db=args.vesum_db, report=report)
+
+    try:
+        result = verify_words_store(
+            args.level,
+            evidence_dir=args.evidence_dir,
+            plans_dir=args.plans_dir,
+            sources_instance=explicit_sources,
+            strict=args.strict,
+            report=report,
+        )
+    finally:
+        if explicit_sources is not None:
+            explicit_sources.close()
 
     if args.json:
         print(json.dumps(result, indent=2, ensure_ascii=False))

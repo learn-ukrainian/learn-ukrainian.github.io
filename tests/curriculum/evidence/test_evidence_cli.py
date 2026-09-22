@@ -1,16 +1,34 @@
 """Tests for curriculum evidence CLI commands."""
 
 import json
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
 
+import pytest
 import yaml
 
 from scripts.curriculum.evidence import __main__, words
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PYTHON = sys.executable
+
+
+def _real_sources_db() -> Path:
+    path = REPO_ROOT / "data/sources.db"
+    if path.is_file():
+        return path
+    from scripts.guardrails.worktree_containment import resolve_main_root
+
+    return resolve_main_root(REPO_ROOT) / "data/sources.db"
+
+
+HAS_REAL_SOURCES_DB = _real_sources_db().is_file()
+
+
+def _db_flags(sources_db: Path, vesum_db: Path) -> list[str]:
+    return ["--sources-db", str(sources_db), "--vesum-db", str(vesum_db)]
 
 
 def test_cli_help(capsys):
@@ -22,7 +40,7 @@ def test_cli_help(capsys):
     assert "invalid_request" in captured.out
 
 
-def test_cli_build_and_verify_subprocess(tmp_path):
+def test_cli_build_and_verify_subprocess(synthetic_sources, synthetic_vesum, tmp_path):
     req_path = tmp_path / "req.yaml"
     req_path.write_text(
         yaml.safe_dump(
@@ -31,9 +49,10 @@ def test_cli_build_and_verify_subprocess(tmp_path):
                 "level": "a1",
                 "words": [
                     {
-                        "lemma": "мама",
+                        "lemma": "synthetic",
                         "pos": "noun",
                         "want": "new",
+                        "entry": {"source": "vesum", "entry_id": 10},
                     }
                 ],
             }
@@ -42,8 +61,9 @@ def test_cli_build_and_verify_subprocess(tmp_path):
     )
 
     ev_dir = tmp_path / "evidence"
+    db_flags = _db_flags(synthetic_sources, synthetic_vesum)
 
-    # Run build-words via subprocess
+    # Run build-words via subprocess against the synthetic databases
     cmd_build = [
         PYTHON,
         "-m",
@@ -55,6 +75,7 @@ def test_cli_build_and_verify_subprocess(tmp_path):
         "--evidence-dir",
         str(ev_dir),
         "--json",
+        *db_flags,
     ]
     proc_build = subprocess.run(
         cmd_build,
@@ -68,7 +89,7 @@ def test_cli_build_and_verify_subprocess(tmp_path):
     assert data_build["status"] == "ok"
     assert data_build["words_count"] == 1
 
-    # Run words-verify via subprocess
+    # Run words-verify via subprocess against the same synthetic databases
     cmd_verify = [
         PYTHON,
         "-m",
@@ -78,6 +99,7 @@ def test_cli_build_and_verify_subprocess(tmp_path):
         "--evidence-dir",
         str(ev_dir),
         "--json",
+        *db_flags,
     ]
     proc_verify = subprocess.run(
         cmd_verify,
@@ -91,7 +113,12 @@ def test_cli_build_and_verify_subprocess(tmp_path):
     assert data_verify["status"] == "ok"
 
 
-def test_cli_dry_run_does_not_write_files(tmp_path):
+def test_cli_dry_run_does_not_write_files(synthetic_sources, synthetic_vesum, tmp_path):
+    # Monosyllabic form: the build must not need the stress oracle.
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("DELETE FROM forms_all")
+        conn.execute("INSERT INTO forms_all VALUES (1, 100, 'ма', 'мама', 'noun', 'noun:f:v_kly:short', '', '')")
+
     req_path = tmp_path / "req.yaml"
     req_path.write_text(
         yaml.safe_dump(
@@ -120,6 +147,7 @@ def test_cli_dry_run_does_not_write_files(tmp_path):
             "--evidence-dir",
             str(ev_dir),
             "--dry-run",
+            *_db_flags(synthetic_sources, synthetic_vesum),
         ]
     )
     assert ret == 0
@@ -127,6 +155,7 @@ def test_cli_dry_run_does_not_write_files(tmp_path):
     assert not (ev_dir / "_words.registry.yaml").exists()
 
 
+@pytest.mark.skipif(not HAS_REAL_SOURCES_DB, reason="requires the real data/sources.db dictionary")
 def test_cli_dry_run_committed_five_lemmas_request():
     req_path = REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml"
     assert req_path.is_file()
