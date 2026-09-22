@@ -565,3 +565,93 @@ class TestAstraReviewFindings:
         }
         violations = check_plan_compliance(plan, mapping=mapping)
         assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_blocker_3_item_ulp_evidence_not_naming_move_fails(self, mapping):
+        """Evidence attached directly to item not naming the move must fail."""
+        plan = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'ulp_evidence': ['ULP episode 1: alphabet'],
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_blocker_3_arc_moves_ulp_evidence_not_naming_move_fails(self, mapping):
+        """Evidence under arc.moves not naming the move must fail."""
+        plan = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                            }
+                        ]
+                    }
+                }
+            ],
+            'arc': {
+                'moves': {
+                    'G-a2-005': {
+                        'ulp_evidence': ['ULP episode 1: alphabet'],
+                    }
+                }
+            },
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_blocker_3_item_and_arc_ulp_evidence_naming_move_passes(self, mapping):
+        """Evidence naming specific move authorizes early introduction."""
+        plan_item = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'ulp_evidence': ['ULP episode 25: G-a2-005'],
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_item = check_plan_compliance(plan_item, mapping=mapping)
+        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_item)
+
+        plan_arc = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                            }
+                        ]
+                    }
+                }
+            ],
+            'arc': {
+                'moves': {
+                    'G-a2-005': {
+                        'ulp_evidence': ['ULP episode 25: G-a2-005'],
+                    }
+                }
+            },
+        }
+        violations_arc = check_plan_compliance(plan_arc, mapping=mapping)
+        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_arc)
