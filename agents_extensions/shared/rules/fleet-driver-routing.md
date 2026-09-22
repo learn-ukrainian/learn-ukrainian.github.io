@@ -119,10 +119,12 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | --- | --- | --- | --- | --- | --- |
 | Claude Sonnet 5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-thinking-high` |
 | Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
-| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-thinking-high` |
-| GPT-5.6 Sol | $4 | $5 | $0.40 | $20 | `gpt-5.6-sol-high` |
-| GPT-5.6 Luna | $0.20 | $0.25 | $0.02 | $1.20 | `gpt-5.6-luna-high` |
+| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |
+| GPT-5.6 Sol | $4 | $5 | $0.40 | $20 | do not send |
+| GPT-5.6 Luna | $0.20 | $0.25 | $0.02 | $1.20 | do not send |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |
+
+Do not send GPT-5.6. Cursor's catalog has no GPT-6 slug; GPT-6 Sol and Luna run on the native Codex CLI. `claude-fable-5-thinking-high` is Fable 5, not 5.1.
 
 Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#6943**.
 
