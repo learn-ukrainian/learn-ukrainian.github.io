@@ -125,5 +125,11 @@
       "sha256": "d4deb246759df6f76112d8fe73090a72007db412e06cb069745bedee62b2909c"
     }
   },
-  "verdict": "CANARY_PILOT_PASSED"
+  "verdict": "CANARY_PILOT_PASSED",
+  "reliability_assessment": {
+    "status": "NOT_RELIABLE",
+    "audit_issue": 8338,
+    "notes": "NOT RELIABLE: The saved adapter (pilot_canary_adapter.safetensors) contains only 4 layers and hidden dimension 256, which does not match Google Gemma 3 4B (34 layers, hidden dimension 2560). The training run was produced by a stand-in synthetic script (v4_pilot_canary_evaluation.py) rather than authentic model weights. Superseded by the first real open model training run in issue #8338.",
+    "superseded_by": "docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md"
+  }
 }

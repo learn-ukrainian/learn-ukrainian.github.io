@@ -73,6 +73,7 @@ repos:
       - id: check-added-large-files
         name: block accidentally large files
         args: [--maxkb=2000]
+        exclude: ^data/projects/open_model_data/study/run_output/adapter/adapter_model\.safetensors$
       - id: check-merge-conflict
       - id: end-of-file-fixer
         exclude: ^(curriculum/|wiki/|docs/references/|docs/token-usage/|batch_state/|site/node_modules/|\.venv/|tests/fixtures/ulif_dictua/)

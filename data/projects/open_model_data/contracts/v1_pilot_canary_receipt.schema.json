@@ -521,6 +521,35 @@
         "CANARY_PILOT_PASSED",
         "CANARY_PILOT_FAILED"
       ]
+    },
+    "reliability_assessment": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "status",
+        "audit_issue",
+        "notes",
+        "superseded_by"
+      ],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": [
+            "NOT_RELIABLE",
+            "RELIABLE",
+            "UNVERIFIED"
+          ]
+        },
+        "audit_issue": {
+          "type": "integer"
+        },
+        "notes": {
+          "type": "string"
+        },
+        "superseded_by": {
+          "type": "string"
+        }
+      }
     }
   }
 }
