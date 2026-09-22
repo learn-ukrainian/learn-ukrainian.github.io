@@ -19,8 +19,8 @@ launcher_adapter_canary() {
 }
 launcher_adapter_exec() {
   local cmd=("$LC_CURSOR_BIN")
-  # Pass --model only when the caller set one. Empty keeps the grok
-  # cursor-agent already has selected.
+  # Driver defaults LC_MODEL to grok-4.7-high. Always pass a set model so
+  # cursor-agent cannot fall back to Auto or a fast variant.
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
   fi
