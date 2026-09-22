@@ -13,6 +13,8 @@ import yaml
 
 from scripts.curriculum.evidence import lesson_lock, lock, pack, sources, words
 
+pytestmark = pytest.mark.reads_content
+
 PYTHON = sys.executable
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
