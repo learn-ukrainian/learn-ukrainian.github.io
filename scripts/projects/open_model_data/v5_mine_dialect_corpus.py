@@ -100,7 +100,7 @@ V02_SFT_SHARDS_DIR = (
     / "data"
     / "projects"
     / "open_model_data"
-    / "release"
+    / "archive"
     / "uldr_v1_production"
     / "sft"
 )

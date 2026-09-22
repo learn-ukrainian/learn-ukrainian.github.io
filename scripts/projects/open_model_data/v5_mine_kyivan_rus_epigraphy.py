@@ -114,7 +114,7 @@ V02_BASELINE_SUITE_PATH = (
     / "partitions"
     / "dialect_historical_protection_suite_600.jsonl"
 )
-V02_SFT_SHARDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v1_production" / "sft"
+V02_SFT_SHARDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "archive" / "uldr_v1_production" / "sft"
 
 CYRILLIC_CHAR_RE = re.compile(r"[а-яіїєґѣѧѡъьѵѳѫꙋꙗѕziѿ]", re.IGNORECASE)
 HISTORICAL_CYRILLIC_RE = re.compile(r"[ѣѧѡъьѵѳѫꙋꙗѕziіѿ҃]", re.IGNORECASE)

@@ -964,7 +964,7 @@ def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]
         / "data"
         / "projects"
         / "open_model_data"
-        / "release"
+        / "archive"
         / "uldr_v1_production"
         / "sft"
         / "sft_shard_001_of_012.jsonl"

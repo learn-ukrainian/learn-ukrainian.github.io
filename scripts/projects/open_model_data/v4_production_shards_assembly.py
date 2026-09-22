@@ -52,7 +52,7 @@ TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.js
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_production_release_receipt.schema.json"
 
-DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v1_production"
+DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "archive" / "uldr_v1_production"
 DEFAULT_STEM_CONTROLS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "stem_controls"
 DEFAULT_HELDOUT_SUITE = (
     REPO_ROOT
