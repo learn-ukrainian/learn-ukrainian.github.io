@@ -427,6 +427,9 @@ def test_resolved_major_does_not_block(tmp_path: Path) -> None:
         ("two_branches", codes.EVIDENCE_BRANCH_COUNT),
         ("no_branch", codes.EVIDENCE_BRANCH_COUNT),
         ("scope", codes.SCOPE_MISSING),
+        ("finding_not_referenced", codes.FINDING_NOT_REFERENCED),
+        ("dangling_check_reference", codes.DANGLING_CHECK_REFERENCE),
+        ("sub_dimension_invalid", codes.SUB_DIMENSION_INVALID),
     ],
 )
 def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> None:
@@ -480,6 +483,12 @@ def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> No
     elif mutate == "scope":
         finding["locations"] = []
         finding.pop("scope", None)
+    elif mutate == "finding_not_referenced":
+        checks = _lesson_checks()
+    elif mutate == "dangling_check_reference":
+        checks["job"] = ["F-99"]
+    elif mutate == "sub_dimension_invalid":
+        finding["sub_dimension"] = "invalid_sub_dim"
     findings = finding if isinstance(finding, list) else [finding]
     if mutate == "duplicate":
         findings[1]["evidence"] = {"receipt": receipt}
@@ -490,6 +499,28 @@ def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> No
     validated = _validate(paths)
     assert not validated.ok
     assert code in _codes(validated)
+
+    schema_valid_mutations = {
+        "manifest",
+        "fabricated",
+        "expected",
+        "other_activity",
+        "empty_quote",
+        "out_of_bounds",
+        "incomplete",
+        "unsupported_cap",
+        "outcome",
+        "missing_check",
+        "recap_check",
+        "duplicate",
+        "finding_not_referenced",
+        "dangling_check_reference",
+    }
+    if mutate in schema_valid_mutations:
+        assert codes.SCHEMA_INVALID not in _codes(validated), (
+            f"mutation {mutate} unexpectedly triggered schema_invalid: "
+            f"{[r.message for r in validated.rejections if r.code == codes.SCHEMA_INVALID]}"
+        )
 
 
 def test_recap_check_required_when_manifest_says_recap(tmp_path: Path) -> None:
@@ -1020,3 +1051,121 @@ def test_plan_review_findings_with_locations_rejected(tmp_path: Path) -> None:
     assert not res.ok
     assert codes.LOCATION_NOT_IN_LESSON in _codes(res)
     assert any("plan-review findings with locations are rejected" in r.message for r in res.rejections)
+
+
+def test_sub_dimension_invalid_isolated_from_schema(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    import copy
+
+    import scripts.review.validate.validate as val_mod
+
+    paths = _layout(tmp_path)
+    receipt = _record(paths["ledger"], manifest=paths["digest"], result="alpha-item-text is attested", status="ok")
+    finding = _finding(evidence={"receipt": receipt}, sub_dimension="stress")
+    checks = _lesson_checks(["F-01"])
+    _dump(paths["review"], _review(kind="lesson", manifest_hash=paths["digest"], checks=checks, findings=[finding]))
+
+    # Valid under default taxonomy
+    val_default = _validate(paths)
+    assert val_default.ok
+
+    # Omit 'stress' from taxonomy only
+    custom_tax = copy.deepcopy(val_mod._taxonomy())
+    custom_tax["sub_dimensions"]["language"] = ["russianism", "surzhyk"]
+    monkeypatch.setattr(val_mod, "_taxonomy", lambda: custom_tax)
+
+    val_custom = _validate(paths)
+    assert not val_custom.ok
+    assert codes.SUB_DIMENSION_INVALID in _codes(val_custom)
+    assert codes.SCHEMA_INVALID not in _codes(val_custom)
+
+
+def test_active_finding_cites_previous_receipt_rejected(tmp_path: Path) -> None:
+    paths = _layout(tmp_path)
+    prev_ledger = paths["ledger"].parent / "attempt-0.jsonl"
+    create_empty_ledger(prev_ledger)
+    r_prev = _record(
+        prev_ledger,
+        manifest="11" * 32,
+        result="alpha-item-text is attested",
+        attempt_id="attempt-0",
+        review_id="review-1",
+        status="ok",
+    )
+
+    # 1. Finding with status: active citing previous attempt receipt is rejected
+    finding_active = _finding(status="active", evidence={"receipt": r_prev})
+    checks = _lesson_checks(["F-01"])
+    rev_data = _review(kind="lesson", manifest_hash=paths["digest"], checks=checks, findings=[finding_active])
+    rev_data["attempt"]["previous_attempt_id"] = "attempt-0"
+    _dump(paths["review"], rev_data)
+
+    val_active = _validate(paths)
+    assert not val_active.ok
+    assert codes.RECEIPT_NOT_IN_LEDGER in _codes(val_active)
+
+    # 2. Finding with status: persisting citing previous attempt receipt is accepted
+    finding_persisting = _finding(status="persisting", evidence={"receipt": r_prev})
+    rev_data_persisting = _review(
+        kind="lesson", manifest_hash=paths["digest"], checks=checks, findings=[finding_persisting]
+    )
+    rev_data_persisting["attempt"]["previous_attempt_id"] = "attempt-0"
+    _dump(paths["review"], rev_data_persisting)
+
+    val_persisting = _validate(paths)
+    assert val_persisting.ok
+
+
+def test_v4_and_review_both_record(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+
+    v4_invocations: list[tuple[str, dict]] = []
+
+    def fake_v4_record(*, name: str, typed_outcome: dict) -> None:
+        v4_invocations.append((name, typed_outcome))
+
+    monkeypatch.setattr(server_module, "_record_v4_typed_invocation", fake_v4_record)
+
+    async def fake_verify_words(_arguments):
+        content = [TextContent(type="text", text="Batch verification: 1 words\nFound: 1/1\n- слово — FOUND")]
+        typed_outcome = {"disposition": "found", "hits": 1}
+        return content, typed_outcome
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
+
+    result = _run(server_module.call_tool("verify_words", {"words": ["слово"]}))
+    assert any("receipt: " in t.text for t in result)
+    receipt = result[0].text.splitlines()[-1].removeprefix("receipt: ")
+
+    stored = lookup(ledger, receipt)
+    assert stored["tool"] == "verify_words"
+    assert stored["status"] == "ok"
+
+    assert len(v4_invocations) == 1
+    assert v4_invocations[0][0] == "verify_words"
+    assert v4_invocations[0][1] == {"disposition": "found", "hits": 1}
+
+
+def test_server_recording_off_preserves_typed_structured_content(
+    server_module, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import CallToolRequestParams, TextContent
+
+    _quiet_env(monkeypatch)
+
+    async def fake_verify_words(_arguments):
+        content = [TextContent(type="text", text="Batch verification: 1 words\nFound: 1/1\n- слово — FOUND")]
+        typed_outcome = {"disposition": "found", "hits": 1}
+        return content, typed_outcome
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
+
+    params = CallToolRequestParams(name="verify_words", arguments={"words": ["слово"]})
+    res = _run(server_module._on_call_tool(None, params))
+    assert res.is_error is False
+    assert not any("receipt:" in t.text for t in res.content)
+    assert res.structured_content == {"disposition": "found", "hits": 1}
