@@ -31,8 +31,6 @@ from jsonschema import Draft202012Validator
 
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import codes as resolver_codes
-from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
-from scripts.curriculum.resolver.receipts import check_receipts, validate_receipts
 from scripts.curriculum.validate.loader import PlanError, load_plan
 
 from . import codes
@@ -40,7 +38,6 @@ from .planned import PlannedStateError, planned_state
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/learner-observed-v1.schema.json"
-VALID_TABS = resolver_codes.TABS
 
 
 class ObservedError(Exception):
@@ -120,6 +117,7 @@ def build_observed_index(
     grammar_path: Path | None = None,
     expanded: Any = None,
     expanded_path: Path | None = None,
+    state_dir: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
 ) -> dict[str, Any]:
@@ -148,7 +146,14 @@ def build_observed_index(
         raise ObservedError(codes.LESSON_NOT_FOUND, f"lesson {lesson_n} not found in plan {slug}")
 
     # 2. Load resolution receipts via check_receipts
-    res_path = resolutions_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.resolutions.yaml")
+    from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+    from scripts.curriculum.resolver.receipts import check_receipts, validate_receipts
+
+    res_path = resolutions_path or (
+        (state_dir / f"lesson-{lesson_n}.resolutions.yaml")
+        if state_dir
+        else (evidence_root / "_state" / slug / f"lesson-{lesson_n}.resolutions.yaml")
+    )
     if resolutions_doc is not None:
         res_data = resolutions_doc
         try:
@@ -169,7 +174,11 @@ def build_observed_index(
 
     expanded_doc = expanded
     if expanded_doc is None:
-        exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+        exp_file = expanded_path or (
+            (state_dir / f"lesson-{lesson_n}.expanded.yaml")
+            if state_dir
+            else (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+        )
         if exp_file.is_file():
             with contextlib.suppress(Exception):
                 expanded_doc = ExpandedDocument.load(exp_file)
@@ -298,10 +307,10 @@ def build_observed_index(
 
         unit = token.get("unit") or {}
         tab = unit.get("tab")
-        if tab not in VALID_TABS:
+        if tab not in resolver_codes.TABS:
             raise ObservedError(
                 codes.UNKNOWN_TAB,
-                f"token {token.get('token')!r} has unknown tab {tab!r}; must be one of {sorted(VALID_TABS)}",
+                f"token {token.get('token')!r} has unknown tab {tab!r}; must be one of {sorted(resolver_codes.TABS)}",
             )
 
         selected = token.get("selected")
@@ -418,6 +427,7 @@ def write_observed(
     grammar_path: Path | None = None,
     expanded: Any = None,
     expanded_path: Path | None = None,
+    state_dir: Path | None = None,
     out_dir: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
@@ -436,12 +446,16 @@ def write_observed(
         grammar_path=grammar_path,
         expanded=expanded,
         expanded_path=expanded_path,
+        state_dir=state_dir,
         allow_missing_prior=allow_missing_prior,
         strict=strict,
     )
-    evidence_root = out_dir or evidence_dir or (REPO_ROOT / f"curriculum/l2-uk-en/evidence/{level}")
-    state_dir = Path(evidence_root) / "_state" / slug
-    state_dir.mkdir(parents=True, exist_ok=True)
-    out_path = state_dir / f"lesson-{lesson_n}.observed.yaml"
+    if state_dir is not None:
+        target_dir = Path(state_dir)
+    else:
+        evidence_root = out_dir or evidence_dir or (REPO_ROOT / f"curriculum/l2-uk-en/evidence/{level}")
+        target_dir = Path(evidence_root) / "_state" / slug
+    target_dir.mkdir(parents=True, exist_ok=True)
+    out_path = target_dir / f"lesson-{lesson_n}.observed.yaml"
     digest = lock.write(out_path, lock.yaml_bytes(doc))
     return out_path, digest

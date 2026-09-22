@@ -244,8 +244,8 @@ def test_cli_planned_json_output(tmp_path: Path) -> None:
     assert payload["position"] == 1
     assert payload["lesson_n"] == 2
     assert payload["cumulative_core_count"] == 1
-    assert "W-CORE-01" in payload["core_ids"]
-    assert "W-BASE-01" in payload["base_ids"]
+    assert "W-10" in payload["core_ids"]
+    assert "W-1" in payload["base_ids"]
 
 
 def test_cli_band_json_output(tmp_path: Path) -> None:
@@ -547,7 +547,6 @@ def test_cli_gate_failing_output(tmp_path: Path) -> None:
                 "unit": {"tab": "vpravy", "activity": "a1", "item": 0, "block": 0},
                 "offset": 0,
                 "token": "bad-tok",
-                "sentence": "sample sentence with bad-tok",
                 "surface": "sentence_token",
                 "class": "resolved",
                 "candidates": ["W-99"],

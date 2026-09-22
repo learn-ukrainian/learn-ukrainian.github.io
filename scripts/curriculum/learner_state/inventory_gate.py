@@ -26,8 +26,6 @@ from typing import Any
 import yaml
 
 from scripts.curriculum.resolver import codes as resolver_codes
-from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
-from scripts.curriculum.resolver.receipts import check_receipts
 from scripts.curriculum.validate.loader import PlanError, load_plan
 
 from . import codes
@@ -373,6 +371,9 @@ def check_lesson(
                 not_checked=tuple(not_checked),
             )
         try:
+            from scripts.curriculum.resolver.inputs import ResolverError
+            from scripts.curriculum.resolver.receipts import check_receipts
+
             res_doc = check_receipts(res_file)
             tokens = res_doc.get("tokens") or []
         except ResolverError as err:
@@ -422,6 +423,8 @@ def check_lesson(
         exp_file = evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml"
         if exp_file.is_file():
             with contextlib.suppress(Exception):
+                from scripts.curriculum.resolver.inputs import ExpandedDocument
+
                 expanded_doc = ExpandedDocument.load(exp_file)
 
     units_by_locator: dict[tuple[Any, Any, Any, Any], Any] = {}

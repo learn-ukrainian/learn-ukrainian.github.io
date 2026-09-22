@@ -333,7 +333,6 @@ def _setup_fixture(root: Path, level: str = "a1") -> dict[str, Path]:
         "words_path": evidence_dir / "_words.yaml",
         "base_request_path": evidence_dir / "_base.request.yaml",
         "resolutions_path": state_dir / "lesson-1.resolutions.yaml",
-        "state_dir": state_dir,
     }
 
 
