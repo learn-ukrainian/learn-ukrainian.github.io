@@ -50,10 +50,11 @@ $driver_mode
 
 Options:
   -h, --help                 Show this help and exit.
-  --model MODEL              Provider model. Claude/Grok: omit to keep last TUI/session model.
+  --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
+                             Claude interactive / Grok: omit to keep last TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
-                             --reasoning-effort). Omit to keep last session selection.
-                             Other providers ignore.
+                             --reasoning-effort). Claude driver default: high. Otherwise
+                             omit to keep last session selection. Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
   --force                    Driver only. Attributed operator release of a live
@@ -67,10 +68,11 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
-  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude/Grok =
+  LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
+                             claude-opus-5-5[1m]; empty for Claude interactive/Grok =
                              last session).
-  LAUNCHER_EFFORT            Default effort when --effort is omitted (empty for Claude/Grok =
-                             last session).
+  LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
+                             empty for Claude interactive/Grok = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
 
@@ -234,10 +236,14 @@ launcher_clear_foreign_route_state() {
 launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
-      # Both interactive and driver leave model/effort alone unless the caller
-      # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
-      # Claude Code keeps the last TUI/session selection.
-      LC_MODEL="${LAUNCHER_MODEL:-}"
+      # Driver seats the orchestrator on Opus 5.5 with the 1M window (operator
+      # 2026-09-22); effort defaults to high below. Interactive leaves model and
+      # effort alone so Claude Code keeps the last TUI/session selection.
+      if [ "$LC_MODE" = driver ]; then
+        LC_MODEL="${LAUNCHER_MODEL:-claude-opus-5-5[1m]}"
+      else
+        LC_MODEL="${LAUNCHER_MODEL:-}"
+      fi
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
@@ -274,6 +280,10 @@ launcher_defaults() {
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
   if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
     if [ "$LC_MODE" = driver ]; then LC_EFFORT=high; else LC_EFFORT=low; fi
+  fi
+  if [ "$LC_PROVIDER" = claude ] && [ "$LC_MODE" = driver ] && [ -z "$LC_EFFORT" ]; then
+    # Opus 5.5 API default is medium; orchestrating seats run at high.
+    LC_EFFORT=high
   fi
   LC_ENDPOINT="${LAUNCHER_ENDPOINT:-coding}"
   LC_ISOLATE_CONFIG="${LAUNCHER_ISOLATE_CONFIG:-1}"
@@ -413,7 +423,8 @@ launcher_normalize_model() {
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
     claude:fable-5|claude:claude-fable-5) LC_MODEL='claude-fable-5' ;;  # legacy alias
     claude:sonnet) LC_MODEL='claude-sonnet-5' ;;
-    claude:opus|claude:opus-5) LC_MODEL='claude-opus-5' ;;
+    claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
+    claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
 }
 
@@ -516,7 +527,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7|cursor:auto|cursor:grok-4.7|cursor:grok-4.6|cursor:composer-2.5)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7|cursor:auto|cursor:grok-4.7|cursor:grok-4.6|cursor:composer-2.5)
       return 0
       ;;
     *)

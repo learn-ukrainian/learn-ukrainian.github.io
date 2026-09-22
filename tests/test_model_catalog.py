@@ -44,6 +44,8 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "gpt-5.6-terra",
         "gpt-5.6-luna",
         "claude-fable-5",
+        "claude-fable-5-1",
+        "claude-opus-5-5",
         "claude-opus-5",
         "claude-sonnet-5",
         "gemini-3.1-pro-high",
@@ -369,7 +371,9 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
-    assert seats["claude"]["model_id"] == "claude-fable-5-1"
+    # Operator 2026-09-22: Opus 5.5 drives; Fable 5.1 stays the advisor seat.
+    assert seats["claude"]["model_id"] == "claude-opus-5-5"
+    assert seats["claude"]["effort"] == "high"
     assert seats["grok"]["fallback_model_id"] == "grok-4.7"
     assert seats["cursor"]["model_id"] == "auto"
     assert seats["cursor"]["effort"] == "high"
@@ -629,6 +633,8 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
     flat = [model for rung in ladder for model in rung]
     assert "claude-fable-5" in flat
     assert "claude-opus-5" not in flat
+    # The Opus 5.5 orchestrator seat must not inherit approval authority either.
+    assert "claude-opus-5-5" not in flat
     assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
 
 
@@ -637,6 +643,15 @@ def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
     roles = set(load_model_catalog()["models"]["claude-opus-5"]["roles"])
     assert "advisory_consultation" in roles
     assert "orchestration" not in roles
+
+
+def test_opus_5_5_is_the_claude_orchestrator_and_formal_cf_pin() -> None:
+    catalog = load_model_catalog()
+    roles = set(catalog["models"]["claude-opus-5-5"]["roles"])
+    assert "orchestration" in roles
+    assert "advisory_consultation" not in roles
+    assert "claude-opus-5-5" in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
+    assert "claude-opus-5-5" in catalog["formal_cf_defaults"]["claude"]["family_models"]
 
 
 def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():

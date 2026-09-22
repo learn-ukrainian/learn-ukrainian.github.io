@@ -66,14 +66,28 @@ Use Cursor with the same pinned model only when native Claude does not expose Fa
 rejects that model before inference. Quota pressure alone does not invert this order.
 Record the harness fallback explicitly; it is a transport fallback, not a model substitution.
 
-**Claude Seat Routing: Fable 5.1 & Sonnet 5 Tiering (operator directive 2026-09-17):**
+**Claude default model: Opus 5.5 (operator directive 2026-09-22):**
+> *«add opus as the default claude model, set opus 5.5 for the orchestrator if i start claude driver. the advisor is still fable 5.1»* (operator directive, session 2026-09-22)
+
+- **Default Claude model and orchestrator seat**: **`claude-opus-5-5` (Opus 5.5)**. `start-claude-driver.sh`
+  pins `claude-opus-5-5[1m]` @ `high` unless `--model` / `--effort` (or `LAUNCHER_MODEL` /
+  `LAUNCHER_EFFORT`) override it; interactive `start-claude.sh` keeps the last TUI selection. Opus 5.5
+  also takes advanced non-linguistic Claude-lane work (architecture, hard coding, deep code review).
+- **Advisor and authority seat stays Fable 5.1**: `claude-fable-5-1` for advisor turns, advisor panels,
+  the critical review ladder, and the Ukrainian-specific linguistic work named below. The orchestrator
+  seat never confers approval authority.
+- **Effort**: Opus 5.5's API default is `medium`, one level below Opus 5. Orchestrating runs at `high`;
+  see `docs/best-practices/fleet-shared-doctrine.md` § Effort guidance for the full ladder.
+
+**Claude Seat Routing: Fable 5.1 & Sonnet 5 Tiering (operator directive 2026-09-17; orchestration and
+advanced non-linguistic work moved to Opus 5.5 on 2026-09-22, above):**
 > *«for advanced stuff use fable-5.1 and for rutine stuff sonnet-5. for ukrainina specific fable»* (operator directive, session 2026-09-17)
 
 Operationalizes the Claude seat selection within the 2-Tier Formal Review Routing Policy and day-to-day task dispatch:
-- **Advanced reasoning, contested architectural decisions, and Ukrainian-specific linguistic reviews**:
-  Mandate **`claude-fable-5-1` (Fable 5.1)**. Fable's deep reasoning and linguistic rigor are required
-  whenever complex domain logic, contested architectural questions, or Ukrainian language norms and
-  pedagogy are evaluated within the Claude lane.
+- **Advanced non-linguistic execution** (architecture, hard coding, deep code review, contested architectural implementation):
+  **`claude-opus-5-5` (Opus 5.5)**.
+- **Ukrainian-specific linguistic judgment**: Mandate **`claude-fable-5-1` (Fable 5.1)** whenever Ukrainian language norms and pedagogy are evaluated.
+- **Advisor and designated authority**: **`claude-fable-5-1` (Fable 5.1)** for advisor turns, advisor panels, and the critical review ladder. That seat holds the approval boundary. The orchestrator seat does not confer it.
 - **Everyday routine infrastructure and standard non-linguistic coding**:
   Use **`claude-sonnet-5` (Sonnet 5)** to preserve frontier rate limits and execution speed.
 
@@ -91,14 +105,14 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
     so the seat rides the same native `opencode acp --pure` transport
     as GLM/Gemma (#6805). The current Arena evidence is preliminary
     and frontend-specific, so this promotion does not grant critical or advisory authority.
-* **Complex Tasks, Deep Reviews & Anthropic Advisory Consultations**:
-  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, and
-    non-binding advisory consultation). Operator directive 2026-07-31: when requesting
+* **Complex tasks, deep reviews, and Anthropic advisory consultations**:
+  * **Execution**: `claude-opus-5-5` for architecture, hard coding, and deep code review.
+  * **Non-binding advisory consultation**: `claude-opus-5`. Operator directive 2026-07-31: when requesting
     Anthropic advisory input, use `ab ask-claude --type advisory --to-model claude-opus-5`;
     never substitute Sonnet. This consultation does not confer designated approval
     authority and does not satisfy the formal cross-family review gate.
 * **Escalatory Advisor / Critical Authority Reviews** (reserved for architecture, security, or design escalation):
-  * **Top advisors**: `claude-fable-5` · `gpt-6-astra` — the ONLY top-tier
+  * **Top advisors**: `claude-fable-5-1` (Fable 5.1) · `gpt-6-astra` — the ONLY top-tier
     advisor seats. Astra is pinned at `high` for advisory and escalation. Fable's cost is accepted for advisor turns:
     they are rare, short, and decision-bearing; never spend them on queue grind.
   * **Other advisors**: `gemini-3.1-pro-high` · `gemini-3.8-flash-high` ·
@@ -286,7 +300,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
-  | **claude** | `claude-fable-5` @ high | **`gpt-6-astra` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Astra at the Codex ACP provider default — pick by CodexBar headroom. Fable drives in the SUMMONED cadence only (see § Orchestration operating pattern) |
+  | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes advanced non-linguistic work (architecture, hard coding, deep code review) | **`gpt-6-astra` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Fable 5.1 stays the advisor / authority seat, including Ukrainian-specific linguistic judgment, and is summoned for judgment, not seated as driver (see § Orchestration operating pattern). The orchestrator seat does not confer approval authority. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Astra at the Codex ACP provider default — pick by CodexBar headroom |
   | **codex** | `gpt-6-astra` @ high | **`gpt-6-astra` @ high** | Named alternate for harness / infra / devops; never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Pro deep single-shot |
@@ -296,7 +310,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | seat | model_id | effort | escalate_model_id | escalate_effort |
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
-  | claude | claude-fable-5-1 | high | gpt-6-astra | high |
+  | claude | claude-opus-5-5 | high | gpt-6-astra | high |
   | codex | gpt-6-astra | high | gpt-6-astra | high |
   | cursor | auto | high | gpt-6-astra | high |
   | grok | grok-4.7 | high | grok-4.7 | high |
@@ -327,7 +341,10 @@ the system until it returns) is broken by ROLE SPLIT, not by a better single dri
   re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
   merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
   orchestrator currently available.
-* **Summoned judgment: `claude-fable-5`** — NOT a resident driver. One or two SHORT
+* **Claude driver seat: `claude-opus-5-5` @ `high`** (operator 2026-09-22) — what
+  `start-claude-driver.sh` launches when a Claude session drives an epic. Same
+  dispatch-heavy discipline as below; it is not the advisor and holds no approval authority.
+* **Summoned judgment: `claude-fable-5-1` (Fable 5.1)** — NOT a resident driver. One or two SHORT
   scheduled sessions per day: read the fleet's verdicts, correct course, lock designs,
   write the next precise briefs, leave. Drive dispatch-heavy, never inline-heavy
   (measured 2026-07-26: a dispatch-heavy Fable orchestration hour costs ~2 weekly-quota

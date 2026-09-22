@@ -72,7 +72,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-fable-5` @ high | **`gpt-5.6-sol` @ xhigh** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
+| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-5.6-sol` @ xhigh** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
 | **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
 | **grok** | `grok-4.6` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
 | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
@@ -82,7 +82,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
-| claude | claude-fable-5-1 | high | gpt-6-astra | high |
+| claude | claude-opus-5-5 | high | gpt-6-astra | high |
 | codex | gpt-6-astra | high | gpt-6-astra | high |
 | cursor | auto | high | gpt-6-astra | high |
 | grok | grok-4.7 | high | grok-4.7 | high |

@@ -97,7 +97,7 @@ review_scheduler:
     claude:
       formal_review_eligible: true
       # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5, claude-opus-5, claude-opus-4-8]
+      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -361,6 +361,29 @@ models:
       docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
+  claude-opus-5-5:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [orchestration, architecture, agentic_coding, critical_review, security_review]
+    transports: [native_claude]
+    strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
+    weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
+    notes: >-
+      Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
+      Opus 5.5 executes advanced non-linguistic work (architecture, hard coding,
+      deep code review). start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
+      Fable 5.1 stays the designated Anthropic advisor / authority seat, including
+      Ukrainian-specific linguistic judgment; this seat does not confer
+      approval authority. Effort: API default is medium (not high); medium on
+      Opus 5.5 beats Opus 5 @ high on coding and knowledge work. Orchestrating runs
+      at high; medium/low for routine turns; xhigh for hard debugging and the
+      curriculum/linguistic review skills that pin effort: xhigh; max almost never.
+      Each level thinks more per turn than on Opus 5 — lower effort before prompting
+      for brevity. Thinking is always on (thinking: disabled and budget_tokens 400);
+      forced tool_choice any/tool 400s. Full prose: fleet-shared-doctrine § Effort.
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/models/overview
   claude-opus-5:
     family: anthropic
     tier: frontier_authority
@@ -933,6 +956,13 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     requires_data_egress_policy: local_interactive
+  claude-opus-5-5:
+    model_id: claude-opus-5-5
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5-5
+    review_profiles: [code, infra]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-opus-5:
     model_id: claude-opus-5
     route: claude
@@ -1009,26 +1039,27 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-fable-5-1
+    model_id: claude-opus-5-5
     effort: high
     escalate_model_id: gpt-6-astra
     escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Fable 5.1 is the Anthropic orchestration and designated-authority seat
-      (claude-fable-5 remains as the legacy alias id pinned by existing callers).
-      Non-binding Anthropic advisory consultations route separately to Opus 5 under
-      the operator's 2026-07-31 directive. Fable runs in the SUMMONED cadence, not
-      as a resident daily driver: grok-4.7 owns the daily epic loops; Fable takes
-      1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
-      design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
-      2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
+      Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat and executes
+      advanced non-linguistic work (architecture, hard coding, deep code review).
+      start-claude-driver.sh pins claude-opus-5-5[1m] @ high unless --model /
+      --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Fable 5.1 stays
+      the designated Anthropic advisor and authority seat, including
+      Ukrainian-specific linguistic judgment (summoned judgment, advisor panels,
+      the critical review ladder); the orchestrator seat does not confer approval
+      authority. Non-binding Anthropic advisory consultations still
+      route to Opus 5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
+      loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
       Escalation stays CROSS-FAMILY to Astra @ high; Claude is an escalation TARGET,
-      not an escalator. Opus 5 is not an orchestrator and its advisory output does
-      not confer approval authority.       Driving default is `high` (step down to
-      medium/low for routine; xhigh for hard turns and pinned curriculum/linguistic
-      review skills; max almost never; long deliverables stay at high unless measured
-      gain) — see fleet-shared-doctrine Fable 5.1 effort topology.
+      not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
+      step down to medium/low for routine turns; xhigh for hard turns and pinned
+      curriculum/linguistic review skills; max almost never) — see
+      fleet-shared-doctrine § Effort guidance.
   codex:
     model_id: gpt-6-astra
     effort: high
@@ -1105,13 +1136,14 @@ formal_cf_defaults:
   claude:
     model_id: claude-sonnet-5
     effort: high
-    # Sealed Claude ACP: Sonnet default; Fable / Opus 5 / Opus 4.8 via --model pin
+    # Sealed Claude ACP: Sonnet default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
     # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
     escalate_model_id: claude-fable-5
     escalate_effort: high
     family_models:
       - claude-sonnet-5
       - claude-fable-5
+      - claude-opus-5-5
       - claude-opus-5
       - claude-opus-4-8
   glm:
