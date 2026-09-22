@@ -29,6 +29,8 @@ from scripts.audit.checks.state_standard_compliance import (
 from scripts.audit.parsing import AuditContext, AuditState
 from scripts.audit.phases_content import run_content_quality_checks
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture
 def mapping():
