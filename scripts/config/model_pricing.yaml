@@ -11,6 +11,19 @@ models:
   # applies at/over 200k prompt tokens and is not modeled by this flat rate.
   # Runtime Grok calls use the subscription lane, so no blended per-token price is inferred.
   # https://docs.x.ai/docs/models
+  # Source: xAI docs (verified 2026-09-22, #8464). Same published base rate band as 4.6
+  # for the subscription lane; runtime Grok calls remain subscription-billed.
+  # https://docs.x.ai/docs/models
+  grok-4.7:
+    billing_model: subscription
+    input_usd_per_1m_tokens: 2.00
+    output_usd_per_1m_tokens: 6.00
+
+  grok-4.7-build-fast:
+    billing_model: subscription
+    input_usd_per_1m_tokens: 2.00
+    output_usd_per_1m_tokens: 6.00
+
   grok-4.6:
     billing_model: subscription
     input_usd_per_1m_tokens: 2.00

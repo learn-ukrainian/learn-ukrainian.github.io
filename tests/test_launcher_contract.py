@@ -1040,7 +1040,7 @@ def test_hermes_help_never_probes_or_claims(provider: str) -> None:
 
 
 @pytest.mark.parametrize("provider,model,route", (
-    ("grok", "grok-4.6", "xai-oauth"), ("codex", "gpt-6-astra", "openai-codex"),
+    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6-astra", "openai-codex"),
 ))
 def test_hermes_real_exec_preserves_literal_prompt_argv(
     tmp_path: Path, provider: str, model: str, route: str,

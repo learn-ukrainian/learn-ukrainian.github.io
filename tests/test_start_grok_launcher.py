@@ -79,7 +79,7 @@ def test_grok_hermes_opt_in_pins_route_and_reuses_driver_lifecycle(tmp_path) -> 
     )
     assert result.returncode == 0, result.stderr
     assert "agent=grok harness=hermes" in result.stdout
-    assert "would exec hermes chat --cli --provider xai-oauth --model grok-4.6" in result.stdout
+    assert "would exec hermes chat --cli --provider xai-oauth --model grok-4.7" in result.stdout
     assert "--reasoning high" in result.stdout
     assert result.stdout.index("would claim lease") < result.stdout.index("would run provider canary")
     assert result.stdout.index("would run provider canary") < result.stdout.index("would bind drive-epic")

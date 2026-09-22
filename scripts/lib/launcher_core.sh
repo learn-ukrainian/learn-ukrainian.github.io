@@ -92,7 +92,7 @@ EOF
 
 Hermes (opt-in only):
   --harness hermes           Use the existing Hermes OAuth login; no paid fallback.
-                             Grok pins grok-4.6 via xai-oauth; Codex pins
+                             Grok pins grok-4.7 via xai-oauth; Codex pins
                              gpt-6-astra via openai-codex (interactive only).
                              --effort maps to the probed Hermes --reasoning flag.
                              Hermes accepts prompt text, not forwarded CLI flags.
@@ -257,8 +257,8 @@ launcher_defaults() {
       ;;
     cursor)
       # Orchestrator seat defaults to Auto (catalog allowlist + attestation).
-      # Pin grok-4.6 / composer-2.5 when family independence must be frozen.
-      LC_MODEL="${LAUNCHER_MODEL:-auto}"
+      # Default pin grok-4.7 (#8464); composer-2.5 when Moonshot identity must be frozen.
+      LC_MODEL="${LAUNCHER_MODEL:-grok-4.7}"
       LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
     kimi)
@@ -502,9 +502,9 @@ launcher_validate_driver_certification() {
       return 0
     fi
     case "$LC_MODEL" in
-      grok-4.6) return 0 ;;
+      grok-4.7|grok-4.7-build-fast|grok-4.6) return 0 ;;
       *)
-        launcher_error "model '$LC_MODEL' is not certified for the grok launcher (use grok-4.6, or omit --model)."
+        launcher_error "model '$LC_MODEL' is not certified for the grok launcher (use grok-4.7, or omit --model)."
         exit 4
         ;;
     esac
@@ -516,7 +516,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.6|cursor:auto|cursor:grok-4.6|cursor:composer-2.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7|grok:grok-4.7-build-fast|grok:grok-4.6|cursor:auto|cursor:grok-4.7|cursor:grok-4.6|cursor:composer-2.5)
       return 0
       ;;
     *)

@@ -71,7 +71,7 @@ def test_cursor_driver_claims_lease_for_supported_selectors(selector: str) -> No
     assert "would bind drive-epic" in result.stdout
     assert "would heartbeat observer presence agent=cursor" in result.stdout
     assert "would renew observer presence while the driver session runs" in result.stdout
-    assert "--model auto" in result.stdout
+    assert "--model grok-4.7" in result.stdout
 
 
 def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
@@ -83,7 +83,7 @@ def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
     assert "only --harness cursor-agent" in harness.stderr
 
 
-@pytest.mark.parametrize("model", ("auto", "grok-4.6", "composer-2.5"))
+@pytest.mark.parametrize("model", ("auto", "grok-4.7", "grok-4.6", "composer-2.5"))
 def test_cursor_driver_accepts_allowlisted_models(model: str) -> None:
     result = run_launcher(DRIVER, "--epic", "infra", "--model", model)
     assert result.returncode == 0, result.stderr
@@ -102,7 +102,7 @@ def test_cursor_seat_enumerated_in_launcher_core_and_public_estate() -> None:
     core = (REPO / "scripts/lib/launcher_core.sh").read_text(encoding="utf-8")
     assert "cursor)" in core
     assert "handoff_identity_for_cursor_epic" in core
-    assert "cursor:auto|cursor:grok-4.6|cursor:composer-2.5" in core
+    assert "cursor:auto|cursor:grok-4.7|cursor:grok-4.6|cursor:composer-2.5" in core
     assert Path(REPO / "scripts/launchers/cursor.sh").is_file()
     assert DRIVER in {
         path.name for path in REPO.glob("start-*-driver.sh") if path.parent == REPO

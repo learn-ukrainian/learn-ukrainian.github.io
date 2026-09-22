@@ -149,12 +149,12 @@ AGENTS: dict[str, AgentEntry] = {
     "grok": {
         # Native `grok` CLI seat (preferred Grok transport). Named by role
         # (native CLI), not model version — model is a swappable attribute
-        # (currently grok-4.6, operator order 2026-08-16 / #6865). Historical
+        # (currently grok-4.7, operator order 2026-09-22 / #8464). Historical
         # alias: "grok-build" (see agent_identity.SEAT_ALIASES); dual-READ
         # only, prefer-WRITE "grok".
         # DISTINCT from "grok-hermes" below (disfavored Hermes/OpenRouter path).
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
-        "default_model": "grok-4.6",
+        "default_model": "grok-4.7",
         "default_effort": "high",
         "cost_tier": "medium",
         "capabilities": frozenset(
@@ -174,7 +174,7 @@ AGENTS: dict[str, AgentEntry] = {
         # registry lookups of the historical key still succeed without every
         # caller remembering to normalize first.
         "adapter": "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter",
-        "default_model": "grok-4.6",
+        "default_model": "grok-4.7",
         "default_effort": "high",
         "cost_tier": "medium",
         "capabilities": frozenset(
@@ -285,7 +285,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "cursor": {
         "adapter": "scripts.agent_runtime.adapters.cursor:CursorAdapter",
-        "default_model": "auto",
+        "default_model": "grok-4.7",
         "cost_tier": "low",
         "capabilities": frozenset(
             {

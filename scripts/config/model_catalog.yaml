@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-09-04
+reviewed_on: 2026-09-22
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -34,11 +34,12 @@ policy:
   notes:
     - CodexBar is a health and quota signal, not a complete model inventory.
     - Cursor auto is a harness choice, never a model identity for formal review.
-    - GPT and Claude routes are native-only. Grok is native CLI ONLY at grok-4.6 for every seat
+    - >-
+      GPT and Claude routes are native-only. Grok is native CLI ONLY at grok-4.7 for every seat
       (interactive, orchestrator, ask, dispatch, reviewer/judge, cursor availability fallback).
-      Operator order 2026-08-16 (#6865) retires the 2026-07-27 ruling that sanctioned opencode
-      first-party xai/grok-4.5 for orchestrator seats — opencode is no longer a sanctioned grok
-      route for any seat. Hermes and OpenRouter grok routes remain banned.
+      Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
+      first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
+      Hermes and OpenRouter grok routes remain banned. grok-4.6 stays allowed for explicit pins.
     - >-
       Kimi K3 workers (`kimi`, `kimicc`, and catalog ids `kimi-code/k3*`) use the
       native `kimi` CLI subscription path only (`catalog_transport` /
@@ -60,7 +61,7 @@ policy:
       Wave 1 CF SCORECARD 2026-08-23 (operator/CTO GO, provisional): letter grades
       are advisory labels on existing quality_tiers — not a parallel ranking and
       not a reviewed_on refresh. Fable (claude-fable-5) = S+ (frontier_authority).
-      gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.6 ≥B, NOT C
+      gpt-5.6-sol = A / hard advisory (frontier_authority). grok-4.7/4.6 ≥B, NOT C
       (keep frontier_practical; do not demote). Kimi = strong root-cause / densest
       useful CI nits (native `kimi` CLI only). AGY gemini-3.7-flash-high = fast
       scoped CF. GLM-5.3 = ships-heavier, LOCAL-ONLY (zai-coding-plan; never
@@ -145,7 +146,7 @@ review_scheduler:
       capacity_weight: 1.0
     grok:
       formal_review_eligible: true
-      models: [grok-4.6]
+      models: [grok-4.7]
       participant: grok
       adapter_transport: acp
       catalog_transport: native_grok
@@ -476,16 +477,32 @@ models:
     weaknesses: [superseded_as_default_by_3_7_flash, not_default_critical_authority]
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.5-flash
-  grok-4.6:
+  grok-4.7:
     family: xai
     tier: frontier_practical
     lifecycle: active
-    # Rotated from grok-4.5 by operator order 2026-08-16 (#6865); same pricing
-    # tier ($2/$6 per 1M tokens under 200k prompt tokens).
+    # Rotated from grok-4.6 by operator order 2026-09-22 (#8464). Native CLI
+    # default; Cursor pin uses the same model id.
+    aliases: [grok-4.7-build-fast]
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window]
+    notes: >-
+      Native `grok models` default as of 2026-09-22. build-fast is an allowed
+      explicit pin (same family/tier), not a separate catalog seat.
+    sources:
+      - https://docs.x.ai/docs/models
+  grok-4.6:
+    family: xai
+    tier: frontier_practical
+    lifecycle: active
+    # Prior pin (operator order 2026-08-16 / #6865). Remains allowed for explicit
+    # pins after #8464; defaults and ladders use grok-4.7.
+    roles: [coding, strong_review, adversarial_review, debugging]
+    transports: [native_grok, cursor]
+    strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
+    weaknesses: [native_subscription_window, superseded_as_default_by_grok_4_7]
     notes: >-
       Wave 1 SCORECARD 2026-08-23: CF #7133 pass with nits; useful residual-positional
       finding. Operator lock: ≥B, NOT C — keep frontier_practical; do not demote.
@@ -876,21 +893,29 @@ review_candidates:
     health_keys: [gemini]
     review_profiles: [code, infra]
     capabilities: [code_review]
+  grok-4.7:
+    model_id: grok-4.7
+    route: grok
+    transport: native_grok
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.7
+    review_profiles: [code, infra]
+    capabilities: [code_review, isolation, sealed_evidence]
+  grok-4.7-cursor-fallback:
+    # Explicit Cursor pin — never Cursor auto. Used when native grok is dark.
+    model_id: grok-4.7
+    route: cursor
+    transport: cursor
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.7
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   grok-4.6:
+    # Retained for explicit pin / history; not on automatic ladders after #8464.
     model_id: grok-4.6
     route: grok
     transport: native_grok
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent grok --model grok-4.6
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
-  grok-4.6-cursor-fallback:
-    # Explicit Cursor pin — never Cursor auto. Used when native grok is dark.
-    model_id: grok-4.6
-    route: cursor
-    transport: cursor
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model grok-4.6
-    review_profiles: [code, infra]
-    capabilities: [code_review]
   kimi-k3:
     model_id: kimi-code/k3
     # kimicc is the concrete K3 ACP participant; bare `kimi` is a launcher
@@ -996,7 +1021,7 @@ orchestrator_seats:
       (claude-fable-5 remains as the legacy alias id pinned by existing callers).
       Non-binding Anthropic advisory consultations route separately to Opus 5 under
       the operator's 2026-07-31 directive. Fable runs in the SUMMONED cadence, not
-      as a resident daily driver: grok-4.6 owns the daily epic loops; Fable takes
+      as a resident daily driver: grok-4.7 owns the daily epic loops; Fable takes
       1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
       design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
       2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
@@ -1024,16 +1049,16 @@ orchestrator_seats:
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.
   grok:
-    model_id: grok-4.6
+    model_id: grok-4.7
     effort: high
-    # Rotated from grok-4.5 (operator order 2026-08-16, #6865). No higher Grok
-    # SKU in catalog yet — keep native pin; Cursor pin is availability fallback only.
-    escalate_model_id: grok-4.6
+    # Rotated from grok-4.6 (operator order 2026-09-22, #8464). Cursor pin is
+    # availability fallback only (same SKU).
+    escalate_model_id: grok-4.7
     escalate_effort: high
     escalate_when: n/a_same_sku
     fallback_transport: cursor
-    fallback_model_id: grok-4.6
-    note: native grok-4.6; Cursor explicit grok-4.6 if native dark (not a quality escalate)
+    fallback_model_id: grok-4.7
+    note: native grok-4.7; Cursor explicit grok-4.7 if native dark (not a quality escalate)
   agy:
     model_id: gemini-3.8-flash-high
     effort: high
@@ -1048,7 +1073,7 @@ orchestrator_seats:
     escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     auto_allowlist:
-      - grok-4.6
+      - grok-4.7
       - composer-2.5
     attestation_rule: driver_of_record_requires_attested_resolved_model
     unknown_auto_family_resolution: union_family
@@ -1056,18 +1081,17 @@ orchestrator_seats:
       - xai
       - moonshot
     note: >-
-      Cursor Auto orchestrator seat (parent #6952, #6955). Auto is permitted only when
-      it resolves within the explicit allowlist (currently grok-4.6 [xAI], composer-2.5 [Moonshot];
-      refresh under the catalog ~30-day contract without freezing a single SKU). When cursor:auto
-      reports resolved_model=unknown, resolve its identity to the allowlist-union family
-      {xAI, Moonshot} instead of unattested-harness-with-quorum: Cursor-authored PRs require a single
-      cross-family reviewer from outside {xAI, Moonshot} (superseding #6489 dual-family quorum as the
-      default; quorum remains valid as fallback history); Cursor-as-reviewer is eligible only against
-      authors outside {xAI, Moonshot}. The union bound holds strictly while the Auto allowlist
-      contract holds (~30-day refresh; lint enforces the pair; allowlist rotation invalidates the bound).
-      Driver-of-record still requires an attested concrete resolved_model from the run (unattested or
-      unknown-Auto cannot be driver-of-record). Concurrency is 1 (the driver session is the Cursor lane;
-      do not dispatch --agent cursor from within the driver session).
+      Cursor Auto orchestrator seat (parent #6952, #6955). Launcher/registry/adapter
+      default pin is grok-4.7 (#8464); Auto remains the catalog seat identity and is
+      permitted only when it resolves within the explicit allowlist (currently
+      grok-4.7 [xAI], composer-2.5 [Moonshot]; refresh under the catalog ~30-day contract).
+      When cursor:auto reports resolved_model=unknown, resolve its identity to the
+      allowlist-union family {xAI, Moonshot}: Cursor-authored PRs require a single
+      cross-family reviewer from outside {xAI, Moonshot}; Cursor-as-reviewer is eligible
+      only against authors outside {xAI, Moonshot}. Attested Cursor grok-4.7 = xAI family.
+      Driver-of-record still requires an attested concrete resolved_model from the run.
+      Concurrency is 1 (the driver session is the Cursor lane; do not dispatch --agent cursor
+      from within the driver session).
 
 # Formal CF transport defaults for review-pr (model + effort). Advisor/authority
 # roles use high effort; Astra also fills the routine reviewer role at medium.
@@ -1115,10 +1139,10 @@ formal_cf_defaults:
     model_id: poolside/laguna-xs-2.1
     effort: high
   grok:
-    model_id: grok-4.6
+    model_id: grok-4.7
     effort: high
     fallback_transport: cursor
-    fallback_model_id: grok-4.6
+    fallback_model_id: grok-4.7
   agy:
     # Orchestrator pin + ladder seat; not a review-pr --reviewer transport until
     # sealed isolation (#5555). When AGY is the formal candidate, resolve-reviewer
@@ -1143,8 +1167,8 @@ review_ladders:
     - [claude-fable-5-cursor-fallback]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]
-    - [grok-4.6]
-    - [grok-4.6-cursor-fallback]
+    - [grok-4.7]
+    - [grok-4.7-cursor-fallback]
     - [kimi-k3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.
@@ -1159,8 +1183,8 @@ review_ladders:
     - [openai_frontier]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]
-    - [grok-4.6]
-    - [grok-4.6-cursor-fallback]
+    - [grok-4.7]
+    - [grok-4.7-cursor-fallback]
     - [kimi-k3]
     # Operator 2026-08-13: DeepSeek Flash remains the only DeepSeek review-ladder rung
     # (volume). Pro hold lifted for hard implement only — never a routine review rung.

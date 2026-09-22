@@ -30,10 +30,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-09-04"
-    assert catalog_age_days(catalog, as_of=date(2026, 9, 4)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 10, 3))
-    assert catalog_is_stale(catalog, as_of=date(2026, 10, 5))
+    assert catalog["reviewed_on"] == "2026-09-22"
+    assert catalog_age_days(catalog, as_of=date(2026, 9, 22)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 10, 21))
+    assert catalog_is_stale(catalog, as_of=date(2026, 10, 23))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -51,6 +51,7 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
         "gemini-3.7-flash-high",
         "gemini-3.6-flash-high",
         "gemini-3.5-flash-high",
+        "grok-4.7",
         "grok-4.6",
         "kimi-code/k3",
         "kimi-k3-max",
@@ -305,10 +306,10 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     assert "gpt-5.6-terra" not in candidates
     assert candidates["grok-4.6"]["transport"] == "native_grok"
     # Explicit Cursor pin when native grok is dark — never Cursor auto.
-    assert candidates["grok-4.6-cursor-fallback"]["transport"] == "cursor"
-    assert candidates["grok-4.6-cursor-fallback"]["model_id"] == "grok-4.6"
-    assert candidates["grok-4.6-cursor-fallback"]["invocation"].endswith(
-        "--agent cursor --model grok-4.6"
+    assert candidates["grok-4.7-cursor-fallback"]["transport"] == "cursor"
+    assert candidates["grok-4.7-cursor-fallback"]["model_id"] == "grok-4.7"
+    assert candidates["grok-4.7-cursor-fallback"]["invocation"].endswith(
+        "--agent cursor --model grok-4.7"
     )
 
 
@@ -349,7 +350,7 @@ def test_formal_cf_defaults_pin_role_specific_efforts():
     assert defaults["glm"]["escalate_model_id"] == "glm-5.3"
     assert defaults["pool"]["model_id"] == "poolside/laguna-s-2.1"
     assert defaults["grok"]["fallback_transport"] == "cursor"
-    assert defaults["grok"]["fallback_model_id"] == "grok-4.6"
+    assert defaults["grok"]["fallback_model_id"] == "grok-4.7"
     assert defaults["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert defaults["agy"]["effort"] == "high"
     assert defaults["agy"]["formal_review_eligible"] is False
@@ -369,12 +370,12 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
     assert seats["claude"]["model_id"] == "claude-fable-5-1"
-    assert seats["grok"]["fallback_model_id"] == "grok-4.6"
+    assert seats["grok"]["fallback_model_id"] == "grok-4.7"
     assert seats["cursor"]["model_id"] == "auto"
     assert seats["cursor"]["effort"] == "high"
     assert seats["cursor"]["escalate_model_id"] == "gpt-6-astra"
     assert seats["cursor"]["escalate_effort"] == "high"
-    assert seats["cursor"]["auto_allowlist"] == ["grok-4.6", "composer-2.5"]
+    assert seats["cursor"]["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     assert seats["cursor"]["attestation_rule"] == "driver_of_record_requires_attested_resolved_model"
     assert seats["cursor"]["unknown_auto_family_resolution"] == "union_family"
     assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
@@ -403,7 +404,7 @@ def test_practical_ladders_exclude_advisory_roles():
         assert "gpt-5.6-terra" not in names
         assert "claude-sonnet-5" in names
         assert "pool" in names
-        assert "grok-4.6-cursor-fallback" in names
+        assert "grok-4.7-cursor-fallback" in names
     critical = {name for rung in ladders["critical"] for name in rung}
     assert "openai_frontier" in critical
     assert "claude-fable-5" in critical
@@ -500,7 +501,7 @@ def test_cursor_orchestrator_unknown_auto_resolves_to_union_family():
     cursor_seat = catalog["orchestrator_seats"]["cursor"]
     assert cursor_seat["unknown_auto_family_resolution"] == "union_family"
     assert cursor_seat["unknown_auto_union_families"] == ["xai", "moonshot"]
-    assert cursor_seat["auto_allowlist"] == ["grok-4.6", "composer-2.5"]
+    assert cursor_seat["auto_allowlist"] == ["grok-4.7", "composer-2.5"]
     models = catalog["models"]
     assert models["grok-4.6"]["family"] == "xai"
     assert models["composer-2.5"]["family"] == "moonshot"

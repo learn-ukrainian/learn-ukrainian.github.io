@@ -60,7 +60,7 @@ GROK_FLAT_SCHEMA_BUILDER_VERSION = "qg-layer-b-judge-grok-flat-schema.v1"
 GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v2"
 DEFAULT_MODELS = {
     "codex": "gpt-6-astra",
-    "grok": "grok-4.6",  # operator order 2026-08-16 (#6865), rotated from grok-4.5
+    "grok": "grok-4.7",  # operator order 2026-09-22 (#8464), rotated from grok-4.6
     "gemini": "gemini-3.8-flash-high",
 }
 CODEX_DISABLED_FEATURES = (
@@ -1376,8 +1376,8 @@ def parse_args(argv: Sequence[str] | None = None) -> argparse.Namespace:
 def _config_from_args(args: argparse.Namespace) -> BridgeConfig:
     model = args.judge_model or DEFAULT_MODELS[args.judge_family]
     model_version = args.judge_model_version or model
-    if args.judge_family == "grok" and (model != "grok-4.6" or model_version != "grok-4.6"):
-        raise BridgeInputError("Grok Layer-B judges must use grok-4.6")
+    if args.judge_family == "grok" and (model != "grok-4.7" or model_version != "grok-4.7"):
+        raise BridgeInputError("Grok Layer-B judges must use grok-4.7")
     if args.timeout_seconds <= 0:
         raise BridgeInputError("--timeout-seconds must be positive")
     return BridgeConfig(

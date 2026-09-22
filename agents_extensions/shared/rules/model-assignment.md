@@ -51,12 +51,12 @@ OpenRouter remains **mainly Pool + Gemma**. Kimi / Gemini (AGY) / GLM subscribed
 
 **Unknown-Auto AUTHORS (Cursor Auto) — allowlist-union family (#6955):** when the author ran
 `cursor:auto` and reports `resolved_model=unknown`, the resolver attributes the author to the
-**allowlist-union family {xAI, Moonshot}** (`grok-4.6` [xAI] | `composer-2.5` [Moonshot]) instead
+**allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead
 of unattested-harness-with-quorum. Cursor-authored PRs require a **single** cross-family reviewer
 from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, or GLM under local-only egress),
 superseding the #6489 dual-family quorum as the default for unknown-Auto PRs (#6489 quorum remains
 valid as fallback history). A declared `author_family` against an auto attestation is a fail-closed
-conflict. Resolved-model attestation (or pinned `composer-2.5` / `grok-4.6` authorship) remains
+conflict. Resolved-model attestation (or pinned `composer-2.5` / `grok-4.7` authorship) remains
 the primary provenance path.
 
 **Fable transport order (user directive 2026-07-20):** always dispatch the exact
@@ -123,7 +123,7 @@ the canonical reviewer resolver. A routing-table change must never grant approva
 or count as a formal review.
 
 **Lane updates (user-reported 2026-07-18):**
-* **grok**: the lane now offers **grok-4.6 only**, with selectable reasoning effort
+* **grok**: the lane now offers **grok-4.7** (4.6 still allowed for explicit pins), with selectable reasoning effort
   (`low`/`mid`/`high`) — set effort explicitly per dispatch; authoring/review seats run `high`.
 * **cursor** (operator 2026-08-08 / #6468; **Ultra month 2026-08-13 → review ~2026-09-13**):
   **Cursor Auto is the default mechanical worker** for code/infra CI fixes and
@@ -288,9 +288,9 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | --- | --- | --- | --- |
   | **claude** | `claude-fable-5` @ high | **`gpt-6-astra` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Astra at the Codex ACP provider default — pick by CodexBar headroom. Fable drives in the SUMMONED cadence only (see § Orchestration operating pattern) |
   | **codex** | `gpt-6-astra` @ high | **`gpt-6-astra` @ high** | Named alternate for harness / infra / devops; never co-owns a live lease |
-  | **grok** | `grok-4.6` @ high | same SKU (no higher pin yet) | Cursor **explicit** `grok-4.6` = availability fallback, not quality escalate |
+  | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Pro deep single-shot |
-  | **cursor** | `auto` @ high (allowlist: `grok-4.6`, `composer-2.5`) | **`gpt-6-astra` @ xhigh** | Driver-of-record requires attested `resolved_model`; unknown-Auto resolves to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
+  | **cursor** | `auto` @ high (default pin `grok-4.7`; allowlist: `grok-4.7`, `composer-2.5`) | **`gpt-6-astra` @ xhigh** | Driver-of-record requires attested `resolved_model`; unknown-Auto resolves to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
 
   <!-- fleet-roster-projection:begin orchestrator_seats -->
   | seat | model_id | effort | escalate_model_id | escalate_effort |
@@ -299,7 +299,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | claude | claude-fable-5-1 | high | gpt-6-astra | high |
   | codex | gpt-6-astra | high | gpt-6-astra | high |
   | cursor | auto | high | gpt-6-astra | high |
-  | grok | grok-4.6 | high | grok-4.6 | high |
+  | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->
 
   **Escalate when:** deep single-shot, architecture, hard multi-file judgment, high-stakes synthesis —
@@ -309,12 +309,12 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
 ### Cursor driver seat — identity contract and attestation (#6952 / #6955)
 
 * **Driver-of-record requires attested `resolved_model`:** Cursor is an orchestrator seat with default model `auto`. Because Auto is a dynamic selector rather than a concrete model identity, a Cursor driver session requires an attested concrete `resolved_model` extracted from the run (via headless telemetry in `scripts/delegate.py` / `scripts/agent_runtime/adapters/cursor.py`). Driver-of-record can never be unattested or unknown-Auto.
-* **Unknown-Auto resolves to allowlist-union family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, its identity resolves to the **allowlist-union family {xAI, Moonshot}** (`grok-4.6` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum.
+* **Unknown-Auto resolves to allowlist-union family {xAI, Moonshot}:** When `cursor:auto` reports `resolved_model=unknown`, its identity resolves to the **allowlist-union family {xAI, Moonshot}** (`grok-4.7` [xAI] | `composer-2.5` [Moonshot]) instead of unattested-harness-with-quorum.
   * **Cursor-authored PRs:** Require a **single** cross-family reviewer from outside {xAI, Moonshot} (e.g. Claude, Codex/GPT, Gemini/AGY, or GLM under local-only egress). This supersedes the #6489 dual-family quorum as the default for unknown-Auto PRs (#6489 quorum remains valid as fallback history).
   * **Cursor-as-reviewer:** Eligible only against authors outside {xAI, Moonshot}.
   * **Validity condition:** The union bound holds strictly while the Auto allowlist contract holds (~30-day catalog refresh; lint enforces the pair). Allowlist rotation invalidates the bound (refresh first).
-* **Auto allowlist and ~30-day refresh contract:** Cursor Auto is permitted only within an explicit allowlist (currently `grok-4.6` and `composer-2.5`), refreshed under the catalog's ~30-day freshness contract without freezing a single SKU.
-* **Family attribution for CF checks:** When `resolved_model` is attested, cross-family review checks use the **attested** model family (e.g. Cursor `composer-2.5` = Moonshot family, Cursor `grok-4.6` = xAI via Cursor). When `resolved_model=unknown`, the union family {xAI, Moonshot} applies.
+* **Auto allowlist and ~30-day refresh contract:** Cursor Auto is permitted only within an explicit allowlist (currently `grok-4.7` and `composer-2.5`), refreshed under the catalog's ~30-day freshness contract without freezing a single SKU.
+* **Family attribution for CF checks:** When `resolved_model` is attested, cross-family review checks use the **attested** model family (e.g. Cursor `composer-2.5` = Moonshot family, Cursor `grok-4.7` = xAI via Cursor). When `resolved_model=unknown`, the union family {xAI, Moonshot} applies.
 * **Operating constraints:** Concurrency is 1 (the driver session is the Cursor lane; do not dispatch `--agent cursor` from inside the session). Canonical driver = launched TUI session (`start-cursor-driver.sh`, #6956); GUI Cursor IDE is human supervision only. Do not vendor pstack, Graphite, Benny, or N-implementation arenas.
 
 ## Orchestration operating pattern (operator 2026-07-26 — binding)
@@ -323,7 +323,7 @@ The knowledge-monopoly + quota-burn cycle (only the Anthropic frontier seat hold
 system; letting it drive daily exhausts the weekly in ~2 days; cheaper drivers then degrade
 the system until it returns) is broken by ROLE SPLIT, not by a better single driver:
 
-* **Daily driver: `grok-4.6`** — owns the epic loops (dispatch, babysit, settle, reap,
+* **Daily driver: `grok-4.7`** — owns the epic loops (dispatch, babysit, settle, reap,
   re-fire) under the mechanical rails (evidence-mandatory reviews, lease lifecycle,
   merge/stamp guards, delegate origin-sync). Operator-rated the best price/quality
   orchestrator currently available.
@@ -522,7 +522,7 @@ lane's current strengths/caveats live in the catalog, the per-task table, and th
 | Work type | 1st pick | 2nd | 3rd | gate / never |
 | --- | --- | --- | --- | --- |
 | **Coding / impl / fixtures** | **Ultra month (2026-08-13→~2026-09-13):** **cursor Auto** first when fit allows for mechanical + ordinary infra/code implement. After Cursor Auto, prefer **`--agent glm`** (Flash default, LOCAL-ONLY) for ordinary code/infra when China egress is acceptable. Else **Astra @ `low`** for bounded work with exact owned paths + an objective scope ceiling; use a complete Astra envelope when consequential boundaries need definition. **Astra @ `low`** for implementation / broader autonomous integration | **agy** `gemini-3.8-flash-high` · **kimi** `k3-256k` · Astra when Cursor unfit or concurrency full | **deepseek-v4-flash** (tool-heavy / CF volume) · grok | LANGUAGE-LANES / advisor / authority never on Cursor; `cursor:auto` never CF identity; when Codex near_cap, **do not** park ruff/fingerprint/CI-fix on Codex; claude seat = only ≤5-LOC CI-fix-I-caused; Workers never sole authority; **Pro @ high = hard implement only** (complex multi-file, hard lookup — 2026-08-13) |
-| **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Astra (authority) | **high/medium/low formal CF defaults:** `gpt-6-astra` @ `medium` · `claude-sonnet-5` · `gemini-3.8-flash-high` · native `grok-4.6` (Cursor **`grok-4.6` explicit** if native dark) · Kimi K3 · GLM-5.3 · **DeepSeek V4 Flash @ OpenCode high** · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · Gemini 3.5 Flash | DeepSeek review = Flash only (Pro stays off the routine review ladder — Pro @ high = hard implement only, 2026-08-13); never critical authority; first-party `deepseek-direct` + native Entire capture |
+| **Code review** (cross-family = outside author's family) | **critical only:** Opus/Fable ↔ Astra (authority) | **high/medium/low formal CF defaults:** `gpt-6-astra` @ `medium` · `claude-sonnet-5` · `gemini-3.8-flash-high` · native `grok-4.7` (Cursor **`grok-4.7` explicit** if native dark) · Kimi K3 · GLM-5.3 · **DeepSeek V4 Flash @ OpenCode high** · pool **`laguna-s-2.1`** | **second dissent / volume:** Pool S 2.1 · Gemini 3.5 Flash | DeepSeek review = Flash only (Pro stays off the routine review ladder — Pro @ high = hard implement only, 2026-08-13); never critical authority; first-party `deepseek-direct` + native Entire capture |
 | **UK content authoring** (author immersion-first, never translate) | **agy** (A1–A2 voice) ≈ **codex** | **claude** (B1–C2, sparingly — save the window) | **grok-4.6** | **LANGUAGE-LANES RULE below binds**: only these four; cursor/deepseek/kimi/pool/glm/gemma excluded |
 | **Content / factual / CEFR review** (VESUM-gated) | **agy** (pedagogy/CEFR, + `sources` MCP) | **codex** · **grok-4.6** | **claude** (judgment tier) | **LANGUAGE-LANES RULE below binds**; NO grok as a QG judge seat (separate standing ban); FOLK stays cross-family GPT↔Claude per the folk rubric |
 | **Research / recon / triage** | **Astra @ `low`** with exact owned paths + an objective scope ceiling; add an Astra envelope when the boundaries themselves need judgment | Astra @ `low` for broader work; Astra @ `high` for advisory judgment | agy | Workers never sole authority on consequential calls |
@@ -657,8 +657,8 @@ Consequences:
   ruling below):** never Hermes (`grok-hermes`/`grok-tools` stay banned) and **opencode is no
   longer sanctioned for any grok seat, including orchestrator** — "we have grok cli"
   (operator, verbatim). The native `grok` CLI is the ONLY sanctioned route for every grok
-  seat (interactive, orchestrator, ask, dispatch, reviewer/judge) at `grok-4.6`; Cursor
-  explicit `grok-4.6` stays the availability fallback only when native is dark. Never
+  seat (interactive, orchestrator, ask, dispatch, reviewer/judge) at `grok-4.7`; Cursor
+  explicit `grok-4.7` stays the availability fallback only when native is dark. Never
   route grok via OpenRouter model ids (`openrouter/x-ai/*`) — only the first-party `xai/*`
   provider is sub-backed, and as of this order that first-party access is native-CLI-only,
   not opencode-hosted. Check `/api/orient` headroom.

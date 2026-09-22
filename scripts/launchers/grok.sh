@@ -5,7 +5,7 @@ launcher_adapter_validate() {
     grok) ;;
     hermes)
       launcher_hermes_validate
-      LC_MODEL="${LC_MODEL:-grok-4.6}"
+      LC_MODEL="${LC_MODEL:-grok-4.7}"
       # shellcheck disable=SC2034 # consumed by shared Hermes execution
       LC_HERMES_PROVIDER=xai-oauth
       case "$LC_EFFORT" in
