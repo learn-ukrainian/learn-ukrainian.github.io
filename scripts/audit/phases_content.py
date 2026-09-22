@@ -8,6 +8,8 @@ and pedagogical compliance.
 
 from pathlib import Path
 
+import yaml
+
 from .checks import (
     check_content_quality,
     check_markdown_format,
@@ -176,8 +178,17 @@ def run_content_quality_checks(ctx: AuditContext, state: AuditState) -> None:
     )
     state.pedagogical_violations.extend(ped_violations)
 
+    plan = ctx.plan_data or ctx.meta_data
+    if plan is None and ctx.frontmatter_str:
+        try:
+            parsed = yaml.safe_load(ctx.frontmatter_str)
+            if isinstance(parsed, dict):
+                plan = parsed
+        except Exception:
+            pass
+
     state_standard_violations = check_state_standard_compliance(
-        ctx.level_code, ctx.module_num, ctx.content, immersion_pct=None
+        ctx.level_code, ctx.module_num, ctx.content, immersion_pct=None, plan=plan
     )
     for violation in state_standard_violations:
         state.pedagogical_violations.append({

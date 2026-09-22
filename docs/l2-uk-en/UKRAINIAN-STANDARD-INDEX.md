@@ -37,12 +37,12 @@
 ## A2 Level (Початковий рівень другого ступеня)
 
 * **Themes (Catalog B):** Lines `1072-1164`
-* **Grammar (Catalog V):** Lines `1165-1850`
+* **Grammar (Catalog V):** Lines `1165-1432`
 
 ## B1 Level (Середній рівень першого ступеня)
 
 * **Themes (Catalog B):** Lines `1853-1980`
-* **Grammar (Catalog V):** Lines `1981-2870`
+* **Grammar (Catalog V):** Lines `1981-2450`
 
 ## B2 Level (Середній рівень другого ступеня)
 
