@@ -249,7 +249,7 @@ def build_words(
                         raise ValueError(
                             f"{codes.INVALID_REQUEST}: requested ULIF homonym_index {req_hi} not found for {lemma!r}"
                         )
-                    headword = matching_ulif.get("canonical_headword", lemma)
+                    headword = matching_ulif.get("canonical_headword") or lemma
                     entry: dict[str, Any] | str = {"source": "ulif", "key": [headword, req_hi]}
                     selected_entry_id: int | None = single_entry_id
                 else:
@@ -277,7 +277,7 @@ def build_words(
                         raise ValueError(
                             f"{codes.INVALID_REQUEST}: no VESUM entry evidencing ULIF homonym_index {req_hi} for {lemma!r}"
                         )
-                    headword = matching_ulif.get("canonical_headword", lemma)
+                    headword = matching_ulif.get("canonical_headword") or lemma
                     entry = {"source": "ulif", "key": [headword, req_hi]}
                     selected_entry_id = sorted_entry_ids[req_hi - 1]
                 else:
@@ -326,7 +326,7 @@ def build_words(
                     ulif_field = {
                         "source": "ulif",
                         "key": [
-                            matching_entry.get("canonical_headword", lemma),
+                            matching_entry.get("canonical_headword") or lemma,
                             matching_entry["homonym_index"],
                         ],
                     }
