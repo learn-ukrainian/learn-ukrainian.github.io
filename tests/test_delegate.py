@@ -7905,6 +7905,17 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path, monkeypatch):
     assert not (worktree / "wiki").exists()
     assert (worktree / "data").is_symlink()
 
+    # Re-including every default exclude must drop the primary symlink first.
+    # Otherwise sparse-checkout disable writes through it into the primary tree.
+    meta_all = delegate._apply_dispatch_sparse_checkout(
+        worktree, sparse_include=("curriculum", "data", "wiki")
+    )
+    assert meta_all["applied"] is True
+    assert meta_all["excluded"] == []
+    assert not (worktree / "data").is_symlink()
+    assert (worktree / "data" / "f.txt").read_text(encoding="utf-8") == "data\n"
+    assert (primary / "data" / "f.txt").read_text(encoding="utf-8") == "data\n"
+
     meta3 = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=True)
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()

@@ -4124,7 +4124,11 @@ def _apply_dispatch_sparse_checkout(
         _unlink_shared_data_link(worktree_path)
         proc = _run_git(["git", "sparse-checkout", "disable"])
         if proc.returncode == 0:
-            _run_git(["git", "checkout", "HEAD", "--", "data"])
+            checkout = _run_git(["git", "checkout", "HEAD", "--", "data"])
+            if checkout.returncode != 0:
+                detail = (checkout.stderr or checkout.stdout or "checkout data failed").strip()
+                telemetry["error"] = detail
+                raise RuntimeError(f"failed to check out data in {worktree_path}: {detail}")
         if proc.returncode != 0:
             detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
             telemetry["error"] = detail
@@ -4141,8 +4145,17 @@ def _apply_dispatch_sparse_checkout(
 
     if not excluded:
         # Nothing to drop at this ref (or everything was re-included). Prefer a
-        # full tree rather than an empty cone set.
+        # full tree rather than an empty cone set. Unlink first: a reused
+        # worktree may still have data -> primary, and disable would write
+        # through that symlink into the primary checkout.
+        _unlink_shared_data_link(worktree_path)
         proc = _run_git(["git", "sparse-checkout", "disable"])
+        if proc.returncode == 0 and "data" in includes:
+            checkout = _run_git(["git", "checkout", "HEAD", "--", "data"])
+            if checkout.returncode != 0:
+                detail = (checkout.stderr or checkout.stdout or "checkout data failed").strip()
+                telemetry["error"] = detail
+                raise RuntimeError(f"failed to check out data in {worktree_path}: {detail}")
         if proc.returncode != 0:
             detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
             telemetry["error"] = detail
@@ -4171,8 +4184,7 @@ def _apply_dispatch_sparse_checkout(
 
     telemetry["applied"] = True
     if "data" in excluded:
-        _link_shared_data_tree(worktree_path, _REPO_ROOT)
-        telemetry["data_from_main"] = True
+        telemetry["data_from_main"] = _link_shared_data_tree(worktree_path, _REPO_ROOT)
     print(
         f"🌲 dispatch sparse-checkout: excluded {', '.join(excluded)} "
         f"in {worktree_path} (use --sparse-include / --full-checkout to keep them)",
@@ -4188,7 +4200,7 @@ def _unlink_shared_data_link(worktree_path: Path) -> None:
         link.unlink()
 
 
-def _link_shared_data_tree(worktree_path: Path, main_repo_root: Path) -> None:
+def _link_shared_data_tree(worktree_path: Path, main_repo_root: Path) -> bool:
     """Point ``worktree/data`` at the primary checkout's ``data`` directory.
 
     Sparse-checkout has already dropped the tracked copy. Gitignored databases
@@ -4200,13 +4212,13 @@ def _link_shared_data_tree(worktree_path: Path, main_repo_root: Path) -> None:
     source = (main_repo_root / "data").resolve()
     target = worktree_path / "data"
     if worktree_path.resolve() == main_repo_root.resolve():
-        return
+        return False
     if not source.is_dir():
         print(f"⚠️  skipping shared data link; missing {source}", file=sys.stderr)
-        return
+        return False
     if target.is_symlink():
         if target.resolve() == source:
-            return
+            return True
         target.unlink()
     elif target.exists():
         leftovers = list(target.iterdir()) if target.is_dir() else None
@@ -4219,12 +4231,13 @@ def _link_shared_data_tree(worktree_path: Path, main_repo_root: Path) -> None:
                 f"⚠️  leaving {target} in place; it is not the shared data link",
                 file=sys.stderr,
             )
-            return
+            return False
         if target.is_dir():
             target.rmdir() if not leftovers else shutil.rmtree(target)
         else:
-            return
+            return False
     target.symlink_to(source)
+    return True
 
 
 def _inspect_worktree_local_venv(worktree_path: Path) -> dict[str, str | bool | None]:
