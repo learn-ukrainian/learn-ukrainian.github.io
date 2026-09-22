@@ -1,0 +1,22 @@
+request_schema: 1
+module: a1/dry-run-module
+texts:
+  - id: T-001
+    source:
+      table: textbooks
+      chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0003
+    span:
+      first_words: Найважливішою своєю метою
+      last_words: справедливе суспільство.
+    supports: "Grounds Ukrainian realism literature discussion."
+  - id: T-002
+    source:
+      table: textbooks
+      chunk_id: 10-klas-ukrajinska-literatura-avramenko-2018_s0004
+    span:
+      first_words: Адже вона — одна
+      last_words: в 10 класі.
+    supports: "Grounds introduction to realism and modernism."
+standard:
+  - id: S-001
+    lines: 3121-3126
