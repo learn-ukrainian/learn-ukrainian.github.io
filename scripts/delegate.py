@@ -2826,11 +2826,51 @@ def _dispatch_worktree_components() -> list[tuple[Path, str]]:
     return found
 
 
-def _commit_is_durably_contained(cwd: Path, sha: str) -> bool:
-    """True when ``sha`` is on ``origin/main`` or some ``refs/remotes/origin/*`` ref.
+def _live_origin_branch_shas(cwd: Path, branches: list[str]) -> dict[str, str] | None:
+    """Return live ``refs/heads/<name>`` SHAs from one batched ``ls-remote``.
 
-    Any git error is not containment. A clean worktree is not enough: its
-    commits may exist only in that checkout.
+    ``None`` means the lookup itself failed (git error, unreachable origin,
+    timeout) and proves nothing. A branch absent from a successful mapping is
+    genuinely gone from the remote; its local tracking ref is a stale cache.
+    """
+    if not branches:
+        return {}
+    patterns = sorted({f"refs/heads/{branch}" for branch in branches})
+    try:
+        proc = subprocess.run(
+            ["git", "ls-remote", "origin", *patterns],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    live: dict[str, str] = {}
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) != 2:
+            continue
+        sha, ref = parts
+        if ref.startswith("refs/heads/"):
+            live[ref.removeprefix("refs/heads/")] = sha
+    return live
+
+
+def _commit_is_durably_contained(cwd: Path, sha: str) -> bool:
+    """True when ``sha`` is on ``origin/main`` or a live origin branch.
+
+    A local ``refs/remotes/origin/*`` ref is a cache, not proof: the remote
+    branch may already be deleted while the tracking ref still contains the
+    tip. Every tracking-ref candidate is re-verified against the live remote;
+    containment counts only when the live SHA equals the cached tracking SHA
+    or has ``sha`` as an ancestor. Any git error, a missing remote ref, or an
+    unreadable live SHA is not containment. A clean worktree is not enough:
+    its commits may exist only in that checkout.
     """
     try:
         ancestor = subprocess.run(
@@ -2855,7 +2895,7 @@ def _commit_is_durably_contained(cwd: Path, sha: str) -> bool:
                 "for-each-ref",
                 "--contains",
                 sha,
-                "--format=%(refname)",
+                "--format=%(refname)%09%(objectname)",
                 "refs/remotes/origin",
             ],
             cwd=cwd,
@@ -2869,7 +2909,38 @@ def _commit_is_durably_contained(cwd: Path, sha: str) -> bool:
         return False
     if listed.returncode != 0:
         return False
-    return any(line.strip().startswith("refs/remotes/origin/") for line in (listed.stdout or "").splitlines())
+    candidates: list[tuple[str, str]] = []
+    for line in (listed.stdout or "").splitlines():
+        parts = line.split("\t")
+        if len(parts) != 2:
+            continue
+        ref, tracking_sha = parts
+        if ref.startswith("refs/remotes/origin/"):
+            candidates.append((ref.removeprefix("refs/remotes/origin/"), tracking_sha))
+    live = _live_origin_branch_shas(cwd, [name for name, _ in candidates])
+    if live is None:
+        return False
+    for name, tracking_sha in candidates:
+        live_sha = live.get(name)
+        if live_sha is None:
+            continue
+        if live_sha == tracking_sha:
+            return True
+        try:
+            contains = subprocess.run(
+                ["git", "merge-base", "--is-ancestor", sha, live_sha],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if contains.returncode == 0:
+            return True
+    return False
 
 
 def _worktree_head_is_durably_contained(path: Path) -> bool:

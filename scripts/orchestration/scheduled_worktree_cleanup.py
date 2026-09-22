@@ -6,9 +6,11 @@ requires the macOS process-CWD probe in apply mode, delegates safe worktree
 removal to the canonical reaper, deletes origin and local branches only with
 exact merged-PR, a closed PR whose head GitHub still publishes at
 ``refs/pull/<N>/head``, origin/main-ancestry, or (scratch names only)
-another-origin-ref proof, runs automatic Git maintenance, and writes an
-immutable JSON receipt. Orphaned ``.worktrees/**``
-directories are reported but never deleted.
+another-origin-ref proof re-verified against the live remote with
+``git ls-remote``, runs automatic Git maintenance, and writes an immutable
+JSON receipt. When this run's ``fetch --prune`` fails, every deletion that
+relies on remote containment is skipped as ``fetch_failed_no_remote_proof``.
+Orphaned ``.worktrees/**`` directories are reported but never deleted.
 """
 
 from __future__ import annotations
@@ -189,27 +191,75 @@ def _is_agent_scratch_branch(branch: str) -> bool:
     return branch.split("/")[-1].startswith("review-")
 
 
-def _tip_on_other_origin_ref(repo_root: Path, head_sha: str, branch: str) -> bool:
-    """True when some origin ref other than ``branch`` contains ``head_sha``.
+def _live_origin_branch_shas(repo_root: Path, branches: list[str]) -> dict[str, str] | None:
+    """Return live ``refs/heads/<name>`` SHAs from one batched ``ls-remote``.
 
-    A git error is not containment. The candidate's own
-    ``refs/remotes/origin/<branch>`` does not count: a ref is always
-    reachable from itself.
+    ``None`` means the lookup itself failed (git error, unreachable origin,
+    timeout) and proves nothing. A branch absent from a successful mapping is
+    genuinely gone from the remote; its local tracking ref is a stale cache.
+    """
+    if not branches:
+        return {}
+    patterns = sorted({f"refs/heads/{branch}" for branch in branches})
+    proc = _run_git(repo_root, "ls-remote", "origin", *patterns)
+    if proc.returncode != 0:
+        return None
+    live: dict[str, str] = {}
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) != 2:
+            continue
+        sha, ref = parts
+        if ref.startswith("refs/heads/"):
+            live[ref.removeprefix("refs/heads/")] = sha
+    return live
+
+
+def _tip_on_other_origin_ref(repo_root: Path, head_sha: str, branch: str) -> bool:
+    """True when a live origin branch other than ``branch`` contains ``head_sha``.
+
+    A local ``refs/remotes/origin/*`` ref is a cache, not proof: after a
+    failed ``fetch --prune`` the remote branch may already be deleted while
+    the tracking ref still contains the tip. Every candidate is re-verified
+    against the live remote; containment counts only when the live SHA equals
+    the cached tracking SHA or has ``head_sha`` as an ancestor. A git error,
+    a missing remote ref, or an unreadable live SHA is not containment. The
+    candidate's own ``refs/remotes/origin/<branch>`` does not count: a ref is
+    always reachable from itself.
     """
     proc = _run_git(
         repo_root,
         "for-each-ref",
         "--contains",
         head_sha,
-        "--format=%(refname)",
+        "--format=%(refname)%09%(objectname)",
         "refs/remotes/origin",
     )
     if proc.returncode != 0:
         return False
     excluded = f"refs/remotes/origin/{branch}"
+    prefix = "refs/remotes/origin/"
+    candidates: list[tuple[str, str]] = []
     for line in (proc.stdout or "").splitlines():
-        ref = line.strip()
-        if ref.startswith("refs/remotes/origin/") and ref != excluded:
+        parts = line.split("\t")
+        if len(parts) != 2:
+            continue
+        ref, tracking_sha = parts
+        if ref.startswith(prefix) and ref != excluded:
+            candidates.append((ref[len(prefix) :], tracking_sha))
+    if not candidates:
+        return False
+    live = _live_origin_branch_shas(repo_root, [name for name, _ in candidates])
+    if live is None:
+        return False
+    for name, tracking_sha in candidates:
+        live_sha = live.get(name)
+        if live_sha is None:
+            continue
+        if live_sha == tracking_sha:
+            return True
+        contains = _run_git(repo_root, "merge-base", "--is-ancestor", head_sha, live_sha)
+        if contains.returncode == 0:
             return True
     return False
 
@@ -262,6 +312,7 @@ def _stale_ref_delete_reason(
     prs: list[reap_worktrees.PullRequestState],
     head_sha: str,
     kind: str,
+    fetch_ok: bool = True,
 ) -> tuple[str | None, str | None]:
     """Return ``(delete_reason, skip_reason)`` for a candidate stale ref.
 
@@ -270,6 +321,12 @@ def _stale_ref_delete_reason(
     contained in a merged PR head, or reachable from some other origin ref.
     A closed PR head is proof only while ``refs/pull/<N>/head`` is still that
     commit.
+
+    ``fetch_ok=False`` means this run's ``fetch --prune`` failed, so every
+    local ``refs/remotes/origin/*`` ref is a suspect cache: origin/main
+    ancestry and remote-ref containment stop being proof and the ref is kept
+    with ``fetch_failed_no_remote_proof``. Exact merged-PR heads and live
+    ``refs/pull/<N>/head`` checks do not depend on the fetch and still count.
     """
     open_pr = next((pr for pr in prs if pr.state == "OPEN"), None)
     if open_pr is not None:
@@ -280,9 +337,9 @@ def _stale_ref_delete_reason(
     )
     if exact_merged is not None:
         return f"{kind}; exact head of MERGED PR #{exact_merged.number}", None
-    if _branch_is_origin_main_ancestor(repo_root, head_sha):
+    if fetch_ok and _branch_is_origin_main_ancestor(repo_root, head_sha):
         return f"{kind}; branch HEAD is an ancestor of origin/main", None
-    contained = _merged_pr_contains_head(repo_root, head_sha, prs)
+    contained = _merged_pr_contains_head(repo_root, head_sha, prs) if fetch_ok else None
     if contained is not None:
         return f"{kind}; tip is contained in MERGED PR #{contained.number}", None
     exact_closed = next(
@@ -295,8 +352,13 @@ def _stale_ref_delete_reason(
             return f"{kind}; exact head of CLOSED PR #{exact_closed.number}", None
         closed_not_durable = True
     if _is_agent_scratch_branch(branch):
-        if _tip_on_other_origin_ref(repo_root, head_sha, branch):
+        if fetch_ok and _tip_on_other_origin_ref(repo_root, head_sha, branch):
             return f"{kind}; agent scratch ref; tip is contained in a remote ref", None
+        if not fetch_ok:
+            return None, (
+                f"{kind} but fetch_failed_no_remote_proof; agent scratch ref; "
+                "origin/main ancestry and remote-ref containment are unverified"
+            )
         return None, (
             f"{kind} but no exact merged/closed PR or origin/main ancestry evidence; "
             "agent scratch ref; tip not contained in main, a merged PR, or a remote ref"
@@ -305,6 +367,10 @@ def _stale_ref_delete_reason(
         return None, (
             f"{kind} but CLOSED PR #{exact_closed.number} head is not durably "
             f"on refs/pull/{exact_closed.number}/head"
+        )
+    if not fetch_ok:
+        return None, (
+            f"{kind} but fetch_failed_no_remote_proof; origin/main ancestry and remote-ref containment are unverified"
         )
     return None, (f"{kind} but no exact merged/closed PR or origin/main ancestry evidence")
 
@@ -383,6 +449,7 @@ def cleanup_stale_origin_branches(
     repo_root: Path,
     *,
     apply: bool,
+    fetch_ok: bool = True,
 ) -> list[dict[str, Any]]:
     """Delete origin heads only with merged/closed, ancestry, or remote-ref proof."""
     checked_out = _checked_out_branches(repo_root)
@@ -416,6 +483,7 @@ def cleanup_stale_origin_branches(
             prs=prs,
             head_sha=head_sha,
             kind="origin head",
+            fetch_ok=fetch_ok,
         )
         if skip_reason is not None:
             results.append(
@@ -519,6 +587,7 @@ def cleanup_gone_local_branches(
     repo_root: Path,
     *,
     apply: bool,
+    fetch_ok: bool = True,
 ) -> list[dict[str, Any]]:
     """Delete gone-upstream branches only with containment proof, never by name."""
     checked_out = _checked_out_branches(repo_root)
@@ -553,6 +622,7 @@ def cleanup_gone_local_branches(
             prs=prs,
             head_sha=head_sha,
             kind="upstream gone",
+            fetch_ok=fetch_ok,
         )
         if skip_reason is not None:
             results.append(
@@ -660,6 +730,7 @@ def cleanup_untracked_local_branches(
     repo_root: Path,
     *,
     apply: bool,
+    fetch_ok: bool = True,
 ) -> list[dict[str, Any]]:
     """Delete never-tracked local branches only with containment proof."""
     checked_out = _checked_out_branches(repo_root)
@@ -708,6 +779,7 @@ def cleanup_untracked_local_branches(
             prs=prs,
             head_sha=head_sha,
             kind="untracked local",
+            fetch_ok=fetch_ok,
         )
         if skip_reason is not None:
             results.append(
@@ -914,13 +986,15 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
         result["fetch_refspecs"] = {"ok": False, "error": str(exc)}
         result["errors"].append(f"fetch refspec reconcile failed: {exc}")
 
+    fetch_ok = True
     if apply:
         fetch = _run_git(repo_root, "fetch", "--prune", "origin")
+        fetch_ok = fetch.returncode == 0
         result["fetch"] = {
-            "ok": fetch.returncode == 0,
-            "detail": None if fetch.returncode == 0 else _failure(fetch),
+            "ok": fetch_ok,
+            "detail": None if fetch_ok else _failure(fetch),
         }
-        if fetch.returncode != 0:
+        if not fetch_ok:
             result["errors"].append(f"fetch failed ({_failure(fetch)}); degraded to local cleanup")
 
     worktree_prune = _worktree_prune(repo_root, apply=apply)
@@ -967,7 +1041,7 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
             branches: list[dict[str, Any]] = []
             result["reaper_disabled"] = True
         else:
-            origin_branches = cleanup_stale_origin_branches(repo_root, apply=apply)
+            origin_branches = cleanup_stale_origin_branches(repo_root, apply=apply, fetch_ok=fetch_ok)
             if apply:
                 if any(row.get("action") == "deleted" for row in origin_branches):
                     try:
@@ -977,8 +1051,8 @@ def _repo_result_unlocked(repo_root: Path, *, apply: bool) -> dict[str, Any]:
                 prune_after = _run_git(repo_root, "fetch", "--prune", "origin")
                 if prune_after.returncode != 0:
                     result["errors"].append(f"post-origin prune failed ({_failure(prune_after)})")
-            branches = cleanup_gone_local_branches(repo_root, apply=apply) + cleanup_untracked_local_branches(
-                repo_root, apply=apply
+            branches = cleanup_gone_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok) + (
+                cleanup_untracked_local_branches(repo_root, apply=apply, fetch_ok=fetch_ok)
             )
         result["origin_branches"] = origin_branches
         result["branches"] = branches

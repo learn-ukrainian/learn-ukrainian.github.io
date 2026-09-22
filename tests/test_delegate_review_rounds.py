@@ -2,9 +2,97 @@
 
 from __future__ import annotations
 
+import os
+import subprocess
 from pathlib import Path
 
 import scripts.delegate as delegate
+
+
+def _git(cwd: Path, *args: str) -> str:
+    env = {
+        key: value
+        for key, value in os.environ.items()
+        if not key.startswith("GIT_") and not key.startswith("PRE_COMMIT") and key != "AGENT_NO_MERGE"
+    }
+    proc = subprocess.run(
+        ["git", *args],
+        cwd=cwd,
+        capture_output=True,
+        text=True,
+        check=True,
+        env=env,
+        timeout=30,
+    )
+    return proc.stdout.strip()
+
+
+def _repo(tmp_path: Path) -> Path:
+    remote = tmp_path / "origin.git"
+    repo = tmp_path / "repo"
+    _git(tmp_path, "init", "--bare", str(remote))
+    _git(tmp_path, "init", "--initial-branch=main", str(repo))
+    _git(repo, "config", "user.email", "test@example.invalid")
+    _git(repo, "config", "user.name", "Test User")
+    (repo / "README.md").write_text("base\n", encoding="utf-8")
+    _git(repo, "add", ".")
+    _git(repo, "commit", "-m", "base")
+    _git(repo, "remote", "add", "origin", str(remote))
+    _git(repo, "push", "-u", "origin", "main")
+    return repo
+
+
+def _topic_tip(repo: Path) -> str:
+    """Push a review topic branch and return its tip SHA."""
+    _git(repo, "checkout", "-b", "codex/review-topic-r2")
+    (repo / "topic.txt").write_text("review work\n", encoding="utf-8")
+    _git(repo, "add", "topic.txt")
+    _git(repo, "commit", "-m", "review round work")
+    _git(repo, "push", "-u", "origin", "codex/review-topic-r2")
+    _git(repo, "checkout", "main")
+    return _git(repo, "rev-parse", "codex/review-topic-r2")
+
+
+def test_containment_counts_live_remote_ref(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    tip = _topic_tip(repo)
+
+    assert delegate._commit_is_durably_contained(repo, tip) is True
+
+
+def test_containment_counts_live_remote_ref_that_moved_forward(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    tip = _topic_tip(repo)
+    # The remote branch advances past the cached tracking ref; the tip is
+    # still contained in the live remote head.
+    _git(repo, "checkout", "codex/review-topic-r2")
+    (repo / "more.txt").write_text("later round\n", encoding="utf-8")
+    _git(repo, "add", "more.txt")
+    _git(repo, "commit", "-m", "remote moved forward")
+    _git(repo, "push", "origin", "codex/review-topic-r2")
+    _git(repo, "checkout", "main")
+    _git(repo, "update-ref", "refs/remotes/origin/codex/review-topic-r2", tip)
+
+    assert delegate._commit_is_durably_contained(repo, tip) is True
+
+
+def test_containment_rejects_stale_tracking_ref(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    tip = _topic_tip(repo)
+    # The remote branch is deleted but the local tracking ref is never pruned:
+    # refs/remotes/origin/codex/review-topic-r2 is now a stale cache and must
+    # not count as containment proof.
+    _git(tmp_path / "origin.git", "update-ref", "-d", "refs/heads/codex/review-topic-r2")
+
+    assert delegate._commit_is_durably_contained(repo, tip) is False
+
+
+def test_containment_ls_remote_error_is_not_contained(tmp_path: Path) -> None:
+    repo = _repo(tmp_path)
+    tip = _topic_tip(repo)
+    _git(repo, "remote", "set-url", "origin", str(tmp_path / "missing.git"))
+
+    assert delegate._commit_is_durably_contained(repo, tip) is False
 
 
 def test_review_series_round_numbers() -> None:

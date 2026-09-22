@@ -972,6 +972,160 @@ def test_scratch_ref_is_skipped_when_remote_containment_git_errors(
     assert _git(repo, "branch", "--list", "rescue/unreadable") != ""
 
 
+def test_scratch_ref_on_stale_origin_ref_is_kept(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "feature/landed")
+    (repo / "landed.txt").write_text("on origin\n", encoding="utf-8")
+    _git(repo, "add", "landed.txt")
+    _git(repo, "commit", "-m", "landed elsewhere")
+    _git(repo, "push", "-u", "origin", "feature/landed")
+    _git(repo, "checkout", "main")
+    branch = "rescue/copied"
+    _git(repo, "branch", branch, "feature/landed")
+    # The remote branch is deleted but the local tracking ref is never pruned:
+    # refs/remotes/origin/feature/landed is now a stale cache.
+    _git(tmp_path / "origin.git", "update-ref", "-d", "refs/heads/feature/landed")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert "tip not contained" in row["reason"]
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_scratch_ref_is_kept_when_live_remote_check_errors(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "feature/landed")
+    (repo / "landed.txt").write_text("on origin\n", encoding="utf-8")
+    _git(repo, "add", "landed.txt")
+    _git(repo, "commit", "-m", "landed elsewhere")
+    _git(repo, "push", "-u", "origin", "feature/landed")
+    _git(repo, "checkout", "main")
+    branch = "rescue/copied"
+    _git(repo, "branch", branch, "feature/landed")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+    real_run_git = cleanup._run_git
+
+    def flaky_run_git(repo_root: Path, *args: str):
+        if "ls-remote" in args:
+            return subprocess.CompletedProcess(
+                args=["git", *args],
+                returncode=128,
+                stdout="",
+                stderr="fatal: unable to connect to origin",
+            )
+        return real_run_git(repo_root, *args)
+
+    monkeypatch.setattr(cleanup, "_run_git", flaky_run_git)
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert "tip not contained" in row["reason"]
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_fetch_failure_keeps_remote_containment_deletions(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    # Ancestor-of-origin/main proof and other-origin-ref proof both rely on
+    # local tracking refs, so a failed fetch must keep every one of them.
+    ancestor_branch = "claude/review-9"
+    _git(repo, "branch", ancestor_branch, "main")
+    _git(repo, "checkout", "-b", "feature/landed")
+    (repo / "landed.txt").write_text("on origin\n", encoding="utf-8")
+    _git(repo, "add", "landed.txt")
+    _git(repo, "commit", "-m", "landed elsewhere")
+    _git(repo, "push", "-u", "origin", "feature/landed")
+    _git(repo, "checkout", "main")
+    contained_branch = "rescue/copied"
+    _git(repo, "branch", contained_branch, "feature/landed")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_untracked_local_branches(repo, apply=True, fetch_ok=False)
+
+    for branch in (ancestor_branch, contained_branch):
+        row = next(item for item in result if item["branch"] == branch)
+        assert row["action"] == "skipped"
+        assert "fetch_failed_no_remote_proof" in row["reason"]
+        assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_fetch_failure_keeps_origin_head_deletions(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "feature/landed")
+    (repo / "landed.txt").write_text("on origin\n", encoding="utf-8")
+    _git(repo, "add", "landed.txt")
+    _git(repo, "commit", "-m", "landed elsewhere")
+    _git(repo, "push", "-u", "origin", "feature/landed")
+    _git(repo, "checkout", "main")
+    _git(repo, "branch", "-D", "feature/landed")
+    _git(repo, "branch", "rescue/copied", "origin/feature/landed")
+    _git(repo, "push", "origin", "rescue/copied")
+    _git(repo, "branch", "-D", "rescue/copied")
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_stale_origin_branches(repo, apply=True, fetch_ok=False)
+
+    row = next(item for item in result if item["branch"] == "rescue/copied")
+    assert row["action"] == "skipped"
+    assert "fetch_failed_no_remote_proof" in row["reason"]
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert "rescue/copied" in remote_heads.splitlines()
+
+
+def test_repo_result_fetch_failure_keeps_and_reports(tmp_path: Path, monkeypatch) -> None:
+    repo = _repo(tmp_path)
+    branch = "claude/review-9"
+    _git(repo, "branch", branch, "main")
+    # Break the remote so this run's `fetch --prune` fails.
+    _git(repo, "remote", "set-url", "origin", str(tmp_path / "missing.git"))
+    monkeypatch.setattr(cleanup.reap_worktrees, "_live_cwd_paths", lambda _repo: set())
+    monkeypatch.setattr(cleanup.reap_worktrees, "reap_worktrees", lambda **_kwargs: [])
+    monkeypatch.setattr(cleanup.reap_worktrees, "adopt_dispatch_worktrees", lambda _repo: [])
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+    monkeypatch.setattr(cleanup, "cleanup_stale_origin_branches", lambda *_args, **_kwargs: [])
+    monkeypatch.setattr(cleanup, "find_orphaned_worktree_directories", lambda _repo: [])
+    monkeypatch.setattr(cleanup, "_git_maintenance", lambda _repo, *, apply: {"ok": True})
+    monkeypatch.setattr(cleanup, "sweep_review_temp_orphans", lambda: {"errors": 0})
+    monkeypatch.setattr(
+        cleanup,
+        "sweep_tmp_leaks",
+        lambda apply=False: {"errors": 0, "roots_reaped": 0, "bytes_freed": 0, "candidates": 0, "skipped_live": 0},
+    )
+
+    result = cleanup._repo_result(repo, apply=True)
+
+    assert result["fetch"]["ok"] is False
+    assert any("fetch failed" in error for error in result["errors"])
+    row = next(item for item in result["branches"] if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert "fetch_failed_no_remote_proof" in row["reason"]
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
 def test_origin_scratch_ref_is_not_deleted_for_containing_itself(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
     _git(repo, "checkout", "-b", "rescue/only-here")
