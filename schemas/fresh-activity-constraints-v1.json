@@ -29,14 +29,9 @@
       "id": "e-or-ye",
       "options": ["е", "є"],
       "record_id": "pravopys-2019-paragraph-4"
-    },
-    {
-      "id": "y-or-i",
-      "options": ["и", "і"],
-      "record_id": "pravopys-2019-paragraph-3",
-      "also_record_id": "pravopys-2019-paragraph-2"
     }
   ],
+  "deferred": "и | і removed 2026-09-22: no Правопис/primer record found; add only with a sourced record",
   "b2_true_false_cap": {
     "applied": false,
     "why": "The shared true-false-b2 definition requires at least 10 items, so the A1-B1 cap of 4 is not applied. The B2 cap is decided with the first B2 plans."

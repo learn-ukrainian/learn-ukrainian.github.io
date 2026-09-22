@@ -50,8 +50,11 @@ def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:
         "true-false-b2",
     }
     assert loaded["by_type"]["true-false-b2"]["items_max"] is None
-    assert loaded["b2_true_false_cap"]["applied"] is False
-    assert len(loaded["orthography_lists"]) == 6
+    assert len(loaded["orthography_lists"]) == 5
+    assert (
+        loaded["deferred"]
+        == "и | і removed 2026-09-22: no Правопис/primer record found; add only with a sourced record"
+    )
 
 
 def test_activity_payload_schema_does_not_express_the_constraint_file() -> None:
@@ -248,4 +251,20 @@ def test_orthography_reversed_options_order_passes() -> None:
             "explanation": "Soft sign at end.",
         }
     )
-    assert validate_draft(draft, "a1", activity_types=types) == []
+
+
+def test_removed_y_or_i_orthography_list_fails() -> None:
+    draft, types = load_fixture("a1")
+    item = _item(draft, "a3")
+    item.clear()
+    item.update(
+        {
+            "sentence": "в___соко",
+            "answer": "и",
+            "mode": "orthography",
+            "options": ["и", "і"],
+            "explanation": "Orthography check.",
+        }
+    )
+    reasons = _reasons(draft, "a1", types)
+    assert any("exactly one closed list" in reason for reason in reasons)
