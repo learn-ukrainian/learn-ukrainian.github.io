@@ -39,7 +39,7 @@ policy:
       (interactive, orchestrator, ask, dispatch, reviewer/judge, cursor availability fallback).
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
-      Hermes and OpenRouter grok routes remain banned. grok-4.6 stays allowed for explicit pins.
+      Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
     - >-
       Kimi K3 workers (`kimi`, `kimicc`, and catalog ids `kimi-code/k3*`) use the
       native `kimi` CLI subscription path only (`catalog_transport` /
