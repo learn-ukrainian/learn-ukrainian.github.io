@@ -447,7 +447,9 @@ def build_pack(
 
         # 8. built_with
         sources_db_hash = sources_instance._fingerprint(sources_instance.sources_db)[0]
-        vesum_hash = sources_instance._vesum_identity()[0]
+        # No pack section reads VESUM; record its identity only when the file is there to open.
+        vesum_present = sources_instance.vesum_db.is_file()
+        vesum_hash = sources_instance._vesum_identity()[0] if vesum_present else None
         commit_sha = get_mcp_commit()
         trie_hash = stress.source_info()["digest"]
         try:
@@ -468,8 +470,10 @@ def build_pack(
         else:
             built_with["overrides_sha256"] = None
 
-        ru_batch = sources_instance.russian_patterns([])
-        built_with["russian_patterns"] = ru_batch.content_hash
+        # The Russian-pattern identity folds in the VESUM hash, so it needs VESUM too.
+        if vesum_present:
+            ru_batch = sources_instance.russian_patterns([])
+            built_with["russian_patterns"] = ru_batch.content_hash
 
         if stamp:
             built_with["built_at"] = datetime.now(UTC).isoformat()

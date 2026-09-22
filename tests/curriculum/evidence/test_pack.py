@@ -747,3 +747,66 @@ def test_file_modes(synthetic_sources, synthetic_standard, synthetic_word_store,
     p = Path(res["pack_path"])
     mode = oct(p.stat().st_mode & 0o777)
     assert mode == "0o644"
+
+
+def _texts_only_request(tmp_path) -> Path:
+    req_file = tmp_path / "req.yaml"
+    req_file.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "module": "a1/test-mod",
+                "texts": [
+                    {
+                        "id": "T-001",
+                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
+                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
+                        "supports": "VESUM identity check.",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    return req_file
+
+
+def test_texts_only_build_without_vesum_records_null(
+    synthetic_sources, synthetic_standard, synthetic_word_store, tmp_path
+):
+    """A pack build never opens a missing VESUM file and does not invent its hash."""
+    missing_vesum = tmp_path / "absent-vesum.db"
+    src = sources.Sources(sources_db=synthetic_sources, vesum_db=missing_vesum, standard_path=synthetic_standard)
+    pack.build_pack(
+        "a1",
+        "test-mod",
+        _texts_only_request(tmp_path),
+        evidence_dir=synthetic_word_store,
+        sources_instance=src,
+        offline=True,
+    )
+
+    built_with = yaml.safe_load((synthetic_word_store / "test-mod.yaml").read_text(encoding="utf-8"))["built_with"]
+    assert built_with["vesum"] is None
+    assert "russian_patterns" not in built_with
+    assert not missing_vesum.exists()
+
+
+def test_build_with_vesum_records_its_content_hash(
+    synthetic_sources, synthetic_vesum, synthetic_standard, synthetic_word_store, tmp_path
+):
+    """When the VESUM file exists the pack keeps its real identity hash."""
+    src = sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum, standard_path=synthetic_standard)
+    pack.build_pack(
+        "a1",
+        "test-mod",
+        _texts_only_request(tmp_path),
+        evidence_dir=synthetic_word_store,
+        sources_instance=src,
+        offline=True,
+    )
+
+    built_with = yaml.safe_load((synthetic_word_store / "test-mod.yaml").read_text(encoding="utf-8"))["built_with"]
+    expected = sources.Sources(vesum_db=synthetic_vesum)._vesum_identity()[0]
+    assert built_with["vesum"] == expected
+    assert len(built_with["russian_patterns"]) == 64

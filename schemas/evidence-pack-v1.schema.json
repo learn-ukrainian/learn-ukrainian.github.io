@@ -82,8 +82,15 @@
           "pattern": "^[0-9a-f]{64}$"
         },
         "vesum": {
-          "type": "string",
-          "pattern": "^[0-9a-f]{64}$"
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
         },
         "trie": {
           "type": "string",
