@@ -87,7 +87,7 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
         "slug": "synthetic-mod",
         "title": "Synthetic Module",
         "level": "a1",
-        "arc_ref": {"position": 1},
+        "arc_ref": {"level": "a1", "position": 1},
         "lessons": [
             {
                 "n": 1,
@@ -252,9 +252,20 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
     words_path = ev_dir / "_words.yaml"
     lock.write(words_path, lock.yaml_bytes(words_data))
 
-    # 4. Registry
+    # 4. Registry and base request
     reg_path = ev_dir / "_words.registry.yaml"
     lock.write(reg_path, lock.yaml_bytes([]))
+    base_req_path = ev_dir / "_base.request.yaml"
+    base_req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [{"lemma": "слово", "pos": "noun", "want": "new"}],
+            }
+        ),
+        encoding="utf-8",
+    )
 
     # 5. Lesson lock
     lesson_lock.write_lesson_lock("a1", "synthetic-mod", repo_root=root)
@@ -268,19 +279,27 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
 
 
 def test_cli_render_prompt_end_to_end_synthetic_tree(tmp_path):
-    """Finding 1: End-to-end CLI test on a synthetic level tree.
+    """Finding 1: End-to-end CLI test on a synthetic level tree with injected --repo-root.
 
     Asserts that the rendered prompt contains every cited record id and real non-zero hashes.
     """
     paths = _build_synthetic_tree(tmp_path)
     output_prompt = tmp_path / "rendered_prompt.md"
 
-    with (
-        patch("scripts.build.fresh.cli.REPO_ROOT", tmp_path),
-        patch("scripts.curriculum.evidence.lesson_lock.REPO_ROOT", tmp_path),
-    ):
-        code = main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "-o", str(output_prompt)])
-        assert code == 0
+    code = main(
+        [
+            "render-prompt",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "1",
+            "-o",
+            str(output_prompt),
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 0
 
     assert output_prompt.is_file()
     rendered = output_prompt.read_text(encoding="utf-8")
@@ -304,18 +323,38 @@ def test_cli_render_prompt_end_to_end_synthetic_tree(tmp_path):
     assert recorded_sha == hashlib.sha256(rendered.encode("utf-8")).hexdigest()
 
 
+def test_cli_repo_root_injected_via_env_var(tmp_path):
+    """Repo root can be injected via LEARN_UKRAINIAN_REPO_ROOT environment variable."""
+    _build_synthetic_tree(tmp_path)
+    output_prompt = tmp_path / "env_rendered_prompt.md"
+
+    with patch.dict("os.environ", {"LEARN_UKRAINIAN_REPO_ROOT": str(tmp_path)}):
+        code = main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "-o", str(output_prompt)])
+        assert code == 0
+    assert output_prompt.is_file()
+
+
 def test_cli_recap_fails_closed_when_built_lesson_missing(tmp_path, capsys):
     """Finding 1: Recap fails closed and names missing built lesson (never a placeholder)."""
     _build_synthetic_tree(tmp_path)
     output_prompt = tmp_path / "rendered_recap.md"
 
-    with (
-        patch("scripts.build.fresh.cli.REPO_ROOT", tmp_path),
-        patch("scripts.curriculum.evidence.lesson_lock.REPO_ROOT", tmp_path),
-    ):
-        # Lesson 2 is recap, but lesson-1.draft.yaml does not exist
-        code = main(["render-prompt", "a1", "synthetic-mod", "--lesson", "2", "--recap", "-o", str(output_prompt)])
-        assert code == 1
+    # Lesson 2 is recap, but lesson-1.draft.yaml does not exist
+    code = main(
+        [
+            "render-prompt",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "2",
+            "--recap",
+            "-o",
+            str(output_prompt),
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 1
 
     captured = capsys.readouterr()
     assert "Built lesson 1 is missing" in captured.err
@@ -325,16 +364,28 @@ def test_cli_write_fails_preflight_writes_gap_report_atomically(tmp_path, capsys
     """Finding 4: A failed preflight writes the gap report atomically (mode 0o644) and makes no writer call."""
     tree = _build_synthetic_tree(tmp_path)
 
-    # Corrupt pack lock to cause preflight lock failure
+    # Empty examples in pack to cause preflight evidence gap (missing record EX-001)
     pack_path = tree["pack"]
-    pack_path.write_text("corrupted content", encoding="utf-8")
+    pack_data = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
+    pack_data["examples"] = []
+    lock.write(pack_path, lock.yaml_bytes(pack_data))
+    # Update lesson lock so lock integrity check passes
+    lesson_lock.write_lesson_lock("a1", "synthetic-mod", repo_root=tmp_path)
 
-    with (
-        patch("scripts.build.fresh.cli.REPO_ROOT", tmp_path),
-        patch("scripts.curriculum.evidence.lesson_lock.REPO_ROOT", tmp_path),
-    ):
-        code = main(["write", "a1", "synthetic-mod", "--lesson", "1", "--writer", "agy"])
-        assert code == 1
+    code = main(
+        [
+            "write",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "1",
+            "--writer",
+            "agy",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 1
 
     captured = capsys.readouterr()
     assert "Preflight FAILED" in captured.err

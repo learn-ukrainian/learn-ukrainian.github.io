@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import os
 import sys
 from pathlib import Path
 from typing import Any
@@ -35,6 +36,22 @@ from scripts.curriculum.learner_state.planned import PlannedState, planned_state
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 
+def _resolve_repo_root(args: argparse.Namespace | None = None) -> Path:
+    """Resolve repository root directory from CLI argument, env var, or default.
+
+    Checks:
+    1. --repo-root argument (if passed on CLI)
+    2. LEARN_UKRAINIAN_REPO_ROOT or REPO_ROOT environment variable
+    3. REPO_ROOT (detected from module path)
+    """
+    if args is not None and getattr(args, "repo_root", None) is not None:
+        return Path(args.repo_root).resolve()
+    env_root = os.environ.get("LEARN_UKRAINIAN_REPO_ROOT") or os.environ.get("REPO_ROOT")
+    if env_root:
+        return Path(env_root).resolve()
+    return REPO_ROOT
+
+
 def _build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.build.fresh.cli",
@@ -53,9 +70,17 @@ def _build_parser() -> argparse.ArgumentParser:
             "Exit codes:\n"
             "  0: Successful operation\n"
             "  1: Check failure, gap detected, or execution error\n\n"
+            "Environment variables:\n"
+            "  LEARN_UKRAINIAN_REPO_ROOT, REPO_ROOT: Override repository root directory for path resolution.\n\n"
             "Related:\n"
             "  docs/epics/fresh-build-writer-contract.md (#8431 r3), sub-epic #8397 child 6"
         ),
+    )
+    parser.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
 
     subparsers = parser.add_subparsers(dest="command", required=True)
@@ -91,6 +116,12 @@ def _build_parser() -> argparse.ArgumentParser:
     p_render.add_argument(
         "--recap", action="store_true", help="Render recap prompt variant with built lessons 1..N-1 (default: False)"
     )
+    p_render.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
+    )
 
     # 2. preflight subcommand
     p_preflight = subparsers.add_parser(
@@ -118,6 +149,12 @@ def _build_parser() -> argparse.ArgumentParser:
     p_preflight.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
     p_preflight.add_argument(
         "--gap-report", type=Path, default=None, help="File path to write evidence gap report if preflight fails"
+    )
+    p_preflight.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
 
     # 3. write subcommand
@@ -166,6 +203,12 @@ def _build_parser() -> argparse.ArgumentParser:
         default=None,
         help="Directory to save draft and state files (default: evidence/<level>/_state/<slug>/)",
     )
+    p_write.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
+    )
 
     return parser
 
@@ -175,7 +218,7 @@ def _load_lesson_data(
     slug: str,
     lesson_n: int,
     *,
-    repo_root: Path = REPO_ROOT,
+    repo_root: Path | None = None,
     plans_dir: Path | None = None,
     evidence_dir: Path | None = None,
 ) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Path]]:
@@ -183,12 +226,13 @@ def _load_lesson_data(
 
     Fails closed if plan, pack, or word store is missing or lock disagrees.
     """
+    root = repo_root if repo_root is not None else _resolve_repo_root()
     paths = lesson_lock.resolve_paths(
         level,
         slug,
         plans_dir=plans_dir,
         evidence_dir=evidence_dir,
-        repo_root=repo_root,
+        repo_root=root,
     )
 
     # 1. Load plan via scripts.curriculum.plan_v2 (Finding 1)
@@ -219,7 +263,7 @@ def _load_lesson_data(
             slug,
             plans_dir=plans_dir,
             evidence_dir=evidence_dir,
-            repo_root=repo_root,
+            repo_root=root,
         )
         if not ok:
             raise ValueError(f"Per-lesson lock mismatch for {level}/{slug}: {diff}")
@@ -318,14 +362,25 @@ def _load_recap_built_lessons(
 def main(argv: list[str] | None = None) -> int:
     parser = _build_parser()
     args = parser.parse_args(argv)
+    repo_root = _resolve_repo_root(args)
+    cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None
 
     if args.command == "render-prompt":
-        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
-        card_path, _, _card_sha = style_card_info(args.level)
+        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(
+            args.level, args.slug, args.lesson, repo_root=repo_root
+        )
+        card_path, _, _card_sha = style_card_info(args.level, cards_dir=cards_dir)
 
         # Compute planned state and immersion payload
         pos = plan_dict.get("arc_ref", {}).get("position", 1)
-        p_state = planned_state(args.level, pos, args.lesson, allow_missing_prior=True)
+        p_state = planned_state(
+            args.level,
+            pos,
+            args.lesson,
+            allow_missing_prior=True,
+            plans_dir=paths["plan"].parent,
+            evidence_dir=paths["words"].parent,
+        )
         imm_payload = compute_immersion_payload(
             args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
         )
@@ -402,7 +457,9 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     elif args.command == "preflight":
-        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
+        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(
+            args.level, args.slug, args.lesson, repo_root=repo_root
+        )
 
         res = preflight_lesson(
             lesson_entry,
@@ -426,10 +483,19 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     elif args.command == "write":
-        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
-        card_path, _, _card_sha = style_card_info(args.level)
+        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(
+            args.level, args.slug, args.lesson, repo_root=repo_root
+        )
+        card_path, _, _card_sha = style_card_info(args.level, cards_dir=cards_dir)
         pos = plan_dict.get("arc_ref", {}).get("position", 1)
-        p_state = planned_state(args.level, pos, args.lesson, allow_missing_prior=True)
+        p_state = planned_state(
+            args.level,
+            pos,
+            args.lesson,
+            allow_missing_prior=True,
+            plans_dir=paths["plan"].parent,
+            evidence_dir=paths["words"].parent,
+        )
         imm_payload = compute_immersion_payload(
             args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
         )
@@ -505,6 +571,7 @@ def main(argv: list[str] | None = None) -> int:
             attempt=args.attempt,
             plan_activity_types=plan_activity_types,
             fake_seat=args.fake_seat,
+            repo_root=repo_root,
         )
 
         print(f"Writer call succeeded for {args.level}/{args.slug} lesson {args.lesson} (seat: {args.writer}).")
