@@ -683,29 +683,62 @@ def _worktree_review_pr_number(repo_root: Path, info: WorktreeInfo) -> int | Non
     return None
 
 
+def _sha_is_ancestor(cwd: Path, sha: str, descendant: str) -> bool:
+    """True when ``sha`` is an ancestor of ``descendant``. A git error is not."""
+    proc = _run(
+        ["git", "merge-base", "--is-ancestor", sha, descendant],
+        cwd=cwd,
+    )
+    return proc.returncode == 0
+
+
 def _pr_matches_worktree_head(
     info: WorktreeInfo,
     pr_state: PullRequestState | None,
 ) -> bool:
+    """True when the tip is the PR head or an ancestor of that head.
+
+    Callers use this as deletion proof for worktree removal and for merged
+    branch pruning. An identical tree at a divergent commit is not
+    containment; ``_same_tree_hint`` may report it, and it never returns true
+    here. Ancestor of ``origin/main`` is a separate proof, checked beside this
+    one. A git error is not ancestry.
+    """
     if pr_state is None or not pr_state.head_sha or not info.head:
         return False
     if pr_state.head_sha == info.head:
         return True
-    proc = _run(
-        ["git", "merge-base", "--is-ancestor", info.head, pr_state.head_sha],
-        cwd=info.path,
-    )
-    if proc.returncode == 0:
-        return True
-    # Squash/recommit leftovers often keep the same tree at a sibling SHA
-    # that is neither the PR head nor an ancestor of it.  git diff --quiet
-    # is 0 only when both objects exist and the trees are identical; a
-    # missing or dummy headRefOid fails closed.
+    return _sha_is_ancestor(info.path, info.head, pr_state.head_sha)
+
+
+def _tip_is_ancestor_of_origin_main(info: WorktreeInfo) -> bool:
+    """True when the recorded tip, not a same-tree sibling, is on origin/main."""
+    if not info.head:
+        return False
+    return _sha_is_ancestor(info.path, info.head, "origin/main")
+
+
+def _same_tree_hint(
+    info: WorktreeInfo,
+    pr_state: PullRequestState | None,
+) -> str | None:
+    """Report an identical tree. Never deletion proof.
+
+    ``git diff --quiet`` is 0 only when both objects exist and the trees
+    match. A missing or dummy head, or any diff, is not a hint.
+    """
+    if pr_state is None or not pr_state.head_sha or not info.head:
+        return None
+    if pr_state.head_sha == info.head:
+        return None
     tree = _run(
         ["git", "diff", "--quiet", pr_state.head_sha, info.head],
         cwd=info.path,
     )
-    return tree.returncode == 0
+    if tree.returncode != 0:
+        return None
+    label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
+    return f"same tree as {label} head; not deletion proof"
 
 
 def _live_cwd_paths(repo_root: Path) -> set[Path] | None:
@@ -1457,6 +1490,8 @@ def _qualifying_reason(
                 # Review branches are local-only; a missing origin branch
                 # cannot prove that their extra commits are safe to discard.
                 return None
+            if _tip_is_ancestor_of_origin_main(info):
+                return f"{pr_label} MERGED; HEAD is an ancestor of origin/main"
             # Squash merges may leave extra local reconcile commits. A gone
             # origin branch permits cleanup without an exact PR-head match.
             if info.branch is not None and not _origin_branch_present(info.path, info.branch):
@@ -2047,6 +2082,20 @@ def _reap_qualified_worktree(
                 error=recovery_error,
             )
 
+        # Decide branch deletion while the worktree directory still exists.
+        # ``git merge-base`` cannot run with a cwd that ``worktree remove``
+        # has already deleted, and a same-tree sibling is not proof.
+        prune_contained = False
+        if (
+            prune_merged_branches
+            and info.branch is not None
+            and pr_state is not None
+            and pr_state.state == "MERGED"
+        ):
+            prune_contained = _pr_matches_worktree_head(
+                info, pr_state
+            ) or _tip_is_ancestor_of_origin_main(info)
+
         remove_error = _remove_worktree(repo_root, info)
         if remove_error is not None:
             return ReapResult(
@@ -2062,13 +2111,7 @@ def _reap_qualified_worktree(
 
         branch_prune_error = None
         branch_pruned = False
-        if (
-            prune_merged_branches
-            and info.branch is not None
-            and pr_state is not None
-            and pr_state.state == "MERGED"
-            and _pr_matches_worktree_head(info, pr_state)
-        ):
+        if prune_contained:
             branch_prune_error = _prune_branch(
                 repo_root,
                 info.branch,
@@ -2349,6 +2392,10 @@ def reap_worktrees(
                             if pr_error
                             else "no reap condition matched"
                         )
+                if not pr_unknown and reason.startswith("no reap condition matched"):
+                    hint = _same_tree_hint(info, pr_state)
+                    if hint:
+                        reason = f"{reason}; {hint}"
                 results.append(
                     ReapResult(
                         path=str(info.path),

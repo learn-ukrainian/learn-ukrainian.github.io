@@ -726,6 +726,109 @@ def test_exact_merged_origin_branch_is_deleted(tmp_path: Path, monkeypatch) -> N
     assert branch not in remote_heads.splitlines()
 
 
+def _unique_pushed_branch(repo: Path, branch: str) -> str:
+    _git(repo, "checkout", "-b", branch)
+    filename = branch.replace("/", "-") + ".txt"
+    (repo / filename).write_text(branch + "\n", encoding="utf-8")
+    _git(repo, "add", filename)
+    _git(repo, "commit", "-m", branch)
+    head_sha = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "push", "-u", "origin", branch)
+    _git(repo, "checkout", "main")
+    return head_sha
+
+
+def _closed_pr(number: int, head_sha: str) -> cleanup.reap_worktrees.PullRequestState:
+    return cleanup.reap_worktrees.PullRequestState(
+        number=number,
+        state="CLOSED",
+        head_sha=head_sha,
+    )
+
+
+def test_closed_pr_exact_head_with_matching_pull_ref_is_deleted(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/closed-durable"
+    head_sha = _unique_pushed_branch(repo, branch)
+    _git(tmp_path / "origin.git", "update-ref", "refs/pull/88/head", head_sha)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, candidate: ([_closed_pr(88, head_sha)], None) if candidate == branch else ([], None),
+    )
+
+    applied = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    row = next(item for item in applied if item["branch"] == branch)
+    assert row["action"] == "deleted"
+    assert row["reason"] == "origin head; exact head of CLOSED PR #88"
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert branch not in remote_heads.splitlines()
+
+
+def test_closed_pr_exact_head_with_mismatched_pull_ref_is_kept(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/closed-mismatch"
+    head_sha = _unique_pushed_branch(repo, branch)
+    main_sha = _git(repo, "rev-parse", "main")
+    _git(tmp_path / "origin.git", "update-ref", "refs/pull/89/head", main_sha)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, candidate: ([_closed_pr(89, head_sha)], None) if candidate == branch else ([], None),
+    )
+
+    applied = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    row = next(item for item in applied if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert "refs/pull/89/head" in row["reason"]
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert branch in remote_heads.splitlines()
+
+
+def test_closed_pr_exact_head_ls_remote_error_is_kept(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/closed-ls-remote-error"
+    head_sha = _unique_pushed_branch(repo, branch)
+    _git(tmp_path / "origin.git", "update-ref", "refs/pull/90/head", head_sha)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, candidate: ([_closed_pr(90, head_sha)], None) if candidate == branch else ([], None),
+    )
+    real_run_git = cleanup._run_git
+
+    def fail_pull_ref(repo_root: Path, *args: str):
+        if any(arg.startswith("refs/pull/") for arg in args):
+            return subprocess.CompletedProcess(
+                ["git", *args],
+                128,
+                "",
+                "fatal: could not read from remote repository",
+            )
+        return real_run_git(repo_root, *args)
+
+    monkeypatch.setattr(cleanup, "_run_git", fail_pull_ref)
+
+    applied = cleanup.cleanup_stale_origin_branches(repo, apply=True)
+
+    row = next(item for item in applied if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert "refs/pull/90/head" in row["reason"]
+    remote_heads = _git(tmp_path / "origin.git", "for-each-ref", "--format=%(refname:short)")
+    assert branch in remote_heads.splitlines()
+
+
 def test_unique_unproven_origin_branch_is_preserved(tmp_path: Path, monkeypatch) -> None:
     repo = _repo(tmp_path)
     _git(repo, "checkout", "-b", "codex/unique-origin")

@@ -480,3 +480,32 @@ def test_detached_earlier_pr_commit_matches_and_main_checkout_does_not(tmp_path:
 
     assert detached.resolve() in matched
     assert on_main.resolve() not in matched
+
+
+def test_apply_keeps_same_tree_divergent_commit(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """A sibling commit with the merged PR's tree is not removed or pruned."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/feature")
+    git(worktree, "push", "-u", "origin", "codex/feature")
+    git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
+    tree = git(worktree, "rev-parse", "HEAD^{tree}")
+    parent = git(repo, "rev-parse", "main")
+    pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
+    patch_gh(
+        monkeypatch,
+        pr_number=7070,
+        state="MERGED",
+        head_ref_name="codex/feature",
+        head_sha=pr_head,
+        branch_prs={"codex/feature": [{"number": 7070, "state": "MERGED", "headRefOid": pr_head}]},
+    )
+
+    result = mc.run_merge_closeout(repo, 7070, apply=True, live_cwds=set())
+
+    assert worktree.exists()
+    assert git(repo, "rev-parse", "--verify", "codex/feature")
+    assert any("not deletion proof" in entry["reason"] for entry in result.reap_results)
+    assert result.ok is False

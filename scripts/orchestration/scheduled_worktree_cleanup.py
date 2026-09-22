@@ -4,7 +4,8 @@
 The scheduled runner prunes remote refs and stale worktree registrations,
 requires the macOS process-CWD probe in apply mode, delegates safe worktree
 removal to the canonical reaper, deletes origin and local branches only with
-exact merged/closed-PR, origin/main-ancestry, or (scratch names only)
+exact merged-PR, a closed PR whose head GitHub still publishes at
+``refs/pull/<N>/head``, origin/main-ancestry, or (scratch names only)
 another-origin-ref proof, runs automatic Git maintenance, and writes an
 immutable JSON receipt. Orphaned ``.worktrees/**``
 directories are reported but never deleted.
@@ -236,6 +237,24 @@ def _merged_pr_contains_head(
     return None
 
 
+def _closed_pr_head_is_durable(repo_root: Path, number: int, head_sha: str) -> bool:
+    """True only when GitHub still publishes ``head_sha`` at ``refs/pull/<N>/head``.
+
+    A closed, unmerged pull request's recorded head is not containment by
+    itself. ``git ls-remote`` must return exactly that SHA. A git or network
+    error, an empty answer, or any other SHA is not proof, and the ref stays.
+    """
+    ref = f"refs/pull/{number}/head"
+    proc = _run_git(repo_root, "ls-remote", "origin", ref)
+    if proc.returncode != 0:
+        return False
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) == 2 and parts[1] == ref and parts[0] == head_sha:
+            return True
+    return False
+
+
 def _stale_ref_delete_reason(
     repo_root: Path,
     *,
@@ -249,6 +268,8 @@ def _stale_ref_delete_reason(
     Scratch names never skip containment. A scratch ref is deleted only when
     its tip is an exact merged-PR head, an ancestor of ``origin/main``,
     contained in a merged PR head, or reachable from some other origin ref.
+    A closed PR head is proof only while ``refs/pull/<N>/head`` is still that
+    commit.
     """
     open_pr = next((pr for pr in prs if pr.state == "OPEN"), None)
     if open_pr is not None:
@@ -268,14 +289,22 @@ def _stale_ref_delete_reason(
         (pr for pr in prs if pr.state == "CLOSED" and pr.head_sha == head_sha),
         None,
     )
-    if exact_closed is not None:
-        return f"{kind}; exact head of CLOSED PR #{exact_closed.number}", None
+    closed_not_durable = False
+    if exact_closed is not None and exact_closed.number is not None:
+        if _closed_pr_head_is_durable(repo_root, exact_closed.number, head_sha):
+            return f"{kind}; exact head of CLOSED PR #{exact_closed.number}", None
+        closed_not_durable = True
     if _is_agent_scratch_branch(branch):
         if _tip_on_other_origin_ref(repo_root, head_sha, branch):
             return f"{kind}; agent scratch ref; tip is contained in a remote ref", None
         return None, (
             f"{kind} but no exact merged/closed PR or origin/main ancestry evidence; "
             "agent scratch ref; tip not contained in main, a merged PR, or a remote ref"
+        )
+    if closed_not_durable and exact_closed is not None and exact_closed.number is not None:
+        return None, (
+            f"{kind} but CLOSED PR #{exact_closed.number} head is not durably "
+            f"on refs/pull/{exact_closed.number}/head"
         )
     return None, (f"{kind} but no exact merged/closed PR or origin/main ancestry evidence")
 
