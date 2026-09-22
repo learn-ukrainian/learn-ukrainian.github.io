@@ -4607,6 +4607,7 @@ function LexiconPracticeIsland({
               </span>
               <button
                 type="button"
+                data-testid="practice-clear-focus"
                 onClick={clearFocus}
                 style={{
                   padding: '4px 8px',
@@ -4615,7 +4616,7 @@ function LexiconPracticeIsland({
                   borderRadius: '4px',
                   background: 'var(--lu-surface)',
                   color: 'var(--lu-text-muted)',
-                  cursor: 'pointer'
+                  cursor: 'pointer',
                 }}
               >
                 <PracticeChromeLabel k="practice.clearFocus" />

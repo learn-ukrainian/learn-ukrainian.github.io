@@ -307,6 +307,51 @@ const frontmatter = {
     :global(.lexicon-cloze-row button) {
       width: 100%;
     }
+
+    /* Mobile touch target minimums (44px) #8383 */
+    :global(.k3-settings-btn) {
+      min-height: 44px;
+      min-width: 44px;
+    }
+
+    :global([data-testid="settings-drawer-close"]),
+    :global([data-testid="custom-deck-studio-close"]) {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    :global(.daily-deck-atlas-link) {
+      display: inline-flex;
+      align-items: center;
+      min-height: 44px;
+    }
+
+    :global(.stage-back) {
+      min-width: 44px;
+    }
+
+    .lexicon-practice-back {
+      min-width: 44px;
+    }
+
+    :global(.k3-levels button) {
+      min-width: 44px;
+    }
+
+    :global([data-testid="practice-clear-focus"]) {
+      min-width: 44px;
+      min-height: 44px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    :global(.k3-deck-filter-bar button) {
+      min-height: 44px;
+    }
   }
   .lexicon-practice-back {
     display: inline-flex;
