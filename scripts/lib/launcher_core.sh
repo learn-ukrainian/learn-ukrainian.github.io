@@ -51,7 +51,9 @@ $driver_mode
 Options:
   -h, --help                 Show this help and exit.
   --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
-                             Claude interactive / Grok: omit to keep last TUI/session model.
+                             Cursor driver default: grok-4.7-high (not Auto, not a fast
+                             variant). Claude interactive / Grok: omit to keep last
+                             TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
                              --reasoning-effort). Claude driver default: high. Otherwise
                              omit to keep last session selection. Other providers ignore.
@@ -69,8 +71,8 @@ Options:
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
   LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
-                             claude-opus-5-5[1m]; empty for Claude interactive/Grok =
-                             last session).
+                             claude-opus-5-5[1m]; Cursor driver: grok-4.7-high; empty
+                             for Claude interactive/Grok = last session).
   LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
                              empty for Claude interactive/Grok = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
@@ -262,9 +264,13 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     cursor)
-      # Omit --model unless the caller sets one. cursor-agent then keeps the
-      # grok it already loads. An explicit pin is passed through unchanged.
-      LC_MODEL="${LAUNCHER_MODEL:-}"
+      # Pin grok-4.7-high. Omitting --model lets cursor-agent use Auto, which
+      # routes to a fast Grok variant and burns the seat. --model still overrides.
+      if [ "$LC_MODE" = driver ]; then
+        LC_MODEL="${LAUNCHER_MODEL:-grok-4.7-high}"
+      else
+        LC_MODEL="${LAUNCHER_MODEL:-}"
+      fi
       LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
     kimi)

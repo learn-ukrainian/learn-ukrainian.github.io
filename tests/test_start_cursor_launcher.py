@@ -71,7 +71,7 @@ def test_cursor_driver_claims_lease_for_supported_selectors(selector: str) -> No
     assert "would bind drive-epic" in result.stdout
     assert "would heartbeat observer presence agent=cursor" in result.stdout
     assert "would renew observer presence while the driver session runs" in result.stdout
-    assert "--model" not in result.stdout
+    assert "--model grok-4.7-high" in result.stdout
 
 
 def test_cursor_driver_rejects_uncertified_model_and_foreign_harness() -> None:
