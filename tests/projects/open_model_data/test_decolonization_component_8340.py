@@ -1050,3 +1050,169 @@ def test_cf_r11_remediations_regression(monkeypatch):
     )
     with pytest.raises(ValueError, match="invalid date format"):
         make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+
+def test_cf_r12_remediations_regression(monkeypatch):
+    """Verify remediation of all CF-R12 findings.
+
+    1. Citation binding in query_source_evidence:
+       Unrelated book cursors containing generic tokens ('сторінка', 'клас', 'klas',
+       'lesson', 'мов', 'українськ', 'культура', 'дослідженн') MUST fail closed with
+       'does not substantiate claimed citation'.
+    2. Sample-size equality in make_reviewer_confirmation:
+       drawn_count and reviewed_count must both be positive integers, not bool,
+       and exactly equal.
+    3. Calendar date validation in make_reviewer_confirmation:
+       signoff_date must be a valid calendar date, rejecting impossible dates
+       like '2026-99-99' or '2026-02-31'.
+    4. Antonenko style guide retrieval:
+       Antonenko cases retrieved from table style_guide succeed even when the author's
+       name does not appear in the record body.
+    """
+    import json
+    import sqlite3
+
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        make_reviewer_confirmation,
+        query_source_evidence,
+    )
+
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    sources_db = _resolve_db_path("sources.db", REPO_ROOT)
+    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    real_v_cur = v_conn.cursor()
+    real_s_cur = s_conn.cursor()
+
+    # ── 1. Generic tokens in unrelated book fixtures fail closed ──
+    class TractorBookWithGenericTokensCursor:
+        def __init__(self, text):
+            self._text = text
+
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return (88888, "Книга про трактори", self._text)
+
+        def fetchall(self):
+            return [(88888, "Книга про трактори", self._text)]
+
+    generic_fixture_texts = [
+        "Книга про трактори. Сторінка 1. Тут є лікар.",
+        "Книга про трактори. Клас 5. Тут є лікар.",
+        "Книга про трактори. Klas 8. Дослідження тракторів. Тут є лікар.",
+        "Книга про трактори. Lesson 3. Українська культура праці на тракторі. Тут є лікар.",
+    ]
+    for text in generic_fixture_texts:
+        cur = TractorBookWithGenericTokensCursor(text)
+        with pytest.raises(ValueError, match="does not substantiate claimed citation"):
+            query_source_evidence(
+                case_id="decol_lex_001",
+                term="лікар",
+                copy="доктор",
+                auth="Олександр Пономарів «Культура слова»",
+                cat_name="calque_lexical",
+                s_cur=cur,
+                v_cur=real_v_cur,
+                style_guide_cache=[],
+            )
+
+    # ── 2. Sample size equality and type enforcement ──
+    signoff_path = REPO_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    valid_signoff = json.loads(signoff_path.read_text(encoding="utf-8"))
+
+    cases_file = DECOLONIZATION_DIR / "cases.json"
+    valid_cases = json.loads(cases_file.read_text(encoding="utf-8"))
+    lex_001_item = next(c for c in valid_cases if c["case_id"] == "decol_lex_001")
+
+    # 2a. sample_size_drawn is None
+    bad_signoff_drawn_none = dict(valid_signoff, sample_size_drawn=None)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_drawn_none,
+    )
+    with pytest.raises(ValueError, match="Review incomplete or defective"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 2b. sample_size_drawn is negative
+    bad_signoff_drawn_neg = dict(valid_signoff, sample_size_drawn=-1)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_drawn_neg,
+    )
+    with pytest.raises(ValueError, match="Review incomplete or defective"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 2c. sample_size_drawn is boolean
+    bad_signoff_drawn_bool = dict(valid_signoff, sample_size_drawn=True)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_drawn_bool,
+    )
+    with pytest.raises(ValueError, match="Review incomplete or defective"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 2d. sample_size_reviewed != sample_size_drawn
+    bad_signoff_mismatch = dict(valid_signoff, sample_size_drawn=300, sample_size_reviewed=301)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_mismatch,
+    )
+    with pytest.raises(ValueError, match="Review incomplete or defective"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # ── 3. Calendar date validation ──
+    bad_date_99 = dict(valid_signoff, signoff_date="2026-99-99")
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_date_99,
+    )
+    with pytest.raises(ValueError, match="is not a valid calendar date"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    bad_date_feb31 = dict(valid_signoff, signoff_date="2026-02-31")
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_date_feb31,
+    )
+    with pytest.raises(ValueError, match="is not a valid calendar date"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # ── 4. Antonenko style guide retrieval without author name in text ──
+    class StyleGuideNoAuthorCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            # Article without author name 'Антоненко' in head or body
+            return (
+                187,
+                "Бажаючий – що (котрий, який) бажає – охочий",
+                "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄПРИКМЕТНИКІВ",
+                "Часто можна натрапити на таке оголошення: Бажаючі взяти участь в екскурсії. Слід казати охочий.",
+            )
+
+        def fetchall(self):
+            return [
+                (
+                    187,
+                    "Бажаючий – що (котрий, який) бажає – охочий",
+                    "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄПРИКМЕТНИКІВ",
+                    "Часто можна натрапити на таке оголошення: Бажаючі взяти участь в екскурсії. Слід казати охочий.",
+                )
+            ]
+
+    sg_cur = StyleGuideNoAuthorCursor()
+    res = query_source_evidence(
+        case_id="decol_lex_004",
+        term="охочий",
+        copy="бажаючий",
+        auth="Борис Антоненко-Давидович «Як ми говоримо»",
+        cat_name="calque_lexical",
+        s_cur=sg_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res["source"] == "Борис Антоненко-Давидович «Як ми говоримо»"
+    assert "охочий" in res["supporting_passage"].lower()
