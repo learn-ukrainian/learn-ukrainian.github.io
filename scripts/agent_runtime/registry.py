@@ -40,10 +40,10 @@ class AgentEntry(TypedDict):
 AGENTS: dict[str, AgentEntry] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        # Operator 2026-09-04: workhorse Astra @ low; explicit --model/--effort
-        # still win for the approved GPT-6 model.
-        "default_model": "gpt-6-astra",
-        "default_effort": "low",
+        # Operator 2026-09-22: Sol @ high orchestrates. Luna and Astra are
+        # explicit pins for scouting and advisory.
+        "default_model": "gpt-6-sol",
+        "default_effort": "high",
         "cost_tier": "medium",
         "capabilities": frozenset(
             {
@@ -58,7 +58,7 @@ AGENTS: dict[str, AgentEntry] = {
     },
     "codex-desktop": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-6-astra",
+        "default_model": "gpt-6-sol",
         "cost_tier": "high",
         "capabilities": frozenset(
             {

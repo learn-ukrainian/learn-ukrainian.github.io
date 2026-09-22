@@ -217,14 +217,18 @@ def _strip_codex_prompt_echo(stderr: str) -> str:
     return stderr[last_divider.end() :]
 
 
+# Operator 2026-09-22. Sol is the orchestrator, Luna scouts, Astra advises.
+CODEX_APPROVED_MODELS = frozenset({"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"})
+
+
 class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
 
     name: str = "codex"
-    default_model: str = "gpt-6-astra"
-    # Operator 2026-09-04: omitted effort defaults to low for the Astra workhorse;
-    # an explicit --effort always wins.
-    default_effort: str = "low"
+    default_model: str = "gpt-6-sol"
+    # Omitted effort is the orchestrator setting. Scouting passes Luna and its
+    # own effort. An explicit --effort always wins.
+    default_effort: str = "high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``
@@ -258,11 +262,14 @@ class CodexAdapter:
 
         ``effort``: appended as ``-c model_reasoning_effort=<level>`` so it
         overrides ``~/.codex/config.toml`` for this invocation only. When
-        None, the lane default ``low`` is applied.
+        None, the lane default ``high`` is applied.
         See #1396.
         """
-        if model is not None and model != self.default_model:
-            raise ValueError(f"CodexAdapter: model={model!r} rejected; only {self.default_model!r} is approved")
+        if model is not None and model not in CODEX_APPROVED_MODELS:
+            approved = ", ".join(sorted(CODEX_APPROVED_MODELS))
+            raise ValueError(
+                f"CodexAdapter: model={model!r} rejected; approved models are {approved}"
+            )
 
         tc_early = tool_config or {}
         read_only_tmp_root = _read_only_tmp_root(tc_early, cwd, mode)

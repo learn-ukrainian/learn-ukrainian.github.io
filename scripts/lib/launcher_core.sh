@@ -247,7 +247,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-astra}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-sol}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -279,7 +279,8 @@ launcher_defaults() {
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
   if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
-    if [ "$LC_MODE" = driver ]; then LC_EFFORT=high; else LC_EFFORT=low; fi
+    # Operator 2026-09-22: Sol's seat is high, including the ordinary launcher.
+    LC_EFFORT=high
   fi
   if [ "$LC_PROVIDER" = claude ] && [ "$LC_MODE" = driver ] && [ -z "$LC_EFFORT" ]; then
     # Opus 5.5 API default is medium; orchestrating seats run at high.
@@ -486,7 +487,11 @@ launcher_validate_mode() {
       launcher_selector_help >&2
       exit 2
     fi
-    LC_MODEL="gpt-6-astra"
+    if [ "$LC_MODEL" = gpt-6-luna ]; then
+      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
+      exit 4
+    fi
+    LC_MODEL="${LC_MODEL:-gpt-6-sol}"
     unset SESSION_EPIC
     LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
@@ -530,7 +535,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)

@@ -31,7 +31,7 @@ def test_codex_claude_code_harness_dry_run_uses_local_proxy_contract() -> None:
     result = run_launcher("start-codex.sh", "--harness", "claude-code")
     assert result.returncode == 0, result.stderr
     assert "credential_source=local-proxy-placeholder" in result.stdout
-    assert "would exec claude --model gpt-6-astra" in result.stdout
+    assert "would exec claude --model gpt-6-sol" in result.stdout
 
 
 @pytest.mark.parametrize("base", ("http://127.0.0.1:8317", "http://localhost:8317"))
@@ -86,7 +86,7 @@ def test_codex_claude_code_dry_run_redacts_explicit_proxy_token() -> None:
 def test_codex_claude_code_rejects_old_model_before_provider(model):
     result = run_launcher("start-codex.sh", "--harness", "claude-code", "--model", model)
     assert result.returncode == 2
-    assert "only gpt-6-astra is approved" in result.stderr
+    assert "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol" in result.stderr
     assert "would exec" not in result.stdout
 
 
@@ -98,4 +98,4 @@ def test_direct_codex_proxy_configuration_rejects_old_pin_without_exports():
         text=True, capture_output=True, check=False, timeout=10,
     )
     assert result.returncode == 2
-    assert "only gpt-6-astra is approved" in result.stderr
+    assert "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol" in result.stderr

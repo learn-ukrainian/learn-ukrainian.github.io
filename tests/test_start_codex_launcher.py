@@ -28,8 +28,8 @@ def test_codex_hermes_opt_in_uses_provider_label_separately_from_model(tmp_path)
 
     result = run_launcher("start-codex.sh", "--harness", "hermes", env=hermes_stub_env(tmp_path))
     assert result.returncode == 0, result.stderr
-    assert "would exec hermes chat --cli --provider openai-codex --model gpt-6-astra" in result.stdout
-    assert "--reasoning low" in result.stdout
+    assert "would exec hermes chat --cli --provider openai-codex --model gpt-6-sol" in result.stdout
+    assert "--reasoning high" in result.stdout
     assert "would claim lease" not in result.stdout
     assert "would probe" not in result.stdout
 
@@ -37,7 +37,7 @@ def test_codex_hermes_opt_in_uses_provider_label_separately_from_model(tmp_path)
 def test_codex_hermes_rejects_provider_label_as_model() -> None:
     result = run_launcher("start-codex.sh", "--harness", "hermes", "--model", "openai-codex")
     assert result.returncode == 2
-    assert "only gpt-6-astra is approved" in result.stderr
+    assert "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol" in result.stderr
 
 
 def test_codex_hermes_cannot_start_astra_driver_or_governor() -> None:

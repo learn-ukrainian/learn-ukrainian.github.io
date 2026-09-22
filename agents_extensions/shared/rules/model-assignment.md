@@ -23,8 +23,10 @@ official model documentation, checking local bakeoff deltas, updating `reviewed_
 Selection order is binding: **independence and hard gates → review quality tier → health/quota within
 that tier → cost among equivalent fits**. Formal code review uses the catalog's `review_ladders`
 and the reviewer resolver for current routine and authority seat order; do not reconstruct a ladder
-from historical prose. The routine Codex seat is **Astra @ medium**. Legacy Terra qualification is
-historical evidence; the approved Codex model is Astra.
+from historical prose. The Codex orchestrator and advanced seat is **GPT-6 Sol @ high**.
+Scouting and bounded repeatable work use **GPT-6 Luna @ high** (max only for an unusually
+hard scouting task). Advisory escalation stays **GPT-6 Astra @ high**. Token prices under
+272K are Sol $2/$10 and Luna $0.10/$0.50 per million input/output tokens.
 Cost never lowers the quality floor. An `unhealthy` route is unavailable; `degraded` and `near_cap`
 only break ties inside a quality rung. `cursor:auto` is never an acceptable formal-review identity;
 Composer is eligible only with its concrete `composer-2.5` model identity.
@@ -301,7 +303,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | Seat | Default (loop) | Escalate (deep) | Notes |
   | --- | --- | --- | --- |
   | **claude** | `claude-opus-5-5` @ high (operator 2026-09-22; launcher pins `claude-opus-5-5[1m]`). Opus 5.5 executes advanced non-linguistic work (architecture, hard coding, deep code review) | **`gpt-6-astra` @ xhigh** | Escalation is CROSS-FAMILY: Claude is a target, not an escalator. Fable 5.1 stays the advisor / authority seat, including Ukrainian-specific linguistic judgment, and is summoned for judgment, not seated as driver (see § Orchestration operating pattern). The orchestrator seat does not confer approval authority. Other formal-review lanes may explicitly select Fable at the sealed participant's fixed `high` effort, or select Astra at the Codex ACP provider default — pick by CodexBar headroom |
-  | **codex** | `gpt-6-astra` @ high | **`gpt-6-astra` @ high** | Named alternate for harness / infra / devops; never co-owns a live lease |
+  | **codex** | `gpt-6-sol` @ high | **`gpt-6-astra` @ high** | Sol orchestrates and does advanced work. Luna @ high scouts. Astra @ high advises. Never co-owns a live lease |
   | **grok** | `grok-4.7` @ high | same SKU | Cursor **explicit** `grok-4.7` = availability fallback, not quality escalate |
   | **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | Catalog seat only — **not** a self-orchestrating implementer; Flash worker briefs must be complete (#5737); Pro deep single-shot |
   | **cursor** | `auto` @ high (default pin `grok-4.7`; allowlist: `grok-4.7`, `composer-2.5`) | **`gpt-6-astra` @ xhigh** | Driver-of-record requires attested `resolved_model`; unknown-Auto resolves to union family {xAI, Moonshot} (single CF reviewer outside union supersedes #6489 quorum); concurrency 1 |
@@ -311,7 +313,7 @@ Machine-readable pins: `scripts/config/model_catalog.yaml` → `orchestrator_sea
   | --- | --- | --- | --- | --- |
   | agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
   | claude | claude-opus-5-5 | high | gpt-6-astra | high |
-  | codex | gpt-6-astra | high | gpt-6-astra | high |
+  | codex | gpt-6-sol | high | gpt-6-astra | high |
   | cursor | auto | high | gpt-6-astra | high |
   | grok | grok-4.7 | high | grok-4.7 | high |
   <!-- fleet-roster-projection:end orchestrator_seats -->

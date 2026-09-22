@@ -883,14 +883,14 @@ def test_legacy_callable_defaults_to_astra_before_message_creation():
         patch("scripts.ai_agent_bridge._codex.process_for_codex") as invoke,
     ):
         assert ask_codex("bounded fixture", from_llm="claude") == 91
-    assert send.call_args.kwargs["to_model"] == "gpt-6-astra"
+    assert send.call_args.kwargs["to_model"] == "gpt-6-sol"
     invoke.assert_called_once_with(91, False, False, review=False)
 
 
 @pytest.mark.parametrize("model", ["gpt-5.6-terra", "gpt-5.5"])
 def test_legacy_callable_rejects_old_model_before_message_creation(model):
     with patch("scripts.ai_agent_bridge._codex.send_message") as send:
-        with pytest.raises(ValueError, match="only gpt-6-astra"):
+        with pytest.raises(ValueError, match="approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol"):
             ask_codex("bounded fixture", from_llm="claude", to_model=model)
     send.assert_not_called()
 
@@ -905,6 +905,6 @@ def test_stale_queued_model_returns_error_before_headroom_or_invoke():
     ):
         process_for_codex(91)
     error.assert_called_once()
-    assert "only gpt-6-astra" in error.call_args.args[2]
+    assert "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol" in error.call_args.args[2]
     headroom.assert_not_called()
     invoke.assert_not_called()
