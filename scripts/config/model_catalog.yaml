@@ -109,7 +109,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [gpt-6-astra]
+      models: [gpt-6-sol, gpt-6-astra]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -242,11 +242,11 @@ execution_routing:
         - acceptance_evidence
         - escalation_triggers
     preferred_worker:
-      model_id: gpt-6-astra
-      effort: low
+      model_id: gpt-6-luna
+      effort: high
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       task_types: [bounded_implementation, bounded_investigation]
-      escalate_to: gpt-6-astra
+      escalate_to: gpt-6-sol
       prohibited_decisions:
         - consequential_architecture
         - security
@@ -258,13 +258,13 @@ execution_routing:
         - broader_integration
         - final_disposition
     direct_worker:
-      model_id: gpt-6-astra
-      effort: low
+      model_id: gpt-6-luna
+      effort: high
       task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
       constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
     autonomous_fallback:
-      model_id: gpt-6-astra
-      effort: low
+      model_id: gpt-6-sol
+      effort: high
       when: [missing_objective_scope_ceiling, broader_autonomous_integration, unresolved_consequential_ambiguity]
     review_boundary:
       advisory_family: openai
@@ -281,28 +281,60 @@ models:
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Operator GO 2026-09-04: workhorse low, reviewer medium, advisor high.
-      Native Codex CLI 0.153.3 lists low/medium/high/xhigh/max/ultra; low is
-      the lighter-reasoning default. All Codex routes require GPT-6 Astra.
+      Operator 2026-09-22: advisory seat at high. GPT-6 Sol is the orchestrator
+      and advanced seat. GPT-6 Luna is the scouting and bounded-work seat.
+      Astra remains the most capable model in the family.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
-  gpt-5.6-sol:
+      - https://openai.com/index/introducing-gpt-6-sol-and-luna/
+  gpt-6-sol:
     family: openai
     tier: frontier_authority
     lifecycle: active
+    roles: [orchestration, architecture, implementation, standard_review, critical_review, agentic_coding]
+    transports: [native_codex, cursor]
+    strengths: [agentic_coding, demanding_reasoning, lower_cost_than_astra]
+    weaknesses: [below_astra_on_the_hardest_tasks, not_independent_from_openai_authors]
+    notes: >-
+      Operator 2026-09-22: Codex orchestrator and advanced work at high.
+      API id gpt-6-sol. Standard price $2 / $10 per million input/output
+      tokens under 272K. OpenAI still ranks Astra above Sol.
+    sources:
+      - https://developers.openai.com/api/docs/models/gpt-6-sol
+      - https://openai.com/index/introducing-gpt-6-sol-and-luna/
+  gpt-6-luna:
+    family: openai
+    tier: economical
+    lifecycle: active
+    roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
+    transports: [native_codex, cursor]
+    strengths: [high_volume, repeatable_work, lowest_gpt6_token_price]
+    weaknesses: [not_a_formal_reviewer, not_the_orchestrator, not_sole_consequential_authority]
+    notes: >-
+      Operator 2026-09-22: scouting and bounded repeatable work at high.
+      Use max only for an unusually hard scouting task. API id gpt-6-luna.
+      Standard price $0.10 / $0.50 per million input/output tokens, 20x below
+      GPT-6 Sol. Routing decisions stay with the Sol orchestrator.
+    sources:
+      - https://developers.openai.com/api/docs/models/gpt-6-luna
+      - https://openai.com/index/introducing-gpt-6-sol-and-luna/
+  gpt-5.6-sol:
+    family: openai
+    tier: frontier_authority
+    lifecycle: fallback
     roles: [architecture, critical_review, bounded_advisory_envelope, difficult_debugging, final_synthesis]
     transports: [cursor]
     strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
     weaknesses: [scarce_frontier_quota, wasteful_for_routine_work, not_a_speed_winner]
     notes: >-
-      Wave 1 SCORECARD 2026-08-23 operator lock: A / hard advisory. CF #7142
-      thorough/confirmational on docs — Codex/Sol careful/small, not a speed winner.
+      Historical Wave 1 scorecard only. Operator 2026-09-22: do not select
+      GPT-5.6. Live seats are gpt-6-sol, gpt-6-luna, and gpt-6-astra.
     sources:
       - https://developers.openai.com/api/docs/guides/latest-model
   gpt-5.6-terra:
     family: openai
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: fallback
     roles: [implementation, investigation, standard_review]
     transports: [cursor]
     strengths: [balanced_quality_cost, agentic_coding]
@@ -312,7 +344,7 @@ models:
   gpt-5.6-luna:
     family: openai
     tier: economical
-    lifecycle: active
+    lifecycle: fallback
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: [cursor]
     strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]
@@ -854,10 +886,10 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   openai_frontier:
-    model_id: gpt-6-astra
+    model_id: gpt-6-sol
     route: codex
     transport: native_codex
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort medium
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-sol --effort high
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
@@ -1061,19 +1093,16 @@ orchestrator_seats:
       curriculum/linguistic review skills; max almost never) — see
       fleet-shared-doctrine § Effort guidance.
   codex:
-    model_id: gpt-6-astra
+    model_id: gpt-6-sol
     effort: high
     escalate_model_id: gpt-6-astra
     escalate_effort: high
-    escalate_when: deep_single_shot_or_architecture
+    escalate_when: advisory_or_hardest_judgment
     note: >
-      Re-added as orchestrator seat 2026-07-23 (reverses the 2026-07-22 removal) specifically for
-      HydrationCapsuleV1 long-horizon support — score-from-memory + a ~100ms capsule hydrate is
-      designed to minimize the rollover-token overhead the prior removal objected to. Named
-      alternate/overflow on harness/infra (epic:4707) and the independent DevOps stream
-      (epic:5703) alongside Gemini — never a concurrent same-stream co-owner; each
-      session-stream lease already fails closed on a live foreign holder, so no new
-      exclusivity logic is needed.
+      Operator 2026-09-22: GPT-6 Sol @ high is the Codex orchestrator and advanced
+      seat. GPT-6 Astra @ high remains the advisory escalation. GPT-6 Luna @ high
+      does scouting and bounded work and is not this seat. Named alternate on
+      harness/infra and DevOps — never a concurrent same-stream co-owner.
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.
@@ -1127,10 +1156,10 @@ orchestrator_seats:
 # routine ladder. CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
   codex:
-    model_id: gpt-6-astra
-    effort: medium
-    # Authority model for critical / hard CF. The one-shot Codex ACP participant
-    # does not expose reasoning effort, so review-pr pins the model only.
+    model_id: gpt-6-sol
+    effort: high
+    # Advisory escalation. The one-shot Codex ACP participant does not expose
+    # reasoning effort, so review-pr pins the model only.
     escalate_model_id: gpt-6-astra
     escalate_effort: high
   claude:

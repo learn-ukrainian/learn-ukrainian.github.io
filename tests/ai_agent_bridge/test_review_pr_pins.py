@@ -31,11 +31,11 @@ def test_auto_remains_semantic_until_the_deterministic_scheduler_runs():
 
 
 def test_formal_cf_pins_use_role_specific_effort():
-    assert formal_cf_pin("codex") == ("gpt-6-astra", "medium")
+    assert formal_cf_pin("codex") == ("gpt-6-sol", "high")
     assert formal_cf_pin("claude") == ("claude-sonnet-5", "high")
     assert formal_cf_pin("agy") == ("gemini-3.8-flash-high", "high")
     assert formal_cf_pin("glm") == ("glm-5.3", "high")
-    assert FORMAL_CF_MODEL["codex"] == "gpt-6-astra"
+    assert FORMAL_CF_MODEL["codex"] == "gpt-6-sol"
     assert FORMAL_CF_EFFORT["claude"] == "high"
 
 
@@ -53,7 +53,7 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
         ("claude", "claude-fable-5", "claude-fable-5"),
         ("claude", "claude-opus-5", "claude-opus-5"),
         ("claude", "claude-opus-4-8", "claude-opus-4-8"),
-        ("codex", "gpt-6-astra", "openai_frontier"),
+        ("codex", "gpt-6-sol", "openai_frontier"),
         ("glm", "glm-5.3", "glm-5.3"),
         ("grok", "grok-4.7", "grok-4.7"),
     ],

@@ -247,7 +247,7 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-astra}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-sol}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -486,7 +486,7 @@ launcher_validate_mode() {
       launcher_selector_help >&2
       exit 2
     fi
-    LC_MODEL="gpt-6-astra"
+    LC_MODEL="${LC_MODEL:-gpt-6-sol}"
     unset SESSION_EPIC
     LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
@@ -530,7 +530,7 @@ launcher_validate_driver_certification() {
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)

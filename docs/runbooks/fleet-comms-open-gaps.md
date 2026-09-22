@@ -83,7 +83,7 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
 | claude | claude-opus-5-5 | high | gpt-6-astra | high |
-| codex | gpt-6-astra | high | gpt-6-astra | high |
+| codex | gpt-6-sol | high | gpt-6-astra | high |
 | cursor | auto | high | gpt-6-astra | high |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
