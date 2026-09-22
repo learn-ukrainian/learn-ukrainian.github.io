@@ -1,0 +1,118 @@
+# Valid lesson-draft-v1 fixture (b1) for tests/build/test_fresh_draft_schema.py.
+# Shape-only fixture: every Ukrainian string is a tool copy of a sources.db record
+# (textbooks 4-klas-informatyka-vorontsova-2021_s0053, 9-klas-fizyka-bariakhtar-2022_s0086;
+# literary_texts 4d2b605b_c0268) selected by line index, or the contract's own example speakers;
+# nothing Ukrainian was typed. Activity types (the plan's, not the draft's): {"a1": "quiz", "a2": "true-false", "a3": "error-correction", "a4": "select"}.
+draft_schema: 1
+lesson:
+  module: b1/fixture-module
+  n: 2
+inputs:
+  plan_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  pack_lock: '0000000000000000000000000000000000000000000000000000000000000000'
+  words_lock: '0000000000000000000000000000000000000000000000000000000000000000'
+  lesson_lock_entry_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  learner_state_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  style_card_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+status: ok
+steps:
+- id: s1
+  blocks:
+  - kind: prose
+    text: The lesson opens with the term {{uk:Які}} and the incidental word {{gloss:W-040}}.
+    explains:
+    - T-003
+    - X-004
+  - kind: example
+    ref: EX-001
+  - kind: paradigm
+    ref: P-01
+  - kind: table
+    rows:
+    - - Які каталоги містяться на диску Б?
+      - Які підкаталоги містить каталог «Книжки»?
+    - - Які
+      - підкаталоги
+    explains:
+    - T-003
+  - kind: pronunciation
+    text: 'Say the first word slowly: {{uk:Які}}.'
+    explains:
+    - T-005
+  - kind: culture
+    text: The textbook page this rests on is cited in Ресурси by the engine.
+    explains:
+    - T-011
+  - kind: tip
+    text: Read the two questions twice.
+  - kind: video
+    ref: V-002
+    lead_in: Watch once before reading.
+  - kind: activity
+    ref: a1
+  - kind: activity
+    ref: a2
+- id: s2
+  lead_in: Now the same forms in an exchange.
+  blocks:
+  - kind: quote
+    ref: T-007
+  - kind: dialogue
+  - kind: summary
+    text: Both speakers used the forms the step introduced.
+  - kind: callout
+    text: The consolidation block follows.
+consolidation:
+  lead_in: The larger practice block.
+  activities:
+  - a3
+  - a4
+dialogue:
+  lines:
+  - speaker: Оксана
+    text: Павле Кузьмичу, я за вами...
+  - speaker: Тарас
+    text: Щось трапилось?
+  - speaker: Оксана
+    text: Та перебої якісь в генераторі...
+activities:
+- id: a1
+  instruction: Choose the right answer.
+  items:
+  - question: 1. Які каталоги містяться на диску Б?
+    explanation: 'Item 1: the first option repeats the question the text asks.'
+    options:
+    - Які каталоги містяться на диску Б?
+    - Які підкаталоги містить каталог «Книжки»?
+    - Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+    - Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+    correct: 0
+- id: a2
+  instruction: True or false?
+  items:
+  - statement: 1. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 1: the text states it.'
+- id: a3
+  instruction: Find and fix the error.
+  items:
+  - sentence: 1. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-001
+    explanation: 'Item 1: the record''s correct text replaces its incorrect text.'
+- id: a4
+  instruction: Select every right answer.
+  items:
+  - question: 1. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 1: both questions are on the page.'
+gaps: []

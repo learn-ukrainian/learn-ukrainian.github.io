@@ -380,9 +380,9 @@ def test_a1_schema_accepts_unjumble_parser_aliases():
             "type": "unjumble",
             "instruction": "Put the words in order.",
             "items": [
-                {"jumbled": "Я / читаю", "answer": "Я читаю"},
-                {"prompt": ["Ти", "пишеш"], "answer": "Ти пишеш"},
-                {"scrambled": "Він їсть", "answer": "Він їсть"},
+                {"jumbled": "Я / читаю", "answer": "Я читаю", "explanation": "Subject first, then the verb."},
+                {"prompt": ["Ти", "пишеш"], "answer": "Ти пишеш", "explanation": "Subject first, then the verb."},
+                {"scrambled": "Він їсть", "answer": "Він їсть", "explanation": "Subject first, then the verb."},
             ],
         }
     ]

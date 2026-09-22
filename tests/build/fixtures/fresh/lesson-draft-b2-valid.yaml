@@ -1,0 +1,359 @@
+# Valid lesson-draft-v1 fixture (b2) for tests/build/test_fresh_draft_schema.py.
+# Shape-only fixture: every Ukrainian string is a tool copy of a sources.db record
+# (textbooks 4-klas-informatyka-vorontsova-2021_s0053, 9-klas-fizyka-bariakhtar-2022_s0086;
+# literary_texts 4d2b605b_c0268) selected by line index, or the contract's own example speakers;
+# nothing Ukrainian was typed. Activity types (the plan's, not the draft's): {"a1": "quiz", "a2": "true-false", "a3": "error-correction", "a4": "select"}.
+draft_schema: 1
+lesson:
+  module: b2/fixture-module
+  n: 2
+inputs:
+  plan_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  pack_lock: '0000000000000000000000000000000000000000000000000000000000000000'
+  words_lock: '0000000000000000000000000000000000000000000000000000000000000000'
+  lesson_lock_entry_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  learner_state_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  style_card_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+status: ok
+steps:
+- id: s1
+  blocks:
+  - kind: prose
+    text: The lesson opens with the term {{uk:Які}} and the incidental word {{gloss:W-040}}.
+    explains:
+    - T-003
+    - X-004
+  - kind: example
+    ref: EX-001
+  - kind: paradigm
+    ref: P-01
+  - kind: table
+    rows:
+    - - Які каталоги містяться на диску Б?
+      - Які підкаталоги містить каталог «Книжки»?
+    - - Які
+      - підкаталоги
+    explains:
+    - T-003
+  - kind: pronunciation
+    text: 'Say the first word slowly: {{uk:Які}}.'
+    explains:
+    - T-005
+  - kind: culture
+    text: The textbook page this rests on is cited in Ресурси by the engine.
+    explains:
+    - T-011
+  - kind: tip
+    text: Read the two questions twice.
+  - kind: video
+    ref: V-002
+    lead_in: Watch once before reading.
+  - kind: activity
+    ref: a1
+  - kind: activity
+    ref: a2
+- id: s2
+  lead_in: Now the same forms in an exchange.
+  blocks:
+  - kind: quote
+    ref: T-007
+  - kind: dialogue
+  - kind: summary
+    text: Both speakers used the forms the step introduced.
+  - kind: callout
+    text: The consolidation block follows.
+consolidation:
+  lead_in: The larger practice block.
+  activities:
+  - a3
+  - a4
+dialogue:
+  lines:
+  - speaker: Оксана
+    text: Павле Кузьмичу, я за вами...
+  - speaker: Тарас
+    text: Щось трапилось?
+  - speaker: Оксана
+    text: Та перебої якісь в генераторі...
+activities:
+- id: a1
+  instruction: Choose the right answer.
+  items:
+  - question: 1. Які каталоги містяться на диску Б?
+    explanation: 'Item 1: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 2. Які каталоги містяться на диску Б?
+    explanation: 'Item 2: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 3. Які каталоги містяться на диску Б?
+    explanation: 'Item 3: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 4. Які каталоги містяться на диску Б?
+    explanation: 'Item 4: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 5. Які каталоги містяться на диску Б?
+    explanation: 'Item 5: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 6. Які каталоги містяться на диску Б?
+    explanation: 'Item 6: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 7. Які каталоги містяться на диску Б?
+    explanation: 'Item 7: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 8. Які каталоги містяться на диску Б?
+    explanation: 'Item 8: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 9. Які каталоги містяться на диску Б?
+    explanation: 'Item 9: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+  - question: 10. Які каталоги містяться на диску Б?
+    explanation: 'Item 10: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+- id: a2
+  instruction: True or false?
+  items:
+  - statement: 1. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 1: the text states it.'
+  - statement: 2. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 2: the text states it.'
+  - statement: 3. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 3: the text states it.'
+  - statement: 4. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 4: the text states it.'
+  - statement: 5. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 5: the text states it.'
+  - statement: 6. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 6: the text states it.'
+  - statement: 7. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 7: the text states it.'
+  - statement: 8. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 8: the text states it.'
+  - statement: 9. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 9: the text states it.'
+  - statement: 10. Якщо світло відбивається від шорсткої поверхні, то таке відбивання називають розсіяним (дифузним) (рис. 11.9).
+    correct: true
+    explanation: 'Item 10: the text states it.'
+- id: a3
+  instruction: Find and fix the error.
+  items:
+  - sentence: 1. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-001
+    explanation: 'Item 1: the record''s correct text replaces its incorrect text.'
+  - sentence: 2. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-002
+    explanation: 'Item 2: the record''s correct text replaces its incorrect text.'
+  - sentence: 3. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-003
+    explanation: 'Item 3: the record''s correct text replaces its incorrect text.'
+  - sentence: 4. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-004
+    explanation: 'Item 4: the record''s correct text replaces its incorrect text.'
+  - sentence: 5. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-005
+    explanation: 'Item 5: the record''s correct text replaces its incorrect text.'
+  - sentence: 6. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-006
+    explanation: 'Item 6: the record''s correct text replaces its incorrect text.'
+  - sentence: 7. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-007
+    explanation: 'Item 7: the record''s correct text replaces its incorrect text.'
+  - sentence: 8. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-008
+    explanation: 'Item 8: the record''s correct text replaces its incorrect text.'
+- id: a4
+  instruction: Select every right answer.
+  items:
+  - question: 1. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 1: both questions are on the page.'
+  - question: 2. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 2: both questions are on the page.'
+  - question: 3. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 3: both questions are on the page.'
+  - question: 4. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 4: both questions are on the page.'
+  - question: 5. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 5: both questions are on the page.'
+  - question: 6. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 6: both questions are on the page.'
+  - question: 7. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 7: both questions are on the page.'
+  - question: 8. Які каталоги містяться на диску Б?
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: true
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+    explanation: 'Item 8: both questions are on the page.'
+gaps: []

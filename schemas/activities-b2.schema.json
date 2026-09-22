@@ -81,7 +81,8 @@
             "type": "object",
             "required": [
               "question",
-              "options"
+              "options",
+              "explanation"
             ],
             "additionalProperties": false,
             "properties": {
@@ -113,7 +114,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -196,7 +198,8 @@
             "required": [
               "sentence",
               "answer",
-              "options"
+              "options",
+              "explanation"
             ],
             "additionalProperties": false,
             "properties": {
@@ -216,7 +219,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -294,7 +298,8 @@
             "type": "object",
             "required": [
               "words",
-              "answer"
+              "answer",
+              "explanation"
             ],
             "additionalProperties": false,
             "properties": {
@@ -311,6 +316,11 @@
               "answer": {
                 "type": "string",
                 "minLength": 1
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             }
           }
@@ -348,7 +358,8 @@
             "type": "object",
             "required": [
               "statement",
-              "correct"
+              "correct",
+              "explanation"
             ],
             "additionalProperties": false,
             "properties": {
@@ -360,7 +371,8 @@
                 "type": "boolean"
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -452,7 +464,9 @@
             "type": "object",
             "required": [
               "sentence",
-              "error"
+              "error",
+              "explanation",
+              "error_ref"
             ],
             "additionalProperties": false,
             "properties": {
@@ -497,6 +511,11 @@
                 "type": "string",
                 "minLength": 1,
                 "description": "The correct word or phrase (alternative to 'answer')"
+              },
+              "error_ref": {
+                "type": "string",
+                "pattern": "^E-[0-9]{3,}$",
+                "description": "The E- learner-error record this item is drawn from; its `incorrect` text appears in `sentence` and its `correct` text is the correction (writer contract #8431 r3 §1c)."
               }
             }
           }
@@ -561,7 +580,8 @@
             "type": "object",
             "required": [
               "question",
-              "options"
+              "options",
+              "explanation"
             ],
             "additionalProperties": false,
             "properties": {
@@ -596,7 +616,8 @@
                 "minimum": 2
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             }
           }
@@ -630,7 +651,8 @@
             "type": "object",
             "required": [
               "source",
-              "options"
+              "options",
+              "explanation"
             ],
             "additionalProperties": false,
             "properties": {
@@ -661,7 +683,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             }
           }
