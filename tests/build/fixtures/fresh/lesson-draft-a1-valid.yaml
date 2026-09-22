@@ -1,0 +1,128 @@
+# Valid lesson-draft-v1 fixture (a1) for tests/build/test_fresh_draft_schema.py.
+# Shape-only fixture: every Ukrainian string is a tool copy of a sources.db record
+# (textbooks 4-klas-informatyka-vorontsova-2021_s0053, 9-klas-fizyka-bariakhtar-2022_s0086;
+# literary_texts 4d2b605b_c0268) selected by line index, or the contract's own example speakers;
+# nothing Ukrainian was typed. Activity types (the plan's, not the draft's): {"a1": "quiz", "a2": "match-up", "a3": "fill-in", "a4": "error-correction"}.
+draft_schema: 1
+lesson:
+  module: a1/fixture-module
+  n: 2
+inputs:
+  plan_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  pack_lock: '0000000000000000000000000000000000000000000000000000000000000000'
+  words_lock: '0000000000000000000000000000000000000000000000000000000000000000'
+  lesson_lock_entry_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  learner_state_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+  style_card_sha256: '0000000000000000000000000000000000000000000000000000000000000000'
+status: ok
+steps:
+- id: s1
+  blocks:
+  - kind: prose
+    text: The lesson opens with the term {{uk:Які}} and the incidental word {{gloss:W-040}}.
+    explains:
+    - T-003
+    - X-004
+  - kind: example
+    ref: EX-001
+  - kind: paradigm
+    ref: P-01
+  - kind: table
+    rows:
+    - - Які каталоги містяться на диску Б?
+      - Які підкаталоги містить каталог «Книжки»?
+    - - Які
+      - підкаталоги
+    explains:
+    - T-003
+  - kind: pronunciation
+    text: 'Say the first word slowly: {{uk:Які}}.'
+    explains:
+    - T-005
+  - kind: culture
+    text: The textbook page this rests on is cited in Ресурси by the engine.
+    explains:
+    - T-011
+  - kind: tip
+    text: Read the two questions twice.
+  - kind: video
+    ref: V-002
+    lead_in: Watch once before reading.
+  - kind: bilingual
+    uk:
+    - Які каталоги містяться на диску Б?
+    - Які підкаталоги містить каталог «Книжки»?
+    en:
+    - First question of the page.
+    - Second question of the page.
+  - kind: activity
+    ref: a1
+  - kind: activity
+    ref: a2
+- id: s2
+  lead_in: Now the same forms in an exchange.
+  blocks:
+  - kind: quote
+    ref: T-007
+  - kind: dialogue
+  - kind: summary
+    text: Both speakers used the forms the step introduced.
+  - kind: callout
+    text: The consolidation block follows.
+consolidation:
+  lead_in: The larger practice block.
+  activities:
+  - a3
+  - a4
+dialogue:
+  lines:
+  - speaker: Оксана
+    text: Павле Кузьмичу, я за вами...
+  - speaker: Тарас
+    text: Щось трапилось?
+  - speaker: Оксана
+    text: Та перебої якісь в генераторі...
+  translation_en:
+  - Line one in English.
+  - Line two in English.
+  - Line three in English.
+activities:
+- id: a1
+  instruction: Choose the right answer.
+  items:
+  - question: 1. Які каталоги містяться на диску Б?
+    explanation: 'Item 1: the first option repeats the question the text asks.'
+    options:
+    - text: Які каталоги містяться на диску Б?
+      correct: true
+    - text: Які підкаталоги містить каталог «Книжки»?
+      correct: false
+    - text: Каталог — це папка, що містить інші папки і файли, об'єднані за певною ознакою. Каталог, розміщений усередині іншого каталогу, називається підкаталогом.
+      correct: false
+    - text: Розгляньте малюнок і дайте відповіді на запитання внизу сторінки.
+      correct: false
+- id: a2
+  instruction: Match the word to its gloss.
+  pairs:
+  - left: 1. Які
+    right: gloss 1
+  - left: 2. підкаталоги
+    right: gloss 2
+- id: a3
+  instruction: Fill the blank.
+  items:
+  - sentence: 1. ____ Які каталоги містяться на диску Б?
+    answer: Які
+    options:
+    - Які
+    - підкаталоги
+    explanation: 'Item 1: the form the sentence needs.'
+- id: a4
+  instruction: Find and fix the error.
+  items:
+  - sentence: 1. Які підкаталоги містить каталог «Книжки»?
+    error: підкаталоги
+    correction: містить
+    error_ref: E-001
+    explanation: 'Item 1: the record''s correct text replaces its incorrect text.'
+gaps: []

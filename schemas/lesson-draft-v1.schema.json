@@ -1,0 +1,646 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/lesson-draft-v1.schema.json",
+  "title": "Lesson draft v1 (any level; activity shapes delegated to the per-level files)",
+  "description": "What the lesson writer returns for one lesson (writer contract #8431 r3 §1, §1a–§1d, §3, §4, §6). GENERATED FILE — edit schemas/templates/lesson-draft-v1.template.json and run `python scripts/build/fresh/gen_draft_schemas.py --write`; CI runs `--check`. Only the wording inside a step is the writer's: steps, their order, evidence and activities are the plan's, echoed here by id. Facts about Ukrainian reach the page by `ref` (example, quote, paradigm, video) or rest on `explains` records (prose, table, pronunciation, culture); tip/summary/callout/lead_in are connective and carry no claim. Inline markup (§1d, §6): a gloss reference `{{gloss:W-<digits>}}` and a quoted-term span `{{uk:<text>}}` are the only markup; the regex in $defs/text.pattern is the one the code validates too — a token may not carry both, nesting fails, a stray brace fails. A combining accent (U+0300, U+0301) anywhere fails (§3). What this schema proves: the shape and the declared gaps. What it cannot prove: a concealed gap, or that an explanation is supported by its records (the reviewer's evidence_use dimension). Invariants that need the plan (step ids and order, activity ids, dialogue.step, type and placement, evidence-use set arithmetic) are the structure gate's (contract §2, engine E3). Invariants expressible here are in `allOf` (if/then); the rest are code checks named in scripts/build/fresh/draft_schema.py CODE_CHECKS.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "draft_schema",
+    "lesson",
+    "inputs",
+    "status",
+    "steps",
+    "consolidation",
+    "activities",
+    "gaps"
+  ],
+  "properties": {
+    "draft_schema": {
+      "const": 1
+    },
+    "lesson": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "module",
+        "n"
+      ],
+      "properties": {
+        "module": {
+          "type": "string",
+          "pattern": "^(a1|a2|b1|b2)/[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "<level>/<module slug>"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "inputs": {
+      "type": "object",
+      "description": "The six input hashes, echoed back; the engine refuses a mismatch (contract §1).",
+      "additionalProperties": false,
+      "required": [
+        "plan_sha256",
+        "pack_lock",
+        "words_lock",
+        "lesson_lock_entry_sha256",
+        "learner_state_sha256",
+        "style_card_sha256"
+      ],
+      "properties": {
+        "plan_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "pack_lock": {
+          "$ref": "#/$defs/sha256"
+        },
+        "words_lock": {
+          "$ref": "#/$defs/sha256"
+        },
+        "lesson_lock_entry_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "learner_state_sha256": {
+          "$ref": "#/$defs/sha256"
+        },
+        "style_card_sha256": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "status": {
+      "enum": [
+        "ok",
+        "evidence_gap"
+      ]
+    },
+    "steps": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "$ref": "#/$defs/step"
+      }
+    },
+    "consolidation": {
+      "type": "object",
+      "description": "The larger practice block closing the lesson; `activities` equals the plan's list (checked by the structure gate).",
+      "additionalProperties": false,
+      "required": [
+        "activities"
+      ],
+      "properties": {
+        "lead_in": {
+          "$ref": "#/$defs/text"
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/activity_id"
+          }
+        }
+      }
+    },
+    "dialogue": {
+      "type": "object",
+      "description": "Present exactly when a step carries a `dialogue` block (code check). Speakers exactly as the plan names them. `translation_en` has one entry per line or is absent as a whole, per the immersion rule (code check: equal length).",
+      "additionalProperties": false,
+      "required": [
+        "lines"
+      ],
+      "properties": {
+        "lines": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "speaker",
+              "text"
+            ],
+            "properties": {
+              "speaker": {
+                "$ref": "#/$defs/plain_text"
+              },
+              "text": {
+                "$ref": "#/$defs/text"
+              }
+            }
+          }
+        },
+        "translation_en": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        }
+      }
+    },
+    "activities": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/activity"
+      }
+    },
+    "gaps": {
+      "type": "array",
+      "description": "Non-empty only with status evidence_gap (contract §4).",
+      "items": {
+        "$ref": "#/$defs/gap"
+      }
+    }
+  },
+  "allOf": [
+    {
+      "description": "§4 invariant (schema): status ok ⇒ gaps empty and no step empty.",
+      "if": {
+        "properties": {
+          "status": {
+            "const": "ok"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "gaps": {
+            "maxItems": 0
+          },
+          "steps": {
+            "items": {
+              "properties": {
+                "blocks": {
+                  "minItems": 1
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "description": "§4 invariant (schema): status evidence_gap ⇒ gaps non-empty. That every gaps[].step is a step of the draft and that exactly those steps are empty is a code check (gap_steps_exist, gap_steps_empty); that they are plan step ids is the structure gate's.",
+      "if": {
+        "properties": {
+          "status": {
+            "const": "evidence_gap"
+          }
+        }
+      },
+      "then": {
+        "properties": {
+          "gaps": {
+            "minItems": 1
+          }
+        }
+      }
+    }
+  ],
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "step_id": {
+      "type": "string",
+      "pattern": "^s[0-9]+$"
+    },
+    "activity_id": {
+      "type": "string",
+      "pattern": "^a[0-9]+$"
+    },
+    "record_id": {
+      "type": "string",
+      "description": "A pack record id an explanation may rest on: T- (textbook chunk), X- (textbook exercise), EX- (example), E- (error), V- (video) or W- (word record).",
+      "pattern": "^(T|X|EX|E|V|W)-[0-9]+$"
+    },
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A writer text field. The pattern is the inline-markup contract of §1d and §6 and the accent ban of §3: any run of characters without braces or combining accents, or a gloss reference `{{gloss:W-<digits>}}`, or a quoted-term span `{{uk:…}}` whose content has no braces and no accents. Consequences: a token cannot be both a gloss and a quoted term; spans do not nest; an unbalanced or unknown `{{…}}` fails. The same regex is INLINE_MARKUP_RE in scripts/build/fresh/draft_schema.py, applied by code to every string of the draft, activity items included.",
+      "pattern": "^(?:[^{}\\u0300\\u0301]|\\{\\{gloss:W-[0-9]+\\}\\}|\\{\\{uk:[^{}\\u0300\\u0301]+\\}\\})*$"
+    },
+    "plain_text": {
+      "type": "string",
+      "minLength": 1,
+      "description": "A string with no markup and no combining accent (speaker names).",
+      "pattern": "^[^{}\\u0300\\u0301]+$"
+    },
+    "explains": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "description": "The records this explanation rests on (§1a). Coverage is set arithmetic against the plan's step evidence (structure gate).",
+      "items": {
+        "$ref": "#/$defs/record_id"
+      }
+    },
+    "step": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "id",
+        "blocks"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/step_id"
+        },
+        "lead_in": {
+          "$ref": "#/$defs/text",
+          "description": "Optional: one or two sentences that carry the thread from the step before. Connective — no language or culture claim (§6)."
+        },
+        "blocks": {
+          "type": "array",
+          "description": "The writer's wording lives only here. Empty exactly for the steps named in `gaps` (§4).",
+          "items": {
+            "$ref": "#/$defs/block"
+          }
+        }
+      }
+    },
+    "block": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/block_prose"
+        },
+        {
+          "$ref": "#/$defs/block_example"
+        },
+        {
+          "$ref": "#/$defs/block_quote"
+        },
+        {
+          "$ref": "#/$defs/block_paradigm"
+        },
+        {
+          "$ref": "#/$defs/block_table"
+        },
+        {
+          "$ref": "#/$defs/block_pronunciation"
+        },
+        {
+          "$ref": "#/$defs/block_bilingual"
+        },
+        {
+          "$ref": "#/$defs/block_culture"
+        },
+        {
+          "$ref": "#/$defs/block_tip"
+        },
+        {
+          "$ref": "#/$defs/block_summary"
+        },
+        {
+          "$ref": "#/$defs/block_callout"
+        },
+        {
+          "$ref": "#/$defs/block_video"
+        },
+        {
+          "$ref": "#/$defs/block_dialogue"
+        },
+        {
+          "$ref": "#/$defs/block_activity"
+        }
+      ]
+    },
+    "block_prose": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text",
+        "explains"
+      ],
+      "properties": {
+        "kind": {
+          "const": "prose"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "explains": {
+          "$ref": "#/$defs/explains"
+        }
+      }
+    },
+    "block_example": {
+      "type": "object",
+      "description": "By id; the engine prints text, stress and translation from the EX- record.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "properties": {
+        "kind": {
+          "const": "example"
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^EX-[0-9]+$"
+        }
+      }
+    },
+    "block_quote": {
+      "type": "object",
+      "description": "Verbatim from the pack, attributed by the engine — the only block that prints source prose (§1a).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "properties": {
+        "kind": {
+          "const": "quote"
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^T-[0-9]+$"
+        }
+      }
+    },
+    "block_paradigm": {
+      "type": "object",
+      "description": "A table of forms specified by the plan's steps[].paradigm (plan schema r9); generated by the engine from the word record.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "properties": {
+        "kind": {
+          "const": "paradigm"
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^P-[0-9]+$"
+        }
+      }
+    },
+    "block_table": {
+      "type": "object",
+      "description": "Non-paradigm tables only (a schedule, a comparison of uses).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "rows",
+        "explains"
+      ],
+      "properties": {
+        "kind": {
+          "const": "table"
+        },
+        "rows": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "$ref": "#/$defs/text"
+            }
+          }
+        },
+        "explains": {
+          "$ref": "#/$defs/explains"
+        }
+      }
+    },
+    "block_pronunciation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text",
+        "explains"
+      ],
+      "properties": {
+        "kind": {
+          "const": "pronunciation"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "explains": {
+          "$ref": "#/$defs/explains"
+        }
+      }
+    },
+    "block_bilingual": {
+      "type": "object",
+      "description": "Side-by-side passage; A1–A2 only, where the immersion rule allows. `uk` and `en` have equal length, aligned line by line (code check bilingual_equal_length; the band restriction is the immersion gate's).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "uk",
+        "en"
+      ],
+      "properties": {
+        "kind": {
+          "const": "bilingual"
+        },
+        "uk": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        },
+        "en": {
+          "type": "array",
+          "minItems": 1,
+          "items": {
+            "$ref": "#/$defs/text"
+          }
+        }
+      }
+    },
+    "block_culture": {
+      "type": "object",
+      "description": "A fact about Ukraine always carries its record.",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text",
+        "explains"
+      ],
+      "properties": {
+        "kind": {
+          "const": "culture"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        },
+        "explains": {
+          "$ref": "#/$defs/explains"
+        }
+      }
+    },
+    "block_tip": {
+      "type": "object",
+      "description": "Connective prose; may not carry a language or culture claim (§6).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text"
+      ],
+      "properties": {
+        "kind": {
+          "const": "tip"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "block_summary": {
+      "type": "object",
+      "description": "Connective prose; may not carry a language or culture claim (§6).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text"
+      ],
+      "properties": {
+        "kind": {
+          "const": "summary"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "block_callout": {
+      "type": "object",
+      "description": "Connective prose; may not carry a language or culture claim (§6).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "text"
+      ],
+      "properties": {
+        "kind": {
+          "const": "callout"
+        },
+        "text": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "block_video": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "properties": {
+        "kind": {
+          "const": "video"
+        },
+        "ref": {
+          "type": "string",
+          "pattern": "^V-[0-9]+$"
+        },
+        "lead_in": {
+          "$ref": "#/$defs/text"
+        }
+      }
+    },
+    "block_dialogue": {
+      "type": "object",
+      "description": "Placed once, in the step the plan's dialogue.step names (structure gate); the lines are in the top-level `dialogue`.",
+      "additionalProperties": false,
+      "required": [
+        "kind"
+      ],
+      "properties": {
+        "kind": {
+          "const": "dialogue"
+        }
+      }
+    },
+    "block_activity": {
+      "type": "object",
+      "description": "Exactly the plan's `practice` ids, in order (structure gate); the ref must be declared in `activities` (code check activity_ref_declared).",
+      "additionalProperties": false,
+      "required": [
+        "kind",
+        "ref"
+      ],
+      "properties": {
+        "kind": {
+          "const": "activity"
+        },
+        "ref": {
+          "$ref": "#/$defs/activity_id"
+        }
+      }
+    },
+    "gap": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "step",
+        "need",
+        "detail"
+      ],
+      "properties": {
+        "step": {
+          "$ref": "#/$defs/step_id"
+        },
+        "need": {
+          "enum": [
+            "example",
+            "quote",
+            "error",
+            "word_form",
+            "video",
+            "standard_line",
+            "publication_right"
+          ]
+        },
+        "detail": {
+          "$ref": "#/$defs/text",
+          "description": "One sentence: what is missing and for which teaching point."
+        }
+      }
+    },
+    "activity": {
+      "description": "The level-agnostic schema accepts any level's activity shapes; the per-level file is the binding one.",
+      "anyOf": [
+        {
+          "$ref": "lesson-draft-a1-v1.schema.json#/$defs/activity"
+        },
+        {
+          "$ref": "lesson-draft-a2-v1.schema.json#/$defs/activity"
+        },
+        {
+          "$ref": "lesson-draft-b1-v1.schema.json#/$defs/activity"
+        },
+        {
+          "$ref": "lesson-draft-b2-v1.schema.json#/$defs/activity"
+        }
+      ]
+    },
+    "activity_types": {
+      "a1": {
+        "$ref": "lesson-draft-a1-v1.schema.json#/$defs/activity_types"
+      },
+      "a2": {
+        "$ref": "lesson-draft-a2-v1.schema.json#/$defs/activity_types"
+      },
+      "b1": {
+        "$ref": "lesson-draft-b1-v1.schema.json#/$defs/activity_types"
+      },
+      "b2": {
+        "$ref": "lesson-draft-b2-v1.schema.json#/$defs/activity_types"
+      }
+    }
+  }
+}

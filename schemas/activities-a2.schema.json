@@ -91,7 +91,8 @@
             "type": "object",
             "required": [
               "letters",
-              "answer"
+              "answer",
+              "explanation"
             ],
             "properties": {
               "letters": {
@@ -109,6 +110,11 @@
               },
               "hint": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false
@@ -279,7 +285,9 @@
             "required": [
               "sentence",
               "error",
-              "correction"
+              "correction",
+              "explanation",
+              "error_ref"
             ],
             "properties": {
               "sentence": {
@@ -314,7 +322,13 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
+              },
+              "error_ref": {
+                "type": "string",
+                "pattern": "^E-[0-9]{3,}$",
+                "description": "The E- learner-error record this item is drawn from; its `incorrect` text appears in `sentence` and its `correct` text is the correction (writer contract #8431 r3 §1c)."
               }
             },
             "additionalProperties": false
@@ -451,7 +465,8 @@
             "type": "object",
             "required": [
               "sentence",
-              "answer"
+              "answer",
+              "explanation"
             ],
             "properties": {
               "sentence": {
@@ -471,7 +486,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -939,7 +955,8 @@
           "items": {
             "type": "object",
             "required": [
-              "options"
+              "options",
+              "explanation"
             ],
             "properties": {
               "question": {
@@ -991,7 +1008,8 @@
                 "description": "Correct option text for string-option quiz items"
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "allOf": [
@@ -1088,7 +1106,8 @@
             "type": "object",
             "required": [
               "question",
-              "options"
+              "options",
+              "explanation"
             ],
             "properties": {
               "question": {
@@ -1121,7 +1140,8 @@
                 "minimum": 1
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -1161,7 +1181,8 @@
           "items": {
             "type": "object",
             "required": [
-              "source"
+              "source",
+              "explanation"
             ],
             "properties": {
               "source": {
@@ -1199,7 +1220,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -1239,7 +1261,8 @@
           "items": {
             "type": "object",
             "required": [
-              "statement"
+              "statement",
+              "explanation"
             ],
             "properties": {
               "statement": {
@@ -1253,7 +1276,8 @@
                 "type": "boolean"
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "anyOf": [
@@ -1305,7 +1329,8 @@
           "items": {
             "type": "object",
             "required": [
-              "words"
+              "words",
+              "explanation"
             ],
             "properties": {
               "words": {
@@ -1332,6 +1357,11 @@
               },
               "hint": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "anyOf": [

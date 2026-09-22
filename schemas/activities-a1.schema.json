@@ -97,7 +97,8 @@
             "type": "object",
             "required": [
               "letters",
-              "answer"
+              "answer",
+              "explanation"
             ],
             "properties": {
               "letters": {
@@ -115,6 +116,11 @@
               },
               "hint": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false
@@ -217,7 +223,8 @@
             "type": "object",
             "required": [
               "word",
-              "correct"
+              "correct",
+              "explanation"
             ],
             "properties": {
               "word": {
@@ -230,6 +237,11 @@
               },
               "translation": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false
@@ -265,7 +277,8 @@
             "type": "object",
             "required": [
               "word",
-              "answer"
+              "answer",
+              "explanation"
             ],
             "properties": {
               "word": {
@@ -278,6 +291,11 @@
               },
               "hint": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false
@@ -321,7 +339,9 @@
             "type": "object",
             "required": [
               "sentence",
-              "error"
+              "error",
+              "explanation",
+              "error_ref"
             ],
             "anyOf": [
               {
@@ -372,7 +392,13 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
+              },
+              "error_ref": {
+                "type": "string",
+                "pattern": "^E-[0-9]{3,}$",
+                "description": "The E- learner-error record this item is drawn from; its `incorrect` text appears in `sentence` and its `correct` text is the correction (writer contract #8431 r3 §1c)."
               }
             },
             "additionalProperties": false
@@ -413,7 +439,8 @@
             "type": "object",
             "required": [
               "sentence",
-              "answer"
+              "answer",
+              "explanation"
             ],
             "properties": {
               "sentence": {
@@ -433,7 +460,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -543,7 +571,8 @@
             "type": "object",
             "required": [
               "image",
-              "letter"
+              "letter",
+              "explanation"
             ],
             "properties": {
               "image": {
@@ -564,6 +593,11 @@
               },
               "note": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false
@@ -1015,7 +1049,8 @@
           "items": {
             "type": "object",
             "required": [
-              "options"
+              "options",
+              "explanation"
             ],
             "allOf": [
               {
@@ -1117,7 +1152,8 @@
                 "description": "Correct option text"
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -1157,7 +1193,8 @@
           "items": {
             "type": "object",
             "required": [
-              "source"
+              "source",
+              "explanation"
             ],
             "properties": {
               "source": {
@@ -1195,7 +1232,8 @@
                 }
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -1235,7 +1273,8 @@
           "items": {
             "type": "object",
             "required": [
-              "statement"
+              "statement",
+              "explanation"
             ],
             "anyOf": [
               {
@@ -1261,7 +1300,8 @@
                 "type": "boolean"
               },
               "explanation": {
-                "type": "string"
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false
@@ -1301,7 +1341,8 @@
           "items": {
             "type": "object",
             "required": [
-              "answer"
+              "answer",
+              "explanation"
             ],
             "anyOf": [
               {
@@ -1400,6 +1441,11 @@
               },
               "hint": {
                 "type": "string"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false
@@ -1437,7 +1483,8 @@
           "items": {
             "type": "object",
             "required": [
-              "video"
+              "video",
+              "explanation"
             ],
             "properties": {
               "video": {
@@ -1460,6 +1507,11 @@
               "note": {
                 "type": "string",
                 "description": "Additional guidance for the learner"
+              },
+              "explanation": {
+                "type": "string",
+                "minLength": 1,
+                "description": "Required teaching feedback for this item (writer contract #8431 r3 §1c; R-19)."
               }
             },
             "additionalProperties": false

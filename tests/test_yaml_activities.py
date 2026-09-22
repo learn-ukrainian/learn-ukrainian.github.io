@@ -416,6 +416,7 @@ class TestA2ActivitySchema:
                 "prompt": "Питання?",
                 "options": ["а", "б", "в"],
                 "answer": "б",
+                "explanation": "Пояснення.",
             }],
         }
         object_options_activity = {
@@ -427,6 +428,7 @@ class TestA2ActivitySchema:
                     {"text": "а", "correct": False},
                     {"text": "б", "correct": True},
                 ],
+                "explanation": "Пояснення.",
             }],
         }
 
