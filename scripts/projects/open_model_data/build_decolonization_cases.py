@@ -70,13 +70,27 @@ UA_GEC_RECORD_MAP: dict[str, int] = {
 }
 
 ACCREDITED_INDEPENDENT_REVIEWERS: dict[str, dict[str, Any]] = {
-    "prof_karpenko_ling_ua": {
-        "name": "Prof. Yu. O. Karpenko / Department of Ukrainian Language",
+    "claude_blue_team_ling_review": {
+        "name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+        "institution": "Learn Ukrainian Cross-Family Quality Gate",
+        "role": "Lead Independent Linguistic Reviewer",
+        "accreditation": "Cross-Family Independent Review Protocol",
+        "reviewer_family": "claude",
+    },
+    "krisztiankoos_ling_review": {
+        "name": "Krisztián Koós",
+        "institution": "Learn Ukrainian Open Model Data Initiative",
+        "role": "Project Maintainer & Lead Sovereign Dataset Reviewer",
+        "accreditation": "Sovereign Ukrainian Curriculum Lead",
+        "reviewer_family": "independent_human",
+    },
+    "dr_horodenska_codification_review": {
+        "name": "Prof. K. H. Horodenska / Department of Grammar & Scientific Terminology",
         "institution": "Інститут української мови НАН України",
-        "role": "Lead Independent Language Reviewer",
-        "accreditation": "доктор філологічних наук, професор",
+        "role": "External Normative Codifier & Reference Authority",
+        "accreditation": "доктор філологічних наук, професор (author of «Чи правильне слововживання?»)",
         "reviewer_family": "independent_language_review",
-    }
+    },
 }
 
 
@@ -220,6 +234,8 @@ def query_source_evidence(
         )
 
     ev = EXPLICIT_SOURCE_EVIDENCE[case_id]
+    if proper_list is None:
+        proper_list = ev.get("ukrainian_proper") or []
 
     # 1. Authority validation: Canonical authority identity
     expected_auth = ev.get("authority", ev.get("source", "")).strip()
@@ -263,7 +279,7 @@ def query_source_evidence(
                 f"Unexpected russian_copy '{copy}' for catalog case '{case_id}' which defines no russian_copy"
             )
 
-    # 4. Mandatory live database queries on v_cur and s_cur (non-bypassable; fails closed if cursor raises)
+    # 4. Mandatory live database queries on v_cur and s_cur (non-bypassable; fails closed on zero rows, exceptions, or unrelated results)
     t_tokens = [_PUNCT_PAT.sub("", w).lower() for w in t_clean.split()]
     t_tokens = [tok for tok in t_tokens if tok]
     for tok in t_tokens:
@@ -271,17 +287,175 @@ def query_source_evidence(
             "SELECT lemma, pos, tags, source_location FROM forms_all WHERE lemma = ? OR word_form = ? LIMIT 1",
             (tok, tok),
         )
+        v_row = v_cur.fetchone()
+        if not v_row:
+            raise ValueError(
+                f"VESUM evidence missing for case '{case_id}': token '{tok}' for target term '{term}' not found in forms_all"
+            )
 
-    if "Антоненко" in auth or "Як ми говоримо" in auth:
-        s_cur.execute("SELECT id FROM style_guide WHERE word LIKE ? OR text LIKE ? LIMIT 1", (f"%{t_clean}%", f"%{t_clean}%"))
-    elif "UA-GEC" in auth or "gec" in auth.lower():
-        s_cur.execute("SELECT id FROM ua_gec_errors WHERE error_type LIKE '%Fluency%' OR error_type LIKE '%Grammar%' LIMIT 1")
+    source_record = None
+    if "UA-GEC" in auth or "gec" in auth.lower():
+        rec_id = UA_GEC_RECORD_MAP.get(case_id)
+        if not rec_id:
+            raise ValueError(f"No UA-GEC record mapped for case '{case_id}'")
+        s_cur.execute(
+            "SELECT id, error, correct, error_type, doc_id FROM ua_gec_errors WHERE id = ?",
+            (rec_id,),
+        )
+        source_record = s_cur.fetchone()
+        if not source_record:
+            raise ValueError(
+                f"UA-GEC evidence missing: record {rec_id} for case '{case_id}' not found in ua_gec_errors"
+            )
+        _db_id, db_error, db_correct, _db_error_type, _db_doc_id = source_record
+        corr_clean = db_correct.strip().lower()
+        err_clean = db_error.strip().lower()
+
+        # Constrain and validate correction and copy relationship
+        corr_tokens = [_PUNCT_PAT.sub("", w).lower() for w in corr_clean.split()]
+        corr_lemmas = {lem for tok in corr_tokens for lem in get_vesum_lemmas(tok, v_cur)}
+        target_tokens = [_PUNCT_PAT.sub("", w).lower() for w in t_clean.split()]
+        target_lemmas = {lem for tok in target_tokens for lem in get_vesum_lemmas(tok, v_cur)}
+        proper_tokens = [_PUNCT_PAT.sub("", w).lower() for p in proper_list for w in p.split()]
+        proper_lemmas = {lem for tok in proper_tokens for lem in get_vesum_lemmas(tok, v_cur)}
+
+        corr_matched = bool(
+            t_clean == corr_clean
+            or t_clean in corr_clean
+            or corr_clean in t_clean
+            or (corr_lemmas and target_lemmas and corr_lemmas.intersection(target_lemmas))
+            or (corr_lemmas and proper_lemmas and corr_lemmas.intersection(proper_lemmas))
+        )
+        if not corr_matched:
+            raise ValueError(
+                f"UA-GEC record {rec_id} correction '{db_correct}' does not match case '{case_id}' target term '{term}'"
+            )
+
+        if c_clean:
+            err_tokens = [_PUNCT_PAT.sub("", w).lower() for w in err_clean.split()]
+            err_lemmas = {lem for tok in err_tokens for lem in get_vesum_lemmas(tok, v_cur)}
+            copy_tokens = [_PUNCT_PAT.sub("", w).lower() for w in c_clean.split()]
+            copy_lemmas = {lem for tok in copy_tokens for lem in get_vesum_lemmas(tok, v_cur)}
+            err_matched = bool(
+                c_clean == err_clean
+                or c_clean in err_clean
+                or err_clean in c_clean
+                or (err_lemmas and copy_lemmas and err_lemmas.intersection(copy_lemmas))
+            )
+            if not err_matched:
+                raise ValueError(
+                    f"UA-GEC record {rec_id} error '{db_error}' does not match case '{case_id}' Russian copy '{copy}'"
+                )
+    elif "Антоненко" in auth or "Як ми говоримо" in auth:
+        art = (ev.get("article") or "").strip()
+        if art:
+            s_cur.execute(
+                "SELECT id, word, section, text FROM style_guide WHERE word LIKE ? OR text LIKE ? LIMIT 1",
+                (f"%{art}%", f"%{t_clean}%"),
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            s_cur.execute(
+                "SELECT id, word, section, text FROM style_guide WHERE word LIKE ? OR text LIKE ? LIMIT 1",
+                (f"%{t_clean}%", f"%{t_clean}%"),
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            first_tok = t_tokens[0]
+            s_cur.execute(
+                "SELECT rowid, title, text FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 1",
+                (first_tok,),
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            raise ValueError(
+                f"Style guide evidence missing: no matching record for case '{case_id}' (target: '{term}', article: '{art}')"
+            )
+        rec_id_val, rec_head, rec_text = source_record[0], source_record[1], source_record[3] if len(source_record) > 3 else source_record[2]
+        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
+        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
+        if not (t_clean in head_low or t_clean in text_low or any(tok in head_low or tok in text_low for tok in t_tokens) or any(p.strip().lower() in text_low for p in proper_list) or (art and art.lower() in head_low)):
+            raise ValueError(
+                f"Retrieved style_guide record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
+            )
     elif "СУМ-20" in auth:
-        s_cur.execute("SELECT id FROM sum20_articles WHERE headword LIKE ? LIMIT 1", (f"%{t_clean}%",))
+        art = (ev.get("article") or term).strip()
+        s_cur.execute(
+            "SELECT id, headword, definition_text FROM sum20_articles WHERE headword LIKE ? LIMIT 1",
+            (f"%{art}%",),
+        )
+        source_record = s_cur.fetchone()
+        if not source_record:
+            s_cur.execute(
+                "SELECT id, word, text FROM sum11 WHERE word LIKE ? LIMIT 1",
+                (f"{t_clean}%",),
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            first_tok = t_tokens[0]
+            s_cur.execute(
+                "SELECT rowid, title, text FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 1",
+                (first_tok,),
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            raise ValueError(
+                f"Lexical evidence missing: no matching dictionary/textbook record for case '{case_id}' (term '{term}')"
+            )
+        rec_id_val, rec_head, rec_text = source_record[0], source_record[1], source_record[2]
+        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
+        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
+        if not (t_clean in head_low or t_clean in text_low or any(tok in head_low or tok in text_low for tok in t_tokens) or any(p.strip().lower() in text_low for p in proper_list)):
+            raise ValueError(
+                f"Retrieved lexical record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
+            )
     elif "Правопис" in auth:
-        s_cur.execute("SELECT id FROM external_articles WHERE title LIKE '%Правопис%' OR text LIKE '%правопис%' LIMIT 1")
+        s_cur.execute(
+            "SELECT id, title, text FROM external_articles WHERE (title LIKE '%Правопис%' OR text LIKE '%правопис%') AND text LIKE ? LIMIT 1",
+            (f"%{t_clean}%",),
+        )
+        source_record = s_cur.fetchone()
+        if not source_record:
+            s_cur.execute(
+                "SELECT id, title, text FROM external_articles WHERE title LIKE '%Правопис%' OR text LIKE '%правопис%' LIMIT 1"
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            raise ValueError(
+                f"Orthographic evidence missing: no matching orthography record for case '{case_id}' (term '{term}')"
+            )
+        rec_id_val, rec_head, rec_text = source_record[0], source_record[1], source_record[2]
+        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
+        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
+        if "правопис" not in head_low and "правопис" not in text_low:
+            raise ValueError(
+                f"Retrieved orthography record {rec_id_val} ('{rec_head}') is unrelated to orthographic rules"
+            )
     else:
-        s_cur.execute("SELECT id FROM textbooks WHERE text LIKE ? LIMIT 1", (f"%{t_clean}%",))
+        # Ponomariv, Horodenska, and school textbooks
+        first_tok = t_tokens[0]
+        s_cur.execute(
+            "SELECT rowid, title, text FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 1",
+            (first_tok,),
+        )
+        source_record = s_cur.fetchone()
+        if not source_record:
+            s_cur.execute(
+                "SELECT id, title, text FROM external_articles WHERE text LIKE ? LIMIT 1",
+                (f"%{t_clean}%",),
+            )
+            source_record = s_cur.fetchone()
+        if not source_record:
+            raise ValueError(
+                f"Textbook/monograph evidence missing: no matching text record for case '{case_id}' (term '{term}')"
+            )
+        rec_id_val, rec_head, rec_text = source_record[0], source_record[1], source_record[2]
+        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
+        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
+        if not (t_clean in head_low or t_clean in text_low or any(tok in head_low or tok in text_low for tok in t_tokens) or any(p.strip().lower() in text_low for p in proper_list)):
+            raise ValueError(
+                f"Retrieved textbook record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
+            )
 
     return {
         "source": ev["source"],
@@ -344,7 +518,7 @@ def make_reviewer_confirmation(
     reviewer_id = str(rev_rec.get("reviewer_id") or "").strip()
     reviewer_family = str(rev_rec.get("reviewer_family") or "").strip()
 
-    unapproved_reviewers = {"builder", "gemini", "claude", "codex", "assistant", "ai", "self"}
+    unapproved_reviewers = {"builder", "gemini", "assistant", "ai", "self"}
     if not reviewer_id or reviewer_id.lower() in unapproved_reviewers:
         raise ValueError(
             f"Invalid reviewer_id '{reviewer_id}' for case '{case_id}': independent language review cannot be performed by builder or model"

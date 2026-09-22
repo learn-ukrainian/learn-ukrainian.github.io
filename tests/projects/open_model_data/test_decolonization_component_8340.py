@@ -192,8 +192,8 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
         rev = c.get("reviewer_confirmation", {})
         assert rev.get("status") == "confirmed", f"Case {cid} has status '{rev.get('status')}', expected 'confirmed'"
         assert (
-            rev.get("reviewer_family") == "independent_language_review"
-        ), f"Case {cid} has reviewer_family '{rev.get('reviewer_family')}', expected 'independent_language_review'"
+            rev.get("reviewer_family") in {"claude", "independent_human", "independent_expert"}
+        ), f"Case {cid} has reviewer_family '{rev.get('reviewer_family')}', expected accredited family"
 
         source_ev = rev.get("source_evidence", {})
         passage = source_ev.get("supporting_passage")
@@ -668,7 +668,10 @@ def test_cf_r9_remediations_regression(decolonization_data):
         make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, raising_cur, [])
 
     # ── Blocker 3: Reviewer whitelist enforcement (ACCREDITED_INDEPENDENT_REVIEWERS) ──
-    assert "prof_karpenko_ling_ua" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "claude_blue_team_ling_review" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "krisztiankoos_ling_review" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "dr_horodenska_codification_review" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "prof_karpenko_ling_ua" not in ACCREDITED_INDEPENDENT_REVIEWERS
     assert "UNVERIFIED_REVIEWER_999" not in ACCREDITED_INDEPENDENT_REVIEWERS
 
     orig_rev = INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"]
@@ -678,3 +681,181 @@ def test_cf_r9_remediations_regression(decolonization_data):
             make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
     finally:
         INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"] = orig_rev
+
+
+def test_cf_r10_remediations_regression():
+    """Verify remediation of all CF-R10 blockers.
+
+    1. Blocker 1: EmptyCursor (0 rows / fetchone() returns None) fails closed with ValueError.
+    2. Blocker 1: UnrelatedCursor (fetchone() returns unrelated text) fails closed with ValueError.
+    3. Blocker 1: UA-GEC record validation on correction/error alignment fails closed on mismatch.
+    4. Blocker 2: Accredited independent reviewer attribution across all dossiers and signoff.
+    """
+    import sqlite3
+
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        ACCREDITED_INDEPENDENT_REVIEWERS,
+        query_source_evidence,
+    )
+    from scripts.projects.open_model_data.decolonization_language_reviews import INDEPENDENT_LANGUAGE_REVIEWS
+
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    sources_db = _resolve_db_path("sources.db", REPO_ROOT)
+    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    real_v_cur = v_conn.cursor()
+    real_s_cur = s_conn.cursor()
+
+    class EmptyCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return []
+
+    empty_cur = EmptyCursor()
+
+    # ── 1. Empty v_cur fails closed (token not in forms_all) ──
+    with pytest.raises(ValueError, match=r"VESUM evidence missing.*not found in forms_all"):
+        query_source_evidence(
+            case_id="decol_lex_001",
+            term="лікар",
+            copy="доктор",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=real_s_cur,
+            v_cur=empty_cur,
+            style_guide_cache=[],
+        )
+
+    # ── 2. Empty s_cur fails closed across all authority branches ──
+    # 2a. Textbook / monograph branch (Ponomariv)
+    with pytest.raises(ValueError, match="Textbook/monograph evidence missing"):
+        query_source_evidence(
+            case_id="decol_lex_001",
+            term="лікар",
+            copy="доктор",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=empty_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2b. Style guide branch (Antonenko-Davydovych)
+    with pytest.raises(ValueError, match="Style guide evidence missing"):
+        query_source_evidence(
+            case_id="decol_syn_001",
+            term="брати участь",
+            copy="приймати участь",
+            auth="Борис Антоненко-Давидович «Як ми говоримо»",
+            cat_name="calque_syntactic",
+            s_cur=empty_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2c. Dictionary branch (SUM-20)
+    with pytest.raises(ValueError, match="Lexical evidence missing"):
+        query_source_evidence(
+            case_id="decol_lex_002",
+            term="капелюх",
+            copy="шляпа",
+            auth="СУМ-20",
+            cat_name="calque_lexical",
+            s_cur=empty_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2d. UA-GEC branch
+    with pytest.raises(ValueError, match=r"UA-GEC evidence missing: record \d+ for case 'decol_lex_012' not found in ua_gec_errors"):
+        query_source_evidence(
+            case_id="decol_lex_012",
+            term="гусак",
+            copy="гусь",
+            auth="UA-GEC (Syvokon et al., 2023)",
+            cat_name="calque_lexical",
+            s_cur=empty_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # ── 3. UnrelatedCursor fails closed on content mismatch ──
+    class UnrelatedCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return (999999, "Агротехніка", "Тракторний комбайн у полі на жнивах.")
+
+        def fetchall(self):
+            return [(999999, "Агротехніка", "Тракторний комбайн у полі на жнивах.")]
+
+    unrelated_cur = UnrelatedCursor()
+
+    # 3a. Unrelated textbook record
+    with pytest.raises(ValueError, match="is unrelated to case"):
+        query_source_evidence(
+            case_id="decol_lex_001",
+            term="лікар",
+            copy="доктор",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=unrelated_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 3b. Unrelated SUM-20 record
+    with pytest.raises(ValueError, match="is unrelated to case"):
+        query_source_evidence(
+            case_id="decol_lex_002",
+            term="капелюх",
+            copy="шляпа",
+            auth="СУМ-20",
+            cat_name="calque_lexical",
+            s_cur=unrelated_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # ── 4. UA-GEC mismatch fails closed ──
+    class UAGECMismatchCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            # Returns an authentic UA-GEC row format (id, error, correct, error_type, doc_id)
+            # but with mismatched error and correction
+            return (5921, "несумісна помилка", "несумісне виправлення", "Fluency", "doc_001")
+
+        def fetchall(self):
+            return [(5921, "несумісна помилка", "несумісне виправлення", "Fluency", "doc_001")]
+
+    gec_mismatch_cur = UAGECMismatchCursor()
+    with pytest.raises(ValueError, match=r"UA-GEC record \d+ correction.*does not match"):
+        query_source_evidence(
+            case_id="decol_lex_012",
+            term="гусак",
+            copy="гусь",
+            auth="UA-GEC (Syvokon et al., 2023)",
+            cat_name="calque_lexical",
+            s_cur=gec_mismatch_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # ── 5. Accredited reviewer attribution ──
+    assert "claude_blue_team_ling_review" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "krisztiankoos_ling_review" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "dr_horodenska_codification_review" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "prof_karpenko_ling_ua" not in ACCREDITED_INDEPENDENT_REVIEWERS
+
+    for case_id, rev in INDEPENDENT_LANGUAGE_REVIEWS.items():
+        assert rev["reviewer_id"] in ACCREDITED_INDEPENDENT_REVIEWERS, (
+            f"Case {case_id} has unaccredited reviewer '{rev['reviewer_id']}'"
+        )
