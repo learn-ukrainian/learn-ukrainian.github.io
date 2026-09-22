@@ -28,10 +28,10 @@ from scripts.build.fresh.prompt import (
     style_card_info,
 )
 from scripts.build.fresh.writer import ALLOWED_WRITERS, dispatch_writer
-from scripts.curriculum import plan_v2
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.learner_state.planned import PlannedState, planned_state
+from scripts.curriculum.validate.loader import load_plan
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -235,10 +235,10 @@ def _load_lesson_data(
         repo_root=root,
     )
 
-    # 1. Load plan via scripts.curriculum.plan_v2 (Finding 1)
+    # 1. Load plan via scripts.curriculum.validate.loader (Finding 1)
     if not paths["plan"].is_file():
         raise FileNotFoundError(f"Plan file not found: {paths['plan']}")
-    plan_dict = plan_v2.load_plan(paths["plan"])
+    plan_dict = load_plan(paths["plan"])
 
     lesson_entry = next((l for l in plan_dict.get("lessons", []) if l.get("n") == lesson_n), None)
     if lesson_entry is None:
