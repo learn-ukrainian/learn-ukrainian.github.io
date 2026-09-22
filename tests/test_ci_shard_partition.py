@@ -39,7 +39,7 @@ from tests.conftest import (
     pytest_ignore_collect,
 )
 
-pytestmark = pytest.mark.repo_invariant
+pytestmark = [pytest.mark.repo_invariant, pytest.mark.reads_content]
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _CI = _REPO_ROOT / ".github" / "workflows" / "ci.yml"
@@ -519,7 +519,82 @@ def test_shards_length_equals_shard_count_for_selected_and_full() -> None:
         tree_paths=frozenset(),
     )
     assert full["pytest_mode"] == "full"
+    assert full["backend"] == "true"
     assert len(json.loads(full["shards"])) == int(full["shard_count"]) == 4
+
+
+def test_merge_group_docs_skip_frontend_and_full_shards() -> None:
+    """A docs merge must not rebuild the site or run four pytest shards (#8437)."""
+    from scripts.ci.classify_changes import classify
+
+    result = classify(
+        ["docs/epics/a2-arc.md"],
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=["site/"],
+        tree_paths=frozenset(),
+    )
+    assert result["docs_only"] == "true"
+    assert result["frontend"] == "false"
+    assert result["backend"] == "true"
+    assert result["pytest_mode"] == "docs"
+    assert json.loads(result["shards"]) == [1]
+
+
+def test_frontend_only_change_skips_python_shards() -> None:
+    from scripts.ci.classify_changes import classify
+
+    result = classify(
+        ["site/src/pages/index.astro", "packages/activity-kit/src/card.ts"],
+        event="pull_request",
+        labels=[],
+        shard_count=4,
+        denominator=["site/", "packages/activity-kit/"],
+        tree_paths=frozenset(),
+    )
+    assert result["frontend"] == "true"
+    assert result["backend"] == "false"
+    assert result["pytest_mode"] == "frontend"
+    assert json.loads(result["shards"]) == []
+
+
+def test_backend_only_merge_group_skips_frontend() -> None:
+    from scripts.ci.classify_changes import classify
+
+    result = classify(
+        ["tests/test_x.py"],
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=["site/"],
+        tree_paths=frozenset({"tests/test_x.py"}),
+    )
+    assert result["pytest_mode"] == "selected"
+    assert result["frontend"] == "false"
+    assert result["backend"] == "true"
+
+
+def test_learner_docs_still_run_content_lane_and_frontend() -> None:
+    from scripts.ci.classify_changes import classify
+
+    result = classify(
+        ["site/src/content/docs/a1/hello.mdx"],
+        event="merge_group",
+        labels=[],
+        shard_count=4,
+        denominator=["site/"],
+        tree_paths=frozenset(),
+    )
+    assert result["pytest_mode"] == "content"
+    assert result["frontend"] == "true"
+    assert result["backend"] == "true"
+
+
+def test_ci_yml_skips_pytest_when_backend_is_false() -> None:
+    ci_text = _ci_text()
+    assert "needs.changes.outputs.backend != 'false'" in ci_text
+    assert 'if [ "$BACKEND" = false ]; then' in ci_text
 
 
 def test_ci_yml_no_modulo_split_remains() -> None:

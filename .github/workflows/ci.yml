@@ -34,6 +34,7 @@ jobs:
     outputs:
       docs_only: ${{ steps.classify.outputs.docs_only }}
       frontend: ${{ steps.classify.outputs.frontend }}
+      backend: ${{ steps.classify.outputs.backend }}
       shards: ${{ steps.classify.outputs.shards }}
       pytest_mode: ${{ steps.classify.outputs.pytest_mode }}
       shard_count: ${{ steps.classify.outputs.shard_count }}
@@ -124,6 +125,7 @@ jobs:
   pytest:
     name: pytest (${{ matrix.shard }})
     needs: [changes]
+    if: needs.changes.outputs.backend != 'false'
     runs-on: ubuntu-latest
     timeout-minutes: 20
     strategy:
@@ -608,6 +610,7 @@ jobs:
         env:
           DOCS_ONLY: ${{ needs.changes.outputs.docs_only }}
           FRONTEND: ${{ needs.changes.outputs.frontend }}
+          BACKEND: ${{ needs.changes.outputs.backend }}
           CHANGES: ${{ needs.changes.result }}
           RUFF: ${{ needs.ruff.result }}
           SECRET: ${{ needs.secret-scan.result }}
@@ -621,7 +624,11 @@ jobs:
           skip_ok() { [ "$1" = success ] || [ "$1" = skipped ]; }
           ok "$CHANGES"
           ok "$SECRET"
-          ok "$PYTEST"
+          if [ "$BACKEND" = false ]; then
+            skip_ok "$PYTEST"
+          else
+            ok "$PYTEST"
+          fi
           if [ "$DOCS_ONLY" = true ]; then
             skip_ok "$RUFF"
             skip_ok "$CONTRACTS"
