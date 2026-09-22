@@ -2,7 +2,9 @@
 
 Computes the lesson immersion band for a given track, position, lesson number,
 and cumulative vocabulary count.
-- A1: derives band from cumulative_vocabulary using config.compute_immersion_band (source: ulp_vocab)
+- A1: derives band from cumulative_vocabulary using config.compute_immersion_band (source: ulp_vocab).
+  Fails closed when USE_ULP_IMMERSION_DERIVATION is False (ulp_derivation_disabled).
+  Requires cumulative_core_count (fails with cumulative_core_count_missing if None).
 - A2, B1, B2: reads ArcPosition.band_key from load_arc (source: arc_table) and looks up
   via config._find_immersion_band_by_key. A level whose arc has no band_key fails with
   arc_band_table_missing, never falling back to module numbers.
@@ -97,13 +99,23 @@ def compute_lesson_immersion_band(
     track_key = track.lower().split("-")[0] if "-" in track else track.lower()
 
     if track_key == "a1":
+        if not config.USE_ULP_IMMERSION_DERIVATION:
+            raise ImmersionError(
+                codes.ULP_DERIVATION_DISABLED,
+                "USE_ULP_IMMERSION_DERIVATION is False; refusing to derive A1 immersion band without derivation",
+            )
+        if cumulative_core_count is None:
+            raise ImmersionError(
+                codes.CUMULATIVE_CORE_COUNT_MISSING,
+                "cumulative_core_count is required for A1 immersion band computation",
+            )
         band = config.compute_immersion_band(
             "a1",
             arc_position,
-            {"cumulative_vocabulary": cumulative_core_count if cumulative_core_count is not None else 0},
+            {"cumulative_vocabulary": cumulative_core_count},
         )
         band_key = str(band["key"])
-        source: Literal["ulp_vocab", "arc_table"] = "ulp_vocab" if config.USE_ULP_IMMERSION_DERIVATION else "arc_table"
+        source: Literal["ulp_vocab", "arc_table"] = "ulp_vocab"
     else:
         # Load arc
         if arc_loader is not None:

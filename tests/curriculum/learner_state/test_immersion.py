@@ -158,12 +158,30 @@ def test_unknown_band_key_fails_arc_band_table_missing() -> None:
     assert "unknown band_key" in exc_info.value.message
 
 
-def test_a1_band_source_not_ulp_vocab_when_derivation_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
-    """When USE_ULP_IMMERSION_DERIVATION is False, source is not ulp_vocab."""
+def test_a1_fails_closed_when_derivation_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    """When USE_ULP_IMMERSION_DERIVATION is False, A1 fails closed with ulp_derivation_disabled."""
     monkeypatch.setattr(cfg, "USE_ULP_IMMERSION_DERIVATION", False)
-    band = compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1, cumulative_core_count=100)
-    assert band.source != "ulp_vocab"
-    assert band.source == "arc_table"
+    with pytest.raises(ImmersionError) as exc_info:
+        compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1, cumulative_core_count=100)
+    assert exc_info.value.code == codes.ULP_DERIVATION_DISABLED
+    assert "USE_ULP_IMMERSION_DERIVATION" in exc_info.value.message
+
+
+def test_a1_band_source_not_ulp_vocab_when_derivation_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Test alias retained for compatibility."""
+    test_a1_fails_closed_when_derivation_disabled(monkeypatch)
+
+
+def test_a1_requires_cumulative_core_count() -> None:
+    """For A1, cumulative_core_count is required; passing None or omitting raises cumulative_core_count_missing."""
+    with pytest.raises(ImmersionError) as exc_info:
+        compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1, cumulative_core_count=None)
+    assert exc_info.value.code == codes.CUMULATIVE_CORE_COUNT_MISSING
+    assert "cumulative_core_count" in exc_info.value.message
+
+    with pytest.raises(ImmersionError) as exc_info:
+        compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1)
+    assert exc_info.value.code == codes.CUMULATIVE_CORE_COUNT_MISSING
 
 
 def test_lesson_band_waiver_carried_to_dict_and_text() -> None:

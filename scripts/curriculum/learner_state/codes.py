@@ -23,6 +23,10 @@ BARE_LEMMA = "bare_lemma"
 
 # --- Failures: immersion band ------------------------------------------------
 ARC_BAND_TABLE_MISSING = "arc_band_table_missing"
+ULP_DERIVATION_DISABLED = "ulp_derivation_disabled"
+ULP_IMMERSION_DERIVATION_DISABLED = ULP_DERIVATION_DISABLED
+CUMULATIVE_CORE_COUNT_MISSING = "cumulative_core_count_missing"
+CUMULATIVE_COUNT_MISSING = CUMULATIVE_CORE_COUNT_MISSING
 
 # --- Failures: Part 2 inventory gate (registered for Part 2 SSOT) ------------
 LEMMA_OUTSIDE_STATE = "lemma_outside_state"
@@ -49,6 +53,8 @@ DESCRIPTIONS: dict[str, str] = {
     BASE_LAYER_UNRESOLVED: "failure: base layer request line matched zero or multiple word store records",
     BARE_LEMMA: "failure (rule 1): bare Ukrainian lemma found in state instead of word store ID",
     ARC_BAND_TABLE_MISSING: "failure: arc position has no band_key defined in _arc.yaml",
+    ULP_DERIVATION_DISABLED: "failure: USE_ULP_IMMERSION_DERIVATION is disabled for A1 immersion calculation",
+    CUMULATIVE_CORE_COUNT_MISSING: "failure: cumulative_core_count is required for A1 immersion band computation",
     LEMMA_OUTSIDE_STATE: "failure: token resolves to a lemma outside allowed learner state",
     CORE_NOT_INTRODUCED: "failure: core vocabulary item declared in plan is not introduced in lesson",
     RECYCLED_NOT_USED: "failure: recycled vocabulary item declared in plan is not used in lesson",
@@ -72,6 +78,8 @@ FAILURE_CODES = frozenset(
         BASE_LAYER_UNRESOLVED,
         BARE_LEMMA,
         ARC_BAND_TABLE_MISSING,
+        ULP_DERIVATION_DISABLED,
+        CUMULATIVE_CORE_COUNT_MISSING,
         LEMMA_OUTSIDE_STATE,
         CORE_NOT_INTRODUCED,
         RECYCLED_NOT_USED,
