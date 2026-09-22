@@ -1,0 +1,757 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-words-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "evidence_schema": {
+      "const": 1
+    },
+    "level": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "built_with": {
+      "$ref": "#/$defs/built_with"
+    },
+    "words": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/word"
+      }
+    }
+  },
+  "required": [
+    "evidence_schema",
+    "level",
+    "built_with",
+    "words"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "vesum": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "const": "vesum"
+        },
+        "entry_id": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "source",
+        "entry_id"
+      ],
+      "additionalProperties": false
+    },
+    "ulif": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "const": "ulif"
+        },
+        "key": {
+          "type": "array",
+          "prefixItems": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "integer",
+              "minimum": 1
+            }
+          ],
+          "items": false,
+          "minItems": 2,
+          "maxItems": 2
+        }
+      },
+      "required": [
+        "source",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    "source": {
+      "type": "object",
+      "properties": {
+        "tool": {
+          "type": "string",
+          "minLength": 1
+        },
+        "key": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "integer",
+              "minimum": 1
+            },
+            {
+              "type": "array",
+              "items": {
+                "oneOf": [
+                  {
+                    "type": "string",
+                    "minLength": 1
+                  },
+                  {
+                    "type": "integer",
+                    "minimum": 1
+                  }
+                ]
+              }
+            }
+          ]
+        }
+      },
+      "required": [
+        "tool",
+        "key"
+      ],
+      "additionalProperties": false
+    },
+    "marker": {
+      "type": "object",
+      "properties": {
+        "marker": {
+          "type": "string",
+          "minLength": 1
+        },
+        "origin": {
+          "type": "string",
+          "minLength": 1
+        },
+        "marker_class": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "marker",
+        "origin",
+        "marker_class"
+      ],
+      "additionalProperties": false
+    },
+    "reading": {
+      "type": "object",
+      "properties": {
+        "stressed_form": {
+          "type": "string",
+          "minLength": 1
+        },
+        "unstressed_form": {
+          "type": "string",
+          "minLength": 1
+        },
+        "vowel_index": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vowel_indices": {
+          "type": "array",
+          "items": {
+            "type": "integer",
+            "minimum": 0
+          }
+        },
+        "vesum": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "lemma": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "pos": {
+                  "type": "string",
+                  "minLength": 1
+                },
+                "tags": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "lemma",
+                "pos",
+                "tags"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "required_tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "override_applied": {
+          "type": "boolean"
+        },
+        "input_mismatch": {
+          "type": "boolean"
+        }
+      },
+      "required": [
+        "stressed_form",
+        "unstressed_form",
+        "vowel_index",
+        "vowel_indices",
+        "vesum",
+        "required_tags",
+        "override_applied"
+      ],
+      "additionalProperties": false
+    },
+    "form": {
+      "type": "object",
+      "properties": {
+        "form": {
+          "type": "string",
+          "minLength": 1
+        },
+        "tags": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stressed": {
+          "type": "string",
+          "minLength": 1
+        },
+        "stress_source": {
+          "enum": [
+            "ulif",
+            "trie",
+            "pending",
+            "none"
+          ]
+        },
+        "markers": {
+          "type": "array",
+          "items": {
+            "oneOf": [
+              {
+                "type": "string",
+                "minLength": 1
+              },
+              {
+                "$ref": "#/$defs/marker"
+              }
+            ]
+          }
+        },
+        "learner": {
+          "type": "boolean"
+        },
+        "stress_candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/reading"
+          }
+        },
+        "unresolvable_by_tags": {
+          "type": "boolean"
+        },
+        "override": {
+          "const": true
+        },
+        "source": {
+          "$ref": "#/$defs/source"
+        }
+      },
+      "required": [
+        "form",
+        "tags",
+        "stress_source",
+        "markers",
+        "learner"
+      ],
+      "additionalProperties": false,
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "stress_source": {
+                "const": "pending"
+              }
+            }
+          },
+          "then": {
+            "not": {
+              "required": [
+                "stressed"
+              ]
+            }
+          },
+          "else": {
+            "required": [
+              "stressed"
+            ]
+          }
+        },
+        {
+          "if": {
+            "required": [
+              "override"
+            ]
+          },
+          "then": {
+            "properties": {
+              "stress_source": {
+                "const": "trie"
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "markers": {
+                "contains": {
+                  "oneOf": [
+                    {
+                      "enum": [
+                        "alt",
+                        "arch",
+                        "bad",
+                        "dialect",
+                        "obsc",
+                        "slang",
+                        "subst",
+                        "vulg"
+                      ]
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "marker": {
+                          "enum": [
+                            "alt",
+                            "arch",
+                            "bad",
+                            "dialect",
+                            "obsc",
+                            "slang",
+                            "subst",
+                            "vulg"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "marker"
+                      ]
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "learner": {
+                "const": false
+              }
+            }
+          }
+        }
+      ]
+    },
+    "heritage": {
+      "type": "object",
+      "properties": {
+        "query": {
+          "type": "string"
+        },
+        "source_family": {
+          "type": "string"
+        },
+        "source": {
+          "type": "string"
+        },
+        "word": {
+          "type": "string"
+        },
+        "text": {
+          "type": "string"
+        },
+        "classification": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string"
+        },
+        "dictionary": {
+          "type": "string"
+        },
+        "is_authentic_ukrainian": {
+          "type": "boolean"
+        },
+        "is_russianism": {
+          "type": "boolean"
+        },
+        "is_modern": {
+          "type": "boolean"
+        },
+        "is_dialect": {
+          "type": "boolean"
+        },
+        "sovietization_risk": {
+          "type": "number"
+        },
+        "score": {
+          "type": "number"
+        },
+        "evidence_tags": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "sovietization_keywords": {
+          "type": "string"
+        }
+      },
+      "required": [],
+      "additionalProperties": false
+    },
+    "built_with": {
+      "type": "object",
+      "properties": {
+        "mcp_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "sources_db": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "vesum": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "trie": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ulif_forms": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "const": "pending"
+            }
+          ]
+        },
+        "overrides_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "russian_patterns": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "built_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "mcp_commit",
+        "sources_db",
+        "vesum",
+        "trie",
+        "ulif_forms"
+      ],
+      "additionalProperties": false
+    },
+    "candidate": {
+      "oneOf": [
+        {
+          "type": "object",
+          "properties": {
+            "entry_id": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "forms": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "minLength": 1
+              },
+              "maxItems": 3
+            }
+          },
+          "required": [
+            "entry_id",
+            "forms"
+          ],
+          "additionalProperties": false
+        },
+        {
+          "type": "object",
+          "properties": {
+            "source": {
+              "const": "ulif"
+            },
+            "key": {
+              "type": "array",
+              "prefixItems": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              ],
+              "items": false,
+              "minItems": 2,
+              "maxItems": 2
+            },
+            "canonical_headword": {
+              "type": "string",
+              "minLength": 1
+            },
+            "sense_gloss": {
+              "type": "string"
+            }
+          },
+          "required": [
+            "source",
+            "key",
+            "canonical_headword",
+            "sense_gloss"
+          ],
+          "additionalProperties": false
+        }
+      ]
+    },
+    "word": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^W-[0-9]*[1-9][0-9]*$"
+        },
+        "lemma": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pos": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/vesum"
+            },
+            {
+              "$ref": "#/$defs/ulif"
+            },
+            {
+              "const": "unresolved"
+            }
+          ]
+        },
+        "ulif": {
+          "oneOf": [
+            {
+              "const": "pending"
+            },
+            {
+              "$ref": "#/$defs/ulif"
+            }
+          ]
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/candidate"
+          }
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/form"
+          }
+        },
+        "cefr": {
+          "type": "object",
+          "properties": {
+            "level": {
+              "enum": [
+                "A1",
+                "A2",
+                "B1",
+                "B2",
+                "C1",
+                "C2"
+              ]
+            },
+            "source": {
+              "const": "puls"
+            }
+          },
+          "required": [
+            "level",
+            "source"
+          ],
+          "additionalProperties": false
+        },
+        "gloss_en": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gloss_source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "dmklinger_uk_en"
+            },
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "table",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "sense_gloss": {
+          "type": "string"
+        },
+        "government": {
+          "type": "string",
+          "minLength": 1
+        },
+        "government_source": {
+          "$ref": "#/$defs/source"
+        },
+        "shadow": {
+          "type": "object",
+          "properties": {
+            "russian_shadow": {
+              "type": "boolean"
+            },
+            "score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1
+            }
+          },
+          "required": [
+            "russian_shadow",
+            "score"
+          ],
+          "additionalProperties": false
+        },
+        "heritage": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/heritage"
+          }
+        },
+        "note": {
+          "type": "string"
+        },
+        "first_introduced": {
+          "type": "object",
+          "properties": {
+            "position": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "lesson": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "position",
+            "lesson"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "lemma",
+        "pos",
+        "entry",
+        "ulif",
+        "forms"
+      ],
+      "additionalProperties": false,
+      "dependentRequired": {
+        "gloss_en": [
+          "gloss_source"
+        ],
+        "gloss_source": [
+          "gloss_en"
+        ],
+        "government": [
+          "government_source"
+        ],
+        "government_source": [
+          "government"
+        ]
+      },
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "entry": {
+                "const": "unresolved"
+              }
+            }
+          },
+          "then": {
+            "required": [
+              "candidates"
+            ],
+            "properties": {
+              "forms": {
+                "maxItems": 0
+              }
+            }
+          },
+          "else": {
+            "not": {
+              "required": [
+                "candidates"
+              ]
+            }
+          }
+        }
+      ]
+    }
+  },
+  "$comment": "Shape contract only: the builder/verifier checks source equality, one-entry paradigms, unique ids, and stressed == form for stress_source none. Store records use numeric id order; form lists retain VESUM order."
+}

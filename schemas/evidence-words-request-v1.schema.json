@@ -1,0 +1,99 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-words-request-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "request_schema": {
+      "const": 1
+    },
+    "level": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$"
+    },
+    "words": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/word"
+      }
+    }
+  },
+  "required": [
+    "request_schema",
+    "level",
+    "words"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "word": {
+      "type": "object",
+      "properties": {
+        "lemma": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pos": {
+          "type": "string",
+          "minLength": 1
+        },
+        "entry": {
+          "oneOf": [
+            {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "const": "vesum"
+                },
+                "entry_id": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "source",
+                "entry_id"
+              ],
+              "additionalProperties": false
+            },
+            {
+              "type": "object",
+              "properties": {
+                "source": {
+                  "const": "ulif"
+                },
+                "homonym_index": {
+                  "type": "integer",
+                  "minimum": 1
+                }
+              },
+              "required": [
+                "source",
+                "homonym_index"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "want": {
+          "oneOf": [
+            {
+              "const": "new"
+            },
+            {
+              "type": "string",
+              "pattern": "^W-[0-9]*[1-9][0-9]*$"
+            }
+          ]
+        },
+        "note": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "lemma",
+        "pos",
+        "want"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
