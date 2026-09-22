@@ -58,9 +58,51 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
             "ulif_forms": "0" * 64,
         },
         "words": [
-            {"id": "W-BASE-01", "lemma": "base-w1", "pos": "pron"},
-            {"id": "W-CORE-01", "lemma": "core-w1", "pos": "noun"},
-            {"id": "W-CORE-02", "lemma": "core-w2", "pos": "verb"},
+            {
+                "id": "W-1",
+                "lemma": "base-w1",
+                "pos": "pron",
+                "forms": [
+                    {
+                        "form": "base-w1",
+                        "tags": "pron",
+                        "stressed": "base-w1",
+                        "stress_source": "none",
+                        "markers": [],
+                        "learner": True,
+                    }
+                ],
+            },
+            {
+                "id": "W-10",
+                "lemma": "core-w1",
+                "pos": "noun",
+                "forms": [
+                    {
+                        "form": "core-w1",
+                        "tags": "noun:inanim:m:v_naz",
+                        "stressed": "tok1",
+                        "stress_source": "ulif",
+                        "markers": [],
+                        "learner": True,
+                    }
+                ],
+            },
+            {
+                "id": "W-11",
+                "lemma": "core-w2",
+                "pos": "verb",
+                "forms": [
+                    {
+                        "form": "core-w2",
+                        "tags": "verb:pres:s:1",
+                        "stressed": "core-w2",
+                        "stress_source": "ulif",
+                        "markers": [],
+                        "learner": True,
+                    }
+                ],
+            },
         ],
     }
     _write_yaml(evidence_dir / "_words.yaml", words_store)
@@ -86,7 +128,7 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                 "word_target": 10,
                 "inventory": {
                     "vocabulary": {
-                        "core": [{"lemma": "core-w1", "evidence": "W-CORE-01"}],
+                        "core": [{"lemma": "core-w1", "evidence": "W-10", "forms": ["noun:inanim:m:v_naz"]}],
                     }
                 },
                 "steps": [
@@ -94,7 +136,7 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                         "id": "s1",
                         "kind": "teach",
                         "teach": "T1",
-                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-CORE-01"]},
+                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-10"]},
                         "uses": {"grammar": [], "vocabulary": []},
                         "evidence": ["E-01"],
                         "practice": ["a1"],
@@ -112,8 +154,8 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                 "word_target": 10,
                 "inventory": {
                     "vocabulary": {
-                        "core": [{"lemma": "core-w2", "evidence": "W-CORE-02"}],
-                        "recycled": ["W-CORE-01"],
+                        "core": [{"lemma": "core-w2", "evidence": "W-11", "forms": ["verb:pres:s:1"]}],
+                        "recycled": ["W-10"],
                     }
                 },
                 "steps": [
@@ -121,8 +163,8 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                         "id": "s1",
                         "kind": "teach",
                         "teach": "T2",
-                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-CORE-02"]},
-                        "uses": {"grammar": [], "vocabulary": ["W-CORE-01"]},
+                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-11"]},
+                        "uses": {"grammar": [], "vocabulary": ["W-10"]},
                         "evidence": ["E-02"],
                         "practice": ["a1"],
                     }
@@ -392,6 +434,15 @@ def test_cli_observed_and_gate_pass(tmp_path: Path) -> None:
     state_dir = evidence_dir / "_state" / "mod-01"
     state_dir.mkdir(parents=True, exist_ok=True)
 
+    exp_doc = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "units": [{"tab": "urok", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok1"}],
+    }
+    exp_path = state_dir / "lesson-1.expanded.yaml"
+    exp_bytes = yaml.safe_dump(exp_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    exp_path.write_bytes(exp_bytes)
+    lock.write(exp_path, exp_bytes)
+
     res_doc = {
         "resolutions_schema": 1,
         "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
@@ -404,13 +455,13 @@ def test_cli_observed_and_gate_pass(tmp_path: Path) -> None:
         },
         "tokens": [
             {
-                "unit": {"tab": "urok", "activity": None, "item": None, "block": "s1"},
+                "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
                 "offset": 0,
                 "token": "tok1",
                 "surface": "sentence_token",
                 "class": "resolved",
-                "candidates": ["W-CORE-01"],
-                "selected": {"record": "W-CORE-01", "forms": ["noun:inanim:m:v_naz"], "stressed": "tok1"},
+                "candidates": ["W-10"],
+                "selected": {"record": "W-10", "forms": ["noun:inanim:m:v_naz"], "stressed": "tok1"},
                 "provenance": "deterministic",
             }
         ],
@@ -446,7 +497,7 @@ def test_cli_observed_and_gate_pass(tmp_path: Path) -> None:
     assert obs_payload["observed_schema"] == 1
     assert obs_payload["lesson"]["slug"] == "mod-01"
     assert len(obs_payload["records"]) == 1
-    assert obs_payload["records"][0]["id"] == "W-CORE-01"
+    assert obs_payload["records"][0]["id"] == "W-10"
 
     # 2. gate command
     res_gate = subprocess.run(
@@ -499,8 +550,8 @@ def test_cli_gate_failing_output(tmp_path: Path) -> None:
                 "sentence": "sample sentence with bad-tok",
                 "surface": "sentence_token",
                 "class": "resolved",
-                "candidates": ["W-OUTSIDE-99"],
-                "selected": {"record": "W-OUTSIDE-99", "forms": ["noun:inanim:m:v_naz"], "stressed": "bad-tok"},
+                "candidates": ["W-99"],
+                "selected": {"record": "W-99", "forms": ["noun:inanim:m:v_naz"], "stressed": "bad-tok"},
                 "provenance": "deterministic",
             }
         ],

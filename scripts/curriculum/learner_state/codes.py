@@ -7,6 +7,8 @@ No literal code strings elsewhere in this package.
 
 from __future__ import annotations
 
+from scripts.curriculum.evidence import codes as evidence_codes
+
 # --- Failures: input and plan discovery --------------------------------------
 PLAN_NOT_FOUND = "plan_not_found"
 PLAN_YAML_INVALID = "plan_yaml_invalid"
@@ -41,14 +43,16 @@ RESOLUTIONS_NOT_FOUND = "resolutions_not_found"
 RESOLUTIONS_INVALID = "resolutions_invalid"
 OBSERVED_SCHEMA_INVALID = "observed_schema_invalid"
 OBSERVED_YAML_INVALID = "observed_yaml_invalid"
-LOCK_MISMATCH = "lock_mismatch"
+LOCK_MISMATCH = evidence_codes.LOCK_MISMATCH
 UNKNOWN_TAB = "unknown_tab"
 
 # --- Reports -----------------------------------------------------------------
 UNTAUGHT_FORMS = "untaught_forms"
+STRESS_CERTAIN_IDENTITY_OPEN = "stress_certain_identity_open"
 
 # --- Not Checked -------------------------------------------------------------
 LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED = "lesson_structural_minimums_not_calibrated"
+INTRODUCING_STEP_NOT_LOCATABLE = "introducing_step_not_locatable"
 
 # --- Descriptions for --help and reporting -----------------------------------
 DESCRIPTIONS: dict[str, str] = {
@@ -76,8 +80,12 @@ DESCRIPTIONS: dict[str, str] = {
     LOCK_MISMATCH: "failure: file bytes disagree with lock sidecar",
     UNKNOWN_TAB: "failure: token occurrence has unknown tab outside urok|slovnyk|vpravy|resursy",
     UNTAUGHT_FORMS: "report: forms whose grammatical category is not yet taught at this position",
+    STRESS_CERTAIN_IDENTITY_OPEN: ("report: several records share one stressed spelling; non-blocking open question"),
     LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED: (
         "not_checked: lesson-level structural minimums are uncalibrated (module minimums apply)"
+    ),
+    INTRODUCING_STEP_NOT_LOCATABLE: (
+        "not_checked: introducing step cannot be located until expanded-document units carry step id"
     ),
 }
 
@@ -109,9 +117,14 @@ FAILURE_CODES = frozenset(
     }
 )
 
-REPORT_CODES = frozenset({UNTAUGHT_FORMS})
+REPORT_CODES = frozenset({UNTAUGHT_FORMS, STRESS_CERTAIN_IDENTITY_OPEN})
 
-NOT_CHECKED_CODES = frozenset({LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED})
+NOT_CHECKED_CODES = frozenset(
+    {
+        LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED,
+        INTRODUCING_STEP_NOT_LOCATABLE,
+    }
+)
 
 
 def help_text() -> str:

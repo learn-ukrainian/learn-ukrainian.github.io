@@ -20,6 +20,7 @@ Untaught forms:
 
 from __future__ import annotations
 
+import contextlib
 import json
 import re
 from pathlib import Path
@@ -29,6 +30,9 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.resolver import codes as resolver_codes
+from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+from scripts.curriculum.resolver.receipts import check_receipts, validate_receipts
 from scripts.curriculum.validate.loader import PlanError, load_plan
 
 from . import codes
@@ -36,7 +40,7 @@ from .planned import PlannedStateError, planned_state
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 SCHEMA_PATH = REPO_ROOT / "schemas/learner-observed-v1.schema.json"
-VALID_TABS = frozenset({"urok", "slovnyk", "vpravy", "resursy"})
+VALID_TABS = resolver_codes.TABS
 
 
 class ObservedError(Exception):
@@ -114,9 +118,10 @@ def build_observed_index(
     words_path: Path | None = None,
     base_request_path: Path | None = None,
     grammar_path: Path | None = None,
+    expanded: Any = None,
+    expanded_path: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
-    **kwargs: Any,
 ) -> dict[str, Any]:
     """Compute post-build observed index for level, slug, lesson_n."""
     plans_root = plans_dir or (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}")
@@ -142,19 +147,37 @@ def build_observed_index(
     if lesson is None:
         raise ObservedError(codes.LESSON_NOT_FOUND, f"lesson {lesson_n} not found in plan {slug}")
 
-    # 2. Load resolution receipts
+    # 2. Load resolution receipts via check_receipts
     res_path = resolutions_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.resolutions.yaml")
     if resolutions_doc is not None:
         res_data = resolutions_doc
+        try:
+            validate_receipts(res_data)
+        except ResolverError as err:
+            raise ObservedError(codes.RESOLUTIONS_INVALID, f"in-memory resolutions invalid: {err.message}") from err
     else:
         if not res_path.is_file():
             raise ObservedError(codes.RESOLUTIONS_NOT_FOUND, f"resolutions file {res_path} not found")
-        if not lock.check(res_path):
-            raise ObservedError(codes.LOCK_MISMATCH, f"resolutions file {res_path} failed lock check")
         try:
-            res_data = yaml.safe_load(res_path.read_text(encoding="utf-8"))
+            res_data = check_receipts(res_path)
+        except ResolverError as err:
+            if err.code == resolver_codes.LOCK_MISMATCH:
+                raise ObservedError(codes.LOCK_MISMATCH, err.message) from err
+            raise ObservedError(codes.RESOLUTIONS_INVALID, err.message) from err
         except Exception as err:
             raise ObservedError(codes.RESOLUTIONS_INVALID, f"failed parsing YAML in {res_path}: {err}") from err
+
+    expanded_doc = expanded
+    if expanded_doc is None:
+        exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+        if exp_file.is_file():
+            with contextlib.suppress(Exception):
+                expanded_doc = ExpandedDocument.load(exp_file)
+
+    units_by_locator: dict[tuple[Any, Any, Any, Any], Any] = {}
+    if expanded_doc is not None:
+        for u in getattr(expanded_doc, "units", ()):
+            units_by_locator[(u.tab, u.activity, u.item, u.block)] = u
 
     # 3. Planned state
     try:
@@ -236,14 +259,27 @@ def build_observed_index(
         if isinstance(plc, dict) and "evidence" in plc:
             name_ids.add(plc["evidence"])
 
-    drilling_activity_ids = set()
-    for act in lesson.get("activities", []):
-        if isinstance(act, dict):
-            act_type = str(act.get("type", "")).lower()
-            act_focus = str(act.get("focus", "")).lower()
-            act_id = act.get("id")
-            if act_type == "drill" or act_focus == "drill" or (act_id and "drill" in str(act_id).lower()):
-                drilling_activity_ids.add(str(act_id))
+    # Ground drilled role in plan data without string heuristics.
+    # Plan field names verified in scripts/curriculum/validate/validate.py (lines 445-455):
+    # `step.get("practice")`, `lesson.get("consolidation")`, `(lesson.get("practice") or {}).get("patterns")`
+    practice_or_consolidation_acts: set[str] = set()
+    for step in lesson.get("steps", []):
+        if isinstance(step, dict):
+            for act_id in step.get("practice") or []:
+                if isinstance(act_id, str):
+                    practice_or_consolidation_acts.add(act_id)
+    for act_id in lesson.get("consolidation") or []:
+        if isinstance(act_id, str):
+            practice_or_consolidation_acts.add(act_id)
+    lesson_practice = lesson.get("practice")
+    if isinstance(lesson_practice, list):
+        for act_id in lesson_practice:
+            if isinstance(act_id, str):
+                practice_or_consolidation_acts.add(act_id)
+    elif isinstance(lesson_practice, dict):
+        for act_id in lesson_practice.get("patterns") or []:
+            if isinstance(act_id, str):
+                practice_or_consolidation_acts.add(act_id)
 
     # 6. Aggregate tokens
     record_forms: dict[str, dict[str, dict[str, int]]] = {}
@@ -286,9 +322,25 @@ def build_observed_index(
                 record_forms[rec_id][ftag] = {"urok": 0, "slovnyk": 0, "vpravy": 0, "resursy": 0}
             record_forms[rec_id][ftag][tab] += 1
 
+        unit_obj = None
+        unit_idx = token.get("unit_index")
+        if (
+            expanded_doc is not None
+            and isinstance(unit_idx, int)
+            and 0 <= unit_idx < len(getattr(expanded_doc, "units", ()))
+        ):
+            unit_obj = expanded_doc.units[unit_idx]
+        elif expanded_doc is not None:
+            unit_loc = (unit.get("tab"), unit.get("activity"), unit.get("item"), unit.get("block"))
+            unit_obj = units_by_locator.get(unit_loc)
+
+        role = unit_obj.role if unit_obj is not None else (token.get("role") or unit.get("role") or "")
         act_id = unit.get("activity")
-        if act_id is not None and str(act_id) in drilling_activity_ids:
-            drilled_records.add(rec_id)
+        if rec_id in core_by_id and act_id in practice_or_consolidation_acts and role in ("item_prompt", "item_answer"):
+            core_item = core_by_id[rec_id]
+            plan_forms = set(core_item.get("forms") or [])
+            if any(f in plan_forms for f in forms):
+                drilled_records.add(rec_id)
 
     # 7. Build records list and untaught forms
     records_list = []
@@ -307,16 +359,7 @@ def build_observed_index(
         elif rec_id in recycled_ids:
             role = "recycled"
         elif rec_id in core_by_id:
-            core_item = core_by_id[rec_id]
-            if (
-                rec_id in drilled_records
-                or core_item.get("drilled") is True
-                or core_item.get("role") == "drilled"
-                or (bool(core_item.get("forms")) and rec_id in drilled_records)
-            ):
-                role = "drilled"
-            else:
-                role = "taught"
+            role = "drilled" if rec_id in drilled_records else "taught"
         else:
             role = "exposed"
 
@@ -366,12 +409,37 @@ def write_observed(
     slug: str,
     lesson_n: int,
     *,
+    resolutions_doc: dict[str, Any] | None = None,
+    resolutions_path: Path | None = None,
+    plans_dir: Path | None = None,
+    evidence_dir: Path | None = None,
+    words_path: Path | None = None,
+    base_request_path: Path | None = None,
+    grammar_path: Path | None = None,
+    expanded: Any = None,
+    expanded_path: Path | None = None,
     out_dir: Path | None = None,
-    **kwargs: Any,
+    allow_missing_prior: bool = False,
+    strict: bool = False,
 ) -> tuple[Path, str]:
     """Compute and atomically write observed index and lock sidecar."""
-    doc = build_observed_index(level, slug, lesson_n, **kwargs)
-    evidence_root = out_dir or kwargs.get("evidence_dir") or (REPO_ROOT / f"curriculum/l2-uk-en/evidence/{level}")
+    doc = build_observed_index(
+        level,
+        slug,
+        lesson_n,
+        resolutions_doc=resolutions_doc,
+        resolutions_path=resolutions_path,
+        plans_dir=plans_dir,
+        evidence_dir=evidence_dir,
+        words_path=words_path,
+        base_request_path=base_request_path,
+        grammar_path=grammar_path,
+        expanded=expanded,
+        expanded_path=expanded_path,
+        allow_missing_prior=allow_missing_prior,
+        strict=strict,
+    )
+    evidence_root = out_dir or evidence_dir or (REPO_ROOT / f"curriculum/l2-uk-en/evidence/{level}")
     state_dir = Path(evidence_root) / "_state" / slug
     state_dir.mkdir(parents=True, exist_ok=True)
     out_path = state_dir / f"lesson-{lesson_n}.observed.yaml"
