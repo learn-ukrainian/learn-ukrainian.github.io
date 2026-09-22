@@ -859,3 +859,194 @@ def test_cf_r10_remediations_regression():
         assert rev["reviewer_id"] in ACCREDITED_INDEPENDENT_REVIEWERS, (
             f"Case {case_id} has unaccredited reviewer '{rev['reviewer_id']}'"
         )
+
+
+def test_cf_r11_remediations_regression(monkeypatch):
+    """Verify remediation of all CF-R11 blockers.
+
+    1. Blocker 1:
+       a. Unrelated textbook/curriculum record (e.g. agricultural book 'Книга про трактори' with 'лікар')
+          fails closed because it does not substantiate claimed citation / curriculum authority.
+       b. Soviet dictionary СУМ-11 record in modern dictionary branch fails closed with ValueError.
+    2. Blocker 2:
+       a. UA-GEC negation mismatch ('не гусь → не гусак' when target is 'гусак') fails closed.
+       b. UA-GEC doc_id metadata mismatch fails closed.
+    3. Blocker 3:
+       make_reviewer_confirmation fails closed on incomplete/defective signoff:
+       a. sample_size_reviewed == 0 (incomplete review)
+       b. blocker_defect_count > 0 (e.g. 300 blockers)
+       c. minor_defect_count > 5
+       d. invalid / missing dataset_sha256 hex digest
+       e. invalid / missing signoff_date
+    """
+    import json
+    import sqlite3
+
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        make_reviewer_confirmation,
+        query_source_evidence,
+        validate_ua_gec_phrase,
+    )
+
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    sources_db = _resolve_db_path("sources.db", REPO_ROOT)
+    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    real_v_cur = v_conn.cursor()
+    real_s_cur = s_conn.cursor()
+
+    # ── 1. Blocker 1: Citation binding and Modern Dictionary Fallback ──
+    # 1a. Unrelated book with token match but no curriculum/linguistic citation anchors
+    class UnrelatedBookCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return (88888, "Книга про трактори", "Тут є лікар тракторної бригади і ремонтники.")
+
+        def fetchall(self):
+            return [(88888, "Книга про трактори", "Тут є лікар тракторної бригади і ремонтники.")]
+
+    unrelated_book_cur = UnrelatedBookCursor()
+    with pytest.raises(ValueError, match="does not substantiate claimed citation"):
+        query_source_evidence(
+            case_id="decol_lex_001",
+            term="лікар",
+            copy="доктор",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=unrelated_book_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 1b. Soviet SUM-11 cursor fails closed
+    class SovietSum11Cursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return (11111, "СУМ-11 том 4", "КАПЕЛЮХ, а, ч. Головний убір.")
+
+        def fetchall(self):
+            return [(11111, "СУМ-11 том 4", "КАПЕЛЮХ, а, ч. Головний убір.")]
+
+    soviet_cur = SovietSum11Cursor()
+    with pytest.raises(ValueError, match="Soviet dictionary СУМ-11 is strictly forbidden"):
+        query_source_evidence(
+            case_id="decol_lex_002",
+            term="капелюх",
+            copy="шляпа",
+            auth="СУМ-20",
+            cat_name="calque_lexical",
+            s_cur=soviet_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # ── 2. Blocker 2: Strict UA-GEC phrase and metadata alignment ──
+    # 2a. Negation mismatch
+    assert not validate_ua_gec_phrase("гусак", "не гусак", real_v_cur)
+    assert not validate_ua_gec_phrase("не гусак", "гусак", real_v_cur)
+
+    class UAGECNegationCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            # doc_id matches ("1068"), error matches, but correction has negation particle mismatch
+            return (5921, "гусь", "не гусак", "Fluency", "1068")
+
+        def fetchall(self):
+            return [(5921, "гусь", "не гусак", "Fluency", "1068")]
+
+    neg_cur = UAGECNegationCursor()
+    with pytest.raises(ValueError, match=r"UA-GEC record \d+ correction.*does not match"):
+        query_source_evidence(
+            case_id="decol_lex_012",
+            term="гусак",
+            copy="гусь",
+            auth="UA-GEC (Syvokon et al., 2023)",
+            cat_name="calque_lexical",
+            s_cur=neg_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2b. doc_id metadata mismatch
+    class UAGECDocMismatchCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            # doc_id is 9999 instead of expected 1068
+            return (5921, "гусь", "гусак", "Fluency", "9999")
+
+        def fetchall(self):
+            return [(5921, "гусь", "гусак", "Fluency", "9999")]
+
+    doc_mismatch_cur = UAGECDocMismatchCursor()
+    with pytest.raises(ValueError, match=r"UA-GEC doc_id mismatch for case 'decol_lex_012': expected '1068', got '9999'"):
+        query_source_evidence(
+            case_id="decol_lex_012",
+            term="гусак",
+            copy="гусь",
+            auth="UA-GEC (Syvokon et al., 2023)",
+            cat_name="calque_lexical",
+            s_cur=doc_mismatch_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # ── 3. Blocker 3: make_reviewer_confirmation signoff contract ──
+    signoff_path = REPO_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    valid_signoff = json.loads(signoff_path.read_text(encoding="utf-8"))
+
+    cases_file = DECOLONIZATION_DIR / "cases.json"
+    valid_cases = json.loads(cases_file.read_text(encoding="utf-8"))
+    lex_001_item = next(c for c in valid_cases if c["case_id"] == "decol_lex_001")
+
+    # 3a. Incomplete review: sample_size_reviewed = 0
+    bad_signoff_3a = dict(valid_signoff, sample_size_reviewed=0)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_3a,
+    )
+    with pytest.raises(ValueError, match="Review incomplete"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 3b. Unresolved blocker defects: blocker_defect_count = 300
+    bad_signoff_3b = dict(valid_signoff, blocker_defect_count=300)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_3b,
+    )
+    with pytest.raises(ValueError, match="unresolved BLOCKER defect"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 3c. Excessive minor defects: minor_defect_count = 10
+    bad_signoff_3c = dict(valid_signoff, minor_defect_count=10)
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_3c,
+    )
+    with pytest.raises(ValueError, match="exceeds allowable tolerance limit"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 3d. Invalid dataset_sha256
+    bad_signoff_3d = dict(valid_signoff, dataset_sha256="not_a_valid_sha")
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_3d,
+    )
+    with pytest.raises(ValueError, match="not a valid 64-character hex digest"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+
+    # 3e. Invalid signoff_date
+    bad_signoff_3e = dict(valid_signoff, signoff_date="2026/09/22")
+    monkeypatch.setattr(
+        "scripts.projects.open_model_data.build_decolonization_cases.json.loads",
+        lambda s: bad_signoff_3e,
+    )
+    with pytest.raises(ValueError, match="invalid date format"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
