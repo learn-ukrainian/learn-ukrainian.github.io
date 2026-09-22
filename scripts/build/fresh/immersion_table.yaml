@@ -3,7 +3,7 @@
 # Keys are immersion band keys from scripts.config.IMMERSION_POLICIES.
 
 a1-m01-03:
-  contract_citation: "#8431 r3 §6/§7 (A1 early scaffolding; theory Ukrainian-first with brief English support)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 early scaffolding; theory Ukrainian-first with brief English support)"
   roles:
     narration: [en]
     dialogue_line: [uk]
@@ -14,7 +14,7 @@ a1-m01-03:
     resource_line: [en, uk]
 
 a1-m04-06:
-  contract_citation: "#8431 r3 §6/§7 (A1 early scaffolding; words/phrases inline with English support)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 early scaffolding; words/phrases inline with English support)"
   roles:
     narration: [en]
     dialogue_line: [uk]
@@ -25,7 +25,7 @@ a1-m04-06:
     resource_line: [en, uk]
 
 a1-m07-14:
-  contract_citation: "#8431 r3 §6/§7 (A1 Ukrainian-first examples with English support; paragraphs English)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 Ukrainian-first examples with English support; paragraphs English)"
   roles:
     narration: [en]
     dialogue_line: [uk]
@@ -36,7 +36,7 @@ a1-m07-14:
     resource_line: [en, uk]
 
 a1-m15-24:
-  contract_citation: "#8431 r3 §6/§7 (A1 paragraphs English with inline bold Ukrainian)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 paragraphs English with inline bold Ukrainian)"
   roles:
     narration: [en]
     dialogue_line: [uk]
@@ -47,7 +47,7 @@ a1-m15-24:
     resource_line: [en, uk]
 
 a1-m25-34:
-  contract_citation: "#8431 r3 §6/§7 (A1 paragraphs English with inline bold Ukrainian; pattern boxes)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 paragraphs English with inline bold Ukrainian; pattern boxes)"
   roles:
     narration: [en]
     dialogue_line: [uk]
@@ -58,7 +58,7 @@ a1-m25-34:
     resource_line: [en, uk]
 
 a1-m35-54:
-  contract_citation: "#8431 r3 §6/§7 (A1 Ukrainian narrative paragraphs required; bilingual narration/instructions)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 Ukrainian narrative paragraphs required; bilingual narration/instructions)"
   roles:
     narration: [en, uk]
     dialogue_line: [uk]
@@ -69,7 +69,7 @@ a1-m35-54:
     resource_line: [en, uk]
 
 a1-m55+:
-  contract_citation: "#8431 r3 §6/§7 (A1 Ukrainian narrative paragraphs required; bilingual narration/instructions)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A1 Ukrainian narrative paragraphs required; bilingual narration/instructions)"
   roles:
     narration: [en, uk]
     dialogue_line: [uk]
@@ -80,7 +80,7 @@ a1-m55+:
     resource_line: [en, uk]
 
 a2-bridge:
-  contract_citation: "#8431 r3 §6/§7 (A2 simple Ukrainian explanations; do not add English body scaffolding)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A2 simple Ukrainian explanations; do not add English body scaffolding)"
   roles:
     narration: [uk]
     dialogue_line: [uk]
@@ -91,7 +91,7 @@ a2-bridge:
     resource_line: [en, uk]
 
 a2-ramp:
-  contract_citation: "#8431 r3 §6/§7 (A2 easy Ukrainian explanations; Ukrainian only headers and context)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A2 easy Ukrainian explanations; Ukrainian only headers and context)"
   roles:
     narration: [uk]
     dialogue_line: [uk]
@@ -102,7 +102,7 @@ a2-ramp:
     resource_line: [en, uk]
 
 a2-m01-20:
-  contract_citation: "#8431 r3 §6/§7 (A2 easy Ukrainian explanations; Ukrainian only section intros)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A2 easy Ukrainian explanations; Ukrainian only section intros)"
   roles:
     narration: [uk]
     dialogue_line: [uk]
@@ -113,7 +113,7 @@ a2-m01-20:
     resource_line: [en, uk]
 
 a2-m21-50:
-  contract_citation: "#8431 r3 §6/§7 (A2 Ukrainian for all content: dialogues, examples, section intros)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A2 Ukrainian for all content: dialogues, examples, section intros)"
   roles:
     narration: [uk]
     dialogue_line: [uk]
@@ -124,7 +124,7 @@ a2-m21-50:
     resource_line: [en, uk]
 
 a2-m51-70:
-  contract_citation: "#8431 r3 §6/§7 (A2 Ukrainian for narrative, dialogues, examples, section intros)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (A2 Ukrainian for narrative, dialogues, examples, section intros)"
   roles:
     narration: [uk]
     dialogue_line: [uk]
@@ -135,7 +135,7 @@ a2-m51-70:
     resource_line: [en, uk]
 
 b1-core:
-  contract_citation: "#8431 r3 §6/§7 (B1 full Ukrainian immersion; no English in module body)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (B1 full Ukrainian immersion; no English in module body)"
   roles:
     narration: [uk]
     dialogue_line: [uk]
@@ -146,7 +146,7 @@ b1-core:
     resource_line: [en, uk]
 
 b2+:
-  contract_citation: "#8431 r3 §6/§7 (B2+ full Ukrainian immersion; no English in module body)"
+  contract_citation: "scripts/config.py IMMERSION_POLICIES (B2+ full Ukrainian immersion; no English in module body)"
   roles:
     narration: [uk]
     dialogue_line: [uk]

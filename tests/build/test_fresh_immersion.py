@@ -15,6 +15,7 @@ from scripts.build.fresh.immersion import (
     get_immersion_table,
     load_immersion_table,
 )
+from scripts.config import IMMERSION_POLICIES
 from scripts.curriculum.arc.loader import ArcPosition
 from scripts.curriculum.learner_state.immersion import ImmersionError, LessonBand
 
@@ -159,32 +160,18 @@ def test_b1_immersion_payload():
     assert payload.permitted_languages["gloss"] == ("en",)
 
 
-@pytest.mark.parametrize(
-    "band_key",
-    [
-        "a1-m01-03",
-        "a1-m04-06",
-        "a1-m07-14",
-        "a1-m15-24",
-        "a1-m25-34",
-        "a1-m35-54",
-        "a1-m55+",
-        "a2-bridge",
-        "a2-ramp",
-        "a2-m01-20",
-        "a2-m21-50",
-        "a2-m51-70",
-        "b1-core",
-        "b2+",
-    ],
-)
+ALL_CONFIG_BAND_KEYS = [entry["key"] for entries in IMMERSION_POLICIES.values() for entry in entries]
+
+
+@pytest.mark.parametrize("band_key", ALL_CONFIG_BAND_KEYS)
 def test_all_contract_bands_tied_to_table_rows(band_key: str):
     """Test per band key tying it to its contract citation and role mapping (#8431 §6/§7, Finding 6)."""
     table = load_immersion_table()
+    assert set(table.keys()) == set(ALL_CONFIG_BAND_KEYS), "Table keys do not match config keys"
     assert band_key in table, f"Band key {band_key} missing from immersion_table.yaml"
     row = table[band_key]
     assert "contract_citation" in row, f"Band {band_key} missing contract_citation"
-    assert "#8431 r3 §6/§7" in row["contract_citation"]
+    assert "scripts/config.py IMMERSION_POLICIES" in row["contract_citation"]
 
     roles = row.get("roles", {})
     for field_role in FIELD_ROLES:
