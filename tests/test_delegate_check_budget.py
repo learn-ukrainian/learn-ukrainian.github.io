@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 import types
 import urllib.error
 from datetime import UTC, datetime
@@ -321,8 +322,26 @@ def test_language_lane_refuses_to_shed_onto_cursor(monkeypatch):
 
 
 def test_adapter_rejects_foreign_model_after_substitution():
+    temp_root = Path(tempfile.gettempdir())
+    before = set(temp_root.glob("codex-runtime-*.txt"))
     assert delegate._adapter_rejects_model("codex", "claude-fable-5-1") is True
     assert delegate._adapter_rejects_model("codex", "gpt-6-astra") is False
+    assert set(temp_root.glob("codex-runtime-*.txt")) <= before
+
+
+def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
+    class _Boom:
+        def build_invocation(self, **_kwargs):
+            raise RuntimeError("grok CLI not found")
+
+    fake = types.ModuleType("probe_adapter_mod")
+    fake.Boom = _Boom
+    monkeypatch.setitem(sys.modules, "probe_adapter_mod", fake)
+    monkeypatch.setattr(
+        "agent_runtime.registry.get_agent_entry",
+        lambda _agent: {"adapter": "probe_adapter_mod:Boom"},
+    )
+    assert delegate._adapter_rejects_model("grok", "grok-4.7") is False
 
 
 def test_adapter_valueerror_before_spawn_is_failed(monkeypatch, tmp_path):

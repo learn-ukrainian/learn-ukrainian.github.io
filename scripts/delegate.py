@@ -7104,8 +7104,32 @@ def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
     return False
 
 
+def _discard_model_probe_output(plan: object) -> None:
+    """Remove a temp file a successful model probe created. Leave repo paths alone."""
+    output = getattr(plan, "output_file", None)
+    if not isinstance(output, Path):
+        return
+    try:
+        resolved = output.resolve()
+        temp_root = Path(tempfile.gettempdir()).resolve()
+    except OSError:
+        return
+    if resolved != temp_root and temp_root not in resolved.parents:
+        return
+    try:
+        resolved.unlink(missing_ok=True)
+    except OSError:
+        return
+
+
 def _adapter_rejects_model(agent: str, model: str) -> bool:
-    """True when the target adapter raises on this explicit model before spawn."""
+    """True when the target adapter refuses this explicit model before spawn.
+
+    A successful probe is not a rejection. Any error other than the adapter's
+    model ValueError is inconclusive: keep the explicit model instead of
+    crashing dispatch. The probe must not leave the temp file ``build_invocation``
+    creates on the accepted path.
+    """
     from agent_runtime.registry import get_agent_entry
 
     entry = get_agent_entry(agent)
@@ -7116,7 +7140,7 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
     module = __import__(module_name, fromlist=[class_name])
     adapter = getattr(module, class_name)()
     try:
-        adapter.build_invocation(
+        plan = adapter.build_invocation(
             prompt="model-probe",
             mode="read-only",
             cwd=Path("."),
@@ -7128,6 +7152,13 @@ def _adapter_rejects_model(agent: str, model: str) -> bool:
     except ValueError as exc:
         text = str(exc)
         return model in text and ("rejected" in text or "unsupported" in text.lower())
+    except Exception as exc:
+        print(
+            f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
+            file=sys.stderr,
+        )
+        return False
+    _discard_model_probe_output(plan)
     return False
 
 
