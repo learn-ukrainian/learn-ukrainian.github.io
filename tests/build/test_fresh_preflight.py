@@ -2,12 +2,10 @@
 
 from __future__ import annotations
 
-from pathlib import Path
-
 import pytest
 import yaml
 
-from scripts.build.fresh.preflight import Gap, PreflightResult, compute_homographs, preflight_lesson
+from scripts.build.fresh.preflight import compute_homographs, preflight_lesson
 from scripts.curriculum.resolver.inputs import Allowlist
 
 
@@ -20,8 +18,20 @@ def clean_word_store():
                 "lemma": "слово",
                 "pos": "noun",
                 "forms": [
-                    {"form": "слово", "tags": "noun:inanim:n:v_naz", "stressed": "сло́во", "stress_source": "vesum", "learner": True},
-                    {"form": "слова", "tags": "noun:inanim:n:v_rod", "stressed": "сло́ва", "stress_source": "vesum", "learner": True},
+                    {
+                        "form": "слово",
+                        "tags": "noun:inanim:n:v_naz",
+                        "stressed": "сло́во",
+                        "stress_source": "vesum",
+                        "learner": True,
+                    },
+                    {
+                        "form": "слова",
+                        "tags": "noun:inanim:n:v_rod",
+                        "stressed": "сло́ва",
+                        "stress_source": "vesum",
+                        "learner": True,
+                    },
                 ],
             }
         ]
@@ -182,7 +192,13 @@ def test_preflight_paradigm_need(clean_word_store, clean_pack):
                 "id": "W-001",
                 "lemma": "слово",
                 "forms": [
-                    {"form": "слово", "tags": "noun:inanim:n:v_naz", "stressed": None, "stress_source": "pending", "learner": True},
+                    {
+                        "form": "слово",
+                        "tags": "noun:inanim:n:v_naz",
+                        "stressed": None,
+                        "stress_source": "pending",
+                        "learner": True,
+                    },
                 ],
             }
         ]
@@ -200,7 +216,13 @@ def test_preflight_cited_forms_pending_stress(clean_pack):
                 "id": "W-010",
                 "lemma": "тест",
                 "forms": [
-                    {"form": "тест", "tags": "noun:inanim:m:v_naz", "stressed": None, "stress_source": "pending", "learner": True}
+                    {
+                        "form": "тест",
+                        "tags": "noun:inanim:m:v_naz",
+                        "stressed": None,
+                        "stress_source": "pending",
+                        "learner": True,
+                    }
                 ],
             }
         ]
@@ -208,9 +230,7 @@ def test_preflight_cited_forms_pending_stress(clean_pack):
     plan_entry = {
         "steps": [{"id": "s1"}],
         "inventory": {
-            "vocabulary": {
-                "core": [{"evidence": "W-010", "lemma": "тест", "forms": ["noun:inanim:m:v_naz"]}]
-            }
+            "vocabulary": {"core": [{"evidence": "W-010", "lemma": "тест", "forms": ["noun:inanim:m:v_naz"]}]}
         },
     }
     res = preflight_lesson(plan_entry, pack=clean_pack, word_store=store_pending)
@@ -225,22 +245,46 @@ def test_homograph_list_computation():
             "id": "W-001",
             "lemma": "замок",
             "forms": [
-                {"form": "замок", "tags": "noun:inanim:m:v_naz", "stressed": "за́мок", "stress_source": "vesum", "learner": True}
+                {
+                    "form": "замок",
+                    "tags": "noun:inanim:m:v_naz",
+                    "stressed": "за́мок",
+                    "stress_source": "vesum",
+                    "learner": True,
+                }
             ],
         },
         {
             "id": "W-002",
             "lemma": "замок",
             "forms": [
-                {"form": "замок", "tags": "noun:inanim:m:v_naz", "stressed": "замо́к", "stress_source": "vesum", "learner": True}
+                {
+                    "form": "замок",
+                    "tags": "noun:inanim:m:v_naz",
+                    "stressed": "замо́к",
+                    "stress_source": "vesum",
+                    "learner": True,
+                }
             ],
         },
         {
             "id": "W-003",
             "lemma": "стіл",
             "forms": [
-                {"form": "стіл", "tags": "noun:inanim:m:v_naz", "stressed": "сті́л", "stress_source": "vesum", "learner": True},
-                {"form": "стіл", "tags": "noun:inanim:m:v_zna", "stressed": "сті́л", "stress_source": "vesum", "learner": True},
+                {
+                    "form": "стіл",
+                    "tags": "noun:inanim:m:v_naz",
+                    "stressed": "сті́л",
+                    "stress_source": "vesum",
+                    "learner": True,
+                },
+                {
+                    "form": "стіл",
+                    "tags": "noun:inanim:m:v_zna",
+                    "stressed": "сті́л",
+                    "stress_source": "vesum",
+                    "learner": True,
+                },
             ],
         },
     ]

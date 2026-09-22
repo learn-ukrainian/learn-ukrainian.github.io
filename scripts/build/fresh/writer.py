@@ -18,11 +18,9 @@ The writer call:
 from __future__ import annotations
 
 import datetime
-import os
 import subprocess
 import sys
 from collections.abc import Callable
-from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
@@ -111,9 +109,7 @@ def dispatch_writer(
 ) -> dict[str, Any]:
     """Execute the writer call, wait for completion, parse and validate the draft."""
     if writer not in ALLOWED_WRITERS:
-        raise ValueError(
-            f"Invalid writer {writer!r}. Explicit writer seat must be one of {ALLOWED_WRITERS}."
-        )
+        raise ValueError(f"Invalid writer {writer!r}. Explicit writer seat must be one of {ALLOWED_WRITERS}.")
 
     root = repo_root or REPO_ROOT
     task_id = f"write-{level}-{slug}-{lesson_n}-{attempt}"
@@ -139,9 +135,7 @@ def dispatch_writer(
             ]
             proc = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=False)
             if proc.returncode != 0:
-                raise WriterCallError(
-                    f"Fake seat script failed with exit code {proc.returncode}: {proc.stderr}"
-                )
+                raise WriterCallError(f"Fake seat script failed with exit code {proc.returncode}: {proc.stderr}")
     else:
         # Real delegate dispatch
         dispatch_cmd = [
@@ -177,9 +171,7 @@ def dispatch_writer(
         ]
         wait_proc = subprocess.run(wait_cmd, capture_output=True, text=True, timeout=timeout + 30, check=False)
         if wait_proc.returncode != 0:
-            raise WriterCallError(
-                f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr}"
-            )
+            raise WriterCallError(f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr}")
 
     # 2. Read result file
     if not result_file.is_file():
@@ -212,7 +204,7 @@ def dispatch_writer(
         "prompt_sha256": prompt_sha256,
         "task_id": task_id,
         "attempt": attempt,
-        "created_at": datetime.datetime.now(datetime.timezone.utc).isoformat(),
+        "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
     }
     writer_meta_file.write_text(yaml.safe_dump(meta, sort_keys=False), encoding="utf-8")
 

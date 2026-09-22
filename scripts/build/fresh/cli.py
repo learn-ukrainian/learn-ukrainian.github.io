@@ -9,7 +9,6 @@ Subcommands:
 from __future__ import annotations
 
 import argparse
-import json
 import sys
 from pathlib import Path
 from typing import Any
@@ -26,9 +25,8 @@ from scripts.build.fresh.prompt import (
     style_card_info,
 )
 from scripts.build.fresh.writer import ALLOWED_WRITERS, dispatch_writer
-from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import lesson_lock
 from scripts.curriculum.learner_state.planned import planned_state
-from scripts.curriculum.resolver.inputs import Allowlist
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -83,8 +81,12 @@ def _build_parser() -> argparse.ArgumentParser:
     p_render.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
     p_render.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
     p_render.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
-    p_render.add_argument("--output", "-o", type=Path, default=None, help="Output file path for rendered prompt (default: stdout)")
-    p_render.add_argument("--recap", action="store_true", help="Render recap prompt variant with built lessons 1..N-1 (default: False)")
+    p_render.add_argument(
+        "--output", "-o", type=Path, default=None, help="Output file path for rendered prompt (default: stdout)"
+    )
+    p_render.add_argument(
+        "--recap", action="store_true", help="Render recap prompt variant with built lessons 1..N-1 (default: False)"
+    )
 
     # 2. preflight subcommand
     p_preflight = subparsers.add_parser(
@@ -110,7 +112,9 @@ def _build_parser() -> argparse.ArgumentParser:
     p_preflight.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
     p_preflight.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
     p_preflight.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
-    p_preflight.add_argument("--gap-report", type=Path, default=None, help="File path to write evidence gap report if preflight fails")
+    p_preflight.add_argument(
+        "--gap-report", type=Path, default=None, help="File path to write evidence gap report if preflight fails"
+    )
 
     # 3. write subcommand
     p_write = subparsers.add_parser(
@@ -137,15 +141,34 @@ def _build_parser() -> argparse.ArgumentParser:
     p_write.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
     p_write.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
     p_write.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
-    p_write.add_argument("--writer", choices=ALLOWED_WRITERS, required=True, help="Explicit writer seat (claude, codex, agy, grok; code never auto-routes)")
-    p_write.add_argument("--attempt", type=int, default=1, help="Attempt count for regeneration tracking (default: 1, e.g. 1 or 2)")
-    p_write.add_argument("--fake-seat", type=Path, default=None, help="Optional script path for fake seat execution during testing (never makes paid call)")
-    p_write.add_argument("--output-dir", type=Path, default=None, help="Directory to save draft and state files (default: evidence/<level>/_state/<slug>/)")
+    p_write.add_argument(
+        "--writer",
+        choices=ALLOWED_WRITERS,
+        required=True,
+        help="Explicit writer seat (claude, codex, agy, grok; code never auto-routes)",
+    )
+    p_write.add_argument(
+        "--attempt", type=int, default=1, help="Attempt count for regeneration tracking (default: 1, e.g. 1 or 2)"
+    )
+    p_write.add_argument(
+        "--fake-seat",
+        type=Path,
+        default=None,
+        help="Optional script path for fake seat execution during testing (never makes paid call)",
+    )
+    p_write.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Directory to save draft and state files (default: evidence/<level>/_state/<slug>/)",
+    )
 
     return parser
 
 
-def _load_lesson_data(level: str, slug: str, lesson_n: int) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Path]]:
+def _load_lesson_data(
+    level: str, slug: str, lesson_n: int
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Path]]:
     """Helper to resolve paths and load plan, pack, and word store."""
     paths = lesson_lock.resolve_paths(level, slug)
     if not paths["plan"].is_file():
@@ -164,7 +187,7 @@ def _load_lesson_data(level: str, slug: str, lesson_n: int) -> tuple[dict[str, A
     if lesson_entry is None:
         raise ValueError(f"Lesson {lesson_n} not found in plan {paths['plan']}")
 
-    return plan_dict, lesson_entry, pack_dict, paths
+    return plan_dict, lesson_entry, pack_dict, words_dict, paths
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -172,13 +195,15 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "render-prompt":
-        plan_dict, lesson_entry, pack_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
-        card_path, _, card_sha = style_card_info(args.level)
+        plan_dict, lesson_entry, pack_dict, _words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
+        card_path, _, _card_sha = style_card_info(args.level)
 
         # Compute planned state and immersion payload
         pos = plan_dict.get("arc_ref", {}).get("position", 1)
         p_state = planned_state(args.level, pos, args.lesson, allow_missing_prior=True)
-        imm_payload = compute_immersion_payload(args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count)
+        imm_payload = compute_immersion_payload(
+            args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
+        )
 
         if args.recap:
             # Load built lessons 1..N-1 if available
@@ -225,8 +250,7 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     elif args.command == "preflight":
-        plan_dict, lesson_entry, pack_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
-        words_dict = yaml.safe_load(paths["words"].read_text(encoding="utf-8")) if paths["words"].is_file() else {}
+        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
 
         res = preflight_lesson(
             lesson_entry,
@@ -246,14 +270,15 @@ def main(argv: list[str] | None = None) -> int:
         return 0
 
     elif args.command == "write":
-        plan_dict, lesson_entry, pack_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
-        card_path, _, card_sha = style_card_info(args.level)
+        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
+        card_path, _, _card_sha = style_card_info(args.level)
         pos = plan_dict.get("arc_ref", {}).get("position", 1)
         p_state = planned_state(args.level, pos, args.lesson, allow_missing_prior=True)
-        imm_payload = compute_immersion_payload(args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count)
+        imm_payload = compute_immersion_payload(
+            args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
+        )
 
         # 1. Run preflight first
-        words_dict = yaml.safe_load(paths["words"].read_text(encoding="utf-8")) if paths["words"].is_file() else {}
         pre_res = preflight_lesson(lesson_entry, pack=pack_dict, word_store=words_dict)
         if not pre_res.passed:
             print("Preflight FAILED with evidence gaps. NO writer call made.", file=sys.stderr)

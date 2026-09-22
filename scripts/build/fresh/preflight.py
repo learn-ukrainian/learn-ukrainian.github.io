@@ -15,15 +15,12 @@ Before any paid writer call, verifies availability of evidence records:
 
 from __future__ import annotations
 
-import hashlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import yaml
 
-from scripts.curriculum.evidence import lock, registry
-from scripts.curriculum.evidence import words as words_module
 from scripts.curriculum.evidence import pack as pack_module
 from scripts.curriculum.resolver.ambiguity import readings
 from scripts.curriculum.resolver.inputs import Allowlist
@@ -141,17 +138,25 @@ def preflight_lesson(
             if need == "example":
                 ex_ids = [i for i in cited_ids if i.startswith("EX-")]
                 if not ex_ids:
-                    gaps.append(Gap(step=step_id, need="example", detail=f"step {step_id} needs example but cites no EX- record"))
+                    gaps.append(
+                        Gap(
+                            step=step_id, need="example", detail=f"step {step_id} needs example but cites no EX- record"
+                        )
+                    )
                 else:
                     for eid in ex_ids:
                         if eid not in pack_records:
-                            gaps.append(Gap(step=step_id, need="example", detail=f"example record {eid} missing from pack"))
+                            gaps.append(
+                                Gap(step=step_id, need="example", detail=f"example record {eid} missing from pack")
+                            )
 
             elif need == "quote":
                 # Quote need check
                 t_ids = [i for i in cited_ids if i.startswith("T-")]
                 if not t_ids:
-                    gaps.append(Gap(step=step_id, need="quote", detail=f"step {step_id} needs quote but cites no T- record"))
+                    gaps.append(
+                        Gap(step=step_id, need="quote", detail=f"step {step_id} needs quote but cites no T- record")
+                    )
                 else:
                     for tid in t_ids:
                         if tid not in pack_records:
@@ -180,7 +185,9 @@ def preflight_lesson(
                         for eref in act.get("error_refs") or []:
                             e_ids.append(eref)
                 if not e_ids:
-                    gaps.append(Gap(step=step_id, need="error", detail=f"step {step_id} needs error but cites no E- record"))
+                    gaps.append(
+                        Gap(step=step_id, need="error", detail=f"step {step_id} needs error but cites no E- record")
+                    )
                 else:
                     for eid in e_ids:
                         if eid not in pack_records:
@@ -189,7 +196,9 @@ def preflight_lesson(
             elif need == "video":
                 v_ids = [i for i in cited_ids if i.startswith("V-")]
                 if not v_ids:
-                    gaps.append(Gap(step=step_id, need="video", detail=f"step {step_id} needs video but cites no V- record"))
+                    gaps.append(
+                        Gap(step=step_id, need="video", detail=f"step {step_id} needs video but cites no V- record")
+                    )
                 else:
                     for vid in v_ids:
                         if vid not in pack_records:
@@ -198,29 +207,53 @@ def preflight_lesson(
             elif need == "culture":
                 t_ids = [i for i in cited_ids if i.startswith("T-")]
                 if not t_ids:
-                    gaps.append(Gap(step=step_id, need="culture", detail=f"step {step_id} needs culture but cites no T- record"))
+                    gaps.append(
+                        Gap(step=step_id, need="culture", detail=f"step {step_id} needs culture but cites no T- record")
+                    )
                 else:
                     for tid in t_ids:
                         if tid not in pack_records:
-                            gaps.append(Gap(step=step_id, need="culture", detail=f"culture record {tid} missing from pack"))
+                            gaps.append(
+                                Gap(step=step_id, need="culture", detail=f"culture record {tid} missing from pack")
+                            )
 
             elif need == "paradigm":
                 paradigm = step.get("paradigm")
                 if not paradigm:
-                    gaps.append(Gap(step=step_id, need="paradigm", detail=f"step {step_id} needs paradigm but carries no paradigm block"))
+                    gaps.append(
+                        Gap(
+                            step=step_id,
+                            need="paradigm",
+                            detail=f"step {step_id} needs paradigm but carries no paradigm block",
+                        )
+                    )
                 else:
                     wid = paradigm.get("word")
                     if not wid or wid not in store_records:
-                        gaps.append(Gap(step=step_id, need="word_form", detail=f"paradigm word {wid} missing from word store"))
+                        gaps.append(
+                            Gap(step=step_id, need="word_form", detail=f"paradigm word {wid} missing from word store")
+                        )
                     else:
                         w_rec = store_records[wid]
                         p_forms = paradigm.get("forms") or []
                         store_form_tags = {f["tags"]: f for f in w_rec.get("forms") or []}
                         for p_tag in p_forms:
                             if p_tag not in store_form_tags:
-                                gaps.append(Gap(step=step_id, need="word_form", detail=f"paradigm form tag {p_tag} not found in {wid}"))
+                                gaps.append(
+                                    Gap(
+                                        step=step_id,
+                                        need="word_form",
+                                        detail=f"paradigm form tag {p_tag} not found in {wid}",
+                                    )
+                                )
                             elif store_form_tags[p_tag].get("stress_source") == "pending":
-                                gaps.append(Gap(step=step_id, need="word_form", detail=f"paradigm form {p_tag} in {wid} has pending stress"))
+                                gaps.append(
+                                    Gap(
+                                        step=step_id,
+                                        need="word_form",
+                                        detail=f"paradigm form {p_tag} in {wid} has pending stress",
+                                    )
+                                )
 
     # 4. Check all cited forms in lesson for non-pending stress (R-23)
     inv = plan_entry.get("inventory") or {}
@@ -259,7 +292,7 @@ def preflight_lesson(
     else:
         homographs = []
 
-    passed = (len(gaps) == 0)
+    passed = len(gaps) == 0
     status = "ok" if passed else "evidence_gap"
 
     res = PreflightResult(

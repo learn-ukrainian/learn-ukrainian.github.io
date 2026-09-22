@@ -13,7 +13,6 @@ from scripts.build.fresh.prompt import (
     check_rendered_prompt,
     render_lesson_prompt,
     render_recap_prompt,
-    style_card_info,
 )
 from scripts.curriculum.learner_state.planned import PlannedState
 
@@ -49,9 +48,7 @@ def sample_plan_entry():
             },
         ],
         "consolidation": ["a1"],
-        "activities": [
-            {"id": "a1", "type": "quiz", "placement": "inline", "focus": "Identify letter"}
-        ],
+        "activities": [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Identify letter"}],
         "inventory": {
             "vocabulary": {
                 "core": [{"lemma": "mama", "evidence": "W-001", "forms": ["tag-nom"]}],
@@ -199,11 +196,7 @@ def test_check_fails_v1_path(sample_plan_entry):
 def test_check_fails_uncited_record_id(sample_plan_entry):
     card_path = CARDS_DIR / "a1.md"
     # Prompt contains extra T-999 in cited records
-    prompt = (
-        "## 2. Cited Evidence Records\n\n"
-        "### Record T-999\n- Text: Uncited text\n\n"
-        "---"
-    )
+    prompt = "## 2. Cited Evidence Records\n\n### Record T-999\n- Text: Uncited text\n\n---"
     res = check_rendered_prompt(prompt, sample_plan_entry, card_path)
     assert res.passed is False
     assert any("uncited_record_id" in e and "T-999" in e for e in res.errors)
