@@ -304,7 +304,7 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert "gpt-5.6-terra" not in candidates
-    assert candidates["grok-4.6"]["transport"] == "native_grok"
+    assert candidates["grok-4.7"]["transport"] == "native_grok"
     # Explicit Cursor pin when native grok is dark — never Cursor auto.
     assert candidates["grok-4.7-cursor-fallback"]["transport"] == "cursor"
     assert candidates["grok-4.7-cursor-fallback"]["model_id"] == "grok-4.7"
@@ -447,7 +447,7 @@ def test_catalog_rejects_missing_risk_ladder():
 
 def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["grok-4.6"]["transport"] = "hermes"
+    broken["review_candidates"]["grok-4.7"]["transport"] = "hermes"
     with pytest.raises(ModelCatalogError, match="is not listed"):
         validate_catalog(broken)
 

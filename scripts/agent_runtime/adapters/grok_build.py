@@ -112,10 +112,9 @@ _MCP_REVIEW_DENY_RULES: tuple[str, ...] = (
     "Edit",
     "Bash",
 )
-# Operator order 2026-09-22 (issue #8464): admit grok-4.7 (+ build-fast); keep 4.6.
-GROK_ALLOWED_MODELS: frozenset[str] = frozenset(
-    {"grok-4.7", "grok-4.7-build-fast", "grok-4.6"}
-)
+# Current CLI default only. grok-4.7-build-fast is about 2x the price and is
+# not admitted. grok-4.6 is the previous id and is not admitted.
+GROK_ALLOWED_MODELS: frozenset[str] = frozenset({"grok-4.7"})
 GROK_SUPPORTED_EFFORTS: frozenset[str] = frozenset({"low", "medium", "high"})
 GROK_BUILD_DEFAULT_MODEL = "grok-4.7"
 GROK_BUILD_DEFAULT_EFFORT = os.environ.get("LEARN_UK_GROK_BUILD_EFFORT", "high")
