@@ -776,7 +776,8 @@ def validate_plan(
     """Validate one module plan against its pack and the level word store.
 
     path overrides exist for tests; the lesson-plans/ root rule applies to
-    plan_path regardless. activity_schema_path overrides the activity allowlist
+    plan_path regardless, and a pack_path override must match the plan's
+    evidence_ref.path (rule 3). activity_schema_path overrides the activity allowlist
     schema (tests only; never a fallback level). Never raises for plan content
     problems — they come back as failures in the Report.
     """
@@ -811,8 +812,16 @@ def validate_plan(
         return report
 
     try:
+        declared_pack = _declared_pack_path(root, plan["evidence_ref"]["path"])
         if pack_path is None:
-            pack_path = _declared_pack_path(root, plan["evidence_ref"]["path"])
+            pack_path = declared_pack
+        elif pack_path.resolve() != declared_pack:
+            raise PlanError(
+                codes.PACK_PATH_MISMATCH,
+                f"pack override {pack_path} does not match evidence_ref.path "
+                f"{plan['evidence_ref']['path']!r}, which resolves to {declared_pack}; "
+                "the declared path must identify the checked pack (rule 3)",
+            )
         pack = load_pack(pack_path)
         store = load_words(words_path)
     except PlanError as error:
@@ -903,7 +912,12 @@ def main(argv: list[str] | None = None) -> int:
         default=None,
         help="plan path override (tests); the lesson-plans/<level>/ root rule still applies",
     )
-    parser.add_argument("--pack", type=Path, default=None, help="pack path override (tests)")
+    parser.add_argument(
+        "--pack",
+        type=Path,
+        default=None,
+        help="pack path override (tests); must match the plan's evidence_ref.path",
+    )
     parser.add_argument("--words", type=Path, default=None, help="word store path override (tests)")
     parser.add_argument("--json", action="store_true", help="print the machine-readable report instead of text")
     args = parser.parse_args(argv)

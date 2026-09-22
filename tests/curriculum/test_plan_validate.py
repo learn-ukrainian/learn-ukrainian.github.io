@@ -508,6 +508,14 @@ FAILING_CASES = [
         expected=frozenset({codes.PACK_NOT_FOUND}),
     ),
     Case(
+        "pack_override_must_match_declared_path",
+        mutate=_mutate(
+            lambda p, pk, w: p["evidence_ref"].__setitem__("path", "evidence/a1/nonexistent.yaml")
+        ),
+        kwargs=lambda world: {"pack_path": world.pack_path},
+        expected=frozenset({codes.PACK_PATH_MISMATCH}),
+    ),
+    Case(
         "pack_hash_differs_from_evidence_ref",
         post=lambda world, p, pk, w: _write_plan_with_wrong_hash(world, p),
         expected=frozenset({codes.PACK_HASH_MISMATCH}),
@@ -893,6 +901,12 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     for index, case in enumerate(ALL_CASES):
         produced |= run_case(tmp_path / f"case-{index}", case).codes()
     assert produced == set(codes.DESCRIPTIONS)
+
+
+def test_pack_override_matching_declared_path_passes(tmp_path: Path) -> None:
+    world = write_world(tmp_path, *build_base())
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path, pack_path=world.pack_path)
+    assert report.ok, report.render_text()
 
 
 def test_cli_text_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:

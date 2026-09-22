@@ -25,6 +25,7 @@ PACK_WORDS_LIST_PRESENT = "pack_words_list_present"
 DUPLICATE_PACK_ID = "duplicate_pack_id"
 PACK_LOCK_MISMATCH = "pack_lock_mismatch"
 PACK_HASH_MISMATCH = "pack_hash_mismatch"
+PACK_PATH_MISMATCH = "pack_path_mismatch"
 WORDS_NOT_FOUND = "words_not_found"
 WORDS_YAML_INVALID = "words_yaml_invalid"
 WORDS_MALFORMED = "words_malformed"
@@ -106,6 +107,7 @@ DESCRIPTIONS = {
     DUPLICATE_PACK_ID: "failure: a record id appears twice in the module pack",
     PACK_LOCK_MISMATCH: "failure: the pack file's bytes disagree with its .lock sidecar",
     PACK_HASH_MISMATCH: "failure: the pack file's sha256 disagrees with the plan's evidence_ref.sha256",
+    PACK_PATH_MISMATCH: "failure (rule 3): the --pack override does not match the plan's evidence_ref.path",
     WORDS_NOT_FOUND: "failure: the level word store does not exist",
     WORDS_YAML_INVALID: "failure: the word store file is not valid YAML",
     WORDS_MALFORMED: "failure: a word record is malformed (missing id, lemma or forms)",
