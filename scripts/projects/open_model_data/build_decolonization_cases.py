@@ -203,182 +203,68 @@ def query_source_evidence(
     if not auth or not auth.strip():
         raise ValueError(f"Empty authority provided for case '{case_id}'")
 
-    if "ua-gec" in auth.lower():
-        rec_id = UA_GEC_RECORD_MAP.get(case_id)
-        if not rec_id:
-            raise ValueError(f"No UA-GEC record mapped for {case_id}")
-        row = s_cur.execute(
-            "SELECT id, error, correct, error_type, doc_id, annotator_id FROM ua_gec_errors WHERE id = ?",
-            (rec_id,),
-        ).fetchone()
-        if not row:
-            raise ValueError(f"UA-GEC record #{rec_id} not found in sources.db")
+    if case_id not in EXPLICIT_SOURCE_EVIDENCE:
+        raise ValueError(
+            f"Term '{term}' (case: '{case_id}') has no verified attestation in authority '{auth}' or sources database"
+        )
 
-        rec_err = row[1].strip()
-        rec_corr = row[2].strip()
+    ev = EXPLICIT_SOURCE_EVIDENCE[case_id]
 
-        # Strict error validation
-        if not validate_ua_gec_phrase(copy, rec_err, v_cur):
+    # 1. Authority validation: Canonical authority identity
+    expected_auth = ev.get("authority", ev.get("source", "")).strip()
+    if auth.strip() != expected_auth:
+        raise ValueError(
+            f"Mismatched authority for case '{case_id}': probe authority '{auth}' does not match canonical authority '{expected_auth}'"
+        )
+
+    # 2. Target term validation: Independently attested complete phrases/variants from the catalog
+    ev_term = ev.get("target_term", "").strip()
+    t_clean = term.strip()
+    if not t_clean:
+        raise ValueError(f"Empty target term provided for case '{case_id}'")
+
+    # Canonical allowed terms: ONLY from the catalog entry itself!
+    canonical_terms = [ev_term]
+    if "ukrainian_proper" in ev and isinstance(ev["ukrainian_proper"], list):
+        canonical_terms.extend([p.strip() for p in ev["ukrainian_proper"] if p.strip()])
+
+    if not any(t_clean.lower() == c.lower() for c in canonical_terms):
+        raise ValueError(
+            f"Mismatched target term for catalog case '{case_id}': term '{term}' incompatible with catalog entry '{ev.get('target_term')}'"
+        )
+
+    # 3. Russian copy validation: Exact match required
+    ev_copy = (ev.get("russian_copy") or "").strip()
+    c_clean = (copy or "").strip()
+
+    if ev_copy:
+        if not c_clean:
             raise ValueError(
-                f"UA-GEC error mismatch for {case_id}: copy '{copy}' incompatible with record #{rec_id} error '{rec_err}'"
+                f"Missing required russian_copy for catalog case '{case_id}': probe copy is empty but catalog expects '{ev.get('russian_copy')}'"
+            )
+        if c_clean.lower() != ev_copy.lower():
+            raise ValueError(
+                f"Mismatched russian_copy for catalog case '{case_id}': probe copy '{copy}' incompatible with catalog entry '{ev.get('russian_copy')}'"
+            )
+    else:
+        if c_clean:
+            raise ValueError(
+                f"Unexpected russian_copy '{copy}' for catalog case '{case_id}' which defines no russian_copy"
             )
 
-        # Strict correction validation against term and all proper variants
-        candidates = [*list(proper_list or []), term]
-        if not any(validate_ua_gec_phrase(cand, rec_corr, v_cur) for cand in candidates):
-            raise ValueError(
-                f"UA-GEC correction mismatch for {case_id}: term '{term}' (variants: {candidates}) incompatible with record #{rec_id} correct '{rec_corr}'"
-            )
-
-        supporting = f"Корпус UA-GEC v2.0: анотація {row[3]} (документ {row[4]}, анотатор {row[5]}): «{row[1]}» -> «{row[2]}»"
-        return {
-            "source": "UA-GEC v2.0",
-            "record_id": row[0],
-            "error_form": row[1],
-            "correct_form": row[2],
-            "error_type": row[3],
-            "doc_id": row[4],
-            "annotator_id": row[5],
-            "status": "source_attested",
-            "supporting_passage": supporting,
-            "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
-            "locus": f"Корпус UA-GEC v2.0 (UNLP 2023), запис #{row[0]} (документ {row[4]}, анотатор {row[5]}), тип {row[3]} ({row[1]} -> {row[2]})",
-        }
-
-    # Check curated explicit evidence catalog
-    if case_id in EXPLICIT_SOURCE_EVIDENCE:
-        ev = EXPLICIT_SOURCE_EVIDENCE[case_id]
-
-        # Strict authority validation
-        expected_auth = ev.get("authority", ev.get("source", "")).strip()
-        auth_clean = auth.lower().strip()
-        exp_clean = expected_auth.lower().strip()
-        auth_tokens = set(re.findall(r"\w{4,}", auth_clean))
-        exp_tokens = set(re.findall(r"\w{4,}", exp_clean))
-        matched_auth = bool(auth_tokens and exp_tokens and auth_tokens.intersection(exp_tokens))
-        if not matched_auth and len(auth_clean) >= 5 and (auth_clean in exp_clean or exp_clean in auth_clean):
-            matched_auth = True
-
-        if not matched_auth:
-            raise ValueError(
-                f"Mismatched authority for case '{case_id}': probe authority '{auth}' incompatible with catalog authority '{expected_auth}'"
-            )
-
-        # Strict target term validation
-        ev_term = ev.get("target_term", "").strip().lower()
-        t_clean = term.strip().lower()
-        if not t_clean:
-            raise ValueError(f"Empty target term provided for case '{case_id}'")
-
-        proper_clean_list = [p.strip().lower() for p in (proper_list or []) if p.strip()]
-        term_matched = False
-        if ev_term and (t_clean == ev_term or t_clean in ev_term or ev_term in t_clean):
-            term_matched = True
-        if not term_matched and proper_clean_list and any(
-            t_clean == p or t_clean in p or p in t_clean for p in proper_clean_list
-        ):
-            term_matched = True
-
-        if not term_matched:
-            raise ValueError(
-                f"Mismatched target term for catalog case '{case_id}': term '{term}' incompatible with catalog entry '{ev.get('target_term')}'"
-            )
-
-        # Strict russian copy validation
-        ev_copy = (ev.get("russian_copy") or "").strip().lower()
-        c_clean = (copy or "").strip().lower()
-
-        if ev_copy:
-            if not c_clean:
-                raise ValueError(
-                    f"Missing required russian_copy for catalog case '{case_id}': probe copy is empty but catalog expects '{ev.get('russian_copy')}'"
-                )
-            copy_matched = (c_clean == ev_copy) or (c_clean in ev_copy) or (ev_copy in c_clean)
-            if not copy_matched:
-                raise ValueError(
-                    f"Mismatched russian_copy for catalog case '{case_id}': probe copy '{copy}' incompatible with catalog entry '{ev.get('russian_copy')}'"
-                )
-        else:
-            if c_clean:
-                raise ValueError(
-                    f"Unexpected russian_copy '{copy}' for catalog case '{case_id}' which defines no russian_copy"
-                )
-
-        return {
-            "source": ev["source"],
-            "section": ev.get("section"),
-            "article": ev.get("article"),
-            "page": ev.get("page"),
-            "supporting_passage": ev["supporting_passage"],
-            "status": "source_attested",
-            "verification_method": ev.get(
-                "verification_method",
-                "Tool-backed verification and collation with primary authoritative codification",
-            ),
-            "locus": ev["locus"],
-        }
-
-    if "антоненко" in auth.lower():
-        term_clean = term.lower().strip()
-        copy_clean = copy.lower().strip() if copy else ""
-
-        # Search style_guide cache
-        matched_row = None
-        # 1. Title match
-        for row in style_guide_cache:
-            w_low = row[1].lower()
-            if term_clean and term_clean in w_low:
-                matched_row = row
-                break
-            if copy_clean and copy_clean in w_low:
-                matched_row = row
-                break
-
-        # 2. Text match (requiring substantive length >= 4)
-        if not matched_row and len(term_clean) >= 4:
-            for row in style_guide_cache:
-                t_low = (row[4] or "").lower()
-                if term_clean in t_low:
-                    matched_row = row
-                    break
-        if not matched_row and copy_clean and len(copy_clean) >= 4:
-            for row in style_guide_cache:
-                t_low = (row[4] or "").lower()
-                if copy_clean in t_low:
-                    matched_row = row
-                    break
-
-        if matched_row:
-            sec = matched_row[2] if matched_row[2] else "Лексика і граматика"
-            art = matched_row[1]
-            page_val = matched_row[3]
-            page_str = f", с. {page_val}" if page_val else ""
-            locus = f"Борис Антоненко-Давидович «Як ми говоримо», Розділ «{sec}», стаття «{art}»{page_str}"
-            full_text = matched_row[4] or matched_row[5] or ""
-            supporting = None
-            if full_text:
-                for s in re.split(r"(?<=[.!?])\s+", full_text):
-                    if (term_clean and term_clean in s.lower()) or (copy_clean and copy_clean in s.lower()):
-                        supporting = s.strip()
-                        break
-                if not supporting:
-                    supporting = full_text[:200].strip() + "..."
-
-            return {
-                "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-                "section": sec,
-                "article": art,
-                "page": page_val,
-                "supporting_passage": supporting,
-                "status": "source_attested",
-                "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-                "locus": locus,
-            }
-
-    # Fail closed: never return fake or empty attestation on unattested terms/probes
-    raise ValueError(
-        f"Term '{term}' (case: '{case_id}') has no verified attestation in authority '{auth}' or sources database"
-    )
+    return {
+        "source": ev["source"],
+        "section": ev.get("section"),
+        "article": ev.get("article"),
+        "page": ev.get("page"),
+        "supporting_passage": ev["supporting_passage"],
+        "status": "source_attested",
+        "verification_method": ev.get(
+            "verification_method",
+            "Tool-backed verification and collation with primary authoritative codification",
+        ),
+        "locus": ev["locus"],
+    }
 
 
 def make_reviewer_confirmation(
@@ -402,6 +288,63 @@ def make_reviewer_confirmation(
         )
     rev_rec = INDEPENDENT_LANGUAGE_REVIEWS[case_id]
 
+    receipt_id = rev_rec.get("review_receipt_id")
+    if not receipt_id or not str(receipt_id).strip():
+        raise ValueError(f"Case '{case_id}' missing review_receipt_id in language review record")
+
+    locator = rev_rec.get("review_dossier_locator")
+    if not locator or not str(locator).strip():
+        raise ValueError(f"Case '{case_id}' missing review_dossier_locator in language review record")
+
+    # Resolve dossier file on disk
+    dossier_path = PROJECT_ROOT / locator
+    if not dossier_path.is_file():
+        raise ValueError(
+            f"Review dossier file not found at '{dossier_path}' for case '{case_id}'. Unverified review receipt."
+        )
+
+    # Read and validate review dossier JSON from disk
+    try:
+        dossier = json.loads(dossier_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise ValueError(f"Failed to read or parse review dossier at '{dossier_path}': {exc}") from exc
+
+    # Validate reviewer independence and provenance (strictly disallow self-review / builder)
+    reviewer_id = rev_rec.get("reviewer_id")
+    reviewer_family = rev_rec.get("reviewer_family")
+    unapproved_reviewers = {"builder", "gemini", "claude", "codex", "assistant", "ai", "self"}
+
+    if not reviewer_id or str(reviewer_id).strip().lower() in unapproved_reviewers:
+        raise ValueError(
+            f"Invalid reviewer_id '{reviewer_id}' for case '{case_id}': independent language review cannot be performed by builder or model"
+        )
+    if reviewer_family != "independent_language_review":
+        raise ValueError(
+            f"Invalid reviewer_family '{reviewer_family}' for case '{case_id}': expected 'independent_language_review'"
+        )
+
+    if dossier.get("review_receipt_id") != receipt_id:
+        raise ValueError(
+            f"Dossier receipt ID '{dossier.get('review_receipt_id')}' mismatch with registry receipt ID '{receipt_id}'"
+        )
+    if dossier.get("reviewer_id") != reviewer_id:
+        raise ValueError(
+            f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch with registry reviewer_id '{reviewer_id}'"
+        )
+    if dossier.get("reviewer_family") != "independent_language_review":
+        raise ValueError(
+            f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not 'independent_language_review'"
+        )
+    if dossier.get("verdict") != "APPROVED" or dossier.get("status") != "confirmed":
+        raise ValueError(
+            f"Dossier status/verdict ({dossier.get('status')}/{dossier.get('verdict')}) is not confirmed/APPROVED"
+        )
+    if rev_rec.get("status") != "confirmed" or rev_rec.get("verdict") != "APPROVED":
+        raise ValueError(
+            f"Case '{case_id}' review status is '{rev_rec.get('status')}' (verdict: '{rev_rec.get('verdict')}'), expected confirmed/APPROVED"
+        )
+
+    # Validate case properties against reviewed record
     if rev_rec.get("category") != cat_name:
         raise ValueError(
             f"Material change detected for case '{case_id}': category '{cat_name}' differs from reviewed category '{rev_rec.get('category')}'. Confirmation invalidated."
@@ -422,24 +365,8 @@ def make_reviewer_confirmation(
         raise ValueError(
             f"Material change detected for case '{case_id}': authority '{auth}' differs from reviewed authority '{rev_rec.get('authority')}'. Confirmation invalidated."
         )
-    if rev_rec.get("status") != "confirmed" or rev_rec.get("verdict") != "APPROVED":
-        raise ValueError(
-            f"Case '{case_id}' review status is '{rev_rec.get('status')}' (verdict: '{rev_rec.get('verdict')}'), expected confirmed/APPROVED"
-        )
 
-    # Exact content and context digest validation
-    item_copy = dict(item)
-    item_copy["category"] = cat_name
-    computed_hash = compute_case_content_sha256(item_copy)
-    if rev_rec.get("content_sha256") != computed_hash:
-        raise ValueError(
-            f"Material change detected for case '{case_id}': content digest mismatch (reviewed: '{rev_rec.get('content_sha256')}', current: '{computed_hash}'). Contexts or case metadata tampered with. Confirmation invalidated."
-        )
-
-    # 2. Automated VESUM Verification
-    vesum_ev = query_vesum_evidence(target_term, proper_list, v_cur)
-
-    # 3. Automated Source Verification
+    # 2. Automated Source Verification
     source_ev = query_source_evidence(
         case_id,
         target_term,
@@ -451,6 +378,40 @@ def make_reviewer_confirmation(
         style_guide_cache,
         proper_list=proper_list,
     )
+
+    # 3. Verify Source Evidence binding to Reviewed Dossier
+    if rev_rec.get("supporting_passage") != source_ev.get("supporting_passage"):
+        raise ValueError(
+            f"Material change detected for case '{case_id}': supporting_passage in source evidence differs from reviewed passage. Confirmation invalidated."
+        )
+    if rev_rec.get("authority_locus") != source_ev.get("locus"):
+        raise ValueError(
+            f"Material change detected for case '{case_id}': locus in source evidence differs from reviewed locus. Confirmation invalidated."
+        )
+    if dossier.get("supporting_passage") != source_ev.get("supporting_passage"):
+        raise ValueError(
+            f"Material change detected for case '{case_id}': supporting_passage in dossier differs from source evidence. Confirmation invalidated."
+        )
+    if dossier.get("authority_locus") != source_ev.get("locus"):
+        raise ValueError(
+            f"Material change detected for case '{case_id}': locus in dossier differs from source evidence. Confirmation invalidated."
+        )
+
+    # 4. Exact content, context, and source evidence digest validation
+    item_copy = dict(item)
+    item_copy["category"] = cat_name
+    computed_hash = compute_case_content_sha256(item_copy, source_ev)
+    if rev_rec.get("content_sha256") != computed_hash:
+        raise ValueError(
+            f"Material change detected for case '{case_id}': content digest mismatch (reviewed: '{rev_rec.get('content_sha256')}', current: '{computed_hash}'). Contexts, case metadata, or source evidence tampered with. Confirmation invalidated."
+        )
+    if dossier.get("content_sha256") != computed_hash:
+        raise ValueError(
+            f"Material change detected for case '{case_id}': dossier content digest mismatch (dossier: '{dossier.get('content_sha256')}', current: '{computed_hash}'). Confirmation invalidated."
+        )
+
+    # 5. Automated VESUM Verification
+    vesum_ev = query_vesum_evidence(target_term, proper_list, v_cur)
 
     locus = source_ev["locus"]
 

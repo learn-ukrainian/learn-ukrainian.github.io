@@ -321,6 +321,59 @@ def test_adversarial_probes_and_fail_closed():
             style_guide_cache=[],
         )
 
+    # 4e. Probe with one-character target (CF-R8 Finding 1)
+    with pytest.raises(ValueError, match="Mismatched target term for catalog case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="м",
+            copy="мати відношення до",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4f. Probe with one-character copy (CF-R8 Finding 1)
+    with pytest.raises(ValueError, match="Mismatched russian_copy for catalog case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="мати дотичність",
+            copy="м",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4g. Probe with caller-supplied proper_list bypass attempt (CF-R8 Finding 1)
+    with pytest.raises(ValueError, match="Mismatched target term for catalog case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="INVALID_TARGET",
+            copy="мати відношення до",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+            proper_list=["INVALID_TARGET"],
+        )
+
+    # 4h. Probe with unapproved/partial authority (CF-R8 Finding 1)
+    with pytest.raises(ValueError, match="Mismatched authority for case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="мати дотичність",
+            copy="мати відношення до",
+            auth="Unrelated Катерина textbook",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
     # 5. query_source_evidence must fail closed on unknown prepositional probe (Finding 1, no fallback)
     with pytest.raises(ValueError, match="has no verified attestation"):
         query_source_evidence(
@@ -364,7 +417,7 @@ def test_adversarial_probes_and_fail_closed():
         {**syn_032["contexts"][0], "query": "Абсолютно сфальсифікований запит"},
         syn_032["contexts"][1],
     ]
-    with pytest.raises(ValueError, match=r"content digest mismatch.*Contexts or case metadata tampered with"):
+    with pytest.raises(ValueError, match=r"content digest mismatch.*Contexts, case metadata, or source evidence tampered with"):
         make_reviewer_confirmation(tampered_contexts_item, "calque_syntactic", v_cur, s_cur, [])
 
     # 9. make_reviewer_confirmation must fail closed on flipped is_erroneous (CF-R7 Finding 3)
@@ -376,6 +429,54 @@ def test_adversarial_probes_and_fail_closed():
     # 10. make_reviewer_confirmation must fail closed on changed category (CF-R7 Finding 3)
     with pytest.raises(ValueError, match="category 'calque_lexical' differs from reviewed"):
         make_reviewer_confirmation(syn_032, "calque_lexical", v_cur, s_cur, [])
+
+    # 11. make_reviewer_confirmation must fail closed on tampered supporting passage (CF-R8 Finding 2)
+    from scripts.projects.open_model_data.decolonization_cases_data import PREPOSITIONAL_CALQUES
+    from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+    prep_020 = next(c for c in PREPOSITIONAL_CALQUES if c["case_id"] == "decol_prep_020")
+    orig_passage = EXPLICIT_SOURCE_EVIDENCE["decol_prep_020"]["supporting_passage"]
+    try:
+        EXPLICIT_SOURCE_EVIDENCE["decol_prep_020"]["supporting_passage"] = "UNVERIFIED_SENTINEL_PASSAGE"
+        with pytest.raises(
+            ValueError,
+            match=r"Material change detected for case 'decol_prep_020': supporting_passage.*Confirmation invalidated",
+        ):
+            make_reviewer_confirmation(prep_020, "calque_prepositional", v_cur, s_cur, [])
+    finally:
+        EXPLICIT_SOURCE_EVIDENCE["decol_prep_020"]["supporting_passage"] = orig_passage
+
+    # 12. make_reviewer_confirmation must fail closed on nonexistent dossier file (CF-R8 Finding 3)
+    from scripts.projects.open_model_data.decolonization_language_reviews import INDEPENDENT_LANGUAGE_REVIEWS
+    orig_locator = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"]
+    try:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"] = (
+            "data/projects/open_model_data/components/decolonization/reviews/nonexistent_dossier_999.json"
+        )
+        with pytest.raises(ValueError, match=r"Review dossier file not found at .*nonexistent_dossier_999.json"):
+            make_reviewer_confirmation(syn_032, "calque_syntactic", v_cur, s_cur, [])
+    finally:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_dossier_locator"] = orig_locator
+
+    # 13. make_reviewer_confirmation must fail closed when receipt ID is missing (CF-R8 Finding 3)
+    orig_receipt = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_receipt_id"]
+    try:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_receipt_id"] = ""
+        with pytest.raises(ValueError, match=r"missing review_receipt_id"):
+            make_reviewer_confirmation(syn_032, "calque_syntactic", v_cur, s_cur, [])
+    finally:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["review_receipt_id"] = orig_receipt
+
+    # 14. make_reviewer_confirmation must fail closed on builder/non-independent reviewer (CF-R8 Finding 3)
+    orig_rev_id = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_id"]
+    orig_rev_fam = INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_family"]
+    try:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_id"] = "builder"
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_family"] = "gemini"
+        with pytest.raises(ValueError, match=r"independent language review cannot be performed by builder or model"):
+            make_reviewer_confirmation(syn_032, "calque_syntactic", v_cur, s_cur, [])
+    finally:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_id"] = orig_rev_id
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_syn_032"]["reviewer_family"] = orig_rev_fam
 
 
 def test_supporting_passages_and_no_manufactured_statements(decolonization_data):
@@ -412,6 +513,13 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
         ev = c["reviewer_confirmation"]["source_evidence"]
         assert "Антоненко-Давидович" in ev["source_name"]
         assert "стаття «" in ev["locus"]
+
+    # 4. decol_prep_020 must cite Ponomariv page 76 and verbatim authentic text (CF-R8 Finding 2)
+    prep_020 = next(c for c in cases if c["case_id"] == "decol_prep_020")
+    ev_020 = prep_020["reviewer_confirmation"]["source_evidence"]
+    assert "с. 76" in ev_020["locus"]
+    assert "у вихідні (дні)" in ev_020["supporting_passage"]
+    assert "у вихідний (день)" in ev_020["supporting_passage"]
 
 
 def test_dataset_acceptance_with_verified_signoff():

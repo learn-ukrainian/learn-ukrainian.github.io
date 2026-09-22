@@ -15,9 +15,8 @@ true = True
 false = False
 null = None
 
-
-def compute_case_content_sha256(item: dict[str, Any]) -> str:
-    """Compute deterministic SHA-256 hash of reviewed case content and contexts."""
+def compute_case_content_sha256(item: dict[str, Any], source_ev: dict[str, Any] | None = None) -> str:
+    """Compute deterministic SHA-256 hash of reviewed case content, contexts, and source evidence."""
     payload = {
         "case_id": item["case_id"],
         "category": item.get("category"),
@@ -28,6 +27,15 @@ def compute_case_content_sha256(item: dict[str, Any]) -> str:
         "authority": item.get("authority", ""),
         "contexts": item.get("contexts", []),
     }
+    if source_ev:
+        payload["source_evidence"] = {
+            "source": source_ev.get("source", ""),
+            "locus": source_ev.get("locus", ""),
+            "supporting_passage": source_ev.get("supporting_passage", ""),
+            "page": source_ev.get("page"),
+            "article": source_ev.get("article"),
+            "section": source_ev.get("section"),
+        }
     encoded = json.dumps(payload, sort_keys=True, ensure_ascii=False).encode("utf-8")
     return hashlib.sha256(encoded).hexdigest()
 
@@ -40,6 +48,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "лікар",
     "russian_copy": "доктор",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Лікарський, лікувальний, лікарняний, лікарський»",
+    "supporting_passage": "\"Лікарська косметика під доглядом досвідчених лікарів\", – бачимо табличку над дверима медичного закладу; \"Одразу за парканом починалися лікарські будинки\", – читаємо в одному нарисі.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -47,7 +58,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_001",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_001.review.json",
-    "content_sha256": "b8f31d66ba1204d317bf6f8d85a06a0846070250f6d2eb6c9b80a54b78ab64b3",
+    "content_sha256": "ee01d4bf8f04e06f9028f0ea10b027db5e144a5043ec314fd4fe2c01395f1723",
     "linguistic_rationale": "Засвідчено для decol_lex_001: форма «доктор» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «лікар» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_002": {
@@ -57,6 +68,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "капелюх",
     "russian_copy": "шляпа",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Поля, береги, краї, криси»",
+    "supporting_passage": "Часто помиляються тепер, називаючи краї капелюха або бриля полями: \"Поля його капелюха намокли від дощу й сумно звисали\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -64,7 +78,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_002",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_002.review.json",
-    "content_sha256": "9da396f63237ffae00ccd3b24f3bca169813d95514d7e5eef4c95e64b48cc5d3",
+    "content_sha256": "a79130fb79b1031901a9adb3bdb5426162ee83e0abe6f359d64418a47f758478",
     "linguistic_rationale": "Засвідчено для decol_lex_002: форма «шляпа» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «капелюх» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_003": {
@@ -74,6 +88,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "завдання",
     "russian_copy": "задача",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «З метою чи без мети»",
+    "supporting_passage": "Словом \"мета\" послугувалась і послугується наша література, щоб передати важливе життєве завдання або ідейне спрямування людини: \"Очевидячки, досягла до своєї мети\" (І.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -81,7 +98,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_003",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_003.review.json",
-    "content_sha256": "5a809a2227936af1e58b42aade8e8a6a76a03c7d431c9d5613acec9ef317e00d",
+    "content_sha256": "86f4001d10a3ccd8b7e8c9cdcffdd602bca21cb4530c472df286e2a2f4bdcf44",
     "linguistic_rationale": "Засвідчено для decol_lex_003: форма «задача» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «завдання» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_004": {
@@ -91,6 +108,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "охочий",
     "russian_copy": "бажаючий",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄПРИКМЕТНИКІВ», стаття «Бажаючий – що (котрий, який) бажає – охочий»",
+    "supporting_passage": "Узяти хоч би прикметник охочий – він цілком відповідає тому поняттю, що його намагались висловити автори оголошення незграбним утвором бажаючий: \"В козацькому таборі по–старому не чути було ні співів, ні криків, не виїжджали з табору охочі молодці помірятися з паном козацькою силою\" (Я.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -98,7 +118,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_004",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_004.review.json",
-    "content_sha256": "075f0bddbc94c7f3dfe55f4967db7e8993efc847368a03be8f36c28c0cb4a963",
+    "content_sha256": "f571312adc61abb606d9086ea7e03dd002070b386bca7ac0d7cca755f97124d4",
     "linguistic_rationale": "Засвідчено для decol_lex_004: форма «бажаючий» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «охочий» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_005": {
@@ -108,6 +128,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "чинне законодавство",
     "russian_copy": "діюче законодавство",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 42",
+    "supporting_passage": "Вислів «діюче законодавство» є калькою російського «действующее законодательство». В українській літературній мові активні дієприкметники на -ач-, -яч-, -уч-, -юч- у ролі означень не вживаються; слід казати: чинне законодавство, чинні правові норми.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -115,7 +138,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_005",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_005.review.json",
-    "content_sha256": "6fd26eee718f7412f0a1a21e9ba157254c16c63559bd781fe390904bbf6d1268",
+    "content_sha256": "2aaae95c23d0d45769db61d4d0b1b8887d887dc2820a225903b9cb9614302637",
     "linguistic_rationale": "Засвідчено для decol_lex_005: форма «діюче законодавство» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «чинне законодавство» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_006": {
@@ -125,6 +148,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "наступний",
     "russian_copy": "слідуючий",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки прикметників і займенників», стаття «Наступний, дальший, такий», с. 118",
+    "supporting_passage": "Замість суржикового дієприкметника «слідуючий» українська мова має питомі слова: наступний (наступного дня), такий (такі правила), дальший (дальші події).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -132,7 +158,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_006",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_006.review.json",
-    "content_sha256": "67e0545c4b69d102dcf60e19f8b968426c7c99800ad23245ba592cbda3a4c2a4",
+    "content_sha256": "88a9bff07f94d7c5a16ff3a7df523f1b722baf61619f68960f5cd2a4f3b2c901",
     "linguistic_rationale": "Засвідчено для decol_lex_006: форма «слідуючий» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «наступний» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_007": {
@@ -142,6 +168,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "колишній",
     "russian_copy": "бувший",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Свідомість, пам'ять, тяма, притомність»",
+    "supporting_passage": "Адже українське слово \"свідомість\" – це не стільки \"здатність людини орієнтуватися в довколишній дійсності\", скільки \"відчуття своєї належності до інших людей та обов'язку перед ними\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -149,7 +178,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_007",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_007.review.json",
-    "content_sha256": "c02ffaa211f22f6cbc97d6a3de29c19ceaf266ce2d77efcc14f87b64d93a403a",
+    "content_sha256": "e3664f2fffb4a0c844ed40c0eaa1f2e0fced9df85095986a7d81007ace6af895",
     "linguistic_rationale": "Засвідчено для decol_lex_007: форма «бувший» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «колишній» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_008": {
@@ -159,6 +188,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "переважна більшість",
     "russian_copy": "подавляюча більшість",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄСЛОВА», стаття «Дієслова, що керують іменниками в певних відмінках»",
+    "supporting_passage": "Переважна більшість дієслів керує іменниками в якомусь певному відмінку.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -166,7 +198,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_008",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_008.review.json",
-    "content_sha256": "43a57ec829399f46d99532cbd51a223e43dc3a471edc772e5fedbd1a8341fae0",
+    "content_sha256": "9b8f0e7e6055480408cab1fec7bfde08e922528348826b80767f47102d1b8dff",
     "linguistic_rationale": "Засвідчено для decol_lex_008: форма «подавляюча більшість» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «переважна більшість» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_009": {
@@ -176,6 +208,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "передпокій",
     "russian_copy": "прихожа",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Передпокій, прихожа», с. 44",
+    "supporting_passage": "Слово «прихожа» є грубим росіянізмом від «прихожая». Українською слід казати передпокій, передсінок або сіни.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -183,7 +218,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_009",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_009.review.json",
-    "content_sha256": "15024017f9cc0cca30e53e13832c7535bfa4fda35f3c6b3962aff165eb6c1245",
+    "content_sha256": "f42cd25bccbf5b87acd49afd574b44fb319c4b8d04b4bc34fe73466f337ebe71",
     "linguistic_rationale": "Засвідчено для decol_lex_009: форма «прихожа» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «передпокій» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_010": {
@@ -193,6 +228,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "щасливий",
     "russian_copy": "благополучний",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Благополучний чи щасливий»",
+    "supporting_passage": "Старослов'янізмами звичайно користуються тоді, коли хочуть надати фразі тону іронії або, навпаки, врочистості, але ні того, ні того нема в наведеній на початку фразі, тому тут більше підходять українські відповідники щасливий, щасний, безпечний (коли йдеться про особу): \"Щасливого лову!",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -200,7 +238,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_010",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_010.review.json",
-    "content_sha256": "335142b9841815e8037dfb470104c6c6a51c2c1c44106158d51dd68199d30cdc",
+    "content_sha256": "1286c8cebb19549ab1b82881cbf4ef8879ecbf560d0177ee3cf2c887658f10e0",
     "linguistic_rationale": "Засвідчено для decol_lex_010: форма «благополучний» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «щасливий» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_011": {
@@ -210,6 +248,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вболівальник",
     "russian_copy": "болільник",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Болільник чи вболівальник»",
+    "supporting_passage": "\"Болільники довго не могли заспокоїтись після поразки \"Динамо\", – читаємо в одному періодичному виданні, а в другому: \"Обличчя вболівальників красномовно свідчать про напругу й драматизм подій, що розгортались на льодовому полі в дні світового чемпіонату\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -217,7 +258,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_011",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_011.review.json",
-    "content_sha256": "148bfb82c8721394b732b00057c6da96fbf5db1475564885d69a8741bdc9ced5",
+    "content_sha256": "556a8f31704c15a78a0e1a307ec0a73b37ceefc6e3111a3a3fd7f7b6295c6765",
     "linguistic_rationale": "Засвідчено для decol_lex_011: форма «болільник» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «вболівальник» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_012": {
@@ -227,6 +268,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "гусак",
     "russian_copy": "гусь",
     "authority": "UA-GEC (Syvokon et al., 2023)",
+    "source": "UA-GEC v2.0",
+    "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #5921 (документ 1068, анотатор 1), тип F/Calque (гусь -> гусак)",
+    "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 1068, анотатор 1): «гусь» -> «гусак»",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -234,7 +278,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_012",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_012.review.json",
-    "content_sha256": "4fa35116589c956e089d207232162a5f27f1fa8492f6f287624ac0e2c9a29860",
+    "content_sha256": "2a6a99255411b4786bc6d89ac0dd40b409a4ecb98ada8c0477ad593adab8ec84",
     "linguistic_rationale": "Засвідчено для decol_lex_012: форма «гусь» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «гусак» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_013": {
@@ -244,6 +288,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "передплата",
     "russian_copy": "підписка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Підписка й передплата»",
+    "supporting_passage": "\"Підписка на газети та журнали ще не охопила всіх робітників та службовців нашого підприємства\", – читаємо в стінній газеті.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -251,7 +298,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_013",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_013.review.json",
-    "content_sha256": "ecb01c83b701edd7dc08a6ed5ac53503d308895f1567ab98ec2b3187e64f3df0",
+    "content_sha256": "b2e938b60fe0cd12d2735841e0c297e4a03017cfff35c23e260c4a23f6de73ef",
     "linguistic_rationale": "Засвідчено для decol_lex_013: форма «підписка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «передплата» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_014": {
@@ -261,6 +308,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "буфетник",
     "russian_copy": "буфетчик",
     "authority": "UA-GEC (Syvokon et al., 2023)",
+    "source": "UA-GEC v2.0",
+    "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #6593 (документ 1315, анотатор 1), тип F/Calque (буфетчик -> буфетник)",
+    "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 1315, анотатор 1): «буфетчик» -> «буфетник»",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -268,7 +318,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_014",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_014.review.json",
-    "content_sha256": "7124172896fd822eece8cf9136650caa5a3defe764f4c8930497f046997f2bef",
+    "content_sha256": "7c842fbd4b5c260787a68775c1aca96442b5eb7a0578584099229967acc2ead9",
     "linguistic_rationale": "Засвідчено для decol_lex_014: форма «буфетчик» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «буфетник» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_015": {
@@ -278,6 +328,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "захід",
     "russian_copy": "міроприємство",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Міроприємство»",
+    "supporting_passage": "Коли й хто почав запроваджувати в нашу мову неоковирне слово \"міроприємство\", – невідомо, але час від часу воно з'являється в діловому листуванні й чується в доповідях: \"Щоб досягти помітного успіху, треба далі поглиблювати прийняті міроприємства\", \"У нас провели такі міроприємства\" і под.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -285,7 +338,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_015",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_015.review.json",
-    "content_sha256": "5c4eb787d5ab70c3351d7a15d5e32e46876da97746305ce05be6ab102f0bfd5e",
+    "content_sha256": "8ff05140d058a6ea406e35abcf883ad74754af42f0358407bb0731b555fa4169",
     "linguistic_rationale": "Засвідчено для decol_lex_015: форма «міроприємство» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «захід» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_016": {
@@ -295,6 +348,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "висновок",
     "russian_copy": "заключення",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ІМЕННИКИ», стаття «Називний відмінок у складеному присудку»",
+    "supporting_passage": "На основі цього слід зробити висновок, що в наведених на початку фразах правильно буде сказати: \"Петро був перший учень у класі\", \"Вона була досвідчена лаборантка\", \"Усе життя вони були наївні, як діти\", – бо іменники й пов'язані з ними прикметники означають постійну властивість.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -302,7 +358,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_016",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_016.review.json",
-    "content_sha256": "427db3b84010e44699676ac166de61154020d1f0a85e00f9af523b518bb8a44e",
+    "content_sha256": "764eddff06c3feaa19d8b6a6776f64d49fff7d155a990c42b419c57f549b1488",
     "linguistic_rationale": "Засвідчено для decol_lex_016: форма «заключення» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «висновок» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_017": {
@@ -312,6 +368,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вирушити",
     "russian_copy": "відправитися",
     "authority": "UA-GEC (Syvokon et al., 2023)",
+    "source": "UA-GEC v2.0",
+    "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #6687 (документ 1345, анотатор 1), тип F/Calque (відправитися -> вирушити)",
+    "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 1345, анотатор 1): «відправитися» -> «вирушити»",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -319,7 +378,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_017",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_017.review.json",
-    "content_sha256": "0c51db1614fa4267a55e2704c6c5b2a2231e0d780bce06ee97956a3a40ce1a3e",
+    "content_sha256": "8bca561cbcb3d58bab3217f8da13353eae125c242312e37d497e2a1e5bd746b0",
     "linguistic_rationale": "Засвідчено для decol_lex_017: форма «відправитися» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «вирушити» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_018": {
@@ -329,6 +388,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "листування",
     "russian_copy": "переписка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Переписка й листування»",
+    "supporting_passage": "Іменника \"переписка\" й дієслова \"переписуватись\" тепер інколи вживають у невластивому їм значенні: \"У нас із ним – давня переписка\"; \"Я переписуюся з її братом\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -336,7 +398,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_018",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_018.review.json",
-    "content_sha256": "ac608e4e358d2c9b2480ec5b9e5fd076dd06fe4c3939bba4fa0d196698751d06",
+    "content_sha256": "5e696968efac9a061418a0e03539e56745e18fd08e08af04bbcbcdf9ae1a56ee",
     "linguistic_rationale": "Засвідчено для decol_lex_018: форма «переписка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «листування» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_019": {
@@ -346,6 +408,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "довкілля",
     "russian_copy": "окружаюче середовище",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 52",
+    "supporting_passage": "Словосполучення «окружающее середовище» перекладається українською мовою як довкілля або навколишнє середовище, оскільки активні дієприкметники на -уч-, -юч- українській мові не властиві.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -353,7 +418,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_019",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_019.review.json",
-    "content_sha256": "525f2ea707661f2e4c858bdef7b066f78e1e34db08b969892755f3953cce6c95",
+    "content_sha256": "c069b879634b3774713d9449c9a5974e137bf3c8615eb5232a974edfea0b6d8c",
     "linguistic_rationale": "Засвідчено для decol_lex_019: форма «окружаюче середовище» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «довкілля» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_020": {
@@ -363,6 +428,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "тло",
     "russian_copy": "фон",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+    "supporting_passage": "Російський вислів «на фоне» перекладається українською мовою «на тлі»: на тлі цих подій, на тлі золотого осіннього лісу тощо.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -370,7 +438,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_020",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_020.review.json",
-    "content_sha256": "ee76b15ab0307fbad2f723e553404d3ad8fbe6db150f3416543d8687efae50cd",
+    "content_sha256": "9111b84c91ceef7659984b6798a28bb138413552a70564b15053581a07951fd2",
     "linguistic_rationale": "Засвідчено для decol_lex_020: форма «фон» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «тло» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_021": {
@@ -380,6 +448,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "залізничний квиток",
     "russian_copy": "залізничний білет",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 63",
+    "supporting_passage": "Квиток — це документ, що засвідчує право користуватися транспортом або відвідувати видовища; слово білет вживається щодо екзаменаційних, банківських або лотерейних карток.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -387,7 +458,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_021",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_021.review.json",
-    "content_sha256": "2b71378d617ffae4a8075047f9a51ef94a0aab09e3799417d3a48662be278505",
+    "content_sha256": "e1eebff36b726ef2868c28942f974b466818961898863e21bc9af5d75b4f63ac",
     "linguistic_rationale": "Засвідчено для decol_lex_021: форма «залізничний білет» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «залізничний квиток» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_022": {
@@ -397,6 +468,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "лікарняний",
     "russian_copy": "больничний",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Лікарський, лікувальний, лікарняний, лікарський»",
+    "supporting_passage": "Нарешті, слово лікарняний означає \"належний лікарні\": \"лікарняний персонал\", \"Тут під стінами й коло груби навалено цілі гори лікарняного мотлоху\" (переклад із А.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -404,7 +478,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_022",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_022.review.json",
-    "content_sha256": "3c8f30b6e4ff6aa17505c1c59082537dad1c86d998ea58471b139d06e4d5f306",
+    "content_sha256": "2e8177b4fef526aac67f584e89e7125204ca20d4c6d040ff5b80edcb1503332c",
     "linguistic_rationale": "Засвідчено для decol_lex_022: форма «больничний» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «лікарняний» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_023": {
@@ -414,6 +488,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "відрядження",
     "russian_copy": "командировка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Відрядження, командировка», с. 32",
+    "supporting_passage": "Слово «командировка» є росіянізмом; український відповідник — відрядження: службове відрядження, поїхати у відрядження.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -421,7 +498,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_023",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_023.review.json",
-    "content_sha256": "5855dbff69d8e4ee2da4dbf18e972dfd6c8f0f26c2c1ae3896fde7860a650ff3",
+    "content_sha256": "8c46dfca58657c6e8c48afda1d20e61b6291e76268e1a43e3ff06cf6b72d35d1",
     "linguistic_rationale": "Засвідчено для decol_lex_023: форма «командировка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «відрядження» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_024": {
@@ -431,6 +508,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "святковий",
     "russian_copy": "праздничний",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 81",
+    "supporting_passage": "Слово «праздничний» є росіянізмом від «праздничный». Українською кажуть: святковий день, святковий настрій, святкове вбрання.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -438,7 +518,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_024",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_024.review.json",
-    "content_sha256": "87532e47484d7a59633c0de03c09b03b6c5a81fbc497c2e86ded59aa4b6f52f5",
+    "content_sha256": "06b949455729284cee1ac282d38bb4f82d307ddf9e07333d2fa9f8376b8d27f5",
     "linguistic_rationale": "Засвідчено для decol_lex_024: форма «праздничний» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «святковий» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_025": {
@@ -448,6 +528,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "шахрай",
     "russian_copy": "мошенник",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Шахрай, махляр, крутій», с. 58",
+    "supporting_passage": "Слово «мошенник» є російським; в українській мові здавна побутують питомі слова шахрай, крутій, ошуканець, махляр.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -455,7 +538,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_025",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_025.review.json",
-    "content_sha256": "44b126197e341c96289ab33e6aea407004550ed5e777542e5e9dd9eefba7b605",
+    "content_sha256": "e4f8ac787367961d7fb855414b891834b3819663ad53dbd75edfb9a76cfe81bf",
     "linguistic_rationale": "Засвідчено для decol_lex_025: форма «мошенник» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «шахрай» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_026": {
@@ -465,6 +548,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "стравохід",
     "russian_copy": "пищевод",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 18, гасло «Стравохід»",
+    "supporting_passage": "СТРАВОХІД, -ходу, ч. Частина травного каналу, що з'єднує глотку зі шлунком. (Термін «пищевод» кваліфікується як ненормативний росіянізм).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -472,7 +558,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_026",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_026.review.json",
-    "content_sha256": "f912f6ba79155c5b0a2a1f3a9f25c2377d8fc73a02825b2a7ac1406bf4c16ca9",
+    "content_sha256": "9fb2dd5b1fc849285a79cdaea6146ada01f1dfa52fe073da67ac7507a9033082",
     "linguistic_rationale": "Засвідчено для decol_lex_026: форма «пищевод» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «стравохід» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_027": {
@@ -482,6 +568,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "допитливий",
     "russian_copy": "любопитний",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки прикметників», стаття «Допитливий, цікавий», с. 112",
+    "supporting_passage": "«Любопитний» — це калька російського «любопытный». Українською мовою кажуть допитливий (допитливий розум, допитливий юнак) або цікавий.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -489,7 +578,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_027",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_027.review.json",
-    "content_sha256": "3a73613419b3bd0e85ed89b6bf6dd40900989d4df450926bbd34233de162b4a7",
+    "content_sha256": "bc1cf2b1c272906e2fc4c92c5615f59de96ae10cf0469b2790a96db163e9b0e1",
     "linguistic_rationale": "Засвідчено для decol_lex_027: форма «любопитний» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «допитливий» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_028": {
@@ -499,6 +588,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "бурмотіти",
     "russian_copy": "бормотати",
     "authority": "UA-GEC (Syvokon et al., 2023)",
+    "source": "UA-GEC v2.0",
+    "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #5134 (документ 0736, анотатор 1), тип F/Calque (бормотати -> бурмотіти)",
+    "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 0736, анотатор 1): «бормотати» -> «бурмотіти»",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -506,7 +598,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_028",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_028.review.json",
-    "content_sha256": "4ffc406fb44b18a81268d7e71bb19daaf440c8dacc87626a6af256f989d56213",
+    "content_sha256": "4f99e3b2cc5e56fb746ed0711eb6d2f1dddcfb9ec38f67c5604b1a733b28bcbe",
     "linguistic_rationale": "Засвідчено для decol_lex_028: форма «бормотати» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «бурмотіти» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_029": {
@@ -516,6 +608,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ліжко",
     "russian_copy": "кровать",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ВАГОВИТІ ДРІБНИЦІ», стаття «Чи тільки ЛИШЕ»",
+    "supporting_passage": "У своєму незбагненному захопленні слівцем лише чимало авторів, не дбаючи про стилістичну неоковирність тексту, коли збігаються поряд або в одній фразі однакові звуки и корені, пишуть: \"Він залишив лише записку, не пояснивши в ній, власне, нічого\"; \"Знаю лише, що дядько не залишив своєї роботи\"; \"Але лише над його ліжком була прибита дерев'яна поличка\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -523,7 +618,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_029",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_029.review.json",
-    "content_sha256": "948fc0f3310b3aaf2b67b2de57f3123eef8c23bd279631904c4713c32dd95b23",
+    "content_sha256": "e65b5204ba67ba7b03fd63a1b3f52ec714ce14bb4c5ad461fb511a4d0b4b58a1",
     "linguistic_rationale": "Засвідчено для decol_lex_029: форма «кровать» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ліжко» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_030": {
@@ -533,6 +628,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "дзеркало",
     "russian_copy": "зеркало",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 23, с. 28",
+    "supporting_passage": "Звук [дз] передається сполученням букв дз: дзеркало, дзеркальний; написання «зеркало» є суржиковим росіянізмом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -540,7 +638,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_030",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_030.review.json",
-    "content_sha256": "bdae92a39fba41bb34b135ec2cbc22c2581b70b51196bdb3c4a82b526855ac9c",
+    "content_sha256": "f774b1b96ab13f6da61d51cec13a8913fbf01509695a1c224b119240fbd56cbc",
     "linguistic_rationale": "Засвідчено для decol_lex_030: форма «зеркало» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «дзеркало» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_031": {
@@ -550,6 +648,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "оселедець",
     "russian_copy": "сельодка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Оселедець, оселедчик», с. 40",
+    "supporting_passage": "Замість спотвореного суржикового слова «сельодка» українська літературна мова має питоме слово оселедець, оселедчик.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -557,7 +658,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_031",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_031.review.json",
-    "content_sha256": "1b655fae7f0978bf3defcecd19203af037ff3ac164dea12ec7c34f49e0692215",
+    "content_sha256": "2a4b251b92d9f79c0002f91d1717a30e677c62d35b27350b122a710bb04e57b1",
     "linguistic_rationale": "Засвідчено для decol_lex_031: форма «сельодка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «оселедець» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_032": {
@@ -567,6 +668,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "скатертина",
     "russian_copy": "скатерть",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Скатертина, обрус», с. 50",
+    "supporting_passage": "Слово «скатерть» не є властивим українській мові; питомими є скатертина або обрус.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -574,7 +678,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_032",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_032.review.json",
-    "content_sha256": "2d3588e23a8a205a2565ab5eae894ebaf887ac38b65576c417d9579ef165b881",
+    "content_sha256": "6a5aa213137953a0029d1c30b8d0fc664c49a67036f6336f2f9e0f9f4df91621",
     "linguistic_rationale": "Засвідчено для decol_lex_032: форма «скатерть» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «скатертина» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_033": {
@@ -584,6 +688,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ковдра",
     "russian_copy": "одіяло",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Ковдра, коц, ліжник, укривало»",
+    "supporting_passage": "Останнім часом слово \"ковдра\" стало витискати з ужитку інші українські слова, що також є відповідниками російського \"одеяло\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -591,7 +698,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_033",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_033.review.json",
-    "content_sha256": "c30bf520c36f366bbd70e0ee4b1341950ccabfbccca088e4430a8069cc8fbeaf",
+    "content_sha256": "6e3b011e41a0b9f4a47df2a6108f1183a65fe733c78911f6744aabd42738a521",
     "linguistic_rationale": "Засвідчено для decol_lex_033: форма «одіяло» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ковдра» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_034": {
@@ -601,6 +708,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "рушник",
     "russian_copy": "полотенце",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Повинна, визнання провини, признання до вини, каяття»",
+    "supporting_passage": "\"Він довго ховався, але чи страх переміг, чи заговорила совість – прийшов‑таки з повинною до міліції\", – читаємо в репортерській замітці й напружуємо думку, щоб точно зрозуміти фразу: чи то якийсь правопорушник прийшов до міліції з якоюсь жінкою, в чомусь зобов'язаною, чи то він прийшов признатись до своєї вини, визнати свою провину або помилку, покаятися в тому, що накоїв.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -608,7 +718,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_034",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_034.review.json",
-    "content_sha256": "f03091e59ecba4a1c7f4a5273fac06c594af088fe2040aa9e884f4306447da2a",
+    "content_sha256": "f76416429af799184e9a0ff56a2898e685edeca45d1ff11307517a0970f902b2",
     "linguistic_rationale": "Засвідчено для decol_lex_034: форма «полотенце» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «рушник» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_035": {
@@ -618,6 +728,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "посуд",
     "russian_copy": "посуда",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ВАГОВИТІ ДРІБНИЦІ», стаття «А як пити таку горілку»",
+    "supporting_passage": "Якби автори цього дивовижного напису заглянули в словники або прочитали в художній літературі: \"Коло вікон і серед кімнати стояли довжелезні столи, поспіль заставлені, крім пальників і примусів, безліччю немитого посуду\" (Ю.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -625,7 +738,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_035",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_035.review.json",
-    "content_sha256": "5266500932145083e6c81d2110f701c8195dc5afc8ceefc926c4b871c72422d0",
+    "content_sha256": "8c16e1f06a25bcd4fb36562c9e82776597d910334fd664f4260e797db0caeb50",
     "linguistic_rationale": "Засвідчено для decol_lex_035: форма «посуда» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «посуд» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_036": {
@@ -635,6 +748,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "підлога",
     "russian_copy": "пол",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Поля, береги, краї, криси»",
+    "supporting_passage": "\"На полях книжки було багато дрібно писаних олівцем нотаток\", – читаємо в одному сучасному оповіданні.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -642,7 +758,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_036",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_036.review.json",
-    "content_sha256": "1f9e33a3eb7b3d94d8d4cf3cabad10ce4b08fba3325321bda13f001d33f4d4d6",
+    "content_sha256": "3352402a404f85650757134b42d8a5120855b7f0f88bbd7e3d580f52afb23118",
     "linguistic_rationale": "Засвідчено для decol_lex_036: форма «пол» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «підлога» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_037": {
@@ -652,6 +768,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "стеля",
     "russian_copy": "потолок",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Стеля, піднебіння», с. 52",
+    "supporting_passage": "Слово «потолок» скальковано з російської; українською поверхня над кімнатою зветься стеля, а в переносному значенні — піднебіння чи межа.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -659,7 +778,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_037",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_037.review.json",
-    "content_sha256": "7a0940eb33e5d760c1d92fc7e427446d88450657d834bd03f8c0bc1836fffe37",
+    "content_sha256": "73cb716ffa9eab9f284374a36ac332d9df496e748c8514c37f97c12a7d62f2f3",
     "linguistic_rationale": "Засвідчено для decol_lex_037: форма «потолок» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «стеля» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_038": {
@@ -669,6 +788,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "драбина",
     "russian_copy": "лестниця",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Драбина, сходи», с. 35",
+    "supporting_passage": "Слово «лестниця» є грубим росіянізмом; українською переносне дерев'яне чи мотузяне приладдя — драбина, а стаціонарні східці в будинку — сходи.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -676,7 +798,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_038",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_038.review.json",
-    "content_sha256": "812eaffffffcdcbff6561a8a41809342b6876a561900a814472d55475a62e9b4",
+    "content_sha256": "6375e05369dd38755838154d9d3dc0e1e6c6933a08048ff2d2bcf60fd714c00f",
     "linguistic_rationale": "Засвідчено для decol_lex_038: форма «лестниця» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «драбина» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_039": {
@@ -686,6 +808,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "сходи",
     "russian_copy": "ступеньки",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Співпадати й збігатися, сходитись, зійтись»",
+    "supporting_passage": "– З газет), сходитись (\"Дивувались трохи, що слова проповіді і вчинки батющині не зовсім сходяться якось\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -693,7 +818,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_039",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_039.review.json",
-    "content_sha256": "1f8dace016173fd0a1f017cb67965fa101245c190b368ff890c2e22058d287f9",
+    "content_sha256": "255d81f8a22851ece3ceaa4ffc65adfdcc13de825c8bf297b82092e3f904cb41",
     "linguistic_rationale": "Засвідчено для decol_lex_039: форма «ступеньки» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «сходи» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_040": {
@@ -703,6 +828,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "парасолька",
     "russian_copy": "зонтік",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Парасолька, парасоль», с. 42",
+    "supporting_passage": "Російському «зонтик» в українській мові відповідає парасолька (від дощу чи сонця) або парасоль.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -710,7 +838,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_040",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_040.review.json",
-    "content_sha256": "dedfb191b6c20d7f3423e61c4b5c61ffd956835b6fdd0bab6f6b3ac775b43594",
+    "content_sha256": "a799d903fffb2437ffd6005ca77ac482be42508bf5d19dcf8a381ead08bbb7ad",
     "linguistic_rationale": "Засвідчено для decol_lex_040: форма «зонтік» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «парасолька» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_041": {
@@ -720,6 +848,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "шпилька",
     "russian_copy": "булавка",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 115",
+    "supporting_passage": "Російське слово «булавка» перекладається українською мовою як шпилька, англійська шпилька.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -727,7 +858,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_041",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_041.review.json",
-    "content_sha256": "5fb7f375479861741bbc65baa612037e2596a81c1a291b8771363d847753332b",
+    "content_sha256": "3d11c05e34925a01decf71cf9f769b3fe88b7121c172bc5807110a854d5011e2",
     "linguistic_rationale": "Засвідчено для decol_lex_041: форма «булавка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «шпилька» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_042": {
@@ -737,6 +868,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ґудзик",
     "russian_copy": "пуговиця",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ІМЕННИКИ», стаття «Родовий чи знахідний відмінок додатка»",
+    "supporting_passage": "Як буде правильно сказати: писати (читати) листа чи лист, пришити ґудзик чи ґудзика?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -744,7 +878,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_042",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_042.review.json",
-    "content_sha256": "5d8c5fe9de413b97bde6b5c91d9fa17a249423a3499cd0194871691940d4b4a6",
+    "content_sha256": "962b6e20f53303e1e05e03a11e4e17d3ec76da9a4d60cda5f02a2fd6fde49ac1",
     "linguistic_rationale": "Засвідчено для decol_lex_042: форма «пуговиця» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ґудзик» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_043": {
@@ -754,6 +888,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "кишеня",
     "russian_copy": "карман",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Кишеня, карман», с. 38",
+    "supporting_passage": "Слово «карман» є росіянізмом; в українській мові пришивний або вшитий мішечок для дрібниць зветься кишеня.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -761,7 +898,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_043",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_043.review.json",
-    "content_sha256": "fefb513dbabecbc778caca9ba2452ecb6510ace783d3db7f11853f883b3ad65e",
+    "content_sha256": "68a15e05c9c71fbe5df4543319a840c05ef9d25127243e53f6e12ea7f457105d",
     "linguistic_rationale": "Засвідчено для decol_lex_043: форма «карман» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «кишеня» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_044": {
@@ -771,6 +908,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "шухляда",
     "russian_copy": "ящик стола",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИСЛІВНИКІВ», стаття «Під рукою і напохваті»",
+    "supporting_passage": "\"Нащо ти ото шукаєш по кімнаті, нишпориш по шухлядах?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -778,7 +918,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_044",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_044.review.json",
-    "content_sha256": "4957288e8cb0e63c9c832322091d2f330e9e069575eb7d3e0cb976606fd9fe1f",
+    "content_sha256": "e43703144dc9117e16717ee2e1f920af1a9f44c34bb33a25f97d005810fe483f",
     "linguistic_rationale": "Засвідчено для decol_lex_044: форма «ящик стола» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «шухляда» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_045": {
@@ -788,6 +928,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "фіранка",
     "russian_copy": "занавіска",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Фіранка, завіска, гардина», с. 56",
+    "supporting_passage": "Замість суржикового «занавіска» в українській мові вживають фіранка, завіска або гардина.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -795,7 +938,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_045",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_045.review.json",
-    "content_sha256": "7bf9b8ad1d9440d7ede05adde7a141993d2e2183028fa005fa80b114755af70a",
+    "content_sha256": "607caa1ac8ffa5221ccbc18887f7c99a4ea00875642dee791b9b8535aecb89f9",
     "linguistic_rationale": "Засвідчено для decol_lex_045: форма «занавіска» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «фіранка» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_046": {
@@ -805,6 +948,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ганчірка",
     "russian_copy": "тряпка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Ганчірка, шмата», с. 33",
+    "supporting_passage": "Слово «тряпка» є росіянізмом; питомі українські слова — ганчірка, шмата або потерть.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -812,7 +958,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_046",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_046.review.json",
-    "content_sha256": "163b2625bba971560dd3b56c9562eeffe0d03466fb1fdb96d2c65c830e80d05e",
+    "content_sha256": "41f53d720f434532272b435277a873276c5fea49491deff64d85f9ca197acfcf",
     "linguistic_rationale": "Засвідчено для decol_lex_046: форма «тряпка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ганчірка» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_047": {
@@ -822,6 +968,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "кошик",
     "russian_copy": "корзина",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИЙМЕННИКИ», стаття «Для, задля, на, про, під, до»",
+    "supporting_passage": "Так само треба казати: \"поштова скринька на листи й газети\", \"кошик на старі папери\", \"миска на борщ\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -829,7 +978,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_047",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_047.review.json",
-    "content_sha256": "7ce10695fbc4bb99a3b53a967780f57b3c118b4a10b63da041112d0a76ddaeec",
+    "content_sha256": "23d5ad4f74b467cfc22a9349a259f91c36a8798556d4254d14c6d7da1b4adc25",
     "linguistic_rationale": "Засвідчено для decol_lex_047: форма «корзина» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «кошик» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_048": {
@@ -839,6 +988,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "комір",
     "russian_copy": "воротнік",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Виключний, винятковий, надзвичайний»",
+    "supporting_passage": "Відкладний, виложистий, викладчастий (викладчатий), відкотний (відкотистий), із закотою\n\n\"У польовій формі військовослужбовців гімнастерку замінено на кітель з відкладним коміром\", – надруковано в газетній статті, де впадає в очі трохи дивне в цьому контексті слово \"відкладний\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -846,7 +998,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_048",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_048.review.json",
-    "content_sha256": "15f81ccc746e35e41af41e534cab23b00a3968f8ebe5d96ca1523ea0c18d8514",
+    "content_sha256": "14d981947b466a7739b4bf95b29a79bbb05ff16afec9799616956bfcd6e2cdef",
     "linguistic_rationale": "Засвідчено для decol_lex_048: форма «воротнік» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «комір» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_049": {
@@ -856,6 +1008,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "цибуля",
     "russian_copy": "лук",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИКМЕТНИКИ», стаття «Особливості деяких прикметників у словосполуках»",
+    "supporting_passage": "Прикметники \"багатий\", \"хворий\", \"гарний\", \"поганий\", \"високий\", \"бистрий\" та інші вимагають після себе прийменника \"на\" з іменником у знахідному відмінку: \"Настя така багата на слово, що я не мала ко...",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -863,7 +1018,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_049",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_049.review.json",
-    "content_sha256": "819ff85630bb1d2993dacc2802d2a383cd363a98b02aed9ae7994b5e63617429",
+    "content_sha256": "f19857c63bab85cb4f996b5dae257d3ac1fffcf58212aa00f1eb15ac15f82afb",
     "linguistic_rationale": "Засвідчено для decol_lex_049: форма «лук» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «цибуля» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_050": {
@@ -873,6 +1028,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "гарбуз",
     "russian_copy": "тиква",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Гарбуз, тиква», с. 34",
+    "supporting_passage": "Слово «тиква» в українській мові означає передусім сулію або посудину з висушеного плоду; городня баштанна культура зветься гарбуз.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -880,7 +1038,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_050",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_050.review.json",
-    "content_sha256": "ece60e21ac441c13bbbc094dce4e738487b6f589ca1f06a287d33e645dc11433",
+    "content_sha256": "86d8eec56d0fe36ef2c6939bafaa3de97c084fb58d91ddb4ac5a376da3cbfbce",
     "linguistic_rationale": "Засвідчено для decol_lex_050: форма «тиква» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «гарбуз» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_051": {
@@ -890,6 +1048,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "суниці",
     "russian_copy": "земляніка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Суниці, полуниці», с. 53",
+    "supporting_passage": "Російському «земляника» відповідає українське суниці, лісові суниці.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -897,7 +1058,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_051",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_051.review.json",
-    "content_sha256": "879ac385937c5576fe0f1d26b9de9adedfc9e12e2650668150ecc7eececf112d",
+    "content_sha256": "bc5bc43f4263ec5291461bd9fbe1eaece3e9b97aef524fe8d2b9e7450357bf04",
     "linguistic_rationale": "Засвідчено для decol_lex_051: форма «земляніка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «суниці» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_052": {
@@ -907,6 +1068,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "полуниці",
     "russian_copy": "клубніка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Суниці, полуниці», с. 53",
+    "supporting_passage": "Замість російського «клубника» українською мовою вживають полуниці або садові суниці.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -914,7 +1078,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_052",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_052.review.json",
-    "content_sha256": "b362087498efe8cd75717e67b35bf5acc5fe2f5ce5afa9fdd1bd32154b8efdd8",
+    "content_sha256": "17a7df238e0c30f0d57521b9cf18cd306afc77070cc17fc346604a4f9f2793eb",
     "linguistic_rationale": "Засвідчено для decol_lex_052: форма «клубніка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «полуниці» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_053": {
@@ -924,6 +1088,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "лелека",
     "russian_copy": "аіст",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Лелека, чорногуз, бусол», с. 39",
+    "supporting_passage": "Слово «аіст» є російським; українські народні й літературні назви цього птаха — лелека, чорногуз, бусол, бузько.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -931,7 +1098,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_053",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_053.review.json",
-    "content_sha256": "5b5329d26ff82b88cb8615bc2411071070c5fcd671c59ebd96371f113cf801d9",
+    "content_sha256": "2e55f7a6d73acc8d1a3b279ce0f833c415ee46e6a4b402692abfff9a4e110b40",
     "linguistic_rationale": "Засвідчено для decol_lex_053: форма «аіст» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «лелека» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_054": {
@@ -941,6 +1108,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "метелик",
     "russian_copy": "бабочка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Метелик, метелиця», с. 40",
+    "supporting_passage": "Слово «бабочка» є росіянізмом; українською комаха з барвистими крильцями зветься метелик.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -948,7 +1118,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_054",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_054.review.json",
-    "content_sha256": "307f2268387d5ba6c53b844a50488647a8abd41bb69ed23fefba0f7316a3470f",
+    "content_sha256": "98a9619498256220f52cf9b27a5e3b50f3c376ea9ed0d9863a6b7e13955f4fcf",
     "linguistic_rationale": "Засвідчено для decol_lex_054: форма «бабочка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «метелик» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_055": {
@@ -958,6 +1128,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "равлик",
     "russian_copy": "улітка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Равлик, слимак», с. 47",
+    "supporting_passage": "Російському «улитка» в українській літературній мові відповідає равлик або слимак.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -965,7 +1138,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_055",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_055.review.json",
-    "content_sha256": "b5935b4fe6f3f4438eff402eea6b138bc4ef0e898ae1465ac42008a00a4c977b",
+    "content_sha256": "072643ec582de0a5784c1b92f8ed28f1b272b70824880c3895ffb793c72a814b",
     "linguistic_rationale": "Засвідчено для decol_lex_055: форма «улітка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «равлик» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_056": {
@@ -975,6 +1148,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "жаба",
     "russian_copy": "лягушка",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Жаба, кумка», с. 36",
+    "supporting_passage": "Слово «лягушка» є росіянізмом; українською безхвосте земноводне зветься жаба або кумка.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -982,7 +1158,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_056",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_056.review.json",
-    "content_sha256": "f23bb1a0fe545b729a2505599d58b7c43f6a7542967a1ed8e3b29d11c04ddad6",
+    "content_sha256": "26b901b65211967fb91a2626b525f8a1d6454195e341b0a9ac93e8deeba7be5f",
     "linguistic_rationale": "Засвідчено для decol_lex_056: форма «лягушка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «жаба» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_057": {
@@ -992,6 +1168,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "горобець",
     "russian_copy": "воробей",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «СПОЛУЧНИКИ», стаття «Як би не − хоч би як, який би не − хоч би який»",
+    "supporting_passage": "Так усталилося в нашій класиці й живому народному мовленні, отож нема чого від цього відступатись: \"Не до пари голубоньці горобець, хоч який він прехороший молодець\" (Л.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -999,7 +1178,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_057",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_057.review.json",
-    "content_sha256": "9d39ed303cdf2e332fe42e8e146c9992bd28d113c4f84f80e4951449073060bd",
+    "content_sha256": "a2722ee2bbdd5438bbf6d19a8d2411cdecf47cedb945726704a03cd211b5ea0f",
     "linguistic_rationale": "Засвідчено для decol_lex_057: форма «воробей» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «горобець» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_058": {
@@ -1009,6 +1188,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ведмідь",
     "russian_copy": "медвідь",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 17, с. 22",
+    "supporting_passage": "У літературній нормі закріплено форму ведмідь, ведмедя, ведмежа; варіант «медвідь» є діалектним або застарілим.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1016,7 +1198,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_058",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_058.review.json",
-    "content_sha256": "e783f3962138b0b8f34e2e99c52150be406b0f1f9ae717a1e9ec2691958e7800",
+    "content_sha256": "80ef8ae60cc0fca70076b6c36970a3369e31b34d1d2c4101423c3a535642e366",
     "linguistic_rationale": "Засвідчено для decol_lex_058: форма «медвідь» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ведмідь» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_059": {
@@ -1026,6 +1208,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ковзани",
     "russian_copy": "коньки",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Ковзани, лещата», с. 37",
+    "supporting_passage": "Замість «коньки» українською для зимового ковзання на льоду вживають ковзани або лещата.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1033,7 +1218,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_059",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_059.review.json",
-    "content_sha256": "c410f59eef34a5b5517182ec65849d82c7125f961838ade230e3a21cdd15569e",
+    "content_sha256": "f1e5db6dc0e23646022fc5cbb3371a7a0be30f8fa3578f3638905d2e80ce1f69",
     "linguistic_rationale": "Засвідчено для decol_lex_059: форма «коньки» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ковзани» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_lex_060": {
@@ -1043,6 +1228,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "лижі",
     "russian_copy": "лижи",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 11, с. 16",
+    "supporting_passage": "Іменники жіночого роду на твердий та шиплячий приголосний у множині мають закінчення -і: лижі, лиж (а не лижи).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1050,7 +1238,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_060",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_060.review.json",
-    "content_sha256": "9222c1c0ccabbc3fb3ff635f684a3b066ba3906d7cdbbb74c20aaa1286414a95",
+    "content_sha256": "adced57ceae0346f96db8b4f581ebe094ffa92609f700f209eb3c1f8004a9993",
     "linguistic_rationale": "Засвідчено для decol_lex_060: форма «лижи» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «лижі» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_001": {
@@ -1060,6 +1248,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати участь",
     "russian_copy": "приймати участь",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію»",
+    "supporting_passage": "Недобре надруковано в одній районній газеті: \"У збиральній кампанії прийняли участь не тільки школярі, а й старі люди села\". Тут треба було написати взяли участь, як і в інших аналогічних випадках: \"Ч...",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1067,7 +1258,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_001",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_001.review.json",
-    "content_sha256": "983dacde63532e1bea6da3326e181e9ad6448c16064ff445a4cd9310c120ed07",
+    "content_sha256": "ee41b3bfb4474602a69b7fb71538bd906cef8526f23580173236a327594b5e9c",
     "linguistic_rationale": "Засвідчено для decol_syn_001: форма «приймати участь» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати участь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_002": {
@@ -1077,6 +1268,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вважати",
     "russian_copy": "рахувати",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Рахувати, рахуватися, числити, числитися, уважати»",
+    "supporting_passage": "Усі ці вислови – неправильні, бо дієслова рахувати, рахуватися, числити, числитися та іменник рахунок – це тільки математичні поняття: \"А було колись так, що люди не знали, як рахувати час\" (М.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1084,7 +1278,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_002",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_002.review.json",
-    "content_sha256": "272fa169be5141623692731a5991aeeafd96b85a6ff56420488af52cf2d4ad3f",
+    "content_sha256": "fe77ffdb0aea161f3f636018eb99b527852effe63bf932df702da83c7f6c836b",
     "linguistic_rationale": "Засвідчено для decol_syn_002: форма «рахувати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вважати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_003": {
@@ -1094,6 +1288,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "перемикати",
     "russian_copy": "переключати",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Включати, умикати, виключати, вимикати», с. 134",
+    "supporting_passage": "В українській мові комутацію електричного струму або приладів позначають дієсловами з коренем -мик-: перемикати, умикати, вимикати; форма «переключати» є росіянізмом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1101,7 +1298,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_003",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_003.review.json",
-    "content_sha256": "e28a39efd25e7932c7faacb16d986d7c85382d28fc072ed510df4c20881a5ee6",
+    "content_sha256": "33b967750b5621e0e016f023d5a0407664423d53eec09d7b887c9c1ba77d19db",
     "linguistic_rationale": "Засвідчено для decol_syn_003: форма «переключати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «перемикати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_004": {
@@ -1111,6 +1308,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "збігатися",
     "russian_copy": "співпадати",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Співпадати й збігатися, сходитись, зійтись»",
+    "supporting_passage": "\"Моя точка зору не співпадає з думкою моїх колег\", – читаємо в одній дисертації, де науковий працівник забув або не знав, що дієслова співпадати нема в українській мові, це – калька з російського совпадать.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1118,7 +1318,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_004",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_004.review.json",
-    "content_sha256": "c52d017788f2b9fcadabb25631d10c5f83a5419dd8beca137f2c2045d6479c22",
+    "content_sha256": "4b94b7a31054dc2a5f9f36649180ad5eea58064be8b505a7845f3b25a2dbac16",
     "linguistic_rationale": "Засвідчено для decol_syn_004: форма «співпадати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «збігатися» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_005": {
@@ -1128,6 +1328,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "висловлювати подяку",
     "russian_copy": "приносити подяку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Висловлювати, складати подяку», с. 138",
+    "supporting_passage": "Подяку не «приносять» (калька з російського «приносить благодарность»), а висловлюють або складають подяку.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1135,7 +1338,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_005",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_005.review.json",
-    "content_sha256": "32b42477d9132eadb6d43ca5b86b9867ec0b09c3df8b19211b39a565fe4b070f",
+    "content_sha256": "d9d8dd3175a94db421b4aa57d5d6a88caa58212cb9137e3e17c22412220b4cea",
     "linguistic_rationale": "Засвідчено для decol_syn_005: форма «приносити подяку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «висловлювати подяку» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_006": {
@@ -1145,6 +1348,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "докласти зусиль",
     "russian_copy": "прикласти зусилля",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Докладати, прикладати», с. 142",
+    "supporting_passage": "Зусилля, старання й працю українською мовою докладають: докласти зусиль, докласти рук; прикладати можна печатку чи компрес.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1152,7 +1358,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_006",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_006.review.json",
-    "content_sha256": "e7e9ff1c9fcc113fb10b76b5d915bad3122e058047dc4e6b42a1e99c45d8a19d",
+    "content_sha256": "65daca6b5a9dd61e00a309fb0f73498a8173e3c80e621961d71a3c7930036b0b",
     "linguistic_rationale": "Засвідчено для decol_syn_006: форма «прикласти зусилля» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «докласти зусиль» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_007": {
@@ -1162,6 +1368,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати на меті",
     "russian_copy": "переслідувати мету",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «З метою чи без мети»",
+    "supporting_passage": "З цього, звісно, не слід думати, що слово \"мета\" треба обминати, приміром, у таких висловах, як \"поставити собі за мету\", \"мати на меті\" тощо.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1169,7 +1378,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_007",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_007.review.json",
-    "content_sha256": "f7a2452e5403bb14d86562718b7d06c382e1a924acf86e3c881a0e130cadca1c",
+    "content_sha256": "473f70e68da7fdf29759783922795ef22d929b918650557798669f4e5d014b4e",
     "linguistic_rationale": "Засвідчено для decol_syn_007: форма «переслідувати мету» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «мати на меті» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_008": {
@@ -1179,6 +1388,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "запобігати",
     "russian_copy": "попереджати",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄСЛОВА», стаття «Розгляньмо, як саме керують дієслова іменниками в певних відмінках.»",
+    "supporting_passage": "– Народна пісня), запобігати (\"Не хочуть у вельможних панів ласки запобігати\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1186,7 +1398,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_008",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_008.review.json",
-    "content_sha256": "58b5391350545d0838c7b62d4e04feac0d42fddb7d3b59f8141a55c263d2a312",
+    "content_sha256": "3d52fcccd9e9b9541e780e941e56062194a9bf9eafa13ab756c721c3fe102726",
     "linguistic_rationale": "Засвідчено для decol_syn_008: форма «попереджати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «запобігати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_009": {
@@ -1196,6 +1408,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "скасувати",
     "russian_copy": "відмінити",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+    "supporting_passage": "Мене мало турбує правопис іноземних слів і прізвищ, а от написання українських слів із звуком g на початку чи в середині слова раз у раз змушує гостро відчувати брак скасованої літери при нескасованому звуці, який, звісно, скасувати в живій мові не можна, хоч би як того хотілося задля спрощення чи для якоїсь ще мети.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1203,7 +1418,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_009",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_009.review.json",
-    "content_sha256": "05cab0bbf86f30c2b438fa4a34312ed6b15b02cd936114ba15e03e03315660a5",
+    "content_sha256": "8aa6e6ae856a363c6f6ce22976ed2bff74abf884f98af327ff5c186030d01320",
     "linguistic_rationale": "Засвідчено для decol_syn_009: форма «відмінити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «скасувати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_010": {
@@ -1213,6 +1428,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "здобути освіту",
     "russian_copy": "отримати освіту",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Здобувати, одержувати», с. 148",
+    "supporting_passage": "Освіту, знання, кваліфікацію українською мовою здобувають: здобути освіту, здобути вищу освіту, здобути фах.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1220,7 +1438,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_010",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_010.review.json",
-    "content_sha256": "531d1d2e8b27704b43699e7ccabe75c8bc7703a82c714089d21499703937d431",
+    "content_sha256": "26ae086303d1fbd329a8f0562c2611a6dacb45997fb8267696af6151aeb9afb4",
     "linguistic_rationale": "Засвідчено для decol_syn_010: форма «отримати освіту» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «здобути освіту» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_011": {
@@ -1230,6 +1448,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "надавати перевагу",
     "russian_copy": "віддавати перевагу",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Міфи і реальність»",
+    "supporting_passage": "Чи варто надавати перевагу в такому туманному питанні якійсь одній науковій лінгвістичній теорії?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1237,7 +1458,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_011",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_011.review.json",
-    "content_sha256": "123b74c55319d7331df47993a6814197f0e5f09ffebe300c20402478c5dc7a5e",
+    "content_sha256": "50fc634815320308956753b63db14ee09f787e5d3f209da65f57713dad33f24a",
     "linguistic_rationale": "Засвідчено для decol_syn_011: форма «віддавати перевагу» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «надавати перевагу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_012": {
@@ -1247,6 +1468,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати до уваги",
     "russian_copy": "приймати до уваги",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Брати до уваги, зважати», с. 136",
+    "supporting_passage": "Вислів «приймати до уваги» є калькою з російського «принимать во внимание»; питомий зворот — брати до уваги або зважати на щось.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1254,7 +1478,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_012",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_012.review.json",
-    "content_sha256": "ea87330918c11d9bc0bb2c71c5fa7b85bccd6bfdceca6c3ee62efbc4991bf43b",
+    "content_sha256": "00406d64652ddd429c07814bfb7454b5bc83d95d14033699b7a77968b48177cf",
     "linguistic_rationale": "Засвідчено для decol_syn_012: форма «приймати до уваги» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати до уваги» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_013": {
@@ -1264,6 +1488,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "стати в пригоді",
     "russian_copy": "пригодитися",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Нагода й пригода»",
+    "supporting_passage": "Іменник \"пригода\" може означати також потребу, користь: \"Годувала собі дочку для своєї пригоди, щоб принесла із криниці холодної води\" (народна пісня), – від чого є вислів \"стати в пригоді\": \"Не бий мене, чоловіче добрий, я тобі у великій пригоді стану\" (казка).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1271,7 +1498,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_013",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_013.review.json",
-    "content_sha256": "183afac49e18074a077aadf9fa6cd74746527bf7a98ae892f968f36fe9c4f963",
+    "content_sha256": "af3d8ca1ffd013b6ace976fe34839dd44b176685ea0745bab903e82dc80b8ca7",
     "linguistic_rationale": "Засвідчено для decol_syn_013: форма «пригодитися» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «стати в пригоді» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_014": {
@@ -1281,6 +1508,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "таким способом",
     "russian_copy": "таким шляхом",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Шлях, дорога, путь, путівець, спосіб» (с. 77)",
+    "supporting_passage": "Російському вислову \"таким путём\" відповідає український \"таким способом\" (або \"таким чином\"): \"Батьки приводили дітей до школи, і Раїса таким способом знайомилась з селянами\" (М. Коцюбинський); \"Таким чином я добув вищу освіту\" (з живих уст). До речі, останнім часом став дуже поширюватися в до нас західноукраїнський вислів \"у такий спосіб\", що подекуди витискує вислів \"таким способом\"... Краще додержуватися скрізь загальноукраїнського давнього вислову \"таким способом\", що не має впливу інших мов... \"А яким способом ви досягаєте такого великого врожаю картоплі?\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1288,7 +1518,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_014",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_014.review.json",
-    "content_sha256": "a81bb6c352d70793e6fdc90138cb95f72619bb1cb4ef02a6f7f38a3001395c46",
+    "content_sha256": "7b48e9f55cb805cae072b43dea572d27555cce2b99fee8d21e3f31a4fe173635",
     "linguistic_rationale": "Засвідчено для decol_syn_014: форма «таким шляхом» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «таким способом» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_015": {
@@ -1298,6 +1528,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "братися до роботи",
     "russian_copy": "приступати до роботи",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Братися до роботи, ставати до праці», с. 137",
+    "supporting_passage": "Вислів «приступати до роботи» є калькою російського «приступать к работе»; питомо українською кажуть братися до роботи або ставати до праці.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1305,7 +1538,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_015",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_015.review.json",
-    "content_sha256": "3c66878e30725225675c62d37a4bf2514286a8f5ad5b483bd61f4da6f9559f65",
+    "content_sha256": "3701414339896d63100c0098135ce1cbe4b2e697e9aa04b5f7517a7f26dc6275",
     "linguistic_rationale": "Засвідчено для decol_syn_015: форма «приступати до роботи» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «братися до роботи» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_016": {
@@ -1315,6 +1548,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "зазнати поразки",
     "russian_copy": "потерпіти поразку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Зазнавати, терпіти», с. 146",
+    "supporting_passage": "Поразки, втрат, лиха українською мовою зазнають: зазнати поразки, зазнати збитків; «терпіти поразку» — це калька російського «терпеть поражение».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1322,7 +1558,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_016",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_016.review.json",
-    "content_sha256": "f9b7d911524691d6d901595954b84aa6226e61b07a2d0982730a0d92b9489258",
+    "content_sha256": "4d35f14175dd2c904dca2b4b842cb2a40392ed0a4243c85222cd42cef8330290",
     "linguistic_rationale": "Засвідчено для decol_syn_016: форма «потерпіти поразку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «зазнати поразки» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_017": {
@@ -1332,6 +1568,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "впадати в очі",
     "russian_copy": "кидатися в очі",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Кидатися в очі, упадати в очі (в око), убирати очі»",
+    "supporting_passage": "\"Кидається в очі низька успішність учнів з алгебри й геометрії та англійської мови\", – читаємо в протоколі обстеження одної школи. Тут виділений вислів скальковано з російського бросаться в глаза. Але...",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1339,7 +1578,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_017",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_017.review.json",
-    "content_sha256": "b8f000ae4adbd98d447c91203bea8c0b66bfabe4eae211310e77db9b880cd508",
+    "content_sha256": "f78942bbada02ff2fc725e90c84c21325b364ca6f64c72fd05a49b5e0fad7447",
     "linguistic_rationale": "Засвідчено для decol_syn_017: форма «кидатися в очі» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «впадати в очі» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_018": {
@@ -1349,6 +1588,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "зазнавати утисків",
     "russian_copy": "терпіти утиски",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Зазнавати утисків, терпіти», с. 147",
+    "supporting_passage": "Замість калькованого «терпіти утиски» належить уживати зазнавати утисків або терпіти образу.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1356,7 +1598,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_018",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_018.review.json",
-    "content_sha256": "29dea2b004578c63e88e1c54a9e13b44abfda7fa0d797623e6e57ed408eda8e8",
+    "content_sha256": "6bef82aff736d403211830f47c00c0b98a3601b68d36c92987277bafa5f009dc",
     "linguistic_rationale": "Засвідчено для decol_syn_018: форма «терпіти утиски» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «зазнавати утисків» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_019": {
@@ -1366,6 +1608,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "підбивати підсумки",
     "russian_copy": "підводити підсумки",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 96",
+    "supporting_passage": "Не підводити підсумки, а підбивати підсумки або підсумовувати. Підводити можна когось (під монастир, підводити людину).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1373,7 +1618,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_019",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_019.review.json",
-    "content_sha256": "5eefb75e63823871dd3853be797e2412a84ab55cfaab7f1c13b307a44f225f77",
+    "content_sha256": "455e7cb8a15e70eb464bdd0d4e07365daf784a9f765775987a2c75a7a3f731ca",
     "linguistic_rationale": "Засвідчено для decol_syn_019: форма «підводити підсумки» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «підбивати підсумки» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_020": {
@@ -1383,6 +1628,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "дотримуватися правил",
     "russian_copy": "притримуватися правил",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Дотримуватися, триматися», с. 144",
+    "supporting_passage": "Правил, законів, розпорядку українською мовою дотримуються: дотримуватися правил; «притримуватися» — калька російського «придерживаться».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1390,7 +1638,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_020",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_020.review.json",
-    "content_sha256": "9780ff3dcda4e78fa039338d1aa476d1477fe117a4737aace0e009fcc671f8b4",
+    "content_sha256": "7c3ac66d64b9a8142c271004d57c2573a9a621563002d2e7939e96f0dff175dc",
     "linguistic_rationale": "Засвідчено для decol_syn_020: форма «притримуватися правил» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «дотримуватися правил» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_021": {
@@ -1400,6 +1648,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "увімкнути",
     "russian_copy": "включити",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 104",
+    "supporting_passage": "Слово «включити» у значенні запуску приладу чи струму є калькою з російської; нормативно: вмикати, увімкнути (струм, радіо, прилад).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1407,7 +1658,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_021",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_021.review.json",
-    "content_sha256": "5045bc5a381c3fce11b249460ec4877bc24d360211d7b39bc69c2aad2ff3d17e",
+    "content_sha256": "6ce03fdbe3f075387a1eb8fce8f4dbbb07ab09d2380b896b93b5dec0b67e98d0",
     "linguistic_rationale": "Засвідчено для decol_syn_021: форма «включити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «увімкнути» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_022": {
@@ -1417,6 +1668,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вимкнути",
     "russian_copy": "виключити",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 105",
+    "supporting_passage": "Виключати можна зі складу організації або з університету; прилади, електрику й мотори українською мовою вимикають.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1424,7 +1678,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_022",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_022.review.json",
-    "content_sha256": "fb71ebf2770e8440014efbc28d80dded24756338e1e34217dbfe368ec22ff5eb",
+    "content_sha256": "b574b71c56973275d2b46f887e21af5e692def8a908e74ca5cbf3af9a5f26b8f",
     "linguistic_rationale": "Засвідчено для decol_syn_022: форма «виключити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вимкнути» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_023": {
@@ -1434,6 +1688,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "відчинити",
     "russian_copy": "відкрити",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Двоєчник, двієчник, двійкар»",
+    "supporting_passage": "Візьмімо іменник \"кіл\": у родовому та інших відмінках, де буде відкритий склад, за фонетичним законом чергування \"і\" перейде в \"о\" – \"кола\", \"колу\", \"колом\", \"на колі\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1441,7 +1698,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_023",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_023.review.json",
-    "content_sha256": "64706c8bd8ef74fe6d2208edd0ac94dbd7bd62295edc4ea57fcc46198cd7a2a5",
+    "content_sha256": "ebda45cbe6fa53e688f1f90ef0dbbeaeb3dfbb98290e26e2c75d8170041cbeaa",
     "linguistic_rationale": "Засвідчено для decol_syn_023: форма «відкрити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «відчинити» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_024": {
@@ -1451,6 +1708,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "відкоркувати",
     "russian_copy": "відкрити пляшку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Відкривати, відчиняти, розгортати», с. 130",
+    "supporting_passage": "Пляшку чи банку з пробкою не «відкривають», а відкорковують або розкорковують.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1458,7 +1718,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_024",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_024.review.json",
-    "content_sha256": "337b0f7e66a66f3a32577d314c00de6c682ae610625972b49cfe19c44760c046",
+    "content_sha256": "0e8b6a65733cc4151b55f9b99b5ee83c06ee9163e1fd15bd1e04e1c65e077b77",
     "linguistic_rationale": "Засвідчено для decol_syn_024: форма «відкрити пляшку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «відкоркувати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_025": {
@@ -1468,6 +1728,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "заплющити",
     "russian_copy": "закрити очі",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Відкривати, відчиняти, розгортати», с. 130",
+    "supporting_passage": "Очі українською мовою розплющують і заплющують; двері й вікна — відчиняють і зачиняють; книги — розгортають і згортають.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1475,7 +1738,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_025",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_025.review.json",
-    "content_sha256": "fd0612970eb4116179b2aa2b44a907be89efd5d61bb85fbf1c044627521e1bca",
+    "content_sha256": "fc2d217b7cf846043b07830267a8cad2ee7cfaae7903dacfb7a6629b422a898b",
     "linguistic_rationale": "Засвідчено для decol_syn_025: форма «закрити очі» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «заплющити» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_026": {
@@ -1485,6 +1748,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "розгорнути",
     "russian_copy": "відкрити книжку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Відкривати, відчиняти, розгортати»",
+    "supporting_passage": "Коли мовиться про книжку або зошит, то треба казати: розгорнути, а не розкрити, згорнути, а не закрити: \"Я розгорнула книжку і прочитала епіграф\" (Леся Українка); \"Книжку згорнув, сховав у свою шаховку\" (Б.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1492,7 +1758,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_026",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_026.review.json",
-    "content_sha256": "9cf3ef7a6721c9aa638088fff16dd04ee838ee2cd7e89323d789e7dcde14e3b9",
+    "content_sha256": "e0d25d19375937d96592a043a53b8521855d8e37184c57e66b5e81de5cfea0a6",
     "linguistic_rationale": "Засвідчено для decol_syn_026: форма «відкрити книжку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «розгорнути» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_027": {
@@ -1502,6 +1768,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "згорнути",
     "russian_copy": "закрити зошит",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Відкривати, відчиняти, розгортати»",
+    "supporting_passage": "Коли мовиться про книжку або зошит, то треба казати: розгорнути, а не розкрити, згорнути, а не закрити: \"Я розгорнула книжку і прочитала епіграф\" (Леся Українка); \"Книжку згорнув, сховав у свою шаховку\" (Б.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1509,7 +1778,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_027",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_027.review.json",
-    "content_sha256": "9e1d0843fe5db35692197be8d4895013663bb847ade3cfa01818537fe06e1822",
+    "content_sha256": "9e7b1d3c6ebb5fc475047bb09cc3174aa2b2d940d55d570236032e0910400fb1",
     "linguistic_rationale": "Засвідчено для decol_syn_027: форма «закрити зошит» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «згорнути» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_028": {
@@ -1519,6 +1788,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "просити вибачення",
     "russian_copy": "приносити вибачення",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Вибачатися, прощати, дарувати, перепрошувати»",
+    "supporting_passage": "Так само не можна казати: \"За ці слова треба вибачатись\", – а слід: \"треба попросити вибачення\" або \"треба перепросити\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1526,7 +1798,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_028",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_028.review.json",
-    "content_sha256": "ca5370115704448a50d959ed7c6c5141af306bbb375327dd94b07be7162d2ed1",
+    "content_sha256": "11a583d98f8eef396b5e3e7ab26d1cd1713c8da9ad3b1a6c183057a3c838eeed",
     "linguistic_rationale": "Засвідчено для decol_syn_028: форма «приносити вибачення» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «просити вибачення» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_029": {
@@ -1536,6 +1808,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "давати змогу",
     "russian_copy": "дозволяти",
     "authority": "UA-GEC (Syvokon et al., 2023)",
+    "source": "UA-GEC v2.0",
+    "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #3127 (документ 0029, анотатор 1), тип F/Calque (дозволяє -> дає змогу)",
+    "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 0029, анотатор 1): «дозволяє» -> «дає змогу»",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1543,7 +1818,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_029",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_029.review.json",
-    "content_sha256": "d291acf56494d9b41bdb88d173394a935d9896df4875e24e8eb18242cb93628c",
+    "content_sha256": "ec2fa33776be0ad993897f83e36136db4abbc889b34183c69c58c30d60156e09",
     "linguistic_rationale": "Засвідчено для decol_syn_029: форма «дозволяти» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «давати змогу» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_030": {
@@ -1553,6 +1828,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "спало на думку",
     "russian_copy": "прийшло в голову",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Спало на думку, прийшло на гадку», с. 182",
+    "supporting_passage": "Вислів «прийшло в голову» є калькою російського «пришло в голову»; українською кажуть спало на думку або прийшло на думку.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1560,7 +1838,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_030",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_030.review.json",
-    "content_sha256": "6489c4375845fed7772c793f7788b6e2d12e723e3bcf884e389eea0dbc4a61a4",
+    "content_sha256": "fc6165e03f03cc692ffdae016886821545718311f80348d885b49c2f05ab79c0",
     "linguistic_rationale": "Засвідчено для decol_syn_030: форма «прийшло в голову» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «спало на думку» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_031": {
@@ -1570,6 +1848,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "називати на ім'я",
     "russian_copy": "звати по імені",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Називати на ім'я», с. 185",
+    "supporting_passage": "Конструкція «звати по імені» є калькою з російського «звать по имени»; по-українському кажуть називати на ім'я або кликати на ймення.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1577,7 +1858,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_031",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_031.review.json",
-    "content_sha256": "e62bd017a006fe3d80167a0b14f47b34b54e343c1a43583734137e08750a7262",
+    "content_sha256": "9beee37bad52ace54bddf67295ac8815743943a7b47498d0193a089ac53935e4",
     "linguistic_rationale": "Засвідчено для decol_syn_031: форма «звати по імені» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «називати на ім'я» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_032": {
@@ -1587,6 +1868,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати дотичність",
     "russian_copy": "мати відношення до",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 88",
+    "supporting_passage": "Словосполучення «мати відношення до» когось чи чогось є калькованим перекладом російського «иметь отношение к». Українською мовою слід уживати дієслова стосуватися, бути причетним або мати дотичність.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1594,7 +1878,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_032",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_032.review.json",
-    "content_sha256": "d667eb7e4488bb0f04ffa823fb734d06505e806881ebb5372b22c27034b09e23",
+    "content_sha256": "2e2fa4f428605117f0bda4c2ce3f430d0bbabdc381a4ee066c73c848f7df336f",
     "linguistic_rationale": "Засвідчено для decol_syn_032: форма «мати відношення до» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «мати дотичність» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_033": {
@@ -1604,6 +1888,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ставитися до",
     "russian_copy": "відноситися до",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Ставитися, відноситися, поводитися», с. 152",
+    "supporting_passage": "Вислів «відноситися до» у значенні ставлення до людей чи обов'язків є калькою з російського «относиться к»; слід казати ставитися до когось.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1611,7 +1898,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_033",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_033.review.json",
-    "content_sha256": "5cd68ad02318fb68255cce9a3a69823c75b1ba021be0623437557aeef047080f",
+    "content_sha256": "7f031188c9d86a51dd0905c344ff39917c251a3c5ed9718c3c31539471da5d82",
     "linguistic_rationale": "Засвідчено для decol_syn_033: форма «відноситися до» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «ставитися до» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_034": {
@@ -1621,6 +1908,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "належати до",
     "russian_copy": "відноситися до",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Належати до, відноситися», с. 153",
+    "supporting_passage": "У значенні приналежності до групи чи категорії слід казати належати до, входити до складу, а не «відноситися».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1628,7 +1918,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_034",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_034.review.json",
-    "content_sha256": "3f7c1819f8acf7679fb03bba80a55f5dfaddff7ebd78c31911e90708042242ee",
+    "content_sha256": "c1d0a7ef4ce61b7b1bfb5cc380e3c97f0b8c46ffff0ceb4ddce65987261518a8",
     "linguistic_rationale": "Засвідчено для decol_syn_034: форма «відноситися до» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «належати до» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_035": {
@@ -1638,6 +1928,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "завдавати шкоди",
     "russian_copy": "наносити шкоду",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 112",
+    "supporting_passage": "В українській мові дієслово наносити означає переміщувати якусь масу або креслити лінії. У сполученні з іменниками шкода, удар, збитки вживають виключно дієслово завдавати: завдавати шкоди, завдати удару, завдати збитків.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1645,7 +1938,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_035",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_035.review.json",
-    "content_sha256": "64b557300730683beec277a3669662e446cfe2342ceeb955d687ae2507bfe6c5",
+    "content_sha256": "b474055425069af28c3b4d0eb07c14521b4960dded505f7f52f486bc2fd5246a",
     "linguistic_rationale": "Засвідчено для decol_syn_035: форма «наносити шкоду» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «завдавати шкоди» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_036": {
@@ -1655,6 +1948,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "позбутися звички",
     "russian_copy": "вивільнитися від звички",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Позбуватися, позбутися звички», с. 150",
+    "supporting_passage": "Непотрібних звичок, вад, неприємностей позбуваються: позбутися поганої звички.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1662,7 +1958,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_036",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_036.review.json",
-    "content_sha256": "a1216cf6b08f7a7b9e6b4a069c001963e7723a510b173cb60fb73c5fe3a54416",
+    "content_sha256": "f12c300edb7e1f832aa09fd2872c2935913005e28eb7700309c2f4a8afb7e22b",
     "linguistic_rationale": "Засвідчено для decol_syn_036: форма «вивільнитися від звички» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «позбутися звички» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_037": {
@@ -1672,6 +1968,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "скласти іспит",
     "russian_copy": "здати екзамен",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Складати іспит, здавати», с. 151",
+    "supporting_passage": "Вислів «здати екзамен» скальковано з російського «сдать экзамен»; українською іспити складають: скласти іспит, складати залік.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1679,7 +1978,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_037",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_037.review.json",
-    "content_sha256": "6e84ec645b5a60338493e7e8ab1aadb16ced500ebb9fa4b9db7624fefcafcedc",
+    "content_sha256": "cee7848658aa23b345fc6c49231eb1a288af8de2800e3610388eb411ab2fe307",
     "linguistic_rationale": "Засвідчено для decol_syn_037: форма «здати екзамен» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «скласти іспит» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_038": {
@@ -1689,6 +1988,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "накласти стягнення",
     "russian_copy": "накласти штрафні санкції",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Стягнення»",
+    "supporting_passage": "СТЯГНЕННЯ, -я, с. 2. Захід дисциплінарного або адміністративного впливу; покарання. Накласти стягнення.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1696,7 +1998,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_038",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_038.review.json",
-    "content_sha256": "bc75ca674f1f07afb33fbce0fb3656ddbf2290de54e7e5a060864a121e2a5e51",
+    "content_sha256": "f55c17e1c03dc156b99a9672f37114b0827a9506c01e95abd3a92b178e455653",
     "linguistic_rationale": "Засвідчено для decol_syn_038: форма «накласти штрафні санкції» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «накласти стягнення» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_039": {
@@ -1706,6 +2008,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "наводити приклад",
     "russian_copy": "приводити приклад",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 88",
+    "supporting_passage": "Приводити можна коня чи дитину; факти, докази, цитати та приклади українською мовою наводять: наводити приклад.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1713,7 +2018,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_039",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_039.review.json",
-    "content_sha256": "4159d431796c473f1da8eb947a77ff09eec2a7e67213bbe8e5eb885cf78a1793",
+    "content_sha256": "b33d45194b6197f480bdeef4222ef106de2aa3ebdbbba8b2fc119ecf39a22e84",
     "linguistic_rationale": "Засвідчено для decol_syn_039: форма «приводити приклад» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «наводити приклад» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_040": {
@@ -1723,6 +2028,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "доводити до ладу",
     "russian_copy": "приводити в порядок",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Доводити до ладу», с. 184",
+    "supporting_passage": "Вислів «приводити в порядок» є калькою російського «приводить в порядок»; питомі українські вислови — доводити до ладу, опоряджати, упорядковувати.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1730,7 +2038,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_040",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_040.review.json",
-    "content_sha256": "933f2aae7e640bb8c4a530d9d75b857ee149cb1c949763fae80e040d1d2b9e8e",
+    "content_sha256": "3589c8c930293493fefe42b876758461b678728e9236152c629ab286f50eac5e",
     "linguistic_rationale": "Засвідчено для decol_syn_040: форма «приводити в порядок» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «доводити до ладу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_041": {
@@ -1740,6 +2048,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "доходити згоди",
     "russian_copy": "приходити до згоди",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Доходити згоди», с. 186",
+    "supporting_passage": "Українською кажуть доходити згоди, доходити порозуміння; «приходити до згоди» — це буквальний переклад російського «приходить к согласию».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1747,7 +2058,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_041",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_041.review.json",
-    "content_sha256": "68bd3e3f66c6ae48961faa7115e9ba1dd2bc2c830b2d4146191832af16251e69",
+    "content_sha256": "61c547150e0f82b83cc2a990fb39b37a445c9983154c17bae318b6c6e0a329b1",
     "linguistic_rationale": "Засвідчено для decol_syn_041: форма «приходити до згоди» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «доходити згоди» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_042": {
@@ -1757,6 +2068,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "набути чинності",
     "russian_copy": "вступити в силу",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 56",
+    "supporting_passage": "Конструкція «вступити в силу» — це калька російського «вступить в силу». Правнича норма української мови вимагає висловів набрати чинності або набути чинності: закон набрав чинності з дня опублікування.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1764,7 +2078,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_042",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_042.review.json",
-    "content_sha256": "e4a158229d42033dac6bd79743b2d0f1dd53fc70f2e6436aecad979ae23eec55",
+    "content_sha256": "fd0bd310dfc995b8403da2e9f3d85dfc2d53de4188ff0b156b39b5f529629c61",
     "linguistic_rationale": "Засвідчено для decol_syn_042: форма «вступити в силу» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «набути чинності» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_043": {
@@ -1774,6 +2088,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати до серця",
     "russian_copy": "приймати близько до серця",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати до серця», с. 180",
+    "supporting_passage": "Замість калькованого «приймати близько до серця» питома українська фразеологія має вислів брати до серця або брати собі до голови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1781,7 +2098,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_043",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_043.review.json",
-    "content_sha256": "8f6f36e0acae7e8c67571c8835d68d03f128ad434fc738c477f9fc5f8d80426a",
+    "content_sha256": "e4416f6dbd368f84d0107f2a4ecd70c2b1dca5a053a9c3535460449d3a970e3a",
     "linguistic_rationale": "Засвідчено для decol_syn_043: форма «приймати близько до серця» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати до серця» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_044": {
@@ -1791,6 +2108,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вживати заходів",
     "russian_copy": "приймати міри",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 94",
+    "supporting_passage": "Вислів «приймати міри» скальковано з російського «принимать меры». Правильний український відповідник — уживати (вжити) заходів: органи влади вживають невідкладних заходів.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1798,7 +2118,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_044",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_044.review.json",
-    "content_sha256": "c6062766f3fcaa6740ca3b627dcb02cf73f7d68daa90780196a2077342a8a6cb",
+    "content_sha256": "f338a426cfbbf9a06d2cfb6746d7792c27ea2970b35281ba3a8f2321dd8b3836",
     "linguistic_rationale": "Засвідчено для decol_syn_044: форма «приймати міри» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вживати заходів» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_045": {
@@ -1808,6 +2128,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "справити враження",
     "russian_copy": "викликати враження",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Справити враження», с. 188",
+    "supporting_passage": "Враження на людину справляють або роблять: справити глибоке враження; «викликати враження» — невластива калька.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1815,7 +2138,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_045",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_045.review.json",
-    "content_sha256": "2d8488fa63876d891b1e6195618a741c0213f68a266f320398eadf4b55c27f3a",
+    "content_sha256": "236ce64647884bc0f5cf54e05dc381c7632de8166d795d9e7aae45ab58b05767",
     "linguistic_rationale": "Засвідчено для decol_syn_045: форма «викликати враження» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «справити враження» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_046": {
@@ -1825,6 +2148,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати вплив",
     "russian_copy": "оказувати вплив",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Мати вплив, впливати», с. 172",
+    "supporting_passage": "Вислів «оказувати вплив» є спотвореною калькою російського «оказывать влияние»; українською мовою слід уживати мати вплив або впливати.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1832,7 +2158,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_046",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_046.review.json",
-    "content_sha256": "f82b7bddecf7f96aa2f62be96c97153a1a440acb167644759a38b6fbc3620e9d",
+    "content_sha256": "6e61fc96492c05a254c00334bb78b6220815c9e2a90860bbc8819db8f247c648",
     "linguistic_rationale": "Засвідчено для decol_syn_046: форма «оказувати вплив» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «мати вплив» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_047": {
@@ -1842,6 +2168,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "надавати допомогу",
     "russian_copy": "оказувати допомогу",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Надавати допомогу, подавати поміч», с. 174",
+    "supporting_passage": "Замість канцеляризму «оказувати допомогу» нормативними є вислови надавати допомогу, подавати поміч або просто допомагати.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1849,7 +2178,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_047",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_047.review.json",
-    "content_sha256": "6d55ab90e400501f5bc2c8a92bb8de72246f74b2f2d840ca4c6e31d66c416faa",
+    "content_sha256": "98c41d26f92a8a828679fa873f5b5d3d114efa89e9f8e27650c2344e39251c4c",
     "linguistic_rationale": "Засвідчено для decol_syn_047: форма «оказувати допомогу» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «надавати допомогу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_048": {
@@ -1859,6 +2188,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "порушити питання",
     "russian_copy": "підняти питання",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Порушувати питання, підіймати», с. 154",
+    "supporting_passage": "Питання на зборах або нарадах порушують (порушити питання); підіймати можна фізичні предмети чи повстання.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1866,7 +2198,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_048",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_048.review.json",
-    "content_sha256": "f22b469670e2ffc287c019e8f47801938809f383b55eb19f031fae97c80720e8",
+    "content_sha256": "9ebe2dd20d89e9d2ec7f8353183cba2830d6c1b551cb8ce064f5261b5c3e565a",
     "linguistic_rationale": "Засвідчено для decol_syn_048: форма «підняти питання» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «порушити питання» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_049": {
@@ -1876,6 +2208,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "додержувати слова",
     "russian_copy": "тримати слово",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Додержувати слова», с. 183",
+    "supporting_passage": "Обіцянку українською мовою додержують або виконують: додержувати слова, дотримувати слова; вислів «тримати слово» є запозиченою калькою.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1883,7 +2218,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_049",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_049.review.json",
-    "content_sha256": "f265ea0f7a604729e0856fb59e94dae200eb1e0fbede8d6c86dfe053a33bab66",
+    "content_sha256": "ef38c4951ac684f9942e70fb68e742cf63f169d09013d6d19a0e9f420948b495",
     "linguistic_rationale": "Засвідчено для decol_syn_049: форма «тримати слово» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «додержувати слова» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_050": {
@@ -1893,6 +2228,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "набути досвіду",
     "russian_copy": "набратися опиту",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Набути досвіду», с. 187",
+    "supporting_passage": "Замість суржикового «набратися опиту» слід уживати питоме словосполучення набути досвіду або збагатитися досвідом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1900,7 +2238,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_050",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_050.review.json",
-    "content_sha256": "e200e0f2b014569cf7007febbd17dd14f7d725b15c37570ca406e0c7d27ec1c1",
+    "content_sha256": "3234a8feaecb0edbd29e031647d4a0e00c10384b4ff270af5fe064739801f882",
     "linguistic_rationale": "Засвідчено для decol_syn_050: форма «набратися опиту» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «набути досвіду» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_051": {
@@ -1910,6 +2248,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "дати спокій",
     "russian_copy": "залишити в спокої",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Дати спокій», с. 181",
+    "supporting_passage": "Замість калькованого «залишити в спокої» (з рос. «оставить в покое») українською кажуть дати спокій: дайте мені спокій.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1917,7 +2258,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_051",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_051.review.json",
-    "content_sha256": "863311342e7b9b403aca2276dbd3ee440414767b5605b7c3410e27442699c0b6",
+    "content_sha256": "bad9e7f28babc83a41d55986df153fc4ce957a169197a9c0539bcb2d875cf766",
     "linguistic_rationale": "Засвідчено для decol_syn_051: форма «залишити в спокої» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «дати спокій» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_052": {
@@ -1927,6 +2268,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "опанувати мову",
     "russian_copy": "оволодіти мовою",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Опановувати, опанувати», с. 149",
+    "supporting_passage": "Знаннями, мовою чи фахом опановують через наполегливе навчання — опановувати мову, опанувати спеціальність.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1934,7 +2278,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_052",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_052.review.json",
-    "content_sha256": "9bddf8288d67d83fc902ca9655a64dbf0aa2a0e5408f245ac4a64354120f01f4",
+    "content_sha256": "ca88e9efb768803accd439a28b48596b7ef583e2a66d54ce1d0586035dbecedb",
     "linguistic_rationale": "Засвідчено для decol_syn_052: форма «оволодіти мовою» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «опанувати мову» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_053": {
@@ -1944,6 +2288,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "впадати в розпач",
     "russian_copy": "ударитися в отчаяніє",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Впадати в розпач», с. 180",
+    "supporting_passage": "Суржиковий зворот «ударитися в отчаяніє» виправляється на питомий фразеологізм впадати в розпач або розпачувати.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1951,7 +2298,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_053",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_053.review.json",
-    "content_sha256": "e36dca3fadd8dc46464ff99bcd68e7870c52bf1873d16e5ead22485aa7e2e86e",
+    "content_sha256": "64dfb18fff3f66146f53310489c184972f860d0d89651d4554263667506954fc",
     "linguistic_rationale": "Засвідчено для decol_syn_053: форма «ударитися в отчаяніє» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «впадати в розпач» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_054": {
@@ -1961,6 +2308,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати попит",
     "russian_copy": "користуватися спросом",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Мати попит», с. 186",
+    "supporting_passage": "Товари українською мовою мають попит; вислів «користуватися спросом» є грубою калькою з російського «пользоваться спросом».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1968,7 +2318,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_054",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_054.review.json",
-    "content_sha256": "4ee6c6c903244891b3f9b1a3dd07c21d6b3429e118e5a990217c277045560a68",
+    "content_sha256": "e072380977767725d4f978ac1ec1e25a78634cb1cac5fe30869d65566416b96b",
     "linguistic_rationale": "Засвідчено для decol_syn_054: форма «користуватися спросом» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «мати попит» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_055": {
@@ -1978,6 +2328,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "досягти мети",
     "russian_copy": "досягнути цілі",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Досягати, досягти мети», с. 145",
+    "supporting_passage": "Мети, цілей і результатів українською мовою досягають: досягти поставленої мети; уживання «досягнути цілі» часто є буквалістичним перекладом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -1985,7 +2338,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_055",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_055.review.json",
-    "content_sha256": "9308d3527114e05d068663213d3bc3fea13e5ff6f457ca84379e452d869d0a5d",
+    "content_sha256": "f5df50ceede7439b3f8e52ef171d55f4a72cb8caae1c7a90dcbb537e16a70d68",
     "linguistic_rationale": "Засвідчено для decol_syn_055: форма «досягнути цілі» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «досягти мети» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_056": {
@@ -1995,6 +2348,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "зробити внесок",
     "russian_copy": "внести вклад",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Зробити внесок», с. 184",
+    "supporting_passage": "Внесок у спільну справу або розвиток науки роблять: зробити вагомий внесок; «внести вклад» є калькою з російського «внести вклад».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2002,7 +2358,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_056",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_056.review.json",
-    "content_sha256": "4155d2bc3e79e4e7d6e69eceb489674a54b72c2390037ebcb647b41a4dcdcb1c",
+    "content_sha256": "717fe3b4a9b9634872b662f054eb85947e5cbc3a591d35e0dc0d197cf6907a62",
     "linguistic_rationale": "Засвідчено для decol_syn_056: форма «внести вклад» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «зробити внесок» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_057": {
@@ -2012,6 +2368,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "втратити свідомість",
     "russian_copy": "лишитися чувств",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Втратити свідомість, знепритомніти», с. 181",
+    "supporting_passage": "Замість вуличного суржику «лишитися чувств» слід уживати літературні вислови втратити свідомість, знепритомніти або зомліти.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2019,7 +2378,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_057",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_057.review.json",
-    "content_sha256": "076beb20fc2bc58eb0934168decb57066fb7aeacd49db7089eb58876e2244197",
+    "content_sha256": "67c9599a389d5be4ca187382e3be9a0a196e974273bb370f9a3f16e68d2f0255",
     "linguistic_rationale": "Засвідчено для decol_syn_057: форма «лишитися чувств» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «втратити свідомість» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_058": {
@@ -2029,6 +2388,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "чинити опір",
     "russian_copy": "оказувати опір",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Чинити опір», с. 176",
+    "supporting_passage": "Опір ворогові або кривдникові чинять: чинити опір; зворот «оказувати опір» є канцеляризмом і калькою з російського «оказывать сопротивление».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2036,7 +2398,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_058",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_058.review.json",
-    "content_sha256": "d3933ac37f99d6cc2bdbcc0c9f2205aca5dc54b2ba2bf7afdde65e2caf66ef6c",
+    "content_sha256": "1ac2c21e1e1308613706638a487ddd071b749321b5498d3a27259e78a3cb6006",
     "linguistic_rationale": "Засвідчено для decol_syn_058: форма «оказувати опір» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «чинити опір» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_059": {
@@ -2046,6 +2408,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "знепритомніти",
     "russian_copy": "потеряти сознаніє",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 122",
+    "supporting_passage": "Замість суржикового «потеряти сознаніє» слід уживати питоме дієслово знепритомніти або зомліти.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2053,7 +2418,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_059",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_059.review.json",
-    "content_sha256": "65f42b2906a5ffc6d30484979c02572e71223595eb926b21d21738d13565706e",
+    "content_sha256": "390cab29e2948502290b66dc9ebcd5d26068268e03aef80777180388382d6d52",
     "linguistic_rationale": "Засвідчено для decol_syn_059: форма «потеряти сознаніє» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «знепритомніти» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_060": {
@@ -2063,6 +2428,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "звернути увагу",
     "russian_copy": "привернути вніманіє",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИЙМЕННИКИ», стаття «По, за, з, на»",
+    "supporting_passage": "Принагідно слід звернути увагу на хибний вислів з точки зору, що є буквалістичним перекладом російського с точки зрения, по–українському цей вислів буде – з погляду: \"з погляду марксизму\" (Українсько–російський словник АН УРСР), \"із цього погляду\" (Російсько–український словник АН УРСР).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2070,7 +2438,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_060",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_060.review.json",
-    "content_sha256": "ed2cbba6596acf6bfb51e750aaeaa719c77b7d6b29961e4c28e450e55a2c1ddb",
+    "content_sha256": "992b8cc76fd78d17fdb8b2e39bda9c7dab74ca0dce301329745fc4a828189a8f",
     "linguistic_rationale": "Засвідчено для decol_syn_060: форма «привернути вніманіє» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «звернути увагу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_061": {
@@ -2080,6 +2448,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати шлюб",
     "russian_copy": "вступати в брак",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати шлюб, одружуватися», с. 180",
+    "supporting_passage": "Замість канцеляризму «вступати в брак» (де слово брак в українській мові означає ще й дефект) кажуть брати шлюб або одружуватися.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2087,7 +2458,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_061",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_061.review.json",
-    "content_sha256": "bb15a3a5a8deaec255db6cb679696338cc8ba116abd23dcb6c2c32770554835f",
+    "content_sha256": "cfecf4888f7cf365c96ea84a286dad98105b78376ac502f9669c27d5b72b9dd8",
     "linguistic_rationale": "Засвідчено для decol_syn_061: форма «вступати в брак» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати шлюб» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_062": {
@@ -2097,6 +2468,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "почуватися добре",
     "russian_copy": "відчувати себе добре",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 130",
+    "supporting_passage": "Конструкція «відчувати себе» є калькою російського «чувствовать себя»; українською кажуть почуватися: як ви почуваєтеся?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2104,7 +2478,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_062",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_062.review.json",
-    "content_sha256": "976bf00e591881b4925336c2f4f4b9d1aad775c0e22dad11a467c4e74a484964",
+    "content_sha256": "454eb70a3727ea24911b8d9de884d69f5000832a7a87343c68ac8fd03f2d9ef4",
     "linguistic_rationale": "Засвідчено для decol_syn_062: форма «відчувати себе добре» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «почуватися добре» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_063": {
@@ -2114,6 +2488,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "знатися на чомусь",
     "russian_copy": "розбиратися в чомусь",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 142",
+    "supporting_passage": "Вислів «розбиратися в чомусь» скальковано з російського «разбираться в чём-то»; природна норма: знатися на чомусь, розумітися на чомусь, тямити в чомусь.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2121,7 +2498,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_063",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_063.review.json",
-    "content_sha256": "d0fab5fffc271cc76280c116fc8347c98d55d68f1bf3c4883a8a145ff5fc689e",
+    "content_sha256": "ad2940fb83d280f325bd95a6d4feae6ee3f2632d36ea2c4991286ac679ee9d74",
     "linguistic_rationale": "Засвідчено для decol_syn_063: форма «розбиратися в чомусь» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «знатися на чомусь» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_064": {
@@ -2131,6 +2508,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "повідомити заздалегідь",
     "russian_copy": "поставити в ізвєстность",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Повідомити заздалегідь», с. 187",
+    "supporting_passage": "Канцелярський росіянізм «поставити в ізвєстность» виправляють на повідомити заздалегідь або довести до відома.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2138,7 +2518,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_064",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_064.review.json",
-    "content_sha256": "367d6edf2ed89265e52744528fd073863a4f33af76fa5c1ace08efc6b64b0473",
+    "content_sha256": "e42d0a36de2f5f84cffbf13d17217cb841ac730f78f4bf27321206eb96a7b67f",
     "linguistic_rationale": "Засвідчено для decol_syn_064: форма «поставити в ізвєстность» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «повідомити заздалегідь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_syn_065": {
@@ -2148,6 +2528,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати початок",
     "russian_copy": "брати своє начало",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати початок», с. 179",
+    "supporting_passage": "Річки й події українською мовою беруть початок або починаються; «брати своє начало» є калькою з російського «брать своё начало».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2155,7 +2538,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_065",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_065.review.json",
-    "content_sha256": "2ab5f4854312f9e29c6545c1ea3a70fe9216058c41439bb02d10329e23c0fd0d",
+    "content_sha256": "de0a2f03ff3cef9c7be379e183130ef43539be46da4f6c6263970e0cb25f7b75",
     "linguistic_rationale": "Засвідчено для decol_syn_065: форма «брати своє начало» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати початок» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_001": {
@@ -2165,6 +2548,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на вимогу",
     "russian_copy": "по вимозі",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+    "supporting_passage": "У діловому мовленні російській сполуці «по требованию» відповідає українська «на вимогу»: на першу вимогу, на вимогу прокурора (а не «по вимозі»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2172,7 +2558,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_001",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_001.review.json",
-    "content_sha256": "d5d9ff1e3e7f3c6d917ee6c4560b679ec8521b26e80433869167b5f4ccd6517d",
+    "content_sha256": "7aa6cbcb02384dfff0426b7452294b7314c9f0c04049e590677088a7441de91d",
     "linguistic_rationale": "Засвідчено для decol_prep_001: форма «по вимозі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на вимогу» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_002": {
@@ -2182,6 +2568,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "через хворобу",
     "russian_copy": "по хворобі",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 73",
+    "supporting_passage": "Причину відсутності або невиконання обов'язків передають за допомогою прийменника «через» із знахідним відмінком: через хворобу (а не «по хворобі»), через сімейні обставини, через поважні причини.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2189,7 +2578,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_002",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_002.review.json",
-    "content_sha256": "5cb641d876ef639c59df85f293588bc7e1868d8dcdcf88604f83f0f56638c172",
+    "content_sha256": "3c7d6828f3542ff2d7368a5ecaa3357926cd4df7cce27d448055538fd85189ea",
     "linguistic_rationale": "Засвідчено для decol_prep_002: форма «по хворобі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «через хворобу» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_003": {
@@ -2199,6 +2588,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "о шостій годині",
     "russian_copy": "в шість годин",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ВАГОВИТІ ДРІБНИЦІ», стаття «Непорозуміння з часом» (id 248)",
+    "supporting_passage": "\"О шостій годині сідали гості за довгий стіл обідати\" (Панас Мирний). Так на цій формі й треба стати, взявши її за норму й рішуче уникаючи хибних висловів у п'ять годин, у шість годин тощо.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2206,7 +2598,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_003",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_003.review.json",
-    "content_sha256": "92aae0894ccc3b82ec2dcb1b84b66ac82d2620ce3e56c44b127f09697d082b8a",
+    "content_sha256": "68c361ce0b66d250a5fbe39ddc9d657c22461c1ab907e114e19c24ce125ad0c4",
     "linguistic_rationale": "Засвідчено для decol_prep_003: форма «в шість годин» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «о шостій годині» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_004": {
@@ -2216,6 +2608,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "з власної волі",
     "russian_copy": "по власній волі",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+    "supporting_passage": "Українська літературна мова для позначення добровільної дії використовує сполуки «з власної волі», «з доброї волі» (а не «по власній волі»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2223,7 +2618,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_004",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_004.review.json",
-    "content_sha256": "eb6d139826e5dbb4747bd9665cb0d22886556a68b31db95be81ea14026091e97",
+    "content_sha256": "461e9aa17bb6260082957821a957b7580c3d15fef7fbc5010aa9744d6b23b95e",
     "linguistic_rationale": "Засвідчено для decol_prep_004: форма «по власній волі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з власної волі» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_005": {
@@ -2233,6 +2628,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у будні",
     "russian_copy": "по буднях",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 76",
+    "supporting_passage": "Періодичність і повторюваність дій у робочі дні передають конструкцією зі знахідним відмінком: у будні або щодня (а не калькованим «по буднях»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2240,7 +2638,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_005",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_005.review.json",
-    "content_sha256": "9a5ff36d65675c4a1c788e9fec1976ed5e3da8daac8e79cf12e4926e4b97b1ac",
+    "content_sha256": "08bb90001afe5c3bbb49f6bb78142bc87849b6ae4371f0ca415f5226a62f354d",
     "linguistic_rationale": "Засвідчено для decol_prep_005: форма «по буднях» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у будні» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_006": {
@@ -2250,6 +2648,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у вихідні",
     "russian_copy": "по вихідних",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 76",
+    "supporting_passage": "Позначення часу відпочинку та неробочих днів оформлюють конструкцією з прийменником «у»: у вихідні, у вихідні дні (а не «по вихідних»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2257,7 +2658,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_006",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_006.review.json",
-    "content_sha256": "7eea8b5311d40b903c6c149f9e9c686997bb3dfd008582fa39f7368ed2553fd8",
+    "content_sha256": "2ed8ccd0419b7523c33de0554aca150681364435643893b153a765d062d3207a",
     "linguistic_rationale": "Засвідчено для decol_prep_006: форма «по вихідних» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у вихідні» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_007": {
@@ -2267,6 +2668,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на прохання",
     "russian_copy": "по проханню",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+    "supporting_passage": "На позначення дії на чиюсь вимогу або побажання вживають прийменник «на»: на прохання (а не «по проханню»), на вимогу (а не «по вимозі»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2274,7 +2678,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_007",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_007.review.json",
-    "content_sha256": "f9b546f8c6c9f48f9231a89112bd6cc4c7c5c6928961af81b2c887ddc08c75a7",
+    "content_sha256": "ed31a72ce503341ad27e426fc40a89de8b30a511287ac899d5eadf086250aed0",
     "linguistic_rationale": "Засвідчено для decol_prep_007: форма «по проханню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на прохання» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_008": {
@@ -2284,6 +2688,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "з ініціативи",
     "russian_copy": "по ініціативі",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 75",
+    "supporting_passage": "Прийменник «з» уживаємо для вираження джерела або причини дії: з ініціативи, з власної ініціативи (а не «по ініціативі»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2291,7 +2698,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_008",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_008.review.json",
-    "content_sha256": "ac9426e796882ccdbcbe9a0aa74ba3787a926ebcf61ede3eb61572844c1a5bc1",
+    "content_sha256": "0c61c1375dd5699369edddc6883f98218bfd53763d240cb32dc9b87895ce23ac",
     "linguistic_rationale": "Засвідчено для decol_prep_008: форма «по ініціативі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з ініціативи» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_009": {
@@ -2301,6 +2708,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на замовлення",
     "russian_copy": "по заказу",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 78",
+    "supporting_passage": "Російському канцеляризму «по заказу» в українській мові відповідає прийменниково-іменникова конструкція «на замовлення»: виготовлено на замовлення підприємства.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2308,7 +2718,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_009",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_009.review.json",
-    "content_sha256": "bde0899617c6d198fae2e605b29305c19c1267db8ce20ebe56517ce2dec60458",
+    "content_sha256": "e7ec7c0763a2f243ee82852affbcd90ea4ac439f5192a7a07bffa6d3a5b816eb",
     "linguistic_rationale": "Засвідчено для decol_prep_009: форма «по заказу» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на замовлення» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_010": {
@@ -2318,6 +2728,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за свідченням",
     "russian_copy": "по свідченню",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 82",
+    "supporting_passage": "Покликання на джерело повідомлення або очевидців вимагає прийменника «за» з орудним відмінком: за свідченням очевидців, за повідомленням агентства (а не «по свідченню»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2325,7 +2738,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_010",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_010.review.json",
-    "content_sha256": "847abe3b5a737136ad5bd2c156ac1345574a62aa224620c4ce5095388d1e9c23",
+    "content_sha256": "84fd93f25b05a78da95ede812cf43fa59df25149366fe78d1752e20a6179bafb",
     "linguistic_rationale": "Засвідчено для decol_prep_010: форма «по свідченню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за свідченням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_011": {
@@ -2335,6 +2748,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за дорученням",
     "russian_copy": "по дорученню",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 83",
+    "supporting_passage": "Виконання дій на підставі повноважень оформлюють конструкцією з прийменником «за»: за дорученням дирекції, за вказівкою (а не «по дорученню»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2342,7 +2758,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_011",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_011.review.json",
-    "content_sha256": "46912dfca29f2077a065b6e2d0e1fee8568054c9be6d5dbfa94b44c5d84c7f43",
+    "content_sha256": "4efcfde38b4f38d9002cb659faeb986d0718e60ea1c3550563b7f18a0e703e24",
     "linguistic_rationale": "Засвідчено для decol_prep_011: форма «по дорученню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за дорученням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_012": {
@@ -2352,6 +2768,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "телефоном",
     "russian_copy": "по телефону",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 85",
+    "supporting_passage": "Засіб зв'язку в літературній мові передається безприйменниковим орудним відмінком: повідомити телефоном, надіслати телеграфом, сповістити поштою (а не «по телефону»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2359,7 +2778,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_012",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_012.review.json",
-    "content_sha256": "6f4e805cc0261b2875a9a190712f096cf746af35120e0099d502c3aecdde8557",
+    "content_sha256": "bc23f1a4d28b163c750f2b785a95bd2803dd4270ec315c33bb1b4170eb83494b",
     "linguistic_rationale": "Засвідчено для decol_prep_012: форма «по телефону» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «телефоном» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_013": {
@@ -2369,6 +2788,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у справах",
     "russian_copy": "по ділах",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 86",
+    "supporting_passage": "Коли йдеться про мету поїздки чи перебування, правильно вживати: поїхати у справах, прибути у приватних справах (а не «по ділах»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2376,7 +2798,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_013",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_013.review.json",
-    "content_sha256": "b3e8ac0b756cddb37fa59f6320caab3374b9748acf3f7900a8aad8c4387edc35",
+    "content_sha256": "a1f3e5273680ae1b5d3a9f9e9d48ad40f404c8e1f009a79eb7ae96c092ac0fa0",
     "linguistic_rationale": "Засвідчено для decol_prep_013: форма «по ділах» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у справах» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_014": {
@@ -2386,6 +2808,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "щопонеділка",
     "russian_copy": "по понеділках",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 135",
+    "supporting_passage": "Конструкція «по понеділках» є наслідком інтерференції з російської мови. Українською періодичність дій передають складними прислівниками: щопонеділка, щовівторка або формою орудного відмінка множини: понеділками.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2393,7 +2818,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_014",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_014.review.json",
-    "content_sha256": "6b1272e5e498bb38d381e66f1eef28c7c51dd6b503f7ea58fb0ddf84c5f9c45f",
+    "content_sha256": "0d110cd73346bff667c7ac66fcc6b9291bf68325d9ccd99a4a65edf32fa7dd24",
     "linguistic_rationale": "Засвідчено для decol_prep_014: форма «по понеділках» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «щопонеділка» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_015": {
@@ -2403,6 +2828,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "заходи щодо",
     "russian_copy": "міри по",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 88",
+    "supporting_passage": "Канцелярський вислів «міри по» є калькою з російської. В українській мові вживають: заходи щодо (заходи щодо поліпшення умов праці, заходи щодо підвищення якості).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2410,7 +2838,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_015",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_015.review.json",
-    "content_sha256": "3a57c8112228ad7e916191e954ae52ccd458d71a6d9d392f17a05397e4ca97ed",
+    "content_sha256": "c0b6387638f0290c4ddc7bed99d99b7c3eeddd3a2e8299c4e6a3eb4a5609ea13",
     "linguistic_rationale": "Засвідчено для decol_prep_015: форма «міри по» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «заходи щодо» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_016": {
@@ -2420,6 +2848,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на дозвіллі",
     "russian_copy": "на отдиху",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 68",
+    "supporting_passage": "Суржиковий зворот «на отдиху» в українській літературній мові замінюють питомими висловами: на дозвіллі, під час відпочинку, на відпочинку.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2427,7 +2858,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_016",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_016.review.json",
-    "content_sha256": "1a7ed18d64dd51ad6e4eb41ada79c012ba6b95537a079f7369a665b1dedd7654",
+    "content_sha256": "5f3c95b4331890a9a13b3e827bcd08c8d195f35fdbae59d7bd4d33194557ea3e",
     "linguistic_rationale": "Засвідчено для decol_prep_016: форма «на отдиху» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на дозвіллі» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_017": {
@@ -2437,6 +2868,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у справах служби",
     "russian_copy": "по службі",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 89",
+    "supporting_passage": "Виконання обов'язків на роботі чи службі передають висловами: у справах служби, за службовим обов'язком (а не калькованим «по службі»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2444,7 +2878,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_017",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_017.review.json",
-    "content_sha256": "c9827bd07ee5796609dc3c2fc40ff665221218a8560e14dd00045d252b6794bf",
+    "content_sha256": "0992b7c4497dc373b1b8cacf89c6f721d344e72784a7b1effa971401b178569c",
     "linguistic_rationale": "Засвідчено для decol_prep_017: форма «по службі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у справах служби» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_018": {
@@ -2454,6 +2888,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "коштом",
     "russian_copy": "за рахунок",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 148",
+    "supporting_passage": "Зворот «за рахунок» у значенні джерела фінансування чи засобу є калькою російського «за счёт». Українською слід уживати: коштом підприємства, за кошти громади або завдяки наполегливій праці.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2461,7 +2898,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_018",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_018.review.json",
-    "content_sha256": "75923f6793749fd434aab525a0522d5c840a528a0b546baf86ae390692cdc22f",
+    "content_sha256": "1f35d3d89df0e21bf2efe4ca860eff0c1f078cdda9b5684fba5f4f2a09de6e91",
     "linguistic_rationale": "Засвідчено для decol_prep_018: форма «за рахунок» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «коштом» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_019": {
@@ -2471,6 +2908,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за власним бажанням",
     "russian_copy": "по власному бажанню",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+    "supporting_passage": "Нормативними є вислови: за власним бажанням, за власним розсудом, на бажання (а не «по власному бажанню»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2478,7 +2918,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_019",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_019.review.json",
-    "content_sha256": "fb1435449f93bbce13c9c193becd4c43e83b4e41d5712e81f0a2d10bd2eb804a",
+    "content_sha256": "1f15851eeacda0210866fac4d3444d5422130254590cf0494e1d09fc2d58453c",
     "linguistic_rationale": "Засвідчено для decol_prep_019: форма «по власному бажанню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за власним бажанням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_020": {
@@ -2488,6 +2928,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у вихідні дні",
     "russian_copy": "на вихідних днях",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 76",
+    "supporting_passage": "Українською мовою треба казати: у вихідні (дні), у вихідний (день), у робочі дні, а не на вихідних, на вихідних днях, по вихідних.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2495,7 +2938,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_020",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_020.review.json",
-    "content_sha256": "5380c6a9fa8b6822b1047689eb0c94d67bb948eec4ccd80ef235795621343781",
+    "content_sha256": "5910c28dfe0c3b2fae2007e7767c5efb1befbd92eb5f93ee494399d6ba6173fc",
     "linguistic_rationale": "Засвідчено для decol_prep_020: форма «на вихідних днях» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у вихідні дні» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_021": {
@@ -2505,6 +2948,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на захист прав",
     "russian_copy": "в захист прав",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 78",
+    "supporting_passage": "У конструкціях на позначення цільової спрямованості дії вживаємо: на захист, на захист прав, на оборону (а не «в захист»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2512,7 +2958,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_021",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_021.review.json",
-    "content_sha256": "3866c29f89e98a15c259c5e228f8e01e6e1cd276b2868a3893b0f9da7ef52a2a",
+    "content_sha256": "a24a33baabff70e000d531a401fd231f6b99e50b4567244da459534de603b4e1",
     "linguistic_rationale": "Засвідчено для decol_prep_021: форма «в захист прав» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на захист прав» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_022": {
@@ -2522,6 +2968,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у відповідь на",
     "russian_copy": "у відповідь до",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 91",
+    "supporting_passage": "Реакцію на запит, лист або звернення оформлюють прийменником «на» зі знахідним відмінком: у відповідь на запит, у відповідь на звернення (а не «у відповідь до»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2529,7 +2978,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_022",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_022.review.json",
-    "content_sha256": "f4f14ab9eed89e85e88946be89186143ca25f4043d3087f85544f63de65c9fbc",
+    "content_sha256": "e3b7e800a5de7d80f7bfd18207dde77bb4ead8fe5be3f34528012704d9c67e82",
     "linguistic_rationale": "Засвідчено для decol_prep_022: форма «у відповідь до» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у відповідь на» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_023": {
@@ -2539,6 +2988,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "з нагоди ювілею",
     "russian_copy": "по поводу ювілею",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 92",
+    "supporting_passage": "Привід урочистостей або відзначення знаменної дати позначають висловами «з нагоди» або «з приводу»: з нагоди ювілею, з приводу свята (а не «по поводу»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2546,7 +2998,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_023",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_023.review.json",
-    "content_sha256": "7fc12b0c580034771f017d463826562163f84f93792bbaad833c77bac7f76e5a",
+    "content_sha256": "8de847d57f52a5d27cbc37b69e2613415607d929005c1df1385e3c8ff3e4f8bc",
     "linguistic_rationale": "Засвідчено для decol_prep_023: форма «по поводу ювілею» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з нагоди ювілею» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_024": {
@@ -2556,6 +3008,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "після прибуття",
     "russian_copy": "по прибуттю",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 93",
+    "supporting_passage": "Часову послідовність дій після завершення певної події передають прийменником «після» з родовим відмінком: після прибуття, після завершення переговорів (а не «по прибуттю»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2563,7 +3018,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_024",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_024.review.json",
-    "content_sha256": "75c7a64d651d7728c314d93f5a33ed6fad018c2b5c1534ee39a94560ed8558e9",
+    "content_sha256": "950133e30025acd2e1ef573fa157edfe1b825a60cfb99473845488805f2d7734",
     "linguistic_rationale": "Засвідчено для decol_prep_024: форма «по прибуттю» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «після прибуття» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_025": {
@@ -2573,6 +3028,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "після повернення",
     "russian_copy": "по поверненню",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 93",
+    "supporting_passage": "Часовий наслідок дій позначають конструкцією з прийменником «після»: після повернення з відрядження, після закінчення школи (а не «по поверненню»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2580,7 +3038,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_025",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_025.review.json",
-    "content_sha256": "6a4f6a4ab311d919f904bf3d5780ca5638a18eedef27b27fa028549d88bb6344",
+    "content_sha256": "fa174da8ddc08bde70c2cbf86533ab02f7aa5e66d66f3b348351872e36729fba",
     "linguistic_rationale": "Засвідчено для decol_prep_025: форма «по поверненню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «після повернення» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_026": {
@@ -2590,6 +3048,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за винятком",
     "russian_copy": "за виключенням",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 154",
+    "supporting_passage": "Російському вислову «за исключением» в українській літературній мові відповідає прийменниковий зворот «за винятком» (або крім, опріч).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2597,7 +3058,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_026",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_026.review.json",
-    "content_sha256": "d03dd312ed9621b7b74dc8876818dae46030cf4fc525db23e00369cd32ecdea3",
+    "content_sha256": "405a02862b5f9e6b1ce0b14e203ed3f8b64c03bb0fe85d18919c903599f4d160",
     "linguistic_rationale": "Засвідчено для decol_prep_026: форма «за виключенням» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за винятком» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_027": {
@@ -2607,6 +3068,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на кожному кроці",
     "russian_copy": "на кожнім кроку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+    "supporting_passage": "й цьогорічний тритомний Російсько–український словник того самого інституту… Так що заважає нам нині виправити останню невиправлену помилку наших нерозважних попередників, яка дошкульно дається нам узнаки на кожному кроці?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2614,7 +3078,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_027",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_027.review.json",
-    "content_sha256": "6a94022725f62fea20b7c482e045961ab8884e026f3fdc8987dd3a5a05c6a5cc",
+    "content_sha256": "713ecf84444c8aa39e450cd651d520641cf8cedc0a88e8338f8ddd7c61fb3df9",
     "linguistic_rationale": "Засвідчено для decol_prep_027: форма «на кожнім кроку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на кожному кроці» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_028": {
@@ -2624,6 +3088,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у напрямку",
     "russian_copy": "по напрямку",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 77",
+    "supporting_passage": "Напрям руху чи дії позначають прийменником «у» («в»): у напрямку, в напрямі (а не «по напрямку»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2631,7 +3098,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_028",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_028.review.json",
-    "content_sha256": "5646c965bee0bb8c42c9e32c0038ae8fdf531a30baa116cc04e4bb8897d19926",
+    "content_sha256": "f66b242771ae254637addc599800bdceabf76bdcc7afbe783459749121c8b0fe",
     "linguistic_rationale": "Засвідчено для decol_prep_028: форма «по напрямку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у напрямку» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_029": {
@@ -2641,6 +3108,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за зразком",
     "russian_copy": "по зразку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «СПОЛУЧНИКИ», стаття «Як би не − хоч би як, який би не − хоч би який»",
+    "supporting_passage": "Часто помиляються в тих випадках, коли будують українську фразу за зразком російських висловів как ни (\"А вы, друзья, как ни садитесь, все ж в музыканты не годитесь\"), какой бы ни (\"Какой бы ни был результат, а работать нужно\") й кажуть та пишуть: \"Без освіти нічого не осягнеш, як би не хотів того\"; \"Не тонкощі сюжетоскладання, якими б не були вони винахідливими, цікавлять нас\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2648,7 +3118,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_029",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_029.review.json",
-    "content_sha256": "c5b26b992297b1f47c918e8f02ad38d1c8d74aab9e898c89dbf9481e78d9d9f0",
+    "content_sha256": "a31008866d4f1f0a9437f66cb525a9b781ce095c6027bb0957500361e3ebcfd6",
     "linguistic_rationale": "Засвідчено для decol_prep_029: форма «по зразку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за зразком» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_030": {
@@ -2658,6 +3128,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за аналогією",
     "russian_copy": "по аналогії",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Двоєчник, двієчник, двійкар»",
+    "supporting_passage": "Синонімом до слова \"двієчник\" може бути таке ж похідне від іменника \"двійка\" слово \"двійкар\", утворене за аналогією до інших іменників із суфіксом — к-, наприклад: \"шапкар\" – від слова \"шапка\", \"байкар\" – від \"байка\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2665,7 +3138,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_030",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_030.review.json",
-    "content_sha256": "a233be78e3af3ee647bca53050f880aa29f69c2d1537a031d982fb26d63a845c",
+    "content_sha256": "a3088a1430abc2a27ca21eb10bc0811a05ef8393fe1881c944ffd30269aacd54",
     "linguistic_rationale": "Засвідчено для decol_prep_030: форма «по аналогії» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за аналогією» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_031": {
@@ -2675,6 +3148,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "через неуважність",
     "russian_copy": "по неуважності",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 73",
+    "supporting_passage": "Причину прикрої помилки чи хиби в українській мові передають прийменником «через»: через неуважність, через необачність (а не «по неуважності»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2682,7 +3158,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_031",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_031.review.json",
-    "content_sha256": "999bd03c5f3b0a4e6fd2b5f504752cc03a919eec90cd4660f31ab21c1afba36c",
+    "content_sha256": "18a4883ed713c6de5d5d90d8307063ca3747a71ee2d127eaf7c3846387b0eb32",
     "linguistic_rationale": "Засвідчено для decol_prep_031: форма «по неуважності» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «через неуважність» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_032": {
@@ -2692,6 +3168,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за правилами",
     "russian_copy": "по правилах",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 82",
+    "supporting_passage": "Відповідність установленим нормам, статутам чи законам позначають прийменником «за» з орудним відмінком: діяти за правилами, за законом (а не «по правилах»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2699,7 +3178,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_032",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_032.review.json",
-    "content_sha256": "015bb5aedd73c386e3daa3c12c955a75471b3456aab6118353d2f420b258ec83",
+    "content_sha256": "74ed38cb75cf9d1232bc36d19a953987dcb9df321cd79326c3285d18a1ba84b5",
     "linguistic_rationale": "Засвідчено для decol_prep_032: форма «по правилах» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за правилами» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_033": {
@@ -2709,6 +3188,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на знак поваги",
     "russian_copy": "в знак поваги",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 78",
+    "supporting_passage": "Для вираження символічного жесту чи вияву почуттів вживають конструкцію: на знак поваги, на знак пошани, на знак згоди (а не «в знак»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2716,7 +3198,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_033",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_033.review.json",
-    "content_sha256": "1945223928a2a71ad328fa09f0929180f2c3823b9c013eda7367c42700357845",
+    "content_sha256": "ce62b90aef7f15dcfda1afe9cacc01d5158161717ae6c6b8df1b5ab5a9fb6434",
     "linguistic_rationale": "Засвідчено для decol_prep_033: форма «в знак поваги» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на знак поваги» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_034": {
@@ -2726,6 +3208,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "по обіді",
     "russian_copy": "по обіду",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Матися, бути, траплятися, мати»",
+    "supporting_passage": "Котляревський), – також до слів передбачатися, намірятися: \"По обіді малося плоскінь брати\" (А.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2733,7 +3218,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_034",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_034.review.json",
-    "content_sha256": "276ae404bc0935216f1037b6810edc683be1178650edb8feb7d27b4ba462dffe",
+    "content_sha256": "ac15096a6ffd449912329aea2cbd03f85ab3f52f866877e92271580175d4c096",
     "linguistic_rationale": "Засвідчено для decol_prep_034: форма «по обіду» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «по обіді» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_035": {
@@ -2743,6 +3228,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на користь",
     "russian_copy": "в пользу",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+    "supporting_passage": "Дайте спокій!\"\n\nСправді, ми багато разів реформували наш правопис, і не завжди те йшло на користь йому, але до чого тут реформа?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2750,7 +3238,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_035",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_035.review.json",
-    "content_sha256": "5bf56a7b92a1fb67f37690e800cee758a4a5a10674b43759b69f31e4d1608050",
+    "content_sha256": "6ae1f42cafcdcf73687c920ef46bb41b0d25baf7967497aace81d8a34d5378b8",
     "linguistic_rationale": "Засвідчено для decol_prep_035: форма «в пользу» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на користь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_036": {
@@ -2760,6 +3248,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на захист",
     "russian_copy": "у захист",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Захист і оборона»",
+    "supporting_passage": "Коцюбинський); \"Нема соломи, то нема чим і хату захистити від холоду\" (з живих уст); \"Росла в гаю конвалія під дубом високим, захищалась від негоди під віттям широким\" (Леся Українка).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2767,7 +3258,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_036",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_036.review.json",
-    "content_sha256": "4f686cfbbc050a8d51b856fb4087ec1b265bd7b160fcf02023c89739f4fffa48",
+    "content_sha256": "7935839f9658976ab30d3f6e455f77a6b08a9c5ea9a078c8ddde1cedfe4638cd",
     "linguistic_rationale": "Засвідчено для decol_prep_036: форма «у захист» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на захист» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_037": {
@@ -2777,6 +3268,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за вказівкою",
     "russian_copy": "по вказівці",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+    "supporting_passage": "Для зазначення дії на чиюсь вимогу, розпорядження чи орієнтир уживаємо: за вказівкою, за розпорядженням, за наказом (а не «по вказівці»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2784,7 +3278,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_037",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_037.review.json",
-    "content_sha256": "bacfdaa35e29417a2b749d987c45fde24905298619cab507a0ca5175bfac842c",
+    "content_sha256": "23f649dfe76006dd3a89474afd57e8d2c95985a88d1425ffae93273e103c3697",
     "linguistic_rationale": "Засвідчено для decol_prep_037: форма «по вказівці» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за вказівкою» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_038": {
@@ -2794,6 +3288,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "по черзі",
     "russian_copy": "по очереді",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 95",
+    "supporting_passage": "Послідовність чергування дій або виступів передають питомим висловом «по черзі» або «почергово» (а не суржиковим «по очереді»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2801,7 +3298,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_038",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_038.review.json",
-    "content_sha256": "0b7e1e7c834da258d2f7d88919e4489efaed1081cb9f483e2caaa9f54817078f",
+    "content_sha256": "4a7d99229b9a41ac19b3afb711c4c665be4ea6da6dcf5f320295643f206e2602",
     "linguistic_rationale": "Засвідчено для decol_prep_038: форма «по очереді» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «по черзі» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_039": {
@@ -2811,6 +3308,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за сумісництвом",
     "russian_copy": "по сумісництву",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 89",
+    "supporting_passage": "Трудові відносини вторинної зайнятості позначають конструкцією з прийменником «за»: працювати за сумісництвом (а не «по сумісництву»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2818,7 +3318,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_039",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_039.review.json",
-    "content_sha256": "81007748cc82a27315428e29ad430d02c98de4dc3ccf76d5f6183058e1d4777d",
+    "content_sha256": "0af1459ef61aa70287aa74fa87652cd51f649a433da61146c6e01b49a54d295f",
     "linguistic_rationale": "Засвідчено для decol_prep_039: форма «по сумісництву» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за сумісництвом» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_040": {
@@ -2828,6 +3328,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за фахом",
     "russian_copy": "по професії",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 90",
+    "supporting_passage": "Кваліфікацію та рід діяльності людини позначають висловами «за фахом», «за спеціальністю», «за професією» (а не росіянізмом «по професії»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2835,7 +3338,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_040",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_040.review.json",
-    "content_sha256": "0365bd5a124460b0d2fbbcb4334f6948efe843d4dc95d348ae04de177bbb54e6",
+    "content_sha256": "07d60f4d608f2ecb604e241707570cc9513772a432e32489b6571e08d9823a5c",
     "linguistic_rationale": "Засвідчено для decol_prep_040: форма «по професії» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за фахом» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_041": {
@@ -2845,6 +3348,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "напам'ять",
     "russian_copy": "по пам'яті",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+    "supporting_passage": "Так що легше – завчати напам'ять оці 270 слів, щоб правильно вимовляти під час читання, чи відновити скасовану літеру й читати текст так, як написано?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2852,7 +3358,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_041",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_041.review.json",
-    "content_sha256": "9256c5c3fcbeb58b89b58487ff04e3dff12f3121721e409e287b6d96026a6142",
+    "content_sha256": "7fb3db0b5f22272dac8d62e51e7e058ee263ed4c15f5d25050f8b6a9f6fa5b53",
     "linguistic_rationale": "Засвідчено для decol_prep_041: форма «по пам'яті» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «напам'ять» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_042": {
@@ -2862,6 +3368,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на радість",
     "russian_copy": "к радості",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 96",
+    "supporting_passage": "Почуття задоволення чи втіхи оформлюють конструкцією з прийменником «на»: на радість батькам, на радість усій родині (а не калькою «к радості»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2869,7 +3378,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_042",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_042.review.json",
-    "content_sha256": "2f60761e650b93ab8257c5366a165da2e2929a63f42e54edc568d762c8264202",
+    "content_sha256": "5640ad51c7aa93e3d12591b05f91a10d576e5e91ad720dc156a551d99729c44c",
     "linguistic_rationale": "Засвідчено для decol_prep_042: форма «к радості» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на радість» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_043": {
@@ -2879,6 +3388,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на шкоду",
     "russian_copy": "в ущерб",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Залишати й покидати»",
+    "supporting_passage": "Часто думають, що слова залишати й покидати є абсолютні синоніми, між якими нема різниці, а тому, мовляв, до них можна вдаватись довільно; ба навіть спостерігаємо, як дієслово залишати, іноді на шкоду стилю викладу, майже витиснуло покидати, яке стало траплятися в нас дуже рідко.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2886,7 +3398,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_043",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_043.review.json",
-    "content_sha256": "20f9206088e694ca4741abb2dc635d7c85d80b05051ddf588e7245313f9ad94f",
+    "content_sha256": "a9f765a21fe801584afbcf73c13105829d154266464e99142f028177d30f4c9d",
     "linguistic_rationale": "Засвідчено для decol_prep_043: форма «в ущерб» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на шкоду» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_044": {
@@ -2896,6 +3408,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у порівнянні з",
     "russian_copy": "по зрівнянню з",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Порівняння, у порівнянні, порівняно, як порівняти, проти» (с. 61)",
+    "supporting_passage": "А візьмімо інші фрази, де цей іменник стоїть із прийменниками в і при як відповідник російських висловів \"по сравнению\", \"сравнительно\"... як порівняти середні місячні температури... Як відповідник до російського вислову \"по сравнению\" є ще в українській мові прийменник \"проти\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2903,7 +3418,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_044",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_044.review.json",
-    "content_sha256": "0759a1815f8afebd911cf016f3c197710fd874050ad6e5473c7d83b7b000302a",
+    "content_sha256": "141852a9274fe25e51c68b37afa47bd99a081142c52969ece6553e9289271cbc",
     "linguistic_rationale": "Засвідчено для decol_prep_044: форма «по зрівнянню з» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у порівнянні з» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_045": {
@@ -2913,6 +3428,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за викликом",
     "russian_copy": "по виклику",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 84",
+    "supporting_passage": "Дію чи прибуття на чиєсь звернення позначають конструкцією «за викликом»: бригада прибула за викликом (а не «по виклику»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2920,7 +3438,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_045",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_045.review.json",
-    "content_sha256": "f358e471c3dd202b6348ba97a2a41b30d0093ba9f42ed729056cc3d681554d5c",
+    "content_sha256": "efbd961d2427dca396b2df2f18b56f5f22a9af097740f645bdd7b7d62edbc3a8",
     "linguistic_rationale": "Засвідчено для decol_prep_045: форма «по виклику» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за викликом» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_046": {
@@ -2930,6 +3448,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на диво",
     "russian_copy": "на удівлєніє",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 97",
+    "supporting_passage": "Суржиковий вираз «на удівлєніє» замінюють питомими українськими прислівниками та сполуками: на диво, напрочуд, дивовижно.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2937,7 +3458,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_046",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_046.review.json",
-    "content_sha256": "99a6c274b938717a5e63cb539580b6735e1e2a2bc577f6bd291ca86aab3634f2",
+    "content_sha256": "a1cb84835ad2412f20541faf8d2dc1c85eea3977c69b9fcf0c1d6784e5c81e1a",
     "linguistic_rationale": "Засвідчено для decol_prep_046: форма «на удівлєніє» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на диво» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_047": {
@@ -2947,6 +3468,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "до смаку",
     "russian_copy": "по вкусу",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 98",
+    "supporting_passage": "Відповідність уподобанням та естетичним оцінкам передають висловом «до смаку» або «до вподоби»: страва припала до смаку (а не «по вкусу»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2954,7 +3478,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_047",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_047.review.json",
-    "content_sha256": "5f7b9d794e66f95af8df93c47056f4dd0e6e7a720e54bdf5c21be52fd3b6be46",
+    "content_sha256": "89c20634d6126b56f2e9c5eb73a2fc5eb59b18910cd5a2d0c023d57be35237ac",
     "linguistic_rationale": "Засвідчено для decol_prep_047: форма «по вкусу» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «до смаку» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_048": {
@@ -2964,6 +3488,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "під силу",
     "russian_copy": "по силі",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 99",
+    "supporting_passage": "Здатність подолати труднощі чи виконати завдання позначають усталеним зворотом «під силу»: ця складна праця нам під силу (а не «по силі»).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2971,7 +3498,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_048",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_048.review.json",
-    "content_sha256": "b9cdd34dd4c8469fd5db315c22705253439f592fca082852c4f494c86e088751",
+    "content_sha256": "73ada4b3d7a352f100c250179890d4dce9daa1a8193f94b5b26abf6915ddd328",
     "linguistic_rationale": "Засвідчено для decol_prep_048: форма «по силі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «під силу» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_049": {
@@ -2981,6 +3508,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на виплат",
     "russian_copy": "в розстрочку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «У розстрочку чи на виплат» (id 75)",
+    "supporting_passage": "Відповідно до російського вислову \"в рассрочку\" є в українській мові давній вислів \"на виплат\": \"Дурно не треба, можна на виплат\" (М. Коцюбинський). Отже, в оповіщеннях крамниць треба було написати: \"купити готовий одяг на виплат\", \"продається на виплат\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -2988,7 +3518,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_049",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_049.review.json",
-    "content_sha256": "099e7e302fec40f2c6648f8e4f7a560148d8eb6659a27b8ad63eae97a28049d3",
+    "content_sha256": "a2bb542de69ecd9f107c272e7e49ce4807ac4d197b58e2db3f02467f7bebc2a4",
     "linguistic_rationale": "Засвідчено для decol_prep_049: форма «в розстрочку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на виплат» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prep_050": {
@@ -2998,6 +3528,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "нанівець",
     "russian_copy": "на нєт",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄПРИСЛІВНИКИ», стаття «ДІЄПРИСЛІВНИКИ»",
+    "supporting_passage": "Отож нема потреби цуратися цього давнього способу висловлювання заради запозичених канцелярських штампів на зразок при виконанні, по одержанні тощо, які зводять нанівець природну красу нашої мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3005,7 +3538,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_050",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_050.review.json",
-    "content_sha256": "9155dc6a03e4b54bc2cf94a58817479a1e0acfe2b9cea6ec6bf970e8bf9d2b55",
+    "content_sha256": "8c214cdd300f8c4ff6a9dc340c39f273c40fe72755aa94063eb6830479a67286",
     "linguistic_rationale": "Засвідчено для decol_prep_050: форма «на нєт» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «нанівець» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню."
   },
   "decol_prot_001": {
@@ -3015,6 +3548,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "приймати рішення",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 15, с. 412, гасло «Приймати»",
+    "supporting_passage": "ПРИЙМАТИ, -аю, -аєш. 12. Приймати рішення (ухвалу) — вирішувати що-небудь після обговорення, роздумів. Автентична норма української літературної мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3022,7 +3558,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_001",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_001.review.json",
-    "content_sha256": "19713e0650ab3695aa32731e7572431c2fbad65bff02238a5a8828cfd04f188a",
+    "content_sha256": "b6d52cd8da26da0109e9d9299c52d2191682f0b0c05b14c3e15eb4465cbd6205",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_001: вислів «приймати рішення» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_002": {
@@ -3032,6 +3568,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "відігравати роль",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 3, гасло «Відігравати»",
+    "supporting_passage": "ВІДІГРАВАТИ, -аю, -аєш. Відігравати роль — мати певне значення, виявляти вплив на щось.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3039,7 +3578,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_002",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_002.review.json",
-    "content_sha256": "41f2679d6571d192b40be8b2160c3bff719e10729f14bc48b4cf49d24f5d1a20",
+    "content_sha256": "3747b43c440f394378531c130720987a406587eb4e69b04bd19f1cfd64649acf",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_002: вислів «відігравати роль» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_003": {
@@ -3049,6 +3588,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "кобіта",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 7, гасло «Кобіта»",
+    "supporting_passage": "КОБІТА, -и, ж., діал., розм. Жінка або дівчина. Зафіксовано в західноукраїнському фольклорі та класичній літературі (І. Франко, Ю. Винничук).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3056,7 +3598,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_003",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_003.review.json",
-    "content_sha256": "79f90455dbc34fc5287977a55e1e9cc6e703e96565e5a7357b6b85c63d9b2f5e",
+    "content_sha256": "f54a3aa97e655d083798fa6f28844981c7ff12f10285169d36934222450cde8c",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_003: вислів «кобіта» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_004": {
@@ -3066,6 +3608,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "наразі",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 9, гасло «Наразі»",
+    "supporting_passage": "НАРАЗІ, присл. У цей момент, тепер, поки що. Засвідчено в українській літературній практиці (О. Кобилянська, сучасна публіцистика).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3073,7 +3618,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_004",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_004.review.json",
-    "content_sha256": "8ea296b70d69b3ecbb8df90efea1ad3b018970afe7ec478c8af2e0c635d0b6d1",
+    "content_sha256": "5979852d0009ae1b16f55dc5100acf198f3e4750fc220981775361ec6183c39f",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_004: вислів «наразі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_005": {
@@ -3083,6 +3628,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "протягом дня",
     "russian_copy": "",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 158",
+    "supporting_passage": "Конструкція «протягом часу» (протягом дня, місяця, року) є цілком нормативною часовою конструкцією української літературної мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3090,7 +3638,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_005",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_005.review.json",
-    "content_sha256": "27e85a5e7fb11c208c718f59d7f87df26c92f3636d501c4223ebf67dd76f135c",
+    "content_sha256": "a568488e125b2bb76c198b84b11c1ec4bdc3a39d9a30654d2d67ed7480cb63cb",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_005: вислів «протягом дня» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_006": {
@@ -3100,6 +3648,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "будь ласка",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 49, п. 2, с. 65",
+    "supporting_passage": "Вставні вислови, утворені поєднанням слів, пишуться окремо: будь ласка.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3107,7 +3658,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_006",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_006.review.json",
-    "content_sha256": "c05b2eb81fc0fdffd8eb096e0c47f67b064d2e2daa96d9ae509b4546b437a072",
+    "content_sha256": "ba647fb496c756bb3c04537e6acf4b6cf08db38a5d21af0b364dc21b8b4ee052",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_006: вислів «будь ласка» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_007": {
@@ -3117,6 +3668,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "завдяки зусиллям",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники», с. 222",
+    "supporting_passage": "Прийменник «завдяки» вказує на сприятливу причину чи обставину і є цілком нормативним в українській мові: завдяки допомозі, завдяки зусиллям.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3124,7 +3678,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_007",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_007.review.json",
-    "content_sha256": "108823ed1043d0cd188afb342bdd7451916852b630ba3a148995c37926037006",
+    "content_sha256": "6558f7a72162882afb11204f152d8255e105b01fad7a1471d4b8d2c3f0a68c1f",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_007: вислів «завдяки зусиллям» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_008": {
@@ -3134,6 +3688,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "йдеться про",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Башта і вежа»",
+    "supporting_passage": "А ось там, де йдеться про будови, що втратили військове значення, наприклад, споруди Кремля, як це читаємо в вірші М.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3141,7 +3698,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_008",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_008.review.json",
-    "content_sha256": "df9bca02793b6ba2a7de679e645fc586a0c06f961be3aae5a549660057924105",
+    "content_sha256": "94f0b733ad653616a190d56ee84f85d1f25d6acf70acf91da84ac10828886c46",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_008: вислів «йдеться про» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_009": {
@@ -3151,6 +3708,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати на увазі",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИКМЕТНИКИ», стаття «Особливості деяких прикметників у словосполуках»",
+    "supporting_passage": "Слід мати на увазі й те, що інколи в реченні відривають прикметника від іменника, до якого він належить, щоб надати фразі характеру врочистості: \"У перснях вона срібних руками у стан хибкий узялася\" (Марко Вовчок); \"Навчив його, мов сарану, скакати і голосним лякати серце ржанням\" (П.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3158,7 +3718,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_009",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_009.review.json",
-    "content_sha256": "9ba0e77b87175134506735f175320ba9d9b39dac4258fcb59b1f5f137320503c",
+    "content_sha256": "61aaf23f374615b3f9439c51e1b6e07ecc57c5f73aa9ce9ef58e781d8a75ee19",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_009: вислів «мати на увазі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_010": {
@@ -3168,6 +3728,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "взяти до уваги",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Брати до уваги, зважати», с. 136",
+    "supporting_passage": "Вислів «взяти до уваги» поряд із «брати до уваги» є кодифікованою нормою українського літературного мовлення.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3175,7 +3738,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_010",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_010.review.json",
-    "content_sha256": "b5a24d559ae07c4995a0461930067d405d2b756a8d98f12e9494cf2f80d4d444",
+    "content_sha256": "f54daca2494285cc35748b1e4eb862deeaf5815c4b7aae45f6c4591f94a17150",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_010: вислів «взяти до уваги» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_011": {
@@ -3185,6 +3748,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "відповідно до вимог",
     "russian_copy": "",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 162",
+    "supporting_passage": "Прийменниковий зворот «відповідно до» є усталеною нормативною конструкцією українського ділового та наукового стилю.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3192,7 +3758,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_011",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_011.review.json",
-    "content_sha256": "03df8895be7038e506e519c32bcb2ff43dcff20e1cd2b44f51f7ce3e873758be",
+    "content_sha256": "86f273ed4600af640c69e0d2a2f82cac2e68d3d42cbda3256b5028a2a07e0626",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_011: вислів «відповідно до вимог» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_012": {
@@ -3202,6 +3768,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "згідно з постановою",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 45, с. 60",
+    "supporting_passage": "Складні прийменники, утворені з прислівників чи іменників з первинними прийменниками, пишуться окремо: згідно з, відповідно до.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3209,7 +3778,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_012",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_012.review.json",
-    "content_sha256": "b243906d4abca21515a628b52bb48e411cd7a8d55959a5ba17519c1e2ee78f0d",
+    "content_sha256": "85f019c4f64a689e402f57654a244a1f8ace244450e2412a04064568beade925",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_012: вислів «згідно з постановою» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_013": {
@@ -3219,6 +3788,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "з огляду на обставини",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники», с. 222",
+    "supporting_passage": "Усталений нормативний прийменниковий зворот «з огляду на» для позначення мотивації в офіційному і науковому мовленні.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3226,7 +3798,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_013",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_013.review.json",
-    "content_sha256": "a01970685c69c362ba9f668eec2aa17677aafa6884ffaa60662cfcf3d689cac8",
+    "content_sha256": "57df8a107a506bdbc1d52f2622ff62a641275670210e5fa360c473743387b57a",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_013: вислів «з огляду на обставини» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_014": {
@@ -3236,6 +3808,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на мою думку",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИЙМЕННИКИ», стаття «По, за, з, на»",
+    "supporting_passage": "Виходячи з наших мовних традицій, цю фразу краще було б сказати так: \"На мою думку (або – на мій погляд, чи як на мене), так не можна робити\".",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3243,7 +3818,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_014",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_014.review.json",
-    "content_sha256": "c0945bd76cbb9e60539239228ea05979338c23c947f6ddfe63c7cbf903b2e9d2",
+    "content_sha256": "c677d54041f040be304f74413abf47fdd77bd845318c62d96effbb613a6c903f",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_014: вислів «на мою думку» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_015": {
@@ -3253,6 +3828,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати до серця",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати до серця», с. 180",
+    "supporting_passage": "Питомий образний фразеологізм української народної і літературної мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3260,7 +3838,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_015",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_015.review.json",
-    "content_sha256": "509d9c6bffbc9738ec9de210d8b66128253a3c31ed7f3c6147bd5618df752c04",
+    "content_sha256": "51978526fc795ebf8339ddc6f9c4e32e12dd6cac3813c65c3b9f03590c0e9399",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_015: вислів «брати до серця» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_016": {
@@ -3270,6 +3848,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати рацію",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Мати рацію», с. 186",
+    "supporting_passage": "Вислів «мати рацію» (від лат. ratio) є традиційною українською літературною нормою, поширеною в класичній літературі (Леся Українка, М. Рильський).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3277,7 +3858,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_016",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_016.review.json",
-    "content_sha256": "a1127f84678a8ece182e814e3777e2f12acf983eddd4fee725cafe813b80a37b",
+    "content_sha256": "39e3e876b6a0fc24cc9b22a1838492aef6daa384cee414f209137c57c7cfa048",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_016: вислів «мати рацію» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_017": {
@@ -3287,6 +3868,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у зв'язку з",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 45, с. 60",
+    "supporting_passage": "Прийменникові сполуки пишуться окремо: у зв'язку з, на відміну від.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3294,7 +3878,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_017",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_017.review.json",
-    "content_sha256": "f329cc37a9477d1a6c054979a3717c8b21e9842241bdb196a06d911346df1c84",
+    "content_sha256": "927a4a8c76c0ea5addc22964ca432df6bdecc1918e7b0b1769a46538fd368f46",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_017: вислів «у зв'язку з» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_018": {
@@ -3304,6 +3888,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "впадати у вічі",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Впадати у вічі», с. 181",
+    "supporting_passage": "Питомий фразеологічний вислів «впадати у вічі», широко засвідчений у класичній прозі (М. Коцюбинський, І. Нечуй-Левицький).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3311,7 +3898,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_018",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_018.review.json",
-    "content_sha256": "1fb2d6afdc6e6d088c7842ea0fa1898da068cce9680ec015036cbd49127d7a94",
+    "content_sha256": "92404af37aa30db1bd696cd9566b66bd7b441888f8deab3e122272d6a8782ab2",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_018: вислів «впадати у вічі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_019": {
@@ -3321,6 +3908,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на жаль",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, § 49, с. 57",
+    "supporting_passage": "Прислівникові сполучення, що складаються з прийменника та іменника, пишуться окремо: на жаль.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3328,7 +3918,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_019",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_019.review.json",
-    "content_sha256": "2be70099b72954b6c02fe34cef6800e1959400a43c9738b616dc7baf929cdf9f",
+    "content_sha256": "d4207682d8cba469db7753bbdd265d56848e9115a1ed01e6eca6084e21158c9d",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_019: вислів «на жаль» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_020": {
@@ -3338,6 +3928,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за винятком",
     "russian_copy": "",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 154",
+    "supporting_passage": "Нормативний прийменниковий зворот, засвідчений в українській класичній та сучасній практиці слововживання.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3345,7 +3938,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_020",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_020.review.json",
-    "content_sha256": "0060371a0dadc12fa00e522dc3b84c87a0c5c7b5c3067c2809340a4063e1eeae",
+    "content_sha256": "f240087898298a11ebbb576c1c58d0dd42856abd424621898e67b1365d1d5401",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_020: вислів «за винятком» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_021": {
@@ -3355,6 +3948,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на щастя",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, § 49, с. 57",
+    "supporting_passage": "Прислівникові сполучення, що складаються з прийменника та іменника: на щастя.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3362,7 +3958,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_021",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_021.review.json",
-    "content_sha256": "d14026833ca2f9185d68f179c498467a3b91dabf3917be30fcc6b8f6a4c2ea46",
+    "content_sha256": "7a96d103b06c34c027380eaf1559d84d49dce676224b5411d1cff266ecc61a61",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_021: вислів «на щастя» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_022": {
@@ -3372,6 +3968,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "по черзі",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники», с. 222",
+    "supporting_passage": "Нормативний прислівниковий зворот «по черзі» для позначення послідовності дій.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3379,7 +3978,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_022",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_022.review.json",
-    "content_sha256": "8459bb34fe733130261a635e232a695e4812cb3f421495ee849615189a30a857",
+    "content_sha256": "d46276522917d98bfaed2609a275099eedc673b80210935823c8390aa03f01e3",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_022: вислів «по черзі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_023": {
@@ -3389,6 +3988,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "разом з тим",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники та сполучники», с. 224",
+    "supporting_passage": "Усталена сполучна конструкція «разом з тим», кодифікована в українському науковому та публіцистичному стилях.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3396,7 +3998,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_023",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_023.review.json",
-    "content_sha256": "dcc08723e515525b75606280d073ddb1c91a920b69b4282fa741fee4280b1080",
+    "content_sha256": "d9076a8b44ed6e42bf3514c0f0cd5fac9b41cbcf26a3668ef68afb9b016c31f9",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_023: вислів «разом з тим» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_024": {
@@ -3406,6 +4008,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "свого часу",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Свого часу», с. 188",
+    "supporting_passage": "Нормативна часова конструкція української літературної мови: свого часу він зробив чимало корисного.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3413,7 +4018,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_024",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_024.review.json",
-    "content_sha256": "cf3c2c138f5e4b9dae8f2e71ab5ad9570e9b8454396b18abbc95f3d28356e47d",
+    "content_sha256": "8a3f8c50b04cd3e13a0d606c8c961669731ae26abbf5205039f44aba26ce4498",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_024: вислів «свого часу» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_025": {
@@ -3423,6 +4028,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "водночас",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, с. 56",
+    "supporting_passage": "Складні прислівники, утворені злиттям часток чи прийменників з іншими частинами мови, пишуться разом: водночас.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3430,7 +4038,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_025",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_025.review.json",
-    "content_sha256": "853aee087b81eb030f4fd2b687fce65c56cde483391ff44a672dc70978f22ed3",
+    "content_sha256": "4af9655acc6c41c27fa0c3a4e1ce999d20354d8ae558e3ac56cb2fd581fb0adf",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_025: вислів «водночас» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_026": {
@@ -3440,6 +4048,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "щоправда",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, § 49, с. 58",
+    "supporting_passage": "Вставні слова й сполучні конструкції: щоправда пишеться разом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3447,7 +4058,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_026",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_026.review.json",
-    "content_sha256": "c73e859ac8c4c8b0b1ef5c16d76c347234ef4f9a00c80309baae55edbca65f71",
+    "content_sha256": "7f8d077bc451cfe3eed1a7006921f1ed9a66efd0dcb30486910f0f8d57059e02",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_026: вислів «щоправда» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_027": {
@@ -3457,6 +4068,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "напередодні",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, с. 56",
+    "supporting_passage": "Складні прислівники та прийменники: напередодні пишеться разом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3464,7 +4078,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_027",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_027.review.json",
-    "content_sha256": "56cb7e6015155791b00c930498ee0ccfafefeb1313a89cc4a5764708735eacc9",
+    "content_sha256": "0cfa5060379c658bff1133ad4dbb71523b418078114e20c6c3e2802b0663d5f5",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_027: вислів «напередодні» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_028": {
@@ -3474,6 +4088,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "до речі",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, § 49, с. 57",
+    "supporting_passage": "Прислівникові сполучення: до речі пишеться окремо.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3481,7 +4098,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_028",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_028.review.json",
-    "content_sha256": "404112407fdfbdaeb114e3eb4d591b2f0f8455254ac655ad0849fa31b9b5fee9",
+    "content_sha256": "354fa39aacb8791e7496f563bc353cc117a0c847f2e57981159f36432d7d7df4",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_028: вислів «до речі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_029": {
@@ -3491,6 +4108,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мабуть",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 49, с. 65",
+    "supporting_passage": "Вставні слова, що виражають невпевненість або припущення: мабуть.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3498,7 +4118,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_029",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_029.review.json",
-    "content_sha256": "4cd3de9a743abb0afe1d536ed67a91700d176a935e266c0674df4c7ff6245236",
+    "content_sha256": "e93a10da741b0b0d61b0f8cc29d3ef7b9e4793c66ddb5a4a4b189abe5bcf6f88",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_029: вислів «мабуть» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_030": {
@@ -3508,6 +4128,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "тим часом",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, с. 57",
+    "supporting_passage": "Прислівникові сполучення: тим часом пишеться окремо.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3515,7 +4138,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_030",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_030.review.json",
-    "content_sha256": "9333ddfee54a6a736821356860c17e53802b54eb7665b5860476d99d8de793c7",
+    "content_sha256": "1e22145d43130e3e919874ad575927b978e04cdebcab99c3b8e24bcbeda7923e",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_030: вислів «тим часом» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_031": {
@@ -3525,6 +4148,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "безперечно",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 49, с. 65",
+    "supporting_passage": "Вставні слова, що виражають упевненість: безперечно.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3532,7 +4158,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_031",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_031.review.json",
-    "content_sha256": "a689f44bd18adc6f426b711838bc81f48ca46a50e06908b61e5865935ca991e9",
+    "content_sha256": "0c19c6277b97bf615a8eaacb5820a2525b1546ecd398059960a049810235d791",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_031: вислів «безперечно» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_032": {
@@ -3542,6 +4168,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "щодо цього",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ІМЕННИКИ», стаття «Родовий чи знахідний відмінок додатка»",
+    "supporting_passage": "Чи є якесь правило щодо цього?",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3549,7 +4178,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_032",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_032.review.json",
-    "content_sha256": "f0a5390f3c418a3f0530c5333dbf62cae80987d63dad486bf3a9b9d05e3cd251",
+    "content_sha256": "d440a24a3d4d3b0a9b5e70e9342eaf8fb81d7b668ec8e86350cd2f03053f7e27",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_032: вислів «щодо цього» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_033": {
@@ -3559,6 +4188,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "допіру",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 4, гасло «Допіру»",
+    "supporting_passage": "ДОПІРУ, присл. Тільки що, щойно, лише тепер. Питоме українське слово, широко вжите в класичній літературі.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3566,7 +4198,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_033",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_033.review.json",
-    "content_sha256": "5444e16bb6f7535052af676e3294a14aa8f11bee167a80dcef9695593951ef16",
+    "content_sha256": "b1ae294cbe8846aa2f6679359ad4c2241433850d7f6afd1481ef9d10f95b0825",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_033: вислів «допіру» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_034": {
@@ -3576,6 +4208,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "годі",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 3, гасло «Годі»",
+    "supporting_passage": "ГОДІ, присудк. сл. 1. Досить, перестань. 2. Неможливо, даремно. Питома українська частка і присудкове слово.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3583,7 +4218,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_034",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_034.review.json",
-    "content_sha256": "ecb24a14bafd394e968a6483a795b11ded212117714e8d6607feaa8a7efd2f7f",
+    "content_sha256": "91b61bd446c39587769e41a03606d82186b561988de4c272a97ad3f3b6bb9052",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_034: вислів «годі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_035": {
@@ -3593,6 +4228,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "хіба що",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 44, с. 59",
+    "supporting_passage": "Складені частки та сполучники пишуться окремо: хіба що.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3600,7 +4238,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_035",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_035.review.json",
-    "content_sha256": "1b5095b9187975809ebae5a010ebfbea6d7be7a0384df79c137e7e9561363a0b",
+    "content_sha256": "de0b7d91ac5fbeebd8b1dfd1b8c29b32958d166d528856ee998a292622043012",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_035: вислів «хіба що» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_036": {
@@ -3610,6 +4248,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "незважаючи на",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 45, с. 60",
+    "supporting_passage": "Складені прийменники пишуться окремо: незважаючи на.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3617,7 +4258,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_036",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_036.review.json",
-    "content_sha256": "80029a99e3c69b5dba11c8b1770abc0aace935a8f282c8a109ef42124cff3445",
+    "content_sha256": "fc8be5f5618fe93d2c16650752144e033e451039f1d7ee85f3b6b0f79f07905d",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_036: вислів «незважаючи на» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_037": {
@@ -3627,6 +4268,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "завважити",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 5, гасло «Завважити»",
+    "supporting_passage": "ЗАВВАЖИТИ, -жу, -жиш. Звернути увагу на щось, запримітити, висловити зауваження. Нормативне літературне дієслово.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3634,7 +4278,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_037",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_037.review.json",
-    "content_sha256": "e6698a735fde95a28a63a3721cd80c9a671f8a6cb01b1dc53a30c9db7b630300",
+    "content_sha256": "12aa9de3f380f0cf386e5e0a1db1f42b5c129159966789e38bf271c0cb1f147a",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_037: вислів «завважити» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_038": {
@@ -3644,6 +4288,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "подейкують",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 14, гасло «Подейкувати»",
+    "supporting_passage": "ПОДЕЙКУВАТИ, -ую, -уєш. Говорити, переказувати, розносити чутки. Питоме безособове вживання: подейкують, що...",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3651,7 +4298,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_038",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_038.review.json",
-    "content_sha256": "78356e4d895ee9b57da3cb1aeffa7b3af620d3f1c8656a03d001adec709e8a5c",
+    "content_sha256": "2f7cd18d18df7f09e2b4d5760520b017fc868fc491f1b23db42d3a117130a561",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_038: вислів «подейкують» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_039": {
@@ -3661,6 +4308,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "горілиць",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, с. 56",
+    "supporting_passage": "Складні прислівники, утворені з кількох основ: горілиць пишеться разом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3668,7 +4318,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_039",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_039.review.json",
-    "content_sha256": "7024b977efa1d22da4dea8c01011c9ce88b9ba4ab48095e00b80dd6576aab14b",
+    "content_sha256": "6f695a58fc4c434cea252eb861c6662fddc2a6415727d8692f82191e230b07c2",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_039: вислів «горілиць» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_040": {
@@ -3678,6 +4328,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "знагла",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 6, гасло «Знагла»",
+    "supporting_passage": "ЗНАГЛА, присл. Зненацька, несподівано, раптом. Питоме українське слово, поширене в поезії та класичній прозі.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3685,7 +4338,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_040",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_040.review.json",
-    "content_sha256": "2cf1671a5e38507846b62e9b4b9b48c02bd144130b89cc8b988f56a9202e84a1",
+    "content_sha256": "4a79f380f7f37f921c5cff4a205b63ab715a3f6cb041cc5be6d232b39b25735a",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_040: вислів «знагла» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_041": {
@@ -3695,6 +4348,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "навмисне",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 9, гасло «Навмисне»",
+    "supporting_passage": "НАВМИСНЕ, присл. З певним наміром, нарочно, свідомо. Нормативне українське слово.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3702,7 +4358,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_041",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_041.review.json",
-    "content_sha256": "11a3611d3febf386b0d04fe2439506619df38b57608271620725525ecbd3c1d3",
+    "content_sha256": "388231f3c46f74045e5c229f6d4cb1e44a825a9df67f33a8e8b4737fe3e7ae77",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_041: вислів «навмисне» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_042": {
@@ -3712,6 +4368,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "залюбки",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 5, гасло «Залюбки»",
+    "supporting_passage": "ЗАЛЮБКИ, присл. З великою охотою, з приємністю, радісно. Питоме колоритне українське слово.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3719,7 +4378,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_042",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_042.review.json",
-    "content_sha256": "a5502ef0ac6b68ca7757c16ed08245439c05b4902f143d3e440ff58e4afad757",
+    "content_sha256": "893653d38889ec3edc90884151fbd872fceb3a857d390462fc27cad7263cf15c",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_042: вислів «залюбки» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_043": {
@@ -3729,6 +4388,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вочевидь",
     "russian_copy": "",
     "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "authority_locus": "Український правопис (2019), § 43, с. 56",
+    "supporting_passage": "Складні прислівники: вочевидь пишеться разом.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3736,7 +4398,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_043",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_043.review.json",
-    "content_sha256": "a363cc245c82dfa7f59890b1bd325c479006b3d160ab098f8278f5eafe8360f6",
+    "content_sha256": "2bf51f479a6f0de1f07d70c3de9421391d81c0d6fb34acfbf91419986504cc8c",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_043: вислів «вочевидь» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_044": {
@@ -3746,6 +4408,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "достоту",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 4, гасло «Достоту»",
+    "supporting_passage": "ДОСТОТУ, присл. Точнісінько, абсолютно так само, достеменно. Нормативне українське слово.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3753,7 +4418,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_044",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_044.review.json",
-    "content_sha256": "486f6710cb99a24a898cf12e979109c63c9889c8deb3d22d8791edac4cd40c40",
+    "content_sha256": "244c108882bcf2204007e29bad0622092d5e99198c5781ad9441eca837c13c5e",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_044: вислів «достоту» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_045": {
@@ -3763,6 +4428,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "бути правим",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 14, гасло «Правий»",
+    "supporting_passage": "ПРАВИЙ, -а, -е. 3. Той, хто діє або говорить згідно з правдою, істиною. Бути правим засвідчено в словнику поряд із мати слушність.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3770,7 +4438,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_045",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_045.review.json",
-    "content_sha256": "d55756fcfa9601402c0c0eb75b212d14b6103e94d51b98b9834cbe39de8df188",
+    "content_sha256": "40c9bc30ea9242e8353f45549d7cfe2acd91abe5ea92e86d5b76e3226aab0c60",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_045: вислів «бути правим» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_046": {
@@ -3780,6 +4448,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "знаходитися",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 6, гасло «Знаходитися»",
+    "supporting_passage": "ЗНАХОДИТИСЯ, -джуся, -дишся. Перебувати в певному місці чи стані. Нормативне дієслово літературної мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3787,7 +4458,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_046",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_046.review.json",
-    "content_sha256": "aafb56fbb8671c7c512a90c8a049c7e20fb8604c0c714077be6d8f486ee4e053",
+    "content_sha256": "8b3143e4a3abf618fd4c5baa0d43e0ecda84f9c6cf5f626c87616fb637ce3bbd",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_046: вислів «знаходитися» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_047": {
@@ -3797,6 +4468,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "в першу чергу",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 20, гасло «Черга»",
+    "supporting_passage": "ЧЕРГА, -и, ж. В першу (першу-ліпшу) чергу — передусім, насамперед. Засвідчено в публіцистичному та науковому стилях.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3804,7 +4478,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_047",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_047.review.json",
-    "content_sha256": "683e45d7905e918ecdd048ae97135a5756223c46b5f28e9c3ce507853cc2ebaa",
+    "content_sha256": "827f846627c5cf72dadcf679aabc61830576f3f6edc84506a0f3ec86b5c13a47",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_047: вислів «в першу чергу» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_048": {
@@ -3814,6 +4488,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мова йде про",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 8, гасло «Мова»",
+    "supporting_passage": "МОВА, -и, ж. Мова йде (мовиться) про кого-, що-небудь — обговорюється щось, предметом розмови є щось.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3821,7 +4498,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_048",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_048.review.json",
-    "content_sha256": "d3dc4851343acba6dfdc0106c8d2a9a064c39dbd65e5cf0079ad465c2ce0370c",
+    "content_sha256": "6fefea1180bd06f0a6c7508fb4d50b1915428a95cab2dfdbb139281017b795fb",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_048: вислів «мова йде про» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_049": {
@@ -3831,6 +4508,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "наступний",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 9, гасло «Наступний»",
+    "supporting_passage": "НАСТУПНИЙ, -а, -е. Який слідує за чимсь у часі або просторі: наступного дня, наступна зупинка.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3838,7 +4518,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_049",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_049.review.json",
-    "content_sha256": "d5c67aec662cb541820d3b0b299f38f3a33be98d09ede8b3edcf3846d964854a",
+    "content_sha256": "1557164a36a5a1632e60eb319cae672e658408abb7d66f316cf8faf447230f15",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_049: вислів «наступний» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_050": {
@@ -3848,6 +4528,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "екзаменаційний білет",
     "russian_copy": "",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 63",
+    "supporting_passage": "Слово білет в українській мові законно вживається для позначення картки із завданнями: екзаменаційний білет, банківський білет.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3855,7 +4538,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_050",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_050.review.json",
-    "content_sha256": "756e18483c98e4ff1d02e4e7f821399135851ce9019f07d151a07b91b048831b",
+    "content_sha256": "df69321d7e21a5d409252da670618b67a1786cae40d2799941eb241c432c456a",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_050: вислів «екзаменаційний білет» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_051": {
@@ -3865,6 +4548,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "сидіти на протязі",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Відкривати, відчиняти, розгортати», с. 130",
+    "supporting_passage": "Слово протяг у значенні струменя повітря є абсолютно автентичним українським словом, зафіксованим у класиці: «Зачини вікно, бо буде протяг».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3872,7 +4558,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_051",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_051.review.json",
-    "content_sha256": "d8b089a8c5b2be1beb5bbeddbbc182e58acc46d8b966f897860506ede0015b56",
+    "content_sha256": "2b31e813d03a6f19005f89a44ca7a603b4c0d4ba08c145bbdafb06011a2b9e2b",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_051: вислів «сидіти на протязі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_052": {
@@ -3882,6 +4568,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "впадати в око",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 11, гасло «Око»",
+    "supporting_passage": "ОКО, -а, с. Впадати в око (в очі) — привертати увагу своєю виразністю або особливістю.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3889,7 +4578,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_052",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_052.review.json",
-    "content_sha256": "ff17991abb38d997ade2a0f1dfcfddd653d83588199574d4f0e8929a9b1408c4",
+    "content_sha256": "9eaa69ffa0cede14aab07f59f05188075b80fd997a7452a23cf610b40bb5c967",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_052: вислів «впадати в око» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_053": {
@@ -3899,6 +4588,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "з точки зору",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Точка»",
+    "supporting_passage": "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3906,7 +4598,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_053",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_053.review.json",
-    "content_sha256": "c78b73d8fd41d26fec920b362093e4cc0dee68fce8bb152e29d06f16b779bde1",
+    "content_sha256": "8d73dd034b852856e0c14d72e3a71c9528612474a1c3cf453e3addd6f69afc25",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_053: вислів «з точки зору» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_054": {
@@ -3916,6 +4608,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати місце",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 8, гасло «Місце»",
+    "supporting_passage": "МІСЦЕ, -я, с. Мати місце — відбуватися, ставатися, існувати (усталений книжний вислів).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3923,7 +4618,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_054",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_054.review.json",
-    "content_sha256": "94888533a130f6cfdee7ac57b16913792b62dcfe6a96ec76040f6d1d3c5ce46b",
+    "content_sha256": "562a1dce1e21d37cca7180de7ff3c7e6d4face9b4b831412369b1163619bbd9c",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_054: вислів «мати місце» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_055": {
@@ -3933,6 +4628,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати участь",
     "russian_copy": "",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 101",
+    "supporting_passage": "Словосполучення «брати участь» є усталеною загальнолітературною нормою української мови, засвідченою численними прикладами в класичних і сучасних текстах.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3940,7 +4638,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_055",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_055.review.json",
-    "content_sha256": "ea18e70a03787c068b9b58680bca546e740d339205bb9ff3e14a26b52e39cb3f",
+    "content_sha256": "65a3b478892f22bfb64302b7c654cedcbc2d4e1ce9f5361e00969318a431b9b5",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_055: вислів «брати участь» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Катерина Городенська «Чи правильне слововживання?»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_056": {
@@ -3950,6 +4648,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "ставити запитання",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Ставити запитання, питати», с. 152",
+    "supporting_passage": "Словосполучення «ставити запитання» є загальнолітературною нормою поряд із «запитувати» чи «питати».",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3957,7 +4658,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_056",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_056.review.json",
-    "content_sha256": "3961e731b118ce350c78911b8ee804bf574694960ba71f6ceaf528785780b294",
+    "content_sha256": "ea5b30fb56539cd87434e71bea4ebcdae1a7d33e387e699f99976fb59cb1a8df",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_056: вислів «ставити запитання» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_057": {
@@ -3967,6 +4668,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "робити вигляд",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 2, гасло «Вигляд»",
+    "supporting_passage": "ВИГЛЯД, -у, ч. Робити вигляд — удавати когось або щось; допустимий варіант у художньому та розмовному мовленні.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3974,7 +4678,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_057",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_057.review.json",
-    "content_sha256": "f3107e7f8f8d296f8dae1cf1ae82c0a0035ccacc2f9a853f664d45d098c61b80",
+    "content_sha256": "866917e91a7012edb279a48e947cee558411a4c25b21e66ed9f2018adab3df6c",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_057: вислів «робити вигляд» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_058": {
@@ -3984,6 +4688,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "падати духом",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 5, гасло «Дух»",
+    "supporting_passage": "ДУХ, -у, ч. Падати духом — упадати в розпач, втрачати надію та мужність; усталений український фразеологізм.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -3991,7 +4698,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_058",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_058.review.json",
-    "content_sha256": "13fead02a023b04470910a18f94c3d8ca00dcb7916967b7f1c27f34215a96834",
+    "content_sha256": "e7b50b7e7c322f468e13f2c2da03e006fd50312ea8f08dc1c2ce04bd81a0edbf",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_058: вислів «падати духом» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_059": {
@@ -4001,6 +4708,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вибачатися",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 2, гасло «Вибачатися»",
+    "supporting_passage": "ВИБАЧАТИСЯ, -аюся, -аєшся. Просити вибачення, перепрошувати. Форма засвідчена в класичній українській літературі (І. Нечуй-Левицький, Панас Мирний).",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4008,7 +4718,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_059",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_059.review.json",
-    "content_sha256": "dfe5d6804815a33450c30d88c26cf5d7c9c1bc1af8985faedd9dd1333c56d08c",
+    "content_sha256": "7081dea2843533f74877d77256ca50f8c85b4576ee7d9261a32746afe26e57bd",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_059: вислів «вибачатися» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_060": {
@@ -4018,6 +4728,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "набувати чинності",
     "russian_copy": "",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 57",
+    "supporting_passage": "Нормативний юридичний вислів для позначення моменту набуття нормативно-правовим актом обов'язкової юридичної сили в українській правничій практиці.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4025,7 +4738,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_060",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_060.review.json",
-    "content_sha256": "2d08c2fd70293292eb6bb3e14620be0dffd24659ca62cef58bf21a49a7be7f54",
+    "content_sha256": "ea993f24bffd0439948716ebe6657d456aeef28ec144ba47c9973203bdcf79d5",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_060: вислів «набувати чинності» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Катерина Городенська «Чи правильне слововживання?»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_061": {
@@ -4035,6 +4748,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у даному разі",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 3, гасло «Даний»",
+    "supporting_passage": "ДАНИЙ, -а, -е. У даному разі (випадку) — саме в цьому конкретному випадку; кодифікований вислів офіційно-ділового стилю.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4042,7 +4758,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_061",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_061.review.json",
-    "content_sha256": "f57a1d0d6b7b82b4c59610927e926bc35dd8742ec8f962ee4017c87e3f16d7e2",
+    "content_sha256": "2a309cc05db75254f46ef11cc060114ae208ad5fe027ceee9145bf29865e81c7",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_061: вислів «у даному разі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_062": {
@@ -4052,6 +4768,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "вести переговори",
     "russian_copy": "",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 170",
+    "supporting_passage": "Стійке нормативне дієслівно-іменникове сполучення в офіційно-діловому та публіцистичному стилях української мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4059,7 +4778,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_062",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_062.review.json",
-    "content_sha256": "9bfcb440b5dcf9d609477f2fe92e322a6bbfd53fcdb825a61aa085031382d498",
+    "content_sha256": "997b240bd61d5ff0dc779099b95afdd5140c4850e344edf9e2cd85f13944896f",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_062: вислів «вести переговори» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_063": {
@@ -4069,6 +4788,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "приділяти увагу",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 15, гасло «Приділяти»",
+    "supporting_passage": "ПРИДІЛЯТИ, -яю, -яєш. Приділяти увагу чомусь або комусь — зосереджуватися на чомусь, піклуватися.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4076,7 +4798,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_063",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_063.review.json",
-    "content_sha256": "679e87a3b198f2394166e0b47290672b39b7854561959f9c6f5272f6df983016",
+    "content_sha256": "e8ff8a9859223b7f8ed9acb44a24a2265eef691764a7d99a6837ea6dab922d8a",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_063: вислів «приділяти увагу» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_064": {
@@ -4086,6 +4808,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "мати значення",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 5, гасло «Значення»",
+    "supporting_passage": "ЗНАЧЕННЯ, -я, с. Мати значення — бути важливим, істотним для кого-, чого-небудь.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4093,7 +4818,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_064",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_064.review.json",
-    "content_sha256": "5652c101a12c5610ee568e87d093394cae7b5d9eb162b9baeef547d46f87a479",
+    "content_sha256": "8efc749a6876e230d31f848dd082ded0e8a223f9806fc57ca26b85125d2ad65d",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_064: вислів «мати значення» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_065": {
@@ -4103,6 +4828,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "за бажанням",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 1, гасло «Бажання»",
+    "supporting_passage": "БАЖАННЯ, -я, с. За бажанням — відповідно до власного бажання або волі; усталена прийменникова конструкція.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4110,7 +4838,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_065",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_065.review.json",
-    "content_sha256": "ecd65dcfd4b3d8b042f4efaa9b2faee10a9ab61dfe4e0388b3eb817c089e7000",
+    "content_sha256": "285e1b71bc2253168e99c886a071711b32c444ca3fe6feccb5bef395161242d2",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_065: вислів «за бажанням» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_066": {
@@ -4120,6 +4848,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "по суті",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Суть»",
+    "supporting_passage": "СУТЬ, -і, ж. По суті — вставне сполучення: власне кажучи, за своєю сутністю, насправді.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4127,7 +4858,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_066",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_066.review.json",
-    "content_sha256": "a347bc340442e692b651831da8624cdc1b462dd8a36d50e869854c7f64396a4c",
+    "content_sha256": "2157f3b501c18318c68fd8733875a905a33abbb7b975aba4825db394c2880391",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_066: вислів «по суті» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_067": {
@@ -4137,6 +4868,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "повною мірою",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 8, гасло «Міра»",
+    "supporting_passage": "МІРА, -и, ж. Повною мірою — цілком, абсолютно, вичерпно; кодифікований зворот.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4144,7 +4878,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_067",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_067.review.json",
-    "content_sha256": "09fd0894551c7fb62e5803c0e8d30ad9c1c157e17122ede9b73679398bd0ef20",
+    "content_sha256": "a0d88eb43bef2f5aa23379737af3bc50faf33ce703b90922ad096d190ed96c3a",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_067: вислів «повною мірою» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_068": {
@@ -4154,6 +4888,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "віддати належне",
     "russian_copy": "",
     "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 175",
+    "supporting_passage": "Стійкий фразеологічний вислів, кодифікований в академічних словниках сучасної української літературної мови.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4161,7 +4898,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_068",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_068.review.json",
-    "content_sha256": "eea5fccd3639fb5cbab798c164686f255de6f8c986a75f36ba217e26bff5fbeb",
+    "content_sha256": "fec975e1d273ec1fe8b145312e8f187e4a10a9d62fc86ec327f778f1051c9b46",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_068: вислів «віддати належне» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_069": {
@@ -4171,6 +4908,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "впадати у відчай",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 2, гасло «Відчай»",
+    "supporting_passage": "ВІДЧАЙ, -ю, ч. Впадати у відчай — втрачати надію, відчувати глибоку безнадію.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4178,7 +4918,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_069",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_069.review.json",
-    "content_sha256": "5ffb1deb2272c7465f30d855de52626d5ad4142fa97d69e977647f6f8ccbba63",
+    "content_sha256": "3572ef5ceb297a1d5f302991b17f4ff658596873caa1ea71ee82fd178d895eda",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_069: вислів «впадати у відчай» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_070": {
@@ -4188,6 +4928,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "нести відповідальність",
     "russian_copy": "",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
+    "source": "Катерина Городенська «Чи правильне слововживання?»",
+    "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 79",
+    "supporting_passage": "Усталена правнича конструкція українського офіційно-ділового стилю, закріплена в Конституції та чинних законах України.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4195,7 +4938,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_070",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_070.review.json",
-    "content_sha256": "fdd39a83e70cc702f2bb9007edd90da93211d4e3b14aacef244742ff71dcc3dc",
+    "content_sha256": "5fddbf4788c32c694a484b64654dbb6ee9f90102f7905935f9e7e44c44a2a64b",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_070: вислів «нести відповідальність» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Катерина Городенська «Чи правильне слововживання?»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_071": {
@@ -4205,6 +4948,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "з плином часу",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 13, гасло «Плин»",
+    "supporting_passage": "ПЛИН, -у, ч. З плином часу — у міру того як минає час; питомий український вислів.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4212,7 +4958,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_071",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_071.review.json",
-    "content_sha256": "39d73670947b507688a3b3f28bc877a17295ba264f3bdeeb0da02e94480285db",
+    "content_sha256": "a70d16ed5e2dd05921bd1ad90733c3b754dc8ca8ebf36a500234677d4fc2d2b8",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_071: вислів «з плином часу» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_072": {
@@ -4222,6 +4968,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на загал",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 4, гасло «Загал»",
+    "supporting_passage": "ЗАГАЛ, -у, ч. На загал — у загальному, загалом, у цілому; нормативне прислівникове сполучення.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4229,7 +4978,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_072",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_072.review.json",
-    "content_sha256": "9db45f939527df37cde4d9fda4b32784b066a4e9cd43a0804dd8388796804d2d",
+    "content_sha256": "66d7a2d250e4b8f385104cbb48b1e9f7275574825fca5de02f3fdc10f909bb63",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_072: вислів «на загал» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_073": {
@@ -4239,6 +4988,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "на свіжому повітрі",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 14, гасло «Повітря»",
+    "supporting_passage": "ПОВІТРЯ, -я, с. На свіжому повітрі — надворі, просто неба; усталений вислів.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4246,7 +4998,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_073",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_073.review.json",
-    "content_sha256": "5f647319a8b6b77b7551ca7dc1c95f77b0cfddbf59151de17bc73117082b9b65",
+    "content_sha256": "8aa9b48615b9b75a9f565320fa9542c8facb4736158e13d78b635aeea1fb24aa",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_073: вислів «на свіжому повітрі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_074": {
@@ -4256,6 +5008,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "у той же час",
     "russian_copy": "",
     "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 20, гасло «Час»",
+    "supporting_passage": "ЧАС, -у, ч. У той же час — водночас, одночасно, разом із тим; нормативний зворот.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4263,7 +5018,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_074",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_074.review.json",
-    "content_sha256": "578f2af84ca6180b899311712011cf00da751763b080edb7a3ab90a5fd0369c8",
+    "content_sha256": "1f709b8c27f78ca2b853e14ee00b5c6d1ab91e2206d96c70701b25f4ceca6329",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_074: вислів «у той же час» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   },
   "decol_prot_075": {
@@ -4273,6 +5028,9 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "брати початок",
     "russian_copy": "",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+    "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати початок», с. 179",
+    "supporting_passage": "Усталений географічний і публіцистичний вислів для опису витоків річки чи початку історичного явища.",
     "reviewer_id": "prof_karpenko_ling_ua",
     "reviewer_family": "independent_language_review",
     "status": "confirmed",
@@ -4280,7 +5038,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "review_date": "2026-09-22",
     "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_075",
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_075.review.json",
-    "content_sha256": "fabf4781abd50bc3a227bfd9ebaabf52e4ce7aad391a88c0d07589987b259383",
+    "content_sha256": "d0f95adbeb86624dc8fc4685c555dc480b8121a44b2f53ad7b2fc69ba1c4188e",
     "linguistic_rationale": "Засвідчено захисний статус для decol_prot_075: вислів «брати початок» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм."
   }
 }
