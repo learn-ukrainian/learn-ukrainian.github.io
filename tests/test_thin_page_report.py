@@ -282,5 +282,6 @@ def test_module_help_via_python_dash_m() -> None:
         text=True,
         cwd=Path(__file__).resolve().parents[1],
         check=True,
+        timeout=30,
     )
     assert "thin" in result.stdout
