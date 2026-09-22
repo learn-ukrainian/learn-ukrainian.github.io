@@ -358,6 +358,10 @@
         "sha256": "0756a2a5c50b58955d1678b7cdf9bdf198d876b0e542a2d3903edee47e3111f6"
       },
       {
+        "path": "scripts/lexicon/thin_page_report.py",
+        "sha256": "16b0fc71167e48116403da7acf5090eaa86a6d2d0d05be76003e061da43b78fe"
+      },
+      {
         "path": "scripts/lexicon/triage_needs_review.py",
         "sha256": "412f7456d42f6adcfbc3f44157d2bbfb9d35b22b879620e258bf76ff3c2091eb"
       },
