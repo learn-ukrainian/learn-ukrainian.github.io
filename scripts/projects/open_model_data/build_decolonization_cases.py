@@ -543,11 +543,6 @@ def query_source_evidence(
                 t_clean in text_low
                 or t_clean in text_clean
                 or t_clean in head_low
-                or any(
-                    p.strip().lower() in text_low or p.strip().lower() in text_clean
-                    for p in proper_list
-                    if len(p.strip()) > 3
-                )
             )
             if not phrase_attested:
                 raise ValueError(

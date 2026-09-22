@@ -1501,6 +1501,28 @@ def test_cf_r15_phrase_attestation_regression() -> None:
         def fetchall(self) -> list:
             return []
 
+    class ChergaAlternativeOnlyMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Returns matching headword 'ЧЕРГА' containing only ukrainian_proper alternatives ('насамперед'), lacking 'в першу чергу'
+            return (778, "ЧЕРГА", "насамперед, найперше, передусім")
+
+        def fetchall(self) -> list:
+            return []
+
+    class MovaAlternativeOnlyMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Returns matching headword 'МОВА' containing only ukrainian_proper alternatives ('йдеться про'), lacking 'мова йде про'
+            return (667, "МОВА", "йдеться про щось важливе")
+
+        def fetchall(self) -> list:
+            return []
+
     s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
     u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
     v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
@@ -1543,7 +1565,39 @@ def test_cf_r15_phrase_attestation_regression() -> None:
             style_guide_cache=[],
         )
 
-    # 3. Live query for decol_prot_047 substantiates both headword and phrase
+    # 3. Matching headword 'ЧЕРГА' with alternative only ('насамперед') must fail closed
+    with pytest.raises(
+        ValueError,
+        match=r"does not substantiate claimed phrase 'в першу чергу' \(matching headword lacks the phrase\)",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_047",
+            term="в першу чергу",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=ChergaAlternativeOnlyMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4. Matching headword 'МОВА' with alternative only ('йдеться про') must fail closed
+    with pytest.raises(
+        ValueError,
+        match=r"does not substantiate claimed phrase 'мова йде про' \(matching headword lacks the phrase\)",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_048",
+            term="мова йде про",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=MovaAlternativeOnlyMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 5. Live query for decol_prot_047 substantiates both headword and phrase
     res_047 = query_source_evidence(
         case_id="decol_prot_047",
         term="в першу чергу",
@@ -1556,7 +1610,7 @@ def test_cf_r15_phrase_attestation_regression() -> None:
     )
     assert res_047["status"] == "source_attested"
 
-    # 4. Live query for decol_prot_048 substantiates both headword and phrase
+    # 6. Live query for decol_prot_048 substantiates both headword and phrase
     res_048 = query_source_evidence(
         case_id="decol_prot_048",
         term="мова йде про",
