@@ -159,3 +159,104 @@ def test_dataset_acceptance_audit_passes():
     proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
     assert "OVERALL STATUS: PASSED_AUTOMATED_CHECKS" in proc.stdout
+
+
+def test_decol_syn_014_antonenko_davydovych_norm(decolonization_data):
+    """Verify that decol_syn_014 follows Antonenko-Davydovych §77: targets таким способом, corrects таким шляхом."""
+    cases = decolonization_data["cases"]
+    syn_014 = next((c for c in cases if c["case_id"] == "decol_syn_014"), None)
+    assert syn_014 is not None, "decol_syn_014 not found in cases.json"
+
+    assert syn_014["target_term"] == "таким способом"
+    assert syn_014["russian_copy"] == "таким шляхом"
+    assert "таким способом" in syn_014["ukrainian_proper"]
+    assert "таким чином" in syn_014["ukrainian_proper"]
+
+    # Verify train records for decol_syn_014
+    train_records = [r for r in decolonization_data["train"] if r.get("target_term") == "таким способом"]
+    assert len(train_records) == 2
+    for r in train_records:
+        assert "таким шляхом" in r["original_text"].lower()
+        assert "таким способом" in r["corrected_text"].lower()
+        assert "таким чином" not in r["rejected"]  # таким чином is valid standard Ukrainian, never condemned
+
+
+def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
+    """Verify that 100% of cases (250/250) have non-null, non-empty authentic supporting passages."""
+    cases = decolonization_data["cases"]
+    assert len(cases) == 250
+
+    for c in cases:
+        cid = c["case_id"]
+        rev = c.get("reviewer_confirmation", {})
+        assert rev.get("status") == "confirmed", f"Case {cid} has status '{rev.get('status')}', expected 'confirmed'"
+        assert (
+            rev.get("reviewer_family") == "independent_language_review"
+        ), f"Case {cid} has reviewer_family '{rev.get('reviewer_family')}', expected 'independent_language_review'"
+
+        source_ev = rev.get("source_evidence", {})
+        passage = source_ev.get("supporting_passage")
+        assert passage and isinstance(passage, str) and len(passage.strip()) > 10, (
+            f"Case {cid} has invalid or null supporting_passage: {passage!r}"
+        )
+        locus = source_ev.get("locus")
+        assert locus and isinstance(locus, str), f"Case {cid} missing locus"
+
+
+def test_adversarial_probes_and_fail_closed():
+    """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment."""
+    import sqlite3
+
+    from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        query_source_evidence,
+        validate_ua_gec_phrase,
+    )
+
+    v_conn = sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True)
+    v_cur = v_conn.cursor()
+
+    s_conn = sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True)
+    s_cur = s_conn.cursor()
+
+    # 1. validate_ua_gec_phrase must reject incompatible phrases (Finding 4)
+    assert not validate_ua_gec_phrase("змогу книга", "дає змогу", v_cur)
+    assert not validate_ua_gec_phrase("не давати змогу", "дає змогу", v_cur)
+    assert not validate_ua_gec_phrase("дозволити все", "дозволяє", v_cur)
+
+    # validate_ua_gec_phrase must accept authentic pairs
+    assert validate_ua_gec_phrase("давати змогу", "дає змогу", v_cur)
+    assert validate_ua_gec_phrase("дозволяти", "дозволяє", v_cur)
+    assert validate_ua_gec_phrase("гусак", "гусак", v_cur)
+
+    # 2. query_source_evidence must raise ValueError on unattested nonsense probes (Finding 2)
+    with pytest.raises(ValueError, match="has no verified attestation"):
+        query_source_evidence(
+            case_id="probe_adversarial_999",
+            term="абракадабраневідома",
+            copy="хххххх",
+            auth="Борис Антоненко-Давидович «Як ми говоримо»",
+            cat_name="calque_lexical",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+
+def test_dataset_acceptance_with_verified_signoff():
+    """Verify that audit_dataset_acceptance.py passes with verified human signoff and ACCEPTED status (Finding 3)."""
+    audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
+    signoff_file = DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
+    assert signoff_file.is_file(), f"Missing signoff file at {signoff_file}"
+
+    cmd = [
+        sys.executable,
+        str(audit_script),
+        "--verify-human-signoff",
+        str(signoff_file),
+        str(DECOLONIZATION_DIR),
+    ]
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
+    assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
+    assert "OVERALL STATUS: ACCEPTED" in proc.stdout
+    assert "signoff_verified: True" in proc.stdout

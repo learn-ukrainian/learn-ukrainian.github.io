@@ -45,13 +45,13 @@ from scripts.rag.config import VESUM_DB_PATH
 
 def _resolve_db_path(filename: str, project_root: Path) -> Path:
     direct = Path(os.environ.get(f"{filename.upper().replace('.', '_')}_PATH", project_root / "data" / filename))
-    if direct.is_file():
+    if direct.is_file() and direct.stat().st_size > 0:
         return direct
     try:
         from scripts.guardrails.worktree_containment import resolve_main_root
 
         primary = resolve_main_root(project_root) / "data" / filename
-        if primary.is_file():
+        if primary.is_file() and primary.stat().st_size > 0:
             return primary
     except Exception:
         pass

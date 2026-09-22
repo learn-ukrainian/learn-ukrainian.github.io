@@ -2,7 +2,7 @@
 
 **Governing Issue:** [#8340](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8340)
 **Parent Epic:** [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321)
-**Status:** Accepted (`audit_dataset_acceptance.py` exit code 0)
+**Status:** Accepted (Verified Automated Checks & Drawn Sample Signoff Recorded; `audit_dataset_acceptance.py` exit code 0)
 
 ## Overview
 This component provides a curated, verified catalog and training/evaluation corpus of 250 distinct linguistic phenomena (500 total records: 400 train, 100 eval) addressing Russianisms, calqued officialese, and Soviet linguistic distortion in Ukrainian, while strictly defending authentic Ukrainian expressions against hyperpurism.

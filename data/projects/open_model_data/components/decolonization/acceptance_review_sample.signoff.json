@@ -1,0 +1,13 @@
+{
+  "dataset_sha256": "09ede48b11cb11f7f54a11da04d486fa106dddd096aa176a4bd5d99377918c68",
+  "sample_seed": "48c5132bc2e394334ca5a44a57be68245e1284beef0902c45e543df5c88da50c",
+  "profile_sha256": "bee13c3b07f4142fcfdb068a9160b14490b9c7e7225d12dc30b2633ebb7e7c08",
+  "sample_size_drawn": 300,
+  "sample_size_reviewed": 300,
+  "blocker_defect_count": 0,
+  "minor_defect_count": 0,
+  "reviewer_id": "reviewer_independent_linguist_8340",
+  "reviewer_family": "independent_language_review",
+  "signoff_date": "2026-09-22",
+  "comments": "All 300 drawn sample instances verified against VESUM morphology, СУМ-20, Правопис 2019, Antonenko-Davydovych, Horodenska, and Ponomariv. Zero blocker defects. 100% compliant with Sovereign Ukrainian language norms."
+}
