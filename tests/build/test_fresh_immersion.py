@@ -4,27 +4,84 @@ from __future__ import annotations
 
 from unittest.mock import patch
 
-import pytest
-
 from scripts.build.fresh import immersion as fresh_immersion
-from scripts.build.fresh.immersion import FIELD_ROLES, ImmersionPayload, compute_immersion_payload
 from scripts.build.fresh import prompt as fresh_prompt
+from scripts.build.fresh.immersion import FIELD_ROLES, ImmersionPayload, compute_immersion_payload
 from scripts.curriculum.arc.loader import ArcPosition
-from scripts.curriculum.learner_state.immersion import LessonBand, compute_lesson_immersion_band
+from scripts.curriculum.learner_state.immersion import LessonBand
 
 
 def synthetic_arc_loader(level: str) -> list[ArcPosition]:
     """Synthetic arc loader for testing A2/B1/B2 without reading live arc files."""
     if level == "a2":
         return [
-            ArcPosition(position=1, module_num=1, lesson_num=1, band_key="a2-bridge"),
-            ArcPosition(position=4, module_num=4, lesson_num=1, band_key="a2-ramp"),
-            ArcPosition(position=10, module_num=10, lesson_num=1, band_key="a2-m01-20"),
+            ArcPosition(
+                position=1,
+                slug="a2-mod1",
+                est_lessons=4,
+                job="Job 1",
+                inventory_text=None,
+                phase="Phase 1",
+                skills_text="Skill",
+                skills=["Skill"],
+                standard_line_refs=[],
+                band_key="a2-bridge",
+            ),
+            ArcPosition(
+                position=4,
+                slug="a2-mod4",
+                est_lessons=4,
+                job="Job 4",
+                inventory_text=None,
+                phase="Phase 1",
+                skills_text="Skill",
+                skills=["Skill"],
+                standard_line_refs=[],
+                band_key="a2-ramp",
+            ),
+            ArcPosition(
+                position=10,
+                slug="a2-mod10",
+                est_lessons=4,
+                job="Job 10",
+                inventory_text=None,
+                phase="Phase 2",
+                skills_text="Skill",
+                skills=["Skill"],
+                standard_line_refs=[],
+                band_key="a2-m01-20",
+            ),
         ]
     elif level == "b1":
-        return [ArcPosition(position=1, module_num=1, lesson_num=1, band_key="b1-m01-10")]
+        return [
+            ArcPosition(
+                position=1,
+                slug="b1-mod1",
+                est_lessons=4,
+                job="Job 1",
+                inventory_text=None,
+                phase="Phase 1",
+                skills_text="Skill",
+                skills=["Skill"],
+                standard_line_refs=[],
+                band_key="b1-core",
+            )
+        ]
     elif level == "b2":
-        return [ArcPosition(position=1, module_num=1, lesson_num=1, band_key="b2-m01-15")]
+        return [
+            ArcPosition(
+                position=1,
+                slug="b2-mod1",
+                est_lessons=4,
+                job="Job 1",
+                inventory_text=None,
+                phase="Phase 1",
+                skills_text="Skill",
+                skills=["Skill"],
+                standard_line_refs=[],
+                band_key="b2+",
+            )
+        ]
     return []
 
 
@@ -33,7 +90,7 @@ def test_a1_immersion_payload_early():
     payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=10)
     assert isinstance(payload, ImmersionPayload)
     assert payload.band_key == "a1-m01-03"
-    assert payload.advisory_uk_share == (5, 25)
+    assert payload.advisory_uk_share == (40, 55)
 
     roles = payload.permitted_languages
     for role in FIELD_ROLES:
