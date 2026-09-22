@@ -1504,12 +1504,61 @@ _REVIEW_ENV_KEYS = (
     "LU_REVIEW_LEDGER_PATH",
 )
 
+_HTTP_MODE = False
+_HTTP_RECORDING_ERROR_LOGGED = False
+
+
+def _set_http_mode(enabled: bool = True) -> None:
+    global _HTTP_MODE, _HTTP_RECORDING_ERROR_LOGGED
+    _HTTP_MODE = enabled
+    if not enabled:
+        _HTTP_RECORDING_ERROR_LOGGED = False
+
+
+def _detect_git_commit() -> str:
+    try:
+        import subprocess
+
+        res = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            capture_output=True,
+            text=True,
+            cwd=str(PROJECT_ROOT),
+            timeout=2,
+        )
+        if res.returncode == 0 and res.stdout.strip():
+            return res.stdout.strip()
+    except Exception:
+        pass
+    return "unknown"
+
+
+_SERVER_GIT_COMMIT: str = _detect_git_commit()
+
+
+def _review_server_version() -> str:
+    server_sha = _sha256_of_file(Path(__file__).resolve())
+    return f"{server_sha}+{_SERVER_GIT_COMMIT}"
+
 
 def _review_env_engaged() -> bool:
     """True when the dispatch set any review-recording variable on this process."""
     import os
 
-    return any(os.environ.get(key) for key in _REVIEW_ENV_KEYS)
+    has_env = any(os.environ.get(key) for key in _REVIEW_ENV_KEYS)
+    if not has_env:
+        return False
+    if _HTTP_MODE:
+        global _HTTP_RECORDING_ERROR_LOGGED
+        if not _HTTP_RECORDING_ERROR_LOGGED:
+            import logging
+
+            logging.getLogger("sources_server").error(
+                "Review recording is disabled in standalone/HTTP mode; ignoring LU_REVIEW_* variables."
+            )
+            _HTTP_RECORDING_ERROR_LOGGED = True
+        return False
+    return True
 
 
 def _review_recorder():
@@ -1543,8 +1592,8 @@ def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextConte
 
 def _review_record(
     recorder: Any, name: str, arguments: dict[str, Any], content: list[TextContent], *, status: str
-) -> list[TextContent]:
-    """Append the full tool result and return that result plus a receipt line."""
+) -> tuple[list[TextContent], bool]:
+    """Append the full tool result and return (content, recording_error)."""
     from scripts.review.receipts.ledger import freeze_arguments
 
     try:
@@ -1553,14 +1602,14 @@ def _review_record(
             arguments=freeze_arguments(arguments),
             status=status,
             result=_review_result_text(content),
-            server_version=_sha256_of_file(Path(__file__).resolve()),
+            server_version=_review_server_version(),
         )
     except Exception as exc:
-        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")]
-    return _with_receipt(content, receipt_id)
+        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True
+    return _with_receipt(content, receipt_id), False
 
 
-def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> list[TextContent] | None:
+def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool] | None:
     """Refuse a call that must not run. None means the handler may run."""
     if recorder is None:
         return None
@@ -1568,11 +1617,13 @@ def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) 
 
     if recorder.mode != "on":
         text = f"Review receipt recording is misconfigured: {recorder.error}"
-        return [TextContent(type="text", text=text)]
+        return [TextContent(type="text", text=text)], True
     if name not in REVIEW_TOOLS:
         text = f"Tool {name} is not in the review tool list."
-        return _review_record(recorder, name, arguments, [TextContent(type="text", text=text)], status="refused")
+        content, _rec_err = _review_record(recorder, name, arguments, [TextContent(type="text", text=text)], status="refused")
+        return content, True
     return None
+
 
 
 async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
@@ -1594,7 +1645,8 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
     review_arguments = arguments if isinstance(arguments, dict) else {}
     refused = _review_before_handler(recorder, name, review_arguments)
     if refused is not None:
-        return refused, True, None
+        content, is_err = refused
+        return content, is_err, None
     try:
         # Dispatch to handler
         _handlers = {
@@ -1663,15 +1715,18 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
         if recorder is not None and recorder.mode == "on":
-            result = _review_record(recorder, name, review_arguments, result, status="ok")
+            result, rec_err = _review_record(recorder, name, review_arguments, result, status="ok")
+            if rec_err:
+                return result, True, None
         return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
-            content = _review_record(recorder, name, review_arguments, content, status="error")
+            content, _rec_err = _review_record(recorder, name, review_arguments, content, status="error")
         return content, True, None
+
 
 
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
@@ -3140,6 +3195,7 @@ def create_http_app():
     are rejected with 405 so Streamable HTTP clients do not hang on an empty
     SSE notification stream.
     """
+    _set_http_mode(True)
     from starlette.responses import Response
     from starlette.routing import Route
 
@@ -3185,6 +3241,7 @@ def create_http_app():
 
 async def main_sse(host: str = "127.0.0.1", port: int = 8766):
     """Run the MCP sources server as a standalone Streamable HTTP daemon."""
+    _set_http_mode(True)
     import uvicorn
 
     # Verify SQLite sources database exists
@@ -3211,6 +3268,7 @@ async def main_sse(host: str = "127.0.0.1", port: int = 8766):
 
 if __name__ == "__main__":
     if "--standalone" in sys.argv:
+        _set_http_mode(True)
         host = "127.0.0.1"
         port = 8766
         for i, arg in enumerate(sys.argv):
@@ -3219,5 +3277,6 @@ if __name__ == "__main__":
             elif arg == "--port" and i + 1 < len(sys.argv):
                 port = int(sys.argv[i + 1])
         asyncio.run(main_sse(host=host, port=port))
+
     else:
         asyncio.run(main_stdio())

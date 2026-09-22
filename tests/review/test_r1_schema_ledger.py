@@ -617,8 +617,8 @@ def test_server_records_full_result_and_refuses_other_tools(
     assert len(stored["result"]) == 600
     assert stored["status"] == "ok"
     assert stored["tool"] == "verify_words"
-    assert stored["arguments"] == {"words": ["placeholder"]}
-    assert len(stored["server_version"]) == 64
+    assert stored["server_version"].startswith(server_module._sha256_of_file(SERVER_PATH))
+    assert "+" in stored["server_version"]
 
     called = {"yes": False}
 
@@ -903,3 +903,79 @@ def test_positive_evidence_requires_ok_status_and_review_tool(tmp_path: Path) ->
     )
     good_val = _validate(good_paths)
     assert good_val.ok
+
+
+def test_recording_failure_returns_error_and_drops_typed_result(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import CallToolRequestParams, TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+
+    async def fake_verify_words(_arguments):
+        content = [TextContent(type="text", text="Batch verification: 1 words\nFound: 1/1\n- слово — FOUND")]
+        typed_outcome = {"disposition": "found", "hits": 1}
+        return content, typed_outcome
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
+
+    def boom(*_a, **_kw):
+        raise OSError("simulated disk failure")
+
+    monkeypatch.setattr(
+        "scripts.review.receipts.ledger.ReviewSession.record",
+        boom,
+    )
+
+    params = CallToolRequestParams(name="verify_words", arguments={"words": ["слово"]})
+    res = _run(server_module._on_call_tool(None, params))
+    assert res.is_error is True
+    assert res.structured_content is None
+    assert "Review receipt recording failed: OSError" in res.content[0].text
+
+
+def test_http_mode_refuses_recording(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    import logging
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    server_module._set_http_mode(True)
+    try:
+        with caplog.at_level(logging.ERROR, logger="sources_server"):
+            # Review env should be reported as not engaged
+            assert server_module._review_env_engaged() is False
+            # Verify the error was logged
+            assert any(
+                "Review recording is disabled in standalone/HTTP mode" in record.message
+                for record in caplog.records
+            )
+            # Second call should not log another error (logged once)
+            record_count = len(caplog.records)
+            assert server_module._review_env_engaged() is False
+            assert len(caplog.records) == record_count
+
+            # Running a review tool behaves as with recording off (no receipt appended)
+            res = _run(server_module.call_tool("verify_words", {"words": ["слово"]}))
+            assert not any("receipt: " in t.text for t in res)
+            assert not ledger.exists()
+    finally:
+        server_module._set_http_mode(False)
+
+
+def test_review_server_version_format(server_module) -> None:
+    version = server_module._review_server_version()
+    assert "+" in version
+    sha, commit = version.split("+", 1)
+    assert len(sha) == 64
+    assert len(commit) >= 7 or commit == "unknown"
+
+
+def test_detect_git_commit_fallback(server_module, monkeypatch: pytest.MonkeyPatch) -> None:
+    def fake_run(*_a, **_kw):
+        raise OSError("no git")
+
+    monkeypatch.setattr(subprocess, "run", fake_run)
+    assert server_module._detect_git_commit() == "unknown"
