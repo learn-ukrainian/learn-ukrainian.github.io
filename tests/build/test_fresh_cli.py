@@ -193,7 +193,6 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
         "texts": [
             {
                 "id": "T-001",
-                "kind": "culture",
                 "source": {
                     "kind": "textbook",
                     "file": "f.txt",
@@ -211,7 +210,6 @@ def _build_synthetic_tree(root: Path) -> dict[str, Path]:
         "examples": [
             {
                 "id": "EX-001",
-                "kind": "example",
                 "text": "Example text",
                 "source": {
                     "kind": "textbook",

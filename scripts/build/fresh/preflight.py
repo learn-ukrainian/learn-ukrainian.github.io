@@ -30,12 +30,13 @@ from scripts.curriculum.resolver.narrow import FormIndex
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
-_NEED_KIND_MAP: dict[str, tuple[str, str]] = {
-    "example": ("EX-", "example"),
-    "quote": ("T-", "quote"),
-    "culture": ("T-", "culture"),
-    "error": ("E-", "error"),
-    "video": ("V-", "video"),
+# Need -> pack record list name (schemas/evidence-pack-v1.schema.json, #8431 §4, MAJOR A)
+_NEED_TO_PACK_LIST: dict[str, str] = {
+    "example": "examples",
+    "error": "errors",
+    "video": "videos",
+    "quote": "texts",
+    "culture": "texts",
 }
 
 
@@ -103,6 +104,9 @@ def preflight_lesson(
     pack_lock_sha256: str | None = None,
     words_lock_sha256: str | None = None,
     learner_state: Any = None,
+    repo_root: Path | None = None,
+    plans_dir: Path | None = None,
+    evidence_dir: Path | None = None,
 ) -> PreflightResult:
     """Run preflight checks for one lesson entry.
 
@@ -128,7 +132,16 @@ def preflight_lesson(
             gaps.append(Gap(step=first_step_id, need="words_lock", detail=f"words lock mismatch for {words_path}"))
 
     if level is not None and slug is not None:
-        ok, diff = lesson_lock.check_lesson_lock(level, slug)
+        resolved_repo_root = repo_root or REPO_ROOT
+        resolved_plans_dir = plans_dir
+        resolved_evidence_dir = evidence_dir or (pack_path.parent if pack_path is not None else None)
+        ok, diff = lesson_lock.check_lesson_lock(
+            level,
+            slug,
+            plans_dir=resolved_plans_dir,
+            evidence_dir=resolved_evidence_dir,
+            repo_root=resolved_repo_root,
+        )
         if not ok:
             gaps.append(
                 Gap(
@@ -144,13 +157,16 @@ def preflight_lesson(
     if word_store is None and words_path is None:
         gaps.append(Gap(step=first_step_id, need="words_missing", detail="word store dictionary not provided"))
 
-    # 2. Index pack records
+    # 2. Index pack records and their containing lists
     pack_records: dict[str, dict[str, Any]] = {}
+    record_list_map: dict[str, str] = {}
     if pack is not None:
         for list_name in pack_module.PACK_RECORD_LISTS:
             for rec in pack.get(list_name) or []:
                 if isinstance(rec, dict) and "id" in rec:
-                    pack_records[rec["id"]] = rec
+                    rid = rec["id"]
+                    pack_records[rid] = rec
+                    record_list_map[rid] = list_name
 
     # 3. Index word store records
     store_records: dict[str, dict[str, Any]] = {}
@@ -159,7 +175,7 @@ def preflight_lesson(
             if isinstance(rec, dict) and "id" in rec:
                 store_records[rec["id"]] = rec
 
-    # 4. Check step needs by record kind and existence
+    # 4. Check step needs by record kind (containing pack list) and existence
     for step in steps:
         step_id = step.get("id", "")
         needs = step.get("needs") or []
@@ -167,35 +183,60 @@ def preflight_lesson(
         step_ref = step.get("ref")
         step_explains = step.get("explains") or []
 
-        cited_ids = set(step_evidence) | set(step_explains)
-        if step_ref:
-            cited_ids.add(step_ref)
+        all_step_citations: list[str] = list(step_evidence) + list(step_explains)
+        if step_ref and step_ref not in all_step_citations:
+            all_step_citations.append(step_ref)
 
         for need in needs:
-            if need in _NEED_KIND_MAP:
-                id_prefix, expected_kind = _NEED_KIND_MAP[need]
-                matching_ids = [i for i in cited_ids if i.startswith(id_prefix)]
+            if need in _NEED_TO_PACK_LIST:
+                expected_list = _NEED_TO_PACK_LIST[need]
 
+                citation_candidates = list(all_step_citations)
                 # For error need, also inspect step activities error_refs
                 if need == "error":
                     step_activities = step.get("practice") or []
                     for act in plan_entry.get("activities", []):
                         if act.get("id") in step_activities:
                             for eref in act.get("error_refs") or []:
-                                if eref.startswith(id_prefix):
-                                    matching_ids.append(eref)
+                                if eref not in citation_candidates:
+                                    citation_candidates.append(eref)
 
-                if not matching_ids:
-                    gaps.append(
-                        Gap(
-                            step=step_id,
-                            need=need,
-                            detail=f"step {step_id} needs {need} but cites no {id_prefix} record",
-                        )
-                    )
+                matching_records = [
+                    rid for rid in citation_candidates if record_list_map.get(rid) == expected_list
+                ]
+
+                if matching_records:
+                    # Finding 2: Until WP 21 lands, a quote need is ALWAYS a publication_right gap
+                    if need == "quote":
+                        for rid in matching_records:
+                            gaps.append(
+                                Gap(
+                                    step=step_id,
+                                    need="publication_right",
+                                    detail=f"source for quote {rid} in step {step_id} lacks verified publication right (WP 21 pending)",
+                                )
+                            )
                 else:
-                    for rid in matching_ids:
-                        if rid not in pack_records:
+                    # No record found in expected_list
+                    mismatched = [
+                        rid
+                        for rid in citation_candidates
+                        if rid in pack_records and record_list_map.get(rid) != expected_list
+                    ]
+                    missing = [rid for rid in citation_candidates if rid not in pack_records]
+
+                    if mismatched:
+                        for rid in mismatched:
+                            actual_list = record_list_map[rid]
+                            gaps.append(
+                                Gap(
+                                    step=step_id,
+                                    need=need,
+                                    detail=f"record {rid} cited for {need} found in list '{actual_list}', expected '{expected_list}'",
+                                )
+                            )
+                    elif missing:
+                        for rid in missing:
                             gaps.append(
                                 Gap(
                                     step=step_id,
@@ -203,28 +244,14 @@ def preflight_lesson(
                                     detail=f"{need} record {rid} missing from pack",
                                 )
                             )
-                        else:
-                            rec = pack_records[rid]
-                            rec_kind = rec.get("kind")
-                            if rec_kind is not None and rec_kind != expected_kind:
-                                gaps.append(
-                                    Gap(
-                                        step=step_id,
-                                        need=need,
-                                        detail=f"record {rid} cited for {need} has kind {rec_kind!r}, expected {expected_kind!r}",
-                                    )
-                                )
-
-                            # Finding 2: Until WP 21 lands, a quote need is ALWAYS a publication_right gap,
-                            # whatever the pack record says. No publish.allowed branch.
-                            if need == "quote":
-                                gaps.append(
-                                    Gap(
-                                        step=step_id,
-                                        need="publication_right",
-                                        detail=f"source for quote {rid} in step {step_id} lacks verified publication right (WP 21 pending)",
-                                    )
-                                )
+                    else:
+                        gaps.append(
+                            Gap(
+                                step=step_id,
+                                need=need,
+                                detail=f"step {step_id} needs {need} but cites no record",
+                            )
+                        )
 
             elif need == "paradigm":
                 paradigm = step.get("paradigm")
@@ -322,7 +349,7 @@ def preflight_lesson(
 
         constructed_allowlist = Allowlist.from_records(
             filtered_words,
-            words_lock=words_lock_sha256 or "dummy",
+            words_lock=words_lock_sha256,
             label="preflight",
         )
         homographs = compute_homographs(constructed_allowlist)

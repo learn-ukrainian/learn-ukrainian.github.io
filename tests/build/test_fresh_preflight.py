@@ -1,14 +1,17 @@
 """Tests for fresh build engine Part E2 preflight verification and gap reports (#8431 §4, §7 row 0)."""
 
-from __future__ import annotations
-
+import json
 import stat
+from pathlib import Path
 
 import pytest
 import yaml
+from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.curriculum.evidence import lock
+
+REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
 @pytest.fixture
@@ -43,41 +46,85 @@ def clean_word_store():
 @pytest.fixture
 def clean_pack():
     return {
+        "evidence_schema": 1,
+        "module": "a1/clean-mod",
+        "built_with": {
+            "mcp_commit": "0" * 40,
+            "sources_db": "0" * 64,
+            "vesum": "0" * 64,
+            "trie": "0" * 64,
+            "ulif_forms": "0" * 64,
+            "standard_sha256": "0" * 64,
+        },
         "texts": [
             {
                 "id": "T-001",
-                "kind": "culture",
-                "source": {"table": "textbooks", "chunk_id": "c1"},
-                "text": "attested culture text",
+                "source": {
+                    "kind": "textbook",
+                    "file": "f.txt",
+                    "grade": 1,
+                    "author": "Author",
+                    "section_id": 1,
+                    "page": 1,
+                    "chunk_id": "c1",
+                },
+                "quote": "attested culture text",
+                "sha256": "0" * 64,
+                "supports": "Culture point",
             },
             {
                 "id": "T-002",
-                "kind": "quote",
-                "source": {"table": "textbooks", "chunk_id": "c2"},
-                "text": "attested quote text",
+                "source": {
+                    "kind": "textbook",
+                    "file": "f.txt",
+                    "grade": 1,
+                    "author": "Author",
+                    "section_id": 1,
+                    "page": 1,
+                    "chunk_id": "c2",
+                },
+                "quote": "attested quote text",
+                "sha256": "0" * 64,
+                "supports": "Quote point",
             },
         ],
         "examples": [
             {
                 "id": "EX-001",
-                "kind": "example",
-                "source": {"table": "textbooks", "chunk_id": "c3"},
-                "example": "attested example",
+                "source": {
+                    "kind": "textbook",
+                    "file": "f.txt",
+                    "grade": 1,
+                    "author": "Author",
+                    "section_id": 1,
+                    "page": 1,
+                    "chunk_id": "c3",
+                },
+                "text": "attested example",
+                "sha256": "0" * 64,
+                "sentence_ref": {"words": ["W-001"]},
             }
         ],
         "errors": [
             {
                 "id": "E-001",
-                "kind": "error",
+                "source": {
+                    "table": "ua_gec_errors",
+                    "id": 1,
+                },
                 "incorrect": "bad",
                 "correct": "good",
+                "error_type": "grammar",
+                "pattern": "pattern",
             }
         ],
         "videos": [
             {
                 "id": "V-001",
-                "kind": "video",
                 "url": "https://example.com/v1",
+                "channel": "Channel",
+                "use": "intro",
+                "checked": None,
             }
         ],
     }
@@ -122,7 +169,6 @@ def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word
         "texts": [
             {
                 "id": "T-002",
-                "kind": "quote",
                 "source": {
                     "table": "textbooks",
                     "chunk_id": "c2",
@@ -142,24 +188,35 @@ def test_preflight_quote_with_publish_allowed_true_still_produces_gap(clean_word
 
 
 def test_preflight_record_kind_mismatch_fails(clean_word_store, clean_pack):
-    """Finding 3: record kind must match _NEED_KIND_MAP (e.g. quote cannot be satisfied by culture record)."""
-    # T-001 has kind 'culture'; step needs 'quote'
-    plan_entry_quote_mismatch = {
-        "steps": [{"id": "s1", "needs": ["quote"], "explains": ["T-001"]}],
+    """Finding 3 / MAJOR A: A record found in a list that does not match the need fails as a kind gap."""
+    # First verify clean_pack is valid against evidence-pack-v1 schema
+    schema = json.loads((REPO_ROOT / "schemas/evidence-pack-v1.schema.json").read_text(encoding="utf-8"))
+    validator = Draft202012Validator(schema)
+    assert validator.is_valid(clean_pack), "clean_pack fixture must validate against evidence-pack-v1 schema"
+
+    # 1. Step needs 'example' (expected list: 'examples'), but cites T-001 (found in 'texts')
+    plan_entry_example_mismatch = {
+        "steps": [{"id": "s1", "needs": ["example"], "evidence": ["T-001"]}],
         "inventory": {"vocabulary": {"core": []}},
     }
-    res1 = preflight_lesson(plan_entry_quote_mismatch, pack=clean_pack, word_store=clean_word_store)
+    res1 = preflight_lesson(plan_entry_example_mismatch, pack=clean_pack, word_store=clean_word_store)
     assert res1.passed is False
-    assert any("kind 'culture', expected 'quote'" in g.detail for g in res1.gaps)
+    assert any(
+        g.need == "example" and "found in list 'texts'" in g.detail and "expected 'examples'" in g.detail
+        for g in res1.gaps
+    )
 
-    # T-002 has kind 'quote'; step needs 'culture'
+    # 2. Step needs 'culture' (expected list: 'texts'), but cites EX-001 (found in 'examples')
     plan_entry_culture_mismatch = {
-        "steps": [{"id": "s1", "needs": ["culture"], "explains": ["T-002"]}],
+        "steps": [{"id": "s1", "needs": ["culture"], "explains": ["EX-001"]}],
         "inventory": {"vocabulary": {"core": []}},
     }
     res2 = preflight_lesson(plan_entry_culture_mismatch, pack=clean_pack, word_store=clean_word_store)
     assert res2.passed is False
-    assert any("kind 'quote', expected 'culture'" in g.detail for g in res2.gaps)
+    assert any(
+        g.need == "culture" and "found in list 'examples'" in g.detail and "expected 'texts'" in g.detail
+        for g in res2.gaps
+    )
 
 
 def test_preflight_missing_pack_or_words_fails_closed(clean_word_store, clean_pack):
