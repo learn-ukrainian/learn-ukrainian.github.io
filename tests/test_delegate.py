@@ -6358,6 +6358,10 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         prompt_text="Discuss Wikipedia articles without path refs.",
     )
+    assert delegate._infer_sparse_include(
+        None,
+        prompt_text="Read data/lexicon/source-inventory/one.yaml.",
+    ) == ("data",)
 
 
 def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
@@ -6371,7 +6375,8 @@ def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
     meta = delegate._apply_dispatch_sparse_checkout(tmp_path, full_checkout=True)
     assert meta["full_checkout"] is True
     assert meta["applied"] is True
-    assert calls == [["git", "sparse-checkout", "disable"]]
+    assert calls[0] == ["git", "sparse-checkout", "disable"]
+    assert calls[-1] == ["git", "checkout", "HEAD", "--", "data"]
 
 
 def test_apply_dispatch_sparse_checkout_include_curriculum(tmp_path, monkeypatch):
@@ -6407,6 +6412,33 @@ def test_ensure_worktree_full_checkout_disables_sparse(tmp_tasks_dir, tmp_path, 
     sparse_calls = [c for c in calls if c[:2] == ["git", "sparse-checkout"]]
     assert sparse_calls == [["git", "sparse-checkout", "disable"]]
     assert telemetry["sparse"]["full_checkout"] is True
+
+
+def test_link_shared_data_tree_replaces_db_symlinks(tmp_path, monkeypatch):
+    main = tmp_path / "main"
+    (main / "data").mkdir(parents=True)
+    (main / "data" / "vesum.db").write_text("db", encoding="utf-8")
+    worktree = tmp_path / "wt"
+    (worktree / "data").mkdir(parents=True)
+    (worktree / "data" / "vesum.db").symlink_to(main / "data" / "vesum.db")
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+
+    delegate._link_shared_data_tree(worktree, main)
+
+    link = worktree / "data"
+    assert link.is_symlink()
+    assert link.resolve() == (main / "data").resolve()
+
+
+def test_augment_prompt_says_data_comes_from_main():
+    text = delegate._augment_prompt_with_worktree(
+        "do work",
+        Path("/tmp/wt"),
+        sparse_telemetry={"full_checkout": False, "excluded": ["curriculum", "data", "wiki"]},
+    )
+    assert "primary checkout's data" in text
+    assert "curriculum" in text
+    assert "wiki" in text
 
 
 def test_augment_prompt_mentions_sparse_exclusions():
@@ -7801,7 +7833,7 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
     assert not any(c[:2] == ["git", "rebase"] for c in calls), "branch-reuse dry-run must never rebase"
 
 
-def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
+def test_apply_dispatch_sparse_checkout_real_git(tmp_path, monkeypatch):
     """Integration: cone sparse excludes curriculum/wiki without touching primary."""
     import os
     import subprocess
@@ -7839,7 +7871,7 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     git("init", "-b", "main")
     git("config", "user.email", "test@example.com")
     git("config", "user.name", "Test")
-    for name in ("curriculum", "wiki", "scripts", "docs"):
+    for name in ("curriculum", "wiki", "scripts", "docs", "data"):
         d = primary / name
         d.mkdir()
         (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
@@ -7851,11 +7883,16 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     git("worktree", "add", str(worktree), "HEAD")
     assert (worktree / "curriculum" / "f.txt").is_file()
 
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary)
     meta = delegate._apply_dispatch_sparse_checkout(worktree)
     assert meta["applied"] is True
-    assert meta["excluded"] == ["curriculum", "wiki"]
+    assert meta["excluded"] == ["curriculum", "data", "wiki"]
+    assert meta["data_from_main"] is True
     assert not (worktree / "curriculum").exists()
     assert not (worktree / "wiki").exists()
+    assert (worktree / "data").is_symlink()
+    assert (worktree / "data").resolve() == (primary / "data").resolve()
+    assert (worktree / "data" / "f.txt").read_text(encoding="utf-8") == "data\n"
     assert (worktree / "scripts" / "f.txt").is_file()
     assert (worktree / "README.md").is_file()
     # Primary must remain full.
@@ -7863,14 +7900,17 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
     assert (primary / "wiki" / "f.txt").is_file()
 
     meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum",))
-    assert meta2["excluded"] == ["wiki"]
+    assert meta2["excluded"] == ["data", "wiki"]
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert not (worktree / "wiki").exists()
+    assert (worktree / "data").is_symlink()
 
     meta3 = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=True)
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "wiki" / "f.txt").is_file()
+    assert (worktree / "data" / "f.txt").is_file()
+    assert not (worktree / "data").is_symlink()
 
 
 def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):

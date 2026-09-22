@@ -3977,10 +3977,11 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 
 
 # Default cone sparse-checkout exclusions for dispatch worktrees.
-# curriculum/ + wiki/ are ~300MB of the ~550MB full tree; most infra/code
-# dispatches never edit them. Content work opts back in with
-# --sparse-include curriculum (and/or wiki) or --full-checkout.
-_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset({"curriculum", "wiki"})
+# curriculum/ and wiki/ are lesson trees. data/ is one shared tree on the
+# primary checkout (~500MB of tracked lexicon and dataset files). Code and
+# review work reads that copy through a symlink instead of checking it out
+# again. Opt back in with --sparse-include or --full-checkout.
+_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset({"curriculum", "data", "wiki"})
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
@@ -4083,10 +4084,10 @@ def _apply_dispatch_sparse_checkout(
 ) -> dict[str, Any]:
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
-    Default profile excludes ``curriculum/`` and ``wiki/`` so each dispatch
-    stays ~200MB instead of ~550MB. ``--full-checkout`` disables sparse mode.
-    ``--sparse-include DIR`` keeps named top-level dirs that would otherwise
-    be excluded (e.g. ``curriculum`` for module content work).
+    Default profile excludes ``curriculum/``, ``wiki/``, and ``data/``.
+    ``data/`` is then linked to the primary checkout so workers read one
+    copy. ``--full-checkout`` disables sparse mode. ``--sparse-include DIR``
+    keeps a named top-level dir (a real checkout, not the shared link).
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -4120,7 +4121,10 @@ def _apply_dispatch_sparse_checkout(
             )
 
     if full_checkout:
+        _unlink_shared_data_link(worktree_path)
         proc = _run_git(["git", "sparse-checkout", "disable"])
+        if proc.returncode == 0:
+            _run_git(["git", "checkout", "HEAD", "--", "data"])
         if proc.returncode != 0:
             detail = (proc.stderr or proc.stdout or "sparse-checkout disable failed").strip()
             telemetry["error"] = detail
@@ -4146,6 +4150,9 @@ def _apply_dispatch_sparse_checkout(
         telemetry["applied"] = True
         return telemetry
 
+    if "data" not in exclude:
+        _unlink_shared_data_link(worktree_path)
+
     proc = _run_git(["git", "sparse-checkout", "init", "--cone"])
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "sparse-checkout init failed").strip()
@@ -4163,12 +4170,61 @@ def _apply_dispatch_sparse_checkout(
         )
 
     telemetry["applied"] = True
+    if "data" in excluded:
+        _link_shared_data_tree(worktree_path, _REPO_ROOT)
+        telemetry["data_from_main"] = True
     print(
         f"🌲 dispatch sparse-checkout: excluded {', '.join(excluded)} "
         f"in {worktree_path} (use --sparse-include / --full-checkout to keep them)",
         file=sys.stderr,
     )
     return telemetry
+
+
+def _unlink_shared_data_link(worktree_path: Path) -> None:
+    """Remove a shared data symlink so git can check out a real ``data`` tree."""
+    link = worktree_path / "data"
+    if link.is_symlink():
+        link.unlink()
+
+
+def _link_shared_data_tree(worktree_path: Path, main_repo_root: Path) -> None:
+    """Point ``worktree/data`` at the primary checkout's ``data`` directory.
+
+    Sparse-checkout has already dropped the tracked copy. Gitignored databases
+    live in that primary directory, so one symlink replaces both the tracked
+    tree and the per-file database links. A real ``data`` directory is left
+    alone: that is a checkout that opted back in, or it holds files this
+    helper did not create.
+    """
+    source = (main_repo_root / "data").resolve()
+    target = worktree_path / "data"
+    if worktree_path.resolve() == main_repo_root.resolve():
+        return
+    if not source.is_dir():
+        print(f"⚠️  skipping shared data link; missing {source}", file=sys.stderr)
+        return
+    if target.is_symlink():
+        if target.resolve() == source:
+            return
+        target.unlink()
+    elif target.exists():
+        leftovers = list(target.iterdir()) if target.is_dir() else None
+        shared = leftovers is not None and all(
+            item.is_symlink() and str(item.resolve()).startswith(str(source) + os.sep)
+            for item in leftovers
+        )
+        if leftovers and not shared:
+            print(
+                f"⚠️  leaving {target} in place; it is not the shared data link",
+                file=sys.stderr,
+            )
+            return
+        if target.is_dir():
+            target.rmdir() if not leftovers else shutil.rmtree(target)
+        else:
+            return
+    target.symlink_to(source)
 
 
 def _inspect_worktree_local_venv(worktree_path: Path) -> dict[str, str | bool | None]:
@@ -4527,12 +4583,22 @@ def _augment_prompt_with_worktree(
     if sparse_telemetry and not sparse_telemetry.get("full_checkout"):
         excluded = sparse_telemetry.get("excluded") or []
         if excluded:
-            sparse_note = (
-                "Sparse-checkout is active: these top-level trees are NOT present: "
-                + ", ".join(str(p) for p in excluded)
-                + ". If you need them, re-dispatch with --sparse-include <dir> "
-                "or --full-checkout (do not invent content for missing paths).\n"
-            )
+            missing = [str(p) for p in excluded if str(p) != "data"]
+            notes: list[str] = []
+            if "data" in {str(p) for p in excluded}:
+                notes.append(
+                    "data/ is the primary checkout's data directory, linked into "
+                    "this worktree. Read it there. It is not a private copy. "
+                    "Pass --sparse-include data before editing tracked files under data/.\n"
+                )
+            if missing:
+                notes.append(
+                    "Sparse-checkout is active: these top-level trees are NOT present: "
+                    + ", ".join(missing)
+                    + ". If you need them, re-dispatch with --sparse-include <dir> "
+                    "or --full-checkout (do not invent content for missing paths).\n"
+                )
+            sparse_note = "".join(notes)
     delivery_note = ""
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
