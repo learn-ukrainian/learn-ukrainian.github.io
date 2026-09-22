@@ -600,7 +600,12 @@ def test_resume_policy_bridge_only_rejects_delegate():
 
 
 def test_codex_adapter_mode_flags_read_only():
-    assert CodexAdapter._mode_flags("read-only") == ["-s", "read-only"]
+    assert CodexAdapter._mode_flags("read-only") == [
+        "-s",
+        "read-only",
+        "-c",
+        'mcp_servers.sources.default_tools_approval_mode="approve"',
+    ]
 
 
 def test_codex_adapter_mode_flags_workspace_write():
@@ -657,10 +662,13 @@ def test_codex_adapter_build_invocation_read_only(tmp_path):
     assert plan.stdin_payload == "hello"
     assert plan.output_file is not None
     assert "test-task" in plan.output_file.name
-    # tool_config=None: no MCP -c overrides; the lane-default
-    # model_reasoning_effort=low (operator 2026-09-04) is the only -c flag.
+    # Read-only keeps the lane-default effort and auto-approves the
+    # sources server so stdio MCP calls are not cancelled.
     config_values = [plan.cmd[index + 1] for index, token in enumerate(plan.cmd[:-1]) if token == "-c"]
-    assert config_values == ["model_reasoning_effort=low"]
+    assert config_values == [
+        "model_reasoning_effort=low",
+        'mcp_servers.sources.default_tools_approval_mode="approve"',
+    ]
     # Liveness paths should include the output file
     assert plan.output_file in plan.liveness_paths
 
