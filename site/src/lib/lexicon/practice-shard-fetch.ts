@@ -17,6 +17,7 @@ import type {
   PracticeStressItem,
   PracticeSynonymItem,
 } from "./srs";
+import practiceDeckPointer from "../../data/lexicon-practice-deck.pointer.json";
 
 export type ShardJsonCache = Map<string, Promise<unknown>>;
 
@@ -33,6 +34,27 @@ export const PRACTICE_DRILL_KINDS = [
 ] as const;
 
 export type PracticeDrillKind = (typeof PRACTICE_DRILL_KINDS)[number];
+
+export const PUBLISHED_PRACTICE_SHARDS: ReadonlySet<string> = new Set(
+  Array.isArray(practiceDeckPointer?.files)
+    ? practiceDeckPointer.files.map((f: { path: string }) => f.path)
+    : [],
+);
+
+let overridePublishedShards: ReadonlySet<string> | null = null;
+
+export function setPublishedPracticeShardsForTesting(
+  shards: ReadonlySet<string> | null,
+): void {
+  overridePublishedShards = shards;
+}
+
+export function isPracticeShardPublished(
+  filename: string,
+  publishedShards: ReadonlySet<string> = overridePublishedShards ?? PUBLISHED_PRACTICE_SHARDS,
+): boolean {
+  return publishedShards.has(filename);
+}
 
 export type PracticeDrillFields = {
   cloze: PracticeClozeItem[];
@@ -85,8 +107,15 @@ export function softSkipUnpublishedDrillShard(reason: unknown): Record<string, n
   throw reason;
 }
 
-export function practiceDrillShardUrls(shardBaseUrl: string, level: string): string[] {
-  return PRACTICE_DRILL_KINDS.map((kind) => `${shardBaseUrl}/practice-${kind}.${level}.json`);
+export function practiceDrillShardUrls(
+  shardBaseUrl: string,
+  level: string,
+  publishedOnly = false,
+  publishedShards: ReadonlySet<string> = overridePublishedShards ?? PUBLISHED_PRACTICE_SHARDS,
+): string[] {
+  return PRACTICE_DRILL_KINDS
+    .filter((kind) => !publishedOnly || isPracticeShardPublished(`practice-${kind}.${level}.json`, publishedShards))
+    .map((kind) => `${shardBaseUrl}/practice-${kind}.${level}.json`);
 }
 
 function itemsFromShard<T>(payload: unknown, key: PracticeDrillKind): T[] {
@@ -111,11 +140,17 @@ export async function fetchPracticeDrillFields(
   shardBaseUrl: string,
   level: string,
   cache: ShardJsonCache,
+  publishedShards: ReadonlySet<string> = overridePublishedShards ?? PUBLISHED_PRACTICE_SHARDS,
 ): Promise<PracticeDrillFields> {
   const results = await Promise.all(
-    practiceDrillShardUrls(shardBaseUrl, level).map((url) =>
-      getShardJson<unknown>(url, cache).catch(softSkipUnpublishedDrillShard),
-    ),
+    PRACTICE_DRILL_KINDS.map((kind) => {
+      const filename = `practice-${kind}.${level}.json`;
+      if (!isPracticeShardPublished(filename, publishedShards)) {
+        return Promise.resolve({});
+      }
+      const url = `${shardBaseUrl}/${filename}`;
+      return getShardJson<unknown>(url, cache).catch(softSkipUnpublishedDrillShard);
+    }),
   );
   return drillFieldsFromShardResults(results);
 }
