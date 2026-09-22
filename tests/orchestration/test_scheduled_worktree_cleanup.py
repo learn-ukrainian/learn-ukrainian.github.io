@@ -287,6 +287,90 @@ def test_scratch_review_branch_with_no_pr_is_deleted(
     assert _git(repo, "branch", "--list", branch) == ""
 
 
+def test_non_scratch_prefix_is_preserved(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "source-work")
+    (repo / "cf.txt").write_text("not scratch\n", encoding="utf-8")
+    _git(repo, "add", "cf.txt")
+    _git(repo, "commit", "-m", "local only")
+    _git(repo, "checkout", "main")
+    branch = "cf-unproven"
+    _git(repo, "branch", branch, "source-work")
+    _git(repo, "push", "origin", branch)
+    _git(repo, "branch", "--set-upstream-to", f"origin/{branch}", branch)
+    _git(repo, "push", "origin", "--delete", branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == branch)
+    assert row["action"] == "skipped"
+    assert _git(repo, "branch", "--list", branch) != ""
+
+
+def test_squash_parent_is_deleted_and_main_ancestor_is_not_called_contained(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    _git(repo, "checkout", "-b", "feature")
+    (repo / "parent.txt").write_text("parent\n", encoding="utf-8")
+    _git(repo, "add", "parent.txt")
+    _git(repo, "commit", "-m", "parent")
+    parent = _git(repo, "rev-parse", "HEAD")
+    (repo / "tip.txt").write_text("tip\n", encoding="utf-8")
+    _git(repo, "add", "tip.txt")
+    _git(repo, "commit", "-m", "tip")
+    tip = _git(repo, "rev-parse", "HEAD")
+    _git(repo, "checkout", "main")
+    contained = "codex/squash-parent"
+    _git(repo, "branch", contained, parent)
+    _git(repo, "push", "origin", contained)
+    _git(repo, "branch", "--set-upstream-to", f"origin/{contained}", contained)
+    _git(repo, "push", "origin", "--delete", contained)
+
+    base = _git(repo, "rev-parse", "main")
+    (repo / "later.txt").write_text("later\n", encoding="utf-8")
+    _git(repo, "add", "later.txt")
+    _git(repo, "commit", "-m", "later main")
+    _git(repo, "push", "origin", "main")
+    on_main = "codex/old-main"
+    _git(repo, "branch", on_main, base)
+    _git(repo, "push", "origin", on_main)
+    _git(repo, "branch", "--set-upstream-to", f"origin/{on_main}", on_main)
+    _git(repo, "push", "origin", "--delete", on_main)
+
+    def _prs(_repo: Path, candidate: str):
+        if candidate == contained:
+            return (
+                [cleanup.reap_worktrees.PullRequestState(number=7, state="MERGED", head_sha=tip)],
+                None,
+            )
+        if candidate == on_main:
+            return (
+                [cleanup.reap_worktrees.PullRequestState(number=8, state="MERGED", head_sha=tip)],
+                None,
+            )
+        return [], None
+
+    monkeypatch.setattr(cleanup.reap_worktrees, "_query_pr_states", _prs)
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+    by_branch = {item["branch"]: item for item in result}
+    assert by_branch[contained]["action"] == "deleted"
+    assert "contained in MERGED PR #7" in by_branch[contained]["reason"]
+    assert by_branch[on_main]["action"] == "deleted"
+    assert "ancestor of origin/main" in by_branch[on_main]["reason"]
+    assert "contained" not in by_branch[on_main]["reason"]
+
+
 def test_unproven_gone_branch_is_preserved(
     tmp_path: Path,
     monkeypatch,

@@ -173,14 +173,14 @@ def _branch_is_origin_main_ancestor(repo_root: Path, head_sha: str) -> bool:
 
 
 def _is_agent_scratch_branch(branch: str) -> bool:
-    """Local names agents create for a review round, a rescue, or a PR checkout.
+    """Names that are a review round, a rescue, or a ``pr-N`` checkout.
 
     These refs are not the pull request's head branch. ``gh pr list --head``
-    never sees them, so the exact-SHA rule kept every one of them.
+    never sees them, so the exact-SHA rule kept every one of them. The set is
+    the one named in the drive-epic closeout: ``*/review-*``, ``rescue/*``,
+    and ``pr-*``. A wider prefix list would force-delete unpushed work.
     """
-    if branch.startswith(("rescue/", "pr-", "cf-", "audit-pr-", "rebase-")):
-        return True
-    if branch.startswith("build/a1/"):
+    if branch.startswith(("rescue/", "pr-")):
         return True
     return branch.split("/")[-1].startswith("review-")
 
@@ -197,7 +197,13 @@ def _merged_pr_contains_head(
         if head_sha == pr.head_sha:
             return pr
         proc = _run_git(repo_root, "merge-base", "--is-ancestor", head_sha, pr.head_sha)
-        if proc.returncode == 0:
+        if proc.returncode != 0:
+            continue
+        # A commit already on main is an ancestor of every PR that branched
+        # after it. Return code 1 is "not an ancestor"; anything else is
+        # unreadable and must not delete the ref.
+        on_main = _run_git(repo_root, "merge-base", "--is-ancestor", head_sha, "origin/main")
+        if on_main.returncode == 1:
             return pr
     return None
 

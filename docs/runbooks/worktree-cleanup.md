@@ -255,14 +255,14 @@ Each run performs the following in both repository roots:
    head evidence (including same-tree squash siblings) or MERGED PR evidence with
    the origin branch gone, plus the terminal-dispatch
    class described above; open or GitHub-unknown PR state remains a hard skip;
-4. deletes origin heads whose GitHub PR is MERGED or CLOSED at the exact live
-   origin SHA (`ls-remote` + `--force-with-lease`), or whose tip is already an
-   ancestor of `origin/main`, and which are not checked out, have no open PR,
-   and are not `entire/` refs;
+4. deletes origin heads that are not checked out, have no open PR, and are not
+   `entire/` refs, when the GitHub PR is MERGED or CLOSED at the exact live
+   origin SHA (`ls-remote` + `--force-with-lease`), when the tip is contained
+   in a MERGED PR and is not an ancestor of `origin/main`, when the tip is
+   already an ancestor of `origin/main`, or when the ref is agent scratch
+   (`*/review-*`, `rescue/*`, `pr-*`) with no open PR;
 5. deletes local branches whose upstream is gone, or that were never tracked,
-   only when their exact head is proven merged/closed or is already an ancestor
-   of `origin/main` (`entire/` refs are preserved; a `pr-N` name alone is not
-   proof);
+   on the same evidence (`entire/` refs are preserved);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
 7. runs `git gc --auto`;
