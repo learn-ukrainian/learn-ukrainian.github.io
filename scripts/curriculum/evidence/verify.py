@@ -184,10 +184,18 @@ def verify_words_store(
             paradigm_res = sources_instance.inspect_lemma_forms(lemma, pos)
             forms_by_entry = paradigm_res.forms_by_entry
 
+            # ULIF spelling group check for this word (also gates ULIF-keyed entries)
+            ulif_group = sources_instance.ulif_entries([lemma]).raw.get(lemma, [])
+            ulif_checked = sources_instance.ulif_group_checked(ulif_group)
+
             if isinstance(entry, dict) and entry.get("source") == "vesum":
                 entry_id = entry.get("entry_id")
             elif isinstance(entry, dict) and entry.get("source") == "ulif":
                 req_hi = entry.get("key", [None, 1])[1]
+                ulif_homonym = next((e for e in ulif_group if e.get("homonym_index") == req_hi), None)
+                if ulif_homonym is None:
+                    errors.append(f"{codes.FORM_MISMATCH}: entry {entry} for {lemma} ({pos}) not found in ULIF")
+                    continue
                 if len(forms_by_entry) == 1:
                     entry_id = next(iter(forms_by_entry))
                 else:
@@ -214,9 +222,7 @@ def verify_words_store(
                     f"{len(stored_forms)} stored forms vs {len(vesum_forms)} in VESUM"
                 )
 
-            # ULIF spelling group check for this word
-            ulif_group = sources_instance.ulif_entries([lemma]).raw.get(lemma, [])
-            ulif_checked = sources_instance.ulif_group_checked(ulif_group)
+            # ULIF spelling group was fetched above during entry resolution
             matching_entry = None
             if ulif_checked:
                 if isinstance(entry, dict) and entry.get("source") == "ulif":

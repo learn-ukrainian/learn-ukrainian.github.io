@@ -390,6 +390,66 @@ def test_verify_fails_on_unsupported_cefr(clean_store, synthetic_vesum, syntheti
     assert any(codes.CEFR_MISMATCH in err for err in res["errors"])
 
 
+def test_verify_fails_on_missing_ulif_homonym(tmp_path, synthetic_vesum, synthetic_sources, monkeypatch):
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "matches": [
+                {
+                    "stressed_form": f"{w}-stressed",
+                    "unstressed_form": w,
+                    "vowel_index": 0,
+                    "vowel_indices": [0],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+            "source": {"digest": "t" * 64},
+        },
+    )
+
+    # ULIF homonym 2 exists at build time, so the store resolves legitimately.
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(
+            "INSERT INTO ulif_dictua_entries VALUES (15, 'synthetic', 2, 'synthetic-original', 'noun', '', 0, 'ok', 'synthetic-time')"
+        )
+
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "synthetic",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "ulif", "homonym_index": 2},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=False)
+
+    # The ULIF homonym disappears from the source; the stored key must no longer verify.
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("DELETE FROM ulif_dictua_entries WHERE id = 15")
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)
+
+    assert res["status"] == "failed"
+    assert any(codes.FORM_MISMATCH in err for err in res["errors"])
+
+
 def test_verify_checked_ulif_stress_passes_and_mismatch_fails(tmp_path, synthetic_vesum, synthetic_sources):
     import json
 

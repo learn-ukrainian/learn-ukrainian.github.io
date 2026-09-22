@@ -245,7 +245,11 @@ def build_words(
                 if entry_req is not None and entry_req.get("source") == "ulif":
                     req_hi = entry_req.get("homonym_index")
                     matching_ulif = next((e for e in ulif_group if e.get("homonym_index") == req_hi), None)
-                    headword = matching_ulif.get("canonical_headword", lemma) if matching_ulif else lemma
+                    if matching_ulif is None:
+                        raise ValueError(
+                            f"{codes.INVALID_REQUEST}: requested ULIF homonym_index {req_hi} not found for {lemma!r}"
+                        )
+                    headword = matching_ulif.get("canonical_headword", lemma)
                     entry: dict[str, Any] | str = {"source": "ulif", "key": [headword, req_hi]}
                     selected_entry_id: int | None = single_entry_id
                 else:
@@ -264,12 +268,16 @@ def build_words(
                         )
                 elif entry_req is not None and entry_req.get("source") == "ulif":
                     req_hi = entry_req.get("homonym_index")
-                    if req_hi is None or req_hi < 1 or req_hi > len(sorted_entry_ids):
-                        raise ValueError(
-                            f"{codes.INVALID_REQUEST}: requested homonym_index {req_hi} not found for {lemma!r}"
-                        )
                     matching_ulif = next((e for e in ulif_group if e.get("homonym_index") == req_hi), None)
-                    headword = matching_ulif.get("canonical_headword", lemma) if matching_ulif else lemma
+                    if matching_ulif is None:
+                        raise ValueError(
+                            f"{codes.INVALID_REQUEST}: requested ULIF homonym_index {req_hi} not found for {lemma!r}"
+                        )
+                    if req_hi > len(sorted_entry_ids):
+                        raise ValueError(
+                            f"{codes.INVALID_REQUEST}: no VESUM entry evidencing ULIF homonym_index {req_hi} for {lemma!r}"
+                        )
+                    headword = matching_ulif.get("canonical_headword", lemma)
                     entry = {"source": "ulif", "key": [headword, req_hi]}
                     selected_entry_id = sorted_entry_ids[req_hi - 1]
                 else:

@@ -256,6 +256,76 @@ def test_homograph_with_ulif_entry_id_resolves_and_records_key(
     assert reg[0]["entry"] == {"source": "ulif", "key": ["synthetic-original", 2]}
 
 
+def test_missing_ulif_homonym_rejected_multi_entry(synthetic_vesum, synthetic_sources, tmp_path):
+    # Fixture has only ULIF homonym 1 for "synthetic"; homonym 2 is not in the source.
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "synthetic",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "ulif", "homonym_index": 2},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        with pytest.raises(ValueError, match=codes.INVALID_REQUEST):
+            words.build_words(
+                "a1",
+                req_path,
+                evidence_dir=tmp_path,
+                sources_instance=api,
+                dry_run=True,
+            )
+
+
+def test_missing_ulif_homonym_rejected_single_entry(synthetic_vesum, synthetic_sources, tmp_path):
+    # "synthetic-checked" has a single checked ULIF homonym (1) and one VESUM entry.
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("DELETE FROM forms_all")
+        conn.execute(
+            "INSERT INTO forms_all VALUES (1, 10, 'synthetic-a', 'synthetic-checked', 'noun', 'noun:f:v_naz', '', '')"
+        )
+
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "synthetic-checked",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "ulif", "homonym_index": 2},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        with pytest.raises(ValueError, match=codes.INVALID_REQUEST):
+            words.build_words(
+                "a1",
+                req_path,
+                evidence_dir=tmp_path,
+                sources_instance=api,
+                dry_run=True,
+            )
+
+
 def test_homograph_without_entry_is_unresolved(synthetic_vesum, synthetic_sources, tmp_path):
     req_path = tmp_path / "req.yaml"
     req_path.write_text(
