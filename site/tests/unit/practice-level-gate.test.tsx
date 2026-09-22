@@ -21,7 +21,11 @@ function makeLexeme(
     lemmaPlain: lemma,
     gloss,
     ipa: null,
-    paradigm: { nominative: lemma } as any,
+    paradigm: {
+      cases: {
+        nominative: { singular: lemma },
+      },
+    },
     cefr,
     pos: 'noun',
     heritage: 'native',
