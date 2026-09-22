@@ -1,0 +1,29 @@
+{
+  "timestamp": "2026-09-22T13:26:49.722363+00:00",
+  "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+  "device": "cuda",
+  "gpu_name": "Tesla T4",
+  "num_layers": 24,
+  "hidden_size": 896,
+  "total_parameters": 494032768,
+  "trainable_parameters": 8798208,
+  "lora_r": 16,
+  "lora_alpha": 32,
+  "learning_rate": 0.0002,
+  "total_steps": 250,
+  "initial_loss": 15.3211,
+  "final_loss": 0.213,
+  "loss_reduction_pct": 98.61,
+  "fingerprints": {
+    "train_file": "/content/uldr_v1_train_6000.jsonl",
+    "train_sha256": "648c2a2ae37e53789640f1db3623b15317a3a4beb31a72d7ee5be322d8e0927d",
+    "train_records": 6000,
+    "heldout_file": "/content/heldout_1000.jsonl",
+    "heldout_sha256": "20b485f5d31ac069740282ca278d94e730dbbb4ca3ec50b5589d0083d287b0f0",
+    "heldout_cases": 1000,
+    "protection_file": "/content/protection_600.jsonl",
+    "protection_sha256": "67070c44fcb3efeed5d394e0b598b95a5e5f2c8c984a0b3065c3c0f4e8c36af7",
+    "protection_cases": 600,
+    "adapter_sha256": "088a7f472353f42f2336aaebc9c05bb0075df18b58be2072dea3e7b9b25b59ec"
+  }
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "v1_real_training_scorecard",
+  "issue": 8338,
+  "epic": 6321,
+  "verdict": {
+    "overall": "TRAINING_HURT_PERFORMANCE",
+    "plain_answer": "Fine-tuning on the 6,000-example uldr_v1_production dataset HURT overall generation reliability and severely degraded dialect and historical preservation.",
+    "calque_elimination_rate_delta": 0.0,
+    "dialect_preservation_rate_delta": -0.19,
+    "historical_preservation_rate_delta": -0.10,
+    "format_validity_delta": -0.972
+  },
+  "acceptance_audit_preflight": {
+    "status": "ACCEPTANCE_FAILED",
+    "report_path": "data/projects/open_model_data/study/uldr_v1_acceptance_audit.json",
+    "failures": [
+      "Exact duplicate rate 14.10% exceeds limit 0.00%",
+      "Near-duplicate template rate 97.53% exceeds limit 1.00%",
+      "Reasoning top 20 patterns cover 89.9% of corpus",
+      "99 records cite Soviet SUM-11 as normative authority",
+      "3 self-contradictions in target term context"
+    ]
+  },
+  "training_run": {
+    "model_name": "Qwen/Qwen2.5-0.5B-Instruct",
+    "hardware": "NVIDIA Tesla T4 GPU (15GB VRAM)",
+    "cuda_version": "13.0",
+    "total_parameters": 494032768,
+    "num_layers": 24,
+    "hidden_size": 896,
+    "trainable_parameters": 8798208,
+    "lora_r": 16,
+    "lora_alpha": 32,
+    "learning_rate": 0.0002,
+    "total_steps": 250,
+    "initial_loss": 15.3211,
+    "final_loss": 0.213,
+    "loss_reduction_pct": 98.61,
+    "adapter_safetensors": "data/projects/open_model_data/study/run_output/adapter/adapter_model.safetensors",
+    "adapter_sha256": "088a7f472353f42f2336aaebc9c05bb0075df18b58be2072dea3e7b9b25b59ec",
+    "training_log": "data/projects/open_model_data/study/run_output/training_log.jsonl"
+  },
+  "fingerprints": {
+    "train_sha256": "648c2a2ae37e53789640f1db3623b15317a3a4beb31a72d7ee5be322d8e0927d",
+    "heldout_1000_sha256": "20b485f5d31ac069740282ca278d94e730dbbb4ca3ec50b5589d0083d287b0f0",
+    "protection_600_sha256": "67070c44fcb3efeed5d394e0b598b95a5e5f2c8c984a0b3065c3c0f4e8c36af7"
+  },
+  "heldout_1000_results": {
+    "baseline": {
+      "format_valid": 1000,
+      "format_error": 0,
+      "gate1_calque_elimination_rate": 0.0,
+      "gate2_harmful_edit_rate": 0.5267,
+      "gate3_span_integrity_pass": false,
+      "gate4_citation_violations": 6,
+      "gate5_high_freq_recall": 0.0
+    },
+    "trained": {
+      "format_valid": 28,
+      "format_error": 972,
+      "gate1_calque_elimination_rate": 0.0,
+      "gate2_harmful_edit_rate": 0.9983,
+      "gate3_span_integrity_pass": false,
+      "gate4_citation_violations": 30,
+      "gate5_high_freq_recall": 0.0
+    }
+  },
+  "protection_600_results": {
+    "baseline": {
+      "regional_dialect_preservation_rate": 0.1933,
+      "historical_classical_preservation_rate": 0.105,
+      "combined_preservation_rate": 0.158,
+      "anti_surzhyk_normalization_rate": 0.01,
+      "surzhyk_eradication_rate": 0.42
+    },
+    "trained": {
+      "regional_dialect_preservation_rate": 0.0033,
+      "historical_classical_preservation_rate": 0.005,
+      "combined_preservation_rate": 0.004,
+      "anti_surzhyk_normalization_rate": 0.0,
+      "surzhyk_eradication_rate": 0.01
+    }
+  },
+  "pilot_receipt_status": {
+    "target": "data/projects/open_model_data/canary/pilot_canary_receipt.json",
+    "status": "NOT_RELIABLE",
+    "reason": "Saved adapter contains 4 layers / 256 dim instead of Gemma 3 4B (34 layers / 2560 dim); produced by stand-in synthetic script."
+  }
+}

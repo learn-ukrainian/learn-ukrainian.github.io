@@ -1,0 +1,13 @@
+{
+  "dataset_sha256": "2bf70a92038b0f0408f88efc8eae6d658da5b1fb92563c6c9e81f952d8759f92",
+  "sample_seed": "8ac2a47690d3eb9c74dfd355b559f82db982e88e6d1d704509e761d3eb2d2256",
+  "profile_sha256": "bee13c3b07f4142fcfdb068a9160b14490b9c7e7225d12dc30b2633ebb7e7c08",
+  "sample_size_drawn": 300,
+  "sample_size_reviewed": 0,
+  "blocker_defect_count": 0,
+  "minor_defect_count": 0,
+  "reviewer_id": "",
+  "reviewer_family": "",
+  "signoff_date": "",
+  "comments": ""
+}

@@ -1,5 +1,11 @@
 # Phase 3.6: 200-Item Pilot Canary Fine-Tune on Gemma 3 4B
 
+> [!WARNING]
+> **RELIABILITY STATUS: NOT RELIABLE (Audited under Issue #8338)**
+> The historical Phase 3.6 pilot canary receipt (`data/projects/open_model_data/canary/pilot_canary_receipt.json`) and its saved adapter (`pilot_canary_adapter.safetensors`) were evaluated under Issue #8338 and determined to be **not reliable**. The saved adapter contains only 4 layers and hidden dimension 256, rather than Google Gemma 3 4B's authentic architecture (34 layers, 2560 hidden dimension). The artifact was generated via a synthetic in-tree script (`v4_pilot_canary_evaluation.py`) rather than actual training on real weights.
+>
+> **Superseded by Issue #8338**: The first genuine open model training run and before/after scorecard are published in [`docs/projects/open-model-data/REAL_TRAINING_RUN_SCORECARD_8338.md`](REAL_TRAINING_RUN_SCORECARD_8338.md).
+
 ## Overview & Purpose
 
 Part of **Epic #6321** (Open Model Data) and **Issue #8010**.

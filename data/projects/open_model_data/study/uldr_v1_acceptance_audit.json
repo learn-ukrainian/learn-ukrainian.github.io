@@ -1,0 +1,222 @@
+{
+  "dataset_dir": "data/projects/open_model_data/archive/uldr_v1_production",
+  "dataset_sha256": "2bf70a92038b0f0408f88efc8eae6d658da5b1fb92563c6c9e81f952d8759f92",
+  "profile_name": "default",
+  "profile_sha256": "bee13c3b07f4142fcfdb068a9160b14490b9c7e7225d12dc30b2633ebb7e7c08",
+  "sample_seed": "8ac2a47690d3eb9c74dfd355b559f82db982e88e6d1d704509e761d3eb2d2256",
+  "total_records": 9000,
+  "train_records": 9000,
+  "eval_records": 0,
+  "overall_status": "ACCEPTANCE_FAILED",
+  "sample_file_path": "data/projects/open_model_data/study/uldr_v1_acceptance_sample.md",
+  "checks": {
+    "check_1_repeats": {
+      "check_name": "Repeats & Duplicates",
+      "status": "FAIL",
+      "metrics": {
+        "total_records": 9000,
+        "distinct_qa_pairs": 7731,
+        "exact_duplicate_count": 1269,
+        "exact_duplicate_rate": 0.141,
+        "max_single_multiplicity": 97,
+        "distinct_normalized_qa_templates": 222,
+        "near_duplicate_template_rate": 0.9753
+      },
+      "thresholds": {
+        "max_exact_duplicate_rate": 0.0,
+        "max_single_multiplicity": 1,
+        "max_near_duplicate_rate": 0.01
+      },
+      "failures": [
+        "Exact duplicate rate 14.10% exceeds limit 0.00%",
+        "Max single item multiplicity 97 exceeds limit 1",
+        "Near-duplicate template rate 97.53% exceeds limit 1.00%"
+      ]
+    },
+    "check_2_form_letters": {
+      "check_name": "Form Letters & Pattern Concentration",
+      "status": "FAIL",
+      "metrics": {
+        "query": {
+          "K": 99,
+          "top1": 0.2555,
+          "top5": 0.732,
+          "top20": 0.9732,
+          "entropy": 0.5156,
+          "perplexity": 10.69
+        },
+        "reasoning": {
+          "K": 221,
+          "top1": 0.2555,
+          "top5": 0.7102,
+          "top20": 0.8988,
+          "entropy": 0.5002,
+          "perplexity": 14.88
+        },
+        "answer": {
+          "K": 221,
+          "top1": 0.2555,
+          "top5": 0.7185,
+          "top20": 0.9098,
+          "entropy": 0.4916,
+          "perplexity": 14.21
+        }
+      },
+      "thresholds": {
+        "max_exact_duplicate_rate": 0.0,
+        "max_single_multiplicity": 1,
+        "max_near_duplicate_rate": 0.01,
+        "near_duplicate_jaccard_threshold": 0.85,
+        "max_query_top5_share": 0.8,
+        "min_query_unique_skeletons": 20,
+        "min_query_entropy": 0.6,
+        "max_reasoning_top1_share": 0.1,
+        "max_reasoning_top5_share": 0.25,
+        "max_reasoning_top20_share": 0.5,
+        "min_reasoning_perplexity": 25.0,
+        "min_reasoning_entropy": 0.8,
+        "min_reasoning_unique_skeletons": 50,
+        "max_answer_top1_share": 0.05,
+        "max_answer_top5_share": 0.15,
+        "max_answer_top20_share": 0.3,
+        "min_answer_perplexity": 35.0,
+        "min_answer_entropy": 0.8,
+        "min_answer_unique_skeletons": 50,
+        "min_correction_share": 0.5,
+        "min_examples_per_category": 50,
+        "max_single_category_share": 0.4,
+        "max_self_contradictions": 0,
+        "max_sum11_normative_violations": 0,
+        "max_sum11_negative_inferences": 0,
+        "max_translation_dict_violations": 0,
+        "max_unapproved_authorities": 0,
+        "max_exact_sentence_leakage": 0,
+        "max_target_phenomenon_leakage": 0,
+        "max_high_containment_share": 0.02,
+        "containment_threshold": 0.5,
+        "require_held_out_split": true,
+        "sample_size": 300,
+        "thin_category_sample_cap": 20
+      },
+      "failures": [
+        "Query normalized entropy 0.5156 is below floor 0.6",
+        "Reasoning top 1 pattern covers 25.6%, exceeding limit 10.0%",
+        "Reasoning top 5 patterns cover 71.0%, exceeding limit 25.0%",
+        "Reasoning top 20 patterns cover 89.9%, exceeding limit 50.0%",
+        "Reasoning perplexity 14.88 is below floor 25.0",
+        "Reasoning normalized entropy 0.5002 is below floor 0.8",
+        "Answer top 1 pattern covers 25.6%, exceeding limit 5.0%",
+        "Answer top 5 patterns cover 71.9%, exceeding limit 15.0%",
+        "Answer top 20 patterns cover 91.0%, exceeding limit 30.0%",
+        "Answer perplexity 14.21 is below floor 35.0",
+        "Answer normalized entropy 0.4916 is below floor 0.8"
+      ]
+    },
+    "check_3_content_share": {
+      "check_name": "Real Content Share",
+      "status": "PASS",
+      "metrics": {
+        "candidate_rows": 6000,
+        "controls_count": 1800,
+        "corrections_count": 4200,
+        "clean_control_share": 0.3,
+        "substantive_correction_share": 0.7,
+        "category_count": 0,
+        "thin_categories_count": 0
+      },
+      "thresholds": {
+        "max_exact_duplicate_rate": 0.0,
+        "max_single_multiplicity": 1,
+        "max_near_duplicate_rate": 0.01,
+        "near_duplicate_jaccard_threshold": 0.85,
+        "max_query_top5_share": 0.8,
+        "min_query_unique_skeletons": 20,
+        "min_query_entropy": 0.6,
+        "max_reasoning_top1_share": 0.1,
+        "max_reasoning_top5_share": 0.25,
+        "max_reasoning_top20_share": 0.5,
+        "min_reasoning_perplexity": 25.0,
+        "min_reasoning_entropy": 0.8,
+        "min_reasoning_unique_skeletons": 50,
+        "max_answer_top1_share": 0.05,
+        "max_answer_top5_share": 0.15,
+        "max_answer_top20_share": 0.3,
+        "min_answer_perplexity": 35.0,
+        "min_answer_entropy": 0.8,
+        "min_answer_unique_skeletons": 50,
+        "min_correction_share": 0.5,
+        "min_examples_per_category": 50,
+        "max_single_category_share": 0.4,
+        "max_self_contradictions": 0,
+        "max_sum11_normative_violations": 0,
+        "max_sum11_negative_inferences": 0,
+        "max_translation_dict_violations": 0,
+        "max_unapproved_authorities": 0,
+        "max_exact_sentence_leakage": 0,
+        "max_target_phenomenon_leakage": 0,
+        "max_high_containment_share": 0.02,
+        "containment_threshold": 0.5,
+        "require_held_out_split": true,
+        "sample_size": 300,
+        "thin_category_sample_cap": 20
+      },
+      "failures": []
+    },
+    "check_4_contradictions": {
+      "check_name": "Self-Contradiction Audit",
+      "status": "FAIL",
+      "metrics": {
+        "contradiction_count": 3
+      },
+      "thresholds": {
+        "max_self_contradictions": 0
+      },
+      "failures": [
+        "Found 3 self-contradictions (limit is 0). Examples: [\"Line 83: target_term 'біля тридцяти' missing from record context\", \"Line 483: target_term 'біля тридцяти' missing from record context\", \"Line 183: target_term 'біля тридцяти' missing from record context\"]"
+      ]
+    },
+    "check_5_source_rules": {
+      "check_name": "Source Rules (Epic Rules 3 & 4)",
+      "status": "FAIL",
+      "metrics": {
+        "sum11_normative_violations": 99,
+        "sum11_negative_inferences": 0,
+        "translation_dictionary_violations": 0,
+        "unapproved_authorities_violations": 0
+      },
+      "thresholds": {
+        "max_sum11_normative_violations": 0,
+        "max_sum11_negative_inferences": 0,
+        "max_translation_dict_violations": 0,
+        "max_unapproved_authorities": 0
+      },
+      "failures": [
+        "Citing СУМ-11 as normative source in 99 records (0 allowed)"
+      ]
+    },
+    "check_6_split_overlap": {
+      "check_name": "Train/Test Overlap & Leakage",
+      "status": "FAIL",
+      "metrics": {},
+      "thresholds": {},
+      "failures": [
+        "Required held-out evaluation split is missing or empty"
+      ]
+    },
+    "check_7_sample_drawer": {
+      "check_name": "Review Sample & Human Lifecycle",
+      "status": "PASS",
+      "metrics": {
+        "sample_size_drawn": 300,
+        "sample_file_md": "data/projects/open_model_data/study/uldr_v1_acceptance_sample.md",
+        "sample_file_json": "data/projects/open_model_data/study/uldr_v1_acceptance_sample.json",
+        "signoff_template_path": "data/projects/open_model_data/study/uldr_v1_acceptance_sample.signoff_template.json",
+        "signoff_verified": false
+      },
+      "thresholds": {
+        "sample_size": 300
+      },
+      "failures": []
+    }
+  }
+}
