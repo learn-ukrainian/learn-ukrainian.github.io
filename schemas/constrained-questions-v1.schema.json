@@ -1,0 +1,245 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "constrained-questions-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "questions_schema": {
+      "const": 1
+    },
+    "lesson": {
+      "$ref": "#/$defs/lesson"
+    },
+    "inputs": {
+      "$ref": "#/$defs/inputs"
+    },
+    "questions": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/question"
+      }
+    }
+  },
+  "required": [
+    "questions_schema",
+    "lesson",
+    "inputs",
+    "questions"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "expanded_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "allowlist_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "words_lock": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "vesum": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "trie_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "expanded_sha256",
+        "allowlist_sha256",
+        "words_lock",
+        "vesum",
+        "trie_digest"
+      ],
+      "additionalProperties": false
+    },
+    "lesson": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "level",
+        "slug",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "tab": {
+          "enum": [
+            "urok",
+            "slovnyk",
+            "vpravy",
+            "resursy"
+          ]
+        },
+        "activity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "block": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "tab",
+        "activity",
+        "item",
+        "block"
+      ],
+      "additionalProperties": false,
+      "$comment": "Matches the review contract's locations (tab, activity, item) plus the block."
+    },
+    "word_id": {
+      "type": "string",
+      "pattern": "^W-[0-9]*[1-9][0-9]*$"
+    },
+    "candidate": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "$ref": "#/$defs/word_id"
+        },
+        "lemma": {
+          "type": "string",
+          "minLength": 1
+        },
+        "pos": {
+          "type": "string",
+          "minLength": 1
+        },
+        "gloss_en": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stressed": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "minLength": 1
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          },
+          "minItems": 1
+        }
+      },
+      "required": [
+        "record",
+        "lemma",
+        "pos",
+        "gloss_en",
+        "stressed",
+        "forms"
+      ],
+      "additionalProperties": false,
+      "$comment": "Copied from the word record; stressed is null only for a pending reading, which no answer may select."
+    },
+    "question": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^Q-[0-9]{3,}$"
+        },
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sentence": {
+          "type": "string",
+          "minLength": 1
+        },
+        "blocking": {
+          "type": "boolean"
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/candidate"
+          },
+          "minItems": 2,
+          "maxItems": 5
+        },
+        "proposal": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/word_id"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "unit",
+        "offset",
+        "token",
+        "sentence",
+        "blocking",
+        "candidates",
+        "proposal"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$comment": "One batch per lesson; stress_open questions are blocking, stress_certain_identity_open are not. Answers file: {answers: [{id, record, stressed?}]}; stressed is needed only when one record offers several readings."
+}
