@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import sys
+import tempfile
 import types
 import urllib.error
 from datetime import UTC, datetime
@@ -290,6 +291,80 @@ def test_check_budget_dry_run_does_not_spawn(monkeypatch, tmp_path, capsys):
     state = json.loads((tmp_path / "tasks" / "budget-check-fixture.json").read_text(encoding="utf-8"))
     assert lines[1] == state["run_nonce"]
     assert "ROUTING WARNING" in captured.err
+
+
+def _hot_language_budget():
+    def lane(status):
+        return {
+            "status": status,
+            "interactive": {"status": status, "burn_pct_7d": 99.0 if status == "hot" else 10.0},
+            "burn_pct_7d": 99.0 if status == "hot" else 10.0,
+            "resets_at": "2026-07-14T00:00:00Z",
+        }
+
+    return {
+        "recommendation": {"primary_agent_for_code": "agy", "rationale": "fixture", "warnings": []},
+        "agents": {
+            "claude": lane("hot"),
+            "codex": lane("hot"),
+            "agy": lane("cool"),
+            "grok": lane("cool"),
+            "cursor": lane("cool"),
+        },
+        "diagnostics": {"records_loaded": 10, "stale": False, "codexbar_data_available": True},
+    }
+
+
+def test_language_lane_refuses_to_shed_onto_cursor(monkeypatch):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: _hot_language_budget())
+    with pytest.raises(delegate.BudgetGuardRefuseError, match="LANGUAGE-LANES RULE"):
+        delegate._resolve_agent_with_budget_guard("claude", language_lane=True)
+
+
+def test_adapter_rejects_foreign_model_after_substitution():
+    temp_root = Path(tempfile.gettempdir())
+    before = set(temp_root.glob("codex-runtime-*.txt"))
+    assert delegate._adapter_rejects_model("codex", "claude-fable-5-1") is True
+    assert delegate._adapter_rejects_model("codex", "gpt-6-astra") is False
+    assert set(temp_root.glob("codex-runtime-*.txt")) <= before
+
+
+def test_adapter_probe_keeps_model_when_invocation_cannot_run(monkeypatch):
+    class _Boom:
+        def build_invocation(self, **_kwargs):
+            raise RuntimeError("grok CLI not found")
+
+    fake = types.ModuleType("probe_adapter_mod")
+    fake.Boom = _Boom
+    monkeypatch.setitem(sys.modules, "probe_adapter_mod", fake)
+    monkeypatch.setattr(
+        "agent_runtime.registry.get_agent_entry",
+        lambda _agent: {"adapter": "probe_adapter_mod:Boom"},
+    )
+    assert delegate._adapter_rejects_model("grok", "grok-4.7") is False
+
+
+def test_adapter_valueerror_before_spawn_is_failed(monkeypatch, tmp_path):
+    monkeypatch.setattr(delegate, "_TASKS_DIR", tmp_path)
+
+    def boom(*_args, **_kwargs):
+        raise ValueError("CodexAdapter: model='claude-fable-5-1' rejected; only 'gpt-6-astra' is approved")
+
+    monkeypatch.setattr("agent_runtime.runner.invoke", boom)
+    rc = delegate._run_worker(
+        "pre-spawn",
+        "codex",
+        "prompt",
+        "workspace-write",
+        str(tmp_path),
+        "claude-fable-5-1",
+        30,
+    )
+    state = json.loads((tmp_path / "pre-spawn.json").read_text(encoding="utf-8"))
+    assert rc == 1
+    assert state["status"] == "failed"
+    assert state["needs_finalize"] is False
+    assert "rejected" in (state.get("last_error") or "")
 
 
 def test_check_budget_hard_sub_on_near_cap_fresh(monkeypatch, tmp_path, capsys):

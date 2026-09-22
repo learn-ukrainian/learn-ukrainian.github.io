@@ -4946,6 +4946,7 @@ def _run_worker(
     finalize_error: str | None = None
     no_deliverable = False
     no_deliverable_reason: str | None = None
+    pre_spawn_failure = False
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     telemetry_settled = False
@@ -5030,6 +5031,10 @@ def _run_worker(
         except AgentRuntimeError as exc:
             stderr_excerpt = f"runtime error: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "runtime exception did not expose a terminal subprocess returncode"
+        except ValueError as exc:
+            pre_spawn_failure = True
+            stderr_excerpt = f"adapter rejected before spawn: {exc}"[:500]
+            returncode_reason = "adapter rejected the dispatch before a process was spawned"
         except Exception as exc:
             # Last-ditch: don't crash the worker on an unexpected bug — we
             # need to update the state file or the parent will see us as
@@ -5265,7 +5270,11 @@ def _run_worker(
             no_deliverable_reason = _review_verdict_failure_reason(response)
             no_deliverable = no_deliverable_reason is not None
 
-        if needs_finalize:
+        if pre_spawn_failure:
+            needs_finalize = False
+            final_status = "failed"
+            ok_outcome = False
+        elif needs_finalize:
             final_status = "needs_finalize"
         elif no_deliverable:
             final_status = _NO_DELIVERABLE_STATUS
@@ -6086,16 +6095,32 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     if _dispatch_check_budget_enabled(args) and not getattr(args, "force_agent", False):
         try:
+            language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter")
+                _resolve_agent_with_budget_guard(
+                    requested_agent, provider="openrouter", language_lane=language_lane
+                )
                 if getattr(args, "provider", None) == "openrouter"
-                else _resolve_agent_with_budget_guard(requested_agent)
+                else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
             )
         except BudgetGuardRefuseError as exc:
             print(f"❌ {exc}", file=sys.stderr)
             return 2
     else:
         dispatch_agent = requested_agent
+
+    explicit_model = getattr(args, "model", None)
+    if (
+        explicit_model
+        and dispatch_agent != requested_agent
+        and _adapter_rejects_model(dispatch_agent, str(explicit_model))
+    ):
+        print(
+            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. "
+            "Using that lane's default.",
+            file=sys.stderr,
+        )
+        args.model = None
 
     try:
         _validate_dispatch_effort(dispatch_agent, getattr(args, "effort", None))
@@ -7054,7 +7079,95 @@ def _budget_needs_hard_capacity_action(
     return False, ""
 
 
-def _resolve_agent_with_budget_guard(agent: str, *, provider: str | None = None) -> str:
+_LANGUAGE_LANES = frozenset({"claude", "codex", "agy", "grok"})
+
+
+def _dispatch_is_language_lane(args: argparse.Namespace) -> bool:
+    """True when the dispatch is Ukrainian language work.
+
+    Signals: ``--language-lane``, a ``l2-uk*`` research track, or an owned
+    path under ``curriculum/``. Cursor and other non-language lanes must not
+    receive that work through budget substitution (#8449).
+    """
+    if bool(getattr(args, "language_lane", False)):
+        return True
+    track = str(getattr(args, "research_track", "") or "").strip().lower()
+    if track.startswith("l2-uk"):
+        return True
+    owned = getattr(args, "research_owned_path", None) or []
+    if isinstance(owned, str):
+        owned = [owned]
+    for path in owned:
+        text = str(path).replace("\\", "/").lstrip("./")
+        if text.startswith("curriculum/") or text.startswith("scripts/curriculum/"):
+            return True
+    return False
+
+
+def _discard_model_probe_output(plan: object) -> None:
+    """Remove a temp file a successful model probe created. Leave repo paths alone."""
+    output = getattr(plan, "output_file", None)
+    if not isinstance(output, Path):
+        return
+    try:
+        resolved = output.resolve()
+        temp_root = Path(tempfile.gettempdir()).resolve()
+    except OSError:
+        return
+    if resolved != temp_root and temp_root not in resolved.parents:
+        return
+    try:
+        resolved.unlink(missing_ok=True)
+    except OSError:
+        return
+
+
+def _adapter_rejects_model(agent: str, model: str) -> bool:
+    """True when the target adapter refuses this explicit model before spawn.
+
+    A successful probe is not a rejection. Any error other than the adapter's
+    model ValueError is inconclusive: keep the explicit model instead of
+    crashing dispatch. The probe must not leave the temp file ``build_invocation``
+    creates on the accepted path.
+    """
+    from agent_runtime.registry import get_agent_entry
+
+    entry = get_agent_entry(agent)
+    spec = str(entry.get("adapter") or "")
+    if ":" not in spec:
+        return False
+    module_name, class_name = spec.split(":", 1)
+    module = __import__(module_name, fromlist=[class_name])
+    adapter = getattr(module, class_name)()
+    try:
+        plan = adapter.build_invocation(
+            prompt="model-probe",
+            mode="read-only",
+            cwd=Path("."),
+            model=model,
+            task_id=None,
+            session_id=None,
+            tool_config=None,
+        )
+    except ValueError as exc:
+        text = str(exc)
+        return model in text and ("rejected" in text or "unsupported" in text.lower())
+    except Exception as exc:
+        print(
+            f"⚠ model probe for {agent} could not verify {model}: {type(exc).__name__}",
+            file=sys.stderr,
+        )
+        return False
+    _discard_model_probe_output(plan)
+    return False
+
+
+def _resolve_agent_with_budget_guard(
+    agent: str,
+    *,
+    provider: str | None = None,
+    language_lane: bool = False,
+) -> str:
     """Return possibly-substituted agent.
 
     Hard auto-sub on fresh snapshot when chosen lane is near_cap, hot, or in
@@ -7171,6 +7284,14 @@ def _resolve_agent_with_budget_guard(agent: str, *, provider: str | None = None)
         )
         sub = None
     if sub and sub != requested:
+        if language_lane:
+            return _language_lane_substitute(
+                requested,
+                fallbacks,
+                agents if isinstance(agents, dict) else {},
+                is_stale=is_stale,
+                records_loaded=records_loaded,
+            )
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
             f"({reason}; "
@@ -7190,6 +7311,49 @@ def _resolve_agent_with_budget_guard(agent: str, *, provider: str | None = None)
         f"Cooler seats from budget snapshot: {cooler_txt}. "
         "Re-route (see `python -m scripts.fleet.capacity_pick`) or pass --force-agent."
     )
+
+
+def _language_lane_substitute(
+    requested: str,
+    fallbacks: dict[str, str],
+    agents: dict[str, Any],
+    *,
+    is_stale: bool,
+    records_loaded: int,
+) -> str:
+    """Walk fallbacks, staying inside claude/codex/agy/grok (#8449)."""
+    seat = requested
+    seen = {seat}
+    while True:
+        info = agents.get(seat, {}) or {}
+        status = _budget_lane_status(seat, info if isinstance(info, dict) else {})
+        will_last = _budget_will_last_to_reset(info if isinstance(info, dict) else {})
+        needs, why = _budget_needs_hard_capacity_action(
+            status=status,
+            will_last=will_last,
+            is_stale=is_stale,
+            records_loaded=records_loaded,
+        )
+        if not needs:
+            return seat
+        nxt = fallbacks.get(seat)
+        if not nxt or nxt in seen or nxt not in _LANGUAGE_LANES:
+            raise BudgetGuardRefuseError(
+                "ROUTING REFUSED: LANGUAGE-LANES RULE (operator 2026-07-17). "
+                f"Language work on --agent {requested} cannot move to "
+                f"{nxt or 'no fallback'}; allowed lanes are claude, codex, agy, and grok."
+            )
+        print(
+            f"🔄 HARD AUTO-SUBSTITUTE: --agent {seat} → {nxt} "
+            f"({why}; language-lane fallback stays inside claude, codex, agy, grok).",
+            file=sys.stderr,
+        )
+        seen.add(nxt)
+        seat = nxt
+        if len(seen) > 4:
+            raise BudgetGuardRefuseError(
+                "ROUTING REFUSED: language-lane fallback chain did not reach a cool seat."
+            )
 
 
 def _session_stream_store() -> Any:
@@ -7955,6 +8119,14 @@ def build_parser() -> argparse.ArgumentParser:
         help=(
             "Opt in to allow PR approval/merge and pushes to main inside the "
             "delegated subprocess. Default is off: AGENT_NO_MERGE=1 is set."
+        ),
+    )
+    d.add_argument(
+        "--language-lane",
+        action="store_true",
+        help=(
+            "This dispatch judges or produces Ukrainian. Budget substitution may "
+            "stay only on claude, codex, agy, or grok; otherwise the dispatch is refused."
         ),
     )
     d.add_argument(
