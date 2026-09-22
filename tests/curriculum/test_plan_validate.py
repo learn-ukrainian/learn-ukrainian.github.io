@@ -1,4 +1,4 @@
-"""Tests for the single-plan module plan validator (issue #8412, Brief A).
+"""Tests for the module plan validator's single-plan rules (issue #8412, Brief A).
 
 Fixtures are built in test code and written into a tmp curriculum tree
 (curriculum/l2-uk-en/lesson-plans/<level>/ + evidence/<level>/). No fixture
@@ -8,6 +8,15 @@ placeholders the fixture word store defines, and no fixture carries a stress
 mark except the two fixtures that must fail for one. The one Cyrillic token
 ("мама") is copied from the schema document's §2 example; it fails rule 7 in a
 disallowed field and passes as an inventory lemma that matches the word store.
+
+Brief B made the validator the complete §6 gate, so the fixture world also
+carries what the cross-plan rules read: a prior position-1 plan (mod-zero,
+which introduces W-003 — the word the base fixture recycles), a generated
+fixture arc (_arc.yaml + its source document) whose position 2 matches the
+fixture plan, a grammar registry derived from the plan's introductions, and
+the generated scope sidecar. These are derived from the (mutated) plan so the
+Brief A cases stay neutral to the cross-plan rules; fixtures that exercise the
+cross-plan rules themselves live in test_plan_validate_cross.py.
 """
 
 from __future__ import annotations
@@ -26,6 +35,7 @@ import pytest
 import yaml
 
 from scripts.curriculum.validate import codes
+from scripts.curriculum.validate.scope import compute_scope, write_scope_sidecar
 from scripts.curriculum.validate.validate import Report, validate_plan
 from scripts.curriculum.validate.validate import main as validate_main
 
@@ -39,12 +49,16 @@ NOT_CHECKED = {
     codes.MINUTES_CONSTANTS_UNDEFINED,
     codes.WORD_TARGET_NOT_CALIBRATED,
     codes.LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED,
-    codes.CROSS_PLAN_RULES_PENDING,
+    codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
+    codes.TITLE_QUANTITIES_NOT_PARSED,
 }
 
 LETTER_A = "А"  # copied from docs/epics/fresh-build-plan-schema.md §2
 LETTER_O = "О"  # copied from docs/epics/fresh-build-plan-schema.md §2
 LEMMA_MAMA = "мама"  # copied from docs/epics/fresh-build-plan-schema.md §2
+
+PRIOR_SLUG = "mod-zero"
+ARC_DOC_REL = "docs/epics/fresh-build-a1-arc.md"
 
 
 def base_plan() -> dict:
@@ -57,7 +71,7 @@ def base_plan() -> dict:
         "slug": SLUG,
         "version": "1",
         "title": "Module one title",
-        "arc_ref": {"level": LEVEL, "position": 1},
+        "arc_ref": {"level": LEVEL, "position": 2},
         "evidence_ref": {"path": f"curriculum/l2-uk-en/evidence/{LEVEL}/{SLUG}.yaml", "sha256": "0" * 64},
         "lessons": [
             {
@@ -184,6 +198,87 @@ def base_words() -> dict:
     }
 
 
+def prior_plan() -> dict:
+    """The position-1 plan: introduces W-003, which the base fixture recycles.
+
+    It is never validated, only mined for its position and introductions
+    (rule 4), so it needs no pack of its own.
+    """
+    return {
+        "plan_schema": 2,
+        "slug": PRIOR_SLUG,
+        "arc_ref": {"level": LEVEL, "position": 1},
+        "lessons": [
+            {
+                "n": 1,
+                "slug": "prior-lesson",
+                "kind": "teach",
+                "inventory": {"vocabulary": {"core": [], "incidental": [], "recycled": []}},
+                "steps": [
+                    {
+                        "id": "s1",
+                        "kind": "teach",
+                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-003"]},
+                    }
+                ],
+            }
+        ],
+    }
+
+
+def fixture_arc(plan: dict) -> dict:
+    """A generated-looking arc whose position 2 matches the (mutated) fixture plan.
+
+    Derived from the plan so Brief A fixtures stay neutral to rule 5; fixtures
+    that exercise rule 5 itself live in test_plan_validate_cross.py.
+    """
+    scope = compute_scope(plan, LEVEL, plan["slug"])
+
+    def record(position: int, slug: str, letters: list[str]) -> dict:
+        entry = {
+            "position": position,
+            "slug": slug,
+            "est_lessons": 2,
+            "job": f"Job of {slug}.",
+            "inventory_text": None,
+            "phase": "A1.1",
+            "skills_text": "W",
+            "skills": ["W"],
+            "standard_line_refs": [],
+        }
+        if letters:
+            entry["letters"] = letters
+        return entry
+
+    return {
+        "arc_schema": 1,
+        "level": LEVEL,
+        "source": {"path": ARC_DOC_REL, "sha256": "0" * 64},  # rebound by write_world
+        "est_lessons_total": 4,
+        "positions": [
+            record(1, PRIOR_SLUG, []),
+            record(2, plan["slug"], scope["letters"]["list"]),
+        ],
+    }
+
+
+def derived_registry(plan: dict) -> list[dict]:
+    """Registry records matching the plan's own grammar introductions (§2a)."""
+    records = []
+    for lesson in plan["lessons"]:
+        if lesson["kind"] != "teach":
+            continue
+        for entry in lesson["inventory"].get("grammar") or []:
+            records.append(
+                {
+                    "id": entry["id"],
+                    "point": entry["point"],
+                    "introduced_at": {"position": plan["arc_ref"]["position"], "lesson": lesson["slug"]},
+                }
+            )
+    return records
+
+
 @dataclass(frozen=True)
 class World:
     plan_path: Path
@@ -217,6 +312,20 @@ def write_world(root: Path, plan: dict, pack: dict, words: dict, slug: str = SLU
     plan["evidence_ref"]["sha256"] = pack_digest
     plan_path = plan_dir / f"{slug}.yaml"
     plan_path.write_bytes(_dump(plan))
+
+    # The cross-plan fixture files (Brief B): the prior plan, the arc, the
+    # grammar registry and the scope sidecar — all derived above.
+    (plan_dir / f"{PRIOR_SLUG}.yaml").write_bytes(_dump(prior_plan()))
+    doc_path = root / ARC_DOC_REL
+    doc_path.parent.mkdir(parents=True, exist_ok=True)
+    doc_path.write_bytes(f"# fixture arc document for {slug}\n".encode())
+    arc = fixture_arc(plan)
+    arc["source"]["sha256"] = hashlib.sha256(doc_path.read_bytes()).hexdigest()
+    (plan_dir / "_arc.yaml").write_bytes(_dump(arc))
+    registry = derived_registry(plan)
+    if registry:
+        (plan_dir / "_grammar.yaml").write_bytes(_dump(registry))
+    write_scope_sidecar(plan_path, slug, compute_scope(plan, LEVEL, slug))
     return World(plan_path=plan_path, pack_path=pack_path, words_path=words_path)
 
 
@@ -456,7 +565,7 @@ FAILING_CASES = [
         mutate=_mutate(
             lambda p, pk, w: p["lessons"][0]["steps"][1]["uses"].__setitem__("vocabulary", ["W-003", "W-008"])
         ),
-        expected=frozenset({codes.USES_NOT_RECYCLED}),
+        expected=frozenset({codes.USES_NOT_RECYCLED, codes.USED_NOT_INTRODUCED_EARLIER}),
     ),
     Case(
         "recycled_used_by_no_step",
@@ -479,9 +588,7 @@ FAILING_CASES = [
     ),
     Case(
         "recycled_not_used_in_recap_lesson",
-        mutate=_mutate(
-            lambda p, pk, w: p["lessons"][1]["inventory"]["vocabulary"].__setitem__("recycled", ["W-001"])
-        ),
+        mutate=_mutate(lambda p, pk, w: p["lessons"][1]["inventory"]["vocabulary"].__setitem__("recycled", ["W-001"])),
         expected=frozenset({codes.RECYCLED_NOT_USED}),
     ),
     # rule 3: evidence resolves and the pack is the locked one
@@ -500,20 +607,16 @@ FAILING_CASES = [
         mutate=_mutate(
             lambda p, pk, w: p["lessons"][0]["steps"][1]["uses"].__setitem__("vocabulary", ["W-003", "W-099"])
         ),
-        expected=frozenset({codes.UNKNOWN_WORD_ID, codes.USES_NOT_RECYCLED}),
+        expected=frozenset({codes.UNKNOWN_WORD_ID, codes.USES_NOT_RECYCLED, codes.USED_NOT_INTRODUCED_EARLIER}),
     ),
     Case(
         "evidence_ref_path_identifies_checked_pack",
-        mutate=_mutate(
-            lambda p, pk, w: p["evidence_ref"].__setitem__("path", "evidence/a1/nonexistent.yaml")
-        ),
+        mutate=_mutate(lambda p, pk, w: p["evidence_ref"].__setitem__("path", "evidence/a1/nonexistent.yaml")),
         expected=frozenset({codes.PACK_NOT_FOUND}),
     ),
     Case(
         "pack_override_must_match_declared_path",
-        mutate=_mutate(
-            lambda p, pk, w: p["evidence_ref"].__setitem__("path", "evidence/a1/nonexistent.yaml")
-        ),
+        mutate=_mutate(lambda p, pk, w: p["evidence_ref"].__setitem__("path", "evidence/a1/nonexistent.yaml")),
         kwargs=lambda world: {"pack_path": world.pack_path},
         expected=frozenset({codes.PACK_PATH_MISMATCH}),
     ),
@@ -842,17 +945,18 @@ def test_case(tmp_path: Path, case: Case) -> None:
     assert report.ok == (not case.expected)
 
 
-def test_valid_plan_reports_all_not_checked_and_half_built(tmp_path: Path) -> None:
+def test_valid_plan_reports_all_not_checked_and_full_gate(tmp_path: Path) -> None:
     report = run_case(tmp_path, VALID_CASES[0])
     text = report.render_text()
-    assert "single-plan half" in text
-    assert "Brief B" in text
+    assert "the §6 gate" in text
+    assert "cross_plan_rules_pending" not in text
     for code in NOT_CHECKED:
         assert f"NOT_CHECKED {code}" in text
     payload = report.to_json()
     assert payload["status"] == "pass"
-    assert "single-plan half" in payload["validator"]
+    assert "the §6 gate" in payload["validator"]
     assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
+    assert payload["waivers"] == []
 
 
 def test_failure_names_code_lesson_step_and_value(tmp_path: Path) -> None:
@@ -902,6 +1006,9 @@ def test_code_registry_matches_produced_codes(tmp_path: Path) -> None:
     produced: set[str] = set()
     for index, case in enumerate(ALL_CASES):
         produced |= run_case(tmp_path / f"case-{index}", case).codes()
+    from tests.curriculum.test_plan_validate_cross import produced_cross_codes
+
+    produced |= produced_cross_codes(tmp_path / "cross")
     assert produced == set(codes.DESCRIPTIONS)
 
 
@@ -915,7 +1022,7 @@ def test_cli_text_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     world = write_world(tmp_path, *build_base())
     assert validate_main([LEVEL, SLUG, "--plan", str(world.plan_path)]) == 0
     out = capsys.readouterr().out
-    assert "single-plan half" in out
+    assert "the §6 gate" in out
     assert "status: pass" in out
     for code in NOT_CHECKED:
         assert code in out
@@ -926,7 +1033,7 @@ def test_cli_json_output(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
     assert validate_main([LEVEL, SLUG, "--plan", str(world.plan_path), "--json"]) == 0
     payload = json.loads(capsys.readouterr().out)
     assert payload["status"] == "pass"
-    assert "single-plan half" in payload["validator"]
+    assert "the §6 gate" in payload["validator"]
     assert {entry["code"] for entry in payload["not_checked"]} == NOT_CHECKED
 
 
@@ -977,7 +1084,7 @@ def test_cli_subprocess_clean_environment(tmp_path: Path) -> None:
 
     ok = run(good.plan_path)
     assert ok.returncode == 0, ok.stderr
-    assert "single-plan half" in ok.stdout
+    assert "the §6 gate" in ok.stdout
     failing = run(bad.plan_path)
     assert failing.returncode == 1
     assert codes.REMOVED_V1_FIELD in failing.stdout
