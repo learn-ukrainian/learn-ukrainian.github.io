@@ -19,13 +19,15 @@ export interface PracticeFlashcardData {
   heritageLabel?: string;
 }
 
-interface PracticeFlashcardProps {
+export interface PracticeFlashcardProps {
   card: PracticeFlashcardData;
   ratingLabels: Record<PracticeRating, { uk: string; en: string }>;
   intervalPreviews: Record<PracticeRating, string>;
   onRate(rating: PracticeRating): void;
   /** Pure chrome locale for rating-button labels (#5503). */
   chromeLocale: ChromeLocale;
+  /** Audio fallback behavior when pronunciation clip or manifest is unavailable (#8378). */
+  audioFallback?: 'speech' | 'hide' | 'disable';
 }
 
 const RATING_ORDER: PracticeRating[] = ['again', 'hard', 'good', 'easy'];
@@ -36,6 +38,7 @@ export default function PracticeFlashcard({
   intervalPreviews,
   onRate,
   chromeLocale,
+  audioFallback = 'speech',
 }: PracticeFlashcardProps) {
   const [flipped, setFlipped] = useState(false);
   const [rated, setRated] = useState(false);
@@ -162,7 +165,7 @@ export default function PracticeFlashcard({
       {card.pronunciationLemma && (
         <div className="flashcard-pronunciation" style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '0.5rem' }}>
           {card.subtitle && <span className="flashcard-subtitle">{card.subtitle}</span>}
-          <PronunciationPlayer lemma={card.pronunciationLemma} locale={chromeLocale} />
+          <PronunciationPlayer lemma={card.pronunciationLemma} locale={chromeLocale} fallback={audioFallback} />
         </div>
       )}
       <div

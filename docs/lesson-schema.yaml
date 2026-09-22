@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 0f6c30a6bf1e174737dc6ec8635434206548641cbe0e31eab599899fa1489f53
+  components_sha256: e38f9c0ef077463afa24bd431c636fa5bff6199669063c5dbacecad235428ba9
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -1849,7 +1849,11 @@ components:
         type: ChromeLocale
         description: chromeLocale prop.
         ukrainian_text: 'false'
-      optional: []
+      optional:
+      - name: audioFallback
+        type: '''speech'' | ''hide'' | ''disable'''
+        description: audioFallback prop.
+        ukrainian_text: 'false'
     nested_types:
       PracticeFlashcardData:
       - name: front
@@ -2088,6 +2092,16 @@ components:
       - name: locale
         type: '''en'' | ''uk'''
         description: Chrome locale; defaults to the document locale.
+        ukrainian_text: 'false'
+      - name: fallback
+        type: '''speech'' | ''hide'' | ''disable'''
+        description: 'Fallback behavior when audio clip or manifest is unavailable:
+
+          ''speech'' (default, for Word Atlas) falls back to on-device SpeechSynthesis.
+
+          ''hide'' (for Flashcards) keeps the audio button hidden.
+
+          ''disable'' renders the audio button disabled.'
         ukrainian_text: 'false'
     nested_types: {}
     example:

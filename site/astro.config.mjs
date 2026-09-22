@@ -1,5 +1,6 @@
 // @ts-check
-import { realpathSync } from 'node:fs';
+import { mkdirSync, realpathSync, writeFileSync } from 'node:fs';
+import { dirname } from 'node:path';
 import { fileURLToPath, URL } from 'node:url';
 import { unified } from '@astrojs/markdown-remark';
 import { defineConfig } from 'astro/config';
@@ -116,6 +117,27 @@ export default defineConfig({
               "s.setAttribute('data-goatcounter','https://learn-ukrainian.goatcounter.com/count');" +
               'document.head.appendChild(s);}',
           );
+        },
+      },
+    },
+    // Provide a minimal fallback pronunciation manifest when local WAVs are not generated (#8378).
+    // Avoids tracked stub files colliding with scripts/audio/generate_pronunciation.py.
+    {
+      name: 'pronunciation-fallback-manifest',
+      hooks: {
+        'astro:config:setup': () => {
+          const manifestPath = fileURLToPath(new URL('./public/audio/pronunciation/manifest.json', import.meta.url));
+          try {
+            mkdirSync(dirname(manifestPath), { recursive: true });
+            writeFileSync(
+              manifestPath,
+              JSON.stringify({ schemaVersion: 1, entries: {} }, null, 2) + '\n',
+              { flag: 'wx' },
+            );
+          } catch (err) {
+            // @ts-ignore
+            if (err?.code !== 'EEXIST') throw err;
+          }
         },
       },
     },

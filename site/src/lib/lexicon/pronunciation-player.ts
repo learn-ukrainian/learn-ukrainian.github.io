@@ -17,16 +17,41 @@ const COPY = {
   uk: { play: 'Послухати вимову', stop: 'Зупинити відтворення', error: 'Аудіо недоступне. Спробуйте ще раз.' },
 };
 
+let manifestUnavailable = false;
+
+export function resetManifestCacheForTesting(): void {
+  manifestRequest = undefined;
+  manifestUnavailable = false;
+}
+
 function manifest(): Promise<Manifest> {
+  if (manifestUnavailable) {
+    return Promise.reject(new Error('audio manifest unavailable'));
+  }
   if (!manifestRequest) {
     manifestRequest = fetch(`${getAudioBase()}manifest.json`).then(async (response) => {
-      if (!response.ok) throw new Error('audio manifest unavailable');
-      const value = await response.json();
-      if (value?.schemaVersion !== 1 || !value.entries || typeof value.entries !== 'object' || Array.isArray(value.entries)) {
-        throw new Error('invalid audio manifest');
+      if (response.status === 404) {
+        manifestUnavailable = true;
+        throw new Error('audio manifest unavailable');
       }
-      return value;
-    }).catch((error) => { manifestRequest = undefined; throw error; });
+      if (!response.ok) {
+        throw new Error('audio manifest fetch failed');
+      }
+      try {
+        const value = await response.json();
+        if (value?.schemaVersion !== 1 || !value.entries || typeof value.entries !== 'object' || Array.isArray(value.entries)) {
+          manifestUnavailable = true;
+          throw new Error('invalid audio manifest');
+        }
+        return value;
+      } catch (err) {
+        manifestUnavailable = true;
+        throw err;
+      }
+    }).catch((error) => {
+      manifestRequest = undefined;
+      throw error;
+    });
   }
   return manifestRequest;
 }
@@ -143,7 +168,28 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
   };
   const keydown = (event: KeyboardEvent) => event.stopPropagation();
   root.lang = 'uk';
-  button.hidden = !lemma;
+  const fallback = (root.dataset.fallback as 'speech' | 'hide' | 'disable') || 'speech';
+  const applyFallbackState = () => {
+    if (disposed || audio) return;
+    if (fallback === 'hide') {
+      button.hidden = true;
+    } else if (fallback === 'disable') {
+      button.hidden = !lemma;
+      button.disabled = true;
+      button.setAttribute('aria-disabled', 'true');
+    } else {
+      button.hidden = !lemma;
+      button.disabled = false;
+      button.removeAttribute('aria-disabled');
+    }
+  };
+  if (fallback === 'hide') {
+    button.hidden = true;
+  } else {
+    button.hidden = !lemma;
+    button.disabled = false;
+    button.removeAttribute('aria-disabled');
+  }
   label();
   status.textContent = '';
   button.addEventListener('click', click);
@@ -168,6 +214,8 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
       };
       label();
       button.hidden = false;
+      button.disabled = false;
+      button.removeAttribute('aria-disabled');
     };
     manifest().then((value) => {
       if (disposed) return;
@@ -179,17 +227,31 @@ export function mountPronunciationPlayer(root: HTMLElement): () => void {
         void lemmaAudioPath(lemma).then((path) => {
           if (!disposed && !audio && path) {
             attachAudio(path, true);
+          } else if (!disposed && !audio) {
+            applyFallbackState();
           }
-        }).catch(() => { /* Optional on-demand audio falls back to synthesis */ });
+        }).catch(() => {
+          if (!disposed && !audio) applyFallbackState();
+        });
+      } else {
+        applyFallbackState();
       }
     }).catch(() => {
+      if (disposed) return;
       const cdn = getCdnBase();
-      if (disposed || !cdn) return;
-      void lemmaAudioPath(lemma).then((path) => {
-        if (!disposed && !audio && path) {
-          attachAudio(path, true);
-        }
-      }).catch(() => { /* Optional on-demand audio falls back to synthesis */ });
+      if (cdn) {
+        void lemmaAudioPath(lemma).then((path) => {
+          if (!disposed && !audio && path) {
+            attachAudio(path, true);
+          } else if (!disposed && !audio) {
+            applyFallbackState();
+          }
+        }).catch(() => {
+          if (!disposed && !audio) applyFallbackState();
+        });
+      } else {
+        applyFallbackState();
+      }
     });
   }
   const cleanup = () => {
