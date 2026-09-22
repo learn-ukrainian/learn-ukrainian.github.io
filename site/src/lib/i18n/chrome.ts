@@ -379,6 +379,20 @@ const en = {
   'practice.deckChange': 'Change deck',
   'practice.deckManageMore': 'Manage decks & sync',
 
+  // Track 3 (Thematic Courses & Exams) subtitles & badges (#8381)
+  'practice.courses.badgeExam': 'B2–C1 / Exam prep',
+  'practice.courses.badgeCulture': 'B2–C1 / Exam prep',
+  'practice.courses.subtitle.zno-stress': 'Word Stress Exam Prep',
+  'practice.courses.subtitle.zno-paronym': 'Paronyms & Confusable Words',
+  'practice.courses.subtitle.zno-lexical-norm': 'Lexical Norms & Calques',
+  'practice.courses.subtitle.zno-morphological-norm': 'Morphological Norms & Forms',
+  'practice.courses.subtitle.zno-syntactic-norm': 'Syntactic Norms & Agreement',
+  'practice.courses.subtitle.zno-orthography': 'Spelling & Orthography Rules',
+  'practice.courses.subtitle.zno-morphology': 'Parts of Speech & Inflection',
+  'practice.courses.subtitle.zno-syntax': 'Sentence Structure & Punctuation',
+  'practice.courses.subtitle.zno-phonetics': 'Phonetics & Sound Changes',
+  'practice.courses.subtitle.culture': 'Error Correction',
+
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
   'atlas.practiceUnavailable': 'Not in the practice pool yet',
@@ -725,6 +739,20 @@ const uk: Record<ChromeKey, string> = {
   'practice.deckCurated': 'Відібрана добірка',
   'practice.deckChange': 'Змінити колоду',
   'practice.deckManageMore': 'Менеджер колод і синхронізація',
+
+  // Track 3 (Thematic Courses & Exams) subtitles & badges (#8381)
+  'practice.courses.badgeExam': 'B2–C1 / Підготовка до ЗНО',
+  'practice.courses.badgeCulture': 'B2–C1 / Культура мовлення',
+  'practice.courses.subtitle.zno-stress': '',
+  'practice.courses.subtitle.zno-paronym': '',
+  'practice.courses.subtitle.zno-lexical-norm': '',
+  'practice.courses.subtitle.zno-morphological-norm': '',
+  'practice.courses.subtitle.zno-syntactic-norm': '',
+  'practice.courses.subtitle.zno-orthography': '',
+  'practice.courses.subtitle.zno-morphology': '',
+  'practice.courses.subtitle.zno-syntax': '',
+  'practice.courses.subtitle.zno-phonetics': '',
+  'practice.courses.subtitle.culture': '',
 
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',
