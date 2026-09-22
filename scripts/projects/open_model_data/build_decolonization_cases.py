@@ -442,44 +442,66 @@ def query_source_evidence(
     elif "СУМ-20" in auth:
         art = (ev.get("article") or term).strip()
         art_head = art.split()[0] if " " in art else art
-        t_head = term.split()[0] if " " in term else term
-        # 1. Query modern academic dictionary СУМ-20
+
+        # 1. Query modern academic dictionary СУМ-20: bound to cited entry or exact phrase in definition
+        sum20_keys = list(dict.fromkeys([art, art.upper(), art.lower(), art_head, art_head.upper(), art_head.lower()]))
+        placeholders = ",".join(["?"] * len(sum20_keys))
         s_cur.execute(
-            "SELECT id, headword, definition_text FROM sum20_articles WHERE headword LIKE ? OR normalized_lookup_key LIKE ? OR headword LIKE ? OR normalized_lookup_key LIKE ? LIMIT 1",
-            (f"%{art}%", f"%{art.lower()}%", f"%{t_head}%", f"%{t_head.lower()}%"),
+            f"SELECT id, headword, definition_text FROM sum20_articles WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) OR definition_text LIKE ? LIMIT 1",
+            (*sum20_keys, *sum20_keys, f"%{t_clean}%"),
         )
         source_record = s_cur.fetchone()
 
         # 2. Modern normative fallback: ULIF (data/ulif_dump_all.db or sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
-            for tbl in ("ulif_all.ulif_entries", "ulif_entries"):
+            dictua_keys = list(dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if " " not in term else [])))
+            for k in dictua_keys:
                 try:
                     s_cur.execute(
-                        f"SELECT 1, canonical_headword, lemma FROM {tbl} WHERE lemma = ? OR lemma = ? OR lemma = ? OR lemma = ? OR canonical_headword LIKE ? LIMIT 1",
-                        (t_head.lower(), art.lower(), art_head.lower(), art.capitalize(), f"%{t_head}%"),
+                        "SELECT id, COALESCE(NULLIF(canonical_headword, ''), normalized_query), COALESCE(NULLIF(sense_gloss, ''), normalized_query) FROM ulif_dictua_entries WHERE normalized_query = ? LIMIT 1",
+                        (k,),
                     )
                     source_record = s_cur.fetchone()
                     if source_record:
                         break
                 except sqlite3.OperationalError:
-                    continue
+                    pass
 
         if not source_record:
-            try:
-                s_cur.execute(
-                    "SELECT id, COALESCE(NULLIF(canonical_headword, ''), normalized_query), COALESCE(NULLIF(sense_gloss, ''), normalized_query) FROM ulif_dictua_entries WHERE normalized_query = ? OR normalized_query = ? OR normalized_query = ? OR canonical_headword LIKE ? LIMIT 1",
-                    (t_head.lower(), art.lower(), art_head.lower(), f"%{t_head}%"),
+            ulif_keys = list(
+                dict.fromkeys(
+                    [
+                        art,
+                        art.lower(),
+                        art.capitalize(),
+                        art_head,
+                        art_head.lower(),
+                        art_head.capitalize(),
+                    ]
+                    + ([term, term.lower(), term.capitalize()] if " " not in term else [])
                 )
-                source_record = s_cur.fetchone()
-            except sqlite3.OperationalError:
-                pass
+            )
+            for tbl in ("ulif_all.ulif_entries", "ulif_entries"):
+                for k in ulif_keys:
+                    try:
+                        s_cur.execute(
+                            f"SELECT 1, canonical_headword, lemma FROM {tbl} WHERE lemma = ? OR canonical_headword = ? LIMIT 1",
+                            (k, k),
+                        )
+                        source_record = s_cur.fetchone()
+                        if source_record:
+                            break
+                    except sqlite3.OperationalError:
+                        continue
+                if source_record:
+                    break
 
         # 3. Modern normative fallback: ВТС (Великий тлумачний словник) in external_articles
         if not source_record:
             try:
                 s_cur.execute(
                     "SELECT id, title, text FROM external_articles WHERE (title LIKE '%ВТС%' OR title LIKE '%тлумачний%' OR text LIKE '%тлумачний%') AND (title LIKE ? OR text LIKE ?) LIMIT 1",
-                    (f"%{art_head}%", f"%{art_head}%"),
+                    (f"%{art_head}%", f"%{t_clean}%"),
                 )
                 source_record = s_cur.fetchone()
             except sqlite3.OperationalError:
@@ -493,8 +515,8 @@ def query_source_evidence(
         rec_id_val = source_record[0]
         rec_head = str(source_record[1])
         rec_text = str(source_record[2])
-        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower())
-        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
+        head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower()).strip()
+        text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower()).strip()
 
         # Prohibit Soviet dictionary СУМ-11 as positive normative evidence
         if any(s in head_low or s in text_low for s in ("sum11", "sum-11", "сум-11", "сум 11")):
@@ -502,16 +524,27 @@ def query_source_evidence(
                 f"Soviet dictionary СУМ-11 is strictly forbidden as positive normative evidence for case '{case_id}'"
             )
 
-        art_clean = art.lower()
-        if not (
-            t_clean in head_low
+        art_clean = re.sub(r"[\u0301\u0300]", "", art.lower()).strip()
+        art_head_clean = re.sub(r"[\u0301\u0300]", "", art_head.lower()).strip()
+
+        # Bind selected record strictly to the cited entry or phrase
+        is_bound = (
+            head_low in (art_clean, art_head_clean)
+            or head_low.startswith(art_clean + " ")
+            or head_low.startswith(art_head_clean + " ")
+            or art_clean in head_low.split()
+            or art_head_clean in head_low.split()
             or t_clean in text_low
-            or any(tok in head_low or tok in text_low for tok in t_tokens)
-            or any(p.strip().lower() in text_low for p in proper_list)
-            or (art_clean and (art_clean in head_low or art_clean in text_low))
-        ):
+            or (" " not in term and head_low == t_clean)
+            or any(
+                p.strip().lower() == head_low or p.strip().lower() in text_low
+                for p in proper_list
+                if len(p.strip()) > 3
+            )
+        )
+        if not is_bound:
             raise ValueError(
-                f"Retrieved lexical record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
+                f"Retrieved lexical record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate cited entry '{art}' or phrase '{term}')"
             )
     elif "правопис" in auth.lower():
         s_cur.execute(

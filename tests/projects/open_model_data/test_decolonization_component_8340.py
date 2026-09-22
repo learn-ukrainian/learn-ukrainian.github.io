@@ -15,6 +15,7 @@ Verifies:
 from __future__ import annotations
 
 import json
+import sqlite3
 import subprocess
 import sys
 from pathlib import Path
@@ -26,6 +27,7 @@ if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
+    PROJECT_ROOT,
     VESUM_DB_PATH,
     LinguisticNormalizer,
     _resolve_db_path,
@@ -1360,3 +1362,104 @@ def test_cf_r13_remediations_regression() -> None:
     )
     assert "пономарів" in res_tlo["source"].lower()
     assert res_tlo["status"] == "source_attested"
+
+
+def test_cf_r14_dictionary_binding_regression() -> None:
+    """CF-R14 regression: dictionary lookups must strictly bind to cited entry or phrase.
+
+    1. decol_prot_047 ('в першу чергу', citing 'Черга') must fail closed if СУМ-20
+       returns unrelated entry 'ПЛАВНИЙ'.
+    2. decol_prot_048 ('мова йде про', citing 'Мова') must fail closed if ULIF
+       returns unrelated surname entry 'Євдокимова'.
+    3. Live database queries must select authentic entries for 'Черга' and 'Мова'.
+    """
+    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
+
+    class PlavniyMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Simulate returning unrelated СУМ-20 record 'ПЛАВНИЙ'
+            return (999, "ПЛАВНИЙ", "який плавно рухається")
+
+        def fetchall(self) -> list:
+            return []
+
+    class YevdokymovaMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Simulate returning unrelated ULIF surname record 'Євдокимова'
+            return (888, "Євдокимова", "жіноче прізвище")
+
+        def fetchall(self) -> list:
+            return []
+
+    real_s_conn = sqlite3.connect(_resolve_db_path("sources.db", PROJECT_ROOT))
+    real_s_conn.execute(f"ATTACH DATABASE '{_resolve_db_path('ulif_dump_all.db', PROJECT_ROOT)}' AS ulif_all")
+    real_s_cur = real_s_conn.cursor()
+
+    real_v_conn = sqlite3.connect(_resolve_db_path("vesum.db", PROJECT_ROOT))
+    real_v_cur = real_v_conn.cursor()
+
+    # 1. PlavniyMockCursor must fail closed for decol_prot_047
+    with pytest.raises(
+        ValueError,
+        match=r"(does not substantiate cited entry 'Черга' or phrase 'в першу чергу'|is unrelated to case 'decol_prot_047')",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_047",
+            term="в першу чергу",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=PlavniyMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2. YevdokymovaMockCursor must fail closed for decol_prot_048
+    with pytest.raises(
+        ValueError,
+        match=r"(does not substantiate cited entry 'Мова' or phrase 'мова йде про'|is unrelated to case 'decol_prot_048')",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_048",
+            term="мова йде про",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=YevdokymovaMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 3. Live query for decol_prot_047 binds to authentic 'черга'
+    res_047 = query_source_evidence(
+        case_id="decol_prot_047",
+        term="в першу чергу",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res_047["status"] == "source_attested"
+    assert "черг" in res_047["source"].lower() or "черг" in res_047.get("article", "").lower()
+
+    # 4. Live query for decol_prot_048 binds to authentic 'мова'
+    res_048 = query_source_evidence(
+        case_id="decol_prot_048",
+        term="мова йде про",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res_048["status"] == "source_attested"
+    assert "мов" in res_048["source"].lower() or "мов" in res_048.get("article", "").lower()
