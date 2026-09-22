@@ -7,7 +7,7 @@ Fails when:
 - a recycled id never appears (recycled_not_used)
 - a form listed in the plan's forms for a core lemma does not appear in a teaching position
   (taught_form_absent: paradigm table, activity item, or the step introducing the word)
-- a token is outside_allowlist or unclassifiable in the stream (token_unresolved)
+- a token has an unresolved failure class in the stream (token_unresolved)
 - tokens marked skipped:<field> are ignored by every check here
 - a resolved form's stress is pending (pending_stress).
 
