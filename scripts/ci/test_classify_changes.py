@@ -212,9 +212,7 @@ class ClassifierTests(unittest.TestCase):
 
     def test_merge_group_content_class(self):
         # #8437: curriculum markdown without learner pages stays on the docs lane.
-        self.assert_docs(
-            self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event="merge_group")
-        )
+        self.assert_docs(self.classify(["curriculum/l2-uk-en/a1/module/lesson-1/module.md"], event="merge_group"))
 
     def test_merge_group_docs_only_stays_docs(self):
         # #8437: a docs merge does not rebuild the site or run four shards.
@@ -266,9 +264,11 @@ class ClassifierTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as directory:
             output = Path(directory) / "output"
             env["GITHUB_OUTPUT"] = str(output)
-            with patch.dict(os.environ, env, clear=True), \
-                 patch.object(scope, "compare_paths", side_effect=OSError()), \
-                 contextlib.redirect_stdout(io.StringIO()) as stdout:
+            with (
+                patch.dict(os.environ, env, clear=True),
+                patch.object(scope, "compare_paths", side_effect=OSError()),
+                contextlib.redirect_stdout(io.StringIO()) as stdout,
+            ):
                 scope.main()
         self.assertIn("files=0", stdout.getvalue())
         self.assertIn("pytest_mode=full", stdout.getvalue())
@@ -306,9 +306,7 @@ class ClassifierTests(unittest.TestCase):
             "tests/test_reads_content_marker_invariant.py",
         ]
         self.assert_full(self.classify(paths, tree_paths=tree), frontend="false")
-        self.assert_full(
-            self.classify(paths, event="merge_group", tree_paths=tree), frontend="false"
-        )
+        self.assert_full(self.classify(paths, event="merge_group", tree_paths=tree), frontend="false")
 
     def test_full_ci_label_forces_full_over_content(self):
         self.assert_full(
@@ -390,10 +388,14 @@ class ClassifierTests(unittest.TestCase):
 
     @patch.object(scope.subprocess, "check_output")
     def test_rename_source_and_odd_filenames(self, command):
-        command.return_value = json.dumps({"files": [
-            {"filename": "docs/moved.md", "previous_filename": "scripts/ci/README.md"},
-            {"filename": "unknown/line\nbreak.md"},
-        ]})
+        command.return_value = json.dumps(
+            {
+                "files": [
+                    {"filename": "docs/moved.md", "previous_filename": "scripts/ci/README.md"},
+                    {"filename": "unknown/line\nbreak.md"},
+                ]
+            }
+        )
         paths = scope.compare_paths("base", "head", "owner/repo")
         self.assertEqual(paths, ["docs/moved.md", "scripts/ci/README.md", "unknown/line\nbreak.md"])
         self.assert_full(self.classify(paths))
@@ -424,15 +426,20 @@ class ClassifierTests(unittest.TestCase):
                 subprocess.CalledProcessError(1, "gh"),
                 subprocess.TimeoutExpired("gh", 60),
             ):
-                with self.subTest(error=type(error).__name__), patch.dict(os.environ, env), \
-                     patch.object(scope, "compare_paths", side_effect=error), \
-                     contextlib.redirect_stdout(io.StringIO()):
+                with (
+                    self.subTest(error=type(error).__name__),
+                    patch.dict(os.environ, env),
+                    patch.object(scope, "compare_paths", side_effect=error),
+                    contextlib.redirect_stdout(io.StringIO()),
+                ):
                     output.write_text("")
                     scope.main()
                     self.assertEqual(output.read_text(), full_line)
-            with patch.dict(os.environ, env), \
-                 patch.object(scope, "compare_paths", return_value=["docs/guide.md"]), \
-                 contextlib.redirect_stdout(io.StringIO()):
+            with (
+                patch.dict(os.environ, env),
+                patch.object(scope, "compare_paths", return_value=["docs/guide.md"]),
+                contextlib.redirect_stdout(io.StringIO()),
+            ):
                 output.write_text("")
                 scope.main()
                 self.assertEqual(
@@ -443,8 +450,11 @@ class ClassifierTests(unittest.TestCase):
 
     def test_forced_events_do_not_need_compare_api(self):
         # schedule stays force-full without touching the compare API.
-        with patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "schedule"}, clear=True), \
-             patch.object(scope, "compare_paths") as compare, contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with (
+            patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "schedule"}, clear=True),
+            patch.object(scope, "compare_paths") as compare,
+            contextlib.redirect_stdout(io.StringIO()) as stdout,
+        ):
             scope.main()
             compare.assert_not_called()
             self.assertIn("docs_only=false", stdout.getvalue())
@@ -457,8 +467,11 @@ class ClassifierTests(unittest.TestCase):
     def test_merge_group_without_event_env_fails_closed(self):
         # merge_group classifies by paths (#8399), but a missing REPO env must
         # fail closed to full before the compare API is ever called.
-        with patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "merge_group"}, clear=True), \
-             patch.object(scope, "compare_paths") as compare, contextlib.redirect_stdout(io.StringIO()) as stdout:
+        with (
+            patch.dict(os.environ, {"PYTEST_SHARD_COUNT": "4", "EVENT_NAME": "merge_group"}, clear=True),
+            patch.object(scope, "compare_paths") as compare,
+            contextlib.redirect_stdout(io.StringIO()) as stdout,
+        ):
             scope.main()
             compare.assert_not_called()
             self.assertIn("pytest_mode=full", stdout.getvalue())
@@ -577,6 +590,98 @@ class ClassifierTests(unittest.TestCase):
         self.assertEqual(len(json.loads(selected["shards"])), int(selected["shard_count"]))
         full = self.classify(["unknown.bin"])
         self.assertEqual(len(json.loads(full["shards"])), int(full["shard_count"]))
+
+    def test_inbox_watch_selected(self):
+        tree = _tree(
+            "scripts/ai_agent_bridge/_inbox_watch.py",
+            "tests/ai_agent_bridge/test_inbox_watch.py",
+            "tests/test_ci_shard_partition.py",
+        )
+        # PR #8496 pattern: changed script and test file
+        result = self.classify(
+            ["scripts/ai_agent_bridge/_inbox_watch.py", "tests/ai_agent_bridge/test_inbox_watch.py"],
+            tree_paths=tree,
+        )
+        self.assert_selected(
+            result,
+            [
+                "tests/ai_agent_bridge/test_inbox_watch.py",
+                "tests/test_ci_shard_partition.py",
+            ],
+        )
+        # Script change alone finds matching test in tree
+        result_script_only = self.classify(
+            ["scripts/ai_agent_bridge/_inbox_watch.py"],
+            tree_paths=tree,
+        )
+        self.assert_selected(
+            result_script_only,
+            [
+                "tests/ai_agent_bridge/test_inbox_watch.py",
+                "tests/test_ci_shard_partition.py",
+            ],
+        )
+
+    def test_leading_underscore_stem_collision_forces_full(self):
+        tree = _tree(
+            "scripts/ai_agent_bridge/_inbox_watch.py",
+            "scripts/other/inbox_watch.py",
+            "tests/ai_agent_bridge/test_inbox_watch.py",
+            "tests/test_ci_shard_partition.py",
+        )
+        # Stripped stem 'inbox_watch' collides with scripts/other/inbox_watch.py
+        self.assert_full(
+            self.classify(["scripts/ai_agent_bridge/_inbox_watch.py"], tree_paths=tree),
+            frontend="false",
+        )
+
+    def test_package_mapping_positive_and_negative(self):
+        tree_pos = _tree(
+            "scripts/ai_agent_bridge/custom_worker.py",
+            "tests/ai_agent_bridge/test_custom_worker.py",
+            "tests/test_ci_shard_partition.py",
+        )
+        self.assertEqual(
+            scope._package_map_tests("scripts/ai_agent_bridge/custom_worker.py", tree_pos),
+            ["tests/ai_agent_bridge/test_custom_worker.py"],
+        )
+        self.assert_selected(
+            self.classify(["scripts/ai_agent_bridge/custom_worker.py"], tree_paths=tree_pos),
+            [
+                "tests/ai_agent_bridge/test_custom_worker.py",
+                "tests/test_ci_shard_partition.py",
+            ],
+        )
+
+        tree_neg = _tree(
+            "scripts/pkg_a/worker.py",
+            "tests/pkg_b/test_worker.py",
+            "tests/test_ci_shard_partition.py",
+        )
+        self.assertEqual(
+            scope._package_map_tests("scripts/pkg_a/worker.py", tree_neg),
+            [],
+        )
+        self.assertEqual(
+            scope._package_map_tests("scripts/delegate.py", tree_pos),
+            [],
+        )
+
+    def test_new_fail_closed_triggers_force_full(self):
+        triggers = (
+            "pytest.ini",
+            "setup.cfg",
+            "tox.ini",
+            "tests/conftest.py",
+            "tests/sub/conftest.py",
+            "tests/helpers.py",
+            "tests/fixtures/data.json",
+        )
+        for path in triggers:
+            with self.subTest(path=path):
+                tree = _tree(path, "tests/test_x.py", "tests/test_ci_shard_partition.py")
+                self.assertTrue(scope.hits_shared_root_denylist(path))
+                self.assert_full(self.classify([path], tree_paths=tree), frontend="false")
 
 
 if __name__ == "__main__":

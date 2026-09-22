@@ -182,9 +182,7 @@ class StallWatcher:
     ) -> None:
         self.breadcrumb_dir = breadcrumb_dir
         self.stall_budget = stall_budget if stall_budget is not None else stall_budget_seconds()
-        self.poll_interval = (
-            poll_interval if poll_interval is not None else poll_interval_seconds(self.stall_budget)
-        )
+        self.poll_interval = poll_interval if poll_interval is not None else poll_interval_seconds(self.stall_budget)
         self._report = report
         self._terminate = terminate
         self.now = now

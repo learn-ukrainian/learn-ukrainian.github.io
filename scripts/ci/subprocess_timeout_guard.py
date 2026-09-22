@@ -93,9 +93,7 @@ class _SubprocessCallVisitor(ast.NodeVisitor):
             kwargs = {kw.arg for kw in node.keywords if kw.arg}
             if "timeout" not in kwargs:
                 qualname = ".".join(self._scope_stack) if self._scope_stack else "<module>"
-                self.hits.append(
-                    TimeoutLessCall(node.lineno, name, qualname, call_shape_hash(node))
-                )
+                self.hits.append(TimeoutLessCall(node.lineno, name, qualname, call_shape_hash(node)))
         self.generic_visit(node)
 
 
@@ -116,15 +114,10 @@ def format_allowlist_key(rel_path: str, qualname: str, callee: str, shape_hash: 
 def parse_allowlist_key(entry: str) -> tuple[str, str, str, str]:
     parts = entry.split("::")
     if len(parts) != ALLOWLIST_KEY_PARTS:
-        raise ValueError(
-            "invalid allowlist entry format "
-            f"(expected path::qualname::callee::shape): {entry}"
-        )
+        raise ValueError(f"invalid allowlist entry format (expected path::qualname::callee::shape): {entry}")
     path, qualname, callee, shape_hash = parts
     if not _SHAPE_RE.fullmatch(shape_hash):
-        raise ValueError(
-            f"invalid allowlist shape hash (expected {SHAPE_HASH_HEX_LEN} lowercase hex): {entry}"
-        )
+        raise ValueError(f"invalid allowlist shape hash (expected {SHAPE_HASH_HEX_LEN} lowercase hex): {entry}")
     if not callee.startswith("subprocess."):
         raise ValueError(f"invalid allowlist callee (expected subprocess.*): {entry}")
     if not path or not qualname:
@@ -142,9 +135,7 @@ def sort_allowlist_entries(entries: Sequence[str]) -> list[str]:
     return sorted(entries, key=lambda item: item.encode("utf-8"))
 
 
-def format_unallowlisted_line(
-    key: str, *, lineno: int, actual_count: int, allowed_count: int
-) -> str:
+def format_unallowlisted_line(key: str, *, lineno: int, actual_count: int, allowed_count: int) -> str:
     """Paste-ready key first so the line can be copied into the allowlist."""
     return f"{key}  # line {lineno}; found {actual_count}, allowlist permits {allowed_count}"
 
@@ -225,9 +216,7 @@ def compare_allowlist(
     for key, allowed_count in sorted(allowlist_counts.items()):
         actual_count = len(actual_hits.get(key, []))
         if allowed_count > actual_count:
-            stale_entries.append(
-                format_stale_line(key, allowed_count=allowed_count, actual_count=actual_count)
-            )
+            stale_entries.append(format_stale_line(key, allowed_count=allowed_count, actual_count=actual_count))
     return unallowlisted, stale_entries
 
 

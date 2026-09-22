@@ -357,7 +357,11 @@ def write_file_durations(*, junit_paths: Sequence[Path], output: Path) -> dict[s
     if not file_seconds:
         raise RuntimeError("file-durations found zero mappable test files across the given JUnit reports")
     _write_json(output, file_seconds)
-    return {"files": len(file_seconds), "unmapped_testcases": unmapped, "total_seconds": round(sum(file_seconds.values()), 3)}
+    return {
+        "files": len(file_seconds),
+        "unmapped_testcases": unmapped,
+        "total_seconds": round(sum(file_seconds.values()), 3),
+    }
 
 
 def _plan_payload(
@@ -420,10 +424,7 @@ def assert_set_integrity(nodeids: Sequence[str], shards: Sequence[Sequence[str]]
     if set(assigned) != set(nodeids):
         missing = sorted(set(nodeids) - set(assigned))
         extra = sorted(set(assigned) - set(nodeids))
-        raise RuntimeError(
-            "shard union does not equal fast collection "
-            f"(missing={len(missing)}, extra={len(extra)})"
-        )
+        raise RuntimeError(f"shard union does not equal fast collection (missing={len(missing)}, extra={len(extra)})")
     if len(assigned) != len(nodeids):
         raise RuntimeError("shard assignment count does not match collected selection")
 
@@ -523,9 +524,7 @@ def verify_artifacts(
         if plan.get("partition_mode") != "lpt-durations" or plan.get("grouping") != "file":
             raise RuntimeError(f"invalid planner mode in {plan_path}")
         if plan.get("markexpr") != REQUIRED_MARKEXPR:
-            raise RuntimeError(
-                f"plan markexpr must be {REQUIRED_MARKEXPR!r}, got {plan.get('markexpr')!r}"
-            )
+            raise RuntimeError(f"plan markexpr must be {REQUIRED_MARKEXPR!r}, got {plan.get('markexpr')!r}")
         if _junit_count(main_junit) != len(assigned):
             raise RuntimeError(f"main JUnit count does not match plan for shard {shard_id}")
         if expected_source_sha is not None and plan.get("source_sha") != expected_source_sha.strip():
@@ -734,34 +733,98 @@ def _parser() -> argparse.ArgumentParser:
         ),
     )
     commands = parser.add_subparsers(dest="command", required=True, title="commands")
-    plan = commands.add_parser("plan", help="Materialize all shard plans in one directory for offline use.", description="Collect once and write all four offline LPT plans.", formatter_class=formatter)
-    plan.add_argument("--durations", type=Path, help="Optional JSON duration dataset; missing input uses median fallback.")
-    plan.add_argument("--output-dir", type=Path, required=True, help="Directory receiving pytest-shard-N/plan.json and test-nodeids.txt.")
-    plan.add_argument("--shard-count", type=int, default=SHARD_COUNT, help=f"Number of shards (default: {SHARD_COUNT}).")
-    snapshot = commands.add_parser("snapshot", help="Freeze one shared duration input for a CI event.", description="Normalize a cache restore into an immutable shard input snapshot.", formatter_class=formatter)
-    snapshot.add_argument("--durations", type=Path, help="Optional restored duration JSON; missing input selects median fallback.")
+    plan = commands.add_parser(
+        "plan",
+        help="Materialize all shard plans in one directory for offline use.",
+        description="Collect once and write all four offline LPT plans.",
+        formatter_class=formatter,
+    )
+    plan.add_argument(
+        "--durations", type=Path, help="Optional JSON duration dataset; missing input uses median fallback."
+    )
+    plan.add_argument(
+        "--output-dir",
+        type=Path,
+        required=True,
+        help="Directory receiving pytest-shard-N/plan.json and test-nodeids.txt.",
+    )
+    plan.add_argument(
+        "--shard-count", type=int, default=SHARD_COUNT, help=f"Number of shards (default: {SHARD_COUNT})."
+    )
+    snapshot = commands.add_parser(
+        "snapshot",
+        help="Freeze one shared duration input for a CI event.",
+        description="Normalize a cache restore into an immutable shard input snapshot.",
+        formatter_class=formatter,
+    )
+    snapshot.add_argument(
+        "--durations", type=Path, help="Optional restored duration JSON; missing input selects median fallback."
+    )
     snapshot.add_argument("--output", type=Path, required=True, help="Output JSON snapshot path.")
     snapshot.add_argument("--source-sha", required=True, help="Exact event tree SHA, normally GITHUB_SHA.")
     snapshot.add_argument("--cache-primary-key", required=True, help="Requested cache key used for this event.")
     snapshot.add_argument("--cache-matched-key", help="Matched restore key, when the cache action exposes one.")
     snapshot.add_argument("--cache-hit", default="false", help="Exact cache-hit output (default: false).")
-    plan_shard = commands.add_parser("plan-shard", help="Collect and write one shard's plan locally.", description="Collect the required suite once and write one deterministic shard-local LPT plan.", formatter_class=formatter)
-    plan_shard.add_argument("--snapshot", type=Path, required=True, help="Immutable duration snapshot JSON shared by all shards.")
+    plan_shard = commands.add_parser(
+        "plan-shard",
+        help="Collect and write one shard's plan locally.",
+        description="Collect the required suite once and write one deterministic shard-local LPT plan.",
+        formatter_class=formatter,
+    )
+    plan_shard.add_argument(
+        "--snapshot", type=Path, required=True, help="Immutable duration snapshot JSON shared by all shards."
+    )
     plan_shard.add_argument("--shard-id", type=int, required=True, help="1-based shard number, e.g. 1.")
-    plan_shard.add_argument("--output-dir", type=Path, required=True, help="Directory receiving plan.json and test-nodeids.txt.")
-    plan_shard.add_argument("--shard-count", type=int, default=SHARD_COUNT, help=f"Total shard count (default: {SHARD_COUNT}).")
+    plan_shard.add_argument(
+        "--output-dir", type=Path, required=True, help="Directory receiving plan.json and test-nodeids.txt."
+    )
+    plan_shard.add_argument(
+        "--shard-count", type=int, default=SHARD_COUNT, help=f"Total shard count (default: {SHARD_COUNT})."
+    )
     plan_shard.add_argument("--expected-source-sha", help="Require the snapshot source SHA to equal this event SHA.")
-    validate = commands.add_parser("validate-snapshot", help="Validate the fast planner-contract snapshot without collection.", description="Check snapshot schema, planner version, selection digest, and source identity without collecting tests.", formatter_class=formatter)
+    validate = commands.add_parser(
+        "validate-snapshot",
+        help="Validate the fast planner-contract snapshot without collection.",
+        description="Check snapshot schema, planner version, selection digest, and source identity without collecting tests.",
+        formatter_class=formatter,
+    )
     validate.add_argument("--snapshot", type=Path, required=True, help="Immutable duration snapshot JSON to validate.")
     validate.add_argument("--expected-source-sha", help="Require the snapshot source SHA to equal this event SHA.")
-    verify = commands.add_parser("verify-artifacts", help="Fail closed unless all shard evidence forms one complete partition.", description="Verify plans, node-ID lists, JUnit counts, and optional execution/provenance evidence.", formatter_class=formatter)
-    verify.add_argument("--artifact-dir", type=Path, required=True, help="Directory containing pytest-shard-1 through pytest-shard-N artifacts.")
-    verify.add_argument("--shard-count", type=int, default=SHARD_COUNT, help=f"Expected number of shards (default: {SHARD_COUNT}).")
+    verify = commands.add_parser(
+        "verify-artifacts",
+        help="Fail closed unless all shard evidence forms one complete partition.",
+        description="Verify plans, node-ID lists, JUnit counts, and optional execution/provenance evidence.",
+        formatter_class=formatter,
+    )
+    verify.add_argument(
+        "--artifact-dir",
+        type=Path,
+        required=True,
+        help="Directory containing pytest-shard-1 through pytest-shard-N artifacts.",
+    )
+    verify.add_argument(
+        "--shard-count", type=int, default=SHARD_COUNT, help=f"Expected number of shards (default: {SHARD_COUNT})."
+    )
     verify.add_argument("--expected-source-sha", help="Require every plan source SHA to equal this event SHA.")
-    verify.add_argument("--require-plan-metadata", action="store_true", help="Require and cross-check immutable snapshot/planner metadata.")
-    verify.add_argument("--require-execution-receipt", action="store_true", help="Require each shard's reported execution node-ID receipt.")
-    publish = commands.add_parser("publish-durations", help="Publish landing-tier test timings for later shard balancing.", description="Parse shard logs and write the rolling duration dataset.", formatter_class=formatter)
-    publish.add_argument("--log", type=Path, action="append", required=True, help="Pytest log path; repeat once per shard.")
+    verify.add_argument(
+        "--require-plan-metadata",
+        action="store_true",
+        help="Require and cross-check immutable snapshot/planner metadata.",
+    )
+    verify.add_argument(
+        "--require-execution-receipt",
+        action="store_true",
+        help="Require each shard's reported execution node-ID receipt.",
+    )
+    publish = commands.add_parser(
+        "publish-durations",
+        help="Publish landing-tier test timings for later shard balancing.",
+        description="Parse shard logs and write the rolling duration dataset.",
+        formatter_class=formatter,
+    )
+    publish.add_argument(
+        "--log", type=Path, action="append", required=True, help="Pytest log path; repeat once per shard."
+    )
     publish.add_argument("--previous", type=Path, help="Prior duration dataset, if available.")
     publish.add_argument("--output", type=Path, required=True, help="Output duration dataset JSON path.")
     publish.add_argument("--summary", type=Path, required=True, help="Markdown summary output path.")
@@ -771,18 +834,60 @@ def _parser() -> argparse.ArgumentParser:
         choices=sorted(_PUBLISH_EVENTS),
         help="github.event_name for the summary label (default: push).",
     )
-    run = commands.add_parser("run", help="Run exactly the node IDs in a shard plan.", description="Execute a node-ID file with pytest and optionally record reported execution IDs.", formatter_class=formatter)
+    run = commands.add_parser(
+        "run",
+        help="Run exactly the node IDs in a shard plan.",
+        description="Execute a node-ID file with pytest and optionally record reported execution IDs.",
+        formatter_class=formatter,
+    )
     run.add_argument("--nodeids", type=Path, required=True, help="Newline-delimited planned node-ID file.")
-    run.add_argument("--execution-receipt", type=Path, help="Optional JSON receipt path recording planned and reported node IDs.")
-    run.add_argument("pytest_args", nargs=argparse.REMAINDER, help="Arguments passed to pytest after `--`, e.g. -- -q --junitxml=main-junit.xml.")
-    file_durations = commands.add_parser("file-durations", help="Refresh the committed per-file duration snapshot from JUnit reports.", description="Aggregate per-file test seconds from one or more JUnit XML reports (GitHub Actions file plane).", formatter_class=formatter)
-    file_durations.add_argument("--junit", type=Path, action="append", required=True, help="JUnit XML report path; repeat once per shard report.")
-    file_durations.add_argument("--output", type=Path, required=True, help="Output duration JSON path (flat {file: seconds}, sorted keys, 3-decimal rounding).")
-    plan_files = commands.add_parser("plan-files", help="Write one shard's file allowlist from candidate paths on stdin (GitHub Actions file plane).", description="LPT-partition candidate repo-relative file paths (read from stdin, one per line) across shards and write shard-id's sorted allowlist.", formatter_class=formatter)
+    run.add_argument(
+        "--execution-receipt", type=Path, help="Optional JSON receipt path recording planned and reported node IDs."
+    )
+    run.add_argument(
+        "pytest_args",
+        nargs=argparse.REMAINDER,
+        help="Arguments passed to pytest after `--`, e.g. -- -q --junitxml=main-junit.xml.",
+    )
+    file_durations = commands.add_parser(
+        "file-durations",
+        help="Refresh the committed per-file duration snapshot from JUnit reports.",
+        description="Aggregate per-file test seconds from one or more JUnit XML reports (GitHub Actions file plane).",
+        formatter_class=formatter,
+    )
+    file_durations.add_argument(
+        "--junit",
+        type=Path,
+        action="append",
+        required=True,
+        help="JUnit XML report path; repeat once per shard report.",
+    )
+    file_durations.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="Output duration JSON path (flat {file: seconds}, sorted keys, 3-decimal rounding).",
+    )
+    plan_files = commands.add_parser(
+        "plan-files",
+        help="Write one shard's file allowlist from candidate paths on stdin (GitHub Actions file plane).",
+        description="LPT-partition candidate repo-relative file paths (read from stdin, one per line) across shards and write shard-id's sorted allowlist.",
+        formatter_class=formatter,
+    )
     plan_files.add_argument("--shard-id", type=int, required=True, help="1-based shard number, e.g. 1.")
     plan_files.add_argument("--shard-count", type=int, required=True, help="Total shard count.")
-    plan_files.add_argument("--durations", type=Path, required=True, help="Committed per-file duration JSON (flat {file: seconds}); files without history use the median.")
-    plan_files.add_argument("--output", type=Path, required=True, help="Output path for this shard's sorted newline-delimited file allowlist.")
+    plan_files.add_argument(
+        "--durations",
+        type=Path,
+        required=True,
+        help="Committed per-file duration JSON (flat {file: seconds}); files without history use the median.",
+    )
+    plan_files.add_argument(
+        "--output",
+        type=Path,
+        required=True,
+        help="Output path for this shard's sorted newline-delimited file allowlist.",
+    )
     return parser
 
 

@@ -154,7 +154,9 @@ def inventory_workflows(workflow_dir: Path = DEFAULT_WORKFLOW_DIR) -> list[Workf
             continue
         raw_jobs = _mapping(workflow.get("jobs", {}), description=f"{path}: jobs")
         jobs = {
-            job_name: job_slots(_mapping(job, description=f"{path}:{job_name}"), workflow_name=path.name, job_name=job_name)
+            job_name: job_slots(
+                _mapping(job, description=f"{path}:{job_name}"), workflow_name=path.name, job_name=job_name
+            )
             for job_name, job in raw_jobs.items()
         }
         inventories.append(WorkflowInventory(path=path, jobs=jobs))
@@ -187,7 +189,9 @@ def _print_human(report: Mapping[str, Any]) -> None:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--workflow-dir", type=Path, default=DEFAULT_WORKFLOW_DIR, help="workflow directory to inventory")
+    parser.add_argument(
+        "--workflow-dir", type=Path, default=DEFAULT_WORKFLOW_DIR, help="workflow directory to inventory"
+    )
     parser.add_argument("--check", action="store_true", help="fail when the inventory exceeds the configured ceiling")
     parser.add_argument("--json", action="store_true", help="emit JSON only")
     args = parser.parse_args(argv)

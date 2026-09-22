@@ -224,11 +224,7 @@ def verify_cloud_artifacts(
 
     # Mandatory completeness anchoring check (exact-head anchor must be present)
     clean_expected_digest = expected_collected_digest.strip() if expected_collected_digest else None
-    if (
-        expected_nodeids is None
-        and expected_collected_count is None
-        and not clean_expected_digest
-    ):
+    if expected_nodeids is None and expected_collected_count is None and not clean_expected_digest:
         return VerificationResult(
             VerificationOutcome.UNKNOWN_INFRA,
             reasons=[
@@ -261,10 +257,7 @@ def verify_cloud_artifacts(
                     f"expected_collected_count ({expected_collected_count}) does not match len(expected_nodeids) ({target_count})"
                 ],
             )
-        if (
-            clean_expected_digest is not None
-            and clean_expected_digest.lower() != target_digest.lower()
-        ):
+        if clean_expected_digest is not None and clean_expected_digest.lower() != target_digest.lower():
             return VerificationResult(
                 VerificationOutcome.UNKNOWN_INFRA,
                 reasons=[
@@ -451,8 +444,7 @@ def verify_cloud_artifacts(
             )
 
         if target_digest is not None and (
-            not isinstance(plan_collected_digest, str)
-            or plan_collected_digest.lower() != target_digest.lower()
+            not isinstance(plan_collected_digest, str) or plan_collected_digest.lower() != target_digest.lower()
         ):
             return VerificationResult(
                 VerificationOutcome.UNKNOWN_INFRA,
@@ -655,9 +647,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             print(f"- expected-nodeids-file not found: {args.expected_nodeids_file}", file=sys.stderr)
             return 2
         expected_nodeids = [
-            line.strip()
-            for line in args.expected_nodeids_file.read_text(encoding="utf-8").splitlines()
-            if line.strip()
+            line.strip() for line in args.expected_nodeids_file.read_text(encoding="utf-8").splitlines() if line.strip()
         ]
 
     result = verify_cloud_artifacts(
