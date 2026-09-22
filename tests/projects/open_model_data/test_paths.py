@@ -173,3 +173,41 @@ def test_dialect_builder_loads_verified_non_archived_replay(tmp_path: Path, isol
     )
     assert len(trajs) == 1
     assert trajs[0]["trajectory_id"] == "traj.verified.001"
+
+
+def test_execute_mining_and_release_forwards_replay_arguments(
+    tmp_path: Path, isolated_vesum_db: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Verify that execute_mining_and_release exposes and forwards replay arguments to builder."""
+    from typing import Any
+
+    import scripts.projects.open_model_data.v5_mine_dialect_corpus as mdc
+
+    captured_kwargs: dict[str, Any] = {}
+
+    def mock_build_sft(_candidates, **kwargs):
+        captured_kwargs.update(kwargs)
+        raise ValueError("StopPipelineAfterForwarding")
+
+    monkeypatch.setattr(mdc, "mine_all_candidate_sentences", lambda _db: [])
+    monkeypatch.setattr(mdc, "partition_candidates_by_lemma", lambda _c: ([], []))
+    monkeypatch.setattr(mdc, "build_evaluation_benchmark", lambda *args, **kwargs: [])
+    monkeypatch.setattr(mdc, "build_sft_dialect_dataset", mock_build_sft)
+
+    out_dir = tmp_path / "out"
+    dummy_db = tmp_path / "dummy.db"
+    dummy_db.touch()
+    shards_dir = tmp_path / "custom_shards"
+
+    with pytest.raises(ValueError, match="StopPipelineAfterForwarding"):
+        mdc.execute_mining_and_release(
+            db_path=dummy_db,
+            vesum_db=isolated_vesum_db,
+            output_dir=out_dir,
+            replay_quota=42,
+            replay_shards_dir=shards_dir,
+        )
+
+    assert captured_kwargs["replay_quota"] == 42
+    assert captured_kwargs["replay_shards_dir"] == shards_dir
+    assert captured_kwargs["sft_dialect_quota"] == 500 - 42

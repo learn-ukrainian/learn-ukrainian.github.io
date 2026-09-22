@@ -1231,6 +1231,8 @@ def execute_mining_and_release(
     db_path: Path = DEFAULT_SOURCES_DB,
     vesum_db: Path = DEFAULT_VESUM_DB,
     output_dir: Path = DEFAULT_RELEASE_DIR,
+    replay_quota: int = 0,
+    replay_shards_dir: Path | None = None,
 ) -> dict[str, Any]:
     """Execute full mining pipeline, lemma partitioning, schema validation, and artifact delivery."""
     output_dir.mkdir(parents=True, exist_ok=True)
@@ -1253,12 +1255,14 @@ def execute_mining_and_release(
     )
     print(f"Constructed {len(eval_cases)} evaluation cases.")
 
-    print("Building SFT Dialect Protection Dataset (>= 500 trajectories) with real VESUM attestation...")
+    print("Building SFT Dialect Protection Dataset with real VESUM attestation...")
+    sft_dialect_quota = 500 if replay_quota == 0 else max(450, 500 - replay_quota)
     sft_trajectories = build_sft_dialect_dataset(
         sft_candidates,
         vesum_db=vesum_db,
-        sft_dialect_quota=450,
-        replay_quota=100,
+        sft_dialect_quota=sft_dialect_quota,
+        replay_quota=replay_quota,
+        replay_shards_dir=replay_shards_dir,
     )
     print(f"Constructed {len(sft_trajectories)} SFT trajectories.")
 
@@ -1357,6 +1361,8 @@ def main() -> None:
     parser.add_argument("--db", type=Path, default=DEFAULT_SOURCES_DB, help="Path to sources.db")
     parser.add_argument("--vesum-db", type=Path, default=DEFAULT_VESUM_DB, help="Path to vesum.db")
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_RELEASE_DIR, help="Output directory for release artifacts")
+    parser.add_argument("--replay-quota", type=int, default=0, help="Quota for verified anti-calque replay trajectories (default: 0)")
+    parser.add_argument("--replay-shards-dir", type=Path, default=None, help="Directory containing non-archived verified replay JSONL shards")
     parser.add_argument("--evaluate", action="store_true", help="Run multi-zone benchmark evaluation")
     parser.add_argument("--predictions", type=Path, default=None, help="Path to JSONL file containing model predictions to evaluate")
     args = parser.parse_args()
@@ -1365,7 +1371,13 @@ def main() -> None:
         eval_path = args.output_dir / "dialect_corpus_expanded_1500.jsonl"
         if not eval_path.exists():
             print(f"Evaluation benchmark not found at {eval_path}. Running mining first...")
-            execute_mining_and_release(args.db, args.vesum_db, args.output_dir)
+            execute_mining_and_release(
+                args.db,
+                args.vesum_db,
+                args.output_dir,
+                replay_quota=args.replay_quota,
+                replay_shards_dir=args.replay_shards_dir,
+            )
 
         cases = [json.loads(l) for l in eval_path.read_text(encoding="utf-8").splitlines() if l.strip()]
 
@@ -1397,7 +1409,13 @@ def main() -> None:
         reg = verify_modern_literary_regression(predictions=preds)
         print(f"\nModern Literary Regression Check: {reg}")
     else:
-        execute_mining_and_release(args.db, args.vesum_db, args.output_dir)
+        execute_mining_and_release(
+            args.db,
+            args.vesum_db,
+            args.output_dir,
+            replay_quota=args.replay_quota,
+            replay_shards_dir=args.replay_shards_dir,
+        )
 
 
 if __name__ == "__main__":
