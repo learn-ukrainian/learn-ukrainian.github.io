@@ -91,6 +91,7 @@ class MockULIFServer:
         fail_on_page2_row1: bool = False,
         fail_with_403: bool = False,
         resume_mismatch: bool = False,
+        search_offsets: bool = False,
         inject_unknown_control: bool = False,
     ) -> None:
         self.page1_size = page1_size
@@ -100,6 +101,7 @@ class MockULIFServer:
         self.fail_on_page2_row1 = fail_on_page2_row1
         self.fail_with_403 = fail_with_403
         self.resume_mismatch = resume_mismatch
+        self.search_offsets = search_offsets
         self.inject_unknown_control = inject_unknown_control
         self.requests_log: list[tuple[str, dict[str, str] | None]] = []
 
@@ -149,6 +151,15 @@ class MockULIFServer:
                         register_size=self.page2_size,
                     )
                     return HttpResult(200, mismatch_html, {})
+                if self.search_offsets:
+                    offset_html = _register_html(
+                        ["ду́же", "за́мок", "замо́к"],
+                        "VS-p1",
+                        has_next=True,
+                        has_back=False,
+                        register_size=self.page1_size,
+                    )
+                    return HttpResult(200, offset_html, {})
                 p2_html = _register_html(
                     ["замо́к", "Іши́м", "Іши́м"],
                     "VS-p2",
@@ -170,6 +181,15 @@ class MockULIFServer:
 
         # Paging via nextpage
         if "ctl00$ContentPlaceHolder1$nextpage.x" in data or "ctl00$ContentPlaceHolder1$nextpage" in data:
+            if self.resume_mismatch:
+                mismatch_html = _register_html(
+                    ["а", "б"],
+                    "VS-p-mismatch",
+                    has_next=True,
+                    has_back=False,
+                    register_size=self.page2_size,
+                )
+                return HttpResult(200, mismatch_html, {})
             if vs == "VS-p1":
                 self.current_page = 2
                 p2_html = _register_html(
@@ -541,6 +561,49 @@ def test_resume_mismatch_stops_cleanly_with_resume_mismatch(tmp_path: Path):
         assert p2["error"] == "resume_mismatch"
     finally:
         ledger.close()
+
+
+def test_resume_fast_forward_when_search_offsets(tmp_path: Path):
+    server1 = MockULIFServer(fail_on_page2_row1=True)
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server1,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+
+    # Resume with server where search for "замо́к" lands offset, but nextpage succeeds
+    server2 = MockULIFServer(search_offsets=True)
+    code2 = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server2,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code2 == 0
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p2 = ledger.get_page(2)
+        assert p2 is not None
+        assert p2["state"] == "completed"
+    finally:
+        ledger.close()
+
+    # Verify that fast-forward searched for page 1 headword "а" to begin pagination
+    ff_searches = [
+        req
+        for method, req in server2.requests_log
+        if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
+    ]
+    assert len(ff_searches) == 1
 
 
 def test_unknown_control_is_recorded_and_counted(tmp_path: Path):

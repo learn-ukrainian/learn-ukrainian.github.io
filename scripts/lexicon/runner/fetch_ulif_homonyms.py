@@ -2331,6 +2331,58 @@ def run_fetch(
     return return_code
 
 
+def _fast_forward_to_page(
+    client: PoliteClient,
+    ledger: SpellingLedger,
+    cache: Any,
+    seed_tokens: dict[str, str],
+    start_headword: str,
+    target_page: int,
+    *,
+    quiet: bool = False,
+) -> tuple[str, list[dict[str, Any]]]:
+    """Fast-forward ASPX GridView from page 1 to target_page via canonical nextpage pagination."""
+    if not quiet:
+        print(
+            f"resuming: fast-forwarding from page 1 to page {target_page} via canonical pagination...",
+            file=sys.stderr,
+            flush=True,
+        )
+    search_fields = _form_fields(
+        seed_tokens,
+        spelling=start_headword,
+        extra=_image_click(SEARCH_BUTTON),
+    )
+    current_html, current_req = client.exchange("POST", search_fields)
+    _keep_walk(ledger, cache, "", f"tsearch:ff:1:{target_page}", current_html, current_req, current_page=1)
+
+    for ff_page in range(1, target_page):
+        tokens = _tokens(current_html)
+        if tokens is None or _validation_failure(current_html):
+            raise SessionInvalid(f"ff_page_{ff_page}_viewstate")
+        rows = parse_register_list(current_html)
+        if not rows:
+            raise SessionInvalid(f"ff_page_{ff_page}_empty")
+        next_fields = _form_fields(
+            tokens,
+            spelling=str(rows[-1]["unstressed"]),
+            extra=_image_click(PAGE_BUTTONS["next"]),
+        )
+        current_html, next_req = client.exchange("POST", next_fields)
+        _keep_walk(ledger, cache, "", f"page:ff:{ff_page + 1}:{target_page}", current_html, next_req, current_page=ff_page + 1)
+        if not quiet and ((ff_page + 1) % 25 == 0 or (ff_page + 1) == target_page):
+            print(
+                f"fast-forwarding: reached page {ff_page + 1}/{target_page}...",
+                file=sys.stderr,
+                flush=True,
+            )
+
+    landed_rows = parse_register_list(current_html)
+    if not landed_rows:
+        raise SessionInvalid(f"ff_target_page_{target_page}_empty")
+    return current_html, landed_rows
+
+
 def run_walk(
     *,
     state_dir: Path,
@@ -2507,7 +2559,32 @@ def run_walk(
                     landed_rows = parse_register_list(page_html)
                     if not landed_rows:
                         raise SessionInvalid("resume_missing_register")
-                    if landed_rows[0]["stressed"] != exp_start or landed_rows[-1]["stressed"] != exp_end:
+
+                    # Check if direct search landed on exact page boundaries (fast path / test mocks)
+                    if landed_rows[0]["stressed"] == exp_start and landed_rows[-1]["stressed"] == exp_end:
+                        current_page_html = page_html
+                    elif start_page > 1:
+                        # Fallback: Real ULIF search offsets the target word by several entries.
+                        # Fast-forward from page 1 using canonical nextpage pagination to preserve
+                        # the exact 25-row grid alignment and server ViewState sequence.
+                        current_page_html, landed_rows = _fast_forward_to_page(
+                            client,
+                            ledger,
+                            cache,
+                            seed_tokens,
+                            start_headword,
+                            start_page,
+                            quiet=quiet,
+                        )
+                        if landed_rows[0]["stressed"] != exp_start or landed_rows[-1]["stressed"] != exp_end:
+                            ledger.mark_page(start_page, "error", error="resume_mismatch")
+                            print(
+                                f"stopping: resume_mismatch on page {start_page} (expected {exp_start}..{exp_end}, landed {landed_rows[0]['stressed']}..{landed_rows[-1]['stressed']})",
+                                file=sys.stderr,
+                            )
+                            stop_reason = "resume_mismatch"
+                            return_code = EXIT_USAGE
+                    else:
                         ledger.mark_page(start_page, "error", error="resume_mismatch")
                         print(
                             f"stopping: resume_mismatch on page {start_page} (expected {exp_start}..{exp_end}, landed {landed_rows[0]['stressed']}..{landed_rows[-1]['stressed']})",
@@ -2515,7 +2592,6 @@ def run_walk(
                         )
                         stop_reason = "resume_mismatch"
                         return_code = EXIT_USAGE
-                    current_page_html = page_html
                 else:
                     search_fields = _form_fields(
                         seed_tokens,
@@ -2742,6 +2818,21 @@ def run_walk(
                                 landed = parse_register_list(reseed_page_html)
                                 if landed and landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end:
                                     current_page_html = reseed_page_html
+                                elif current_page > 1:
+                                    current_page_html, landed = _fast_forward_to_page(
+                                        client,
+                                        ledger,
+                                        cache,
+                                        seed_tokens,
+                                        start_headword,
+                                        current_page,
+                                        quiet=quiet,
+                                    )
+                                    if not (landed and landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end):
+                                        ledger.mark_page(current_page, "error", error="resume_mismatch")
+                                        stop_reason = "resume_mismatch"
+                                        return_code = EXIT_USAGE
+                                        break
                                 else:
                                     ledger.mark_page(current_page, "error", error="resume_mismatch")
                                     stop_reason = "resume_mismatch"
