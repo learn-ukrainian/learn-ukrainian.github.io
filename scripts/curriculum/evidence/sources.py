@@ -1,0 +1,333 @@
+"""The word store's sole boundary to dictionaries and morphology tools.
+
+Use one Sources instance per build (and close it). Results preserve source
+bytes; normalization applies only to lookup inputs. Database wrappers share a
+read-only connection, and content hashes are cached only for that instance.
+The DB fingerprint includes a nonempty WAL, which is part of SQLite's content.
+Stat changes during a session fail closed rather than mixing source versions.
+"""
+
+import hashlib
+import json
+import sqlite3
+from collections.abc import Callable, Iterable
+from contextlib import closing
+from dataclasses import dataclass, field
+from functools import lru_cache
+from pathlib import Path
+from typing import Any
+
+from scripts.rag.config import VESUM_DB_PATH
+from scripts.verification import stress, vesum
+
+from . import codes, tags
+
+BATCH_SIZE = 500
+REPO_ROOT = Path(__file__).resolve().parents[3]
+APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
+# Exact POS equivalences only, never text/translation matching.
+GLOSS_POS = {
+    "noun": ("noun",),
+    "verb": ("verb",),
+    "adj": ("adjective", "adj"),
+    "adv": ("adverb",),
+    "numr": ("numeral",),
+    "part": ("particle",),
+    "prep": ("preposition",),
+    "conj": ("conjunction",),
+    "intj": ("interjection",),
+}
+
+
+@dataclass(frozen=True)
+class SourceResult[T]:
+    raw: T
+    content_hash: str
+    metadata: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class ParadigmResult(SourceResult[dict]):
+    forms_by_entry: dict[int, list[dict]] = field(default_factory=dict)
+
+
+def normalize_spelling(word: str) -> str:
+    return word.translate(APOSTROPHES)
+
+
+def _file_hash(path: Path) -> str:
+    with path.open("rb") as stream:
+        return hashlib.file_digest(stream, "sha256").hexdigest()
+
+
+def _signature(path: Path) -> tuple[int, int, int, int] | None:
+    if not path.exists():
+        return None
+    stat = path.stat()
+    return stat.st_ino, stat.st_size, stat.st_mtime_ns, stat.st_ctime_ns
+
+
+def _sources_path() -> Path:
+    path = REPO_ROOT / "data/sources.db"
+    if path.is_file():
+        return path
+    from scripts.guardrails.worktree_containment import resolve_main_root
+
+    return resolve_main_root(REPO_ROOT) / "data/sources.db"
+
+
+def open_readonly(path: Path) -> sqlite3.Connection:
+    conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    return conn
+
+
+class Sources:
+    """Build-scoped source access. Caller owns batching progress and final reports."""
+
+    def __init__(
+        self,
+        *,
+        sources_db: Path | None = None,
+        vesum_db: Path | None = None,
+        report: Callable[[str], None] | None = None,
+    ):
+        self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
+        self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
+        self.mapper = tags.TagMapper(report=report)
+        self.report = report
+        self._conn: sqlite3.Connection | None = None
+        self._fingerprints: dict[Path, tuple[tuple, str, dict]] = {}
+        self._vesum_snapshot: tuple[tuple, str, dict] | None = None
+
+    def __enter__(self):
+        return self
+
+    def __exit__(self, *exc):
+        self.close()
+
+    def close(self) -> None:
+        if self._conn is not None:
+            self._conn.close()
+            self._conn = None
+
+    def _fingerprint(self, path: Path) -> tuple[str, dict]:
+        wal = Path(f"{path}-wal")
+        signature = (_signature(path), _signature(wal))
+        if signature[0] is None:
+            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(path)!r}")
+        if path in self._fingerprints:
+            before, digest, metadata = self._fingerprints[path]
+            if before != signature:
+                raise ValueError(f"{codes.SOURCE_CHANGED}: {str(path)!r} during source session")
+            return digest, metadata
+        db_digest = _file_hash(path)
+        metadata = {"db_sha256": db_digest}
+        digest = db_digest
+        if signature[1] is not None and signature[1][1]:
+            metadata["wal_sha256"] = _file_hash(wal)
+            digest = hashlib.sha256(json.dumps(metadata, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
+        if signature != (_signature(path), _signature(wal)):
+            raise ValueError(f"{codes.SOURCE_CHANGED}: {str(path)!r} while hashing")
+        self._fingerprints[path] = (signature, digest, metadata)
+        return digest, metadata
+
+    def _db(self) -> sqlite3.Connection:
+        if self._conn is None:
+            self._conn = open_readonly(self.sources_db)
+        return self._conn
+
+    def _db_result[T](self, raw: T) -> SourceResult[T]:
+        digest, metadata = self._fingerprint(self.sources_db)
+        return SourceResult(raw, digest, dict(metadata))
+
+    def _vesum_identity(self) -> tuple[str, dict]:
+        # Metadata is the canonical content identity, not an incidental DB file hash.
+        signature = (_signature(self.vesum_db), _signature(Path(f"{self.vesum_db}-wal")))
+        if self._vesum_snapshot is not None:
+            before, digest, metadata = self._vesum_snapshot
+            if signature != before:
+                raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM during source session")
+            return digest, dict(metadata)
+        with closing(open_readonly(self.vesum_db)) as conn:
+            exists = conn.execute("SELECT 1 FROM sqlite_master WHERE name='vesum_build_metadata'").fetchone()
+            metadata = dict(conn.execute("SELECT key, value FROM vesum_build_metadata")) if exists else {}
+        digest = metadata.get("canonical_jsonl_sha256")
+        if not isinstance(digest, str) or len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest):
+            digest, file_metadata = self._fingerprint(self.vesum_db)
+            metadata.update(file_metadata)
+        if signature != (_signature(self.vesum_db), _signature(Path(f"{self.vesum_db}-wal"))):
+            raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM while reading metadata")
+        self._vesum_snapshot = (signature, digest, dict(metadata))
+        return digest, metadata
+
+    def inspect_lemma_forms(self, lemma: str, pos: str) -> ParadigmResult:
+        digest, metadata = self._vesum_identity()
+        raw = vesum.inspect_lemma(normalize_spelling(lemma), db_path=self.vesum_db).as_dict()
+        if raw["status"] == "unavailable":
+            raise ValueError(f"{codes.SOURCE_UNAVAILABLE}: VESUM inspection for {lemma!r}")
+        grouped: dict[int, list[dict]] = {}
+        for form in raw["forms"]:
+            if form["pos"] == pos:
+                grouped.setdefault(form["entry_id"], []).append(form)
+        if self._vesum_identity()[0] != digest:
+            raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM for {lemma!r}")
+        return ParadigmResult(raw, digest, metadata, grouped)
+
+    def inspect_many(self, requests: Iterable[tuple[str, str]]) -> dict[tuple[str, str], ParadigmResult]:
+        unique = list(dict.fromkeys((normalize_spelling(lemma), pos) for lemma, pos in requests))
+        results = {}
+        for start in range(0, len(unique), BATCH_SIZE):
+            for lemma, pos in unique[start : start + BATCH_SIZE]:
+                results[lemma, pos] = self.inspect_lemma_forms(lemma, pos)
+            self._progress("paradigms", min(start + BATCH_SIZE, len(unique)), len(unique))
+        return results
+
+    def verify_words(self, words: Iterable[str], pos: str | None = None) -> SourceResult[dict]:
+        requested = list(dict.fromkeys(map(normalize_spelling, words)))
+        digest, metadata = self._vesum_identity()
+        raw = {}
+        for start in range(0, len(requested), BATCH_SIZE):
+            raw.update(vesum.verify_words(requested[start : start + BATCH_SIZE], pos_filter=pos, db_path=self.vesum_db))
+            self._progress("words", min(start + BATCH_SIZE, len(requested)), len(requested))
+        if self._vesum_identity()[0] != digest:
+            raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM batch")
+        return SourceResult(raw, digest, metadata)
+
+    def stress_for_form(self, form: str, vesum_tags: str) -> SourceResult[dict]:
+        """Return the oracle envelope unchanged. Builder handles monosyllables first."""
+        raw = stress.verify_stress(normalize_spelling(form), tags=self.mapper(vesum_tags))
+        # The trie alone does not identify exact-form override changes.
+        override_digest = _file_hash(stress.STRESS_OVERRIDES_PATH) if stress.STRESS_OVERRIDES_PATH.exists() else None
+        return SourceResult(raw, raw["source"]["digest"], {"overrides_sha256": override_digest})
+
+    def stress_many(self, requests: Iterable[tuple[str, str]]) -> dict[tuple[str, str], SourceResult[dict]]:
+        requested = list(dict.fromkeys((normalize_spelling(form), tag) for form, tag in requests))
+        result = {}
+        for start in range(0, len(requested), BATCH_SIZE):
+            for form, tag in requested[start : start + BATCH_SIZE]:
+                result[form, tag] = self.stress_for_form(form, tag)
+            self._progress("stress", min(start + BATCH_SIZE, len(requested)), len(requested))
+        return result
+
+    def ulif_entries(self, lemmas: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
+        """Raw entry rows + ordered raw sections. No unchecked group can be eligible."""
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        requested = list(dict.fromkeys(map(normalize_spelling, lemmas)))
+        result: dict[str, list[dict]] = {lemma: [] for lemma in requested}
+        for start in range(0, len(requested), BATCH_SIZE):
+            batch = requested[start : start + BATCH_SIZE]
+            slots = ",".join("?" for _ in batch)
+            rows = conn.execute(
+                f"SELECT * FROM ulif_dictua_entries WHERE normalized_query IN ({slots}) ORDER BY normalized_query, homonym_index, id",
+                batch,
+            ).fetchall()
+            entries = {row["id"]: dict(row) for row in rows}
+            for row in entries.values():
+                row["sections"] = []
+                result[row["normalized_query"]].append(row)
+            if entries:
+                # Join on requested spellings to stay within SQLite's variable cap.
+                sections = conn.execute(
+                    f"SELECT s.* FROM ulif_dictua_sections s JOIN ulif_dictua_entries e ON e.id=s.entry_id WHERE e.normalized_query IN ({slots}) ORDER BY s.entry_id, s.kind, s.source_order, s.id",
+                    batch,
+                )
+                for section in sections:
+                    entries[section["entry_id"]]["sections"].append(dict(section))
+            self._progress("ulif", min(start + BATCH_SIZE, len(requested)), len(requested))
+        return self._db_result(result)
+
+    @staticmethod
+    def ulif_group_checked(entries: list[dict]) -> bool:
+        return bool(entries) and all(row.get("homonym_checked") == 1 and row.get("status") == "ok" for row in entries)
+
+    def gloss_rows(self, requests: Iterable[tuple[str, str]]) -> SourceResult[dict[tuple[str, str], list[dict]]]:
+        """Exact lemma + explicit POS equivalents, ordered by stable row id.
+
+        No accent stripping or prefix/fuzzy fallback: a stressed-only headword
+        that differs from the requested spelling is absent under brief rule 6.
+        """
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        requested = list(dict.fromkeys((normalize_spelling(lemma), pos) for lemma, pos in requests))
+        result = {key: [] for key in requested}
+        for start in range(0, len(requested), BATCH_SIZE):
+            batch = requested[start : start + BATCH_SIZE]
+            words = list(dict.fromkeys(lemma for lemma, _ in batch))
+            slots = ",".join("?" for _ in words)
+            rows = conn.execute(f"SELECT * FROM dmklinger_uk_en WHERE word IN ({slots}) ORDER BY id", words).fetchall()
+            for key in batch:
+                result[key] = [
+                    dict(row)
+                    for row in rows
+                    if row["word"] == key[0] and row["pos"] in GLOSS_POS.get(key[1], (key[1],))
+                ]
+            self._progress("glosses", min(start + BATCH_SIZE, len(requested)), len(requested))
+        return self._db_result(result)
+
+    def cefr_levels(self, lemmas: Iterable[str]) -> SourceResult[dict]:
+        """Raw PULS hits; consumers must reject the upstream helper's prefix fallback."""
+        from scripts.wiki import sources_db
+
+        self._fingerprint(self.sources_db)
+        with sources_db.using_connection(self._db()):
+            raw = sources_db.query_cefr_levels(list(dict.fromkeys(map(normalize_spelling, lemmas))))
+        return self._db_result(raw)
+
+    def heritage(self, words: Iterable[str]) -> SourceResult[dict]:
+        from scripts.wiki import sources_db
+
+        self._fingerprint(self.sources_db)
+        with sources_db.using_connection(self._db()):
+            raw = {}
+            requested = list(dict.fromkeys(map(normalize_spelling, words)))
+            for index, word in enumerate(requested, 1):
+                raw[word] = sources_db.search_heritage(word, include_live_slovnyk=False)
+                if index % BATCH_SIZE == 0 or index == len(requested):
+                    self._progress("heritage", index, len(requested))
+        return self._db_result(raw)
+
+    def russian_patterns(self, words: Iterable[str]) -> SourceResult[dict]:
+        from scripts.lexicon import calque_corrections
+        from scripts.verification import check_ru_morph
+
+        requested = list(dict.fromkeys(map(normalize_spelling, words)))
+        verified = self.verify_words(requested)
+        raw = check_ru_morph.check_russian_patterns_batch(
+            requested, verified_words={word for word, hits in verified.raw.items() if hits}
+        )
+        # Hash the actual morphology dictionaries and implementation inputs.
+        files = [Path(check_ru_morph.__file__), Path(calque_corrections.__file__)]
+        for analyzer in (check_ru_morph._morph_ru, check_ru_morph._morph_uk):
+            files.extend(sorted(Path(analyzer.dictionary.path).rglob("*")))
+        hashes = [_file_hash(path) for path in files if path.is_file()]
+        hashes.append(verified.content_hash)
+        digest = hashlib.sha256("\n".join(hashes).encode()).hexdigest()
+        return SourceResult(raw, digest, {"vesum": verified.content_hash})
+
+    def tag_inventory(self) -> SourceResult[dict]:
+        digest, metadata = self._vesum_identity()
+        with closing(open_readonly(self.vesum_db)) as conn:
+            atoms = sorted(
+                {atom for row in conn.execute("SELECT DISTINCT tags FROM forms_all") for atom in row[0].split(":")}
+            )
+            markers = [row[0] for row in conn.execute("SELECT DISTINCT marker FROM form_markers ORDER BY marker")]
+        return SourceResult({"atoms": atoms, "markers": markers}, digest, metadata)
+
+    def _progress(self, kind: str, count: int, total: int) -> None:
+        if self.report:
+            self.report(f"{kind}: {count}/{total}")
+
+
+@lru_cache(maxsize=1)
+def _default() -> Sources:
+    return Sources()
+
+
+def inspect_lemma_forms(lemma: str, pos: str) -> ParadigmResult:
+    return _default().inspect_lemma_forms(lemma, pos)
+
+
+def stress_for_form(form: str, vesum_tags: str) -> SourceResult[dict]:
+    return _default().stress_for_form(form, vesum_tags)
