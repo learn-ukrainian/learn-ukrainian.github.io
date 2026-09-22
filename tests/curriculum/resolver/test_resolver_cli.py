@@ -14,6 +14,8 @@ from resolver_helpers import form, record, stressed
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import codes
 
+pytestmark = [pytest.mark.reads_content]
+
 REPO_ROOT = Path(__file__).resolve().parents[3]
 LEVEL, SLUG, N = "a1", "synthetic-module", 1
 
