@@ -1,0 +1,98 @@
+{
+  "version": 1,
+  "blank_marker": "_{3,}|\\[blank\\]",
+  "record_pattern": "^W-[0-9]*[1-9][0-9]*$",
+  "answer_tags_min_length": 1,
+  "orthography_lists": [
+    {
+      "id": "apostrophe-or-empty",
+      "options": ["’", ""],
+      "record_id": "pravopys-2019-paragraph-7",
+      "also_record_id": "2-klas-ukrmova-vashulenko-2019-1_s0011"
+    },
+    {
+      "id": "soft-sign-or-empty",
+      "options": ["ь", ""],
+      "record_id": "pravopys-2019-paragraph-26"
+    },
+    {
+      "id": "a-or-ya",
+      "options": ["а", "я"],
+      "record_id": "pravopys-2019-paragraph-4"
+    },
+    {
+      "id": "u-or-yu",
+      "options": ["у", "ю"],
+      "record_id": "pravopys-2019-paragraph-4"
+    },
+    {
+      "id": "e-or-ye",
+      "options": ["е", "є"],
+      "record_id": "pravopys-2019-paragraph-4"
+    },
+    {
+      "id": "y-or-i",
+      "options": ["и", "і"],
+      "record_id": "pravopys-2019-paragraph-3",
+      "also_record_id": "pravopys-2019-paragraph-2"
+    }
+  ],
+  "b2_true_false_cap": {
+    "applied": false,
+    "why": "The shared true-false-b2 definition requires at least 10 items, so the A1-B1 cap of 4 is not applied. The B2 cap is decided with the first B2 plans."
+  },
+  "by_type": {
+    "fill-in-a1": {
+      "sentence_blanks": 1,
+      "modes": {
+        "form-choice": {
+          "options_min": 2,
+          "options_max": 4
+        },
+        "orthography": {
+          "options_from": "orthography_lists"
+        }
+      }
+    },
+    "fill-in-a2": {
+      "sentence_blanks": 1,
+      "modes": {
+        "form-choice": {
+          "options_min": 2,
+          "options_max": 4
+        }
+      }
+    },
+    "fill-in-b1": {
+      "sentence_blanks": 1,
+      "modes": {
+        "form-choice": {
+          "options_min": 2,
+          "options_max": 4
+        }
+      }
+    },
+    "fill-in-b2": {
+      "sentence_blanks": 1,
+      "modes": {
+        "form-choice": {
+          "options_min": 4,
+          "options_max": 4
+        }
+      }
+    },
+    "true-false-a1": {
+      "items_max": 4
+    },
+    "true-false-a2": {
+      "items_max": 4
+    },
+    "true-false-b1": {
+      "items_max": 4
+    },
+    "true-false-b2": {
+      "items_max": null,
+      "see": "b2_true_false_cap"
+    }
+  }
+}
