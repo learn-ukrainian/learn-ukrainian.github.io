@@ -78,7 +78,7 @@ export default function VocabularyTrack({
       </div>
 
       {/* Expandable Lexical Relations Group */}
-      <details className="k3-track-subgroup" style={{ marginTop: '1rem' }}>
+      <details className="k3-track-subgroup" open style={{ marginTop: '1rem' }}>
         <summary style={{ cursor: 'pointer', userSelect: 'none', fontWeight: 600 }}>
           <span>
             {chromeLocale === 'uk'

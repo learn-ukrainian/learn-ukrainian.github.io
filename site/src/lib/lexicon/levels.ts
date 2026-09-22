@@ -185,3 +185,96 @@ export function filterRowsByLetter<T extends Pick<LexiconBrowseRow, "l">>(
   if (!UKRAINIAN_LETTERS.has(letter)) return [];
   return rows.filter((row) => firstUkrainianLetter(row.l) === letter);
 }
+
+export function isCefrAtLeast(
+  level: unknown,
+  minLevel: CefrLevel,
+): boolean {
+  const current = parseCefrLevel(level);
+  if (!current) return false;
+  const currentRank = CEFR_RANK.get(current) ?? -1;
+  const minRank = CEFR_RANK.get(minLevel) ?? 0;
+  return currentRank >= minRank;
+}
+
+export const MODE_MIN_LEVELS: Partial<Record<string, CefrLevel>> = {
+  paronym: "A2",
+  heritage: "A2",
+};
+
+export interface ModeLevelRequirement {
+  mode: string;
+  minLevel: CefrLevel | null;
+  isGated: boolean;
+  badgeText: string | null;
+  tooltip: { uk: string; en: string } | null;
+  feedback: { uk: string; en: string } | null;
+  note: { uk: string; en: string } | null;
+}
+
+export function calculateModeLevelRequirement(
+  mode: string,
+  learnerLevel: unknown,
+  modeCount: number = 0,
+): ModeLevelRequirement {
+  const minLevel = MODE_MIN_LEVELS[mode] ?? null;
+  if (!minLevel) {
+    return {
+      mode,
+      minLevel: null,
+      isGated: false,
+      badgeText: null,
+      tooltip: null,
+      feedback: null,
+      note: null,
+    };
+  }
+
+  const meetsLevel = isCefrAtLeast(learnerLevel, minLevel);
+  const isGated = !meetsLevel && modeCount <= 0;
+
+  if (!isGated) {
+    return {
+      mode,
+      minLevel,
+      isGated: false,
+      badgeText: null,
+      tooltip: null,
+      feedback: null,
+      note: null,
+    };
+  }
+
+  const badgeText = `${minLevel}+`;
+  let feedback = {
+    uk: `Цей режим доступний з рівня ${minLevel} — змініть рівень для тренування`,
+    en: `This mode is available starting at ${minLevel} level — switch level to practice`,
+  };
+
+  if (mode === "paronym") {
+    feedback = {
+      uk: `Пароніми доступні з рівня ${minLevel} — змініть рівень для тренування`,
+      en: `Paronyms are available starting at ${minLevel} level — switch level to practice`,
+    };
+  } else if (mode === "heritage") {
+    feedback = {
+      uk: `Питома лексика доступна з рівня ${minLevel} — змініть рівень для тренування`,
+      en: `Heritage exercises are available starting at ${minLevel} level — switch level to practice`,
+    };
+  }
+
+  const note = {
+    uk: `Доступно з рівня ${minLevel}`,
+    en: `Available from ${minLevel} level`,
+  };
+
+  return {
+    mode,
+    minLevel,
+    isGated: true,
+    badgeText,
+    tooltip: feedback,
+    feedback,
+    note,
+  };
+}

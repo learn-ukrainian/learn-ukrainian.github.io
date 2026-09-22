@@ -2210,6 +2210,20 @@ const frontmatter = {
     margin-bottom: 0.2rem;
     width: fit-content;
   }
+  :global(.k3-mode-card[data-level-gated='true']) {
+    cursor: pointer;
+  }
+  :global(.k3-mode-card-level-badge) {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.12rem 0.45rem;
+    border-radius: 4px;
+    background: var(--lu-accent-purple, #8b5cf6);
+    color: var(--lu-on-primary-fill, #ffffff);
+    margin-bottom: 0.2rem;
+    width: fit-content;
+  }
   :global(.k3-case-selector-container) {
     margin-top: 1.25rem;
   }
