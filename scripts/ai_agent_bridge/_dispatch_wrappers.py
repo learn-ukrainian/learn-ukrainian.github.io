@@ -375,12 +375,17 @@ def build_ask_review_dispatch_command(
     *,
     model: str | None,
     effort: str | None,
+    branch: str | None = None,
 ) -> list[str]:
     """Headless dispatch command for one review-intent ask-*.
 
     ``--mode read-only`` still grants `gh pr view` / `gh pr diff` / repo read
     inside an isolated `--worktree` — read-only is exactly what `review-deep`
     already uses for the same class of work, it is not a tool restriction.
+
+    ``--branch`` attaches that worktree to the author branch. A read-only
+    reviewer cannot ``git checkout``, so a worktree born on ``main`` never
+    reaches the SHA under review.
     """
     cmd = [
         PYTHON,
@@ -397,6 +402,8 @@ def build_ask_review_dispatch_command(
         str(prompt_file),
         "--require-review-verdict",
     ]
+    if branch:
+        cmd.extend(["--branch", branch])
     if model:
         cmd += ["--model", model]
     if effort:
@@ -419,6 +426,7 @@ def run_ask_review_dispatch(
     model: str | None = None,
     effort: str | None = None,
     hard_timeout: int | None = None,
+    branch: str | None = None,
 ) -> dict[str, Any]:
     """Dispatch one review-intent ask-* to the headless native CLI and block for it.
 
@@ -434,7 +442,9 @@ def run_ask_review_dispatch(
     with _prompt_directory() as prompt_directory:
         prompt_path = prompt_directory / f"ask-review-{_safe_path_component(task_id)}.md"
         prompt_path.write_text(content, encoding="utf-8")
-        dispatch_command = build_ask_review_dispatch_command(agent, task_id, prompt_path, model=model, effort=effort)
+        dispatch_command = build_ask_review_dispatch_command(
+            agent, task_id, prompt_path, model=model, effort=effort, branch=branch,
+        )
         try:
             dispatch_proc = subprocess.run(
                 dispatch_command,

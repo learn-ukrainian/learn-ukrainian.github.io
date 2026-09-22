@@ -1527,6 +1527,7 @@ def _handle_acp_compat(args, target: str) -> None:
             # None resolves the seat's per-seat timeout profile default;
             # --no-timeout bypasses it with a generous ceiling.
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
+            branch=branch,
         )
         return
 
@@ -1588,6 +1589,7 @@ def _dispatch_headless_review(
     output_path: str | None,
     stdout_only: bool,
     hard_timeout: int | None,
+    branch: str | None = None,
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
@@ -1618,6 +1620,7 @@ def _dispatch_headless_review(
             model=model,
             effort=effort,
             hard_timeout=hard_timeout,
+            branch=branch,
         )
     except RuntimeError as exc:
         raise SystemExit(str(exc)) from exc

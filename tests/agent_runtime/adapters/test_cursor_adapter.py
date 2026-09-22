@@ -144,7 +144,7 @@ def test_cursor_adapter_workspace_write_allows_edits_by_default(adapter, tmp_pat
     )
     assert "--mode" not in plan.cmd
     assert "--force" in plan.cmd
-    assert plan.cmd[plan.cmd.index("--sandbox") + 1] == "enabled"
+    assert plan.cmd[plan.cmd.index("--sandbox") + 1] == "disabled"
 
 
 def test_cursor_adapter_workspace_write_explicit_plan_still_allowed(adapter, tmp_path, monkeypatch):

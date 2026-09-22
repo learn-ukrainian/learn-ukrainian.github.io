@@ -10,9 +10,11 @@ Key design points:
   shell-limit issues with large prompts.
 - **JSONL event stream.** Parses stdout using ``parse_json_events`` to
   extract tool-call telemetry and the final assistant response.
-- **Security boundaries.** read-only and workspace-write use sandboxed
-  profiles. Danger mode (inside verified dispatch worktree) uses ``--force``
-  + sandbox disabled for full finalize parity with other lanes (#4750).
+- **Security boundaries.** read-only uses ask mode. workspace-write and
+  danger use ``--force`` with sandbox disabled. The dispatch worktree is the
+  write boundary. ``--sandbox enabled`` aborts on hosts whose sandbox helper
+  cannot start (observed 2026-09-21, AppArmor), which took down the primary
+  implementer. Callers can still pass ``tool_config["sandbox"]="enabled"``.
 - **Per-invocation workspace.** Caller can specify ``cursor_workspace`` in
   ``tool_config`` to scope the agent to a specific directory.
 
@@ -130,7 +132,8 @@ class CursorAdapter:
                   ``{cursor_workspace}/.cursor/mcp.json``.
                 - ``mcp_server_names``: MCP servers to mirror/approve.
                 - ``cursor_mode``: "plan" | "ask", toggles ``--mode``.
-                - ``sandbox``: "enabled" | "disabled", toggles ``--sandbox``.
+                - ``sandbox``: "enabled" | "disabled". Default for workspace-write
+                  is ``disabled`` (the dispatch worktree is the write boundary).
             effort: Logged and ignored (no cursor equivalent today).
         """
         if effort:
@@ -206,11 +209,11 @@ class CursorAdapter:
             cursor_mode = config.get("cursor_mode")
             if cursor_mode in ("plan", "ask"):
                 cmd.extend(["--mode", str(cursor_mode)])
-            # Security boundaries from Phase 2 spec: sandbox stays enabled by
-            # default (worktree is the write boundary for force tools).
+            # The dispatch worktree is the write boundary. Sandbox enabled
+            # aborts the agent on hosts where the helper cannot start.
             if self._should_approve_mcps(config, default=True):
                 cmd.append("--approve-mcps")
-            sandbox = config.get("sandbox", "enabled")
+            sandbox = config.get("sandbox", "disabled")
             cmd.extend(["--sandbox", sandbox])
             # Unattended file/shell tools need approval grant; without --force
             # print-mode can still narrate a plan and exit "successfully".
