@@ -1,0 +1,19 @@
+{
+  "model": {
+    "modelId": "grok-4.7",
+    "displayModelId": "grok-4.7",
+    "displayName": "Grok 4.7",
+    "displayNameShort": "Grok 4.7",
+    "aliases": ["grok-4.7"],
+    "maxMode": true
+  },
+  "selectedModel": {
+    "modelId": "grok-4.7",
+    "parameters": [
+      {"id": "context", "value": "500k"},
+      {"id": "reasoning_effort", "value": "high"},
+      {"id": "fast", "value": "false"}
+    ]
+  },
+  "hasChangedDefaultModel": true
+}

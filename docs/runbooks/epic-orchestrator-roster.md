@@ -123,7 +123,7 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | claude | claude-fable-5-1 | high | gpt-6-astra | high |
 | codex | gpt-6-astra | high | gpt-6-astra | high |
 | cursor | auto | high | gpt-6-astra | high |
-| grok | grok-4.6 | high | grok-4.6 | high |
+| grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->
 
 <!-- fleet-roster-projection:begin formal_review_eligible -->

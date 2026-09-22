@@ -71,7 +71,7 @@ def test_cursor_attested_grok_author_refuses_same_family_review():
     inputs = ResolverInputs(author_model="cursor:grok-4.6", risk="medium")
     assert resolve_author_family(inputs.author_model) == "xai"
 
-    for name in ("grok-4.6", "grok-4.6-cursor-fallback"):
+    for name in ("grok-4.6", "grok-4.7-cursor-fallback"):
         result = evaluate_candidate(REVIEW_CANDIDATES[name], inputs)
         assert result.status == "excluded", (name, result.status)
         assert "same family" in result.reason

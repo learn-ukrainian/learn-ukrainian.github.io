@@ -393,10 +393,17 @@ def test_registry_native_grok_distinct_from_hermes_grok():
     assert "grok-hermes" in registry.AGENTS
 
 
-def test_grok_build_lane_defaults_to_grok_46():
-    assert registry.get_agent_entry("grok")["default_model"] == "grok-4.6"
-    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.6"
-    assert GROK_BUILD_DEFAULT_MODEL == "grok-4.6"
+def test_grok_build_lane_defaults_to_grok_47():
+    assert registry.get_agent_entry("grok")["default_model"] == "grok-4.7"
+    assert registry.get_agent_entry("grok-build")["default_model"] == "grok-4.7"
+    assert GROK_BUILD_DEFAULT_MODEL == "grok-4.7"
+
+
+def test_grok_build_admits_grok_47_and_build_fast(tmp_path):
+    """#8464: native CLI defaults to grok-4.7; build-fast is an allowed explicit pin."""
+    for model in ("grok-4.7", "grok-4.7-build-fast", "grok-4.6"):
+        plan = _build("x", tmp_path, model=model, effort="high")
+        assert _val(plan.cmd, "-m") == model
 
 
 def test_grok_build_rejects_retired_model_pin(tmp_path):
