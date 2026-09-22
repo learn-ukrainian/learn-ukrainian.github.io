@@ -13,7 +13,7 @@ Tests that:
 3. Presence checks support requirement_id and arc_position as well as module_num.
 """
 
-from __future__ import annotations
+from pathlib import Path
 
 import pytest
 
@@ -26,6 +26,8 @@ from scripts.audit.checks.state_standard_compliance import (
     find_item_standard_level,
     load_compliance_mapping,
 )
+from scripts.audit.parsing import AuditContext, AuditState
+from scripts.audit.phases_content import run_content_quality_checks
 
 
 @pytest.fixture
@@ -370,7 +372,7 @@ class TestCheckStateStandardComplianceIntegration:
             level='A1',
             module_num=1,
             content='',
-            plan={'level': 'a1', 'grammar': ['dative'], 'ulp_evidence': True},
+            plan={'level': 'a1', 'grammar': ['dative'], 'ulp_evidence': ['ULP Ep 14 — "мені подобається" formulaic expression']},
         )
         assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_ulp)
 
@@ -379,3 +381,125 @@ class TestCheckStateStandardComplianceIntegration:
         violations = check_immersion_compliance('b1', 10, 85.0, mapping)
         assert len(violations) == 1
         assert violations[0].code == 'STATE_STANDARD_LOW_IMMERSION'
+
+
+class TestAstraReviewFindings:
+    """Regression tests for Astra's review findings on PR #8404."""
+
+    def test_finding_1_empty_plan_fails_state_standard_floor(self, mapping):
+        """Finding 1: Missing coverage passes — {'level': 'a1', 'grammar': []} must fail."""
+        plan = {'level': 'a1', 'grammar': []}
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert len(violations) > 0
+        assert any(v.code == 'STATE_STANDARD_OMITTED_ITEM' for v in violations)
+
+    def test_finding_1_removing_item_and_declaration_fails(self, mapping):
+        """Finding 1: Removing an item and its declaration must fail (Standard mapping is authority)."""
+        # Module 9 at A1 requires reflexive_verbs per the Standard mapping
+        plan = {
+            'level': 'a1',
+            'module': 9,
+            'slug': 'verbs-lesson',
+            'grammar': ['nominative'],  # reflexive_verbs removed from grammar and not in required_items
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_OMITTED_ITEM' and 'reflexive_verbs' in v.message for v in violations)
+
+    def test_finding_2_notes_mentioning_no_ulp_does_not_authorize_early_teaching(self, mapping):
+        """Finding 2: Prose notes saying 'No ULP evidence exists' must not authorize early teaching."""
+        plan = {
+            'level': 'a1',
+            'slug': 'premature-dative',
+            'grammar': ['dative'],
+            'notes': 'No ULP evidence exists for this move.',
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_finding_2_bare_boolean_ulp_evidence_does_not_authorize_early_teaching(self, mapping):
+        """Finding 2: Bare boolean ulp_evidence: true must not authorize early teaching without actual evidence."""
+        plan = {
+            'level': 'a1',
+            'slug': 'premature-dative',
+            'grammar': ['dative'],
+            'ulp_evidence': True,
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_finding_3_production_gate_calls_state_standard_floor_check(self):
+        """Finding 3: run_content_quality_checks passes plan to floor check in production gate."""
+        ctx = AuditContext(
+            file_path='curriculum/l2-uk-en/a1/module-01.md',
+            content='# Module 1\nContent text',
+            body='# Module 1\nContent text',
+            frontmatter_str='',
+            meta_data=None,
+            plan_data={'level': 'a1', 'slug': 'm01', 'grammar': ['dative']},
+            vocab_data=None,
+            vocab_error=None,
+            level_code='A1',
+            module_num=1,
+            track_code='A1',
+            display_level='A1',
+            module_focus='grammar',
+            module_title='Test Module',
+            target=1000,
+            config={},
+            section_map={},
+            core_content='Content text',
+            phase='A1.1',
+            pedagogy='PPP',
+            skip_activities=True,
+            skip_review=True,
+            yaml_activities=None,
+            use_yaml_activities=False,
+            yaml_file=Path('nonexistent.yaml'),
+        )
+        state = AuditState()
+        run_content_quality_checks(ctx, state)
+        assert any(
+            v.get('type') == 'STATE_STANDARD_EARLY_WITHOUT_ULP'
+            for v in state.pedagogical_violations
+        )
+
+    def test_finding_4_v2_inventory_in_lessons_early_without_ulp_fails(self, mapping):
+        """Finding 4: v2 schema stores grammar under lessons[].inventory.grammar — G-a2-005 at A1 must fail."""
+        plan = {
+            'level': 'a1',
+            'slug': 'polite-requests',
+            'lessons': [
+                {
+                    'title': 'Lesson 1',
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'point': 'Polite third person imperative forms',
+                            }
+                        ]
+                    },
+                }
+            ],
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_finding_5_caller_supplied_level_does_not_override_standard_mapping(self, mapping):
+        """Finding 5: Caller metadata level does not override Standard mapping level (dative is A2)."""
+        plan = {
+            'level': 'a1',
+            'slug': 'override-attempt',
+            'grammar': [{'name': 'dative', 'level': 'a1'}],
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
+
+    def test_finding_6_standard_verbatim_lines_703_719_produces_no_violations(self, mapping):
+        """Finding 6: Passing Standard verbatim lines 703–719 produces zero violations."""
+        standard_path = Path(__file__).parent.parent / 'docs' / 'l2-uk-en' / 'UKRAINIAN-STATE-STANDARD-2024.txt'
+        with open(standard_path, encoding='utf-8') as f:
+            lines = f.readlines()
+        verbatim_content = ''.join(lines[702:719])
+        violations = check_reflexive_verbs_a1(9, verbatim_content, mapping)
+        assert len(violations) == 0

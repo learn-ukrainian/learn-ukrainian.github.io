@@ -235,48 +235,193 @@ def check_immersion_compliance(level: str, module_num: int, immersion_pct: float
     return violations
 
 
+CASE_KEYWORDS: dict[str, set[str]] = {
+    'dative': {'dative', 'давальн', 'мені', 'тобі', 'йому', 'їй', 'нам', 'вам', 'їм'},
+    'instrumental': {'instrumental', 'орудн', 'мною', 'тобою', 'ним', 'нею', 'нами', 'вами', 'ними'},
+    'genitive': {'genitive', 'родов', 'мене', 'тебе', 'його', 'її', 'нас', 'вас', 'їх'},
+    'accusative': {'accusative', 'знахідн'},
+    'locative': {'locative', 'місцев'},
+    'vocative': {'vocative', 'кличн'},
+    'nominative': {'nominative', 'називн'},
+}
+
+
+def _evidence_text_matches_move(text: str, item_key: str, item_id: str, item_name: str) -> bool:
+    """Check if an evidence string specifically references the item/move and cites ULP."""
+    if not isinstance(text, str):
+        return False
+    text_lower = text.lower()
+    if 'ulp' not in text_lower and 'ukrainian lessons podcast' not in text_lower:
+        return False
+
+    keywords = {item_key, item_key.replace('_', ' '), item_key.replace('_', '-')}
+    if item_id:
+        keywords.add(item_id.lower())
+    if item_name:
+        keywords.add(item_name.lower())
+    if item_key in CASE_KEYWORDS:
+        keywords.update(CASE_KEYWORDS[item_key])
+
+    return any(kw in text_lower for kw in keywords)
+
+
 def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | None) -> bool:
-    """Check whether ULP evidence is recorded for teaching an item earlier."""
+    """Check whether ULP evidence is recorded specifically for teaching an item earlier."""
+    item_name = ''
+    item_id = ''
+
     if isinstance(item, dict):
-        if item.get('ulp_evidence'):
-            return True
+        item_name = str(item.get('name') or item.get('point') or '')
+        item_id = str(item.get('id') or '')
+
+        # 1. Evidence directly on the item dictionary
+        item_ulp = item.get('ulp_evidence')
+        if not isinstance(item_ulp, bool):
+            if isinstance(item_ulp, str) and ('ulp' in item_ulp.lower() or 'ukrainian lessons podcast' in item_ulp.lower()):
+                return True
+            if isinstance(item_ulp, list):
+                for ev in item_ulp:
+                    if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                        return True
+
         evidence = item.get('evidence', [])
         if isinstance(evidence, list):
             for ev in evidence:
-                if isinstance(ev, str) and 'ulp' in ev.lower():
+                if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                     return True
-        elif isinstance(evidence, str) and 'ulp' in evidence.lower():
+        elif isinstance(evidence, str) and not isinstance(evidence, bool) and ('ulp' in evidence.lower() or 'ukrainian lessons podcast' in evidence.lower()):
             return True
 
-    if plan.get('ulp_evidence'):
-        return True
+    elif isinstance(item, str):
+        item_name = item
+        if item.startswith('G-'):
+            item_id = item
 
-    for key in ('arc', 'arc_ref'):
-        arc_ref = plan.get(key)
-        if isinstance(arc_ref, dict) and arc_ref.get('ulp_evidence'):
-            return True
+    clean_key = item_name.lower().strip().replace('-', '_')
+    clean_key = ITEM_ALIASES.get(clean_key, clean_key)
 
-    if arc:
-        if arc.get('ulp_evidence'):
-            return True
-        if isinstance(item, str) and arc.get(item, {}).get('ulp_evidence'):
-            return True
+    # 2. Check plan-level ulp_evidence tied to this specific item/move
+    plan_ulp = plan.get('ulp_evidence')
+    if isinstance(plan_ulp, dict):
+        entry = plan_ulp.get(clean_key) or plan_ulp.get(item_name.lower()) or (plan_ulp.get(item_id) if item_id else None)
+        if not isinstance(entry, bool):
+            if isinstance(entry, str) and ('ulp' in entry.lower() or 'ukrainian lessons podcast' in entry.lower()):
+                return True
+            if isinstance(entry, list):
+                for ev in entry:
+                    if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                        return True
+    elif isinstance(plan_ulp, list):
+        for ev in plan_ulp:
+            if _evidence_text_matches_move(ev, clean_key, item_id, item_name):
+                return True
 
-    # Scan plan text / comments / points for ULP references
-    for text_key in ('rationale', 'notes', 'review_notes', 'focus', 'subtitle'):
-        val = plan.get(text_key)
-        if isinstance(val, str) and re.search(r'\bULP\b', val, re.IGNORECASE):
-            return True
+    # 3. Check curriculum arc metadata tied to this move
+    for arc_dict in (arc, plan.get('arc'), plan.get('arc_ref')):
+        if not isinstance(arc_dict, dict):
+            continue
 
-    content_outline = plan.get('content_outline', [])
-    if isinstance(content_outline, list):
-        for sec in content_outline:
-            if isinstance(sec, dict):
-                for pt in sec.get('points', []):
-                    if isinstance(pt, str) and re.search(r'\bULP\b', pt, re.IGNORECASE):
+        # Check arc moves or direct item entry
+        moves = arc_dict.get('moves', {})
+        move_entry = None
+        if isinstance(moves, dict):
+            move_entry = moves.get(clean_key) or (moves.get(item_id) if item_id else None)
+        if not move_entry:
+            move_entry = arc_dict.get(clean_key) or (arc_dict.get(item_id) if item_id else None)
+
+        if isinstance(move_entry, dict):
+            move_ulp = move_entry.get('ulp_evidence')
+            if not isinstance(move_ulp, bool):
+                if isinstance(move_ulp, str) and ('ulp' in move_ulp.lower() or 'ukrainian lessons podcast' in move_ulp.lower()):
+                    return True
+                if isinstance(move_ulp, list):
+                    for ev in move_ulp:
+                        if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                            return True
+            move_ev = move_entry.get('evidence')
+            if isinstance(move_ev, list):
+                for ev in move_ev:
+                    if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                         return True
 
+        # Check arc['ulp_evidence'] mapping
+        arc_ulp = arc_dict.get('ulp_evidence')
+        if isinstance(arc_ulp, dict):
+            ev_val = arc_ulp.get(clean_key) or (arc_ulp.get(item_id) if item_id else None)
+            if not isinstance(ev_val, bool):
+                if isinstance(ev_val, str) and ('ulp' in ev_val.lower() or 'ukrainian lessons podcast' in ev_val.lower()):
+                    return True
+                if isinstance(ev_val, list):
+                    for ev in ev_val:
+                        if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                            return True
+        elif isinstance(arc_ulp, list):
+            for ev in arc_ulp:
+                if _evidence_text_matches_move(ev, clean_key, item_id, item_name):
+                    return True
+
     return False
+
+
+def get_required_items_for_plan(plan: dict[str, Any], plan_level: str, mapping: dict[str, Any]) -> list[str]:
+    """Derive minimum required State Standard items for a plan from the Standard mapping."""
+    lvl_data = mapping.get(plan_level, {})
+    if not isinstance(lvl_data, dict):
+        return []
+
+    required_items: list[str] = []
+
+    # 1. Module / position-specific presence requirements from mapping
+    plan_module = plan.get('module') or plan.get('module_num') or plan.get('sequence')
+    if isinstance(plan_module, str) and plan_module.isdigit():
+        plan_module = int(plan_module)
+    plan_pos = plan.get('arc_position')
+    plan_req_id = plan.get('requirement_id')
+
+    for key, val in lvl_data.items():
+        if isinstance(val, dict):
+            target_modules = val.get('modules') or ([val['module']] if 'module' in val else [])
+            target_pos = val.get('arc_position')
+            target_req_id = val.get('requirement_id')
+            if (
+                (plan_module is not None and plan_module in target_modules)
+                or (plan_pos is not None and plan_pos == target_pos)
+                or (plan_req_id is not None and plan_req_id == target_req_id)
+            ):
+                required_items.append(key)
+
+    # Check case first_module mappings
+    cases_dict = lvl_data.get('cases', {})
+    if isinstance(cases_dict, dict) and plan_module is not None:
+        for case_name, case_data in cases_dict.items():
+            if isinstance(case_data, dict) and case_data.get('first_module') == plan_module and case_name not in required_items:
+                required_items.append(case_name)
+
+    # 2. Check if plan is a level-level plan (or empty plan with no taught items)
+    is_level_plan = plan.get('is_level_plan') is True
+    has_no_taught = not (
+        plan.get('grammar') or plan.get('taught_items') or plan.get('covered_items') or plan.get('topics')
+        or plan.get('inventory', {}).get('grammar')
+        or any(isinstance(l, dict) and (l.get('grammar') or l.get('inventory', {}).get('grammar')) for l in plan.get('lessons', []))
+    )
+
+    if is_level_plan or has_no_taught:
+        # Collect items with required: true in the mapping for this level
+        for section in ('cases', 'verbs', 'morphology', 'syntax'):
+            sec_dict = lvl_data.get(section, {})
+            if isinstance(sec_dict, dict):
+                for item_name, item_data in sec_dict.items():
+                    if isinstance(item_data, dict) and item_data.get('required') is True and item_name not in required_items:
+                        required_items.append(item_name)
+
+    # 3. Include any required_items explicitly declared by the plan
+    declared = plan.get('required_items', [])
+    if isinstance(declared, list):
+        for item in declared:
+            if isinstance(item, str) and item not in required_items:
+                required_items.append(item)
+
+    return required_items
 
 
 def check_plan_compliance(
@@ -327,24 +472,67 @@ def check_plan_compliance(
                 fix=f"Include coverage of required State Standard item '{item_name}' to satisfy the minimum floor"
             ))
 
-    required_items = plan.get('required_items', [])
-    if isinstance(required_items, list) and required_items:
+    required_items = get_required_items_for_plan(plan, plan_level, mapping)
+    if required_items:
         taught_set: set[str] = set()
         for key in ('covered_items', 'taught_items', 'grammar', 'topics'):
             vals = plan.get(key, [])
             if isinstance(vals, list):
                 for v in vals:
                     if isinstance(v, str):
-                        taught_set.add(v.lower().strip().replace('-', '_'))
+                        clean = v.lower().strip().replace('-', '_')
+                        taught_set.add(clean)
+                        taught_set.add(ITEM_ALIASES.get(clean, clean))
                     elif isinstance(v, dict):
                         if 'name' in v:
-                            taught_set.add(str(v['name']).lower().strip().replace('-', '_'))
+                            clean = str(v['name']).lower().strip().replace('-', '_')
+                            taught_set.add(clean)
+                            taught_set.add(ITEM_ALIASES.get(clean, clean))
                         if 'id' in v:
-                            taught_set.add(str(v['id']).lower().strip().replace('-', '_'))
+                            clean = str(v['id']).lower().strip().replace('-', '_')
+                            taught_set.add(clean)
+
+        inv_grammar = plan.get('inventory', {}).get('grammar', [])
+        if isinstance(inv_grammar, list):
+            for v in inv_grammar:
+                if isinstance(v, str):
+                    clean = v.lower().strip().replace('-', '_')
+                    taught_set.add(clean)
+                    taught_set.add(ITEM_ALIASES.get(clean, clean))
+                elif isinstance(v, dict):
+                    if 'name' in v:
+                        clean = str(v['name']).lower().strip().replace('-', '_')
+                        taught_set.add(clean)
+                        taught_set.add(ITEM_ALIASES.get(clean, clean))
+                    if 'id' in v:
+                        clean = str(v['id']).lower().strip().replace('-', '_')
+                        taught_set.add(clean)
+
+        for lesson in plan.get('lessons', []):
+            if isinstance(lesson, dict):
+                for lk in ('grammar', 'inventory'):
+                    l_val = lesson.get(lk, [])
+                    if lk == 'inventory' and isinstance(l_val, dict):
+                        l_val = l_val.get('grammar', [])
+                    if isinstance(l_val, list):
+                        for v in l_val:
+                            if isinstance(v, str):
+                                clean = v.lower().strip().replace('-', '_')
+                                taught_set.add(clean)
+                                taught_set.add(ITEM_ALIASES.get(clean, clean))
+                            elif isinstance(v, dict):
+                                if 'name' in v:
+                                    clean = str(v['name']).lower().strip().replace('-', '_')
+                                    taught_set.add(clean)
+                                    taught_set.add(ITEM_ALIASES.get(clean, clean))
+                                if 'id' in v:
+                                    clean = str(v['id']).lower().strip().replace('-', '_')
+                                    taught_set.add(clean)
 
         for req_item in required_items:
             clean_req = req_item.lower().strip().replace('-', '_')
-            if clean_req not in taught_set:
+            clean_req = ITEM_ALIASES.get(clean_req, clean_req)
+            if clean_req not in taught_set and req_item.lower().strip().replace('-', '_') not in taught_set:
                 ref = _get_item_reference(req_item, plan_level, mapping)
                 violations.append(StateStandardViolation(
                     code='STATE_STANDARD_OMITTED_ITEM',
@@ -360,33 +548,50 @@ def check_plan_compliance(
         if isinstance(vals, list):
             taught_candidates.extend(vals)
 
-    # Also extract grammar items from v2 inventory
+    # Extract grammar items from v2 inventory
     inventory_grammar = plan.get('inventory', {}).get('grammar', [])
     if isinstance(inventory_grammar, list):
         taught_candidates.extend(inventory_grammar)
+
+    # Extract grammar items from v2 lessons[].inventory.grammar and lessons[].grammar
+    lessons = plan.get('lessons', [])
+    if isinstance(lessons, list):
+        for lesson in lessons:
+            if isinstance(lesson, dict):
+                lesson_inv = lesson.get('inventory', {})
+                if isinstance(lesson_inv, dict):
+                    l_inv_grammar = lesson_inv.get('grammar', [])
+                    if isinstance(l_inv_grammar, list):
+                        taught_candidates.extend(l_inv_grammar)
+                l_grammar = lesson.get('grammar', [])
+                if isinstance(l_grammar, list):
+                    taught_candidates.extend(l_grammar)
 
     for item in taught_candidates:
         item_level: str | None = None
         item_name = ''
 
         if isinstance(item, dict):
-            item_name = str(item.get('name') or item.get('id') or item.get('point') or '')
-            if 'level' in item:
-                item_level = str(item['level']).lower()
+            item_name = str(item.get('name') or item.get('point') or item.get('id') or '')
+            # Authority of the Standard mapping: mapping level wins over caller-supplied level
+            std_level = find_item_standard_level(item_name, mapping) if item_name else None
+            if std_level:
+                item_level = std_level
             elif 'id' in item and str(item['id']).startswith('G-'):
                 parts = str(item['id']).split('-')
                 if len(parts) >= 2 and parts[1].lower() in LEVEL_ORDER:
                     item_level = parts[1].lower()
-            if not item_level and item_name:
-                item_level = find_item_standard_level(item_name, mapping)
+            elif 'level' in item:
+                item_level = str(item['level']).lower()
         elif isinstance(item, str):
             item_name = item
-            if item.startswith('G-'):
+            std_level = find_item_standard_level(item, mapping)
+            if std_level:
+                item_level = std_level
+            elif item.startswith('G-'):
                 parts = item.split('-')
                 if len(parts) >= 2 and parts[1].lower() in LEVEL_ORDER:
                     item_level = parts[1].lower()
-            if not item_level:
-                item_level = find_item_standard_level(item, mapping)
 
         if not item_level or item_level not in LEVEL_ORDER:
             continue
@@ -443,7 +648,18 @@ def check_state_standard_compliance(
     violations = []
     level_key = level.lower()
 
-    # If plan is provided, check plan compliance first
+    # If plan is not provided, try to extract frontmatter from content as plan
+    if plan is None and immersion_pct is None and content and content.startswith('---'):
+        try:
+            match = re.match(r'^---\n(.*?)\n---', content, re.DOTALL)
+            if match:
+                parsed = yaml.safe_load(match.group(1))
+                if isinstance(parsed, dict):
+                    plan = parsed
+        except Exception:
+            pass
+
+    # If plan is provided (or extracted from content), check plan compliance first
     if plan is not None:
         violations.extend(check_plan_compliance(plan, mapping=mapping))
 
