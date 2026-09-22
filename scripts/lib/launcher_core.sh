@@ -279,7 +279,8 @@ launcher_defaults() {
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
   if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
-    if [ "$LC_MODE" = driver ]; then LC_EFFORT=high; else LC_EFFORT=low; fi
+    # Operator 2026-09-22: Sol's seat is high, including the ordinary launcher.
+    LC_EFFORT=high
   fi
   if [ "$LC_PROVIDER" = claude ] && [ "$LC_MODE" = driver ] && [ -z "$LC_EFFORT" ]; then
     # Opus 5.5 API default is medium; orchestrating seats run at high.
@@ -485,6 +486,10 @@ launcher_validate_mode() {
       launcher_error "unknown lane selector '$LC_EPIC'."
       launcher_selector_help >&2
       exit 2
+    fi
+    if [ "$LC_MODEL" = gpt-6-luna ]; then
+      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
+      exit 4
     fi
     LC_MODEL="${LC_MODEL:-gpt-6-sol}"
     unset SESSION_EPIC

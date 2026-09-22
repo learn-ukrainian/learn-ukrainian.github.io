@@ -29,7 +29,7 @@ def test_codex_hermes_opt_in_uses_provider_label_separately_from_model(tmp_path)
     result = run_launcher("start-codex.sh", "--harness", "hermes", env=hermes_stub_env(tmp_path))
     assert result.returncode == 0, result.stderr
     assert "would exec hermes chat --cli --provider openai-codex --model gpt-6-sol" in result.stdout
-    assert "--reasoning low" in result.stdout
+    assert "--reasoning high" in result.stdout
     assert "would claim lease" not in result.stdout
     assert "would probe" not in result.stdout
 

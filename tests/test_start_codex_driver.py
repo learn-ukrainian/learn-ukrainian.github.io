@@ -262,3 +262,15 @@ def test_claude_code_forwarded_agent_and_fallback_models_rejected_before_preflig
     assert "would exec" not in result.stdout
     assert "would probe" not in result.stdout
     assert "would require binary" not in result.stdout
+
+
+def test_luna_is_rejected_for_driver_and_governor() -> None:
+    driver = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-luna")
+    assert driver.returncode == 4, driver.stderr
+    assert "not certified" in driver.stderr
+    governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", "--model", "gpt-6-luna")
+    assert governor.returncode == 4, governor.stderr
+    assert "not a governor model" in governor.stderr
+    bounded = run_launcher("start-codex.sh", "--model", "gpt-6-luna")
+    assert bounded.returncode == 0, bounded.stderr
+    assert "--model gpt-6-luna" in bounded.stdout

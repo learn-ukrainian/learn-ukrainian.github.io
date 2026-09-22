@@ -195,7 +195,7 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 @pytest.mark.parametrize(
     ("launcher", "args", "model", "effort"),
     [
-        ("start-codex.sh", [], "gpt-6-sol", "low"),
+        ("start-codex.sh", [], "gpt-6-sol", "high"),
         ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-sol", "high"),
         ("start-codex.sh", ["--model", "gpt-6-astra", "--effort", "max"], "gpt-6-astra", "max"),
     ],

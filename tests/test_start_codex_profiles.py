@@ -296,7 +296,7 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "--model",
         "gpt-6-astra",
         "-c",
-        "model_reasoning_effort=low",
+        "model_reasoning_effort=high",
         "resume",
         "thread-id",
     ]
