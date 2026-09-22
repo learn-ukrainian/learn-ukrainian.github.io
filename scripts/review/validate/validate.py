@@ -3,6 +3,9 @@
 Rejects a review whose manifest hash, receipts, quotes, taxonomy checks, or
 evidence branch do not match the pinned inputs. Prints APPROVE or REVISE from
 active and persisting findings. A resolved MAJOR is history and does not block.
+
+Plan-review findings with locations are rejected (location_not_in_lesson)
+until a plan document locator is defined.
 """
 
 from __future__ import annotations
@@ -183,6 +186,12 @@ def _matching_units(units: list[dict[str, Any]], location: dict[str, Any]) -> li
 def _check_locations(check: _Check, finding: dict[str, Any], units: list[dict[str, Any]], *, kind: str) -> None:
     locations = finding.get("locations")
     if not isinstance(locations, list):
+        return
+    if kind == "plan" and locations:
+        check.add(
+            codes.LOCATION_NOT_IN_LESSON,
+            f"{finding.get('id')}: plan-review findings with locations are rejected until a plan document locator is defined",
+        )
         return
     if not locations:
         scope = finding.get("scope")
@@ -610,7 +619,9 @@ def build_parser() -> argparse.ArgumentParser:
             "and receipt ledger, then print APPROVE or REVISE from active findings.\n"
             "Use after a review seat returns review.yaml. Do NOT use to judge whether\n"
             "the evidence supports the claim or whether the severity is right, and do\n"
-            "NOT use for v1 content-review output."
+            "NOT use for v1 content-review output.\n\n"
+            "Plan-review findings with locations are rejected (location_not_in_lesson)\n"
+            "until a plan document locator is defined."
         ),
         epilog=(
             "Examples:\n"

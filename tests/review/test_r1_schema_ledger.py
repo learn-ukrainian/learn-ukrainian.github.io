@@ -979,3 +979,44 @@ def test_detect_git_commit_fallback(server_module, monkeypatch: pytest.MonkeyPat
 
     monkeypatch.setattr(subprocess, "run", fake_run)
     assert server_module._detect_git_commit() == "unknown"
+
+
+def test_plan_review_findings_with_locations_rejected(tmp_path: Path) -> None:
+    import scripts.review.validate.validate as val_mod
+    from scripts.review.validate.validate import build_parser
+
+    # Verify docstring and help text
+    help_text = build_parser().format_help()
+    assert "Plan-review findings with locations are rejected (location_not_in_lesson)" in help_text
+    assert "until a plan document locator is defined" in help_text
+    assert "Plan-review findings with locations are rejected (location_not_in_lesson)" in (val_mod.__doc__ or "")
+    assert "until a plan document locator is defined" in (val_mod.__doc__ or "")
+
+    # Validate plan review with locations
+    paths = _layout(tmp_path)
+    receipt = _record(paths["ledger"], manifest=paths["digest"], result="attested result")
+    plan_checks = {name: "clean" for name in PLAN_CHECKS}
+    plan_checks["closing_shape"] = ["F-01"]
+    finding = {
+        "id": "F-01",
+        "status": "active",
+        "locations": [{"tab": "plan", "quote": "some quote"}],
+        "dimension": "plan_defect",
+        "severity": "MINOR",
+        "claim": "Plan defect claim.",
+        "evidence": {"receipt": receipt},
+        "expected": "attested",
+    }
+    _dump(
+        paths["review"],
+        _review(
+            kind="plan",
+            manifest_hash=paths["digest"],
+            checks=plan_checks,
+            findings=[finding],
+        ),
+    )
+    res = _validate(paths)
+    assert not res.ok
+    assert codes.LOCATION_NOT_IN_LESSON in _codes(res)
+    assert any("plan-review findings with locations are rejected" in r.message for r in res.rejections)
