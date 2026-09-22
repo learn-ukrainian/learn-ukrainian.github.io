@@ -19,7 +19,6 @@ The rendered-prompt check validates (#8431 §8.1):
 from __future__ import annotations
 
 import hashlib
-import json
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -28,12 +27,22 @@ from typing import Any
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from scripts.build.fresh.draft_schema import (
-    SCHEMAS_DIR,
     activity_definitions,
     activity_payload_schema,
 )
 from scripts.build.fresh.immersion import ImmersionPayload, compute_immersion_payload
 from scripts.curriculum.learner_state.planned import PlannedState
+
+__all__ = [
+    "RenderedPromptCheckResult",
+    "check_rendered_prompt",
+    "compute_immersion_payload",
+    "extract_plan_citations",
+    "get_activity_item_shapes",
+    "render_lesson_prompt",
+    "render_recap_prompt",
+    "style_card_info",
+]
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 PROMPTS_DIR = Path(__file__).parent / "prompts"
@@ -48,9 +57,7 @@ BAND_CARD_MAP = {
 
 #: Valid inline markup pattern for allowed double braces:
 #: {{gloss:W-...}}, {{uk:...}}, or {{<digits>}} for activity blanks.
-VALID_DOUBLE_BRACE_RE = re.compile(
-    r"^\{\{(?:gloss:W-[0-9]+|uk:[^{}\u0300\u0301]+|[0-9]+)\}\}$"
-)
+VALID_DOUBLE_BRACE_RE = re.compile(r"^\{\{(?:gloss:(?:W-[0-9]+|W-[.…]+)|uk:[^{}\u0300\u0301]+|[0-9]+)\}\}$")
 
 RECORD_ID_RE = re.compile(r"\b(?:W|EX|T|E|V|P|G|X|S)-[0-9a-zA-Z_-]+\b")
 FORBIDDEN_V1_PATHS = (
@@ -100,8 +107,7 @@ def style_card_info(level: str, cards_dir: Path | None = None) -> tuple[Path, st
         sidecar_sha = sidecar_text.split()[0]
         if sidecar_sha != computed_sha:
             raise ValueError(
-                f"style card sidecar mismatch for {card_path.name}: "
-                f"recorded {sidecar_sha}, actual {computed_sha}"
+                f"style card sidecar mismatch for {card_path.name}: recorded {sidecar_sha}, actual {computed_sha}"
             )
 
     return card_path, card_bytes.decode("utf-8"), computed_sha
@@ -366,7 +372,9 @@ def check_rendered_prompt(
         found_ids = set(RECORD_ID_RE.findall(records_text))
         for fid in found_ids:
             if fid not in plan_citations:
-                errors.append(f"uncited_record_id: record {fid!r} appears in cited records but is not cited in the plan entry")
+                errors.append(
+                    f"uncited_record_id: record {fid!r} appears in cited records but is not cited in the plan entry"
+                )
 
     # 4. Nothing from another lesson except the recap's built lessons
     current_lesson_n = plan_entry.get("lesson", {}).get("n") or plan_entry.get("n")
@@ -379,7 +387,9 @@ def check_rendered_prompt(
             for bl in built_lessons:
                 bl_n = bl.get("n")
                 if bl_n is not None and current_lesson_n is not None and bl_n >= current_lesson_n:
-                    errors.append(f"recap_invalid_built_lesson: recap includes lesson {bl_n} >= current lesson {current_lesson_n}")
+                    errors.append(
+                        f"recap_invalid_built_lesson: recap includes lesson {bl_n} >= current lesson {current_lesson_n}"
+                    )
 
     # 5. The style card hash exists and matches
     if not style_card_path.is_file():

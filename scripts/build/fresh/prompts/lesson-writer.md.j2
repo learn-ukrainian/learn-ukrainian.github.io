@@ -27,64 +27,64 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 {% for step in plan_entry.steps %}
 #### Step `{{ step.id }}`
 - kind: {{ step.kind }}
-{% if step.teach %}- teach: {{ step.teach }}{% endif %}
-{% if step.needs %}- needs: {{ step.needs | join(', ') }}{% endif %}
-{% if step.explains %}- explains: {{ step.explains | join(', ') }}{% endif %}
-{% if step.ref %}- ref: {{ step.ref }}{% endif %}
-{% if step.evidence %}- evidence: {{ step.evidence | join(', ') }}{% endif %}
-{% if step.practice %}- practice: {{ step.practice | join(', ') }}{% endif %}
-{% if step.paradigm %}- paradigm: {{ step.paradigm.id }} (word: {{ step.paradigm.word }}, forms: {{ step.paradigm.forms | join(', ') }}){% endif %}
+{% if step.teach is defined and step.teach %}- teach: {{ step.teach }}{% endif %}
+{% if step.needs is defined and step.needs %}- needs: {{ step.needs | join(', ') }}{% endif %}
+{% if step.explains is defined and step.explains %}- explains: {{ step.explains | join(', ') }}{% endif %}
+{% if step.ref is defined and step.ref %}- ref: {{ step.ref }}{% endif %}
+{% if step.evidence is defined and step.evidence %}- evidence: {{ step.evidence | join(', ') }}{% endif %}
+{% if step.practice is defined and step.practice %}- practice: {{ step.practice | join(', ') }}{% endif %}
+{% if step.paradigm is defined and step.paradigm %}- paradigm: {{ step.paradigm.id }} (word: {{ step.paradigm.word }}, forms: {{ step.paradigm.forms | join(', ') }}){% endif %}
 {% endfor %}
 
 ### Consolidation
 - activities: {{ plan_entry.consolidation | join(', ') }}
 
-{% if plan_entry.dialogue %}
+{% if plan_entry.dialogue is defined and plan_entry.dialogue %}
 ### Dialogue Specification
 - step: {{ plan_entry.dialogue.step }}
 - situation: {{ plan_entry.dialogue.situation }}
 - setting: {{ plan_entry.dialogue.setting }}
 - register: {{ plan_entry.dialogue.register }}
-{% if plan_entry.dialogue.target_grammar %}- target grammar: {{ plan_entry.dialogue.target_grammar }}{% endif %}
+{% if plan_entry.dialogue.target_grammar is defined and plan_entry.dialogue.target_grammar %}- target grammar: {{ plan_entry.dialogue.target_grammar }}{% endif %}
 - speakers:
 {% for spk in plan_entry.dialogue.speakers %}
   - name: {{ spk.name }} (role: {{ spk.role }}, gender: {{ spk.gender }}, evidence: {{ spk.evidence }})
 {% endfor %}
-{% if plan_entry.dialogue.places %}
+{% if plan_entry.dialogue.places is defined and plan_entry.dialogue.places %}
 - places:
 {% for plc in plan_entry.dialogue.places %}
   - name: {{ plc.name }} (evidence: {{ plc.evidence }})
 {% endfor %}
 {% endif %}
-{% if plan_entry.dialogue.evidence %}
+{% if plan_entry.dialogue.evidence is defined and plan_entry.dialogue.evidence %}
 - evidence: {{ plan_entry.dialogue.evidence | join(', ') }}
 {% endif %}
 {% endif %}
 
 ### Activities
 {% for act in plan_entry.activities %}
-- `{{ act.id }}`: type: `{{ act.type }}`, placement: `{{ act.placement }}`, focus: {{ act.focus }}{% if act.error_refs %}, error_refs: {{ act.error_refs | join(', ') }}{% endif %}{% if act.model %}, model: {{ act.model }}{% endif %}
+- `{{ act.id }}`: type: `{{ act.type }}`, placement: `{{ act.placement }}`, focus: {{ act.focus }}{% if act.error_refs is defined and act.error_refs %}, error_refs: {{ act.error_refs | join(', ') }}{% endif %}{% if act.model is defined and act.model %}, model: {{ act.model }}{% endif %}
 {% endfor %}
 
 ### Inventory
 - **Core Vocabulary**:
 {% for item in plan_entry.inventory.vocabulary.core %}
-  - `{{ item.evidence }}`: lemma: {{ item.lemma }}{% if item.forms %}, forms: {{ item.forms | join(', ') }}{% endif %}
+  - `{{ item.evidence }}`: lemma: {{ item.lemma }}{% if item.forms is defined and item.forms %}, forms: {{ item.forms | join(', ') }}{% endif %}
 {% endfor %}
 - **Incidental Vocabulary**:
 {% for item in plan_entry.inventory.vocabulary.incidental %}
   - `{{ item.evidence }}`: lemma: {{ item.lemma }}
 {% endfor %}
-{% if plan_entry.inventory.vocabulary.recycled %}
+{% if plan_entry.inventory.vocabulary.recycled is defined and plan_entry.inventory.vocabulary.recycled %}
 - **Recycled Vocabulary**: {{ plan_entry.inventory.vocabulary.recycled | join(', ') }}
 {% endif %}
-{% if plan_entry.inventory.grammar %}
+{% if plan_entry.inventory.grammar is defined and plan_entry.inventory.grammar %}
 - **Grammar**:
 {% for g in plan_entry.inventory.grammar %}
-  - `{{ g.id }}`: {{ g.point }}{% if g.evidence %} (evidence: {{ g.evidence | join(', ') }}){% endif %}
+  - `{{ g.id }}`: {{ g.point }}{% if g.evidence is defined and g.evidence %} (evidence: {{ g.evidence | join(', ') }}){% endif %}
 {% endfor %}
 {% endif %}
-{% if plan_entry.inventory.phonetics and plan_entry.inventory.phonetics.letters %}
+{% if plan_entry.inventory.phonetics is defined and plan_entry.inventory.phonetics and plan_entry.inventory.phonetics.letters is defined and plan_entry.inventory.phonetics.letters %}
 - **Phonetics Letters**: {{ plan_entry.inventory.phonetics.letters | join(', ') }}
 {% endif %}
 
@@ -95,36 +95,36 @@ Output must be a single YAML document conforming to `lesson-draft-v1` (optionall
 {% if cited_records %}
 {% for record_id, record in cited_records.items() %}
 ### Record `{{ record_id }}`
-{% if record.lemma %}
+{% if record.lemma is defined and record.lemma %}
 - Kind: word
 - Lemma: {{ record.lemma }}
 - Part of Speech: {{ record.pos }}
-{% if record.gloss %}- Gloss: {{ record.gloss }}{% endif %}
-{% if record.forms %}
+{% if record.gloss is defined and record.gloss %}- Gloss: {{ record.gloss }}{% endif %}
+{% if record.forms is defined and record.forms %}
 - Forms:
 {% for f in record.forms %}
   - form: {{ f.form }}, tags: {{ f.tags }}, stressed: {{ f.stressed }}, stress_source: {{ f.stress_source }}
 {% endfor %}
 {% endif %}
-{% elif record.text %}
+{% elif record.text is defined and record.text %}
 - Kind: text / quote
 - Source: {{ record.source }}
 - Text: {{ record.text }}
-{% elif record.example %}
+{% elif record.example is defined and record.example %}
 - Kind: example
 - Source: {{ record.source }}
 - Text: {{ record.example }}
-{% if record.translation %}- Translation: {{ record.translation }}{% endif %}
-{% elif record.incorrect %}
+{% if record.translation is defined and record.translation %}- Translation: {{ record.translation }}{% endif %}
+{% elif record.incorrect is defined and record.incorrect %}
 - Kind: error
 - Incorrect: {{ record.incorrect }}
 - Correct: {{ record.correct }}
-{% if record.explanation %}- Explanation: {{ record.explanation }}{% endif %}
-{% elif record.url %}
+{% if record.explanation is defined and record.explanation %}- Explanation: {{ record.explanation }}{% endif %}
+{% elif record.url is defined and record.url %}
 - Kind: video
 - Title: {{ record.title }}
 - URL: {{ record.url }}
-{% if record.use %}- Use: {{ record.use }}{% endif %}
+{% if record.use is defined and record.use %}- Use: {{ record.use }}{% endif %}
 {% else %}
 - Raw: {{ record }}
 {% endif %}
@@ -175,7 +175,7 @@ For each activity declared in the plan, format items strictly according to these
 - **Required Properties**: {{ shape.required | join(', ') }}
 - **Properties**:
 {% for prop_name, prop_spec in shape.properties.items() %}
-  - `{{ prop_name }}`: {{ prop_spec.type }}{% if prop_spec.description %} — {{ prop_spec.description }}{% endif %}
+  - `{{ prop_name }}`: {{ prop_spec.type }}{% if prop_spec.description is defined and prop_spec.description %} — {{ prop_spec.description }}{% endif %}
 {% endfor %}
 {% endfor %}
 
