@@ -201,9 +201,7 @@ def preflight_lesson(
                                 if eref not in citation_candidates:
                                     citation_candidates.append(eref)
 
-                matching_records = [
-                    rid for rid in citation_candidates if record_list_map.get(rid) == expected_list
-                ]
+                matching_records = [rid for rid in citation_candidates if record_list_map.get(rid) == expected_list]
 
                 if matching_records:
                     # Finding 2: Until WP 21 lands, a quote need is ALWAYS a publication_right gap

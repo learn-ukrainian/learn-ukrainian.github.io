@@ -313,7 +313,9 @@ def test_cli_render_prompt_end_to_end_synthetic_tree(tmp_path):
     assert 'plan_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
     assert 'pack_lock: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
     assert 'words_lock: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
-    assert 'lesson_lock_entry_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    assert (
+        'lesson_lock_entry_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    )
     assert 'learner_state_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
     for h in ("plan_sha256:", "pack_lock:", "words_lock:", "lesson_lock_entry_sha256:", "learner_state_sha256:"):
         assert h in rendered
@@ -422,8 +424,7 @@ def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys):
     my_draft["lesson"]["n"] = 1
     my_draft["activities"] = [a for a in my_draft["activities"] if a["id"] == "a1"]
     my_draft["steps"][0]["blocks"] = [
-        b for b in my_draft["steps"][0]["blocks"]
-        if not (b.get("kind") == "activity" and b.get("ref") != "a1")
+        b for b in my_draft["steps"][0]["blocks"] if not (b.get("kind") == "activity" and b.get("ref") != "a1")
     ]
     my_draft["consolidation"] = {"lead_in": "The larger practice block.", "activities": []}
     draft_yaml = yaml.safe_dump(my_draft, allow_unicode=True)
@@ -519,8 +520,7 @@ def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
     recap_draft["lesson"]["n"] = 2
     recap_draft["activities"] = [a for a in recap_draft["activities"] if a["id"] == "a1"]
     recap_draft["steps"][0]["blocks"] = [
-        b for b in recap_draft["steps"][0]["blocks"]
-        if not (b.get("kind") == "activity" and b.get("ref") != "a1")
+        b for b in recap_draft["steps"][0]["blocks"] if not (b.get("kind") == "activity" and b.get("ref") != "a1")
     ]
     recap_draft["consolidation"] = {"lead_in": "The larger practice block.", "activities": []}
     recap_draft_yaml = yaml.safe_dump(recap_draft, allow_unicode=True)

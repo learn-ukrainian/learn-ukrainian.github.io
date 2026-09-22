@@ -356,7 +356,9 @@ sys.exit(1)
 
     # MAJOR D: Verify that caller_root was NOT used for reading results
     caller_result = caller_root / "batch_state/tasks/write-a1-delegate-test-3-1.result"
-    assert not caller_result.exists(), "Caller root must not have received result file; result must be read from delegate wait JSON"
+    assert not caller_result.exists(), (
+        "Caller root must not have received result file; result must be read from delegate wait JSON"
+    )
 
     # Assert argument lists recorded
     lines = [json.loads(line) for line in calls_log.read_text(encoding="utf-8").splitlines() if line]
@@ -488,9 +490,7 @@ def test_r11_forbidden_paths_grep():
                 assert occurrences <= 1, f"Term {term!r} occurs {occurrences} times in prompt.py"
 
     # Path-part grep for 'plans' as its own path segment (Finding 10)
-    plans_segment_re = re.compile(
-        r'(/|\.joinpath\()\s*["\']plans["\']|["\']plans["\']\s*/|/plans/|["\']plans["\']'
-    )
+    plans_segment_re = re.compile(r'(/|\.joinpath\()\s*["\']plans["\']|["\']plans["\']\s*/|/plans/|["\']plans["\']')
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")
         if fpath.name != "prompt.py":

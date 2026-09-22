@@ -413,7 +413,7 @@ def main(argv: list[str] | None = None) -> int:
         # Compute real input hashes (Finding 1)
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
 
-        is_recap = (lesson_entry.get("kind") == "recap")
+        is_recap = lesson_entry.get("kind") == "recap"
         if args.recap is not None and args.recap != is_recap:
             print(
                 f"Error: --recap={args.recap} disagrees with plan lesson kind {lesson_entry.get('kind')!r}",
@@ -571,7 +571,7 @@ def main(argv: list[str] | None = None) -> int:
             return 1
 
         # Check plan lesson kind vs --recap
-        is_recap = (lesson_entry.get("kind") == "recap")
+        is_recap = lesson_entry.get("kind") == "recap"
         if getattr(args, "recap", None) is not None and args.recap != is_recap:
             print(
                 f"Error: --recap={args.recap} disagrees with plan lesson kind {lesson_entry.get('kind')!r}",

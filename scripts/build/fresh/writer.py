@@ -39,7 +39,6 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy", "grok")
 
 
-
 class WriterCallError(Exception):
     """Failure during the writer call or result harvesting."""
 
@@ -204,9 +203,7 @@ def dispatch_writer(
             ) from err
 
         if not isinstance(wait_state, dict):
-            raise WriterCallError(
-                f"delegate.py wait output must be a JSON object, got {type(wait_state).__name__}"
-            )
+            raise WriterCallError(f"delegate.py wait output must be a JSON object, got {type(wait_state).__name__}")
 
         status = wait_state.get("status")
         if not isinstance(status, str) or status != "done":
