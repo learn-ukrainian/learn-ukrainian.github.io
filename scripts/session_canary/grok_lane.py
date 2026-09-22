@@ -850,9 +850,9 @@ You own compact recovery. **Never ask the operator** whether to restart, hydrate
 In `~/.grok/config.toml`:
 ```toml
 [session]
-auto_compact_threshold_percent = 95
+auto_compact_threshold_percent = 85
 ```
-Default is 85% (~400k on large Grok windows). Higher leaves runway for a deliberate close.
+Operator 2026-09-21: keep the product default of 85%. Do not raise it.
 
 ### Production rollover (different tool)
 Strict 10/10 identity rollover still uses:
