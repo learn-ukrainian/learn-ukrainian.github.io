@@ -348,10 +348,17 @@ const frontmatter = {
     gap: 1.25rem;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto !important;
+    }
+  }
+
   :global(.lexicon-practice-stage-shell) {
     max-width: 760px;
     margin: 0 auto;
     padding-top: 0.4rem;
+    scroll-margin-top: 72px;
   }
 
   :global(.lexicon-practice-stage-bar) {
@@ -431,6 +438,7 @@ const frontmatter = {
     gap: 1.1rem;
     max-width: 760px;
     border-radius: 12px;
+    scroll-margin-top: 72px;
   }
 
   :global(.lexicon-practice-stage .flashcards) {
