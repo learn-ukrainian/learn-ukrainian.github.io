@@ -198,21 +198,44 @@ def test_check_fails_unresolved_placeholder(sample_plan_entry):
 @pytest.mark.parametrize(
     "v1_snippet",
     [
-        "lesson-plans/sounds-intro-v1/plan.yaml",
-        "plans/a1/sounds-intro.yaml",
-        "/plans/a1/mod.yaml",
+        "curriculum/l2-uk-en/a1-v1/lesson-1.yaml",
+        "curriculum/l2-uk-en/b2-v1/mod.yaml",
+        "curriculum/l2-uk-en/plans/a1/sounds.yaml",
         "curriculum/l2-uk-en/plans",
+        "a1-v1/lesson-1.md",
         "c1-v1/lesson-1.md",
         "-v1/intro.yaml",
+        "/plans/a1/mod.yaml",
+        "plans/a1/sounds-intro.yaml",
+        "lesson-plans/sounds-intro-v1/plan.yaml",
     ],
 )
 def test_check_fails_forbidden_v1_path_patterns(sample_plan_entry, v1_snippet: str):
-    """Finding 5: Test each forbidden v1 path pattern named by the reviewer."""
+    """Finding 5: Test each forbidden v1 path pattern named by the reviewer and brief."""
     card_path = CARDS_DIR / "a1.md"
     bad_prompt = f"Prompt mentioning forbidden path: {v1_snippet}"
     res = check_rendered_prompt(bad_prompt, sample_plan_entry, card_path)
     assert res.passed is False
     assert any("forbidden_v1_path" in e for e in res.errors)
+
+
+@pytest.mark.parametrize(
+    "schema_name",
+    [
+        "lesson-draft-v1",
+        "evidence-words-v1",
+        "lesson-draft-a1-v1",
+        "schemas/lesson-draft-v1.schema.json",
+        "schemas/templates/lesson-draft-v1.template.json",
+        "document conforming to `lesson-draft-v1`",
+    ],
+)
+def test_check_schema_names_do_not_trigger_v1_forbidden(sample_plan_entry, schema_name: str):
+    """Schema names ending in -v1 must not be flagged as forbidden v1 curriculum paths."""
+    card_path = CARDS_DIR / "a1.md"
+    clean_prompt = f"# Header\n\nPrompt referencing valid schema name {schema_name} and allowed W-001.\n"
+    res = check_rendered_prompt(clean_prompt, sample_plan_entry, card_path)
+    assert not any("forbidden_v1_path" in e for e in res.errors)
 
 
 def test_check_fails_uncited_record_id_anywhere_in_prompt(

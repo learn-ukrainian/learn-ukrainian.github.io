@@ -65,14 +65,16 @@ RECORD_ID_RE = re.compile(r"\b(?:W|EX|T|E|V|P|G|X|S)-[0-9a-zA-Z_-]+\b")
 SCHEMA_EXEMPLAR_BEGIN = "<!-- BEGIN SCHEMA_SUMMARY_EXEMPLAR -->"
 SCHEMA_EXEMPLAR_END = "<!-- END SCHEMA_SUMMARY_EXEMPLAR -->"
 
-# Forbidden v1 path patterns per review finding 5
+# Forbidden v1 path patterns per review finding 5 and §8.1
 FORBIDDEN_V1_PATTERNS: tuple[re.Pattern[str], ...] = (
-    re.compile(r"-v1/"),
-    re.compile(r"/plans/"),
-    re.compile(r"curriculum/l2-uk-en/plans"),
-    re.compile(r"\bplans/[a-z0-9-]+"),
-    re.compile(r"lesson-plans/[^/\s]+-v1"),
-    re.compile(r"\b[a-z0-9]+-v1(?:/|\b)"),
+    re.compile(r"curriculum/l2-uk-en/(?:[a-c][1-2]|[a-z0-9]+)-v1/"),
+    re.compile(r"curriculum/l2-uk-en/plans/"),
+    re.compile(r"curriculum/l2-uk-en/plans\b"),
+    re.compile(r"\b(?:[a-c][1-2]|[a-z][0-9])-v1/"),
+    re.compile(r"(?:^|[\s/])-v1/"),
+    re.compile(r"(?<!lesson-)plans/(?:[a-c][1-2]|[a-z0-9]+)/"),
+    re.compile(r"(?<!lesson-)plans/"),
+    re.compile(r"lesson-plans/[^/\s]+-v1(?:/|\b)"),
 )
 
 
