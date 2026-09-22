@@ -256,9 +256,9 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     cursor)
-      # Orchestrator seat defaults to Auto (catalog allowlist + attestation).
-      # Default pin grok-4.7 (#8464); composer-2.5 when Moonshot identity must be frozen.
-      LC_MODEL="${LAUNCHER_MODEL:-grok-4.7}"
+      # Omit --model unless the caller sets one. cursor-agent then keeps the
+      # grok it already loads. An explicit pin is passed through unchanged.
+      LC_MODEL="${LAUNCHER_MODEL:-}"
       LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
     kimi)
@@ -511,12 +511,15 @@ launcher_validate_driver_certification() {
   fi
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude/Grok may omit --model so the TUI keeps the last session selection.
-  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
+  # Claude/Grok/Cursor may omit --model so the CLI keeps its current selection.
+  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ] || [ "$LC_PROVIDER" = "cursor" ]; } && [ -z "${LC_MODEL:-}" ]; then
+    return 0
+  fi
+  if [ "$LC_PROVIDER" = "cursor" ] && launcher_cursor_model_certified "$LC_MODEL"; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7|cursor:auto|cursor:grok-4.7|cursor:grok-4.6|cursor:composer-2.5)
+    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)
@@ -524,6 +527,20 @@ launcher_validate_driver_certification() {
       exit 4
       ;;
   esac
+}
+
+# Cursor CLI model ids: bare certified pins, effort variants such as
+# grok-4.7-high, and bracket overrides such as
+# grok-4.7[context=500k,reasoning_effort=high,fast=false].
+launcher_cursor_model_certified() {
+  local model="$1"
+  case "$model" in
+    auto|grok-4.7|grok-4.6|composer-2.5) return 0 ;;
+    grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
+    grok-4.7-low-fast|grok-4.7-medium-fast|grok-4.7-high-fast|grok-4.7-xhigh-fast) return 0 ;;
+    composer-2.5-fast) return 0 ;;
+  esac
+  [[ "$model" =~ ^(grok-4\.7|grok-4\.6|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]]
 }
 
 launcher_prepare_driver_identity() {
