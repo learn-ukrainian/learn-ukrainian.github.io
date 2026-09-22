@@ -15,8 +15,8 @@
 | Requirements R-01…R-35 | `docs/epics/fresh-build-requirements.md` | accepted by the operator 2026-09-21 |
 | Plan and evidence schema | `docs/epics/fresh-build-plan-schema.md` | revision 8 accepted; **revision 9** (this hand-over's docs PR) adds the fields the contracts need (§2 of this file) |
 | Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |
-| Writer contract + style card | issue #8431 body, r3 | two independent seats (AGY r1, Codex r2) folded in; **operator acceptance pending** |
-| Review contracts (plan + lesson) | issue #8430 body, r4 | two independent seats (AGY r2, Codex r3) folded in; **operator acceptance pending** |
+| Writer contract + style card | issue #8431 body, r3 | two independent seats (AGY r1, Codex r2) folded in; **accepted by the operator 2026-09-22** |
+| Review contracts (plan + lesson) | issue #8430 body, r4 | two independent seats (AGY r2, Codex r3) folded in; **accepted by the operator 2026-09-22** |
 | Word-store primitives | `scripts/curriculum/evidence/{codes,sources,tags,lock,registry}.py` | merged (PR #8450, #8413 A1 part 1) |
 | Arc loader + generator (a1) | `scripts/curriculum/arc/` | merged (#8411) |
 
@@ -82,7 +82,7 @@ In this order; each step's artifact is checked by the tool named before the next
 Calibration outputs of the pilot, recorded on #8425: `word_target` per lesson, lesson-level activity minimums, the share of tokens that needed a constrained question, the untaught-forms share per lesson, settle-item count.
 
 ## 6. The operator's decisions (2026-09-22, his words)
-1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the card is #8397 comment 5773129143 — the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The position 1 pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
+1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), written after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The position 1 pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
 2. **Replacing the `content-review` skill** for fresh-build lessons (#8430 deliverable (h)) — **"go"**; it is WP 24 (an agent-system change, done with his go on record).
 3. **The two contracts** (#8430 r4, #8431 r3) — **"i accept and we will improve it if needed"**; their status lines record it. A later improvement is a design revision with two independent seats, as before.
 
