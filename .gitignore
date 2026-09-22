@@ -41,7 +41,6 @@ service-account*.json
 # Cursor IDE local state — keep project-level mcp.json committed (parallel to .mcp.json)
 .cursor/*
 !.cursor/mcp.json
-!.cursor/cli.json
 !.cursor/rules/
 !.cursor/rules/**
 
