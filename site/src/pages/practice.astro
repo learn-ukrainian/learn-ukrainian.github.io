@@ -348,6 +348,12 @@ const frontmatter = {
     gap: 1.25rem;
   }
 
+  @media (prefers-reduced-motion: reduce) {
+    :global(html) {
+      scroll-behavior: auto !important;
+    }
+  }
+
   :global(.lexicon-practice-stage-shell) {
     max-width: 760px;
     margin: 0 auto;

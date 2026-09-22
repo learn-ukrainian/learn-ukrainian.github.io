@@ -2909,7 +2909,7 @@ function LexiconPracticeIsland({
         const scrollTarget = () => {
           const target = stageShellRef.current ?? stageRef.current;
           target?.scrollIntoView({
-            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            behavior: prefersReducedMotion ? 'instant' : 'smooth',
             block: 'start',
           });
         };

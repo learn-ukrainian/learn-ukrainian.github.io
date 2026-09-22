@@ -217,7 +217,7 @@ describe('Mobile Mixed Mode Transition (Issue #8382)', () => {
 
       await waitFor(() => {
         expect(scrollIntoViewMock).toHaveBeenCalledWith({
-          behavior: 'auto',
+          behavior: 'instant',
           block: 'start',
         });
       });
