@@ -95,6 +95,8 @@ APPROVED_AUTHORITY_PATTERNS = [
     r"брук\b",
     r"brown[-_]uk",
     r"ua[-_]gec",
+    r"городенськ",
+    r"шевельов",
 ]
 
 TRANSLATION_DICT_IDS = {
@@ -1233,7 +1235,7 @@ def audit_check_7_sample_drawer(
         )
 
     md_file_path.write_text("\n".join(md_lines), encoding="utf-8")
-    json_sidecar_path.write_text(json.dumps(json_records, ensure_ascii=False, indent=2), encoding="utf-8")
+    json_sidecar_path.write_text(json.dumps(json_records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     # Emit signoff template
     signoff_template = {
@@ -1249,7 +1251,7 @@ def audit_check_7_sample_drawer(
         "signoff_date": "",
         "comments": "",
     }
-    signoff_template_path.write_text(json.dumps(signoff_template, ensure_ascii=False, indent=2), encoding="utf-8")
+    signoff_template_path.write_text(json.dumps(signoff_template, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
 
     # Strict Signoff Validation (Fixes Blocker 3, R2-F2, R3-F2, R3-F5)
     failures = []
