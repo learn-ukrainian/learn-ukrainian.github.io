@@ -38,12 +38,6 @@ from scripts.curriculum.evidence import lock
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy", "grok")
 
-SEAT_DEFAULT_MODELS: dict[str, str] = {
-    "claude": "claude-sonnet-5",
-    "codex": "gpt-6-astra",
-    "agy": "gemini-3.8-flash-high",
-    "grok": "grok-4.7-high",
-}
 
 
 class WriterCallError(Exception):
@@ -131,8 +125,6 @@ def dispatch_writer(
 
     root = repo_root or REPO_ROOT
     task_id = f"write-{level}-{slug}-{lesson_n}-{attempt}"
-    task_state_file = root / f"batch_state/tasks/{task_id}.json"
-    result_file = root / f"batch_state/tasks/{task_id}.result"
     del_script = delegate_script or (root / "scripts/delegate.py")
 
     output_dir = Path(output_dir)
@@ -141,8 +133,11 @@ def dispatch_writer(
     raw_file = output_dir / f"lesson-{lesson_n}.raw.txt"
     writer_meta_file = output_dir / f"lesson-{lesson_n}.writer.yaml"
 
+    seat_model = model
+
     # 1. Execute task (either through fake seat or real delegate.py)
     if fake_seat is not None:
+        result_file = root / f"batch_state/tasks/{task_id}.result"
         result_file.parent.mkdir(parents=True, exist_ok=True)
         if callable(fake_seat):
             fake_seat(task_id, prompt_file, result_file)
@@ -185,7 +180,7 @@ def dispatch_writer(
                 f"delegate.py dispatch failed with exit code {disp_proc.returncode}: {disp_proc.stderr}"
             )
 
-        # Wait for task to finish — mandatory before reading result (#8431 §1, Finding 7)
+        # Wait for task to finish — mandatory before reading result (#8431 §1, Finding 7, MAJOR D)
         wait_cmd = [
             sys.executable,
             str(del_script),
@@ -200,15 +195,30 @@ def dispatch_writer(
                 f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr or wait_proc.stdout}"
             )
 
-        # Check terminal status in state file if present
-        if task_state_file.is_file():
-            try:
-                state_data = json.loads(task_state_file.read_text(encoding="utf-8"))
-                status = state_data.get("status")
-                if status != "done":
-                    raise WriterCallError(f"Task {task_id} completed with non-done status: {status!r}")
-            except json.JSONDecodeError:
-                pass
+        # Parse JSON printed by delegate.py wait <task-id> (MAJOR D)
+        try:
+            wait_state = json.loads(wait_proc.stdout)
+        except Exception as err:
+            raise WriterCallError(
+                f"delegate.py wait output was not valid JSON: {err}; stdout={wait_proc.stdout!r}"
+            ) from err
+
+        if not isinstance(wait_state, dict):
+            raise WriterCallError(
+                f"delegate.py wait output must be a JSON object, got {type(wait_state).__name__}"
+            )
+
+        status = wait_state.get("status")
+        if not isinstance(status, str) or status != "done":
+            raise WriterCallError(f"Task {task_id} completed with non-done status: {status!r}")
+
+        result_path_str = wait_state.get("result_file")
+        if not result_path_str:
+            raise WriterCallError(f"delegate.py wait state missing 'result_file': {wait_state}")
+
+        result_file = Path(result_path_str)
+        if seat_model is None:
+            seat_model = wait_state.get("resolved_model") or wait_state.get("model")
 
     # 2. Read result file
     if not result_file.is_file():
@@ -217,15 +227,8 @@ def dispatch_writer(
     raw_reply = result_file.read_text(encoding="utf-8")
 
     # 3. Determine seat model (#8431 §1, Finding 11)
-    seat_model = model
-    if seat_model is None and task_state_file.is_file():
-        try:
-            state_data = json.loads(task_state_file.read_text(encoding="utf-8"))
-            seat_model = state_data.get("resolved_model") or state_data.get("model")
-        except json.JSONDecodeError:
-            pass
     if seat_model is None:
-        seat_model = SEAT_DEFAULT_MODELS.get(writer, "unknown")
+        seat_model = "unknown"
 
     # 4. Save raw reply and writer metadata ATOMICALLY (0o644) BEFORE schema validation (#8431 §1, Finding 11)
     # This guarantees provenance is preserved on disk even if schema validation fails.

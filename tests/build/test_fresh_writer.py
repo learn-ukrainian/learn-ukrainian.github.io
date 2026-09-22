@@ -208,7 +208,7 @@ result_path.write_text('''```yaml
     assert res["writer"] == "agy"
     assert res["task_id"] == "write-a1-test-slug-2-1"
     assert res["prompt_sha256"] == "a" * 64
-    assert res["model"] == "gemini-3.8-flash-high"
+    assert res["model"] == "unknown"
 
     # Verify state files exist and file permissions are 0o644
     draft_file = output_dir / "lesson-2.draft.yaml"
@@ -223,7 +223,7 @@ result_path.write_text('''```yaml
 
     meta = yaml.safe_load(meta_file.read_text(encoding="utf-8"))
     assert meta["writer"] == "agy"
-    assert meta["model"] == "gemini-3.8-flash-high"
+    assert meta["model"] == "unknown"
     assert meta["task_id"] == "write-a1-test-slug-2-1"
     assert meta["attempt"] == 1
 
@@ -274,13 +274,18 @@ Path(args.result_file).write_text("invalid_draft: true\\nstatus: ok\\n", encodin
 
     meta = yaml.safe_load(meta_file.read_text(encoding="utf-8"))
     assert meta["writer"] == "claude"
-    assert meta["model"] == "claude-sonnet-5"
+    assert meta["model"] == "unknown"
 
 
 def test_real_dispatch_path_with_fake_delegate(tmp_path, a1_valid_fixture, passing_preflight):
-    """Finding 7: Test the real dispatch path through fake delegate.py, checking argv, wait, and status."""
+    """Finding 7 & MAJOR D: Test real dispatch path through fake delegate.py writing to a different root, verifying wait JSON parsing."""
     draft, types = a1_valid_fixture
     raw_yaml = yaml.safe_dump(draft, allow_unicode=True)
+
+    caller_root = tmp_path / "caller_root"
+    caller_root.mkdir()
+    other_root = tmp_path / "other_root"
+    other_root.mkdir()
 
     calls_log = tmp_path / "delegate_calls.jsonl"
     fake_delegate_script = tmp_path / "fake_delegate.py"
@@ -291,7 +296,7 @@ import json
 import sys
 from pathlib import Path
 
-repo_root = Path({str(tmp_path)!r})
+other_root = Path({str(other_root)!r})
 calls_log = Path({str(calls_log)!r})
 
 argv = sys.argv[1:]
@@ -300,22 +305,26 @@ with open(calls_log, "a", encoding="utf-8") as f:
 
 cmd = argv[0] if argv else ""
 if cmd == "dispatch":
-    # Parse task-id
     task_id = argv[argv.index("--task-id") + 1]
-    task_state = repo_root / f"batch_state/tasks/{{task_id}}.json"
+    task_state = other_root / f"batch_state/tasks/{{task_id}}.json"
     task_state.parent.mkdir(parents=True, exist_ok=True)
     task_state.write_text(json.dumps({{"task_id": task_id, "status": "running", "model": "test-delegate-model"}}), encoding="utf-8")
     sys.exit(0)
 
 elif cmd == "wait":
     task_id = argv[1]
-    task_state = repo_root / f"batch_state/tasks/{{task_id}}.json"
-    result_file = repo_root / f"batch_state/tasks/{{task_id}}.result"
+    result_file = other_root / f"batch_state/tasks/{{task_id}}.result"
     result_file.parent.mkdir(parents=True, exist_ok=True)
     result_file.write_text('''```yaml
 {raw_yaml}
 ```''', encoding="utf-8")
-    task_state.write_text(json.dumps({{"task_id": task_id, "status": "done", "resolved_model": "gpt-6-astra"}}), encoding="utf-8")
+    state = {{
+        "task_id": task_id,
+        "status": "done",
+        "result_file": str(result_file),
+        "resolved_model": "gpt-6-astra",
+    }}
+    print(json.dumps(state, indent=2))
     sys.exit(0)
 
 sys.exit(1)
@@ -339,11 +348,15 @@ sys.exit(1)
         attempt=1,
         plan_activity_types=types,
         delegate_script=fake_delegate_script,
-        repo_root=tmp_path,
+        repo_root=caller_root,
     )
 
     assert res["writer"] == "codex"
     assert res["model"] == "gpt-6-astra"
+
+    # MAJOR D: Verify that caller_root was NOT used for reading results
+    caller_result = caller_root / "batch_state/tasks/write-a1-delegate-test-3-1.result"
+    assert not caller_result.exists(), "Caller root must not have received result file; result must be read from delegate wait JSON"
 
     # Assert argument lists recorded
     lines = [json.loads(line) for line in calls_log.read_text(encoding="utf-8").splitlines() if line]
@@ -370,7 +383,7 @@ sys.exit(1)
 
 
 def test_real_dispatch_path_wait_failure(tmp_path, a1_valid_fixture, passing_preflight):
-    """Finding 7: dispatch_writer fails when wait reports non-zero exit code or non-done status."""
+    """Finding 7: dispatch_writer fails when wait reports non-zero exit code."""
     fake_delegate_script = tmp_path / "fake_delegate_failing.py"
     fake_delegate_script.write_text(
         """
@@ -403,6 +416,50 @@ sys.exit(1)
         )
 
 
+@pytest.mark.parametrize(
+    ("wait_stdout", "expected_err"),
+    [
+        ("NOT_JSON_AT_ALL", "not valid JSON"),
+        ('{"task_id": "t", "status": "crashed"}', "completed with non-done status: 'crashed'"),
+        ('{"task_id": "t", "status": 500}', "completed with non-done status: 500"),
+        ('{"task_id": "t", "status": null}', "completed with non-done status: None"),
+        ('{"task_id": "t", "status": "done"}', "missing 'result_file'"),
+    ],
+)
+def test_real_dispatch_path_malformed_status_fails(tmp_path, passing_preflight, wait_stdout, expected_err):
+    """MAJOR D: A malformed status or missing result_file from delegate.py wait fails loudly."""
+    fake_delegate = tmp_path / f"fake_delegate_{abs(hash(wait_stdout))}.py"
+    fake_delegate.write_text(
+        f"""
+import sys
+cmd = sys.argv[1] if len(sys.argv) > 1 else ""
+if cmd == "dispatch":
+    sys.exit(0)
+elif cmd == "wait":
+    print({wait_stdout!r})
+    sys.exit(0)
+sys.exit(1)
+""",
+        encoding="utf-8",
+    )
+    prompt_file = tmp_path / "prompt.md"
+    prompt_file.write_text("Test prompt", encoding="utf-8")
+
+    with pytest.raises(WriterCallError, match=expected_err):
+        dispatch_writer(
+            writer="codex",
+            level="a1",
+            slug="malformed-test",
+            lesson_n=1,
+            prompt_file=prompt_file,
+            prompt_sha256="e" * 64,
+            output_dir=tmp_path / "out",
+            preflight_result=passing_preflight,
+            delegate_script=fake_delegate,
+            repo_root=tmp_path,
+        )
+
+
 def test_r11_forbidden_paths_grep():
     """R-11 grep test: scripts/build/fresh/ never opens or references v1 plans, v1 levels, or wiki packets (#8431, Finding 10)."""
     fresh_dir = REPO_ROOT / "scripts" / "build" / "fresh"
@@ -429,6 +486,15 @@ def test_r11_forbidden_paths_grep():
                 # Ensure no blanket exemption: count occurrences
                 occurrences = text.count(term)
                 assert occurrences <= 1, f"Term {term!r} occurs {occurrences} times in prompt.py"
+
+    # Path-part grep for 'plans' as its own path segment (Finding 10)
+    plans_segment_re = re.compile(
+        r'(/|\.joinpath\()\s*["\']plans["\']|["\']plans["\']\s*/|/plans/|["\']plans["\']'
+    )
+    for fpath in all_files:
+        text = fpath.read_text(encoding="utf-8")
+        if fpath.name != "prompt.py":
+            assert not plans_segment_re.search(text), f"Isolated 'plans' path segment found in {fpath}"
 
 
 def test_nothing_typed_no_cyrillic_in_engine_code():
