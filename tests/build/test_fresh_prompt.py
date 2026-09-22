@@ -10,6 +10,8 @@ import pytest
 from scripts.build.fresh.immersion import compute_immersion_payload
 from scripts.build.fresh.prompt import (
     CARDS_DIR,
+    SCHEMA_EXEMPLAR_BEGIN,
+    SCHEMA_EXEMPLAR_END,
     check_rendered_prompt,
     render_lesson_prompt,
     render_recap_prompt,
@@ -116,6 +118,8 @@ def test_render_lesson_prompt_clean(sample_plan_entry, sample_learner_state, sam
     assert "## 2. Cited Evidence Records" in rendered
     assert "W-001" in rendered
     assert "EX-001" in rendered
+    assert SCHEMA_EXEMPLAR_BEGIN in rendered
+    assert SCHEMA_EXEMPLAR_END in rendered
 
     check_res = check_rendered_prompt(rendered, sample_plan_entry, card_path)
     assert check_res.passed is True
@@ -146,10 +150,21 @@ def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cit
 
     assert "## 2. Built Lessons of this Module" in rendered
     assert "Built Lesson 1: Lesson 1" in rendered
+    assert SCHEMA_EXEMPLAR_BEGIN in rendered
+    assert SCHEMA_EXEMPLAR_END in rendered
 
     check_res = check_rendered_prompt(rendered, recap_plan, card_path, is_recap=True, built_lessons=built_lessons)
     assert check_res.passed is True
     assert check_res.errors == []
+
+
+def test_check_fails_missing_schema_summary_marker(sample_plan_entry):
+    """Finding 5: A missing delimiter marker for the schema exemplar fails the check."""
+    card_path = CARDS_DIR / "a1.md"
+    prompt = "Prompt without delimiter markers."
+    res = check_rendered_prompt(prompt, sample_plan_entry, card_path)
+    assert res.passed is False
+    assert any("missing_schema_summary_marker" in e for e in res.errors)
 
 
 def test_check_fails_unresolved_placeholder(sample_plan_entry):
@@ -180,31 +195,110 @@ def test_check_fails_unresolved_placeholder(sample_plan_entry):
     assert any("template variable rendered as 'None'" in e for e in res_4.errors)
 
 
-def test_check_fails_v1_path(sample_plan_entry):
+@pytest.mark.parametrize(
+    "v1_snippet",
+    [
+        "lesson-plans/sounds-intro-v1/plan.yaml",
+        "plans/a1/sounds-intro.yaml",
+        "/plans/a1/mod.yaml",
+        "curriculum/l2-uk-en/plans",
+        "c1-v1/lesson-1.md",
+        "-v1/intro.yaml",
+    ],
+)
+def test_check_fails_forbidden_v1_path_patterns(sample_plan_entry, v1_snippet: str):
+    """Finding 5: Test each forbidden v1 path pattern named by the reviewer."""
     card_path = CARDS_DIR / "a1.md"
-    bad_prompt = "Reference to curriculum/l2-uk-en/plans/a1-mod.yaml"
+    bad_prompt = f"Prompt mentioning forbidden path: {v1_snippet}"
     res = check_rendered_prompt(bad_prompt, sample_plan_entry, card_path)
     assert res.passed is False
     assert any("forbidden_v1_path" in e for e in res.errors)
 
-    bad_prompt_2 = "Reference to curriculum/l2-uk-en/a1-v1/intro.md"
-    res_2 = check_rendered_prompt(bad_prompt_2, sample_plan_entry, card_path)
-    assert res_2.passed is False
-    assert any("forbidden_v1_path" in e for e in res_2.errors)
 
-
-def test_check_fails_uncited_record_id(sample_plan_entry):
+def test_check_fails_uncited_record_id_anywhere_in_prompt(
+    sample_plan_entry, sample_learner_state, sample_cited_records
+):
+    """Finding 5: Uncited ID scan covers the WHOLE rendered prompt (outside the delimited schema exemplar)."""
+    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
     card_path = CARDS_DIR / "a1.md"
-    # Prompt contains extra T-999 in cited records
-    prompt = "## 2. Cited Evidence Records\n\n### Record T-999\n- Text: Uncited text\n\n---"
-    res = check_rendered_prompt(prompt, sample_plan_entry, card_path)
+
+    rendered = render_lesson_prompt(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        immersion=imm_payload,
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=card_path,
+    )
+
+    # Inject uncited ID into the plan section
+    tampered_plan = rendered.replace("Sounds and letters", "Sounds and letters with uncited EX-999")
+    res_plan = check_rendered_prompt(tampered_plan, sample_plan_entry, card_path)
+    assert res_plan.passed is False
+    assert any("uncited_record_id" in e and "EX-999" in e for e in res_plan.errors)
+
+    # Inject uncited ID into the style card section
+    tampered_card = rendered + "\nExtra style card note with T-777\n"
+    res_card = check_rendered_prompt(tampered_card, sample_plan_entry, card_path)
+    assert res_card.passed is False
+    assert any("uncited_record_id" in e and "T-777" in e for e in res_card.errors)
+
+
+def test_check_fails_unauthorized_lesson_number(sample_plan_entry, sample_learner_state, sample_cited_records):
+    """Finding 5: Enforce nothing from another lesson by number."""
+    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
+    card_path = CARDS_DIR / "a1.md"
+
+    rendered = render_lesson_prompt(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        immersion=imm_payload,
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=card_path,
+    )
+
+    # Inject reference to Lesson 5 into lesson 1 prompt
+    tampered = rendered.replace("First phonetics step.", "First phonetics step from Lesson 5.")
+    res = check_rendered_prompt(tampered, sample_plan_entry, card_path)
     assert res.passed is False
-    assert any("uncited_record_id" in e and "T-999" in e for e in res.errors)
+    assert any("unauthorized_lesson_number" in e and "5" in e for e in res.errors)
+
+
+def test_check_honors_style_card_path(sample_plan_entry, sample_learner_state, sample_cited_records, tmp_path):
+    """Finding 12: style_card_path parameter of render functions is honored."""
+    custom_card = tmp_path / "custom_card.md"
+    card_text = "Custom style card content with unique phrase: #xyz-unique-style."
+    custom_card.write_text(card_text, encoding="utf-8")
+    expected_sha = hashlib.sha256(card_text.encode("utf-8")).hexdigest()
+
+    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
+
+    rendered = render_lesson_prompt(
+        plan_entry=sample_plan_entry,
+        cited_records=sample_cited_records,
+        learner_state=sample_learner_state,
+        immersion=imm_payload,
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=custom_card,
+    )
+
+    assert card_text in rendered
+    assert expected_sha in rendered
+    assert custom_card.name in rendered
 
 
 def test_check_fails_unauthorized_lesson_content(sample_plan_entry):
     card_path = CARDS_DIR / "a1.md"
-    prompt = "Lesson 1 text with ## Built Lessons of this Module included."
+    prompt = (
+        f"Lesson 1 text with ## Built Lessons of this Module included.\n{SCHEMA_EXEMPLAR_BEGIN}\n{SCHEMA_EXEMPLAR_END}"
+    )
     res = check_rendered_prompt(prompt, sample_plan_entry, card_path, is_recap=False)
     assert res.passed is False
     assert any("unauthorized_lesson_content" in e for e in res.errors)
@@ -212,8 +306,7 @@ def test_check_fails_unauthorized_lesson_content(sample_plan_entry):
 
 def test_check_fails_style_card_mismatch(sample_plan_entry):
     card_path = CARDS_DIR / "a1.md"
-    # Prompt missing card sha
-    prompt = "Prompt without the required card hash."
+    prompt = f"Prompt without the required card hash.\n{SCHEMA_EXEMPLAR_BEGIN}\n{SCHEMA_EXEMPLAR_END}"
     res = check_rendered_prompt(prompt, sample_plan_entry, card_path)
     assert res.passed is False
     assert any("card_hash_mismatch" in e for e in res.errors)

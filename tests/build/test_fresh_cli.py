@@ -1,15 +1,20 @@
-"""Tests for fresh build engine Part E2 CLI entry and --help standard compliance (#8431 r3)."""
+"""Tests for fresh build engine Part E2 CLI entry, end-to-end loading, and --help standard compliance (#8431 r3)."""
 
 from __future__ import annotations
 
 import argparse
+import hashlib
+import stat
 import subprocess
 import sys
 from pathlib import Path
+from unittest.mock import patch
 
 import pytest
+import yaml
 
-from scripts.build.fresh.cli import _build_parser
+from scripts.build.fresh.cli import _build_parser, main
+from scripts.curriculum.evidence import lesson_lock, lock
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
@@ -67,3 +72,276 @@ def test_main_module_forwarding():
     proc = subprocess.run(cmd, cwd=REPO_ROOT, capture_output=True, text=True, timeout=10, check=False)
     assert proc.returncode == 0
     assert "Fresh build engine E2" in proc.stdout
+
+
+def _build_synthetic_tree(root: Path) -> dict[str, Path]:
+    """Helper to build a complete synthetic level tree with plans, locked pack, locked word store, and locks."""
+    plans_dir = root / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plans_dir.mkdir(parents=True, exist_ok=True)
+    ev_dir = root / "curriculum" / "l2-uk-en" / "evidence" / "a1"
+    ev_dir.mkdir(parents=True, exist_ok=True)
+
+    # 1. Plan v2
+    plan_data = {
+        "plan_schema": 2,
+        "slug": "synthetic-mod",
+        "title": "Synthetic Module",
+        "level": "a1",
+        "arc_ref": {"position": 1},
+        "lessons": [
+            {
+                "n": 1,
+                "title": "Lesson 1",
+                "slug": "lesson-1",
+                "kind": "teach",
+                "job": "Test Job",
+                "rationale": "Test Rationale",
+                "word_target": 10,
+                "steps": [
+                    {
+                        "id": "s1",
+                        "kind": "teach",
+                        "explains": ["T-001"],
+                        "ref": "EX-001",
+                        "needs": ["example"],
+                    }
+                ],
+                "consolidation": ["a1"],
+                "activities": [
+                    {
+                        "id": "a1",
+                        "type": "quiz",
+                        "placement": "inline",
+                        "focus": "Test",
+                    }
+                ],
+                "inventory": {
+                    "vocabulary": {
+                        "core": [
+                            {
+                                "lemma": "слово",
+                                "evidence": "W-001",
+                                "forms": ["noun:inanim:n:v_naz"],
+                            }
+                        ],
+                        "incidental": [],
+                        "recycled": [],
+                    },
+                    "grammar": [],
+                    "phonetics": {"letters": ["А"]},
+                },
+            },
+            {
+                "n": 2,
+                "title": "Lesson 2 Recap",
+                "slug": "lesson-2",
+                "kind": "recap",
+                "job": "Recap Job",
+                "rationale": "Recap Rationale",
+                "word_target": 10,
+                "steps": [
+                    {
+                        "id": "s1",
+                        "kind": "recap",
+                        "explains": ["T-001"],
+                        "ref": "EX-001",
+                        "needs": ["example"],
+                    }
+                ],
+                "consolidation": ["a1"],
+                "activities": [
+                    {
+                        "id": "a1",
+                        "type": "quiz",
+                        "placement": "inline",
+                        "focus": "Recap",
+                    }
+                ],
+                "inventory": {
+                    "vocabulary": {
+                        "core": [
+                            {
+                                "lemma": "слово",
+                                "evidence": "W-001",
+                                "forms": ["noun:inanim:n:v_naz"],
+                            }
+                        ],
+                        "incidental": [],
+                        "recycled": [],
+                    },
+                    "grammar": [],
+                    "phonetics": {"letters": ["А"]},
+                },
+            },
+        ],
+    }
+    plan_path = plans_dir / "synthetic-mod.yaml"
+    plan_path.write_text(yaml.safe_dump(plan_data, allow_unicode=True), encoding="utf-8")
+
+    # 2. Pack
+    pack_data = {
+        "evidence_schema": 1,
+        "module": "a1/synthetic-mod",
+        "built_with": {
+            "mcp_commit": "0" * 40,
+            "sources_db": "0" * 64,
+            "vesum": "0" * 64,
+            "trie": "0" * 64,
+            "ulif_forms": "0" * 64,
+            "standard_sha256": "0" * 64,
+        },
+        "texts": [
+            {
+                "id": "T-001",
+                "kind": "culture",
+                "source": {
+                    "kind": "textbook",
+                    "file": "f.txt",
+                    "grade": 1,
+                    "author": "Author",
+                    "section_id": 1,
+                    "page": 1,
+                    "chunk_id": "c1",
+                },
+                "quote": "Quote text",
+                "sha256": "0" * 64,
+                "supports": "Rule",
+            }
+        ],
+        "examples": [
+            {
+                "id": "EX-001",
+                "kind": "example",
+                "text": "Example text",
+                "source": {
+                    "kind": "textbook",
+                    "file": "f.txt",
+                    "grade": 1,
+                    "author": "Author",
+                    "section_id": 1,
+                    "page": 1,
+                    "chunk_id": "c2",
+                },
+                "sha256": "0" * 64,
+                "sentence_ref": {"words": ["W-001"]},
+            }
+        ],
+    }
+    pack_path = ev_dir / "synthetic-mod.yaml"
+    lock.write(pack_path, lock.yaml_bytes(pack_data))
+
+    # 3. Word store
+    words_data = {
+        "words": [
+            {
+                "id": "W-001",
+                "lemma": "слово",
+                "pos": "noun",
+                "forms": [
+                    {
+                        "form": "слово",
+                        "tags": "noun:inanim:n:v_naz",
+                        "stressed": "сло́во",
+                        "stress_source": "vesum",
+                        "learner": True,
+                    }
+                ],
+            }
+        ]
+    }
+    words_path = ev_dir / "_words.yaml"
+    lock.write(words_path, lock.yaml_bytes(words_data))
+
+    # 4. Registry
+    reg_path = ev_dir / "_words.registry.yaml"
+    lock.write(reg_path, lock.yaml_bytes([]))
+
+    # 5. Lesson lock
+    lesson_lock.write_lesson_lock("a1", "synthetic-mod", repo_root=root)
+
+    return {
+        "plan": plan_path,
+        "pack": pack_path,
+        "words": words_path,
+        "state_dir": ev_dir / "_state",
+    }
+
+
+def test_cli_render_prompt_end_to_end_synthetic_tree(tmp_path):
+    """Finding 1: End-to-end CLI test on a synthetic level tree.
+
+    Asserts that the rendered prompt contains every cited record id and real non-zero hashes.
+    """
+    paths = _build_synthetic_tree(tmp_path)
+    output_prompt = tmp_path / "rendered_prompt.md"
+
+    with (
+        patch("scripts.build.fresh.cli.REPO_ROOT", tmp_path),
+        patch("scripts.curriculum.evidence.lesson_lock.REPO_ROOT", tmp_path),
+    ):
+        code = main(["render-prompt", "a1", "synthetic-mod", "--lesson", "1", "-o", str(output_prompt)])
+        assert code == 0
+
+    assert output_prompt.is_file()
+    rendered = output_prompt.read_text(encoding="utf-8")
+
+    # 1. Contains every cited record id
+    assert "W-001" in rendered
+    assert "EX-001" in rendered
+    assert "T-001" in rendered
+    assert "No external cited records required." not in rendered
+
+    # 2. Contains real, non-zero hashes in the inputs block
+    assert 'plan_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    assert 'pack_lock: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    assert 'words_lock: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+
+    # Verify sha256 sidecar file was always recorded (#8431, Finding 11)
+    sha_file = paths["state_dir"] / "synthetic-mod" / "lesson-1.prompt.sha256"
+    assert sha_file.is_file()
+    recorded_sha = sha_file.read_text(encoding="ascii").strip()
+    assert len(recorded_sha) == 64
+    assert recorded_sha == hashlib.sha256(rendered.encode("utf-8")).hexdigest()
+
+
+def test_cli_recap_fails_closed_when_built_lesson_missing(tmp_path, capsys):
+    """Finding 1: Recap fails closed and names missing built lesson (never a placeholder)."""
+    _build_synthetic_tree(tmp_path)
+    output_prompt = tmp_path / "rendered_recap.md"
+
+    with (
+        patch("scripts.build.fresh.cli.REPO_ROOT", tmp_path),
+        patch("scripts.curriculum.evidence.lesson_lock.REPO_ROOT", tmp_path),
+    ):
+        # Lesson 2 is recap, but lesson-1.draft.yaml does not exist
+        code = main(["render-prompt", "a1", "synthetic-mod", "--lesson", "2", "--recap", "-o", str(output_prompt)])
+        assert code == 1
+
+    captured = capsys.readouterr()
+    assert "Built lesson 1 is missing" in captured.err
+
+
+def test_cli_write_fails_preflight_writes_gap_report_atomically(tmp_path, capsys):
+    """Finding 4: A failed preflight writes the gap report atomically (mode 0o644) and makes no writer call."""
+    tree = _build_synthetic_tree(tmp_path)
+
+    # Corrupt pack lock to cause preflight lock failure
+    pack_path = tree["pack"]
+    pack_path.write_text("corrupted content", encoding="utf-8")
+
+    with (
+        patch("scripts.build.fresh.cli.REPO_ROOT", tmp_path),
+        patch("scripts.curriculum.evidence.lesson_lock.REPO_ROOT", tmp_path),
+    ):
+        code = main(["write", "a1", "synthetic-mod", "--lesson", "1", "--writer", "agy"])
+        assert code == 1
+
+    captured = capsys.readouterr()
+    assert "Preflight FAILED" in captured.err
+
+    # Check gap report file written atomically with mode 0o644
+    gap_report = tree["state_dir"] / "synthetic-mod" / "lesson-1.gaps.yaml"
+    assert gap_report.is_file()
+    assert stat.S_IMODE(gap_report.stat().st_mode) == 0o644
+    content = yaml.safe_load(gap_report.read_text(encoding="utf-8"))
+    assert content["status"] == "evidence_gap"

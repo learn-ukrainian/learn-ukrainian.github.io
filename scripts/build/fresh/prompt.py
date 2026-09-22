@@ -9,9 +9,10 @@ plus per-type activity item shapes rendered from the level schema and the draft 
 
 The rendered-prompt check validates (#8431 §8.1):
 - no unresolved placeholders ({{ ... }} not in valid inline markup, {% ... %}, TODO, None)
-- no path or text of a v1 plan or curriculum/l2-uk-en/<level>-v1/
-- no record id outside the plan entry's citations
-- nothing from another lesson except the recap's built lessons
+- no path, pattern, or text of a v1 plan or forbidden v1 path (-v1/, /plans/, etc.)
+- uncited-id scan covers the WHOLE rendered prompt minus only the delimited schema exemplar
+- nothing from another lesson by id: no record id and no lesson number outside this lesson's
+  plan entry (except the recap's declared built lessons 1..N-1)
 - the style card hash exists and matches disk
 - the prompt sha256 is computed and recorded
 """
@@ -60,13 +61,18 @@ BAND_CARD_MAP = {
 VALID_DOUBLE_BRACE_RE = re.compile(r"^\{\{(?:gloss:(?:W-[0-9]+|W-[.…]+)|uk:[^{}\u0300\u0301]+|[0-9]+)\}\}$")
 
 RECORD_ID_RE = re.compile(r"\b(?:W|EX|T|E|V|P|G|X|S)-[0-9a-zA-Z_-]+\b")
-FORBIDDEN_V1_PATHS = (
-    "curriculum/l2-uk-en/plans/",
-    "curriculum/l2-uk-en/a1-v1/",
-    "curriculum/l2-uk-en/a2-v1/",
-    "curriculum/l2-uk-en/b1-v1/",
-    "curriculum/l2-uk-en/b2-v1/",
-    "curriculum/l2-uk-en/<level>-v1/",
+
+SCHEMA_EXEMPLAR_BEGIN = "<!-- BEGIN SCHEMA_SUMMARY_EXEMPLAR -->"
+SCHEMA_EXEMPLAR_END = "<!-- END SCHEMA_SUMMARY_EXEMPLAR -->"
+
+# Forbidden v1 path patterns per review finding 5
+FORBIDDEN_V1_PATTERNS: tuple[re.Pattern[str], ...] = (
+    re.compile(r"-v1/"),
+    re.compile(r"/plans/"),
+    re.compile(r"curriculum/l2-uk-en/plans"),
+    re.compile(r"\bplans/[a-z0-9-]+"),
+    re.compile(r"lesson-plans/[^/\s]+-v1"),
+    re.compile(r"\b[a-z0-9]+-v1(?:/|\b)"),
 )
 
 
@@ -216,7 +222,16 @@ def render_lesson_prompt(
     )
     template = env.get_template("lesson-writer.md.j2")
 
-    card_path, card_content, card_sha256 = style_card_info(level)
+    if style_card_path is not None:
+        card_path = Path(style_card_path)
+        card_bytes = card_path.read_bytes()
+        card_sha256 = hashlib.sha256(card_bytes).hexdigest()
+        card_content = card_bytes.decode("utf-8")
+        card_name = card_path.name
+    else:
+        card_path, card_content, card_sha256 = style_card_info(level)
+        card_name = card_path.name
+
     shapes = get_activity_item_shapes(level, schemas_dir)
 
     l_state = learner_state.to_dict() if isinstance(learner_state, PlannedState) else dict(learner_state)
@@ -228,7 +243,6 @@ def render_lesson_prompt(
 
     imm_dict = immersion.to_dict() if isinstance(immersion, ImmersionPayload) else dict(immersion)
 
-    # Ensure plan_entry has module key
     pe = dict(plan_entry)
     if "lesson" not in pe:
         pe["lesson"] = {"module": f"{level}/{slug}", "n": lesson_n}
@@ -240,7 +254,7 @@ def render_lesson_prompt(
         cited_records=cited_records,
         learner_state=l_state,
         immersion=imm_dict,
-        style_card_name=card_path.name,
+        style_card_name=card_name,
         style_card_content=card_content,
         style_card_sha256=card_sha256,
         activity_item_shapes=shapes,
@@ -281,7 +295,16 @@ def render_recap_prompt(
     )
     template = env.get_template("lesson-recap-writer.md.j2")
 
-    card_path, card_content, card_sha256 = style_card_info(level)
+    if style_card_path is not None:
+        card_path = Path(style_card_path)
+        card_bytes = card_path.read_bytes()
+        card_sha256 = hashlib.sha256(card_bytes).hexdigest()
+        card_content = card_bytes.decode("utf-8")
+        card_name = card_path.name
+    else:
+        card_path, card_content, card_sha256 = style_card_info(level)
+        card_name = card_path.name
+
     shapes = get_activity_item_shapes(level, schemas_dir)
 
     l_state = learner_state.to_dict() if isinstance(learner_state, PlannedState) else dict(learner_state)
@@ -305,7 +328,7 @@ def render_recap_prompt(
         cited_records=cited_records,
         learner_state=l_state,
         immersion=imm_dict,
-        style_card_name=card_path.name,
+        style_card_name=card_name,
         style_card_content=card_content,
         style_card_sha256=card_sha256,
         activity_item_shapes=shapes,
@@ -330,11 +353,9 @@ def check_rendered_prompt(
     errors: list[str] = []
 
     # 1. No unresolved placeholders
-    # Unrendered Jinja statements:
     if "{%" in rendered_prompt or "%}" in rendered_prompt:
         errors.append("unresolved_placeholder: unrendered Jinja statement tag ({% or %}) found in prompt")
 
-    # Double braces that are not valid markup:
     all_braces = re.findall(r"\{\{[^{}]*\}\}", rendered_prompt)
     for token in all_braces:
         if not VALID_DOUBLE_BRACE_RE.match(token):
@@ -344,52 +365,68 @@ def check_rendered_prompt(
         if marker in rendered_prompt:
             errors.append(f"unresolved_placeholder: placeholder token {marker!r} found in prompt")
 
-    # Detect leaked None values from missing variables in template
     if re.search(r"\bNone\b", rendered_prompt) and not re.search(r"type:\s*None", rendered_prompt):
-        # Check if None is part of an unrendered template field
         for line in rendered_prompt.splitlines():
             if ": None" in line and not line.strip().startswith("#"):
                 errors.append(f"unresolved_placeholder: template variable rendered as 'None': {line.strip()!r}")
 
-    # 2. No path, slug or text of a v1 plan or curriculum/l2-uk-en/<level>-v1/
-    for forbidden in FORBIDDEN_V1_PATHS:
-        if forbidden in rendered_prompt:
-            errors.append(f"forbidden_v1_path: prompt contains v1 path reference {forbidden!r}")
+    # 2. No path, slug or text of a v1 plan using path patterns (#8431 §8.1, Finding 5)
+    for pat in FORBIDDEN_V1_PATTERNS:
+        match = pat.search(rendered_prompt)
+        if match:
+            errors.append(
+                f"forbidden_v1_path: prompt contains v1 path reference matching {pat.pattern!r}: {match.group(0)!r}"
+            )
 
-    # 3. No record id outside the plan entry's citations (within cited records section)
+    # 3. Delimited schema-summary exemplar block and whole-prompt uncited-id scan (#8431 §8.1, Finding 5)
+    if SCHEMA_EXEMPLAR_BEGIN not in rendered_prompt or SCHEMA_EXEMPLAR_END not in rendered_prompt:
+        errors.append("missing_schema_summary_marker: schema-summary exemplar block delimiters missing from prompt")
+        prompt_for_id_scan = rendered_prompt
+    else:
+        # Strip only the delimited exemplar block; scan remainder of whole prompt
+        before, rest = rendered_prompt.split(SCHEMA_EXEMPLAR_BEGIN, 1)
+        after = rest.split(SCHEMA_EXEMPLAR_END, 1)[1]
+        prompt_for_id_scan = before + "\n" + after
+
     plan_citations = extract_plan_citations(plan_entry)
-    records_section_match = re.search(
-        r"## 2\. Cited Evidence Records(.*?)(?:---|\n## 3\.)",
-        rendered_prompt,
-        re.DOTALL,
-    ) or re.search(
-        r"## 3\. Cited Evidence Records(.*?)(?:---|\n## 4\.)",
-        rendered_prompt,
-        re.DOTALL,
-    )
-    if records_section_match:
-        records_text = records_section_match.group(1)
-        found_ids = set(RECORD_ID_RE.findall(records_text))
-        for fid in found_ids:
-            if fid not in plan_citations:
-                errors.append(
-                    f"uncited_record_id: record {fid!r} appears in cited records but is not cited in the plan entry"
-                )
+    found_ids = set(RECORD_ID_RE.findall(prompt_for_id_scan))
+    for fid in sorted(found_ids):
+        if fid not in plan_citations:
+            errors.append(f"uncited_record_id: record {fid!r} appears in prompt but is not cited in the plan entry")
 
-    # 4. Nothing from another lesson except the recap's built lessons
+    # 4. Nothing from another lesson by id or number (Finding 5)
     current_lesson_n = plan_entry.get("lesson", {}).get("n") or plan_entry.get("n")
+    allowed_lesson_numbers: set[int] = set()
+    if current_lesson_n is not None:
+        allowed_lesson_numbers.add(int(current_lesson_n))
+
     if not is_recap:
         if "## Built Lessons of this Module" in rendered_prompt or "### Built Lesson" in rendered_prompt:
             errors.append("unauthorized_lesson_content: non-recap prompt contains built lessons of other lessons")
     else:
-        # In recap prompt, built_lessons are expected
         if built_lessons:
             for bl in built_lessons:
                 bl_n = bl.get("n")
-                if bl_n is not None and current_lesson_n is not None and bl_n >= current_lesson_n:
-                    errors.append(
-                        f"recap_invalid_built_lesson: recap includes lesson {bl_n} >= current lesson {current_lesson_n}"
-                    )
+                if bl_n is not None:
+                    allowed_lesson_numbers.add(int(bl_n))
+                    if current_lesson_n is not None and bl_n >= current_lesson_n:
+                        errors.append(
+                            f"recap_invalid_built_lesson: recap includes lesson {bl_n} >= current lesson {current_lesson_n}"
+                        )
+
+    # Check for unauthorized lesson numbers across the prompt (excluding schema exemplar)
+    lesson_num_patterns = (
+        re.compile(r"\b[Ll]esson\s+#?(\d+)\b"),
+        re.compile(r"\b[Ll]esson-(\d+)\b"),
+        re.compile(r"\blesson:\s*(?:\{[^}]*|\n[ ]*)n:\s*(\d+)"),
+    )
+    for lpat in lesson_num_patterns:
+        for m in lpat.finditer(prompt_for_id_scan):
+            lnum = int(m.group(1))
+            if lnum not in allowed_lesson_numbers:
+                errors.append(
+                    f"unauthorized_lesson_number: lesson number {lnum} appears in prompt but does not belong to this lesson or allowed recap lessons"
+                )
 
     # 5. The style card hash exists and matches
     if not style_card_path.is_file():

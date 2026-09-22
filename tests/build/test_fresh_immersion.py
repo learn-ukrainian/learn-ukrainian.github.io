@@ -1,14 +1,22 @@
-"""Tests for fresh build engine Part E2 immersion payload (#8414, #8431 §7)."""
+"""Tests for fresh build engine Part E2 immersion payload (#8414, #8431 §6/§7)."""
 
 from __future__ import annotations
 
 from unittest.mock import patch
 
+import pytest
+
 from scripts.build.fresh import immersion as fresh_immersion
 from scripts.build.fresh import prompt as fresh_prompt
-from scripts.build.fresh.immersion import FIELD_ROLES, ImmersionPayload, compute_immersion_payload
+from scripts.build.fresh.immersion import (
+    FIELD_ROLES,
+    ImmersionPayload,
+    compute_immersion_payload,
+    get_immersion_table,
+    load_immersion_table,
+)
 from scripts.curriculum.arc.loader import ArcPosition
-from scripts.curriculum.learner_state.immersion import LessonBand
+from scripts.curriculum.learner_state.immersion import ImmersionError, LessonBand
 
 
 def synthetic_arc_loader(level: str) -> list[ArcPosition]:
@@ -110,24 +118,34 @@ def test_a1_immersion_payload_early():
     assert "min_vocab_entries" in targets
 
 
-def test_a1_immersion_payload_late():
-    """Late A1 (position >= 41): bilingual narration/instructions permitted."""
-    payload = compute_immersion_payload("a1", arc_position=45, lesson_n=1, cumulative_core_count=600)
-    assert payload.permitted_languages["narration"] == ("en", "uk")
-    assert payload.permitted_languages["activity_instruction"] == ("en", "uk")
+def test_a1_immersion_payload_late_band():
+    """A1 late band (a1-m35-54 and a1-m55+): bilingual narration and instructions per contract table."""
+    table = get_immersion_table()
+    assert "a1-m35-54" in table
+    assert table["a1-m35-54"]["roles"]["narration"] == ["en", "uk"]
+    assert table["a1-m35-54"]["roles"]["activity_instruction"] == ["en", "uk"]
+
+    assert "a1-m55+" in table
+    assert table["a1-m55+"]["roles"]["narration"] == ["en", "uk"]
+    assert table["a1-m55+"]["roles"]["activity_instruction"] == ["en", "uk"]
 
 
 def test_a2_immersion_payload():
-    """A2 bridge allows English support; A2 ramp is Ukrainian-only narration."""
+    """From A2 on, never allow more English than contract allows (#8431 §6/§7, Finding 6).
+
+    a2-bridge uses easy Ukrainian as default teaching voice (no English body scaffolding).
+    """
     p_bridge = compute_immersion_payload("a2", arc_position=1, lesson_n=1, arc_loader=synthetic_arc_loader)
     assert p_bridge.band_key == "a2-bridge"
-    assert p_bridge.permitted_languages["narration"] == ("uk", "en")
-    assert p_bridge.permitted_languages["activity_instruction"] == ("uk", "en")
+    assert p_bridge.permitted_languages["narration"] == ("uk",)
+    assert p_bridge.permitted_languages["activity_instruction"] == ("uk",)
+    assert p_bridge.permitted_languages["activity_item"] == ("uk",)
 
     p_ramp = compute_immersion_payload("a2", arc_position=4, lesson_n=1, arc_loader=synthetic_arc_loader)
     assert p_ramp.band_key == "a2-ramp"
     assert p_ramp.permitted_languages["narration"] == ("uk",)
     assert p_ramp.permitted_languages["activity_instruction"] == ("uk",)
+    assert p_ramp.permitted_languages["activity_item"] == ("uk",)
 
 
 def test_b1_immersion_payload():
@@ -141,12 +159,64 @@ def test_b1_immersion_payload():
     assert payload.permitted_languages["gloss"] == ("en",)
 
 
+@pytest.mark.parametrize(
+    "band_key",
+    [
+        "a1-m01-03",
+        "a1-m04-06",
+        "a1-m07-14",
+        "a1-m15-24",
+        "a1-m25-34",
+        "a1-m35-54",
+        "a1-m55+",
+        "a2-bridge",
+        "a2-ramp",
+        "a2-m01-20",
+        "a2-m21-50",
+        "a2-m51-70",
+        "b1-core",
+        "b2+",
+    ],
+)
+def test_all_contract_bands_tied_to_table_rows(band_key: str):
+    """Test per band key tying it to its contract citation and role mapping (#8431 §6/§7, Finding 6)."""
+    table = load_immersion_table()
+    assert band_key in table, f"Band key {band_key} missing from immersion_table.yaml"
+    row = table[band_key]
+    assert "contract_citation" in row, f"Band {band_key} missing contract_citation"
+    assert "#8431 r3 §6/§7" in row["contract_citation"]
+
+    roles = row.get("roles", {})
+    for field_role in FIELD_ROLES:
+        assert field_role in roles, f"Band {band_key} missing role {field_role}"
+        assert isinstance(roles[field_role], list)
+        assert len(roles[field_role]) > 0
+
+
+def test_unsupported_band_key_fails_closed():
+    """Where the contract gives no row, fail closed with unsupported_immersion_band (#8431, Finding 6)."""
+    with patch("scripts.build.fresh.immersion.compute_lesson_immersion_band") as mock_band:
+        mock_band.return_value = LessonBand(
+            band_key="nonexistent-band",
+            advisory_uk_share=(50, 50),
+            module_structural={"min_uk_dialogue_lines": 1, "min_uk_example_sentences": 1, "min_vocab_entries": 1},
+            source="arc_table",
+            not_checked=[],
+        )
+        with pytest.raises(ImmersionError) as exc_info:
+            compute_immersion_payload("a2", 1, 1)
+        assert exc_info.value.code == "unsupported_immersion_band"
+
+
 def test_payload_pin_consumed_by_both():
-    """Payload pin: writer prompt and E3 gate consume the exact same compute_immersion_payload function."""
+    """Payload pin: writer prompt and E3 gate consume the exact same compute_immersion_payload function.
+
+    # E3: The gate-side half of this pin belongs to E3's test suite once the E3 gate is implemented.
+    """
     # 1. Verify compute_immersion_payload reads compute_lesson_immersion_band
     with patch("scripts.build.fresh.immersion.compute_lesson_immersion_band") as mock_band:
         mock_band.return_value = LessonBand(
-            band_key="pinned-band",
+            band_key="a1-m01-03",
             advisory_uk_share=(20, 40),
             module_structural={"min_uk_dialogue_lines": 5, "min_uk_example_sentences": 8, "min_vocab_entries": 12},
             source="ulp_vocab",
@@ -154,13 +224,13 @@ def test_payload_pin_consumed_by_both():
         )
         res = compute_immersion_payload("a1", 1, 1, cumulative_core_count=10)
         assert mock_band.called
-        assert res.band_key == "pinned-band"
+        assert res.band_key == "a1-m01-03"
 
     # 2. Verify prompt module imports compute_immersion_payload from immersion.py
     assert fresh_prompt.compute_immersion_payload is fresh_immersion.compute_immersion_payload
 
     # 3. Verify to_dict serializability
     d = res.to_dict()
-    assert d["band_key"] == "pinned-band"
+    assert d["band_key"] == "a1-m01-03"
     assert d["advisory_uk_share"] == [20, 40]
     assert d["structural_targets"]["min_uk_dialogue_lines"] == 5

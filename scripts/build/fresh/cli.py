@@ -9,6 +9,7 @@ Subcommands:
 from __future__ import annotations
 
 import argparse
+import hashlib
 import sys
 from pathlib import Path
 from typing import Any
@@ -20,13 +21,16 @@ from scripts.build.fresh.immersion import compute_immersion_payload
 from scripts.build.fresh.preflight import preflight_lesson
 from scripts.build.fresh.prompt import (
     check_rendered_prompt,
+    extract_plan_citations,
     render_lesson_prompt,
     render_recap_prompt,
     style_card_info,
 )
 from scripts.build.fresh.writer import ALLOWED_WRITERS, dispatch_writer
-from scripts.curriculum.evidence import lesson_lock
-from scripts.curriculum.learner_state.planned import planned_state
+from scripts.curriculum import plan_v2
+from scripts.curriculum.evidence import lesson_lock, lock
+from scripts.curriculum.evidence import pack as pack_module
+from scripts.curriculum.learner_state.planned import PlannedState, planned_state
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -167,27 +171,148 @@ def _build_parser() -> argparse.ArgumentParser:
 
 
 def _load_lesson_data(
-    level: str, slug: str, lesson_n: int
-) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Path]]:
-    """Helper to resolve paths and load plan, pack, and word store."""
-    paths = lesson_lock.resolve_paths(level, slug)
+    level: str,
+    slug: str,
+    lesson_n: int,
+    *,
+    repo_root: Path = REPO_ROOT,
+    plans_dir: Path | None = None,
+    evidence_dir: Path | None = None,
+) -> tuple[dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Any], dict[str, Path]]:
+    """Helper to resolve paths and load plan, pack, and word store with lock integrity (#8431, Findings 1, 3, 12).
+
+    Fails closed if plan, pack, or word store is missing or lock disagrees.
+    """
+    paths = lesson_lock.resolve_paths(
+        level,
+        slug,
+        plans_dir=plans_dir,
+        evidence_dir=evidence_dir,
+        repo_root=repo_root,
+    )
+
+    # 1. Load plan via scripts.curriculum.plan_v2 (Finding 1)
     if not paths["plan"].is_file():
         raise FileNotFoundError(f"Plan file not found: {paths['plan']}")
-    plan_dict = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-
-    pack_dict = {}
-    if paths["pack"].is_file():
-        pack_dict = yaml.safe_load(paths["pack"].read_text(encoding="utf-8"))
-
-    words_dict = {}
-    if paths["words"].is_file():
-        words_dict = yaml.safe_load(paths["words"].read_text(encoding="utf-8"))
+    plan_dict = plan_v2.load_plan(paths["plan"])
 
     lesson_entry = next((l for l in plan_dict.get("lessons", []) if l.get("n") == lesson_n), None)
     if lesson_entry is None:
         raise ValueError(f"Lesson {lesson_n} not found in plan {paths['plan']}")
 
+    # 2. Load pack with lock verification (Finding 3)
+    if not paths["pack"].is_file():
+        raise FileNotFoundError(f"Pack file not found: {paths['pack']}")
+    lock.require(paths["pack"])
+    pack_dict = yaml.safe_load(paths["pack"].read_text(encoding="utf-8"))
+
+    # 3. Load word store with lock verification (Finding 3)
+    if not paths["words"].is_file():
+        raise FileNotFoundError(f"Word store not found: {paths['words']}")
+    lock.require(paths["words"])
+    words_dict = yaml.safe_load(paths["words"].read_text(encoding="utf-8"))
+
+    # 4. Check per-lesson lock if present (Finding 3)
+    if paths["lock"].is_file():
+        ok, diff = lesson_lock.check_lesson_lock(
+            level,
+            slug,
+            plans_dir=plans_dir,
+            evidence_dir=evidence_dir,
+            repo_root=repo_root,
+        )
+        if not ok:
+            raise ValueError(f"Per-lesson lock mismatch for {level}/{slug}: {diff}")
+
     return plan_dict, lesson_entry, pack_dict, words_dict, paths
+
+
+def _load_cited_records(
+    lesson_entry: dict[str, Any],
+    pack_dict: dict[str, Any],
+    words_dict: dict[str, Any],
+) -> dict[str, Any]:
+    """Resolve cited record IDs from the locked pack and word store (#8431 §1, Finding 1)."""
+    cited_ids = extract_plan_citations(lesson_entry)
+
+    # Index pack records
+    pack_records: dict[str, dict[str, Any]] = {}
+    for list_name in pack_module.PACK_RECORD_LISTS:
+        for rec in pack_dict.get(list_name) or []:
+            if isinstance(rec, dict) and "id" in rec:
+                pack_records[rec["id"]] = rec
+
+    # Index word records
+    word_records: dict[str, dict[str, Any]] = {}
+    for rec in words_dict.get("words") or []:
+        if isinstance(rec, dict) and "id" in rec:
+            word_records[rec["id"]] = rec
+
+    cited_records: dict[str, Any] = {}
+    for cid in sorted(cited_ids):
+        if cid in word_records:
+            cited_records[cid] = word_records[cid]
+        elif cid in pack_records:
+            cited_records[cid] = pack_records[cid]
+
+    return cited_records
+
+
+def _compute_input_hashes(
+    paths: dict[str, Path],
+    lesson_n: int,
+    p_state: PlannedState,
+) -> dict[str, str]:
+    """Compute the five real, non-zero input hashes from files and locks (#8431 §1, Finding 1)."""
+    plan_sha256 = hashlib.sha256(paths["plan"].read_bytes()).hexdigest()
+    pack_lock = hashlib.sha256(paths["pack"].read_bytes()).hexdigest()
+    words_lock = hashlib.sha256(paths["words"].read_bytes()).hexdigest()
+
+    lesson_lock_entry_sha256 = "0" * 64
+    if paths["lock"].is_file():
+        lock_doc = yaml.safe_load(paths["lock"].read_text(encoding="utf-8"))
+        for entry in lock_doc.get("lessons", []):
+            if entry.get("n") == lesson_n:
+                lesson_lock_entry_sha256 = entry.get("entry_sha256", "0" * 64)
+                break
+
+    learner_state_sha256 = hashlib.sha256(lock.yaml_bytes(p_state.to_dict())).hexdigest()
+
+    return {
+        "plan_sha256": plan_sha256,
+        "pack_lock": pack_lock,
+        "words_lock": words_lock,
+        "lesson_lock_entry_sha256": lesson_lock_entry_sha256,
+        "learner_state_sha256": learner_state_sha256,
+    }
+
+
+def _load_recap_built_lessons(
+    state_dir: Path,
+    slug: str,
+    lesson_n: int,
+) -> list[dict[str, Any]]:
+    """Load built lessons 1..N-1 from real files; fail closed and name missing built lesson (#8431, Finding 1)."""
+    built: list[dict[str, Any]] = []
+    module_state_dir = state_dir / slug
+
+    for prior_n in range(1, lesson_n):
+        # Check standard draft filename variants in state dir
+        candidates = [
+            module_state_dir / f"lesson-{prior_n}.draft.yaml",
+            module_state_dir / f"lesson-{prior_n}.yaml",
+        ]
+        found = next((c for c in candidates if c.is_file()), None)
+        if found is None:
+            raise FileNotFoundError(
+                f"Built lesson {prior_n} is missing for recap: expected {module_state_dir / f'lesson-{prior_n}.draft.yaml'}"
+            )
+        text = found.read_text(encoding="utf-8")
+        parsed = yaml.safe_load(text) or {}
+        title = parsed.get("title") or f"Lesson {prior_n}"
+        built.append({"n": prior_n, "title": title, "content": text, "draft": parsed})
+
+    return built
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -195,7 +320,7 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
 
     if args.command == "render-prompt":
-        plan_dict, lesson_entry, pack_dict, _words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
+        plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(args.level, args.slug, args.lesson)
         card_path, _, _card_sha = style_card_info(args.level)
 
         # Compute planned state and immersion payload
@@ -205,47 +330,74 @@ def main(argv: list[str] | None = None) -> int:
             args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
         )
 
+        # Load real cited records from pack and word store (Finding 1)
+        cited_records = _load_cited_records(lesson_entry, pack_dict, words_dict)
+
+        # Compute real input hashes (Finding 1)
+        hashes = _compute_input_hashes(paths, args.lesson, p_state)
+
         if args.recap:
-            # Load built lessons 1..N-1 if available
-            built = []
-            for prior_n in range(1, args.lesson):
-                built.append({"n": prior_n, "title": f"Lesson {prior_n}", "content": f"# Built lesson {prior_n}"})
+            # Load built lessons 1..N-1 from real files, failing closed if missing (Finding 1)
+            try:
+                built = _load_recap_built_lessons(paths["state_dir"], args.slug, args.lesson)
+            except FileNotFoundError as err:
+                print(f"Error loading recap built lessons: {err}", file=sys.stderr)
+                return 1
+
             rendered = render_recap_prompt(
                 lesson_entry,
                 built_lessons=built,
-                cited_records={},
+                cited_records=cited_records,
                 learner_state=p_state,
                 immersion=imm_payload,
                 level=args.level,
                 slug=args.slug,
                 lesson_n=args.lesson,
                 style_card_path=card_path,
+                plan_sha256=hashes["plan_sha256"],
+                pack_lock=hashes["pack_lock"],
+                words_lock=hashes["words_lock"],
+                lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
+                learner_state_sha256=hashes["learner_state_sha256"],
             )
+            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=True, built_lessons=built)
         else:
             rendered = render_lesson_prompt(
                 lesson_entry,
-                cited_records={},
+                cited_records=cited_records,
                 learner_state=p_state,
                 immersion=imm_payload,
                 level=args.level,
                 slug=args.slug,
                 lesson_n=args.lesson,
                 style_card_path=card_path,
+                plan_sha256=hashes["plan_sha256"],
+                pack_lock=hashes["pack_lock"],
+                words_lock=hashes["words_lock"],
+                lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
+                learner_state_sha256=hashes["learner_state_sha256"],
             )
+            check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=False)
 
-        check_res = check_rendered_prompt(rendered, lesson_entry, card_path, is_recap=args.recap)
         if not check_res.passed:
             print("Rendered-prompt check FAILED:", file=sys.stderr)
             for err in check_res.errors:
                 print(f"  - {err}", file=sys.stderr)
             return 1
 
+        # Always record prompt sha256 (#8431, Finding 11)
+        state_dir = paths["state_dir"] / args.slug
+        state_dir.mkdir(parents=True, exist_ok=True)
+        sha_file = state_dir / f"lesson-{args.lesson}.prompt.sha256"
+        lock.atomic_write(sha_file, f"{check_res.prompt_sha256}\n".encode("ascii"))
+
         if args.output:
             args.output.parent.mkdir(parents=True, exist_ok=True)
-            args.output.write_text(rendered, encoding="utf-8")
+            lock.atomic_write(args.output, rendered.encode("utf-8"))
             print(f"Rendered prompt written to {args.output} (sha256: {check_res.prompt_sha256})")
         else:
             print(rendered)
+            print(f"# prompt sha256: {check_res.prompt_sha256}", file=sys.stderr)
 
         return 0
 
@@ -257,6 +409,10 @@ def main(argv: list[str] | None = None) -> int:
             pack=pack_dict,
             word_store=words_dict,
             gap_report_path=args.gap_report,
+            pack_path=paths["pack"],
+            words_path=paths["words"],
+            level=args.level,
+            slug=args.slug,
         )
 
         print(f"Preflight status: {res.status}")
@@ -278,24 +434,47 @@ def main(argv: list[str] | None = None) -> int:
             args.level, pos, args.lesson, cumulative_core_count=p_state.cumulative_core_count
         )
 
-        # 1. Run preflight first
-        pre_res = preflight_lesson(lesson_entry, pack=pack_dict, word_store=words_dict)
+        out_dir = args.output_dir or (paths["state_dir"] / args.slug)
+        out_dir.mkdir(parents=True, exist_ok=True)
+        gap_report_file = out_dir / f"lesson-{args.lesson}.gaps.yaml"
+
+        # 1. Run preflight first with gap report destination (#8431 §4, Finding 4)
+        pre_res = preflight_lesson(
+            lesson_entry,
+            pack=pack_dict,
+            word_store=words_dict,
+            pack_path=paths["pack"],
+            words_path=paths["words"],
+            level=args.level,
+            slug=args.slug,
+            gap_report_path=gap_report_file,
+        )
+
         if not pre_res.passed:
             print("Preflight FAILED with evidence gaps. NO writer call made.", file=sys.stderr)
+            print(f"Gap report written atomically to {gap_report_file}", file=sys.stderr)
             for g in pre_res.gaps:
                 print(f"  [{g.step}] need: {g.need} — {g.detail}", file=sys.stderr)
             return 1
 
-        # 2. Render prompt
+        # 2. Render prompt with real cited records and hashes (Finding 1)
+        cited_records = _load_cited_records(lesson_entry, pack_dict, words_dict)
+        hashes = _compute_input_hashes(paths, args.lesson, p_state)
+
         rendered_prompt = render_lesson_prompt(
             lesson_entry,
-            cited_records={},
+            cited_records=cited_records,
             learner_state=p_state,
             immersion=imm_payload,
             level=args.level,
             slug=args.slug,
             lesson_n=args.lesson,
             style_card_path=card_path,
+            plan_sha256=hashes["plan_sha256"],
+            pack_lock=hashes["pack_lock"],
+            words_lock=hashes["words_lock"],
+            lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
+            learner_state_sha256=hashes["learner_state_sha256"],
         )
         check_res = check_rendered_prompt(rendered_prompt, lesson_entry, card_path)
         if not check_res.passed:
@@ -304,13 +483,13 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  - {err}", file=sys.stderr)
             return 1
 
-        # 3. Write prompt to state dir
-        out_dir = args.output_dir or (paths["state_dir"] / args.slug)
-        out_dir.mkdir(parents=True, exist_ok=True)
+        # 3. Write prompt and prompt sha256 to state dir atomically (#8431 §1, Finding 11)
         prompt_file = out_dir / f"lesson-{args.lesson}.prompt.md"
-        prompt_file.write_text(rendered_prompt, encoding="utf-8")
+        lock.atomic_write(prompt_file, rendered_prompt.encode("utf-8"))
+        prompt_sha_file = out_dir / f"lesson-{args.lesson}.prompt.sha256"
+        lock.atomic_write(prompt_sha_file, f"{check_res.prompt_sha256}\n".encode("ascii"))
 
-        # 4. Dispatch writer
+        # 4. Dispatch writer with structural preflight gate (#8431 §1, §7 row 0, Finding 4)
         plan_activity_types = {
             act["id"]: act["type"] for act in lesson_entry.get("activities", []) if "id" in act and "type" in act
         }
@@ -322,6 +501,7 @@ def main(argv: list[str] | None = None) -> int:
             prompt_file=prompt_file,
             prompt_sha256=check_res.prompt_sha256,
             output_dir=out_dir,
+            preflight_result=pre_res,
             attempt=args.attempt,
             plan_activity_types=plan_activity_types,
             fake_seat=args.fake_seat,

@@ -2,22 +2,23 @@
 
 The writer call:
 - takes explicit --writer {claude,codex,agy,grok} (code never auto-routes)
+- requires preflight result: refuses structurally unless preflight passed (#8431 §7 row 0)
 - runs scripts/delegate.py dispatch --agent <writer> --mode read-only --worktree
   --task-id write-<level>-<slug>-<n>-<attempt> --prompt-file ... --research-role writer
-- runs delegate.py wait <task-id> (wait is mandatory)
-- reads batch_state/tasks/<task-id>.result
+- runs delegate.py wait <task-id> (wait is mandatory before reading result)
+- fails if wait reports non-done status
+- saves raw reply and writer metadata (including seat model and prompt hash) with atomic writes (0o644)
+  even if schema validation fails
 - strips surrounding Markdown fence if present
 - parses YAML into dict
 - validates with E1's schema (Draft202012Validator + code checks) BEFORE anything else reads it
-- keeps raw reply, prompt hash, and seat identity beside draft:
-  lesson-<n>.draft.yaml, lesson-<n>.raw.txt, lesson-<n>.writer.yaml
-- supports fake_seat parameter for test execution without paid calls
-- no retry inside this step; schema failure is check-1 failure.
+- writes draft with lock sidecar only after schema validation succeeds.
 """
 
 from __future__ import annotations
 
 import datetime
+import json
 import subprocess
 import sys
 from collections.abc import Callable
@@ -31,10 +32,18 @@ from scripts.build.fresh.draft_schema import (
     DraftValidationError,
     validate_draft,
 )
+from scripts.build.fresh.preflight import PreflightResult
 from scripts.curriculum.evidence import lock
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 ALLOWED_WRITERS: tuple[str, ...] = ("claude", "codex", "agy", "grok")
+
+SEAT_DEFAULT_MODELS: dict[str, str] = {
+    "claude": "claude-sonnet-5",
+    "codex": "gpt-6-astra",
+    "agy": "gemini-3.8-flash-high",
+    "grok": "grok-4.7-high",
+}
 
 
 class WriterCallError(Exception):
@@ -51,10 +60,8 @@ def strip_markdown_fence(text: str) -> str:
     s = text.strip()
     if s.startswith("```"):
         lines = s.splitlines()
-        # Remove opening fence line
         if lines and lines[0].startswith("```"):
             lines = lines[1:]
-        # Remove closing fence line
         if lines and lines[-1].strip() == "```":
             lines = lines[:-1]
         return "\n".join(lines).strip()
@@ -99,6 +106,7 @@ def dispatch_writer(
     prompt_file: Path,
     prompt_sha256: str,
     output_dir: Path,
+    preflight_result: PreflightResult | None = None,
     attempt: int = 1,
     plan_activity_types: dict[str, str] | None = None,
     fake_seat: Path | str | Callable[[str, Path, Path], None] | None = None,
@@ -106,15 +114,32 @@ def dispatch_writer(
     repo_root: Path | None = None,
     delegate_script: Path | None = None,
     schemas_dir: Path | None = None,
+    model: str | None = None,
 ) -> dict[str, Any]:
-    """Execute the writer call, wait for completion, parse and validate the draft."""
+    """Execute the writer call, wait for completion, parse and validate the draft.
+
+    Structurally refuses if preflight_result did not pass (#8431 §7 row 0, Finding 4).
+    Saves raw reply and seat metadata before schema validation so provenance is preserved
+    even on schema failure (#8431 §1, Finding 11).
+    """
+    # 0. Structural preflight gate (#8431 §7 row 0, Finding 4)
+    if preflight_result is None or not preflight_result.passed:
+        raise WriterCallError("Writer dispatch refused: preflight verification did not pass (#8431 §7 row 0).")
+
     if writer not in ALLOWED_WRITERS:
         raise ValueError(f"Invalid writer {writer!r}. Explicit writer seat must be one of {ALLOWED_WRITERS}.")
 
     root = repo_root or REPO_ROOT
     task_id = f"write-{level}-{slug}-{lesson_n}-{attempt}"
+    task_state_file = root / f"batch_state/tasks/{task_id}.json"
     result_file = root / f"batch_state/tasks/{task_id}.result"
     del_script = delegate_script or (root / "scripts/delegate.py")
+
+    output_dir = Path(output_dir)
+    output_dir.mkdir(parents=True, exist_ok=True)
+    draft_file = output_dir / f"lesson-{lesson_n}.draft.yaml"
+    raw_file = output_dir / f"lesson-{lesson_n}.raw.txt"
+    writer_meta_file = output_dir / f"lesson-{lesson_n}.writer.yaml"
 
     # 1. Execute task (either through fake seat or real delegate.py)
     if fake_seat is not None:
@@ -137,7 +162,7 @@ def dispatch_writer(
             if proc.returncode != 0:
                 raise WriterCallError(f"Fake seat script failed with exit code {proc.returncode}: {proc.stderr}")
     else:
-        # Real delegate dispatch
+        # Real delegate dispatch (#8431 §1, Finding 7)
         dispatch_cmd = [
             sys.executable,
             str(del_script),
@@ -160,7 +185,7 @@ def dispatch_writer(
                 f"delegate.py dispatch failed with exit code {disp_proc.returncode}: {disp_proc.stderr}"
             )
 
-        # Wait for task to finish
+        # Wait for task to finish — mandatory before reading result (#8431 §1, Finding 7)
         wait_cmd = [
             sys.executable,
             str(del_script),
@@ -171,7 +196,19 @@ def dispatch_writer(
         ]
         wait_proc = subprocess.run(wait_cmd, capture_output=True, text=True, timeout=timeout + 30, check=False)
         if wait_proc.returncode != 0:
-            raise WriterCallError(f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr}")
+            raise WriterCallError(
+                f"delegate.py wait failed with exit code {wait_proc.returncode}: {wait_proc.stderr or wait_proc.stdout}"
+            )
+
+        # Check terminal status in state file if present
+        if task_state_file.is_file():
+            try:
+                state_data = json.loads(task_state_file.read_text(encoding="utf-8"))
+                status = state_data.get("status")
+                if status != "done":
+                    raise WriterCallError(f"Task {task_id} completed with non-done status: {status!r}")
+            except json.JSONDecodeError:
+                pass
 
     # 2. Read result file
     if not result_file.is_file():
@@ -179,7 +216,32 @@ def dispatch_writer(
 
     raw_reply = result_file.read_text(encoding="utf-8")
 
-    # 3. Parse and validate draft before anything else reads it
+    # 3. Determine seat model (#8431 §1, Finding 11)
+    seat_model = model
+    if seat_model is None and task_state_file.is_file():
+        try:
+            state_data = json.loads(task_state_file.read_text(encoding="utf-8"))
+            seat_model = state_data.get("resolved_model") or state_data.get("model")
+        except json.JSONDecodeError:
+            pass
+    if seat_model is None:
+        seat_model = SEAT_DEFAULT_MODELS.get(writer, "unknown")
+
+    # 4. Save raw reply and writer metadata ATOMICALLY (0o644) BEFORE schema validation (#8431 §1, Finding 11)
+    # This guarantees provenance is preserved on disk even if schema validation fails.
+    lock.atomic_write(raw_file, raw_reply.encode("utf-8"))
+
+    meta = {
+        "writer": writer,
+        "model": seat_model,
+        "prompt_sha256": prompt_sha256,
+        "task_id": task_id,
+        "attempt": attempt,
+        "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
+    }
+    lock.atomic_write(writer_meta_file, yaml.safe_dump(meta, sort_keys=False).encode("utf-8"))
+
+    # 5. Parse and validate draft before anything else reads it
     draft = parse_and_validate_reply(
         raw_reply,
         level=level,
@@ -187,31 +249,14 @@ def dispatch_writer(
         schemas_dir=schemas_dir,
     )
 
-    # 4. Save state files beside draft in output_dir
-    output_dir = Path(output_dir)
-    output_dir.mkdir(parents=True, exist_ok=True)
-
-    draft_file = output_dir / f"lesson-{lesson_n}.draft.yaml"
-    raw_file = output_dir / f"lesson-{lesson_n}.raw.txt"
-    writer_meta_file = output_dir / f"lesson-{lesson_n}.writer.yaml"
-
-    # Write draft with lock sidecar
+    # 6. Save validated draft with lock sidecar
     lock.write(draft_file, lock.yaml_bytes(draft))
-    raw_file.write_text(raw_reply, encoding="utf-8")
-
-    meta = {
-        "writer": writer,
-        "prompt_sha256": prompt_sha256,
-        "task_id": task_id,
-        "attempt": attempt,
-        "created_at": datetime.datetime.now(datetime.UTC).isoformat(),
-    }
-    writer_meta_file.write_text(yaml.safe_dump(meta, sort_keys=False), encoding="utf-8")
 
     return {
         "draft": draft,
         "task_id": task_id,
         "writer": writer,
+        "model": seat_model,
         "prompt_sha256": prompt_sha256,
         "draft_file": draft_file,
         "raw_file": raw_file,

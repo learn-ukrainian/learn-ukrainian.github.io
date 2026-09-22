@@ -1,4 +1,4 @@
-"""Lesson immersion payload computation (#8414, #8431 §7).
+"""Lesson immersion payload computation (#8414, #8431 r3 §6/§7).
 
 Reads compute_lesson_immersion_band and returns the structured immersion payload:
 - advisory Ukrainian share (min %, max %)
@@ -7,7 +7,9 @@ Reads compute_lesson_immersion_band and returns the structured immersion payload
   narration, dialogue_line, activity_instruction, activity_item, gloss, quote, resource_line
 - source and not_checked tracking
 
-Both the writer's prompt and E3's gate consume this single function.
+Permitted languages are loaded strictly from the data table (immersion_table.yaml)
+which cites writer contract #8431 r3 §6/§7 per row. Where the contract gives no row,
+computation fails closed with 'unsupported_immersion_band'.
 """
 
 from __future__ import annotations
@@ -16,7 +18,13 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
-from scripts.curriculum.learner_state.immersion import LessonBand, compute_lesson_immersion_band
+import yaml
+
+from scripts.curriculum.learner_state.immersion import (
+    ImmersionError,
+    LessonBand,
+    compute_lesson_immersion_band,
+)
 
 FIELD_ROLES: tuple[str, ...] = (
     "narration",
@@ -27,6 +35,29 @@ FIELD_ROLES: tuple[str, ...] = (
     "quote",
     "resource_line",
 )
+
+IMMERSION_TABLE_PATH = Path(__file__).parent / "immersion_table.yaml"
+
+
+def load_immersion_table(table_path: Path | None = None) -> dict[str, Any]:
+    """Load the permitted languages table citing writer contract #8431 r3 §6/§7."""
+    path = table_path or IMMERSION_TABLE_PATH
+    if not path.is_file():
+        raise FileNotFoundError(f"Immersion table file not found: {path}")
+    data = yaml.safe_load(path.read_text(encoding="utf-8"))
+    if not isinstance(data, dict):
+        raise ValueError(f"Immersion table at {path} must be a dictionary keyed by band.")
+    return data
+
+
+_CACHED_IMMERSION_TABLE: dict[str, Any] | None = None
+
+
+def get_immersion_table() -> dict[str, Any]:
+    global _CACHED_IMMERSION_TABLE
+    if _CACHED_IMMERSION_TABLE is None:
+        _CACHED_IMMERSION_TABLE = load_immersion_table()
+    return _CACHED_IMMERSION_TABLE
 
 
 @dataclass(frozen=True)
@@ -57,47 +88,24 @@ class ImmersionPayload:
 
 
 def _permitted_languages_for_band(
-    level: str,
     band_key: str,
-    arc_position: int,
+    *,
+    table: dict[str, Any] | None = None,
 ) -> dict[str, tuple[str, ...]]:
-    """Determine permitted languages per field role based on level, band, and position."""
-    lvl = level.lower().split("-")[0] if "-" in level else level.lower()
+    """Look up permitted languages per field role in the contract-sourced immersion table.
 
-    # Quote and dialogue lines are always Ukrainian only; gloss is English.
-    base: dict[str, tuple[str, ...]] = {
-        "dialogue_line": ("uk",),
-        "quote": ("uk",),
-        "gloss": ("en",),
-        "resource_line": ("en", "uk"),
-    }
+    Fails closed if the band key has no row in the contract table (#8431 §6/§7).
+    """
+    tbl = table if table is not None else get_immersion_table()
+    if band_key not in tbl:
+        raise ImmersionError(
+            "unsupported_immersion_band",
+            f"immersion band {band_key!r} has no row in contract immersion table",
+        )
 
-    if lvl in ("b1", "b2") or band_key.startswith(("b1", "b2")):
-        # B1+ onward is full immersion
-        base["narration"] = ("uk",)
-        base["activity_instruction"] = ("uk",)
-        base["activity_item"] = ("uk",)
-    elif lvl == "a2" or band_key.startswith("a2"):
-        if band_key == "a2-bridge":
-            base["narration"] = ("uk", "en")
-            base["activity_instruction"] = ("uk", "en")
-            base["activity_item"] = ("uk",)
-        else:
-            base["narration"] = ("uk",)
-            base["activity_instruction"] = ("uk",)
-            base["activity_item"] = ("uk",)
-    else:
-        # A1 band: English scaffolding early, Ukrainian-primary later
-        if arc_position >= 41 or band_key in ("a1-m35-54", "a1-m55+"):
-            base["narration"] = ("en", "uk")
-            base["activity_instruction"] = ("en", "uk")
-            base["activity_item"] = ("uk", "en")
-        else:
-            base["narration"] = ("en",)
-            base["activity_instruction"] = ("en",)
-            base["activity_item"] = ("uk", "en")
-
-    return {role: base[role] for role in FIELD_ROLES}
+    row = tbl[band_key]
+    roles = row.get("roles", {})
+    return {role: tuple(roles.get(role, ())) for role in FIELD_ROLES}
 
 
 def compute_immersion_payload(
@@ -111,11 +119,12 @@ def compute_immersion_payload(
     arc_path: Path | None = None,
     doc_path: Path | None = None,
     lesson_band: LessonBand | None = None,
+    immersion_table: dict[str, Any] | None = None,
 ) -> ImmersionPayload:
     """Compute the lesson immersion payload (#8431 §7).
 
     One function consumes compute_lesson_immersion_band and returns the payload:
-    - permitted languages per field role
+    - permitted languages per field role (sourced from immersion_table.yaml)
     - structural targets (dialogue lines, example sentences, vocab entries)
     - advisory Ukrainian share
     """
@@ -132,9 +141,8 @@ def compute_immersion_payload(
         )
 
     permitted = _permitted_languages_for_band(
-        level=track,
         band_key=lesson_band.band_key,
-        arc_position=arc_position,
+        table=immersion_table,
     )
 
     return ImmersionPayload(

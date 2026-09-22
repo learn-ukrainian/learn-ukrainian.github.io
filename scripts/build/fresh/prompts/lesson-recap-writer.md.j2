@@ -202,6 +202,7 @@ For each activity declared in the plan, format items strictly according to these
 
 Your output must be valid YAML matching:
 
+<!-- BEGIN SCHEMA_SUMMARY_EXEMPLAR -->
 ```yaml
 draft_schema: 1
 lesson:
@@ -267,6 +268,7 @@ activities:
     items: [...]
 gaps: []
 ```
+<!-- END SCHEMA_SUMMARY_EXEMPLAR -->
 
 ### Strict Rules:
 - If evidence is missing, set `status: evidence_gap`, declare `gaps: [{ step: "s1", need: "example", detail: "..." }]`, and leave the blocks of exactly those gap steps empty.
