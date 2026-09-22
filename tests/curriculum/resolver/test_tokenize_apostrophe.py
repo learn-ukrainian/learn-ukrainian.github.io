@@ -10,22 +10,23 @@ def test_apostrophe_cyrillic_classification():
     # Synthetic word from review finding 8
     test_word_base = "бз{apo}юк"
 
-    for apo in APOSTROPHES:
+    for apo in sorted(APOSTROPHES):
         word = test_word_base.format(apo=apo)
         assert _kind(word) == "cyrillic", f"Expected cyrillic for {word!r} with apostrophe U+{ord(apo):04X}"
 
-    # Also test common attested word м'ясо with different apostrophes
-    for apo in (
-        "\u02bc",  # modifier letter apostrophe ʼ (category Lm)
-        "\u2019",  # right single quotation mark ’ (category Pf)
-        "\u0027",  # apostrophe ' (category Po)
-        "\u02b9",  # modifier letter prime ʹ (category Lm)
-    ):
+    # Also test common attested word м'ясо with each member of APOSTROPHES, especially U+02BC
+    assert "\u02bc" in APOSTROPHES
+    for apo in sorted(APOSTROPHES):
         word = f"м{apo}ясо"
         assert _kind(word) == "cyrillic", f"Expected cyrillic for {word!r} with apostrophe U+{ord(apo):04X}"
+
+    # Negative case: U+02B9 (modifier letter prime) is not in APOSTROPHES and still classifies as mixed
+    assert "\u02b9" not in APOSTROPHES
+    assert _kind("м\u02b9ясо") == "mixed"
+    assert _kind(test_word_base.format(apo="\u02b9")) == "mixed"
 
 
 def test_apostrophe_without_letters_is_not_cyrillic():
     """A standalone apostrophe without Cyrillic letters does not classify as cyrillic."""
-    for apo in APOSTROPHES:
+    for apo in sorted(APOSTROPHES):
         assert _kind(apo) != "cyrillic"
