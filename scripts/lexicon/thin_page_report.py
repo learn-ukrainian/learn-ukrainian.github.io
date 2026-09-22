@@ -111,6 +111,7 @@ SLOVNYK_LOOKUP_SECTIONS: dict[str, tuple[str, ...]] = {
 SOURCE_SLOVNYK = "slovnyk_cache"
 SOURCE_ULIF = "ulif_dump"
 SOURCE_FRAZEOLOHICHNYI = "sources.db:frazeolohichnyi"
+FRAZEOLOHICHNYI_PAGE_SIZE = 80
 
 # Exact-lemma-keyed sources.db dictionaries:
 # source name -> (SQL producing normalizable keys, sections it can fill).
@@ -307,7 +308,12 @@ def sources_db_capabilities(sources_db: Path) -> dict[str, dict[str, set[str]]]:
     return result
 
 
-def frazeolohichnyi_idiom_keys(sources_db: Path, candidate_keys: Iterable[str]) -> set[str]:
+def frazeolohichnyi_idiom_keys(
+    sources_db: Path,
+    candidate_keys: Iterable[str],
+    *,
+    page_size: int = FRAZEOLOHICHNYI_PAGE_SIZE,
+) -> set[str]:
     """Return candidate lemma keys attested in the phraseological dictionary.
 
     The ``frazeolohichnyi`` table is keyed by idiom phrase, not by lemma, so
@@ -325,20 +331,29 @@ def frazeolohichnyi_idiom_keys(sources_db: Path, candidate_keys: Iterable[str]) 
             if len(key) < 3:  # trigram index cannot match shorter strings
                 continue
             quoted = '"' + key.replace('"', '""') + '"'
-            try:
-                rows = conn.execute(
-                    "SELECT word, definition FROM frazeolohichnyi WHERE id IN ("
-                    "  SELECT rowid FROM frazeolohichnyi_fts WHERE frazeolohichnyi_fts MATCH ?"
-                    ") ORDER BY id LIMIT 80",
-                    (quoted,),
-                ).fetchall()
-            except sqlite3.OperationalError:
-                return found
-            for word, definition in rows:
-                phrase = _leading_phraseology_phrase(definition or "", word or "")
-                if phrase and _phrase_contains_lemma(phrase, key):
-                    found.add(key)
+            offset = 0
+            while True:
+                try:
+                    rows = conn.execute(
+                        "SELECT word, definition FROM frazeolohichnyi WHERE id IN ("
+                        "  SELECT rowid FROM frazeolohichnyi_fts WHERE frazeolohichnyi_fts MATCH ?"
+                        ") ORDER BY id LIMIT ? OFFSET ?",
+                        (quoted, page_size, offset),
+                    ).fetchall()
+                except sqlite3.OperationalError:
+                    return found
+                if not rows:
                     break
+                matched = False
+                for word, definition in rows:
+                    phrase = _leading_phraseology_phrase(definition or "", word or "")
+                    if phrase and _phrase_contains_lemma(phrase, key):
+                        found.add(key)
+                        matched = True
+                        break
+                if matched or len(rows) < page_size:
+                    break
+                offset += page_size
     return found
 
 

@@ -367,6 +367,48 @@ def test_frazeolohichnyi_six_fts_hits_with_sixth_phrase_match_counts(
     assert report["fillable"]["idioms"]["sources.db:frazeolohichnyi"] == 1
 
 
+def test_frazeolohichnyi_eighty_fts_hits_with_eighty_first_phrase_match_counts(
+    fixture_paths: dict[str, Path], tmp_path: Path
+) -> None:
+    db = tmp_path / "sources_eighty_one_hits.db"
+    conn = sqlite3.connect(db)
+    conn.executescript(
+        """
+        CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, definition TEXT);
+        CREATE VIRTUAL TABLE frazeolohichnyi_fts USING fts5(
+            word, definition, content='frazeolohichnyi', content_rowid='id', tokenize='trigram'
+        );
+        """
+    )
+    # 80 rows mention "яблуко" in definition text only (phrase does not contain it)
+    for i in range(1, 81):
+        conn.execute(
+            "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (?, ?, ?)",
+            (i, f"фраза {i}", f"фраза {i}. Тлумачення із яблуко {i}."),
+        )
+    # 81st row: extracted phrase actually contains "яблуко"
+    conn.execute(
+        "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (81, ?, ?)",
+        ("яблуко розбрату", "яблуко розбрату. Причина незгоди."),
+    )
+    conn.execute(
+        "INSERT INTO frazeolohichnyi_fts (rowid, word, definition) "
+        "SELECT id, word, definition FROM frazeolohichnyi"
+    )
+    conn.commit()
+    conn.close()
+
+    assert frazeolohichnyi_idiom_keys(db, ["яблуко"]) == {"яблуко"}
+
+    report = build_report(
+        atlas_db=fixture_paths["atlas"],
+        sources_db=db,
+        ulif_db=fixture_paths["ulif"],
+        slovnyk_cache=fixture_paths["cache"],
+    )
+    assert report["fillable"]["idioms"]["sources.db:frazeolohichnyi"] == 1
+
+
 def test_slovnyk_cache_schema_version_2_contributes_no_meaning_or_definition(
     fixture_paths: dict[str, Path], tmp_path: Path
 ) -> None:
