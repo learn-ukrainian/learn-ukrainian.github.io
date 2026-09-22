@@ -21,7 +21,13 @@ def test_adapter_safetensors_layer_count() -> None:
     adapter_path = STUDY_DIR / "run_output" / "adapter" / "adapter_model.safetensors"
     assert adapter_path.is_file(), f"Missing adapter file: {adapter_path}"
 
-    with safe_open(str(adapter_path), framework="pt") as f:
+    framework = "pt"
+    try:
+        import torch  # noqa: F401
+    except ImportError:
+        framework = "np"
+
+    with safe_open(str(adapter_path), framework=framework) as f:
         keys = list(f.keys())
         assert len(keys) == 336, f"Expected 336 tensors for 24-layer LoRA, got {len(keys)}"
         layers = {
