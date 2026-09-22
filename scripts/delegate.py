@@ -2778,6 +2778,142 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
     return False, f"task still active or invalid status (status={status})"
 
 
+_REVIEW_SERIES_RE = re.compile(r"^(?P<stem>review-.+)-r(?P<round>[1-9][0-9]*)$")
+
+
+def _review_series(task_id: str) -> tuple[str, int] | None:
+    """Return ``(stem, round)`` for a review task, or None for other tasks.
+
+    ``review-gpt6-routing`` is round 0. ``review-gpt6-routing-r7`` is round 7
+    of that same series. A later round replaces every earlier checkout.
+    """
+    name = task_id.strip().strip("/")
+    if not name.startswith("review-"):
+        return None
+    match = _REVIEW_SERIES_RE.fullmatch(name)
+    if match is None:
+        return name, 0
+    return match.group("stem"), int(match.group("round"))
+
+
+def _dispatch_worktree_components() -> list[tuple[Path, str]]:
+    """Return ``(path, task component)`` for registered dispatch worktrees."""
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    if proc.returncode != 0:
+        return []
+    found: list[tuple[Path, str]] = []
+    current: Path | None = None
+    for line in [*(proc.stdout or "").splitlines(), ""]:
+        if not line:
+            if current is not None:
+                parts = _dispatch_layout_parts(current)
+                if parts is not None:
+                    found.append((current, parts[1]))
+            current = None
+        elif line.startswith("worktree "):
+            current = Path(line.removeprefix("worktree ").strip())
+    return found
+
+
+def _superseded_review_releasable(path: Path) -> tuple[bool, str]:
+    """A finished review checkout can go once a later round of the same series starts.
+
+    Cleanliness and liveness are required. The checkout does not have to match
+    ``origin/<branch>``: a detached earlier round no longer holds the branch,
+    which is why the branch-holder release never saw it.
+    """
+    if reaper_lifecycle.is_reap_pending(_REPO_ROOT, path):
+        return False, "reaper lifecycle reservation is pending"
+    if not _worktree_is_clean(path):
+        return False, "dirty"
+    unparseable = _bound_task_state_unparseable_reason(path)
+    if unparseable is not None:
+        return False, unparseable
+    task_id, task_state = _task_state_for_worktree(path)
+    activity = _branch_holder_activity_reason(
+        path,
+        task_id=task_id,
+        task_state=task_state,
+    )
+    if activity is not None:
+        return False, activity
+    if task_state is None:
+        return True, "clean; task record absent; activity probes empty"
+    status = str(task_state.get("status") or "")
+    if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+        return True, f"clean; task status={status}"
+    return False, f"task still active or invalid status (status={status})"
+
+
+def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list[Path]:
+    """Remove earlier rounds of this review series before the new checkout is made."""
+    series = _review_series(task_id)
+    if series is None:
+        return []
+    stem, current_round = series
+    released: list[Path] = []
+    for path, component in _dispatch_worktree_components():
+        earlier = _review_series(component)
+        if earlier is None:
+            continue
+        earlier_stem, earlier_round = earlier
+        if earlier_stem != stem or earlier_round >= current_round:
+            continue
+        ok, reason = _superseded_review_releasable(path)
+        if not ok:
+            print(
+                f"ℹ️  earlier review {path} kept ({reason})",
+                file=sys.stderr,
+            )
+            continue
+        if dry_run:
+            print(
+                f"🌲 dry-run: would remove superseded review worktree {path} ({reason})",
+                file=sys.stderr,
+            )
+            released.append(path)
+            continue
+        try:
+            proc = subprocess.run(
+                ["git", "worktree", "remove", str(path)],
+                cwd=_REPO_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            print(
+                f"⚠️  failed to remove superseded review worktree {path}: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            continue
+        if proc.returncode != 0:
+            print(
+                f"⚠️  failed to remove superseded review worktree {path}: {_format_process_failure(proc)}",
+                file=sys.stderr,
+            )
+            continue
+        print(
+            f"🌲 removed superseded review worktree {path} ({reason})",
+            file=sys.stderr,
+        )
+        released.append(path)
+    return released
+
+
 def _release_stale_branch_holders(
     *,
     branch: str,
@@ -4323,6 +4459,7 @@ def _ensure_worktree(
         "sparse": None,
         "local_venv": None,
     }
+    _release_superseded_review_worktrees(task_id, dry_run=dry_run)
 
     if requested_branch:
         if resolved_base_sha is None:

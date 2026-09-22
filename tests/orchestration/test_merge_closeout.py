@@ -449,3 +449,34 @@ def test_main_dry_run_default_reports_ok_without_deleting(
     out = capsys.readouterr().out
     assert "mode: dry-run" in out
     assert "OK" in out
+
+
+def test_detached_earlier_pr_commit_matches_and_main_checkout_does_not(tmp_path: Path) -> None:
+    repo = init_repo(tmp_path)
+    branch_wt = repo / ".worktrees" / "dispatch" / "feature"
+    branch_wt.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "branch", "grok/feature", "main")
+    git(repo, "worktree", "add", str(branch_wt), "grok/feature")
+    (branch_wt / "a.txt").write_text("a\n", encoding="utf-8")
+    git(branch_wt, "add", "a.txt")
+    git(branch_wt, "commit", "-m", "first")
+    earlier = git(branch_wt, "rev-parse", "HEAD")
+    (branch_wt / "b.txt").write_text("b\n", encoding="utf-8")
+    git(branch_wt, "add", "b.txt")
+    git(branch_wt, "commit", "-m", "second")
+    pr_sha = git(branch_wt, "rev-parse", "HEAD")
+    git(branch_wt, "push", "-u", "origin", "grok/feature")
+    git(repo, "worktree", "remove", "--force", str(branch_wt))
+    detached = add_detached_worktree(repo, "review-feature-r1", earlier)
+    on_main = add_detached_worktree(repo, "review-other", git(repo, "rev-parse", "origin/main"))
+    pr = mc.PullRequestInfo(
+        number=7,
+        state="MERGED",
+        head_ref_name="grok/feature",
+        head_sha=pr_sha,
+    )
+
+    matched = {info.path.resolve() for info in mc.find_matching_worktrees(repo, pr)}
+
+    assert detached.resolve() in matched
+    assert on_main.resolve() not in matched

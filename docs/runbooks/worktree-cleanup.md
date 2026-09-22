@@ -181,8 +181,9 @@ new dispatch.
 
 The merge owner closes out the exact PR as soon as GitHub reports it `MERGED`, using
 `scripts.orchestration.merge_closeout` — not the P0 reaper directly. This is the one
-command that proves the PR MERGED, finds every worktree tied to it (by branch or by
-exact merged head SHA, including detached review-checkout siblings), reaps each one
+command that proves the PR MERGED, finds every worktree tied to it (by branch, by
+exact merged head SHA, or by an earlier commit that exists only on that PR, including
+detached review-checkout siblings), reaps each one
 through the P0 reaper, and proves the remote and local branch are both gone. Run it
 from a separate shell after every agent, editor, server, and terminal has left the
 target worktree(s):
@@ -193,6 +194,10 @@ cd "$PRIMARY_REPO"
 
 "$PRIMARY_REPO/.venv/bin/python" -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 ```
+
+Starting a later review round (`review-<topic>-rN`) also removes earlier clean
+rounds of that same series, including detached ones that no longer hold the
+branch. A dirty or still-running round is left in place.
 
 Default is dry-run; pass `--apply` to actually reap and delete. `--json` emits a
 machine-readable payload. `merge_closeout` introduces no second deletion hand for the
