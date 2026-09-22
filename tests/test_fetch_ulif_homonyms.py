@@ -1033,6 +1033,57 @@ def test_walk_printed_number_mismatch_retry_idempotent(tmp_path, monkeypatch):
         ledger.close()
 
 
+def test_walk_printed_number_mismatch_marker_failure_rolls_back_atomically(tmp_path):
+    """Failure during the register_rows marker write rolls back the mismatch counter atomically."""
+    ledger = _ledger(tmp_path)
+    try:
+        ledger.conn.execute(
+            """
+            INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
+            VALUES (1, 0, 'арканзас', 1, 'Select$0', 'Арканзас', 'completed', 'digest1', 'now', 'now')
+            """
+        )
+        ledger.conn.commit()
+
+        # Step 1: Install a trigger that aborts UPDATE on register_rows.error
+        ledger.conn.execute(
+            """
+            CREATE TRIGGER fail_marker BEFORE UPDATE OF error ON register_rows
+            BEGIN
+                SELECT RAISE(ABORT, 'simulated database lock on register_rows');
+            END;
+            """
+        )
+        ledger.conn.commit()
+
+        with pytest.raises(sqlite3.DatabaseError, match="simulated database lock on register_rows"):
+            ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
+
+        # Verify atomic rollback: counter was not committed, error was not updated
+        assert (ledger.meta("mismatch_groups", "0") or "0") == "0"
+        err = ledger.conn.execute("SELECT error FROM register_rows WHERE normalized_spelling = 'арканзас'").fetchone()[
+            "error"
+        ]
+        assert err == ""
+
+        # Step 2: Drop trigger and retry - succeeds
+        ledger.conn.execute("DROP TRIGGER fail_marker")
+        ledger.conn.commit()
+
+        ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
+        assert ledger.meta("mismatch_groups") == "1"
+        err = ledger.conn.execute("SELECT error FROM register_rows WHERE normalized_spelling = 'арканзас'").fetchone()[
+            "error"
+        ]
+        assert "printed_number_mismatch" in err
+
+        # Step 3: Re-attempting on already-mismatched group is idempotent
+        ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
+        assert ledger.meta("mismatch_groups") == "1"
+    finally:
+        ledger.close()
+
+
 def test_overlapping_register_identity_opened_once(tmp_path):
     """Duplicate (page_delta, select) collapses; physical row opened once."""
     duplicated = _dedupe_register_rows(
