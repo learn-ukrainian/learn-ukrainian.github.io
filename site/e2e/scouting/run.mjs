@@ -4,6 +4,7 @@
 import { chromium, webkit, devices } from '@playwright/test';
 import { mkdir, writeFile } from 'node:fs/promises';
 import { join, resolve } from 'node:path';
+import { checkProgress, evaluateSession } from './invariants.mjs';
 
 const LIVE_URL = 'https://learn-ukrainian.github.io';
 const LOCAL_URL = 'http://127.0.0.1:4321';
@@ -17,6 +18,8 @@ const PROFILES = {
   explorer: { label: 'Explorer (Desktop, prefers-reduced-motion)', options: { ...devices['Desktop Chrome'], reducedMotion: 'reduce' } },
 };
 const DEFAULT_PROFILES = ['desktop', 'phone', 'android'];
+const DETECT_BUDGETS = [10, 20];
+const DEFAULT_DETECT_BUDGET = 20;
 
 const HELP = `Practice Hub scouting harness (#8317)
 
@@ -24,6 +27,9 @@ Usage: node e2e/scouting/run.mjs --slice <id> --out <dir> [options]
 
   --help                  Show this help
   --slice <id>            Slice id: ${SLICES.join(', ')} (C1 discoverability+session+TTFI; C2-C8 scripted journeys)
+  --detect                Detector (#8477): play one A1 Flashcards session and exit 1 when it breaks a rule
+                          (progress string sequence, pageerror, pronunciation clip). Slices never set the exit code.
+  --budget <n>            Session budget the detector clicks: ${DETECT_BUDGETS.join(' | ')} (default ${DEFAULT_DETECT_BUDGET}; --detect only)
   --out <dir>             Output directory for report, screenshots and timestamped trace zips
   --profile <name>        desktop | phone | android | fast | explorer  (default: desktop,phone,android;
                           comma-separated list allowed)
@@ -39,7 +45,8 @@ function parseArgs(argv) {
     const k = argv[i];
     if (k === '--help' || k === '-h') a.help = true;
     else if (k === '--live') a.live = true;
-    else if (['--slice', '--out', '--profile', '--base'].includes(k)) {
+    else if (k === '--detect') a.detect = true;
+    else if (['--slice', '--out', '--profile', '--base', '--budget'].includes(k)) {
       const v = argv[++i];
       if (v === undefined || v.startsWith('--')) throw new Error(`${k} needs a value`);
       a[k.slice(2)] = v;
@@ -63,8 +70,9 @@ async function withJourney(browser, profileName, slice, name, base, out, fn) {
   await context.tracing.start({ screenshots: true, snapshots: true, sources: true });
   const page = await context.newPage();
   const errors = [];
+  const pageErrors = [];
   const failed = [];
-  page.on('pageerror', (e) => errors.push(String(e)));
+  page.on('pageerror', (e) => { errors.push(String(e)); pageErrors.push(String(e)); });
   page.on('console', (m) => m.type() === 'error' && errors.push(m.text()));
   page.on('response', (r) => r.status() >= 400 && failed.push(`${r.status()} ${r.url()}`));
   const shot = async (label) => {
@@ -81,7 +89,7 @@ async function withJourney(browser, profileName, slice, name, base, out, fn) {
   const tracePath = join(out, `${stem(slice, profileName, name)}.zip`);
   await context.tracing.stop({ path: tracePath });
   await context.close();
-  return { journey: name, profile: profileName, trace: tracePath, consoleErrors: errors.slice(0, 5), failedRequests: [...new Set(failed)].slice(0, 8), ...result };
+  return { journey: name, profile: profileName, trace: tracePath, consoleErrors: errors.slice(0, 5), pageErrors: pageErrors.slice(0, 5), failedRequests: [...new Set(failed)].slice(0, 8), ...result };
 }
 
 // Practice-ish links inside `scope` (a CSS selector, default whole document).
@@ -145,28 +153,117 @@ async function openHubReady(page) {
   await page.locator('button[data-mode]').first().waitFor({ state: 'visible', timeout: 20000 });
 }
 
-// Full first session: A1, budget 10, Flashcards, 10 cards, end screen.
-async function flashcardSession(page, shot) {
+// Pronunciation instrumentation (#8477): count browser-voice calls and clip plays in-page,
+// and watch the network for the manifest and clip requests. Installed before navigation.
+const AUDIO_PATH = '/audio/pronunciation/';
+const AUDIO_INIT_SCRIPT = () => {
+  const log = { speak: 0, plays: [] };
+  window.__scoutAudio = log;
+  const synth = window.SpeechSynthesis && window.SpeechSynthesis.prototype;
+  if (synth && synth.speak) {
+    const speak = synth.speak;
+    synth.speak = function (u) { log.speak += 1; return speak.call(this, u); };
+  }
+  const play = HTMLMediaElement.prototype.play;
+  HTMLMediaElement.prototype.play = function () {
+    const entry = { src: this.currentSrc || this.src || '', rejected: null };
+    log.plays.push(entry);
+    const p = play.call(this);
+    if (p && p.catch) p.then(() => { entry.rejected = false; }, (e) => { entry.rejected = String(e && e.name || e); });
+    return p;
+  };
+};
+async function watchPronunciation(page) {
+  const net = { manifestStatus: null, clips: [] };
+  const onResponse = (r) => {
+    const url = new URL(r.url());
+    if (!url.pathname.includes(AUDIO_PATH)) return;
+    if (url.pathname.endsWith('/manifest.json')) net.manifestStatus = r.status();
+    else net.clips.push({ path: url.pathname, status: r.status() });
+  };
+  const onFailed = (rq) => {
+    const url = new URL(rq.url());
+    if (url.pathname.includes(AUDIO_PATH) && !url.pathname.endsWith('/manifest.json')) net.clips.push({ path: url.pathname, status: 0 });
+  };
+  page.on('response', onResponse);
+  page.on('requestfailed', onFailed);
+  await page.addInitScript(AUDIO_INIT_SCRIPT);
+  return net;
+}
+
+// Press the pronunciation control on the current flashcard once and report what spoke.
+// 'absent' = the card has no control; 'hidden' = the control never became visible (no clip, `hide` fallback).
+async function pressPronunciation(page, net) {
+  const root = page.locator('[data-activity="flashcard"] [data-pronunciation-lemma], .flashcard-pronunciation [data-pronunciation-lemma]').first();
+  const snapshot = async (control) => {
+    const log = await page.evaluate(() => window.__scoutAudio ?? { speak: 0, plays: [] });
+    const lemma = control === 'absent' ? null : await root.getAttribute('data-pronunciation-lemma').catch(() => null);
+    return { control, lemma, manifestStatus: net.manifestStatus, clips: [...net.clips], speakCalls: log.speak, mediaPlays: log.plays };
+  };
+  if (!(await root.count())) return snapshot('absent');
+  const button = root.locator('button');
+  const visible = await button.waitFor({ state: 'visible', timeout: 8000 }).then(() => true, () => false);
+  if (!visible) return snapshot('hidden');
+  await button.click();
+  // Give the clip request and play() a moment; nothing here waits on audio actually finishing.
+  await page.waitForFunction(() => (window.__scoutAudio?.plays.length ?? 0) > 0 || (window.__scoutAudio?.speak ?? 0) > 0, null, { timeout: 3000 }).catch(() => {});
+  await page.waitForTimeout(500);
+  const result = await snapshot('pressed');
+  result.statusText = ((await root.locator('[role="status"]').textContent().catch(() => '')) || '').trim();
+  return result;
+}
+
+// Read the progress pill; when `previous` is given, wait (bounded) for it to change first.
+const PROGRESS_SEL = '[data-testid="practice-session-progress"]';
+async function readProgress(page, previous = null) {
+  if (previous !== null) {
+    await page.waitForFunction((prev) => (document.querySelector('[data-testid="practice-session-progress"]')?.textContent ?? '').trim() !== prev, previous, { timeout: 3000 }).catch(() => {});
+  }
+  const text = await page.locator(PROGRESS_SEL).textContent({ timeout: 2000 }).catch(() => null);
+  return text === null ? null : text.trim();
+}
+
+// Full first session: A1, Flashcards, `budget` cards, end screen. Records EVERY progress
+// reading (start + after each answer) and presses the pronunciation control once (#8477).
+// Slices only record these; `--detect` turns them into the exit code.
+async function flashcardSession(page, shot, budget = 10) {
+  const net = await watchPronunciation(page);
   await openHubReady(page);
   await page.locator('.k3-levels button', { hasText: /^A1$/ }).click();
-  await page.getByTestId('practice-session-budget-10').click();
+  await page.getByTestId(`practice-session-budget-${budget}`).click();
   await page.locator('button[data-mode="flashcards"]').click();
   const summary = page.getByTestId('practice-session-summary');
   const answered = [];
-  const total = await page.getByTestId('practice-session-progress').textContent().catch(() => null);
-  for (let i = 0; i < 12 && !(await summary.isVisible()); i++) {
+  const progressReadings = [];
+  let pronunciation = null; // first card whose control could be pressed; else the last observation
+  let cardsWithoutControl = 0;
+  await page.locator(PROGRESS_SEL).waitFor({ state: 'visible', timeout: 10000 }).catch(() => {});
+  let progress = await readProgress(page);
+  if (progress !== null) progressReadings.push(progress);
+  for (let i = 0; i < budget + 2 && !(await summary.isVisible()); i++) {
     const card = page.locator('[data-activity="flashcard"]');
     await card.waitFor({ state: 'visible', timeout: 10000 });
     answered.push(((await card.textContent()) || '').replace(/\s+/g, ' ').trim().slice(0, 30));
+    if (pronunciation?.control !== 'pressed') {
+      pronunciation = await pressPronunciation(page, net);
+      if (pronunciation.control !== 'pressed') cardsWithoutControl += 1;
+    }
     await card.click(); // flip
-    await page.locator('.rate-btn[data-rate="good"]').click(); // "Знаю"-equivalent
+    await page.locator('.rate-btn[data-rate="good"]').click(); // "Знаю"-equivalent; the counter moves here
+    progress = await readProgress(page, progress);
+    if (progress !== null) progressReadings.push(progress);
     await page.getByTestId('practice-advance-button').click(); // no auto-advance: «Далі» is required
     await page.waitForTimeout(300);
   }
   await summary.waitFor({ state: 'visible', timeout: 15000 });
   const shotPath = await shot('end-screen');
   return {
-    progressAtStart: total,
+    budget,
+    progressAtStart: progressReadings[0] ?? null,
+    progressReadings,
+    progressCheck: checkProgress({ budget, readings: progressReadings }),
+    pronunciation,
+    cardsWithoutControl,
     cardsAnswered: answered.length,
     endScreen: true,
     summaryText: ((await summary.textContent()) || '').replace(/\s+/g, ' ').trim().slice(0, 200),
@@ -357,12 +454,23 @@ const SLICE_RUNNERS = {
   C8: slice8,
 };
 
+// --- Detector (#8477) ------------------------------------------------------------------
+// Same player as C1/C8 `s1-flashcards-a1-10`; the recorded observations become the exit code.
+async function detectRun(browser, profileName, base, out, budget) {
+  const result = await withJourney(browser, profileName, 'DETECT', `d1-flashcards-a1-${budget}`, base, out, (page, shot) => flashcardSession(page, shot, budget));
+  const verdict = evaluateSession({ budget, readings: result.progressReadings ?? [], pageErrors: result.pageErrors ?? [], pronunciation: result.pronunciation, error: result.error ?? null });
+  return { ...result, verdict };
+}
+
 function toMarkdown(report) {
-  const L = [`# Scouting report — slice ${report.slice}`, '', `- Target: ${report.base}${report.live ? ' (live)' : ' (local)'}`, `- Timestamp: ${report.timestamp}`, `- Commit: ${report.commit ?? 'unknown'}`, `- WebKit probe: ${report.webkit.available ? 'available' : 'unavailable'}${report.webkit.note ? ' — ' + report.webkit.note : ''}`, ''];
+  const L = [`# Scouting report — ${report.slice === 'DETECT' ? 'detector' : 'slice ' + report.slice}`, '', `- Target: ${report.base}${report.live ? ' (live)' : ' (local)'}`, `- Timestamp: ${report.timestamp}`, `- Commit: ${report.commit ?? 'unknown'}`, `- WebKit probe: ${report.webkit.available ? 'available' : 'unavailable'}${report.webkit.note ? ' — ' + report.webkit.note : ''}`, ''];
+  if (report.verdict) {
+    L.push(`## Verdict: ${report.verdict.ok ? 'PASS' : 'FAIL'}`, '', ...(report.verdict.ok ? ['- every rule held'] : report.verdict.violations.map((v) => `- ${v}`)), '');
+  }
   L.push('## Journeys', '', '| Profile | Journey | Outcome | Errors |', '|---|---|---|---|');
   const cell = (v) => String(v ?? '').replace(/\\/g, '\\\\').replace(/\|/g, '\\|');
   for (const r of report.results) {
-    const { journey, profile, trace, consoleErrors, failedRequests, error, ...rest } = r;
+    const { journey, profile, trace, consoleErrors, pageErrors, failedRequests, error, verdict, ...rest } = r;
     const outcome = error ? `ERROR: ${error}` : JSON.stringify(rest);
     L.push(`| ${profile} | ${journey} | ${cell(outcome)} | ${cell([...(consoleErrors ?? []), ...(failedRequests ?? [])].join('; '))} |`);
   }
@@ -373,13 +481,17 @@ function toMarkdown(report) {
 async function main() {
   const args = parseArgs(process.argv.slice(2));
   if (args.help) return void process.stdout.write(HELP);
-  if (!args.slice || !SLICES.includes(args.slice.toUpperCase())) throw new Error(`--slice required (${SLICES.join(', ')})`);
+  if (args.detect && args.slice) throw new Error('--detect and --slice are exclusive');
+  if (!args.detect && (!args.slice || !SLICES.includes(args.slice.toUpperCase()))) throw new Error(`--slice required (${SLICES.join(', ')}) or --detect`);
   if (!args.out) throw new Error('--out <dir> required');
-  const slice = args.slice.toUpperCase();
+  const budget = args.budget === undefined ? DEFAULT_DETECT_BUDGET : Number(args.budget);
+  if (args.budget !== undefined && !args.detect) throw new Error('--budget only applies to --detect');
+  if (!DETECT_BUDGETS.includes(budget)) throw new Error(`--budget must be one of ${DETECT_BUDGETS.join(', ')}`);
+  const slice = args.detect ? 'DETECT' : args.slice.toUpperCase();
   const out = resolve(args.out);
   await mkdir(out, { recursive: true });
   const base = args.base || (args.live ? LIVE_URL : LOCAL_URL);
-  const names = args.profile ? args.profile.split(',') : slice === 'C8' ? ['phone', 'android'] : DEFAULT_PROFILES;
+  const names = args.profile ? args.profile.split(',') : args.detect ? ['desktop'] : slice === 'C8' ? ['phone', 'android'] : DEFAULT_PROFILES;
   for (const n of names) if (!PROFILES[n]) throw new Error(`Unknown profile: ${n}`);
 
   const wk = { available: false };
@@ -388,15 +500,21 @@ async function main() {
   const browser = await chromium.launch();
   const results = [];
   try {
-    for (const n of names) results.push(...(await SLICE_RUNNERS[slice](browser, n, base, out)));
+    for (const n of names) {
+      if (args.detect) results.push(await detectRun(browser, n, base, out, budget));
+      else results.push(...(await SLICE_RUNNERS[slice](browser, n, base, out)));
+    }
   } finally {
     await browser.close();
   }
   let commit = process.env.SCOUT_COMMIT || null;
-  const report = { slice, base, live: !!args.live, timestamp: new Date().toISOString(), commit, webkit: wk, results };
+  // Detector: one verdict across profiles; any failing profile fails the process. Slices never do.
+  const verdict = args.detect ? { ok: results.every((r) => r.verdict.ok), violations: results.flatMap((r) => r.verdict.violations.map((v) => `[${r.profile}] ${v}`)) } : undefined;
+  const report = { slice, base, live: !!args.live, timestamp: new Date().toISOString(), commit, webkit: wk, ...(verdict ? { budget, verdict } : {}), results };
   await writeFile(join(out, `${RUN_ID}-report-${slice.toLowerCase()}.json`), JSON.stringify(report, null, 2));
   await writeFile(join(out, `${RUN_ID}-report-${slice.toLowerCase()}.md`), toMarkdown(report));
   console.log(toMarkdown(report));
+  if (verdict && !verdict.ok) process.exitCode = 1;
 }
 
 main().catch((e) => { console.error(e.message); process.exit(1); });
