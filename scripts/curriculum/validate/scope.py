@@ -109,13 +109,19 @@ def write_scope_sidecar(plan_path: Path, slug: str, scope: dict) -> Path:
 
 
 def check_scope_sidecar(report, plan: dict, plan_path: Path, *, write: bool) -> list[str]:
-    """Byte-for-byte sidecar check (or write). Returns the scope letter list."""
-    scope = compute_scope(plan, report.level, report.slug)
+    """Byte-for-byte sidecar check (or write). Returns the scope letter list.
+
+    The sidecar is keyed on plan["slug"] — which the loader has already made
+    equal to the plan's file name and the requested slug — so single-plan mode
+    and --all always read the same sidecar.
+    """
+    slug = plan["slug"]
+    scope = compute_scope(plan, report.level, slug)
     letters = list(scope["letters"]["list"])
     if write:
-        write_scope_sidecar(plan_path, report.slug, scope)
+        write_scope_sidecar(plan_path, slug, scope)
         return letters
-    sidecar = scope_sidecar_path(plan_path, report.slug)
+    sidecar = scope_sidecar_path(plan_path, slug)
     if not sidecar.is_file():
         report.failures.append(
             Outcome(

@@ -11,6 +11,7 @@ PLAN_NOT_FOUND = "plan_not_found"
 PLAN_YAML_INVALID = "plan_yaml_invalid"
 PLAN_OUTSIDE_LESSON_PLANS = "plan_outside_lesson_plans"
 NOT_A_PLAN = "not_a_plan"
+PLAN_SLUG_MISMATCH = "plan_slug_mismatch"
 V1_PLAN = "v1_plan"
 REMOVED_V1_FIELD = "removed_v1_field"
 SCOPE_KEY_IN_PLAN = "scope_key_in_plan"
@@ -136,6 +137,7 @@ DESCRIPTIONS = {
     PLAN_YAML_INVALID: "failure: the plan file is not valid YAML",
     PLAN_OUTSIDE_LESSON_PLANS: "failure: plans live under curriculum/l2-uk-en/lesson-plans/<level>/, nowhere else",
     NOT_A_PLAN: "failure: a name beginning with _ is not a plan (§2a)",
+    PLAN_SLUG_MISMATCH: "failure (§2a): the plan file name, the requested slug and the plan's slug field differ; a plan is <slug>.yaml",
     V1_PLAN: "failure: v1 plans are not read or converted (§7.4)",
     REMOVED_V1_FIELD: "failure: a v1 field was removed from the plan; the message says where it moved",
     SCOPE_KEY_IN_PLAN: "failure: scope is a generated sidecar (_scope/<slug>.yaml), never a plan key (§2a)",

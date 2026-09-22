@@ -28,6 +28,7 @@ from .loader import (
     PLAN_SCHEMA_PATH,
     REPO_ROOT,
     PlanError,
+    check_plan_slug,
     evidence_root,
     load_plan,
     read_plan_text,
@@ -735,6 +736,7 @@ def validate_plan(
         plan_path = resolve_plan_path(level, slug, plan_path)
         plan_text = read_plan_text(plan_path)
         plan = load_plan(plan_path)
+        check_plan_slug(plan_path, slug, plan)
     except PlanError as error:
         _fail(report, error.code, error.message)
         report.not_checked.append(title_quantities_outcome(None))

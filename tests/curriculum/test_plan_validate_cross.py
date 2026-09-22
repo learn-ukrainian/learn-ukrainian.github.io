@@ -830,6 +830,48 @@ def test_stale_scope_fails_with_diff(tmp_path: Path) -> None:
     assert "-count: 99" in outcome.message  # the committed sidecar carries the stale line
 
 
+def _renamed_plan_world(root: Path) -> Path:
+    """A clean plan (with its sidecar) whose file was renamed without touching its slug field."""
+    paths = write_level(root, plans=[target_plan()], arc=default_arc())
+    renamed = paths[SLUG].with_name("mod-renamed.yaml")
+    paths[SLUG].rename(renamed)
+    return renamed
+
+
+def test_renamed_plan_file_is_rejected(tmp_path: Path, capsys: pytest.CaptureFixture) -> None:
+    """A plan is <slug>.yaml: a file name that differs from plan["slug"] fails in both modes."""
+    renamed = _renamed_plan_world(tmp_path)
+    # Asked for by its file name, the slug field disagrees.
+    report = validate_plan(LEVEL, "mod-renamed", plan_path=renamed)
+    assert report.codes() == {codes.PLAN_SLUG_MISMATCH} | ALWAYS_NOT_CHECKED, report.render_text()
+    assert "carries slug 'mod-one'" in report.failures[0].message
+    # Asked for by its slug field, the file name disagrees.
+    report = validate_plan(LEVEL, SLUG, plan_path=renamed)
+    assert report.codes() == {codes.PLAN_SLUG_MISMATCH} | ALWAYS_NOT_CHECKED, report.render_text()
+    # --all reads the slug field; the leftover _scope/mod-one.yaml must not let it pass.
+    assert validate_main([LEVEL, "--all", "--level-dir", str(renamed.parent)]) == 1
+    assert codes.PLAN_SLUG_MISMATCH in capsys.readouterr().out
+
+
+def test_sidecar_moved_to_another_slug_or_level_is_rejected(tmp_path: Path) -> None:
+    """The sidecar names its level and module, so bytes from another slug or level are stale."""
+    plans = [make_plan("mod-zero", 1, [teach_lesson(1, "prior-lesson"), recap_lesson(2)]), target_plan(position=2)]
+    paths = write_level(tmp_path, plans=plans, arc=[arc_position(1, "mod-zero"), arc_position(2, SLUG)])
+    plan_path = paths[SLUG]
+    sidecar = plan_path.parent / "_scope" / f"{SLUG}.yaml"
+    assert validate_plan(LEVEL, SLUG, plan_path=plan_path).ok
+
+    sidecar.write_bytes((plan_path.parent / "_scope" / "mod-zero.yaml").read_bytes())
+    report = validate_plan(LEVEL, SLUG, plan_path=plan_path)
+    assert codes.SCOPE_SIDECAR_STALE in report.codes(), report.render_text()
+
+    plan = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    write_scope_sidecar(plan_path, SLUG, compute_scope(plan, "a2", SLUG))  # the a2 sidecar of the same slug
+    report = validate_plan(LEVEL, SLUG, plan_path=plan_path)
+    outcome = next(o for o in report.failures if o.code == codes.SCOPE_SIDECAR_STALE)
+    assert "-level: a2" in outcome.message
+
+
 # --- waivers and the CLI ------------------------------------------------------
 
 
@@ -1084,4 +1126,6 @@ def produced_cross_codes(root: Path) -> set[str]:
     sidecar.write_bytes(sidecar.read_bytes() + b"count: 99\n")
     plan_path = sidecar.parent.parent / f"{SLUG}.yaml"
     produced |= validate_plan(LEVEL, SLUG, plan_path=plan_path).codes()  # scope_sidecar_stale
+    renamed = _renamed_plan_world(root / "renamed")
+    produced |= validate_plan(LEVEL, SLUG, plan_path=renamed).codes()  # plan_slug_mismatch
     return produced
