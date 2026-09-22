@@ -2317,7 +2317,7 @@ def test_run_worker_marks_no_deliverable_for_clean_zero_commit_tiny_response(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
+    assert state["no_deliverable_reason"] == "no_commits_no_changes"
     assert state["last_error"] == state["no_deliverable_reason"]
 
 
@@ -3337,27 +3337,22 @@ def test_read_only_dispatch_still_fails_on_task_authored_write_with_sibling_work
     assert sibling.exists()
 
 
-def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
+def test_run_worker_flags_background_wait_with_no_commit(
     tmp_tasks_dir,
     tmp_path,
     monkeypatch,
 ):
-    """A substantive zero-commit analysis is a deliverable, not a failure.
-
-    "Investigate and only change if needed" dispatches legitimately conclude
-    with no commits. Their analysis — a non-trivial response — is the
-    deliverable; flagging it trains orchestrators to ignore the signal.
-    """
-    response = (
-        "I investigated the reported failure across scripts/delegate.py and its "
-        "tests. The guard already rejects this exact case: the ownership ledger "
-        "refuses overlapping claims in REFUSE mode, and the regression test at "
-        "tests/test_delegate.py covers it. No code change is required; the "
-        "reported behaviour came from a stale build."
+    """A write dispatch that only says it is waiting, and commits nothing, did not finish (#8448)."""
+    response = "\n".join(
+        [
+            "The task is executing in the background. I will wait for it to complete.",
+            "The task is running pytest in the background. I will wait for it to complete.",
+        ]
+        * 4
     )
-    assert len(response) > delegate.DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
+    assert len(response) > 300
     rc, state = _run_successful_worker_for_deliverable_test(
-        task_id="write-substantive-noop",
+        task_id="write-background-no-commit",
         mode="workspace-write",
         response=response,
         commits_ahead=0,
@@ -3365,10 +3360,10 @@ def test_run_worker_does_not_flag_legitimate_noop_write_dispatch(
         monkeypatch=monkeypatch,
     )
 
-    assert rc == 0
-    assert state["status"] == "done"
+    assert rc == 1
+    assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] is None
+    assert state["no_deliverable_reason"] == "no_commits_no_changes"
 
 
 def test_run_worker_allows_structured_no_change_declaration(
@@ -3440,7 +3435,7 @@ def test_run_worker_flags_real_world_other_branch_delivery_miss(
     assert rc == 1
     assert state["status"] == "no_deliverable"
     assert state["needs_finalize"] is False
-    assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
+    assert state["no_deliverable_reason"] == "no_commits_no_changes"
 
 
 @pytest.mark.parametrize(
@@ -9052,7 +9047,7 @@ def test_finalize_private_remote_zero_commits_ignores_stale_local_base(
     assert state is not None
     assert state["status"] == "no_deliverable"
     assert state["commits_ahead"] == 0
-    assert state["no_deliverable_reason"] == ("write_capable_clean_worktree_zero_commits_short_response")
+    assert state["no_deliverable_reason"] == "no_commits_no_changes"
 
 
 def test_dispatch_populates_worktree_metadata_on_cwd_reuse(

@@ -143,7 +143,6 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
-from scripts.config import DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX
 from scripts.orchestration import reaper_lifecycle
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
@@ -1415,7 +1414,7 @@ def _cursor_model_state(
 
 
 _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON = "commit_count_unknown"
-_NO_DELIVERABLE_SHORT_RESPONSE_REASON = "write_capable_clean_worktree_zero_commits_short_response"
+_NO_DELIVERABLE_NO_COMMITS_REASON = "no_commits_no_changes"
 _NO_DELIVERABLE_INVALID_DECLARATION_REASON = "invalid_delivery_declaration"
 _NO_DELIVERABLE_JUNK_ONLY_WORKTREE_REASON = "junk_only_worktree_changes"
 _NO_DELIVERABLE_MISSING_REVIEW_VERDICT_REASON = "review_missing_verdict_line"
@@ -1564,9 +1563,9 @@ def _delivery_failure_reason(
     - a reasoned ``no_change`` declaration proves a legitimate no-op, while a
       ``change`` claim against a zero-commit branch contradicts the git
       evidence and is flagged;
-    - with zero commits and no declaration, only a trivially short response
-      (nothing that could BE the deliverable) is flagged; a substantive
-      response — an analysis, an investigation conclusion — is accepted.
+    - with zero commits and no valid ``no_change`` declaration, there is
+      nothing to finalize (#8448). A long "waiting in the background" reply
+      is not a deliverable. A reasoned ``no_change`` declaration still is.
     """
     if commits_ahead is None:
         return _NO_DELIVERABLE_UNKNOWN_COMMIT_COUNT_REASON
@@ -1576,9 +1575,7 @@ def _delivery_failure_reason(
         if declaration["outcome"] == "no_change":
             return None
         return _NO_DELIVERABLE_INVALID_DECLARATION_REASON
-    if len(response) <= DELEGATE_NO_DELIVERABLE_RESPONSE_CHARS_MAX:
-        return _NO_DELIVERABLE_SHORT_RESPONSE_REASON
-    return None
+    return _NO_DELIVERABLE_NO_COMMITS_REASON
 
 
 def _review_verdict_failure_reason(response: str) -> str | None:
@@ -5184,7 +5181,10 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if normalized_branch not in containment.PROTECTED_BRANCHES:
+                    if (
+                        normalized_branch not in containment.PROTECTED_BRANCHES
+                        and not (commits_ahead == 0 and dirty_on_exit is False)
+                    ):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
                             normalized_branch,
