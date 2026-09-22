@@ -50,6 +50,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import assert_not_archived_path
+
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
 
@@ -114,7 +116,9 @@ V02_BASELINE_SUITE_PATH = (
     / "partitions"
     / "dialect_historical_protection_suite_600.jsonl"
 )
-V02_SFT_SHARDS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v1_production" / "sft"
+# V0.2 SFT baseline replay directory has been permanently quarantined and archived (#6321).
+# Active replay from archive is strictly prohibited.
+V02_SFT_SHARDS_DIR: Path | None = None
 
 CYRILLIC_CHAR_RE = re.compile(r"[а-яіїєґѣѧѡъьѵѳѫꙋꙗѕziѿ]", re.IGNORECASE)
 HISTORICAL_CYRILLIC_RE = re.compile(r"[ѣѧѡъьѵѳѫꙋꙗѕziіѿ҃]", re.IGNORECASE)
@@ -869,27 +873,29 @@ def build_sft_dataset(
 
     con_ves.close()
 
-    # 3. Add modern literary replay buffer from v0.2 to prevent regression (exactly replay_quota)
+    # 3. Add modern literary replay buffer from approved sources (never from archive)
     replay_count = 0
-    if V02_SFT_SHARDS_DIR.is_dir():
-        for shard in sorted(V02_SFT_SHARDS_DIR.glob("sft_shard_*.jsonl")):
-            if replay_count >= replay_quota:
-                break
-            for line in shard.read_text(encoding="utf-8").splitlines():
+    if V02_SFT_SHARDS_DIR is not None:
+        assert_not_archived_path(V02_SFT_SHARDS_DIR, context="kyivan rus replay buffer shards")
+        if V02_SFT_SHARDS_DIR.is_dir():
+            for shard in sorted(V02_SFT_SHARDS_DIR.glob("sft_shard_*.jsonl")):
                 if replay_count >= replay_quota:
                     break
-                if not line.strip():
-                    continue
-                orig = json.loads(line)
-                if orig.get("is_calque_or_russianism") is True:
-                    orig_copy = dict(orig)
-                    term = orig_copy.get("target_term", idx)
-                    orig_copy["trajectory_id"] = (
-                        f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_replay_{term}'.encode()).hexdigest()[:16]}"
-                    )
-                    trajectories.append(orig_copy)
-                    seen_traj_ids.add(orig_copy["trajectory_id"])
-                    replay_count += 1
+                for line in shard.read_text(encoding="utf-8").splitlines():
+                    if replay_count >= replay_quota:
+                        break
+                    if not line.strip():
+                        continue
+                    orig = json.loads(line)
+                    if orig.get("is_calque_or_russianism") is True:
+                        orig_copy = dict(orig)
+                        term = orig_copy.get("target_term", idx)
+                        orig_copy["trajectory_id"] = (
+                            f"traj.decolonize.{hashlib.sha256(f'traj_{idx:05d}_replay_{term}'.encode()).hexdigest()[:16]}"
+                        )
+                        trajectories.append(orig_copy)
+                        seen_traj_ids.add(orig_copy["trajectory_id"])
+                        replay_count += 1
 
     if replay_count < replay_quota:
         # Fallback: create calibrated anti-calque replay trajectories

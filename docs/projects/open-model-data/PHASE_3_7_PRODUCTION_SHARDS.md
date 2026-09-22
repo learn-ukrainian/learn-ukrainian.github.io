@@ -1,5 +1,9 @@
 # Phase 3.7: Production Shards Assembly (6K SFT + 3K DPO) & Release Packaging
 
+> [!WARNING]
+> **ARCHIVED / SUPERSEDED (2026-09-22):**
+> In accordance with Epic #6321 and UNLP 2026 / Gemma 4 findings, the monolithic synthetic dataset `uldr_v1_production` has been moved to `data/projects/open_model_data/archive/uldr_v1_production/` with a `TOMBSTONE.md`. It must NOT be used for model training or replay buffers. Active work has transitioned to modular components under `data/projects/open_model_data/components/`.
+
 ## Overview & Purpose
 
 Part of **Epic #6321** (Open Model Data) and **Issue #8011**.
@@ -14,10 +18,10 @@ In accordance with Operator Contract Items 7 (tool-backed claims), 9 (Ukrainian 
 
 ## Deliverables & Dataset Architecture
 
-The production release is organized into standardized, reproducible shards under `data/projects/open_model_data/release/uldr_v1_production/`:
+The production release was archived under `data/projects/open_model_data/archive/uldr_v1_production/`:
 
 ```
-data/projects/open_model_data/release/uldr_v1_production/
+data/projects/open_model_data/archive/uldr_v1_production/
 ├── sft/
 │   ├── sft_shard_001_of_012.jsonl    # 500 trajectories
 │   ├── ...
@@ -168,6 +172,6 @@ The public shards can be uploaded to Hugging Face Hub using the credential in `~
 ```bash
 export HF_TOKEN=$(cat ~/.secrets/hf.key)
 huggingface-cli upload learn-ukrainian/uldr-production-shards \
-    data/projects/open_model_data/release/uldr_v1_production/ \
+    data/projects/open_model_data/archive/uldr_v1_production/ \
     --repo-type dataset
 ```

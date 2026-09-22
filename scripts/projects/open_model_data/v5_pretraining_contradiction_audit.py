@@ -53,8 +53,8 @@ def resolve_data_path(rel_path: str | Path) -> Path:
 
 # Default paths relative to project root
 DEFAULT_PROTECTION_SUITE = Path("data/projects/open_model_data/decolonization/partitions/dialect_historical_protection_suite_600.jsonl")
-DEFAULT_SFT_DIR = Path("data/projects/open_model_data/release/uldr_v1_production/sft")
-DEFAULT_DPO_DIR = Path("data/projects/open_model_data/release/uldr_v1_production/dpo")
+DEFAULT_SFT_DIR = Path("data/projects/open_model_data/archive/uldr_v1_production/sft")
+DEFAULT_DPO_DIR = Path("data/projects/open_model_data/archive/uldr_v1_production/dpo")
 DEFAULT_SOURCES_DB = Path("data/sources.db")
 DEFAULT_VESUM_DB = Path("data/vesum.db")
 DEFAULT_OUTPUT_MD = Path("docs/reports/uldr_v02_pretraining_contradiction_audit.md")

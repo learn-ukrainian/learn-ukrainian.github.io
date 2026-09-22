@@ -214,7 +214,7 @@ flowchart LR
 
 ### 6.1 Phase 5.5: ULDR v0.2 Baseline Freezing (Active Issue [#8054](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8054))
 
-* **Data:** Repaired production shards (`data/projects/open_model_data/release/uldr_v1_production/`: 6,000 SFT + 3,000 DPO).
+* **Data:** Repaired production shards (`data/projects/open_model_data/archive/uldr_v1_production/`: 6,000 SFT + 3,000 DPO; archived in favor of modular `components/`).
 * **Mandatory Pre-Training Cross-Stage Audit:** Automated verification of the 600 Phase 5.2 protection cases to guarantee 0 regionalisms or historical forms are falsely flagged as errors by the training loss.
 * **Evaluation Denominator Structure ($N = 1,600$ unique cases):**
   * *Held-Out Core Suite ($N = 1,000$ unique cases):* 400 standard literary corrections, 300 verified colonial calques (containing the dedicated 50-case high-frequency floor as a priority subset), 300 clean modern controls.

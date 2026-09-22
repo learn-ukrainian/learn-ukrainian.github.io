@@ -58,6 +58,8 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
+from scripts.projects.open_model_data.paths import assert_not_archived_path
+
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
 
@@ -959,16 +961,8 @@ def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]
         / "uldr_v03_dialect"
         / "sft_dialect_protection_500.jsonl"
     )
-    p_prod = (
-        REPO_ROOT
-        / "data"
-        / "projects"
-        / "open_model_data"
-        / "release"
-        / "uldr_v1_production"
-        / "sft"
-        / "sft_shard_001_of_012.jsonl"
-    )
+    # Legacy v1 production SFT shards are quarantined and archived (#6321); do not load from archive.
+    p_prod: Path | None = None
 
     # 1. Load dialect protection trajectories (PRESERVE authentic dialect, is_calque_or_russianism=False)
     if p_dialect.is_file():
@@ -1002,35 +996,37 @@ def load_replay_buffer(vesum_db: Path, quota: int = 200) -> list[dict[str, Any]]
                     continue
 
     # 2. Load modern literary anti-calque trajectories (CORRECT modern Russianisms, is_calque_or_russianism=True)
-    if p_prod.is_file():
-        with p_prod.open("r", encoding="utf-8") as f:
-            for line in f:
-                if len(prod_trajectories) >= prod_quota:
-                    break
-                try:
-                    row = json.loads(line)
-                    if not row.get("is_calque_or_russianism", False):
+    if p_prod is not None:
+        assert_not_archived_path(p_prod, context="middle ukrainian replay prod")
+        if p_prod.is_file():
+            with p_prod.open("r", encoding="utf-8") as f:
+                for line in f:
+                    if len(prod_trajectories) >= prod_quota:
+                        break
+                    try:
+                        row = json.loads(line)
+                        if not row.get("is_calque_or_russianism", False):
+                            continue
+                        row_id = f"traj.decolonize.{hashlib.sha256(('replay_prod_' + row['trajectory_id']).encode()).hexdigest()[:16]}"
+                        row["trajectory_id"] = row_id
+                        attestations = row.get("vesum_attestation", [])
+                        if attestations and isinstance(attestations, list):
+                            for att in attestations:
+                                tags = att.setdefault("tags", [])
+                                if "modern_literary_replay" not in tags:
+                                    tags.append("modern_literary_replay")
+                        else:
+                            row["vesum_attestation"] = [
+                                {
+                                    "lemma": row.get("target_term", "рахувати").casefold(),
+                                    "vesum_forms_count": 25,
+                                    "is_standard_attested": True,
+                                    "tags": ["standard_literary", "modern_literary_replay"],
+                                }
+                            ]
+                        prod_trajectories.append(row)
+                    except Exception:
                         continue
-                    row_id = f"traj.decolonize.{hashlib.sha256(('replay_prod_' + row['trajectory_id']).encode()).hexdigest()[:16]}"
-                    row["trajectory_id"] = row_id
-                    attestations = row.get("vesum_attestation", [])
-                    if attestations and isinstance(attestations, list):
-                        for att in attestations:
-                            tags = att.setdefault("tags", [])
-                            if "modern_literary_replay" not in tags:
-                                tags.append("modern_literary_replay")
-                    else:
-                        row["vesum_attestation"] = [
-                            {
-                                "lemma": row.get("target_term", "рахувати").casefold(),
-                                "vesum_forms_count": 25,
-                                "is_standard_attested": True,
-                                "tags": ["standard_literary", "modern_literary_replay"],
-                            }
-                        ]
-                    prod_trajectories.append(row)
-                except Exception:
-                    continue
 
     # 3. Fallback if release files are absent or insufficient
     while len(dialect_trajectories) < dialect_quota:

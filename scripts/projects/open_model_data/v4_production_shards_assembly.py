@@ -32,6 +32,7 @@ if str(REPO_ROOT) not in sys.path:
 import jsonschema
 from jsonschema import Draft202012Validator
 
+from scripts.projects.open_model_data.paths import assert_not_archived_path
 from scripts.projects.open_model_data.phase3_decolonization_partition import (
     MinHashDedup,
     normalize_text,
@@ -52,7 +53,8 @@ TRAJECTORY_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_trajectory.schema.js
 DPO_PAIR_SCHEMA_PATH = CONTRACTS_DIR / "v1_decolonization_dpo_pair.schema.json"
 RECEIPT_SCHEMA_PATH = CONTRACTS_DIR / "v1_production_release_receipt.schema.json"
 
-DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v1_production"
+HISTORICAL_ARCHIVE_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "archive" / "uldr_v1_production"
+DEFAULT_OUTPUT_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "staging" / "production_assembly"
 DEFAULT_STEM_CONTROLS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "decolonization" / "stem_controls"
 DEFAULT_HELDOUT_SUITE = (
     REPO_ROOT
@@ -1044,6 +1046,8 @@ def assemble_production_shards(
     verify_only: bool = False,
 ) -> dict[str, Any]:
     """Execute Phase 3.7 production assembly and verification."""
+    if not verify_only:
+        assert_not_archived_path(output_dir, context="assembly output generation")
     output_dir.mkdir(parents=True, exist_ok=True)
     sft_dir = output_dir / "sft"
     dpo_dir = output_dir / "dpo"
@@ -1729,7 +1733,7 @@ def assemble_production_shards(
 
 
 def verify_production_release(
-    output_dir: Path = DEFAULT_OUTPUT_DIR,
+    output_dir: Path = HISTORICAL_ARCHIVE_DIR,
     heldout_suite_path: Path = DEFAULT_HELDOUT_SUITE,
 ) -> dict[str, Any]:
     """Verify an existing production release without modifying artifacts."""
@@ -1742,7 +1746,7 @@ def verify_production_release(
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="ULDR Phase 3.7: Production Shards Assembly & Release Packaging")
-    parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
+    parser.add_argument("--output-dir", type=Path, default=None)
     parser.add_argument("--stem-controls-dir", type=Path, default=DEFAULT_STEM_CONTROLS_DIR)
     parser.add_argument("--heldout-suite", type=Path, default=DEFAULT_HELDOUT_SUITE)
     parser.add_argument("--sources-db", type=Path, default=DEFAULT_SOURCES_DB)
@@ -1754,8 +1758,9 @@ def main() -> None:
     parser.add_argument("--verify-only", action="store_true", default=False)
 
     args = parser.parse_args()
+    target_output_dir = args.output_dir or (HISTORICAL_ARCHIVE_DIR if args.verify_only else DEFAULT_OUTPUT_DIR)
     assemble_production_shards(
-        output_dir=args.output_dir,
+        output_dir=target_output_dir,
         stem_controls_dir=args.stem_controls_dir,
         heldout_suite_path=args.heldout_suite,
         sources_db_path=args.sources_db,
