@@ -1597,7 +1597,58 @@ def test_cf_r15_phrase_attestation_regression() -> None:
             style_guide_cache=[],
         )
 
-    # 5. Live query for decol_prot_047 substantiates both headword and phrase
+    class TochkaLacksPhraseMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Returns headword 'ТОЧКА' with 'Точка зору' but lacking claimed phrase 'з точки зору'
+            return (137, "ТОЧКА", "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».")
+
+        def fetchall(self) -> list:
+            return []
+
+    class TochkaAttestedMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Returns headword 'ТОЧКА' with checked-in catalog passage containing 'з точки зору'
+            return (137, "ТОЧКА", "ТОЧКА, -и, ж. Точка зору (з точки зору) — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».")
+
+        def fetchall(self) -> list:
+            return []
+
+    # 5. Matching headword 'ТОЧКА' lacking phrase 'з точки зору' must fail closed
+    with pytest.raises(
+        ValueError,
+        match=r"does not substantiate claimed phrase 'з точки зору' \(matching headword lacks the phrase\)",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_053",
+            term="з точки зору",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=TochkaLacksPhraseMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 6. Matching headword 'ТОЧКА' with checked-in catalog passage substantiates 'з точки зору'
+    res_053_mock = query_source_evidence(
+        case_id="decol_prot_053",
+        term="з точки зору",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=TochkaAttestedMockCursor(),
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res_053_mock["status"] == "source_attested"
+
+    # 7. Live query for decol_prot_047 substantiates both headword and phrase
     res_047 = query_source_evidence(
         case_id="decol_prot_047",
         term="в першу чергу",
@@ -1610,7 +1661,7 @@ def test_cf_r15_phrase_attestation_regression() -> None:
     )
     assert res_047["status"] == "source_attested"
 
-    # 6. Live query for decol_prot_048 substantiates both headword and phrase
+    # 8. Live query for decol_prot_048 substantiates both headword and phrase
     res_048 = query_source_evidence(
         case_id="decol_prot_048",
         term="мова йде про",
@@ -1622,3 +1673,16 @@ def test_cf_r15_phrase_attestation_regression() -> None:
         style_guide_cache=[],
     )
     assert res_048["status"] == "source_attested"
+
+    # 9. Live query for decol_prot_053 substantiates both headword and phrase
+    res_053 = query_source_evidence(
+        case_id="decol_prot_053",
+        term="з точки зору",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res_053["status"] == "source_attested"

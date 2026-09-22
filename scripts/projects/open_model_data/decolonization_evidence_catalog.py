@@ -3846,7 +3846,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "section": "Реєстр літературної мови",
     "article": "Точка",
     "page": "т. 19",
-    "supporting_passage": "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
+    "supporting_passage": "ТОЧКА, -и, ж. Точка зору (з точки зору) — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
     "locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Точка»",
     "verification_method": "Lexicographical verification in academic dictionary registry СУМ-20",
     "case_id": "decol_prot_053",

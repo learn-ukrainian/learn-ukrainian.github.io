@@ -6907,7 +6907,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "authority": "СУМ-20",
     "source": "СУМ-20",
     "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Точка»",
-    "supporting_passage": "ТОЧКА, -и, ж. Точка зору — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
+    "supporting_passage": "ТОЧКА, -и, ж. Точка зору (з точки зору) — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».",
     "page": "т. 19",
     "article": "Точка",
     "section": "Реєстр літературної мови",
@@ -6919,7 +6919,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "status": "confirmed",
     "verdict": "APPROVED",
     "review_date": "2026-09-22",
-    "content_sha256": "8d73dd034b852856e0c14d72e3a71c9528612474a1c3cf453e3addd6f69afc25",
+    "content_sha256": "981649354b745a03996efee4aee0ee6e9a75bec19840cee878db2edd674d4871",
     "linguistic_rationale": "Засвідчено для decol_prot_053: вживання «з точки зору» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
     "verified_contexts_count": 2,
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_053.review.json"
