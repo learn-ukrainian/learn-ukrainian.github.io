@@ -334,8 +334,13 @@ no natural owner and is left to the plan review of 33: графіті (`:2679`).
 ## 7. Immersion band mapping (plan schema §4)
 
 One band for the whole level: every position 1–93 maps to `b2+`, 100 % Ukrainian
-(`IMMERSION_POLICIES["default"]`). Nothing is re-tuned (R-30). A module split or merged later stays
-in the same band.
+(`IMMERSION_POLICIES["default"]`). Nothing is re-tuned (R-30). A module split or merged later stays in
+the same band. The table below is the machine-readable form the arc generator parses (#8424;
+same shape as the A2 arc §7):
+
+| Positions | Band key | Advisory Ukrainian share |
+| --- | --- | --- |
+| 1–93 | `b2+` | 100 % |
 
 ## 8. Decisions on the five open questions (operator, 2026-09-21)
 
