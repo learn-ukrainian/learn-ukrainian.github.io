@@ -5,7 +5,10 @@ import {
   fetchPracticeDrillFields,
   getShardJson,
   isMissingShard,
+  isPracticeShardPublished,
   practiceDrillShardUrls,
+  PUBLISHED_PRACTICE_SHARDS,
+  setPublishedPracticeShardsForTesting,
   softSkipUnpublishedDrillShard,
   type PracticeDrillFields,
 } from "@site/src/lib/lexicon/practice-shard-fetch";
@@ -32,6 +35,7 @@ const emptyFields: PracticeDrillFields = {
 
 describe("practice-shard-fetch", () => {
   afterEach(() => {
+    setPublishedPracticeShardsForTesting(null);
     vi.unstubAllGlobals();
     vi.restoreAllMocks();
   });
@@ -146,7 +150,10 @@ describe("practice-shard-fetch", () => {
     expect(merged.cloze.map((item) => item.clozeId)).toEqual(["core", "a1", "a2"]);
   });
 
-  test("fetchPracticeDrillFields hydrates canonical imperative shard items", async () => {
+  test("fetchPracticeDrillFields hydrates canonical imperative shard items when published", async () => {
+    setPublishedPracticeShardsForTesting(
+      new Set([...PUBLISHED_PRACTICE_SHARDS, "practice-imperative.A2.json"]),
+    );
     const canonicalItem = {
       id: "imp_robyty_1pl",
       lemmaId: "робити",
@@ -182,5 +189,38 @@ describe("practice-shard-fetch", () => {
 
     const fields = await fetchPracticeDrillFields("/lexicon", "A2", new Map());
     expect(fields.imperative).toEqual([canonicalItem]);
+  });
+
+  test("fetchPracticeDrillFields suppresses HTTP fetch for unpublished shards (#8379)", async () => {
+    const fetchMock = vi.fn(async (input: RequestInfo | URL) => {
+      const url = String(input);
+      if (url.includes("practice-cloze.A1.json")) {
+        return jsonResponse(200, { cloze: [{ clozeId: "c1" }] });
+      }
+      return jsonResponse(200, {});
+    });
+    vi.stubGlobal("fetch", fetchMock);
+
+    const fields = await fetchPracticeDrillFields("/lexicon", "A1", new Map());
+
+    // Verified: imperative is NOT fetched because it is not in the pointer manifest
+    const requestedUrls = fetchMock.mock.calls.map(([callUrl]) => String(callUrl));
+    expect(requestedUrls.some((u) => u.includes("practice-imperative"))).toBe(false);
+    expect(fields.imperative).toEqual([]);
+    expect(fields.cloze).toEqual([{ clozeId: "c1" }]);
+  });
+
+  test("isPracticeShardPublished checks pointer file manifest (AC-01)", () => {
+    expect(isPracticeShardPublished("practice-cloze.A1.json")).toBe(true);
+    expect(isPracticeShardPublished("practice-stress.A1.json")).toBe(true);
+    expect(isPracticeShardPublished("practice-paradigm.B1.json")).toBe(true);
+    expect(isPracticeShardPublished("practice-imperative.A1.json")).toBe(false);
+    expect(isPracticeShardPublished("practice-imperative.C1.json")).toBe(false);
+  });
+
+  test("practiceDrillShardUrls with publishedOnly=true excludes unpublished shards", () => {
+    const urls = practiceDrillShardUrls("/lexicon", "A1", true);
+    expect(urls.some((u) => u.includes("practice-imperative"))).toBe(false);
+    expect(urls.some((u) => u.includes("practice-cloze"))).toBe(true);
   });
 });
