@@ -21,7 +21,7 @@ that skill). Do not reintroduce claims Sol rejected (see §Plane modes).
 | **Seat onboarding contract** | Task-oriented ownership matrix (discuss / delegate / fleet-comms / ACPX / Buzz deferred), Kimi routes, smoke | `docs/runbooks/agent-seat-onboarding.md` |
 | **`drive-epic` skill** | Method playbook (orient → topology → route → dispatch → settle → CF → merge → handoff) | `agents_extensions/shared/skills/drive-epic/SKILL.md` |
 | **Epic roster runbook** | Operator seat routing (which model drives which epic) | `docs/runbooks/epic-orchestrator-roster.md` |
-| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `plane-status` |
+| **Live routing data** | Caps, ladders, reviewer seats, **live plane mode** | `/api/rules` model-assignment + `scripts/config/model_catalog.yaml` + `scripts/config/fleet_communications.yaml` + `.venv/bin/python -m scripts.fleet_comms plane-status` |
 | **Launchers** | Lease claim + dual-aware pointer (not a second design) | interactive `start-*.sh`, provider `start-*-driver.sh` |
 
 **Golden rule (from drive-epic):** rules + skill teach **method**; roster/caps/modes are
@@ -104,8 +104,8 @@ cold-prompts; silent plane flips; “for now” cutovers.
 
 # Cross-family PR review — DIRECT only (operator 2026-08-06; sealed formal RETIRED 2026-08-07):
 # ONE round. Ask a cross-family lane for verdict + findings at the current head,
-# then post on the PR (gh pr comment / gh pr review). Merge when CI is green.
-# Then reap worktrees + temps (drive-epic §7a / reap_worktrees.py --apply).
+# then post the verdict as a PR comment bound to the head SHA (all agents share one GitHub identity, so gh pr review --approve on our own PRs is rejected; format stays as today until the recorder tool lands). Merge when CI is green.
+# Then reap worktrees + temps (drive-epic §7a / scripts/orchestration/reap_worktrees.py --apply).
 # `--type review` routes to a headless native CLI WITH tools (delegate.py
 # dispatch --agent <lane> --worktree; gh/pytest available), never tool-less
 # ACP (operator 2026-08-23, #7155) — this command line is unchanged, the
@@ -143,7 +143,7 @@ work.
 Every epic driver session (any harness) MUST:
 
 1. Obey this rule (via `/api/rules` or offline fallback of this file).
-2. Run `plane-status` before assuming message-plane availability.
+2. Run `.venv/bin/python -m scripts.fleet_comms plane-status` before assuming message-plane availability.
 3. Use fleet-comms for durable coordination, queues, messages, conversations, artifacts,
    retries, dead letters, receipts, formal jobs, and session continuity. In authority
    mode, never create a new legacy bridge/channel/broker/file coordination write.

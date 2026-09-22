@@ -28,7 +28,7 @@ what residual remains. Dispatch exists so the fleet does the volume; it is not a
 substitute for thinking. Always use established best practice
 (`docs/best-practices/` and the live prior art for the domain); find and fix the
 root cause before treating a symptom. You decide in-scope calls. You are not a
-designated advisor (Fable/Astra) and not the CF of record for work you drove — you
+designated advisor (Fable/Sol) and not the CF of record for work you drove — you
 *do* read the review and the diff before you merge. Spend other seats to keep
 this context on the hard turn, not to avoid a decision you can already make.
 Unused paid quota is waste (§2c); manufactured work is a defect. Judgment is not
@@ -56,11 +56,11 @@ every cycle, before any status sentence.
    worktree remains. A non-zero closeout is a blocker.
 4. **Know every worker's status.** Do not say a worker is running, finished, or
    stuck unless `delegate.py status <task-id>` was run in this turn. Keep the
-   task id, that status, and the branch head. After every dispatch, arm
-   `delegate.py wait <task-id>` before the turn ends. This seat has no Monitor
-   tool; §5's Monitor path does not wake it. When the wait returns, read the
-   result and take the next action. A finished worker that sits until the
-   operator asks is a driver defect.
+   task id, that status, and the branch head. After every dispatch: seats
+   with a Monitor tool watch `batch_state/tasks/<id>.json`; seats without it
+   run `delegate.py wait <task-id>` before the turn ends. When the wait
+   returns, read the result and take the next action. A finished worker that
+   sits until the operator asks is a driver defect.
 
 If any claim you are about to make (a lane name, a cap, a word/stress/morphology fact,
 a gate status, a count) is not in fresh tool output, **STOP and run the tool** — every
@@ -167,7 +167,7 @@ Binding for this lane:
    hand. Do not rewrite original prose because an upgrade activity is wrong — drop
    or replace the **invented** pair; show archive vs upgrade when a CF finding
    looks like a rewrite.
-2. The **driver does not decide Ukrainian**. Gemini writes; Astra reviews; they
+2. The **driver does not decide Ukrainian**. Gemini writes; Sol reviews; they
    settle language. Do not referee stress, letters, or morphology in the driver
    seat.
 3. **Machinery is Fable 5.1, not Sonnet** (operator 2026-09-18). Advanced
@@ -178,7 +178,7 @@ Binding for this lane:
    fails if it comes back. Do not hand-edit the lesson, the plan, or
    `lessons.yaml` to hide it. Do not start the paid writer until a rendered
    prompt is clean of the reported defect. The driver does not solo-implement.
-4. Content PRs are **scripts-free**. One Astra CF per content PR. While CF/CI
+4. Content PRs are **scripts-free**. One Sol CF per content PR. While CF/CI
    runs on module N, package N+1 (pipeline). Do not dump every module on one
    reviewer in one turn.
 5. After gates pass in a worktree, **open the content PR the same session**.
@@ -345,7 +345,7 @@ Before **every** implement `delegate.py dispatch`:
    `routing_budget_primary` + `capacity_pick_order` (tool evidence).
 2. **No card = no dispatch.** Skipping the card is a process defect; do not launch the
    worker and "write the card later."
-3. **Default bounded work:** Fable or Astra **brief** → heap/practical **worker(s)** —
+3. **Default bounded work:** Fable or Sol **brief** → heap/practical **worker(s)** —
    not a Sonnet/Terra fixation solo. Heap without advisor packet is a process defect.
 4. **Fable path:** native `claude-fable-5-1` or Cursor pin to Fable; do not spend Fable on
    lockfiles / pointer / smoke jobs.
@@ -415,12 +415,11 @@ be missed between routing and worker launch. Read and apply every `unread` or
 
 ### 5. Settle-loop (never poll by hand)
 
-A dispatch returning is not a settle. Arm a wait in the same turn (`delegate.py
-wait <task-id>` where this seat has no Monitor tool; otherwise the Monitor
-tool). Ending the turn with a live worker and no wait is a driver defect.
-
-Watch the task's `batch_state/tasks/<id>.json` `status` with the **Monitor** tool.
-This wait is a §2c fill window, not an idle period: fill free lanes before holding.
+A dispatch returning is not a settle. Arm a wait in the same turn: seats with
+a Monitor tool watch `batch_state/tasks/<id>.json`; seats without it run
+`delegate.py wait <task-id>`. Ending the turn with a live worker and no wait
+is a driver defect. This wait is a §2c fill window, not an idle period: fill
+free lanes before holding.
 Terminal vocab (match `scripts/delegate.py`): **`done` = SUCCESS** (NOT "completed");
 other terminal/attention states: `failed | timeout | rate_limited | cancelled |
 crashed | dry_run` (dry_run is terminal, not success) + `needs_finalize | no_deliverable`. Emit on any
@@ -467,7 +466,9 @@ closed. Use lightweight direct review:
 printf '%s\n' "Cross-family review of PR #<N> at head <SHA>: VERDICT + findings." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-<lane> - \
     --task-id review-<N> --type review
-# Post the exact-head verdict on the PR (attest resolved_model + SHA).
+# Post the exact-head verdict as a PR comment bound to the head SHA (all agents share
+# one GitHub identity, so gh pr review --approve on our own PRs is rejected;
+# attest resolved_model + SHA; format stays as today until the recorder tool lands).
 # Do not enqueue or auto-merge here — landing order is §7.
 ```
 
@@ -709,21 +710,21 @@ not the utilization half.
 
 | Seat | Delta |
 | --- | --- |
-| **Grok 4.6** | Tool-backed claims still bind on this seat (operator 2026-07-27): never assert a word/stress/gate/count/SHA without the raw tool output quoted — that is policy, not a 4.6 quality ranking. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. **No-solo means you do not implement; it does not mean you stop thinking.** Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
+| **Grok 4.7** | Tool-backed claims still bind on this seat (operator 2026-07-27): never assert a word/stress/gate/count/SHA without the raw tool output quoted — that is policy, not a 4.7 quality ranking. 500K window — lean on plane/metrics queries, don't try to hold fleet state in context. Never take a judge seat. **FLEET-FIRST / NO SOLO (operator 2026-07-27, demotion trigger):** the operator pays for many seats on purpose and does not trust one AI; Grok is a **driver only** (dispatch → settle → cross-family CF → merge). Forbidden: multi-file implementation yourself, "quick fix" heroics, dictionary rabbit holes, ego-soloing. **No-solo means you do not implement; it does not mean you stop thinking.** Utilization (idle free lane + open work) is §2c and binds every driver seat — not a Grok-only delta. |
 | **Sonnet-5** | You are authority-capable (near-Opus judgment, 1M window) → make the judgment call and escalate **less**; still escalate the genuinely architecture/process class (below). CF reviews you route must go to a **non-Anthropic** family (you are Anthropic-family — avoid self/same-family review). |
 | **Gemini / AGY (gemini-3.8-flash-high)** | Harness/infra scope. MCP-leading tool use + 1M window + low cost = ideal infra driver. **Do not claim curriculum content lanes.** Route UK-language work to the sanctioned language lanes, not to yourself. |
 | **Kimi K3** | Frontier coder/reviewer + cross-family escalation authority (independent of Anthropic & OpenAI). Dispatch defaults to the faster `k3-256k` with no forced effort; full K3 defaults to `high` through the `kimicc` harness. Kimi cannot be a read-only review seat via `ask-kimi --type review` / `delegate.py --mode read-only` (the tooling refuses because headless Kimi auto-approves mutations), so pick another family for cross-family review; still a good implementer and non-Ukrainian design consult; drive when assigned. |
 | **Claude (when driving a track)** | Prefer **Sonnet-5** for routine track driving; reserve Opus for the hardest judgment + the CF review of record so Opus quota stays free. If the seat is **Opus 5**, apply the **Claude Opus 5** row below (do not restate its mitigations here). |
-| **Claude Fable 5.1 (when in the driver seat)** | Apply the Fable 5.1 section of the `claude-api` skill's migration guide (`shared/model-migration.md`) and the fleet effort topology in `docs/best-practices/fleet-shared-doctrine.md` § Fable 5.1 `/effort`. Essentials: thinking is always on (never send `thinking: disabled`); default **`high`**, step to **`medium`/`low`** for routine (do not keep an Opus/`xhigh` habit); **`xhigh`** for hard multi-file / long autonomous turns **and** for curriculum/linguistic skills that pin `effort: xhigh` (do not step those down); **`max` almost never**. Long deliverables stay at **`high`** unless a measured quality gain says otherwise; at `xhigh`/`max` leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort); low searches less (bump for retrieval); effort ≠ shorter replies. Keep test-before-report and progress-grounding (Opus 5 “delete verification scaffolding” does not apply); delegate independent subtasks asynchronously; no context-budget countdowns; final summaries re-ground (outcome first, plain identifiers). Corrections: state plainly and briefly, then continue. |
-| **Claude Opus 5 (when in the driver seat)** | Apply the Opus 5 section of the same migration guide. Thinking stays on; control cost with `effort` (`medium`/`low` for routine driving). Disabling thinking on Opus 5 can turn tool calls into plain text and leak internal tags, and a Claude Code seat cannot set it anyway. |
-| **Codex / GPT-5.6 Terra** | Named alternate only for harness / infra (`epic:4707`) and the independent DevOps stream (`epic:5703`). The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits and escalate hard judgment to Sol. |
+| **Claude Fable 5.1 (when in the driver seat)** | Apply the fleet effort topology in `docs/best-practices/fleet-shared-doctrine.md` § Fable 5.1 `/effort`. Essentials: thinking is always on (never send `thinking: disabled`); default **`high`**, step to **`medium`/`low`** for routine (do not keep an Opus/`xhigh` habit); **`xhigh`** for hard multi-file / long autonomous turns **and** for curriculum/linguistic skills that pin `effort: xhigh` (do not step those down); **`max` almost never**. Long deliverables stay at **`high`** unless a measured quality gain says otherwise; at `xhigh`/`max` leave output-budget room. Quirks: high+ on simple tasks over-gathers (lower effort); low searches less (bump for retrieval); effort ≠ shorter replies. Keep test-before-report and progress-grounding (Opus 5 “delete verification scaffolding” does not apply); delegate independent subtasks asynchronously; no context-budget countdowns; final summaries re-ground (outcome first, plain identifiers). Corrections: state plainly and briefly, then continue. |
+| **Claude Opus 5 (when in the driver seat)** | Thinking stays on; control cost with `effort` (`medium`/`low` for routine driving). Disabling thinking on Opus 5 can turn tool calls into plain text and leak internal tags, and a Claude Code seat cannot set it anyway. |
+| **Codex / GPT-6 Sol** | Named alternate only for harness / infra (`epic:4707`) and the independent DevOps stream (`epic:5703`). The launcher injects the HydrationCapsuleV1 cold-start board and binds at most one exact fresh CLI rollover; stop on any SessionStart setup error. Codex has no Monitor-equivalent watcher, so use bounded foreground waits and escalate hard judgment to Sol. |
 | **Cursor (Auto / `grok-4.7` pin)** | Launched via `./start-cursor-driver.sh --epic <epic>` (#6956). Catalog seat stays Auto; launcher/registry default pin is `grok-4.7` (#8464). Use `composer-2.5` when Moonshot identity must be frozen. Driver-of-record requires attested `resolved_model` (unattested Auto cannot be driver-of-record). **Concurrency 1:** this driver session **is** the Cursor lane — do **not** `delegate.py dispatch --agent cursor` from inside it (deadlock / quota contention). Runtime note: stream leases serialize one **driver** per epic stream (`already has live session`); `delegate.py` does **not** fail-closed against a live Cursor driver lease — capacity is a non-blocking hint only. GUI Cursor IDE remains human supervision, not a second driver protocol. **Anti-passive (Cursor):** this seat has repeatedly failed by stopping at "CF/CI pending" overnight, and by reporting worker status from memory. Binding: every turn that does not merge/hygiene a CLEAN gate must §2-epic-dispose the next issue or name a §2c code; a CLEAN/MERGEABLE PR with CF APPROVE must be merge-queued the same turn (no `--delete-branch` until MERGED). After every dispatch, arm `delegate.py wait` before the turn ends, and do not state a worker's status without `delegate.py status` in that turn. Session end without that closeout is a driver defect. |
 
 ---
 
 ## Escalate — do NOT decide these solo
 
-Route to the **operator + advisors (Fable, Astra)** — never resolve from the loop:
+Route to the **operator + advisors (Fable, Sol)** — never resolve from the loop:
 
 1. Any **architecture / layout / process** change.
 2. A **contested CF verdict** (reviewer and author disagree, or two reviewers split).

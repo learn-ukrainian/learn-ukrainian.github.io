@@ -229,7 +229,7 @@ review_scheduler:
 execution_routing:
   sol_advised_bounded:
     advisor:
-      model_id: gpt-6-astra
+      model_id: gpt-6-sol
       effort: high
       role: bounded_advisory_envelope
       output_fields:
@@ -276,13 +276,13 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: active
-    roles: [implementation, investigation, standard_review, critical_review, bounded_advisory_envelope, architecture, recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
+    roles: [implementation, investigation, architecture, recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: [native_codex, cursor]
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Operator 2026-09-22: advisory seat at high. GPT-6 Sol is the orchestrator
-      and advanced seat. GPT-6 Luna is the scouting and bounded-work seat.
+      Operator 2026-09-22: Removed from review/advisory seats; implementation workhorse
+      only (at low effort). GPT-6 Sol is the reviewer, advisor, and orchestrator at high.
       Astra remains the most capable model in the family.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
@@ -291,7 +291,7 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: active
-    roles: [orchestration, architecture, implementation, standard_review, critical_review, agentic_coding]
+    roles: [orchestration, architecture, implementation, standard_review, critical_review, agentic_coding, bounded_advisory_envelope]
     transports: [native_codex, cursor]
     strengths: [agentic_coding, demanding_reasoning, lower_cost_than_astra]
     weaknesses: [below_astra_on_the_hardest_tasks, not_independent_from_openai_authors]
@@ -1213,7 +1213,7 @@ formal_cf_defaults:
 review_ladders:
   # #5293 quality-first: never let a later rung improve quality tier.
   # critical keeps frontier_authority first (false APPROVED is expensive).
-  # high/medium/low: Astra medium → Sonnet → Flash / Grok / K3 / DS / pool.
+  # high/medium/low: Sol high → Sonnet → Flash / Grok / K3 / DS / pool.
   # Fable/advisory roles stay off routine PRs. glm-5.3 is catalogued for explicit
   # `--reviewer glm-5.3` only (z.ai retired 2026-09-03); never an automatic rung.
   critical:
@@ -1236,7 +1236,7 @@ review_ladders:
     - [pool]
     - [pool-xs, gemini-3.5-flash]
   high: &practical_first_code_review
-    # Routine CF order: Astra medium → Sonnet → Flash / Grok / K3…
+    # Routine CF order: Sol high → Sonnet → Flash / Grok / K3…
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
     - [claude-sonnet-5]

@@ -68,8 +68,10 @@ create a feature branch in the main checkout. Concrete dispatch:
     # (Omit --effort to use the agent's own CLI/config default.)
 
 The main checkout (wherever the user is working) stays untouched on
-`main`. After the PR merges, the worktree is cleaned up by the user
-or the next agent session:
+`main`. After the PR merges, the worktree is cleaned up via the reaper
+(`.venv/bin/python scripts/orchestration/reap_worktrees.py --apply --merged`),
+`merge_closeout` (`.venv/bin/python -m scripts.orchestration.merge_closeout <PR> --apply`),
+or manually:
 
     git worktree remove .worktrees/dispatch/<agent>/<task>
     git branch -d <agent>/<task>
@@ -105,7 +107,7 @@ Remove with (flat layout — back-compat for older worktrees):
 
 ## When YOU (not a delegated agent) need isolation
 
-Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is tracked in #4444-#4450.
+Same rule — use a worktree. Don't branch in the main checkout. You may start at the repository root and run `git status --short --branch` as a read-only preflight/orientation step, but do not implement there. Any implementation edit, branch work, commit, or PR must happen from a worktree unless the user explicitly authorizes an exception. This prose rule is a reminder/backstop; mechanical enforcement is shipped (closed/shipped; delegate preflight checks).
 
 Use the subtree layout:
 

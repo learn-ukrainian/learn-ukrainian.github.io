@@ -201,8 +201,7 @@ holder: Codex-main; a ROLE, not a hardcoded session/model — the roster owns re
 integration + final merge judgment). Only that role sweeps out-of-stream PRs, and only ones sat green
 (CI + review gate passed) idle for MORE THAN 1 HOUR. **To avoid a liveness gap** (a down role-holder
 stranding a green PR forever), this net MUST run as a **scheduled integration sweep** owned by the role
-— it must not depend on any interactive session being live. (Until that scheduled sweep is wired, the
-role-holder runs it at session start/end — see follow-up.) The accountable lead enqueues
+— it must not depend on any interactive session being live. The accountable lead enqueues
 in-stream PRs once current-head cross-family approval and green CI are verified;
 the merge queue is the primary landing path, and this net is a rare safety valve.
 
@@ -368,7 +367,7 @@ Every OPEN issue belongs to **exactly one stream epic**. The registry is
 `docs/WORKSTREAMS.md` § Streams). This is how orchestrators stay on track and schedule:
 
 - **Cold start**: your queue = YOUR stream's epic checklist/sub-issues, not the global
-  issue list. Check `/api/issues/streams` (or the session-setup 11b warning) for drift.
+  issue list. Check `/api/issues/streams` (or the `session-setup.sh` stream warning) for drift.
 - **Creating an issue**: link it to its stream epic AT CREATION — native sub-issue
   (preferred) or a `#N` checklist line in the epic body. An unlinked issue is an ORPHAN
   and gets flagged at every agent's cold start until adopted.
@@ -396,8 +395,10 @@ Every task follows this workflow. No exceptions for non-trivial changes.
    canonical #5302 receipt path/digest, target-input fingerprint, and exact
    reviewed SHA; never copy a `behavior_proof_status` string.
 6. **Pass the independent review and CI gates** — ONE cross-family review round:
-   reviewer outside the author model family, verdict + findings posted on the PR,
-   bound to the current head. Use a qualified, toolful native review lane; the
+   reviewer outside the author model family, verdict + findings posted as a PR
+   comment bound to the head SHA (all agents share one GitHub identity, so
+   `gh pr review --approve` on our own PRs is rejected; format stays as today until
+   the recorder tool lands). Use a qualified, toolful native review lane; the
    shielded formal path remains retired, including for high-risk code. Non-blocking
    findings may remain documented. If a fix changes the head, obtain approval and
    green CI for that new head before enqueue. Do not fold unreviewed edits into merge.

@@ -166,13 +166,13 @@ first. Then query CodexBar as the local quota/config/health probe:
 Use the live model catalog and rules as authority. Standing task-fit defaults:
 
 - Ukrainian pedagogy, CEFR, authoring, or content review uses only `agy`,
-  `codex`, `claude`, or `grok-4.6`, with AGY
+  `codex`, `claude`, or `grok-4.7`, with AGY
   `gemini-3.8-flash-high` first for current Ukrainian teaching voice and
   `gemini-3.1-pro-high` for deep work when live policy permits. Require
   `sources`/VESUM evidence for linguistic claims.
 - Routine Codex implementation uses Terra; Luna or Spark may perform bounded
   mechanical work but are never sole consequential authority.
-- Grok may own sustained daily driving where the roster permits. Fable and Astra
+- Grok may own sustained daily driving where the roster permits. Fable and Sol
   are summoned for short judgment, not polling.
 - GLM-5.3/z.ai is eligible for public, non-sensitive code/infra, bug/security,
   and cross-file analysis only. It is local-invocation-only, sends prompt data

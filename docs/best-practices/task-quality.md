@@ -81,7 +81,7 @@ other failures.
 | **Disk** | Free disk + `.worktrees` headroom for the actual task (incl. build/test trees); **disk wins over quota** |
 | **Capacity check** | Live usage + pick (`python -m scripts.fleet.usage show`, `python -m scripts.fleet.capacity_pick`) — prove numbers now |
 | **Worker headroom** | When terminal goal ∈ {`merge`,`deploy`,`certify`}: ≥2 **non-orchestrator** agents with real capacity, and each required role named (implement vs independent CF — headcount ≠ independence). For `decision-only`/`audit-only`, keep applicable advisor + independent-review rules without forcing unused CF seats |
-| **Fleet usable** | Target epic/stream not lease-wedged (`fleet_comms plane-status`); WIP / active dispatches OK (`/api/delegate/active`); no conflicting driver claim that blocks this start |
+| **Fleet usable** | Target epic/stream not lease-wedged (`.venv/bin/python -m scripts.fleet_comms plane-status`); WIP / active dispatches OK (`/api/delegate/active`); no conflicting driver claim that blocks this start |
 | **Env / secrets** | Only if required: named credentials/paths present (never print secrets) |
 | **Research / routing** | Role · task-family · track · owned paths classified when dispatching (`--research-*` or deliberately generic); `ROUTING_CARD_V1` when the lane requires it |
 
@@ -117,7 +117,7 @@ Record pass/fail with timestamp + receipt for each command above.
 ## Task definition (while open)
 
 Keep the DoR fields current. Material scope change → re-DoR + comment.
-Mission-shrinking non-goals need operator/advisor approval (Fable / Astra;
+Mission-shrinking non-goals need operator/advisor approval (Fable / Sol;
 Kimi may consult on non-Ukrainian design/coding only).
 Re-run **dispatch preflight immediately before each dispatch wave and before
 each CF request** (not only when conditions “might” have moved).

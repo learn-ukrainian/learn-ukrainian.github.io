@@ -662,7 +662,7 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     route = catalog["execution_routing"]["sol_advised_bounded"]
 
     advisor = route["advisor"]
-    assert advisor["model_id"] == "gpt-6-astra"
+    assert advisor["model_id"] == "gpt-6-sol"
     assert advisor["effort"] == "high"
     assert "bounded_advisory_envelope" in catalog["models"][advisor["model_id"]]["roles"]
     assert advisor["output_fields"] == [
@@ -810,9 +810,11 @@ def test_catalog_rejects_malformed_sol_advised_route(
 def test_astra_role_pins_match_runtime_and_reviewer_invocation():
     catalog = load_model_catalog()
     astra = catalog["models"]["gpt-6-astra"]
+    sol = catalog["models"]["gpt-6-sol"]
     assert astra["family"] == "openai"
     assert astra["tier"] == "frontier_authority"
-    assert {"implementation", "standard_review", "critical_review", "bounded_advisory_envelope"} <= set(astra["roles"])
+    assert {"implementation"} <= set(astra["roles"])
+    assert {"implementation", "standard_review", "critical_review", "bounded_advisory_envelope"} <= set(sol["roles"])
     assert AGENTS["codex"]["default_model"] == "gpt-6-sol"
     assert AGENTS["codex"]["default_effort"] == "high"
     assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6-sol --effort high")

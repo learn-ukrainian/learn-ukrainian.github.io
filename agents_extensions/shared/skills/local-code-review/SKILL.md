@@ -19,8 +19,6 @@ semantics, scope freezing, non-mutating checks, cross-family reviewer
 resolution, finding adjudication, and separate behavior proof. A clean
 working tree never substitutes for reviewing a requested commit or PR.
 
-For inline PR-comment posting, use `/code-review:code-review`.
-
 ## Execute
 
 Read and follow [`local-code-review-checklist.md`](local-code-review-checklist.md)

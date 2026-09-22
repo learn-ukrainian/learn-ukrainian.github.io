@@ -3,7 +3,7 @@
 > **Scope**: the closeout gate for a change already made — freezes scope,
 > resolves the exact target, runs a non-mutating review, resolves a
 > cross-family reviewer, and requires separate behavior proof for
-> user-visible changes. For PR-comment posting, use `/code-review:code-review`.
+> user-visible changes.
 
 All state for one review lives in a single JSON file so every step below
 can be a separate CLI call. Pick a path once per review and reuse it:

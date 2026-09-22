@@ -98,7 +98,7 @@ non-skippable:
   owns durable messages/jobs in `authority` mode; legacy stores are read-only
   migration/projection inputs. Session handoff files still carry continuity,
   not competing message or lease authority. Preserve existing stream ownership;
-  do not create legacy message/job writes or another control plane. Use `plane-status`;
+  do not create legacy message/job writes or another control plane. Use `.venv/bin/python -m scripts.fleet_comms plane-status`;
   load `drive-epic` only when explicitly assigned to drive an epic/track. Codex may lead an explicitly assigned, authorized
   stream as a catalogued alternate; it must never co-own a live same-stream
   lease. Otherwise its role is coding or review. Do not change plane, retention,
