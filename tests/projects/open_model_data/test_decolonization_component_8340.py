@@ -28,6 +28,7 @@ if str(REPO_ROOT) not in sys.path:
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     VESUM_DB_PATH,
     LinguisticNormalizer,
+    _resolve_db_path,
 )
 from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
 
@@ -539,3 +540,141 @@ def test_dataset_acceptance_with_verified_signoff():
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
     assert "OVERALL STATUS: ACCEPTED" in proc.stdout
     assert "signoff_verified: True" in proc.stdout
+
+
+def test_cf_r9_remediations_regression(decolonization_data):
+    """Verify remediation of all 3 CF-R9 blockers.
+
+    1. Blocker 1: Authentic authorities and establishing passages for lexical calques (decol_lex_001/002/003).
+    2. Blocker 2: Non-bypassable live SQL execution on s_cur and v_cur in query_source_evidence.
+    3. Blocker 3: Reviewer whitelist enforcement via ACCREDITED_INDEPENDENT_REVIEWERS and signoff cross-reference.
+    """
+    import sqlite3
+
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        ACCREDITED_INDEPENDENT_REVIEWERS,
+        make_reviewer_confirmation,
+        query_source_evidence,
+    )
+    from scripts.projects.open_model_data.decolonization_cases_data import (
+        LEXICAL_CALQUES,
+    )
+    from scripts.projects.open_model_data.decolonization_language_reviews import INDEPENDENT_LANGUAGE_REVIEWS
+
+    cases = decolonization_data["cases"]
+
+    # ── Blocker 1: Passages establish corrections with authentic modern authorities ──
+    lex_001 = next(c for c in cases if c["case_id"] == "decol_lex_001")
+    ev_001 = lex_001["reviewer_confirmation"]["source_evidence"]
+    assert "Пономарів" in lex_001["authority"]
+    assert "с. 42" in ev_001["locus"]
+    assert "лікар" in ev_001["supporting_passage"].lower()
+    assert "доктор" in ev_001["supporting_passage"].lower()
+    assert "стаття 99" not in ev_001["locus"]
+
+    lex_002 = next(c for c in cases if c["case_id"] == "decol_lex_002")
+    ev_002 = lex_002["reviewer_confirmation"]["source_evidence"]
+    assert "СУМ-20" in lex_002["authority"]
+    assert "Капелюх" in ev_002["locus"]
+    assert "капелюх" in ev_002["supporting_passage"].lower()
+    assert "шляпа" in ev_002["supporting_passage"].lower()
+    assert "стаття 59" not in ev_002["locus"]
+
+    lex_003 = next(c for c in cases if c["case_id"] == "decol_lex_003")
+    ev_003 = lex_003["reviewer_confirmation"]["source_evidence"]
+    assert "Пономарів" in lex_003["authority"]
+    assert "с. 51" in ev_003["locus"]
+    assert "завдання" in ev_003["supporting_passage"].lower()
+    assert "задача" in ev_003["supporting_passage"].lower()
+    assert "стаття 35" not in ev_003["locus"]
+
+    # ── Blocker 2: Live SQL execution on s_cur and v_cur (RaisingCursor fails closed) ──
+    class RaisingCursor:
+        def execute(self, *args, **kwargs):
+            raise RuntimeError("Live SQL query executed: simulated cursor failure")
+        def fetchone(self):
+            raise RuntimeError("Live SQL query executed: simulated cursor failure")
+        def fetchall(self):
+            raise RuntimeError("Live SQL query executed: simulated cursor failure")
+
+    raising_cur = RaisingCursor()
+
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    sources_db = _resolve_db_path("sources.db", REPO_ROOT)
+    v_conn = sqlite3.connect(f"file:{vesum_db}?mode=ro", uri=True)
+    s_conn = sqlite3.connect(f"file:{sources_db}?mode=ro", uri=True)
+    real_v_cur = v_conn.cursor()
+    real_s_cur = s_conn.cursor()
+
+    # decol_lex_001 with raising v_cur
+    with pytest.raises(RuntimeError, match="Live SQL query executed"):
+        query_source_evidence(
+            case_id="decol_lex_001",
+            term="лікар",
+            copy="доктор",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=real_s_cur,
+            v_cur=raising_cur,
+            style_guide_cache=[],
+        )
+
+    # decol_lex_001 with raising s_cur
+    with pytest.raises(RuntimeError, match="Live SQL query executed"):
+        query_source_evidence(
+            case_id="decol_lex_001",
+            term="лікар",
+            copy="доктор",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=raising_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # decol_lex_012 (UA-GEC) with raising v_cur
+    with pytest.raises(RuntimeError, match="Live SQL query executed"):
+        query_source_evidence(
+            case_id="decol_lex_012",
+            term="гусак",
+            copy="гусь",
+            auth="UA-GEC (Syvokon et al., 2023)",
+            cat_name="calque_lexical",
+            s_cur=real_s_cur,
+            v_cur=raising_cur,
+            style_guide_cache=[],
+        )
+
+    # decol_lex_012 (UA-GEC) with raising s_cur
+    with pytest.raises(RuntimeError, match="Live SQL query executed"):
+        query_source_evidence(
+            case_id="decol_lex_012",
+            term="гусак",
+            copy="гусь",
+            auth="UA-GEC (Syvokon et al., 2023)",
+            cat_name="calque_lexical",
+            s_cur=raising_cur,
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # make_reviewer_confirmation with raising v_cur fails closed
+    lex_001_item = next(c for c in LEXICAL_CALQUES if c["case_id"] == "decol_lex_001")
+    with pytest.raises(RuntimeError, match="Live SQL query executed"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", raising_cur, real_s_cur, [])
+
+    # make_reviewer_confirmation with raising s_cur fails closed
+    with pytest.raises(RuntimeError, match="Live SQL query executed"):
+        make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, raising_cur, [])
+
+    # ── Blocker 3: Reviewer whitelist enforcement (ACCREDITED_INDEPENDENT_REVIEWERS) ──
+    assert "prof_karpenko_ling_ua" in ACCREDITED_INDEPENDENT_REVIEWERS
+    assert "UNVERIFIED_REVIEWER_999" not in ACCREDITED_INDEPENDENT_REVIEWERS
+
+    orig_rev = INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"]
+    try:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"] = "UNVERIFIED_REVIEWER_999"
+        with pytest.raises(ValueError, match=r"is not in ACCREDITED_INDEPENDENT_REVIEWERS whitelist"):
+            make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
+    finally:
+        INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"] = orig_rev

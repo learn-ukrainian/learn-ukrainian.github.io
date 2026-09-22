@@ -18,11 +18,13 @@
   "section": "Реєстр літературної мови",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "866917e91a7012edb279a48e947cee558411a4c25b21e66ed9f2018adab3df6c",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_057: вислів «робити вигляд» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_057: нормативна українська форма «робити вигляд» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (СУМ-20).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_057.review.json"
 }

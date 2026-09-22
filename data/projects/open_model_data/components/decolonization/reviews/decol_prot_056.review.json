@@ -18,11 +18,13 @@
   "section": "Зауваження до низки дієслів",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "ea5b30fb56539cd87434e71bea4ebcdae1a7d33e387e699f99976fb59cb1a8df",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_056: вислів «ставити запитання» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_056: нормативна українська форма «ставити запитання» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_056.review.json"
 }

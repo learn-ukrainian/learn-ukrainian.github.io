@@ -17,11 +17,13 @@
   "section": "Граматичні та лексичні норми",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "ea993f24bffd0439948716ebe6657d456aeef28ec144ba47c9973203bdcf79d5",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_060: вислів «набувати чинності» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Катерина Городенська «Чи правильне слововживання?»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_060: нормативна українська форма «набувати чинності» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Катерина Городенська «Чи правильне слововживання?»).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_060.review.json"
 }

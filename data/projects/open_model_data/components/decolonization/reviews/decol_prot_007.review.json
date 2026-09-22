@@ -17,11 +17,13 @@
   "section": "Прийменники",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "6558f7a72162882afb11204f152d8255e105b01fad7a1471d4b8d2c3f0a68c1f",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_007: вислів «завдяки зусиллям» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_007: нормативна українська форма «завдяки зусиллям» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_007.review.json"
 }

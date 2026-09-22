@@ -18,11 +18,13 @@
   "section": "Реєстр літературної мови",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "2a309cc05db75254f46ef11cc060114ae208ad5fe027ceee9145bf29865e81c7",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_061: вислів «у даному разі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_061: нормативна українська форма «у даному разі» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (СУМ-20).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_061.review.json"
 }

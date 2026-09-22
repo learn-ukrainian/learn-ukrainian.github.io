@@ -18,11 +18,13 @@
   "section": "Зауваження до низки дієслів",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "f54daca2494285cc35748b1e4eb862deeaf5815c4b7aae45f6c4591f94a17150",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_010: вислів «взяти до уваги» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_010: нормативна українська форма «взяти до уваги» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_010.review.json"
 }

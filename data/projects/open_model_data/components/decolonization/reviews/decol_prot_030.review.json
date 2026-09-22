@@ -17,11 +17,13 @@
   "section": "Прислівникові сполучення",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "1e22145d43130e3e919874ad575927b978e04cdebcab99c3b8e24bcbeda7923e",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_030: вислів «тим часом» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_030: нормативна українська форма «тим часом» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Український правопис (2019)).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_030.review.json"
 }

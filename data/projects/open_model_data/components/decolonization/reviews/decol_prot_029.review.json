@@ -17,11 +17,13 @@
   "section": "Вставні слова",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "e93a10da741b0b0d61b0f8cc29d3ef7b9e4793c66ddb5a4a4b189abe5bcf6f88",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_029: вислів «мабуть» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_029: нормативна українська форма «мабуть» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Український правопис (2019)).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_029.review.json"
 }

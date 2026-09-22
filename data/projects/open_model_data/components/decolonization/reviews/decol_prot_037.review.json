@@ -17,11 +17,13 @@
   "section": "Реєстр літературної мови",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "12aa9de3f380f0cf386e5e0a1db1f42b5c129159966789e38bf271c0cb1f147a",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_037: вислів «завважити» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_037: нормативна українська форма «завважити» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (СУМ-20).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_037.review.json"
 }

@@ -18,10 +18,12 @@
   "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
-  "content_sha256": "7b48e9f55cb805cae072b43dea572d27555cce2b99fee8d21e3f31a4fe173635",
+  "content_sha256": "6736dd1e57a124177463e60bac0ef7268937f07930ba552e87bb9ce51f1a0d8a",
   "linguistic_rationale": "Засвідчено для decol_syn_014: форма «таким шляхом» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «таким способом» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_014.review.json"

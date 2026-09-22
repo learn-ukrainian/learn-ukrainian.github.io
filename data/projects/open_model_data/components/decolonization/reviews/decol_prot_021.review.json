@@ -17,11 +17,13 @@
   "section": "Прислівники та вставні слова",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "7a96d103b06c34c027380eaf1559d84d49dce676224b5411d1cff266ecc61a61",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_021: вислів «на щастя» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_021: нормативна українська форма «на щастя» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Український правопис (2019)).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_021.review.json"
 }

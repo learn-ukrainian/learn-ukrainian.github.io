@@ -17,11 +17,13 @@
   "section": "Лексика і фразеологія",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "fec975e1d273ec1fe8b145312e8f187e4a10a9d62fc86ec327f778f1051c9b46",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_068: вислів «віддати належне» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_068: нормативна українська форма «віддати належне» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Олександр Пономарів «Культура слова»).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_068.review.json"
 }

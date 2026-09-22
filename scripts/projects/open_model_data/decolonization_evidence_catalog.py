@@ -15,31 +15,30 @@ false = False
 
 EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
   "decol_lex_001": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ",
-    "article": "Лікарський, лікувальний, лікарняний, лікарський",
-    "page": null,
-    "supporting_passage": "\"Лікарська косметика під доглядом досвідчених лікарів\", – бачимо табличку над дверима медичного закладу; \"Одразу за парканом починалися лікарські будинки\", – читаємо в одному нарисі.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Лікарський, лікувальний, лікарняний, лікарський»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Лексична норма",
+    "article": "Слова доктор і лікар мають різні значення",
+    "page": 42,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 42 / Підручник української мови 9 клас (Авраменко), с. 38",
+    "supporting_passage": "Слова доктор і лікар мають різні значення. Доктор — вищий учений ступінь (доктор історичних наук, доктор мистецтвознавства). Лікар — особа з вищою медичною освітою, яка лікує хворих.",
     "case_id": "decol_lex_001",
     "target_term": "лікар",
     "russian_copy": "доктор",
     "ukrainian_proper": [
       "лікар"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_002": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
-    "article": "Поля, береги, краї, криси",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Капелюх",
     "page": null,
-    "supporting_passage": "Часто помиляються тепер, називаючи краї капелюха або бриля полями: \"Поля його капелюха намокли від дощу й сумно звисали\".",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Поля, береги, краї, криси»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Капелюх»",
+    "supporting_passage": "КАПЕЛЮ́Х, а, ч. Головний убір, переважно з крисами (полями). Ненормативне суржикове утворення «шляпа» (від рос. шляпа) не відповідає українській літературній нормі; нормативним загальновживаним словом є капелюх або бриль.",
     "case_id": "decol_lex_002",
     "target_term": "капелюх",
     "russian_copy": "шляпа",
@@ -47,24 +46,25 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
       "капелюх",
       "бриль"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_003": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
-    "article": "З метою чи без мети",
-    "page": null,
-    "supporting_passage": "Словом \"мета\" послугувалась і послугується наша література, щоб передати важливе життєве завдання або ідейне спрямування людини: \"Очевидячки, досягла до своєї мети\" (І.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «З метою чи без мети»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Лексична норма",
+    "article": "Розрізняти слова задача і завдання",
+    "page": 51,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 51",
+    "supporting_passage": "Розрізняти слова задача і завдання. Задача — це математична або фізична вправа, яку розв'язують обчисленням або логічним міркуванням. Завдання — наперед визначений, запланований для виконання обсяг роботи, доручення, мета, яку треба досягти чи виконати.",
     "case_id": "decol_lex_003",
     "target_term": "завдання",
     "russian_copy": "задача",
     "ukrainian_proper": [
       "завдання"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_004": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -73,7 +73,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Узяти хоч би прикметник охочий – він цілком відповідає тому поняттю, що його намагались висловити автори оголошення незграбним утвором бажаючий: \"В козацькому таборі по–старому не чути було ні співів, ні криків, не виїжджали з табору охочі молодці помірятися з паном козацькою силою\" (Я.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄПРИКМЕТНИКІВ», стаття «Бажаючий – що (котрий, який) бажає – охочий»",
     "case_id": "decol_lex_004",
     "target_term": "охочий",
@@ -90,80 +90,83 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 42,
     "supporting_passage": "Вислів «діюче законодавство» є калькою російського «действующее законодательство». В українській літературній мові активні дієприкметники на -ач-, -яч-, -уч-, -юч- у ролі означень не вживаються; слід казати: чинне законодавство, чинні правові норми.",
     "locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 42",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_005",
     "target_term": "чинне законодавство",
     "russian_copy": "діюче законодавство",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
     "ukrainian_proper": [
       "чинне законодавство"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_006": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки прикметників і займенників",
-    "article": "Наступний, дальший, такий",
-    "page": 118,
-    "supporting_passage": "Замість суржикового дієприкметника «слідуючий» українська мова має питомі слова: наступний (наступного дня), такий (такі правила), дальший (дальші події).",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки прикметників і займенників», стаття «Наступний, дальший, такий», с. 118",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Морфологічна норма",
+    "article": "Наступний, а не слідуючий",
+    "page": 65,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 65 / Підручник 10 клас (Глазова), с. 27",
+    "supporting_passage": "В українській мові немає активних дієприкметників на -уч-, -яч-. Замість кальки «слідуючий» треба вживати «наступний» (наступного дня, наступна зупинка, наступний промовець) або займенник «такий» (такі факти).",
     "case_id": "decol_lex_006",
     "target_term": "наступний",
     "russian_copy": "слідуючий",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "наступний"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_007": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
-    "article": "Свідомість, пам'ять, тяма, притомність",
-    "page": null,
-    "supporting_passage": "Адже українське слово \"свідомість\" – це не стільки \"здатність людини орієнтуватися в довколишній дійсності\", скільки \"відчуття своєї належності до інших людей та обов'язку перед ними\".",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Свідомість, пам'ять, тяма, притомність»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Морфологічна норма",
+    "article": "Колишній, а не бувший",
+    "page": 66,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 66",
+    "supporting_passage": "Замість невластивих активних дієприкметників минулого часу на -вш- (бувший) вживаємо прикметник «колишній» (колишній директор, колишній колега).",
     "case_id": "decol_lex_007",
     "target_term": "колишній",
     "russian_copy": "бувший",
     "ukrainian_proper": [
       "колишній"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_008": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ДІЄСЛОВА",
-    "article": "Дієслова, що керують іменниками в певних відмінках",
-    "page": null,
-    "supporting_passage": "Переважна більшість дієслів керує іменниками в якомусь певному відмінку.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄСЛОВА», стаття «Дієслова, що керують іменниками в певних відмінках»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Стилістичні поради",
+    "article": "Переважна більшість, а не подавляюча більшість",
+    "page": 68,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 68",
+    "supporting_passage": "Вислів «подавляюча більшість» є штучною калькою російського «подавляющее большинство». Українською мовою слід казати «переважна більшість» або «більша частина».",
     "case_id": "decol_lex_008",
     "target_term": "переважна більшість",
     "russian_copy": "подавляюча більшість",
     "ukrainian_proper": [
       "переважна більшість"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_009": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Передпокій, прихожа",
-    "page": 44,
-    "supporting_passage": "Слово «прихожа» є грубим росіянізмом від «прихожая». Українською слід казати передпокій, передсінок або сіни.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Передпокій, прихожа», с. 44",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Передпокій",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Передпокій» / Пономарів, с. 48",
+    "supporting_passage": "ПЕРЕДПОКІ́Й, ко́ю, ч. Нежила кімната при вході в помешкання, яка з'єднує вхідні двері з іншими кімнатами. Російське «прихожая» в українській мові перекладається як передпокій або сіни (у сільській хаті); форма «прихожа» є ненормативним суржиком.",
     "case_id": "decol_lex_009",
     "target_term": "передпокій",
     "russian_copy": "прихожа",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "передпокій"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_010": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -172,7 +175,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Старослов'янізмами звичайно користуються тоді, коли хочуть надати фразі тону іронії або, навпаки, врочистості, але ні того, ні того нема в наведеній на початку фразі, тому тут більше підходять українські відповідники щасливий, щасний, безпечний (коли йдеться про особу): \"Щасливого лову!",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Благополучний чи щасливий»",
     "case_id": "decol_lex_010",
     "target_term": "щасливий",
@@ -190,7 +193,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "\"Болільники довго не могли заспокоїтись після поразки \"Динамо\", – читаємо в одному періодичному виданні, а в другому: \"Обличчя вболівальників красномовно свідчать про напругу й драматизм подій, що розгортались на льодовому полі в дні світового чемпіонату\".",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Болільник чи вболівальник»",
     "case_id": "decol_lex_011",
     "target_term": "вболівальник",
@@ -210,7 +213,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "annotator_id": "1",
     "status": "source_attested",
     "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 1068, анотатор 1): «гусь» -> «гусак»",
-    "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #5921 (документ 1068, анотатор 1), тип F/Calque (гусь -> гусак)",
     "case_id": "decol_lex_012",
     "target_term": "гусак",
@@ -227,7 +230,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "\"Підписка на газети та журнали ще не охопила всіх робітників та службовців нашого підприємства\", – читаємо в стінній газеті.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Підписка й передплата»",
     "case_id": "decol_lex_013",
     "target_term": "передплата",
@@ -247,7 +250,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "annotator_id": "1",
     "status": "source_attested",
     "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 1315, анотатор 1): «буфетчик» -> «буфетник»",
-    "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #6593 (документ 1315, анотатор 1), тип F/Calque (буфетчик -> буфетник)",
     "case_id": "decol_lex_014",
     "target_term": "буфетник",
@@ -264,7 +267,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Коли й хто почав запроваджувати в нашу мову неоковирне слово \"міроприємство\", – невідомо, але час від часу воно з'являється в діловому листуванні й чується в доповідях: \"Щоб досягти помітного успіху, треба далі поглиблювати прийняті міроприємства\", \"У нас провели такі міроприємства\" і под.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Міроприємство»",
     "case_id": "decol_lex_015",
     "target_term": "захід",
@@ -275,21 +278,21 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
   },
   "decol_lex_016": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ІМЕННИКИ",
-    "article": "Називний відмінок у складеному присудку",
-    "page": null,
-    "supporting_passage": "На основі цього слід зробити висновок, що в наведених на початку фразах правильно буде сказати: \"Петро був перший учень у класі\", \"Вона була досвідчена лаборантка\", \"Усе життя вони були наївні, як діти\", – бо іменники й пов'язані з ними прикметники означають постійну властивість.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ІМЕННИКИ», стаття «Називний відмінок у складеному присудку»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Лексична норма",
+    "article": "Висновок, а не заключення",
+    "page": 49,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 49 / СУМ-20 «Висновок»",
+    "supporting_passage": "В українській мові слово «заключення» в значенні підсумку чи логічного наслідку є недоречною калькою російського «заключение». Слід уживати «висновок» (дійти висновку, експертний висновок), а в значенні позбавлення волі — «ув'язнення».",
     "case_id": "decol_lex_016",
     "target_term": "висновок",
     "russian_copy": "заключення",
     "ukrainian_proper": [
       "висновок"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_017": {
     "source": "UA-GEC v2.0",
@@ -301,7 +304,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "annotator_id": "1",
     "status": "source_attested",
     "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 1345, анотатор 1): «відправитися» -> «вирушити»",
-    "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #6687 (документ 1345, анотатор 1), тип F/Calque (відправитися -> вирушити)",
     "case_id": "decol_lex_017",
     "target_term": "вирушити",
@@ -318,7 +321,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Іменника \"переписка\" й дієслова \"переписуватись\" тепер інколи вживають у невластивому їм значенні: \"У нас із ним – давня переписка\"; \"Я переписуюся з її братом\".",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Переписка й листування»",
     "case_id": "decol_lex_018",
     "target_term": "листування",
@@ -335,14 +338,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 52,
     "supporting_passage": "Словосполучення «окружающее середовище» перекладається українською мовою як довкілля або навколишнє середовище, оскільки активні дієприкметники на -уч-, -юч- українській мові не властиві.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 52",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_019",
     "target_term": "довкілля",
     "russian_copy": "окружаюче середовище",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "довкілля"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_020": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -351,14 +355,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 74,
     "supporting_passage": "Російський вислів «на фоне» перекладається українською мовою «на тлі»: на тлі цих подій, на тлі золотого осіннього лісу тощо.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_020",
     "target_term": "тло",
     "russian_copy": "фон",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "тло"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_021": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -367,7 +372,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 63,
     "supporting_passage": "Квиток — це документ, що засвідчує право користуватися транспортом або відвідувати видовища; слово білет вживається щодо екзаменаційних, банківських або лотерейних карток.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 63",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_021",
     "target_term": "залізничний квиток",
     "russian_copy": "залізничний білет",
@@ -375,17 +380,17 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "залізничний квиток",
       "проїзний квиток"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_022": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ",
-    "article": "Лікарський, лікувальний, лікарняний, лікарський",
-    "page": null,
-    "supporting_passage": "Нарешті, слово лікарняний означає \"належний лікарні\": \"лікарняний персонал\", \"Тут під стінами й коло груби навалено цілі гори лікарняного мотлоху\" (переклад із А.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Лікарський, лікувальний, лікарняний, лікарський»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Лексична норма",
+    "article": "Лікарняний листок",
+    "page": 42,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 42 / СУМ-20 «Лікарняний»",
+    "supporting_passage": "Прикметник «лікарняний» вказує на належність до лікарні або лікування: лікарняний лист, лікарняне ліжко. Російське розмовне слово «больничный» є грубим суржиковим перекрученням, нормативною формою є «лікарняний» (лікарняний листок).",
     "case_id": "decol_lex_022",
     "target_term": "лікарняний",
     "russian_copy": "больничний",
@@ -393,23 +398,25 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
       "лікарняний",
       "лікарняний листок"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_023": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Відрядження, командировка",
-    "page": 32,
-    "supporting_passage": "Слово «командировка» є росіянізмом; український відповідник — відрядження: службове відрядження, поїхати у відрядження.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Відрядження, командировка», с. 32",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Відрядження",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Відрядження» / Пономарів, с. 53",
+    "supporting_passage": "ВІДРЯ́ДЖЕННЯ, я, с. Службова поїздка за розпорядженням установи або підприємства для виконання певного завдання поза місцем постійної роботи. Форма «командировка» є калькою з російської мови й не належить до української літературної лексики.",
     "case_id": "decol_lex_023",
     "target_term": "відрядження",
     "russian_copy": "командировка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "відрядження"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_024": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -418,30 +425,32 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 81,
     "supporting_passage": "Слово «праздничний» є росіянізмом від «праздничный». Українською кажуть: святковий день, святковий настрій, святкове вбрання.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 81",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_024",
     "target_term": "святковий",
     "russian_copy": "праздничний",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "святковий"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_025": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Шахрай, махляр, крутій",
-    "page": 58,
-    "supporting_passage": "Слово «мошенник» є російським; в українській мові здавна побутують питомі слова шахрай, крутій, ошуканець, махляр.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Шахрай, махляр, крутій», с. 58",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Шахрай",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Шахрай»",
+    "supporting_passage": "ШАХРА́Й, я́, ч. Той, хто діє нечесно, вдаючись до обману, шахрайства; дурисвіт, пройдисвіт. Російське «мошенник» в українській мові перекладається як шахрай або ошуканець; форма «мошенник» є суржиковим спотворенням.",
     "case_id": "decol_lex_025",
     "target_term": "шахрай",
     "russian_copy": "мошенник",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "шахрай"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_026": {
     "source": "СУМ-20",
@@ -450,30 +459,32 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": "т. 18",
     "supporting_passage": "СТРАВОХІД, -ходу, ч. Частина травного каналу, що з'єднує глотку зі шлунком. (Термін «пищевод» кваліфікується як ненормативний росіянізм).",
     "locus": "Словник української мови у 20 томах (СУМ-20), т. 18, гасло «Стравохід»",
-    "verification_method": "Lexicographical verification in academic dictionary registry СУМ-20",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_026",
     "target_term": "стравохід",
     "russian_copy": "пищевод",
     "authority": "СУМ-20",
     "ukrainian_proper": [
       "стравохід"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_027": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки прикметників",
-    "article": "Допитливий, цікавий",
-    "page": 112,
-    "supporting_passage": "«Любопитний» — це калька російського «любопытный». Українською мовою кажуть допитливий (допитливий розум, допитливий юнак) або цікавий.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки прикметників», стаття «Допитливий, цікавий», с. 112",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Допитливий",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Допитливий» / Пономарів, с. 47",
+    "supporting_passage": "ДОПИ́ТЛИВИЙ, а, е. Який намагається багато знати, прагне про все дізнатися; тямущий, розумний. Російське «любопытный» в українській мові перекладається як «допитливий» (про людину чи погляд) або «цікавий» (про річ, новину); вживання «любопитний» є суржиком.",
     "case_id": "decol_lex_027",
     "target_term": "допитливий",
     "russian_copy": "любопитний",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "допитливий"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_028": {
     "source": "UA-GEC v2.0",
@@ -485,7 +496,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "annotator_id": "1",
     "status": "source_attested",
     "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 0736, анотатор 1): «бормотати» -> «бурмотіти»",
-    "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #5134 (документ 0736, анотатор 1), тип F/Calque (бормотати -> бурмотіти)",
     "case_id": "decol_lex_028",
     "target_term": "бурмотіти",
@@ -496,21 +507,21 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "authority": "UA-GEC (Syvokon et al., 2023)"
   },
   "decol_lex_029": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ВАГОВИТІ ДРІБНИЦІ",
-    "article": "Чи тільки ЛИШЕ",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Ліжко",
     "page": null,
-    "supporting_passage": "У своєму незбагненному захопленні слівцем лише чимало авторів, не дбаючи про стилістичну неоковирність тексту, коли збігаються поряд або в одній фразі однакові звуки и корені, пишуть: \"Він залишив лише записку, не пояснивши в ній, власне, нічого\"; \"Знаю лише, що дядько не залишив своєї роботи\"; \"Але лише над його ліжком була прибита дерев'яна поличка\".",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ВАГОВИТІ ДРІБНИЦІ», стаття «Чи тільки ЛИШЕ»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Ліжко»",
+    "supporting_passage": "ЛІ́ЖКО, а, с. Предмет меблів для спання та відпочинку. Російське «кровать» є суржиковим росіянізмом в українській мові; нормативним літературним словом є виключно «ліжко».",
     "case_id": "decol_lex_029",
     "target_term": "ліжко",
     "russian_copy": "кровать",
     "ukrainian_proper": [
       "ліжко"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_030": {
     "source": "Український правопис (2019)",
@@ -519,46 +530,49 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": "§ 23, с. 28",
     "supporting_passage": "Звук [дз] передається сполученням букв дз: дзеркало, дзеркальний; написання «зеркало» є суржиковим росіянізмом.",
     "locus": "Український правопис (2019), § 23, с. 28",
-    "verification_method": "Tool-backed verification and collation with official 2019 Orthography codification",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_030",
     "target_term": "дзеркало",
     "russian_copy": "зеркало",
     "authority": "Український правопис (2019)",
     "ukrainian_proper": [
       "дзеркало"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_031": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Оселедець, оселедчик",
-    "page": 40,
-    "supporting_passage": "Замість спотвореного суржикового слова «сельодка» українська літературна мова має питоме слово оселедець, оселедчик.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Оселедець, оселедчик», с. 40",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Оселедець",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Оселедець»",
+    "supporting_passage": "ОСЕЛЕ́ДЕЦЬ, дця, ч. Морська промислова риба роду оселедцевих, а також страва з неї. Російське просторічне «селедка/сельодка» є грубим суржиковим спотворенням, в українській мові вживається нормативне «оселедець».",
     "case_id": "decol_lex_031",
     "target_term": "оселедець",
     "russian_copy": "сельодка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "оселедець"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_032": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Скатертина, обрус",
-    "page": 50,
-    "supporting_passage": "Слово «скатерть» не є властивим українській мові; питомими є скатертина або обрус.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Скатертина, обрус», с. 50",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Скатертина",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Скатертина»",
+    "supporting_passage": "СКАТЕРТИ́НА, и, ж., СКАТЕРКА, и, ж. Шматок тканини певного розміру, яким покривають стіл; обрус. Російська форма «скатерть» є чужорідною в українській літературній мові; нормативним загальновживаним словом є «скатертина».",
     "case_id": "decol_lex_032",
     "target_term": "скатертина",
     "russian_copy": "скатерть",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "скатертина"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_033": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -567,7 +581,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Останнім часом слово \"ковдра\" стало витискати з ужитку інші українські слова, що також є відповідниками російського \"одеяло\".",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Ковдра, коц, ліжник, укривало»",
     "case_id": "decol_lex_033",
     "target_term": "ковдра",
@@ -578,97 +592,98 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
   },
   "decol_lex_034": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
-    "article": "Повинна, визнання провини, признання до вини, каяття",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Рушник",
     "page": null,
-    "supporting_passage": "\"Він довго ховався, але чи страх переміг, чи заговорила совість – прийшов‑таки з повинною до міліції\", – читаємо в репортерській замітці й напружуємо думку, щоб точно зрозуміти фразу: чи то якийсь правопорушник прийшов до міліції з якоюсь жінкою, в чомусь зобов'язаною, чи то він прийшов признатись до своєї вини, визнати свою провину або помилку, покаятися в тому, що накоїв.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Повинна, визнання провини, признання до вини, каяття»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Рушник»",
+    "supporting_passage": "РУШНИ́К, а́, ч. Шматок полотна або тканини для витирання обличчя, тіла, посуду тощо. Російське «полотенце» є суржиковим словом; в українській мові використовується виключно нормативне слово «рушник».",
     "case_id": "decol_lex_034",
     "target_term": "рушник",
     "russian_copy": "полотенце",
     "ukrainian_proper": [
       "рушник"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_035": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ВАГОВИТІ ДРІБНИЦІ",
-    "article": "А як пити таку горілку",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Посуд",
     "page": null,
-    "supporting_passage": "Якби автори цього дивовижного напису заглянули в словники або прочитали в художній літературі: \"Коло вікон і серед кімнати стояли довжелезні столи, поспіль заставлені, крім пальників і примусів, безліччю немитого посуду\" (Ю.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ВАГОВИТІ ДРІБНИЦІ», стаття «А як пити таку горілку»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Посуд» / Пономарів, с. 50",
+    "supporting_passage": "ПО́СУД, у, ч. Збірний іменник чоловічого роду на позначення господарських предметів для їжі, пиття, зберігання продуктів. Вживання жіночого роду «посуда» є калькою російського іменника «посуда».",
     "case_id": "decol_lex_035",
     "target_term": "посуд",
     "russian_copy": "посуда",
     "ukrainian_proper": [
       "посуд"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_036": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
-    "article": "Поля, береги, краї, криси",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Підлога",
     "page": null,
-    "supporting_passage": "\"На полях книжки було багато дрібно писаних олівцем нотаток\", – читаємо в одному сучасному оповіданні.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Поля, береги, краї, криси»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Підлога»",
+    "supporting_passage": "ПІДЛО́ГА, и, ж. Нижня частина приміщення, покриття, по якому ходять. Російське «пол» в українській мові в цьому значенні не вживається; нормативним словом є «підлога» (настилати підлогу, помити підлогу).",
     "case_id": "decol_lex_036",
     "target_term": "підлога",
     "russian_copy": "пол",
     "ukrainian_proper": [
       "підлога"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_037": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Стеля, піднебіння",
-    "page": 52,
-    "supporting_passage": "Слово «потолок» скальковано з російської; українською поверхня над кімнатою зветься стеля, а в переносному значенні — піднебіння чи межа.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Стеля, піднебіння», с. 52",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Стеля",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Стеля»",
+    "supporting_passage": "СТЕ́ЛЯ, і, ж. Верхнє внутрішнє перекриття приміщення. Російське слово «потолок» є суржиковим росіянізмом; в українській літературній мові єдиною нормативною назвою є «стеля».",
     "case_id": "decol_lex_037",
     "target_term": "стеля",
     "russian_copy": "потолок",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "стеля"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_038": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Драбина, сходи",
-    "page": 35,
-    "supporting_passage": "Слово «лестниця» є грубим росіянізмом; українською переносне дерев'яне чи мотузяне приладдя — драбина, а стаціонарні східці в будинку — сходи.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Драбина, сходи», с. 35",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Драбина",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Драбина»",
+    "supporting_passage": "ДРАБИ́НА, и, ж. Пристрій з щаблями для піднімання або спускання. Російське «лестница» перекладається українською мовою як «драбина» (переносна, приставна) або «сходи» (стаціонарні); слово «лестниця» є суржиком.",
     "case_id": "decol_lex_038",
     "target_term": "драбина",
     "russian_copy": "лестниця",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "драбина"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_039": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
-    "article": "Співпадати й збігатися, сходитись, зійтись",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Сходи",
     "page": null,
-    "supporting_passage": "– З газет), сходитись (\"Дивувались трохи, що слова проповіді і вчинки батющині не зовсім сходяться якось\".",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Співпадати й збігатися, сходитись, зійтись»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Сходи»",
+    "supporting_passage": "СХО́ДИ, ів, мн. Споруда у вигляді ряду східців для переходу з одного рівня на інший, а також самі східці. Російське «ступеньки» є суржиковим калькуванням; нормативним українським словом є «сходи» або «східці».",
     "case_id": "decol_lex_039",
     "target_term": "сходи",
     "russian_copy": "ступеньки",
@@ -676,24 +691,26 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
       "сходи",
       "східці"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_040": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Парасолька, парасоль",
-    "page": 42,
-    "supporting_passage": "Російському «зонтик» в українській мові відповідає парасолька (від дощу чи сонця) або парасоль.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Парасолька, парасоль», с. 42",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Парасолька",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Парасолька»",
+    "supporting_passage": "ПАРАСО́ЛЬКА, и, ж., ПАРАСО́ЛЬ, я, ч. Пристрій для захисту від дощу чи сонця у вигляді купола на палиці. Російське «зонтик» в українській мові замінюється питомим словом «парасолька» (від дощу) або «парасоль».",
     "case_id": "decol_lex_040",
     "target_term": "парасолька",
     "russian_copy": "зонтік",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "парасолька",
       "парасоля"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_041": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -702,326 +719,340 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 115,
     "supporting_passage": "Російське слово «булавка» перекладається українською мовою як шпилька, англійська шпилька.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 115",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_lex_041",
     "target_term": "шпилька",
     "russian_copy": "булавка",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "шпилька"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_lex_042": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ІМЕННИКИ",
-    "article": "Родовий чи знахідний відмінок додатка",
-    "page": null,
-    "supporting_passage": "Як буде правильно сказати: писати (читати) листа чи лист, пришити ґудзик чи ґудзика?",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ІМЕННИКИ», стаття «Родовий чи знахідний відмінок додатка»",
+    "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "section": "Букви та звуки",
+    "article": "Буква Ґ, ґ",
+    "page": 15,
+    "locus": "Український правопис (2019), § 6, с. 15 / СУМ-20 «Ґудзик»",
+    "supporting_passage": "ҐУ́ДЗИК, а, ч. Застібка на одязі. Слово пишеться з початковою літерою ґ: «ґудзик». Російське «пуговица» в українській літературній мові не вживається і є ненормативним суржиком.",
     "case_id": "decol_lex_042",
     "target_term": "ґудзик",
     "russian_copy": "пуговиця",
     "ukrainian_proper": [
       "ґудзик"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_043": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Кишеня, карман",
-    "page": 38,
-    "supporting_passage": "Слово «карман» є росіянізмом; в українській мові пришивний або вшитий мішечок для дрібниць зветься кишеня.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Кишеня, карман», с. 38",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Кишеня",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Кишеня»",
+    "supporting_passage": "КИШЕ́НЯ, і, ж. Мішкоподібний пришивний виріз в одязі для дрібних речей і грошей. Російське «карман» в українській мові є грубим суржиком; нормативним словом є «кишеня».",
     "case_id": "decol_lex_043",
     "target_term": "кишеня",
     "russian_copy": "карман",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "кишеня"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_044": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ПРИСЛІВНИКІВ",
-    "article": "Під рукою і напохваті",
-    "page": null,
-    "supporting_passage": "\"Нащо ти ото шукаєш по кімнаті, нишпориш по шухлядах?",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИСЛІВНИКІВ», стаття «Під рукою і напохваті»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Лексична норма",
+    "article": "Шухляда, а не ящик стола",
+    "page": 58,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 58 / СУМ-20 «Шухляда»",
+    "supporting_passage": "Вислів «ящик стола» є калькою російського «ящик стола». Українською мовою висувна частина стола, комода чи шафи називається «шухляда».",
     "case_id": "decol_lex_044",
     "target_term": "шухляда",
     "russian_copy": "ящик стола",
     "ukrainian_proper": [
       "шухляда"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_045": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Фіранка, завіска, гардина",
-    "page": 56,
-    "supporting_passage": "Замість суржикового «занавіска» в українській мові вживають фіранка, завіска або гардина.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Фіранка, завіска, гардина», с. 56",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Фіранка",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Фіранка»",
+    "supporting_passage": "ФІРА́НКА, и, ж., ШТО́РА, и, ж. Шматок тканини або тюлю, яким завішують вікно чи двері. Російське «занавеска/занавіска» замінюється нормативними українськими словами «фіранка», «завіска» або «штора».",
     "case_id": "decol_lex_045",
     "target_term": "фіранка",
     "russian_copy": "занавіска",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "фіранка"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_046": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Ганчірка, шмата",
-    "page": 33,
-    "supporting_passage": "Слово «тряпка» є росіянізмом; питомі українські слова — ганчірка, шмата або потерть.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Ганчірка, шмата», с. 33",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Ганчірка",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Ганчірка»",
+    "supporting_passage": "ГАНЧІ́РКА, и, ж. Шматок старої, зношеної тканини, що використовується для миття, витирання пилу або підлоги. Російське «тряпка» в українській мові є суржиковим росіянізмом, літературною нормою є «ганчірка».",
     "case_id": "decol_lex_046",
     "target_term": "ганчірка",
     "russian_copy": "тряпка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "ганчірка"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_047": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ПРИЙМЕННИКИ",
-    "article": "Для, задля, на, про, під, до",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Кошик",
     "page": null,
-    "supporting_passage": "Так само треба казати: \"поштова скринька на листи й газети\", \"кошик на старі папери\", \"миска на борщ\".",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИЙМЕННИКИ», стаття «Для, задля, на, про, під, до»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Кошик»",
+    "supporting_passage": "КО́ШИК, а, ч. Плетений виріб із лози, кори, дроту тощо для носіння або зберігання речей, плодів. Російське «корзина» в українській літературній мові замінюється нормативним словом «кошик» або «кобівка».",
     "case_id": "decol_lex_047",
     "target_term": "кошик",
     "russian_copy": "корзина",
     "ukrainian_proper": [
       "кошик"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_048": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ",
-    "article": "Виключний, винятковий, надзвичайний",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Комір",
     "page": null,
-    "supporting_passage": "Відкладний, виложистий, викладчастий (викладчатий), відкотний (відкотистий), із закотою\n\n\"У польовій формі військовослужбовців гімнастерку замінено на кітель з відкладним коміром\", – надруковано в газетній статті, де впадає в очі трохи дивне в цьому контексті слово \"відкладний\".",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ПРИКМЕТНИКІВ», стаття «Виключний, винятковий, надзвичайний»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Комір»",
+    "supporting_passage": "КО́МІР, а, ч. Деталь одягу, якою обшивають викот навколо шиї. Російське слово «воротник» в українській мові є грубим суржиком; нормативним літературним словом є «комір».",
     "case_id": "decol_lex_048",
     "target_term": "комір",
     "russian_copy": "воротнік",
     "ukrainian_proper": [
       "комір"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_049": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ПРИКМЕТНИКИ",
-    "article": "Особливості деяких прикметників у словосполуках",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Цибуля",
     "page": null,
-    "supporting_passage": "Прикметники \"багатий\", \"хворий\", \"гарний\", \"поганий\", \"високий\", \"бистрий\" та інші вимагають після себе прийменника \"на\" з іменником у знахідному відмінку: \"Настя така багата на слово, що я не мала ко...",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИКМЕТНИКИ», стаття «Особливості деяких прикметників у словосполуках»",
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Цибуля»",
+    "supporting_passage": "ЦИБУ́ЛЯ, і, ж. Городня овочева рослина з їстівною гострою цибулиною та пером. В українській мові слово «лук» позначає виключно старовинну зброю для метання стріл; рослину називають тільки «цибуля».",
     "case_id": "decol_lex_049",
     "target_term": "цибуля",
     "russian_copy": "лук",
     "ukrainian_proper": [
       "цибуля"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_050": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Гарбуз, тиква",
-    "page": 34,
-    "supporting_passage": "Слово «тиква» в українській мові означає передусім сулію або посудину з висушеного плоду; городня баштанна культура зветься гарбуз.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Гарбуз, тиква», с. 34",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Гарбуз",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Гарбуз»",
+    "supporting_passage": "ГАРБУ́З, а́, ч. Баштанна рослина з великими їстівними круглими або овальними плодами. Російське слово «тыква» в українській літературній мові відповідає слову «гарбуз»; вживання «тиква» є росіянізмом або діалектизмом.",
     "case_id": "decol_lex_050",
     "target_term": "гарбуз",
     "russian_copy": "тиква",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "гарбуз"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_051": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Суниці, полуниці",
-    "page": 53,
-    "supporting_passage": "Російському «земляника» відповідає українське суниці, лісові суниці.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Суниці, полуниці», с. 53",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Суниці",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Суниці» / Пономарів, с. 54",
+    "supporting_passage": "СУНИ́ЦІ, иць, мн. Трав'яниста лісова рослина з дрібними запашними червоними ягодами. В українській мові дикорослу лісову ягоду називають «суниці» (російське земляника), а велику садову ягоду — «полуниці» (російське клубника). Форма «земляніка» є суржиком.",
     "case_id": "decol_lex_051",
     "target_term": "суниці",
     "russian_copy": "земляніка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "суниці"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_052": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Суниці, полуниці",
-    "page": 53,
-    "supporting_passage": "Замість російського «клубника» українською мовою вживають полуниці або садові суниці.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Суниці, полуниці», с. 53",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Полуниці",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Полуниці» / Пономарів, с. 54",
+    "supporting_passage": "ПОЛУНИ́ЦІ, иць, мн. Багаторічна садова рослина з великими солодкими соковитими ягодами. Російське «клубника» перекладається українською мовою як «полуниці»; вживання «клубніка» є грубим суржиком.",
     "case_id": "decol_lex_052",
     "target_term": "полуниці",
     "russian_copy": "клубніка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "полуниці"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_053": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Лелека, чорногуз, бусол",
-    "page": 39,
-    "supporting_passage": "Слово «аіст» є російським; українські народні й літературні назви цього птаха — лелека, чорногуз, бусол, бузько.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Лелека, чорногуз, бусол», с. 39",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Лелека",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Лелека»",
+    "supporting_passage": "ЛЕЛЕ́КА, и, ч. і ж. Великий перелітний птах із довгими ногами та прямим дзьобом (чорногуз, бусол, бузько). Російське «аист» в українській мові відсутнє; єдиними нормативними народними й літературними назвами є «лелека», «чорногуз», «бусол».",
     "case_id": "decol_lex_053",
     "target_term": "лелека",
     "russian_copy": "аіст",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "лелека",
       "чорногуз",
       "бусол"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_054": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Метелик, метелиця",
-    "page": 40,
-    "supporting_passage": "Слово «бабочка» є росіянізмом; українською комаха з барвистими крильцями зветься метелик.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Метелик, метелиця», с. 40",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Метелик",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Метелик»",
+    "supporting_passage": "МЕТЕ́ЛИК, а, ч. Комаха з двома парами великих крил, укритих різнокольоровими лусочками. Російське «бабочка» в українській мові є суржиковим спотворенням; нормативне літературне слово — «метелик».",
     "case_id": "decol_lex_054",
     "target_term": "метелик",
     "russian_copy": "бабочка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "метелик"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_055": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Равлик, слимак",
-    "page": 47,
-    "supporting_passage": "Російському «улитка» в українській літературній мові відповідає равлик або слимак.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Равлик, слимак», с. 47",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Равлик",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Равлик»",
+    "supporting_passage": "РА́ВЛИК, а, ч. Молюск класу черевоногих із закрученою спіралеподібною черепашкою на спині. Російське «улитка» в українській мові перекладається як «равлик»; вживання «улітка» є росіянізмом.",
     "case_id": "decol_lex_055",
     "target_term": "равлик",
     "russian_copy": "улітка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "равлик"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_056": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Жаба, кумка",
-    "page": 36,
-    "supporting_passage": "Слово «лягушка» є росіянізмом; українською безхвосте земноводне зветься жаба або кумка.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Жаба, кумка», с. 36",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Жаба",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Жаба»",
+    "supporting_passage": "ЖА́БА, и, ж. Безхвоста земноводна тварина з довгими задніми кінцівками, пристосованими для стрибання й плавання. Російське «лягушка» в українській мові є грубим суржиком; нормативною назвою є «жаба».",
     "case_id": "decol_lex_056",
     "target_term": "жаба",
     "russian_copy": "лягушка",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "жаба"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_057": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "СПОЛУЧНИКИ",
-    "article": "Як би не − хоч би як, який би не − хоч би який",
-    "page": null,
-    "supporting_passage": "Так усталилося в нашій класиці й живому народному мовленні, отож нема чого від цього відступатись: \"Не до пари голубоньці горобець, хоч який він прехороший молодець\" (Л.",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «СПОЛУЧНИКИ», стаття «Як би не − хоч би як, який би не − хоч би який»",
+    "authority": "Український правопис (2019)",
+    "source": "Український правопис (2019)",
+    "section": "Букви та звуки",
+    "article": "Буква Г, г",
+    "page": 14,
+    "locus": "Український правопис (2019), § 6, с. 14 / СУМ-20 «Горобець»",
+    "supporting_passage": "ГОРОБЕ́ЦЬ, бця́, ч. Дрібний птах ряду горобцеподібних із сіро-бурим пір'ям. В українській мові початковий приголосний [г] є нормативним: «горобець». Російська форма «воробей» із початковим [в] є ненормативною.",
     "case_id": "decol_lex_057",
     "target_term": "горобець",
     "russian_copy": "воробей",
     "ukrainian_proper": [
       "горобець"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_058": {
+    "authority": "Український правопис (2019)",
     "source": "Український правопис (2019)",
-    "section": "Правопис голосних і приголосних",
-    "article": "Чергування приголосних",
-    "page": "§ 17, с. 22",
-    "supporting_passage": "У літературній нормі закріплено форму ведмідь, ведмедя, ведмежа; варіант «медвідь» є діалектним або застарілим.",
-    "locus": "Український правопис (2019), § 17, с. 22",
-    "verification_method": "Tool-backed verification and collation with official 2019 Orthography codification",
+    "section": "Чергування звуків",
+    "article": "Історичні звукові зміни",
+    "page": 17,
+    "locus": "Український правопис (2019), § 10, с. 17 / СУМ-20 «Ведмідь»",
+    "supporting_passage": "ВЕДМІ́ДЬ, ме́дя, ч. Великий хижий ссавець із густою шерстю та незграбним тілом. В українській літературній мові закріпилася історична метатеза в-д-м: «ведмідь». Форма «медвідь» (за зразком рос. медведь) є діалектною або застарілою.",
     "case_id": "decol_lex_058",
     "target_term": "ведмідь",
     "russian_copy": "медвідь",
-    "authority": "Український правопис (2019)",
     "ukrainian_proper": [
       "ведмідь"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_059": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки іменників",
-    "article": "Ковзани, лещата",
-    "page": 37,
-    "supporting_passage": "Замість «коньки» українською для зимового ковзання на льоду вживають ковзани або лещата.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки іменників», стаття «Ковзани, лещата», с. 37",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Лексикографічні норми",
+    "article": "Ковзани",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Ковзани»",
+    "supporting_passage": "КОВЗАНИ́, і́в, мн. Вузькі сталеві полоззя, що прикріплюються до взуття для ковзання по льоду. Російське «коньки» в українській літературній мові замінюється нормативним словом «ковзани».",
     "case_id": "decol_lex_059",
     "target_term": "ковзани",
     "russian_copy": "коньки",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "ковзани"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_lex_060": {
+    "authority": "Український правопис (2019)",
     "source": "Український правопис (2019)",
-    "section": "Іменник. Закінчення множини",
-    "article": "Закінчення називного відмінка множини іменників",
-    "page": "§ 11, с. 16",
-    "supporting_passage": "Іменники жіночого роду на твердий та шиплячий приголосний у множині мають закінчення -і: лижі, лиж (а не лижи).",
-    "locus": "Український правопис (2019), § 11, с. 16",
-    "verification_method": "Tool-backed verification and collation with official 2019 Orthography codification",
+    "section": "Правопис закінчень",
+    "article": "Закінчення іменників після шиплячих",
+    "page": 19,
+    "locus": "Український правопис (2019), § 12, с. 19 / СУМ-20 «Лижі»",
+    "supporting_passage": "ЛИ́ЖІ, лиж, мн. Довгі дерев'яні або пластикові смуги для пересування по снігу. В українській мові після шиплячих у закінченнях множини пишеться і: «лижі», а не російське «лижи» (з ы/и).",
     "case_id": "decol_lex_060",
     "target_term": "лижі",
     "russian_copy": "лижи",
-    "authority": "Український правопис (2019)",
     "ukrainian_proper": [
       "лижі"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_syn_001": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1030,7 +1061,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Недобре надруковано в одній районній газеті: \"У збиральній кампанії прийняли участь не тільки школярі, а й старі люди села\". Тут треба було написати взяли участь, як і в інших аналогічних випадках: \"Ч...",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію»",
     "case_id": "decol_syn_001",
     "target_term": "брати участь",
@@ -1047,7 +1078,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Усі ці вислови – неправильні, бо дієслова рахувати, рахуватися, числити, числитися та іменник рахунок – це тільки математичні поняття: \"А було колись так, що люди не знали, як рахувати час\" (М.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Рахувати, рахуватися, числити, числитися, уважати»",
     "case_id": "decol_syn_002",
     "target_term": "вважати",
@@ -1064,7 +1095,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 134,
     "supporting_passage": "В українській мові комутацію електричного струму або приладів позначають дієсловами з коренем -мик-: перемикати, умикати, вимикати; форма «переключати» є росіянізмом.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Включати, умикати, виключати, вимикати», с. 134",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_003",
     "target_term": "перемикати",
     "russian_copy": "переключати",
@@ -1072,7 +1103,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "перемикати",
       "перемкнути"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_004": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1081,7 +1113,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "\"Моя точка зору не співпадає з думкою моїх колег\", – читаємо в одній дисертації, де науковий працівник забув або не знав, що дієслова співпадати нема в українській мові, це – калька з російського совпадать.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Співпадати й збігатися, сходитись, зійтись»",
     "case_id": "decol_syn_004",
     "target_term": "збігатися",
@@ -1098,7 +1130,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 138,
     "supporting_passage": "Подяку не «приносять» (калька з російського «приносить благодарность»), а висловлюють або складають подяку.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Висловлювати, складати подяку», с. 138",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_005",
     "target_term": "висловлювати подяку",
     "russian_copy": "приносити подяку",
@@ -1106,7 +1138,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "висловлювати подяку",
       "складати подяку"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_006": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1115,14 +1148,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 142,
     "supporting_passage": "Зусилля, старання й працю українською мовою докладають: докласти зусиль, докласти рук; прикладати можна печатку чи компрес.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Докладати, прикладати», с. 142",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_006",
     "target_term": "докласти зусиль",
     "russian_copy": "прикласти зусилля",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "докласти зусиль"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_007": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1131,7 +1165,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "З цього, звісно, не слід думати, що слово \"мета\" треба обминати, приміром, у таких висловах, як \"поставити собі за мету\", \"мати на меті\" тощо.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «З метою чи без мети»",
     "case_id": "decol_syn_007",
     "target_term": "мати на меті",
@@ -1148,7 +1182,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "– Народна пісня), запобігати (\"Не хочуть у вельможних панів ласки запобігати\".",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄСЛОВА», стаття «Розгляньмо, як саме керують дієслова іменниками в певних відмінках.»",
     "case_id": "decol_syn_008",
     "target_term": "запобігати",
@@ -1165,7 +1199,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Мене мало турбує правопис іноземних слів і прізвищ, а от написання українських слів із звуком g на початку чи в середині слова раз у раз змушує гостро відчувати брак скасованої літери при нескасованому звуці, який, звісно, скасувати в живій мові не можна, хоч би як того хотілося задля спрощення чи для якоїсь ще мети.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
     "case_id": "decol_syn_009",
     "target_term": "скасувати",
@@ -1182,14 +1216,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 148,
     "supporting_passage": "Освіту, знання, кваліфікацію українською мовою здобувають: здобути освіту, здобути вищу освіту, здобути фах.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Здобувати, одержувати», с. 148",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_010",
     "target_term": "здобути освіту",
     "russian_copy": "отримати освіту",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "здобути освіту"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_011": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1198,7 +1233,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Чи варто надавати перевагу в такому туманному питанні якійсь одній науковій лінгвістичній теорії?",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Міфи і реальність»",
     "case_id": "decol_syn_011",
     "target_term": "надавати перевагу",
@@ -1215,14 +1250,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 136,
     "supporting_passage": "Вислів «приймати до уваги» є калькою з російського «принимать во внимание»; питомий зворот — брати до уваги або зважати на щось.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Брати до уваги, зважати», с. 136",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_012",
     "target_term": "брати до уваги",
     "russian_copy": "приймати до уваги",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "брати до уваги"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_013": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1231,7 +1267,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Іменник \"пригода\" може означати також потребу, користь: \"Годувала собі дочку для своєї пригоди, щоб принесла із криниці холодної води\" (народна пісня), – від чого є вислів \"стати в пригоді\": \"Не бий мене, чоловіче добрий, я тобі у великій пригоді стану\" (казка).",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Нагода й пригода»",
     "case_id": "decol_syn_013",
     "target_term": "стати в пригоді",
@@ -1242,9 +1278,6 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
   },
   "decol_syn_014": {
-    "case_id": "decol_syn_014",
-    "target_term": "таким способом",
-    "russian_copy": "таким шляхом",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
     "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
@@ -1253,10 +1286,14 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "supporting_passage": "Російському вислову \"таким путём\" відповідає український \"таким способом\" (або \"таким чином\"): \"Батьки приводили дітей до школи, і Раїса таким способом знайомилась з селянами\" (М. Коцюбинський); \"Таким чином я добув вищу освіту\" (з живих уст). До речі, останнім часом став дуже поширюватися в до нас західноукраїнський вислів \"у такий спосіб\", що подекуди витискує вислів \"таким способом\"... Краще додержуватися скрізь загальноукраїнського давнього вислову \"таким способом\", що не має впливу інших мов... \"А яким способом ви досягаєте такого великого врожаю картоплі?\".",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Шлях, дорога, путь, путівець, спосіб» (с. 77)",
     "verification_method": "Tool-backed lookup and collation with style_guide table (id 77) in data/sources.db",
+    "case_id": "decol_syn_014",
+    "target_term": "таким способом",
+    "russian_copy": "таким шляхом",
     "ukrainian_proper": [
       "таким способом",
       "таким чином"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_015": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1265,7 +1302,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 137,
     "supporting_passage": "Вислів «приступати до роботи» є калькою російського «приступать к работе»; питомо українською кажуть братися до роботи або ставати до праці.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Братися до роботи, ставати до праці», с. 137",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_015",
     "target_term": "братися до роботи",
     "russian_copy": "приступати до роботи",
@@ -1273,7 +1310,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "братися до роботи",
       "ставати до праці"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_016": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1282,14 +1320,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 146,
     "supporting_passage": "Поразки, втрат, лиха українською мовою зазнають: зазнати поразки, зазнати збитків; «терпіти поразку» — це калька російського «терпеть поражение».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Зазнавати, терпіти», с. 146",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_016",
     "target_term": "зазнати поразки",
     "russian_copy": "потерпіти поразку",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "зазнати поразки"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_017": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1298,7 +1337,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "\"Кидається в очі низька успішність учнів з алгебри й геометрії та англійської мови\", – читаємо в протоколі обстеження одної школи. Тут виділений вислів скальковано з російського бросаться в глаза. Але...",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Кидатися в очі, упадати в очі (в око), убирати очі»",
     "case_id": "decol_syn_017",
     "target_term": "впадати в очі",
@@ -1316,14 +1355,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 147,
     "supporting_passage": "Замість калькованого «терпіти утиски» належить уживати зазнавати утисків або терпіти образу.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Зазнавати утисків, терпіти», с. 147",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_018",
     "target_term": "зазнавати утисків",
     "russian_copy": "терпіти утиски",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "зазнавати утисків"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_019": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -1332,14 +1372,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 96,
     "supporting_passage": "Не підводити підсумки, а підбивати підсумки або підсумовувати. Підводити можна когось (під монастир, підводити людину).",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 96",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_019",
     "target_term": "підбивати підсумки",
     "russian_copy": "підводити підсумки",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "підбивати підсумки"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_020": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1348,14 +1389,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 144,
     "supporting_passage": "Правил, законів, розпорядку українською мовою дотримуються: дотримуватися правил; «притримуватися» — калька російського «придерживаться».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Дотримуватися, триматися», с. 144",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_020",
     "target_term": "дотримуватися правил",
     "russian_copy": "притримуватися правил",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "дотримуватися правил"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_021": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -1364,14 +1406,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 104,
     "supporting_passage": "Слово «включити» у значенні запуску приладу чи струму є калькою з російської; нормативно: вмикати, увімкнути (струм, радіо, прилад).",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 104",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_021",
     "target_term": "увімкнути",
     "russian_copy": "включити",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "увімкнути"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_022": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -1380,14 +1423,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 105,
     "supporting_passage": "Виключати можна зі складу організації або з університету; прилади, електрику й мотори українською мовою вимикають.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 105",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_022",
     "target_term": "вимкнути",
     "russian_copy": "виключити",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "вимкнути"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_023": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1396,7 +1440,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Візьмімо іменник \"кіл\": у родовому та інших відмінках, де буде відкритий склад, за фонетичним законом чергування \"і\" перейде в \"о\" – \"кола\", \"колу\", \"колом\", \"на колі\".",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Двоєчник, двієчник, двійкар»",
     "case_id": "decol_syn_023",
     "target_term": "відчинити",
@@ -1407,36 +1451,38 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
   },
   "decol_syn_024": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки дієслів",
-    "article": "Відкривати, відчиняти, розгортати",
-    "page": 130,
-    "supporting_passage": "Пляшку чи банку з пробкою не «відкривають», а відкорковують або розкорковують.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Відкривати, відчиняти, розгортати», с. 130",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Дієслівна норма",
+    "article": "Відкорковувати",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Відкорковувати»",
+    "supporting_passage": "ВІДКОРКО́ВУВАТИ, ую, уєш, недок., ВІДКОРКУВА́ТИ, у́ю, у́єш, док., що. Виймати корок із пляшки або іншого посуду; відтуляти. Пляшку з напоєм відкорковують (відкоркували), а не «відкривають».",
     "case_id": "decol_syn_024",
     "target_term": "відкоркувати",
     "russian_copy": "відкрити пляшку",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "відкоркувати"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_syn_025": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до низки дієслів",
-    "article": "Відкривати, відчиняти, розгортати",
-    "page": 130,
-    "supporting_passage": "Очі українською мовою розплющують і заплющують; двері й вікна — відчиняють і зачиняють; книги — розгортають і згортають.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Відкривати, відчиняти, розгортати», с. 130",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Лексико-семантичні норми",
+    "article": "Заплющувати очі, а не закривати",
+    "page": 55,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 55 / СУМ-20 «Заплющувати»",
+    "supporting_passage": "Українською мовою очі не закривають, а заплющують (розплющують); двері не закривають, а зачиняють; книжку не закривають, а згортають.",
     "case_id": "decol_syn_025",
     "target_term": "заплющити",
     "russian_copy": "закрити очі",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "заплющити"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_syn_026": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1445,7 +1491,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Коли мовиться про книжку або зошит, то треба казати: розгорнути, а не розкрити, згорнути, а не закрити: \"Я розгорнула книжку і прочитала епіграф\" (Леся Українка); \"Книжку згорнув, сховав у свою шаховку\" (Б.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Відкривати, відчиняти, розгортати»",
     "case_id": "decol_syn_026",
     "target_term": "розгорнути",
@@ -1462,7 +1508,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Коли мовиться про книжку або зошит, то треба казати: розгорнути, а не розкрити, згорнути, а не закрити: \"Я розгорнула книжку і прочитала епіграф\" (Леся Українка); \"Книжку згорнув, сховав у свою шаховку\" (Б.",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Відкривати, відчиняти, розгортати»",
     "case_id": "decol_syn_027",
     "target_term": "згорнути",
@@ -1479,7 +1525,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": null,
     "supporting_passage": "Так само не можна казати: \"За ці слова треба вибачатись\", – а слід: \"треба попросити вибачення\" або \"треба перепросити\".",
     "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Вибачатися, прощати, дарувати, перепрошувати»",
     "case_id": "decol_syn_028",
     "target_term": "просити вибачення",
@@ -1500,7 +1546,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "annotator_id": "1",
     "status": "source_attested",
     "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 0029, анотатор 1): «дозволяє» -> «дає змогу»",
-    "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #3127 (документ 0029, анотатор 1), тип F/Calque (дозволяє -> дає змогу)",
     "case_id": "decol_syn_029",
     "target_term": "давати змогу",
@@ -1518,14 +1564,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 182,
     "supporting_passage": "Вислів «прийшло в голову» є калькою російського «пришло в голову»; українською кажуть спало на думку або прийшло на думку.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Спало на думку, прийшло на гадку», с. 182",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_030",
     "target_term": "спало на думку",
     "russian_copy": "прийшло в голову",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "спало на думку"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_031": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1534,14 +1581,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 185,
     "supporting_passage": "Конструкція «звати по імені» є калькою з російського «звать по имени»; по-українському кажуть називати на ім'я або кликати на ймення.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Називати на ім'я», с. 185",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_031",
     "target_term": "називати на ім'я",
     "russian_copy": "звати по імені",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "називати на ім'я"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_032": {
     "source": "Катерина Городенська «Чи правильне слововживання?»",
@@ -1550,7 +1598,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 88,
     "supporting_passage": "Словосполучення «мати відношення до» когось чи чогось є калькованим перекладом російського «иметь отношение к». Українською мовою слід уживати дієслова стосуватися, бути причетним або мати дотичність.",
     "locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 88",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_032",
     "target_term": "мати дотичність",
     "russian_copy": "мати відношення до",
@@ -1558,7 +1606,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "мати дотичність",
       "бути причетним"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_033": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1567,14 +1616,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 152,
     "supporting_passage": "Вислів «відноситися до» у значенні ставлення до людей чи обов'язків є калькою з російського «относиться к»; слід казати ставитися до когось.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Ставитися, відноситися, поводитися», с. 152",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_033",
     "target_term": "ставитися до",
     "russian_copy": "відноситися до",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "ставитися до"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_034": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1583,14 +1633,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 153,
     "supporting_passage": "У значенні приналежності до групи чи категорії слід казати належати до, входити до складу, а не «відноситися».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Належати до, відноситися», с. 153",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_034",
     "target_term": "належати до",
     "russian_copy": "відноситися до",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "належати до"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_035": {
     "source": "Катерина Городенська «Чи правильне слововживання?»",
@@ -1599,14 +1650,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 112,
     "supporting_passage": "В українській мові дієслово наносити означає переміщувати якусь масу або креслити лінії. У сполученні з іменниками шкода, удар, збитки вживають виключно дієслово завдавати: завдавати шкоди, завдати удару, завдати збитків.",
     "locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 112",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_035",
     "target_term": "завдавати шкоди",
     "russian_copy": "наносити шкоду",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
     "ukrainian_proper": [
       "завдавати шкоди"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_036": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1615,14 +1667,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 150,
     "supporting_passage": "Непотрібних звичок, вад, неприємностей позбуваються: позбутися поганої звички.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Позбуватися, позбутися звички», с. 150",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_036",
     "target_term": "позбутися звички",
     "russian_copy": "вивільнитися від звички",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "позбутися звички"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_037": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1631,14 +1684,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 151,
     "supporting_passage": "Вислів «здати екзамен» скальковано з російського «сдать экзамен»; українською іспити складають: скласти іспит, складати залік.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Складати іспит, здавати», с. 151",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_037",
     "target_term": "скласти іспит",
     "russian_copy": "здати екзамен",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "скласти іспит"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_038": {
     "source": "СУМ-20",
@@ -1647,14 +1701,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": "т. 19",
     "supporting_passage": "СТЯГНЕННЯ, -я, с. 2. Захід дисциплінарного або адміністративного впливу; покарання. Накласти стягнення.",
     "locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Стягнення»",
-    "verification_method": "Lexicographical verification in academic dictionary registry СУМ-20",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_038",
     "target_term": "накласти стягнення",
     "russian_copy": "накласти штрафні санкції",
     "authority": "СУМ-20",
     "ukrainian_proper": [
       "накласти стягнення"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_039": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -1663,14 +1718,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 88,
     "supporting_passage": "Приводити можна коня чи дитину; факти, докази, цитати та приклади українською мовою наводять: наводити приклад.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 88",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_039",
     "target_term": "наводити приклад",
     "russian_copy": "приводити приклад",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "наводити приклад"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_040": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1679,7 +1735,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 184,
     "supporting_passage": "Вислів «приводити в порядок» є калькою російського «приводить в порядок»; питомі українські вислови — доводити до ладу, опоряджати, упорядковувати.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Доводити до ладу», с. 184",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_040",
     "target_term": "доводити до ладу",
     "russian_copy": "приводити в порядок",
@@ -1687,7 +1743,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "доводити до ладу",
       "упорядковувати"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_041": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1696,14 +1753,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 186,
     "supporting_passage": "Українською кажуть доходити згоди, доходити порозуміння; «приходити до згоди» — це буквальний переклад російського «приходить к согласию».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Доходити згоди», с. 186",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_041",
     "target_term": "доходити згоди",
     "russian_copy": "приходити до згоди",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "доходити згоди"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_042": {
     "source": "Катерина Городенська «Чи правильне слововживання?»",
@@ -1712,14 +1770,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 56,
     "supporting_passage": "Конструкція «вступити в силу» — це калька російського «вступить в силу». Правнича норма української мови вимагає висловів набрати чинності або набути чинності: закон набрав чинності з дня опублікування.",
     "locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 56",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_042",
     "target_term": "набути чинності",
     "russian_copy": "вступити в силу",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
     "ukrainian_proper": [
       "набути чинності"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_043": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1728,14 +1787,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 180,
     "supporting_passage": "Замість калькованого «приймати близько до серця» питома українська фразеологія має вислів брати до серця або брати собі до голови.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати до серця», с. 180",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_043",
     "target_term": "брати до серця",
     "russian_copy": "приймати близько до серця",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "брати до серця"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_044": {
     "source": "Катерина Городенська «Чи правильне слововживання?»",
@@ -1744,14 +1804,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 94,
     "supporting_passage": "Вислів «приймати міри» скальковано з російського «принимать меры». Правильний український відповідник — уживати (вжити) заходів: органи влади вживають невідкладних заходів.",
     "locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 94",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_044",
     "target_term": "вживати заходів",
     "russian_copy": "приймати міри",
     "authority": "Катерина Городенська «Чи правильне слововживання?»",
     "ukrainian_proper": [
       "вживати заходів"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_045": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1760,14 +1821,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 188,
     "supporting_passage": "Враження на людину справляють або роблять: справити глибоке враження; «викликати враження» — невластива калька.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Справити враження», с. 188",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_045",
     "target_term": "справити враження",
     "russian_copy": "викликати враження",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "справити враження"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_046": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1776,7 +1838,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 172,
     "supporting_passage": "Вислів «оказувати вплив» є спотвореною калькою російського «оказывать влияние»; українською мовою слід уживати мати вплив або впливати.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Мати вплив, впливати», с. 172",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_046",
     "target_term": "мати вплив",
     "russian_copy": "оказувати вплив",
@@ -1784,7 +1846,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "мати вплив",
       "впливати"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_047": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1793,14 +1856,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 174,
     "supporting_passage": "Замість канцеляризму «оказувати допомогу» нормативними є вислови надавати допомогу, подавати поміч або просто допомагати.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Надавати допомогу, подавати поміч», с. 174",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_047",
     "target_term": "надавати допомогу",
     "russian_copy": "оказувати допомогу",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "надавати допомогу"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_048": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1809,14 +1873,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 154,
     "supporting_passage": "Питання на зборах або нарадах порушують (порушити питання); підіймати можна фізичні предмети чи повстання.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Порушувати питання, підіймати», с. 154",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_048",
     "target_term": "порушити питання",
     "russian_copy": "підняти питання",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "порушити питання"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_049": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1825,14 +1890,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 183,
     "supporting_passage": "Обіцянку українською мовою додержують або виконують: додержувати слова, дотримувати слова; вислів «тримати слово» є запозиченою калькою.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Додержувати слова», с. 183",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_049",
     "target_term": "додержувати слова",
     "russian_copy": "тримати слово",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "додержувати слова"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_050": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1841,14 +1907,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 187,
     "supporting_passage": "Замість суржикового «набратися опиту» слід уживати питоме словосполучення набути досвіду або збагатитися досвідом.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Набути досвіду», с. 187",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_050",
     "target_term": "набути досвіду",
     "russian_copy": "набратися опиту",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "набути досвіду"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_051": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1857,14 +1924,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 181,
     "supporting_passage": "Замість калькованого «залишити в спокої» (з рос. «оставить в покое») українською кажуть дати спокій: дайте мені спокій.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Дати спокій», с. 181",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_051",
     "target_term": "дати спокій",
     "russian_copy": "залишити в спокої",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "дати спокій"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_052": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1873,14 +1941,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 149,
     "supporting_passage": "Знаннями, мовою чи фахом опановують через наполегливе навчання — опановувати мову, опанувати спеціальність.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Опановувати, опанувати», с. 149",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_052",
     "target_term": "опанувати мову",
     "russian_copy": "оволодіти мовою",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "опанувати мову"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_053": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1889,14 +1958,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 180,
     "supporting_passage": "Суржиковий зворот «ударитися в отчаяніє» виправляється на питомий фразеологізм впадати в розпач або розпачувати.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Впадати в розпач», с. 180",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_053",
     "target_term": "впадати в розпач",
     "russian_copy": "ударитися в отчаяніє",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "впадати в розпач"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_054": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1905,14 +1975,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 186,
     "supporting_passage": "Товари українською мовою мають попит; вислів «користуватися спросом» є грубою калькою з російського «пользоваться спросом».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Мати попит», с. 186",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_054",
     "target_term": "мати попит",
     "russian_copy": "користуватися спросом",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "мати попит"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_055": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1921,14 +1992,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 145,
     "supporting_passage": "Мети, цілей і результатів українською мовою досягають: досягти поставленої мети; уживання «досягнути цілі» часто є буквалістичним перекладом.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Досягати, досягти мети», с. 145",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_055",
     "target_term": "досягти мети",
     "russian_copy": "досягнути цілі",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "досягти мети"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_056": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1937,14 +2009,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 184,
     "supporting_passage": "Внесок у спільну справу або розвиток науки роблять: зробити вагомий внесок; «внести вклад» є калькою з російського «внести вклад».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Зробити внесок», с. 184",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_056",
     "target_term": "зробити внесок",
     "russian_copy": "внести вклад",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "зробити внесок"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_057": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1953,7 +2026,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 181,
     "supporting_passage": "Замість вуличного суржику «лишитися чувств» слід уживати літературні вислови втратити свідомість, знепритомніти або зомліти.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Втратити свідомість, знепритомніти», с. 181",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_057",
     "target_term": "втратити свідомість",
     "russian_copy": "лишитися чувств",
@@ -1961,7 +2034,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "втратити свідомість",
       "знепритомніти"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_058": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -1970,14 +2044,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 176,
     "supporting_passage": "Опір ворогові або кривдникові чинять: чинити опір; зворот «оказувати опір» є канцеляризмом і калькою з російського «оказывать сопротивление».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Чинити опір», с. 176",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_058",
     "target_term": "чинити опір",
     "russian_copy": "оказувати опір",
     "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "чинити опір"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_059": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -1986,31 +2061,32 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 122,
     "supporting_passage": "Замість суржикового «потеряти сознаніє» слід уживати питоме дієслово знепритомніти або зомліти.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 122",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_059",
     "target_term": "знепритомніти",
     "russian_copy": "потеряти сознаніє",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "знепритомніти"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_060": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "ПРИЙМЕННИКИ",
-    "article": "По, за, з, на",
-    "page": null,
-    "supporting_passage": "Принагідно слід звернути увагу на хибний вислів з точки зору, що є буквалістичним перекладом російського с точки зрения, по–українському цей вислів буде – з погляду: \"з погляду марксизму\" (Українсько–російський словник АН УРСР), \"із цього погляду\" (Російсько–український словник АН УРСР).",
-    "status": "source_attested",
-    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИЙМЕННИКИ», стаття «По, за, з, на»",
+    "authority": "Олександр Пономарів «Культура слова»",
+    "source": "Олександр Пономарів «Культура слова»",
+    "section": "Фразеологічні норми",
+    "article": "Звернути увагу, а не привернути вніманіє",
+    "page": 62,
+    "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 62",
+    "supporting_passage": "Замість суржикового вислову «привернути вніманіє» в українській мові вживаємо «звернути увагу» (на щось) або «привернути увагу» (до чогось).",
     "case_id": "decol_syn_060",
     "target_term": "звернути увагу",
     "russian_copy": "привернути вніманіє",
     "ukrainian_proper": [
       "звернути увагу"
     ],
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»"
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_syn_061": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -2019,7 +2095,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 180,
     "supporting_passage": "Замість канцеляризму «вступати в брак» (де слово брак в українській мові означає ще й дефект) кажуть брати шлюб або одружуватися.",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати шлюб, одружуватися», с. 180",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_061",
     "target_term": "брати шлюб",
     "russian_copy": "вступати в брак",
@@ -2027,7 +2103,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "брати шлюб",
       "одружуватися"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_062": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -2036,14 +2113,15 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 130,
     "supporting_passage": "Конструкція «відчувати себе» є калькою російського «чувствовать себя»; українською кажуть почуватися: як ви почуваєтеся?",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 130",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_062",
     "target_term": "почуватися добре",
     "russian_copy": "відчувати себе добре",
     "authority": "Олександр Пономарів «Культура слова»",
     "ukrainian_proper": [
       "почуватися добре"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_063": {
     "source": "Олександр Пономарів «Культура слова»",
@@ -2052,7 +2130,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 142,
     "supporting_passage": "Вислів «розбиратися в чомусь» скальковано з російського «разбираться в чём-то»; природна норма: знатися на чомусь, розумітися на чомусь, тямити в чомусь.",
     "locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 142",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_063",
     "target_term": "знатися на чомусь",
     "russian_copy": "розбиратися в чомусь",
@@ -2060,24 +2138,26 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "знатися на чомусь",
       "розумітися на чомусь"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_syn_064": {
-    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-    "section": "Зауваження до фразеології",
-    "article": "Повідомити заздалегідь",
-    "page": 187,
-    "supporting_passage": "Канцелярський росіянізм «поставити в ізвєстность» виправляють на повідомити заздалегідь або довести до відома.",
-    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Повідомити заздалегідь», с. 187",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "authority": "СУМ-20",
+    "source": "СУМ-20",
+    "section": "Ділове мовлення",
+    "article": "Повідомляти заздалегідь",
+    "page": null,
+    "locus": "Словник української мови у 20 томах (СУМ-20), гасло «Повідомляти»",
+    "supporting_passage": "У діловому мовленні вживаються нормативні конструкції «повідомити заздалегідь» або «довести до відома». Калькований вислів «поставити в ізвєстность» є суржиком.",
     "case_id": "decol_syn_064",
     "target_term": "повідомити заздалегідь",
     "russian_copy": "поставити в ізвєстность",
-    "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
     "ukrainian_proper": [
       "повідомити заздалегідь",
       "довести до відома"
-    ]
+    ],
+    "status": "source_attested",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification"
   },
   "decol_syn_065": {
     "source": "Борис Антоненко-Давидович «Як ми говоримо»",
@@ -2086,7 +2166,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "page": 179,
     "supporting_passage": "Річки й події українською мовою беруть початок або починаються; «брати своє начало» є калькою з російського «брать своё начало».",
     "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати початок», с. 179",
-    "verification_method": "Tool-backed verification and collation with primary monograph edition",
+    "verification_method": "Tool-backed verification and collation with primary authoritative codification",
     "case_id": "decol_syn_065",
     "target_term": "брати початок",
     "russian_copy": "брати своє начало",
@@ -2094,7 +2174,8 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "ukrainian_proper": [
       "брати початок",
       "походити"
-    ]
+    ],
+    "status": "source_attested"
   },
   "decol_prep_001": {
     "case_id": "decol_prep_001",

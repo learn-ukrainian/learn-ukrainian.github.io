@@ -17,11 +17,13 @@
   "section": "Складні прислівники",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "4af9655acc6c41c27fa0c3a4e1ce999d20354d8ae558e3ac56cb2fd581fb0adf",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_025: вислів «водночас» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_025: нормативна українська форма «водночас» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Український правопис (2019)).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_025.review.json"
 }

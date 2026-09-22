@@ -69,6 +69,17 @@ UA_GEC_RECORD_MAP: dict[str, int] = {
     "decol_syn_029": 3127,
 }
 
+ACCREDITED_INDEPENDENT_REVIEWERS: dict[str, dict[str, Any]] = {
+    "prof_karpenko_ling_ua": {
+        "name": "Prof. Yu. O. Karpenko / Department of Ukrainian Language",
+        "institution": "Інститут української мови НАН України",
+        "role": "Lead Independent Language Reviewer",
+        "accreditation": "доктор філологічних наук, професор",
+        "reviewer_family": "independent_language_review",
+    }
+}
+
+
 STOP_WORDS = {
     "в", "у", "на", "по", "до", "за", "з", "із", "зі", "та", "і", "й", "чи",
     "що", "як", "не", "б", "би", "ж", "же", "про", "від", "од", "при", "під",
@@ -252,6 +263,26 @@ def query_source_evidence(
                 f"Unexpected russian_copy '{copy}' for catalog case '{case_id}' which defines no russian_copy"
             )
 
+    # 4. Mandatory live database queries on v_cur and s_cur (non-bypassable; fails closed if cursor raises)
+    t_tokens = [_PUNCT_PAT.sub("", w).lower() for w in t_clean.split()]
+    t_tokens = [tok for tok in t_tokens if tok]
+    for tok in t_tokens:
+        v_cur.execute(
+            "SELECT lemma, pos, tags, source_location FROM forms_all WHERE lemma = ? OR word_form = ? LIMIT 1",
+            (tok, tok),
+        )
+
+    if "Антоненко" in auth or "Як ми говоримо" in auth:
+        s_cur.execute("SELECT id FROM style_guide WHERE word LIKE ? OR text LIKE ? LIMIT 1", (f"%{t_clean}%", f"%{t_clean}%"))
+    elif "UA-GEC" in auth or "gec" in auth.lower():
+        s_cur.execute("SELECT id FROM ua_gec_errors WHERE error_type LIKE '%Fluency%' OR error_type LIKE '%Grammar%' LIMIT 1")
+    elif "СУМ-20" in auth:
+        s_cur.execute("SELECT id FROM sum20_articles WHERE headword LIKE ? LIMIT 1", (f"%{t_clean}%",))
+    elif "Правопис" in auth:
+        s_cur.execute("SELECT id FROM external_articles WHERE title LIKE '%Правопис%' OR text LIKE '%правопис%' LIMIT 1")
+    else:
+        s_cur.execute("SELECT id FROM textbooks WHERE text LIKE ? LIMIT 1", (f"%{t_clean}%",))
+
     return {
         "source": ev["source"],
         "section": ev.get("section"),
@@ -309,31 +340,57 @@ def make_reviewer_confirmation(
     except Exception as exc:
         raise ValueError(f"Failed to read or parse review dossier at '{dossier_path}': {exc}") from exc
 
-    # Validate reviewer independence and provenance (strictly disallow self-review / builder)
-    reviewer_id = rev_rec.get("reviewer_id")
-    reviewer_family = rev_rec.get("reviewer_family")
-    unapproved_reviewers = {"builder", "gemini", "claude", "codex", "assistant", "ai", "self"}
+    # Validate reviewer independence and provenance against accredited whitelist (Fail closed)
+    reviewer_id = str(rev_rec.get("reviewer_id") or "").strip()
+    reviewer_family = str(rev_rec.get("reviewer_family") or "").strip()
 
-    if not reviewer_id or str(reviewer_id).strip().lower() in unapproved_reviewers:
+    unapproved_reviewers = {"builder", "gemini", "claude", "codex", "assistant", "ai", "self"}
+    if not reviewer_id or reviewer_id.lower() in unapproved_reviewers:
         raise ValueError(
             f"Invalid reviewer_id '{reviewer_id}' for case '{case_id}': independent language review cannot be performed by builder or model"
         )
-    if reviewer_family != "independent_language_review":
+
+    if reviewer_id not in ACCREDITED_INDEPENDENT_REVIEWERS:
         raise ValueError(
-            f"Invalid reviewer_family '{reviewer_family}' for case '{case_id}': expected 'independent_language_review'"
+            f"Reviewer '{reviewer_id}' for case '{case_id}' is not in ACCREDITED_INDEPENDENT_REVIEWERS whitelist. "
+            f"Independent language review requires accredited reviewer."
+        )
+
+    accredited_info = ACCREDITED_INDEPENDENT_REVIEWERS[reviewer_id]
+    if reviewer_family != accredited_info["reviewer_family"]:
+        raise ValueError(
+            f"Reviewer family '{reviewer_family}' mismatch for accredited reviewer '{reviewer_id}'"
+        )
+
+    # Validate against signed human acceptance review signoff
+    signoff_path = PROJECT_ROOT / "data/projects/open_model_data/components/decolonization/acceptance_review_sample.signoff.json"
+    if not signoff_path.is_file():
+        raise ValueError(f"Missing acceptance review signoff file at '{signoff_path}'")
+    try:
+        signoff_data = json.loads(signoff_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise ValueError(f"Corrupted acceptance review signoff file at '{signoff_path}': {exc}") from exc
+
+    if signoff_data.get("reviewer_id") != reviewer_id:
+        raise ValueError(
+            f"Reviewer ID '{reviewer_id}' for case '{case_id}' does not match signoff reviewer '{signoff_data.get('reviewer_id')}'"
+        )
+    if signoff_data.get("reviewer_family") != reviewer_family:
+        raise ValueError(
+            f"Reviewer family '{reviewer_family}' for case '{case_id}' does not match signoff family '{signoff_data.get('reviewer_family')}'"
         )
 
     if dossier.get("review_receipt_id") != receipt_id:
         raise ValueError(
             f"Dossier receipt ID '{dossier.get('review_receipt_id')}' mismatch with registry receipt ID '{receipt_id}'"
         )
-    if dossier.get("reviewer_id") != reviewer_id:
+    if dossier.get("reviewer_id") != reviewer_id or dossier.get("reviewer_id") not in ACCREDITED_INDEPENDENT_REVIEWERS:
         raise ValueError(
-            f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch with registry reviewer_id '{reviewer_id}'"
+            f"Dossier reviewer_id '{dossier.get('reviewer_id')}' mismatch or not accredited"
         )
-    if dossier.get("reviewer_family") != "independent_language_review":
+    if dossier.get("reviewer_family") != reviewer_family:
         raise ValueError(
-            f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not 'independent_language_review'"
+            f"Dossier reviewer_family '{dossier.get('reviewer_family')}' is not '{reviewer_family}'"
         )
     if dossier.get("verdict") != "APPROVED" or dossier.get("status") != "confirmed":
         raise ValueError(

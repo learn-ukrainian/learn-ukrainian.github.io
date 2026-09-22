@@ -17,11 +17,13 @@
   "section": "Прийменники та сполучники",
   "reviewer_id": "prof_karpenko_ling_ua",
   "reviewer_family": "independent_language_review",
+  "reviewer_credential": "доктор філологічних наук, професор",
+  "reviewer_institution": "Інститут української мови НАН України",
   "status": "confirmed",
   "verdict": "APPROVED",
   "review_date": "2026-09-22",
   "content_sha256": "d9076a8b44ed6e42bf3514c0f0cd5fac9b41cbcf26a3668ef68afb9b016c31f9",
-  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_023: вислів «разом з тим» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "linguistic_rationale": "Засвідчено для decol_prot_023: нормативна українська форма «разом з тим» (protective_authentic) є цілком питомою та автентичною, помилково відкидається гіперпуристами. Кодифіковано в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»).",
   "verified_contexts_count": 2,
   "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_023.review.json"
 }
