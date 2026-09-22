@@ -20,7 +20,7 @@ import yaml
 from jsonschema import Draft202012Validator
 
 from scripts.curriculum.resolver.codes import TABS
-from scripts.review.receipts.ledger import LedgerError, LedgerHashStaleLastLine, records
+from scripts.review.receipts.ledger import REVIEW_TOOLS, LedgerError, LedgerHashStaleLastLine, records
 
 from . import codes
 
@@ -334,9 +334,10 @@ def _check_finding_evidence(
                     codes.OUTCOME_NOT_IN_LEDGER,
                     f"{finding.get('id')}: outcome {outcome} is not in receipt {receipt_id}",
                 )
-    else:
-        for receipt_id in _cited_receipts(finding):
-            _resolve(
+    elif present[0] == "evidence":
+        receipt_id = finding["evidence"].get("receipt") if isinstance(finding["evidence"], dict) else None
+        if isinstance(receipt_id, str):
+            record = _resolve(
                 check,
                 receipt_id,
                 current=current,
@@ -347,6 +348,30 @@ def _check_finding_evidence(
                 manifest_sha256=manifest_sha256,
                 previous_attempt_id=previous_attempt_id,
             )
+            if record is not None and (record.get("status") != "ok" or record.get("tool") not in REVIEW_TOOLS):
+                check.add(
+                    codes.EVIDENCE_RECEIPT_INVALID,
+                    f"{finding.get('id')}: positive evidence receipt {receipt_id} requires status: ok and review tool",
+                )
+    else:
+        for receipt_id in _cited_receipts(finding):
+            record = _resolve(
+                check,
+                receipt_id,
+                current=current,
+                previous=previous,
+                allow_previous=allow_previous,
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_sha256=manifest_sha256,
+                previous_attempt_id=previous_attempt_id,
+            )
+            if record is not None and (record.get("status") != "ok" or record.get("tool") not in REVIEW_TOOLS):
+                check.add(
+                    codes.EVIDENCE_RECEIPT_INVALID,
+                    f"{finding.get('id')}: source conflict receipt {receipt_id} requires status: ok and review tool",
+                )
+
     expected = finding.get("expected")
     if not isinstance(expected, str):
         return

@@ -11,6 +11,7 @@ RECEIPT_NOT_IN_LEDGER = "receipt_not_in_ledger"
 LEDGER_UNREADABLE = "ledger_unreadable"
 LEDGER_HASH_STALE_LAST_LINE = "ledger_hash_stale_last_line"
 EXPECTED_NOT_IN_RESULT = "expected_not_in_result"
+EVIDENCE_RECEIPT_INVALID = "evidence_receipt_invalid"
 QUOTE_EMPTY = "quote_empty"
 QUOTE_NOT_IN_UNIT = "quote_not_in_unit"
 LOCATION_NOT_IN_LESSON = "location_not_in_lesson"
@@ -38,6 +39,8 @@ DESCRIPTIONS: dict[str, str] = {
     LEDGER_UNREADABLE: "failure: the ledger or its sha256 sidecar is missing, mismatched, or malformed",
     LEDGER_HASH_STALE_LAST_LINE: "failure: the ledger hash file is stale by exactly one trailing line (crash recovery state)",
     EXPECTED_NOT_IN_RESULT: "failure: expected is not a substring of any cited receipt's stored result",
+    EVIDENCE_RECEIPT_INVALID: "failure: positive evidence requires a receipt with status: ok from a tool in the review tool list",
+
 
     QUOTE_EMPTY: "failure: a location quote is empty after NFC and stress-stripping",
     QUOTE_NOT_IN_UNIT: "failure: the quote does not occur inside the named tab, activity, and item",

@@ -192,6 +192,8 @@ def _record(
 
 
 def _layout(tmp_path: Path, *, recap: bool = False) -> dict:
+    tmp_path = Path(tmp_path)
+    tmp_path.mkdir(parents=True, exist_ok=True)
     manifest = tmp_path / "manifest.yaml"
     lesson = tmp_path / "lesson.yaml"
     review = tmp_path / "review.yaml"
@@ -200,6 +202,7 @@ def _layout(tmp_path: Path, *, recap: bool = False) -> dict:
     _dump(lesson, _lesson())
     create_empty_ledger(ledger)
     return {"manifest": manifest, "lesson": lesson, "review": review, "ledger": ledger, "digest": digest}
+
 
 
 
@@ -811,3 +814,92 @@ def test_ledger_stale_last_line_recovery(tmp_path: Path) -> None:
     assert not validated.ok
     assert codes.LEDGER_HASH_STALE_LAST_LINE in _codes(validated)
     assert codes.LEDGER_UNREADABLE not in _codes(validated)
+
+
+def test_positive_evidence_requires_ok_status_and_review_tool(tmp_path: Path) -> None:
+    # 1. Error status receipt cited as positive evidence
+    err_paths = _layout(tmp_path / "case_err")
+    err_receipt = _record(
+        err_paths["ledger"],
+        manifest=err_paths["digest"],
+        result="some error message",
+        status="error",
+        tool="search_text",
+    )
+    _dump(
+        err_paths["review"],
+        _review(
+            kind="lesson",
+            manifest_hash=err_paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[_finding(evidence={"receipt": err_receipt})],
+        ),
+    )
+    err_val = _validate(err_paths)
+    assert not err_val.ok
+    assert codes.EVIDENCE_RECEIPT_INVALID in _codes(err_val)
+
+    # 2. Refused status receipt cited as positive evidence
+    ref_paths = _layout(tmp_path / "case_ref")
+    ref_receipt = _record(
+        ref_paths["ledger"],
+        manifest=ref_paths["digest"],
+        result="refused",
+        status="refused",
+        tool="search_sources",
+    )
+    _dump(
+        ref_paths["review"],
+        _review(
+            kind="lesson",
+            manifest_hash=ref_paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[_finding(evidence={"receipt": ref_receipt})],
+        ),
+    )
+    ref_val = _validate(ref_paths)
+    assert not ref_val.ok
+    assert codes.EVIDENCE_RECEIPT_INVALID in _codes(ref_val)
+
+    # 3. Tool not in REVIEW_TOOLS (e.g. search_sources) even with status: ok
+    bad_tool_paths = _layout(tmp_path / "case_bad_tool")
+    bad_receipt = _record(
+        bad_tool_paths["ledger"],
+        manifest=bad_tool_paths["digest"],
+        result="some result",
+        status="ok",
+        tool="search_sources",
+    )
+    _dump(
+        bad_tool_paths["review"],
+        _review(
+            kind="lesson",
+            manifest_hash=bad_tool_paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[_finding(evidence={"receipt": bad_receipt})],
+        ),
+    )
+    bad_tool_val = _validate(bad_tool_paths)
+    assert not bad_tool_val.ok
+    assert codes.EVIDENCE_RECEIPT_INVALID in _codes(bad_tool_val)
+
+    # 4. Valid status: ok from a review tool -> PASS
+    good_paths = _layout(tmp_path / "case_good")
+    good_receipt = _record(
+        good_paths["ledger"],
+        manifest=good_paths["digest"],
+        result="alpha-item-text is attested",
+        status="ok",
+        tool="search_text",
+    )
+    _dump(
+        good_paths["review"],
+        _review(
+            kind="lesson",
+            manifest_hash=good_paths["digest"],
+            checks=_lesson_checks(["F-01"]),
+            findings=[_finding(evidence={"receipt": good_receipt})],
+        ),
+    )
+    good_val = _validate(good_paths)
+    assert good_val.ok
