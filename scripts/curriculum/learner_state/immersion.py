@@ -43,16 +43,20 @@ class LessonBand:
     module_structural: dict[str, int]
     source: Literal["ulp_vocab", "arc_table"]
     not_checked: list[str]
+    waiver: str | None = None
 
     def to_dict(self) -> dict[str, Any]:
         """Machine-readable dictionary representation."""
-        return {
+        result: dict[str, Any] = {
             "band_key": self.band_key,
             "advisory_uk_share": list(self.advisory_uk_share),
             "module_structural": self.module_structural,
             "source": self.source,
             "not_checked": self.not_checked,
         }
+        if self.waiver:
+            result["waiver"] = self.waiver
+        return result
 
     def render_text(self) -> str:
         """Human-readable text output."""
@@ -65,6 +69,8 @@ class LessonBand:
             f"  min_vocab_entries: {self.module_structural['min_vocab_entries']}",
             f"Source: {self.source}",
         ]
+        if self.waiver:
+            lines.append(f"Waiver: {self.waiver}")
         if self.not_checked:
             lines.append(f"Not checked: {', '.join(self.not_checked)}")
         return "\n".join(lines)
@@ -74,8 +80,9 @@ def compute_lesson_immersion_band(
     track: str,
     arc_position: int,
     lesson_n: int,
-    cumulative_core_count: int,
+    cumulative_core_count: int | None = None,
     *,
+    waiver: str | None = None,
     arc_loader: Callable[[str], list[ArcPosition]] | None = None,
     arc_path: Path | None = None,
     doc_path: Path | None = None,
@@ -84,7 +91,8 @@ def compute_lesson_immersion_band(
 
     For A1, uses config.compute_immersion_band with the seven ULP knees.
     For A2, B1, B2, reads ArcPosition.band_key from load_arc and looks up via
-    config._find_immersion_band_by_key.
+    config._find_immersion_band_by_key. An unknown band_key or missing band_key
+    fails with arc_band_table_missing, never falling back to top band or module numbers.
     """
     track_key = track.lower().split("-")[0] if "-" in track else track.lower()
 
@@ -92,10 +100,10 @@ def compute_lesson_immersion_band(
         band = config.compute_immersion_band(
             "a1",
             arc_position,
-            {"cumulative_vocabulary": cumulative_core_count},
+            {"cumulative_vocabulary": cumulative_core_count if cumulative_core_count is not None else 0},
         )
         band_key = str(band["key"])
-        source: Literal["ulp_vocab", "arc_table"] = "ulp_vocab"
+        source: Literal["ulp_vocab", "arc_table"] = "ulp_vocab" if config.USE_ULP_IMMERSION_DERIVATION else "arc_table"
     else:
         # Load arc
         if arc_loader is not None:
@@ -121,7 +129,25 @@ def compute_lesson_immersion_band(
                 f"arc position {arc_position} in {track} has no band_key; never falling back to module numbers",
             )
         band_key = pos_record.band_key
+
+        family = config._immersion_track_key(track)
+        family_bands = config.IMMERSION_POLICIES.get(family, ())
+        default_bands = config.IMMERSION_POLICIES.get("default", ())
+        known_keys = {b["key"] for b in family_bands} | {b["key"] for b in default_bands}
+        if band_key not in known_keys:
+            raise ImmersionError(
+                codes.ARC_BAND_TABLE_MISSING,
+                f"unknown band_key {band_key!r} for track {track!r} not found in immersion policies; "
+                "refusing to fall through to top band",
+            )
+
         band = config._find_immersion_band_by_key(track, band_key)
+        if band.get("key") != band_key:
+            raise ImmersionError(
+                codes.ARC_BAND_TABLE_MISSING,
+                f"unknown band_key {band_key!r} for track {track!r} not found in immersion policies; "
+                "refusing to fall through to top band",
+            )
         source = "arc_table"
 
     advisory_uk_share = (int(band["advisory_pct_min"]), int(band["advisory_pct_max"]))
@@ -137,4 +163,5 @@ def compute_lesson_immersion_band(
         module_structural=module_structural,
         source=source,
         not_checked=[codes.LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED],
+        waiver=waiver,
     )

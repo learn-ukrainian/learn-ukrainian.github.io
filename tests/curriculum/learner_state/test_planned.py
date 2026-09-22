@@ -361,3 +361,47 @@ def test_determinism_byte_identical_output(tmp_path: Path) -> None:
     json2 = json.dumps(s2.to_dict(), sort_keys=True)
     assert json1 == json2
     assert s1.render_text() == s2.render_text()
+
+
+def test_base_and_name_ids_in_plan_core_do_not_increase_cumulative_count(tmp_path: Path) -> None:
+    """Base-layer and name IDs must not increase cumulative_core_count even if listed as core in plan."""
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+
+    # In module-one.yaml lesson 1, add W-BASE-01 and W-NAME-01 to core vocabulary
+    p1_file = plans_dir / "module-one.yaml"
+    data = yaml.safe_load(p1_file.read_text(encoding="utf-8"))
+    data["lessons"][0]["inventory"]["vocabulary"]["core"] = [
+        {"lemma": "base-one", "evidence": "W-BASE-01"},
+        {"lemma": "Speaker One", "evidence": "W-NAME-01"},
+        {"lemma": "core-one", "evidence": "W-CORE-01"},
+    ]
+    _write_yaml(p1_file, data)
+
+    s1_2 = planned_state("a1", 1, 2, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    # W-BASE-01 and W-NAME-01 must not increase cumulative_core_count
+    assert s1_2.cumulative_core_count == 1
+    assert "W-CORE-01" in s1_2.core_ids
+    assert "W-BASE-01" not in s1_2.core_ids
+    assert "W-NAME-01" not in s1_2.core_ids
+
+    # All remain admitted in learner state
+    assert "W-BASE-01" in s1_2.base_ids
+    assert "W-NAME-01" in s1_2.name_ids
+    assert "W-BASE-01" in s1_2.all_allowed_ids
+    assert "W-NAME-01" in s1_2.all_allowed_ids
+    assert "W-CORE-01" in s1_2.all_allowed_ids
+
+
+def test_arc_ref_level_mismatch_fails(tmp_path: Path) -> None:
+    """When arc_ref.level differs from requested level, fail with PLAN_YAML_INVALID."""
+    plans_dir, evidence_dir = _setup_synthetic_curriculum(tmp_path)
+
+    p1_file = plans_dir / "module-one.yaml"
+    data = yaml.safe_load(p1_file.read_text(encoding="utf-8"))
+    data["arc_ref"]["level"] = "a2"  # Mismatch with requested "a1"
+    _write_yaml(p1_file, data)
+
+    with pytest.raises(PlannedStateError) as exc_info:
+        planned_state("a1", 1, 1, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    assert exc_info.value.code == codes.PLAN_YAML_INVALID
+    assert "arc_ref.level 'a2' does not match requested level 'a1'" in exc_info.value.message

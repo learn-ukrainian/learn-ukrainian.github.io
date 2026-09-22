@@ -31,3 +31,8 @@ def test_ulp_vocab_knees_pinned_hash() -> None:
     assert actual == EXPECTED_ULP_VOCAB_KNEE_SHA256, (
         f"_ULP_VOCAB_KNEE_PER_BAND in scripts/config.py changed! Expected sha256 {EXPECTED_ULP_VOCAB_KNEE_SHA256}, got {actual}"
     )
+
+
+def test_use_ulp_immersion_derivation_pinned() -> None:
+    """Pin the live derivation toggle in scripts/config.py."""
+    assert cfg.USE_ULP_IMMERSION_DERIVATION is True

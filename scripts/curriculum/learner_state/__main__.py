@@ -135,6 +135,16 @@ def build_parser() -> argparse.ArgumentParser:
         help="override cumulative core vocabulary count (for dry-run/testing; defaults to computing planned state)",
     )
     band_parser.add_argument(
+        "--allow-missing-prior",
+        action="store_true",
+        help="waive missing earlier plans for out-of-order pilot authoring",
+    )
+    band_parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="refuse all waivers; fail closed when any earlier plan is missing",
+    )
+    band_parser.add_argument(
         "--plans-dir",
         type=Path,
         default=None,
@@ -197,26 +207,31 @@ def main(argv: list[str] | None = None) -> int:
             return 0
 
         elif args.command == "band":
+            track_key = args.level.lower().split("-")[0] if "-" in args.level else args.level.lower()
             count = args.cumulative_count
-            if count is None:
-                # Compute planned state to get accurate cumulative core count
+            waiver: str | None = None
+            if track_key == "a1" and count is None:
+                # Compute planned state only for A1 to get accurate cumulative core count
                 state = planned_state(
                     args.level,
                     args.position,
                     args.lesson,
-                    allow_missing_prior=True,
+                    allow_missing_prior=args.allow_missing_prior,
+                    strict=args.strict,
                     plans_dir=args.plans_dir,
                     evidence_dir=args.evidence_dir,
                     words_path=args.words,
                     base_request_path=args.base_request,
                 )
                 count = state.cumulative_core_count
+                waiver = state.waiver
 
             band = compute_lesson_immersion_band(
                 args.level,
                 args.position,
                 args.lesson,
                 count,
+                waiver=waiver,
                 arc_path=args.arc_path,
             )
             if args.json:

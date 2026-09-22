@@ -129,3 +129,58 @@ def test_structural_minimums_carried_unchanged() -> None:
     for val in band.module_structural.values():
         assert isinstance(val, int)
         assert val >= 0
+
+
+def test_unknown_band_key_fails_arc_band_table_missing() -> None:
+    """An unknown band_key must fail with arc_band_table_missing, never falling through to top band."""
+    synthetic_positions = [
+        ArcPosition(
+            position=1,
+            slug="synth-slug",
+            est_lessons=4,
+            job="Synthetic job",
+            inventory_text=None,
+            phase="Phase 1",
+            skills_text="L",
+            skills=["L"],
+            standard_line_refs=[],
+            band_key="nonexistent_band_xyz",
+        )
+    ]
+    with pytest.raises(ImmersionError) as exc_info:
+        compute_lesson_immersion_band(
+            "a2",
+            arc_position=1,
+            lesson_n=1,
+            arc_loader=lambda _track: synthetic_positions,
+        )
+    assert exc_info.value.code == codes.ARC_BAND_TABLE_MISSING
+    assert "unknown band_key" in exc_info.value.message
+
+
+def test_a1_band_source_not_ulp_vocab_when_derivation_disabled(monkeypatch: pytest.MonkeyPatch) -> None:
+    """When USE_ULP_IMMERSION_DERIVATION is False, source is not ulp_vocab."""
+    monkeypatch.setattr(cfg, "USE_ULP_IMMERSION_DERIVATION", False)
+    band = compute_lesson_immersion_band("a1", arc_position=1, lesson_n=1, cumulative_core_count=100)
+    assert band.source != "ulp_vocab"
+    assert band.source == "arc_table"
+
+
+def test_lesson_band_waiver_carried_to_dict_and_text() -> None:
+    band = compute_lesson_immersion_band(
+        "a1",
+        arc_position=1,
+        lesson_n=1,
+        cumulative_core_count=100,
+        waiver="waived: prior_plans_missing",
+    )
+    assert band.waiver == "waived: prior_plans_missing"
+    assert band.to_dict()["waiver"] == "waived: prior_plans_missing"
+    assert "Waiver: waived: prior_plans_missing" in band.render_text()
+
+
+def test_a2_band_does_not_require_cumulative_core_count() -> None:
+    """For A2, cumulative_core_count is optional and not needed."""
+    band = compute_lesson_immersion_band("a2", arc_position=1, lesson_n=1)
+    assert band.band_key == "a2-bridge"
+    assert band.source == "arc_table"

@@ -257,3 +257,130 @@ def test_cli_failing_planned_exits_nonzero(tmp_path: Path) -> None:
     )
     assert res.returncode == 1
     assert "Error [base_layer_missing]" in res.stderr
+
+
+def test_cli_band_a2_json_output() -> None:
+    """A2 band loads from arc table without requiring base layer or plans."""
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "band",
+            "a2",
+            "1",
+            "1",
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert payload["band_key"] == "a2-bridge"
+    assert payload["source"] == "arc_table"
+    assert payload["advisory_uk_share"] == [75, 100]
+
+
+def test_cli_band_a1_fails_closed_when_prior_plan_missing(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    # Move mod-01.yaml to position 2 so position 1 is missing
+    p1 = plans_dir / "mod-01.yaml"
+    data = yaml.safe_load(p1.read_text(encoding="utf-8"))
+    data["arc_ref"]["position"] = 2
+    _write_yaml(plans_dir / "mod-02.yaml", data)
+    p1.unlink()
+
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "band",
+            "a1",
+            "2",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 1
+    assert "prior_plans_missing" in res.stderr
+
+
+def test_cli_band_a1_allow_missing_prior_includes_waiver(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    # Move mod-01.yaml to position 2 so position 1 is missing
+    p1 = plans_dir / "mod-01.yaml"
+    data = yaml.safe_load(p1.read_text(encoding="utf-8"))
+    data["arc_ref"]["position"] = 2
+    _write_yaml(plans_dir / "mod-02.yaml", data)
+    p1.unlink()
+
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "band",
+            "a1",
+            "2",
+            "1",
+            "--allow-missing-prior",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 0
+    payload = json.loads(res.stdout)
+    assert "waiver" in payload
+    assert "prior_plans_missing" in payload["waiver"]
+
+
+def test_cli_band_a1_strict_refuses_waiver(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    # Move mod-01.yaml to position 2 so position 1 is missing
+    p1 = plans_dir / "mod-01.yaml"
+    data = yaml.safe_load(p1.read_text(encoding="utf-8"))
+    data["arc_ref"]["position"] = 2
+    _write_yaml(plans_dir / "mod-02.yaml", data)
+    p1.unlink()
+
+    res = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "band",
+            "a1",
+            "2",
+            "1",
+            "--allow-missing-prior",
+            "--strict",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res.returncode == 1
+    assert "prior_plans_missing" in res.stderr

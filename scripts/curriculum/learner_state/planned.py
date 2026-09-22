@@ -7,7 +7,7 @@ allowlist:
   lessons 1..lesson_n-1 of this plan, each with (position, lesson) introduced at
 - grammar_ids and letters: accumulated the same way
 - name_ids: speaker and place ids from every earlier plan and this plan's dialogues
-  of lessons 1..lesson_n (same scope as core_ids; admitted for use, never counted as vocab)
+  of lessons 1..lesson_n (admits names through current lesson; core stops at previous lesson; admitted for use, never counted as vocab)
 - cumulative_core_count = len(core_ids) — base layer and names excluded from count
 - incidental ids never enter state
 - Rule 1: Planned state is ids, never lemmas. A bare lemma anywhere is a failure (bare_lemma).
@@ -159,6 +159,12 @@ def planned_state(
                 codes.PLAN_YAML_INVALID,
                 f"plan file {p_path} missing arc_ref.position",
             )
+        plan_level = arc_ref.get("level")
+        if plan_level != level:
+            raise PlannedStateError(
+                codes.PLAN_YAML_INVALID,
+                f"plan file {p_path} arc_ref.level {plan_level!r} does not match requested level {level!r}",
+            )
         pos = arc_ref["position"]
         if pos in plans_by_position:
             raise PlannedStateError(
@@ -250,7 +256,7 @@ def planned_state(
 
             # Name IDs (speaker and place ids):
             # - For pos < position: all lessons
-            # - For pos == position: lessons 1..lesson_n (same scope as core_ids; admitted for use)
+            # - For pos == position: lessons 1..lesson_n (admits names through current lesson; core stops at previous lesson; admitted for use)
             is_prior_or_current_name = (pos < position) or (pos == position and l_n <= lesson_n)
             if is_prior_or_current_name:
                 dial = lesson.get("dialogue") or {}
@@ -272,6 +278,12 @@ def planned_state(
     grammar_ids = dict(sorted(grammar_ids.items()))
     letters = dict(sorted(letters.items()))
     name_ids = dict(sorted(name_ids.items()))
+
+    # Base-layer ids and name ids must not increase cumulative_core_count,
+    # even when a plan lists them as core.
+    base_id_set = set(base_ids)
+    name_id_set = set(name_ids.keys())
+    core_ids = {k: v for k, v in core_ids.items() if k not in base_id_set and k not in name_id_set}
 
     # cumulative_core_count = len(core_ids) — base layer and names excluded
     cumulative_core_count = len(core_ids)
