@@ -1307,6 +1307,16 @@ def execute_mining_and_release(
         else:
             mixed_count += 1
 
+    try:
+        eval_file_rel = str(eval_file.relative_to(REPO_ROOT))
+    except ValueError:
+        eval_file_rel = str(eval_file)
+
+    try:
+        sft_file_rel = str(sft_file.relative_to(REPO_ROOT))
+    except ValueError:
+        sft_file_rel = str(sft_file)
+
     # Write release receipt
     receipt = {
         "schema_version": "v1_dialect_multizone_release_receipt",
@@ -1315,7 +1325,7 @@ def execute_mining_and_release(
         "created_at": datetime.now(UTC).isoformat(),
         "git_commit": "gemini/8102-dialect-mining",
         "evaluation_benchmark": {
-            "file_path": str(eval_file.relative_to(REPO_ROOT)),
+            "file_path": eval_file_rel,
             "sha256": eval_sha,
             "total_cases": len(eval_cases),
             "preserve_cases": preserve_count,
@@ -1324,11 +1334,11 @@ def execute_mining_and_release(
             "sub_zone_counts": dict(sub_counts),
         },
         "sft_training_dataset": {
-            "file_path": str(sft_file.relative_to(REPO_ROOT)),
+            "file_path": sft_file_rel,
             "sha256": sft_sha,
             "total_trajectories": len(sft_trajectories),
-            "dialect_trajectories": 450,
-            "replay_buffer_trajectories": 100,
+            "dialect_trajectories": sum(1 for t in sft_trajectories if not t.get("is_calque_or_russianism", False)),
+            "replay_buffer_trajectories": sum(1 for t in sft_trajectories if t.get("is_calque_or_russianism", False)),
         },
         "invariants_verified": {
             "zero_train_eval_leakage": True,

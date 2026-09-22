@@ -211,3 +211,83 @@ def test_execute_mining_and_release_forwards_replay_arguments(
     assert captured_kwargs["replay_quota"] == 42
     assert captured_kwargs["replay_shards_dir"] == shards_dir
     assert captured_kwargs["sft_dialect_quota"] == 500 - 42
+
+
+def test_execute_mining_and_release_receipt_generation_derived_counts(
+    tmp_path: Path, isolated_vesum_db: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Verify that execute_mining_and_release dynamically derives dialect vs replay counts in the receipt."""
+    import hashlib
+    import json
+
+    import jsonschema
+
+    import scripts.projects.open_model_data.v5_mine_dialect_corpus as mdc
+
+    mock_eval = (
+        [{"macro_zone": "southwestern", "sub_zone": "hutsul", "case_type": "PRESERVE"}] * 600
+        + [{"macro_zone": "northern", "sub_zone": "polissian", "case_type": "PRESERVE"}] * 400
+        + [{"macro_zone": "southeastern", "sub_zone": "slobozhan", "case_type": "PRESERVE"}] * 500
+    )
+
+    monkeypatch.setattr(mdc, "mine_all_candidate_sentences", lambda _db: [])
+    monkeypatch.setattr(mdc, "partition_candidates_by_lemma", lambda _c: ([], []))
+    monkeypatch.setattr(mdc, "build_evaluation_benchmark", lambda *args, **kwargs: mock_eval)
+    # Bypass per-case schema validation for mocked minimal objects
+    monkeypatch.setattr(mdc, "EVAL_SCHEMA_FILE", tmp_path / "no_eval_schema.json")
+    monkeypatch.setattr(mdc, "TRAJECTORY_SCHEMA_FILE", tmp_path / "no_traj_schema.json")
+
+    dummy_db = tmp_path / "dummy.db"
+    dummy_db.touch()
+
+    # Case 1: Default execution (replay_quota = 0 -> 500 dialect, 0 replay)
+    out_dir_1 = tmp_path / "out1"
+    mock_sft_1 = [
+        {"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False}
+        for i in range(500)
+    ]
+    monkeypatch.setattr(mdc, "build_sft_dialect_dataset", lambda *args, **kwargs: mock_sft_1)
+
+    receipt_1 = mdc.execute_mining_and_release(
+        db_path=dummy_db,
+        vesum_db=isolated_vesum_db,
+        output_dir=out_dir_1,
+        replay_quota=0,
+    )
+
+    assert receipt_1["sft_training_dataset"]["total_trajectories"] == 500
+    assert receipt_1["sft_training_dataset"]["dialect_trajectories"] == 500
+    assert receipt_1["sft_training_dataset"]["replay_buffer_trajectories"] == 0
+
+    # Ensure disk artifacts exist and sha256 matches
+    receipt_file_1 = out_dir_1 / "release_receipt.json"
+    assert receipt_file_1.exists()
+    expected_sha_1 = hashlib.sha256(receipt_file_1.read_bytes()).hexdigest()
+    assert (out_dir_1 / "release_receipt.json.sha256").read_text(encoding="utf-8").startswith(expected_sha_1)
+
+    # Validate against actual repository receipt schema
+    schema = json.loads(mdc.RECEIPT_SCHEMA_FILE.read_text(encoding="utf-8"))
+    jsonschema.validate(receipt_1, schema)
+
+    # Case 2: Mixed execution with replay (e.g. 450 dialect, 50 replay)
+    out_dir_2 = tmp_path / "out2"
+    mock_sft_2 = [
+        {"trajectory_id": f"traj.dial.{i}", "is_calque_or_russianism": False}
+        for i in range(450)
+    ] + [
+        {"trajectory_id": f"traj.replay.{i}", "is_calque_or_russianism": True}
+        for i in range(50)
+    ]
+    monkeypatch.setattr(mdc, "build_sft_dialect_dataset", lambda *args, **kwargs: mock_sft_2)
+
+    receipt_2 = mdc.execute_mining_and_release(
+        db_path=dummy_db,
+        vesum_db=isolated_vesum_db,
+        output_dir=out_dir_2,
+        replay_quota=50,
+    )
+
+    assert receipt_2["sft_training_dataset"]["total_trajectories"] == 500
+    assert receipt_2["sft_training_dataset"]["dialect_trajectories"] == 450
+    assert receipt_2["sft_training_dataset"]["replay_buffer_trajectories"] == 50
+    jsonschema.validate(receipt_2, schema)

@@ -121,7 +121,7 @@
         },
         "replay_buffer_trajectories": {
           "type": "integer",
-          "minimum": 100
+          "minimum": 0
         }
       }
     },

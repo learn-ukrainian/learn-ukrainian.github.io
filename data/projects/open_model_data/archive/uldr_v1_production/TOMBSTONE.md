@@ -13,7 +13,7 @@ This directory (`uldr_v1_production`) contains the initial 6,000 SFT and 3,000 D
 
 Comprehensive dataset audit and empirical evaluation revealed critical flaws:
 1. **Contaminated Reasoning Chains:** Early synthetic generations included hallucinated justifications, grammatical inconsistencies, and occasional Soviet calques embedded within the `<thought>` traces.
-2. **Pre-training Reality & Foundation Model Shifts:** As demonstrated in UNLP 2026 literature (*Paniv et al.*) and the release of Gemma 4, modern open-weights models achieve top-tier general Ukrainian language fluency out of the box without requiring expensive domain pre-training.
+2. **Targeted Adaptation vs. Uncurated Pre-training:** As demonstrated in UNLP 2026 literature (*Paniv et al.*), data-efficient adaptation using targeted vocabulary expansion and highly filtered instruction tuning substantially outperforms indiscriminate pre-training scrapes. Furthermore, modern foundation models (e.g. Gemma 4) exhibit strong baseline Ukrainian capabilities out of the box, confirming that bulk synthetic pre-training is obsolete compared to precision alignment.
 3. **Shift to High-Precision Moat:** Our project value resides exclusively in **surgical alignment and decolonization**—calque defense, valency correction, authentic phraseology, and dialect protection—not bulk synthetic text.
 
 ---
