@@ -59,7 +59,7 @@ class TestStateStandardFloorPolicy:
                     {
                         'id': 'G-a2-005',
                         'point': 'Polite third person imperative forms',
-                        'evidence': ['ULP-25', 'T-102'],
+                        'evidence': ['ULP-25: G-a2-005', 'T-102'],
                     }
                 ]
             },
@@ -655,3 +655,78 @@ class TestAstraReviewFindings:
         }
         violations_arc = check_plan_compliance(plan_arc, mapping=mapping)
         assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_arc)
+
+    def test_sibling_field_evidence_unrelated_fails_and_move_specific_passes(self, mapping):
+        """Sibling field 'evidence' directly on item must name move, not bypass check."""
+        plan_unrelated = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': ['ULP episode 1: alphabet'],
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_unrelated = check_plan_compliance(plan_unrelated, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_unrelated)
+
+        plan_specific = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': ['ULP episode 25: G-a2-005'],
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_specific = check_plan_compliance(plan_specific, mapping=mapping)
+        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_specific)
+
+        # String evidence variant (not list)
+        plan_str_unrelated = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': 'ULP episode 1: alphabet',
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_str = check_plan_compliance(plan_str_unrelated, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_str)
+
+        plan_str_specific = {
+            'level': 'a1',
+            'lessons': [
+                {
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                                'evidence': 'ULP episode 25: G-a2-005',
+                            }
+                        ]
+                    }
+                }
+            ],
+        }
+        violations_str_spec = check_plan_compliance(plan_str_specific, mapping=mapping)
+        assert not any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_str_spec)
