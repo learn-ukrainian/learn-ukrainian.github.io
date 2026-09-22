@@ -246,23 +246,64 @@ CASE_KEYWORDS: dict[str, set[str]] = {
 }
 
 
+def _is_negative_evidence(text: str) -> bool:
+    """Check if an evidence string indicates absence of evidence or is a negative note."""
+    if not isinstance(text, str):
+        return True
+    cleaned = text.strip()
+    if not cleaned:
+        return True
+    text_lower = cleaned.lower()
+
+    if text_lower in {'none', 'no', 'n/a', 'na', 'false', 'nil', 'null'}:
+        return True
+
+    negative_patterns = [
+        r'\bno\b.*\b(ulp|ukrainian lessons podcast|evidence|episode)\b',
+        r'\bwithout\b.*\b(ulp|ukrainian lessons podcast|evidence)\b',
+        r'\b(lacks?|missing)\b.*\b(ulp|ukrainian lessons podcast|evidence)\b',
+        r'\b(not\s+covered|not\s+found|not\s+available|unavailable|unsupported)\b',
+        r'\b(ulp|ukrainian lessons podcast|evidence)\b.*\b(not\s+found|not\s+available|not\s+covered|missing|none|unavailable|unsupported|does\s+not\b)',
+        r'\bнемає\b',
+        r'\bвідсутн\w*\b',
+    ]
+    return any(re.search(pat, text_lower) for pat in negative_patterns)
+
+
 def _evidence_text_matches_move(text: str, item_key: str, item_id: str, item_name: str) -> bool:
     """Check if an evidence string specifically references the item/move and cites ULP."""
     if not isinstance(text, str):
+        return False
+    if _is_negative_evidence(text):
         return False
     text_lower = text.lower()
     if 'ulp' not in text_lower and 'ukrainian lessons podcast' not in text_lower:
         return False
 
-    keywords = {item_key, item_key.replace('_', ' '), item_key.replace('_', '-')}
-    if item_id:
-        keywords.add(item_id.lower())
-    if item_name:
-        keywords.add(item_name.lower())
-    if item_key in CASE_KEYWORDS:
-        keywords.update(CASE_KEYWORDS[item_key])
+    keywords: set[str] = set()
+    clean_k = item_key.lower().strip() if item_key else ''
+    if clean_k:
+        keywords.add(clean_k)
+        keywords.add(clean_k.replace('_', ' '))
+        keywords.add(clean_k.replace('_', '-'))
+        if clean_k in CASE_KEYWORDS:
+            keywords.update(CASE_KEYWORDS[clean_k])
 
-    return any(kw in text_lower for kw in keywords)
+    if item_id:
+        clean_id = item_id.lower().strip()
+        if clean_id:
+            keywords.add(clean_id)
+
+    if item_name:
+        clean_n = item_name.lower().strip()
+        if clean_n:
+            keywords.add(clean_n)
+
+    clean_keywords = {kw for kw in keywords if kw}
+    if not clean_keywords:
+        return False
+
+    return any(kw in text_lower for kw in clean_keywords)
 
 
 def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | None) -> bool:
@@ -277,19 +318,25 @@ def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | Non
         # 1. Evidence directly on the item dictionary
         item_ulp = item.get('ulp_evidence')
         if not isinstance(item_ulp, bool):
-            if isinstance(item_ulp, str) and ('ulp' in item_ulp.lower() or 'ukrainian lessons podcast' in item_ulp.lower()):
-                return True
-            if isinstance(item_ulp, list):
+            if isinstance(item_ulp, str):
+                if not _is_negative_evidence(item_ulp) and ('ulp' in item_ulp.lower() or 'ukrainian lessons podcast' in item_ulp.lower()):
+                    return True
+            elif isinstance(item_ulp, list):
                 for ev in item_ulp:
-                    if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                    if isinstance(ev, str) and not _is_negative_evidence(ev) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                         return True
 
         evidence = item.get('evidence', [])
         if isinstance(evidence, list):
             for ev in evidence:
-                if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                if isinstance(ev, str) and not _is_negative_evidence(ev) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                     return True
-        elif isinstance(evidence, str) and not isinstance(evidence, bool) and ('ulp' in evidence.lower() or 'ukrainian lessons podcast' in evidence.lower()):
+        elif (
+            isinstance(evidence, str)
+            and not isinstance(evidence, bool)
+            and not _is_negative_evidence(evidence)
+            and ('ulp' in evidence.lower() or 'ukrainian lessons podcast' in evidence.lower())
+        ):
             return True
 
     elif isinstance(item, str):
@@ -303,18 +350,26 @@ def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | Non
     # 2. Check plan-level ulp_evidence tied to this specific item/move
     plan_ulp = plan.get('ulp_evidence')
     if isinstance(plan_ulp, dict):
-        entry = plan_ulp.get(clean_key) or plan_ulp.get(item_name.lower()) or (plan_ulp.get(item_id) if item_id else None)
+        entry = (
+            (plan_ulp.get(clean_key) if clean_key else None)
+            or (plan_ulp.get(item_name.lower()) if item_name else None)
+            or (plan_ulp.get(item_id) if item_id else None)
+        )
         if not isinstance(entry, bool):
-            if isinstance(entry, str) and ('ulp' in entry.lower() or 'ukrainian lessons podcast' in entry.lower()):
-                return True
-            if isinstance(entry, list):
+            if isinstance(entry, str):
+                if not _is_negative_evidence(entry) and ('ulp' in entry.lower() or 'ukrainian lessons podcast' in entry.lower()):
+                    return True
+            elif isinstance(entry, list):
                 for ev in entry:
-                    if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                    if isinstance(ev, str) and not _is_negative_evidence(ev) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                         return True
     elif isinstance(plan_ulp, list):
         for ev in plan_ulp:
             if _evidence_text_matches_move(ev, clean_key, item_id, item_name):
                 return True
+    elif isinstance(plan_ulp, str) and not isinstance(plan_ulp, bool):
+        if _evidence_text_matches_move(plan_ulp, clean_key, item_id, item_name):
+            return True
 
     # 3. Check curriculum arc metadata tied to this move
     for arc_dict in (arc, plan.get('arc'), plan.get('arc_ref')):
@@ -325,40 +380,53 @@ def _has_ulp_evidence(item: Any, plan: dict[str, Any], arc: dict[str, Any] | Non
         moves = arc_dict.get('moves', {})
         move_entry = None
         if isinstance(moves, dict):
-            move_entry = moves.get(clean_key) or (moves.get(item_id) if item_id else None)
+            move_entry = (moves.get(clean_key) if clean_key else None) or (moves.get(item_id) if item_id else None)
         if not move_entry:
-            move_entry = arc_dict.get(clean_key) or (arc_dict.get(item_id) if item_id else None)
+            move_entry = (arc_dict.get(clean_key) if clean_key else None) or (arc_dict.get(item_id) if item_id else None)
 
         if isinstance(move_entry, dict):
             move_ulp = move_entry.get('ulp_evidence')
             if not isinstance(move_ulp, bool):
-                if isinstance(move_ulp, str) and ('ulp' in move_ulp.lower() or 'ukrainian lessons podcast' in move_ulp.lower()):
+                if isinstance(move_ulp, str) and not _is_negative_evidence(move_ulp) and ('ulp' in move_ulp.lower() or 'ukrainian lessons podcast' in move_ulp.lower()):
                     return True
                 if isinstance(move_ulp, list):
                     for ev in move_ulp:
-                        if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                        if isinstance(ev, str) and not _is_negative_evidence(ev) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                             return True
             move_ev = move_entry.get('evidence')
             if isinstance(move_ev, list):
                 for ev in move_ev:
-                    if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                    if isinstance(ev, str) and not _is_negative_evidence(ev) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                         return True
+            elif (
+                isinstance(move_ev, str)
+                and not isinstance(move_ev, bool)
+                and not _is_negative_evidence(move_ev)
+                and ('ulp' in move_ev.lower() or 'ukrainian lessons podcast' in move_ev.lower())
+            ):
+                return True
+        elif isinstance(move_entry, str) and not isinstance(move_entry, bool):
+            if not _is_negative_evidence(move_entry) and ('ulp' in move_entry.lower() or 'ukrainian lessons podcast' in move_entry.lower()):
+                return True
 
         # Check arc['ulp_evidence'] mapping
         arc_ulp = arc_dict.get('ulp_evidence')
         if isinstance(arc_ulp, dict):
-            ev_val = arc_ulp.get(clean_key) or (arc_ulp.get(item_id) if item_id else None)
+            ev_val = (arc_ulp.get(clean_key) if clean_key else None) or (arc_ulp.get(item_id) if item_id else None)
             if not isinstance(ev_val, bool):
-                if isinstance(ev_val, str) and ('ulp' in ev_val.lower() or 'ukrainian lessons podcast' in ev_val.lower()):
+                if isinstance(ev_val, str) and not _is_negative_evidence(ev_val) and ('ulp' in ev_val.lower() or 'ukrainian lessons podcast' in ev_val.lower()):
                     return True
                 if isinstance(ev_val, list):
                     for ev in ev_val:
-                        if isinstance(ev, str) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
+                        if isinstance(ev, str) and not _is_negative_evidence(ev) and ('ulp' in ev.lower() or 'ukrainian lessons podcast' in ev.lower()):
                             return True
         elif isinstance(arc_ulp, list):
             for ev in arc_ulp:
                 if _evidence_text_matches_move(ev, clean_key, item_id, item_name):
                     return True
+        elif isinstance(arc_ulp, str) and not isinstance(arc_ulp, bool):
+            if _evidence_text_matches_move(arc_ulp, clean_key, item_id, item_name):
+                return True
 
     return False
 
@@ -400,7 +468,7 @@ def get_required_items_for_plan(plan: dict[str, Any], plan_level: str, mapping: 
     # 2. Check if plan is a level-level plan (or empty plan with no taught items)
     is_level_plan = plan.get('is_level_plan') is True
     has_no_taught = not (
-        plan.get('grammar') or plan.get('taught_items') or plan.get('covered_items') or plan.get('topics')
+        plan.get('grammar') or plan.get('taught_items') or plan.get('covered_items')
         or plan.get('inventory', {}).get('grammar')
         or any(isinstance(l, dict) and (l.get('grammar') or l.get('inventory', {}).get('grammar')) for l in plan.get('lessons', []))
     )
@@ -475,7 +543,7 @@ def check_plan_compliance(
     required_items = get_required_items_for_plan(plan, plan_level, mapping)
     if required_items:
         taught_set: set[str] = set()
-        for key in ('covered_items', 'taught_items', 'grammar', 'topics'):
+        for key in ('covered_items', 'taught_items', 'grammar'):
             vals = plan.get(key, [])
             if isinstance(vals, list):
                 for v in vals:

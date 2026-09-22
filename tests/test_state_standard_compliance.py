@@ -503,3 +503,65 @@ class TestAstraReviewFindings:
         verbatim_content = ''.join(lines[702:719])
         violations = check_reflexive_verbs_a1(9, verbatim_content, mapping)
         assert len(violations) == 0
+
+    def test_blocker_1_nonempty_topics_does_not_disable_floor(self, mapping):
+        """Blocker 1: Adding topics: ['greetings'] must not disable the Standard-derived minimum floor."""
+        plan = {
+            'level': 'a1',
+            'grammar': [],
+            'topics': ['greetings'],
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert len(violations) > 0
+        assert any(v.code == 'STATE_STANDARD_OMITTED_ITEM' for v in violations)
+
+    def test_blocker_2_item_and_arc_negative_ulp_evidence_fails(self, mapping):
+        """Blocker 2: Item or arc evidence saying 'No ULP evidence exists for this move.' must fail."""
+        # Item-level negative note
+        plan_item = {
+            'level': 'a1',
+            'grammar': [
+                {
+                    'name': 'dative',
+                    'ulp_evidence': 'No ULP evidence exists for this move.',
+                }
+            ],
+        }
+        violations_item = check_plan_compliance(plan_item, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_item)
+
+        # Arc-level negative note
+        plan_arc = {
+            'level': 'a1',
+            'grammar': ['dative'],
+            'arc': {
+                'moves': {
+                    'dative': {
+                        'ulp_evidence': 'No ULP evidence exists for this move.',
+                    }
+                }
+            },
+        }
+        violations_arc = check_plan_compliance(plan_arc, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations_arc)
+
+    def test_blocker_2_nested_id_only_item_with_unrelated_ulp_fails(self, mapping):
+        """Blocker 2: Nested ID-only G-a2-005 at A1 passes with unrelated ULP evidence on head, must fail."""
+        plan = {
+            'level': 'a1',
+            'ulp_evidence': ['ULP episode 1: alphabet'],
+            'lessons': [
+                {
+                    'title': 'Lesson 1',
+                    'inventory': {
+                        'grammar': [
+                            {
+                                'id': 'G-a2-005',
+                            }
+                        ]
+                    },
+                }
+            ],
+        }
+        violations = check_plan_compliance(plan, mapping=mapping)
+        assert any(v.code == 'STATE_STANDARD_EARLY_WITHOUT_ULP' for v in violations)
