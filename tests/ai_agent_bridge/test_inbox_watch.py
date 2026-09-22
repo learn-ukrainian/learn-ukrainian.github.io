@@ -250,6 +250,46 @@ def test_live_supervisory_retries_outages_until_prepared(capsys):
     assert "secret" not in captured.err
 
 
+def test_empty_local_queue_does_not_call_monitor():
+    service = type("Service", (), {
+        "record_supervisory_consumption": lambda *args, **kwargs: None,
+        "act_on_supervisory_delivery": lambda *args, **kwargs: None,
+        "refuse_supervisory_delivery": lambda *args, **kwargs: None,
+        "supervisory_delivery_status": lambda *args, **kwargs: None,
+    })()
+    supervisor = type("Supervisor", (), {"remote": object(), "build_capsule": lambda **kwargs: None})()
+    lease = type("Lease", (), {"stream_id": "epic:1", "session_id": "s"})()
+    with patch.object(_inbox_watch, "pending_supervisory_delivery", return_value=None):
+        result = _inbox_watch.consume_supervisory_event(service, supervisor, lease)
+    assert result is _inbox_watch.MONITOR_NOT_CONTACTED
+
+
+def test_idle_tick_does_not_clear_a_monitor_outage(capsys):
+    from scripts.session_supervisor.remote import RemoteUnavailableError
+
+    def stop_after_idle(_seconds):
+        stop_after_idle.calls += 1
+        if stop_after_idle.calls >= 2:
+            raise RuntimeError("stop after idle tick")
+
+    stop_after_idle.calls = 0
+    with (
+        patch("agents_extensions.shared.session_streams.hooks.lease_from_environment"),
+        patch("scripts.fleet_comms.authority.AuthorityService"),
+        patch("scripts.session_supervisor.SessionSupervisor"),
+        patch.object(_inbox_watch, "consume_supervisory_event", side_effect=[
+            RemoteUnavailableError("down"),
+            _inbox_watch.MONITOR_NOT_CONTACTED,
+        ]),
+        patch.object(_inbox_watch.time, "sleep", side_effect=stop_after_idle),
+    ):
+        with pytest.raises(RuntimeError, match="stop after idle tick"):
+            _inbox_watch.run_live_supervisory_watcher(interval_seconds=0.25)
+    captured = capsys.readouterr()
+    assert captured.err.count("Monitor API unreachable") == 1
+    assert "Monitor API recovered" not in captured.err
+
+
 @pytest.mark.parametrize("result", [75, 2, 76, "permanent", "transient"])
 def test_live_supervisory_notifies_only_prepared_wake(result):
     from scripts.session_supervisor.remote import RemoteUnreachableError

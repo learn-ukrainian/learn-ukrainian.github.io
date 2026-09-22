@@ -157,9 +157,16 @@ def supervisory_launch_plan(
     return request
 
 
+class MonitorNotContacted:
+    """The local queue was empty, so this tick did not call Monitor."""
+
+
+MONITOR_NOT_CONTACTED = MonitorNotContacted()
+
+
 def consume_supervisory_event(
     service: AuthorityService, supervisor: SessionSupervisor, lease: Lease, *, now: str | None = None,
-) -> SupervisoryRequest | None:
+) -> SupervisoryRequest | MonitorNotContacted | None:
     """Consume under the live envelope; prepare restart or reconcile its successor.
 
     This runs as a child of the existing launcher, only while its provider child
@@ -173,7 +180,7 @@ def consume_supervisory_event(
     worker_id = f"supervisor:{lease.session_id}"
     delivery = pending_supervisory_delivery(service, lease.stream_id)
     if delivery is None:
-        return None
+        return MONITOR_NOT_CONTACTED
     # Fence the live lease before claiming. Idle polls never reach this call.
     supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
     now_value = now or datetime.now(UTC).isoformat()
@@ -289,6 +296,10 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
                     outage = True
                 time.sleep(delay)
                 delay = min(delay * 2, _MONITOR_BACKOFF_MAX_SECONDS)
+                continue
+            if request is MONITOR_NOT_CONTACTED:
+                # Idle. Monitor was not called, so this is not a recovery.
+                time.sleep(interval_seconds)
                 continue
             if outage:
                 print("inbox watcher: Monitor API recovered", file=sys.stderr, flush=True)
