@@ -1,7 +1,7 @@
 """Per-lesson evidence lock generator, checker, and diff engine (issue #8413, Brief C).
 
 Each lesson's evidence lock covers exactly the records cited by that lesson's plan
-entry plus shared module provenance (built_with, standard). Two builds of the same
+entry plus shared module provenance. Two builds of the same
 lesson from the same cited records yield identical lock entries, isolating touched
 records from unaffected lessons.
 """
@@ -25,6 +25,16 @@ from scripts.curriculum.validate.validate import _pack_ids_in_plan, _word_ids_in
 from . import codes, lock, pack, registry, words
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+# Source identities from built_with that can change lesson compilation/verification
+# outputs without changing pack record bytes (morphology, stress, and rules engines).
+SHARED_SOURCE_IDENTITY_KEYS = (
+    "vesum",
+    "trie",
+    "ulif_forms",
+    "overrides_sha256",
+    "russian_patterns",
+)
 
 
 def read_git_file(
@@ -160,16 +170,14 @@ def compute_lesson_lock(
 
     # 6. Shared calculation
     built_with = pack_dict.get("built_with") or {}
-    standard_list = pack_dict.get("standard") or []
+    shared_built_with = {k: built_with[k] for k in SHARED_SOURCE_IDENTITY_KEYS if k in built_with}
 
-    built_with_sha256 = hashlib.sha256(lock.yaml_bytes(built_with)).hexdigest()
-    standard_sha256 = hashlib.sha256(lock.yaml_bytes(standard_list)).hexdigest()
-    shared_sha256 = hashlib.sha256(lock.yaml_bytes({"built_with": built_with, "standard": standard_list})).hexdigest()
+    built_with_sha256 = hashlib.sha256(lock.yaml_bytes(shared_built_with)).hexdigest()
+    shared_sha256 = built_with_sha256
 
     shared_block = {
         "built_with_sha256": built_with_sha256,
         "sha256": shared_sha256,
-        "standard_sha256": standard_sha256,
     }
 
     # 7. Lessons calculation
@@ -345,7 +353,7 @@ def diff_module(
     plans_dir: Path | None = None,
     repo_root: Path = REPO_ROOT,
 ) -> list[dict[str, Any]]:
-    """Compare current on-disk lock of slug against baseline, returning rebuild items."""
+    """Compare current lesson lock of slug against baseline, returning rebuild items."""
     paths = resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=repo_root)
     lock_path = paths["lock"]
 
@@ -354,7 +362,13 @@ def diff_module(
     if not lock.check(lock_path):
         raise ValueError(f"{codes.LOCK_MISMATCH}: {lock_path} sidecar invalid or missing")
 
-    current_lock = yaml.safe_load(lock_path.read_text(encoding="utf-8"))
+    current_lock = compute_lesson_lock(
+        level,
+        slug,
+        evidence_dir=evidence_dir,
+        plans_dir=plans_dir,
+        repo_root=repo_root,
+    )
     baseline_lock = load_baseline_lock(level, slug, baseline, repo_root=repo_root)
 
     rebuild: list[dict[str, Any]] = []

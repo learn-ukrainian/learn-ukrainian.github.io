@@ -336,7 +336,7 @@ Rules:
   those are re-verified. `built_with` is recorded in both files; `ulif_forms` is meaningful for the
   word store, which since revision 8 holds full paradigms and is therefore the larger of the two.
 - **What a built lesson records (r9, #8413 Brief C).** A per-lesson lock `evidence/<level>/_state/<slug>/lessons.lock.yaml`
-  hashes the records each lesson cites; the built lesson's frontmatter carries the exact key `evidence: { lesson_entry_sha256: <entry_sha256> }` only (`evidence.lesson_entry_sha256`) — never the whole-module lock hash, which changes whenever any lesson's citation changes and would invalidate untouched lessons. The gates `coverage` and `pack-verify` compare `evidence.lesson_entry_sha256` with the current lock file's entry for that lesson. The plan's
+  hashes the records each lesson cites; the built lesson's frontmatter carries the exact key `evidence: { lesson_entry_sha256 }` only (`evidence.lesson_entry_sha256`) — never the whole-module lock hash, which changes whenever any lesson's citation changes and would invalidate untouched lessons — so a pack fix invalidates only the lessons that cite the changed records. The plan's
   `evidence_ref` keeps the module-pack hash the plan review bound to; plan review runs on a **provisional** lock that is
   promoted into `evidence_ref` on APPROVE (review contracts, Contract 1).
 - `stress_source: pending` is legal while the ULIF base is not ready (R-23); a build refuses a
