@@ -84,10 +84,10 @@ advanced non-linguistic work moved to Opus 5.5 on 2026-09-22, above):**
 > *«for advanced stuff use fable-5.1 and for rutine stuff sonnet-5. for ukrainina specific fable»* (operator directive, session 2026-09-17)
 
 Operationalizes the Claude seat selection within the 2-Tier Formal Review Routing Policy and day-to-day task dispatch:
-- **Advanced reasoning, contested architectural decisions, and Ukrainian-specific linguistic reviews**:
-  Mandate **`claude-fable-5-1` (Fable 5.1)**. Fable's deep reasoning and linguistic rigor are required
-  whenever complex domain logic, contested architectural questions, or Ukrainian language norms and
-  pedagogy are evaluated within the Claude lane.
+- **Advanced non-linguistic execution** (architecture, hard coding, deep code review, contested architectural implementation):
+  **`claude-opus-5-5` (Opus 5.5)**.
+- **Ukrainian-specific linguistic judgment**: Mandate **`claude-fable-5-1` (Fable 5.1)** whenever Ukrainian language norms and pedagogy are evaluated.
+- **Advisor and designated authority**: **`claude-fable-5-1` (Fable 5.1)** for advisor turns, advisor panels, and the critical review ladder. That seat holds the approval boundary. The orchestrator seat does not confer it.
 - **Everyday routine infrastructure and standard non-linguistic coding**:
   Use **`claude-sonnet-5` (Sonnet 5)** to preserve frontier rate limits and execution speed.
 
@@ -105,9 +105,9 @@ Operationalizes the Claude seat selection within the 2-Tier Formal Review Routin
     so the seat rides the same native `opencode acp --pure` transport
     as GLM/Gemma (#6805). The current Arena evidence is preliminary
     and frontend-specific, so this promotion does not grant critical or advisory authority.
-* **Complex Tasks, Deep Reviews & Anthropic Advisory Consultations**:
-  * **Anthropic Opus seat**: `claude-opus-5` (complex coding, deep reasoning, and
-    non-binding advisory consultation). Operator directive 2026-07-31: when requesting
+* **Complex tasks, deep reviews, and Anthropic advisory consultations**:
+  * **Execution**: `claude-opus-5-5` for architecture, hard coding, and deep code review.
+  * **Non-binding advisory consultation**: `claude-opus-5`. Operator directive 2026-07-31: when requesting
     Anthropic advisory input, use `ab ask-claude --type advisory --to-model claude-opus-5`;
     never substitute Sonnet. This consultation does not confer designated approval
     authority and does not satisfy the formal cross-family review gate.

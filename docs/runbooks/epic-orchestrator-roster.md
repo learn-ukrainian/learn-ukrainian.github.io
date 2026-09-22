@@ -102,8 +102,10 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
 - **Fable 5.1** (Anthropic top tier) — hardest judgment and top Anthropic advisor (with
   Astra); summoned, not seated as the resident driver since Opus 5.5 took the driver seat
-  (operator 2026-09-22). **Opus 5 is neither an advisor nor an orchestrator seat**
-  (operator 2026-07-26) — it remains a complex-coding/deep-review dispatch seat only.
+  (operator 2026-09-22). **Opus 5.5 is the orchestrator seat. Opus 5 remains a
+  complex-coding/deep-review dispatch seat and the non-binding Anthropic advisory
+  consultation** (`claude-opus-5`, operator 2026-07-26). Designated advisor authority
+  stays Fable 5.1.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
