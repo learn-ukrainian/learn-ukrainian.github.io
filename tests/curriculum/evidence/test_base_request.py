@@ -128,6 +128,8 @@ def test_a1_base_request_schema_and_rules() -> None:
 
 def test_a1_base_request_accepted_by_build_words(tmp_path: Path) -> None:
     """build_words accepts the base request on a synthetic store without writing words into git."""
+    if not VESUM_DB_PATH.is_file():
+        pytest.skip("live VESUM is not provisioned; synthetic tests still run")
     raw_data = yaml.safe_load(BASE_REQUEST_PATH.read_text(encoding="utf-8"))
     req_words = raw_data["words"]
     lemmas = [w["lemma"] for w in req_words]
