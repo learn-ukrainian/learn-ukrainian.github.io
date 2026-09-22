@@ -338,6 +338,10 @@ const frontmatter = {
     color: var(--lu-text-muted);
     font-weight: 800;
   }
+  :global(.lexicon-practice-status:empty) {
+    min-height: 0;
+    margin: 0;
+  }
 
   :global(.lexicon-practice-home) {
     display: grid;
@@ -2207,6 +2211,20 @@ const frontmatter = {
     border-radius: 4px;
     background: var(--lu-state-active, rgba(255, 255, 255, 0.08));
     color: var(--lu-accent-blue, #3b82f6);
+    margin-bottom: 0.2rem;
+    width: fit-content;
+  }
+  :global(.k3-mode-card[data-level-gated='true']) {
+    cursor: pointer;
+  }
+  :global(.k3-mode-card-level-badge) {
+    display: inline-block;
+    font-size: 0.72rem;
+    font-weight: 800;
+    padding: 0.12rem 0.45rem;
+    border-radius: 4px;
+    background: var(--lu-accent-purple, #8b5cf6);
+    color: var(--lu-on-primary-fill, #ffffff);
     margin-bottom: 0.2rem;
     width: fit-content;
   }

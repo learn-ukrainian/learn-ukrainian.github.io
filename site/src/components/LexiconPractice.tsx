@@ -93,9 +93,12 @@ import {
 import {
   CEFR_LEVELS,
   LEARNER_LEVEL_STORAGE_KEY,
+  calculateModeLevelRequirement,
+  isCefrAtLeast,
   normalizeCefrLevel,
   parseCefrLevel,
   type CefrLevel,
+  type ModeLevelRequirement,
 } from '../lib/lexicon/levels';
 import { dateSeed, deckSeed, pickDaily, reRollSeed, type DailyWord } from '../lib/lexicon/daily';
 import { pickDailyForLevel } from '../lib/lexicon/daily-card';
@@ -2221,6 +2224,7 @@ interface ModeCardProps {
   modeDataLoaded: boolean;
   isRecommended?: boolean;
   focusTag?: { uk: string; en: string };
+  levelRequirement?: ModeLevelRequirement;
   chromeLocale: 'en' | 'uk';
   onHover: (mode: VisiblePracticeModeFilter | null) => void;
   onSelect: (mode: VisiblePracticeModeFilter) => void;
@@ -2233,10 +2237,12 @@ function ModeCard({
   modeDataLoaded,
   isRecommended,
   focusTag,
+  levelRequirement,
   chromeLocale,
   onHover,
   onSelect,
 }: ModeCardProps) {
+  const isLevelGated = levelRequirement?.isGated ?? false;
   const modeEmpty = practiceMode !== 'mixed' && modeDataLoaded && modeCount === 0;
   return (
     <button
@@ -2248,8 +2254,16 @@ function ModeCard({
       data-recommended={isRecommended ? 'true' : undefined}
       data-mode-count={modeCount}
       data-mode-empty={modeEmpty ? 'true' : undefined}
-      disabled={modeEmpty}
-      aria-disabled={modeEmpty}
+      data-level-gated={isLevelGated ? 'true' : undefined}
+      disabled={modeEmpty && !isLevelGated}
+      aria-disabled={modeEmpty ? 'true' : undefined}
+      title={
+        isLevelGated && levelRequirement?.tooltip
+          ? chromeLocale === 'uk'
+            ? levelRequirement.tooltip.uk
+            : levelRequirement.tooltip.en
+          : undefined
+      }
       aria-describedby="mode-detail-line"
       onMouseEnter={() => onHover(practiceMode)}
       onMouseLeave={() => onHover(null)}
@@ -2268,6 +2282,14 @@ function ModeCard({
           {chromeLocale === 'uk' ? focusTag.uk : focusTag.en}
         </span>
       ) : null}
+      {isLevelGated && levelRequirement?.badgeText ? (
+        <span
+          className="k3-mode-card-level-badge"
+          data-testid={`practice-mode-level-badge-${practiceMode}`}
+        >
+          {levelRequirement.badgeText}
+        </span>
+      ) : null}
       <span className="k3-mode-title">{chromeLocale === 'uk' ? meta.title : meta.en}</span>
       <span className="k3-mode-step">{chromeLocale === 'uk' ? meta.step : meta.stepEn}</span>
       <span className="k3-mode-desc">
@@ -2275,7 +2297,11 @@ function ModeCard({
       </span>
       {modeEmpty ? (
         <span className="k3-mode-empty-note">
-          <ChromeText k="practice.modeNoExercises" />
+          {isLevelGated && levelRequirement?.note ? (
+            chromeLocale === 'uk' ? levelRequirement.note.uk : levelRequirement.note.en
+          ) : (
+            <ChromeText k="practice.modeNoExercises" />
+          )}
         </span>
       ) : null}
       <span
@@ -3901,6 +3927,18 @@ function LexiconPracticeIsland({
   }
 
   async function startFocusMode(nextMode: PracticeModeFilter) {
+    const req = calculateModeLevelRequirement(
+      nextMode,
+      learnerLevel,
+      modeCounts[nextMode as VisiblePracticeModeFilter] ?? 0,
+    );
+    if (req.isGated && req.feedback) {
+      setFeedback({
+        uk: req.feedback.uk,
+        en: req.feedback.en,
+      });
+      return;
+    }
     await startSession(sessionBudget, nextMode, null);
   }
 
@@ -3933,6 +3971,7 @@ function LexiconPracticeIsland({
     setHistory([]);
     committedSelectionRef.current = null;
     clearResumeSnapshots();
+    setFeedback(null);
     if (sessionPhase === 'active') {
       await ensureDeck(shouldLoadCloze(mode), { level: nextLevel, force: true });
     } else {
@@ -4471,7 +4510,6 @@ function LexiconPracticeIsland({
 
   return (
     <section className="lexicon-practice" aria-label={CHROME_STRINGS[chromeLocale]['practice.ariaLabel']}>
-      {sessionPhase !== 'idle' || feedback ? (
       <p className="lexicon-practice-status" aria-live="polite">
         {feedback ? (
           <PureLocalePracticeMessage uk={feedback.uk} en={feedback.en ?? feedback.uk} />
@@ -4479,13 +4517,12 @@ function LexiconPracticeIsland({
           <>
             <PracticeChromeDual uk={`Сесія ${progressLabel}`} en={`Session ${progressLabel}`} />
           </>
-        ) : (
+        ) : sessionPhase !== 'idle' ? (
           <>
             <PracticeChromeLabel k="practice.sessionComplete" />
           </>
-        )}
+        ) : null}
       </p>
-      ) : null}
 
       {storageWarning && (() => {
         const warn = translateStorageWarning(storageWarning);
@@ -4903,19 +4940,27 @@ function LexiconPracticeIsland({
                   chromeLocale={chromeLocale}
                   weakChips={[]}
                   onStartWeakAreaFocus={(w) => void startWeakAreaFocus(w)}
-                  renderModeCard={(mode, isRecommended) => (
-                    <ModeCard
-                      key={mode}
-                      practiceMode={mode as VisiblePracticeModeFilter}
-                      meta={MODE_META[mode as VisiblePracticeModeFilter]}
-                      modeCount={modeCounts[mode as VisiblePracticeModeFilter] ?? 0}
-                      modeDataLoaded={modeDataLoaded}
-                      isRecommended={isRecommended}
-                      chromeLocale={chromeLocale}
-                      onHover={setHoveredMode}
-                      onSelect={(m) => void startFocusMode(m)}
-                    />
-                  )}
+                  renderModeCard={(mode, isRecommended) => {
+                    const req = calculateModeLevelRequirement(
+                      mode,
+                      learnerLevel,
+                      modeCounts[mode as VisiblePracticeModeFilter] ?? 0,
+                    );
+                    return (
+                      <ModeCard
+                        key={mode}
+                        practiceMode={mode as VisiblePracticeModeFilter}
+                        meta={MODE_META[mode as VisiblePracticeModeFilter]}
+                        modeCount={modeCounts[mode as VisiblePracticeModeFilter] ?? 0}
+                        modeDataLoaded={modeDataLoaded}
+                        isRecommended={isRecommended}
+                        levelRequirement={req}
+                        chromeLocale={chromeLocale}
+                        onHover={setHoveredMode}
+                        onSelect={(m) => void startFocusMode(m)}
+                      />
+                    );
+                  }}
                 />
               </div>
 
@@ -4929,19 +4974,27 @@ function LexiconPracticeIsland({
                   chromeLocale={chromeLocale}
                   onSelectMechanicsMode={(pos) => void handleSelectMechanicsMode(pos)}
                   onHoverMechanicsPos={setHoveredMechanicsPos}
-                  renderBaseModeCard={(mode) => (
-                    <ModeCard
-                      key={mode}
-                      practiceMode={mode as VisiblePracticeModeFilter}
-                      meta={MODE_META[mode as VisiblePracticeModeFilter]}
-                      modeCount={modeCounts[mode as VisiblePracticeModeFilter] ?? 0}
-                      modeDataLoaded={modeDataLoaded}
-                      focusTag={GRAMMAR_FOCUS_TAGS[mode]}
-                      chromeLocale={chromeLocale}
-                      onHover={setHoveredMode}
-                      onSelect={(m) => void startFocusMode(m)}
-                    />
-                  )}
+                  renderBaseModeCard={(mode) => {
+                    const req = calculateModeLevelRequirement(
+                      mode,
+                      learnerLevel,
+                      modeCounts[mode as VisiblePracticeModeFilter] ?? 0,
+                    );
+                    return (
+                      <ModeCard
+                        key={mode}
+                        practiceMode={mode as VisiblePracticeModeFilter}
+                        meta={MODE_META[mode as VisiblePracticeModeFilter]}
+                        modeCount={modeCounts[mode as VisiblePracticeModeFilter] ?? 0}
+                        modeDataLoaded={modeDataLoaded}
+                        focusTag={GRAMMAR_FOCUS_TAGS[mode]}
+                        levelRequirement={req}
+                        chromeLocale={chromeLocale}
+                        onHover={setHoveredMode}
+                        onSelect={(m) => void startFocusMode(m)}
+                      />
+                    );
+                  }}
                   caseSelectorNode={
                     <CaseSelectorBar
                       filter={caseFilter}
