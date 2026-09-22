@@ -1466,7 +1466,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 | Fire-and-forget execution — run code, commit, push | **`scripts/delegate.py dispatch`** | Yes |
 | Durable fleet coordination / topology | **`scripts.fleet_comms`** (`plane-status`, …) + **file dual-write handoffs** (authoritative in every plane mode) | Hand-off files only as existing lane diaries; never invent a third bus |
 | Formal cross-family PR review | **`review-pr` / `publish-review-verdict`** | No (review evidence) |
-| Structured two-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
+| Structured 2-to-4-seat agent conversation | **ACPX adapters** for Codex, Grok (`acpx-grok-shadow`), Claude, Kimi/K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek (feature-flagged, default-off; not a coordination plane) | **No** (read-only/stateless; see onboarding runbook) |
 | Buzz relay coordination | **Deferred** — not in this rollout | N/A |
 | Watch a long-running process (builds, reviews) emit events — **Claude only** | **`Monitor` tool** (Claude Code built-in) | N/A |
 | Watch a long-running process — **Gemini / Codex** | Shell-poll the Monitor API | N/A |
@@ -1474,7 +1474,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 
 **Rules of thumb:**
 - Channel-first for anything >1 turn. The pinned `context.md` eliminates re-pasting project setup on every round.
-- Supported two-seat `discuss` calls delegate to ACP; the command name is a
+- Supported 2-to-4-seat `discuss` calls delegate to ACP; the command name is a
   compatibility surface, not a second provider-launch engine.
 - `ask-*` remains a temporary compatibility path only until single-seat ACP
   and initiator/quota telemetry land. Do not add new provider launch logic
@@ -1482,7 +1482,7 @@ Claude, Gemini, and Codex coordinate through distinct primitives. Pick the right
 - `ai_agent_bridge` is for **communication**. `delegate.py dispatch` is for **execution**. Don't confuse them.
 - **`discuss` is not formal review.** Use `review-pr` / `publish-review-verdict` for CF.
 - Query `.venv/bin/python -m scripts.fleet_comms plane-status` — never hard-code a live plane mode.
-- ACPX is the structured transport for supported bounded two-seat panels;
+- ACPX is the structured transport for supported bounded 2-to-4-seat panels;
   rollback is feature-flag off + native runtime. It is
   not a new coordination plane, and fleet-comms/file handoffs remain durable
   authority.

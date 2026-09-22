@@ -70,7 +70,7 @@ Ownership matrix, troubleshooting, and seat smoke (including ACPX scope):
 
 ACPX is a **feature-flagged structured invocation transport** — not a
 coordination plane and not a replacement for fleet-comms or authoritative file
-handoffs. Supported two-seat `discuss` calls use ACPX as their execution
+handoffs. Supported 2-to-4-seat `discuss` calls use ACPX as their execution
 engine; the CLI name remains a compatibility surface. The active path is a
 controller-scheduled bounded conversation DAG whose durable state and timeline
 are written through existing fleet-comms. The expanded participant registry is
