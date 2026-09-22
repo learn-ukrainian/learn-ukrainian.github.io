@@ -197,7 +197,10 @@ cd "$PRIMARY_REPO"
 
 Starting a later review round (`review-<topic>-rN`) also removes earlier clean
 rounds of that same series, including detached ones that no longer hold the
-branch. A dirty or still-running round is left in place.
+branch, but only when that checkout's HEAD is already an ancestor of
+`origin/main` or reachable from some `refs/remotes/origin/*` ref. A dirty,
+still-running, or uncontained round is left in place, and its local branch is
+not deleted.
 
 Default is dry-run; pass `--apply` to actually reap and delete. `--json` emits a
 machine-readable payload. `merge_closeout` introduces no second deletion hand for the
@@ -256,13 +259,18 @@ Each run performs the following in both repository roots:
    the origin branch gone, plus the terminal-dispatch
    class described above; open or GitHub-unknown PR state remains a hard skip;
 4. deletes origin heads that are not checked out, have no open PR, and are not
-   `entire/` refs, when the GitHub PR is MERGED or CLOSED at the exact live
-   origin SHA (`ls-remote` + `--force-with-lease`), when the tip is contained
-   in a MERGED PR and is not an ancestor of `origin/main`, when the tip is
-   already an ancestor of `origin/main`, or when the ref is agent scratch
-   (`*/review-*`, `rescue/*`, `pr-*`) with no open PR;
+   `entire/` refs, only when the tip is proven contained: the GitHub PR is
+   MERGED or CLOSED at the exact live origin SHA (`ls-remote` +
+   `--force-with-lease`), the tip is contained in a MERGED PR and is not an
+   ancestor of `origin/main`, or the tip is already an ancestor of
+   `origin/main`. Names `*/review-*`, `rescue/*`, and `pr-*` are not that
+   proof. They only widen the set of refs examined, because `gh pr list --head`
+   never sees them. A scratch-named origin ref may also be deleted when its
+   tip is reachable from some other `refs/remotes/origin/*` ref. Its own
+   remote ref does not count. A git error during that check is not
+   containment, and an unproven scratch ref is kept;
 5. deletes local branches whose upstream is gone, or that were never tracked,
-   on the same evidence (`entire/` refs are preserved);
+   on the same containment evidence (`entire/` refs are preserved);
 6. preserves and reports unproven gone branches and orphaned worktree
    directories;
 7. runs `git gc --auto`;

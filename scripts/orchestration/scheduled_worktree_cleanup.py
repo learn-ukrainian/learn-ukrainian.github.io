@@ -4,8 +4,9 @@
 The scheduled runner prunes remote refs and stale worktree registrations,
 requires the macOS process-CWD probe in apply mode, delegates safe worktree
 removal to the canonical reaper, deletes origin and local branches only with
-exact merged/closed-PR or origin/main-ancestry proof, runs automatic Git
-maintenance, and writes an immutable JSON receipt. Orphaned ``.worktrees/**``
+exact merged/closed-PR, origin/main-ancestry, or (scratch names only)
+another-origin-ref proof, runs automatic Git maintenance, and writes an
+immutable JSON receipt. Orphaned ``.worktrees/**``
 directories are reported but never deleted.
 """
 
@@ -176,13 +177,40 @@ def _is_agent_scratch_branch(branch: str) -> bool:
     """Names that are a review round, a rescue, or a ``pr-N`` checkout.
 
     These refs are not the pull request's head branch. ``gh pr list --head``
-    never sees them, so the exact-SHA rule kept every one of them. The set is
-    the one named in the drive-epic closeout: ``*/review-*``, ``rescue/*``,
-    and ``pr-*``. A wider prefix list would force-delete unpushed work.
+    never sees them, so without this set the exact-SHA rule kept every one of
+    them. The set is the one named in the drive-epic closeout: ``*/review-*``,
+    ``rescue/*``, and ``pr-*``. The name only widens which refs are examined.
+    It is never proof the tip is safe to delete; a wider prefix list would
+    still have to pass the same containment proof.
     """
     if branch.startswith(("rescue/", "pr-")):
         return True
     return branch.split("/")[-1].startswith("review-")
+
+
+def _tip_on_other_origin_ref(repo_root: Path, head_sha: str, branch: str) -> bool:
+    """True when some origin ref other than ``branch`` contains ``head_sha``.
+
+    A git error is not containment. The candidate's own
+    ``refs/remotes/origin/<branch>`` does not count: a ref is always
+    reachable from itself.
+    """
+    proc = _run_git(
+        repo_root,
+        "for-each-ref",
+        "--contains",
+        head_sha,
+        "--format=%(refname)",
+        "refs/remotes/origin",
+    )
+    if proc.returncode != 0:
+        return False
+    excluded = f"refs/remotes/origin/{branch}"
+    for line in (proc.stdout or "").splitlines():
+        ref = line.strip()
+        if ref.startswith("refs/remotes/origin/") and ref != excluded:
+            return True
+    return False
 
 
 def _merged_pr_contains_head(
@@ -216,18 +244,23 @@ def _stale_ref_delete_reason(
     head_sha: str,
     kind: str,
 ) -> tuple[str | None, str | None]:
-    """Return ``(delete_reason, skip_reason)`` for a candidate stale ref."""
+    """Return ``(delete_reason, skip_reason)`` for a candidate stale ref.
+
+    Scratch names never skip containment. A scratch ref is deleted only when
+    its tip is an exact merged-PR head, an ancestor of ``origin/main``,
+    contained in a merged PR head, or reachable from some other origin ref.
+    """
     open_pr = next((pr for pr in prs if pr.state == "OPEN"), None)
     if open_pr is not None:
         return None, f"{kind} but PR #{open_pr.number} is OPEN"
-    if _is_agent_scratch_branch(branch):
-        return f"{kind}; agent scratch ref with no open PR", None
     exact_merged = next(
         (pr for pr in prs if pr.state == "MERGED" and pr.head_sha == head_sha),
         None,
     )
     if exact_merged is not None:
         return f"{kind}; exact head of MERGED PR #{exact_merged.number}", None
+    if _branch_is_origin_main_ancestor(repo_root, head_sha):
+        return f"{kind}; branch HEAD is an ancestor of origin/main", None
     contained = _merged_pr_contains_head(repo_root, head_sha, prs)
     if contained is not None:
         return f"{kind}; tip is contained in MERGED PR #{contained.number}", None
@@ -237,8 +270,13 @@ def _stale_ref_delete_reason(
     )
     if exact_closed is not None:
         return f"{kind}; exact head of CLOSED PR #{exact_closed.number}", None
-    if _branch_is_origin_main_ancestor(repo_root, head_sha):
-        return f"{kind}; branch HEAD is an ancestor of origin/main", None
+    if _is_agent_scratch_branch(branch):
+        if _tip_on_other_origin_ref(repo_root, head_sha, branch):
+            return f"{kind}; agent scratch ref; tip is contained in a remote ref", None
+        return None, (
+            f"{kind} but no exact merged/closed PR or origin/main ancestry evidence; "
+            "agent scratch ref; tip not contained in main, a merged PR, or a remote ref"
+        )
     return None, (f"{kind} but no exact merged/closed PR or origin/main ancestry evidence")
 
 
@@ -317,7 +355,7 @@ def cleanup_stale_origin_branches(
     *,
     apply: bool,
 ) -> list[dict[str, Any]]:
-    """Delete origin heads only with exact merged/closed PR or ancestry proof."""
+    """Delete origin heads only with merged/closed, ancestry, or remote-ref proof."""
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _origin_heads(repo_root):
@@ -453,7 +491,7 @@ def cleanup_gone_local_branches(
     *,
     apply: bool,
 ) -> list[dict[str, Any]]:
-    """Delete gone-upstream branches only with exact merged or ancestry proof."""
+    """Delete gone-upstream branches only with containment proof, never by name."""
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _gone_local_branches(repo_root):
@@ -594,7 +632,7 @@ def cleanup_untracked_local_branches(
     *,
     apply: bool,
 ) -> list[dict[str, Any]]:
-    """Delete never-tracked local branches with merged/closed or ancestry proof."""
+    """Delete never-tracked local branches only with containment proof."""
     checked_out = _checked_out_branches(repo_root)
     results: list[dict[str, Any]] = []
     for branch, head_sha in _untracked_local_branches(repo_root):

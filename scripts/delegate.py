@@ -2826,12 +2826,66 @@ def _dispatch_worktree_components() -> list[tuple[Path, str]]:
     return found
 
 
+def _commit_is_durably_contained(cwd: Path, sha: str) -> bool:
+    """True when ``sha`` is on ``origin/main`` or some ``refs/remotes/origin/*`` ref.
+
+    Any git error is not containment. A clean worktree is not enough: its
+    commits may exist only in that checkout.
+    """
+    try:
+        ancestor = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", sha, "origin/main"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if ancestor.returncode == 0:
+        return True
+    if ancestor.returncode != 1:
+        return False
+    try:
+        listed = subprocess.run(
+            [
+                "git",
+                "for-each-ref",
+                "--contains",
+                sha,
+                "--format=%(refname)",
+                "refs/remotes/origin",
+            ],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if listed.returncode != 0:
+        return False
+    return any(line.strip().startswith("refs/remotes/origin/") for line in (listed.stdout or "").splitlines())
+
+
+def _worktree_head_is_durably_contained(path: Path) -> bool:
+    sha = _resolve_sha(path, "HEAD")
+    if not sha:
+        return False
+    return _commit_is_durably_contained(path, sha)
+
+
 def _superseded_review_releasable(path: Path) -> tuple[bool, str]:
     """A finished review checkout can go once a later round of the same series starts.
 
     Cleanliness and liveness are required. The checkout does not have to match
     ``origin/<branch>``: a detached earlier round no longer holds the branch,
-    which is why the branch-holder release never saw it.
+    which is why the branch-holder release never saw it. Removal still requires
+    a separate containment proof of HEAD; this predicate does not provide it.
     """
     if reaper_lifecycle.is_reap_pending(_REPO_ROOT, path):
         return False, "reaper lifecycle reservation is pending"
@@ -2874,6 +2928,12 @@ def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list
         if not ok:
             print(
                 f"ℹ️  earlier review {path} kept ({reason})",
+                file=sys.stderr,
+            )
+            continue
+        if not _worktree_head_is_durably_contained(path):
+            print(
+                f"ℹ️  earlier review {path} kept (tip not contained in main or a remote ref)",
                 file=sys.stderr,
             )
             continue
@@ -2942,6 +3002,13 @@ def _scratch_branch_for_review_checkout(path: Path, component: str) -> str | Non
 def _delete_local_branch(branch: str) -> None:
     if any(item == branch for item in _checked_out_branch_names()):
         print(f"ℹ️  kept local branch {branch}; another checkout still has it", file=sys.stderr)
+        return
+    sha = _resolve_sha(_REPO_ROOT, f"refs/heads/{branch}")
+    if not sha or not _commit_is_durably_contained(_REPO_ROOT, sha):
+        print(
+            f"ℹ️  kept local branch {branch}; tip not contained in main or a remote ref",
+            file=sys.stderr,
+        )
         return
     try:
         proc = subprocess.run(

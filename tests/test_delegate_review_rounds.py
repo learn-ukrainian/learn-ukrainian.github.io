@@ -44,3 +44,82 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
 
     assert released == [earlier]
     assert removed == [str(earlier)]
+
+
+class _Proc:
+    def __init__(self, returncode: int = 0, stdout: str = "", stderr: str = "") -> None:
+        self.returncode = returncode
+        self.stdout = stdout
+        self.stderr = stderr
+
+
+def _git_reply(cmd: list[str], *, contained: bool | None) -> _Proc:
+    """``contained=True`` is an ancestor of origin/main; ``None`` is a git error."""
+    if cmd[:3] == ["git", "rev-parse", "--abbrev-ref"]:
+        return _Proc(stdout="codex/review-topic-r2\n")
+    if cmd[:2] == ["git", "rev-parse"]:
+        return _Proc(stdout="abc123def\n")
+    if "merge-base" in cmd:
+        if contained is None:
+            return _Proc(returncode=128, stderr="fatal: containment check failed")
+        return _Proc(returncode=0 if contained else 1)
+    if "--contains" in cmd:
+        return _Proc(stdout="")
+    return _Proc()
+
+
+def test_uncontained_review_round_is_kept(monkeypatch, tmp_path: Path) -> None:
+    earlier = tmp_path / "codex" / "review-topic-r2"
+    commands: list[list[str]] = []
+    monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
+    monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
+
+    def fake_run(cmd, **_kwargs):
+        commands.append(list(cmd))
+        return _git_reply(list(cmd), contained=False)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    released = delegate._release_superseded_review_worktrees("review-topic-r4", dry_run=False)
+
+    assert released == []
+    assert not any("remove" in cmd for cmd in commands)
+    assert not any(cmd[1:3] == ["branch", "-D"] for cmd in commands)
+
+
+def test_review_round_containment_git_error_is_kept(monkeypatch, tmp_path: Path) -> None:
+    earlier = tmp_path / "codex" / "review-topic-r2"
+    commands: list[list[str]] = []
+    monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
+    monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
+
+    def fake_run(cmd, **_kwargs):
+        commands.append(list(cmd))
+        return _git_reply(list(cmd), contained=None)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    released = delegate._release_superseded_review_worktrees("review-topic-r4", dry_run=False)
+
+    assert released == []
+    assert not any("remove" in cmd for cmd in commands)
+    assert not any("--contains" in cmd for cmd in commands)
+
+
+def test_contained_review_round_deletes_scratch_branch(monkeypatch, tmp_path: Path) -> None:
+    earlier = tmp_path / "codex" / "review-topic-r2"
+    commands: list[list[str]] = []
+    monkeypatch.setattr(delegate, "_dispatch_worktree_components", lambda: [(earlier, "review-topic-r2")])
+    monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
+
+    def fake_run(cmd, **_kwargs):
+        commands.append(list(cmd))
+        return _git_reply(list(cmd), contained=True)
+
+    monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+
+    released = delegate._release_superseded_review_worktrees("review-topic-r4", dry_run=False)
+
+    assert released == [earlier]
+    assert any(cmd[1:3] == ["worktree", "remove"] for cmd in commands)
+    assert ["git", "branch", "-D", "codex/review-topic-r2"] in commands

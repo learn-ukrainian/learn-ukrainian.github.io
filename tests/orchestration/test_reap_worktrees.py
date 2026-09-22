@@ -310,7 +310,7 @@ def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
     project_root = Path(__file__).resolve().parents[2]
     assert _raw_worktree_remove_callers(project_root) == {
         "scripts/ai_agent_bridge/_acp_execution.py": {"acp_execution_cwd"},
-        "scripts/delegate.py": {"_release_stale_branch_holders"},
+        "scripts/delegate.py": {"_release_stale_branch_holders", "_release_superseded_review_worktrees"},
         "scripts/fleet/post_task_reap.py": {"_remove_worktree"},
         "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
         "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},
