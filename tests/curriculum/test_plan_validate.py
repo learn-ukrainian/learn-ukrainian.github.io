@@ -6,8 +6,8 @@ contains Ukrainian word forms beyond single letters copied from
 docs/epics/fresh-build-plan-schema.md §2 (А, О): lemma values are ASCII
 placeholders the fixture word store defines, and no fixture carries a stress
 mark except the two fixtures that must fail for one. The one Cyrillic token
-used to fail rule 7 ("мама", in a disallowed field) is copied from the schema
-document's §2 example.
+("мама") is copied from the schema document's §2 example; it fails rule 7 in a
+disallowed field and passes as an inventory lemma that matches the word store.
 """
 
 from __future__ import annotations
@@ -42,6 +42,7 @@ NOT_CHECKED = {
 
 LETTER_A = "А"  # copied from docs/epics/fresh-build-plan-schema.md §2
 LETTER_O = "О"  # copied from docs/epics/fresh-build-plan-schema.md §2
+LEMMA_MAMA = "мама"  # copied from docs/epics/fresh-build-plan-schema.md §2
 
 
 def base_plan() -> dict:
@@ -229,6 +230,14 @@ def build_non_literacy() -> tuple[dict, dict, dict]:
     return plan, pack, words
 
 
+def build_cyrillic_lemma() -> tuple[dict, dict, dict]:
+    """A core lemma in Cyrillic that exactly matches the word-store record (rule 7)."""
+    plan, pack, words = build_base()
+    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["lemma"] = LEMMA_MAMA
+    words["words"][0]["lemma"] = LEMMA_MAMA
+    return plan, pack, words
+
+
 def _checkpoint_lesson(n: int = 1) -> dict:
     return {
         "n": n,
@@ -324,6 +333,7 @@ def _post_write_plan(new_plan_path: Path) -> Post:
 VALID_CASES = [
     Case("valid_literacy_r9"),
     Case("valid_non_literacy", build=build_non_literacy),
+    Case("valid_cyrillic_lemma", build=build_cyrillic_lemma),
     Case("valid_checkpoint", build=build_checkpoint),
     Case("valid_closing_shape_b", build=build_shape_b, notes=frozenset({codes.CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW})),
 ]
@@ -458,6 +468,20 @@ FAILING_CASES = [
         ),
         expected=frozenset({codes.RECYCLED_INTRODUCED_HERE}),
     ),
+    Case(
+        "uses_not_recycled_in_recap_lesson",
+        mutate=_mutate(
+            lambda p, pk, w: p["lessons"][1]["steps"][0].__setitem__("uses", {"grammar": [], "vocabulary": ["W-001"]})
+        ),
+        expected=frozenset({codes.USES_NOT_RECYCLED}),
+    ),
+    Case(
+        "recycled_not_used_in_recap_lesson",
+        mutate=_mutate(
+            lambda p, pk, w: p["lessons"][1]["inventory"]["vocabulary"].__setitem__("recycled", ["W-001"])
+        ),
+        expected=frozenset({codes.RECYCLED_NOT_USED}),
+    ),
     # rule 3: evidence resolves and the pack is the locked one
     Case(
         "unknown_pack_id",
@@ -468,6 +492,20 @@ FAILING_CASES = [
         "unknown_word_id",
         mutate=_mutate(lambda p, pk, w: p["lessons"][0]["practice"].__setitem__("stress", ["W-001", "W-099"])),
         expected=frozenset({codes.UNKNOWN_WORD_ID}),
+    ),
+    Case(
+        "unknown_word_id_in_step",
+        mutate=_mutate(
+            lambda p, pk, w: p["lessons"][0]["steps"][1]["uses"].__setitem__("vocabulary", ["W-003", "W-099"])
+        ),
+        expected=frozenset({codes.UNKNOWN_WORD_ID, codes.USES_NOT_RECYCLED}),
+    ),
+    Case(
+        "evidence_ref_path_identifies_checked_pack",
+        mutate=_mutate(
+            lambda p, pk, w: p["evidence_ref"].__setitem__("path", "evidence/a1/nonexistent.yaml")
+        ),
+        expected=frozenset({codes.PACK_NOT_FOUND}),
     ),
     Case(
         "pack_hash_differs_from_evidence_ref",
@@ -528,6 +566,15 @@ FAILING_CASES = [
             )
         ),
         expected=frozenset({codes.DUPLICATE_ACTIVITY_ID}),
+    ),
+    Case(
+        "duplicate_step_id",
+        mutate=_mutate(
+            lambda p, pk, w: p["lessons"][0]["steps"].append(
+                {"id": "s2", "kind": "practice", "evidence": ["T-001"], "practice": ["a1"]}
+            )
+        ),
+        expected=frozenset({codes.DUPLICATE_STEP_ID}),
     ),
     Case(
         "unknown_activity_type",
@@ -627,6 +674,21 @@ FAILING_CASES = [
         "error_refs_on_quiz",
         mutate=_mutate(lambda p, pk, w: p["lessons"][0]["activities"][0].__setitem__("error_refs", ["E-001"])),
         expected=frozenset({codes.ERROR_REFS_FORBIDDEN}),
+    ),
+    Case(
+        "error_ref_id_not_e_shaped",
+        mutate=_mutate(lambda p, pk, w: p["lessons"][0]["activities"][1].__setitem__("error_refs", ["X-001"])),
+        expected=frozenset({codes.SCHEMA_VIOLATION}),
+    ),
+    Case(
+        "error_ref_not_an_error_record",
+        mutate=_mutate(
+            lambda p, pk, w: (
+                pk["texts"].append({"id": "E-099"}),
+                p["lessons"][0]["activities"][1].__setitem__("error_refs", ["E-099"]),
+            )
+        ),
+        expected=frozenset({codes.ERROR_REF_NOT_ERROR_RECORD}),
     ),
     # loader and schema
     Case(
@@ -794,6 +856,28 @@ def test_failure_names_code_lesson_step_and_value(tmp_path: Path) -> None:
     assert step_outcome.lesson == 1
     assert step_outcome.step == "s1"
     assert "G-a1-001" in step_outcome.message
+
+
+def test_evidence_failures_keep_lesson_and_step(tmp_path: Path) -> None:
+    report = run_case(tmp_path, case_by_name("unknown_pack_id"))
+    outcome = next(o for o in report.failures if o.code == codes.UNKNOWN_PACK_ID)
+    assert outcome.lesson == 1
+    assert outcome.step == "s2"
+    word_report = run_case(tmp_path / "b", case_by_name("unknown_word_id_in_step"))
+    word_outcome = next(o for o in word_report.failures if o.code == codes.UNKNOWN_WORD_ID)
+    assert word_outcome.lesson == 1
+    assert word_outcome.step == "s2"
+
+
+def test_schema_failure_keeps_lesson_and_step(tmp_path: Path) -> None:
+    plan, pack, words = build_base()
+    plan["lessons"][0]["steps"][1]["kind"] = "bogus"
+    world = write_world(tmp_path, plan, pack, words)
+    report = validate_plan(LEVEL, SLUG, plan_path=world.plan_path)
+    outcome = next(o for o in report.failures if o.code == codes.SCHEMA_VIOLATION)
+    assert outcome.lesson == 1
+    assert outcome.step == "s2"
+    assert "kind" in outcome.message
 
 
 def test_inventory_mismatch_reports_missing_and_extra_separately(tmp_path: Path) -> None:

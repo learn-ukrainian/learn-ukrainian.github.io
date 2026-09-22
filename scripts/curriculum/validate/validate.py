@@ -49,7 +49,9 @@ _NEED_ID_PREFIX = {"example": "EX-", "quote": "T-", "culture": "T-", "error": "E
 
 #: Cyrillic is allowed only in these prose fields (rule 7, §2a "Rule 7,
 #: precisely"), plus single letters in phonetics.letters / introduces.letters
-#: (schema-enforced) and dialogue.places[].name (r9: prose, like speaker name).
+#: (schema-enforced), dialogue.places[].name (r9: prose, like speaker name) and
+#: the inventory vocabulary lemmas (rule 7: a lemma equals the word-store
+#: record's lemma, which is Ukrainian).
 def _cyrillic_allowed(path: tuple) -> bool:
     """path is the JSON path of a string value inside the plan."""
     if path in (("title",), ("subtitle",), ("focus",)):
@@ -65,6 +67,9 @@ def _cyrillic_allowed(path: tuple) -> bool:
         return True
     if len(rest) == 5 and rest[0] == "steps" and rest[2:] == ("introduces", "letters", rest[-1]):
         return True
+    # vocabulary lemmas equal the word-store record's lemma, which is Ukrainian
+    if len(rest) == 5 and rest[:3] in (("inventory", "vocabulary", "core"), ("inventory", "vocabulary", "incidental")):
+        return rest[4] == "lemma"
     if rest in (("title",), ("job",), ("rationale",)):
         return True
     if len(rest) >= 2 and rest[0] == "steps" and rest[2:] == ("teach",):
@@ -351,8 +356,6 @@ def _check_inventory_and_order(report: Report, plan: dict) -> None:
     """Inventory equals declared introductions; the single-plan part of rule 4 (§2a)."""
     for lesson in plan["lessons"]:
         n = lesson["n"]
-        if lesson["kind"] != "teach":
-            continue  # a non-teach lesson's non-empty inventory already failed NON_TEACH_LESSON_INTRODUCES
         inventory = lesson["inventory"]
         vocabulary = inventory["vocabulary"]
 
@@ -361,62 +364,67 @@ def _check_inventory_and_order(report: Report, plan: dict) -> None:
             for kind, items in _step_introduces(step).items():
                 for item in items:
                     introduced_by.setdefault((kind, item), []).append(step["id"])
-        for (kind, item), step_ids in sorted(introduced_by.items()):
-            if len(step_ids) > 1:
-                _fail(
-                    report,
-                    codes.INTRODUCED_TWICE,
-                    f"{kind} item {item!r} is introduced by two steps: {', '.join(step_ids)} (§2a)",
-                    lesson=n,
-                )
 
-        declared = {
-            "letters": sorted((inventory.get("phonetics") or {}).get("letters") or []),
-            "grammar": sorted(entry["id"] for entry in inventory.get("grammar") or []),
-            "vocabulary": sorted(entry["evidence"] for entry in vocabulary["core"]),
-        }
-        introduced = {kind: sorted(item for (k, item) in introduced_by if k == kind) for kind in declared}
-        for kind in ("letters", "grammar", "vocabulary"):
-            missing = sorted(set(introduced[kind]) - set(declared[kind]))
-            extra = sorted(set(declared[kind]) - set(introduced[kind]))
-            label = {
-                "letters": "phonetics.letters",
-                "grammar": "grammar[].id",
-                "vocabulary": "vocabulary.core[].evidence",
-            }[kind]
-            if missing:
-                _fail(
-                    report,
-                    codes.INVENTORY_INTRODUCTION_MISMATCH,
-                    f"introduced by steps but missing from {label}: {', '.join(missing)} (§2a)",
-                    lesson=n,
-                )
-            if extra:
-                _fail(
-                    report,
-                    codes.INVENTORY_INTRODUCTION_MISMATCH,
-                    f"in {label} but introduced by no step: {', '.join(extra)} (§2a)",
-                    lesson=n,
-                )
+        if lesson["kind"] == "teach":
+            # a non-teach lesson's non-empty inventory already failed NON_TEACH_LESSON_INTRODUCES
+            for (kind, item), step_ids in sorted(introduced_by.items()):
+                if len(step_ids) > 1:
+                    _fail(
+                        report,
+                        codes.INTRODUCED_TWICE,
+                        f"{kind} item {item!r} is introduced by two steps: {', '.join(step_ids)} (§2a)",
+                        lesson=n,
+                    )
 
-        # Within-lesson order: a used id the same lesson introduces must come
-        # from an earlier step (rule 4, single-plan part).
-        introduced_so_far: set[str] = set()
-        for step in lesson["steps"]:
-            uses = step.get("uses") or {}
-            for kind in ("grammar", "vocabulary"):
-                for item in uses.get(kind) or []:
-                    if (kind, item) in introduced_by and item not in introduced_so_far:
-                        _fail(
-                            report,
-                            codes.USES_BEFORE_INTRODUCTION,
-                            f"{kind} id {item} is used here but introduced by a later step of this lesson (rule 4)",
-                            lesson=n,
-                            step=step["id"],
-                        )
-            for _kind, items in _step_introduces(step).items():
-                introduced_so_far.update(items)
+            declared = {
+                "letters": sorted((inventory.get("phonetics") or {}).get("letters") or []),
+                "grammar": sorted(entry["id"] for entry in inventory.get("grammar") or []),
+                "vocabulary": sorted(entry["evidence"] for entry in vocabulary["core"]),
+            }
+            introduced = {kind: sorted(item for (k, item) in introduced_by if k == kind) for kind in declared}
+            for kind in ("letters", "grammar", "vocabulary"):
+                missing = sorted(set(introduced[kind]) - set(declared[kind]))
+                extra = sorted(set(declared[kind]) - set(introduced[kind]))
+                label = {
+                    "letters": "phonetics.letters",
+                    "grammar": "grammar[].id",
+                    "vocabulary": "vocabulary.core[].evidence",
+                }[kind]
+                if missing:
+                    _fail(
+                        report,
+                        codes.INVENTORY_INTRODUCTION_MISMATCH,
+                        f"introduced by steps but missing from {label}: {', '.join(missing)} (§2a)",
+                        lesson=n,
+                    )
+                if extra:
+                    _fail(
+                        report,
+                        codes.INVENTORY_INTRODUCTION_MISMATCH,
+                        f"in {label} but introduced by no step: {', '.join(extra)} (§2a)",
+                        lesson=n,
+                    )
 
+            # Within-lesson order: a used id the same lesson introduces must come
+            # from an earlier step (rule 4, single-plan part).
+            introduced_so_far: set[str] = set()
+            for step in lesson["steps"]:
+                uses = step.get("uses") or {}
+                for kind in ("grammar", "vocabulary"):
+                    for item in uses.get(kind) or []:
+                        if (kind, item) in introduced_by and item not in introduced_so_far:
+                            _fail(
+                                report,
+                                codes.USES_BEFORE_INTRODUCTION,
+                                f"{kind} id {item} is used here but introduced by a later step of this lesson (rule 4)",
+                                lesson=n,
+                                step=step["id"],
+                            )
+                for _kind, items in _step_introduces(step).items():
+                    introduced_so_far.update(items)
+
+        # Recycled-vocabulary checks need only the current lesson; they run for
+        # every lesson kind, teach or not (§2a).
         lesson_introduced_words = {item for (kind, item) in introduced_by if kind == "vocabulary"}
         recycled = list(vocabulary["recycled"])
         used_words = [
@@ -518,7 +526,20 @@ def _check_dialogue_and_needs(report: Report, plan: dict) -> None:
     """The r9 dialogue.step, speaker evidence, needs and paradigm id checks."""
     for lesson in plan["lessons"]:
         n = lesson["n"]
-        step_ids = [step["id"] for step in lesson["steps"]]
+        step_ids: list[str] = []
+        seen_step_ids: set[str] = set()
+        for step in lesson["steps"]:
+            if step["id"] in seen_step_ids:
+                _fail(
+                    report,
+                    codes.DUPLICATE_STEP_ID,
+                    f"step id {step['id']!r} appears twice in this lesson; dialogue.step and "
+                    "within-lesson ordering become ambiguous (rule 6)",
+                    lesson=n,
+                    step=step["id"],
+                )
+            seen_step_ids.add(step["id"])
+            step_ids.append(step["id"])
         dialogue = lesson.get("dialogue")
         if dialogue is not None:
             if "step" not in dialogue:
@@ -631,50 +652,116 @@ def _check_word_facts(report: Report, plan: dict, store) -> None:
                     )
 
 
-def _word_ids_in_plan(plan: dict) -> list[tuple[int, str]]:
-    """Every W-… id the plan cites, with its lesson number (rule 3)."""
-    found: list[tuple[int, str]] = []
+def _word_ids_in_plan(plan: dict) -> list[tuple[int, str | None, str]]:
+    """Every W-… id the plan cites, with its lesson number and step id (rule 3)."""
+    found: list[tuple[int, str | None, str]] = []
     for lesson in plan["lessons"]:
         n = lesson["n"]
         vocabulary = lesson["inventory"]["vocabulary"]
-        found += [(n, entry["evidence"]) for entry in vocabulary["core"]]
-        found += [(n, entry["evidence"]) for entry in vocabulary["incidental"]]
-        found += [(n, item) for item in vocabulary["recycled"]]
+        found += [(n, None, entry["evidence"]) for entry in vocabulary["core"]]
+        found += [(n, None, entry["evidence"]) for entry in vocabulary["incidental"]]
+        found += [(n, None, item) for item in vocabulary["recycled"]]
         for step in lesson["steps"]:
             introduces = step.get("introduces") or {}
             uses = step.get("uses") or {}
-            found += [(n, item) for item in introduces.get("vocabulary") or []]
-            found += [(n, item) for item in uses.get("vocabulary") or []]
+            found += [(n, step["id"], item) for item in introduces.get("vocabulary") or []]
+            found += [(n, step["id"], item) for item in uses.get("vocabulary") or []]
             if step.get("paradigm"):
-                found.append((n, step["paradigm"]["word"]))
+                found.append((n, step["id"], step["paradigm"]["word"]))
         practice = lesson.get("practice") or {}
-        found += [(n, item) for item in practice.get("stress") or []]
+        found += [(n, None, item) for item in practice.get("stress") or []]
         dialogue = lesson.get("dialogue")
         if dialogue is not None:
-            found += [(n, speaker["evidence"]) for speaker in dialogue.get("speakers") or [] if "evidence" in speaker]
-            found += [(n, place["evidence"]) for place in dialogue.get("places") or []]
+            found += [
+                (n, None, speaker["evidence"]) for speaker in dialogue.get("speakers") or [] if "evidence" in speaker
+            ]
+            found += [(n, None, place["evidence"]) for place in dialogue.get("places") or []]
     return found
 
 
-def _pack_ids_in_plan(plan: dict) -> list[tuple[int, str]]:
-    """Every non-W-… evidence id the plan cites, with its lesson number (rule 3)."""
-    found: list[tuple[int, str]] = []
+def _pack_ids_in_plan(plan: dict) -> list[tuple[int, str | None, str]]:
+    """Every non-W-… evidence id the plan cites, with its lesson number and step id (rule 3)."""
+    found: list[tuple[int, str | None, str]] = []
     for lesson in plan["lessons"]:
         n = lesson["n"]
         for entry in lesson["inventory"].get("grammar") or []:
-            found += [(n, item) for item in entry["evidence"]]
+            found += [(n, None, item) for item in entry["evidence"]]
         for step in lesson["steps"]:
-            found += [(n, item) for item in step.get("evidence") or []]
+            found += [(n, step["id"], item) for item in step.get("evidence") or []]
         for activity in lesson.get("activities") or []:
             if "model" in activity:
-                found.append((n, activity["model"]))
-            found += [(n, item) for item in activity.get("error_refs") or []]
+                found.append((n, None, activity["model"]))
+            found += [(n, None, item) for item in activity.get("error_refs") or []]
         for video in lesson.get("videos") or []:
-            found.append((n, video["evidence"]))
+            found.append((n, None, video["evidence"]))
         dialogue = lesson.get("dialogue")
         if dialogue is not None:
-            found += [(n, item) for item in dialogue.get("evidence") or []]
+            found += [(n, None, item) for item in dialogue.get("evidence") or []]
     return found
+
+
+def _check_error_ref_records(report: Report, plan: dict, pack) -> None:
+    """error_refs resolve to E- error records of the pack, not any pack id (r9)."""
+    for lesson in plan["lessons"]:
+        for activity in lesson.get("activities") or []:
+            for item in activity.get("error_refs") or []:
+                if item in pack.ids and item not in pack.error_ids:
+                    _fail(
+                        report,
+                        codes.ERROR_REF_NOT_ERROR_RECORD,
+                        f"activity {activity['id']} cites {item} in error_refs, but {item} is not an "
+                        "E- error record of the module pack (r9)",
+                        lesson=lesson["n"],
+                    )
+
+
+def _schema_location(plan: dict, path) -> tuple[int | None, str | None]:
+    """The lesson n and step id a schema error path points into, when it does."""
+    lesson_no: int | None = None
+    step_id: str | None = None
+    parts = list(path)
+    lessons = plan.get("lessons")
+    if not (
+        len(parts) >= 2
+        and parts[0] == "lessons"
+        and isinstance(parts[1], int)
+        and isinstance(lessons, list)
+        and 0 <= parts[1] < len(lessons)
+        and isinstance(lessons[parts[1]], dict)
+    ):
+        return lesson_no, step_id
+    lesson = lessons[parts[1]]
+    n = lesson.get("n")
+    lesson_no = n if isinstance(n, int) else None
+    steps = lesson.get("steps")
+    if (
+        len(parts) >= 4
+        and parts[2] == "steps"
+        and isinstance(parts[3], int)
+        and isinstance(steps, list)
+        and 0 <= parts[3] < len(steps)
+        and isinstance(steps[parts[3]], dict)
+    ):
+        candidate = steps[parts[3]].get("id")
+        step_id = candidate if isinstance(candidate, str) else None
+    return lesson_no, step_id
+
+
+def _declared_pack_path(root: Path, declared: str) -> Path:
+    """Resolve evidence_ref.path against the plan's curriculum/l2-uk-en root.
+
+    The declared reference — not the conventional <slug>.yaml name — identifies
+    the pack that gets checked (rule 3). A curriculum/l2-uk-en/ prefix is
+    accepted; a path escaping the root fails closed as PACK_NOT_FOUND.
+    """
+    relative = declared.removeprefix("curriculum/l2-uk-en/")
+    resolved = (root / relative).resolve()
+    if resolved != root.resolve() and root.resolve() not in resolved.parents:
+        raise PlanError(
+            codes.PACK_NOT_FOUND,
+            f"evidence_ref.path {declared!r} resolves to {resolved}, outside {root}",
+        )
+    return resolved
 
 
 def validate_plan(
@@ -704,7 +791,6 @@ def validate_plan(
         return report
 
     root = evidence_root(plan_path)
-    pack_path = pack_path or root / f"evidence/{level}/{slug}.yaml"
     words_path = words_path or root / f"evidence/{level}/_words.yaml"
 
     _check_stress_marks(report, plan_text)
@@ -712,11 +798,21 @@ def validate_plan(
     schema = json.loads((REPO_ROOT / PLAN_SCHEMA_PATH).read_text(encoding="utf-8"))
     errors = sorted(Draft202012Validator(schema).iter_errors(plan), key=str)
     if errors:
-        details = "; ".join(f"at {'/'.join(str(p) for p in e.absolute_path) or '<root>'}: {e.message}" for e in errors)
-        _fail(report, codes.SCHEMA_VIOLATION, f"the plan fails {PLAN_SCHEMA_PATH}: {details}")
+        for error in errors:
+            where = "/".join(str(p) for p in error.absolute_path) or "<root>"
+            lesson_no, step_id = _schema_location(plan, error.absolute_path)
+            _fail(
+                report,
+                codes.SCHEMA_VIOLATION,
+                f"the plan fails {PLAN_SCHEMA_PATH} at {where}: {error.message}",
+                lesson=lesson_no,
+                step=step_id,
+            )
         return report
 
     try:
+        if pack_path is None:
+            pack_path = _declared_pack_path(root, plan["evidence_ref"]["path"])
         pack = load_pack(pack_path)
         store = load_words(words_path)
     except PlanError as error:
@@ -750,22 +846,25 @@ def validate_plan(
     _check_dialogue_and_needs(report, plan)
 
     pack_ids = pack.ids
-    for lesson_n, item in _pack_ids_in_plan(plan):
+    for lesson_n, step_id, item in _pack_ids_in_plan(plan):
         if item not in pack_ids:
             _fail(
                 report,
                 codes.UNKNOWN_PACK_ID,
                 f"evidence id {item} does not exist in the module pack {pack_path.name} (rule 3)",
                 lesson=lesson_n,
+                step=step_id,
             )
+    _check_error_ref_records(report, plan, pack)
     word_records = store.records
-    for lesson_n, item in _word_ids_in_plan(plan):
+    for lesson_n, step_id, item in _word_ids_in_plan(plan):
         if item not in word_records:
             _fail(
                 report,
                 codes.UNKNOWN_WORD_ID,
                 f"word id {item} does not exist in the level word store {words_path.name} (rule 3)",
                 lesson=lesson_n,
+                step=step_id,
             )
     _check_word_facts(report, plan, store)
     return report

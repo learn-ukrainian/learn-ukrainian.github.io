@@ -126,6 +126,11 @@
       "pattern": "^[A-Z][A-Z0-9]*-[0-9]+$",
       "description": "Evidence-pack record id (T-…, X-…, EX-…, E-…, V-…, S-…)"
     },
+    "errorId": {
+      "type": "string",
+      "pattern": "^E-[0-9]+$",
+      "description": "Error-record id (E-…); error_refs accepts error records only (r9)"
+    },
     "wordId": {
       "type": "string",
       "pattern": "^W-[0-9]+$",
@@ -412,8 +417,8 @@
               },
               "error_refs": {
                 "type": "array",
-                "items": { "$ref": "#/$defs/packId" },
-                "description": "r9: required when type is error-correction, forbidden otherwise; every id resolves in the pack"
+                "items": { "$ref": "#/$defs/errorId" },
+                "description": "r9: required when type is error-correction, forbidden otherwise; every id is an E- error record of the pack"
               }
             }
           }

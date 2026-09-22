@@ -48,10 +48,11 @@ def lock_digest(path: Path, failure_code: str) -> str:
 
 @dataclass(frozen=True)
 class Pack:
-    """The module evidence pack: every record id it defines."""
+    """The module evidence pack: every record id it defines, and its error records."""
 
     path: Path
     ids: frozenset[str] = field(default_factory=frozenset)
+    error_ids: frozenset[str] = field(default_factory=frozenset)
 
 
 @dataclass(frozen=True)
@@ -79,6 +80,7 @@ def load_pack(pack_path: Path) -> Pack:
             "word records live in the level word store evidence/<level>/_words.yaml (§3)",
         )
     ids: set[str] = set()
+    error_ids: set[str] = set()
     for list_name in PACK_LISTS:
         records = data.get(list_name, [])
         if records is None:
@@ -93,7 +95,9 @@ def load_pack(pack_path: Path) -> Pack:
             if record["id"] in ids:
                 raise PlanError(codes.DUPLICATE_PACK_ID, f"{pack_path}: id {record['id']} appears twice")
             ids.add(record["id"])
-    return Pack(path=pack_path, ids=frozenset(ids))
+            if list_name == "errors":
+                error_ids.add(record["id"])
+    return Pack(path=pack_path, ids=frozenset(ids), error_ids=frozenset(error_ids))
 
 
 def load_words(words_path: Path) -> WordStore:

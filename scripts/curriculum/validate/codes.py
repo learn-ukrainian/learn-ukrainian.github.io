@@ -59,6 +59,7 @@ UNKNOWN_WORD_ID = "unknown_word_id"
 TEACH_STEP_WITHOUT_PRACTICE = "teach_step_without_practice"
 UNKNOWN_ACTIVITY_ID = "unknown_activity_id"
 DUPLICATE_ACTIVITY_ID = "duplicate_activity_id"
+DUPLICATE_STEP_ID = "duplicate_step_id"
 UNKNOWN_ACTIVITY_TYPE = "unknown_activity_type"
 ACTIVITY_SCHEMA_UNAVAILABLE = "activity_schema_unavailable"
 ACTIVITY_SCHEMA_MALFORMED = "activity_schema_malformed"
@@ -78,6 +79,7 @@ NEED_KIND_UNSATISFIED = "need_kind_unsatisfied"
 DUPLICATE_PARADIGM_ID = "duplicate_paradigm_id"
 ERROR_REFS_MISSING = "error_refs_missing"
 ERROR_REFS_FORBIDDEN = "error_refs_forbidden"
+ERROR_REF_NOT_ERROR_RECORD = "error_ref_not_error_record"
 
 # --- notes (never fail the run) ---------------------------------------------
 CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
@@ -128,6 +130,7 @@ DESCRIPTIONS = {
     TEACH_STEP_WITHOUT_PRACTICE: "failure (rule 6): a teach step lists no practice activity",
     UNKNOWN_ACTIVITY_ID: "failure (rule 6): a referenced activity id is not defined in the lesson",
     DUPLICATE_ACTIVITY_ID: "failure (rule 6): an activity id appears twice in the same lesson",
+    DUPLICATE_STEP_ID: "failure (rule 6): a step id appears twice in the same lesson",
     UNKNOWN_ACTIVITY_TYPE: "failure (rule 6): an activity type is not in the level allowlist",
     ACTIVITY_SCHEMA_UNAVAILABLE: "failure (rule 6): schemas/activities-<level>.schema.json is missing; no fallback to another level",
     ACTIVITY_SCHEMA_MALFORMED: "failure (rule 6): an activity definition key lacks the -<level> suffix; no fallback to another level",
@@ -143,6 +146,7 @@ DESCRIPTIONS = {
     DUPLICATE_PARADIGM_ID: "failure (r9): a paradigm id appears twice in the same lesson",
     ERROR_REFS_MISSING: "failure (r9): an error-correction activity carries no error_refs",
     ERROR_REFS_FORBIDDEN: "failure (r9): error_refs on an activity whose type is not error-correction",
+    ERROR_REF_NOT_ERROR_RECORD: "failure (r9): an error_refs id exists in the pack but is not an E- error record",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
     MINUTES_CONSTANTS_UNDEFINED: "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
     WORD_TARGET_NOT_CALIBRATED: "not_checked: word_target presence and type are checked; the per-level minimum is not calibrated (§2a)",
