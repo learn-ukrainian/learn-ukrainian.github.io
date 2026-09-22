@@ -403,6 +403,12 @@ _install_socket_guard()
 
 def pytest_configure(config: pytest.Config) -> None:
     _install_socket_guard()
+    # The live app's request middleware defaults to 10s. Tests that drive
+    # TestClient(api_main.app) and read the real decision/ADR tree have
+    # exceeded that under xdist and come back as 504 (#8439). The assertions
+    # are about the payload. A test that sets API_REQUEST_TIMEOUT_S itself
+    # still wins, including the 0.05s timeout case.
+    os.environ.setdefault("API_REQUEST_TIMEOUT_S", "60")
 
 
 def pytest_runtest_setup(item: pytest.Item) -> None:
