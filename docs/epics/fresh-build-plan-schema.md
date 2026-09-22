@@ -21,8 +21,8 @@
 > **Revision 9 (2026-09-22) — the fields the two contracts need; the contracts themselves.** The lesson writer
 > contract ([`fresh-build-writer-contract.md`](fresh-build-writer-contract.md), #8431 r3) and the review contracts
 > ([`fresh-build-review-contracts.md`](fresh-build-review-contracts.md), #8430 r4) are §5 and the *review* row of §6,
-> kept as their own files; each was critiqued by two independent seats (AGY, Codex) and is handed over with the
-> operator's acceptance pending. §2 gains `dialogue.step`, `dialogue.speakers[].evidence`, `dialogue.places`,
+> kept as their own files; each was critiqued by two independent seats (AGY, Codex) and **accepted by the operator on
+> 2026-09-22**. §2 gains `dialogue.step`, `dialogue.speakers[].evidence`, `dialogue.places`,
 > `steps[].needs`, `steps[].paradigm` and `activities[].error_refs` (writer contract §1b; learner state #8414: names are
 > admitted by id, never by string). §3 fixes what a built lesson records (`evidence.lesson_entry_sha256`, #8413 Brief C).
 > The build order and the packages are in [`fresh-build-build-program.md`](fresh-build-build-program.md).
