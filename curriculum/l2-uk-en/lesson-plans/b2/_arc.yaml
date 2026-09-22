@@ -1,0 +1,1337 @@
+arc_schema: 1
+level: b2
+source:
+  path: docs/epics/fresh-build-b2-arc.md
+  sha256: c38867dbba5a65ca77091db751ab1dcc59d7c55d6cbeec9c794fec76194e7974
+est_lessons_total: 298
+immersion_bands:
+- start: 1
+  end: 93
+  band_key: b2+
+positions:
+- position: 1
+  slug: passive-voice-system
+  est_lessons: 3
+  job: 'See the whole system: four ways Ukrainian leaves the doer unnamed, and which text uses which'
+  inventory_text: null
+  phase: B2.0
+  skills_text: R (news item, official notice)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b2+
+- position: 2
+  slug: past-passive-participles
+  est_lessons: 3
+  job: Form passive participles with confidence — a short step up from B1 position 66 — and use them as a predicate
+  inventory_text: null
+  phase: B2.0
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 3
+  slug: b2-impersonal-passive
+  est_lessons: 4
+  job: Use the forms in `-но`, `-то` to report a result without a doer (`:3414-3415`)
+  inventory_text: null
+  phase: B2.0
+  skills_text: R (report, chronicle), W (report what was done)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 3414
+    - 3415
+  band_key: b2+
+- position: 4
+  slug: dim-zhytlo
+  est_lessons: 4
+  job: Talk about repair, replanning and restoration of a home, the property market and buying a home (`:2899-2900`)
+  inventory_text: null
+  phase: B2.0
+  skills_text: R (property advert `:2583-2587`), Li, W (business letter of claim `:2653-2654`)
+  skills:
+  - R
+  - Li
+  - W
+  standard_line_refs:
+  - - 2899
+    - 2900
+  - - 2583
+    - 2587
+  - - 2653
+    - 2654
+  band_key: b2+
+- position: 5
+  slug: reflexive-passive
+  est_lessons: 3
+  job: Recognise and use reflexive verbs with a passive meaning, and tell them from the other reflexive meanings of B1 position 28
+  inventory_text: null
+  phase: B2.0
+  skills_text: R (instructions `:2590`, `:2597`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 2590
+    - 2590
+  - - 2597
+    - 2597
+  band_key: b2+
+- position: 6
+  slug: third-person-plural-passive
+  est_lessons: 3
+  job: Use the indefinite-personal sentence when the doer is unknown or unimportant (`:3413`)
+  inventory_text: null
+  phase: B2.0
+  skills_text: Li (announcements `:2507-2508`)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 3413
+    - 3413
+  - - 2507
+    - 2508
+  band_key: b2+
+- position: 7
+  slug: passive-in-context
+  est_lessons: 3
+  job: 'Choose among the four constructions by style: scientific, official, media, conversational'
+  inventory_text: null
+  phase: B2.0
+  skills_text: W (rewrite one message for two styles)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 8
+  slug: pobut-shchodenne
+  est_lessons: 3
+  job: Talk about conditions and style of life, everyday objects, time and space (`:2902-2906`)
+  inventory_text: null
+  phase: B2.0
+  skills_text: Li (everyday conversation in noise `:2738-2739`), S
+  skills:
+  - Li
+  - S
+  standard_line_refs:
+  - - 2902
+    - 2906
+  - - 2738
+    - 2739
+  band_key: b2+
+- position: 9
+  slug: active-participles-present
+  est_lessons: 2
+  job: Recognise present active participles and use the constructions Ukrainian prefers instead (D4)
+  inventory_text: null
+  phase: B2.0
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b2+
+- position: 10
+  slug: checkpoint-passive-voice
+  est_lessons: 2
+  job: 'Self-check: report events without naming the doer, in the right style'
+  inventory_text: null
+  phase: B2.0
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 11
+  slug: active-participles-past
+  est_lessons: 2
+  job: Recognise and form past active participles — a short step up from B1 position 65
+  inventory_text: null
+  phase: B2.1
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b2+
+- position: 12
+  slug: participles-vs-relative-clauses
+  est_lessons: 3
+  job: Choose between a participle phrase and an attributive clause — `котрий` and `що` appear here only as alternatives to a participle; the clause system is 65's; describe a person's looks, character, habits and aims (`:2882-2883`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: W (detailed description of a person `:2674`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 2882
+    - 2883
+  - - 2674
+    - 2674
+  band_key: b2+
+- position: 13
+  slug: zdorovya-i-medytsyna
+  est_lessons: 4
+  job: Talk about diagnostics, emergency help, addictions, folk and conventional medicine (`:2964-2967`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: Li, R (description of a medicine `:2588-2589`), S (patient)
+  skills:
+  - Li
+  - R
+  - S
+  standard_line_refs:
+  - - 2964
+    - 2967
+  - - 2588
+    - 2589
+  band_key: b2+
+- position: 14
+  slug: phrases-word-combinations
+  est_lessons: 3
+  job: 'Get agreement and government right: which case a verb, a noun or an adjective requires'
+  inventory_text: null
+  phase: B2.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 15
+  slug: predicate-types
+  est_lessons: 3
+  job: Build simple and compound predicates, the compound nominal predicate included (`:3173-3174`, `:3252-3253`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3173
+    - 3174
+  - - 3252
+    - 3253
+  band_key: b2+
+- position: 16
+  slug: secondary-sentence-members
+  est_lessons: 2
+  job: Expand a sentence with attributes, objects, adverbial parts and apposition (`:3477`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs:
+  - - 3477
+    - 3477
+  band_key: b2+
+- position: 17
+  slug: sport-i-dozvillia
+  est_lessons: 4
+  job: Talk about sports, sports facilities and equipment, achievements and records, and cultural leisure (`:2908-2922`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: Li (sports programme `:2512-2514`), R (report `:2607`)
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 2908
+    - 2922
+  - - 2512
+    - 2514
+  - - 2607
+    - 2607
+  band_key: b2+
+- position: 18
+  slug: b2-one-member-sentences
+  est_lessons: 4
+  job: Recognise and use the four types of one-member sentence (`:3409-3418`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: R (diary, memoir `:2606`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 3409
+    - 3418
+  - - 2606
+    - 2606
+  band_key: b2+
+- position: 19
+  slug: homogeneous-members
+  est_lessons: 3
+  job: Build series with a generalising word and punctuate them (`:3399-3400`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs:
+  - - 3399
+    - 3400
+  band_key: b2+
+- position: 20
+  slug: detached-members
+  est_lessons: 4
+  job: Detach a participle phrase, an adverbial-participle phrase and a specifying part, with the punctuation (`:3401-3404`, `:3477`)
+  inventory_text: null
+  phase: B2.1
+  skills_text: W, R
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 3401
+    - 3404
+  - - 3477
+    - 3477
+  band_key: b2+
+- position: 21
+  slug: checkpoint-syntax-i
+  est_lessons: 2
+  job: 'Self-check: the simple sentence, plain and complicated'
+  inventory_text: null
+  phase: B2.1
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 22
+  slug: parenthetical-expressions
+  est_lessons: 3
+  job: State your own position and add accompanying information with parenthetical words and inserted constructions (`:2661-2663`, `:3478-3479`)
+  inventory_text: null
+  phase: B2.2
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs:
+  - - 2661
+    - 2663
+  - - 3478
+    - 3479
+  band_key: b2+
+- position: 23
+  slug: multi-clause-sentences
+  est_lessons: 3
+  job: Read and build a sentence of several clauses with different kinds of link
+  inventory_text: null
+  phase: B2.2
+  skills_text: R (journal article `:2510`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 2510
+    - 2510
+  band_key: b2+
+- position: 24
+  slug: kharchuvannia-i-kukhnia
+  est_lessons: 4
+  job: Talk about culinary traditions, diets and kinds of eating, taste preferences; order a banquet (`:3006-3014`)
+  inventory_text: null
+  phase: B2.2
+  skills_text: R (recipe `:2595`), W (recipe, instruction `:2677`), S
+  skills:
+  - R
+  - W
+  - S
+  standard_line_refs:
+  - - 3006
+    - 3014
+  - - 2595
+    - 2595
+  - - 2677
+    - 2677
+  band_key: b2+
+- position: 25
+  slug: correlative-constructions
+  est_lessons: 2
+  job: Tie a clause to a pointing word in the main clause (`:3428-3429`, `:3477`)
+  inventory_text: null
+  phase: B2.2
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3428
+    - 3429
+  - - 3477
+    - 3477
+  band_key: b2+
+- position: 26
+  slug: emphasis-and-inversion
+  est_lessons: 3
+  job: Stress what matters with word order and with the phrases the Standard lists (`:2871-2872`)
+  inventory_text: null
+  phase: B2.2
+  skills_text: S (prepared talk)
+  skills:
+  - S
+  standard_line_refs:
+  - - 2871
+    - 2872
+  band_key: b2+
+- position: 27
+  slug: stylistic-connectors
+  est_lessons: 3
+  job: 'Organise a written text: listing, specifying, stressing importance (`:2659-2660`)'
+  inventory_text: null
+  phase: B2.2
+  skills_text: W (150–200 words in paragraphs `:2640-2642`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 2659
+    - 2660
+  - - 2640
+    - 2642
+  band_key: b2+
+- position: 28
+  slug: kupivlia-i-servisy
+  est_lessons: 4
+  job: Buy on the internet, read information and advertising, complain; insurance, car service, courses, ordering services and a claim about poor work (`:2994-3004`, `:3016-3027`)
+  inventory_text: null
+  phase: B2.2
+  skills_text: S (complaint, winning a concession `:2745-2746`), W (letter of complaint)
+  skills:
+  - S
+  - W
+  standard_line_refs:
+  - - 2994
+    - 3004
+  - - 3016
+    - 3027
+  - - 2745
+    - 2746
+  band_key: b2+
+- position: 29
+  slug: complex-syntax-ellipsis-parcelling
+  est_lessons: 2
+  job: Use ellipsis in speech and writing — a step up from B1 (`:3472-3473`); recognise parcelling in media and fiction (D4)
+  inventory_text: null
+  phase: B2.2
+  skills_text: Li (everyday conversation)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 3472
+    - 3473
+  band_key: b2+
+- position: 30
+  slug: direct-indirect-speech
+  est_lessons: 3
+  job: 'Quote and report in longer texts: refer to someone''s view and appeal to a speaker''s words (`:3446-3449`, `:2856`, `:2865-2866`)'
+  inventory_text: null
+  phase: B2.2
+  skills_text: W (summary of several sources `:2650-2651`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 3446
+    - 3449
+  - - 2856
+    - 2856
+  - - 2865
+    - 2866
+  - - 2650
+    - 2651
+  band_key: b2+
+- position: 31
+  slug: checkpoint-syntax-ii
+  est_lessons: 2
+  job: 'Self-check: one argument in complex sentences, with sources quoted and reported'
+  inventory_text: null
+  phase: B2.2
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 32
+  slug: phonetic-stylistic-devices
+  est_lessons: 2
+  job: 'Make speech and writing euphonic: `у / в`, `і / й`, `з / зі / із` as a system (`:3453-3458`)'
+  inventory_text: null
+  phase: B2.3
+  skills_text: S (read aloud), W
+  skills:
+  - S
+  - W
+  standard_line_refs:
+  - - 3453
+    - 3458
+  band_key: b2+
+- position: 33
+  slug: lexical-stylistic-devices
+  est_lessons: 4
+  job: Use antonyms, homonyms, epithets, metaphors, diminutives, compound words and onomatopoeia on purpose (`:3459-3469`)
+  inventory_text: null
+  phase: B2.3
+  skills_text: R (poem, song `:2500`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 3459
+    - 3469
+  - - 2500
+    - 2500
+  band_key: b2+
+- position: 34
+  slug: syntactic-stylistic-devices
+  est_lessons: 3
+  job: Use address, repetition, comparison and specification as means of style (`:3470-3477`)
+  inventory_text: null
+  phase: B2.3
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs:
+  - - 3470
+    - 3477
+  band_key: b2+
+- position: 35
+  slug: mistsia-i-oriientyry
+  est_lessons: 5
+  job: Describe a locality, monuments and places of memory, a city's development plan and its problems, suburbs and country life; plan a trip with a tour company, green and rural tourism (`:3029-3038`, `:2924-2935`)
+  inventory_text: null
+  phase: B2.3
+  skills_text: S (problem in an unforeseen situation `:2741-2744`), R (brochure `:2602`)
+  skills:
+  - S
+  - R
+  standard_line_refs:
+  - - 3029
+    - 3038
+  - - 2924
+    - 2935
+  - - 2741
+    - 2744
+  - - 2602
+    - 2602
+  band_key: b2+
+- position: 36
+  slug: register-formal-informal
+  est_lessons: 3
+  job: Choose the official or unofficial register by situation (`:2752-2753`)
+  inventory_text: null
+  phase: B2.3
+  skills_text: Li, S
+  skills:
+  - Li
+  - S
+  standard_line_refs:
+  - - 2752
+    - 2753
+  band_key: b2+
+- position: 37
+  slug: register-business-ukrainian
+  est_lessons: 4
+  job: 'Write and read business papers: CV, explanatory note, complaint, letter of thanks; decline abbreviations (`:2605`, `:3113-3114`)'
+  inventory_text: null
+  phase: B2.3
+  skills_text: W (business letters `:2653-2654`), R
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 2605
+    - 2605
+  - - 3113
+    - 3114
+  - - 2653
+    - 2654
+  band_key: b2+
+- position: 38
+  slug: register-formal-written
+  est_lessons: 4
+  job: 'Read and write in the scientific and the legal style: programmes, contracts, reports, guarantees (`:2677-2681`)'
+  inventory_text: null
+  phase: B2.3
+  skills_text: R (small professional text `:2573`), W
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 2677
+    - 2681
+  - - 2573
+    - 2573
+  band_key: b2+
+- position: 39
+  slug: tradytsii-i-zvychai
+  est_lessons: 4
+  job: Talk about state, religious and family holidays, wishes and gifts, funerals and condolences, Ukrainian customs (`:3058-3064`)
+  inventory_text: null
+  phase: B2.3
+  skills_text: W (essay on national traditions `:2666-2667`), Li
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 3058
+    - 3064
+  - - 2666
+    - 2667
+  band_key: b2+
+- position: 40
+  slug: register-literary-ukrainian
+  est_lessons: 4
+  job: Read original prose at the B2 level and say what the author thinks (`:2603-2604`, `:2572`)
+  inventory_text: null
+  phase: B2.3
+  skills_text: R, W (overview of a book `:2645-2646`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 2603
+    - 2604
+  - - 2572
+    - 2572
+  - - 2645
+    - 2646
+  band_key: b2+
+- position: 41
+  slug: register-public-discourse
+  est_lessons: 4
+  job: 'Follow and produce media and conversational speech: news, interviews, talk shows (`:2512-2519`)'
+  inventory_text: null
+  phase: B2.3
+  skills_text: Li (text of up to 700 words `:2466`), S
+  skills:
+  - Li
+  - S
+  standard_line_refs:
+  - - 2512
+    - 2519
+  - - 2466
+    - 2466
+  band_key: b2+
+- position: 42
+  slug: checkpoint-register-domain
+  est_lessons: 2
+  job: 'Self-check: recognise the style of a text and answer in kind'
+  inventory_text: null
+  phase: B2.3
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 43
+  slug: register-practice-cross-register-rewriting
+  est_lessons: 3
+  job: Rewrite one message across registers
+  inventory_text: null
+  phase: B2.4
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 44
+  slug: politics-government-vocabulary
+  est_lessons: 5
+  job: Discuss social institutions, the structure of the state, political events and movements, war and peace (`:2937-2942`, `:2717-2718`)
+  inventory_text: null
+  phase: B2.4
+  skills_text: Li (news), R (newspaper article `:2593`), S
+  skills:
+  - Li
+  - R
+  - S
+  standard_line_refs:
+  - - 2937
+    - 2942
+  - - 2717
+    - 2718
+  - - 2593
+    - 2593
+  band_key: b2+
+- position: 45
+  slug: law-justice-vocabulary
+  est_lessons: 4
+  job: Discuss rights and duties, crime, law enforcement, equality and justice (`:2944-2948`)
+  inventory_text: null
+  phase: B2.4
+  skills_text: S (witness of an event `:2559`), R
+  skills:
+  - S
+  - R
+  standard_line_refs:
+  - - 2944
+    - 2948
+  - - 2559
+    - 2559
+  band_key: b2+
+- position: 46
+  slug: economics-business-vocabulary
+  est_lessons: 4
+  job: Discuss the economy, the family budget, income, spending and taxes, poverty (`:2951-2955`)
+  inventory_text: null
+  phase: B2.4
+  skills_text: R (article), W (argued message for and against `:2657-2658`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 2951
+    - 2955
+  - - 2657
+    - 2658
+  band_key: b2+
+- position: 47
+  slug: genitive-advanced
+  est_lessons: 4
+  job: Decline the masculine noun types new at B2 (D3); use the genitive in B2-size texts, the subject of a verbal noun included (D2)
+  inventory_text: null
+  phase: B2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 48
+  slug: dative-advanced
+  est_lessons: 3
+  job: Decline neuter nouns with a suffix and `матір` (D3); use the dative for states and benefit in B2-size texts
+  inventory_text: null
+  phase: B2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 49
+  slug: instrumental-advanced
+  est_lessons: 3
+  job: Decline nouns of adjectival origin and of common gender (D3); use the instrumental in B2-size texts
+  inventory_text: null
+  phase: B2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 50
+  slug: questions-deliberative-rhetorical
+  est_lessons: 3
+  job: Ask every kind of question the Standard lists, invite with a question; recognise rhetorical questions (D4)
+  inventory_text: null
+  phase: B2.4
+  skills_text: S (survey with leading questions `:2754-2757`)
+  skills:
+  - S
+  standard_line_refs:
+  - - 2754
+    - 2757
+  band_key: b2+
+- position: 51
+  slug: advanced-case-semantics
+  est_lessons: 3
+  job: Use the accusative meanings B2 adds — path, `на` for cause, purpose and intended use, `під`, `повз` (D2) — and bring all seven cases together
+  inventory_text: null
+  phase: B2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 52
+  slug: pronoun-system-advanced
+  est_lessons: 4
+  job: Decline `скільки` and the indefinite pronouns; use the whole pronoun system in connected text (`:3152-3165`)
+  inventory_text: null
+  phase: B2.4
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3152
+    - 3165
+  band_key: b2+
+- position: 53
+  slug: checkpoint-cases-morphology
+  est_lessons: 2
+  job: 'Self-check: every case and every noun type'
+  inventory_text: null
+  phase: B2.4
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 54
+  slug: aspect-nuances-secondary-imperfectivization
+  est_lessons: 3
+  job: Form and choose aspect pairs, the suffixal ones included (`:3348-3350`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3348
+    - 3350
+  band_key: b2+
+- position: 55
+  slug: aspect-nuances-imperative-infinitive
+  est_lessons: 3
+  job: Choose the aspect in every imperative form and with the infinitive — the forms are B1's (`:3319-3321`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: S (advice, prohibition, threat `:2867`)
+  skills:
+  - S
+  standard_line_refs:
+  - - 3319
+    - 3321
+  - - 2867
+    - 2867
+  band_key: b2+
+- position: 56
+  slug: pluperfect-tense
+  est_lessons: 2
+  job: Recognise and understand the pluperfect in literary texts (D4)
+  inventory_text: null
+  phase: B2.5
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b2+
+- position: 57
+  slug: conditional-mood-particles
+  est_lessons: 3
+  job: Use the conditional for politeness, wish, advice and hypothesis (`:2830`, `:3323-3324`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: S
+  skills:
+  - S
+  standard_line_refs:
+  - - 2830
+    - 2830
+  - - 3323
+    - 3324
+  band_key: b2+
+- position: 58
+  slug: numeral-declension-time-dates
+  est_lessons: 3
+  job: Say and write any time and date in any case (`:3132-3144`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: Li (dates and times by ear)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 3132
+    - 3144
+  band_key: b2+
+- position: 59
+  slug: numeral-declension-compound-numbers
+  est_lessons: 5
+  job: Decline cardinals from 5 to 100 and compound cardinals (`:3145-3149`); the five lessons are for these alone — collective and fractional numerals, if the pack admits them (D4), get a lesson beyond the five
+  inventory_text: null
+  phase: B2.5
+  skills_text: R (statistics in an article)
+  skills:
+  - R
+  standard_line_refs:
+  - - 3145
+    - 3149
+  band_key: b2+
+- position: 60
+  slug: word-formation-person-suffixes
+  est_lessons: 3
+  job: Form and understand names of people by what they do (`:3356-3357`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3356
+    - 3357
+  band_key: b2+
+- position: 61
+  slug: word-formation-abstract-nouns
+  est_lessons: 3
+  job: Form activity nouns with a suffix and with a zero suffix, and abstract nouns (`:3359-3364`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: R (scientific article `:2681`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 3359
+    - 3364
+  - - 2681
+    - 2681
+  band_key: b2+
+- position: 62
+  slug: word-formation-place-object-names
+  est_lessons: 2
+  job: Form and understand names of places by what happens there (`:3366-3367`)
+  inventory_text: null
+  phase: B2.5
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3366
+    - 3367
+  band_key: b2+
+- position: 63
+  slug: word-formation-adjective-adverbs
+  est_lessons: 7
+  job: 'Form and **decline** possessive adjectives — at least three lessons of their own: formation, singular, plural; decline compound adjectives; recycle adjectives from nouns and adverbs from adjectives (`:3121-3129`, `:3369-3373`)'
+  inventory_text: null
+  phase: B2.5
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs:
+  - - 3121
+    - 3129
+  - - 3369
+    - 3373
+  band_key: b2+
+- position: 64
+  slug: advanced-conjunctions-i
+  est_lessons: 2
+  job: Join clauses as equals with the full conjunction set
+  inventory_text: null
+  phase: B2.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b2+
+- position: 65
+  slug: advanced-conjunctions-ii
+  est_lessons: 4
+  job: Build every subordinate clause type the Standard lists, with `котрий`, `що` and `доки` (`:3422-3445`)
+  inventory_text: null
+  phase: B2.6
+  skills_text: W (report or essay with reasoning `:2647-2649`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 3422
+    - 3445
+  - - 2647
+    - 2649
+  band_key: b2+
+- position: 66
+  slug: checkpoint-morphology
+  est_lessons: 2
+  job: 'Self-check: verbs, numerals, word formation, conjunctions'
+  inventory_text: null
+  phase: B2.6
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 67
+  slug: synonymy-types-and-rows
+  est_lessons: 3
+  job: Tell synonyms apart by meaning and colour (`:3461`)
+  inventory_text: null
+  phase: B2.6
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 3461
+    - 3461
+  band_key: b2+
+- position: 68
+  slug: synonymy-in-registers
+  est_lessons: 3
+  job: Choose the synonym the register asks for
+  inventory_text: null
+  phase: B2.6
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 69
+  slug: synonymy-practice-precision
+  est_lessons: 2
+  job: 'Say exactly what you mean: paraphrase, specify, explain in other words (`:2749-2751`)'
+  inventory_text: null
+  phase: B2.6
+  skills_text: S
+  skills:
+  - S
+  standard_line_refs:
+  - - 2749
+    - 2751
+  band_key: b2+
+- position: 70
+  slug: proverbs-work-wisdom-character
+  est_lessons: 3
+  job: Understand and use well-known proverbs about work, wisdom and character
+  inventory_text: null
+  phase: B2.6
+  skills_text: Li, R
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+  band_key: b2+
+- position: 71
+  slug: proverbs-nature-time-caution
+  est_lessons: 3
+  job: Understand and use well-known proverbs about nature, time and caution; weather, seasons and climate (`:3041`)
+  inventory_text: null
+  phase: B2.6
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs:
+  - - 3041
+    - 3041
+  band_key: b2+
+- position: 72
+  slug: set-expressions-combined
+  est_lessons: 3
+  job: Use fixed expressions where they fit (`:2752-2753`)
+  inventory_text: null
+  phase: B2.6
+  skills_text: S
+  skills:
+  - S
+  standard_line_refs:
+  - - 2752
+    - 2753
+  band_key: b2+
+- position: 73
+  slug: checkpoint-lexicology-i
+  est_lessons: 2
+  job: 'Self-check: the right word for the register'
+  inventory_text: null
+  phase: B2.6
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b2+
+- position: 74
+  slug: idioms-somatic
+  est_lessons: 3
+  job: 'Understand and use idioms built on parts of the body; feelings: anger, worry, fear, comfort (`:2847-2848`, `:2868`)'
+  inventory_text: null
+  phase: B2.7
+  skills_text: Li, S
+  skills:
+  - Li
+  - S
+  standard_line_refs:
+  - - 2847
+    - 2848
+  - - 2868
+    - 2868
+  band_key: b2+
+- position: 75
+  slug: idioms-animals
+  est_lessons: 3
+  job: Understand and use idioms built on animals; domestic and wild animals (`:3043`)
+  inventory_text: null
+  phase: B2.7
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs:
+  - - 3043
+    - 3043
+  band_key: b2+
+- position: 76
+  slug: idioms-nature
+  est_lessons: 3
+  job: Understand and use idioms built on nature; natural features, ecology and protection of the environment (`:3044-3045`)
+  inventory_text: null
+  phase: B2.7
+  skills_text: R (article on ecology), S
+  skills:
+  - R
+  - S
+  standard_line_refs:
+  - - 3044
+    - 3045
+  band_key: b2+
+- position: 77
+  slug: neologisms-borrowings
+  est_lessons: 3
+  job: Understand how the vocabulary renews itself, in texts about technology and the media (D4)
+  inventory_text: null
+  phase: B2.7
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b2+
+- position: 78
+  slug: checkpoint-lexicology-ii
+  est_lessons: 2
+  job: 'Self-check: idioms understood and used where they fit'
+  inventory_text: null
+  phase: B2.7
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+  band_key: b2+
+- position: 79
+  slug: professional-email-basics
+  est_lessons: 3
+  job: 'Write a working e-mail: request, thanks, explanation; working hours, leave, pay and the social package (`:2983-2986`)'
+  inventory_text: null
+  phase: B2.7
+  skills_text: W (`:2653-2654`), R
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 2983
+    - 2986
+  - - 2653
+    - 2654
+  band_key: b2+
+- position: 80
+  slug: professional-email-advanced
+  est_lessons: 3
+  job: 'Handle hard cases in writing: complaint, claim, refusal; career and professional growth, the labour market, unemployment (`:2881`, `:2987-2989`)'
+  inventory_text: null
+  phase: B2.7
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs:
+  - - 2881
+    - 2881
+  - - 2987
+    - 2989
+  band_key: b2+
+- position: 81
+  slug: professional-reports
+  est_lessons: 4
+  job: Write a report and a programme; business negotiations and contracts (`:2680`, `:2990-2992`)
+  inventory_text: null
+  phase: B2.7
+  skills_text: W, S (negotiation)
+  skills:
+  - W
+  - S
+  standard_line_refs:
+  - - 2680
+    - 2680
+  - - 2990
+    - 2992
+  band_key: b2+
+- position: 82
+  slug: academic-writing
+  est_lessons: 4
+  job: Write a report to a plan and summarise sources; fields of knowledge, degrees, academic posts, the educational process, reforms (`:2969-2978`)
+  inventory_text: null
+  phase: B2.7
+  skills_text: W (`:2647-2651`), Li (lecture `:2466`)
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 2969
+    - 2978
+  - - 2647
+    - 2651
+  - - 2466
+    - 2466
+  band_key: b2+
+- position: 83
+  slug: text-analysis
+  est_lessons: 3
+  job: Find the theme, the purpose, the author's position and the conclusions of a text (`:2569-2573`)
+  inventory_text: null
+  phase: B2.7
+  skills_text: R (skim a long text `:2576-2577`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 2569
+    - 2573
+  - - 2576
+    - 2577
+  band_key: b2+
+- position: 84
+  slug: news-analysis
+  est_lessons: 4
+  job: Follow the press, radio, television, the internet and social networks; discuss the news and responses to it (`:3052-3056`, `:2532`)
+  inventory_text: null
+  phase: B2.7
+  skills_text: Li (news of up to 700 words), S
+  skills:
+  - Li
+  - S
+  standard_line_refs:
+  - - 3052
+    - 3056
+  - - 2532
+    - 2532
+  band_key: b2+
+- position: 85
+  slug: presentation-skills
+  est_lessons: 4
+  job: Speak before an audience; address a speaker and appeal to a speaker's words (`:2729-2730`, `:2863-2866`)
+  inventory_text: null
+  phase: B2.8
+  skills_text: S, Li (long presentation `:2511`)
+  skills:
+  - S
+  - Li
+  standard_line_refs:
+  - - 2729
+    - 2730
+  - - 2863
+    - 2866
+  - - 2511
+    - 2511
+  band_key: b2+
+- position: 86
+  slug: discussion-debate
+  est_lessons: 4
+  job: 'Take part in a formal and an informal discussion: react to arguments, state for and against; contested questions, conflicts between generations (`:2758-2760`, `:2949`, `:2887`)'
+  inventory_text: null
+  phase: B2.8
+  skills_text: S (12–15 turns `:2779-2780`), Li (round table `:2531`)
+  skills:
+  - S
+  - Li
+  standard_line_refs:
+  - - 2758
+    - 2760
+  - - 2949
+    - 2949
+  - - 2887
+    - 2887
+  - - 2779
+    - 2780
+  - - 2531
+    - 2531
+  band_key: b2+
+- position: 87
+  slug: checkpoint-communication
+  est_lessons: 2
+  job: 'Self-check: a letter, a talk and a discussion'
+  inventory_text: null
+  phase: B2.8
+  skills_text: W, S
+  skills:
+  - W
+  - S
+  standard_line_refs: []
+  band_key: b2+
+- position: 88
+  slug: tekhnolohii-ta-shi
+  est_lessons: 4
+  job: Talk about the development of science and technology, discoveries, inventions that changed the world (`:3047-3050`)
+  inventory_text: null
+  phase: B2.8
+  skills_text: R, W (essay with reasoning `:2668-2669`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 3047
+    - 3050
+  - - 2668
+    - 2669
+  band_key: b2+
+- position: 89
+  slug: nauka-i-doslidzhennia
+  est_lessons: 4
+  job: Talk about research; give definitions in a professional field (`:2840-2841`); prepare and run a simple survey (`:2754-2757`)
+  inventory_text: null
+  phase: B2.8
+  skills_text: S (survey `:2783`), W
+  skills:
+  - S
+  - W
+  standard_line_refs:
+  - - 2840
+    - 2841
+  - - 2754
+    - 2757
+  - - 2783
+    - 2783
+  band_key: b2+
+- position: 90
+  slug: mystetstvo-i-literatura
+  est_lessons: 4
+  job: Talk about museums, galleries, theatre, the philharmonic, festivals; retell a plot and say what you think of it (`:2908-2915`, `:2726`)
+  inventory_text: null
+  phase: B2.8
+  skills_text: W (overview of a film or play `:2670-2671`), Li (film `:2472-2473`)
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 2908
+    - 2915
+  - - 2726
+    - 2726
+  - - 2670
+    - 2671
+  - - 2472
+    - 2473
+  band_key: b2+
+- position: 91
+  slug: modern-diaspora
+  est_lessons: 4
+  job: Talk about nationality, country and languages, the history of a family and its origin, contacts between people (`:2878`, `:2886`, `:2888-2889`)
+  inventory_text: null
+  phase: B2.8
+  skills_text: R (memoir `:2606`), W (private letter describing events and impressions `:2652`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 2878
+    - 2878
+  - - 2886
+    - 2886
+  - - 2888
+    - 2889
+  - - 2606
+    - 2606
+  - - 2652
+    - 2652
+  band_key: b2+
+- position: 92
+  slug: religion-in-ukraine
+  est_lessons: 3
+  job: Talk about religious holidays, customs and traditions (`:3059`, `:3064`)
+  inventory_text: null
+  phase: B2.8
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 3059
+    - 3059
+  - - 3064
+    - 3064
+  band_key: b2+
+- position: 93
+  slug: b2-final-exam
+  est_lessons: 3
+  job: 'Take a practice exam in the four skills at the Standard''s B2 sizes: listening of up to 700 words, writing of 150–200 words, a dialogue of 12–15 turns, a talk before an audience'
+  inventory_text: null
+  phase: B2.8
+  skills_text: all
+  skills:
+  - W
+  - Li
+  - R
+  - S
+  standard_line_refs: []
+  band_key: b2+

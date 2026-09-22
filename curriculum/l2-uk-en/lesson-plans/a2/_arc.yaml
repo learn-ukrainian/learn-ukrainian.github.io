@@ -1,0 +1,859 @@
+arc_schema: 1
+level: a2
+source:
+  path: docs/epics/fresh-build-a2-arc.md
+  sha256: 3023551e407b25d93dd905744d9866aea678533e162eb1cb5522d50381932522
+est_lessons_total: 224
+immersion_bands:
+- start: 1
+  end: 3
+  band_key: a2-bridge
+- start: 4
+  end: 7
+  band_key: a2-ramp
+- start: 8
+  end: 20
+  band_key: a2-m01-20
+- start: 21
+  end: 50
+  band_key: a2-m21-50
+- start: 51
+  end: 69
+  band_key: a2-m51-70
+positions:
+- position: 1
+  slug: a2-bridge
+  est_lessons: 4
+  job: 'Show what you can do after A1 and start working in Ukrainian only: three tenses, four cases, questions — with the grammar words needed to follow a Ukrainian explanation'
+  inventory_text: null
+  phase: A2.1
+  skills_text: Li, W
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  band_key: a2-bridge
+- position: 2
+  slug: aspect-concept
+  est_lessons: 3
+  job: Notice that Ukrainian verbs come in pairs — one for the process, one for the result — and read a past-tense story that uses both
+  inventory_text: null
+  phase: A2.1
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: a2-bridge
+- position: 3
+  slug: aspect-in-vocabulary
+  est_lessons: 3
+  job: 'Learn verbs as pairs from now on: recognise the common ways a pair is formed and keep a pair list'
+  inventory_text: null
+  phase: A2.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-bridge
+- position: 4
+  slug: liudyna-i-stosunky
+  est_lessons: 4
+  job: 'Describe a person — appearance, clothes, character — and the people around you: neighbours, colleagues, friends (`:1074-1081`)'
+  inventory_text: null
+  phase: A2.1
+  skills_text: W (describe a friend, as in `:898-902`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1074
+    - 1081
+  - - 898
+    - 902
+  band_key: a2-ramp
+- position: 5
+  slug: genitive-intro
+  est_lessons: 4
+  job: 'Say what there is not and what you do not have: genitive singular of nouns, with its vowel alternations'
+  inventory_text: null
+  phase: A2.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-ramp
+- position: 6
+  slug: genitive-dates-numbers
+  est_lessons: 4
+  job: 'Give dates, birthdays and amounts: ordinals in the genitive, quantity words with the genitive'
+  inventory_text: null
+  phase: A2.1
+  skills_text: Li (dates and prices by ear), R (calendar, price list)
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+  band_key: a2-ramp
+- position: 7
+  slug: foundations-practice
+  est_lessons: 3
+  job: 'Use everything from 1–6 in one connected situation: a first week in a new city'
+  inventory_text: null
+  phase: A2.1
+  skills_text: W (note, SMS `:927-928`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 927
+    - 928
+  band_key: a2-ramp
+- position: 8
+  slug: checkpoint-foundations
+  est_lessons: 2
+  job: 'Self-check: describe people, deny, count, date'
+  inventory_text: null
+  phase: A2.1
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 9
+  slug: genitive-prepositions-source
+  est_lessons: 3
+  job: 'Say where someone or something comes from, what something is made of and since when: `з / із / зі` + genitive'
+  inventory_text: null
+  phase: A2.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 10
+  slug: genitive-prepositions-purpose
+  est_lessons: 2
+  job: 'Say who or what something is for: `для` + genitive'
+  inventory_text: null
+  phase: A2.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 11
+  slug: genitive-prepositions-direction
+  est_lessons: 3
+  job: 'Say how far and next to what: `до`, `біля`, `навпроти` + genitive; give and follow directions'
+  inventory_text: null
+  phase: A2.2
+  skills_text: Li (directions), R (map)
+  skills:
+  - Li
+  - R
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 12
+  slug: euphony-advanced
+  est_lessons: 2
+  job: Choose `у / в`, `і / й`, `з / із / зі` in connected speech and writing
+  inventory_text: null
+  phase: A2.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 13
+  slug: genitive-adjectives-pronouns
+  est_lessons: 4
+  job: 'Say whose and of which: adjectives, possessives and all personal pronouns in the genitive, and the pronoun forms of the accusative'
+  inventory_text: null
+  phase: A2.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 14
+  slug: genitive-plural
+  est_lessons: 4
+  job: 'Talk about many and few: genitive plural after quantities; stress that moves between forms'
+  inventory_text: null
+  phase: A2.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 15
+  slug: shopping-and-health
+  est_lessons: 4
+  job: Buy food, toiletries and medicine by weight, volume and amount; say how you feel at the pharmacy and the doctor's (`:1124-1129`, `:1145-1152`)
+  inventory_text: null
+  phase: A2.2
+  skills_text: Li, R (labels, prescription, opening hours `:857-858`)
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1124
+    - 1129
+  - - 1145
+    - 1152
+  - - 857
+    - 858
+  band_key: a2-m01-20
+- position: 16
+  slug: checkpoint-genitive
+  est_lessons: 2
+  job: 'Self-check: origin, purpose, place, amounts'
+  inventory_text: null
+  phase: A2.2
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 17
+  slug: dative-pronouns
+  est_lessons: 3
+  job: 'Say who likes, needs or feels something and who is how old: dative of all personal pronouns'
+  inventory_text: null
+  phase: A2.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 18
+  slug: dative-nouns
+  est_lessons: 4
+  job: 'Give, tell and send something to someone: dative singular of nouns, with its consonant alternations'
+  inventory_text: null
+  phase: A2.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 19
+  slug: dative-adjectives-pronouns
+  est_lessons: 3
+  job: 'Give something to my new neighbour: adjectives and possessives in the dative'
+  inventory_text: null
+  phase: A2.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 20
+  slug: locative-expanded
+  est_lessons: 4
+  job: 'Say where, in which month and year, along what, and wearing what: the whole locative, with its consonant alternations'
+  inventory_text: null
+  phase: A2.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m01-20
+- position: 21
+  slug: dative-verbs
+  est_lessons: 3
+  job: 'Use the verbs that take the dative: help, advise, thank, call, answer'
+  inventory_text: null
+  phase: A2.3
+  skills_text: W (thank-you message)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 22
+  slug: services-and-communication
+  est_lessons: 4
+  job: Get things done at the bank, post office, library, gym and in a taxi; make a simple phone call (`:1138-1143`, `:995`)
+  inventory_text: null
+  phase: A2.3
+  skills_text: Li (phone, voicemail `:793-794`), R (forms, notices)
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1138
+    - 1143
+  - - 995
+    - 995
+  - - 793
+    - 794
+  band_key: a2-m21-50
+- position: 23
+  slug: checkpoint-dative
+  est_lessons: 2
+  job: 'Self-check: give, tell, help, locate'
+  inventory_text: null
+  phase: A2.3
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 24
+  slug: instrumental-accompaniment
+  est_lessons: 3
+  job: 'Say with whom and with what: `з` + instrumental'
+  inventory_text: null
+  phase: A2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 25
+  slug: instrumental-means
+  est_lessons: 3
+  job: Say by what means and with what tool; verbs that take the instrumental
+  inventory_text: null
+  phase: A2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 26
+  slug: instrumental-profession
+  est_lessons: 4
+  job: Say what someone works as, was, and wants to become; workplaces, working hours, pay (`:1118-1122`)
+  inventory_text: null
+  phase: A2.4
+  skills_text: W (short biography, 10–15 phrases `:906-907`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1118
+    - 1122
+  - - 906
+    - 907
+  band_key: a2-m21-50
+- position: 27
+  slug: vocative-expanded
+  est_lessons: 3
+  job: 'Address anyone correctly: every noun type, first name with patronymic, `пане / пані` with a name or title'
+  inventory_text: null
+  phase: A2.4
+  skills_text: W (start and end a letter or e-mail)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 28
+  slug: instrumental-prepositions
+  est_lessons: 3
+  job: Say above, under, in front of, behind and between; before an event
+  inventory_text: null
+  phase: A2.4
+  skills_text: R (floor plan, seating plan)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 29
+  slug: instrumental-adjectives-pronouns
+  est_lessons: 3
+  job: 'Talk with my old friends and with them: adjectives, possessives and all personal pronouns in the instrumental'
+  inventory_text: null
+  phase: A2.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 30
+  slug: work-and-food
+  est_lessons: 4
+  job: 'Cook and eat together: dishes, tableware, ways of cooking, places to eat; follow a recipe (`:1131-1136`)'
+  inventory_text: null
+  phase: A2.4
+  skills_text: R (recipe, menu `:864`), Li (cooking show `:801-802`)
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 1131
+    - 1136
+  - - 864
+    - 864
+  - - 801
+    - 802
+  band_key: a2-m21-50
+- position: 31
+  slug: checkpoint-instrumental
+  est_lessons: 2
+  job: 'Self-check: company, means, profession, position'
+  inventory_text: null
+  phase: A2.4
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 32
+  slug: plural-nominative-accusative
+  est_lessons: 3
+  job: 'Name and see many people and things: nominative and accusative plural of nouns, adjectives and pronouns'
+  inventory_text: null
+  phase: A2.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 33
+  slug: plural-genitive
+  est_lessons: 3
+  job: 'Complete the genitive plural: every noun type, with adjectives and pronouns'
+  inventory_text: null
+  phase: A2.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 34
+  slug: plural-other-cases
+  est_lessons: 3
+  job: Use the dative, instrumental and locative plural
+  inventory_text: null
+  phase: A2.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 35
+  slug: dozvillia-i-khobi
+  est_lessons: 4
+  job: Talk about free time, sport and sports places, the press, television, the internet and social networks (`:1095-1099`)
+  inventory_text: null
+  phase: A2.5
+  skills_text: Li (sports commentary, interview `:804-805`), W (social-network post)
+  skills:
+  - Li
+  - W
+  standard_line_refs:
+  - - 1095
+    - 1099
+  - - 804
+    - 805
+  band_key: a2-m21-50
+- position: 36
+  slug: which-case-when
+  est_lessons: 4
+  job: Choose the case from the question and the preposition; read the table of noun types
+  inventory_text: null
+  phase: A2.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 37
+  slug: all-cases-practice
+  est_lessons: 3
+  job: Keep one story going through all seven cases, singular and plural
+  inventory_text: null
+  phase: A2.5
+  skills_text: W (private letter `:912-914`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 912
+    - 914
+  band_key: a2-m21-50
+- position: 38
+  slug: home-and-daily-life
+  est_lessons: 4
+  job: Rent a flat and book a hotel room; rooms, furniture, everyday objects and routines (`:1083-1093`)
+  inventory_text: null
+  phase: A2.5
+  skills_text: R (rental advert, hotel form `:867`), W (form, guest-book entry `:936-937`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 1083
+    - 1093
+  - - 867
+    - 867
+  - - 936
+    - 937
+  band_key: a2-m21-50
+- position: 39
+  slug: checkpoint-cases
+  est_lessons: 2
+  job: 'Self-check: all cases in one day of errands'
+  inventory_text: null
+  phase: A2.5
+  skills_text: R, Li, W
+  skills:
+  - R
+  - Li
+  - W
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 40
+  slug: aspect-in-past
+  est_lessons: 4
+  job: 'Tell what was going on and what got done: choosing the aspect in the past'
+  inventory_text: null
+  phase: A2.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 41
+  slug: synthetic-future
+  est_lessons: 4
+  job: 'Say what you will be doing and what you will get done: perfective future, compound future and the one-word imperfective future'
+  inventory_text: null
+  phase: A2.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 42
+  slug: aspect-mastery
+  est_lessons: 4
+  job: Choose the aspect in advice, plans, repeated and single actions; sound changes inside a pair
+  inventory_text: null
+  phase: A2.6
+  skills_text: Li (advice, as ULP 91)
+  skills:
+  - Li
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 43
+  slug: motion-verbs
+  est_lessons: 7
+  job: Go, ride and fly there and back, one way and regularly; then arrive, leave, cross, go around and come up with the common prefixes
+  inventory_text: null
+  phase: A2.6
+  skills_text: R (departure board), Li (station and airport announcements `:798-799`)
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 798
+    - 799
+  band_key: a2-m21-50
+- position: 44
+  slug: imperative-complete
+  est_lessons: 4
+  job: 'Ask, instruct, forbid and wish: imperative of the 2nd person, and of the 3rd person with `хай / нехай`'
+  inventory_text: null
+  phase: A2.6
+  skills_text: R (instructions and rules `:800`, signs `:855-856`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 800
+    - 800
+  - - 855
+    - 856
+  band_key: a2-m21-50
+- position: 45
+  slug: telling-stories-and-travel
+  est_lessons: 4
+  job: 'Tell a trip as a story: station, bus station, airport, parts of the world, sights (`:1101-1111`)'
+  inventory_text: null
+  phase: A2.6
+  skills_text: W (postcard, travel message), Li
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 1101
+    - 1111
+  band_key: a2-m21-50
+- position: 46
+  slug: checkpoint-verbs
+  est_lessons: 2
+  job: 'Self-check: aspect, futures, motion, instructions'
+  inventory_text: null
+  phase: A2.6
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 47
+  slug: because-and-although
+  est_lessons: 4
+  job: 'Give reasons and concessions and place events in time: `тому що`, `бо`, `хоча`, `коли`; link with `і`, `та`, `але`'
+  inventory_text: null
+  phase: A2.7
+  skills_text: W (short opinion with a reason `:967-968`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 967
+    - 968
+  band_key: a2-m21-50
+- position: 48
+  slug: purpose-clauses
+  est_lessons: 3
+  job: 'Say what something is done for: `щоб` with the infinitive and with the past'
+  inventory_text: null
+  phase: A2.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 49
+  slug: relative-clauses
+  est_lessons: 4
+  job: 'Say which one you mean: clauses with `який`; report what you know with `що`, `де`, `куди`, `звідки`'
+  inventory_text: null
+  phase: A2.7
+  skills_text: R (short newspaper item `:862`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 862
+    - 862
+  band_key: a2-m21-50
+- position: 50
+  slug: word-order-emphasis
+  est_lessons: 3
+  job: Put the new information where a Ukrainian expects it; ellipsis and repetition in speech
+  inventory_text: null
+  phase: A2.7
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs: []
+  band_key: a2-m21-50
+- position: 51
+  slug: real-conditionals
+  est_lessons: 3
+  job: 'Say what happens if: real conditions with `якщо`'
+  inventory_text: null
+  phase: A2.7
+  skills_text: W (invitation with a condition, change or cancel a meeting `:793-794`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 793
+    - 794
+  band_key: a2-m51-70
+- position: 52
+  slug: education-and-work
+  est_lessons: 4
+  job: 'Talk about studying and working: subjects, stationery, `вчити / вивчати / вчитися`, a working day (`:1113-1122`)'
+  inventory_text: null
+  phase: A2.7
+  skills_text: W (short CV-style biography), R (timetable, job advert)
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 1113
+    - 1122
+  band_key: a2-m51-70
+- position: 53
+  slug: checkpoint-syntax
+  est_lessons: 2
+  job: 'Self-check: reasons, purposes, conditions, descriptions'
+  inventory_text: null
+  phase: A2.7
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 54
+  slug: comparison
+  est_lessons: 4
+  job: 'Compare things and ways of doing things: degrees of comparison of adjectives; adverbs formed from adjectives'
+  inventory_text: null
+  phase: A2.8
+  skills_text: R (advertisements `:863`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 863
+    - 863
+  band_key: a2-m51-70
+- position: 55
+  slug: numerals-and-cases
+  est_lessons: 4
+  job: 'Count things correctly: numeral with noun, the forms of `один`, amounts of money, sizes and prices'
+  inventory_text: null
+  phase: A2.8
+  skills_text: Li (amounts, sizes, prices `:988-989`)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 988
+    - 989
+  band_key: a2-m51-70
+- position: 56
+  slug: sviy-and-sebe
+  est_lessons: 3
+  job: Say my own, your own, their own with `свій`; use the common fixed expressions with `себе`
+  inventory_text: null
+  phase: A2.8
+  skills_text: W (about yourself, your family and your home `:1000-1001`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1000
+    - 1001
+  band_key: a2-m51-70
+- position: 57
+  slug: indefinite-negative-pronouns
+  est_lessons: 3
+  job: Talk about someone, something, somewhere — and no one, nothing, nowhere
+  inventory_text: null
+  phase: A2.8
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 58
+  slug: synonyms-antonyms-style
+  est_lessons: 3
+  job: 'Choose the better word: synonyms, antonyms, epithets and everyday metaphors'
+  inventory_text: null
+  phase: A2.8
+  skills_text: R (short original text `:861`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 861
+    - 861
+  band_key: a2-m51-70
+- position: 59
+  slug: preferences-and-choices
+  est_lessons: 3
+  job: Say what you prefer, how sure you are, what is possible and what you hope (`:1055-1064`)
+  inventory_text: null
+  phase: A2.8
+  skills_text: Li (survey, interview `:805`)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 1055
+    - 1064
+  - - 805
+    - 805
+  band_key: a2-m51-70
+- position: 60
+  slug: nature-and-traditions
+  est_lessons: 4
+  job: Talk about weather, plants, farm animals and landscape; state and religious holidays, birthdays, weddings, wishes and gifts (`:1154-1163`)
+  inventory_text: null
+  phase: A2.8
+  skills_text: Li (forecast `:801`), W (greeting card with wishes `:934`)
+  skills:
+  - Li
+  - W
+  standard_line_refs:
+  - - 1154
+    - 1163
+  - - 801
+    - 801
+  - - 934
+    - 934
+  band_key: a2-m51-70
+- position: 61
+  slug: metalanguage-words-and-cases
+  est_lessons: 2
+  job: Read and use a Ukrainian explanation about parts of speech and cases
+  inventory_text: null
+  phase: A2.9
+  skills_text: R (textbook rule)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 62
+  slug: metalanguage-verbs-and-time
+  est_lessons: 2
+  job: Read and use a Ukrainian explanation about tense, aspect and mood
+  inventory_text: null
+  phase: A2.9
+  skills_text: R (textbook rule)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 63
+  slug: metalanguage-sentences-and-classroom
+  est_lessons: 2
+  job: 'Follow a lesson held in Ukrainian: classroom instructions, task wording, asking the teacher'
+  inventory_text: null
+  phase: A2.9
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 64
+  slug: metalanguage-phonetics
+  est_lessons: 3
+  job: Talk about sounds, stress and intonation in Ukrainian; double stress and stress that changes the meaning
+  inventory_text: null
+  phase: A2.9
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 65
+  slug: metalanguage-morphology
+  est_lessons: 2
+  job: Read a paradigm table and a dictionary entry in Ukrainian
+  inventory_text: null
+  phase: A2.9
+  skills_text: R (dictionary entry)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 66
+  slug: metalanguage-syntax-cases
+  est_lessons: 2
+  job: 'Analyse a sentence in Ukrainian the way a school textbook does: subject, predicate, the case and its question'
+  inventory_text: null
+  phase: A2.9
+  skills_text: R (textbook exercise)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 67
+  slug: a2-comprehensive-review
+  est_lessons: 4
+  job: Review the level through one continuing story, block by block
+  inventory_text: null
+  phase: A2.10
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 68
+  slug: a2-practice-exam
+  est_lessons: 3
+  job: 'Take a practice exam in the four skills at the Standard''s A2 sizes: dialogue of 8–10 turns, text of 50 words, biography of 10–15 phrases'
+  inventory_text: null
+  phase: A2.10
+  skills_text: all
+  skills:
+  - W
+  - Li
+  - R
+  standard_line_refs: []
+  band_key: a2-m51-70
+- position: 69
+  slug: a2-finale
+  est_lessons: 3
+  job: 'One full week in Ukraine, in Ukrainian only: everything together, and a look at what B1 brings'
+  inventory_text: null
+  phase: A2.10
+  skills_text: all
+  skills:
+  - W
+  - Li
+  - R
+  standard_line_refs: []
+  band_key: a2-m51-70

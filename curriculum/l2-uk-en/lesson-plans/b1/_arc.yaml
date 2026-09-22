@@ -1,0 +1,1159 @@
+arc_schema: 1
+level: b1
+source:
+  path: docs/epics/fresh-build-b1-arc.md
+  sha256: 4eb17c163dedabcbd19990cd22f0eafca28a43769ce55b07bdf02295dd4d62f9
+est_lessons_total: 286
+immersion_bands:
+- start: 1
+  end: 94
+  band_key: b1-core
+positions:
+- position: 1
+  slug: b1-baseline-past-present
+  est_lessons: 3
+  job: Show what you can do after A2 in the present and the past, and meet the remaining present-tense patterns the Standard names
+  inventory_text: null
+  phase: B1.0
+  skills_text: Li, W
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 2
+  slug: b1-baseline-future-aspect
+  est_lessons: 3
+  job: Show what you can do with the three futures and with aspect pairs; find your gaps
+  inventory_text: null
+  phase: B1.0
+  skills_text: Li
+  skills:
+  - Li
+  standard_line_refs: []
+  band_key: b1-core
+- position: 3
+  slug: people-and-relationships
+  est_lessons: 4
+  job: Talk about family ties, relatives, marital status, relations between people, character, clothes and fashion (`:1855-1865`)
+  inventory_text: null
+  phase: B1.0
+  skills_text: R (interview `:1567`), W (detailed description of a person `:1639`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 1855
+    - 1865
+  - - 1567
+    - 1567
+  - - 1639
+    - 1639
+  band_key: b1-core
+- position: 4
+  slug: aspect-past-tense
+  est_lessons: 4
+  job: Choose the aspect in the past for a single result, a process, repetition and an attempt
+  inventory_text: null
+  phase: B1.0
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 5
+  slug: aspect-future-tense
+  est_lessons: 3
+  job: Choose between the three futures in plans, promises and predictions
+  inventory_text: null
+  phase: B1.0
+  skills_text: W (promise, plan)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 6
+  slug: aspect-in-narration
+  est_lessons: 4
+  job: Tell a story in which background and events use different aspects
+  inventory_text: null
+  phase: B1.0
+  skills_text: W (retelling `:1629-1630`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1629
+    - 1630
+  band_key: b1-core
+- position: 7
+  slug: daily-life-and-routines
+  est_lessons: 3
+  job: Talk about living conditions and lifestyle, hairdresser and beauty services (`:1876-1881`)
+  inventory_text: null
+  phase: B1.0
+  skills_text: Li (phone call `:1749`), R
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1876
+    - 1881
+  - - 1749
+    - 1749
+  band_key: b1-core
+- position: 8
+  slug: aspect-in-negation
+  est_lessons: 3
+  job: 'Say what did not happen, is not there and will not be: aspect under negation, `немає / не було / не буде`, double negation'
+  inventory_text: null
+  phase: B1.0
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 9
+  slug: work-and-career
+  est_lessons: 4
+  job: Talk about official employment and contract work, working hours, leave and pay (`:1930-1936`)
+  inventory_text: null
+  phase: B1.0
+  skills_text: W (the facts of a working life, as connected text; the document forms are position 85), R (job advert)
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 1930
+    - 1936
+  band_key: b1-core
+- position: 10
+  slug: checkpoint-aspect
+  est_lessons: 2
+  job: 'Self-check: narrate, plan and deny with the right aspect'
+  inventory_text: null
+  phase: B1.0
+  skills_text: Li, W
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 11
+  slug: alternation-vowels
+  est_lessons: 3
+  job: Predict the vowel changes between forms of one word
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 12
+  slug: alternation-consonants-nouns
+  est_lessons: 3
+  job: Predict the consonant changes in the dative, locative and vocative and in word formation
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 13
+  slug: alternation-consonants-verbs
+  est_lessons: 3
+  job: Predict the consonant changes in verb forms
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 14
+  slug: health-at-the-doctor
+  est_lessons: 4
+  job: Describe symptoms, understand a diagnosis, tests and examinations, deal with the pharmacy (`:1912-1919`)
+  inventory_text: null
+  phase: B1.1
+  skills_text: Li, R (instructions for use `:1545-1546`)
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1912
+    - 1919
+  - - 1545
+    - 1546
+  band_key: b1-core
+- position: 15
+  slug: simplification-consonants
+  est_lessons: 2
+  job: Spell and say words with simplified consonant groups
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 16
+  slug: noun-subclasses-masculine
+  est_lessons: 5
+  job: Decline the masculine noun types the Standard adds, surnames included
+  inventory_text: null
+  phase: B1.1
+  skills_text: W (address an envelope `:1633`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1633
+    - 1633
+  band_key: b1-core
+- position: 17
+  slug: noun-subclasses-hissing
+  est_lessons: 2
+  job: Decline nouns with sibilant stems
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 18
+  slug: restaurant-and-food
+  est_lessons: 4
+  job: 'Eat out: dishes, tableware, places to eat, taste preferences; make a complaint (`:1947-1952`, `:1709-1710`)'
+  inventory_text: null
+  phase: B1.1
+  skills_text: R (menu, recipe `:1570`), Li
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 1947
+    - 1952
+  - - 1709
+    - 1710
+  - - 1570
+    - 1570
+  band_key: b1-core
+- position: 19
+  slug: noun-subclasses-feminine
+  est_lessons: 4
+  job: Decline feminine nouns with a zero ending and in `-ість`, and the neuter types
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 20
+  slug: pluralia-tantum
+  est_lessons: 2
+  job: Use nouns that have only a plural, with numerals and adjectives
+  inventory_text: null
+  phase: B1.1
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 21
+  slug: checkpoint-morphophonemics
+  est_lessons: 2
+  job: 'Self-check: forms that change their sounds'
+  inventory_text: null
+  phase: B1.1
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 22
+  slug: conditionals-real
+  est_lessons: 2
+  job: State conditions and their results in all tenses — a short step up from A2 position 51
+  inventory_text: null
+  phase: B1.2
+  skills_text: W (invitation with a condition)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 23
+  slug: conditionals-unreal
+  est_lessons: 4
+  job: 'Say what would happen and what would have happened: the conditional mood, `якби`, `коли б`'
+  inventory_text: null
+  phase: B1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 24
+  slug: aspect-in-conditionals
+  est_lessons: 3
+  job: Choose the aspect inside conditions and wishes
+  inventory_text: null
+  phase: B1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 25
+  slug: shopping-and-services
+  est_lessons: 4
+  job: Buy consumer and industrial goods, pay by cash or card, return faulty goods; bank, post office, insurance (`:1938-1945`, `:1954-1960`)
+  inventory_text: null
+  phase: B1.2
+  skills_text: Li, W (form at the post office or bank `:1623-1624`)
+  skills:
+  - Li
+  - W
+  standard_line_refs:
+  - - 1938
+    - 1945
+  - - 1954
+    - 1960
+  - - 1623
+    - 1624
+  band_key: b1-core
+- position: 26
+  slug: imperative-nuances
+  est_lessons: 3
+  job: Invite, suggest and urge with all imperative forms, the first person plural included
+  inventory_text: null
+  phase: B1.2
+  skills_text: R (rules, prohibitions `:1798-1799`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 1798
+    - 1799
+  band_key: b1-core
+- position: 27
+  slug: aspect-in-imperatives
+  est_lessons: 3
+  job: Choose the aspect in requests, instructions and prohibitions
+  inventory_text: null
+  phase: B1.2
+  skills_text: W (written instruction `:1640-1641`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1640
+    - 1641
+  band_key: b1-core
+- position: 28
+  slug: reflexive-verbs-nuances
+  est_lessons: 3
+  job: Use reflexive verbs for mutual, self-directed and impersonal states
+  inventory_text: null
+  phase: B1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 29
+  slug: housing-and-renting
+  est_lessons: 4
+  job: 'Rent and pay for housing: type and size of a home, parts of a building, furnishing, rent and utilities (`:1867-1874`)'
+  inventory_text: null
+  phase: B1.2
+  skills_text: R (rental contract excerpt, advert), W (note to a landlord `:1625-1627`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 1867
+    - 1874
+  - - 1625
+    - 1627
+  band_key: b1-core
+- position: 30
+  slug: passive-voice-intro
+  est_lessons: 3
+  job: Recognise and understand passive and impersonal forms in news and notices
+  inventory_text: null
+  phase: B1.2
+  skills_text: R (news item, official notice)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b1-core
+- position: 31
+  slug: verbal-nouns
+  est_lessons: 3
+  job: Form and use nouns made from verbs
+  inventory_text: null
+  phase: B1.2
+  skills_text: R (short official paper `:1581`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 1581
+    - 1581
+  band_key: b1-core
+- position: 32
+  slug: verb-formation-suffixes
+  est_lessons: 3
+  job: Recognise how suffixes build verbs and conjugate the resulting patterns
+  inventory_text: null
+  phase: B1.2
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 33
+  slug: checkpoint-verbs
+  est_lessons: 2
+  job: 'Self-check: conditions, requests, reflexive verbs'
+  inventory_text: null
+  phase: B1.2
+  skills_text: Li, W
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 34
+  slug: prepositions-spatial-review
+  est_lessons: 3
+  job: Place and move things in space with every preposition and case met so far; directions of the compass (`:1831-1832`)
+  inventory_text: null
+  phase: B1.3
+  skills_text: Li (detailed directions `:1481`, navigation `:1485-1486`)
+  skills:
+  - Li
+  standard_line_refs:
+  - - 1831
+    - 1832
+  - - 1481
+    - 1481
+  - - 1485
+    - 1486
+  band_key: b1-core
+- position: 35
+  slug: motion-base-review
+  est_lessons: 2
+  job: 'Use the unprefixed pairs in all tenses: one trip versus a habit, there and back versus on the way'
+  inventory_text: null
+  phase: B1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 36
+  slug: motion-prefixes-arrival
+  est_lessons: 2
+  job: 'Arriving, coming up to, reaching, dropping in: the aspect pair of each prefixed verb and the preposition and case it takes'
+  inventory_text: null
+  phase: B1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 37
+  slug: traveling-ukraine
+  est_lessons: 5
+  job: 'Plan and handle a trip in Ukraine: transport, stations, airport, booking, car service and fuel, border and customs, sights (`:1892-1903`, `:1711-1713`)'
+  inventory_text: null
+  phase: B1.3
+  skills_text: R (timetable, brochure), Li (announcements)
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 1892
+    - 1903
+  - - 1711
+    - 1713
+  band_key: b1-core
+- position: 38
+  slug: motion-prefixes-departure
+  est_lessons: 2
+  job: 'Leaving, setting off, moving away: aspect pairs, prepositions and cases'
+  inventory_text: null
+  phase: B1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 39
+  slug: motion-prefixes-in-out
+  est_lessons: 2
+  job: 'Going in, out, up and down: aspect pairs, prepositions and cases'
+  inventory_text: null
+  phase: B1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 40
+  slug: motion-prefixes-transit
+  est_lessons: 2
+  job: 'Crossing, passing, going around and through: aspect pairs, prepositions and cases'
+  inventory_text: null
+  phase: B1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 41
+  slug: motion-flight-swim
+  est_lessons: 3
+  job: Extend the system to flying, swimming, running, carrying and leading
+  inventory_text: null
+  phase: B1.3
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 42
+  slug: figurative-motion
+  est_lessons: 3
+  job: Understand motion verbs used of time, events and states
+  inventory_text: null
+  phase: B1.3
+  skills_text: R (newspaper article `:1566`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 1566
+    - 1566
+  band_key: b1-core
+- position: 43
+  slug: checkpoint-motion
+  est_lessons: 2
+  job: 'Self-check: a journey told and planned'
+  inventory_text: null
+  phase: B1.3
+  skills_text: Li, W
+  skills:
+  - Li
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 44
+  slug: adjectives-comparative
+  est_lessons: 3
+  job: Compare people, things and events with every comparative form and construction
+  inventory_text: null
+  phase: B1.4
+  skills_text: W (compare alternatives `:1718-1719`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1718
+    - 1719
+  band_key: b1-core
+- position: 45
+  slug: adjectives-superlative
+  est_lessons: 2
+  job: Single out the most and the least
+  inventory_text: null
+  phase: B1.4
+  skills_text: R (advertising `:1569`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 1569
+    - 1569
+  band_key: b1-core
+- position: 46
+  slug: adverbs-comparison-formation
+  est_lessons: 2
+  job: 'Compare ways of doing things: the comparison of adverbs, which A2 did not teach'
+  inventory_text: null
+  phase: B1.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 47
+  slug: nature-and-environment
+  est_lessons: 4
+  job: Talk about weather, seasons and climate, plants, farm and wild animals, natural features (`:1968-1973`)
+  inventory_text: null
+  phase: B1.4
+  skills_text: Li (documentary excerpt `:1489`), R
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1968
+    - 1973
+  - - 1489
+    - 1489
+  band_key: b1-core
+- position: 48
+  slug: word-formation-adjectives
+  est_lessons: 3
+  job: Form adjectives from nouns and place names
+  inventory_text: null
+  phase: B1.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 49
+  slug: possessive-adjectives
+  est_lessons: 2
+  job: Recognise and understand adjectives that say whose something is, formed from a person's name or a kinship word; consolidate the adjective formation of 48
+  inventory_text: null
+  phase: B1.4
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b1-core
+- position: 50
+  slug: word-formation-nouns
+  est_lessons: 3
+  job: Form names of people by what they do and names of places by what happens there
+  inventory_text: null
+  phase: B1.4
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 51
+  slug: checkpoint-comparison
+  est_lessons: 2
+  job: 'Self-check: compare, and build new words'
+  inventory_text: null
+  phase: B1.4
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 52
+  slug: homogeneous-members
+  est_lessons: 3
+  job: Build sentences with several subjects, predicates or objects; use the nominative in all its listed roles
+  inventory_text: null
+  phase: B1.5
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 53
+  slug: genitive-nuances
+  est_lessons: 4
+  job: Use the genitive for a part of a whole, a feature, a wish, and with the full B1 preposition list
+  inventory_text: null
+  phase: B1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 54
+  slug: dative-nuances
+  est_lessons: 3
+  job: Use the dative for states, needs and addressees
+  inventory_text: null
+  phase: B1.5
+  skills_text: W (personal letter `:1621-1622`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1621
+    - 1622
+  band_key: b1-core
+- position: 55
+  slug: education-and-university
+  est_lessons: 4
+  job: Talk about institutions of education, fields and specialities, lectures, seminars, credits and exams (`:1921-1928`)
+  inventory_text: null
+  phase: B1.5
+  skills_text: Li (lecture `:1457-1458`), R (course description, timetable)
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1921
+    - 1928
+  - - 1457
+    - 1458
+  band_key: b1-core
+- position: 56
+  slug: instrumental-nuances
+  est_lessons: 3
+  job: Use the instrumental for the path, the manner and the object of state verbs
+  inventory_text: null
+  phase: B1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 57
+  slug: vocative-formal
+  est_lessons: 3
+  job: Address people formally, in all four functions the Standard lists, with the right sound changes
+  inventory_text: null
+  phase: B1.5
+  skills_text: W (open and close a formal letter)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 58
+  slug: prepositions-temporal
+  est_lessons: 3
+  job: Say when, for how long, within what time and at what hour
+  inventory_text: null
+  phase: B1.5
+  skills_text: R (timetable, schedule)
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b1-core
+- position: 59
+  slug: places-and-locations
+  est_lessons: 3
+  job: 'Describe a locality: its type and position, institutions and public places, monuments and sights (`:1962-1966`)'
+  inventory_text: null
+  phase: B1.5
+  skills_text: R (brochure, poster `:1578`), Li
+  skills:
+  - R
+  - Li
+  standard_line_refs:
+  - - 1962
+    - 1966
+  - - 1578
+    - 1578
+  band_key: b1-core
+- position: 60
+  slug: prepositions-cause-purpose
+  est_lessons: 3
+  job: Give the cause and the purpose with prepositions
+  inventory_text: null
+  phase: B1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 61
+  slug: cases-with-ordinal-numerals
+  est_lessons: 3
+  job: Use ordinals, compound ones included, in every case; dates in full
+  inventory_text: null
+  phase: B1.5
+  skills_text: Li (dates and years by ear)
+  skills:
+  - Li
+  standard_line_refs: []
+  band_key: b1-core
+- position: 62
+  slug: cases-with-quantity-expressions
+  est_lessons: 5
+  job: Decline `два`, `три`, `чотири` and the indefinite numerals; count people and things in every case
+  inventory_text: null
+  phase: B1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 63
+  slug: advanced-pronouns
+  est_lessons: 4
+  job: Use `себе`, the demonstratives and the relative pronouns in all cases
+  inventory_text: null
+  phase: B1.5
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 64
+  slug: checkpoint-cases
+  est_lessons: 2
+  job: 'Self-check: every case in its B1 meanings'
+  inventory_text: null
+  phase: B1.5
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 65
+  slug: participles-active
+  est_lessons: 3
+  job: Recognise and form active participles; tell them from adjectives
+  inventory_text: null
+  phase: B1.6
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b1-core
+- position: 66
+  slug: participles-passive
+  est_lessons: 3
+  job: Recognise and form passive participles
+  inventory_text: null
+  phase: B1.6
+  skills_text: R
+  skills:
+  - R
+  standard_line_refs: []
+  band_key: b1-core
+- position: 67
+  slug: participle-phrases
+  est_lessons: 3
+  job: Read and build a sentence with a participle phrase
+  inventory_text: null
+  phase: B1.6
+  skills_text: R (annotation, review `:1581`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 1581
+    - 1581
+  band_key: b1-core
+- position: 68
+  slug: leisure-culture-festivals
+  est_lessons: 4
+  job: Talk about museums, galleries, theatre, cinema, the philharmonic, festivals; report on a book or film (`:1883-1890`, `:1642-1643`)
+  inventory_text: null
+  phase: B1.6
+  skills_text: W (50–70 words on a book or film), Li
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 1883
+    - 1890
+  - - 1642
+    - 1643
+  band_key: b1-core
+- position: 69
+  slug: short-form-adjectives
+  est_lessons: 2
+  job: Recognise and use the short forms of adjectives
+  inventory_text: null
+  phase: B1.6
+  skills_text: R (song or poem excerpt `:1472-1473`)
+  skills:
+  - R
+  standard_line_refs:
+  - - 1472
+    - 1473
+  band_key: b1-core
+- position: 70
+  slug: gerunds-imperfective
+  est_lessons: 3
+  job: 'Say what is done at the same time: imperfective adverbial participles'
+  inventory_text: null
+  phase: B1.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 71
+  slug: gerunds-perfective
+  est_lessons: 3
+  job: 'Say what was done first: perfective adverbial participles'
+  inventory_text: null
+  phase: B1.6
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 72
+  slug: gerund-phrases
+  est_lessons: 3
+  job: Read and build a sentence with an adverbial-participle phrase
+  inventory_text: null
+  phase: B1.6
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 73
+  slug: society-and-media
+  est_lessons: 5
+  job: Understand and discuss social institutions, the structure of the state, war and peace, political events, and how the media report them (`:1905-1910`, `:1451-1453`)
+  inventory_text: null
+  phase: B1.6
+  skills_text: Li (news programme `:1490-1493`), R (newspaper article)
+  skills:
+  - Li
+  - R
+  standard_line_refs:
+  - - 1905
+    - 1910
+  - - 1451
+    - 1453
+  - - 1490
+    - 1493
+  band_key: b1-core
+- position: 74
+  slug: checkpoint-participles
+  est_lessons: 2
+  job: 'Self-check: read and compress with participles'
+  inventory_text: null
+  phase: B1.6
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 75
+  slug: complex-compound
+  est_lessons: 3
+  job: 'Join clauses as equals: adding, contrasting, continuing, offering alternatives'
+  inventory_text: null
+  phase: B1.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 76
+  slug: complex-subordinate-object
+  est_lessons: 3
+  job: Report what someone knows, asks and wants
+  inventory_text: null
+  phase: B1.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 77
+  slug: complex-subordinate-relative
+  est_lessons: 3
+  job: Say which one you mean with `який` in any case
+  inventory_text: null
+  phase: B1.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 78
+  slug: complex-subordinate-time
+  est_lessons: 3
+  job: Tell what happened at the same time and what happened next
+  inventory_text: null
+  phase: B1.7
+  skills_text: W (event description, 50–70 words `:1644-1645`)
+  skills:
+  - W
+  standard_line_refs:
+  - - 1644
+    - 1645
+  band_key: b1-core
+- position: 79
+  slug: complex-subordinate-reason
+  est_lessons: 2
+  job: Give reasons in speech and in writing
+  inventory_text: null
+  phase: B1.7
+  skills_text: W
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 80
+  slug: complex-subordinate-condition
+  est_lessons: 3
+  job: Bring real and unreal conditions together in argument
+  inventory_text: null
+  phase: B1.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 81
+  slug: complex-subordinate-purpose
+  est_lessons: 2
+  job: State purpose and intended use (`:1805-1807`)
+  inventory_text: null
+  phase: B1.7
+  skills_text: —
+  skills: []
+  standard_line_refs:
+  - - 1805
+    - 1807
+  band_key: b1-core
+- position: 82
+  slug: complex-subordinate-concess
+  est_lessons: 3
+  job: Concede a point and still hold your view
+  inventory_text: null
+  phase: B1.7
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 83
+  slug: reported-speech
+  est_lessons: 3
+  job: Turn direct speech into reported speech and back
+  inventory_text: null
+  phase: B1.7
+  skills_text: W (report a conversation)
+  skills:
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 84
+  slug: checkpoint-syntax
+  est_lessons: 2
+  job: 'Self-check: one argument, every clause type'
+  inventory_text: null
+  phase: B1.7
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 85
+  slug: text-register-formal
+  est_lessons: 5
+  job: 'Write the most frequent documents: application, CV, autobiography, explanatory note, formal letter'
+  inventory_text: null
+  phase: B1.8
+  skills_text: W (`:1631-1632`), R (short official documents `:1549-1550`)
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 1631
+    - 1632
+  - - 1549
+    - 1550
+  band_key: b1-core
+- position: 86
+  slug: text-register-informal
+  est_lessons: 3
+  job: 'Hold an informal conversation and correspondence: compliments, sympathy, joy, disappointment, indifference (`:1786-1787`, `:1821-1829`)'
+  inventory_text: null
+  phase: B1.8
+  skills_text: W (personal letter, social-network message), Li
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 1786
+    - 1787
+  - - 1821
+    - 1829
+  band_key: b1-core
+- position: 87
+  slug: text-compression
+  est_lessons: 3
+  job: Take notes, shorten a text and read abbreviations
+  inventory_text: null
+  phase: B1.8
+  skills_text: W (lecture notes, theses `:1646-1647`), R
+  skills:
+  - W
+  - R
+  standard_line_refs:
+  - - 1646
+    - 1647
+  band_key: b1-core
+- position: 88
+  slug: reading-literature
+  est_lessons: 4
+  job: Read an unadapted prose excerpt, a diary or memoir page, and say what the author thinks (`:1558-1559`, `:1579-1582`)
+  inventory_text: null
+  phase: B1.8
+  skills_text: R, W (short review `:1620`)
+  skills:
+  - R
+  - W
+  standard_line_refs:
+  - - 1558
+    - 1559
+  - - 1579
+    - 1582
+  - - 1620
+    - 1620
+  band_key: b1-core
+- position: 89
+  slug: introductory-words
+  est_lessons: 2
+  job: Show how sure you are and where your thought is going with parenthetical words
+  inventory_text: null
+  phase: B1.8
+  skills_text: —
+  skills: []
+  standard_line_refs: []
+  band_key: b1-core
+- position: 90
+  slug: checkpoint-text-register
+  est_lessons: 2
+  job: 'Self-check: the same message, formal and informal'
+  inventory_text: null
+  phase: B1.8
+  skills_text: R, W
+  skills:
+  - R
+  - W
+  standard_line_refs: []
+  band_key: b1-core
+- position: 91
+  slug: narrative-mastery
+  est_lessons: 4
+  job: Tell in order an event you took part in or witnessed, unforeseen ones included, in all tense and aspect forms, with your impressions (`:1697-1699`, `:1738-1740`)
+  inventory_text: null
+  phase: B1.9
+  skills_text: W, Li
+  skills:
+  - W
+  - Li
+  standard_line_refs:
+  - - 1697
+    - 1699
+  - - 1738
+    - 1740
+  band_key: b1-core
+- position: 92
+  slug: debate-and-opinion
+  est_lessons: 4
+  job: State a view on a social problem, give reasons, agree and disagree politely, manage the conversation (`:1804`, `:1810-1815`, `:1846-1849`)
+  inventory_text: null
+  phase: B1.9
+  skills_text: Li (round-table discussion `:1504`), W (theses of a talk)
+  skills:
+  - Li
+  - W
+  standard_line_refs:
+  - - 1804
+    - 1804
+  - - 1810
+    - 1815
+  - - 1846
+    - 1849
+  - - 1504
+    - 1504
+  band_key: b1-core
+- position: 93
+  slug: comprehensive-b1-review
+  est_lessons: 4
+  job: Review the level through one continuing story, block by block
+  inventory_text: null
+  phase: B1.9
+  skills_text: R, Li
+  skills:
+  - R
+  - Li
+  standard_line_refs: []
+  band_key: b1-core
+- position: 94
+  slug: practice-exam
+  est_lessons: 3
+  job: 'Take a practice exam in the four skills at the Standard''s B1 sizes: dialogue of 10–12 turns, description of 50–70 words, prepared talk with theses'
+  inventory_text: null
+  phase: B1.9
+  skills_text: all
+  skills:
+  - W
+  - Li
+  - R
+  standard_line_refs: []
+  band_key: b1-core

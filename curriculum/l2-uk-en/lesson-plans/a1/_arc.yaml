@@ -1,4 +1,5 @@
 arc_schema: 1
+level: a1
 source:
   path: docs/epics/fresh-build-a1-arc.md
   sha256: 319bd259d43fd6f917e2f720285c38d33d59b850561f3dd186ead12f0226df13
