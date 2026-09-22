@@ -30,9 +30,9 @@ def test_grok_explicit_retired_model_is_refused() -> None:
 
 
 def test_grok_explicit_certified_model_still_pins() -> None:
-    result = run_launcher("start-grok.sh", "--model", "grok-4.6")
+    result = run_launcher("start-grok.sh", "--model", "grok-4.7")
     assert result.returncode == 0, result.stderr
-    assert "--model grok-4.6" in result.stdout
+    assert "--model grok-4.7" in result.stdout
 
 
 def test_grok_effort_injects_reasoning_effort_only_when_set() -> None:

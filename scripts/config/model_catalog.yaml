@@ -481,24 +481,22 @@ models:
     family: xai
     tier: frontier_practical
     lifecycle: active
-    # Rotated from grok-4.6 by operator order 2026-09-22 (#8464). Native CLI
-    # default; Cursor pin uses the same model id.
-    aliases: [grok-4.7-build-fast]
+    # Current CLI default. grok-4.7-build-fast is about 2x the price and is not
+    # an alias. grok-4.6 is not admitted.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window]
     notes: >-
-      Native `grok models` default as of 2026-09-22. build-fast is an allowed
-      explicit pin (same family/tier), not a separate catalog seat.
+      Native `grok models` default. grok-4.7-build-fast is not admitted.
     sources:
       - https://docs.x.ai/docs/models
   grok-4.6:
     family: xai
     tier: frontier_practical
     lifecycle: active
-    # Prior pin (operator order 2026-08-16 / #6865). Remains allowed for explicit
-    # pins after #8464; defaults and ladders use grok-4.7.
+    # Prior pin (operator order 2026-08-16 / #6865). Not admitted by the
+    # adapter. Defaults and ladders use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
@@ -909,7 +907,7 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
   grok-4.6:
-    # Retained for explicit pin / history; not on automatic ladders after #8464.
+    # Historical row. The adapter does not admit this id.
     model_id: grok-4.6
     route: grok
     transport: native_grok
@@ -1051,8 +1049,7 @@ orchestrator_seats:
   grok:
     model_id: grok-4.7
     effort: high
-    # Rotated from grok-4.6 (operator order 2026-09-22, #8464). Cursor pin is
-    # availability fallback only (same SKU).
+    # grok-4.7 only. grok-4.7-build-fast is not admitted.
     escalate_model_id: grok-4.7
     escalate_effort: high
     escalate_when: n/a_same_sku

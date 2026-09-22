@@ -126,7 +126,7 @@ def test_grok_deny_rules_use_documented_native_permission_prefixes():
 
 def test_exact_argv_per_mode(tmp_path):
     # read-only: auto, no always-approve, fail-closed deny on write tools + Bash
-    ro_plan = _build("inspect", tmp_path, mode="read-only", model="grok-4.6", effort="high")
+    ro_plan = _build("inspect", tmp_path, mode="read-only", model="grok-4.7", effort="high")
     assert ro_plan.cmd == [
         FAKE_GROK,
         "-p",
@@ -145,7 +145,7 @@ def test_exact_argv_per_mode(tmp_path):
         "--deny",
         "Bash",
         "-m",
-        "grok-4.6",
+        "grok-4.7",
         "--effort",
         "high",
         "--disallowed-tools",
@@ -153,7 +153,7 @@ def test_exact_argv_per_mode(tmp_path):
     ]
 
     # workspace-write: auto, always-approve, no default deny rules
-    ww_plan = _build("edit code", tmp_path, mode="workspace-write", model="grok-4.6", effort="high")
+    ww_plan = _build("edit code", tmp_path, mode="workspace-write", model="grok-4.7", effort="high")
     assert ww_plan.cmd == [
         FAKE_GROK,
         "-p",
@@ -167,13 +167,13 @@ def test_exact_argv_per_mode(tmp_path):
         str(tmp_path),
         "--always-approve",
         "-m",
-        "grok-4.6",
+        "grok-4.7",
         "--effort",
         "high",
     ]
 
     # danger: bypassPermissions, always-approve, no default deny rules
-    danger_plan = _build("danger task", tmp_path, mode="danger", model="grok-4.6", effort="high")
+    danger_plan = _build("danger task", tmp_path, mode="danger", model="grok-4.7", effort="high")
     assert danger_plan.cmd == [
         FAKE_GROK,
         "-p",
@@ -187,7 +187,7 @@ def test_exact_argv_per_mode(tmp_path):
         str(tmp_path),
         "--always-approve",
         "-m",
-        "grok-4.6",
+        "grok-4.7",
         "--effort",
         "high",
     ]
@@ -260,8 +260,8 @@ def test_unsupported_mode_raises(tmp_path):
 
 
 def test_model_and_effort_flags(tmp_path):
-    plan = _build("x", tmp_path, model="grok-4.6", effort="high")
-    assert _val(plan.cmd, "-m") == "grok-4.6"
+    plan = _build("x", tmp_path, model="grok-4.7", effort="high")
+    assert _val(plan.cmd, "-m") == "grok-4.7"
     assert _val(plan.cmd, "--effort") == "high"
 
 
@@ -399,17 +399,16 @@ def test_grok_build_lane_defaults_to_grok_47():
     assert GROK_BUILD_DEFAULT_MODEL == "grok-4.7"
 
 
-def test_grok_build_admits_grok_47_and_build_fast(tmp_path):
-    """#8464: native CLI defaults to grok-4.7; build-fast is an allowed explicit pin."""
-    for model in ("grok-4.7", "grok-4.7-build-fast", "grok-4.6"):
-        plan = _build("x", tmp_path, model=model, effort="high")
-        assert _val(plan.cmd, "-m") == model
+def test_grok_build_admits_current_cli_default(tmp_path):
+    plan = _build("x", tmp_path, model="grok-4.7", effort="high")
+    assert _val(plan.cmd, "-m") == "grok-4.7"
 
 
-def test_grok_build_rejects_retired_model_pin(tmp_path):
-    """#6870: pin the literal retired model id, not the grok-build agent alias."""
-    with pytest.raises(ValueError, match=r"unsupported Grok model 'grok-4\.5'"):
-        _build("x", tmp_path, model="grok-4.5", effort="high")
+@pytest.mark.parametrize("model", ["grok-4.5", "grok-4.6", "grok-4.7-build-fast"])
+def test_grok_build_rejects_retired_or_expensive_pins(tmp_path, model):
+    """Previous ids and the 2x build-fast variant are not the seat."""
+    with pytest.raises(ValueError, match=r"unsupported Grok model"):
+        _build("x", tmp_path, model=model, effort="high")
 
 
 def test_grok_build_default_model_is_listed_by_cli():
