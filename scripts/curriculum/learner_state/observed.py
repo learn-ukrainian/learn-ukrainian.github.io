@@ -116,6 +116,7 @@ def build_observed_index(
     grammar_path: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
+    **kwargs: Any,
 ) -> dict[str, Any]:
     """Compute post-build observed index for level, slug, lesson_n."""
     plans_root = plans_dir or (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}")

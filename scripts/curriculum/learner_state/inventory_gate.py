@@ -116,12 +116,7 @@ def _get_sentence_text(token: dict[str, Any], expanded_doc: Any, stream_failures
     t_tok = token.get("token")
     t_offset = token.get("offset")
     for f in stream_failures:
-        if (
-            isinstance(f, dict)
-            and f.get("token") == t_tok
-            and f.get("offset") == t_offset
-            and f.get("text")
-        ):
+        if isinstance(f, dict) and f.get("token") == t_tok and f.get("offset") == t_offset and f.get("text"):
             return str(f["text"])
 
     return str(t_tok or "")
@@ -141,6 +136,7 @@ def check_lesson(
     resolutions_path: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
+    **kwargs: Any,
 ) -> GateReport:
     """Validate a built lesson's resolution stream against inventory rules."""
     plans_root = plans_dir or (REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}")
@@ -295,11 +291,7 @@ def check_lesson(
             name_ids.add(plc["evidence"])
 
     total_allowed_ids = (
-        base_ids
-        | core_ids
-        | name_ids
-        | this_lesson_core_ids
-        | this_lesson_incidental_ids
+        base_ids | core_ids | name_ids | this_lesson_core_ids | this_lesson_incidental_ids | this_lesson_recycled_ids
     )
 
     # Map core items to the steps that introduce them
@@ -529,9 +521,7 @@ def check_lesson(
                     # Check if unit block corresponds to the step introducing rec
                     for s_id, s_vocab in step_intro_vocab.items():
                         if rec in s_vocab and (
-                            block == s_id
-                            or str(block).startswith(s_id)
-                            or unit.get("step") == s_id
+                            block == s_id or str(block).startswith(s_id) or unit.get("step") == s_id
                         ):
                             is_teaching = True
                             break
