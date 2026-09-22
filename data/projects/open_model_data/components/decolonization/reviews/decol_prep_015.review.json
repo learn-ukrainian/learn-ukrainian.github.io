@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_015",
+  "case_id": "decol_prep_015",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "заходи щодо",
+  "russian_copy": "міри по",
+  "ukrainian_proper": [
+    "заходи щодо"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "3a57c8112228ad7e916191e954ae52ccd458d71a6d9d392f17a05397e4ca97ed",
+  "linguistic_rationale": "Засвідчено для decol_prep_015: форма «міри по» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «заходи щодо» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_015.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_037",
+  "case_id": "decol_syn_037",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "скласти іспит",
+  "russian_copy": "здати екзамен",
+  "ukrainian_proper": [
+    "скласти іспит"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6e84ec645b5a60338493e7e8ab1aadb16ced500ebb9fa4b9db7624fefcafcedc",
+  "linguistic_rationale": "Засвідчено для decol_syn_037: форма «здати екзамен» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «скласти іспит» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_037.review.json"
+}

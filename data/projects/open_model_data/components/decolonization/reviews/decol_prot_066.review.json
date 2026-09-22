@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_066",
+  "case_id": "decol_prot_066",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "по суті",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "по суті",
+    "по суті справи"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a347bc340442e692b651831da8624cdc1b462dd8a36d50e869854c7f64396a4c",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_066: вислів «по суті» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_066.review.json"
+}

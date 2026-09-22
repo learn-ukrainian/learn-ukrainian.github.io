@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_007",
+  "case_id": "decol_prep_007",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на прохання",
+  "russian_copy": "по проханню",
+  "ukrainian_proper": [
+    "на прохання"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f9b546f8c6c9f48f9231a89112bd6cc4c7c5c6928961af81b2c887ddc08c75a7",
+  "linguistic_rationale": "Засвідчено для decol_prep_007: форма «по проханню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на прохання» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_007.review.json"
+}

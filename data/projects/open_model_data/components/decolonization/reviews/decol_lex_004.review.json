@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_004",
+  "case_id": "decol_lex_004",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "охочий",
+  "russian_copy": "бажаючий",
+  "ukrainian_proper": [
+    "охочий"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "075f0bddbc94c7f3dfe55f4967db7e8993efc847368a03be8f36c28c0cb4a963",
+  "linguistic_rationale": "Засвідчено для decol_lex_004: форма «бажаючий» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «охочий» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_004.review.json"
+}

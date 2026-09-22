@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_020",
+  "case_id": "decol_syn_020",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "дотримуватися правил",
+  "russian_copy": "притримуватися правил",
+  "ukrainian_proper": [
+    "дотримуватися правил"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9780ff3dcda4e78fa039338d1aa476d1477fe117a4737aace0e009fcc671f8b4",
+  "linguistic_rationale": "Засвідчено для decol_syn_020: форма «притримуватися правил» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «дотримуватися правил» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_020.review.json"
+}

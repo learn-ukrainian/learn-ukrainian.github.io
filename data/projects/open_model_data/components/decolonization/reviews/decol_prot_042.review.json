@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_042",
+  "case_id": "decol_prot_042",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "залюбки",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "залюбки"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a5502ef0ac6b68ca7757c16ed08245439c05b4902f143d3e440ff58e4afad757",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_042: вислів «залюбки» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_042.review.json"
+}

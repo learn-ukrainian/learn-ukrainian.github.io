@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_025",
+  "case_id": "decol_prep_025",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "після повернення",
+  "russian_copy": "по поверненню",
+  "ukrainian_proper": [
+    "після повернення"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6a4f6a4ab311d919f904bf3d5780ca5638a18eedef27b27fa028549d88bb6344",
+  "linguistic_rationale": "Засвідчено для decol_prep_025: форма «по поверненню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «після повернення» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_025.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_004",
+  "case_id": "decol_prep_004",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "з власної волі",
+  "russian_copy": "по власній волі",
+  "ukrainian_proper": [
+    "з власної волі"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "eb6d139826e5dbb4747bd9665cb0d22886556a68b31db95be81ea14026091e97",
+  "linguistic_rationale": "Засвідчено для decol_prep_004: форма «по власній волі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з власної волі» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_004.review.json"
+}

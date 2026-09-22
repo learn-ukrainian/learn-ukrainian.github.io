@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_043",
+  "case_id": "decol_prep_043",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на шкоду",
+  "russian_copy": "в ущерб",
+  "ukrainian_proper": [
+    "на шкоду"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "20f9206088e694ca4741abb2dc635d7c85d80b05051ddf588e7245313f9ad94f",
+  "linguistic_rationale": "Засвідчено для decol_prep_043: форма «в ущерб» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на шкоду» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_043.review.json"
+}

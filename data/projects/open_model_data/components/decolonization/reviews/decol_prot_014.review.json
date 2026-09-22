@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_014",
+  "case_id": "decol_prot_014",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на мою думку",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на мою думку"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c0945bd76cbb9e60539239228ea05979338c23c947f6ddfe63c7cbf903b2e9d2",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_014: вислів «на мою думку» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_014.review.json"
+}

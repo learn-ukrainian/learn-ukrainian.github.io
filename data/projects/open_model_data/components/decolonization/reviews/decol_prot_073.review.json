@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_073",
+  "case_id": "decol_prot_073",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на свіжому повітрі",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на свіжому повітрі"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5f647319a8b6b77b7551ca7dc1c95f77b0cfddbf59151de17bc73117082b9b65",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_073: вислів «на свіжому повітрі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_073.review.json"
+}

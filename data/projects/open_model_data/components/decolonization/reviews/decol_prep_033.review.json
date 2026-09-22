@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_033",
+  "case_id": "decol_prep_033",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на знак поваги",
+  "russian_copy": "в знак поваги",
+  "ukrainian_proper": [
+    "на знак поваги"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "1945223928a2a71ad328fa09f0929180f2c3823b9c013eda7367c42700357845",
+  "linguistic_rationale": "Засвідчено для decol_prep_033: форма «в знак поваги» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на знак поваги» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_033.review.json"
+}

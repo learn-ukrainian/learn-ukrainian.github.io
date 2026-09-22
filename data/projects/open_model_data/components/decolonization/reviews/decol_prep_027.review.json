@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_027",
+  "case_id": "decol_prep_027",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на кожному кроці",
+  "russian_copy": "на кожнім кроку",
+  "ukrainian_proper": [
+    "на кожному кроці"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6a94022725f62fea20b7c482e045961ab8884e026f3fdc8987dd3a5a05c6a5cc",
+  "linguistic_rationale": "Засвідчено для decol_prep_027: форма «на кожнім кроку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на кожному кроці» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_027.review.json"
+}

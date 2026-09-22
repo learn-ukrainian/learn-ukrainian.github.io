@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_036",
+  "case_id": "decol_prep_036",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на захист",
+  "russian_copy": "у захист",
+  "ukrainian_proper": [
+    "на захист"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "4f686cfbbc050a8d51b856fb4087ec1b265bd7b160fcf02023c89739f4fffa48",
+  "linguistic_rationale": "Засвідчено для decol_prep_036: форма «у захист» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на захист» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_036.review.json"
+}

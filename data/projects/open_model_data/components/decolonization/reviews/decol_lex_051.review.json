@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_051",
+  "case_id": "decol_lex_051",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "суниці",
+  "russian_copy": "земляніка",
+  "ukrainian_proper": [
+    "суниці"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "879ac385937c5576fe0f1d26b9de9adedfc9e12e2650668150ecc7eececf112d",
+  "linguistic_rationale": "Засвідчено для decol_lex_051: форма «земляніка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «суниці» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_051.review.json"
+}

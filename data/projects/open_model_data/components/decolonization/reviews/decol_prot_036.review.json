@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_036",
+  "case_id": "decol_prot_036",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "незважаючи на",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "незважаючи на"
+  ],
+  "authority": "Український правопис (2019)",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "80029a99e3c69b5dba11c8b1770abc0aace935a8f282c8a109ef42124cff3445",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_036: вислів «незважаючи на» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_036.review.json"
+}

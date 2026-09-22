@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_058",
+  "case_id": "decol_syn_058",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "чинити опір",
+  "russian_copy": "оказувати опір",
+  "ukrainian_proper": [
+    "чинити опір"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d3933ac37f99d6cc2bdbcc0c9f2205aca5dc54b2ba2bf7afdde65e2caf66ef6c",
+  "linguistic_rationale": "Засвідчено для decol_syn_058: форма «оказувати опір» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «чинити опір» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_058.review.json"
+}

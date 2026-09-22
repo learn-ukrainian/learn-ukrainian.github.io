@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_003",
+  "case_id": "decol_prep_003",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "о шостій годині",
+  "russian_copy": "в шість годин",
+  "ukrainian_proper": [
+    "о шостій годині"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "92aae0894ccc3b82ec2dcb1b84b66ac82d2620ce3e56c44b127f09697d082b8a",
+  "linguistic_rationale": "Засвідчено для decol_prep_003: форма «в шість годин» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «о шостій годині» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_003.review.json"
+}

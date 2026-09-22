@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_010",
+  "case_id": "decol_prep_010",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за свідченням",
+  "russian_copy": "по свідченню",
+  "ukrainian_proper": [
+    "за свідченням"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "847abe3b5a737136ad5bd2c156ac1345574a62aa224620c4ce5095388d1e9c23",
+  "linguistic_rationale": "Засвідчено для decol_prep_010: форма «по свідченню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за свідченням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_010.review.json"
+}

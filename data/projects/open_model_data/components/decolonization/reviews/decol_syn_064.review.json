@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_064",
+  "case_id": "decol_syn_064",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "повідомити заздалегідь",
+  "russian_copy": "поставити в ізвєстность",
+  "ukrainian_proper": [
+    "повідомити заздалегідь",
+    "довести до відома"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "367d6edf2ed89265e52744528fd073863a4f33af76fa5c1ace08efc6b64b0473",
+  "linguistic_rationale": "Засвідчено для decol_syn_064: форма «поставити в ізвєстность» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «повідомити заздалегідь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_064.review.json"
+}

@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_002",
+  "case_id": "decol_prot_002",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "відігравати роль",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "відігравати роль",
+    "грати роль"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "41f2679d6571d192b40be8b2160c3bff719e10729f14bc48b4cf49d24f5d1a20",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_002: вислів «відігравати роль» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_002.review.json"
+}

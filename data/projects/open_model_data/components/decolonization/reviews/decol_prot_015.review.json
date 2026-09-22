@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_015",
+  "case_id": "decol_prot_015",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "брати до серця",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "брати до серця"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "509d9c6bffbc9738ec9de210d8b66128253a3c31ed7f3c6147bd5618df752c04",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_015: вислів «брати до серця» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_015.review.json"
+}

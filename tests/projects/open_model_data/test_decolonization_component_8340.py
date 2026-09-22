@@ -256,13 +256,65 @@ def test_adversarial_probes_and_fail_closed():
             style_guide_cache=[],
         )
 
-    # 4. query_source_evidence must fail closed on case_id reuse with nonsense term/copy (Finding 1)
-    with pytest.raises(ValueError, match="Mismatched probe inputs for catalog case 'decol_syn_032'"):
+    # 4. query_source_evidence must fail closed on case_id reuse with nonsense term/copy (CF-R7 Finding 1)
+    with pytest.raises(ValueError, match="Mismatched target term for catalog case 'decol_syn_032'"):
         query_source_evidence(
             case_id="decol_syn_032",
             term="абракадабраневідома",
             copy="хххххх",
             auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4a. Probe with invalid target and valid copy (CF-R7 counterexample 1)
+    with pytest.raises(ValueError, match="Mismatched target term for catalog case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="невірний_термін",
+            copy="мати відношення до",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4b. Probe with valid target and invalid copy (CF-R7 counterexample 2)
+    with pytest.raises(ValueError, match="Mismatched russian_copy for catalog case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="мати дотичність",
+            copy="невірна_копія",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4c. Probe with invalid target and empty copy (CF-R7 counterexample 3)
+    with pytest.raises(ValueError):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="невірний_термін",
+            copy="",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4d. Probe with empty authority (CF-R7 counterexample 4)
+    with pytest.raises(ValueError, match="Empty authority provided for case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="мати дотичність",
+            copy="мати відношення до",
+            auth="",
             cat_name="calque_syntactic",
             s_cur=s_cur,
             v_cur=v_cur,
@@ -301,8 +353,29 @@ def test_adversarial_probes_and_fail_closed():
         "authority": "Катерина Городенська «Чи правильне слововживання?»",
         "is_erroneous": True,
     }
-    with pytest.raises(ValueError, match="Mismatched target_term for case 'decol_syn_032'"):
+    with pytest.raises(ValueError, match="Material change detected for case 'decol_syn_032'"):
         make_reviewer_confirmation(corrupted_item, "calque_syntactic", v_cur, s_cur, [])
+
+    # 8. make_reviewer_confirmation must fail closed on tampered contexts (CF-R7 Finding 3)
+    from scripts.projects.open_model_data.decolonization_cases_data import SYNTACTIC_CALQUES
+    syn_032 = next(c for c in SYNTACTIC_CALQUES if c["case_id"] == "decol_syn_032")
+    tampered_contexts_item = dict(syn_032)
+    tampered_contexts_item["contexts"] = [
+        {**syn_032["contexts"][0], "query": "Абсолютно сфальсифікований запит"},
+        syn_032["contexts"][1],
+    ]
+    with pytest.raises(ValueError, match=r"content digest mismatch.*Contexts or case metadata tampered with"):
+        make_reviewer_confirmation(tampered_contexts_item, "calque_syntactic", v_cur, s_cur, [])
+
+    # 9. make_reviewer_confirmation must fail closed on flipped is_erroneous (CF-R7 Finding 3)
+    flipped_err_item = dict(syn_032)
+    flipped_err_item["is_erroneous"] = False
+    with pytest.raises(ValueError, match="is_erroneous 'False' differs from reviewed"):
+        make_reviewer_confirmation(flipped_err_item, "calque_syntactic", v_cur, s_cur, [])
+
+    # 10. make_reviewer_confirmation must fail closed on changed category (CF-R7 Finding 3)
+    with pytest.raises(ValueError, match="category 'calque_lexical' differs from reviewed"):
+        make_reviewer_confirmation(syn_032, "calque_lexical", v_cur, s_cur, [])
 
 
 def test_supporting_passages_and_no_manufactured_statements(decolonization_data):
@@ -326,7 +399,7 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
 
     # 3. Check that prepositional calques have accurate authorities
     ponomariv_prep_cases = [c for c in cases if c["category"] == "calque_prepositional" and "Пономарів" in c["authority"]]
-    assert len(ponomariv_prep_cases) == 27
+    assert len(ponomariv_prep_cases) == 36
     for c in ponomariv_prep_cases:
         ev = c["reviewer_confirmation"]["source_evidence"]
         assert "Олександр Пономарів" in ev["source_name"]
@@ -334,7 +407,7 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
         assert "с." in ev["locus"]
 
     antonenko_prep = [c for c in cases if c["category"] == "calque_prepositional" and "Антоненко" in c["authority"]]
-    assert len(antonenko_prep) == 21
+    assert len(antonenko_prep) == 12
     for c in antonenko_prep:
         ev = c["reviewer_confirmation"]["source_evidence"]
         assert "Антоненко-Давидович" in ev["source_name"]

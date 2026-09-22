@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_001",
+  "case_id": "decol_prep_001",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на вимогу",
+  "russian_copy": "по вимозі",
+  "ukrainian_proper": [
+    "на вимогу"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d5d9ff1e3e7f3c6d917ee6c4560b679ec8521b26e80433869167b5f4ccd6517d",
+  "linguistic_rationale": "Засвідчено для decol_prep_001: форма «по вимозі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на вимогу» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_001.review.json"
+}

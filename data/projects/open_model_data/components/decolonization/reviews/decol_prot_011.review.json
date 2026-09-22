@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_011",
+  "case_id": "decol_prot_011",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "відповідно до вимог",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "відповідно до вимог"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "03df8895be7038e506e519c32bcb2ff43dcff20e1cd2b44f51f7ce3e873758be",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_011: вислів «відповідно до вимог» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Олександр Пономарів «Культура слова»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_011.review.json"
+}

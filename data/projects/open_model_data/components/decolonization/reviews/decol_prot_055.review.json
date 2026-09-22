@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_055",
+  "case_id": "decol_prot_055",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "брати участь",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "брати участь"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ea18e70a03787c068b9b58680bca546e740d339205bb9ff3e14a26b52e39cb3f",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_055: вислів «брати участь» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Катерина Городенська «Чи правильне слововживання?»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_055.review.json"
+}

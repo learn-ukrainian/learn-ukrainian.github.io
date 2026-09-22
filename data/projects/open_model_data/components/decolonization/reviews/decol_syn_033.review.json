@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_033",
+  "case_id": "decol_syn_033",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "ставитися до",
+  "russian_copy": "відноситися до",
+  "ukrainian_proper": [
+    "ставитися до"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5cd68ad02318fb68255cce9a3a69823c75b1ba021be0623437557aeef047080f",
+  "linguistic_rationale": "Засвідчено для decol_syn_033: форма «відноситися до» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «ставитися до» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_033.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_005",
+  "case_id": "decol_lex_005",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "чинне законодавство",
+  "russian_copy": "діюче законодавство",
+  "ukrainian_proper": [
+    "чинне законодавство"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6fd26eee718f7412f0a1a21e9ba157254c16c63559bd781fe390904bbf6d1268",
+  "linguistic_rationale": "Засвідчено для decol_lex_005: форма «діюче законодавство» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «чинне законодавство» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_005.review.json"
+}

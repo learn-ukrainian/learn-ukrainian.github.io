@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_014",
+  "case_id": "decol_syn_014",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "таким способом",
+  "russian_copy": "таким шляхом",
+  "ukrainian_proper": [
+    "таким способом",
+    "таким чином"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a81bb6c352d70793e6fdc90138cb95f72619bb1cb4ef02a6f7f38a3001395c46",
+  "linguistic_rationale": "Засвідчено для decol_syn_014: форма «таким шляхом» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «таким способом» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_014.review.json"
+}

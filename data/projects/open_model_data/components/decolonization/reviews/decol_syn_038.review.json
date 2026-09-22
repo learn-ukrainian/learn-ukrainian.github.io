@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_038",
+  "case_id": "decol_syn_038",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "накласти стягнення",
+  "russian_copy": "накласти штрафні санкції",
+  "ukrainian_proper": [
+    "накласти стягнення"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "bc75ca674f1f07afb33fbce0fb3656ddbf2290de54e7e5a060864a121e2a5e51",
+  "linguistic_rationale": "Засвідчено для decol_syn_038: форма «накласти штрафні санкції» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «накласти стягнення» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_038.review.json"
+}

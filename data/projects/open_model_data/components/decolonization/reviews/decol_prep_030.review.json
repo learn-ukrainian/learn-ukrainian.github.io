@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_030",
+  "case_id": "decol_prep_030",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за аналогією",
+  "russian_copy": "по аналогії",
+  "ukrainian_proper": [
+    "за аналогією"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a233be78e3af3ee647bca53050f880aa29f69c2d1537a031d982fb26d63a845c",
+  "linguistic_rationale": "Засвідчено для decol_prep_030: форма «по аналогії» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за аналогією» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_030.review.json"
+}

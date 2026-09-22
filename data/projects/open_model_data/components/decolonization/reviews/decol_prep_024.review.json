@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_024",
+  "case_id": "decol_prep_024",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "після прибуття",
+  "russian_copy": "по прибуттю",
+  "ukrainian_proper": [
+    "після прибуття"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "75c7a64d651d7728c314d93f5a33ed6fad018c2b5c1534ee39a94560ed8558e9",
+  "linguistic_rationale": "Засвідчено для decol_prep_024: форма «по прибуттю» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «після прибуття» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_024.review.json"
+}

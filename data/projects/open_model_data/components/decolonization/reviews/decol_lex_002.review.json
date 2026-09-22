@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_002",
+  "case_id": "decol_lex_002",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "капелюх",
+  "russian_copy": "шляпа",
+  "ukrainian_proper": [
+    "капелюх",
+    "бриль"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9da396f63237ffae00ccd3b24f3bca169813d95514d7e5eef4c95e64b48cc5d3",
+  "linguistic_rationale": "Засвідчено для decol_lex_002: форма «шляпа» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «капелюх» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_002.review.json"
+}

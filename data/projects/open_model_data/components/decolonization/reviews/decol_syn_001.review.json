@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_001",
+  "case_id": "decol_syn_001",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "брати участь",
+  "russian_copy": "приймати участь",
+  "ukrainian_proper": [
+    "брати участь"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "983dacde63532e1bea6da3326e181e9ad6448c16064ff445a4cd9310c120ed07",
+  "linguistic_rationale": "Засвідчено для decol_syn_001: форма «приймати участь» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати участь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_001.review.json"
+}

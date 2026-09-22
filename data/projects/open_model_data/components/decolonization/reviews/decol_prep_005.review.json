@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_005",
+  "case_id": "decol_prep_005",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "у будні",
+  "russian_copy": "по буднях",
+  "ukrainian_proper": [
+    "у будні"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9a5ff36d65675c4a1c788e9fec1976ed5e3da8daac8e79cf12e4926e4b97b1ac",
+  "linguistic_rationale": "Засвідчено для decol_prep_005: форма «по буднях» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у будні» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_005.review.json"
+}

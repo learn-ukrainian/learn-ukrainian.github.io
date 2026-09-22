@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_048",
+  "case_id": "decol_syn_048",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "порушити питання",
+  "russian_copy": "підняти питання",
+  "ukrainian_proper": [
+    "порушити питання"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f22b469670e2ffc287c019e8f47801938809f383b55eb19f031fae97c80720e8",
+  "linguistic_rationale": "Засвідчено для decol_syn_048: форма «підняти питання» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «порушити питання» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_048.review.json"
+}

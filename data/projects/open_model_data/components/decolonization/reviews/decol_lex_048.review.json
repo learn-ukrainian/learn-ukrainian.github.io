@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_048",
+  "case_id": "decol_lex_048",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "комір",
+  "russian_copy": "воротнік",
+  "ukrainian_proper": [
+    "комір"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "15f81ccc746e35e41af41e534cab23b00a3968f8ebe5d96ca1523ea0c18d8514",
+  "linguistic_rationale": "Засвідчено для decol_lex_048: форма «воротнік» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «комір» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_048.review.json"
+}

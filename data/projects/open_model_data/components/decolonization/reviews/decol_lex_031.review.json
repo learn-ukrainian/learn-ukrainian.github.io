@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_031",
+  "case_id": "decol_lex_031",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "оселедець",
+  "russian_copy": "сельодка",
+  "ukrainian_proper": [
+    "оселедець"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "1b655fae7f0978bf3defcecd19203af037ff3ac164dea12ec7c34f49e0692215",
+  "linguistic_rationale": "Засвідчено для decol_lex_031: форма «сельодка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «оселедець» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_031.review.json"
+}

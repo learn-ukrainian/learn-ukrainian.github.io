@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_019",
+  "case_id": "decol_lex_019",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "довкілля",
+  "russian_copy": "окружаюче середовище",
+  "ukrainian_proper": [
+    "довкілля"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "525f2ea707661f2e4c858bdef7b066f78e1e34db08b969892755f3953cce6c95",
+  "linguistic_rationale": "Засвідчено для decol_lex_019: форма «окружаюче середовище» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «довкілля» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_019.review.json"
+}

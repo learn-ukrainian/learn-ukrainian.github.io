@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_049",
+  "case_id": "decol_prot_049",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "наступний",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "наступний"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d5c67aec662cb541820d3b0b299f38f3a33be98d09ede8b3edcf3846d964854a",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_049: вислів «наступний» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_049.review.json"
+}

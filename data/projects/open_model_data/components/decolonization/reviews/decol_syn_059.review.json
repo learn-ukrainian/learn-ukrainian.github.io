@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_059",
+  "case_id": "decol_syn_059",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "знепритомніти",
+  "russian_copy": "потеряти сознаніє",
+  "ukrainian_proper": [
+    "знепритомніти"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "65f42b2906a5ffc6d30484979c02572e71223595eb926b21d21738d13565706e",
+  "linguistic_rationale": "Засвідчено для decol_syn_059: форма «потеряти сознаніє» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «знепритомніти» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_059.review.json"
+}

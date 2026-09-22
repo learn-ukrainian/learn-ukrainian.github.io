@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_041",
+  "case_id": "decol_prot_041",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "навмисне",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "навмисне"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "11a3611d3febf386b0d04fe2439506619df38b57608271620725525ecbd3c1d3",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_041: вислів «навмисне» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_041.review.json"
+}

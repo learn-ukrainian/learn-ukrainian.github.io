@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_065",
+  "case_id": "decol_syn_065",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "брати початок",
+  "russian_copy": "брати своє начало",
+  "ukrainian_proper": [
+    "брати початок",
+    "походити"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "2ab5f4854312f9e29c6545c1ea3a70fe9216058c41439bb02d10329e23c0fd0d",
+  "linguistic_rationale": "Засвідчено для decol_syn_065: форма «брати своє начало» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати початок» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_065.review.json"
+}

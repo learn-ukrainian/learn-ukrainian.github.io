@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_021",
+  "case_id": "decol_syn_021",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "увімкнути",
+  "russian_copy": "включити",
+  "ukrainian_proper": [
+    "увімкнути"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5045bc5a381c3fce11b249460ec4877bc24d360211d7b39bc69c2aad2ff3d17e",
+  "linguistic_rationale": "Засвідчено для decol_syn_021: форма «включити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «увімкнути» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_021.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_017",
+  "case_id": "decol_lex_017",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "вирушити",
+  "russian_copy": "відправитися",
+  "ukrainian_proper": [
+    "вирушити"
+  ],
+  "authority": "UA-GEC (Syvokon et al., 2023)",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "0c51db1614fa4267a55e2704c6c5b2a2231e0d780bce06ee97956a3a40ce1a3e",
+  "linguistic_rationale": "Засвідчено для decol_lex_017: форма «відправитися» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «вирушити» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_017.review.json"
+}

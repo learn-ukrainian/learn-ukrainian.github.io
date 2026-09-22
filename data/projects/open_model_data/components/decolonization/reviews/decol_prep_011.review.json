@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_011",
+  "case_id": "decol_prep_011",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за дорученням",
+  "russian_copy": "по дорученню",
+  "ukrainian_proper": [
+    "за дорученням"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "46912dfca29f2077a065b6e2d0e1fee8568054c9be6d5dbfa94b44c5d84c7f43",
+  "linguistic_rationale": "Засвідчено для decol_prep_011: форма «по дорученню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за дорученням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_011.review.json"
+}

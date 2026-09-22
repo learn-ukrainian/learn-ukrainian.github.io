@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_010",
+  "case_id": "decol_prot_010",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "взяти до уваги",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "взяти до уваги",
+    "брати до уваги"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b5a24d559ae07c4995a0461930067d405d2b756a8d98f12e9494cf2f80d4d444",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_010: вислів «взяти до уваги» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_010.review.json"
+}

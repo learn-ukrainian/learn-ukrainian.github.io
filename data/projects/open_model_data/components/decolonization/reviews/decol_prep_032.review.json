@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_032",
+  "case_id": "decol_prep_032",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за правилами",
+  "russian_copy": "по правилах",
+  "ukrainian_proper": [
+    "за правилами"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "015bb5aedd73c386e3daa3c12c955a75471b3456aab6118353d2f420b258ec83",
+  "linguistic_rationale": "Засвідчено для decol_prep_032: форма «по правилах» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за правилами» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_032.review.json"
+}

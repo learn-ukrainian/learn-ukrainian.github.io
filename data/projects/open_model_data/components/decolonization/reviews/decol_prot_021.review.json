@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_021",
+  "case_id": "decol_prot_021",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на щастя",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на щастя"
+  ],
+  "authority": "Український правопис (2019)",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d14026833ca2f9185d68f179c498467a3b91dabf3917be30fcc6b8f6a4c2ea46",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_021: вислів «на щастя» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Український правопис (2019)). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_021.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_016",
+  "case_id": "decol_lex_016",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "висновок",
+  "russian_copy": "заключення",
+  "ukrainian_proper": [
+    "висновок"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "427db3b84010e44699676ac166de61154020d1f0a85e00f9af523b518bb8a44e",
+  "linguistic_rationale": "Засвідчено для decol_lex_016: форма «заключення» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «висновок» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_016.review.json"
+}

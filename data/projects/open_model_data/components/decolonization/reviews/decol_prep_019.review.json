@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_019",
+  "case_id": "decol_prep_019",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за власним бажанням",
+  "russian_copy": "по власному бажанню",
+  "ukrainian_proper": [
+    "за власним бажанням"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fb1435449f93bbce13c9c193becd4c43e83b4e41d5712e81f0a2d10bd2eb804a",
+  "linguistic_rationale": "Засвідчено для decol_prep_019: форма «по власному бажанню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за власним бажанням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_019.review.json"
+}

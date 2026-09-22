@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_031",
+  "case_id": "decol_prep_031",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "через неуважність",
+  "russian_copy": "по неуважності",
+  "ukrainian_proper": [
+    "через неуважність"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "999bd03c5f3b0a4e6fd2b5f504752cc03a919eec90cd4660f31ab21c1afba36c",
+  "linguistic_rationale": "Засвідчено для decol_prep_031: форма «по неуважності» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «через неуважність» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_031.review.json"
+}

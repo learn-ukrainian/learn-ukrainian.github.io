@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_041",
+  "case_id": "decol_syn_041",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "доходити згоди",
+  "russian_copy": "приходити до згоди",
+  "ukrainian_proper": [
+    "доходити згоди"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "68bd3e3f66c6ae48961faa7115e9ba1dd2bc2c830b2d4146191832af16251e69",
+  "linguistic_rationale": "Засвідчено для decol_syn_041: форма «приходити до згоди» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «доходити згоди» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_041.review.json"
+}

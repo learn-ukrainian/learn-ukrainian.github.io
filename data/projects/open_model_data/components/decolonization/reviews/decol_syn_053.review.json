@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_053",
+  "case_id": "decol_syn_053",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "впадати в розпач",
+  "russian_copy": "ударитися в отчаяніє",
+  "ukrainian_proper": [
+    "впадати в розпач"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e36dca3fadd8dc46464ff99bcd68e7870c52bf1873d16e5ead22485aa7e2e86e",
+  "linguistic_rationale": "Засвідчено для decol_syn_053: форма «ударитися в отчаяніє» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «впадати в розпач» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_053.review.json"
+}

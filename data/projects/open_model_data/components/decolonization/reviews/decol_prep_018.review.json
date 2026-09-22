@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_018",
+  "case_id": "decol_prep_018",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "коштом",
+  "russian_copy": "за рахунок",
+  "ukrainian_proper": [
+    "коштом",
+    "завдяки"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "75923f6793749fd434aab525a0522d5c840a528a0b546baf86ae390692cdc22f",
+  "linguistic_rationale": "Засвідчено для decol_prep_018: форма «за рахунок» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «коштом» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_018.review.json"
+}

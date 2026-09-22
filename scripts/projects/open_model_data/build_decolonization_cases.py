@@ -39,7 +39,10 @@ from scripts.projects.open_model_data.decolonization_cases_data import (
     SYNTACTIC_CALQUES,
 )
 from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
-from scripts.projects.open_model_data.decolonization_language_reviews import INDEPENDENT_LANGUAGE_REVIEWS
+from scripts.projects.open_model_data.decolonization_language_reviews import (
+    INDEPENDENT_LANGUAGE_REVIEWS,
+    compute_case_content_sha256,
+)
 from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
 
 
@@ -197,6 +200,9 @@ def query_source_evidence(
     Fails closed: if no verified attestation exists, raises ValueError.
     Never returns fake or empty supporting passages.
     """
+    if not auth or not auth.strip():
+        raise ValueError(f"Empty authority provided for case '{case_id}'")
+
     if "ua-gec" in auth.lower():
         rec_id = UA_GEC_RECORD_MAP.get(case_id)
         if not rec_id:
@@ -244,45 +250,59 @@ def query_source_evidence(
         ev = EXPLICIT_SOURCE_EVIDENCE[case_id]
 
         # Strict authority validation
-        expected_auth = ev.get("authority", ev.get("source", ""))
+        expected_auth = ev.get("authority", ev.get("source", "")).strip()
         auth_clean = auth.lower().strip()
         exp_clean = expected_auth.lower().strip()
         auth_tokens = set(re.findall(r"\w{4,}", auth_clean))
         exp_tokens = set(re.findall(r"\w{4,}", exp_clean))
-        if not (
-            auth_clean in exp_clean
-            or exp_clean in auth_clean
-            or (auth_tokens and auth_tokens.intersection(exp_tokens))
-        ):
+        matched_auth = bool(auth_tokens and exp_tokens and auth_tokens.intersection(exp_tokens))
+        if not matched_auth and len(auth_clean) >= 5 and (auth_clean in exp_clean or exp_clean in auth_clean):
+            matched_auth = True
+
+        if not matched_auth:
             raise ValueError(
                 f"Mismatched authority for case '{case_id}': probe authority '{auth}' incompatible with catalog authority '{expected_auth}'"
             )
 
-        # Strict term/copy validation
+        # Strict target term validation
         ev_term = ev.get("target_term", "").strip().lower()
-        ev_copy = (ev.get("russian_copy") or "").strip().lower()
-        passage_low = (ev.get("supporting_passage") or "").lower()
-        art_low = (ev.get("article") or "").lower()
-
         t_clean = term.strip().lower()
+        if not t_clean:
+            raise ValueError(f"Empty target term provided for case '{case_id}'")
+
+        proper_clean_list = [p.strip().lower() for p in (proper_list or []) if p.strip()]
+        term_matched = False
+        if ev_term and (t_clean == ev_term or t_clean in ev_term or ev_term in t_clean):
+            term_matched = True
+        if not term_matched and proper_clean_list and any(
+            t_clean == p or t_clean in p or p in t_clean for p in proper_clean_list
+        ):
+            term_matched = True
+
+        if not term_matched:
+            raise ValueError(
+                f"Mismatched target term for catalog case '{case_id}': term '{term}' incompatible with catalog entry '{ev.get('target_term')}'"
+            )
+
+        # Strict russian copy validation
+        ev_copy = (ev.get("russian_copy") or "").strip().lower()
         c_clean = (copy or "").strip().lower()
 
-        term_matched = bool(
-            (ev_term and (t_clean == ev_term or t_clean in ev_term or ev_term in t_clean))
-            or (proper_list and any(p.strip().lower() in ev_term for p in proper_list))
-            or (t_clean and (t_clean in passage_low or t_clean in art_low))
-        )
-
-        copy_matched = bool(
-            not c_clean
-            or (ev_copy and (c_clean == ev_copy or c_clean in ev_copy or ev_copy in c_clean))
-            or (c_clean in passage_low or c_clean in art_low)
-        )
-
-        if not (term_matched or copy_matched):
-            raise ValueError(
-                f"Mismatched probe inputs for catalog case '{case_id}': term '{term}', copy '{copy}' incompatible with catalog entry '{ev.get('target_term')}' / '{ev.get('russian_copy')}'"
-            )
+        if ev_copy:
+            if not c_clean:
+                raise ValueError(
+                    f"Missing required russian_copy for catalog case '{case_id}': probe copy is empty but catalog expects '{ev.get('russian_copy')}'"
+                )
+            copy_matched = (c_clean == ev_copy) or (c_clean in ev_copy) or (ev_copy in c_clean)
+            if not copy_matched:
+                raise ValueError(
+                    f"Mismatched russian_copy for catalog case '{case_id}': probe copy '{copy}' incompatible with catalog entry '{ev.get('russian_copy')}'"
+                )
+        else:
+            if c_clean:
+                raise ValueError(
+                    f"Unexpected russian_copy '{copy}' for catalog case '{case_id}' which defines no russian_copy"
+                )
 
         return {
             "source": ev["source"],
@@ -381,17 +401,39 @@ def make_reviewer_confirmation(
             f"Case '{case_id}' has not been confirmed by independent language review in INDEPENDENT_LANGUAGE_REVIEWS"
         )
     rev_rec = INDEPENDENT_LANGUAGE_REVIEWS[case_id]
+
+    if rev_rec.get("category") != cat_name:
+        raise ValueError(
+            f"Material change detected for case '{case_id}': category '{cat_name}' differs from reviewed category '{rev_rec.get('category')}'. Confirmation invalidated."
+        )
+    if rev_rec.get("is_erroneous") != item.get("is_erroneous"):
+        raise ValueError(
+            f"Material change detected for case '{case_id}': is_erroneous '{item.get('is_erroneous')}' differs from reviewed is_erroneous '{rev_rec.get('is_erroneous')}'. Confirmation invalidated."
+        )
     if rev_rec.get("target_term") != target_term:
         raise ValueError(
-            f"Mismatched target_term for case '{case_id}' in language review record: expected '{rev_rec.get('target_term')}', got '{target_term}'"
+            f"Material change detected for case '{case_id}': target_term '{target_term}' differs from reviewed target_term '{rev_rec.get('target_term')}'. Confirmation invalidated."
         )
-    if russian_copy and rev_rec.get("russian_copy") != russian_copy:
+    if (item.get("russian_copy") or "") != (rev_rec.get("russian_copy") or ""):
         raise ValueError(
-            f"Mismatched russian_copy for case '{case_id}' in language review record: expected '{rev_rec.get('russian_copy')}', got '{russian_copy}'"
+            f"Material change detected for case '{case_id}': russian_copy '{item.get('russian_copy')}' differs from reviewed russian_copy '{rev_rec.get('russian_copy')}'. Confirmation invalidated."
         )
-    if rev_rec.get("status") != "confirmed":
+    if rev_rec.get("authority") != auth:
         raise ValueError(
-            f"Case '{case_id}' review status is '{rev_rec.get('status')}', expected 'confirmed'"
+            f"Material change detected for case '{case_id}': authority '{auth}' differs from reviewed authority '{rev_rec.get('authority')}'. Confirmation invalidated."
+        )
+    if rev_rec.get("status") != "confirmed" or rev_rec.get("verdict") != "APPROVED":
+        raise ValueError(
+            f"Case '{case_id}' review status is '{rev_rec.get('status')}' (verdict: '{rev_rec.get('verdict')}'), expected confirmed/APPROVED"
+        )
+
+    # Exact content and context digest validation
+    item_copy = dict(item)
+    item_copy["category"] = cat_name
+    computed_hash = compute_case_content_sha256(item_copy)
+    if rev_rec.get("content_sha256") != computed_hash:
+        raise ValueError(
+            f"Material change detected for case '{case_id}': content digest mismatch (reviewed: '{rev_rec.get('content_sha256')}', current: '{computed_hash}'). Contexts or case metadata tampered with. Confirmation invalidated."
         )
 
     # 2. Automated VESUM Verification
@@ -416,7 +458,11 @@ def make_reviewer_confirmation(
         "reviewer_id": rev_rec["reviewer_id"],
         "reviewer_family": rev_rec["reviewer_family"],
         "status": rev_rec["status"],
+        "verdict": rev_rec.get("verdict", "APPROVED"),
         "review_date": rev_rec.get("review_date", "2026-09-22"),
+        "review_receipt_id": rev_rec.get("review_receipt_id"),
+        "review_dossier_locator": rev_rec.get("review_dossier_locator"),
+        "content_sha256": rev_rec.get("content_sha256"),
         "authority_locus": locus,
         "vesum_lemma_status": "verified",
         "vesum_evidence": vesum_ev,

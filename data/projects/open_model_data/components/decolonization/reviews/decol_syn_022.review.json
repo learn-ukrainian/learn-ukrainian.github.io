@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_022",
+  "case_id": "decol_syn_022",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "вимкнути",
+  "russian_copy": "виключити",
+  "ukrainian_proper": [
+    "вимкнути"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fb71ebf2770e8440014efbc28d80dded24756338e1e34217dbfe368ec22ff5eb",
+  "linguistic_rationale": "Засвідчено для decol_syn_022: форма «виключити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вимкнути» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_022.review.json"
+}

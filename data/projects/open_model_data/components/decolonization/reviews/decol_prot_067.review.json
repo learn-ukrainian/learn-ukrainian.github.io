@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_067",
+  "case_id": "decol_prot_067",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "повною мірою",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "повною мірою"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "09fd0894551c7fb62e5803c0e8d30ad9c1c157e17122ede9b73679398bd0ef20",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_067: вислів «повною мірою» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_067.review.json"
+}

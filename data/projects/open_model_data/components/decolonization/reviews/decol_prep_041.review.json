@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_041",
+  "case_id": "decol_prep_041",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "напам'ять",
+  "russian_copy": "по пам'яті",
+  "ukrainian_proper": [
+    "напам'ять",
+    "з пам'яті"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9256c5c3fcbeb58b89b58487ff04e3dff12f3121721e409e287b6d96026a6142",
+  "linguistic_rationale": "Засвідчено для decol_prep_041: форма «по пам'яті» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «напам'ять» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_041.review.json"
+}

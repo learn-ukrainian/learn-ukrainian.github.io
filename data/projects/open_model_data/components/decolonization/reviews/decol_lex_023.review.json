@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_023",
+  "case_id": "decol_lex_023",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "відрядження",
+  "russian_copy": "командировка",
+  "ukrainian_proper": [
+    "відрядження"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5855dbff69d8e4ee2da4dbf18e972dfd6c8f0f26c2c1ae3896fde7860a650ff3",
+  "linguistic_rationale": "Засвідчено для decol_lex_023: форма «командировка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «відрядження» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_023.review.json"
+}

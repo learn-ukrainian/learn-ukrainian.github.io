@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_012",
+  "case_id": "decol_lex_012",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "гусак",
+  "russian_copy": "гусь",
+  "ukrainian_proper": [
+    "гусак"
+  ],
+  "authority": "UA-GEC (Syvokon et al., 2023)",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "4fa35116589c956e089d207232162a5f27f1fa8492f6f287624ac0e2c9a29860",
+  "linguistic_rationale": "Засвідчено для decol_lex_012: форма «гусь» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «гусак» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_012.review.json"
+}

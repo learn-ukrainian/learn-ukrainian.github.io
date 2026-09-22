@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_046",
+  "case_id": "decol_prep_046",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на диво",
+  "russian_copy": "на удівлєніє",
+  "ukrainian_proper": [
+    "на диво"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "99a6c274b938717a5e63cb539580b6735e1e2a2bc577f6bd291ca86aab3634f2",
+  "linguistic_rationale": "Засвідчено для decol_prep_046: форма «на удівлєніє» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на диво» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_046.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_020",
+  "case_id": "decol_lex_020",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "тло",
+  "russian_copy": "фон",
+  "ukrainian_proper": [
+    "тло"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ee76b15ab0307fbad2f723e553404d3ad8fbe6db150f3416543d8687efae50cd",
+  "linguistic_rationale": "Засвідчено для decol_lex_020: форма «фон» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «тло» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_020.review.json"
+}

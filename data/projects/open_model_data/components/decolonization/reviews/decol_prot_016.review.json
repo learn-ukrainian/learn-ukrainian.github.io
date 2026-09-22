@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_016",
+  "case_id": "decol_prot_016",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "мати рацію",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "мати рацію"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a1127f84678a8ece182e814e3777e2f12acf983eddd4fee725cafe813b80a37b",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_016: вислів «мати рацію» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_016.review.json"
+}

@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_017",
+  "case_id": "decol_syn_017",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "впадати в очі",
+  "russian_copy": "кидатися в очі",
+  "ukrainian_proper": [
+    "впадати в очі",
+    "впадати у вічі"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b8f000ae4adbd98d447c91203bea8c0b66bfabe4eae211310e77db9b880cd508",
+  "linguistic_rationale": "Засвідчено для decol_syn_017: форма «кидатися в очі» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «впадати в очі» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_017.review.json"
+}

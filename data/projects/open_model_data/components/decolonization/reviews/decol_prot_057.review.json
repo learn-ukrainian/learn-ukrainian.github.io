@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_057",
+  "case_id": "decol_prot_057",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "робити вигляд",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "робити вигляд",
+    "удавати"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f3107e7f8f8d296f8dae1cf1ae82c0a0035ccacc2f9a853f664d45d098c61b80",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_057: вислів «робити вигляд» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_057.review.json"
+}

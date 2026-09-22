@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_044",
+  "case_id": "decol_syn_044",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "вживати заходів",
+  "russian_copy": "приймати міри",
+  "ukrainian_proper": [
+    "вживати заходів"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c6062766f3fcaa6740ca3b627dcb02cf73f7d68daa90780196a2077342a8a6cb",
+  "linguistic_rationale": "Засвідчено для decol_syn_044: форма «приймати міри» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вживати заходів» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_044.review.json"
+}

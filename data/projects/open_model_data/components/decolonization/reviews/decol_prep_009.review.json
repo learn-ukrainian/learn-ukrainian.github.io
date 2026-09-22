@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_009",
+  "case_id": "decol_prep_009",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на замовлення",
+  "russian_copy": "по заказу",
+  "ukrainian_proper": [
+    "на замовлення"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "bde0899617c6d198fae2e605b29305c19c1267db8ce20ebe56517ce2dec60458",
+  "linguistic_rationale": "Засвідчено для decol_prep_009: форма «по заказу» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на замовлення» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_009.review.json"
+}

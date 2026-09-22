@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_055",
+  "case_id": "decol_lex_055",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "равлик",
+  "russian_copy": "улітка",
+  "ukrainian_proper": [
+    "равлик"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b5935b4fe6f3f4438eff402eea6b138bc4ef0e898ae1465ac42008a00a4c977b",
+  "linguistic_rationale": "Засвідчено для decol_lex_055: форма «улітка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «равлик» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_055.review.json"
+}

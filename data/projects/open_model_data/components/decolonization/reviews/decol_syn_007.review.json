@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_007",
+  "case_id": "decol_syn_007",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "мати на меті",
+  "russian_copy": "переслідувати мету",
+  "ukrainian_proper": [
+    "мати на меті"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f7a2452e5403bb14d86562718b7d06c382e1a924acf86e3c881a0e130cadca1c",
+  "linguistic_rationale": "Засвідчено для decol_syn_007: форма «переслідувати мету» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «мати на меті» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_007.review.json"
+}

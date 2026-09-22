@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_058",
+  "case_id": "decol_lex_058",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ведмідь",
+  "russian_copy": "медвідь",
+  "ukrainian_proper": [
+    "ведмідь"
+  ],
+  "authority": "Український правопис (2019)",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e783f3962138b0b8f34e2e99c52150be406b0f1f9ae717a1e9ec2691958e7800",
+  "linguistic_rationale": "Засвідчено для decol_lex_058: форма «медвідь» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ведмідь» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_058.review.json"
+}

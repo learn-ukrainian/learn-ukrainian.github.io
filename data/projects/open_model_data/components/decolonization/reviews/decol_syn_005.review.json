@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_005",
+  "case_id": "decol_syn_005",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "висловлювати подяку",
+  "russian_copy": "приносити подяку",
+  "ukrainian_proper": [
+    "висловлювати подяку",
+    "складати подяку"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "32b42477d9132eadb6d43ca5b86b9867ec0b09c3df8b19211b39a565fe4b070f",
+  "linguistic_rationale": "Засвідчено для decol_syn_005: форма «приносити подяку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «висловлювати подяку» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_005.review.json"
+}

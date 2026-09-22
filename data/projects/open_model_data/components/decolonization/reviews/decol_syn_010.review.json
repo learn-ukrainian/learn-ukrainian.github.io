@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_010",
+  "case_id": "decol_syn_010",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "здобути освіту",
+  "russian_copy": "отримати освіту",
+  "ukrainian_proper": [
+    "здобути освіту"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "531d1d2e8b27704b43699e7ccabe75c8bc7703a82c714089d21499703937d431",
+  "linguistic_rationale": "Засвідчено для decol_syn_010: форма «отримати освіту» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «здобути освіту» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_010.review.json"
+}

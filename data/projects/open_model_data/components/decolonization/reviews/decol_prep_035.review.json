@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_035",
+  "case_id": "decol_prep_035",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на користь",
+  "russian_copy": "в пользу",
+  "ukrainian_proper": [
+    "на користь"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5bf56a7b92a1fb67f37690e800cee758a4a5a10674b43759b69f31e4d1608050",
+  "linguistic_rationale": "Засвідчено для decol_prep_035: форма «в пользу» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на користь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_035.review.json"
+}

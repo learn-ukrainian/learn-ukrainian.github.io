@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_033",
+  "case_id": "decol_lex_033",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ковдра",
+  "russian_copy": "одіяло",
+  "ukrainian_proper": [
+    "ковдра"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c30bf520c36f366bbd70e0ee4b1341950ccabfbccca088e4430a8069cc8fbeaf",
+  "linguistic_rationale": "Засвідчено для decol_lex_033: форма «одіяло» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ковдра» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_033.review.json"
+}

@@ -1,0 +1,23 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_003",
+  "case_id": "decol_prot_003",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "кобіта",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "кобіта",
+    "жінка",
+    "дівчина"
+  ],
+  "authority": "СУМ-20",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "79f90455dbc34fc5287977a55e1e9cc6e703e96565e5a7357b6b85c63d9b2f5e",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_003: вислів «кобіта» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (СУМ-20). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_003.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_009",
+  "case_id": "decol_prot_009",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "мати на увазі",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "мати на увазі"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9ba0e77b87175134506735f175320ba9d9b39dac4258fcb59b1f5f137320503c",
+  "linguistic_rationale": "Засвідчено захисний статус для decol_prot_009: вислів «мати на увазі» є питомою українською конструкцією, перевіреною за VESUM та зафіксованою в авторитетних джерелах (Борис Антоненко-Давидович «Як ми говоримо»). Претензії щодо його ненормативності спростовано як необґрунтований гіперпуризм.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_009.review.json"
+}

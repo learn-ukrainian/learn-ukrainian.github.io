@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_028",
+  "case_id": "decol_prep_028",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "у напрямку",
+  "russian_copy": "по напрямку",
+  "ukrainian_proper": [
+    "у напрямку",
+    "до"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5646c965bee0bb8c42c9e32c0038ae8fdf531a30baa116cc04e4bb8897d19926",
+  "linguistic_rationale": "Засвідчено для decol_prep_028: форма «по напрямку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у напрямку» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_028.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_026",
+  "case_id": "decol_prep_026",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за винятком",
+  "russian_copy": "за виключенням",
+  "ukrainian_proper": [
+    "за винятком"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d03dd312ed9621b7b74dc8876818dae46030cf4fc525db23e00369cd32ecdea3",
+  "linguistic_rationale": "Засвідчено для decol_prep_026: форма «за виключенням» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за винятком» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_026.review.json"
+}

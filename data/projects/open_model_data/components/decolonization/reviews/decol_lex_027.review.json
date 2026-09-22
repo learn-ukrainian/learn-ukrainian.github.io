@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_027",
+  "case_id": "decol_lex_027",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "допитливий",
+  "russian_copy": "любопитний",
+  "ukrainian_proper": [
+    "допитливий"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "3a73613419b3bd0e85ed89b6bf6dd40900989d4df450926bbd34233de162b4a7",
+  "linguistic_rationale": "Засвідчено для decol_lex_027: форма «любопитний» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «допитливий» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_027.review.json"
+}

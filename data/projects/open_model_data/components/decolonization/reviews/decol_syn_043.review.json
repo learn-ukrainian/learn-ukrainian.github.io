@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_043",
+  "case_id": "decol_syn_043",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "брати до серця",
+  "russian_copy": "приймати близько до серця",
+  "ukrainian_proper": [
+    "брати до серця"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8f6f36e0acae7e8c67571c8835d68d03f128ad434fc738c477f9fc5f8d80426a",
+  "linguistic_rationale": "Засвідчено для decol_syn_043: форма «приймати близько до серця» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати до серця» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_043.review.json"
+}

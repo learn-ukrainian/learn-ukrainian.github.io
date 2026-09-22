@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_023",
+  "case_id": "decol_prep_023",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "з нагоди ювілею",
+  "russian_copy": "по поводу ювілею",
+  "ukrainian_proper": [
+    "з нагоди ювілею"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "7fc12b0c580034771f017d463826562163f84f93792bbaad833c77bac7f76e5a",
+  "linguistic_rationale": "Засвідчено для decol_prep_023: форма «по поводу ювілею» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з нагоди ювілею» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_023.review.json"
+}

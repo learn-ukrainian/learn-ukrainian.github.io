@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_043",
+  "case_id": "decol_lex_043",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "кишеня",
+  "russian_copy": "карман",
+  "ukrainian_proper": [
+    "кишеня"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fefb513dbabecbc778caca9ba2452ecb6510ace783d3db7f11853f883b3ad65e",
+  "linguistic_rationale": "Засвідчено для decol_lex_043: форма «карман» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «кишеня» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_043.review.json"
+}

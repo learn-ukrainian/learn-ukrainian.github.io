@@ -1,0 +1,22 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_029",
+  "case_id": "decol_syn_029",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "давати змогу",
+  "russian_copy": "дозволяти",
+  "ukrainian_proper": [
+    "давати змогу",
+    "надавати можливість"
+  ],
+  "authority": "UA-GEC (Syvokon et al., 2023)",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d291acf56494d9b41bdb88d173394a935d9896df4875e24e8eb18242cb93628c",
+  "linguistic_rationale": "Засвідчено для decol_syn_029: форма «дозволяти» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «давати змогу» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_029.review.json"
+}

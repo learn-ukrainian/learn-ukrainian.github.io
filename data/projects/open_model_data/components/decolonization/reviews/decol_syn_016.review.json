@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_016",
+  "case_id": "decol_syn_016",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "зазнати поразки",
+  "russian_copy": "потерпіти поразку",
+  "ukrainian_proper": [
+    "зазнати поразки"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f9b7d911524691d6d901595954b84aa6226e61b07a2d0982730a0d92b9489258",
+  "linguistic_rationale": "Засвідчено для decol_syn_016: форма «потерпіти поразку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «зазнати поразки» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_016.review.json"
+}

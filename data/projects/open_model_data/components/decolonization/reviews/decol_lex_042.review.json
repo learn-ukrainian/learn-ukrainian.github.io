@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_042",
+  "case_id": "decol_lex_042",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ґудзик",
+  "russian_copy": "пуговиця",
+  "ukrainian_proper": [
+    "ґудзик"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5d8c5fe9de413b97bde6b5c91d9fa17a249423a3499cd0194871691940d4b4a6",
+  "linguistic_rationale": "Засвідчено для decol_lex_042: форма «пуговиця» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ґудзик» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_042.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_045",
+  "case_id": "decol_prep_045",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за викликом",
+  "russian_copy": "по виклику",
+  "ukrainian_proper": [
+    "за викликом"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f358e471c3dd202b6348ba97a2a41b30d0093ba9f42ed729056cc3d681554d5c",
+  "linguistic_rationale": "Засвідчено для decol_prep_045: форма «по виклику» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за викликом» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_045.review.json"
+}

@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_050",
+  "case_id": "decol_syn_050",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "набути досвіду",
+  "russian_copy": "набратися опиту",
+  "ukrainian_proper": [
+    "набути досвіду"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e200e0f2b014569cf7007febbd17dd14f7d725b15c37570ca406e0c7d27ec1c1",
+  "linguistic_rationale": "Засвідчено для decol_syn_050: форма «набратися опиту» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «набути досвіду» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_050.review.json"
+}

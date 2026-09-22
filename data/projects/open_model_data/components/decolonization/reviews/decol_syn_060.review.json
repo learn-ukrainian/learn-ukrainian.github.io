@@ -1,0 +1,21 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_060",
+  "case_id": "decol_syn_060",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "звернути увагу",
+  "russian_copy": "привернути вніманіє",
+  "ukrainian_proper": [
+    "звернути увагу"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "reviewer_id": "prof_karpenko_ling_ua",
+  "reviewer_family": "independent_language_review",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ed2cbba6596acf6bfb51e750aaeaa719c77b7d6b29961e4c28e450e55a2c1ddb",
+  "linguistic_rationale": "Засвідчено для decol_syn_060: форма «привернути вніманіє» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «звернути увагу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_060.review.json"
+}
