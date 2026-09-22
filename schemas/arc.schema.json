@@ -6,15 +6,74 @@
   "type": "object",
   "required": [
     "arc_schema",
+    "level",
     "source",
     "est_lessons_total",
     "positions"
   ],
   "additionalProperties": false,
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "level": {
+            "const": "a1"
+          }
+        },
+        "required": [
+          "level"
+        ]
+      },
+      "then": {
+        "not": {
+          "required": [
+            "immersion_bands"
+          ]
+        },
+        "properties": {
+          "positions": {
+            "items": {
+              "not": {
+                "required": [
+                  "band_key"
+                ]
+              }
+            }
+          }
+        },
+        "description": "A1's immersion band is ULP-derived, so an A1 arc has neither immersion_bands nor per-position band_key"
+      },
+      "else": {
+        "required": [
+          "immersion_bands"
+        ],
+        "properties": {
+          "positions": {
+            "items": {
+              "required": [
+                "band_key"
+              ]
+            }
+          }
+        },
+        "description": "Non-A1 arcs carry the level's immersion band mapping: immersion_bands ranges plus a per-position band_key"
+      }
+    }
+  ],
   "properties": {
     "arc_schema": {
       "const": 1,
       "description": "Arc data schema version"
+    },
+    "level": {
+      "type": "string",
+      "enum": [
+        "a1",
+        "a2",
+        "b1",
+        "b2"
+      ],
+      "description": "Level this arc belongs to"
     },
     "source": {
       "type": "object",
@@ -39,6 +98,37 @@
       "type": "integer",
       "minimum": 1,
       "description": "Sum of all positions' est_lessons; the generator checks it equals the lesson total stated in the arc document's sizing paragraph"
+    },
+    "immersion_bands": {
+      "type": "array",
+      "minItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "start",
+          "end",
+          "band_key"
+        ],
+        "additionalProperties": false,
+        "properties": {
+          "start": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "First position of the band range (inclusive)"
+          },
+          "end": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Last position of the band range (inclusive)"
+          },
+          "band_key": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Immersion band key; the generator checks it exists in IMMERSION_POLICIES of the level's immersion policy family (scripts/config.py)"
+          }
+        }
+      },
+      "description": "Immersion band mapping parsed from the arc document's §7 band table (non-A1 levels only; forbidden at A1)"
     },
     "positions": {
       "type": "array",
@@ -102,11 +192,12 @@
               "enum": [
                 "W",
                 "Li",
-                "R"
+                "R",
+                "S"
               ]
             },
             "uniqueItems": true,
-            "description": "Parsed skills duty codes: W writing, Li listening, R real-world reading"
+            "description": "Parsed skills duty codes: W writing, Li listening, R real-world reading, S speaking (S only at B2, per each document's own §5 legend)"
           },
           "standard_line_refs": {
             "type": "array",
@@ -135,6 +226,11 @@
             },
             "uniqueItems": true,
             "description": "Letters introduced by a literacy position (key omitted on main-table positions)"
+          },
+          "band_key": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Immersion band key for this position, filled by the generator from immersion_bands so consumers never expand ranges themselves (non-A1 only; forbidden at A1)"
           }
         }
       }

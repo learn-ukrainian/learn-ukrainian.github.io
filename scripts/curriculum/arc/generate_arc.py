@@ -7,6 +7,13 @@ emits curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml. No arc content is
 typed by hand: every string in the YAML is copied from the document by the
 parser, and any table cell the parser cannot read fails generation with the
 row quoted.
+
+For non-A1 levels the YAML additionally carries the level's immersion band
+mapping, parsed from the document's §7 band table (tables only — prose in §7
+fails generation): a top-level ``immersion_bands`` list of
+``{start, end, band_key}`` ranges plus a per-position ``band_key`` filled from
+those ranges, validated against IMMERSION_POLICIES in scripts/config.py.
+A1 has neither key: its band is ULP-derived.
 """
 
 from __future__ import annotations
@@ -24,12 +31,25 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 
 ARC_DOC_REL = "docs/epics/fresh-build-{level}-arc.md"
 ARC_OUT_REL = "curriculum/l2-uk-en/lesson-plans/{level}/_arc.yaml"
-SUPPORTED_LEVELS = ("a1",)
+MANIFEST_REL = "curriculum/l2-uk-en/curriculum.yaml"
+SUPPORTED_LEVELS = ("a1", "a2", "b1", "b2")
+
+try:
+    from scripts.config import IMMERSION_POLICIES, _immersion_track_key
+except ModuleNotFoundError:  # running as a bare script: repo root not on sys.path yet
+    if str(REPO_ROOT) not in sys.path:
+        sys.path.insert(0, str(REPO_ROOT))
+    from scripts.config import IMMERSION_POLICIES, _immersion_track_key
 
 LITERACY_HEADER = ["Pos", "Slug", "Job", "Inventory (letters / signs)", "Est. lessons"]
 MAIN_HEADER = ["Pos", "Slug", "Phase", "One-sentence job", "Skills duty", "L"]
+BAND_TABLE_HEADER = ["Positions", "Band key", "Advisory Ukrainian share"]
 
 SKILL_CODES = ("W", "Li", "R")
+# Skill-code vocabulary per level, after each document's own §5 legend
+# (B2's legend adds S speaking; A1/A2/B1 know only W writing, Li listening,
+# R real-world reading, so their "all" expands to three codes).
+LEVEL_SKILL_CODES: dict[str, tuple[str, ...]] = {"b2": ("W", "Li", "R", "S")}
 SKILLS_NONE = "—"
 SKILLS_ALL = "all"
 
@@ -43,6 +63,8 @@ POSITION_INT_RE = re.compile(r"^\d+$")
 POSITION_RANGE_RE = re.compile(r"^(\d+)\s*[–-]\s*(\d+)$")
 STATED_TOTAL_RE = re.compile(r"orientation only and total (\d+)")
 STATED_TOTAL_SENTENCE_RE = re.compile(r"[^.]*orientation only and total \d+\.", re.S)
+BAND_SECTION_RE = re.compile(r"^## 7\.\s")
+SECTION_HEADING_RE = re.compile(r"^## ")
 
 
 class ArcGenerationError(Exception):
@@ -57,11 +79,13 @@ def _split_row(line: str) -> list[str]:
     return [cell.strip() for cell in line.strip().strip("|").split("|")]
 
 
-def _find_position_tables(doc_text: str) -> dict[str, list[tuple[str, list[str]]]]:
+def _find_position_tables(doc_text: str, level: str) -> dict[str, list[tuple[str, list[str]]]]:
     """Return {'literacy': rows, 'main': rows} — (raw line, cells) per data row.
 
     A position table is a Markdown table whose first two header cells are
     ``Pos`` / ``Slug``. Exactly two shapes are known; any other shape fails.
+    A literacy table is expected at A1 only: at any other level it fails,
+    because letters are an A1-only inventory.
     """
     lines = doc_text.splitlines()
     found: dict[str, list[tuple[str, list[str]]]] = {}
@@ -85,10 +109,16 @@ def _find_position_tables(doc_text: str) -> dict[str, list[tuple[str, list[str]]
             shape = "main"
         else:
             raise ArcGenerationError(f"unknown position-table header: {header!r}")
+        if shape == "literacy" and level != "a1":
+            raise ArcGenerationError(
+                f"literacy position table found, but level {level!r} has no literacy phase; "
+                "letters are an A1-only inventory"
+            )
         if shape in found:
             raise ArcGenerationError(f"duplicate {shape} position table in the arc document")
         found[shape] = rows
-    missing = {"literacy", "main"} - found.keys()
+    required = {"literacy", "main"} if level == "a1" else {"main"}
+    missing = required - found.keys()
     if missing:
         raise ArcGenerationError(f"position table(s) not found in the arc document: {sorted(missing)}")
     return found
@@ -190,7 +220,7 @@ def _standard_line_refs(raw_row: str) -> list[list[int]]:
     return refs
 
 
-def _parse_skills(cell: str, raw_row: str) -> list[str]:
+def _parse_skills(cell: str, raw_row: str, skill_codes: tuple[str, ...] = SKILL_CODES) -> list[str]:
     text = PAREN_GROUP_RE.sub("", cell)
     tokens = [token.strip() for token in text.split(",")]
     if any(not token for token in tokens):
@@ -198,12 +228,12 @@ def _parse_skills(cell: str, raw_row: str) -> list[str]:
     if tokens == [SKILLS_NONE]:
         return []
     if tokens == [SKILLS_ALL]:
-        return list(SKILL_CODES)
+        return list(skill_codes)
     skills: list[str] = []
     for token in tokens:
-        if token not in SKILL_CODES:
+        if token not in skill_codes:
             _fail(
-                raw_row, f"skills-duty token {token!r} is not one of {SKILL_CODES}, {SKILLS_NONE!r}, or {SKILLS_ALL!r}"
+                raw_row, f"skills-duty token {token!r} is not one of {skill_codes}, {SKILLS_NONE!r}, or {SKILLS_ALL!r}"
             )
         if token in skills:
             _fail(raw_row, f"skills-duty cell {cell!r} repeats skill code {token!r}")
@@ -242,56 +272,67 @@ def _parse_letters(inventory_cell: str, raw_row: str) -> list[str]:
     return letters
 
 
-def parse_positions(doc_text: str) -> list[dict]:
+def parse_positions(doc_text: str, level: str = "a1") -> list[dict]:
     """Parse the arc document into one record per position (roll-up excluded)."""
-    tables = _find_position_tables(doc_text)
-    literacy_rows = tables["literacy"]
+    tables = _find_position_tables(doc_text, level)
+    literacy_rows = tables.get("literacy", [])
     main_rows = tables["main"]
-    if not literacy_rows:
+    skill_codes = LEVEL_SKILL_CODES.get(level, SKILL_CODES)
+    if level == "a1" and not literacy_rows:
         raise ArcGenerationError("literacy position table has no data rows")
     if not main_rows:
         raise ArcGenerationError("main position table has no data rows")
 
-    roll_raw, roll_cells = main_rows[0]
-    roll_match = POSITION_RANGE_RE.match(roll_cells[0])
-    if not roll_match:
-        _fail(roll_raw, f"first row of the main table must be the literacy roll-up range row, got {roll_cells[0]!r}")
-    roll_start, roll_end = int(roll_match.group(1)), int(roll_match.group(2))
-    if roll_start != 1 or roll_end != len(literacy_rows):
-        _fail(
-            roll_raw,
-            f"roll-up range {roll_cells[0]!r} does not span 1..{len(literacy_rows)} (the literacy table rows)",
-        )
-    roll_phase = roll_cells[2]
-    roll_skills_text = roll_cells[4]
-    roll_skills = _parse_skills(roll_skills_text, roll_raw)
-    roll_total = _int_cell(roll_cells[5], roll_raw, "roll-up lesson total")
-    _standard_line_refs(roll_raw)
-
     records: list[dict] = []
-    for raw, cells in literacy_rows:
-        records.append(
-            {
-                "position": _position_int(cells[0], raw),
-                "slug": _slug(cells[1], raw),
-                "est_lessons": _int_cell(cells[4], raw, "Est. lessons"),
-                "job": cells[2],
-                "inventory_text": cells[3],
-                "phase": roll_phase,
-                "skills_text": roll_skills_text,
-                "skills": list(roll_skills),
-                "standard_line_refs": _standard_line_refs(raw),
-                "letters": _parse_letters(cells[3], raw),
-            }
-        )
+    if level == "a1":
+        roll_raw, roll_cells = main_rows[0]
+        roll_match = POSITION_RANGE_RE.match(roll_cells[0])
+        if not roll_match:
+            _fail(roll_raw, f"first row of the main table must be the literacy roll-up range row, got {roll_cells[0]!r}")
+        roll_start, roll_end = int(roll_match.group(1)), int(roll_match.group(2))
+        if roll_start != 1 or roll_end != len(literacy_rows):
+            _fail(
+                roll_raw,
+                f"roll-up range {roll_cells[0]!r} does not span 1..{len(literacy_rows)} (the literacy table rows)",
+            )
+        roll_phase = roll_cells[2]
+        roll_skills_text = roll_cells[4]
+        roll_skills = _parse_skills(roll_skills_text, roll_raw, skill_codes)
+        roll_total = _int_cell(roll_cells[5], roll_raw, "roll-up lesson total")
+        _standard_line_refs(roll_raw)
 
-    literacy_sum = sum(record["est_lessons"] for record in records)
-    if literacy_sum != roll_total:
-        raise ArcGenerationError(
-            f"sum of literacy est_lessons is {literacy_sum}, but the roll-up row says {roll_total}\n  row: {roll_raw.strip()}"
-        )
+        for raw, cells in literacy_rows:
+            records.append(
+                {
+                    "position": _position_int(cells[0], raw),
+                    "slug": _slug(cells[1], raw),
+                    "est_lessons": _int_cell(cells[4], raw, "Est. lessons"),
+                    "job": cells[2],
+                    "inventory_text": cells[3],
+                    "phase": roll_phase,
+                    "skills_text": roll_skills_text,
+                    "skills": list(roll_skills),
+                    "standard_line_refs": _standard_line_refs(raw),
+                    "letters": _parse_letters(cells[3], raw),
+                }
+            )
 
-    for raw, cells in main_rows[1:]:
+        literacy_sum = sum(record["est_lessons"] for record in records)
+        if literacy_sum != roll_total:
+            raise ArcGenerationError(
+                f"sum of literacy est_lessons is {literacy_sum}, but the roll-up row says {roll_total}\n"
+                f"  row: {roll_raw.strip()}"
+            )
+        data_rows = main_rows[1:]
+    else:
+        data_rows = main_rows
+
+    for raw, cells in data_rows:
+        if level != "a1":
+            if POSITION_RANGE_RE.match(cells[0]):
+                _fail(raw, f"position cell {cells[0]!r} is a range; level {level!r} has no literacy roll-up row")
+            if BOLD_LETTER_COUNT_RE.search(raw):
+                _fail(raw, f"bolded letters count found, but level {level!r} has no literacy inventory")
         records.append(
             {
                 "position": _position_int(cells[0], raw),
@@ -301,7 +342,7 @@ def parse_positions(doc_text: str) -> list[dict]:
                 "inventory_text": None,
                 "phase": cells[2],
                 "skills_text": cells[4],
-                "skills": _parse_skills(cells[4], raw),
+                "skills": _parse_skills(cells[4], raw, skill_codes),
                 "standard_line_refs": _standard_line_refs(raw),
             }
         )
@@ -324,29 +365,162 @@ def parse_positions(doc_text: str) -> list[dict]:
     return records
 
 
-def render_arc_yaml(doc_bytes: bytes, doc_rel_path: str) -> str:
+def _band_section_lines(doc_text: str) -> list[str]:
+    """Lines of the document's ``## 7.`` section, up to the next ``## `` heading."""
+    lines = doc_text.splitlines()
+    start: int | None = None
+    for i, line in enumerate(lines):
+        if BAND_SECTION_RE.match(line):
+            start = i + 1
+            break
+    if start is None:
+        raise ArcGenerationError("the arc document has no '## 7.' section with the immersion band mapping")
+    section: list[str] = []
+    for line in lines[start:]:
+        if SECTION_HEADING_RE.match(line):
+            break
+        section.append(line)
+    return section
+
+
+def parse_immersion_bands(doc_text: str) -> list[dict]:
+    """Parse the §7 immersion band table into ``{start, end, band_key}`` records.
+
+    Tables only: if §7 holds no band table (a prose mapping), generation stops
+    and quotes the prose line — the generator never re-derives a mapping.
+    Ranges accept an en dash (U+2013) and an ASCII hyphen; a single position
+    ``n`` is ``start: n, end: n``. The band-key cell is backticked in the
+    documents and stripped exactly like a slug cell.
+    """
+    section = _band_section_lines(doc_text)
+    band_rows: list[tuple[str, list[str]]] | None = None
+    i = 0
+    while i < len(section):
+        line = section[i]
+        if line.strip().startswith("|") and i + 1 < len(section) and TABLE_SEPARATOR_RE.match(section[i + 1]):
+            header = _split_row(line)
+            j = i + 2
+            rows: list[tuple[str, list[str]]] = []
+            while j < len(section) and section[j].strip().startswith("|"):
+                rows.append((section[j], _split_row(section[j])))
+                j += 1
+            if header != BAND_TABLE_HEADER:
+                raise ArcGenerationError(
+                    f"unexpected table in §7 (expected the immersion band table {BAND_TABLE_HEADER!r})\n"
+                    f"  row: {line.strip()}"
+                )
+            if band_rows is not None:
+                raise ArcGenerationError("duplicate immersion band table in §7")
+            band_rows = rows
+            i = j
+        else:
+            i += 1
+    if band_rows is None:
+        prose = next((line for line in section if line.strip()), "")
+        raise ArcGenerationError(
+            "no immersion band table found in §7; the generator parses tables only "
+            "and never re-derives a mapping\n"
+            f"  line: {prose.strip()}"
+        )
+    if not band_rows:
+        raise ArcGenerationError("immersion band table in §7 has no data rows")
+
+    bands: list[dict] = []
+    for raw, cells in band_rows:
+        if len(cells) != len(BAND_TABLE_HEADER):
+            _fail(raw, f"band-table row has {len(cells)} cells, expected {len(BAND_TABLE_HEADER)}")
+        range_cell = cells[0]
+        range_match = POSITION_RANGE_RE.match(range_cell)
+        if range_match:
+            start, end = int(range_match.group(1)), int(range_match.group(2))
+        elif POSITION_INT_RE.match(range_cell):
+            start = end = int(range_cell)
+        else:
+            _fail(raw, f"positions cell {range_cell!r} is not a range (1–3 or 1-3) or a single position")
+        if start > end:
+            _fail(raw, f"positions cell {range_cell!r} is an inverted range ({start} > {end})")
+        bands.append({"start": start, "end": end, "band_key": _slug(cells[1], raw)})
+    return bands
+
+
+def _position_band_map(bands: list[dict], records: list[dict], level: str) -> dict[int, str]:
+    """Validate the band ranges against the positions and the immersion policy.
+
+    Every band key must exist in IMMERSION_POLICIES of the level's immersion
+    policy family, and every position must be covered by exactly one range.
+    Returns the per-position band-key map the generator bakes into positions[].
+    """
+    family = _immersion_track_key(level)
+    known_keys = sorted(band["key"] for band in IMMERSION_POLICIES[family])
+    for band in bands:
+        if band["band_key"] not in known_keys:
+            raise ArcGenerationError(
+                f"band key {band['band_key']!r} is not in IMMERSION_POLICIES[{family!r}] "
+                f"(the immersion policy family for level {level!r}); known keys: {known_keys!r}"
+            )
+    last = records[-1]["position"]
+    covered: dict[int, str] = {}
+    for band in bands:
+        if band["start"] < 1 or band["end"] > last:
+            raise ArcGenerationError(
+                f"band range {band['start']}–{band['end']} ({band['band_key']}) lies outside positions 1–{last}"
+            )
+        for position in range(band["start"], band["end"] + 1):
+            if position in covered:
+                raise ArcGenerationError(
+                    f"position {position} is covered by more than one band range "
+                    f"({covered[position]!r} and {band['band_key']!r}); ranges must not overlap"
+                )
+            covered[position] = band["band_key"]
+    missing = [record["position"] for record in records if record["position"] not in covered]
+    if missing:
+        raise ArcGenerationError(f"position(s) not covered by any band range in §7: {missing!r}")
+    return covered
+
+
+def _manifest_slugs(level: str) -> list[str]:
+    manifest = yaml.safe_load((REPO_ROOT / MANIFEST_REL).read_text(encoding="utf-8"))
+    return list(manifest["levels"][level]["modules"])
+
+
+def render_arc_yaml(doc_bytes: bytes, doc_rel_path: str, level: str = "a1") -> str:
     """Render the full _arc.yaml text for an arc document (bytes + repo-relative path)."""
-    records = parse_positions(doc_bytes.decode("utf-8"))
-    data = {
+    doc_text = doc_bytes.decode("utf-8")
+    records = parse_positions(doc_text, level)
+    data: dict = {
         "arc_schema": 1,
+        "level": level,
         "source": {
             "path": doc_rel_path,
             "sha256": hashlib.sha256(doc_bytes).hexdigest(),
         },
         "est_lessons_total": sum(record["est_lessons"] for record in records),
-        "positions": records,
     }
+    if level != "a1":
+        manifest_slugs = _manifest_slugs(level)
+        document_slugs = [record["slug"] for record in records]
+        if document_slugs != manifest_slugs:
+            raise ArcGenerationError(
+                f"slug order in the arc document does not equal the manifest order in {MANIFEST_REL} "
+                f"for level {level!r}:\n  document: {document_slugs!r}\n  manifest: {manifest_slugs!r}"
+            )
+        bands = parse_immersion_bands(doc_text)
+        band_map = _position_band_map(bands, records, level)
+        data["immersion_bands"] = bands
+        for record in records:
+            record["band_key"] = band_map[record["position"]]
+    data["positions"] = records
     return yaml.safe_dump(data, sort_keys=False, allow_unicode=True, width=10**6)
 
 
-def generate_yaml(doc_path: Path) -> str:
+def generate_yaml(doc_path: Path, level: str = "a1") -> str:
     """Generate the _arc.yaml text from an arc document path."""
     doc_bytes = doc_path.read_bytes()
     try:
         rel_path = doc_path.resolve().relative_to(REPO_ROOT).as_posix()
     except ValueError:
         rel_path = doc_path.as_posix()
-    return render_arc_yaml(doc_bytes, rel_path)
+    return render_arc_yaml(doc_bytes, rel_path, level)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -354,23 +528,33 @@ def build_parser() -> argparse.ArgumentParser:
         description=(
             "Generate curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml from the reviewed arc document "
             "(docs/epics/fresh-build-<level>-arc.md) by parsing its position tables.\n"
+            "Supported levels: a1, a2, b1, b2.\n"
+            "Non-A1 levels additionally carry the immersion band mapping parsed from the document's §7 "
+            "band table (| Positions | Band key | Advisory Ukrainian share |): a top-level immersion_bands "
+            "list of {start, end, band_key} ranges and a per-position band_key filled from those ranges, "
+            "validated against IMMERSION_POLICIES in scripts/config.py. A1 has neither key (its band is "
+            "ULP-derived).\n"
             "Use it after the arc document changes; never edit _arc.yaml by hand — the committed YAML must be "
             "byte-identical to a fresh run of this generator."
         ),
         epilog="""Examples:
-  .venv/bin/python scripts/curriculum/arc/generate_arc.py --level a1 --write
-  .venv/bin/python scripts/curriculum/arc/generate_arc.py --level a1 --check
+  .venv/bin/python scripts/curriculum/arc/generate_arc.py --level a2 --write
+  .venv/bin/python scripts/curriculum/arc/generate_arc.py --level a2 --check
 
 Outputs:
   --write   writes curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml (overwrites)
-  --check   writes nothing; compares a fresh generation against the committed file
+  --check   writes nothing; compares a fresh generation against the committed file,
+            which re-verifies the position tables, the stated lesson total, the
+            slug order against curriculum/l2-uk-en/curriculum.yaml (non-A1), and
+            the §7 band table (coverage of every position exactly once, band keys
+            known to IMMERSION_POLICIES)
 Exit codes:
   0  generation succeeded / committed file is byte-identical
   1  --check found the committed file missing or different
   2  the arc document could not be parsed (the offending row is quoted), or bad CLI usage
 Related:
   Loader: scripts/curriculum/arc/loader.py (validates against schemas/arc.schema.json and source.sha256)
-  Schema: schemas/arc.schema.json; source doc: docs/epics/fresh-build-a1-arc.md; issue #8411
+  Schema: schemas/arc.schema.json; source docs: docs/epics/fresh-build-<level>-arc.md; issues #8411, #8424
 """,
         formatter_class=argparse.RawDescriptionHelpFormatter,
     )
@@ -379,7 +563,7 @@ Related:
         default="a1",
         choices=SUPPORTED_LEVELS,
         help="Level whose arc is generated; selects docs/epics/fresh-build-<level>-arc.md and "
-        "curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml (default: a1; only a1 exists today)",
+        "curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml (default: a1)",
     )
     mode = parser.add_mutually_exclusive_group(required=True)
     mode.add_argument(
@@ -414,7 +598,7 @@ def main(argv: list[str] | None = None) -> int:
     doc_path = args.doc or REPO_ROOT / ARC_DOC_REL.format(level=args.level)
     out_path = args.output or REPO_ROOT / ARC_OUT_REL.format(level=args.level)
     try:
-        generated = generate_yaml(doc_path)
+        generated = generate_yaml(doc_path, args.level)
     except (ArcGenerationError, FileNotFoundError, UnicodeDecodeError) as exc:
         print(f"error: cannot generate the arc from {doc_path}: {exc}", file=sys.stderr)
         return 2

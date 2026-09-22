@@ -45,6 +45,7 @@ class ArcPosition:
     skills: list[str]
     standard_line_refs: list[tuple[int, int]]
     letters: list[str] | None = None
+    band_key: str | None = None
 
 
 def load_arc(level: str, *, arc_path: Path | None = None, doc_path: Path | None = None) -> list[ArcPosition]:
@@ -102,6 +103,7 @@ def load_arc(level: str, *, arc_path: Path | None = None, doc_path: Path | None 
             skills=list(record["skills"]),
             standard_line_refs=[(start, end) for start, end in record["standard_line_refs"]],
             letters=list(record["letters"]) if "letters" in record else None,
+            band_key=record.get("band_key"),
         )
         for record in data["positions"]
     ]
