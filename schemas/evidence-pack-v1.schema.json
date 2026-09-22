@@ -1,0 +1,684 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-pack-v1.schema.json",
+  "type": "object",
+  "Description": "Schema for module evidence pack",
+  "properties": {
+    "evidence_schema": {
+      "const": 1
+    },
+    "module": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+    },
+    "built_with": {
+      "$ref": "#/$defs/built_with"
+    },
+    "texts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text_record"
+      }
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exercise_record"
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/example_record"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/error_record"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/note_record"
+      }
+    },
+    "videos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/video_record"
+      }
+    },
+    "standard": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/standard_record"
+      }
+    },
+    "unsupported": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unsupported_record"
+      }
+    }
+  },
+  "required": [
+    "evidence_schema",
+    "module",
+    "built_with"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "built_with": {
+      "type": "object",
+      "properties": {
+        "mcp_commit": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{40}$"
+        },
+        "sources_db": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "vesum": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "trie": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "ulif_forms": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "const": "pending"
+            }
+          ]
+        },
+        "standard_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "overrides_sha256": {
+          "oneOf": [
+            {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "russian_patterns": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "built_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "mcp_commit",
+        "sources_db",
+        "vesum",
+        "trie",
+        "ulif_forms",
+        "standard_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "textbook_source": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "textbook"
+        },
+        "file": {
+          "type": "string"
+        },
+        "grade": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "author": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "section_id": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "page": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "chunk_id": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "file",
+        "grade",
+        "author",
+        "section_id",
+        "page",
+        "chunk_id"
+      ],
+      "additionalProperties": false
+    },
+    "literary_source": {
+      "type": "object",
+      "properties": {
+        "kind": {
+          "const": "literary"
+        },
+        "file": {
+          "type": "string"
+        },
+        "author": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "work": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "year": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "page": {
+          "oneOf": [
+            {
+              "type": "integer"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "chunk_id": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "integer"
+            }
+          ]
+        }
+      },
+      "required": [
+        "kind",
+        "file",
+        "author",
+        "work",
+        "year",
+        "page",
+        "chunk_id"
+      ],
+      "additionalProperties": false
+    },
+    "text_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^T-[0-9]+$"
+        },
+        "source": {
+          "$ref": "#/$defs/textbook_source"
+        },
+        "quote": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "supports": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "quote",
+        "sha256",
+        "supports"
+      ],
+      "additionalProperties": false
+    },
+    "exercise_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^X-[0-9]+$"
+        },
+        "source": {
+          "$ref": "#/$defs/textbook_source"
+        },
+        "quote": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "pattern": {
+          "type": "string"
+        },
+        "items_sample": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "quote",
+        "sha256",
+        "pattern",
+        "items_sample"
+      ],
+      "additionalProperties": false
+    },
+    "example_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^EX-[0-9]+$"
+        },
+        "source": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/textbook_source"
+            },
+            {
+              "$ref": "#/$defs/literary_source"
+            }
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "sentence_ref": {
+          "type": "object",
+          "properties": {
+            "words": {
+              "type": "array",
+              "items": {
+                "type": "string",
+                "pattern": "^W-[0-9]+$"
+              }
+            }
+          },
+          "required": [
+            "words"
+          ],
+          "additionalProperties": false
+        },
+        "translation_en": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "text",
+        "sha256",
+        "sentence_ref"
+      ],
+      "additionalProperties": false
+    },
+    "error_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^E-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "ua_gec_errors"
+            },
+            "id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "table",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "incorrect": {
+          "type": "string"
+        },
+        "correct": {
+          "type": "string"
+        },
+        "error_type": {
+          "type": "string"
+        },
+        "pattern": {
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "incorrect",
+        "correct",
+        "error_type",
+        "pattern"
+      ],
+      "additionalProperties": false
+    },
+    "note_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^N-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "style_guide"
+            },
+            "id": {
+              "type": "integer"
+            }
+          },
+          "required": [
+            "table",
+            "id"
+          ],
+          "additionalProperties": false
+        },
+        "word": {
+          "type": "string"
+        },
+        "section": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "text": {
+          "type": "string"
+        },
+        "excerpt_full": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "russianism_pattern": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "word",
+        "section",
+        "text",
+        "excerpt_full",
+        "russianism_pattern"
+      ],
+      "additionalProperties": false
+    },
+    "video_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^V-[0-9]+$"
+        },
+        "url": {
+          "type": "string"
+        },
+        "channel": {
+          "type": "string"
+        },
+        "use": {
+          "type": "string"
+        },
+        "checked": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "http_status": {
+                  "type": "integer"
+                },
+                "final_url": {
+                  "type": "string"
+                },
+                "content_type": {
+                  "oneOf": [
+                    {
+                      "type": "string"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ]
+                },
+                "date": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "http_status",
+                "final_url",
+                "content_type",
+                "date"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "channel",
+        "use",
+        "checked"
+      ],
+      "additionalProperties": false
+    },
+    "standard_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^S-[0-9]+$"
+        },
+        "lines": {
+          "type": "string",
+          "pattern": "^[0-9]+-[0-9]+$"
+        },
+        "text": {
+          "type": "string"
+        },
+        "file_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "id",
+        "lines",
+        "text",
+        "file_sha256"
+      ],
+      "additionalProperties": false
+    },
+    "unsupported_record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^U-[0-9]+$"
+        },
+        "claim": {
+          "type": "string"
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tool": {
+                "type": "string"
+              },
+              "query": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "tool",
+              "query"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "status": {
+          "enum": [
+            "open",
+            "resolved"
+          ]
+        },
+        "resolved_by": {
+          "oneOf": [
+            {
+              "type": "string"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "record"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "claim",
+        "searches",
+        "status"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

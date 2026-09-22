@@ -275,7 +275,7 @@ passes silently and never invents a value.
 ```yaml
 evidence_schema: 1
 module: a1/<slug>
-built_with: { mcp_commit: <sha>, sources_db: <sha256>, vesum: <sha256>, ulif_forms: <sha256|pending> }
+built_with: { mcp_commit: <sha>, sources_db: <sha256>, vesum: <sha256|null>, ulif_forms: <sha256|pending> }
 
 texts:        # T-…  verbatim quotes
   - id: T-003
@@ -327,7 +327,9 @@ words:        # W-…  one record per lemma **sense** (homonym-safe); ids are le
 Rules:
 
 - Built by a tool run (MCP batch calls), never typed from memory. The builder records the exact
-  source hashes in `built_with`.
+  source hashes in `built_with`. No pack section reads VESUM, so a pack built where the VESUM file is
+  absent records `vesum: null` (and no `russian_patterns`, which folds in the VESUM hash) rather than
+  a hash of a file it never opened.
 - Frozen by `.lock` — two separate locks (§2 rule 3). An edit to a **module pack** changes its hash
   and invalidates the plan's `evidence_ref` until the plan is re-reviewed. An edit to the **level word
   store** changes `_words.yaml.lock`; it lists the plans that cite the changed records (§7.2) and
