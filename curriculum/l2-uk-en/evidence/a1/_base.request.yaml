@@ -9,7 +9,7 @@ words:
   - lemma: ти
     pos: noun
     want: new
-    note: "closed class: personal pronoun (2nd pers sing); taught at position 43 (please-do-this)"
+    note: "closed class: personal pronoun (2nd pers sing); base-layer item (position 43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)"
   - lemma: він
     pos: noun
     want: new
@@ -29,7 +29,7 @@ words:
   - lemma: ви
     pos: noun
     want: new
-    note: "closed class: personal pronoun (2nd pers plur/polite); taught at position 43 (please-do-this)"
+    note: "closed class: personal pronoun (2nd pers plur/polite); base-layer item (position 43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)"
   - lemma: вони
     pos: noun
     want: new
@@ -76,6 +76,7 @@ words:
     note: "closed class: demonstrative pronoun (distal); taught at position 12 (this-and-that)"
 
   # Prepositions and euphonic partners
+  # Note: безо, обо, подо, черезо are not attested as lemmas in VESUM and are omitted.
   - lemma: у
     pos: prep
     want: new
@@ -84,6 +85,14 @@ words:
     pos: prep
     want: new
     note: "closed class: preposition, euphonic partner of у; taught at position 28 (euphony) and position 29 (where-is-it)"
+  - lemma: уві
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of у"
+  - lemma: ві
+    pos: prep
+    want: new
+    note: "closed class: preposition, archaic euphonic partner of у"
   - lemma: з
     pos: prep
     want: new
@@ -175,7 +184,7 @@ words:
   - lemma: межи
     pos: prep
     want: new
-    note: "closed class: preposition, euphonic partner of між"
+    note: "closed class: preposition; older, stylistically marked variant of між, not a sound-driven alternation like з/із/зі"
   - lemma: біля
     pos: prep
     want: new
@@ -238,6 +247,10 @@ words:
     pos: conj
     want: new
     note: "closed class: subordinating conjunction (purpose); basic clause connector"
+  - lemma: щоби
+    pos: conj
+    want: new
+    note: "closed class: subordinating conjunction (purpose), partner of щоб; basic clause connector"
   - lemma: поки
     pos: conj
     want: new
@@ -284,6 +297,10 @@ words:
     pos: part
     want: new
     note: "closed class: restrictive particle"
+  - lemma: лиш
+    pos: part
+    want: new
+    note: "closed class: restrictive particle, partner of лише"
   - lemma: тільки
     pos: part
     want: new

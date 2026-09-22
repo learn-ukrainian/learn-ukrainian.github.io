@@ -7,6 +7,7 @@ on a synthetic store without writing any words file into git.
 from __future__ import annotations
 
 import hashlib
+import re
 import sqlite3
 from pathlib import Path
 
@@ -79,23 +80,48 @@ def test_a1_base_request_schema_and_rules() -> None:
         assert lemma not in lemmas_seen, f"duplicate lemma {lemma!r} in base layer request"
         lemmas_seen.add(lemma)
 
-    # Euphonic pairs required by the brief
+    # Euphonic and partner pairs declared in the base request file
     required_euphonic_pairs = [
         ("у", "в"),
+        ("у", "уві"),
+        ("у", "ві"),
         ("з", "із"),
         ("з", "зі"),
         ("з", "зо"),
-        ("і", "й"),
-        ("вже", "уже"),
-        ("ще", "іще"),
+        ("від", "од"),
         ("під", "піді"),
         ("під", "підо"),
         ("над", "наді"),
         ("над", "надо"),
         ("перед", "переді"),
         ("перед", "передо"),
-        ("від", "од"),
+        ("між", "межи"),
+        ("о", "об"),
+        ("і", "й"),
+        ("і", "та"),
+        ("щоб", "щоби"),
+        ("же", "ж"),
+        ("ще", "іще"),
+        ("вже", "уже"),
+        ("лише", "лиш"),
     ]
+
+    declared_partner_pairs = set()
+    for item in req_words:
+        note = item.get("note", "")
+        m = re.search(r"(?:partner|variant).*?\bof\s+([^\s;,]+)", note)
+        if m:
+            base_word = m.group(1)
+            declared_partner_pairs.add((base_word, item["lemma"]))
+
+    # Verify that required_euphonic_pairs exactly matches all declared partner pairs in the request file
+    assert len(required_euphonic_pairs) == len(set(required_euphonic_pairs)), "duplicate pair in required_euphonic_pairs"
+    assert set(required_euphonic_pairs) == declared_partner_pairs, (
+        f"required_euphonic_pairs does not match declared partner pairs: "
+        f"missing={declared_partner_pairs - set(required_euphonic_pairs)}, "
+        f"extra={set(required_euphonic_pairs) - declared_partner_pairs}"
+    )
+
     for w1, w2 in required_euphonic_pairs:
         assert w1 in lemmas_seen, f"missing euphonic partner {w1!r}"
         assert w2 in lemmas_seen, f"missing euphonic partner {w2!r}"
