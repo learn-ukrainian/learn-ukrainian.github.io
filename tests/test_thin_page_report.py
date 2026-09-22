@@ -19,8 +19,10 @@ from scripts.lexicon.thin_page_report import (
     build_parser,
     build_report,
     classify_tier,
+    frazeolohichnyi_idiom_keys,
     main,
     normalize_key,
+    slovnyk_capabilities,
 )
 
 STRESSED_APPLE = "я\u0301блуко"  # combining acute on 'я'
@@ -285,3 +287,120 @@ def test_module_help_via_python_dash_m() -> None:
         timeout=30,
     )
     assert "thin" in result.stdout
+
+
+def test_frazeolohichnyi_definition_mention_without_phrase_match_does_not_count(
+    fixture_paths: dict[str, Path], tmp_path: Path
+) -> None:
+    db = tmp_path / "sources_mention_only.db"
+    conn = sqlite3.connect(db)
+    conn.executescript(
+        """
+        CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, definition TEXT);
+        CREATE VIRTUAL TABLE frazeolohichnyi_fts USING fts5(
+            word, definition, content='frazeolohichnyi', content_rowid='id', tokenize='trigram'
+        );
+        """
+    )
+    # Definition mentions "яблуко", but the extracted phrase is "водити за ніс"
+    conn.execute(
+        "INSERT INTO frazeolohichnyi (id, word, definition) VALUES "
+        "(1, 'водити за ніс', 'водити за ніс. Обдурювати когось; згадка про яблуко.')"
+    )
+    conn.execute(
+        "INSERT INTO frazeolohichnyi_fts (rowid, word, definition) "
+        "SELECT id, word, definition FROM frazeolohichnyi"
+    )
+    conn.commit()
+    conn.close()
+
+    assert frazeolohichnyi_idiom_keys(db, ["яблуко"]) == set()
+
+    report = build_report(
+        atlas_db=fixture_paths["atlas"],
+        sources_db=db,
+        ulif_db=fixture_paths["ulif"],
+        slovnyk_cache=fixture_paths["cache"],
+    )
+    assert "sources.db:frazeolohichnyi" not in report["fillable"].get("idioms", {})
+
+
+def test_frazeolohichnyi_six_fts_hits_with_sixth_phrase_match_counts(
+    fixture_paths: dict[str, Path], tmp_path: Path
+) -> None:
+    db = tmp_path / "sources_six_hits.db"
+    conn = sqlite3.connect(db)
+    conn.executescript(
+        """
+        CREATE TABLE frazeolohichnyi (id INTEGER PRIMARY KEY, word TEXT, definition TEXT);
+        CREATE VIRTUAL TABLE frazeolohichnyi_fts USING fts5(
+            word, definition, content='frazeolohichnyi', content_rowid='id', tokenize='trigram'
+        );
+        """
+    )
+    # 5 rows mention "яблуко" in definition text only (phrase does not contain it)
+    for i in range(1, 6):
+        conn.execute(
+            "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (?, ?, ?)",
+            (i, f"фраза {i}", f"фраза {i}. Тлумачення із яблуко {i}."),
+        )
+    # 6th row: extracted phrase actually contains "яблуко"
+    conn.execute(
+        "INSERT INTO frazeolohichnyi (id, word, definition) VALUES (6, ?, ?)",
+        ("яблуко розбрату", "яблуко розбрату. Причина незгоди."),
+    )
+    conn.execute(
+        "INSERT INTO frazeolohichnyi_fts (rowid, word, definition) "
+        "SELECT id, word, definition FROM frazeolohichnyi"
+    )
+    conn.commit()
+    conn.close()
+
+    assert frazeolohichnyi_idiom_keys(db, ["яблуко"]) == {"яблуко"}
+
+    report = build_report(
+        atlas_db=fixture_paths["atlas"],
+        sources_db=db,
+        ulif_db=fixture_paths["ulif"],
+        slovnyk_cache=fixture_paths["cache"],
+    )
+    assert report["fillable"]["idioms"]["sources.db:frazeolohichnyi"] == 1
+
+
+def test_slovnyk_cache_schema_version_2_contributes_no_meaning_or_definition(
+    fixture_paths: dict[str, Path], tmp_path: Path
+) -> None:
+    cache_dir = tmp_path / "v2_slovnyk_cache"
+    cache_dir.mkdir()
+    row = {"dictionary_slug": "newsum", "text": "старе означення"}
+    (cache_dir / "тест.json").write_text(
+        json.dumps(
+            {
+                "schema_version": 2,
+                "lemma": "тест",
+                "lookup_word": "тест",
+                "lookups": {
+                    "newsum": row,
+                    "vts": row,
+                    "ukreng": row,
+                },
+            },
+            ensure_ascii=False,
+        ),
+        encoding="utf-8",
+    )
+
+    caps = slovnyk_capabilities(cache_dir)
+    assert caps == {}
+    assert "meaning" not in caps.get("тест", set())
+    assert "definition_cards" not in caps.get("тест", set())
+
+    report = build_report(
+        atlas_db=fixture_paths["atlas"],
+        sources_db=fixture_paths["sources"],
+        ulif_db=fixture_paths["ulif"],
+        slovnyk_cache=cache_dir,
+    )
+    fillable = report["fillable"]
+    assert "slovnyk_cache" not in fillable.get("meaning", {})
+    assert "slovnyk_cache" not in fillable.get("definition_cards", {})

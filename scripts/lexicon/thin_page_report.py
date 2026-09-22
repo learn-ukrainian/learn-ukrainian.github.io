@@ -43,7 +43,6 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import json
-import re
 import sqlite3
 import sys
 import unicodedata
@@ -58,6 +57,11 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.atlas.atlas_db import ENRICHMENT_SECTIONS, unstressed
+from scripts.lexicon.enrich_manifest import (
+    _leading_phraseology_phrase,
+    _load_current_slovnyk_cache_file,
+    _phrase_contains_lemma,
+)
 
 DEFAULT_ATLAS_DB = PROJECT_ROOT / "data" / "atlas.db"
 DEFAULT_SOURCES_DB = PROJECT_ROOT / "data" / "sources.db"
@@ -230,11 +234,8 @@ def slovnyk_capabilities(cache_dir: Path) -> dict[str, set[str]]:
     """Map normalized lemma -> sections the slovnyk.me cache has material for."""
     capabilities: dict[str, set[str]] = {}
     for path in cache_dir.glob("*.json"):
-        try:
-            payload = json.loads(path.read_text(encoding="utf-8"))
-        except (OSError, json.JSONDecodeError):
-            continue
-        if not isinstance(payload, dict):
+        payload = _load_current_slovnyk_cache_file(path)
+        if not payload or not isinstance(payload, dict):
             continue
         lookups = payload.get("lookups")
         if not isinstance(lookups, dict):
@@ -306,16 +307,12 @@ def sources_db_capabilities(sources_db: Path) -> dict[str, dict[str, set[str]]]:
     return result
 
 
-def _word_boundary_pattern(key: str) -> re.Pattern[str]:
-    return re.compile(rf"(?<![\w'-]){re.escape(key)}(?![\w'-])")
-
-
 def frazeolohichnyi_idiom_keys(sources_db: Path, candidate_keys: Iterable[str]) -> set[str]:
     """Return candidate lemma keys attested in the phraseological dictionary.
 
     The ``frazeolohichnyi`` table is keyed by idiom phrase, not by lemma, so
-    membership is probed through its trigram FTS index and confirmed with a
-    word-boundary match on the normalized row text.
+    membership is probed through its trigram FTS index and confirmed by
+    extracting the idiom phrase and checking lemma containment.
     """
     found: set[str] = set()
     with _connect_ro(sources_db) as conn:
@@ -332,15 +329,14 @@ def frazeolohichnyi_idiom_keys(sources_db: Path, candidate_keys: Iterable[str]) 
                 rows = conn.execute(
                     "SELECT word, definition FROM frazeolohichnyi WHERE id IN ("
                     "  SELECT rowid FROM frazeolohichnyi_fts WHERE frazeolohichnyi_fts MATCH ?"
-                    ") LIMIT 5",
+                    ") ORDER BY id LIMIT 80",
                     (quoted,),
                 ).fetchall()
             except sqlite3.OperationalError:
                 return found
-            pattern = _word_boundary_pattern(key)
             for word, definition in rows:
-                text = normalize_key(f"{word or ''} {definition or ''}")
-                if pattern.search(text):
+                phrase = _leading_phraseology_phrase(definition or "", word or "")
+                if phrase and _phrase_contains_lemma(phrase, key):
                     found.add(key)
                     break
     return found
