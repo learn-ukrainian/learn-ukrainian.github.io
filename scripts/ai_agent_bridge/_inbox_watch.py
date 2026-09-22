@@ -37,6 +37,7 @@ if TYPE_CHECKING:
     from scripts.session_supervisor.remote import RemoteEpicClient
 
 DEFAULT_POLL_INTERVAL_SECONDS = 15.0
+_MONITOR_BACKOFF_MAX_SECONDS = 300.0
 MAX_PREVIEW_CHARS = 240
 DEFAULT_LOCK_DIR = PRIMARY_REPO_ROOT / ".agent"
 SUPERVISORY_RESTART_EXIT = 75
@@ -168,11 +169,13 @@ def consume_supervisory_event(
     require_supervisory_api(service)
     if supervisor.remote is None:
         raise ValueError("supervisory consumption requires remote Monitor authority")
-    supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
+    # The queue is local. Do not call Monitor until a wake is actually waiting.
     worker_id = f"supervisor:{lease.session_id}"
     delivery = pending_supervisory_delivery(service, lease.stream_id)
     if delivery is None:
         return None
+    # Fence the live lease before claiming. Idle polls never reach this call.
+    supervisor.build_capsule(role="driver", stream_id=lease.stream_id, lease=lease)
     now_value = now or datetime.now(UTC).isoformat()
     if delivery.state == "running":
         expires = datetime.fromisoformat(delivery.lease_expires_at.replace("Z", "+00:00"))
@@ -270,16 +273,30 @@ def run_live_supervisory_watcher(*, interval_seconds: float = DEFAULT_POLL_INTER
     supervisor = SessionSupervisor(None, repo_root=Path.cwd(), remote=RemoteEpicClient())
     with AuthorityService() as service:
         require_supervisory_api(service)
+        delay = interval_seconds
+        outage = False
         while True:
             try:
                 request = consume_supervisory_event(service, supervisor, lease)
             except RemoteUnavailableError:
-                # Do not expose remote diagnostics or signal an unprepared wake.
-                print("inbox watcher: waiting for Monitor API to recover", file=sys.stderr, flush=True)
-            else:
-                if request is not None:
-                    print(request.delivery_id, flush=True)
-                    return SUPERVISORY_RESTART_EXIT
+                # One line per outage. Diagnostics stay off this stream.
+                if not outage:
+                    print(
+                        "inbox watcher: Monitor API unreachable; retrying with backoff",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                    outage = True
+                time.sleep(delay)
+                delay = min(delay * 2, _MONITOR_BACKOFF_MAX_SECONDS)
+                continue
+            if outage:
+                print("inbox watcher: Monitor API recovered", file=sys.stderr, flush=True)
+                outage = False
+            delay = interval_seconds
+            if request is not None:
+                print(request.delivery_id, flush=True)
+                return SUPERVISORY_RESTART_EXIT
             time.sleep(interval_seconds)
 
 

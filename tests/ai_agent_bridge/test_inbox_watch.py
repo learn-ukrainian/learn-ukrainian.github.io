@@ -233,17 +233,20 @@ def test_live_supervisory_retries_outages_until_prepared(capsys):
         patch("scripts.fleet_comms.authority.AuthorityService"),
         patch("scripts.session_supervisor.SessionSupervisor"),
         patch.object(_inbox_watch, "consume_supervisory_event", side_effect=[
-            RemoteUnreachableError("hostile $(secret)"), None,
-            RemoteUnavailableError("hostile $(secret)"), request,
+            RemoteUnreachableError("hostile $(secret)"),
+            RemoteUnavailableError("hostile $(secret)"),
+            None,
+            request,
         ]) as consume,
         patch.object(_inbox_watch.time, "sleep") as sleep,
     ):
         assert _inbox_watch.run_live_supervisory_watcher(interval_seconds=0.25) == 75
     assert consume.call_count == 4
-    assert sleep.call_args_list == [((0.25,),)] * 3
+    assert [call.args[0] for call in sleep.call_args_list] == [0.25, 0.5, 0.25]
     captured = capsys.readouterr()
     assert captured.out == "delivery-test\n"
-    assert captured.err.count("waiting for Monitor API to recover") == 2
+    assert captured.err.count("Monitor API unreachable") == 1
+    assert "Monitor API recovered" in captured.err
     assert "secret" not in captured.err
 
 
