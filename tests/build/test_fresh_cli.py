@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import argparse
 import subprocess
 import sys
 from pathlib import Path
@@ -25,7 +26,7 @@ def test_cli_parser_help_standard_compliance():
         assert section in parser.epilog, f"main parser epilog missing {section}"
 
     # 2. Subparsers
-    subparsers_action = next(a for a in parser._actions if isinstance(a, type(parser.add_subparsers())))
+    subparsers_action = next(a for a in parser._actions if isinstance(a, argparse._SubParsersAction))
     assert "render-prompt" in subparsers_action.choices
     assert "preflight" in subparsers_action.choices
     assert "write" in subparsers_action.choices
