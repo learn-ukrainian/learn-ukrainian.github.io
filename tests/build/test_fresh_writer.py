@@ -71,17 +71,21 @@ def test_parse_and_validate_reply_success(a1_valid_fixture):
 def test_combining_accent_in_english_narration_fails(a1_valid_fixture):
     """A combining accent inside English narration fails the schema gate (§3, Finding 12)."""
     draft, types = a1_valid_fixture
+    assert validate_draft(draft, level="a1", activity_types=types) == []
+
     mutated = copy.deepcopy(draft)
 
     # Inject combining acute (U+0301) into English narration text
-    mutated["steps"][0]["blocks"][0]["text"] = "English text with an accent: cafe\u0301."
+    accented_text = "English text with an accent: cafe\u0301."
+    mutated["steps"][0]["blocks"][0]["text"] = accented_text
 
     errors = validate_draft(mutated, level="a1", activity_types=types)
-    assert len(errors) > 0
-    # Must specifically trigger no_combining_accent, not generic schema error (Finding 12)
-    accent_errors = [e for e in errors if e.check == "no_combining_accent"]
-    assert len(accent_errors) > 0
-    assert "combining accent" in accent_errors[0].message
+    assert len(errors) == 1
+    err = errors[0]
+    # The E1 draft schema rejects U+0300/U+0301 via regex pattern at the schema layer (Finding 12)
+    assert err.check == "schema"
+    assert err.path == "/steps/0/blocks/0"
+    assert accented_text in err.reason
 
 
 def test_bilingual_arrays_unequal_length_fails(a1_valid_fixture):
