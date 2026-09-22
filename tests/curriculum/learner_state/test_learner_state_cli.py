@@ -19,6 +19,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes
 
 pytestmark = pytest.mark.reads_content
@@ -384,3 +385,180 @@ def test_cli_band_a1_strict_refuses_waiver(tmp_path: Path) -> None:
     )
     assert res.returncode == 1
     assert "prior_plans_missing" in res.stderr
+
+
+def test_cli_observed_and_gate_pass(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    state_dir = evidence_dir / "_state" / "mod-01"
+    state_dir.mkdir(parents=True, exist_ok=True)
+
+    res_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "inputs": {
+            "expanded_sha256": "0" * 64,
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "urok", "activity": None, "item": None, "block": "s1"},
+                "offset": 0,
+                "token": "tok1",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-CORE-01"],
+                "selected": {"record": "W-CORE-01", "forms": ["noun:inanim:m:v_naz"], "stressed": "tok1"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    res_path = state_dir / "lesson-1.resolutions.yaml"
+    res_bytes = yaml.safe_dump(res_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    res_path.write_bytes(res_bytes)
+    lock.write(res_path, res_bytes)
+
+    # 1. observed command
+    res_obs = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "observed",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_obs.returncode == 0
+    obs_payload = json.loads(res_obs.stdout)
+    assert obs_payload["observed_schema"] == 1
+    assert obs_payload["lesson"]["slug"] == "mod-01"
+    assert len(obs_payload["records"]) == 1
+    assert obs_payload["records"][0]["id"] == "W-CORE-01"
+
+    # 2. gate command
+    res_gate = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "gate",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_gate.returncode == 0
+    gate_payload = json.loads(res_gate.stdout)
+    assert gate_payload["ok"] is True
+    assert gate_payload["failures"] == []
+
+
+def test_cli_gate_failing_output(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    state_dir = evidence_dir / "_state" / "mod-01"
+    state_dir.mkdir(parents=True, exist_ok=True)
+
+    # Token outside allowlist
+    res_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "inputs": {
+            "expanded_sha256": "0" * 64,
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "vpravy", "activity": "a1", "item": 0, "block": 0},
+                "offset": 0,
+                "token": "bad-tok",
+                "sentence": "sample sentence with bad-tok",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-OUTSIDE-99"],
+                "selected": {"record": "W-OUTSIDE-99", "forms": ["noun:inanim:m:v_naz"], "stressed": "bad-tok"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    res_path = state_dir / "lesson-1.resolutions.yaml"
+    res_bytes = yaml.safe_dump(res_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    res_path.write_bytes(res_bytes)
+    lock.write(res_path, res_bytes)
+
+    # Text mode: exits 1 and writes failure to stderr
+    res_gate_txt = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "gate",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_gate_txt.returncode == 1
+    assert "lemma_outside_state" in res_gate_txt.stderr
+    assert "bad-tok" in res_gate_txt.stderr
+    assert "vpravy" in res_gate_txt.stderr
+
+    # JSON mode: exits 1 and emits ok: false
+    res_gate_json = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "gate",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_gate_json.returncode == 1
+    payload = json.loads(res_gate_json.stdout)
+    assert payload["ok"] is False
+    assert len(payload["failures"]) >= 1
+    codes_found = {f["code"] for f in payload["failures"]}
+    assert "lemma_outside_state" in codes_found

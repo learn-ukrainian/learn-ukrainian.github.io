@@ -36,6 +36,14 @@ TAUGHT_FORM_ABSENT = "taught_form_absent"
 TOKEN_UNRESOLVED = "token_unresolved"
 PENDING_STRESS = "pending_stress"
 
+# --- Failures: observed index and resolutions receipts -----------------------
+RESOLUTIONS_NOT_FOUND = "resolutions_not_found"
+RESOLUTIONS_INVALID = "resolutions_invalid"
+OBSERVED_SCHEMA_INVALID = "observed_schema_invalid"
+OBSERVED_YAML_INVALID = "observed_yaml_invalid"
+LOCK_MISMATCH = "lock_mismatch"
+UNKNOWN_TAB = "unknown_tab"
+
 # --- Reports -----------------------------------------------------------------
 UNTAUGHT_FORMS = "untaught_forms"
 
@@ -61,6 +69,12 @@ DESCRIPTIONS: dict[str, str] = {
     TAUGHT_FORM_ABSENT: "failure: taught form declared in plan does not appear in a teaching position",
     TOKEN_UNRESOLVED: "failure: token is outside allowlist or unclassifiable in resolution stream",
     PENDING_STRESS: "failure: resolved form has pending stress in word store",
+    RESOLUTIONS_NOT_FOUND: "failure: lesson resolutions receipts file does not exist",
+    RESOLUTIONS_INVALID: "failure: lesson resolutions receipts file is invalid or tampered",
+    OBSERVED_SCHEMA_INVALID: "failure: observed index document breaks learner-observed-v1 schema",
+    OBSERVED_YAML_INVALID: "failure: observed index YAML is invalid",
+    LOCK_MISMATCH: "failure: file bytes disagree with lock sidecar",
+    UNKNOWN_TAB: "failure: token occurrence has unknown tab outside urok|slovnyk|vpravy|resursy",
     UNTAUGHT_FORMS: "report: forms whose grammatical category is not yet taught at this position",
     LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED: (
         "not_checked: lesson-level structural minimums are uncalibrated (module minimums apply)"
@@ -86,6 +100,12 @@ FAILURE_CODES = frozenset(
         TAUGHT_FORM_ABSENT,
         TOKEN_UNRESOLVED,
         PENDING_STRESS,
+        RESOLUTIONS_NOT_FOUND,
+        RESOLUTIONS_INVALID,
+        OBSERVED_SCHEMA_INVALID,
+        OBSERVED_YAML_INVALID,
+        LOCK_MISMATCH,
+        UNKNOWN_TAB,
     }
 )
 
