@@ -29,6 +29,8 @@ from scripts.curriculum.validate import codes
 from scripts.curriculum.validate.validate import Report, validate_plan
 from scripts.curriculum.validate.validate import main as validate_main
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LEVEL = "a1"
 SLUG = "mod-one"
