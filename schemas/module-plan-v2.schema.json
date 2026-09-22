@@ -1,0 +1,547 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://learn-ukrainian.github.io/schemas/module-plan-v2.schema.json",
+  "title": "Module Plan v2",
+  "description": "Lesson-based module plan (curriculum/l2-uk-en/lesson-plans/{level}/{slug}.yaml), per docs/epics/fresh-build-plan-schema.md §2 (revision 9). Conditional requirements (dialogue.step, speaker evidence, error_refs, incidental forms ban) are enforced by scripts/curriculum/validate/ with named rule codes, not by this schema, so a violation names the rule, the lesson, the step and the value.",
+  "type": "object",
+  "required": [
+    "plan_schema",
+    "module",
+    "level",
+    "sequence",
+    "slug",
+    "version",
+    "title",
+    "arc_ref",
+    "evidence_ref",
+    "lessons"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "plan_schema": {
+      "const": 2,
+      "description": "Module plan schema version; a file without plan_schema: 2 is a v1 plan and is rejected"
+    },
+    "module": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Module slug"
+    },
+    "level": {
+      "type": "string",
+      "enum": ["a1", "a2", "b1", "b2", "c1", "c2"],
+      "description": "Level this plan belongs to; equals the lesson-plans/<level>/ directory it lives in"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 1,
+      "description": "Position of the module within the level, kept from v1"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$",
+      "description": "Module slug; the plan file is <slug>.yaml"
+    },
+    "version": {
+      "type": ["string", "integer"],
+      "description": "Plan version, kept from v1"
+    },
+    "title": {
+      "type": "string",
+      "description": "Module title; Ukrainian allowed (rule 7)"
+    },
+    "subtitle": {
+      "type": "string",
+      "description": "Module subtitle; Ukrainian allowed (rule 7)"
+    },
+    "focus": {
+      "type": "string",
+      "description": "Module focus sentence; Ukrainian allowed (rule 7)"
+    },
+    "objectives": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Module objectives; Ukrainian allowed (rule 7)"
+    },
+    "connects_to": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "description": "ASCII slugs of modules this one connects to (rule 7)"
+    },
+    "prerequisites": {
+      "type": "array",
+      "items": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+      "description": "ASCII slugs of prerequisite modules (rule 7)"
+    },
+    "register": {
+      "type": "string",
+      "description": "Module register label, kept from v1"
+    },
+    "changelog": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "Plan changelog entries, kept from v1"
+    },
+    "arc_ref": {
+      "type": "object",
+      "required": ["level", "position"],
+      "additionalProperties": false,
+      "properties": {
+        "level": {
+          "type": "string",
+          "enum": ["a1", "a2", "b1", "b2", "c1", "c2"]
+        },
+        "position": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Arc position this module fills; checked against _arc.yaml by Brief B"
+        }
+      }
+    },
+    "evidence_ref": {
+      "type": "object",
+      "required": ["path", "sha256"],
+      "additionalProperties": false,
+      "properties": {
+        "path": {
+          "type": "string",
+          "description": "Repo-relative path of the module evidence pack"
+        },
+        "sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$",
+          "description": "SHA-256 of the pack file bytes; must equal the pack's .lock (rule 3)"
+        }
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "description": "Lesson entries; non-empty with n contiguous from 1 (rule 1, checked by the validator so the failure names the rule)",
+      "items": { "$ref": "#/$defs/lesson" }
+    }
+  },
+  "$defs": {
+    "packId": {
+      "type": "string",
+      "pattern": "^[A-Z][A-Z0-9]*-[0-9]+$",
+      "description": "Evidence-pack record id (T-…, X-…, EX-…, E-…, V-…, S-…)"
+    },
+    "errorId": {
+      "type": "string",
+      "pattern": "^E-[0-9]+$",
+      "description": "Error-record id (E-…); error_refs accepts error records only (r9)"
+    },
+    "wordId": {
+      "type": "string",
+      "pattern": "^W-[0-9]+$",
+      "description": "Word-store record id"
+    },
+    "grammarId": {
+      "type": "string",
+      "pattern": "^G-[a-z0-9]+-[0-9]{3}$",
+      "description": "Grammar point id G-<level>-<nnn>"
+    },
+    "activityId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Activity id, unique within its lesson"
+    },
+    "stepId": {
+      "type": "string",
+      "pattern": "^[a-z][a-z0-9-]*$",
+      "description": "Step id, unique within its lesson"
+    },
+    "singleLetter": {
+      "type": "string",
+      "pattern": "^[А-Яа-яЇїІіЄєҐґЬь]$",
+      "description": "One Ukrainian Cyrillic letter"
+    },
+    "lesson": {
+      "type": "object",
+      "required": ["n", "slug", "title", "kind", "job", "rationale", "word_target", "inventory", "steps"],
+      "additionalProperties": false,
+      "properties": {
+        "n": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Lesson number; contiguous from 1 across the plan (rule 1)"
+        },
+        "slug": {
+          "type": "string",
+          "pattern": "^[a-z0-9-]+$",
+          "description": "Stable lesson slug; becomes /<level>/<module>/<n>/"
+        },
+        "title": {
+          "type": "string",
+          "description": "Lesson title; Ukrainian allowed (rule 7)"
+        },
+        "kind": {
+          "type": "string",
+          "enum": ["teach", "practice", "recap", "checkpoint"],
+          "description": "Lesson kind (§2a)"
+        },
+        "closes_with_recap": {
+          "type": "boolean",
+          "description": "Rule 1(b) closing shape; only on a last teach lesson that closes the module"
+        },
+        "job": {
+          "type": "string",
+          "description": "One sentence: what the learner can do after this lesson; Ukrainian allowed (rule 7)"
+        },
+        "rationale": {
+          "type": "string",
+          "description": "Why here, why in this order; Ukrainian allowed (rule 7)"
+        },
+        "word_target": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Per-lesson minimum word target (R-04); calibration is not_checked until the first pilot"
+        },
+        "inventory": {
+          "type": "object",
+          "required": ["vocabulary"],
+          "additionalProperties": false,
+          "properties": {
+            "phonetics": {
+              "type": "object",
+              "required": ["letters", "sounds"],
+              "additionalProperties": false,
+              "properties": {
+                "letters": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/singleLetter" }
+                },
+                "sounds": {
+                  "type": "array",
+                  "items": { "type": "string" }
+                }
+              },
+              "description": "Optional; A1 letter modules only. Must equal the union of the steps' introduces.letters"
+            },
+            "grammar": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["id", "point", "evidence"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": { "$ref": "#/$defs/grammarId" },
+                  "point": {
+                    "type": "string",
+                    "description": "One English sentence naming the point; Cyrillic fails (rule 7)"
+                  },
+                  "evidence": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/packId" }
+                  }
+                }
+              },
+              "description": "Named grammar points; ids must equal the union of the steps' introduces.grammar"
+            },
+            "vocabulary": {
+              "type": "object",
+              "required": ["core", "incidental", "recycled"],
+              "additionalProperties": false,
+              "properties": {
+                "core": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["lemma", "evidence", "forms"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "lemma": {
+                        "type": "string",
+                        "description": "Must equal the word-store record's lemma (rule 7)"
+                      },
+                      "evidence": { "$ref": "#/$defs/wordId" },
+                      "forms": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "Forms this lesson teaches and drills (r8); every tag must exist in the word record (rule 7)"
+                      }
+                    }
+                  },
+                  "description": "Actively taught words; evidence ids must equal the union of the steps' introduces.vocabulary"
+                },
+                "incidental": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "required": ["lemma", "evidence"],
+                    "additionalProperties": false,
+                    "properties": {
+                      "lemma": {
+                        "type": "string",
+                        "description": "Must equal the word-store record's lemma (rule 7)"
+                      },
+                      "evidence": { "$ref": "#/$defs/wordId" },
+                      "forms": {
+                        "type": "array",
+                        "items": { "type": "string" },
+                        "description": "FORBIDDEN (r8): an incidental word is neither taught nor drilled; the validator fails an entry that carries forms so nobody reads it as a restriction"
+                      }
+                    }
+                  }
+                },
+                "recycled": {
+                  "type": "array",
+                  "items": { "$ref": "#/$defs/wordId" },
+                  "description": "Word-store ids introduced in an earlier lesson or plan; each must be used by at least one step"
+                }
+              }
+            }
+          }
+        },
+        "steps": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "kind"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/stepId" },
+              "kind": {
+                "type": "string",
+                "enum": ["teach", "practice", "recap"],
+                "description": "Step kind (§2a); teach steps exist only in teach lessons"
+              },
+              "teach": {
+                "type": "string",
+                "description": "Point taught, in one sentence; Ukrainian allowed (rule 7)"
+              },
+              "introduces": {
+                "type": "object",
+                "required": ["letters", "grammar", "vocabulary"],
+                "additionalProperties": false,
+                "properties": {
+                  "letters": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/singleLetter" }
+                  },
+                  "grammar": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/grammarId" }
+                  },
+                  "vocabulary": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/wordId" }
+                  }
+                },
+                "description": "Declared introductions (§2a); empty or absent on practice and recap steps"
+              },
+              "uses": {
+                "type": "object",
+                "required": ["grammar", "vocabulary"],
+                "additionalProperties": false,
+                "properties": {
+                  "grammar": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/grammarId" }
+                  },
+                  "vocabulary": {
+                    "type": "array",
+                    "items": { "$ref": "#/$defs/wordId" }
+                  }
+                },
+                "description": "Ids the step relies on; same-lesson introductions must come from an earlier step"
+              },
+              "evidence": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/packId" },
+                "description": "Pack ids this step cites (rule 3)"
+              },
+              "practice": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/activityId" },
+                "description": "Practice activity ids defined in this lesson; a teach step lists at least one (rule 6)"
+              },
+              "needs": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "enum": ["example", "quote", "error", "video", "culture", "paradigm"]
+                },
+                "description": "r9: record kinds this step's blocks need; the step's evidence must contain a record of each kind"
+              },
+              "paradigm": {
+                "type": "object",
+                "required": ["id", "word", "forms"],
+                "additionalProperties": false,
+                "properties": {
+                  "id": {
+                    "type": "string",
+                    "pattern": "^P-[0-9]+$",
+                    "description": "Paradigm id, unique within the lesson"
+                  },
+                  "word": { "$ref": "#/$defs/wordId" },
+                  "forms": {
+                    "type": "array",
+                    "items": { "type": "string" },
+                    "description": "Form tags; every tag must exist in the word record (rule 7 check, r9)"
+                  }
+                },
+                "description": "r9, optional: a table of forms the engine generates from the word record"
+              }
+            }
+          }
+        },
+        "consolidation": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/activityId" },
+          "description": "Activity ids of the larger practice block closing the lesson"
+        },
+        "activities": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["id", "type", "placement", "focus"],
+            "additionalProperties": false,
+            "properties": {
+              "id": { "$ref": "#/$defs/activityId" },
+              "type": {
+                "type": "string",
+                "description": "Activity type; must be in the level allowlist from schemas/activities-<level>.schema.json (rule 6)"
+              },
+              "placement": {
+                "type": "string",
+                "enum": ["inline", "workbook"]
+              },
+              "focus": {
+                "type": "string",
+                "description": "What the activity checks; Ukrainian allowed (rule 7)"
+              },
+              "model": {
+                "$ref": "#/$defs/packId",
+                "description": "Optional: pack exercise the activity is modelled on"
+              },
+              "error_refs": {
+                "type": "array",
+                "items": { "$ref": "#/$defs/errorId" },
+                "description": "r9: required when type is error-correction, forbidden otherwise; every id is an E- error record of the pack"
+              }
+            }
+          }
+        },
+        "videos": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["evidence", "use"],
+            "additionalProperties": false,
+            "properties": {
+              "evidence": {
+                "$ref": "#/$defs/packId",
+                "description": "Pack video record id; never a bare URL (R-18)"
+              },
+              "use": {
+                "type": "string",
+                "description": "Where in the lesson and why; Ukrainian allowed (rule 7)"
+              }
+            }
+          }
+        },
+        "dialogue": {
+          "type": "object",
+          "required": ["situation", "setting", "speakers", "register", "target_grammar", "evidence"],
+          "additionalProperties": false,
+          "properties": {
+            "step": {
+              "$ref": "#/$defs/stepId",
+              "description": "r9: id of the step that hosts the dialogue block; required by the validator when dialogue is present"
+            },
+            "situation": {
+              "type": "string",
+              "description": "Ukrainian allowed (rule 7)"
+            },
+            "setting": {
+              "type": "string",
+              "description": "Place and objects; Ukrainian allowed (rule 7)"
+            },
+            "speakers": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "role", "gender"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Speaker name; Ukrainian allowed (rule 7)"
+                  },
+                  "role": {
+                    "type": "string",
+                    "description": "Speaker role, English; Cyrillic fails (rule 7)"
+                  },
+                  "gender": {
+                    "type": "string",
+                    "enum": ["m", "f"]
+                  },
+                  "evidence": {
+                    "$ref": "#/$defs/wordId",
+                    "description": "r9: word record carrying the name's case forms; required by the validator"
+                  }
+                }
+              }
+            },
+            "places": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "evidence"],
+                "additionalProperties": false,
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "r9: place name as prose; Ukrainian allowed (rule 7)"
+                  },
+                  "evidence": { "$ref": "#/$defs/wordId" }
+                }
+              },
+              "description": "r9, optional: place names used in the dialogue, by record"
+            },
+            "register": {
+              "type": "string",
+              "enum": ["informal", "formal"]
+            },
+            "target_grammar": {
+              "type": "string",
+              "description": "What the dialogue exists to show; Ukrainian allowed (rule 7)"
+            },
+            "evidence": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/packId" },
+              "description": "Pack ids; r9 allows EX- records of attested exchanges beside T- ids"
+            }
+          }
+        },
+        "practice": {
+          "type": "object",
+          "required": ["vocabulary", "stress", "patterns"],
+          "additionalProperties": false,
+          "properties": {
+            "vocabulary": {
+              "const": "core",
+              "description": "Every core lemma of this lesson, in the forms it teaches (R-33)"
+            },
+            "stress": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/wordId" },
+              "description": "Word records whose stress placement is drilled"
+            },
+            "patterns": {
+              "type": "array",
+              "items": { "$ref": "#/$defs/activityId" },
+              "description": "Activity ids whose pattern is recycled into the deck"
+            }
+          }
+        },
+        "reading_passages": {
+          "type": "array",
+          "items": { "type": "object" },
+          "description": "Optional; B2+ and seminar tracks later. No rule in Brief A constrains the entries."
+        }
+      }
+    }
+  }
+}
