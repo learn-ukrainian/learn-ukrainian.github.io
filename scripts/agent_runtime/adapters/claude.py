@@ -95,9 +95,7 @@ def _isolated_review_response_schema(tool_config: dict[str, Any]) -> str:
     )
 
     changed_paths = tool_config.get("review_changed_paths")
-    if not isinstance(changed_paths, list) or not all(
-        isinstance(path, str) and path for path in changed_paths
-    ):
+    if not isinstance(changed_paths, list) or not all(isinstance(path, str) and path for path in changed_paths):
         raise ValueError("ClaudeAdapter: isolated review changed paths required")
     try:
         schema = transport_isolated_review_schema()
@@ -401,7 +399,11 @@ class ClaudeAdapter:
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")
         allowed_tools = tc.get("allowed_tools")
-        if mcp_config_path and allowed_tools and not review_isolation:
+        if tc.get("strict_mcp_config") and mcp_config_path and not review_isolation:
+            cmd.extend(["--strict-mcp-config", "--mcp-config", str(mcp_config_path)])
+            if allowed_tools:
+                cmd.extend(["--allowedTools", allowed_tools])
+        elif mcp_config_path and allowed_tools and not review_isolation:
             cmd.extend(["--mcp-config", str(mcp_config_path), "--allowedTools", allowed_tools])
 
         # Cache-warmth optimization (CC 2.1.98+)
@@ -485,11 +487,19 @@ class ClaudeAdapter:
             intact = bool(strict_events) and all(isinstance(event, dict) for event in strict_events)
             terminal = strict_events[-1] if intact else {}
             return structured_result(
-                terminal.get("structured_output"), output_schema, returncode=returncode,
-                terminal_ok=(intact and "structured_output" in terminal and terminal.get("type") == "result"
-                             and terminal.get("subtype") == "success" and terminal.get("is_error") is False
-                             and sum(event.get("type") == "result" for event in strict_events) == 1),
-                session_id=session_id, tool_calls=tool_calls,
+                terminal.get("structured_output"),
+                output_schema,
+                returncode=returncode,
+                terminal_ok=(
+                    intact
+                    and "structured_output" in terminal
+                    and terminal.get("type") == "result"
+                    and terminal.get("subtype") == "success"
+                    and terminal.get("is_error") is False
+                    and sum(event.get("type") == "result" for event in strict_events) == 1
+                ),
+                session_id=session_id,
+                tool_calls=tool_calls,
             )
 
         # Claude Code 2.1.117 does not document a dedicated rate-limit exit

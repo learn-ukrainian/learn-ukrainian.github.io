@@ -381,6 +381,8 @@ class GrokBuildAdapter:
         allowed = tc.get("allowed_tools")
         if allowed:
             cmd.extend(["--tools", str(allowed)])
+        if tc.get("strict_mcp_config") and tc.get("mcp_config_path"):
+            cmd.extend(["--strict-mcp-config", "--mcp-config", str(tc["mcp_config_path"])])
 
         # Resume only if the caller explicitly opts in (delegate dispatch never
         # should — resume_policy=never — to avoid cross-worktree contamination).
@@ -448,9 +450,15 @@ class GrokBuildAdapter:
             envelope = json_value(stdout)
             envelope = envelope if isinstance(envelope, dict) else {}
             return structured_result(
-                envelope.get("structuredOutput"), output_schema, returncode=returncode,
-                terminal_ok=("structuredOutput" in envelope and envelope.get("stopReason") == "end_turn"
-                             and "structuredOutputError" not in envelope and envelope.get("type") != "error"),
+                envelope.get("structuredOutput"),
+                output_schema,
+                returncode=returncode,
+                terminal_ok=(
+                    "structuredOutput" in envelope
+                    and envelope.get("stopReason") == "end_turn"
+                    and "structuredOutputError" not in envelope
+                    and envelope.get("type") != "error"
+                ),
                 session_id=envelope.get("sessionId"),
             )
 

@@ -1230,9 +1230,7 @@ def _ensure_sibling_repo_worktree(
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
-        raise ValueError(
-            f"sibling worktree path {worktree_path} is outside target repo {root}"
-        ) from exc
+        raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
     worktree_branch = _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -1254,8 +1252,7 @@ def _ensure_sibling_repo_worktree(
         return worktree_path, worktree_branch, telemetry
     if dry_run:
         raise ValueError(
-            f"sibling --repo dry-run found no worktree at {worktree_path}; "
-            "rerun without --dry-run to create one"
+            f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
     branch_name = _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
@@ -1275,9 +1272,7 @@ def _ensure_sibling_repo_worktree(
             env=_sanitized_git_env(),
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}"
-        ) from exc
+        raise RuntimeError(f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}") from exc
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
@@ -4837,6 +4832,11 @@ def _run_worker(
     runtime_tmp_namespace_root: str | None = None,
     run_nonce: str | None = None,
     require_review_verdict: bool = False,
+    review_attempt: str | None = None,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
+    mcp_config_path: str | None = None,
+    strict_mcp_config: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -4967,6 +4967,15 @@ def _run_worker(
                 tool_config["harness"] = harness
             if mode == "read-only" and runtime_tmp_root is not None:
                 tool_config["read_only_tmp_root"] = runtime_tmp_root
+            if mcp_config_path is not None:
+                tool_config["mcp_config_path"] = mcp_config_path
+            if strict_mcp_config:
+                tool_config["strict_mcp_config"] = True
+                tool_config["mcp_server_names"] = ["sources"]
+            if review_id is not None:
+                tool_config["review_id"] = review_id
+            if attempt_id is not None:
+                tool_config["attempt_id"] = attempt_id
             tool_config = tool_config or None
             result = runtime_invoke(
                 agent,
@@ -5186,9 +5195,8 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if (
-                        normalized_branch not in containment.PROTECTED_BRANCHES
-                        and not (commits_ahead == 0 and dirty_on_exit is False)
+                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
+                        commits_ahead == 0 and dirty_on_exit is False
                     ):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
@@ -5832,6 +5840,46 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+
+    review_attempt = getattr(args, "review_attempt", None)
+    review_id = getattr(args, "review_id", None)
+    attempt_id = getattr(args, "attempt_id", None)
+    review_plan = None
+    if review_attempt or review_id or attempt_id:
+        if not (review_attempt and review_id and attempt_id):
+            print(
+                "❌ --review-attempt, --review-id, and --attempt-id must be used together",
+                file=sys.stderr,
+            )
+            return 2
+        manifest_path = Path(review_attempt)
+        if not manifest_path.is_file():
+            print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
+            return 2
+
+        effective_harness = requested_harness or args.agent
+        from agent_runtime.review_mcp import (
+            UNSUPPORTED_HARNESS_REASONS,
+            prepare_review_attempt,
+        )
+
+        if effective_harness in UNSUPPORTED_HARNESS_REASONS:
+            print(
+                f"❌ review attempt refused for {args.agent}: {UNSUPPORTED_HARNESS_REASONS[effective_harness]} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+        try:
+            review_plan = prepare_review_attempt(
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_path=manifest_path,
+                harness=effective_harness,
+            )
+        except ValueError as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
@@ -6097,9 +6145,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         try:
             language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(
-                    requested_agent, provider="openrouter", language_lane=language_lane
-                )
+                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
                 if getattr(args, "provider", None) == "openrouter"
                 else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
             )
@@ -6116,8 +6162,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         and _adapter_rejects_model(dispatch_agent, str(explicit_model))
     ):
         print(
-            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. "
-            "Using that lane's default.",
+            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. Using that lane's default.",
             file=sys.stderr,
         )
         args.model = None
@@ -6748,6 +6793,20 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             cmd.extend(["--effort", effort])
         if run_nonce:
             cmd.extend(["--run-nonce", run_nonce])
+        if review_plan is not None:
+            cmd.extend(
+                [
+                    "--review-attempt",
+                    str(review_attempt),
+                    "--review-id",
+                    str(review_id),
+                    "--attempt-id",
+                    str(attempt_id),
+                    "--mcp-config-path",
+                    str(review_plan.config_path),
+                    "--strict-mcp-config",
+                ]
+            )
 
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
@@ -7195,7 +7254,11 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
+        if (
+            status not in {"cool", "warm"}
+            or account.get("is_available") is False
+            or account.get("status") == "near_cap"
+        ):
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
@@ -7351,9 +7414,7 @@ def _language_lane_substitute(
         seen.add(nxt)
         seat = nxt
         if len(seen) > 4:
-            raise BudgetGuardRefuseError(
-                "ROUTING REFUSED: language-lane fallback chain did not reach a cool seat."
-            )
+            raise BudgetGuardRefuseError("ROUTING REFUSED: language-lane fallback chain did not reach a cool seat.")
 
 
 def _session_stream_store() -> Any:
@@ -7864,6 +7925,11 @@ def cmd_worker(args: argparse.Namespace) -> int:
         runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
         runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
         run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
+        review_attempt=getattr(args, "review_attempt", None),
+        review_id=getattr(args, "review_id", None),
+        attempt_id=getattr(args, "attempt_id", None),
+        mcp_config_path=getattr(args, "mcp_config_path", None),
+        strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
     )
 
 
@@ -7991,9 +8057,7 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
-    d.add_argument(
-        "--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview."
-    )
+    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview.")
     d.add_argument(
         "--provider",
         default=None,
@@ -8081,6 +8145,37 @@ def build_parser() -> argparse.ArgumentParser:
             "`VERDICT: APPROVE|APPROVED|CHANGES_REQUESTED|BLOCKED` line in the "
             "reply terminalizes as no_deliverable instead (#8421). Used by the "
             "ask-* review wrapper; ordinary dispatches are unaffected."
+        ),
+    )
+    d.add_argument(
+        "--review-attempt",
+        default=None,
+        metavar="MANIFEST",
+        help=(
+            "Path to manifest YAML file for formal review attempt recording (#8517). "
+            "Used together with --review-id and --attempt-id to launch a per-attempt "
+            "stdio sources MCP server with ledger receipts. Default: None. "
+            "Example: --review-attempt batch_state/manifests/rev-1.yaml"
+        ),
+    )
+    d.add_argument(
+        "--review-id",
+        default=None,
+        metavar="REVIEW_ID",
+        help=(
+            "Formal review identifier for receipt recording (#8517). Required when "
+            "--review-attempt is set; must match the review id in receipt paths. "
+            "Default: None. Example: --review-id rev-20260922-001"
+        ),
+    )
+    d.add_argument(
+        "--attempt-id",
+        default=None,
+        metavar="ATTEMPT_ID",
+        help=(
+            "Unique attempt identifier for receipt recording (#8517). Required when "
+            "--review-attempt is set; names the attempt ledger <attempt_id>.jsonl. "
+            "Default: None. Example: --attempt-id att-01"
         ),
     )
     d.add_argument(
@@ -8413,6 +8508,11 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.add_argument("--run-nonce", default=None)
+    wk.add_argument("--review-attempt", default=None)
+    wk.add_argument("--review-id", default=None)
+    wk.add_argument("--attempt-id", default=None)
+    wk.add_argument("--mcp-config-path", default=None)
+    wk.add_argument("--strict-mcp-config", action="store_true")
     wk.set_defaults(func=cmd_worker)
 
     return p
