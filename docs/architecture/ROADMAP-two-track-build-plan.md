@@ -37,7 +37,7 @@ Tracks run in parallel after shared Phase 1 unblock. Track B+ ships first (weeks
 | 1.2 | Rebuild `data/sources.db` with the new schema | User runs | 30 min | DB rebuilt, literary_texts + external + wikipedia row counts preserved |
 | 1.3 | Fix **#1339** — A1 grade filter SQL bug (chunks leak Grade 5+ into A1 retrieval) | Codex | 1–2 h | Test: `search_sources(track="a1")` returns only Grade 1-4 chunks; regression test committed |
 | 1.4 | Verify stage (c) of #1348 works against rebuilt DB | Claude | 30 min | `pytest tests/wiki/ -v` green after deleting v1 orphan tests; `search_sources(track="a1")` returns non-empty results on real DB |
-| 1.5 | Dispatch **#1348 stage (d)** — stress test + fault injection + ADR-006 revision (prompt at `docs/session-state/pending-dispatches/1348-stage-d.md`) | Codex | 30–45 min | Commit `test(wiki): ... (#1348 stage-d)`; ADR-006 revised with 2026-04-20 block |
+| 1.5 | Dispatch **#1348 stage (d)** — stress test + fault injection + ADR-006 revision | Codex | 30–45 min | Commit `test(wiki): ... (#1348 stage-d)`; ADR-006 revised with 2026-04-20 block |
 | 1.6 | Run **#1348 stage (e) cold encode** — `.venv/bin/python scripts/wiki/cold_encode.py --all-corpora` | User runs on their Mac, Claude monitors | 2.5–3 h | `data/embeddings/manifest.db` has ~157K unit rows; `.npy` shards across 5 corpus dirs |
 | 1.7 | Run **#1340** re-validation — patch `scripts/wiki/diagnostics/retrieval_playback.py` to add `--strategy=unified_dense`, run on `a1/sounds-letters-and-hello` | Claude | 1–2 h | New comparison report shows **≥8/10 concepts** surfaced (baseline = 6/10) |
 
