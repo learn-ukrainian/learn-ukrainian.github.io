@@ -226,6 +226,9 @@ def test_r11_forbidden_paths_grep():
         "curriculum/l2-uk-en/a2-v1/",
         "curriculum/l2-uk-en/b1-v1/",
         "curriculum/l2-uk-en/b2-v1/",
+        "curriculum/l2-uk-en/<level>-v1/",
+        "wiki_packet",
+        "wiki/packets",
     ]
 
     for py_file in fresh_dir.glob("*.py"):
