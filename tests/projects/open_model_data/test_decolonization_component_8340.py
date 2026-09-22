@@ -1216,3 +1216,147 @@ def test_cf_r12_remediations_regression(monkeypatch):
     )
     assert res["source"] == "Борис Антоненко-Давидович «Як ми говоримо»"
     assert "охочий" in res["supporting_passage"].lower()
+
+
+def test_cf_r13_remediations_regression() -> None:
+    """CF-R13 regression: verify strict author citation anchors and fail-closed behavior for unrelated books.
+
+    Remediates:
+    - Blocker 1: Unrelated records (e.g. agricultural machinery 'Книга про трактори' containing 'завдання'
+      and 'граматика') must fail closed and never substantiate a Ponomariv citation.
+    - Blocker 2: Another author's textbook (e.g. Avramenko textbook containing 'охочий') must fail closed
+      and never substantiate an Antonenko-Davydovych citation.
+    - Blocker 3: A record that lacks the supporting passage content must fail closed.
+    - Live authentic resolution for Ponomariv, Antonenko, and inflected forms (e.g. 'тло').
+    """
+    import sqlite3
+
+    from scripts.projects.open_model_data.build_decolonization_cases import (
+        PROJECT_ROOT,
+        _resolve_db_path,
+        query_source_evidence,
+    )
+
+    vesum_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
+    sources_path = _resolve_db_path("sources.db", PROJECT_ROOT)
+    real_v_cur = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True).cursor()
+    real_s_cur = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True).cursor()
+
+    # 1. TractorBookMockCursor: 'Книга про трактори' containing 'завдання' and 'граматика'
+    class TractorBookMockCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return [
+                (
+                    999,
+                    "Книга про трактори",
+                    "Трактор виконує завдання на полі. Граматика української мови дуже важлива.",
+                    "",
+                    "",
+                    "traktor.pdf",
+                )
+            ]
+
+    with pytest.raises(
+        ValueError,
+        match=r"(does not substantiate claimed citation|Textbook/monograph evidence missing)",
+    ):
+        query_source_evidence(
+            case_id="decol_lex_003",
+            term="завдання",
+            copy="задача",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_lexical",
+            s_cur=TractorBookMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2. AvramenkoTextbookMockCursor: Avramenko textbook containing 'охочий'
+    class AvramenkoTextbookMockCursor:
+        def execute(self, *args, **kwargs):
+            return self
+
+        def fetchone(self):
+            return None
+
+        def fetchall(self):
+            return [
+                (
+                    888,
+                    "Українська мова. Підручник",
+                    "Кожен охочий учень може виконати цю вправу.",
+                    "Олександр Авраменко",
+                    "Авраменко",
+                    "avramenko_9.pdf",
+                )
+            ]
+
+    with pytest.raises(
+        ValueError,
+        match=r"(does not substantiate citation|Style guide evidence missing)",
+    ):
+        query_source_evidence(
+            case_id="decol_lex_004",
+            term="охочий",
+            copy="бажаючий",
+            auth="Борис Антоненко-Давидович «Як ми говоримо»",
+            cat_name="calque_lexical",
+            s_cur=AvramenkoTextbookMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 3. make_reviewer_confirmation must fail closed on TractorBookMockCursor
+    from scripts.projects.open_model_data.build_decolonization_cases import make_reviewer_confirmation
+    from scripts.projects.open_model_data.decolonization_cases_data import LEXICAL_CALQUES
+    lex_003_item = next(c for c in LEXICAL_CALQUES if c["case_id"] == "decol_lex_003")
+    with pytest.raises(
+        ValueError,
+        match=r"(does not substantiate claimed citation|Textbook/monograph evidence missing)",
+    ):
+        make_reviewer_confirmation(lex_003_item, "calque_lexical", real_v_cur, TractorBookMockCursor(), [])
+
+    # 4. Live database resolution for authentic records
+    res_pon = query_source_evidence(
+        case_id="decol_lex_003",
+        term="завдання",
+        copy="задача",
+        auth="Олександр Пономарів «Культура слова»",
+        cat_name="calque_lexical",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert "пономарів" in res_pon["source"].lower()
+    assert res_pon["status"] == "source_attested"
+
+    res_ant = query_source_evidence(
+        case_id="decol_lex_004",
+        term="охочий",
+        copy="бажаючий",
+        auth="Борис Антоненко-Давидович «Як ми говоримо»",
+        cat_name="calque_lexical",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert "антоненко" in res_ant["source"].lower()
+
+    res_tlo = query_source_evidence(
+        case_id="decol_lex_020",
+        term="тло",
+        copy="фон",
+        auth="Олександр Пономарів «Культура слова»",
+        cat_name="calque_lexical",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert "пономарів" in res_tlo["source"].lower()
+    assert res_tlo["status"] == "source_attested"

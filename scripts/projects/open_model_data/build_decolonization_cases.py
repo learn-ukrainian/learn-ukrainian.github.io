@@ -370,12 +370,17 @@ def query_source_evidence(
             if source_record:
                 from_style_guide_table = True
         if not source_record:
-            antonenko_anchors = (
-                "антоненко", "antonenko", "як ми говоримо",
-                "авраменко", "караман", "глазова", "заболотний", "ющук", "погрібний", "pohribnyi",
-                "мариненко", "масенко", "голуб", "підручник", "слововживання", "стилістик",
-                "граматик", "правопис", "лексик", "ukrmova",
+            # Query external_articles for authentic Antonenko codification records
+            s_cur.execute(
+                "SELECT id, title, text, speaker, source_file FROM external_articles WHERE (decolonization_tag = ? OR ((speaker LIKE '%Антоненко%' OR title LIKE '%Як ми говоримо%') AND (title LIKE ? OR text LIKE ?))) LIMIT 1",
+                (case_id, f"%{t_clean}%", f"%{t_clean}%"),
             )
+            source_record = s_cur.fetchone()
+            if source_record:
+                from_style_guide_table = False
+
+        if not source_record:
+            antonenko_anchors = ("антоненко", "antonenko", "як ми говоримо")
             for tok in t_tokens:
                 try:
                     s_cur.execute(
@@ -407,15 +412,6 @@ def query_source_evidence(
                     break
 
         if not source_record:
-            s_cur.execute(
-                "SELECT id, title, text, '', '' FROM external_articles WHERE text LIKE ? LIMIT 1",
-                (f"%{t_clean}%",),
-            )
-            source_record = s_cur.fetchone()
-            if source_record:
-                from_style_guide_table = False
-
-        if not source_record:
             raise ValueError(
                 f"Style guide evidence missing: no matching record for case '{case_id}' (target: '{term}', article: '{art}')"
             )
@@ -428,15 +424,10 @@ def query_source_evidence(
         text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower())
         combined_text = f"{head_low} {text_low} {rec_author_meta.lower()} {rec_src_meta.lower()}"
         if not from_style_guide_table:
-            antonenko_anchors = (
-                "антоненко", "antonenko", "як ми говоримо",
-                "авраменко", "караман", "глазова", "заболотний", "ющук", "погрібний", "pohribnyi",
-                "мариненко", "масенко", "голуб", "підручник", "слововживання", "стилістик",
-                "граматик", "правопис", "лексик", "ukrmova",
-            )
+            antonenko_anchors = ("антоненко", "antonenko", "як ми говоримо")
             if not any(k in combined_text for k in antonenko_anchors):
                 raise ValueError(
-                    f"Retrieved textbook record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate citation '{auth}')"
+                    f"Retrieved record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate citation '{auth}')"
                 )
         if not (
             t_clean in head_low
@@ -450,10 +441,12 @@ def query_source_evidence(
             )
     elif "СУМ-20" in auth:
         art = (ev.get("article") or term).strip()
+        art_head = art.split()[0] if " " in art else art
+        t_head = term.split()[0] if " " in term else term
         # 1. Query modern academic dictionary СУМ-20
         s_cur.execute(
-            "SELECT id, headword, definition_text FROM sum20_articles WHERE headword LIKE ? OR normalized_lookup_key LIKE ? LIMIT 1",
-            (f"%{art}%", f"%{art.lower()}%"),
+            "SELECT id, headword, definition_text FROM sum20_articles WHERE headword LIKE ? OR normalized_lookup_key LIKE ? OR headword LIKE ? OR normalized_lookup_key LIKE ? LIMIT 1",
+            (f"%{art}%", f"%{art.lower()}%", f"%{t_head}%", f"%{t_head.lower()}%"),
         )
         source_record = s_cur.fetchone()
 
@@ -462,8 +455,8 @@ def query_source_evidence(
             for tbl in ("ulif_all.ulif_entries", "ulif_entries"):
                 try:
                     s_cur.execute(
-                        f"SELECT 1, canonical_headword, lemma FROM {tbl} WHERE lemma = ? OR lemma = ? OR canonical_headword LIKE ? LIMIT 1",
-                        (art.lower(), art.capitalize(), f"%{art}%"),
+                        f"SELECT 1, canonical_headword, lemma FROM {tbl} WHERE lemma = ? OR lemma = ? OR lemma = ? OR lemma = ? OR canonical_headword LIKE ? LIMIT 1",
+                        (t_head.lower(), art.lower(), art_head.lower(), art.capitalize(), f"%{t_head}%"),
                     )
                     source_record = s_cur.fetchone()
                     if source_record:
@@ -474,8 +467,8 @@ def query_source_evidence(
         if not source_record:
             try:
                 s_cur.execute(
-                    "SELECT id, COALESCE(NULLIF(canonical_headword, ''), normalized_query), COALESCE(NULLIF(sense_gloss, ''), normalized_query) FROM ulif_dictua_entries WHERE normalized_query = ? OR canonical_headword LIKE ? LIMIT 1",
-                    (art.lower(), f"%{art}%"),
+                    "SELECT id, COALESCE(NULLIF(canonical_headword, ''), normalized_query), COALESCE(NULLIF(sense_gloss, ''), normalized_query) FROM ulif_dictua_entries WHERE normalized_query = ? OR normalized_query = ? OR normalized_query = ? OR canonical_headword LIKE ? LIMIT 1",
+                    (t_head.lower(), art.lower(), art_head.lower(), f"%{t_head}%"),
                 )
                 source_record = s_cur.fetchone()
             except sqlite3.OperationalError:
@@ -486,26 +479,9 @@ def query_source_evidence(
             try:
                 s_cur.execute(
                     "SELECT id, title, text FROM external_articles WHERE (title LIKE '%ВТС%' OR title LIKE '%тлумачний%' OR text LIKE '%тлумачний%') AND (title LIKE ? OR text LIKE ?) LIMIT 1",
-                    (f"%{art}%", f"%{art}%"),
+                    (f"%{art_head}%", f"%{art_head}%"),
                 )
                 source_record = s_cur.fetchone()
-            except sqlite3.OperationalError:
-                pass
-
-        # 4. Modern normative fallback: Language/curriculum dictionary reference (Pohribnyi, Anna Ohoiko 1000 words core lexicon)
-        if not source_record:
-            try:
-                first_tok = t_tokens[0]
-                s_cur.execute(
-                    "SELECT rowid, title, text FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 10",
-                    (first_tok,),
-                )
-                for cand in s_cur.fetchall():
-                    c_title = cand[1].lower()
-                    c_text = cand[2].lower()
-                    if any(ref in c_title or ref in c_text for ref in ("pohribnyi", "погрібний", "підло́га", "1000-words", "словник", "лексика", "урок", "lesson", "мова")):
-                        source_record = cand
-                        break
             except sqlite3.OperationalError:
                 pass
 
@@ -537,7 +513,7 @@ def query_source_evidence(
             raise ValueError(
                 f"Retrieved lexical record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
             )
-    elif "Правопис" in auth:
+    elif "правопис" in auth.lower():
         s_cur.execute(
             "SELECT id, title, text FROM external_articles WHERE (title LIKE '%Правопис%' OR text LIKE '%правопис%') AND text LIKE ? LIMIT 1",
             (f"%{t_clean}%",),
@@ -572,90 +548,90 @@ def query_source_evidence(
             for co_author in ("авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний", "pohribnyi"):
                 if co_author in locus_low:
                     citation_anchors.append(co_author)
-            if len(citation_anchors) == 3:
-                citation_anchors.extend([
-                    "авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний", "pohribnyi",
-                    "підручник", "слововживання", "стилістик", "граматик", "правопис", "лексик",
-                    "klas-", "grade-", "textbook",
-                ])
         elif "городенськ" in auth_low:
-            citation_anchors = [
-                "городенськ", "чи правильне слововживання", "слововживання",
-                "авраменко", "глазова", "заболотний", "караман", "підручник", "стилістик", "граматик", "лексик",
-                "klas-", "grade-", "textbook",
-            ]
+            citation_anchors = ["городенськ", "чи правильне слововживання"]
+            for co_author in ("авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний", "pohribnyi"):
+                if co_author in locus_low:
+                    citation_anchors.append(co_author)
+        elif "чак" in auth_low:
+            citation_anchors = ["чак", "складні випадки українського слововживання", "чи правильно ми говоримо"]
+        elif "скрипник" in auth_low:
+            citation_anchors = ["скрипник"]
+        elif "синявськ" in auth_low:
+            citation_anchors = ["синявськ", "норми української літературної мови"]
+        elif "караванськ" in auth_low:
+            citation_anchors = ["караванськ", "пошук українського слова", "секрети української мови"]
+        elif "радчук" in auth_low:
+            citation_anchors = ["радчук"]
         else:
-            citation_anchors = [
-                "підручник", "авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний",
-                "слововживання", "стилістик", "граматик", "правопис", "лексик",
-                "klas-", "grade-", "textbook",
-            ]
+            citation_anchors = []
+            for textbook_author in ("авраменко", "глазова", "заболотний", "караман", "ющук", "погрібний"):
+                if textbook_author in auth_low or textbook_author in locus_low:
+                    citation_anchors.append(textbook_author)
+            if not citation_anchors:
+                citation_anchors = ["підручник", "слововживання", "стилістик", "правопис"]
 
-        first_tok = t_tokens[0]
-        try:
-            s_cur.execute(
-                "SELECT f.rowid, f.title, f.text, COALESCE(t.author, ''), COALESCE(t.author_uk, ''), COALESCE(t.source_file, '') "
-                "FROM textbooks_fts f "
-                "LEFT JOIN textbooks t ON f.rowid = t.id "
-                "WHERE textbooks_fts MATCH ? LIMIT 100",
-                (first_tok,),
-            )
-            cands = s_cur.fetchall()
-        except sqlite3.OperationalError:
-            s_cur.execute(
-                "SELECT rowid, title, text, '', '', '' FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 100",
-                (first_tok,),
-            )
-            cands = s_cur.fetchall()
+        # 1. Primary check: authentic monograph records in external_articles
+        s_cur.execute(
+            "SELECT id, title, text, speaker, source_file FROM external_articles WHERE decolonization_tag = ? OR ((speaker LIKE ? OR title LIKE ?) AND (title LIKE ? OR text LIKE ?)) LIMIT 1",
+            (case_id, f"%{auth[:15]}%", f"%{auth[:15]}%", f"%{t_clean}%", f"%{t_clean}%"),
+        )
+        source_record = s_cur.fetchone()
 
-        source_record = None
-        for cand in cands:
-            c_head = cand[1]
-            c_text = cand[2]
-            c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
-            c_src = cand[5] if len(cand) > 5 else ""
-            c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
-            if any(k in c_low for k in citation_anchors):
-                source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
-                break
-
-        if not source_record and len(t_tokens) > 1:
-            second_tok = t_tokens[1]
+        # 2. Textbooks search if not found in primary monograph records
+        if not source_record:
+            first_tok = t_tokens[0]
             try:
                 s_cur.execute(
                     "SELECT f.rowid, f.title, f.text, COALESCE(t.author, ''), COALESCE(t.author_uk, ''), COALESCE(t.source_file, '') "
                     "FROM textbooks_fts f "
                     "LEFT JOIN textbooks t ON f.rowid = t.id "
                     "WHERE textbooks_fts MATCH ? LIMIT 100",
-                    (second_tok,),
+                    (first_tok,),
                 )
-                for cand in s_cur.fetchall():
-                    c_head = cand[1]
-                    c_text = cand[2]
-                    c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
-                    c_src = cand[5] if len(cand) > 5 else ""
-                    c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
-                    if any(k in c_low for k in citation_anchors):
-                        source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
-                        break
+                cands = s_cur.fetchall()
             except sqlite3.OperationalError:
-                pass
+                s_cur.execute(
+                    "SELECT rowid, title, text, '', '', '' FROM textbooks_fts WHERE textbooks_fts MATCH ? LIMIT 100",
+                    (first_tok,),
+                )
+                cands = s_cur.fetchall()
 
-        if not source_record and cands:
-            c_auth = f"{cands[0][3]} {cands[0][4]}" if len(cands[0]) > 4 else ""
-            c_src = cands[0][5] if len(cands[0]) > 5 else ""
-            source_record = (cands[0][0], cands[0][1], cands[0][2], c_auth, c_src)
+            for cand in cands:
+                c_head = cand[1]
+                c_text = cand[2]
+                c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
+                c_src = cand[5] if len(cand) > 5 else ""
+                c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
+                if any(k in c_low for k in citation_anchors):
+                    source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
+                    break
 
-        if not source_record:
-            s_cur.execute(
-                "SELECT id, title, text, '', '' FROM external_articles WHERE text LIKE ? LIMIT 1",
-                (f"%{t_clean}%",),
-            )
-            source_record = s_cur.fetchone()
+            if not source_record and len(t_tokens) > 1:
+                second_tok = t_tokens[1]
+                try:
+                    s_cur.execute(
+                        "SELECT f.rowid, f.title, f.text, COALESCE(t.author, ''), COALESCE(t.author_uk, ''), COALESCE(t.source_file, '') "
+                        "FROM textbooks_fts f "
+                        "LEFT JOIN textbooks t ON f.rowid = t.id "
+                        "WHERE textbooks_fts MATCH ? LIMIT 100",
+                        (second_tok,),
+                    )
+                    for cand in s_cur.fetchall():
+                        c_head = cand[1]
+                        c_text = cand[2]
+                        c_auth = f"{cand[3]} {cand[4]}" if len(cand) > 4 else ""
+                        c_src = cand[5] if len(cand) > 5 else ""
+                        c_low = f"{c_head} {c_text} {c_auth} {c_src}".lower()
+                        if any(k in c_low for k in citation_anchors):
+                            source_record = (cand[0], cand[1], cand[2], c_auth, c_src)
+                            break
+                except sqlite3.OperationalError:
+                    pass
 
         if not source_record:
             raise ValueError(
-                f"Textbook/monograph evidence missing: no matching text record for case '{case_id}' (term '{term}')"
+                f"Textbook/monograph evidence missing: no matching text record for case '{case_id}' (term '{term}', authority '{auth}')"
             )
 
         rec_id_val = source_record[0]
@@ -674,11 +650,13 @@ def query_source_evidence(
                 f"Retrieved textbook record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (does not substantiate claimed citation '{auth}' / locus '{ev.get('locus')}')"
             )
 
+        art = (ev.get("article") or "").strip().lower()
         if not (
             t_clean in head_low
             or t_clean in text_low
             or any(tok in head_low or tok in text_low for tok in t_tokens)
             or any(p.strip().lower() in text_low for p in proper_list)
+            or (art and (art in head_low or art in text_low))
         ):
             raise ValueError(
                 f"Retrieved textbook record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
