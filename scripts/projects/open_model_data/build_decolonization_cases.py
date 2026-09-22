@@ -442,19 +442,28 @@ def query_source_evidence(
     elif "СУМ-20" in auth:
         art = (ev.get("article") or term).strip()
         art_head = art.split()[0] if " " in art else art
+        is_phrase = len(term.split()) > 1
 
-        # 1. Query modern academic dictionary СУМ-20: bound to cited entry or exact phrase in definition
+        # 1. Query modern academic dictionary СУМ-20 by exact cited headword
         sum20_keys = list(dict.fromkeys([art, art.upper(), art.lower(), art_head, art_head.upper(), art_head.lower()]))
         placeholders = ",".join(["?"] * len(sum20_keys))
         s_cur.execute(
-            f"SELECT id, headword, definition_text FROM sum20_articles WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) OR definition_text LIKE ? LIMIT 1",
-            (*sum20_keys, *sum20_keys, f"%{t_clean}%"),
+            f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM sum20_articles WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) LIMIT 1",
+            (*sum20_keys, *sum20_keys),
         )
         source_record = s_cur.fetchone()
 
+        # If not found by headword, search by exact phrase in article_text
+        if not source_record and is_phrase:
+            s_cur.execute(
+                "SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM sum20_articles WHERE article_text LIKE ? OR definition_text LIKE ? LIMIT 1",
+                (f"%{t_clean}%", f"%{t_clean}%"),
+            )
+            source_record = s_cur.fetchone()
+
         # 2. Modern normative fallback: ULIF (data/ulif_dump_all.db or sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
-            dictua_keys = list(dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if " " not in term else [])))
+            dictua_keys = list(dict.fromkeys([art.lower(), art_head.lower()] + ([term.lower()] if not is_phrase else [])))
             for k in dictua_keys:
                 try:
                     s_cur.execute(
@@ -478,7 +487,7 @@ def query_source_evidence(
                         art_head.lower(),
                         art_head.capitalize(),
                     ]
-                    + ([term, term.lower(), term.capitalize()] if " " not in term else [])
+                    + ([term, term.lower(), term.capitalize()] if not is_phrase else [])
                 )
             )
             for tbl in ("ulif_all.ulif_entries", "ulif_entries"):
@@ -517,6 +526,7 @@ def query_source_evidence(
         rec_text = str(source_record[2])
         head_low = re.sub(r"[\u0301\u0300]", "", rec_head.lower()).strip()
         text_low = re.sub(r"[\u0301\u0300]", "", rec_text.lower()).strip()
+        text_clean = re.sub(r"\s+", " ", re.sub(r"\(.*?\)", "", text_low))
 
         # Prohibit Soviet dictionary СУМ-11 as positive normative evidence
         if any(s in head_low or s in text_low for s in ("sum11", "sum-11", "сум-11", "сум 11")):
@@ -527,6 +537,23 @@ def query_source_evidence(
         art_clean = re.sub(r"[\u0301\u0300]", "", art.lower()).strip()
         art_head_clean = re.sub(r"[\u0301\u0300]", "", art_head.lower()).strip()
 
+        # For multi-word phrase cases, the record MUST substantiate the phrase itself
+        if is_phrase:
+            phrase_attested = (
+                t_clean in text_low
+                or t_clean in text_clean
+                or t_clean in head_low
+                or any(
+                    p.strip().lower() in text_low or p.strip().lower() in text_clean
+                    for p in proper_list
+                    if len(p.strip()) > 3
+                )
+            )
+            if not phrase_attested:
+                raise ValueError(
+                    f"Retrieved lexical record {rec_id_val} ('{rec_head}') does not substantiate claimed phrase '{term}' (matching headword lacks the phrase)"
+                )
+
         # Bind selected record strictly to the cited entry or phrase
         is_bound = (
             head_low in (art_clean, art_head_clean)
@@ -534,13 +561,9 @@ def query_source_evidence(
             or head_low.startswith(art_head_clean + " ")
             or art_clean in head_low.split()
             or art_head_clean in head_low.split()
+            or (not is_phrase and head_low == t_clean)
             or t_clean in text_low
-            or (" " not in term and head_low == t_clean)
-            or any(
-                p.strip().lower() == head_low or p.strip().lower() in text_low
-                for p in proper_list
-                if len(p.strip()) > 3
-            )
+            or t_clean in text_clean
         )
         if not is_bound:
             raise ValueError(

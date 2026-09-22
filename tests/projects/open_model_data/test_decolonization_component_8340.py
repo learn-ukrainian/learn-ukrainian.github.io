@@ -1397,17 +1397,20 @@ def test_cf_r14_dictionary_binding_regression() -> None:
         def fetchall(self) -> list:
             return []
 
-    real_s_conn = sqlite3.connect(_resolve_db_path("sources.db", PROJECT_ROOT))
-    real_s_conn.execute(f"ATTACH DATABASE '{_resolve_db_path('ulif_dump_all.db', PROJECT_ROOT)}' AS ulif_all")
+    s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
+    u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
+    v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
+    real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
+    real_s_conn.execute(f"ATTACH DATABASE 'file:{u_path}?mode=ro' AS ulif_all")
     real_s_cur = real_s_conn.cursor()
 
-    real_v_conn = sqlite3.connect(_resolve_db_path("vesum.db", PROJECT_ROOT))
+    real_v_conn = sqlite3.connect(f"file:{v_path}?mode=ro", uri=True)
     real_v_cur = real_v_conn.cursor()
 
     # 1. PlavniyMockCursor must fail closed for decol_prot_047
     with pytest.raises(
         ValueError,
-        match=r"(does not substantiate cited entry 'Черга' or phrase 'в першу чергу'|is unrelated to case 'decol_prot_047')",
+        match=r"(does not substantiate cited entry 'Черга' or phrase 'в першу чергу'|does not substantiate claimed phrase 'в першу чергу')",
     ):
         query_source_evidence(
             case_id="decol_prot_047",
@@ -1423,7 +1426,7 @@ def test_cf_r14_dictionary_binding_regression() -> None:
     # 2. YevdokymovaMockCursor must fail closed for decol_prot_048
     with pytest.raises(
         ValueError,
-        match=r"(does not substantiate cited entry 'Мова' or phrase 'мова йде про'|is unrelated to case 'decol_prot_048')",
+        match=r"(does not substantiate cited entry 'Мова' or phrase 'мова йде про'|does not substantiate claimed phrase 'мова йде про')",
     ):
         query_source_evidence(
             case_id="decol_prot_048",
@@ -1463,3 +1466,105 @@ def test_cf_r14_dictionary_binding_regression() -> None:
     )
     assert res_048["status"] == "source_attested"
     assert "мов" in res_048["source"].lower() or "мов" in res_048.get("article", "").lower()
+
+
+def test_cf_r15_phrase_attestation_regression() -> None:
+    """CF-R15 regression: matching headword that lacks claimed phrase must fail closed.
+
+    1. decol_prot_047 ('в першу чергу', citing 'Черга') must fail closed if record
+       has headword 'ЧЕРГА' but definition lacks the phrase 'в першу чергу'.
+    2. decol_prot_048 ('мова йде про', citing 'Мова') must fail closed if record
+       has headword 'МОВА' but definition lacks the phrase 'мова йде про'.
+    3. Live database queries must substantiate both headword AND phrase.
+    """
+    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
+
+    class ChergaLacksPhraseMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Returns matching headword 'ЧЕРГА', but definition text lacks 'в першу чергу'
+            return (777, "ЧЕРГА", "рядок людей або предметів, що вишикувалися один за одним")
+
+        def fetchall(self) -> list:
+            return []
+
+    class MovaLacksPhraseMockCursor:
+        def execute(self, query: str, params: tuple = ()) -> None:
+            pass
+
+        def fetchone(self) -> tuple | None:
+            # Returns matching headword 'МОВА', but definition text lacks 'мова йде про'
+            return (666, "МОВА", "здатність говорити, висловлювати думки")
+
+        def fetchall(self) -> list:
+            return []
+
+    s_path = _resolve_db_path("sources.db", PROJECT_ROOT)
+    u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
+    v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
+    real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
+    real_s_conn.execute(f"ATTACH DATABASE 'file:{u_path}?mode=ro' AS ulif_all")
+    real_s_cur = real_s_conn.cursor()
+
+    real_v_conn = sqlite3.connect(f"file:{v_path}?mode=ro", uri=True)
+    real_v_cur = real_v_conn.cursor()
+
+    # 1. Matching headword 'ЧЕРГА' lacking phrase 'в першу чергу' must fail closed
+    with pytest.raises(
+        ValueError,
+        match=r"does not substantiate claimed phrase 'в першу чергу' \(matching headword lacks the phrase\)",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_047",
+            term="в першу чергу",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=ChergaLacksPhraseMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 2. Matching headword 'МОВА' lacking phrase 'мова йде про' must fail closed
+    with pytest.raises(
+        ValueError,
+        match=r"does not substantiate claimed phrase 'мова йде про' \(matching headword lacks the phrase\)",
+    ):
+        query_source_evidence(
+            case_id="decol_prot_048",
+            term="мова йде про",
+            copy="",
+            auth="СУМ-20",
+            cat_name="protective_authentic",
+            s_cur=MovaLacksPhraseMockCursor(),
+            v_cur=real_v_cur,
+            style_guide_cache=[],
+        )
+
+    # 3. Live query for decol_prot_047 substantiates both headword and phrase
+    res_047 = query_source_evidence(
+        case_id="decol_prot_047",
+        term="в першу чергу",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res_047["status"] == "source_attested"
+
+    # 4. Live query for decol_prot_048 substantiates both headword and phrase
+    res_048 = query_source_evidence(
+        case_id="decol_prot_048",
+        term="мова йде про",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=real_s_cur,
+        v_cur=real_v_cur,
+        style_guide_cache=[],
+    )
+    assert res_048["status"] == "source_attested"
