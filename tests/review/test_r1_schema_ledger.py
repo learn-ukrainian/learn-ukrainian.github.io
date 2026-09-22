@@ -411,6 +411,7 @@ def test_resolved_major_does_not_block(tmp_path: Path) -> None:
         ("out_of_bounds", codes.LOCATION_NOT_IN_LESSON),
         ("incomplete", codes.LOCATION_INCOMPLETE),
         ("no_searches", codes.UNSUPPORTED_WITHOUT_SEARCHES),
+        ("unsupported_cap", codes.UNSUPPORTED_SEVERITY_ABOVE_MINOR),
         ("outcome", codes.OUTCOME_NOT_IN_LEDGER),
         ("no_sub", codes.LANGUAGE_SUB_DIMENSION_MISSING),
         ("missing_check", codes.CHECK_MISSING),
@@ -423,7 +424,7 @@ def test_resolved_major_does_not_block(tmp_path: Path) -> None:
 )
 def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> None:
     paths = _layout(tmp_path)
-    result_text = "alpha-item-text is attested" if mutate != "outcome" else "No results found."
+    result_text = "alpha-item-text is attested" if mutate not in ("outcome", "unsupported_cap") else "No results found."
     if mutate == "expected":
         result_text = "stored-output-alpha"
     receipt = _record(paths["ledger"], manifest=paths["digest"], result=result_text, status="ok")
@@ -447,10 +448,16 @@ def test_one_fixture_per_rejection(tmp_path: Path, mutate: str, code: str) -> No
     elif mutate == "no_searches":
         finding.pop("evidence")
         finding["unsupported_by_source"] = {"searches": []}
+    elif mutate == "unsupported_cap":
+        finding.pop("evidence")
+        finding.pop("expected")
+        finding["severity"] = "MAJOR"
+        finding["unsupported_by_source"] = {"searches": [{"receipt": receipt, "outcome": "no_hits"}]}
     elif mutate == "outcome":
         finding.pop("evidence")
         finding.pop("expected")
         finding["unsupported_by_source"] = {"searches": [{"receipt": receipt, "outcome": "hits_but_no_support"}]}
+
     elif mutate == "no_sub":
         finding.pop("sub_dimension")
     elif mutate == "missing_check":

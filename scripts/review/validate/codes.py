@@ -16,6 +16,7 @@ LOCATION_NOT_IN_LESSON = "location_not_in_lesson"
 LOCATION_INCOMPLETE = "location_incomplete"
 SCOPE_MISSING = "scope_missing"
 UNSUPPORTED_WITHOUT_SEARCHES = "unsupported_without_searches"
+UNSUPPORTED_SEVERITY_ABOVE_MINOR = "unsupported_severity_above_minor"
 OUTCOME_NOT_IN_LEDGER = "outcome_not_in_ledger"
 LANGUAGE_SUB_DIMENSION_MISSING = "language_sub_dimension_missing"
 SUB_DIMENSION_INVALID = "sub_dimension_invalid"
@@ -41,8 +42,10 @@ DESCRIPTIONS: dict[str, str] = {
     LOCATION_INCOMPLETE: "failure: an exercise-tab location lacks activity or item",
     SCOPE_MISSING: "failure: an absence finding (locations: []) has no scope",
     UNSUPPORTED_WITHOUT_SEARCHES: "failure: unsupported_by_source has no search receipts",
+    UNSUPPORTED_SEVERITY_ABOVE_MINOR: "failure: unsupported_by_source finding has severity above MINOR (capped at MINOR)",
     OUTCOME_NOT_IN_LEDGER: "failure: the claimed search outcome is not shown by the stored result and status",
     LANGUAGE_SUB_DIMENSION_MISSING: "failure: a language finding has no sub_dimension",
+
     SUB_DIMENSION_INVALID: "failure: sub_dimension is not in the taxonomy list for language",
     CHECK_MISSING: "failure: a taxonomy check for this kind is neither clean nor a list of finding ids",
     CHECK_NOT_APPLICABLE: "failure: a recap-only check is present on a review whose manifest is not a recap",

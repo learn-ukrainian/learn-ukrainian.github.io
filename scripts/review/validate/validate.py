@@ -297,6 +297,12 @@ def _check_finding_evidence(
     status = finding.get("status")
     allow_previous = status in PREVIOUS_STATUSES
     if present[0] == "unsupported_by_source":
+        severity = finding.get("severity")
+        if severity in {"BLOCKER", "MAJOR"}:
+            check.add(
+                codes.UNSUPPORTED_SEVERITY_ABOVE_MINOR,
+                f"{finding.get('id')}: unsupported_by_source finding severity {severity} is above MINOR",
+            )
         searches = (
             finding["unsupported_by_source"].get("searches")
             if isinstance(finding["unsupported_by_source"], dict)
