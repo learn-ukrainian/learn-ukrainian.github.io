@@ -46,7 +46,7 @@ curl -s http://localhost:8765/api/orient   # parse git, health, delegate, govern
 | Open PRs | `gh pr list` (not full orient replay) |
 | Usage limits | CodaxBar.app + `/api/runtime/agents` |
 
-Fleet launchers route eligible two-seat read-only `ab discuss` calls through
+Fleet launchers route eligible 2-to-4-seat read-only `ab discuss` calls through
 the durable ACP controller automatically. Enabled participants are Codex,
 Grok, Claude, Kimi, KimiCC K3, Cursor, and Pool. Bridge transport is a named,
 durably recorded exception for unsupported participants/counts, model

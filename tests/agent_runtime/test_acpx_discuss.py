@@ -100,6 +100,75 @@ def test_two_participants_are_parallel_and_completed_replay_makes_no_calls(tmp_p
     assert any(row[2] is not None for row in rows)
 
 
+def test_three_participants_cross_exchange_reaches_every_peer(tmp_path, monkeypatch):
+    """A 3-seat panel fans out together and threads each peer into round 2."""
+    entered = threading.Barrier(3)
+    prompts: list[tuple[str, str]] = []
+
+    def participant(agent: str, prompt: str, **_kwargs):
+        if "prior response" not in prompt:
+            entered.wait(timeout=2)
+        prompts.append((agent, prompt))
+        return _result(agent, f"{agent} evidence")
+
+    controller = _controller(
+        tmp_path,
+        monkeypatch,
+        participant,
+        lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
+    )
+    try:
+        result = controller.run(
+            prompt="Compare the three bounded options.",
+            cwd=Path.cwd(),
+            task_id="task-8463",
+            correlation_id="corr-8463",
+            idempotency_key="idem-8463-three",
+            rounds=2,
+            participants=("claude", "kimi", "glm"),
+        )
+        rows = controller.conn.execute(
+            "SELECT sender, recipient FROM comms_messages WHERE conversation_id = ?",
+            (result["conversation_id"],),
+        ).fetchall()
+    finally:
+        controller.close()
+
+    assert result["state"] == "COMPLETE"
+    assert result["rounds_completed"] == 2
+    assert sorted(agent for agent, _prompt in prompts) == [
+        "acpx-claude-shadow",
+        "acpx-claude-shadow",
+        "acpx-glm-shadow",
+        "acpx-glm-shadow",
+        "acpx-kimi-shadow",
+        "acpx-kimi-shadow",
+    ]
+    round_two = {
+        agent: prompt for agent, prompt in prompts if "prior response" in prompt
+    }
+    assert "kimi's prior response" in round_two["acpx-claude-shadow"]
+    assert "glm's prior response" in round_two["acpx-claude-shadow"]
+    assert "claude's prior response" in round_two["acpx-kimi-shadow"]
+    assert "glm's prior response" in round_two["acpx-kimi-shadow"]
+    assert "claude's prior response" in round_two["acpx-glm-shadow"]
+    assert "kimi's prior response" in round_two["acpx-glm-shadow"]
+    edges = {(str(row[0]), str(row[1])) for row in rows}
+    seats = ("claude", "kimi", "glm")
+    for seat in seats:
+        assert ("root", seat) in edges
+        assert (seat, "root") in edges
+    for left in seats:
+        for right in seats:
+            if left != right:
+                assert (left, right) in edges
+    receipt = acpx_discuss.verify_discussion_receipt(
+        root=tmp_path / "plane", conversation_id=result["conversation_id"]
+    )
+    assert receipt["checks"]["fixed_participants"] is True
+    assert receipt["participants"] == ["claude", "kimi", "glm"]
+
+
 def test_controller_adopts_exact_authority_reservation_without_second_conversation(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
