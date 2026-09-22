@@ -1,0 +1,18 @@
+request_schema: 1
+level: a1
+words:
+- lemma: мама
+  pos: noun
+  want: new
+- lemma: тато
+  pos: noun
+  want: new
+- lemma: книга
+  pos: noun
+  want: new
+- lemma: стіл
+  pos: noun
+  want: new
+- lemma: знати
+  pos: verb
+  want: new
