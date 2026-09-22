@@ -509,7 +509,11 @@ def analyze_timings(
         ev = str(r.get("event") or "unknown")
         runs_by_event.setdefault(ev, []).append(r)
 
-    target_events = ["pull_request", "merge_group", "push"] if event_filter == "all" else [event_filter]
+    target_events = (
+        ["pull_request", "merge_group", "push"]
+        if event_filter == "all"
+        else [event_filter]
+    )
 
     event_reports: dict[str, EventReport] = {}
 
@@ -626,7 +630,9 @@ def _compute_merge_group_queue_timings(
         runs.sort(key=lambda r: str(r.get("created_at") or ""))
 
         earliest_created = parse_github_timestamp(runs[0].get("created_at"))
-        earliest_started = parse_github_timestamp(runs[0].get("run_started_at") or runs[0].get("created_at"))
+        earliest_started = parse_github_timestamp(
+            runs[0].get("run_started_at") or runs[0].get("created_at")
+        )
 
         runner_wait_min: float | None = None
         if earliest_created is not None and earliest_started is not None:
@@ -652,10 +658,14 @@ def _compute_merge_group_queue_timings(
             status = "landed"
             completed_at = parse_github_timestamp(success_run.get("updated_at"))
             entry_iso = (
-                earliest_created.strftime("%Y-%m-%dT%H:%M:%SZ") if earliest_created else runs[0].get("created_at", "")
+                earliest_created.strftime("%Y-%m-%dT%H:%M:%SZ")
+                if earliest_created
+                else runs[0].get("created_at", "")
             )
             completed_iso = (
-                completed_at.strftime("%Y-%m-%dT%H:%M:%SZ") if completed_at else str(success_run.get("updated_at", ""))
+                completed_at.strftime("%Y-%m-%dT%H:%M:%SZ")
+                if completed_at
+                else str(success_run.get("updated_at", ""))
             )
 
             time_in_queue: float | None = None
@@ -681,7 +691,9 @@ def _compute_merge_group_queue_timings(
         else:
             status = "failed" if kicks > 0 else "in_progress"
             entry_iso = (
-                earliest_created.strftime("%Y-%m-%dT%H:%M:%SZ") if earliest_created else runs[0].get("created_at", "")
+                earliest_created.strftime("%Y-%m-%dT%H:%M:%SZ")
+                if earliest_created
+                else runs[0].get("created_at", "")
             )
             pr_stats_list.append(
                 PRQueueStats(
@@ -699,7 +711,9 @@ def _compute_merge_group_queue_timings(
     queue_time_summary = compute_metric_stats(landed_queue_times)
 
     return {
-        "definition": ("Time from first merge_group run creation for the PR until successful landing run completion."),
+        "definition": (
+            "Time from first merge_group run creation for the PR until successful landing run completion."
+        ),
         "limits": "Does not include internal GitHub merge-queue scheduling latency prior to run creation.",
         "prs": [p.to_dict() for p in pr_stats_list],
         "summary": {
@@ -776,15 +790,11 @@ def render_markdown(report: TimingReport) -> str:
 
             prs = q.get("prs", [])
             if prs:
-                lines.append(
-                    "| PR | Status | Kicks | Queue Entry (UTC) | Queue Exit (UTC) | In-Queue (min) | Runner Wait (min) |"
-                )
+                lines.append("| PR | Status | Kicks | Queue Entry (UTC) | Queue Exit (UTC) | In-Queue (min) | Runner Wait (min) |")
                 lines.append("|---|---|---|---|---|---|---|")
                 for p in prs:
                     q_exit = p.get("queue_completed_at") or "-"
-                    in_q = (
-                        f"{p.get('time_in_queue_minutes'):.1f}" if p.get("time_in_queue_minutes") is not None else "-"
-                    )
+                    in_q = f"{p.get('time_in_queue_minutes'):.1f}" if p.get("time_in_queue_minutes") is not None else "-"
                     r_wait = f"{p.get('runner_wait_minutes'):.1f}" if p.get("runner_wait_minutes") is not None else "-"
                     lines.append(
                         f"| #{p.get('pr_number')} | {p.get('status')} | {p.get('kicks')} | "

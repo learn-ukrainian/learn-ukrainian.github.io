@@ -38,21 +38,15 @@ _CONTENT_CODE_SUFFIXES = (".py", ".db", ".sqlite")
 # Exact code-imported files inside the content roots (#8399 D3). Each forces
 # the full tier on both events and is excluded from the docs exemption; the
 # importing modules are listed in is_code_load_bearing_content's docstring.
-_CONTENT_CODE_PATHS = frozenset(
-    {
-        "curriculum/l2-uk-direct/manifest.yaml",
-        "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
-        "curriculum/l2-uk-en/module-mapping.json",
-        "curriculum/l2-uk-en/vocabulary.db",
-    }
-)
+_CONTENT_CODE_PATHS = frozenset({
+    "curriculum/l2-uk-direct/manifest.yaml",
+    "curriculum/l2-uk-direct/bolshakova-letter-order.yaml",
+    "curriculum/l2-uk-en/module-mapping.json",
+    "curriculum/l2-uk-en/vocabulary.db",
+})
 
 DOC_PREFIXES = (
-    "docs/",
-    "agents_extensions/shared/skills/",
-    ".claude/",
-    ".codex/",
-    ".agent/",
+    "docs/", "agents_extensions/shared/skills/", ".claude/", ".codex/", ".agent/",
 )
 
 SAFETY_NET = "tests/test_ci_shard_partition.py"
@@ -105,7 +99,8 @@ def is_code_load_bearing_content(path: str) -> bool:
     if p.endswith(_CONTENT_CODE_SUFFIXES):
         return True
     return any(
-        p.startswith(root) and "/" not in p[len(root) :] and p.endswith(".json") for root in _CONTENT_TRACK_ROOTS
+        p.startswith(root) and "/" not in p[len(root):] and p.endswith(".json")
+        for root in _CONTENT_TRACK_ROOTS
     )
 
 
@@ -206,7 +201,9 @@ def _stem_map_tests(stem: str, tree: Iterable[str], stems: dict[str, list[str]] 
         for variant in variants:
             if not variant:
                 continue
-            if name == f"test_{variant}.py" or (name.startswith(f"test_{variant}_") and name.endswith(".py")):
+            if name == f"test_{variant}.py" or (
+                name.startswith(f"test_{variant}_") and name.endswith(".py")
+            ):
                 out.append(path)
                 break
     return sorted(set(out))
@@ -433,9 +430,7 @@ def compare_paths(base: str, head: str, repo: str) -> list[str]:
     # GitHub returns files only on the first page, capped at 300. No commit
     # pagination is needed; classify() treats reaching the file cap as full.
     raw = subprocess.check_output(
-        ["gh", "api", f"repos/{repo}/compare/{spec}"],
-        text=True,
-        timeout=60,
+        ["gh", "api", f"repos/{repo}/compare/{spec}"], text=True, timeout=60,
     )
     files = json.loads(raw)["files"]
     if not isinstance(files, list):

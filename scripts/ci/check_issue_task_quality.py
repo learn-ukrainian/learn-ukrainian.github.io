@@ -15,7 +15,9 @@ import sys
 from dataclasses import dataclass
 
 HTML_COMMENT_RE = re.compile(r"(?s)<!--.*?-->")
-PLACEHOLDER_RE = re.compile(r"(?i)^(?:todo|tbd|n/?a|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$")
+PLACEHOLDER_RE = re.compile(
+    r"(?i)^(?:todo|tbd|n/?a|…|\.\.\.|\[.*\]|<.*>|criterion \d+|path/to/)\s*$"
+)
 EXPLICIT_NONE_RE = re.compile(r"(?i)^(?:none|n/?a|na)\s*(?:[—\-].*)?$")
 TERMINAL_GOALS = ("merge", "deploy", "certify", "decision-only", "audit-only")
 
@@ -93,12 +95,16 @@ FIELDS: tuple[FieldCheck, ...] = (
     FieldCheck(
         "residual",
         "residual policy / leftover owner",
-        re.compile(r"(?im)^#{1,3}\s*(?:residual(?:\s+policy)?|leftovers?)\s*$"),
+        re.compile(
+            r"(?im)^#{1,3}\s*(?:residual(?:\s+policy)?|leftovers?)\s*$"
+        ),
     ),
     FieldCheck(
         "review_plan",
         "review plan (author family · outside-family reviewer · backup)",
-        re.compile(r"(?im)^#{1,3}\s*(?:review\s+plan|cf\s+path|cross[- ]family\s+review)\s*$"),
+        re.compile(
+            r"(?im)^#{1,3}\s*(?:review\s+plan|cf\s+path|cross[- ]family\s+review)\s*$"
+        ),
     ),
 )
 
@@ -134,14 +140,20 @@ def _substantive(chunk: str | None, *, allow_none: bool = False) -> bool:
         if re.match(r"^(```|~~~)", stripped):
             continue
         # Markdown headings / hash comments; keep "#1234" issue refs.
-        if stripped.startswith("#") and not re.match(r"^#\d", stripped) and re.match(r"^#{1,6}(?:\s|$)", stripped):
+        if (
+            stripped.startswith("#")
+            and not re.match(r"^#\d", stripped)
+            and re.match(r"^#{1,6}(?:\s|$)", stripped)
+        ):
             continue
         line = stripped.lstrip("-* ").strip()
         line = re.sub(r"^\[\s*[xX ]\s*\]\s*", "", line).strip()
         if not line or line in {"```", "~~~"}:
             continue
         # Bare fence language tags are not content.
-        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and re.match(r"^(```|~~~)", raw.strip()):
+        if re.fullmatch(r"[a-zA-Z0-9_+-]+", line) and re.match(
+            r"^(```|~~~)", raw.strip()
+        ):
             continue
         if allow_none and EXPLICIT_NONE_RE.match(line):
             lines.append(line)
@@ -177,7 +189,9 @@ def score_body(body: str, *, trivial: bool = False) -> dict[str, object]:
         if field.key == "terminal_goal":
             ok = _terminal_goal_ok(chunk)
         else:
-            ok = _substantive(chunk, allow_none=field.key in {"deps", "residual", "non_goals"})
+            ok = _substantive(
+                chunk, allow_none=field.key in {"deps", "residual", "non_goals"}
+            )
         if ok:
             present.append(field.key)
         else:
@@ -214,7 +228,9 @@ def _fetch_issue_body(repo: str, number: int) -> str:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Advisory DoR/DoD field check for an issue body (#7854).")
+    parser = argparse.ArgumentParser(
+        description="Advisory DoR/DoD field check for an issue body (#7854)."
+    )
     src = parser.add_mutually_exclusive_group(required=True)
     src.add_argument("--issue", type=int, help="GitHub issue number (uses gh)")
     src.add_argument("--body-file", type=str, help="Path to markdown body")
