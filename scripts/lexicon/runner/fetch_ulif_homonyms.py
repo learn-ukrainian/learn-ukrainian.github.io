@@ -1656,24 +1656,31 @@ def _commit_spelling_group(
 
     ledger.conn.commit()
 
-    _record_printed_numbers(ledger, normalized_spelling, parsed_rows)
-    mismatch = _printed_number_mismatch(parsed_rows)
-    if mismatch is not None:
-        register, printed = mismatch
-        cur_mismatch = int(ledger.meta("mismatch_groups", "0") or "0")
-        ledger.set_meta("mismatch_groups", str(cur_mismatch + 1))
-        ledger.conn.execute(
-            "UPDATE register_rows SET error = ? WHERE normalized_spelling = ?",
-            (f"printed_number_mismatch register={list(register)} printed={list(printed)}", normalized_spelling),
-        )
-        ledger.conn.commit()
-
     from scripts.wiki.sources_db import store_ulif_dictua_entry
 
     differing = _write_group(cache, normalized_spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
     if differing > 0:
         cur_diff = int(ledger.meta("differing_groups", "0") or "0")
         ledger.set_meta("differing_groups", str(cur_diff + differing))
+
+    _record_printed_numbers(ledger, normalized_spelling, parsed_rows)
+    mismatch = _printed_number_mismatch(parsed_rows)
+    if mismatch is not None:
+        register, printed = mismatch
+        already_recorded = bool(
+            ledger.conn.execute(
+                "SELECT 1 FROM register_rows WHERE normalized_spelling = ? AND error LIKE 'printed_number_mismatch%' LIMIT 1",
+                (normalized_spelling,),
+            ).fetchone()
+        )
+        if not already_recorded:
+            cur_mismatch = int(ledger.meta("mismatch_groups", "0") or "0")
+            ledger.set_meta("mismatch_groups", str(cur_mismatch + 1))
+        ledger.conn.execute(
+            "UPDATE register_rows SET error = ? WHERE normalized_spelling = ?",
+            (f"printed_number_mismatch register={list(register)} printed={list(printed)}", normalized_spelling),
+        )
+        ledger.conn.commit()
 
     pages_seen = {int(r["page_num"]) for r in completed_rows}
     straddled = len(pages_seen) > 1
