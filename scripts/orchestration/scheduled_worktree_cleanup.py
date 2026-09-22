@@ -172,9 +172,40 @@ def _branch_is_origin_main_ancestor(repo_root: Path, head_sha: str) -> bool:
     return proc.returncode == 0
 
 
+def _is_agent_scratch_branch(branch: str) -> bool:
+    """Local names agents create for a review round, a rescue, or a PR checkout.
+
+    These refs are not the pull request's head branch. ``gh pr list --head``
+    never sees them, so the exact-SHA rule kept every one of them.
+    """
+    if branch.startswith(("rescue/", "pr-", "cf-", "audit-pr-", "rebase-")):
+        return True
+    if branch.startswith("build/a1/"):
+        return True
+    return branch.split("/")[-1].startswith("review-")
+
+
+def _merged_pr_contains_head(
+    repo_root: Path,
+    head_sha: str,
+    prs: list[reap_worktrees.PullRequestState],
+) -> reap_worktrees.PullRequestState | None:
+    """A squash merge is not an ancestor of main. The old tip is still on the PR."""
+    for pr in prs:
+        if pr.state != "MERGED" or not pr.head_sha:
+            continue
+        if head_sha == pr.head_sha:
+            return pr
+        proc = _run_git(repo_root, "merge-base", "--is-ancestor", head_sha, pr.head_sha)
+        if proc.returncode == 0:
+            return pr
+    return None
+
+
 def _stale_ref_delete_reason(
     repo_root: Path,
     *,
+    branch: str,
     prs: list[reap_worktrees.PullRequestState],
     head_sha: str,
     kind: str,
@@ -183,12 +214,17 @@ def _stale_ref_delete_reason(
     open_pr = next((pr for pr in prs if pr.state == "OPEN"), None)
     if open_pr is not None:
         return None, f"{kind} but PR #{open_pr.number} is OPEN"
+    if _is_agent_scratch_branch(branch):
+        return f"{kind}; agent scratch ref with no open PR", None
     exact_merged = next(
         (pr for pr in prs if pr.state == "MERGED" and pr.head_sha == head_sha),
         None,
     )
     if exact_merged is not None:
         return f"{kind}; exact head of MERGED PR #{exact_merged.number}", None
+    contained = _merged_pr_contains_head(repo_root, head_sha, prs)
+    if contained is not None:
+        return f"{kind}; tip is contained in MERGED PR #{contained.number}", None
     exact_closed = next(
         (pr for pr in prs if pr.state == "CLOSED" and pr.head_sha == head_sha),
         None,
@@ -303,6 +339,7 @@ def cleanup_stale_origin_branches(
             continue
         reason, skip_reason = _stale_ref_delete_reason(
             repo_root,
+            branch=branch,
             prs=prs,
             head_sha=head_sha,
             kind="origin head",
@@ -439,6 +476,7 @@ def cleanup_gone_local_branches(
             continue
         reason, skip_reason = _stale_ref_delete_reason(
             repo_root,
+            branch=branch,
             prs=prs,
             head_sha=head_sha,
             kind="upstream gone",
@@ -593,6 +631,7 @@ def cleanup_untracked_local_branches(
             prs = [*prs, *extra]
         reason, skip_reason = _stale_ref_delete_reason(
             repo_root,
+            branch=branch,
             prs=prs,
             head_sha=head_sha,
             kind="untracked local",

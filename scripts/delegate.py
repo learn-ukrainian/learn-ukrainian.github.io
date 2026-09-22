@@ -2877,6 +2877,7 @@ def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list
                 file=sys.stderr,
             )
             continue
+        scratch_branch = _scratch_branch_for_review_checkout(path, component)
         if dry_run:
             print(
                 f"🌲 dry-run: would remove superseded review worktree {path} ({reason})",
@@ -2910,8 +2911,81 @@ def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list
             f"🌲 removed superseded review worktree {path} ({reason})",
             file=sys.stderr,
         )
+        if scratch_branch is not None:
+            _delete_local_branch(scratch_branch)
         released.append(path)
     return released
+
+
+def _scratch_branch_for_review_checkout(path: Path, component: str) -> str | None:
+    """The local branch named for this review round, if the checkout is on it."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    name = (proc.stdout or "").strip()
+    if proc.returncode != 0 or not name or name == "HEAD":
+        return None
+    if name.split("/")[-1] != component:
+        return None
+    return name
+
+
+def _delete_local_branch(branch: str) -> None:
+    if any(item == branch for item in _checked_out_branch_names()):
+        print(f"ℹ️  kept local branch {branch}; another checkout still has it", file=sys.stderr)
+        return
+    try:
+        proc = subprocess.run(
+            ["git", "branch", "-D", branch],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        print(
+            f"⚠️  failed to delete local branch {branch}: {type(exc).__name__}: {exc}",
+            file=sys.stderr,
+        )
+        return
+    if proc.returncode != 0:
+        print(
+            f"⚠️  failed to delete local branch {branch}: {_format_process_failure(proc)}",
+            file=sys.stderr,
+        )
+        return
+    print(f"🌲 deleted superseded review branch {branch}", file=sys.stderr)
+
+
+def _checked_out_branch_names() -> list[str]:
+    names: list[str] = []
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return names
+    for line in (proc.stdout or "").splitlines():
+        if line.startswith("branch refs/heads/"):
+            names.append(line.removeprefix("branch refs/heads/").strip())
+    return names
 
 
 def _release_stale_branch_holders(

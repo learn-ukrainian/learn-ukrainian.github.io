@@ -266,6 +266,27 @@ def test_exact_merged_gone_branch_is_deleted(
     assert _git(repo, "branch", "--list", branch) == ""
 
 
+def test_scratch_review_branch_with_no_pr_is_deleted(
+    tmp_path: Path,
+    monkeypatch,
+) -> None:
+    repo = _repo(tmp_path)
+    branch = "codex/review-8115-r1"
+    _gone_branch(repo, branch)
+    monkeypatch.setattr(
+        cleanup.reap_worktrees,
+        "_query_pr_states",
+        lambda _repo, _branch: ([], None),
+    )
+
+    result = cleanup.cleanup_gone_local_branches(repo, apply=True)
+
+    row = next(item for item in result if item["branch"] == branch)
+    assert row["action"] == "deleted"
+    assert "agent scratch ref" in row["reason"]
+    assert _git(repo, "branch", "--list", branch) == ""
+
+
 def test_unproven_gone_branch_is_preserved(
     tmp_path: Path,
     monkeypatch,

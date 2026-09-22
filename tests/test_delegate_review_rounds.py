@@ -28,11 +28,12 @@ def test_later_round_removes_only_earlier_clean_rounds(monkeypatch, tmp_path: Pa
     monkeypatch.setattr(delegate, "_superseded_review_releasable", lambda _path: (True, "clean; task status=done"))
 
     def fake_run(cmd, **_kwargs):
-        removed.append(cmd[-1])
+        if "worktree" in cmd and "remove" in cmd:
+            removed.append(cmd[-1])
 
         class Proc:
             returncode = 0
-            stdout = ""
+            stdout = "HEAD\n"
             stderr = ""
 
         return Proc()
