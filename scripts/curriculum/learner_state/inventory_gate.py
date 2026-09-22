@@ -18,13 +18,13 @@ is lemma_outside_state.
 
 from __future__ import annotations
 
-import contextlib
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
 import yaml
 
+from scripts.curriculum.evidence import lock
 from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.validate.loader import PlanError, load_plan
 
@@ -162,6 +162,7 @@ def check_lesson(
     words_path: Path | None = None,
     base_request_path: Path | None = None,
     expanded: Any = None,
+    expanded_path: Path | None = None,
     resolutions_path: Path | None = None,
     allow_missing_prior: bool = False,
     strict: bool = False,
@@ -324,20 +325,76 @@ def check_lesson(
     # Not checked reporting: introducing_step_not_locatable and missing prior waiver
     not_checked: list[str] = [codes.INTRODUCING_STEP_NOT_LOCATABLE]
     if allow_missing_prior and planned.waiver:
-        not_checked.append(planned.waiver)
+        not_checked.append(codes.WAIVER_PRIOR_PLANS_MISSING)
 
     # Load word store for gloss stress checks
     words_file = words_path or (evidence_root / "_words.yaml")
     store_words: dict[str, dict[str, Any]] = {}
-    if words_file.is_file():
-        try:
-            w_data = yaml.safe_load(words_file.read_text(encoding="utf-8"))
-            if isinstance(w_data, dict) and isinstance(w_data.get("words"), list):
-                for w in w_data["words"]:
-                    if isinstance(w, dict) and "id" in w:
-                        store_words[w["id"]] = w
-        except Exception:
-            pass
+    if not words_file.is_file():
+        return GateReport(
+            level=level,
+            slug=slug,
+            lesson_n=lesson_n,
+            failures=(
+                GateFailure(
+                    code=codes.BASE_LAYER_MISSING,
+                    level=level,
+                    slug=slug,
+                    lesson=lesson_n,
+                    tab="store",
+                    token=None,
+                    sentence=None,
+                    record=None,
+                    message=f"word store file {words_file} not found",
+                ),
+            ),
+            not_checked=tuple(not_checked),
+        )
+    try:
+        w_data = yaml.safe_load(words_file.read_text(encoding="utf-8"))
+        if not isinstance(w_data, dict) or not isinstance(w_data.get("words"), list):
+            return GateReport(
+                level=level,
+                slug=slug,
+                lesson_n=lesson_n,
+                failures=(
+                    GateFailure(
+                        code=codes.BASE_LAYER_MISSING,
+                        level=level,
+                        slug=slug,
+                        lesson=lesson_n,
+                        tab="store",
+                        token=None,
+                        sentence=None,
+                        record=None,
+                        message=f"word store file {words_file} has missing or malformed words list",
+                    ),
+                ),
+                not_checked=tuple(not_checked),
+            )
+        for w in w_data["words"]:
+            if isinstance(w, dict) and "id" in w:
+                store_words[w["id"]] = w
+    except Exception as err:
+        return GateReport(
+            level=level,
+            slug=slug,
+            lesson_n=lesson_n,
+            failures=(
+                GateFailure(
+                    code=codes.BASE_LAYER_MISSING,
+                    level=level,
+                    slug=slug,
+                    lesson=lesson_n,
+                    tab="store",
+                    token=None,
+                    sentence=None,
+                    record=None,
+                    message=f"word store file {words_file} could not be loaded: {err}",
+                ),
+            ),
+            not_checked=tuple(not_checked),
+        )
 
     # 4. Stream and tokens
     stream_failures: list[dict[str, Any]] = []
@@ -418,14 +475,208 @@ def check_lesson(
                 not_checked=tuple(not_checked),
             )
 
+    if stream is not None:
+        stream_inputs = getattr(stream, "inputs", None) or (stream.get("inputs") if isinstance(stream, dict) else {})
+        expected_expanded_sha256 = stream_inputs.get("expanded_sha256") if isinstance(stream_inputs, dict) else None
+    else:
+        res_inputs = res_doc.get("inputs") if isinstance(res_doc, dict) else {}
+        expected_expanded_sha256 = res_inputs.get("expanded_sha256") if isinstance(res_inputs, dict) else None
+
     expanded_doc = expanded
-    if expanded_doc is None:
-        exp_file = evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml"
-        if exp_file.is_file():
-            with contextlib.suppress(Exception):
-                from scripts.curriculum.resolver.inputs import ExpandedDocument
+    if stream is None or expected_expanded_sha256 is not None:
+        if expanded_doc is None:
+            exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+            if not exp_file.is_file():
+                return GateReport(
+                    level=level,
+                    slug=slug,
+                    lesson_n=lesson_n,
+                    failures=(
+                        GateFailure(
+                            code=codes.EXPANDED_DOCUMENT_MISSING,
+                            level=level,
+                            slug=slug,
+                            lesson=lesson_n,
+                            tab="expanded",
+                            token=None,
+                            sentence=None,
+                            record=None,
+                            message=f"expanded document {exp_file} not found",
+                        ),
+                    ),
+                    not_checked=tuple(not_checked),
+                )
+            if Path(f"{exp_file}.lock").exists() and not lock.check(exp_file):
+                return GateReport(
+                    level=level,
+                    slug=slug,
+                    lesson_n=lesson_n,
+                    failures=(
+                        GateFailure(
+                            code=codes.EXPANDED_DOCUMENT_MISMATCH,
+                            level=level,
+                            slug=slug,
+                            lesson=lesson_n,
+                            tab="expanded",
+                            token=None,
+                            sentence=None,
+                            record=None,
+                            message=f"expanded document {exp_file} failed lock check",
+                        ),
+                    ),
+                    not_checked=tuple(not_checked),
+                )
+            try:
+                from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
 
                 expanded_doc = ExpandedDocument.load(exp_file)
+            except ResolverError as err:
+                fail_code = (
+                    codes.EXPANDED_DOCUMENT_MISMATCH
+                    if err.code == resolver_codes.LOCK_MISMATCH
+                    else codes.EXPANDED_DOCUMENT_MISSING
+                )
+                return GateReport(
+                    level=level,
+                    slug=slug,
+                    lesson_n=lesson_n,
+                    failures=(
+                        GateFailure(
+                            code=fail_code,
+                            level=level,
+                            slug=slug,
+                            lesson=lesson_n,
+                            tab="expanded",
+                            token=None,
+                            sentence=None,
+                            record=None,
+                            message=f"expanded document {exp_file} failed to load: {err.message}",
+                        ),
+                    ),
+                    not_checked=tuple(not_checked),
+                )
+            except Exception as err:
+                return GateReport(
+                    level=level,
+                    slug=slug,
+                    lesson_n=lesson_n,
+                    failures=(
+                        GateFailure(
+                            code=codes.EXPANDED_DOCUMENT_MISSING,
+                            level=level,
+                            slug=slug,
+                            lesson=lesson_n,
+                            tab="expanded",
+                            token=None,
+                            sentence=None,
+                            record=None,
+                            message=f"expanded document {exp_file} failed to load: {err}",
+                        ),
+                    ),
+                    not_checked=tuple(not_checked),
+                )
+
+        doc_sha256 = getattr(expanded_doc, "sha256", None) or (
+            expanded_doc.get("sha256") if isinstance(expanded_doc, dict) else None
+        )
+        if expected_expanded_sha256 is not None and doc_sha256 != expected_expanded_sha256:
+            origin = "stream inputs" if stream is not None else "receipts inputs"
+            return GateReport(
+                level=level,
+                slug=slug,
+                lesson_n=lesson_n,
+                failures=(
+                    GateFailure(
+                        code=codes.EXPANDED_DOCUMENT_MISMATCH,
+                        level=level,
+                        slug=slug,
+                        lesson=lesson_n,
+                        tab="expanded",
+                        token=None,
+                        sentence=None,
+                        record=None,
+                        message=(
+                            f"expanded document sha256 {doc_sha256!r} differs from "
+                            f"{origin} {expected_expanded_sha256!r}"
+                        ),
+                    ),
+                ),
+                not_checked=tuple(not_checked),
+            )
+    else:
+        # stream is not None and expected_expanded_sha256 is None
+        if expanded_doc is None:
+            exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+            if exp_file.is_file():
+                if Path(f"{exp_file}.lock").exists() and not lock.check(exp_file):
+                    return GateReport(
+                        level=level,
+                        slug=slug,
+                        lesson_n=lesson_n,
+                        failures=(
+                            GateFailure(
+                                code=codes.EXPANDED_DOCUMENT_MISMATCH,
+                                level=level,
+                                slug=slug,
+                                lesson=lesson_n,
+                                tab="expanded",
+                                token=None,
+                                sentence=None,
+                                record=None,
+                                message=f"expanded document {exp_file} failed lock check",
+                            ),
+                        ),
+                        not_checked=tuple(not_checked),
+                    )
+                try:
+                    from scripts.curriculum.resolver.inputs import ExpandedDocument, ResolverError
+
+                    expanded_doc = ExpandedDocument.load(exp_file)
+                except ResolverError as err:
+                    fail_code = (
+                        codes.EXPANDED_DOCUMENT_MISMATCH
+                        if err.code == resolver_codes.LOCK_MISMATCH
+                        else codes.EXPANDED_DOCUMENT_MISSING
+                    )
+                    return GateReport(
+                        level=level,
+                        slug=slug,
+                        lesson_n=lesson_n,
+                        failures=(
+                            GateFailure(
+                                code=fail_code,
+                                level=level,
+                                slug=slug,
+                                lesson=lesson_n,
+                                tab="expanded",
+                                token=None,
+                                sentence=None,
+                                record=None,
+                                message=f"expanded document {exp_file} failed to load: {err.message}",
+                            ),
+                        ),
+                        not_checked=tuple(not_checked),
+                    )
+                except Exception as err:
+                    return GateReport(
+                        level=level,
+                        slug=slug,
+                        lesson_n=lesson_n,
+                        failures=(
+                            GateFailure(
+                                code=codes.EXPANDED_DOCUMENT_MISSING,
+                                level=level,
+                                slug=slug,
+                                lesson=lesson_n,
+                                tab="expanded",
+                                token=None,
+                                sentence=None,
+                                record=None,
+                                message=f"expanded document {exp_file} failed to load: {err}",
+                            ),
+                        ),
+                        not_checked=tuple(not_checked),
+                    )
 
     units_by_locator: dict[tuple[Any, Any, Any, Any], Any] = {}
     if expanded_doc is not None:
@@ -446,9 +697,9 @@ def check_lesson(
         surface = str(token.get("surface", ""))
 
         # Ignore skipped tokens
-        if klass.startswith("skipped:") or surface == "skipped":
+        if klass.startswith(resolver_codes.SKIPPED_PREFIX) or surface == resolver_codes.SKIPPED:
             continue
-        if klass == "letter_or_syllable":
+        if klass == resolver_codes.LETTER_OR_SYLLABLE:
             continue
 
         unit = token.get("unit") or {}
@@ -468,7 +719,7 @@ def check_lesson(
             unit_loc = (unit.get("tab"), unit.get("activity"), unit.get("item"), unit.get("block"))
             unit_obj = units_by_locator.get(unit_loc)
 
-        role = unit_obj.role if unit_obj is not None else (token.get("role") or unit.get("role") or "")
+        role = token.get("role") or (unit_obj.role if unit_obj is not None else (unit.get("role") or ""))
 
         selected = token.get("selected")
 
@@ -554,7 +805,22 @@ def check_lesson(
             if is_gloss:
                 if rec:
                     w_rec = store_words.get(rec)
-                    if w_rec and _is_record_stress_pending(w_rec):
+                    if w_rec is None:
+                        failures.append(
+                            GateFailure(
+                                code=codes.TOKEN_UNRESOLVED,
+                                level=level,
+                                slug=slug,
+                                lesson=lesson_n,
+                                tab=tab,
+                                token=token_text,
+                                sentence=sentence,
+                                record=rec,
+                                message=f"gloss token {token_text!r} refers to record {rec!r} absent from word store",
+                            )
+                        )
+                        continue
+                    if _is_record_stress_pending(w_rec):
                         failures.append(
                             GateFailure(
                                 code=codes.PENDING_STRESS,

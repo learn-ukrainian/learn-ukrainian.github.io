@@ -904,4 +904,127 @@ def test_gate_allow_missing_prior_records_waiver(tmp_path: Path) -> None:
         allow_missing_prior=True,
     )
     assert report.ok is True
-    assert any("waived: prior_plans_missing" in nc for nc in report.not_checked)
+    assert codes.WAIVER_PRIOR_PLANS_MISSING in report.not_checked
+
+
+def test_gate_gloss_absent_from_store_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    # Gloss referring to W-999 which is not in _words.yaml
+    tokens = [
+        {
+            "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+            "role": "record_print",
+            "offset": 0,
+            "token": "{{gloss:W-999}}",
+            "sentence": "tok {{gloss:W-999}} sent",
+            "surface": resolver_codes.GLOSS_REF,
+            "class": "resolved",
+            "selected": {"record": "W-999", "forms": ["tag:nom"], "stressed": "tok"},
+        }
+    ]
+    report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
+    assert report.ok is False
+    assert any(f.code == codes.TOKEN_UNRESOLVED and f.record == "W-999" for f in report.failures)
+
+
+def test_gate_word_store_unreadable_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    # Tamper words file to be invalid YAML
+    paths["words_path"].write_text("invalid: [broken: yaml", encoding="utf-8")
+    tokens = [
+        {
+            "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+            "role": "record_print",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        }
+    ]
+    report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
+    assert report.ok is False
+    assert any(f.code == codes.BASE_LAYER_MISSING for f in report.failures)
+
+
+def test_gate_missing_expanded_document_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    evidence_dir = paths["evidence_dir"]
+    res_dir = evidence_dir / "_state" / "mod-01"
+    res_dir.mkdir(parents=True, exist_ok=True)
+    res_path = res_dir / "lesson-2.resolutions.yaml"
+
+    res_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": {
+            "expanded_sha256": "a" * 64,
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+                "offset": 0,
+                "token": "tok1",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-10"],
+                "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    _write_yaml(res_path, res_doc)
+
+    report = check_lesson("a1", "mod-01", 2, resolutions_path=res_path, **paths)
+    assert report.ok is False
+    assert any(f.code == codes.EXPANDED_DOCUMENT_MISSING for f in report.failures)
+
+
+def test_gate_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    evidence_dir = paths["evidence_dir"]
+    res_dir = evidence_dir / "_state" / "mod-01"
+    res_dir.mkdir(parents=True, exist_ok=True)
+    res_path = res_dir / "lesson-2.resolutions.yaml"
+    exp_path = res_dir / "lesson-2.expanded.yaml"
+
+    exp_doc = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "units": [
+            {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok1 sent"}
+        ],
+    }
+    _write_yaml(exp_path, exp_doc)
+
+    res_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": {
+            "expanded_sha256": "f" * 64,  # mismatched
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+                "offset": 0,
+                "token": "tok1",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-10"],
+                "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    _write_yaml(res_path, res_doc)
+
+    report = check_lesson("a1", "mod-01", 2, resolutions_path=res_path, **paths)
+    assert report.ok is False
+    assert any(f.code == codes.EXPANDED_DOCUMENT_MISMATCH for f in report.failures)

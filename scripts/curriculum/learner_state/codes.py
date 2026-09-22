@@ -38,6 +38,10 @@ TAUGHT_FORM_ABSENT = "taught_form_absent"
 TOKEN_UNRESOLVED = "token_unresolved"
 PENDING_STRESS = "pending_stress"
 
+# --- Failures: expanded document ---------------------------------------------
+EXPANDED_DOCUMENT_MISSING = "expanded_document_missing"
+EXPANDED_DOCUMENT_MISMATCH = "expanded_document_mismatch"
+
 # --- Failures: observed index and resolutions receipts -----------------------
 RESOLUTIONS_NOT_FOUND = "resolutions_not_found"
 RESOLUTIONS_INVALID = "resolutions_invalid"
@@ -53,6 +57,7 @@ STRESS_CERTAIN_IDENTITY_OPEN = "stress_certain_identity_open"
 # --- Not Checked -------------------------------------------------------------
 LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED = "lesson_structural_minimums_not_calibrated"
 INTRODUCING_STEP_NOT_LOCATABLE = "introducing_step_not_locatable"
+WAIVER_PRIOR_PLANS_MISSING = PRIOR_PLANS_MISSING
 
 # --- Descriptions for --help and reporting -----------------------------------
 DESCRIPTIONS: dict[str, str] = {
@@ -73,6 +78,8 @@ DESCRIPTIONS: dict[str, str] = {
     TAUGHT_FORM_ABSENT: "failure: taught form declared in plan does not appear in a teaching position",
     TOKEN_UNRESOLVED: "failure: token is outside allowlist or unclassifiable in resolution stream",
     PENDING_STRESS: "failure: resolved form has pending stress in word store",
+    EXPANDED_DOCUMENT_MISSING: "failure: expanded document file does not exist or failed to load",
+    EXPANDED_DOCUMENT_MISMATCH: "failure: expanded document sha256 disagrees with receipts inputs or lock",
     RESOLUTIONS_NOT_FOUND: "failure: lesson resolutions receipts file does not exist",
     RESOLUTIONS_INVALID: "failure: lesson resolutions receipts file is invalid or tampered",
     OBSERVED_SCHEMA_INVALID: "failure: observed index document breaks learner-observed-v1 schema",
@@ -108,6 +115,8 @@ FAILURE_CODES = frozenset(
         TAUGHT_FORM_ABSENT,
         TOKEN_UNRESOLVED,
         PENDING_STRESS,
+        EXPANDED_DOCUMENT_MISSING,
+        EXPANDED_DOCUMENT_MISMATCH,
         RESOLUTIONS_NOT_FOUND,
         RESOLUTIONS_INVALID,
         OBSERVED_SCHEMA_INVALID,
@@ -123,6 +132,7 @@ NOT_CHECKED_CODES = frozenset(
     {
         LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED,
         INTRODUCING_STEP_NOT_LOCATABLE,
+        WAIVER_PRIOR_PLANS_MISSING,
     }
 )
 

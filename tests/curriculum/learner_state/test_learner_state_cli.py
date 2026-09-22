@@ -10,6 +10,7 @@ Verifies:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -447,7 +448,7 @@ def test_cli_observed_and_gate_pass(tmp_path: Path) -> None:
         "resolutions_schema": 1,
         "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
         "inputs": {
-            "expanded_sha256": "0" * 64,
+            "expanded_sha256": hashlib.sha256(exp_bytes).hexdigest(),
             "allowlist_sha256": "0" * 64,
             "words_lock": "0" * 64,
             "vesum": "0" * 64,
@@ -531,12 +532,30 @@ def test_cli_gate_failing_output(tmp_path: Path) -> None:
     state_dir = evidence_dir / "_state" / "mod-01"
     state_dir.mkdir(parents=True, exist_ok=True)
 
+    exp_doc = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "units": [
+            {
+                "tab": "vpravy",
+                "activity": "a1",
+                "item": 0,
+                "block": 0,
+                "role": "item_prompt",
+                "text": "bad-tok",
+            }
+        ],
+    }
+    exp_path = state_dir / "lesson-1.expanded.yaml"
+    exp_bytes = yaml.safe_dump(exp_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    exp_path.write_bytes(exp_bytes)
+    lock.write(exp_path, exp_bytes)
+
     # Token outside allowlist
     res_doc = {
         "resolutions_schema": 1,
         "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
         "inputs": {
-            "expanded_sha256": "0" * 64,
+            "expanded_sha256": hashlib.sha256(exp_bytes).hexdigest(),
             "allowlist_sha256": "0" * 64,
             "words_lock": "0" * 64,
             "vesum": "0" * 64,

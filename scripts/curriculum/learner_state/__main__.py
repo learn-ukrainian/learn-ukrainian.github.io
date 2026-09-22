@@ -239,6 +239,12 @@ def build_parser() -> argparse.ArgumentParser:
         help="override path to lesson-<n>.resolutions.yaml (for tests)",
     )
     observed_parser.add_argument(
+        "--expanded",
+        type=Path,
+        default=None,
+        help="override path to lesson-<n>.expanded.yaml (for tests)",
+    )
+    observed_parser.add_argument(
         "--grammar-path",
         type=Path,
         default=None,
@@ -310,6 +316,12 @@ def build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=None,
         help="override path to lesson-<n>.resolutions.yaml (for tests)",
+    )
+    gate_parser.add_argument(
+        "--expanded",
+        type=Path,
+        default=None,
+        help="override path to lesson-<n>.expanded.yaml (for tests)",
     )
     gate_parser.add_argument(
         "--allow-missing-prior",
@@ -397,6 +409,7 @@ def main(argv: list[str] | None = None) -> int:
                 words_path=args.words,
                 base_request_path=args.base_request,
                 resolutions_path=args.resolutions,
+                expanded_path=args.expanded,
                 grammar_path=args.grammar_path,
                 allow_missing_prior=args.allow_missing_prior,
                 strict=args.strict,
@@ -423,6 +436,7 @@ def main(argv: list[str] | None = None) -> int:
                 words_path=args.words,
                 base_request_path=args.base_request,
                 resolutions_path=args.resolutions,
+                expanded_path=args.expanded,
                 allow_missing_prior=args.allow_missing_prior,
                 strict=args.strict,
             )

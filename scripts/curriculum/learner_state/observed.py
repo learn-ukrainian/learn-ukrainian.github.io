@@ -20,7 +20,6 @@ Untaught forms:
 
 from __future__ import annotations
 
-import contextlib
 import json
 import re
 from pathlib import Path
@@ -172,6 +171,9 @@ def build_observed_index(
         except Exception as err:
             raise ObservedError(codes.RESOLUTIONS_INVALID, f"failed parsing YAML in {res_path}: {err}") from err
 
+    res_inputs = res_data.get("inputs") if isinstance(res_data, dict) else {}
+    expected_expanded_sha256 = res_inputs.get("expanded_sha256") if isinstance(res_inputs, dict) else None
+
     expanded_doc = expanded
     if expanded_doc is None:
         exp_file = expanded_path or (
@@ -179,9 +181,36 @@ def build_observed_index(
             if state_dir
             else (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
         )
-        if exp_file.is_file():
-            with contextlib.suppress(Exception):
-                expanded_doc = ExpandedDocument.load(exp_file)
+        if not exp_file.is_file():
+            raise ObservedError(codes.EXPANDED_DOCUMENT_MISSING, f"expanded document {exp_file} not found")
+        if Path(f"{exp_file}.lock").exists() and not lock.check(exp_file):
+            raise ObservedError(codes.EXPANDED_DOCUMENT_MISMATCH, f"expanded document {exp_file} failed lock check")
+        try:
+            expanded_doc = ExpandedDocument.load(exp_file)
+        except ResolverError as err:
+            if err.code == resolver_codes.LOCK_MISMATCH:
+                raise ObservedError(
+                    codes.EXPANDED_DOCUMENT_MISMATCH,
+                    f"expanded document {exp_file} failed lock check: {err.message}",
+                ) from err
+            raise ObservedError(
+                codes.EXPANDED_DOCUMENT_MISSING,
+                f"failed loading expanded document {exp_file}: {err.message}",
+            ) from err
+        except Exception as err:
+            raise ObservedError(
+                codes.EXPANDED_DOCUMENT_MISSING,
+                f"failed loading expanded document {exp_file}: {err}",
+            ) from err
+
+    doc_sha256 = getattr(expanded_doc, "sha256", None) or (
+        expanded_doc.get("sha256") if isinstance(expanded_doc, dict) else None
+    )
+    if expected_expanded_sha256 is not None and doc_sha256 != expected_expanded_sha256:
+        raise ObservedError(
+            codes.EXPANDED_DOCUMENT_MISMATCH,
+            f"expanded document sha256 {doc_sha256!r} differs from receipts inputs {expected_expanded_sha256!r}",
+        )
 
     units_by_locator: dict[tuple[Any, Any, Any, Any], Any] = {}
     if expanded_doc is not None:
@@ -300,9 +329,9 @@ def build_observed_index(
             continue
         klass = str(token.get("class", ""))
         surface = str(token.get("surface", ""))
-        if klass.startswith("skipped:") or surface == "skipped":
+        if klass.startswith(resolver_codes.SKIPPED_PREFIX) or surface == resolver_codes.SKIPPED:
             continue
-        if klass == "letter_or_syllable":
+        if klass == resolver_codes.LETTER_OR_SYLLABLE:
             continue
 
         unit = token.get("unit") or {}
@@ -343,7 +372,7 @@ def build_observed_index(
             unit_loc = (unit.get("tab"), unit.get("activity"), unit.get("item"), unit.get("block"))
             unit_obj = units_by_locator.get(unit_loc)
 
-        role = unit_obj.role if unit_obj is not None else (token.get("role") or unit.get("role") or "")
+        role = token.get("role") or (unit_obj.role if unit_obj is not None else (unit.get("role") or ""))
         act_id = unit.get("activity")
         if rec_id in core_by_id and act_id in practice_or_consolidation_acts and role in ("item_prompt", "item_answer"):
             core_item = core_by_id[rec_id]

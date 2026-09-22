@@ -13,6 +13,7 @@ Verifies:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 
@@ -234,13 +235,15 @@ def _setup_fixture(root: Path, level: str = "a1") -> dict[str, Path]:
             {"tab": "resursy", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok7 sent"},
         ],
     }
-    _write_yaml(state_dir / "lesson-1.expanded.yaml", exp_doc)
+    exp_path = state_dir / "lesson-1.expanded.yaml"
+    _write_yaml(exp_path, exp_doc)
+    exp_sha = hashlib.sha256(exp_path.read_bytes()).hexdigest()
 
     resolutions = {
         "resolutions_schema": 1,
         "lesson": {"level": level, "slug": "mod-01", "n": 1},
         "inputs": {
-            "expanded_sha256": "0" * 64,
+            "expanded_sha256": exp_sha,
             "allowlist_sha256": "0" * 64,
             "words_lock": "0" * 64,
             "vesum": "0" * 64,
@@ -433,3 +436,58 @@ def test_observed_build_in_memory(tmp_path: Path) -> None:
     assert doc["observed_schema"] == 1
     assert doc["lesson"]["slug"] == "mod-01"
     assert len(doc["records"]) > 0
+
+
+def test_observed_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    res_path = paths["resolutions_path"]
+    data = yaml.safe_load(res_path.read_text(encoding="utf-8"))
+    data["inputs"]["expanded_sha256"] = "f" * 64
+    _write_yaml(res_path, data)
+
+    with pytest.raises(ObservedError) as exc_info:
+        write_observed("a1", "mod-01", 1, **paths)
+    assert exc_info.value.code == codes.EXPANDED_DOCUMENT_MISMATCH
+
+
+def test_observed_missing_expanded_document_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    exp_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/mod-01/lesson-1.expanded.yaml"
+    exp_path.unlink()
+    exp_lock = Path(f"{exp_path}.lock")
+    if exp_lock.exists():
+        exp_lock.unlink()
+
+    with pytest.raises(ObservedError) as exc_info:
+        write_observed("a1", "mod-01", 1, **paths)
+    assert exc_info.value.code == codes.EXPANDED_DOCUMENT_MISSING
+
+
+def test_observed_drilled_word_fails_rather_than_silent_taught_on_missing_doc(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    # With expanded document present, W-11 is drilled
+    doc = build_observed_index("a1", "mod-01", 1, **paths)
+    roles = {rec["id"]: rec["role"] for rec in doc["records"]}
+    assert roles["W-11"] == "drilled"
+
+    # When expanded document is absent, it must raise ObservedError rather than silently writing taught
+    exp_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/mod-01/lesson-1.expanded.yaml"
+    exp_path.unlink()
+    exp_lock = Path(f"{exp_path}.lock")
+    if exp_lock.exists():
+        exp_lock.unlink()
+
+    with pytest.raises(ObservedError) as exc_info:
+        build_observed_index("a1", "mod-01", 1, **paths)
+    assert exc_info.value.code == codes.EXPANDED_DOCUMENT_MISSING
+
+
+def test_observed_expanded_document_tampered_lock_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    exp_path = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/mod-01/lesson-1.expanded.yaml"
+    exp_lock = Path(f"{exp_path}.lock")
+    exp_lock.write_text("0" * 64 + "\n", encoding="ascii")
+
+    with pytest.raises(ObservedError) as exc_info:
+        write_observed("a1", "mod-01", 1, **paths)
+    assert exc_info.value.code == codes.EXPANDED_DOCUMENT_MISMATCH
