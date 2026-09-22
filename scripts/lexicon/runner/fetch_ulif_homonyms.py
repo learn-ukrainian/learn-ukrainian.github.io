@@ -2410,28 +2410,31 @@ def _reseed_to_page(
     exp_end = str(p_rec["end_headword"]) if p_rec and p_rec["end_headword"] else None
 
     # If we have expected boundaries, try direct search as a fast path
-    if exp_start and exp_end:
-        search_fields = _form_fields(
-            seed_tokens,
-            spelling=exp_start,
-            extra=_image_click(SEARCH_BUTTON),
-        )
-        search_html, search_req = client.exchange("POST", search_fields)
-        _keep_walk(
-            ledger,
-            cache,
-            "",
-            f"tsearch:{marker_prefix}:{target_page}",
-            search_html,
-            search_req,
-            current_page=target_page,
-        )
-        landed = parse_register_list(search_html)
-        if not landed:
-            raise SessionInvalid(f"{marker_prefix}_missing_register")
+    search_target = exp_start or start_headword
+    search_fields = _form_fields(
+        seed_tokens,
+        spelling=search_target,
+        extra=_image_click(SEARCH_BUTTON),
+    )
+    search_html, search_req = client.exchange("POST", search_fields)
+    _keep_walk(
+        ledger,
+        cache,
+        "",
+        f"tsearch:{marker_prefix}:{target_page}",
+        search_html,
+        search_req,
+        current_page=target_page,
+    )
+    landed = parse_register_list(search_html)
+    if not landed:
+        raise SessionInvalid(f"{marker_prefix}_missing_register")
 
+    if exp_start and exp_end:
         if landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end:
             return search_html, landed
+    elif target_page == 1:
+        return search_html, landed
 
     if target_page > 1:
         # Fallback: Real ULIF search offsets the target word by several entries.
@@ -2583,10 +2586,17 @@ def run_walk(
                 is_resume = False
                 if first_unfinished is not None:
                     p_rec = ledger.get_page(first_unfinished)
-                    if p_rec is not None:
-                        is_resume = True
-                        start_page = first_unfinished
+                    has_boundaries = bool(
+                        p_rec
+                        and p_rec["start_headword"]
+                        and p_rec["end_headword"]
+                        and (p_rec["row_count"] or 0) > 0
+                    )
+                    if first_unfinished == 1 and not has_boundaries:
+                        is_resume = False
+                        start_page = 1
                     else:
+                        is_resume = True
                         start_page = first_unfinished
                 else:
                     completed_count = ledger.conn.execute(
@@ -2686,7 +2696,7 @@ def run_walk(
                             break
                         except SessionInvalid as exc:
                             if start_attempt == MAX_UNIT_RESEEDS - 1:
-                                ledger.ensure_page(1, start_headword=start_headword, end_headword=start_headword, row_count=0)
+                                ledger.ensure_page(1, start_headword="", end_headword="", row_count=0)
                                 ledger.mark_page(1, "retry_scheduled", error=str(exc))
                                 print(
                                     f"stopping: startup on page 1 ended retry_scheduled after {MAX_UNIT_RESEEDS} attempts ({exc})",

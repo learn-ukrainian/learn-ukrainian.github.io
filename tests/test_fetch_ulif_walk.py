@@ -704,6 +704,66 @@ def test_startup_resume_fast_forward_exhaustion_marks_retry_scheduled(tmp_path: 
         ledger.close()
 
 
+def test_startup_retry_exhaustion_followed_by_healthy_invocation_recovers(tmp_path: Path):
+    """Startup failure leaves uninitialized page 1 with empty boundaries; restart on healthy server recovers."""
+    server1 = MockULIFServer()
+    orig_call = server1.__call__
+
+    def failing_call(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET":
+            return HttpResult(500, "Injected initial GET 500", {})
+        return orig_call(method, data)
+
+    state_dir = tmp_path / "state"
+    db_path = tmp_path / "cache.db"
+
+    # Run 1: initial seed GETs fail repeatedly, exhausting retries
+    code1 = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=failing_call,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code1 == EXIT_RETRY_STORM
+
+    # Page 1 is marked retry_scheduled, with empty (unknown) boundaries and row_count=0
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p1 = ledger.get_page(1)
+        assert p1 is not None
+        assert p1["state"] == "retry_scheduled"
+        assert p1["start_headword"] == ""
+        assert p1["end_headword"] == ""
+        assert p1["row_count"] == 0
+    finally:
+        ledger.close()
+
+    # Run 2: restart with healthy server; must navigate fresh start, avoid resume_mismatch, and succeed
+    server2 = MockULIFServer()
+    code2 = run_walk(
+        state_dir=state_dir,
+        db_path=db_path,
+        delay_seconds=1.0,
+        transport=server2,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code2 == EXIT_OK
+
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        p1_after = ledger.get_page(1)
+        assert p1_after is not None
+        assert p1_after["state"] == "completed"
+        assert p1_after["start_headword"] == "ду́же"
+        assert p1_after["end_headword"] == "замо́к"
+        assert p1_after["row_count"] == 3
+    finally:
+        ledger.close()
+
+
 def test_mid_walk_fast_forward_recovers_after_injected_session_invalid(tmp_path: Path):
     """Mid-walk reseed with fast-forward catches SessionInvalid, restarts from fresh seed, and completes."""
     state_dir = tmp_path / "state"
