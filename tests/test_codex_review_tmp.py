@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters import codex as codex_adapter
 from scripts.agent_runtime.adapters.codex import CodexAdapter
 
 
@@ -66,6 +67,7 @@ def test_review_permissions_only_write_lease(tmp_path, session_id):
     assert profile["network"]["domains"] == {"github.com": "allow", "api.github.com": "allow"}
     assert config["features"]["network_proxy"] is True
     assert config["approval_policy"] == "never"
+    assert config["mcp_servers"]["sources"]["default_tools_approval_mode"] == "approve"
     assert "-s" not in plan.cmd
     assert "--dangerously-bypass-approvals-and-sandbox" not in plan.cmd
     assert plan.env_overrides["TMPDIR"] == str(lease)
@@ -88,3 +90,21 @@ def test_review_rejects_unsafe_temp_roots(tmp_path, invalid):
     }[invalid]
     with pytest.raises(ValueError, match="read_only_tmp_root"):
         review_plan(checkout, root)
+
+
+def test_sources_prompt_fails_fast_when_read_only_cannot_approve(tmp_path, monkeypatch):
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    lease = tmp_path / "learn-ukrainian" / "review-test"
+    lease.mkdir(parents=True)
+    monkeypatch.setattr(codex_adapter, "_argv_can_call_sources_mcp", lambda _argv: False)
+    with pytest.raises(ValueError, match="mcp__sources__"):
+        CodexAdapter().build_invocation(
+            prompt="Call mcp__sources__verify_words before judging the sentence.",
+            mode="read-only",
+            cwd=checkout,
+            model=None,
+            task_id="review-test",
+            session_id=None,
+            tool_config={"read_only_tmp_root": str(lease)},
+        )

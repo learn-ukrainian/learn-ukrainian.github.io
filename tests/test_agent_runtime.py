@@ -600,7 +600,12 @@ def test_resume_policy_bridge_only_rejects_delegate():
 
 
 def test_codex_adapter_mode_flags_read_only():
-    assert CodexAdapter._mode_flags("read-only") == ["-s", "read-only"]
+    assert CodexAdapter._mode_flags("read-only") == [
+        "-s",
+        "read-only",
+        "-c",
+        'mcp_servers.sources.default_tools_approval_mode="approve"',
+    ]
 
 
 def test_codex_adapter_mode_flags_workspace_write():
