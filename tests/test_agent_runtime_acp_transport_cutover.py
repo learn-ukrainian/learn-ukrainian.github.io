@@ -320,7 +320,7 @@ def test_adapter_extra_metadata_cannot_override_runner_sealed_provenance(tmp_pat
     }
 
 
-def test_discussion_rejects_three_participants_before_reserving_a_conversation(
+def test_discussion_rejects_five_participants_before_reserving_a_conversation(
     tmp_path,
     monkeypatch,
 ) -> None:
@@ -334,15 +334,15 @@ def test_discussion_rejects_three_participants_before_reserving_a_conversation(
         synthesis_call=lambda agent, _prompt, **_kwargs: _result(agent, "synthesis"),
     )
     try:
-        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="exactly 2"):
+        with pytest.raises(acpx_discuss.AcpxDiscussionError, match="2 to 4"):
             controller.run(
                 prompt="Compare the bounded options.",
                 cwd=tmp_path,
                 task_id="task-6159",
                 correlation_id="corr-6159",
-                idempotency_key="idem-three-seat",
+                idempotency_key="idem-five-seat",
                 rounds=2,
-                participants=("codex", "kimi", "glm"),
+                participants=("codex", "kimi", "glm", "claude", "grok"),
                 source="codex",
             )
         conversations = controller.conn.execute(

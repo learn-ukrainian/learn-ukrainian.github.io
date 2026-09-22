@@ -1,7 +1,7 @@
 """Bounded, durable ACPX multi-seat discussion controller (#6078, #6130).
 
 This is intentionally a small finite DAG, not a new message-plane router. It
-requires ``LU_ACPX_TRANSPORT=active``; exactly two participants resolve through
+requires ``LU_ACPX_TRANSPORT=active``; two to four participants resolve through
 the runner-owned normal ACP boundary into enabled direct-only ACPX seats, while
 the final synthesis is a fresh native Codex call.
 """
@@ -56,14 +56,14 @@ logger = logging.getLogger(__name__)
 PARTICIPANTS = ("codex", "grok")
 SUPPORTED_PARTICIPANTS = frozenset(ACPX_SUPPORTED_PARTICIPANTS)
 MIN_PARTICIPANTS = 2
-MAX_PARTICIPANTS = 2
+MAX_PARTICIPANTS = 4
 MAX_ROUNDS = 3
 DEFAULT_ROUNDS = 2
 CALL_TIMEOUT_SECONDS = 300
 WHOLE_TIMEOUT_SECONDS = 1200
 TOKEN_BUDGET = 160_000
 CONTENT_BUDGET_BYTES = 512 * 1024
-PARTICIPANT_CONCURRENCY = 3
+PARTICIPANT_CONCURRENCY = 4
 
 _TERMINAL = frozenset({"COMPLETE", "PARTIAL_COMPLETE", "FAILED", "CANCELLED"})
 _PARTICIPANT_SLOTS = threading.BoundedSemaphore(PARTICIPANT_CONCURRENCY)
@@ -899,7 +899,7 @@ class AcpxDiscussionController:
             or any(item not in SUPPORTED_PARTICIPANTS for item in normalized_participants)
         ):
             raise AcpxDiscussionError(
-                f"participants must name exactly {MIN_PARTICIPANTS} distinct "
+                f"participants must name {MIN_PARTICIPANTS} to {MAX_PARTICIPANTS} distinct "
                 "enabled ACP seats: "
                 + ", ".join(sorted(SUPPORTED_PARTICIPANTS))
             )
@@ -1413,7 +1413,7 @@ def verify_discussion_receipt(
     checks = {
         "storage_metadata_valid": storage_metadata_valid,
         # Kept under the v1 receipt key for compatibility. It now means the
-        # conversation used one exact, supported two-seat participant set.
+        # conversation used one exact supported set of 2 to 4 seats.
         "fixed_participants": participants_valid,
         "terminal_complete": terminal_complete,
         "all_rounds_succeeded": rounds_complete,

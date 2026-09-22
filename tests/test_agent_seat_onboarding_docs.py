@@ -323,7 +323,7 @@ def test_routine_acp_panel_selection_hierarchy_is_bounded_and_non_authoritative(
     lower = onboarding.lower()
     assert "automatically selects" in lower
     assert "read-only" in lower
-    assert "exactly two enabled participants" in lower
+    assert "2 to 4 distinct enabled participants" in lower
     for participant in (
         "codex",
         "grok",
@@ -581,7 +581,7 @@ def test_deepseek_live_acp_contract_uses_opencode(onboarding: str) -> None:
 def test_acp_replay_section_allows_any_supported_two_seat_pair(onboarding: str) -> None:
     body = " ".join(onboarding.split())
     replay = body.split("### Shared ACPX install and E2E/replay verification", 1)[1]
-    assert "Participants are exactly two enabled seats from the supported set" in replay
+    assert "Participants are 2 to 4 distinct enabled seats from the supported set" in replay
     assert "[Selecting the ACP panel](#selecting-the-acp-panel)" in replay
     assert "`codex,grok` is an example pair, not the only pair" in replay
     assert "Participants are exactly `codex,grok`" not in body

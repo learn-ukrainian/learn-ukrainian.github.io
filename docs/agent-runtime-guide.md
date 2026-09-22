@@ -175,10 +175,10 @@ printf '%s\n' 'Compare the two bounded options and name risks.' |
 ```
 
 The default is two rounds and the hard maximum is three. The DAG runs the
-initial Codex and Grok calls in parallel, permits one bounded peer
+initial participant calls in parallel (two to four seats), permits one bounded peer
 cross-response per participant, then requires authoritative native-Codex
-synthesis. It admits at most two participant calls and five model calls by
-default, including synthesis. There are no persistent sessions, tools,
+synthesis. Each round calls every participant once. The default two-seat,
+two-round panel is five model calls including synthesis. There are no persistent sessions, tools,
 unrestricted loops, hidden failover, or retries. Each model call has a
 300-second deadline; the complete conversation has a 1,200-second deadline,
 with a reliable-token budget of 160k or a 512 KiB content ceiling.
