@@ -67,11 +67,40 @@ def test_certified_claude_driver_models_are_revalidated() -> None:
     assert untrusted.returncode == 4
 
 
-def test_claude_driver_defaults_to_last_session_without_pins() -> None:
-    """No hardwired model/effort — Claude keeps last TUI/session selection."""
+OPUS_5_5_1M = "claude-opus-5-5\\[1m\\]"  # printf %q form of claude-opus-5-5[1m]
+
+
+def test_claude_driver_defaults_to_opus_5_5_at_high() -> None:
+    """Operator 2026-09-22: the Claude orchestrator seat is Opus 5.5 (1M) at high."""
     result = run_launcher("start-claude-driver.sh", "--epic", "devops")
     assert result.returncode == 0, result.stderr
-    assert "would exec claude " in result.stdout
+    assert f"would exec claude --model {OPUS_5_5_1M} --effort high" in result.stdout
+
+
+def test_claude_driver_default_yields_to_launcher_env() -> None:
+    result = run_launcher(
+        "start-claude-driver.sh",
+        "--epic",
+        "devops",
+        env={"LAUNCHER_MODEL": "fable", "LAUNCHER_EFFORT": "medium"},
+    )
+    assert result.returncode == 0, result.stderr
+    assert "would exec claude --model claude-fable-5-1 --effort medium" in result.stdout
+
+
+def test_claude_opus_aliases_resolve_to_5_5_and_keep_opus_5_pinnable() -> None:
+    for alias in ("opus", "opus-5-5", "opus-5.5", "claude-opus-5-5"):
+        result = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", alias)
+        assert result.returncode == 0, (alias, result.stderr)
+        assert "would exec claude --model claude-opus-5-5" in result.stdout
+    legacy = run_launcher("start-claude-driver.sh", "--epic", "devops", "--model", "opus-5")
+    assert legacy.returncode == 0, legacy.stderr
+    assert "would exec claude --model claude-opus-5 --effort high" in legacy.stdout
+
+
+def test_claude_interactive_does_not_inherit_driver_default() -> None:
+    result = run_launcher("start-claude.sh")
+    assert result.returncode == 0, result.stderr
     assert "would exec claude --model" not in result.stdout
     assert "--effort" not in result.stdout
 
@@ -79,16 +108,15 @@ def test_claude_driver_defaults_to_last_session_without_pins() -> None:
 @pytest.mark.parametrize(
     "argv",
     (
-        ("--effort", "high", "--epic", "devops"),
-        ("--effort=high", "--epic", "devops"),
-        ("--epic", "devops", "--effort", "high"),
+        ("--effort", "xhigh", "--epic", "devops"),
+        ("--effort=xhigh", "--epic", "devops"),
+        ("--epic", "devops", "--effort", "xhigh"),
     ),
 )
 def test_claude_driver_accepts_effort_before_or_after_epic(argv: tuple[str, ...]) -> None:
     result = run_launcher("start-claude-driver.sh", *argv)
     assert result.returncode == 0, result.stderr
-    assert "would exec claude --effort high" in result.stdout
-    assert "would exec claude --model" not in result.stdout
+    assert f"would exec claude --model {OPUS_5_5_1M} --effort xhigh" in result.stdout
 
 
 def test_claude_driver_injects_model_and_effort_when_explicit() -> None:

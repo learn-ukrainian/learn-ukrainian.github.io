@@ -930,12 +930,13 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
-    assert "would exec claude --agent infra-orchestrator " in result.stdout
+    # The driver pins --model/--effort first (Opus 5.5 default), then --agent.
+    assert "would exec claude --model claude-opus-5-5\\[1m\\] --effort high --agent infra-orchestrator " in result.stdout
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr
     assert "would select agent" not in explicit.stdout
-    assert "would exec claude --agent curriculum-orchestrator " in explicit.stdout
+    assert "--effort high --agent curriculum-orchestrator " in explicit.stdout
 
     # Stream aliases (fleet_taxonomy.yaml) must not fall back to the curriculum
     # settings default: atlas-practice canonicalizes to the atlas area (#F1, r3).

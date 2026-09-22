@@ -12,7 +12,7 @@ import re
 import subprocess
 import sys
 import unicodedata
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -557,6 +557,49 @@ def build_words(
     finally:
         if owns_sources:
             sources_instance.close()
+
+
+def record_bytes(record: dict[str, Any]) -> bytes:
+    """Return deterministic YAML bytes for a single word record (mapping keys sorted, forms preserved)."""
+    return lock.yaml_bytes(record)
+
+
+def record_hashes(store: dict[str, Any] | Path | str, ids: Iterable[str] | None = None) -> dict[str, str]:
+    """Compute sha256 hashes of specified word ids (or all word records if ids is None) in a word store."""
+    if isinstance(store, (str, Path)):
+        with open(store, encoding="utf-8") as f:
+            store_data = yaml.safe_load(f)
+    else:
+        store_data = store
+
+    record_map: dict[str, dict[str, Any]] = {}
+    if isinstance(store_data, dict):
+        if "id" in store_data and isinstance(store_data["id"], str):
+            record_map[store_data["id"]] = store_data
+        elif "words" in store_data:
+            for rec in store_data.get("words") or []:
+                if isinstance(rec, dict) and "id" in rec:
+                    record_map[rec["id"]] = rec
+        else:
+            for k, v in store_data.items():
+                if isinstance(v, dict) and v.get("id") == k:
+                    record_map[k] = v
+                elif isinstance(v, dict) and "id" in v:
+                    record_map[v["id"]] = v
+
+    target_ids = list(record_map.keys()) if ids is None else list(ids)
+
+    result: dict[str, str] = {}
+    for rid in target_ids:
+        if rid not in record_map:
+            raise KeyError(f"Word record id {rid!r} not found in word store")
+        result[rid] = hashlib.sha256(record_bytes(record_map[rid])).hexdigest()
+    return result
+
+
+def record_hash(store: dict[str, Any] | Path | str, id: str) -> str:
+    """Compute sha256 hash of a single word record id in a word store."""
+    return record_hashes(store, [id])[id]
 
 
 def main(argv: list[str] | None = None) -> int:

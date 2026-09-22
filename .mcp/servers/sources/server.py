@@ -57,6 +57,7 @@ try:
         ListToolsResult,
         TextContent,
         Tool,
+        ToolAnnotations,
     )
 except ImportError:
     print("MCP package not installed. Run: pip install mcp", file=sys.stderr)
@@ -66,6 +67,16 @@ except ImportError:
 # Server ID published to MCP clients. Matches the key in .mcp.json
 # ("sources"). Agent tool prefixes become mcp__sources__*.
 server: Server
+
+# Codex exec treats a tool with no readOnlyHint as approval-required.
+# Under approval_policy=never that call is cancelled instead of run.
+# Every sources tool is a lookup: it does not mutate the checkout.
+_READ_ONLY_TOOL = ToolAnnotations(readOnlyHint=True, destructiveHint=False)
+
+
+def _tool(**kwargs: Any) -> Tool:
+    kwargs.setdefault("annotations", _READ_ONLY_TOOL)
+    return Tool(**kwargs)
 
 VERIFY_SOURCE_ATTRIBUTION_SOURCES = (
     "grinchenko_1907",
@@ -100,7 +111,7 @@ async def list_tools() -> list[Tool]:
     The registered MCP 2.0 handler is ``_on_list_tools``.
     """
     return [
-        Tool(
+        _tool(
             name="search_sources",
             description=(
                 "Unified Ukrainian source search across textbooks, literary corpora, "
@@ -130,7 +141,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_text",
             description=(
                 "FTS5 keyword search across Ukrainian school textbooks. "
@@ -164,7 +175,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_literary",
             description=(
                 "FTS5 search across Ukrainian literary primary sources (chronicles, poetry, prose, legal texts). "
@@ -186,7 +197,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_external",
             description=(
                 "Search the external articles corpus (YouTube transcripts + blogs: "
@@ -231,7 +242,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"],
             },
         ),
-        Tool(
+        _tool(
             name="get_full_text",
             description=(
                 "Load text chunks of a literary work from the sources database. "
@@ -254,7 +265,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["work"]
             },
         ),
-        Tool(
+        _tool(
             name="get_chunk_context",
             description=(
                 "Get text chunk by chunk_id from textbooks or literary_texts collections."
@@ -270,7 +281,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["chunk_id"]
             },
         ),
-        Tool(
+        _tool(
             name="collection_stats",
             description="Get row counts for all available content tables in the sources database.",
             inputSchema={
@@ -278,7 +289,7 @@ async def list_tools() -> list[Tool]:
                 "properties": {},
             },
         ),
-        Tool(
+        _tool(
             name="mcp_server_identity",
             description=(
                 "Return public-safe exact identity hashes (SHA-256) for the running server.py, "
@@ -292,7 +303,7 @@ async def list_tools() -> list[Tool]:
                 "properties": {},
             },
         ),
-        Tool(
+        _tool(
             name="check_modern_form",
             description=(
                 "Check if a Ukrainian word form is a currently-codified modern form or an archaic/historical form. "
@@ -310,7 +321,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="verify_word",
             description=(
                 "Check if a Ukrainian word form exists in the VESUM morphological dictionary "
@@ -334,7 +345,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="verify_quote",
             description=(
                 "Verify whether a Ukrainian literary quote is genuinely attested in the corpus for a given author. "
@@ -361,7 +372,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["author", "text"],
             },
         ),
-        Tool(
+        _tool(
             name="verify_source_attribution",
             description=(
                 "Verify whether a named authoritative source discusses a given claim/topic/headword. "
@@ -392,7 +403,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["source", "claim"],
             },
         ),
-        Tool(
+        _tool(
             name="verify_words",
             description=(
                 "Batch-verify multiple Ukrainian word forms against VESUM in a single call. "
@@ -415,7 +426,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["words"]
             },
         ),
-        Tool(
+        _tool(
             name="vet_vocabulary",
             description=(
                 "Vet up to 500 Ukrainian vocabulary items in one compact report. "
@@ -440,7 +451,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["words"],
             },
         ),
-        Tool(
+        _tool(
             name="verify_lemma",
             description=(
                 "Get all inflected forms of a Ukrainian lemma from the VESUM morphological dictionary. "
@@ -458,7 +469,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["lemma"]
             },
         ),
-        Tool(
+        _tool(
             name="inspect_word",
             description=(
                 "Inspect a Ukrainian word form with full marker awareness in the VESUM morphological dictionary. "
@@ -481,7 +492,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
-        Tool(
+        _tool(
             name="inspect_words",
             description=(
                 "Batch-inspect multiple Ukrainian word forms with full marker awareness against VESUM. "
@@ -503,7 +514,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["words"],
             },
         ),
-        Tool(
+        _tool(
             name="inspect_lemma",
             description=(
                 "Inspect an entire Ukrainian lemma paradigm with full marker awareness in VESUM. "
@@ -520,7 +531,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["lemma"],
             },
         ),
-        Tool(
+        _tool(
             name="verify_stress",
             description=(
                 "Stress oracle: look up the stressed form + stressed-vowel index for a Ukrainian word "
@@ -552,7 +563,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="verify_stresses",
             description=(
                 "Batch stress oracle. One compact record per word (input, status, readings with "
@@ -581,7 +592,7 @@ async def list_tools() -> list[Tool]:
             },
         ),
         # ── Live source query tools ──────────────────────────────
-        Tool(
+        _tool(
             name="query_wikipedia",
             description=(
                 "Query Ukrainian Wikipedia (uk.wikipedia.org). Modes: "
@@ -623,7 +634,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="query_grac",
             description=(
                 "Query the GRAC corpus (2 billion tokens of Ukrainian text) for word frequency, "
@@ -668,7 +679,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="query_ulif",
             description=(
                 "Query official DictUA data from ULIF. Omit sections for the legacy plain paradigm "
@@ -706,7 +717,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="query_ulif_synonyms",
             description="Return official DictUA synonym groups as structured, source-attributed JSON.",
             inputSchema={
@@ -715,7 +726,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
-        Tool(
+        _tool(
             name="query_ulif_antonyms",
             description="Return official DictUA antonym groups as structured, source-attributed JSON.",
             inputSchema={
@@ -724,7 +735,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
-        Tool(
+        _tool(
             name="query_ulif_phraseology",
             description="Return official DictUA phraseology groups as structured, source-attributed JSON.",
             inputSchema={
@@ -733,7 +744,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"],
             },
         ),
-        Tool(
+        _tool(
             name="query_r2u",
             description=(
                 "Look up Russian→Ukrainian translations on r2u.org.ua. "
@@ -750,7 +761,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="query_pravopys",
             description=(
                 "Look up Ukrainian orthography rules from the official 2019 Pravopys. "
@@ -772,7 +783,7 @@ async def list_tools() -> list[Tool]:
             },
         ),
         # ── Dictionary / reference collections (#1022) ──
-        Tool(
+        _tool(
             name="search_ua_gec_errors",
             description=(
                 "Search UA-GEC (Ukrainian Grammatical Error Corpus, Grammarly UA team, MIT). "
@@ -792,7 +803,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_style_guide",
             description=(
                 "Search Антоненко-Давидович «Як ми говоримо» style guide. "
@@ -814,7 +825,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="query_cefr_level",
             description=(
                 "Look up CEFR level (A1-C1) for a Ukrainian word from the PULS "
@@ -833,7 +844,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_definitions",
             description=(
                 "Search СУМ-11 — Ukrainian explanatory dictionary from 1970–1980. "
@@ -860,7 +871,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_grinchenko_1907",
             description=(
                 "Search Грінченко «Словарь української мови» (1907) — historical "
@@ -883,7 +894,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_esum",
             description=(
                 "Search ЕСУМ (Етимологічний словник української мови) etymology entries. "
@@ -903,7 +914,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_idioms",
             description=(
                 "Search Ukrainian phraseological dictionary (Фразеологічний). "
@@ -922,7 +933,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="search_synonyms",
             description=(
                 "Search Ukrajinet Ukrainian WordNet. Coverage: 122,441 synsets "
@@ -945,7 +956,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="translate_en_uk",
             description=(
                 "Search Балла English→Ukrainian dictionary. Coverage: 78,704 of "
@@ -964,7 +975,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"]
             },
         ),
-        Tool(
+        _tool(
             name="query_e2u",
             description=(
                 "Live query e2u.org.ua English→Ukrainian dictionary (331K entries). "
@@ -979,7 +990,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="query_sum20",
             description=(
                 "Query the offline official СУМ-20 (Словник української мови у 20 томах) "
@@ -997,7 +1008,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="query_slovnyk_me",
             description=(
                 "Live query slovnyk.me — Ukrainian dictionary aggregator with "
@@ -1036,7 +1047,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["word"]
             },
         ),
-        Tool(
+        _tool(
             name="search_slovnyk_me",
             description=(
                 "Search slovnyk.me as a single-source dictionary aggregator. "
@@ -1070,7 +1081,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"],
             },
         ),
-        Tool(
+        _tool(
             name="search_heritage",
             description=(
                 "Canonical heritage-defense lookup for distinguishing authentic "
@@ -1095,7 +1106,7 @@ async def list_tools() -> list[Tool]:
                 "required": ["query"],
             },
         ),
-        Tool(
+        _tool(
             name="check_russian_shadow",
             description=(
                 "Detects Russian-pattern morphology in Ukrainian text. No Russian text ingested "

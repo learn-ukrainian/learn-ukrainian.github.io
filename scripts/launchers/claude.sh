@@ -30,8 +30,8 @@ launcher_adapter_canary() {
 }
 launcher_adapter_exec() {
   local cmd=(claude)
-  # Only pin --model / --effort when the caller asked for them; otherwise
-  # Claude Code keeps whatever was selected last in the TUI / user settings.
+  # Pin --model / --effort only when set: the driver defaults to Opus 5.5 at
+  # high (launcher_defaults); interactive keeps the last TUI / user selection.
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
   fi

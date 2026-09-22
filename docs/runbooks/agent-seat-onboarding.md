@@ -120,7 +120,7 @@ and the narrowly allowlisted dual paths.
 | **`discuss`** (bridge) | An observable exception for agent communication that ACP cannot serve; bounded multi-agent deliberation and design input | Implementation, merge authority, or the formal cross-family review gate |
 | **`scripts/delegate.py dispatch`** | Isolated implementation execution in a worktree | Durable fleet authority or formal CF |
 | **Fleet-comms + legacy file handoffs** | Durable coordination authority in `authority` mode; legacy file stores remain read-only migration/projection inputs | Competing message buses; new legacy writes; silent plane/retention/eligibility flips |
-| **ACPX** | Routine first-choice structured transport for eligible two-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
+| **ACPX** | Routine first-choice structured transport for eligible 2-to-4-seat read-only communication; fleet launchers make `discuss` select it automatically for Codex, Grok, Claude, Kimi, KimiCC K3, Cursor, Pool, AGY/Gemini, GLM, and DeepSeek; not a coordination plane | Persistent sessions, backlog, auto-retries, unrestricted chat, plane flips, review eligibility |
 | **Entire context recall** | Optional automatic body-free discovery plus preflight-gated private native session search/explain/recap | Task state, live discussion, terminal receipts, source code authority, rollover, Monitor state, or formal review |
 | **Buzz** | **Explicitly deferred** | Anything in this rollout — relay-as-authority conflicts with the current authority model |
 
@@ -506,7 +506,7 @@ printf '%s\n' 'Compare the two bounded options and name risks.' |
 
 Every fleet launcher exports ACP as the routine transport. The project
 `discuss` command automatically selects the durable ACP controller when the request names
-exactly two enabled participants: Codex, Grok, Claude, Kimi, KimiCC K3,
+2 to 4 distinct enabled participants: Codex, Grok, Claude, Kimi, KimiCC K3,
 Cursor, Pool, AGY/Gemini, GLM, or DeepSeek. The direct `acp-discuss` command remains available for
 operators and tests. Selection starts no process at cold start and does not
 change `delegate.py`. Any other count or invalid seat list is rejected loudly
@@ -518,9 +518,9 @@ typed partial ACP outcome is valid evidence to inspect, but not a successful
 discussion, formal review, or coordination authority.
 
 The legacy `discuss` CLI is now a compatibility surface, not a second
-execution engine, for supported two-seat panels: it delegates to ACP and
+execution engine, for supported 2-to-4-seat panels: it delegates to ACP and
 records the durable ACP conversation. Ordinary `ask-*` calls also use the
-two-seat ACP controller; queued ordinary `process-*` calls drain through that
+2-to-4-seat ACP controller; queued ordinary `process-*` calls drain through that
 same transport. Do not add one-shot provider launch logic. Toolful tasks use
 `delegate.py`; explicit review asks retain headless toolful dispatch.
 The retirement order is compatibility shim → deprecation event → measured zero
@@ -530,7 +530,7 @@ and crash recovery are durable-plane responsibilities and are not retired by
 this transport migration.
 
 Fleet-wide means caller-access parity plus the enabled participant set above.
-The live caller classes below may request any supported two-seat panel when
+The live caller classes below may request any supported 2-to-4-seat panel when
 acting as the accountable orchestrator; ordinary workers and review-only seats
 receive the contract for awareness but do not start conversations independently.
 
@@ -575,13 +575,13 @@ The verifier is read-only and body-free. `verified: true` requires the fixed
 participants to succeed in every requested round, successful native synthesis,
 terminal `COMPLETE`, and an observed replay. It never authorizes a retry.
 
-Participants are exactly two enabled seats from the supported set in
+Participants are 2 to 4 distinct enabled seats from the supported set in
 [Selecting the ACP panel](#selecting-the-acp-panel). `codex,grok` is an example
 pair, not the only pair. Two rounds are the default and three is the hard
 maximum: parallel initial participant calls, a bounded peer
-cross-response, then authoritative native-Codex synthesis. The controller
-allows at most two participant calls and five model calls by default,
-including synthesis. It starts no persistent session, tool-enabled run,
+cross-response, then authoritative native-Codex synthesis. Each round calls
+every participant once. The default two-seat, two-round panel is five model
+calls including synthesis; four seats at three rounds is the maximum. It starts no persistent session, tool-enabled run,
 unrestricted loop, hidden failover, or retry. Each model call is capped at 300
 seconds, the whole conversation at 1,200 seconds, and content at 160k reliable
 tokens or 512 KiB.

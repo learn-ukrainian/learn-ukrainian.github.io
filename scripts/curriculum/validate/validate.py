@@ -1,12 +1,15 @@
-"""Single-plan module plan validator — library and CLI (issue #8412, Brief A).
+"""Module plan validator — library and CLI (issue #8412, Briefs A and B).
 
-Checks the rules of docs/epics/fresh-build-plan-schema.md §2/§2a that one plan
-file, its evidence pack and the level word store can decide — rules 1, 2, 3,
-6, 7, the inventory/introductions equality, the within-lesson part of rule 4,
-and the revision 8/9 field rules. Rules that need the arc, other plans, the
-grammar registry, the scope sidecar or git history are Brief B: they are
-reported as not_checked, never passed silently and never approximated. The
-output says so itself until Brief B lands.
+The complete §6 gate of docs/epics/fresh-build-plan-schema.md: §2 rules 1–7
+with the semantics of §2a. One plan is checked against its evidence pack and
+the level word store (rules 1, 2, 3, 6, 7, the inventory/introductions
+equality, the single-plan part of rule 4), against every plan at an earlier
+arc position (rule 4), against the level arc (rule 5), against the level
+grammar registry, and against its own generated scope sidecar and its module
+title. Pilots written out of order can be validated with an explicit, printed
+waiver (--allow-missing-prior); --strict refuses every waiver flag and
+verifies the registry is append-only over git history, so a plan that needs a
+waiver can never be built or merged as buildable.
 """
 
 from __future__ import annotations
@@ -15,16 +18,17 @@ import argparse
 import json
 import re
 import sys
-from dataclasses import dataclass, field
 from pathlib import Path
 
 from jsonschema import Draft202012Validator
 
 from . import codes
+from .cross import check_arc, check_rule4, load_level_plans
 from .loader import (
     PLAN_SCHEMA_PATH,
     REPO_ROOT,
     PlanError,
+    check_plan_slug,
     evidence_root,
     load_plan,
     read_plan_text,
@@ -32,12 +36,9 @@ from .loader import (
     sha256_of,
 )
 from .pack import load_pack, load_words, lock_digest
-
-#: This build is the single-plan half of plan-validate; Brief B deletes this.
-HALF_BUILT_NOTE = (
-    "plan-validate: single-plan half (Brief A); cross-plan rules — rules 4 and 5, the grammar "
-    "registry, the scope sidecar and the title check — are Brief B and are reported as not_checked"
-)
+from .registry import check_append_only, check_plan_against_registry, load_registry, registry_path_for
+from .report import Outcome, Report
+from .scope import check_scope_sidecar, check_title, title_quantities_outcome
 
 _CYRILLIC = re.compile(r"[А-Яа-яЇїІіЄєҐґЬь]")
 _STRESS_MARKS = ("\u0301", "\u0300")  # combining acute, combining grave
@@ -88,70 +89,12 @@ def _cyrillic_allowed(path: tuple) -> bool:
     return False
 
 
-@dataclass(frozen=True)
-class Outcome:
-    """One produced outcome: a failure, a note or a not_checked line."""
-
-    code: str
-    message: str
-    lesson: int | None = None
-    step: str | None = None
-
-    def render(self) -> str:
-        where = ""
-        if self.lesson is not None:
-            where = f"lesson {self.lesson}"
-            if self.step is not None:
-                where += f" step {self.step}"
-            where += ": "
-        return f"{self.code}: {where}{self.message}"
-
-
-@dataclass
-class Report:
-    """Everything one validation run produced."""
-
-    level: str
-    slug: str
-    failures: list[Outcome] = field(default_factory=list)
-    notes: list[Outcome] = field(default_factory=list)
-    not_checked: list[Outcome] = field(default_factory=list)
-
-    @property
-    def ok(self) -> bool:
-        return not self.failures
-
-    def codes(self) -> set[str]:
-        return {o.code for o in self.failures + self.notes + self.not_checked}
-
-    def to_json(self) -> dict:
-        def entries(items: list[Outcome]) -> list[dict]:
-            return [{"code": o.code, "lesson": o.lesson, "step": o.step, "message": o.message} for o in items]
-
-        return {
-            "validator": HALF_BUILT_NOTE,
-            "level": self.level,
-            "slug": self.slug,
-            "status": "pass" if self.ok else "fail",
-            "failures": entries(self.failures),
-            "notes": entries(self.notes),
-            "not_checked": entries(self.not_checked),
-        }
-
-    def render_text(self) -> str:
-        lines = [HALF_BUILT_NOTE, f"plan: {self.level}/{self.slug}", f"status: {'pass' if self.ok else 'fail'}"]
-        lines += [f"FAIL {o.render()}" for o in self.failures]
-        lines += [f"NOTE {o.render()}" for o in self.notes]
-        lines += [f"NOT_CHECKED {o.render()}" for o in self.not_checked]
-        return "\n".join(lines)
-
-
 def _fail(report: Report, code: str, message: str, lesson: int | None = None, step: str | None = None) -> None:
     report.failures.append(Outcome(code, message, lesson, step))
 
 
 def _always_not_checked(report: Report) -> None:
-    """The not_checked items Brief A always reports (§2a; cross-plan is Brief B)."""
+    """The not_checked items every run reports (§2a), pass or fail."""
     report.not_checked.append(
         Outcome(codes.MINUTES_CONSTANTS_UNDEFINED, codes.DESCRIPTIONS[codes.MINUTES_CONSTANTS_UNDEFINED])
     )
@@ -166,9 +109,8 @@ def _always_not_checked(report: Report) -> None:
     )
     report.not_checked.append(
         Outcome(
-            codes.CROSS_PLAN_RULES_PENDING,
-            "rules 4 and 5 (arc and earlier plans), the grammar registry, the scope sidecar and "
-            "the title check need more than one plan file; they are Brief B",
+            codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
+            codes.DESCRIPTIONS[codes.ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY],
         )
     )
 
@@ -772,14 +714,21 @@ def validate_plan(
     pack_path: Path | None = None,
     words_path: Path | None = None,
     activity_schema_path: Path | None = None,
+    allow_missing_prior: bool = False,
+    strict: bool = False,
+    write_scope: bool = False,
 ) -> Report:
-    """Validate one module plan against its pack and the level word store.
+    """Validate one module plan: the complete §6 gate of §2/§2a.
 
     path overrides exist for tests; the lesson-plans/ root rule applies to
     plan_path regardless, and a pack_path override must match the plan's
     evidence_ref.path (rule 3). activity_schema_path overrides the activity allowlist
-    schema (tests only; never a fallback level). Never raises for plan content
-    problems — they come back as failures in the Report.
+    schema (tests only; never a fallback level). allow_missing_prior turns exactly
+    the missing-prior-plans failure into a printed waiver; strict refuses waiver
+    flags (the CLI enforces that) and verifies the grammar registry is append-only
+    over git history; write_scope regenerates the scope sidecar instead of checking
+    it. Never raises for plan content problems — they come back as failures in the
+    Report.
     """
     report = Report(level=level, slug=slug)
     _always_not_checked(report)
@@ -787,10 +736,13 @@ def validate_plan(
         plan_path = resolve_plan_path(level, slug, plan_path)
         plan_text = read_plan_text(plan_path)
         plan = load_plan(plan_path)
+        check_plan_slug(plan_path, slug, plan)
     except PlanError as error:
         _fail(report, error.code, error.message)
+        report.not_checked.append(title_quantities_outcome(None))
         return report
 
+    report.not_checked.append(title_quantities_outcome(plan))
     root = evidence_root(plan_path)
     words_path = words_path or root / f"evidence/{level}/_words.yaml"
 
@@ -811,6 +763,8 @@ def validate_plan(
             )
         return report
 
+    pack = None
+    store = None
     try:
         declared_pack = _declared_pack_path(root, plan["evidence_ref"]["path"])
         if pack_path is None:
@@ -826,26 +780,26 @@ def validate_plan(
         store = load_words(words_path)
     except PlanError as error:
         _fail(report, error.code, error.message)
-        return report
 
-    pack_digest = sha256_of(pack_path)
-    try:
-        if lock_digest(pack_path, codes.PACK_LOCK_MISMATCH) != pack_digest:
-            _fail(report, codes.PACK_LOCK_MISMATCH, f"{pack_path} bytes disagree with {pack_path}.lock (rule 3)")
-    except PlanError as error:
-        _fail(report, error.code, error.message)
-    if pack_digest != plan["evidence_ref"]["sha256"]:
-        _fail(
-            report,
-            codes.PACK_HASH_MISMATCH,
-            f"{pack_path} sha256 {pack_digest[:12]}… disagrees with evidence_ref.sha256 "
-            f"{plan['evidence_ref']['sha256'][:12]}… (rule 3)",
-        )
-    try:
-        if lock_digest(words_path, codes.WORDS_LOCK_MISMATCH) != sha256_of(words_path):
-            _fail(report, codes.WORDS_LOCK_MISMATCH, f"{words_path} bytes disagree with {words_path}.lock (rule 3)")
-    except PlanError as error:
-        _fail(report, error.code, error.message)
+    if pack is not None and store is not None:
+        pack_digest = sha256_of(pack_path)
+        try:
+            if lock_digest(pack_path, codes.PACK_LOCK_MISMATCH) != pack_digest:
+                _fail(report, codes.PACK_LOCK_MISMATCH, f"{pack_path} bytes disagree with {pack_path}.lock (rule 3)")
+        except PlanError as error:
+            _fail(report, error.code, error.message)
+        if pack_digest != plan["evidence_ref"]["sha256"]:
+            _fail(
+                report,
+                codes.PACK_HASH_MISMATCH,
+                f"{pack_path} sha256 {pack_digest[:12]}… disagrees with evidence_ref.sha256 "
+                f"{plan['evidence_ref']['sha256'][:12]}… (rule 3)",
+            )
+        try:
+            if lock_digest(words_path, codes.WORDS_LOCK_MISMATCH) != sha256_of(words_path):
+                _fail(report, codes.WORDS_LOCK_MISMATCH, f"{words_path} bytes disagree with {words_path}.lock (rule 3)")
+        except PlanError as error:
+            _fail(report, error.code, error.message)
 
     _check_lesson_shape(report, plan)
     _check_inventory_and_order(report, plan)
@@ -854,29 +808,84 @@ def validate_plan(
     _check_activities(report, plan, allowlist)
     _check_dialogue_and_needs(report, plan)
 
-    pack_ids = pack.ids
-    for lesson_n, step_id, item in _pack_ids_in_plan(plan):
-        if item not in pack_ids:
-            _fail(
-                report,
-                codes.UNKNOWN_PACK_ID,
-                f"evidence id {item} does not exist in the module pack {pack_path.name} (rule 3)",
-                lesson=lesson_n,
-                step=step_id,
-            )
-    _check_error_ref_records(report, plan, pack)
-    word_records = store.records
-    for lesson_n, step_id, item in _word_ids_in_plan(plan):
-        if item not in word_records:
-            _fail(
-                report,
-                codes.UNKNOWN_WORD_ID,
-                f"word id {item} does not exist in the level word store {words_path.name} (rule 3)",
-                lesson=lesson_n,
-                step=step_id,
-            )
-    _check_word_facts(report, plan, store)
+    if pack is not None and store is not None:
+        pack_ids = pack.ids
+        for lesson_n, step_id, item in _pack_ids_in_plan(plan):
+            if item not in pack_ids:
+                _fail(
+                    report,
+                    codes.UNKNOWN_PACK_ID,
+                    f"evidence id {item} does not exist in the module pack {pack_path.name} (rule 3)",
+                    lesson=lesson_n,
+                    step=step_id,
+                )
+        _check_error_ref_records(report, plan, pack)
+        word_records = store.records
+        for lesson_n, step_id, item in _word_ids_in_plan(plan):
+            if item not in word_records:
+                _fail(
+                    report,
+                    codes.UNKNOWN_WORD_ID,
+                    f"word id {item} does not exist in the level word store {words_path.name} (rule 3)",
+                    lesson=lesson_n,
+                    step=step_id,
+                )
+        _check_word_facts(report, plan, store)
+
+    # Cross-plan rules (Brief B): earlier plans and the arc (rules 4 and 5),
+    # the grammar registry, the scope sidecar and the module title.
+    check_rule4(report, plan, plan_path, allow_missing_prior=allow_missing_prior)
+    check_arc(report, level, plan, plan_path)
+    registry_path = registry_path_for(plan_path)
+    registry_failures: list[Outcome] = []
+    registry = load_registry(registry_path, level, registry_failures)
+    report.failures.extend(registry_failures)
+    check_plan_against_registry(report, plan, plan_path, registry)
+    if strict and registry is not None:
+        check_append_only(report, registry_path, registry[0])
+    scope_letters = check_scope_sidecar(report, plan, plan_path, write=write_scope)
+    check_title(report, plan, scope_letters)
     return report
+
+
+def validate_level(
+    level: str,
+    *,
+    level_dir: Path | None = None,
+    allow_missing_prior: bool = False,
+    strict: bool = False,
+    write_scope: bool = False,
+) -> list[Report]:
+    """Whole-level mode: every plan of the level, in position order (§6).
+
+    level_dir overrides the level directory (tests only; production runs use
+    the conventional curriculum/l2-uk-en/lesson-plans/<level>/).
+    """
+    level_dir = level_dir or REPO_ROOT / f"curriculum/l2-uk-en/lesson-plans/{level}"
+    plans = load_level_plans(level_dir)
+    reports = [
+        validate_plan(
+            level,
+            plan_slug,
+            plan_path=path,
+            allow_missing_prior=allow_missing_prior,
+            strict=strict,
+            write_scope=write_scope,
+        )
+        for _position, (plan_slug, _plan, path) in sorted(plans.by_position.items())
+    ]
+    if plans.failures and not reports:
+        # No plan could be ordered at all; surface the level-directory failures.
+        report = Report(level=level, slug="<level>")
+        report.failures.extend(plans.failures)
+        reports.append(report)
+    return reports
+
+
+def _report_exit_code(report: Report) -> int:
+    if report.failures:
+        return 1
+    return 3 if report.waivers else 0
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -884,28 +893,78 @@ def main(argv: list[str] | None = None) -> int:
         prog="plan-validate",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         description=(
-            "Validate one module plan (plan_schema: 2) against its evidence pack and the level\n"
-            "word store. Use before plan review or build; do NOT use for v1 plans under plans/\n"
-            "(they are rejected) or for cross-plan checks (Brief B, not built yet — the output\n"
-            "says so itself until then)."
+            "Validate a module plan (plan_schema: 2): the complete plan-validate gate of\n"
+            "docs/epics/fresh-build-plan-schema.md §6 — §2 rules 1–7 with the semantics of\n"
+            "§2a. One plan is checked against its evidence pack and the level word store,\n"
+            "against every plan at an earlier arc position (rule 4), against the level arc\n"
+            "(rule 5), against the level grammar registry, and against its own generated\n"
+            "scope sidecar and its module title. Do NOT use for v1 plans under plans/\n"
+            "(they are rejected).\n"
+            "\n"
+            "Waivers: --allow-missing-prior turns exactly the missing-earlier-plans failure\n"
+            "into the printed, machine-readable waiver 'waived: prior_plans_missing' (with\n"
+            "the positions), for pilots written out of order. A waived run is never clean:\n"
+            "the summary line and --json say 'waived' and the exit code is 3, and an id that\n"
+            "cannot be found in the plans that do exist is not_checked, never a pass.\n"
+            "--strict refuses every waiver flag (exit 2) and additionally verifies that the\n"
+            "grammar registry is append-only against git merge-base HEAD origin/main — the\n"
+            "build preflight and CI run --strict, so a plan that needs a waiver can never be\n"
+            "built or merged as buildable.\n"
+            "\n"
+            "The title check: a run of two or more enumerated single letters in the module's\n"
+            "title or subtitle must equal the scope letter list. 'A run of enumerated single\n"
+            "letters' is a maximal sequence of two or more tokens, each exactly one UPPERCASE\n"
+            "Cyrillic letter, separated only by commas, semicolons or whitespace. One letter\n"
+            "alone is not a run, and a lowercase one-letter Ukrainian word (я, і, у, в, а, о)\n"
+            "inside a sentence is never an enumeration. ASCII digits are never parsed; they\n"
+            "are quoted in not_checked: title_quantities_not_parsed."
         ),
         epilog=(
             "Inputs:\n"
-            "  curriculum/l2-uk-en/lesson-plans/<level>/<slug>.yaml  the plan (schema v2)\n"
-            "  curriculum/l2-uk-en/evidence/<level>/<slug>.yaml(.lock)    the module pack\n"
-            "  curriculum/l2-uk-en/evidence/<level>/_words.yaml(.lock)    the word store\n"
+            "  curriculum/l2-uk-en/lesson-plans/<level>/<slug>.yaml     the plan (schema v2)\n"
+            "  curriculum/l2-uk-en/lesson-plans/<level>/_arc.yaml       the generated level arc\n"
+            "  curriculum/l2-uk-en/lesson-plans/<level>/_grammar.yaml   the grammar registry\n"
+            "  curriculum/l2-uk-en/lesson-plans/<level>/_scope/<slug>.yaml  the scope sidecar\n"
+            "  curriculum/l2-uk-en/evidence/<level>/<slug>.yaml(.lock)  the module pack\n"
+            "  curriculum/l2-uk-en/evidence/<level>/_words.yaml(.lock)  the word store\n"
             "  schemas/module-plan-v2.schema.json, schemas/activities-<level>.schema.json\n"
-            "Outputs: stdout only; read-only, no side effects.\n"
-            "Exit codes: 0 = no failures (not_checked items never fail the run); 1 = failures.\n"
+            "Outputs: stdout only; read-only unless --write-scope is given. The scope sidecar\n"
+            "is deterministic (fixed key order, UTF-8, trailing newline); --write-scope\n"
+            "creates it with mode 0600 and a created _scope directory with mode 0700 — no\n"
+            "group-write or world bits.\n"
+            "Exit codes: 0 = clean pass; 1 = failures; 2 = usage error, including --strict\n"
+            "given together with a waiver flag; 3 = waived (no failures, but a waiver was\n"
+            "used — never a clean pass). not_checked items never fail the run.\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 sounds-letters-and-hello\n"
             "  .venv/bin/python -m scripts.curriculum.validate a1 sounds-letters-and-hello --json\n"
-            "Related: docs/epics/fresh-build-plan-schema.md §2/§2a; issues #8412 (this half),\n"
-            "#8397 (epic). Outcome codes:\n" + codes.help_text()
+            "  .venv/bin/python -m scripts.curriculum.validate a1 --all --strict   (CI)\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --allow-missing-prior\n"
+            "  .venv/bin/python -m scripts.curriculum.validate a1 mod-two --write-scope\n"
+            "Related: docs/epics/fresh-build-plan-schema.md §2/§2a/§6; issues #8412, #8397.\n"
+            "Outcome codes:\n" + codes.help_text()
         ),
     )
     parser.add_argument("level", help="level directory under lesson-plans/, e.g. a1")
-    parser.add_argument("slug", help="module slug; the plan file is <slug>.yaml")
+    parser.add_argument("slug", nargs="?", default=None, help="module slug; the plan file is <slug>.yaml")
+    parser.add_argument("--all", action="store_true", help="validate every plan of the level in position order")
+    parser.add_argument(
+        "--strict",
+        action="store_true",
+        help="refuse every waiver flag and verify the grammar registry is append-only against "
+        "git merge-base HEAD origin/main (the build preflight and CI mode)",
+    )
+    parser.add_argument(
+        "--allow-missing-prior",
+        action="store_true",
+        help="waiver: turn the missing-earlier-plans failure into the printed waiver "
+        "'waived: prior_plans_missing'; a waived run exits 3, never clean",
+    )
+    parser.add_argument(
+        "--write-scope",
+        action="store_true",
+        help="write the generated scope sidecar _scope/<slug>.yaml instead of checking it byte for byte",
+    )
     parser.add_argument(
         "--plan",
         type=Path,
@@ -919,15 +978,77 @@ def main(argv: list[str] | None = None) -> int:
         help="pack path override (tests); must match the plan's evidence_ref.path",
     )
     parser.add_argument("--words", type=Path, default=None, help="word store path override (tests)")
+    parser.add_argument(
+        "--level-dir",
+        type=Path,
+        default=None,
+        help="level directory override for --all (tests); default curriculum/l2-uk-en/lesson-plans/<level>/",
+    )
     parser.add_argument("--json", action="store_true", help="print the machine-readable report instead of text")
     args = parser.parse_args(argv)
 
-    report = validate_plan(args.level, args.slug, plan_path=args.plan, pack_path=args.pack, words_path=args.words)
+    if args.strict and args.allow_missing_prior:
+        parser.error(
+            "--strict refuses every waiver flag (--allow-missing-prior): a plan that needs a "
+            "waiver cannot be built or merged as buildable (§2a)"
+        )
+    if args.all and args.slug:
+        parser.error("--all validates every plan of the level; do not name a slug")
+    if not args.all and not args.slug:
+        parser.error("a slug is required unless --all is given")
+
+    if args.all:
+        reports = validate_level(
+            args.level,
+            level_dir=args.level_dir,
+            allow_missing_prior=args.allow_missing_prior,
+            strict=args.strict,
+            write_scope=args.write_scope,
+        )
+        if args.json:
+            payload = {
+                "level": args.level,
+                "status": "pass",
+                "plans": [report.to_json() for report in reports],
+            }
+            if any(report.failures for report in reports):
+                payload["status"] = "fail"
+            elif any(report.waivers for report in reports):
+                payload["status"] = "waived"
+            print(json.dumps(payload, ensure_ascii=False, indent=2))
+        else:
+            if not reports:
+                print(f"level {args.level}: no plans under lesson-plans/{args.level}/")
+            for report in reports:
+                summary = report.status
+                if report.failures:
+                    summary += f" ({len(report.failures)} failures)"
+                print(f"{report.level}/{report.slug}: {summary}")
+            for report in reports:
+                if report.status != "pass":
+                    print()
+                    print(report.render_text())
+        if any(report.failures for report in reports):
+            return 1
+        if any(report.waivers for report in reports):
+            return 3
+        return 0
+
+    report = validate_plan(
+        args.level,
+        args.slug,
+        plan_path=args.plan,
+        pack_path=args.pack,
+        words_path=args.words,
+        allow_missing_prior=args.allow_missing_prior,
+        strict=args.strict,
+        write_scope=args.write_scope,
+    )
     if args.json:
         print(json.dumps(report.to_json(), ensure_ascii=False, indent=2))
     else:
         print(report.render_text())
-    return 0 if report.ok else 1
+    return _report_exit_code(report)
 
 
 if __name__ == "__main__":

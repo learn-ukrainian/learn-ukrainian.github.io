@@ -1,0 +1,414 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "evidence-pack-request-v1.schema.json",
+  "type": "object",
+  "Description": "Request schema for module evidence pack",
+  "properties": {
+    "request_schema": {
+      "const": 1
+    },
+    "module": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+/[a-z0-9-]+$"
+    },
+    "texts": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/text_request"
+      }
+    },
+    "exercises": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/exercise_request"
+      }
+    },
+    "examples": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/example_request"
+      }
+    },
+    "errors": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/error_request"
+      }
+    },
+    "notes": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/note_request"
+      }
+    },
+    "videos": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/video_request"
+      }
+    },
+    "standard": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/standard_request"
+      }
+    },
+    "unsupported": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unsupported_request"
+      }
+    }
+  },
+  "required": [
+    "request_schema",
+    "module"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "span": {
+      "type": "object",
+      "properties": {
+        "first_words": {
+          "type": "string",
+          "minLength": 1
+        },
+        "last_words": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "first_words",
+        "last_words"
+      ],
+      "additionalProperties": false
+    },
+    "text_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^T-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "textbooks"
+            },
+            "chunk_id": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "required": [
+            "table",
+            "chunk_id"
+          ],
+          "additionalProperties": false
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "supports": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "span",
+        "supports"
+      ],
+      "additionalProperties": false
+    },
+    "exercise_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^X-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "textbooks"
+            },
+            "chunk_id": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "required": [
+            "table",
+            "chunk_id"
+          ],
+          "additionalProperties": false
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "span",
+        "pattern"
+      ],
+      "additionalProperties": false
+    },
+    "example_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^EX-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "enum": [
+                "textbooks",
+                "literary_texts"
+              ]
+            },
+            "chunk_id": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            }
+          },
+          "required": [
+            "table",
+            "chunk_id"
+          ],
+          "additionalProperties": false
+        },
+        "span": {
+          "$ref": "#/$defs/span"
+        },
+        "words": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^W-[0-9]+$"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "span",
+        "words"
+      ],
+      "additionalProperties": false
+    },
+    "error_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^E-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "ua_gec_errors"
+            },
+            "error": {
+              "type": "string",
+              "minLength": 1
+            },
+            "correct": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "required": [
+            "table",
+            "error",
+            "correct"
+          ],
+          "additionalProperties": false
+        },
+        "pattern": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "source",
+        "pattern"
+      ],
+      "additionalProperties": false
+    },
+    "note_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^N-[0-9]+$"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "table": {
+              "const": "style_guide"
+            },
+            "id": {
+              "type": "integer",
+              "minimum": 1
+            }
+          },
+          "required": [
+            "table",
+            "id"
+          ],
+          "additionalProperties": false
+        }
+      },
+      "required": [
+        "id",
+        "source"
+      ],
+      "additionalProperties": false
+    },
+    "video_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^V-[0-9]+$"
+        },
+        "url": {
+          "type": "string",
+          "minLength": 1
+        },
+        "channel": {
+          "type": "string",
+          "minLength": 1
+        },
+        "use": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "id",
+        "url",
+        "channel",
+        "use"
+      ],
+      "additionalProperties": false
+    },
+    "standard_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^S-[0-9]+$"
+        },
+        "lines": {
+          "type": "string",
+          "pattern": "^[0-9]+-[0-9]+$"
+        }
+      },
+      "required": [
+        "id",
+        "lines"
+      ],
+      "additionalProperties": false
+    },
+    "unsupported_request": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^U-[0-9]+$"
+        },
+        "claim": {
+          "type": "string",
+          "minLength": 1
+        },
+        "searches": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "tool": {
+                "type": "string",
+                "minLength": 1
+              },
+              "query": {
+                "type": "string",
+                "minLength": 1
+              }
+            },
+            "required": [
+              "tool",
+              "query"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "resolved_by": {
+          "oneOf": [
+            {
+              "type": "string",
+              "minLength": 1
+            },
+            {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "type": "string",
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "record"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        }
+      },
+      "required": [
+        "id",
+        "claim",
+        "searches"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

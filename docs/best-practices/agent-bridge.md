@@ -423,8 +423,8 @@ to 40–60KB of copy-pasted transcript.
 
 For ordinary inter-agent communication, `ask-*` uses the durable ACP controller
 with exactly two enabled seats: sender and recipient. Pass `--from` explicitly
-from a plain shell; launchers can supply the sender identity. `discuss` also
-requires exactly two enabled seats. Neither surface falls back to a one-shot
+from a plain shell; launchers can supply the sender identity. `discuss`
+accepts 2 to 4 distinct enabled seats. Neither surface falls back to a one-shot
 provider process on failure.
 
 Use `delegate.py dispatch --worktree` for planning, creation, design, or other

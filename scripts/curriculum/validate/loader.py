@@ -4,8 +4,9 @@ Scoping rule (docs/epics/fresh-build-plan-schema.md §1): a plan lives at
 curriculum/l2-uk-en/lesson-plans/<level>/<slug>.yaml and nowhere else. The
 loader resolves the path first, then refuses anything not under that root —
 a path under curriculum/l2-uk-en/plans/ gets a message naming lesson-plans/ —
-refuses a file whose name begins with an underscore ("not a plan"), and
-rejects v1 plans and removed v1 fields before the JSON Schema ever runs, so
+refuses a file whose name begins with an underscore ("not a plan"), refuses
+a plan whose file name, requested slug and ``slug`` field are not one value,
+and rejects v1 plans and removed v1 fields before the JSON Schema ever runs, so
 those failures name their own rule code instead of surfacing as a generic
 schema error. The root is read off the resolved path's components, so tests
 can build a fixture tree anywhere.
@@ -123,6 +124,27 @@ def load_plan(plan_path: Path) -> dict:
             "(lesson-plans/<level>/_scope/<slug>.yaml), never part of the hand-written plan (§2a)",
         )
     return data
+
+
+def check_plan_slug(plan_path: Path, slug: str, plan: dict) -> None:
+    """The file name, the requested slug and plan["slug"] must be one value (§2a).
+
+    A module plan is <slug>.yaml. Single-plan mode is asked for a slug on the
+    command line and --all reads the plan's own slug field; the scope sidecar
+    is keyed on that slug, so a renamed file (or a slug field that disagrees
+    with its file name) would let the two modes read different sidecars.
+    """
+    if plan_path.stem != slug:
+        raise PlanError(
+            codes.PLAN_SLUG_MISMATCH,
+            f"{plan_path.name} was validated as slug {slug!r}; a module plan is <slug>.yaml (§2a)",
+        )
+    if plan.get("slug") != slug:
+        raise PlanError(
+            codes.PLAN_SLUG_MISMATCH,
+            f"{plan_path.name} carries slug {plan.get('slug')!r}; a module plan is <slug>.yaml, "
+            "so its slug field must equal its file name (§2a)",
+        )
 
 
 def read_plan_text(plan_path: Path) -> str:

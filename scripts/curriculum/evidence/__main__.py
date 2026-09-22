@@ -5,7 +5,7 @@ from __future__ import annotations
 import argparse
 import sys
 
-from . import codes, verify, words
+from . import codes, lesson_lock, pack, verify, words
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -14,23 +14,44 @@ def main(argv: list[str] | None = None) -> int:
     parser = argparse.ArgumentParser(
         prog="python -m scripts.curriculum.evidence",
         description=(
-            "Curriculum evidence CLI: build and verify source-grounded word stores.\n"
-            "Use to create per-level dictionary evidence or verify its integrity against locks."
+            "Curriculum evidence CLI: build and verify source-grounded word stores and module evidence packs.\n"
+            "Use to create per-level dictionary evidence and module packs, or verify integrity against locks."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
             "Commands:\n"
             "  build-words   Build or update a level word store from a request YAML\n"
-            "  words-verify  Verify integrity of a level word store against sources and ledger\n\n"
+            "  words-verify  Verify integrity of a level word store against sources and ledger\n"
+            "  build-pack    Build a module evidence pack from a request YAML\n"
+            "  pack-verify   Verify integrity of a module evidence pack against sources and lock\n"
+            "  lessons-lock  Generate, check, or diff the per-lesson evidence lock\n\n"
             "Examples:\n"
             "  .venv/bin/python -m scripts.curriculum.evidence build-words a1 --request req.yaml\n"
-            "  .venv/bin/python -m scripts.curriculum.evidence words-verify a1\n\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence words-verify a1\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence build-pack a1 alphabet --request req.yaml\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence lessons-lock a1 alphabet --write\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence lessons-lock a1 alphabet\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence lessons-lock a1 --all --diff origin/main\n\n"
             "Outcome Codes:\n"
             f"{codes.help_text()}\n"
         ),
     )
     parser.add_argument(
-        "command", choices=["build-words", "build_words", "words-verify", "words_verify"], help="Command to run"
+        "command",
+        choices=[
+            "build-words",
+            "build_words",
+            "words-verify",
+            "words_verify",
+            "build-pack",
+            "build_pack",
+            "pack-verify",
+            "pack_verify",
+            "lessons-lock",
+            "lessons_lock",
+        ],
+        help="Command to run",
     )
     parser.add_argument("args", nargs=argparse.REMAINDER, help="Arguments for the command")
 
@@ -45,6 +66,12 @@ def main(argv: list[str] | None = None) -> int:
         return words.main(rest)
     elif cmd in {"words-verify", "words_verify"}:
         return verify.main(rest)
+    elif cmd in {"build-pack", "build_pack"}:
+        return pack.main(rest)
+    elif cmd in {"pack-verify", "pack_verify"}:
+        return verify.main_pack(rest)
+    elif cmd in {"lessons-lock", "lessons_lock"}:
+        return lesson_lock.main(rest)
     else:
         parser.print_help()
         return 2
