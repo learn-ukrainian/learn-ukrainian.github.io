@@ -1,0 +1,109 @@
+"""Tests for fresh build engine Part E2 immersion payload (#8414, #8431 §7)."""
+
+from __future__ import annotations
+
+from unittest.mock import patch
+
+import pytest
+
+from scripts.build.fresh import immersion as fresh_immersion
+from scripts.build.fresh.immersion import FIELD_ROLES, ImmersionPayload, compute_immersion_payload
+from scripts.build.fresh import prompt as fresh_prompt
+from scripts.curriculum.arc.loader import ArcPosition
+from scripts.curriculum.learner_state.immersion import LessonBand, compute_lesson_immersion_band
+
+
+def synthetic_arc_loader(level: str) -> list[ArcPosition]:
+    """Synthetic arc loader for testing A2/B1/B2 without reading live arc files."""
+    if level == "a2":
+        return [
+            ArcPosition(position=1, module_num=1, lesson_num=1, band_key="a2-bridge"),
+            ArcPosition(position=4, module_num=4, lesson_num=1, band_key="a2-ramp"),
+            ArcPosition(position=10, module_num=10, lesson_num=1, band_key="a2-m01-20"),
+        ]
+    elif level == "b1":
+        return [ArcPosition(position=1, module_num=1, lesson_num=1, band_key="b1-m01-10")]
+    elif level == "b2":
+        return [ArcPosition(position=1, module_num=1, lesson_num=1, band_key="b2-m01-15")]
+    return []
+
+
+def test_a1_immersion_payload_early():
+    """Early A1: English narration, dialogue in Ukrainian, all 7 roles present."""
+    payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=10)
+    assert isinstance(payload, ImmersionPayload)
+    assert payload.band_key == "a1-m01-03"
+    assert payload.advisory_uk_share == (5, 25)
+
+    roles = payload.permitted_languages
+    for role in FIELD_ROLES:
+        assert role in roles
+
+    assert roles["dialogue_line"] == ("uk",)
+    assert roles["quote"] == ("uk",)
+    assert roles["gloss"] == ("en",)
+    assert roles["narration"] == ("en",)
+    assert roles["activity_instruction"] == ("en",)
+    assert roles["activity_item"] == ("uk", "en")
+    assert roles["resource_line"] == ("en", "uk")
+
+    targets = payload.structural_targets
+    assert "min_uk_dialogue_lines" in targets
+    assert "min_uk_example_sentences" in targets
+    assert "min_vocab_entries" in targets
+
+
+def test_a1_immersion_payload_late():
+    """Late A1 (position >= 41): bilingual narration/instructions permitted."""
+    payload = compute_immersion_payload("a1", arc_position=45, lesson_n=1, cumulative_core_count=600)
+    assert payload.permitted_languages["narration"] == ("en", "uk")
+    assert payload.permitted_languages["activity_instruction"] == ("en", "uk")
+
+
+def test_a2_immersion_payload():
+    """A2 bridge allows English support; A2 ramp is Ukrainian-only narration."""
+    p_bridge = compute_immersion_payload("a2", arc_position=1, lesson_n=1, arc_loader=synthetic_arc_loader)
+    assert p_bridge.band_key == "a2-bridge"
+    assert p_bridge.permitted_languages["narration"] == ("uk", "en")
+    assert p_bridge.permitted_languages["activity_instruction"] == ("uk", "en")
+
+    p_ramp = compute_immersion_payload("a2", arc_position=4, lesson_n=1, arc_loader=synthetic_arc_loader)
+    assert p_ramp.band_key == "a2-ramp"
+    assert p_ramp.permitted_languages["narration"] == ("uk",)
+    assert p_ramp.permitted_languages["activity_instruction"] == ("uk",)
+
+
+def test_b1_immersion_payload():
+    """B1 onward is full immersion for narration and activities."""
+    payload = compute_immersion_payload("b1", arc_position=1, lesson_n=1, arc_loader=synthetic_arc_loader)
+    assert payload.permitted_languages["narration"] == ("uk",)
+    assert payload.permitted_languages["activity_instruction"] == ("uk",)
+    assert payload.permitted_languages["activity_item"] == ("uk",)
+    assert payload.permitted_languages["dialogue_line"] == ("uk",)
+    assert payload.permitted_languages["quote"] == ("uk",)
+    assert payload.permitted_languages["gloss"] == ("en",)
+
+
+def test_payload_pin_consumed_by_both():
+    """Payload pin: writer prompt and E3 gate consume the exact same compute_immersion_payload function."""
+    # 1. Verify compute_immersion_payload reads compute_lesson_immersion_band
+    with patch("scripts.build.fresh.immersion.compute_lesson_immersion_band") as mock_band:
+        mock_band.return_value = LessonBand(
+            band_key="pinned-band",
+            advisory_uk_share=(20, 40),
+            module_structural={"min_uk_dialogue_lines": 5, "min_uk_example_sentences": 8, "min_vocab_entries": 12},
+            source="ulp_vocab",
+            not_checked=["lesson_structural_minimums_not_calibrated"],
+        )
+        res = compute_immersion_payload("a1", 1, 1, cumulative_core_count=10)
+        assert mock_band.called
+        assert res.band_key == "pinned-band"
+
+    # 2. Verify prompt module imports compute_immersion_payload from immersion.py
+    assert fresh_prompt.compute_immersion_payload is fresh_immersion.compute_immersion_payload
+
+    # 3. Verify to_dict serializability
+    d = res.to_dict()
+    assert d["band_key"] == "pinned-band"
+    assert d["advisory_uk_share"] == [20, 40]
+    assert d["structural_targets"]["min_uk_dialogue_lines"] == 5
