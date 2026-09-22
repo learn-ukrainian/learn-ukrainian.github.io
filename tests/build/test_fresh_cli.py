@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import copy
 import hashlib
 import stat
 import subprocess
@@ -308,10 +309,14 @@ def test_cli_render_prompt_end_to_end_synthetic_tree(tmp_path):
     assert "T-001" in rendered
     assert "No external cited records required." not in rendered
 
-    # 2. Contains real, non-zero hashes in the inputs block
+    # 2. Contains real, non-zero hashes in the inputs block (Finding 1, MINOR: all 5 checked)
     assert 'plan_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
     assert 'pack_lock: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
     assert 'words_lock: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    assert 'lesson_lock_entry_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    assert 'learner_state_sha256: "0000000000000000000000000000000000000000000000000000000000000000"' not in rendered
+    for h in ("plan_sha256:", "pack_lock:", "words_lock:", "lesson_lock_entry_sha256:", "learner_state_sha256:"):
+        assert h in rendered
 
     # Verify sha256 sidecar file was always recorded (#8431, Finding 11)
     sha_file = paths["state_dir"] / "synthetic-mod" / "lesson-1.prompt.sha256"
@@ -394,3 +399,208 @@ def test_cli_write_fails_preflight_writes_gap_report_atomically(tmp_path, capsys
     assert stat.S_IMODE(gap_report.stat().st_mode) == 0o644
     content = yaml.safe_load(gap_report.read_text(encoding="utf-8"))
     assert content["status"] == "evidence_gap"
+
+
+def test_cli_preflight_passes_on_synthetic_tree(tmp_path, capsys):
+    """MAJOR C: CLI preflight passes with exit code 0 on a synthetic tree with injected --repo-root."""
+    _build_synthetic_tree(tmp_path)
+    code = main(["preflight", "a1", "synthetic-mod", "--lesson", "1", "--repo-root", str(tmp_path)])
+    assert code == 0
+    captured = capsys.readouterr()
+    assert "Preflight status: ok" in captured.out
+    assert "Homographs detected: 0" in captured.out
+
+
+def test_cli_write_reaches_fake_seat_synthetic_tree(tmp_path, capsys):
+    """MAJOR C: CLI write reaches the fake seat on a synthetic tree where preflight passes."""
+    paths = _build_synthetic_tree(tmp_path)
+    valid_draft_template = yaml.safe_load(
+        (Path(__file__).parent / "fixtures" / "fresh" / "lesson-draft-a1-valid.yaml").read_text(encoding="utf-8")
+    )
+    my_draft = copy.deepcopy(valid_draft_template)
+    my_draft["lesson"]["module"] = "a1/synthetic-mod"
+    my_draft["lesson"]["n"] = 1
+    my_draft["activities"] = [a for a in my_draft["activities"] if a["id"] == "a1"]
+    my_draft["steps"][0]["blocks"] = [
+        b for b in my_draft["steps"][0]["blocks"]
+        if not (b.get("kind") == "activity" and b.get("ref") != "a1")
+    ]
+    my_draft["consolidation"] = {"lead_in": "The larger practice block.", "activities": []}
+    draft_yaml = yaml.safe_dump(my_draft, allow_unicode=True)
+
+    fake_seat = tmp_path / "fake_seat.py"
+    fake_seat.write_text(
+        f"""
+import argparse
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--task-id", required=True)
+parser.add_argument("--prompt-file", required=True)
+parser.add_argument("--result-file", required=True)
+args = parser.parse_args()
+
+result_path = Path(args.result_file)
+result_path.parent.mkdir(parents=True, exist_ok=True)
+result_path.write_text('''```yaml
+{draft_yaml}
+```''', encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
+
+    code = main(
+        [
+            "write",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "1",
+            "--writer",
+            "agy",
+            "--fake-seat",
+            str(fake_seat),
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 0
+    captured = capsys.readouterr()
+    assert "Writer call succeeded for a1/synthetic-mod lesson 1 (seat: agy)" in captured.out
+
+    draft_file = paths["state_dir"] / "synthetic-mod" / "lesson-1.draft.yaml"
+    assert draft_file.is_file()
+
+
+def test_cli_recap_render_prompt_and_write(tmp_path, capsys):
+    """MAJOR B: Recap lesson selects recap prompt template and loads built lessons in both render-prompt and write."""
+    paths = _build_synthetic_tree(tmp_path)
+    state_dir = paths["state_dir"] / "synthetic-mod"
+    state_dir.mkdir(parents=True, exist_ok=True)
+
+    # Write built lesson 1 draft with its lock sidecar (verifies lock.require)
+    l1_draft = state_dir / "lesson-1.draft.yaml"
+    l1_content = yaml.safe_dump(
+        {
+            "draft_schema": 1,
+            "lesson": {"module": "a1/synthetic-mod", "n": 1},
+            "status": "ok",
+            "steps": [{"id": "s1", "blocks": [{"kind": "example", "ref": "EX-001"}]}],
+        }
+    )
+    lock.write(l1_draft, l1_content.encode("utf-8"))
+
+    # 1. render-prompt on lesson 2 (which is kind: recap in plan)
+    output_prompt = tmp_path / "recap_prompt.md"
+    code = main(
+        [
+            "render-prompt",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "2",
+            "-o",
+            str(output_prompt),
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 0
+    assert output_prompt.is_file()
+    prompt_text = output_prompt.read_text(encoding="utf-8")
+    assert "Lesson 1" in prompt_text or "lesson-1" in prompt_text
+
+    # 2. write on lesson 2 (kind: recap) reaches fake seat with recap prompt rendered
+    valid_draft_template = yaml.safe_load(
+        (Path(__file__).parent / "fixtures" / "fresh" / "lesson-draft-a1-valid.yaml").read_text(encoding="utf-8")
+    )
+    recap_draft = copy.deepcopy(valid_draft_template)
+    recap_draft["lesson"]["module"] = "a1/synthetic-mod"
+    recap_draft["lesson"]["n"] = 2
+    recap_draft["activities"] = [a for a in recap_draft["activities"] if a["id"] == "a1"]
+    recap_draft["steps"][0]["blocks"] = [
+        b for b in recap_draft["steps"][0]["blocks"]
+        if not (b.get("kind") == "activity" and b.get("ref") != "a1")
+    ]
+    recap_draft["consolidation"] = {"lead_in": "The larger practice block.", "activities": []}
+    recap_draft_yaml = yaml.safe_dump(recap_draft, allow_unicode=True)
+
+    fake_seat = tmp_path / "fake_seat_recap.py"
+    fake_seat.write_text(
+        f"""
+import argparse
+from pathlib import Path
+
+parser = argparse.ArgumentParser()
+parser.add_argument("--task-id", required=True)
+parser.add_argument("--prompt-file", required=True)
+parser.add_argument("--result-file", required=True)
+args = parser.parse_args()
+
+result_path = Path(args.result_file)
+result_path.parent.mkdir(parents=True, exist_ok=True)
+result_path.write_text('''```yaml
+{recap_draft_yaml}
+```''', encoding="utf-8")
+""",
+        encoding="utf-8",
+    )
+
+    code_write = main(
+        [
+            "write",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "2",
+            "--writer",
+            "agy",
+            "--fake-seat",
+            str(fake_seat),
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code_write == 0
+    assert (state_dir / "lesson-2.draft.yaml").is_file()
+
+
+def test_cli_recap_flag_disagreement_fails(tmp_path, capsys):
+    """MAJOR B: --recap flag that disagrees with plan lesson kind fails."""
+    _build_synthetic_tree(tmp_path)
+
+    # Lesson 1 is teach, but --recap is asserted
+    code = main(
+        [
+            "render-prompt",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "1",
+            "--recap",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code == 1
+    captured = capsys.readouterr()
+    assert "disagrees with plan lesson kind" in captured.err
+
+    # Lesson 2 is recap, but --no-recap is asserted
+    code2 = main(
+        [
+            "write",
+            "a1",
+            "synthetic-mod",
+            "--lesson",
+            "2",
+            "--no-recap",
+            "--writer",
+            "agy",
+            "--repo-root",
+            str(tmp_path),
+        ]
+    )
+    assert code2 == 1
+    captured2 = capsys.readouterr()
+    assert "disagrees with plan lesson kind" in captured2.err

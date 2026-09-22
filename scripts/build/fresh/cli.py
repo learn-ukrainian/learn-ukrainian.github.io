@@ -114,7 +114,11 @@ def _build_parser() -> argparse.ArgumentParser:
         "--output", "-o", type=Path, default=None, help="Output file path for rendered prompt (default: stdout)"
     )
     p_render.add_argument(
-        "--recap", action="store_true", help="Render recap prompt variant with built lessons 1..N-1 (default: False)"
+        "--recap",
+        dest="recap",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Assert recap prompt variant (fails if it disagrees with plan)",
     )
     p_render.add_argument(
         "--repo-root",
@@ -208,6 +212,13 @@ def _build_parser() -> argparse.ArgumentParser:
         type=Path,
         default=None,
         help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
+    )
+    p_write.add_argument(
+        "--recap",
+        dest="recap",
+        action=argparse.BooleanOptionalAction,
+        default=None,
+        help="Assert recap prompt variant (fails if it disagrees with plan)",
     )
 
     return parser
@@ -312,13 +323,22 @@ def _compute_input_hashes(
     pack_lock = hashlib.sha256(paths["pack"].read_bytes()).hexdigest()
     words_lock = hashlib.sha256(paths["words"].read_bytes()).hexdigest()
 
-    lesson_lock_entry_sha256 = "0" * 64
+    lesson_lock_entry_sha256: str | None = None
     if paths["lock"].is_file():
         lock_doc = yaml.safe_load(paths["lock"].read_text(encoding="utf-8"))
-        for entry in lock_doc.get("lessons", []):
-            if entry.get("n") == lesson_n:
-                lesson_lock_entry_sha256 = entry.get("entry_sha256", "0" * 64)
-                break
+        if isinstance(lock_doc, dict):
+            for entry in lock_doc.get("lessons", []):
+                if entry.get("n") == lesson_n:
+                    entry_sha = entry.get("entry_sha256")
+                    if entry_sha and entry_sha != "0" * 64:
+                        lesson_lock_entry_sha256 = entry_sha
+                    break
+
+    if not lesson_lock_entry_sha256:
+        raise ValueError(
+            f"Lesson lock entry sha256 missing for lesson {lesson_n} in {paths.get('lock')}; "
+            "missing lesson lock is a preflight gap."
+        )
 
     learner_state_sha256 = hashlib.sha256(lock.yaml_bytes(p_state.to_dict())).hexdigest()
 
@@ -351,6 +371,8 @@ def _load_recap_built_lessons(
             raise FileNotFoundError(
                 f"Built lesson {prior_n} is missing for recap: expected {module_state_dir / f'lesson-{prior_n}.draft.yaml'}"
             )
+        # Note: E3's assembled lesson replaces the draft once built.
+        lock.require(found)
         text = found.read_text(encoding="utf-8")
         parsed = yaml.safe_load(text) or {}
         title = parsed.get("title") or f"Lesson {prior_n}"
@@ -391,11 +413,19 @@ def main(argv: list[str] | None = None) -> int:
         # Compute real input hashes (Finding 1)
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
 
-        if args.recap:
+        is_recap = (lesson_entry.get("kind") == "recap")
+        if args.recap is not None and args.recap != is_recap:
+            print(
+                f"Error: --recap={args.recap} disagrees with plan lesson kind {lesson_entry.get('kind')!r}",
+                file=sys.stderr,
+            )
+            return 1
+
+        if is_recap:
             # Load built lessons 1..N-1 from real files, failing closed if missing (Finding 1)
             try:
                 built = _load_recap_built_lessons(paths["state_dir"], args.slug, args.lesson)
-            except FileNotFoundError as err:
+            except (FileNotFoundError, ValueError) as err:
                 print(f"Error loading recap built lessons: {err}", file=sys.stderr)
                 return 1
 
@@ -460,6 +490,15 @@ def main(argv: list[str] | None = None) -> int:
         plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(
             args.level, args.slug, args.lesson, repo_root=repo_root
         )
+        pos = plan_dict.get("arc_ref", {}).get("position", 1)
+        p_state = planned_state(
+            args.level,
+            pos,
+            args.lesson,
+            allow_missing_prior=True,
+            plans_dir=paths["plan"].parent,
+            evidence_dir=paths["words"].parent,
+        )
 
         res = preflight_lesson(
             lesson_entry,
@@ -470,6 +509,10 @@ def main(argv: list[str] | None = None) -> int:
             words_path=paths["words"],
             level=args.level,
             slug=args.slug,
+            learner_state=p_state,
+            repo_root=repo_root,
+            plans_dir=paths["plan"].parent,
+            evidence_dir=paths["words"].parent,
         )
 
         print(f"Preflight status: {res.status}")
@@ -514,6 +557,10 @@ def main(argv: list[str] | None = None) -> int:
             level=args.level,
             slug=args.slug,
             gap_report_path=gap_report_file,
+            learner_state=p_state,
+            repo_root=repo_root,
+            plans_dir=paths["plan"].parent,
+            evidence_dir=paths["words"].parent,
         )
 
         if not pre_res.passed:
@@ -523,26 +570,63 @@ def main(argv: list[str] | None = None) -> int:
                 print(f"  [{g.step}] need: {g.need} — {g.detail}", file=sys.stderr)
             return 1
 
-        # 2. Render prompt with real cited records and hashes (Finding 1)
+        # Check plan lesson kind vs --recap
+        is_recap = (lesson_entry.get("kind") == "recap")
+        if getattr(args, "recap", None) is not None and args.recap != is_recap:
+            print(
+                f"Error: --recap={args.recap} disagrees with plan lesson kind {lesson_entry.get('kind')!r}",
+                file=sys.stderr,
+            )
+            return 1
+
+        # 2. Render prompt with real cited records and hashes (Finding 1, MAJOR B)
         cited_records = _load_cited_records(lesson_entry, pack_dict, words_dict)
         hashes = _compute_input_hashes(paths, args.lesson, p_state)
 
-        rendered_prompt = render_lesson_prompt(
-            lesson_entry,
-            cited_records=cited_records,
-            learner_state=p_state,
-            immersion=imm_payload,
-            level=args.level,
-            slug=args.slug,
-            lesson_n=args.lesson,
-            style_card_path=card_path,
-            plan_sha256=hashes["plan_sha256"],
-            pack_lock=hashes["pack_lock"],
-            words_lock=hashes["words_lock"],
-            lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
-            learner_state_sha256=hashes["learner_state_sha256"],
-        )
-        check_res = check_rendered_prompt(rendered_prompt, lesson_entry, card_path)
+        if is_recap:
+            try:
+                built = _load_recap_built_lessons(paths["state_dir"], args.slug, args.lesson)
+            except (FileNotFoundError, ValueError) as err:
+                print(f"Error loading recap built lessons: {err}", file=sys.stderr)
+                return 1
+
+            rendered_prompt = render_recap_prompt(
+                lesson_entry,
+                built_lessons=built,
+                cited_records=cited_records,
+                learner_state=p_state,
+                immersion=imm_payload,
+                level=args.level,
+                slug=args.slug,
+                lesson_n=args.lesson,
+                style_card_path=card_path,
+                plan_sha256=hashes["plan_sha256"],
+                pack_lock=hashes["pack_lock"],
+                words_lock=hashes["words_lock"],
+                lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
+                learner_state_sha256=hashes["learner_state_sha256"],
+            )
+            check_res = check_rendered_prompt(
+                rendered_prompt, lesson_entry, card_path, is_recap=True, built_lessons=built
+            )
+        else:
+            rendered_prompt = render_lesson_prompt(
+                lesson_entry,
+                cited_records=cited_records,
+                learner_state=p_state,
+                immersion=imm_payload,
+                level=args.level,
+                slug=args.slug,
+                lesson_n=args.lesson,
+                style_card_path=card_path,
+                plan_sha256=hashes["plan_sha256"],
+                pack_lock=hashes["pack_lock"],
+                words_lock=hashes["words_lock"],
+                lesson_lock_entry_sha256=hashes["lesson_lock_entry_sha256"],
+                learner_state_sha256=hashes["learner_state_sha256"],
+            )
+            check_res = check_rendered_prompt(rendered_prompt, lesson_entry, card_path, is_recap=False)
+
         if not check_res.passed:
             print("Rendered prompt check FAILED:", file=sys.stderr)
             for err in check_res.errors:
