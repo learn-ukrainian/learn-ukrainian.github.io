@@ -125,3 +125,32 @@ def test_cli_dry_run_does_not_write_files(tmp_path):
     assert ret == 0
     assert not (ev_dir / "_words.yaml").exists()
     assert not (ev_dir / "_words.registry.yaml").exists()
+
+
+def test_cli_dry_run_committed_five_lemmas_request():
+    req_path = REPO_ROOT / "tests/fixtures/a1_five_lemmas_request.yaml"
+    assert req_path.is_file()
+
+    proc = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.evidence",
+            "build-words",
+            "a1",
+            "--request",
+            str(req_path),
+            "--dry-run",
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+        timeout=30,
+    )
+    assert proc.returncode == 0, f"dry-run failed: {proc.stderr}\n{proc.stdout}"
+    data = json.loads(proc.stdout)
+    assert data["status"] == "ok"
+    assert data["dry_run"] is True
+    assert data["words_count"] == 5
+    assert data["forms_count"] == 97

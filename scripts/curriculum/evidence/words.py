@@ -11,6 +11,7 @@ import json
 import re
 import subprocess
 import sys
+import unicodedata
 from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
@@ -30,6 +31,50 @@ UKRAINIAN_VOWELS = frozenset("аеєиіїоуюяАЕЄИІЇОУЮЯ")
 def count_vowels(word: str) -> int:
     """Count Ukrainian vowels to gate monosyllables before calling the oracle."""
     return sum(1 for ch in word if ch in UKRAINIAN_VOWELS)
+
+
+def strip_combining_stress(text: str) -> str:
+    nfd = unicodedata.normalize("NFD", text)
+    return unicodedata.normalize("NFC", "".join(ch for ch in nfd if ch not in ("\u0301", "\u0300")))
+
+
+def extract_ulif_paradigm_forms(entry: dict[str, Any] | None) -> dict[str, str]:
+    """Extract form -> stressed_form mapping from ULIF entry's paradigm sections."""
+    if not entry:
+        return {}
+    mapping: dict[str, str] = {}
+    sections = entry.get("sections", [])
+    for sec in sections:
+        if sec.get("kind") == "paradigm":
+            raw_payload = sec.get("payload_json")
+            if not raw_payload:
+                continue
+            try:
+                payload = json.loads(raw_payload) if isinstance(raw_payload, str) else raw_payload
+            except Exception:
+                continue
+            if isinstance(payload, dict):
+                if "rows" in payload and isinstance(payload["rows"], list):
+                    for row in payload["rows"]:
+                        if isinstance(row, list):
+                            for cell in row:
+                                if isinstance(cell, str):
+                                    for token in cell.split():
+                                        tok = token.strip(" ,;:.!?()[]\"'")
+                                        if tok:
+                                            unstressed = sources.normalize_spelling(strip_combining_stress(tok))
+                                            if (
+                                                "\u0301" in tok
+                                                or "\u0300" in tok
+                                                or unicodedata.normalize("NFD", tok)
+                                                != unicodedata.normalize("NFD", unstressed)
+                                            ):
+                                                mapping.setdefault(unstressed, tok)
+                else:
+                    for k, v in payload.items():
+                        if isinstance(k, str) and isinstance(v, str):
+                            mapping[sources.normalize_spelling(k)] = v
+    return mapping
 
 
 def get_mcp_commit(repo_root: Path = REPO_ROOT) -> str:
@@ -181,6 +226,10 @@ def build_words(
             if not forms_by_entry:
                 raise ValueError(f"{codes.INVALID_REQUEST}: no VESUM entries for lemma {lemma!r} ({pos})")
 
+            # Check ULIF spelling group
+            ulif_group = ulif_batch.get(lemma, [])
+            ulif_checked = sources_instance.ulif_group_checked(ulif_group)
+
             # Determine entry
             if len(forms_by_entry) == 1:
                 single_entry_id = next(iter(forms_by_entry))
@@ -193,20 +242,39 @@ def build_words(
                         f"{codes.INVALID_REQUEST}: entry_id mismatch for {lemma!r}: "
                         f"{entry_req.get('entry_id')} vs {single_entry_id}"
                     )
-                entry: dict[str, Any] | str = {"source": "vesum", "entry_id": single_entry_id}
+                if entry_req is not None and entry_req.get("source") == "ulif":
+                    req_hi = entry_req.get("homonym_index")
+                    matching_ulif = next((e for e in ulif_group if e.get("homonym_index") == req_hi), None)
+                    headword = matching_ulif.get("canonical_headword", lemma) if matching_ulif else lemma
+                    entry: dict[str, Any] | str = {"source": "ulif", "key": [headword, req_hi]}
+                    selected_entry_id: int | None = single_entry_id
+                else:
+                    entry = {"source": "vesum", "entry_id": single_entry_id}
+                    selected_entry_id = single_entry_id
             else:
+                sorted_entry_ids = sorted(forms_by_entry.keys())
                 if entry_req is not None and entry_req.get("source") == "vesum":
                     req_eid = entry_req.get("entry_id")
                     if req_eid in forms_by_entry:
                         entry = {"source": "vesum", "entry_id": req_eid}
+                        selected_entry_id = req_eid
                     else:
                         raise ValueError(
                             f"{codes.INVALID_REQUEST}: requested entry_id {req_eid} not found for {lemma!r}"
                         )
                 elif entry_req is not None and entry_req.get("source") == "ulif":
-                    entry = entry_req
+                    req_hi = entry_req.get("homonym_index")
+                    if req_hi is None or req_hi < 1 or req_hi > len(sorted_entry_ids):
+                        raise ValueError(
+                            f"{codes.INVALID_REQUEST}: requested homonym_index {req_hi} not found for {lemma!r}"
+                        )
+                    matching_ulif = next((e for e in ulif_group if e.get("homonym_index") == req_hi), None)
+                    headword = matching_ulif.get("canonical_headword", lemma) if matching_ulif else lemma
+                    entry = {"source": "ulif", "key": [headword, req_hi]}
+                    selected_entry_id = sorted_entry_ids[req_hi - 1]
                 else:
                     entry = "unresolved"
+                    selected_entry_id = None
 
             # Allocate or verify id
             if want == "new":
@@ -233,17 +301,17 @@ def build_words(
                         f"{entry} vs {existing_reg['entry']}"
                     )
 
-            # Check ULIF spelling group
-            ulif_group = ulif_batch.get(lemma, [])
-            ulif_checked = sources_instance.ulif_group_checked(ulif_group)
+            # Check ULIF field on word
             ulif_field: dict[str, Any] | str = "pending"
+            matching_entry = None
             if ulif_checked:
                 # Find matching ULIF entry
-                matching_entry = None
                 if entry_req is not None and entry_req.get("source") == "ulif":
                     matching_entry = next(
                         (e for e in ulif_group if e.get("homonym_index") == entry_req.get("homonym_index")), None
                     )
+                elif isinstance(entry, dict) and entry.get("source") == "ulif":
+                    matching_entry = next((e for e in ulif_group if e.get("homonym_index") == entry["key"][1]), None)
                 elif len(ulif_group) == 1:
                     matching_entry = ulif_group[0]
                 if matching_entry is not None:
@@ -271,9 +339,9 @@ def build_words(
                 word_doc["candidates"] = candidates
                 word_doc["forms"] = []
             else:
-                entry_id = entry["entry_id"]
-                forms_source = forms_by_entry[entry_id]
+                forms_source = forms_by_entry[selected_entry_id]
                 forms_list: list[dict[str, Any]] = []
+                ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
 
                 for f in forms_source:
                     form_str = f["word_form"]
@@ -291,6 +359,17 @@ def build_words(
                         stress_source = "none"
                         stressed = form_str
                         f_entry: dict[str, Any] = {
+                            "form": form_str,
+                            "tags": tags_str,
+                            "stressed": stressed,
+                            "stress_source": stress_source,
+                            "markers": markers,
+                            "learner": is_learner,
+                        }
+                    elif ulif_checked and matching_entry and form_str in ulif_forms:
+                        stress_source = "ulif"
+                        stressed = ulif_forms[form_str]
+                        f_entry = {
                             "form": form_str,
                             "tags": tags_str,
                             "stressed": stressed,

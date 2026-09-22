@@ -18,7 +18,7 @@ from jsonschema import Draft202012Validator
 from scripts.verification import stress
 
 from . import codes, lock, registry, sources
-from .words import count_vowels, find_plans_citing, load_schema
+from .words import count_vowels, extract_ulif_paradigm_forms, find_plans_citing, load_schema
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
@@ -131,6 +131,47 @@ def verify_words_store(
             pos = word["pos"]
             entry = word.get("entry")
 
+            # Check CEFR against source
+            cefr_hits = sources_instance.cefr_levels([lemma]).raw.get(lemma, [])
+            exact_cefr = next((h for h in cefr_hits if sources.normalize_spelling(h.get("word", "")) == lemma), None)
+            expected_cefr = None
+            if exact_cefr and exact_cefr.get("level") in {"A1", "A2", "B1", "B2", "C1", "C2"}:
+                expected_cefr = {"level": exact_cefr["level"], "source": "puls"}
+
+            stored_cefr = word.get("cefr")
+            if stored_cefr != expected_cefr:
+                errors.append(
+                    f"{codes.CEFR_MISMATCH}: stored CEFR {stored_cefr} differs from source {expected_cefr} for {word_id} ({lemma})"
+                )
+
+            # Check Gloss against source
+            gloss_rows = sources_instance.gloss_rows([(lemma, pos)]).raw.get((lemma, pos), [])
+            expected_gloss = None
+            expected_gloss_source = None
+            if gloss_rows:
+                first_row = gloss_rows[0]
+                raw_trans = first_row.get("translations", "")
+                if isinstance(raw_trans, str):
+                    try:
+                        parsed_trans = json.loads(raw_trans)
+                    except Exception:
+                        parsed_trans = [raw_trans]
+                else:
+                    parsed_trans = raw_trans
+                if parsed_trans and isinstance(parsed_trans, list) and len(parsed_trans) > 0:
+                    first_str = str(parsed_trans[0])
+                    if first_str:
+                        expected_gloss = first_str
+                        expected_gloss_source = {"table": "dmklinger_uk_en", "id": first_row["id"]}
+
+            stored_gloss = word.get("gloss_en")
+            stored_gloss_source = word.get("gloss_source")
+            if stored_gloss != expected_gloss or stored_gloss_source != expected_gloss_source:
+                errors.append(
+                    f"{codes.GLOSS_MISMATCH}: stored gloss ({stored_gloss!r}, {stored_gloss_source}) "
+                    f"differs from source ({expected_gloss!r}, {expected_gloss_source}) for {word_id} ({lemma})"
+                )
+
             if entry == "unresolved":
                 cites = find_plans_citing(word_id, plans_base)
                 if cites:
@@ -140,32 +181,67 @@ def verify_words_store(
                 continue
 
             # Resolved entry
-            entry_id = entry.get("entry_id")
             paradigm_res = sources_instance.inspect_lemma_forms(lemma, pos)
             forms_by_entry = paradigm_res.forms_by_entry
 
-            if entry_id not in forms_by_entry:
-                errors.append(f"{codes.FORM_MISMATCH}: entry {entry_id} for {lemma} ({pos}) no longer in VESUM")
+            if isinstance(entry, dict) and entry.get("source") == "vesum":
+                entry_id = entry.get("entry_id")
+            elif isinstance(entry, dict) and entry.get("source") == "ulif":
+                req_hi = entry.get("key", [None, 1])[1]
+                if len(forms_by_entry) == 1:
+                    entry_id = next(iter(forms_by_entry))
+                else:
+                    sorted_eids = sorted(forms_by_entry.keys())
+                    if isinstance(req_hi, int) and 1 <= req_hi <= len(sorted_eids):
+                        entry_id = sorted_eids[req_hi - 1]
+                    else:
+                        entry_id = None
+            else:
+                entry_id = None
+
+            if entry_id is None or entry_id not in forms_by_entry:
+                errors.append(f"{codes.FORM_MISMATCH}: entry {entry} for {lemma} ({pos}) no longer in VESUM")
                 continue
 
             vesum_forms = forms_by_entry[entry_id]
-            vesum_map = {(f["word_form"], f["tags"]): f for f in vesum_forms}
-
             stored_forms = word.get("forms", [])
             total_forms += len(stored_forms)
 
-            for sf in stored_forms:
-                form_str = sf["form"]
-                tags_str = sf["tags"]
-                key = (form_str, tags_str)
+            # Compare the complete paradigm, including count and form ordering
+            if len(stored_forms) != len(vesum_forms):
+                errors.append(
+                    f"{codes.FORM_MISMATCH}: paradigm length mismatch for {word_id} ({lemma}): "
+                    f"{len(stored_forms)} stored forms vs {len(vesum_forms)} in VESUM"
+                )
 
-                if key not in vesum_map:
+            # ULIF spelling group check for this word
+            ulif_group = sources_instance.ulif_entries([lemma]).raw.get(lemma, [])
+            ulif_checked = sources_instance.ulif_group_checked(ulif_group)
+            matching_entry = None
+            if ulif_checked:
+                if isinstance(entry, dict) and entry.get("source") == "ulif":
+                    matching_entry = next((e for e in ulif_group if e.get("homonym_index") == entry["key"][1]), None)
+                elif isinstance(word.get("ulif"), dict) and word["ulif"].get("source") == "ulif":
+                    matching_entry = next(
+                        (e for e in ulif_group if e.get("homonym_index") == word["ulif"]["key"][1]), None
+                    )
+                elif len(ulif_group) == 1:
+                    matching_entry = ulif_group[0]
+
+            ulif_forms = extract_ulif_paradigm_forms(matching_entry) if (ulif_checked and matching_entry) else {}
+
+            for idx, (sf, vf) in enumerate(zip(stored_forms, vesum_forms, strict=False)):
+                form_str = sf.get("form")
+                tags_str = sf.get("tags")
+                vf_form = vf.get("word_form")
+                vf_tags = vf.get("tags")
+
+                if form_str != vf_form or tags_str != vf_tags:
                     errors.append(
-                        f"{codes.FORM_MISMATCH}: form {form_str!r} with tags {tags_str!r} no longer in VESUM for {word_id}"
+                        f"{codes.FORM_MISMATCH}: form at index {idx} mismatch for {word_id}: "
+                        f"({form_str!r}, {tags_str!r}) vs VESUM ({vf_form!r}, {vf_tags!r})"
                     )
                     continue
-
-                vf = vesum_map[key]
 
                 # Excluding marker check
                 vf_markers = vf.get("markers", [])
@@ -178,12 +254,10 @@ def verify_words_store(
                     )
 
                 # ULIF check
-                if sf.get("stress_source") == "ulif":
-                    ulif_group = sources_instance.ulif_entries([lemma]).raw.get(lemma, [])
-                    if not sources_instance.ulif_group_checked(ulif_group):
-                        errors.append(
-                            f"{codes.UNCHECKED_ULIF}: form {form_str!r} of {word_id} has stress_source: ulif but group is unchecked"
-                        )
+                if sf.get("stress_source") == "ulif" and not ulif_checked:
+                    errors.append(
+                        f"{codes.UNCHECKED_ULIF}: form {form_str!r} of {word_id} has stress_source: ulif but group is unchecked"
+                    )
 
                 # Stress check
                 stored_stress_source = sf.get("stress_source")
@@ -198,6 +272,9 @@ def verify_words_store(
                 if count_vowels(form_str) == 1:
                     expected_source = "none"
                     expected_stressed = form_str
+                elif ulif_checked and matching_entry and form_str in ulif_forms:
+                    expected_source = "ulif"
+                    expected_stressed = ulif_forms[form_str]
                 else:
                     stress_res = sources_instance.stress_for_form(form_str, tags_str)
                     raw_st = stress_res.raw
@@ -214,6 +291,8 @@ def verify_words_store(
                 if stored_stress_source != expected_source or (
                     expected_stressed is not None and stored_stressed != expected_stressed
                 ):
+                    stress_mismatch = True
+                if stored_stress_source == "pending" and "stressed" in sf:
                     stress_mismatch = True
 
                 if stress_mismatch:
@@ -233,6 +312,10 @@ def verify_words_store(
                     pending_forms_count += 1
                 if sf.get("override") is True:
                     override_forms_count += 1
+
+            if len(stored_forms) > len(vesum_forms):
+                for sf in stored_forms[len(vesum_forms) :]:
+                    errors.append(f"{codes.FORM_MISMATCH}: extra form {sf.get('form')!r} for {word_id} not in VESUM")
 
         status = "failed" if errors else ("warning" if warnings else "ok")
 

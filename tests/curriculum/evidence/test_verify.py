@@ -345,3 +345,100 @@ def test_verify_source_changed_strict_vs_nonstrict(clean_store, synthetic_vesum,
 
     assert res_strict["status"] == "failed"
     assert any(codes.SOURCE_CHANGED in err for err in res_strict["errors"])
+
+
+def test_verify_fails_on_missing_paradigm_forms(clean_store, synthetic_vesum, synthetic_sources):
+    store_path = clean_store / "_words.yaml"
+    data = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    data["words"][0]["forms"] = []
+    store_bytes = lock.yaml_bytes(data)
+    lock.write(store_path, store_bytes)
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api, strict=True)
+
+    assert res["status"] == "failed"
+    assert any(codes.FORM_MISMATCH in err for err in res["errors"])
+
+
+def test_verify_fails_on_unsupported_gloss(clean_store, synthetic_vesum, synthetic_sources):
+    store_path = clean_store / "_words.yaml"
+    data = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    data["words"][0]["gloss_en"] = "invented gloss"
+    data["words"][0]["gloss_source"] = {"table": "dmklinger_uk_en", "id": 99999}
+    store_bytes = lock.yaml_bytes(data)
+    lock.write(store_path, store_bytes)
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api, strict=True)
+
+    assert res["status"] == "failed"
+    assert any(codes.GLOSS_MISMATCH in err for err in res["errors"])
+
+
+def test_verify_fails_on_unsupported_cefr(clean_store, synthetic_vesum, synthetic_sources):
+    store_path = clean_store / "_words.yaml"
+    data = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    data["words"][0]["cefr"] = {"level": "C2", "source": "puls"}
+    store_bytes = lock.yaml_bytes(data)
+    lock.write(store_path, store_bytes)
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = verify.verify_words_store("a1", evidence_dir=clean_store, sources_instance=api, strict=True)
+
+    assert res["status"] == "failed"
+    assert any(codes.CEFR_MISMATCH in err for err in res["errors"])
+
+
+def test_verify_checked_ulif_stress_passes_and_mismatch_fails(tmp_path, synthetic_vesum, synthetic_sources):
+    import json
+
+    # Setup checked ULIF entry with paradigm section
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(
+            "INSERT INTO ulif_dictua_sections VALUES (10, 2, 'paradigm', 0, '', ?)",
+            (json.dumps({"synthetic-a": "synthetic-a-ulif-stressed"}),),
+        )
+
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("DELETE FROM forms_all")
+        conn.execute(
+            "INSERT INTO forms_all VALUES (1, 10, 'synthetic-a', 'synthetic-checked', 'noun', 'noun:f:v_naz', '', '')"
+        )
+
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "synthetic-checked",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "vesum", "entry_id": 10},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api, dry_run=False)
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)
+    assert res["status"] == "ok"
+
+    # Now tamper with stored stress to wrong stress
+    store_path = tmp_path / "_words.yaml"
+    data = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    data["words"][0]["forms"][0]["stressed"] = "synthetic-a-wrong"
+    lock.write(store_path, lock.yaml_bytes(data))
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res_fail = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)
+    assert res_fail["status"] == "failed"
+    assert any(codes.STRESS_MISMATCH in err for err in res_fail["errors"])

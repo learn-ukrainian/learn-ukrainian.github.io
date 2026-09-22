@@ -16,6 +16,8 @@ PENDING_ULIF = "pending_ulif"
 UNRESOLVED_ENTRY = "unresolved_entry"
 OVERRIDE_PRESENT = "override_present"
 NOT_CHECKED = "not_checked"
+GLOSS_MISMATCH = "gloss_mismatch"
+CEFR_MISMATCH = "cefr_mismatch"
 
 DESCRIPTIONS = {
     INVALID_REQUEST: "failure: the request is invalid",
@@ -34,6 +36,8 @@ DESCRIPTIONS = {
     UNRESOLVED_ENTRY: "open: an entry requires an explicit source choice",
     OVERRIDE_PRESENT: "report: the oracle applied an exact-form override",
     NOT_CHECKED: "report: a fact could not be checked",
+    GLOSS_MISMATCH: "failure: stored gloss differs from the source",
+    CEFR_MISMATCH: "failure: stored CEFR level differs from the source",
 }
 
 EXCLUDING_MARKERS = frozenset({"alt", "arch", "bad", "dialect", "obsc", "slang", "subst", "vulg"})

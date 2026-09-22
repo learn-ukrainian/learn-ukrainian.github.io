@@ -186,6 +186,74 @@ def test_checked_ulif_entry_yields_ulif_stress(synthetic_vesum, synthetic_source
 
     word = res["store"]["words"][0]
     assert word["ulif"] == {"source": "ulif", "key": ["synthetic-original", 1]}
+    assert len(word["forms"]) == 1
+    assert word["forms"][0]["form"] == "synthetic-a"
+    assert word["forms"][0]["stress_source"] == "ulif"
+    assert word["forms"][0]["stressed"] == "synthetic-a-ulif-stressed"
+
+
+def test_homograph_with_ulif_entry_id_resolves_and_records_key(
+    synthetic_vesum, synthetic_sources, tmp_path, monkeypatch
+):
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "matches": [
+                {
+                    "stressed_form": f"{w}-stressed",
+                    "unstressed_form": w,
+                    "vowel_index": 0,
+                    "vowel_indices": [0],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+            "source": {"digest": "c" * 64},
+        },
+    )
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(
+            "INSERT INTO ulif_dictua_entries VALUES (15, 'synthetic', 2, 'synthetic-original', 'noun', '', 0, 'ok', 'synthetic-time')"
+        )
+
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "synthetic",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "ulif", "homonym_index": 2},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = words.build_words(
+            "a1",
+            req_path,
+            evidence_dir=tmp_path,
+            sources_instance=api,
+            dry_run=False,
+        )
+
+    word = res["store"]["words"][0]
+    assert word["entry"] == {"source": "ulif", "key": ["synthetic-original", 2]}
+    assert len(word["forms"]) == 1
+    assert word["forms"][0]["form"] == "synthetic-a"
+    reg = registry.load(tmp_path / "_words.registry.yaml")
+    assert reg[0]["entry"] == {"source": "ulif", "key": ["synthetic-original", 2]}
 
 
 def test_homograph_without_entry_is_unresolved(synthetic_vesum, synthetic_sources, tmp_path):
