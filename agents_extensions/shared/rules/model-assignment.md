@@ -139,15 +139,12 @@ or count as a formal review.
 **Lane updates (user-reported 2026-07-18):**
 * **grok**: the lane now offers **grok-4.7** (4.6 still allowed for explicit pins), with selectable reasoning effort
   (`low`/`mid`/`high`) — set effort explicitly per dispatch; authoring/review seats run `high`.
-* **cursor** (operator 2026-08-08 / #6468; **Ultra month 2026-08-13 → review ~2026-09-13**):
-  **Cursor Auto is the default mechanical worker** for code/infra CI fixes and
-  mechanical-with-judgment (`delegate.py --agent cursor` / `ask-cursor`; default model
-  `auto`). **This month (Ultra 20x):** prefer `--agent cursor` as the **first pick** for
-  mechanical **and** ordinary infra/code implement when fit allows (not LANGUAGE-LANES, not
-  advisor/authority). Ultra unused resets ~30d — idle Auto while burning Codex/Kimi/DeepSeek
-  on those jobs is a **utilization failure**. Spread remains; Cursor is not the only seat.
-  Composer 2.5 remains the **pinned-model** choice when family independence matters (formal
-  CF identity). `cursor:auto` is **never** a formal-review identity. **Gate history #6469:**
+* **cursor** (operator 2026-09-22): pass an explicit `--model`. Do not pass `auto`.
+  Mechanical work uses the Cursor Models pool: `--agent cursor --model grok-4.7-high`.
+  Do not send Fast, `grok-4.6`, `grok-4.5`, or `composer-2.5`. A review of a Grok author
+  uses the Other Models pool, for example `--model claude-sonnet-5-thinking-high`.
+  Pools and prices: `fleet-driver-routing.md` § Cursor pools. `cursor:auto` is **never**
+  a formal-review identity. **Gate history #6469:**
   workspace-write defaulted to `--mode plan` (read-only) — fixed in the same utilization PR
   so Auto can execute. If a future adapter regression returns plan-only rc=0, substitute with
   NOTE to AGY / DeepSeek Flash / Kimi k3-256k / Z.AI GLM. `composer-2.5-fast` stays retired.

@@ -47,13 +47,12 @@ Do **not** use the Fable/Astra advisory role on lockfiles, pointer publishes, rs
 
 ### 1b. Free-lane utilization (operator 2026-08-08 / #6468; capacity-first 2026-08-12 / #4707)
 
-**Cursor Ultra month (operator 2026-08-13; sunset/review ~2026-09-13):** Ultra **20x** is live
-(~100% left at pin; resets unused ~30d). For **mechanical and ordinary infra/code implement**
-that is not LANGUAGE-LANES and not advisor/authority, prefer **`--agent cursor`**
-(`auto`) as the **first pick when fit allows**. Spread remains — Cursor is not the only seat —
-but idle Ultra while burning Codex/Kimi/DeepSeek on mechanical jobs is waste. Still never
-`cursor:auto` as CF-of-record identity. DeepSeek stays **Flash everyday**; **Pro @ high =
-hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13).
+**Cursor (operator 2026-09-22):** pass an explicit `--model`. Do not pass `auto`.
+Cursor has two monthly pools ([Models & Pricing](https://cursor.com/docs/models-and-pricing)).
+For mechanical and ordinary infra/code implement that is not LANGUAGE-LANES and not
+advisor/authority, prefer `--agent cursor --model grok-4.7-high` while the Cursor Models
+pool has headroom. A review of a Grok author must use an Other Models slug, not a Grok
+slug. DeepSeek stays **Flash everyday**; **Pro @ high = hard implement only**.
 
 **Utilize, do not trim.** Keep **Kimi** and **Z.AI/GLM** as first-class seats. Live check:
 `.venv/bin/python -m scripts.fleet.capacity_pick` (preferred) +
@@ -84,22 +83,48 @@ stampede one hot lane.
 
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
-| **Cursor Auto** | code/infra CI, mechanical + ordinary infra/code implement (**Ultra month first pick** through ~2026-09-13) | `--agent cursor` (`auto`); **#6469 fixed** (no default plan mode); never CF identity |
+| **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
+| **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-thinking-high` (or Opus 5 / Fable 5 / GPT-5.6 Sol). Draws the API pool |
 | **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
-| **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.6-flash-high` |
+| **AGY Gemini Flash** | agentic scripts, language-lane content | `gemini-3.8-flash-high` |
 | **Pool Laguna S 2.1** | free CF + web-verify volume | `ask-pool` (OpenRouter mainly Pool+Gemma) |
 | **Z.AI GLM-5.3** (**keep**) | deep security / large-context coherence | `ask-glm` LOCAL-ONLY; z.ai account; 5h when weekly hot |
 | **Claude Sonnet** | routine judgment/CF | save Fable for summoned authority; ~1 Claude driver |
 
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
-**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor Auto / Flash / AGY /
+**Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / Flash / AGY /
 k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
 to rotation. Novel/hard may stay on Astra/Luna among the 1–4 Codex drivers.
 
-Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#4707**.
+### Cursor pools (checked 2026-09-22)
+
+Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-pricing). Prices are USD per million tokens. Pass the CLI slug with `--model`. Do not send `auto`, a Fast variant, or a previous generation.
+
+**Cursor Models pool.** More included usage. Grok and Composer are exempt from the Teams/Enterprise token rate ($0.25 per million on third-party requests). Our pin in this pool is `grok-4.7-high` (Grok 4.7, not Fast).
+
+| Model | Input | Cache read | Output | Send |
+| --- | --- | --- | --- | --- |
+| Grok 4.7 | $2 | $0.50 | $6 | `grok-4.7-high` |
+| Grok 4.7 Fast | $4 | $1 | $12 | do not send |
+| Composer 2.5 | $0.50 | $0.20 | $2.50 | do not send (operator 2026-09-22) |
+| Composer 2.5 Fast | $3 | $0.50 | $15 | do not send |
+| Grok 4.6, Grok 4.5 | $2 | $0.50 | $6 | do not send |
+
+**Other Models pool.** Included on Pro, Pro Plus, and Ultra, then on-demand at the same API price. Start does not include this pool. Use this pool when the reviewer must be outside xAI.
+
+| Model | Input | Cache write | Cache read | Output | Slug |
+| --- | --- | --- | --- | --- | --- |
+| Claude Sonnet 5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-thinking-high` |
+| Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
+| Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-thinking-high` |
+| GPT-5.6 Sol | $4 | $5 | $0.40 | $20 | `gpt-5.6-sol-high` |
+| GPT-5.6 Luna | $0.20 | $0.25 | $0.02 | $1.20 | `gpt-5.6-luna-high` |
+| Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |
+
+Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#6943**.
 
 ## 2. Default execution shape (binding)
 
