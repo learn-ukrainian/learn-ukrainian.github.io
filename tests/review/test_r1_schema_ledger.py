@@ -653,3 +653,106 @@ def test_review_tool_error_is_recorded(server_module, tmp_path: Path, monkeypatc
     assert stored["status"] == "error"
     assert "boom-marker" in stored["result"]
     assert len(stored["result"]) > len("boom-marker")
+
+
+TOOL_NO_RESULT_FIXTURES: list[tuple[str, str]] = [
+    ("check_russian_shadow", json.dumps({"matches_russian": False, "russian_lemma": None, "ukrainian_alternative": None, "confidence": 0.0})),
+    ("verify_quote", json.dumps({"matched": False, "best_confidence": 0.0, "matched_lines": [], "search_normalized": {"author_query": "author", "text_query": "text"}})),
+    ("search_text", "No results found."),
+    ("search_ua_gec_errors", 'No UA-GEC results found for: "деякі речі"'),
+    ("verify_words", "Batch verification: 1 words\nFound: 0/1\n\n- **неслово** — NOT FOUND"),
+    ("inspect_word", "'неслово' — Status: NOT_FOUND\n- Effective markers: none\n- Clean analyses: 0\n- Marked analyses: 0\n- Raw payload: {\"word\": \"неслово\", \"status\": \"NOT_FOUND\"}"),
+    ("inspect_words", "Batch inspection: 1 words\n\n- **неслово** — NOT FOUND\n\nRaw payload:\n{\"words\": {\"неслово\": {\"status\": \"NOT_FOUND\"}}}"),
+    ("verify_stress", "неслово — not_found"),
+    ("query_grac", "**неслово**: frequency = 0, relative = 0.00 per million"),
+    ("query_ulif", "No ULIF paradigm found for: 'кицяневідома'"),
+    ("query_r2u", "No r2u translation found for: 'неслово'"),
+    ("query_sum20", "No official offline СУМ-20 entry is currently ingested for 'неслово'. This tool does not make a live request or use a fallback source."),
+    ("query_pravopys", "No pravopys section found for: 'невідома_тема'"),
+    ("search_style_guide", 'No results in Антоненко-Давидович for: "невідомо"'),
+    ("query_cefr_level", 'No results in PULS CEFR for: "невідомо"'),
+    ("search_heritage", 'No heritage evidence found for: "невідомо"'),
+]
+
+
+def test_all_16_tools_no_hits_and_mixed_case(tmp_path: Path) -> None:
+    assert len(TOOL_NO_RESULT_FIXTURES) == 16
+    for i, (tool_name, no_res_text) in enumerate(TOOL_NO_RESULT_FIXTURES):
+        case_dir = tmp_path / f"tool_{i}_{tool_name}"
+        case_dir.mkdir()
+        paths = _layout(case_dir)
+        receipt = _record(paths["ledger"], manifest=paths["digest"], result=no_res_text, tool=tool_name, status="ok")
+        record = lookup(paths["ledger"], receipt)
+        assert "outcome_facts" in record
+        assert record["outcome_facts"]["hits"] == 0
+
+        # Review claims no_hits -> PASS
+        finding_no_hits = _finding(
+            severity="MINOR",
+            unsupported_by_source={"searches": [{"receipt": receipt, "outcome": "no_hits"}]},
+        )
+        finding_no_hits.pop("evidence", None)
+        finding_no_hits.pop("expected", None)
+        _dump(
+            paths["review"],
+            _review(kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_no_hits]),
+        )
+        validated = _validate(paths)
+        assert validated.ok, f"tool {tool_name} failed no_hits check: {[r.message for r in validated.rejections]}"
+
+        # Review claims hits_but_no_support -> REJECT with outcome_not_in_ledger
+        finding_hits = _finding(
+            severity="MINOR",
+            unsupported_by_source={"searches": [{"receipt": receipt, "outcome": "hits_but_no_support"}]},
+        )
+        finding_hits.pop("evidence", None)
+        finding_hits.pop("expected", None)
+        _dump(
+            paths["review"],
+            _review(kind="lesson", manifest_hash=paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_hits]),
+        )
+        rejected = _validate(paths)
+        assert not rejected.ok and codes.OUTCOME_NOT_IN_LEDGER in _codes(rejected)
+
+    # Mixed verify_words case (1 found, 1 not found) -> hits > 0
+    mixed_dir = tmp_path / "mixed_verify_words"
+    mixed_dir.mkdir()
+    mixed_paths = _layout(mixed_dir)
+    mixed_text = (
+        "Batch verification: 2 words\nFound: 1/2\n\n"
+        "- **слово** — FOUND (clean=1, marked=0): слово(noun)\n"
+        "- **неслово** — NOT FOUND"
+    )
+    mixed_receipt = _record(
+        mixed_paths["ledger"], manifest=mixed_paths["digest"], result=mixed_text, tool="verify_words", status="ok"
+    )
+    mixed_record = lookup(mixed_paths["ledger"], mixed_receipt)
+    assert mixed_record["outcome_facts"]["hits"] == 1
+
+    # Mixed case with hits_but_no_support -> PASS
+    finding_mixed_support = _finding(
+        severity="MINOR",
+        unsupported_by_source={"searches": [{"receipt": mixed_receipt, "outcome": "hits_but_no_support"}]},
+    )
+    finding_mixed_support.pop("evidence", None)
+    finding_mixed_support.pop("expected", None)
+    _dump(
+        mixed_paths["review"],
+        _review(kind="lesson", manifest_hash=mixed_paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_mixed_support]),
+    )
+    mixed_val = _validate(mixed_paths)
+    assert mixed_val.ok
+
+    # Mixed case with no_hits -> REJECT with outcome_not_in_ledger
+    finding_mixed_no_hits = _finding(
+        severity="MINOR",
+        unsupported_by_source={"searches": [{"receipt": mixed_receipt, "outcome": "no_hits"}]},
+    )
+    finding_mixed_no_hits.pop("evidence", None)
+    finding_mixed_no_hits.pop("expected", None)
+    _dump(
+        mixed_paths["review"],
+        _review(kind="lesson", manifest_hash=mixed_paths["digest"], checks=_lesson_checks(["F-01"]), findings=[finding_mixed_no_hits]),
+    )
+    mixed_rej = _validate(mixed_paths)
+    assert not mixed_rej.ok and codes.OUTCOME_NOT_IN_LEDGER in _codes(mixed_rej)

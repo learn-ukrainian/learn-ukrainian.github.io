@@ -100,28 +100,31 @@ def _kind_checks(taxonomy: dict[str, Any], kind: str, *, recap: bool) -> dict[st
 def _outcome_shown(outcome: str, record: dict[str, Any]) -> bool:
     """Whether the ledger record shows the reviewer's claimed search outcome.
 
-    ``error`` requires status error. ``unavailable`` requires that word in an
-    ok result. ``no_hits`` requires an ok result that is empty or says there
-    were no results. ``hits_but_no_support`` requires a non-empty ok result
-    that is neither of those.
+    Decided from structured outcome_facts captured at record time.
     """
-    status = record.get("status")
-    result = record.get("result")
-    text = result if isinstance(result, str) else ""
-    folded = text.casefold()
+    call_status = record.get("status")
+    facts = record.get("outcome_facts")
+    if facts is None:
+        from scripts.review.receipts.outcomes import classify_outcome
+
+        tool = record.get("tool", "")
+        result_text = record.get("result", "")
+        facts = classify_outcome(tool, call_status or "ok", result_text)
+
     if outcome == "error":
-        return status == "error"
-    if status != "ok":
+        return call_status == "error" or facts.get("status") == "error"
+    if call_status != "ok":
         return False
-    unavailable = "unavailable" in folded
-    no_hits = text.strip() == "" or any(marker in folded for marker in _NO_HITS)
     if outcome == "unavailable":
-        return unavailable
+        return bool(facts.get("unavailable")) or facts.get("status") == "unavailable"
+    if facts.get("unavailable"):
+        return False
     if outcome == "no_hits":
-        return no_hits and not unavailable
+        return facts.get("hits") == 0
     if outcome == "hits_but_no_support":
-        return text.strip() != "" and not no_hits and not unavailable
+        return (facts.get("hits") or 0) > 0
     return False
+
 
 
 def _units(document: Any) -> list[dict[str, Any]]:

@@ -16,6 +16,7 @@ from .ledger import (
     records,
     session_from_environ,
 )
+from .outcomes import classify_outcome
 
 __all__ = [
     "ENV_KEYS",
@@ -24,6 +25,7 @@ __all__ = [
     "ReceiptNotFound",
     "ReviewSession",
     "append",
+    "classify_outcome",
     "collect_snapshots",
     "lookup",
     "records",

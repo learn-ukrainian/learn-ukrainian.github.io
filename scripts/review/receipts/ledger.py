@@ -133,6 +133,7 @@ def append(
     snapshots: dict[str, Any],
     status: str,
     result: str,
+    outcome_facts: dict[str, Any] | None = None,
 ) -> str:
     """Append one call and return its receipt id. The result text is stored whole."""
     if status not in {"ok", "error", "refused"}:
@@ -141,6 +142,10 @@ def append(
         raise LedgerError("result must be a string")
     if not _token(review_id) or not _token(attempt_id) or not _sha256(manifest_sha256):
         raise LedgerError("review id, attempt id, or manifest hash is malformed")
+    if outcome_facts is None:
+        from scripts.review.receipts.outcomes import classify_outcome
+
+        outcome_facts = classify_outcome(tool, status, result)
     path = Path(ledger_path)
     with _LOCK:
         existing = _read_verified(path)
@@ -151,6 +156,7 @@ def append(
             "arguments": arguments,
             "attempt_id": attempt_id,
             "manifest_sha256": manifest_sha256,
+            "outcome_facts": outcome_facts,
             "result": result,
             "review_id": review_id,
             "seq": seq,
@@ -167,6 +173,7 @@ def append(
             raise LedgerError("append would rewrite earlier ledger bytes")
         _write_verified(path, updated)
         return receipt_id
+
 
 
 def records(ledger_path: Path) -> list[dict[str, Any]]:
@@ -248,6 +255,7 @@ class ReviewSession:
         status: str,
         result: str,
         server_version: str,
+        outcome_facts: dict[str, Any] | None = None,
     ) -> str:
         if self.mode != "on":
             raise LedgerError(self.error or "review recording is not configured")
@@ -266,7 +274,9 @@ class ReviewSession:
             snapshots=snapshots,
             status=status,
             result=result,
+            outcome_facts=outcome_facts,
         )
+
 
 
 def session_from_environ(environ: Any = None) -> ReviewSession | None:
