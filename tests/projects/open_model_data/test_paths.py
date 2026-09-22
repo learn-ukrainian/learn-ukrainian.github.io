@@ -80,3 +80,58 @@ def test_ensure_component_directories(tmp_path: Path, monkeypatch: pytest.Monkey
     assert (test_components / "grammar").is_dir()
     assert (test_components / "textbooks").is_dir()
     assert (test_components / "dialects").is_dir()
+
+
+def test_is_archived_or_quarantined_path() -> None:
+    """Verify archive detection logic."""
+    from scripts.projects.open_model_data.paths import (
+        assert_not_archived_path,
+        is_archived_or_quarantined_path,
+    )
+
+    assert is_archived_or_quarantined_path(ARCHIVE_DIR) is True
+    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR) is True
+    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR / "sft") is True
+    assert is_archived_or_quarantined_path(ARCHIVED_ULDR_V1_DIR / "sft" / "shard_1.jsonl") is True
+    assert is_archived_or_quarantined_path(QUARANTINED_HISTORICAL_DIR) is True
+
+    assert is_archived_or_quarantined_path(RELEASE_DIR) is False
+    assert is_archived_or_quarantined_path(CORRECTION_PROTECTION_DIR) is False
+    assert is_archived_or_quarantined_path(COMPONENTS_DIR) is False
+    assert is_archived_or_quarantined_path(None) is False
+
+    with pytest.raises(ValueError, match="Prohibited"):
+        assert_not_archived_path(ARCHIVED_ULDR_V1_DIR / "sft", context="test")
+
+    # Should not raise
+    assert_not_archived_path(CORRECTION_PROTECTION_DIR, context="test")
+    assert_not_archived_path(None, context="test")
+
+
+def test_dialect_builder_refuses_archive_replay() -> None:
+    """Verify that build_sft_dialect_dataset strictly refuses replay paths in archive/."""
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
+
+    with pytest.raises(ValueError, match="Prohibited dialect replay shards on archived/quarantined path"):
+        build_sft_dialect_dataset(
+            sft_candidates=[],
+            sft_dialect_quota=0,
+            replay_quota=10,
+            replay_shards_dir=ARCHIVED_ULDR_V1_DIR / "sft",
+        )
+
+
+def test_dialect_builder_replay_without_archive() -> None:
+    """Verify that build_sft_dialect_dataset produces calibrated replay rows without reading archive."""
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
+
+    trajs = build_sft_dialect_dataset(
+        sft_candidates=[],
+        sft_dialect_quota=0,
+        replay_quota=5,
+    )
+    assert len(trajs) == 5
+    for t in trajs:
+        assert t["is_calque_or_russianism"] is True
+        assert t["format_type"] == "deep_analysis"
+        assert t["trajectory_id"].startswith("traj.decolonize.")

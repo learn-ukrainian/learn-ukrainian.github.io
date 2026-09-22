@@ -21,7 +21,6 @@ from scripts.projects.open_model_data.v4_production_shards_assembly import (
     ANTI_SOVIET_DPO_QUOTA,
     CORRECT_SFT_QUOTA,
     DEFAULT_HELDOUT_SUITE,
-    DEFAULT_OUTPUT_DIR,
     DPO_PAIR_SCHEMA_PATH,
     DPO_RECORDS_PER_SHARD,
     DPO_SHARDS_COUNT,
@@ -29,6 +28,7 @@ from scripts.projects.open_model_data.v4_production_shards_assembly import (
     HELDOUT_CORRECT,
     HELDOUT_PRESERVE,
     HELDOUT_TOTAL,
+    HISTORICAL_ARCHIVE_DIR,
     PRESERVE_SFT_QUOTA,
     RECEIPT_SCHEMA_PATH,
     SFT_RECORDS_PER_SHARD,
@@ -41,6 +41,9 @@ from scripts.projects.open_model_data.v4_production_shards_assembly import (
     load_jsonl,
     sha256_file,
     verify_production_release,
+)
+from scripts.projects.open_model_data.v4_production_shards_assembly import (
+    HISTORICAL_ARCHIVE_DIR as DEFAULT_OUTPUT_DIR,
 )
 
 
@@ -393,3 +396,14 @@ def test_dual_tier_licensing_structure(receipt_data: dict[str, Any]) -> None:
     assert "Train-only" in licensing.get("research_internal", "")
     assert receipt_data.get("safety_assertions", {}).get("schema_validation_100_percent") is True
     assert receipt_data.get("safety_assertions", {}).get("claim_verification_100_percent") is True
+
+
+def test_assemble_production_shards_refuses_archive_write() -> None:
+    """Verify that assemble_production_shards strictly refuses write destinations in archive/ (#6321)."""
+    from scripts.projects.open_model_data.v4_production_shards_assembly import assemble_production_shards
+
+    with pytest.raises(ValueError, match="Prohibited assembly output generation on archived/quarantined path"):
+        assemble_production_shards(
+            output_dir=HISTORICAL_ARCHIVE_DIR,
+            verify_only=False,
+        )

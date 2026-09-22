@@ -44,3 +44,25 @@ def ensure_component_directories() -> None:
         DIALECTS_DIR,
     ):
         path.mkdir(parents=True, exist_ok=True)
+
+
+def is_archived_or_quarantined_path(path: Path | str | None) -> bool:
+    """Return True if path is within the archive or quarantined directories."""
+    if path is None:
+        return False
+    try:
+        resolved = Path(path).resolve()
+        resolved.relative_to(ARCHIVE_DIR.resolve())
+        return True
+    except (ValueError, RuntimeError):
+        return False
+
+
+def assert_not_archived_path(path: Path | str | None, context: str = "dataset operation") -> None:
+    """Raise ValueError if path is within the archive or quarantined directory."""
+    if is_archived_or_quarantined_path(path):
+        raise ValueError(
+            f"Prohibited {context} on archived/quarantined path: {path}. "
+            "Archived datasets in open_model_data/archive/ are quarantined and strictly prohibited "
+            "from replay ingestion, active training, or overwritten generation outputs (#6321)."
+        )

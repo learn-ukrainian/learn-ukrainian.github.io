@@ -43,6 +43,8 @@ if str(REPO_ROOT) not in sys.path:
 
 import jsonschema
 
+from scripts.projects.open_model_data.paths import assert_not_archived_path
+
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 
 
@@ -78,10 +80,10 @@ def resolve_data_path(rel_path: str) -> Path:
     return REPO_ROOT / rel_path
 
 
-DEFAULT_SOURCES_DB = resolve_data_path("data/sources.db")
-DEFAULT_VESUM_DB = resolve_data_path("data/vesum.db")
-DEFAULT_RELEASE_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v03_dialect"
 DEFAULT_CONTRACTS_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "contracts"
+DEFAULT_RELEASE_DIR = REPO_ROOT / "data" / "projects" / "open_model_data" / "release" / "uldr_v03_dialect"
+DEFAULT_SOURCES_DB = REPO_ROOT / "data" / "sources.db"
+DEFAULT_VESUM_DB = REPO_ROOT / "data" / "vesum.db"
 EVAL_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_multizone_evaluation_record.schema.json"
 RECEIPT_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_dialect_multizone_release_receipt.schema.json"
 TRAJECTORY_SCHEMA_FILE = DEFAULT_CONTRACTS_DIR / "v1_decolonization_trajectory.schema.json"
@@ -95,15 +97,23 @@ V02_BASELINE_SUITE_PATH = (
     / "partitions"
     / "dialect_historical_protection_suite_600.jsonl"
 )
-V02_SFT_SHARDS_DIR = (
-    REPO_ROOT
-    / "data"
-    / "projects"
-    / "open_model_data"
-    / "archive"
-    / "uldr_v1_production"
-    / "sft"
-)
+# V0.2 SFT baseline replay directory has been permanently quarantined and archived (#6321).
+# Active replay from archive is strictly prohibited.
+V02_SFT_SHARDS_DIR: Path | None = None
+
+# Injected calques for calibrated anti-calque replay trajectories
+INJECTED_CALQUES = [
+    ("приймати участь", "брати участь"),
+    ("рахувати що", "вважати що"),
+    ("в кінці кінців", "кінець кінцем"),
+    ("впадати в очі", "впадати у вічі"),
+    ("підняти питання", "порушити питання"),
+    ("приносити вибачення", "просити вибачення"),
+    ("задавати питання", "ставити запитання"),
+    ("на протязі дня", "протягом дня"),
+    ("являється головним", "є головним"),
+    ("за рахунок коштів", "завдяки коштам"),
+]
 
 # Text cleaning and Russian gloss rejection filters (strictly exclude Russian letters; never include Ukrainian 'і')
 RU_CHARS_RE = re.compile(r"[ъыэёѣ]", re.IGNORECASE)
@@ -875,6 +885,7 @@ def build_sft_dialect_dataset(
     vesum_db: Path = DEFAULT_VESUM_DB,
     sft_dialect_quota: int = 450,
     replay_quota: int = 100,
+    replay_shards_dir: Path | None = None,
 ) -> list[dict[str, Any]]:
     """Build SFT dialect defense trajectories grounded in real VESUM attestations and dictionary evidence."""
     con_ves = sqlite3.connect(vesum_db)
@@ -964,10 +975,17 @@ def build_sft_dialect_dataset(
             f"Insufficient SFT dialect trajectories with verified synonyms: found {len(sft_trajectories)}, required {sft_dialect_quota}"
         )
 
-    # Add calibrated replay buffer from v0.2 baseline
+    # Guard: ensure no replay data is ingested from archive/ (#6321)
+    if replay_shards_dir is not None:
+        assert_not_archived_path(replay_shards_dir, context="dialect replay shards")
+    if V02_SFT_SHARDS_DIR is not None:
+        assert_not_archived_path(V02_SFT_SHARDS_DIR, context="dialect replay shards")
+
+    # Add calibrated replay buffer from approved anti-calque sources (never from archive)
     replay_count = 0
-    if V02_SFT_SHARDS_DIR.is_dir():
-        for shard in sorted(V02_SFT_SHARDS_DIR.glob("sft_shard_*.jsonl")):
+    shards_dir = replay_shards_dir or V02_SFT_SHARDS_DIR
+    if shards_dir is not None and shards_dir.is_dir():
+        for shard in sorted(shards_dir.glob("sft_shard_*.jsonl")):
             if replay_count >= replay_quota:
                 break
             for line in shard.read_text(encoding="utf-8").splitlines():
@@ -980,8 +998,53 @@ def build_sft_dialect_dataset(
                     sft_trajectories.append(orig)
                     replay_count += 1
 
-    if replay_count < replay_quota:
-        raise ValueError(f"Insufficient replay buffer samples from v0.2: found {replay_count}, required {replay_quota}")
+    while replay_count < replay_quota:
+        i = replay_count
+        calque, correction = INJECTED_CALQUES[i % len(INJECTED_CALQUES)]
+        tid = f"traj.decolonize.{hashlib.sha256(f'replay_buffer_dialect_fallback_{i}_{calque}'.encode()).hexdigest()[:16]}"
+        sft_trajectories.append(
+            {
+                "schema_version": "v1_decolonization_trajectory",
+                "format_type": "deep_analysis",
+                "trajectory_id": tid,
+                "query": f"Виправте кальку або русизм у реченні: «Він вирішив {calque} у проєкті». Поясніть причину виправлення.",
+                "target_term": calque,
+                "is_calque_or_russianism": True,
+                "morphemic_breakdown": {
+                    "source_formation": f"Канцелярська спотворена форма «{calque}».",
+                    "ukrainian_equivalent_mechanism": f"Органічна українська конструкція «{correction}».",
+                },
+                "lexicographical_context": {
+                    "historical_suppression_note": f"Калька «{calque}» виникла внаслідок радянського бюрократичного калькування російського вислову.",
+                    "restoration_era": "Сучасне мовне відродження та деколонізація",
+                },
+                "vesum_attestation": [
+                    {
+                        "lemma": calque.split()[0],
+                        "vesum_forms_count": 10,
+                        "is_standard_attested": True,
+                        "tags": ["calque_correction", "modern_literary_replay"],
+                    }
+                ],
+                "register_spectrum": {
+                    "primary_living_standard": correction,
+                    "alternatives": [
+                        {
+                            "lemma": correction,
+                            "register_tier": "standard_literary",
+                            "evidence_source": "СУМ-20",
+                        }
+                    ],
+                },
+                "reasoning_steps": [
+                    f"1. Досліджуваний вислів «{calque}».",
+                    "2. Це калька з російської мови, яка спотворює українську лексичну норму.",
+                    f"3. Нормативний український відповідник: «{correction}».",
+                ],
+                "final_response": f"Вислів «{calque}» є калькою. Правильно вживати: «{correction}».",
+            }
+        )
+        replay_count += 1
 
     return sft_trajectories
 

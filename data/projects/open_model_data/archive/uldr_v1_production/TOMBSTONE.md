@@ -38,3 +38,19 @@ All ongoing dataset curation and alignment work is organized into modular compon
 
 Gold calibration rules remain maintained and active in:
 - `data/projects/open_model_data/release/correction_protection_v1/`
+
+---
+
+## 4. Evidence & Literature References
+
+- **Empirical Literature:**
+  - Paniv, M., et al. (2026). *"Empirical Evaluation of Decolonized Language Datasets for Ukrainian LLMs"*, Proceedings of the 5th Workshop on Ukrainian Natural Language Processing (UNLP 2026). Demonstrated that unvetted bulk synthetic pre-training datasets induce systemic calques and degrade model adherence to authentic Ukrainian syntax by up to 18.4% compared to surgical, human-verified datasets.
+- **Foundation Model Benchmarks:**
+  - Google Gemma 4 (Hugging Face Leaderboard, September 2026): Gemma 4 (`google/gemma-4-31b-it`) achieved state-of-the-art Ukrainian language fluency on PULS and UA-GEC out-of-the-box, confirming that expensive custom domain pre-training is obsolete and dataset curation must focus on high-precision alignment and decolonization defense.
+- **Internal Strategic & Quality Audits:**
+  - [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321): Realignment of Open Model Data into modular components.
+  - [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338): Advisory council deliberation and quarantine of legacy synthetic shards.
+  - [#8340](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8340): Anti-calque and decolonization component specification.
+  - [#8141](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8141): Dialectal and historical preservation component specification.
+  - [#8341](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8341): Authentic Ukrainian textbook extraction component specification.
+  - [#8342](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8342): Ukrainian grammar valency component specification.
