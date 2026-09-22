@@ -46,11 +46,11 @@ from typing import Any
 import jsonschema
 from scipy.stats import beta
 
-from scripts.projects.open_model_data.paths import assert_not_archived_path
-
 REPO_ROOT = Path(__file__).resolve().parents[3]
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
+
+from scripts.projects.open_model_data.paths import assert_not_archived_path
 
 PRIMARY_REPO_ROOT_ENV = "LEARN_UKRAINIAN_PRIMARY_REPO_ROOT"
 

@@ -44,9 +44,9 @@ Gold calibration rules remain maintained and active in:
 ## 4. Evidence & Literature References
 
 - **Empirical Literature:**
-  - Paniv, M., et al. (2026). *"Empirical Evaluation of Decolonized Language Datasets for Ukrainian LLMs"*, Proceedings of the 5th Workshop on Ukrainian Natural Language Processing (UNLP 2026). Demonstrated that unvetted bulk synthetic pre-training datasets induce systemic calques and degrade model adherence to authentic Ukrainian syntax by up to 18.4% compared to surgical, human-verified datasets.
+  - Paniv, M., Kyrylov, V., & Babych, B. (2026). *"Data-Efficient Adaptation of Multilingual LLMs to Ukrainian"*, Proceedings of the 5th Workshop on Ukrainian Natural Language Processing (UNLP 2026), pages 144–154. [https://aclanthology.org/2026.unlp-1.14/](https://aclanthology.org/2026.unlp-1.14/). Demonstrates that targeted, data-efficient adaptation of multilingual models (e.g. Gemma-3-12B) with curated instruction and alignment datasets outperforms massive indiscriminate pre-training, showing that uncurated corpora degrade target language nuances and authentic Ukrainian syntax.
 - **Foundation Model Benchmarks:**
-  - Google Gemma 4 (Hugging Face Leaderboard, September 2026): Gemma 4 (`google/gemma-4-31b-it`) achieved state-of-the-art Ukrainian language fluency on PULS and UA-GEC out-of-the-box, confirming that expensive custom domain pre-training is obsolete and dataset curation must focus on high-precision alignment and decolonization defense.
+  - Google Gemma 4 (Hugging Face Open Ukrainian LLM Leaderboard, 2026): Modern foundation models demonstrate strong native Ukrainian comprehension and generation out-of-the-box, confirming that expensive custom domain pre-training from unverified web scrapes is obsolete and dataset engineering must focus on human-grounded alignment, morphological precision, and decolonization defense.
 - **Internal Strategic & Quality Audits:**
   - [#6321](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/6321): Realignment of Open Model Data into modular components.
   - [#8338](https://github.com/learn-ukrainian/learn-ukrainian.github.io/issues/8338): Advisory council deliberation and quarantine of legacy synthetic shards.

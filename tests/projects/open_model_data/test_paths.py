@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+import json
+import sqlite3
 from pathlib import Path
 
 import pytest
@@ -108,30 +110,66 @@ def test_is_archived_or_quarantined_path() -> None:
     assert_not_archived_path(None, context="test")
 
 
-def test_dialect_builder_refuses_archive_replay() -> None:
+@pytest.fixture
+def isolated_vesum_db(tmp_path: Path) -> Path:
+    """Provide an isolated, fixture-backed SQLite database to avoid depending on data/vesum.db."""
+    db_path = tmp_path / "isolated_vesum.db"
+    con = sqlite3.connect(db_path)
+    con.execute("CREATE TABLE forms_all (lemma TEXT, pos TEXT)")
+    con.commit()
+    con.close()
+    return db_path
+
+
+def test_dialect_builder_refuses_archive_replay(isolated_vesum_db: Path) -> None:
     """Verify that build_sft_dialect_dataset strictly refuses replay paths in archive/."""
     from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
 
     with pytest.raises(ValueError, match="Prohibited dialect replay shards on archived/quarantined path"):
         build_sft_dialect_dataset(
             sft_candidates=[],
+            vesum_db=isolated_vesum_db,
             sft_dialect_quota=0,
             replay_quota=10,
             replay_shards_dir=ARCHIVED_ULDR_V1_DIR / "sft",
         )
 
 
-def test_dialect_builder_replay_without_archive() -> None:
-    """Verify that build_sft_dialect_dataset produces calibrated replay rows without reading archive."""
+def test_dialect_builder_fails_closed_when_replay_missing(isolated_vesum_db: Path) -> None:
+    """Verify that build_sft_dialect_dataset fails closed instead of synthesizing fake replay rows."""
     from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
+
+    with pytest.raises(ValueError, match="Insufficient verified anti-calque replay trajectories"):
+        build_sft_dialect_dataset(
+            sft_candidates=[],
+            vesum_db=isolated_vesum_db,
+            sft_dialect_quota=0,
+            replay_quota=5,
+            replay_shards_dir=None,
+        )
+
+
+def test_dialect_builder_loads_verified_non_archived_replay(tmp_path: Path, isolated_vesum_db: Path) -> None:
+    """Verify that build_sft_dialect_dataset loads verified non-archived replay shards."""
+    from scripts.projects.open_model_data.v5_mine_dialect_corpus import build_sft_dialect_dataset
+
+    shards_dir = tmp_path / "verified_shards"
+    shards_dir.mkdir(parents=True, exist_ok=True)
+    sample_record = {
+        "schema_version": "v1_decolonization_trajectory",
+        "format_type": "deep_analysis",
+        "trajectory_id": "traj.verified.001",
+        "is_calque_or_russianism": True,
+        "query": "test query",
+    }
+    (shards_dir / "sft_shard_001.jsonl").write_text(json.dumps(sample_record) + "\n", encoding="utf-8")
 
     trajs = build_sft_dialect_dataset(
         sft_candidates=[],
+        vesum_db=isolated_vesum_db,
         sft_dialect_quota=0,
-        replay_quota=5,
+        replay_quota=1,
+        replay_shards_dir=shards_dir,
     )
-    assert len(trajs) == 5
-    for t in trajs:
-        assert t["is_calque_or_russianism"] is True
-        assert t["format_type"] == "deep_analysis"
-        assert t["trajectory_id"].startswith("traj.decolonize.")
+    assert len(trajs) == 1
+    assert trajs[0]["trajectory_id"] == "traj.verified.001"
