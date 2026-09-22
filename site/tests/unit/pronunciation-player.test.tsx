@@ -467,3 +467,200 @@ it('keeps speech and explicit WAV playback exclusive in both directions', async 
   view.unmount();
   expect(speech.cancel).toHaveBeenCalledTimes(2);
 });
+
+describe('graceful audio fallback (#8378)', () => {
+  const RATING_LABELS = Object.fromEntries(
+    ['again', 'hard', 'good', 'easy'].map((k) => [k, { en: k, uk: k }])
+  ) as any;
+  const INTERVAL_PREVIEWS = { again: '1d', hard: '2d', good: '4d', easy: '7d' };
+
+  it('hides Flashcard audio button when audioFallback="hide" and pronunciation manifest returns 404', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус', subtitle: 'іменник' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+        audioFallback="hide"
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
+    const button = document.querySelector('[data-pronunciation-lemma] button');
+    expect(button).toHaveAttribute('hidden');
+    expect(screen.getByText('іменник')).toBeVisible();
+  });
+
+  it('hides Flashcard audio button when audioFallback="hide" and pronunciation manifest has no entries', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({ schemaVersion: 1, entries: {} }),
+    } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+        audioFallback="hide"
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
+    const button = document.querySelector('[data-pronunciation-lemma] button');
+    expect(button).toHaveAttribute('hidden');
+  });
+
+  it('disables Flashcard audio button when audioFallback="disable" and manifest 404s', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+        audioFallback="disable"
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
+    const button = screen.getByRole('button', { name: 'Play pronunciation' });
+    expect(button).toBeVisible();
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('disables Flashcard audio button when audioFallback="disable" and manifest loads but entry is missing', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({ schemaVersion: 1, entries: {} }),
+    } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+        audioFallback="disable"
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
+    const button = screen.getByRole('button', { name: 'Play pronunciation' });
+    expect(button).toBeVisible();
+    expect(button).toBeDisabled();
+    expect(button).toHaveAttribute('aria-disabled', 'true');
+  });
+
+  it('falls back to speech synthesis by default on Flashcards when manifest 404s', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус', subtitle: 'іменник' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledOnce());
+    const button = screen.getByRole('button', { name: 'Play pronunciation' });
+    expect(button).toBeVisible();
+    expect(button).not.toBeDisabled();
+    fireEvent.click(button);
+    expect(speech.speak).toHaveBeenCalledOnce();
+  });
+
+  it('renders enabled and visible Flashcard audio button when manifest contains clip', async () => {
+    vi.mocked(fetch).mockResolvedValue({
+      ok: true,
+      json: async () => ({
+        schemaVersion: 1,
+        entries: { 'автобус': { file: FILE } },
+      }),
+    } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+      />
+    );
+    const button = await screen.findByRole('button', { name: 'Play pronunciation' });
+    expect(button).toBeVisible();
+    expect(button).not.toBeDisabled();
+    expect(button).not.toHaveAttribute('hidden');
+    fireEvent.click(button);
+    expect(instances[0].play).toHaveBeenCalledOnce();
+  });
+
+  it('does not retry manifest fetch repeatedly across multiple cards after a 404 error', async () => {
+    vi.mocked(fetch).mockResolvedValue({ ok: false, status: 404 } as Response);
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    render(
+      <>
+        <Flashcard
+          card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+          chromeLocale="en"
+          ratingLabels={RATING_LABELS}
+          intervalPreviews={INTERVAL_PREVIEWS}
+          onRate={vi.fn()}
+        />
+        <Flashcard
+          card={{ front: 'аеропорт', back: 'airport', pronunciationLemma: 'аеропорт' }}
+          chromeLocale="en"
+          ratingLabels={RATING_LABELS}
+          intervalPreviews={INTERVAL_PREVIEWS}
+          onRate={vi.fn()}
+        />
+      </>
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    // Verify fetch was only called once, not twice
+    expect(fetch).toHaveBeenCalledOnce();
+  });
+
+  it('retries manifest fetch on subsequent mounts after a transient network failure (not 404)', async () => {
+    vi.mocked(fetch).mockRejectedValueOnce(new TypeError('Failed to fetch'));
+    const { default: Flashcard } = await import('../../src/components/PracticeFlashcard');
+    const { unmount } = render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(1));
+    unmount();
+
+    vi.mocked(fetch).mockResolvedValueOnce({
+      ok: true,
+      json: async () => ({
+        schemaVersion: 1,
+        entries: { 'автобус': { file: FILE } },
+      }),
+    } as Response);
+
+    render(
+      <Flashcard
+        card={{ front: 'автобус', back: 'bus', pronunciationLemma: 'автобус' }}
+        chromeLocale="en"
+        ratingLabels={RATING_LABELS}
+        intervalPreviews={INTERVAL_PREVIEWS}
+        onRate={vi.fn()}
+      />
+    );
+    await waitFor(() => expect(fetch).toHaveBeenCalledTimes(2));
+  });
+});
