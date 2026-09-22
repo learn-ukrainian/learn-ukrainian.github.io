@@ -285,7 +285,12 @@ the Skills duty column; the practice exam at 94 checks the Standard's B1 sizes.
 
 One band for the whole level: every position 1–94 maps to `b1-core`, 100 % Ukrainian
 (`IMMERSION_POLICIES["b1"]`). Nothing is re-tuned (R-30). A module split or merged later stays in
-the same band.
+the same band. The table below is the machine-readable form the arc generator parses (#8424;
+same shape as the A2 arc §7):
+
+| Positions | Band key | Advisory Ukrainian share |
+| --- | --- | --- |
+| 1–94 | `b1-core` | 100 % |
 
 ## 8. Decisions on the five open questions (operator, 2026-09-21)
 

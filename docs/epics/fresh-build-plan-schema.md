@@ -1,6 +1,6 @@
 # Fresh lesson-based build — plan and evidence-pack schema (design)
 
-> Sub-epic #8397, child 3. Status: **design draft r8** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
+> Sub-epic #8397, child 3. Status: **design draft r9** (r1 reviewed by AGY `gemini-3.8-flash-high`, task
 > `design-review-8397-schema-r1`: REVISE, 7 findings, all folded in) by the curriculum-upgrade driver, for
 > cross-family design review and operator correction. Implements requirements R-01…R-09, R-22,
 > R-24…R-28, R-30, R-32, R-33, R-34, R-35 of [`fresh-build-requirements.md`](fresh-build-requirements.md).
@@ -18,6 +18,14 @@
 > to memorise and is not explained. Changed: §2 (the meaning of a lesson's `forms` list), §3 (the word store
 > holds full paradigms), §4 (planned state; the new paragraph on forms), §6 (the inventory gate). R-16 is read
 > accordingly: its limit is on vocabulary and on what a lesson *explains*, not on the forms of known words.
+> **Revision 9 (2026-09-22) — the fields the two contracts need; the contracts themselves.** The lesson writer
+> contract ([`fresh-build-writer-contract.md`](fresh-build-writer-contract.md), #8431 r3) and the review contracts
+> ([`fresh-build-review-contracts.md`](fresh-build-review-contracts.md), #8430 r4) are §5 and the *review* row of §6,
+> kept as their own files; each was critiqued by two independent seats (AGY, Codex) and is handed over with the
+> operator's acceptance pending. §2 gains `dialogue.step`, `dialogue.speakers[].evidence`, `dialogue.places`,
+> `steps[].needs`, `steps[].paradigm` and `activities[].error_refs` (writer contract §1b; learner state #8414: names are
+> admitted by id, never by string). §3 fixes what a built lesson records (`evidence.lesson_entry_sha256`, #8413 Brief C).
+> The build order and the packages are in [`fresh-build-build-program.md`](fresh-build-build-program.md).
 
 ## 1. Three artifacts, one owner each
 
@@ -94,6 +102,10 @@ lessons:
         uses: { grammar: [], vocabulary: [] }                                     # §2a
         evidence: [T-003, T-007]            # pack ids; every id must be used and cited (R-28)
         practice: [a1, a2]                  # activity ids below
+        needs: [example, paradigm]          # r9: the record kinds this step's blocks need (example | quote | error | video | culture | paradigm);
+                                            # the engine's preflight checks each exists before the writer is called (writer contract §4)
+        paradigm: { id: P-01, word: W-012, forms: ["noun:anim:f:v_naz", "noun:anim:f:v_rod"] }   # r9, optional: a table of forms the
+                                            # engine generates from the word record in this order; the writer places it (writer contract §1)
       - id: s2
         …
     consolidation: [a5, a6, a7]             # the larger practice block closing the lesson
@@ -103,16 +115,20 @@ lessons:
         placement: inline                   # inline | workbook
         focus: "What it checks."
         model: X-004                        # optional: textbook exercise it is modelled on
+        error_refs: [E-001, E-002]          # r9, required when type is error-correction: the E- records its items may draw on (writer contract §1c)
     videos:
       - evidence: V-002                     # never a bare URL; the pack verifies it (R-18)
         use: "Where in the lesson and why."
     dialogue:
+      step: s3                              # r9: the step that hosts the dialogue block (writer contract §1b)
       situation: "…"
       setting: "…"                          # place and objects, as v1 required
-      speakers: [ { name: Оксана, role: waiter, gender: f }, { name: Тарас, role: customer, gender: m } ]
+      speakers: [ { name: Оксана, role: waiter, gender: f, evidence: W-301 }, { name: Тарас, role: customer, gender: m, evidence: W-302 } ]
+                                            # r9: a name is a word record with its case forms; the inventory gate admits it by id (#8414)
+      places: [ { name: Київ, evidence: W-310 } ]   # r9, optional: place names used in the dialogue, by record
       register: informal                    # informal | formal
       target_grammar: "…"                   # what the dialogue exists to show
-      evidence: [T-010]
+      evidence: [T-010]                     # r9: includes the EX- records of attested exchanges for this situation (writer contract §5)
     practice:                               # R-33: the deck is generated from this + the word store
       vocabulary: core                      # every core lemma of this lesson, in the forms it teaches;
                                             # the deck generator adds this lesson's `recycled` ids itself
@@ -317,6 +333,11 @@ Rules:
   store** changes `_words.yaml.lock`; it lists the plans that cite the changed records (§7.2) and
   those are re-verified. `built_with` is recorded in both files; `ulif_forms` is meaningful for the
   word store, which since revision 8 holds full paradigms and is therefore the larger of the two.
+- **What a built lesson records (r9, #8413 Brief C).** A per-lesson lock `evidence/<level>/_state/<slug>/lessons.lock.yaml`
+  hashes the records each lesson cites; the built lesson's frontmatter carries `evidence: { lesson_entry_sha256 }` only,
+  and the gates compare that entry — so a pack fix invalidates only the lessons that cite the changed records. The plan's
+  `evidence_ref` keeps the module-pack hash the plan review bound to; plan review runs on a **provisional** lock that is
+  promoted into `evidence_ref` on APPROVE (review contracts, Contract 1).
 - `stress_source: pending` is legal while the ULIF base is not ready (R-23); a build refuses a
   lesson whose cited forms are still `pending` — and, since r8, a lesson whose **built text uses** a
   form that is still `pending`. Planning is not blocked; building is.
@@ -379,6 +400,8 @@ form for that word; a writer held to listed forms cannot write natural Ukrainian
 
 ## 5. What the lesson writer receives (R-26)
 
+**r9:** what the writer *returns*, the style card, the resolver, the gap procedure and the verification pass are the writer contract, [`fresh-build-writer-contract.md`](fresh-build-writer-contract.md) (#8431 r3). The four inputs below are unchanged.
+
 Exactly four things: the lesson's plan entry; the evidence records that entry cites; the learner
 state for that position (planned state as §4 defines it, held as word-store ids) with the
 immersion rule for it; the fixed style card (ULP practices, voice,
@@ -400,7 +423,7 @@ the only place built content is an input, and only within the module being built
 | practice | the generated deck contains every `practice` item of the lesson plan and nothing outside the lesson's inventory + learner state |
 | atlas-link | every core lemma resolves to an Atlas entry; a miss triggers Atlas enrichment and is reported, never linked blind (R-34) |
 | immersion | existing structural gates, keyed by learner position |
-| review | cross-family content review (LLM) — the only non-deterministic gate |
+| review | cross-family content review (LLM) — the only non-deterministic gate; specified in full by the review contracts, [`fresh-build-review-contracts.md`](fresh-build-review-contracts.md) (#8430 r4): one task per lesson, receipts for every language claim, an active validator, a seeded-defect measurement of every reviewer seat, the settle step, the fix loop with its budgets |
 
 ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)
 
