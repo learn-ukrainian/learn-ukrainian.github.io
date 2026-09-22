@@ -1,0 +1,238 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "resolution-receipts-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "resolutions_schema": {
+      "const": 1
+    },
+    "lesson": {
+      "$ref": "#/$defs/lesson"
+    },
+    "inputs": {
+      "$ref": "#/$defs/inputs"
+    },
+    "tokens": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/token"
+      }
+    }
+  },
+  "required": [
+    "resolutions_schema",
+    "lesson",
+    "inputs",
+    "tokens"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "inputs": {
+      "type": "object",
+      "properties": {
+        "expanded_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "allowlist_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "words_lock": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "vesum": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "trie_digest": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      },
+      "required": [
+        "expanded_sha256",
+        "allowlist_sha256",
+        "words_lock",
+        "vesum",
+        "trie_digest"
+      ],
+      "additionalProperties": false
+    },
+    "lesson": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "level",
+        "slug",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "tab": {
+          "enum": [
+            "urok",
+            "slovnyk",
+            "vpravy",
+            "resursy"
+          ]
+        },
+        "activity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "block": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      },
+      "required": [
+        "tab",
+        "activity",
+        "item",
+        "block"
+      ],
+      "additionalProperties": false,
+      "$comment": "Matches the review contract's locations (tab, activity, item) plus the block."
+    },
+    "word_id": {
+      "type": "string",
+      "pattern": "^W-[0-9]*[1-9][0-9]*$"
+    },
+    "token": {
+      "type": "object",
+      "properties": {
+        "unit": {
+          "$ref": "#/$defs/unit"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "token": {
+          "type": "string",
+          "minLength": 1
+        },
+        "surface": {
+          "enum": [
+            "sentence_token",
+            "proper_noun",
+            "gloss_ref",
+            "letter_or_syllable",
+            "skipped"
+          ]
+        },
+        "class": {
+          "type": "string",
+          "pattern": "^(resolved|stress_certain_identity_open|stress_open|letter_or_syllable|skipped:[a-z_]+)$"
+        },
+        "candidates": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/word_id"
+          },
+          "uniqueItems": true
+        },
+        "selected": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "type": "object",
+              "properties": {
+                "record": {
+                  "$ref": "#/$defs/word_id"
+                },
+                "forms": {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "minLength": 1
+                  }
+                },
+                "stressed": {
+                  "type": [
+                    "string",
+                    "null"
+                  ],
+                  "minLength": 1
+                }
+              },
+              "required": [
+                "record",
+                "forms",
+                "stressed"
+              ],
+              "additionalProperties": false
+            }
+          ]
+        },
+        "provenance": {
+          "oneOf": [
+            {
+              "const": "deterministic"
+            },
+            {
+              "type": "string",
+              "pattern": "^(proposal:[A-Za-z0-9._/@+-]+\\+)?question:[A-Za-z0-9][A-Za-z0-9._/@+-]*:Q-[0-9]{3,}$"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "unit",
+        "offset",
+        "token",
+        "surface",
+        "class",
+        "candidates",
+        "selected",
+        "provenance"
+      ],
+      "additionalProperties": false
+    }
+  },
+  "$comment": "Shape only; receipts.validate_receipts also checks that a selection is one of the candidates, that only resolved or answered tokens carry one, and that no stress_open token is left unanswered."
+}
