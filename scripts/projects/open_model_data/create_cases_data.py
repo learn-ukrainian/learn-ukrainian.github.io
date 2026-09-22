@@ -82,7 +82,7 @@ def generate_cases_file():
         f.write("LEXICAL_CALQUES = " + json.dumps(lexical_cases, ensure_ascii=False, indent=2) + "\n\n")
         f.write("SYNTACTIC_CALQUES = " + json.dumps(syntactic_cases, ensure_ascii=False, indent=2) + "\n\n")
         f.write("PREPOSITIONAL_CALQUES = " + json.dumps(prepositional_cases, ensure_ascii=False, indent=2) + "\n\n")
-        f.write("PROTECTIVE_CONTROLS = " + json.dumps(protective_cases, ensure_ascii=False, indent=2) + "\n\n")
+        f.write("PROTECTIVE_CONTROLS = " + json.dumps(protective_cases, ensure_ascii=False, indent=2) + "\n")
 
     print(f"Successfully generated {OUT_FILE}")
 

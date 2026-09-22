@@ -1234,8 +1234,18 @@ def audit_check_7_sample_drawer(
             }
         )
 
-    md_file_path.write_text("\n".join(md_lines), encoding="utf-8")
-    json_sidecar_path.write_text(json.dumps(json_records, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    def _safe_write(path: Path, content: str) -> None:
+        try:
+            if path.is_file() and path.read_text(encoding="utf-8") == content:
+                return
+            path.write_text(content, encoding="utf-8")
+        except (PermissionError, OSError):
+            if path.is_file() and path.read_text(encoding="utf-8") == content:
+                return
+            raise
+
+    _safe_write(md_file_path, "\n".join(md_lines))
+    _safe_write(json_sidecar_path, json.dumps(json_records, ensure_ascii=False, indent=2) + "\n")
 
     # Emit signoff template
     signoff_template = {
@@ -1251,7 +1261,7 @@ def audit_check_7_sample_drawer(
         "signoff_date": "",
         "comments": "",
     }
-    signoff_template_path.write_text(json.dumps(signoff_template, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _safe_write(signoff_template_path, json.dumps(signoff_template, ensure_ascii=False, indent=2) + "\n")
 
     # Strict Signoff Validation (Fixes Blocker 3, R2-F2, R3-F2, R3-F5)
     failures = []
