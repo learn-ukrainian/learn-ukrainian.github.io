@@ -370,9 +370,11 @@ models:
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
     notes: >-
-      Operator 2026-09-22: default Claude model and the Claude orchestrator seat
-      (start-claude-driver.sh pins claude-opus-5-5[1m] @ high). Fable 5.1 stays the
-      designated Anthropic advisor / authority seat; this seat does not confer
+      Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
+      Opus 5.5 executes advanced non-linguistic work (architecture, hard coding,
+      deep code review). start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
+      Fable 5.1 stays the designated Anthropic advisor / authority seat, including
+      Ukrainian-specific linguistic judgment; this seat does not confer
       approval authority. Effort: API default is medium (not high); medium on
       Opus 5.5 beats Opus 5 @ high on coding and knowledge work. Orchestrating runs
       at high; medium/low for routine turns; xhigh for hard debugging and the
@@ -1043,12 +1045,14 @@ orchestrator_seats:
     escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat —
+      Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat and executes
+      advanced non-linguistic work (architecture, hard coding, deep code review).
       start-claude-driver.sh pins claude-opus-5-5[1m] @ high unless --model /
       --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Fable 5.1 stays
-      the designated Anthropic advisor and authority seat (summoned judgment,
-      advisor panels, the critical review ladder); the orchestrator seat does not
-      confer approval authority. Non-binding Anthropic advisory consultations still
+      the designated Anthropic advisor and authority seat, including
+      Ukrainian-specific linguistic judgment (summoned judgment, advisor panels,
+      the critical review ladder); the orchestrator seat does not confer approval
+      authority. Non-binding Anthropic advisory consultations still
       route to Opus 5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
       loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
       Escalation stays CROSS-FAMILY to Astra @ high; Claude is an escalation TARGET,
