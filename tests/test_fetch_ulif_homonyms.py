@@ -873,6 +873,217 @@ def test_printed_number_mismatch_refuses_group_write(tmp_path, monkeypatch):
     assert '"register": [1, 2]' in meta
 
 
+def test_walk_printed_number_mismatch_records_and_saves_group(tmp_path, monkeypatch):
+    """Walk mode records printed_number_mismatch without raising RuntimeError, saving entries."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as runner
+
+    real_parse = runner.parse_ulif_entry
+
+    def flipped(html: str, *, homonym_index: int, register_position: str = ""):
+        parsed = real_parse(html, homonym_index=homonym_index, register_position=register_position)
+        parsed["printed_homonym_number"] = "2" if homonym_index == 1 else "1"
+        return parsed
+
+    monkeypatch.setattr(runner, "parse_ulif_entry", flipped)
+
+    ledger = _ledger(tmp_path)
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    cache.row_factory = sqlite3.Row
+    try:
+        from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+        prepare_database(tmp_path / "cache.db").close()
+        completed_rows = [
+            {
+                "homonym_index": 1,
+                "page_num": 1,
+                "response_sha256": "digest1",
+                "select_arg": "Select$0",
+                "stressed_headword": "Арканзас",
+            },
+            {
+                "homonym_index": 2,
+                "page_num": 1,
+                "response_sha256": "digest2",
+                "select_arg": "Select$1",
+                "stressed_headword": "арканзас",
+            },
+        ]
+        for h_idx in (1, 2):
+            digest = f"digest{h_idx}"
+            cache.execute(
+                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
+                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
+            )
+            ledger.conn.execute(
+                """
+                INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
+                VALUES (1, ?, 'арканзас', ?, ?, 'Арканзас', 'completed', ?, 'now', 'now')
+                """,
+                (h_idx - 1, h_idx, f"Select${h_idx - 1}", digest),
+            )
+            ledger.conn.execute(
+                """
+                INSERT INTO responses (spelling, role, homonym_index, response_sha256, request_sha256, register_position, created_at)
+                VALUES ('арканзас', 'entry', ?, ?, 'req', ?, 'now')
+                """,
+                (h_idx, digest, f"1:{h_idx - 1}"),
+            )
+        ledger.conn.commit()
+        cache.commit()
+
+        differing = runner._commit_spelling_group(ledger, cache, "арканзас")
+        row = ledger.conn.execute("SELECT state, entry_count FROM spellings WHERE spelling = 'арканзас'").fetchone()
+        entries = list(
+            cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'арканзас'")
+        )
+        mismatch_meta = ledger.meta("mismatch_groups")
+        reg_error = ledger.conn.execute(
+            "SELECT error FROM register_rows WHERE normalized_spelling = 'арканзас'"
+        ).fetchone()["error"]
+    finally:
+        cache.close()
+        ledger.close()
+
+    assert differing == 0
+    assert row["state"] == "stored"
+    assert row["entry_count"] == 2
+    assert len(entries) == 2
+    assert mismatch_meta == "1"
+    assert "printed_number_mismatch" in reg_error
+
+
+def test_walk_printed_number_mismatch_retry_idempotent(tmp_path, monkeypatch):
+    """Mismatch accounting is retry-safe: failure does not leak counts, and retries are idempotent."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as runner
+
+    real_parse = runner.parse_ulif_entry
+
+    def flipped(html: str, *, homonym_index: int, register_position: str = ""):
+        parsed = real_parse(html, homonym_index=homonym_index, register_position=register_position)
+        parsed["printed_homonym_number"] = "2" if homonym_index == 1 else "1"
+        return parsed
+
+    monkeypatch.setattr(runner, "parse_ulif_entry", flipped)
+
+    ledger = _ledger(tmp_path)
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    cache.row_factory = sqlite3.Row
+    try:
+        from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+        prepare_database(tmp_path / "cache.db").close()
+        for h_idx in (1, 2):
+            digest = f"digest{h_idx}"
+            cache.execute(
+                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
+                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
+            )
+            ledger.conn.execute(
+                """
+                INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
+                VALUES (1, ?, 'арканзас', ?, ?, 'Арканзас', 'completed', ?, 'now', 'now')
+                """,
+                (h_idx - 1, h_idx, f"Select${h_idx - 1}", digest),
+            )
+            ledger.conn.execute(
+                """
+                INSERT INTO responses (spelling, role, homonym_index, response_sha256, request_sha256, register_position, created_at)
+                VALUES ('арканзас', 'entry', ?, ?, 'req', ?, 'now')
+                """,
+                (h_idx, digest, f"1:{h_idx - 1}"),
+            )
+        ledger.conn.commit()
+        cache.commit()
+
+        # Step 1: Injected persistence failure
+        real_write = runner._write_group
+        fail_write = True
+
+        def failing_write(*args, **kwargs):
+            if fail_write:
+                raise RuntimeError("simulated write failure")
+            return real_write(*args, **kwargs)
+
+        monkeypatch.setattr(runner, "_write_group", failing_write)
+
+        with pytest.raises(RuntimeError, match="simulated write failure"):
+            runner._commit_spelling_group(ledger, cache, "арканзас")
+
+        # After failure: count must NOT be incremented, state not stored
+        assert (ledger.meta("mismatch_groups", "0") or "0") == "0"
+        state = ledger.state_of("арканзас")
+        assert state != "stored"
+
+        # Step 2: Retry succeeds
+        fail_write = False
+        runner._commit_spelling_group(ledger, cache, "арканзас")
+
+        assert ledger.meta("mismatch_groups") == "1"
+        assert ledger.state_of("арканзас") == "stored"
+
+        # Step 3: Repeated commit on reset state (idempotency check)
+        ledger.conn.execute("UPDATE spellings SET state = 'pending' WHERE spelling = 'арканзас'")
+        ledger.conn.commit()
+        runner._commit_spelling_group(ledger, cache, "арканзас")
+
+        assert ledger.meta("mismatch_groups") == "1"
+    finally:
+        cache.close()
+        ledger.close()
+
+
+def test_walk_printed_number_mismatch_marker_failure_rolls_back_atomically(tmp_path):
+    """Failure during the register_rows marker write rolls back the mismatch counter atomically."""
+    ledger = _ledger(tmp_path)
+    try:
+        ledger.conn.execute(
+            """
+            INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
+            VALUES (1, 0, 'арканзас', 1, 'Select$0', 'Арканзас', 'completed', 'digest1', 'now', 'now')
+            """
+        )
+        ledger.conn.commit()
+
+        # Step 1: Install a trigger that aborts UPDATE on register_rows.error
+        ledger.conn.execute(
+            """
+            CREATE TRIGGER fail_marker BEFORE UPDATE OF error ON register_rows
+            BEGIN
+                SELECT RAISE(ABORT, 'simulated database lock on register_rows');
+            END;
+            """
+        )
+        ledger.conn.commit()
+
+        with pytest.raises(sqlite3.DatabaseError, match="simulated database lock on register_rows"):
+            ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
+
+        # Verify atomic rollback: counter was not committed, error was not updated
+        assert (ledger.meta("mismatch_groups", "0") or "0") == "0"
+        err = ledger.conn.execute("SELECT error FROM register_rows WHERE normalized_spelling = 'арканзас'").fetchone()[
+            "error"
+        ]
+        assert err == ""
+
+        # Step 2: Drop trigger and retry - succeeds
+        ledger.conn.execute("DROP TRIGGER fail_marker")
+        ledger.conn.commit()
+
+        ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
+        assert ledger.meta("mismatch_groups") == "1"
+        err = ledger.conn.execute("SELECT error FROM register_rows WHERE normalized_spelling = 'арканзас'").fetchone()[
+            "error"
+        ]
+        assert "printed_number_mismatch" in err
+
+        # Step 3: Re-attempting on already-mismatched group is idempotent
+        ledger.record_printed_mismatch("арканзас", [1, 2], [1, 2])
+        assert ledger.meta("mismatch_groups") == "1"
+    finally:
+        ledger.close()
+
+
 def test_overlapping_register_identity_opened_once(tmp_path):
     """Duplicate (page_delta, select) collapses; physical row opened once."""
     duplicated = _dedupe_register_rows(

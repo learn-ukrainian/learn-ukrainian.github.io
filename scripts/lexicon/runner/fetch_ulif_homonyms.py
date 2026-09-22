@@ -515,6 +515,35 @@ class SpellingLedger:
         row = self.conn.execute("SELECT value FROM meta WHERE key = ?", (key,)).fetchone()
         return default if row is None else str(row["value"])
 
+    def record_printed_mismatch(
+        self,
+        normalized_spelling: str,
+        register: Sequence[int],
+        printed: Sequence[int | None],
+    ) -> None:
+        """Atomically record printed number mismatch error and increment counter in one transaction."""
+        try:
+            already_recorded = bool(
+                self.conn.execute(
+                    "SELECT 1 FROM register_rows WHERE normalized_spelling = ? AND error LIKE 'printed_number_mismatch%' LIMIT 1",
+                    (normalized_spelling,),
+                ).fetchone()
+            )
+            if not already_recorded:
+                cur_mismatch = int(self.meta("mismatch_groups", "0") or "0")
+                self.conn.execute(
+                    "INSERT INTO meta (key, value) VALUES ('mismatch_groups', ?) ON CONFLICT(key) DO UPDATE SET value = excluded.value",
+                    (str(cur_mismatch + 1),),
+                )
+            self.conn.execute(
+                "UPDATE register_rows SET error = ? WHERE normalized_spelling = ?",
+                (f"printed_number_mismatch register={list(register)} printed={list(printed)}", normalized_spelling),
+            )
+            self.conn.commit()
+        except Exception:
+            self.conn.rollback()
+            raise
+
     def add_requests(self, count: int) -> None:
         current = int(self.meta("requests_made", "0") or "0")
         self.set_meta("requests_made", str(current + count))
@@ -1656,25 +1685,18 @@ def _commit_spelling_group(
 
     ledger.conn.commit()
 
-    _record_printed_numbers(ledger, normalized_spelling, parsed_rows)
-    mismatch = _printed_number_mismatch(parsed_rows)
-    if mismatch is not None:
-        register, printed = mismatch
-        ledger.conn.execute(
-            "UPDATE register_rows SET error = ? WHERE normalized_spelling = ?",
-            (f"printed_number_mismatch register={list(register)} printed={list(printed)}", normalized_spelling),
-        )
-        ledger.conn.commit()
-        raise RuntimeError(
-            f"printed_number_mismatch for {normalized_spelling}: register={list(register)} printed={list(printed)}"
-        )
-
     from scripts.wiki.sources_db import store_ulif_dictua_entry
 
     differing = _write_group(cache, normalized_spelling, parsed_rows, section_sets, raw_sets, store_ulif_dictua_entry)
     if differing > 0:
         cur_diff = int(ledger.meta("differing_groups", "0") or "0")
         ledger.set_meta("differing_groups", str(cur_diff + differing))
+
+    _record_printed_numbers(ledger, normalized_spelling, parsed_rows)
+    mismatch = _printed_number_mismatch(parsed_rows)
+    if mismatch is not None:
+        register, printed = mismatch
+        ledger.record_printed_mismatch(normalized_spelling, register, printed)
 
     pages_seen = {int(r["page_num"]) for r in completed_rows}
     straddled = len(pages_seen) > 1
