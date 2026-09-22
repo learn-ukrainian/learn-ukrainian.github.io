@@ -3971,6 +3971,7 @@ function LexiconPracticeIsland({
     setHistory([]);
     committedSelectionRef.current = null;
     clearResumeSnapshots();
+    setFeedback(null);
     if (sessionPhase === 'active') {
       await ensureDeck(shouldLoadCloze(mode), { level: nextLevel, force: true });
     } else {
@@ -4509,7 +4510,6 @@ function LexiconPracticeIsland({
 
   return (
     <section className="lexicon-practice" aria-label={CHROME_STRINGS[chromeLocale]['practice.ariaLabel']}>
-      {sessionPhase !== 'idle' || feedback ? (
       <p className="lexicon-practice-status" aria-live="polite">
         {feedback ? (
           <PureLocalePracticeMessage uk={feedback.uk} en={feedback.en ?? feedback.uk} />
@@ -4517,13 +4517,12 @@ function LexiconPracticeIsland({
           <>
             <PracticeChromeDual uk={`Сесія ${progressLabel}`} en={`Session ${progressLabel}`} />
           </>
-        ) : (
+        ) : sessionPhase !== 'idle' ? (
           <>
             <PracticeChromeLabel k="practice.sessionComplete" />
           </>
-        )}
+        ) : null}
       </p>
-      ) : null}
 
       {storageWarning && (() => {
         const warn = translateStorageWarning(storageWarning);

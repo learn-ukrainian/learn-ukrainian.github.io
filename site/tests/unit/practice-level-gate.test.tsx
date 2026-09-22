@@ -386,5 +386,60 @@ describe('Practice Level Gate (Issue #8380)', () => {
       expect(heritageB1).not.toHaveAttribute('data-level-gated');
       expect(heritageB1).not.toBeDisabled();
     });
+
+    test('Live region element is persistently mounted in the DOM with aria-live="polite"', () => {
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const { container } = render(
+        <LexiconPractice initialDeck={makeA1Deck()} deckLevel="A1" />,
+      );
+
+      const statusEl = container.querySelector('.lexicon-practice-status');
+      expect(statusEl).toBeInTheDocument();
+      expect(statusEl).toHaveAttribute('aria-live', 'polite');
+      expect(statusEl).toHaveTextContent('');
+    });
+
+    test('Keyboard activation (Enter) triggers feedback announcement in the live region', async () => {
+      const user = userEvent.setup();
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const { container } = render(
+        <LexiconPractice initialDeck={makeA1Deck()} deckLevel="A1" />,
+      );
+
+      const paronymCard = container.querySelector<HTMLButtonElement>('[data-mode="paronym"]');
+      expect(paronymCard).toBeInTheDocument();
+
+      paronymCard!.focus();
+      expect(paronymCard).toHaveFocus();
+      await user.keyboard('{Enter}');
+
+      const statusEl = container.querySelector('.lexicon-practice-status');
+      expect(statusEl).toBeInTheDocument();
+      expect(statusEl).toHaveTextContent(
+        'Paronyms are available starting at A2 level — switch level to practice',
+      );
+    });
+
+    test('Switching levels after clicking level-gated card clears stale feedback message', async () => {
+      const user = userEvent.setup();
+      localStorage.setItem(LEARNER_LEVEL_STORAGE_KEY, 'A1');
+      const { container } = render(
+        <LexiconPractice initialDeck={makeA1Deck()} deckLevel="A1" />,
+      );
+
+      const paronymCard = container.querySelector<HTMLButtonElement>('[data-mode="paronym"]');
+      await user.click(paronymCard!);
+
+      const statusEl = container.querySelector('.lexicon-practice-status');
+      expect(statusEl).toHaveTextContent(
+        'Paronyms are available starting at A2 level — switch level to practice',
+      );
+
+      // Switch level to A2
+      const a2Btn = screen.getByRole('button', { name: 'A2' });
+      await user.click(a2Btn);
+
+      expect(statusEl).toHaveTextContent('');
+    });
   });
 });
