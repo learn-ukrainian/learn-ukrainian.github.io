@@ -11,7 +11,7 @@ import hashlib
 import json
 import subprocess
 import sys
-from collections.abc import Callable
+from collections.abc import Callable, Iterable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
@@ -542,6 +542,62 @@ def build_pack(
     finally:
         if owns_sources:
             sources_instance.close()
+
+
+PACK_RECORD_LISTS = (
+    "texts",
+    "exercises",
+    "examples",
+    "errors",
+    "notes",
+    "videos",
+    "standard",
+    "unsupported",
+)
+
+
+def record_bytes(record: dict[str, Any]) -> bytes:
+    """Return deterministic YAML bytes for a single pack record (mapping keys sorted)."""
+    return lock.yaml_bytes(record)
+
+
+def record_hashes(pack: dict[str, Any] | Path | str, ids: Iterable[str] | None = None) -> dict[str, str]:
+    """Compute sha256 hashes of specified record ids (or all records if ids is None) in a pack."""
+    if isinstance(pack, (str, Path)):
+        with open(pack, encoding="utf-8") as f:
+            pack_data = yaml.safe_load(f)
+    else:
+        pack_data = pack
+
+    record_map: dict[str, dict[str, Any]] = {}
+    if isinstance(pack_data, dict):
+        if "id" in pack_data and isinstance(pack_data["id"], str):
+            record_map[pack_data["id"]] = pack_data
+        elif "evidence_schema" in pack_data or any(k in pack_data for k in PACK_RECORD_LISTS):
+            for lst_name in PACK_RECORD_LISTS:
+                for rec in pack_data.get(lst_name) or []:
+                    if isinstance(rec, dict) and "id" in rec:
+                        record_map[rec["id"]] = rec
+        else:
+            for k, v in pack_data.items():
+                if isinstance(v, dict) and v.get("id") == k:
+                    record_map[k] = v
+                elif isinstance(v, dict) and "id" in v:
+                    record_map[v["id"]] = v
+
+    target_ids = list(record_map.keys()) if ids is None else list(ids)
+
+    result: dict[str, str] = {}
+    for rid in target_ids:
+        if rid not in record_map:
+            raise KeyError(f"Record id {rid!r} not found in pack")
+        result[rid] = hashlib.sha256(record_bytes(record_map[rid])).hexdigest()
+    return result
+
+
+def record_hash(pack: dict[str, Any] | Path | str, id: str) -> str:
+    """Compute sha256 hash of a single record id in a pack."""
+    return record_hashes(pack, [id])[id]
 
 
 def main(argv: list[str] | None = None) -> int:
