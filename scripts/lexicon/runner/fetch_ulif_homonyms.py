@@ -1660,14 +1660,13 @@ def _commit_spelling_group(
     mismatch = _printed_number_mismatch(parsed_rows)
     if mismatch is not None:
         register, printed = mismatch
+        cur_mismatch = int(ledger.meta("mismatch_groups", "0") or "0")
+        ledger.set_meta("mismatch_groups", str(cur_mismatch + 1))
         ledger.conn.execute(
             "UPDATE register_rows SET error = ? WHERE normalized_spelling = ?",
             (f"printed_number_mismatch register={list(register)} printed={list(printed)}", normalized_spelling),
         )
         ledger.conn.commit()
-        raise RuntimeError(
-            f"printed_number_mismatch for {normalized_spelling}: register={list(register)} printed={list(printed)}"
-        )
 
     from scripts.wiki.sources_db import store_ulif_dictua_entry
 

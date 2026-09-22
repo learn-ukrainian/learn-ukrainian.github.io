@@ -873,6 +873,86 @@ def test_printed_number_mismatch_refuses_group_write(tmp_path, monkeypatch):
     assert '"register": [1, 2]' in meta
 
 
+def test_walk_printed_number_mismatch_records_and_saves_group(tmp_path, monkeypatch):
+    """Walk mode records printed_number_mismatch without raising RuntimeError, saving entries."""
+    import scripts.lexicon.runner.fetch_ulif_homonyms as runner
+
+    real_parse = runner.parse_ulif_entry
+
+    def flipped(html: str, *, homonym_index: int, register_position: str = ""):
+        parsed = real_parse(html, homonym_index=homonym_index, register_position=register_position)
+        parsed["printed_homonym_number"] = "2" if homonym_index == 1 else "1"
+        return parsed
+
+    monkeypatch.setattr(runner, "parse_ulif_entry", flipped)
+
+    ledger = _ledger(tmp_path)
+    cache = sqlite3.connect(tmp_path / "cache.db")
+    cache.row_factory = sqlite3.Row
+    try:
+        from scripts.lexicon.runner.fetch_ulif_homonyms import prepare_database
+
+        prepare_database(tmp_path / "cache.db").close()
+        completed_rows = [
+            {
+                "homonym_index": 1,
+                "page_num": 1,
+                "response_sha256": "digest1",
+                "select_arg": "Select$0",
+                "stressed_headword": "Арканзас",
+            },
+            {
+                "homonym_index": 2,
+                "page_num": 1,
+                "response_sha256": "digest2",
+                "select_arg": "Select$1",
+                "stressed_headword": "арканзас",
+            },
+        ]
+        for h_idx in (1, 2):
+            digest = f"digest{h_idx}"
+            cache.execute(
+                "INSERT INTO ulif_dictua_raw_responses (response_sha256, body) VALUES (?, ?)",
+                (digest, _html(f"ishym-entry-{h_idx}.html").encode("utf-8")),
+            )
+            ledger.conn.execute(
+                """
+                INSERT INTO register_rows (page_num, row_index, normalized_spelling, homonym_index, select_arg, stressed_headword, state, entry_sha256, created_at, updated_at)
+                VALUES (1, ?, 'арканзас', ?, ?, 'Арканзас', 'completed', ?, 'now', 'now')
+                """,
+                (h_idx - 1, h_idx, f"Select${h_idx - 1}", digest),
+            )
+            ledger.conn.execute(
+                """
+                INSERT INTO responses (spelling, role, homonym_index, response_sha256, request_sha256, register_position, created_at)
+                VALUES ('арканзас', 'entry', ?, ?, 'req', ?, 'now')
+                """,
+                (h_idx, digest, f"1:{h_idx - 1}"),
+            )
+        ledger.conn.commit()
+        cache.commit()
+
+        differing = runner._commit_spelling_group(ledger, cache, "арканзас")
+        row = ledger.conn.execute("SELECT state, entry_count FROM spellings WHERE spelling = 'арканзас'").fetchone()
+        entries = list(
+            cache.execute("SELECT homonym_index FROM ulif_dictua_entries WHERE normalized_query = 'арканзас'")
+        )
+        mismatch_meta = ledger.meta("mismatch_groups")
+        reg_error = ledger.conn.execute(
+            "SELECT error FROM register_rows WHERE normalized_spelling = 'арканзас'"
+        ).fetchone()["error"]
+    finally:
+        cache.close()
+        ledger.close()
+
+    assert differing == 0
+    assert row["state"] == "stored"
+    assert row["entry_count"] == 2
+    assert len(entries) == 2
+    assert mismatch_meta == "1"
+    assert "printed_number_mismatch" in reg_error
+
+
 def test_overlapping_register_identity_opened_once(tmp_path):
     """Duplicate (page_delta, select) collapses; physical row opened once."""
     duplicated = _dedupe_register_rows(
