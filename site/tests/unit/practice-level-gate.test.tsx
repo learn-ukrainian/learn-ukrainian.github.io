@@ -21,7 +21,11 @@ function makeLexeme(
     lemmaPlain: lemma,
     gloss,
     ipa: null,
-    forms: { nominative: lemma, accusative: lemma, locative: lemma },
+    paradigm: {
+      cases: {
+        nominative: { singular: lemma },
+      },
+    },
     cefr,
     pos: 'noun',
     heritage: 'native',
@@ -103,7 +107,11 @@ function makeA2Deck(): PracticeDeckData {
         prompt: 'Оберіть питоме слово',
         answer: 'бігати',
         calque: 'стартувати',
+        cefr: 'A2',
         options: [{ label: 'бігати' }, { label: 'стартувати' }],
+        rationale: '',
+        citations: [],
+        corrections: [],
       },
     ],
   };
@@ -156,7 +164,11 @@ function makeB1Deck(): PracticeDeckData {
         prompt: 'Оберіть питоме слово',
         answer: 'відтінок',
         calque: 'нюанс',
+        cefr: 'B1',
         options: [{ label: 'відтінок' }, { label: 'нюанс' }],
+        rationale: '',
+        citations: [],
+        corrections: [],
       },
     ],
   };

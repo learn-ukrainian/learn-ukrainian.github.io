@@ -4,6 +4,7 @@ import {
   type ZnoPracticeDeckMeta,
 } from '../ZnoPractice';
 import { ZNO_MODE_META } from '../useZnoPracticeOverlay';
+import { CHROME_STRINGS, type ChromeKey } from '../../lib/i18n/chrome';
 
 export interface CoursesTrackProps {
   chromeLocale: 'uk' | 'en';
@@ -22,6 +23,19 @@ export const CULTURE_DECK_META = {
   descriptionEn: 'Correct typical mistakes and surzhyk in authentic context.',
   accent: 'teal' as const,
   itemCount: 42,
+};
+
+export const COURSE_SUBTITLE_KEYS: Record<string, ChromeKey> = {
+  'zno-stress': 'practice.courses.subtitle.zno-stress',
+  'zno-paronym': 'practice.courses.subtitle.zno-paronym',
+  'zno-lexical-norm': 'practice.courses.subtitle.zno-lexical-norm',
+  'zno-morphological-norm': 'practice.courses.subtitle.zno-morphological-norm',
+  'zno-syntactic-norm': 'practice.courses.subtitle.zno-syntactic-norm',
+  'zno-orthography': 'practice.courses.subtitle.zno-orthography',
+  'zno-morphology': 'practice.courses.subtitle.zno-morphology',
+  'zno-syntax': 'practice.courses.subtitle.zno-syntax',
+  'zno-phonetics': 'practice.courses.subtitle.zno-phonetics',
+  'culture-error-correction': 'practice.courses.subtitle.culture',
 };
 
 function modeCountAccessibleSuffix(count: number, chromeLocale: 'uk' | 'en'): string {
@@ -70,6 +84,8 @@ export default function CoursesTrack({
         {ZNO_PRACTICE_DECK_META.map((znoDeck) => {
           const meta = ZNO_MODE_META[znoDeck.deckId];
           const modeCount = znoDeck.itemCount;
+          const subtitleKey = COURSE_SUBTITLE_KEYS[znoDeck.deckId];
+          const subtitle = subtitleKey && chromeLocale === 'en' ? CHROME_STRINGS.en[subtitleKey] : undefined;
           return (
             <button
               key={znoDeck.deckId}
@@ -87,8 +103,22 @@ export default function CoursesTrack({
               onBlur={() => onHoverZnoDeck?.(null)}
               onClick={() => onSelectZnoDeck(znoDeck.deckId)}
             >
+              <span
+                className="k3-mode-card-difficulty-badge"
+                data-testid={`practice-course-difficulty-${znoDeck.deckId}`}
+              >
+                {CHROME_STRINGS[chromeLocale]['practice.courses.badgeExam']}
+              </span>
               <span className="k3-mode-title">{znoDeck.title}</span>
-              <span className="k3-mode-step">ЗНО / НМТ</span>
+              {subtitle ? (
+                <span
+                  className="k3-mode-subtitle"
+                  data-testid={`practice-course-subtitle-${znoDeck.deckId}`}
+                >
+                  {subtitle}
+                </span>
+              ) : null}
+              <span className="k3-mode-step">{chromeLocale === 'uk' ? 'ЗНО / НМТ' : 'ZNO / NMT'}</span>
               <span className="k3-mode-desc">
                 {chromeLocale === 'uk' ? meta?.description : meta?.descriptionEn}
               </span>
@@ -126,9 +156,23 @@ export default function CoursesTrack({
           onBlur={() => onHoverCultureDeck?.(false)}
           onClick={onSelectCulturePractice}
         >
-          <span className="k3-mode-title">
-            {chromeLocale === 'uk' ? CULTURE_DECK_META.title : CULTURE_DECK_META.en}
+          <span
+            className="k3-mode-card-difficulty-badge"
+            data-testid="practice-course-difficulty-culture-error-correction"
+          >
+            {CHROME_STRINGS[chromeLocale]['practice.courses.badgeCulture']}
           </span>
+          <span className="k3-mode-title">
+            {CULTURE_DECK_META.title}
+          </span>
+          {chromeLocale === 'en' ? (
+            <span
+              className="k3-mode-subtitle"
+              data-testid="practice-course-subtitle-culture-error-correction"
+            >
+              {CHROME_STRINGS.en['practice.courses.subtitle.culture']}
+            </span>
+          ) : null}
           <span className="k3-mode-step">
             {chromeLocale === 'uk' ? CULTURE_DECK_META.step : CULTURE_DECK_META.stepEn}
           </span>

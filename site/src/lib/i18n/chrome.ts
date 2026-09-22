@@ -379,6 +379,20 @@ const en = {
   'practice.deckChange': 'Change deck',
   'practice.deckManageMore': 'Manage decks & sync',
 
+  // Track 3 (Thematic Courses & Exams) subtitles & badges (#8381)
+  'practice.courses.badgeExam': 'B2–C1 / Exam prep',
+  'practice.courses.badgeCulture': 'B2–C1 / Exam prep',
+  'practice.courses.subtitle.zno-stress': 'Word Stress Exam Prep',
+  'practice.courses.subtitle.zno-paronym': 'Paronyms & Confusable Words',
+  'practice.courses.subtitle.zno-lexical-norm': 'Lexical Norms & Calques',
+  'practice.courses.subtitle.zno-morphological-norm': 'Morphological Norms & Forms',
+  'practice.courses.subtitle.zno-syntactic-norm': 'Syntactic Norms & Agreement',
+  'practice.courses.subtitle.zno-orthography': 'Spelling & Orthography Rules',
+  'practice.courses.subtitle.zno-morphology': 'Parts of Speech & Inflection',
+  'practice.courses.subtitle.zno-syntax': 'Sentence Structure & Punctuation',
+  'practice.courses.subtitle.zno-phonetics': 'Phonetics & Sound Changes',
+  'practice.courses.subtitle.culture': 'Error Correction',
+
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
   'atlas.practiceUnavailable': 'Not in the practice pool yet',
@@ -725,6 +739,20 @@ const uk: Record<ChromeKey, string> = {
   'practice.deckCurated': 'Відібрана добірка',
   'practice.deckChange': 'Змінити колоду',
   'practice.deckManageMore': 'Менеджер колод і синхронізація',
+
+  // Track 3 (Thematic Courses & Exams) subtitles & badges (#8381)
+  'practice.courses.badgeExam': 'B2–C1 / Підготовка до ЗНО',
+  'practice.courses.badgeCulture': 'B2–C1 / Культура мовлення',
+  'practice.courses.subtitle.zno-stress': 'Нормативний наголос у словах',
+  'practice.courses.subtitle.zno-paronym': 'Пароніми та розрізнення значень',
+  'practice.courses.subtitle.zno-lexical-norm': 'Лексичні норми та помилки',
+  'practice.courses.subtitle.zno-morphological-norm': 'Морфологічні норми та форми',
+  'practice.courses.subtitle.zno-syntactic-norm': 'Синтаксичні норми та зв’язок слів',
+  'practice.courses.subtitle.zno-orthography': 'Правопис та орфографічні правила',
+  'practice.courses.subtitle.zno-morphology': 'Частини мови та їх словозміна',
+  'practice.courses.subtitle.zno-syntax': 'Будова речення та пунктуація',
+  'practice.courses.subtitle.zno-phonetics': 'Фонетика та звукові явища',
+  'practice.courses.subtitle.culture': 'Редагування помилок у реченнях',
 
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',
