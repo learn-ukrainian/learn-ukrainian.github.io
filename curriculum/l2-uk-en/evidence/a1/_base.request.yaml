@@ -77,6 +77,7 @@ words:
 
   # Prepositions and euphonic partners
   # Note: безо, обо, подо, черезо are not attested as lemmas in VESUM and are omitted.
+  # ві: VESUM prep:arch, not A1.
   - lemma: у
     pos: prep
     want: new
@@ -89,10 +90,6 @@ words:
     pos: prep
     want: new
     note: "closed class: preposition, euphonic partner of у"
-  - lemma: ві
-    pos: prep
-    want: new
-    note: "closed class: preposition, archaic euphonic partner of у"
   - lemma: з
     pos: prep
     want: new

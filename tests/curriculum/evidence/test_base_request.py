@@ -84,7 +84,6 @@ def test_a1_base_request_schema_and_rules() -> None:
     required_euphonic_pairs = [
         ("у", "в"),
         ("у", "уві"),
-        ("у", "ві"),
         ("з", "із"),
         ("з", "зі"),
         ("з", "зо"),
