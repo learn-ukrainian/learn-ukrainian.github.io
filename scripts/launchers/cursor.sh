@@ -19,8 +19,8 @@ launcher_adapter_canary() {
 }
 launcher_adapter_exec() {
   local cmd=("$LC_CURSOR_BIN")
-  # Pin --model when set (default auto from launcher_defaults). Empty would keep
-  # the last TUI selection, but the Cursor orchestrator seat defaults to Auto.
+  # Pass --model only when the caller set one. Empty keeps the grok
+  # cursor-agent already has selected.
   if [ -n "${LC_MODEL:-}" ]; then
     cmd+=(--model "$LC_MODEL")
   fi
