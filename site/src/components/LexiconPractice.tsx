@@ -2628,6 +2628,7 @@ function LexiconPracticeIsland({
     () => new Set(PUBLISHED_PRACTICE_LEVELS as unknown as CefrLevel[]),
   );
   const stageRef = useRef<HTMLDivElement | null>(null);
+  const stageShellRef = useRef<HTMLDivElement | null>(null);
   const secondaryToolsRef = useRef<HTMLDetailsElement | null>(null);
   const deckRequestId = useRef(0);
   const sessionStartedAtRef = useRef(Date.now());
@@ -2889,6 +2890,36 @@ function LexiconPracticeIsland({
       page.removeAttribute('data-in-session');
     }
     return () => page.removeAttribute('data-in-session');
+  }, [sessionPhase]);
+
+  // #8382: On mobile viewports, smoothly scroll the active exercise card into view upon
+  // session initiation so the learner isn't left looking at the bottom of the page or
+  // the daily deck hero card after tapping a mode.
+  useEffect(() => {
+    if (sessionPhase === 'active') {
+      const isMobile =
+        typeof window !== 'undefined' &&
+        (window.innerWidth <= 820 ||
+          (Boolean(window.matchMedia) && window.matchMedia('(max-width: 820px)').matches));
+      if (isMobile) {
+        const prefersReducedMotion =
+          typeof window !== 'undefined' &&
+          Boolean(window.matchMedia) &&
+          window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+        const scrollTarget = () => {
+          const target = stageShellRef.current ?? stageRef.current;
+          target?.scrollIntoView({
+            behavior: prefersReducedMotion ? 'auto' : 'smooth',
+            block: 'start',
+          });
+        };
+        if (typeof requestAnimationFrame === 'function') {
+          requestAnimationFrame(scrollTarget);
+        } else {
+          setTimeout(scrollTarget, 0);
+        }
+      }
+    }
   }, [sessionPhase]);
 
   // §6b: the weak-area chips are derived from `reviewLog` and only surface on the idle
@@ -3318,7 +3349,7 @@ function LexiconPracticeIsland({
     if (selection) {
       // Record for stabilization across future deck swaps (bg merges).
       committedSelectionRef.current = { selection, historyLen: history.length };
-      window.setTimeout(() => stageRef.current?.focus(), 0);
+      window.setTimeout(() => stageRef.current?.focus({ preventScroll: true }), 0);
     }
   }, [selection?.itemId, resetItemFeedback]);
 
@@ -3939,7 +3970,16 @@ function LexiconPracticeIsland({
       });
       return;
     }
-    await startSession(sessionBudget, nextMode, null);
+    setFocusWeakness(null);
+    if (
+      nextMode === 'mixed' &&
+      resumeSnapshots.mixed &&
+      isPracticeSessionResumable(resumeSnapshots.mixed, Date.now(), currentSessionIdentity())
+    ) {
+      await resumeSession('mixed');
+    } else {
+      await startSession(sessionBudget, nextMode, null);
+    }
   }
 
   /**
@@ -5208,7 +5248,7 @@ function LexiconPracticeIsland({
       )}
 
       {sessionPhase === 'active' && (
-        <div className="lexicon-practice-stage-shell">
+        <div className="lexicon-practice-stage-shell" ref={stageShellRef} data-testid="practice-stage-shell">
           <div className="lexicon-practice-stage-bar">
             <button type="button" className="stage-back" onClick={finishPractice}>
               <PracticeChromeLabel k="practice.home" />
