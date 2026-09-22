@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import copy
 
+import pytest
 from jsonschema import Draft7Validator
 
 from scripts.build.fresh.draft_schema import (
@@ -13,6 +14,7 @@ from scripts.build.fresh.draft_schema import (
     validate_draft,
 )
 from scripts.build.fresh.gen_draft_schemas import SCHEMAS_DIR
+from scripts.curriculum.resolver.tokenize import APOSTROPHES
 from tests.build.test_fresh_draft_schema import load_fixture
 
 
@@ -22,7 +24,11 @@ def _item(draft: dict, activity_id: str) -> dict:
 
 
 def _reasons(draft: dict, level: str, types: dict[str, str]) -> list[str]:
-    return [error.reason for error in validate_draft(draft, level, activity_types=types) if error.check == "activity_fresh_constraints"]
+    return [
+        error.reason
+        for error in validate_draft(draft, level, activity_types=types)
+        if error.check == "activity_fresh_constraints"
+    ]
 
 
 def test_constraints_file_loads_once_and_matches_its_meta_schema() -> None:
@@ -182,6 +188,64 @@ def test_valid_form_choice_and_orthography_pass() -> None:
             "mode": "orthography",
             "options": list(lists[0]["options"]),
             "explanation": "The list names the mark.",
+        }
+    )
+    assert validate_draft(draft, "a1", activity_types=types) == []
+
+
+@pytest.mark.parametrize(
+    "variant",
+    ["'", "\u2019", "\u02bc", "`", "\u2018"],
+    ids=["u0027", "u2019", "u02bc", "u0060", "u2018"],
+)
+def test_orthography_apostrophe_variant_passes(variant: str) -> None:
+    assert variant in APOSTROPHES
+    draft, types = load_fixture("a1")
+    item = _item(draft, "a3")
+    item.clear()
+    item.update(
+        {
+            "sentence": "м___яч",
+            "answer": variant,
+            "mode": "orthography",
+            "options": [variant, ""],
+            "explanation": "The list names the mark.",
+        }
+    )
+    assert validate_draft(draft, "a1", activity_types=types) == []
+
+
+def test_orthography_reversed_options_order_passes() -> None:
+    draft, types = load_fixture("a1")
+    item = _item(draft, "a3")
+    item.clear()
+    item.update(
+        {
+            "sentence": "м___яч",
+            "answer": "'",
+            "mode": "orthography",
+            "options": ["", "'"],
+            "explanation": "The list names the mark.",
+        }
+    )
+    assert validate_draft(draft, "a1", activity_types=types) == []
+
+    # Also reversed with empty answer
+    item["answer"] = ""
+    assert validate_draft(draft, "a1", activity_types=types) == []
+
+    # Reversed order with an apostrophe variant
+    item.update({"options": ["", "\u2019"], "answer": "\u2019"})
+    assert validate_draft(draft, "a1", activity_types=types) == []
+
+    # Reversed non-apostrophe list (e.g. soft-sign ["", "ь"])
+    item.update(
+        {
+            "sentence": "кін___",
+            "answer": "ь",
+            "mode": "orthography",
+            "options": ["", "ь"],
+            "explanation": "Soft sign at end.",
         }
     )
     assert validate_draft(draft, "a1", activity_types=types) == []

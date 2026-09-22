@@ -35,6 +35,7 @@ from scripts.build.fresh.gen_draft_schemas import (
     draft_schema_filename,
     level_activity_types,
 )
+from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
 
 SCHEMA_BASE_URI = "https://learn-ukrainian.github.io/schemas/"
 
@@ -321,7 +322,22 @@ def _activity_fresh_constraint_errors(
                     )
             elif spec.get("options_from") == "orthography_lists":
                 options = item.get("options")
-                match = next((entry for entry in lists if entry["options"] == options), None)
+                norm_options = (
+                    [opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt for opt in options]
+                    if isinstance(options, list)
+                    else None
+                )
+                match = None
+                if norm_options is not None:
+                    norm_options_set = set(norm_options)
+                    for entry in lists:
+                        entry_options = [
+                            opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt
+                            for opt in entry["options"]
+                        ]
+                        if len(options) == len(entry["options"]) and norm_options_set == set(entry_options):
+                            match = entry
+                            break
                 if match is None:
                     errors.append(
                         DraftError(
@@ -330,14 +346,25 @@ def _activity_fresh_constraint_errors(
                             f"{key}: orthography options must equal exactly one closed list",
                         )
                     )
-                elif item.get("answer") not in match["options"]:
-                    errors.append(
-                        DraftError(
-                            "activity_fresh_constraints",
-                            item_path + "/answer",
-                            f"{key}: orthography answer is outside its option list",
-                        )
+                else:
+                    raw_answer = item.get("answer")
+                    norm_answer = (
+                        raw_answer.translate(_VESUM_APOSTROPHE_TRANSLATION)
+                        if isinstance(raw_answer, str)
+                        else raw_answer
                     )
+                    entry_options_set = {
+                        opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt
+                        for opt in match["options"]
+                    }
+                    if norm_answer not in entry_options_set:
+                        errors.append(
+                            DraftError(
+                                "activity_fresh_constraints",
+                                item_path + "/answer",
+                                f"{key}: orthography answer is outside its option list",
+                            )
+                        )
     return errors
 
 

@@ -578,7 +578,9 @@ def _check_true_false_placement(report: Report, plan: dict) -> None:
                         step=step["id"],
                     )
         consolidation = list(lesson.get("consolidation") or [])
-        consolidation_refs = [activity_id for activity_id in consolidation if _activity_is_true_false(by_id, activity_id)]
+        consolidation_refs = [
+            activity_id for activity_id in consolidation if _activity_is_true_false(by_id, activity_id)
+        ]
         if consolidation_refs and not hosts:
             for activity_id in consolidation_refs:
                 _fail(
