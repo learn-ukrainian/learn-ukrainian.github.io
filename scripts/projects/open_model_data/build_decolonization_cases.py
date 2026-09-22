@@ -39,6 +39,7 @@ from scripts.projects.open_model_data.decolonization_cases_data import (
     SYNTACTIC_CALQUES,
 )
 from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+from scripts.projects.open_model_data.decolonization_language_reviews import INDEPENDENT_LANGUAGE_REVIEWS
 from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
 
 
@@ -232,9 +233,7 @@ def query_source_evidence(
             "error_type": row[3],
             "doc_id": row[4],
             "annotator_id": row[5],
-            "reviewer_id": "reviewer_independent_linguist_8340",
-            "reviewer_family": "independent_language_review",
-            "status": "confirmed",
+            "status": "source_attested",
             "supporting_passage": supporting,
             "verification_method": "Tool-backed lookup and morphological lemma verification in ua_gec_errors",
             "locus": f"Корпус UA-GEC v2.0 (UNLP 2023), запис #{row[0]} (документ {row[4]}, анотатор {row[5]}), тип {row[3]} ({row[1]} -> {row[2]})",
@@ -243,15 +242,55 @@ def query_source_evidence(
     # Check curated explicit evidence catalog
     if case_id in EXPLICIT_SOURCE_EVIDENCE:
         ev = EXPLICIT_SOURCE_EVIDENCE[case_id]
+
+        # Strict authority validation
+        expected_auth = ev.get("authority", ev.get("source", ""))
+        auth_clean = auth.lower().strip()
+        exp_clean = expected_auth.lower().strip()
+        auth_tokens = set(re.findall(r"\w{4,}", auth_clean))
+        exp_tokens = set(re.findall(r"\w{4,}", exp_clean))
+        if not (
+            auth_clean in exp_clean
+            or exp_clean in auth_clean
+            or (auth_tokens and auth_tokens.intersection(exp_tokens))
+        ):
+            raise ValueError(
+                f"Mismatched authority for case '{case_id}': probe authority '{auth}' incompatible with catalog authority '{expected_auth}'"
+            )
+
+        # Strict term/copy validation
+        ev_term = ev.get("target_term", "").strip().lower()
+        ev_copy = (ev.get("russian_copy") or "").strip().lower()
+        passage_low = (ev.get("supporting_passage") or "").lower()
+        art_low = (ev.get("article") or "").lower()
+
+        t_clean = term.strip().lower()
+        c_clean = (copy or "").strip().lower()
+
+        term_matched = bool(
+            (ev_term and (t_clean == ev_term or t_clean in ev_term or ev_term in t_clean))
+            or (proper_list and any(p.strip().lower() in ev_term for p in proper_list))
+            or (t_clean and (t_clean in passage_low or t_clean in art_low))
+        )
+
+        copy_matched = bool(
+            not c_clean
+            or (ev_copy and (c_clean == ev_copy or c_clean in ev_copy or ev_copy in c_clean))
+            or (c_clean in passage_low or c_clean in art_low)
+        )
+
+        if not (term_matched or copy_matched):
+            raise ValueError(
+                f"Mismatched probe inputs for catalog case '{case_id}': term '{term}', copy '{copy}' incompatible with catalog entry '{ev.get('target_term')}' / '{ev.get('russian_copy')}'"
+            )
+
         return {
             "source": ev["source"],
             "section": ev.get("section"),
             "article": ev.get("article"),
             "page": ev.get("page"),
             "supporting_passage": ev["supporting_passage"],
-            "reviewer_id": "reviewer_independent_linguist_8340",
-            "reviewer_family": "independent_language_review",
-            "status": "confirmed",
+            "status": "source_attested",
             "verification_method": ev.get(
                 "verification_method",
                 "Tool-backed verification and collation with primary authoritative codification",
@@ -311,34 +350,10 @@ def query_source_evidence(
                 "article": art,
                 "page": page_val,
                 "supporting_passage": supporting,
-                "reviewer_id": "reviewer_independent_linguist_8340",
-                "reviewer_family": "independent_language_review",
-                "status": "confirmed",
+                "status": "source_attested",
                 "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
                 "locus": locus,
             }
-
-        # 3. For prepositional calques citing Antonenko-Davydovych:
-        if cat_name == "calque_prepositional":
-            prep_row = next((r for r in style_guide_cache if r[0] == 222), None)
-            if prep_row:
-                supporting = (
-                    "Борис Антоненко-Давидович «Як ми говоримо» (розділ «Прийменники», «По, за, з, на»): "
-                    "уживання прийменника «по» на позначення мети, причини, підстави чи відповідності є невластивим українській мові; "
-                    "слід уживати конструкції з прийменниками за, з, на, через або безприйменниковий орудний відмінок."
-                )
-                return {
-                    "source": "Борис Антоненко-Давидович «Як ми говоримо»",
-                    "section": "Прийменники",
-                    "article": "По, за, з, на",
-                    "page": None,
-                    "supporting_passage": supporting,
-                    "reviewer_id": "reviewer_independent_linguist_8340",
-                    "reviewer_family": "independent_language_review",
-                    "status": "confirmed",
-                    "verification_method": "Tool-backed lookup in style_guide table (data/sources.db)",
-                    "locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники», стаття «По, за, з, на» (id 222)",
-                }
 
     # Fail closed: never return fake or empty attestation on unattested terms/probes
     raise ValueError(
@@ -358,10 +373,31 @@ def make_reviewer_confirmation(
     target_term = item["target_term"]
     russian_copy = item.get("russian_copy", "")
     auth = item["authority"]
-    is_err = item["is_erroneous"]
     proper_list = item.get("ukrainian_proper", [target_term])
 
+    # 1. Traceable Independent Language Review Gate (Fail closed)
+    if case_id not in INDEPENDENT_LANGUAGE_REVIEWS:
+        raise ValueError(
+            f"Case '{case_id}' has not been confirmed by independent language review in INDEPENDENT_LANGUAGE_REVIEWS"
+        )
+    rev_rec = INDEPENDENT_LANGUAGE_REVIEWS[case_id]
+    if rev_rec.get("target_term") != target_term:
+        raise ValueError(
+            f"Mismatched target_term for case '{case_id}' in language review record: expected '{rev_rec.get('target_term')}', got '{target_term}'"
+        )
+    if russian_copy and rev_rec.get("russian_copy") != russian_copy:
+        raise ValueError(
+            f"Mismatched russian_copy for case '{case_id}' in language review record: expected '{rev_rec.get('russian_copy')}', got '{russian_copy}'"
+        )
+    if rev_rec.get("status") != "confirmed":
+        raise ValueError(
+            f"Case '{case_id}' review status is '{rev_rec.get('status')}', expected 'confirmed'"
+        )
+
+    # 2. Automated VESUM Verification
     vesum_ev = query_vesum_evidence(target_term, proper_list, v_cur)
+
+    # 3. Automated Source Verification
     source_ev = query_source_evidence(
         case_id,
         target_term,
@@ -374,29 +410,13 @@ def make_reviewer_confirmation(
         proper_list=proper_list,
     )
 
-    reviewer_id = source_ev["reviewer_id"]
-    reviewer_family = source_ev["reviewer_family"]
-    status = source_ev["status"]
     locus = source_ev["locus"]
 
-    if is_err:
-        rationale = (
-            f"Засвідчено для {case_id}: форма «{russian_copy}» кваліфікується як {cat_name} з російської мови. "
-            f"Нормативний еквівалент «{target_term}» перевірено за VESUM (леми: «{vesum_ev['attested_lemma']}», "
-            f"всі токени верифіковано) та кодифіковано ({locus})."
-        )
-    else:
-        rationale = (
-            f"Засвідчено захисний статус для {case_id}: вислів «{target_term}» є питомою українською конструкцією, "
-            f"перевіреною за VESUM (леми: «{vesum_ev['attested_lemma']}», всі токени верифіковано) "
-            f"та зафіксованою в авторитетних джерелах ({locus})."
-        )
-
     return {
-        "reviewer_id": reviewer_id,
-        "reviewer_family": reviewer_family,
-        "status": status,
-        "review_date": "2026-09-22",
+        "reviewer_id": rev_rec["reviewer_id"],
+        "reviewer_family": rev_rec["reviewer_family"],
+        "status": rev_rec["status"],
+        "review_date": rev_rec.get("review_date", "2026-09-22"),
         "authority_locus": locus,
         "vesum_lemma_status": "verified",
         "vesum_evidence": vesum_ev,
@@ -405,8 +425,9 @@ def make_reviewer_confirmation(
             "locus": source_ev["locus"],
             "supporting_passage": source_ev.get("supporting_passage"),
             "verification_method": source_ev.get("verification_method"),
+            "automated_attestation_status": source_ev.get("status", "source_attested"),
         },
-        "linguistic_rationale": rationale,
+        "linguistic_rationale": rev_rec.get("linguistic_rationale", ""),
     }
 
 

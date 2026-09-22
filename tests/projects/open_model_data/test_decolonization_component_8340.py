@@ -204,11 +204,12 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
 
 
 def test_adversarial_probes_and_fail_closed():
-    """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment."""
+    """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment (CF-R6 Finding 1 & 3)."""
     import sqlite3
 
     from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
     from scripts.projects.open_model_data.build_decolonization_cases import (
+        make_reviewer_confirmation,
         query_source_evidence,
         validate_ua_gec_phrase,
     )
@@ -219,7 +220,7 @@ def test_adversarial_probes_and_fail_closed():
     s_conn = sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True)
     s_cur = s_conn.cursor()
 
-    # 1. validate_ua_gec_phrase must reject incompatible phrases (Finding 4)
+    # 1. validate_ua_gec_phrase must reject incompatible phrases
     assert not validate_ua_gec_phrase("змогу книга", "дає змогу", v_cur)
     assert not validate_ua_gec_phrase("не давати змогу", "дає змогу", v_cur)
     assert not validate_ua_gec_phrase("дозволити все", "дозволяє", v_cur)
@@ -229,7 +230,7 @@ def test_adversarial_probes_and_fail_closed():
     assert validate_ua_gec_phrase("дозволяти", "дозволяє", v_cur)
     assert validate_ua_gec_phrase("гусак", "гусак", v_cur)
 
-    # 2. query_source_evidence must raise ValueError on unattested nonsense probes (Finding 2)
+    # 2. query_source_evidence must raise ValueError on unattested nonsense probes
     with pytest.raises(ValueError, match="has no verified attestation"):
         query_source_evidence(
             case_id="probe_adversarial_999",
@@ -241,6 +242,103 @@ def test_adversarial_probes_and_fail_closed():
             v_cur=v_cur,
             style_guide_cache=[],
         )
+
+    # 3. query_source_evidence must fail closed on case_id reuse with mismatched authority (Finding 1)
+    with pytest.raises(ValueError, match="Mismatched authority for case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="мати дотичність",
+            copy="мати відношення до",
+            auth="Борис Антоненко-Давидович «Як ми говоримо»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 4. query_source_evidence must fail closed on case_id reuse with nonsense term/copy (Finding 1)
+    with pytest.raises(ValueError, match="Mismatched probe inputs for catalog case 'decol_syn_032'"):
+        query_source_evidence(
+            case_id="decol_syn_032",
+            term="абракадабраневідома",
+            copy="хххххх",
+            auth="Катерина Городенська «Чи правильне слововживання?»",
+            cat_name="calque_syntactic",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 5. query_source_evidence must fail closed on unknown prepositional probe (Finding 1, no fallback)
+    with pytest.raises(ValueError, match="has no verified attestation"):
+        query_source_evidence(
+            case_id="probe_prep_unknown_001",
+            term="по якихось справах",
+            copy="по якимось ділам",
+            auth="Олександр Пономарів «Культура слова»",
+            cat_name="calque_prepositional",
+            s_cur=s_cur,
+            v_cur=v_cur,
+            style_guide_cache=[],
+        )
+
+    # 6. make_reviewer_confirmation must fail closed on unreviewed probes (Finding 3)
+    dummy_item = {
+        "case_id": "probe_unreviewed_999",
+        "target_term": "невідомий термін",
+        "russian_copy": "невідома копія",
+        "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+        "is_erroneous": True,
+    }
+    with pytest.raises(ValueError, match="has not been confirmed by independent language review"):
+        make_reviewer_confirmation(dummy_item, "calque_lexical", v_cur, s_cur, [])
+
+    # 7. make_reviewer_confirmation must fail closed on reviewed case ID with corrupted term (Finding 3)
+    corrupted_item = {
+        "case_id": "decol_syn_032",
+        "target_term": "несумісний термін",
+        "russian_copy": "мати відношення до",
+        "authority": "Катерина Городенська «Чи правильне слововживання?»",
+        "is_erroneous": True,
+    }
+    with pytest.raises(ValueError, match="Mismatched target_term for case 'decol_syn_032'"):
+        make_reviewer_confirmation(corrupted_item, "calque_syntactic", v_cur, s_cur, [])
+
+
+def test_supporting_passages_and_no_manufactured_statements(decolonization_data):
+    """Verify authentic citations, no manufactured blanket statements, and correct loci (CF-R6 Finding 2)."""
+    cases = decolonization_data["cases"]
+
+    # 1. decol_syn_014 must bind to article 77, not article 43
+    syn_014 = next(c for c in cases if c["case_id"] == "decol_syn_014")
+    ev_014 = syn_014["reviewer_confirmation"]["source_evidence"]
+    assert "стаття «Шлях, дорога, путь, путівець, спосіб»" in ev_014["locus"]
+    assert "с. 77" in ev_014["locus"]
+    assert "спосіб" in ev_014["supporting_passage"].lower()
+    assert "крамниця" not in ev_014["supporting_passage"].lower()
+
+    # 2. Zero cases must contain the manufactured blanket statement contradicted by style_guide id=222
+    for c in cases:
+        ev = c["reviewer_confirmation"]["source_evidence"]
+        passage = ev.get("supporting_passage", "")
+        assert "Конструкція 'по' з іменником у знахідному" not in passage, f"Case {c['case_id']} contains manufactured blanket text"
+        assert "помилкова з погляду української граматики" not in passage, f"Case {c['case_id']} contains manufactured blanket text"
+
+    # 3. Check that prepositional calques have accurate authorities
+    ponomariv_prep_cases = [c for c in cases if c["category"] == "calque_prepositional" and "Пономарів" in c["authority"]]
+    assert len(ponomariv_prep_cases) == 27
+    for c in ponomariv_prep_cases:
+        ev = c["reviewer_confirmation"]["source_evidence"]
+        assert "Олександр Пономарів" in ev["source_name"]
+        assert "Культура слова" in ev["source_name"]
+        assert "с." in ev["locus"]
+
+    antonenko_prep = [c for c in cases if c["category"] == "calque_prepositional" and "Антоненко" in c["authority"]]
+    assert len(antonenko_prep) == 21
+    for c in antonenko_prep:
+        ev = c["reviewer_confirmation"]["source_evidence"]
+        assert "Антоненко-Давидович" in ev["source_name"]
+        assert "стаття «" in ev["locus"]
 
 
 def test_dataset_acceptance_with_verified_signoff():
