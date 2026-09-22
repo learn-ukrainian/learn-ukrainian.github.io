@@ -1,10 +1,9 @@
-"""Outcome code registry for the single-plan validator (issue #8412, Brief A).
+"""Outcome code registry for the plan validator (issue #8412, Briefs A and B).
 
 One constant per failure code, per note code and per not_checked code, each
 with a one-line description. Nothing else in this package spells a code as a
 string literal; the CLI's --help lists them all via help_text(). Every code
-here is produced by at least one test fixture — codes that only Brief B can
-produce (waivers, arc-side not_checked) are registered there, not here.
+here is produced by at least one test fixture.
 """
 
 # --- input and loader failures -------------------------------------------
@@ -82,6 +81,45 @@ ERROR_REFS_MISSING = "error_refs_missing"
 ERROR_REFS_FORBIDDEN = "error_refs_forbidden"
 ERROR_REF_NOT_ERROR_RECORD = "error_ref_not_error_record"
 
+# --- rule 4, cross-plan part: earlier plans and earlier positions ----------
+POSITION_CLAIMED_TWICE = "position_claimed_twice"
+PRIOR_PLAN_UNREADABLE = "prior_plan_unreadable"
+PRIOR_PLANS_MISSING = "prior_plans_missing"
+USED_NOT_INTRODUCED_EARLIER = "used_not_introduced_earlier"
+
+# --- rule 5: the plan matches the arc --------------------------------------
+ARC_UNAVAILABLE = "arc_unavailable"
+ARC_REF_UNKNOWN = "arc_ref_unknown"
+ARC_SLUG_MISMATCH = "arc_slug_mismatch"
+ARC_LETTERS_MISMATCH = "arc_letters_mismatch"
+LETTER_INTRODUCED_TWICE = "letter_introduced_twice"
+LETTERS_IN_NON_LITERACY_PLAN = "letters_in_non_literacy_plan"
+
+# --- grammar registry (lesson-plans/<level>/_grammar.yaml) ------------------
+REGISTRY_YAML_INVALID = "registry_yaml_invalid"
+REGISTRY_MALFORMED = "registry_malformed"
+REGISTRY_DUPLICATE_ID = "registry_duplicate_id"
+REGISTRY_ID_MALFORMED = "registry_id_malformed"
+GRAMMAR_ID_NOT_REGISTERED = "grammar_id_not_registered"
+GRAMMAR_ID_WRONG_POSITION = "grammar_id_wrong_position"
+GRAMMAR_POINT_MISMATCH = "grammar_point_mismatch"
+SUPERSEDED_GRAMMAR_INTRODUCED = "superseded_grammar_introduced"
+SUPERSEDED_GRAMMAR_USED = "superseded_grammar_used"
+SUPERSEDED_BY_UNKNOWN = "superseded_by_unknown"
+SUPERSEDED_BY_SUPERSEDED = "superseded_by_superseded"
+REGISTRY_MISSING = "registry_missing"
+
+# --- --strict: waiver refusal and append-only over git history ---------------
+REGISTRY_APPEND_ONLY_VIOLATION = "registry_append_only_violation"
+MERGE_BASE_UNAVAILABLE = "merge_base_unavailable"
+
+# --- scope sidecar (lesson-plans/<level>/_scope/<slug>.yaml) -----------------
+SCOPE_SIDECAR_MISSING = "scope_sidecar_missing"
+SCOPE_SIDECAR_STALE = "scope_sidecar_stale"
+
+# --- module title check ------------------------------------------------------
+TITLE_LETTER_ENUMERATION_MISMATCH = "title_letter_enumeration_mismatch"
+
 # --- notes (never fail the run) ---------------------------------------------
 CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
 
@@ -89,7 +127,9 @@ CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW = "closing_shape_b_needs_plan_review"
 MINUTES_CONSTANTS_UNDEFINED = "minutes_constants_undefined"
 WORD_TARGET_NOT_CALIBRATED = "word_target_not_calibrated"
 LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED = "lesson_activity_minimums_not_calibrated"
-CROSS_PLAN_RULES_PENDING = "cross_plan_rules_pending"
+ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY = "arc_has_no_structured_grammar_or_vocabulary"
+TITLE_QUANTITIES_NOT_PARSED = "title_quantities_not_parsed"
+INTRODUCED_EARLIER_UNVERIFIED = "introduced_earlier_unverified"
 
 DESCRIPTIONS = {
     PLAN_NOT_FOUND: "failure: the plan file does not exist",
@@ -150,10 +190,39 @@ DESCRIPTIONS = {
     ERROR_REFS_FORBIDDEN: "failure (r9): error_refs on an activity whose type is not error-correction",
     ERROR_REF_NOT_ERROR_RECORD: "failure (r9): an error_refs id exists in the pack but is not an E- error record",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
+    POSITION_CLAIMED_TWICE: "failure (rule 4): two plan files claim the same arc position",
+    PRIOR_PLAN_UNREADABLE: "failure (rule 4): a sibling plan file cannot be read, so earlier introductions cannot be trusted",
+    PRIOR_PLANS_MISSING: "failure (rule 4): an earlier arc position has no plan file; --allow-missing-prior turns exactly this into the waiver 'waived: prior_plans_missing'",
+    USED_NOT_INTRODUCED_EARLIER: "failure (rule 4): a used or recycled id was introduced in no earlier lesson of this plan and no earlier position's plan",
+    ARC_UNAVAILABLE: "failure (rule 5): lesson-plans/<level>/_arc.yaml is missing, invalid or stale (regenerate with generate_arc.py --write)",
+    ARC_REF_UNKNOWN: "failure (rule 5): arc_ref.level/arc_ref.position does not exist in the level arc",
+    ARC_SLUG_MISMATCH: "failure (rule 5): the plan's slug differs from the arc slug at its position",
+    ARC_LETTERS_MISMATCH: "failure (rule 5): the union of the lessons' phonetics.letters differs from the arc position's letters (missing and extra are reported separately)",
+    LETTER_INTRODUCED_TWICE: "failure (rule 5): a letter is introduced by two lessons of the plan",
+    LETTERS_IN_NON_LITERACY_PLAN: "failure (rule 5): the arc position carries no letters, so phonetics.letters and introduces.letters must be empty everywhere",
+    REGISTRY_YAML_INVALID: "failure (§2a): lesson-plans/<level>/_grammar.yaml is not valid YAML",
+    REGISTRY_MALFORMED: "failure (§2a): the grammar registry is not a list of { id, point, introduced_at: { position, lesson } } records",
+    REGISTRY_DUPLICATE_ID: "failure (§2a): a grammar id appears twice in the registry",
+    REGISTRY_ID_MALFORMED: "failure (§2a): a registry id is not G-<level>-<nnn>",
+    GRAMMAR_ID_NOT_REGISTERED: "failure (§2a): the plan introduces a grammar id the registry does not assign at all",
+    GRAMMAR_ID_WRONG_POSITION: "failure (§2a): the registry assigns the introduced id to a different position or lesson",
+    GRAMMAR_POINT_MISMATCH: "failure (§2a): the plan's point string differs from the registry record's point",
+    SUPERSEDED_GRAMMAR_INTRODUCED: "failure (§2a): the plan introduces a grammar id the registry marks superseded",
+    SUPERSEDED_GRAMMAR_USED: "failure (§2a): a step uses a grammar id the registry marks superseded",
+    SUPERSEDED_BY_UNKNOWN: "failure (§2a): superseded_by names an id that does not exist in the registry",
+    SUPERSEDED_BY_SUPERSEDED: "failure (§2a): superseded_by names an id that is itself superseded",
+    REGISTRY_MISSING: "failure (§2a): the plan introduces grammar but lesson-plans/<level>/_grammar.yaml does not exist; the message says how to add the record",
+    REGISTRY_APPEND_ONLY_VIOLATION: "failure (--strict, §2a): the registry differs from its merge-base version beyond appending records or adding superseded_by",
+    MERGE_BASE_UNAVAILABLE: "failure (--strict, §2a): no merge base with origin/main can be computed (shallow clone); fetch full history",
+    SCOPE_SIDECAR_MISSING: "failure (§2a): the generated scope sidecar _scope/<slug>.yaml does not exist; run plan-validate --write-scope",
+    SCOPE_SIDECAR_STALE: "failure (§2a): the scope sidecar differs byte for byte from a fresh generation; the diff is quoted",
+    TITLE_LETTER_ENUMERATION_MISMATCH: "failure (§2a): a run of enumerated single letters in the module title/subtitle differs from the scope letter list",
     MINUTES_CONSTANTS_UNDEFINED: "not_checked: minutes is computed, and the constants it needs do not exist yet (§2a)",
     WORD_TARGET_NOT_CALIBRATED: "not_checked: word_target presence and type are checked; the per-level minimum is not calibrated (§2a)",
     LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED: "not_checked: per-lesson inline/workbook activity minimums are not calibrated (§2a)",
-    CROSS_PLAN_RULES_PENDING: "not_checked: rules 4 and 5, the grammar registry, the scope sidecar and the title check are Brief B",
+    ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY: "not_checked: the arc carries letters only; it has no structured grammar or vocabulary to compare against (§2a)",
+    TITLE_QUANTITIES_NOT_PARSED: "not_checked: digit quantities in the title/subtitle are not parsed; any ASCII digits found are quoted (§2a)",
+    INTRODUCED_EARLIER_UNVERIFIED: "not_checked: the id is not introduced in the plans that exist; earlier positions are missing under a waiver, so introduction cannot be verified",
 }
 
 NOTE_CODES = frozenset({CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW})
@@ -162,9 +231,16 @@ NOT_CHECKED_CODES = frozenset(
         MINUTES_CONSTANTS_UNDEFINED,
         WORD_TARGET_NOT_CALIBRATED,
         LESSON_ACTIVITY_MINIMUMS_NOT_CALIBRATED,
-        CROSS_PLAN_RULES_PENDING,
+        ARC_HAS_NO_STRUCTURED_GRAMMAR_OR_VOCABULARY,
+        TITLE_QUANTITIES_NOT_PARSED,
+        INTRODUCED_EARLIER_UNVERIFIED,
     }
 )
+
+#: Waiver identities. A waiver is printed as ``waived: <code>`` and is never a
+#: clean pass; --strict refuses every waiver flag.
+WAIVER_PRIOR_PLANS_MISSING = PRIOR_PLANS_MISSING
+WAIVER_CODES = frozenset({WAIVER_PRIOR_PLANS_MISSING})
 
 
 def help_text() -> str:
