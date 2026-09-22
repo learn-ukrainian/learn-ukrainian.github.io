@@ -42,6 +42,7 @@ Read and follow the full plan review prompt at [plan-review-prompt.md](plan-revi
 For review-tier reference docs, see [review-tiers/](review-tiers/).
 
 **MANDATORY first step**: Read `docs/l2-uk-en/state-standard-2024-mapping.yaml` ONCE before reviewing any plans. This is the curriculum authority for core levels.
+**Standard is a floor, not a ceiling (R-32)**: The State Standard defines the minimum requirements for each level. A plan may teach a topic earlier than the Standard lists only when the curriculum arc records ULP evidence for that move. A plan may never drop a Standard item required for the level.
 
 **Output path**: Save each review to `curriculum/l2-uk-en/{track}/audit/{slug}-plan-review.md`
 

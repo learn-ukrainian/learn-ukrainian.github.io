@@ -53,7 +53,7 @@ Flag as **CRITICAL**.
 
 Find the section for this plan's level (a1, a2, b1, b2, c1, c2). Then check:
 
-- [ ] **Grammar scope appropriate for level** — Every grammar topic in the plan's `grammar:` field must appear in the State Standard's scope for this level. If a topic belongs to a higher level, flag as **HIGH** (e.g., Genitive plural at A1 when Standard puts it at A2).
+- [ ] **Grammar scope covers the Standard floor (R-32)** — The State Standard is the minimum floor that each level must cover. A plan may teach a topic earlier than the Standard lists only when the curriculum arc records ULP evidence for that move; earlier teaching with ULP evidence is permitted and MUST NOT be flagged as a failure. However, a plan or level may NOT drop a required Standard item. If a higher-level topic is introduced without ULP evidence, flag as **HIGH**.
 - [ ] **Grammar not missing from plan** — If the plan's `content_outline` teaches grammar that isn't listed in the plan's `grammar:` field, flag as **MEDIUM**.
 - [ ] **Thematic catalogue match** — The module's topic should fit within the Standard's thematic catalogue for this level.
 
@@ -122,9 +122,14 @@ Only for slugs containing "cyrillic-code":
 | version_string | PASS/FAIL | ... |
 
 ## State Standard Alignment
-| Grammar Topic | In Standard? | Standard Level | Plan Level | Status |
-|--------------|-------------|----------------|------------|--------|
-| ... | YES/NO | ... | ... | PASS/FAIL |
+| Grammar Topic | In Standard? | Standard Level | Plan Level | ULP Evidence | Status |
+|--------------|-------------|----------------|------------|--------------|--------|
+| ... | YES/NO | ... | ... | YES/NO/N/A | PASS/FAIL |
+
+*Status policy (R-32)*:
+- If Plan Level == Standard Level: PASS.
+- If Plan Level < Standard Level (taught earlier): PASS if ULP evidence is recorded; FAIL if ULP evidence is missing.
+- If a required Standard item for the level is omitted: FAIL.
 
 ## Grammar Verification (Textbook RAG)
 | Concept | Textbook Source | Correct? | Notes |

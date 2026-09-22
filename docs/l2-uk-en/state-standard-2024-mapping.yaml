@@ -9,6 +9,10 @@
 #
 # For curriculum modules, Section 4 (linguistic competence) is the primary reference.
 # Line numbers refer to UKRAINIAN-STATE-STANDARD-2024.txt
+#
+# Policy (requirement R-32): The State Standard defines the minimum floor each level must cover.
+# Teaching earlier than the Standard prescribes is permitted when ULP evidence is
+# recorded; dropping a required Standard item is prohibited.
 
 # ============================================================
 # A1 — Початковий рівень першого ступеня (lines 221-747)
@@ -16,120 +20,150 @@
 a1:
   level_lines: [221, 747]
 
+  # --- Communicative Intentions (§2, Каталог А) ---
+  intentions:
+    reference: "§2 (Каталог А)"
+    lines: [453, 477]
+    items:
+      - "привернути чиюсь увагу, установити контакт"
+      - "відрекомендувати себе або інших"
+      - "привітатися"
+      - "попрощатися"
+      - "подякувати"
+      - "попросити вибачення"
+      - "привітати"
+      - "побажати"
+      - "ставити прості запитання"
+      - "відповідати на прості запитання"
+      - "просити надати інформацію"
+      - "підтвердити інформацію / заперечити її"
+      - "висловити свої вподобання"
+      - "прохання зробити щось"
+      - "заборонити робити щось"
+      - "виразити просторові значення"
+      - "виразити часові поняття"
+
   # --- Phonetics & Graphics (§4.1) ---
   phonetics:
     alphabet:
       reference: "§4.1.1"
       lines: [571, 572]
-      description: "Ukrainian alphabet"
+      description: "Український алфавіт. Друковані та писані літери. Великі і малі літери"
     apostrophe:
       reference: "§4.1.2"
       lines: [574, 574]
-      description: "Apostrophe usage"
+      description: "Апостроф"
     soft_sign:
       reference: "§4.1.3"
       lines: [575, 575]
-      description: "Soft sign (м'який знак)"
+      description: "М'який знак"
     vowels_consonants:
       reference: "§4.1.4"
       lines: [577, 584]
-      description: "Vowel and consonant sounds"
+      description: "Голосні та приголосні звуки: вимова голосних у наголошеній і ненаголошеній позиціях ([е], [и]); тверді та м'які приголосні; твердість перед [е]; дзвінкі та глухі; звуки [дж], [дз]"
     stress:
       reference: "§4.1.5"
       lines: [586, 586]
-      description: "Word stress"
+      description: "Наголос"
+    syllable:
+      reference: "§4.1.6"
+      lines: [588, 588]
+      description: "Склад. Перенос слів"
     euphony:
       reference: "§4.1.7"
       lines: [590, 594]
-      description: "Euphony devices (у/в, і/й, з/із/зі)"
+      description: "Засоби милозвучності: уживання прийменників у, в; сполучників і, й; прийменника з і варіантів із, зі"
     intonation:
       reference: "§4.1.8"
       lines: [596, 596]
-      description: "Basic intonation patterns"
+      description: "Інтонація (розповідна, питальна, оклична)"
 
   # --- Morphology (§4.2) ---
   morphology:
     noun_declension:
       reference: "§4.2.1.1"
       lines: [603, 631]
-      description: "Noun case form formation — singular/plural, all 4 declensions basic"
+      description: "Іменник: родові значення в однині; форми множини в називному відмінку (-и, -і/-ї); чергування голосних в однині/множині; форми знахідного та місцевого відмінків (ч.р., ж.р., с.р.); кличний відмінок"
     adjective_declension:
       reference: "§4.2.1.2"
       lines: [633, 650]
-      description: "Adjective declension — hard/soft groups, gender agreement"
+      description: "Прикметник: форми називного відмінка однини; узгодження з іменниками в роді й числі; форми знахідного та місцевого відмінків (-ий/-а/-е, -ій/-я/-є)"
     numeral:
       reference: "§4.2.1.3"
       lines: [652, 654]
-      description: "Cardinal and ordinal numerals — basic forms"
+      description: "Числівник: родові форми порядкових числівників із закінченнями -ий, -а, -е (перший, першого; другий, друга, друге)"
     pronoun:
       reference: "§4.2.1.4"
       lines: [656, 657]
-      description: "Personal pronouns — basic declension"
+      description: "Займенник: відмінкові форми особових займенників я (мене, мені), ти (тебе, тобі), ми (нас, нам), ви (вас, вам)"
     pronoun_gender_number:
       reference: "§4.2.2"
       lines: [659, 667]
-      description: "Pronoun gender and number forms"
+      description: "Родові й числові форми присвійних займенників (мій, твій, наш, ваш, їхній), вказівних (той, цей), порядкових числівників (перший, третій); форми множини (мої, твої, наші, ваші, їхні, ті, ці)"
 
   # --- Case Usage (§4.2.3) ---
   cases:
     nominative:
       reference: "§4.2.3.1"
       lines: [672, 676]
-      description: "Nominative case — subject, predicate nominative"
+      description: "Називний відмінок: суб'єкт активної дії; особа чи предмет; ідентифікація особи чи предмета"
       first_module: 1
       required: true
     accusative:
       reference: "§4.2.3.2"
       lines: [678, 688]
-      description: "Accusative — direct object, with prepositions (в/у, на, за, через, про)"
+      description: "Знахідний відмінок: без прийменника (об'єкт дії); із прийменниками в, у, на (кінцевий пункт руху), у/в (дні тижня), про (думати, мріяти)"
       first_module: 11
       required: true
     locative:
       reference: "§4.2.3.3"
       lines: [690, 695]
-      description: "Locative case — location (в/у, на), topic (по)"
+      description: "Місцевий відмінок: у, в, на (позначення місця); у, в (момент часу з назвами місяців)"
       first_module: 13
       required: true
     vocative:
       reference: "§4.2.3.4"
       lines: [697, 699]
-      description: "Vocative case — address forms"
-    dative:
-      allowed: false
-      reference: "A2 requirement"
-    instrumental:
-      allowed: false
-      reference: "A2 requirement"
+      description: "Кличний відмінок: адресат мовлення — потенційний суб'єкт дії"
 
   # --- Verb Forms (§4.2.4) ---
   verbs:
     indicative:
       reference: "§4.2.4.1"
       lines: [703, 719]
-      description: "Indicative mood — present, past, future tenses; conjugation I/II; reflexive verbs (-ся/-сь)"
+      description: "Дійсний спосіб: теперішній час (читати, працювати, могти, іти, їхати, сидіти, дивитися); майбутній час бути; минулий час (-в, -ла, -ло, -ли; сміявся); складена форма майбутнього часу недоконаного виду (буду читати); майбутній час деяких дієслів доконаного виду (зможу, скажете)"
     imperative:
       reference: "§4.2.4.2"
       lines: [721, 725]
-      description: "Imperative mood — 2nd person only at A1"
-      allowed_forms: ["2nd_person"]
-      forbidden_forms: ["1st_person_plural", "3rd_person"]
+      description: "Наказовий спосіб: форми 2-ї особи однини і множини (читай, читайте; скажи, скажіть; дай, дайте; пиши, пишіть; сідай, сідайте; сиди, сидіть)"
+      required_forms: ["2nd_person"]
+
+  # Presence requirement for reflexive verbs in indicative mood
+  reflexive_verbs:
+    reference: "§4.2.4.1"
+    lines: [709, 714]
+    requirement_id: "REQ-A1-REFLEXIVE"
+    arc_position: 9
+    module: 9
+    required_patterns: ["дивитися", "сміявся", "-ся", "-сь"]
+    required_explanation: "-ся/-сь"
 
   # --- Syntax (§4.3) ---
   syntax:
     simple_sentence:
       reference: "§4.3.1"
       lines: [729, 739]
-      description: "Simple sentences — SVO, questions (хто? що? де? коли?), negation (не, ні)"
+      description: "Просте речення: розповідне; питальне (чи); питальне зі словами де, звідки, куди, що, хто; спонукальне для вираження прохання; стверджувальні й заперечні (не, ні)"
     complex_sentence:
       reference: "§4.3.2"
       lines: [741, 747]
-      description: "Basic complex sentences — і, а, але, бо, що, коли, де"
+      description: "Складне речення: складносурядні зі сполучниками і (й), але; складнопідрядні причини зі сполучниками тому що, бо"
 
   # --- Thematic Areas (§3) ---
   themes:
-    reference: "§3"
-    lines: [479, 556]
-    topics: ["людина", "дім", "місто", "побут", "діяльність", "дозвілля", "подорожі", "купівля", "ресторан", "здоров'я", "природа", "традиції"]
+    reference: "§3 (Каталог Б)"
+    lines: [479, 568]
+    topics: ["людина", "дім, помешкання", "місто", "побут", "навчання", "робота", "дозвілля", "подорожі", "купівля", "ресторан, кафе", "здоров'я", "природа, погода", "традиції, свята"]
 
 # ============================================================
 # A2 — Початковий рівень другого ступеня (lines 749-1432)
@@ -137,136 +171,183 @@ a1:
 a2:
   level_lines: [749, 1432]
 
+  immersion:
+    graduated: true
+    target_percentage: 80.0
+    reference: "Curriculum design decision (Easy Ukrainian ramp: early A2 75-85%+, mid/late A2 90-95%+)"
+
+  # --- Communicative Intentions (§2, Каталог А) ---
+  intentions:
+    reference: "§2 (Каталог А)"
+    lines: [1029, 1070]
+    items:
+      - "привернути чиюсь увагу, установити контакт"
+      - "відрекомендувати себе або інших"
+      - "привітатися"
+      - "попрощатися"
+      - "подякувати"
+      - "попросити вибачення, перепросити"
+      - "привітати"
+      - "побажати"
+      - "ставити прості запитання для уточнення інформації"
+      - "відповідати на прості запитання"
+      - "просити надати інформацію"
+      - "підтвердити інформацію / заперечити її"
+      - "висловити свої вподобання"
+      - "прохання робити щось"
+      - "заборона робити щось / заклик не робити чогось"
+      - "виражати впевненість / невпевненість"
+      - "висловлювати можливість / неможливість"
+      - "запрошувати"
+      - "ідентифікувати певні предмети"
+      - "давати прості визначення"
+      - "виражати надію"
+      - "виражати належність"
+      - "виражати просторові значення"
+      - "виражати часові поняття"
+      - "виражати причиново-наслідкові значення"
+
   # --- Phonetics (§4.1) ---
   phonetics:
     vowels_consonants:
       reference: "§4.1.1"
       lines: [1176, 1181]
-      description: "Expanded phonetics — consonant assimilation, voiced/voiceless"
+      description: "Чергування голосних [і] – [о], [і] – [е] (ніс – носа, річ – речі); чергування приголосних [к] – [ц´], [х] – [с´], [г] – [з´] (рука – у руці, поверх – на поверсі, нога – на нозі); чергування приголосних [д] – [дж], [с] – [ш] (ходити – ходжу, носити – ношу)"
     stress:
       reference: "§4.1.2"
       lines: [1183, 1188]
-      description: "Stress patterns in verb forms, noun declension"
+      description: "Наголос: подвійний (помилка, завжди); для розрізнення слів (замок – замок); для розрізнення форм (руки – руки)"
     euphony:
       reference: "§4.1.3"
       lines: [1190, 1195]
-      description: "Expanded euphony — у/в alternation in complex contexts"
+      description: "Засоби милозвучності: уживання прийменників у, в; сполучників і, й; прийменника з і його варіантів зі, із"
     intonation:
       reference: "§4.1.4"
       lines: [1197, 1197]
-      description: "Intonation in complex sentences"
+      description: "Інтонація (розповідна, питальна, оклична)"
 
   # --- Morphology (§4.2) ---
   morphology:
     noun_declension:
       reference: "§4.2.1.1"
       lines: [1204, 1221]
-      description: "Expanded noun declension — all cases, irregular forms"
+      description: "Відмінкові форми іменників: ч.р. твердий/м'який/на -ар/мішана на -ж, -ч, -ш, -щ; ж.р. твердий/м'який/на -ія; с.р. на -о, -е, -а (-я)"
     adjective_declension:
       reference: "§4.2.1.2"
       lines: [1223, 1233]
-      description: "Adjective declension — full paradigm"
+      description: "Прикметник: форми ч.р., ж.р., с.р. (-ий, -а, -е; -ій, -я, -є) та форми множини"
     numeral:
       reference: "§4.2.1.3"
       lines: [1235, 1242]
-      description: "Numerals — declension of cardinals and ordinals"
+      description: "Числівник: відмінково-родові форми порядкових числівників із закінченнями -ий, -а, -е та -ій, -я, -є; кількісний числівник один (один, одного, одному...)"
     pronoun:
       reference: "§4.2.1.4"
       lines: [1244, 1254]
-      description: "Expanded pronouns — possessive, demonstrative, interrogative"
+      description: "Займенник: особові займенники (я, ти, він/воно, вона, ми, ви, вони — повні відмінкові парадигми); присвійні займенники ч.р., с.р., ж.р. (мій, твій, наш, ваш, їхній)"
 
-  # --- Case Usage (§4.2.2) — ALL 7 cases ---
+  # --- Case Usage (§4.2.2) ---
   cases:
     nominative:
       reference: "§4.2.2.1"
       lines: [1258, 1263]
-      description: "Nominative — expanded: subject in passive, comparative constructions"
+      description: "Називний відмінок: суб'єкт активної дії; ідентифікація особи чи предмета; об'єкт зацікавлення (подобатися)"
     genitive:
       reference: "§4.2.2.2"
       lines: [1265, 1285]
-      description: "Genitive — without preposition + with prepositions (без, від, для, до, з/із, після, біля, коло)"
+      description: "Родовий відмінок: без прийменника (час і дата, заперечення об'єкта, кількість/міра з числівниками); із прийменниками з/із/зі (вихідний пункт, матеріал, початок дії), до (кінцевий пункт), для (призначення, мета), біля, навпроти (місце)"
     dative:
       reference: "§4.2.2.3"
       lines: [1287, 1291]
-      description: "Dative — indirect object, impersonal constructions (мені холодно)"
+      description: "Давальний відмінок: особа або предмет, для яких відбувається дія (на користь/шкоду); суб'єкт кількісної вікової ознаки"
       first_module: 1
       required: true
     accusative:
       reference: "§4.2.2.4"
       lines: [1293, 1302]
-      description: "Accusative — expanded prepositions (під, над, між — with motion)"
+      description: "Знахідний відмінок: без прийменника (прямий об'єкт дії); із прийменниками в, у, на (кінцевий пункт руху), у/в (початок дії), про (об'єктні відношення)"
     instrumental:
       reference: "§4.2.2.5"
       lines: [1304, 1322]
-      description: "Instrumental — means, manner, agent; with prepositions (з/із, за, між, над, перед, під)"
+      description: "Орудний відмінок: без прийменника (професія/статус, знаряддя/засіб, об'єкт дії/стану); із прийменниками з/із/зі (спільність дії, ознака), над, під, перед, за, між (простір/шлях), між (об'єктні відношення), перед (час дії)"
       first_module: 4
       required: true
     locative:
       reference: "§4.2.2.6"
       lines: [1324, 1332]
-      description: "Locative — expanded location contexts"
+      description: "Місцевий відмінок: у, в, на (місце перебування); у, в (час: місяць, рік); по (шлях руху); у, в (ознака особи чи предмета)"
     vocative:
-      reference: "§4.2.2.6"  # numbering error in source
+      reference: "§4.2.2.7"  # numbered §4.2.2.6 in Standard text
       lines: [1334, 1337]
-      description: "Vocative — expanded address forms"
+      description: "Кличний відмінок: адресат мовлення — потенційний суб'єкт дії або стану"
 
   # --- Verb Forms (§4.2.3) ---
   verbs:
     indicative:
       reference: "§4.2.3.1"
       lines: [1341, 1359]
-      description: "Indicative — expanded: aspect pairs (доконаний/недоконаний), motion verbs (їхати/ходити)"
+      description: "Дійсний спосіб: дієвідмінювання в теперішньому часі (мріяти, казати, іти, їхати, кричати, ходити, їздити, пити, боротися); форми минулого часу; складена форма майбутнього часу недоконаного виду; майбутній час доконаного виду"
     imperative:
       reference: "§4.2.3.2"
       lines: [1361, 1365]
-      description: "Complete imperative — 1st person plural (читаймо), 3rd person (хай/нехай)"
+      description: "Наказовий спосіб: форми 2-ї і 3-ї особи однини і множини (мрій, мрійте, хай/нехай мріє, хай/нехай мріють; кажи, кажіть; пий, пийте; борися, боріться)"
       required_patterns: ["хай", "нехай"]
+      required_forms: ["2nd_person", "3rd_person"]
+
+  # Presence requirement for 3rd person imperative
+  imperative_complete:
+    reference: "§4.2.3.2"
+    lines: [1361, 1365]
+    requirement_id: "REQ-A2-IMPERATIVE-3RD"
+    arc_position: 23
+    module: 23
+    required_patterns: ["хай", "нехай"]
 
   # --- Word Formation (§4.3) ---
   word_formation:
     adjective_comparison:
       reference: "§4.3.1"
       lines: [1369, 1378]
-      description: "Comparative and superlative adjectives"
+      description: "Ступені порівняння якісних прикметників: проста форма вищого ступеня (солодший); проста форма найвищого ступеня (найсолодший); складена форма вищого (більш солодкий, менш кислий); складена форма найвищого (найбільш солодкий); суплетивні форми (великий – більший, малий – менший)"
     aspect_pairs:
       reference: "§4.3.2"
       lines: [1380, 1381]
-      description: "Aspectual verb pairs — formation patterns"
+      description: "Видові пари дієслів (робити – зробити, ділити – поділити, писати – написати, виходити – вийти, забувати – забути)"
 
   # --- Syntax (§4.4) ---
   syntax:
     declarative:
       reference: "§4.4.1.1"
       lines: [1387, 1389]
-      description: "Declarative sentences — expanded word order"
+      description: "Розповідне речення: стверджувальне (Студент відповідає) та заперечне (Студент не відповідає)"
     interrogative:
       reference: "§4.4.1.2"
       lines: [1391, 1398]
-      description: "Questions — чи, expanded question words (скільки, чому, який)"
+      description: "Питальне речення: інтонаційне; загальне з часткою чи; з питальними словами де, звідки, куди, з ким, про кого; загальні хто це? що це?"
     imperative_sentence:
       reference: "§4.4.1.3"
       lines: [1400, 1401]
-      description: "Imperative sentences"
+      description: "Спонукальне речення: вираження розпорядження, прохання, поради, пропозиції"
     complex_sentence:
       reference: "§4.4.2"
       lines: [1403, 1416]
-      description: "Complex sentences — тому що, для того щоб, якщо, хоча, який/яка/яке"
+      description: "Складне речення: складносурядні з і (й), та (зі значенням і); складносурядні з але; складнопідрядні зі сполучними словами де, куди, звідки; складнопідрядні зі сполучником що; причини з тому що, бо; мети зі сполучником щоб"
 
   # --- Stylistics (§4.5) ---
   stylistics:
     lexical:
       reference: "§4.5.1"
       lines: [1420, 1425]
-      description: "Synonyms, antonyms, diminutives, colloquial variants"
+      description: "Стилістичні засоби лексики: антоніми (тут – там, весело – сумно), синоніми (водій – шофер), епітети (веселі птахи, золоті руки), метафори (прийшла осінь, місто спить)"
     syntactic:
       reference: "§4.5.2"
       lines: [1427, 1432]
-      description: "Word order variation for emphasis"
+      description: "Стилістичні засоби синтаксису: звертання, еліпсис, повтор"
 
+  # --- Thematic Areas (§3) ---
   themes:
-    reference: "§3"
+    reference: "§3 (Каталог Б)"
     lines: [1072, 1163]
-    topics: ["людина", "дім", "щоденне життя", "дозвілля", "середовище", "подорожі", "навчання", "робота", "купівля", "їжа", "послуги", "здоров'я", "природа", "традиції"]
+    topics: ["людина", "дім, помешкання", "щоденне життя, побут", "дозвілля", "навчання", "робота", "купівля", "їжа та напої", "послуги", "охорона здоров'я", "місто", "подорожі", "природа, погода", "традиції, свята"]
 
 # ============================================================
 # B1 — Середній рівень першого ступеня (lines 1434-2450)
