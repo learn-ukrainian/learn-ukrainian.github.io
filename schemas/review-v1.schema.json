@@ -1,0 +1,230 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "review-v1.schema.json",
+  "title": "Review return, schema 1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["review_schema", "taxonomy", "kind", "attempt", "reviewer", "checks", "findings"],
+  "properties": {
+    "review_schema": {"const": 1},
+    "taxonomy": {"const": 1},
+    "kind": {"enum": ["lesson", "plan"]},
+    "attempt": {"$ref": "#/$defs/attempt"},
+    "reviewer": {"$ref": "#/$defs/reviewer"},
+    "checks": {"$ref": "#/$defs/checks"},
+    "findings": {
+      "type": "array",
+      "items": {"$ref": "#/$defs/finding"}
+    }
+  },
+  "$defs": {
+    "sha256": {"type": "string", "pattern": "^[0-9a-f]{64}$"},
+    "token": {"type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9._-]{0,127}$"},
+    "finding_id": {"type": "string", "pattern": "^F-[0-9]+$"},
+    "attempt": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["review_id", "attempt_id", "manifest_sha256", "previous_attempt_id"],
+      "properties": {
+        "review_id": {"$ref": "#/$defs/token"},
+        "attempt_id": {"$ref": "#/$defs/token"},
+        "manifest_sha256": {"$ref": "#/$defs/sha256"},
+        "previous_attempt_id": {"oneOf": [{"$ref": "#/$defs/token"}, {"type": "null"}]}
+      }
+    },
+    "reviewer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["resolved_model", "harness", "family", "prompt_sha256"],
+      "properties": {
+        "resolved_model": {"type": "string", "minLength": 1},
+        "harness": {"type": "string", "minLength": 1},
+        "family": {"type": "string", "minLength": 1},
+        "prompt_sha256": {"$ref": "#/$defs/sha256"}
+      }
+    },
+    "check_value": {
+      "oneOf": [
+        {"const": "clean"},
+        {
+          "type": "array",
+          "minItems": 1,
+          "items": {"$ref": "#/$defs/finding_id"}
+        }
+      ]
+    },
+    "checks": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "closing_shape": {"$ref": "#/$defs/check_value"},
+        "title_describes_job": {"$ref": "#/$defs/check_value"},
+        "title_quantities": {"$ref": "#/$defs/check_value"},
+        "quoted_forms": {"$ref": "#/$defs/check_value"},
+        "sequencing": {"$ref": "#/$defs/check_value"},
+        "sizing": {"$ref": "#/$defs/check_value"},
+        "inventory": {"$ref": "#/$defs/check_value"},
+        "activities": {"$ref": "#/$defs/check_value"},
+        "evidence_fit": {"$ref": "#/$defs/check_value"},
+        "standard_and_ulp": {"$ref": "#/$defs/check_value"},
+        "job": {"$ref": "#/$defs/check_value"},
+        "language": {"$ref": "#/$defs/check_value"},
+        "learner_fit": {"$ref": "#/$defs/check_value"},
+        "activity": {"$ref": "#/$defs/check_value"},
+        "evidence_use": {"$ref": "#/$defs/check_value"},
+        "english": {"$ref": "#/$defs/check_value"},
+        "fact": {"$ref": "#/$defs/check_value"},
+        "recap": {"$ref": "#/$defs/check_value"},
+        "evidence_gap": {"$ref": "#/$defs/check_value"},
+        "plan_defect": {"$ref": "#/$defs/check_value"},
+        "engine_or_gate": {"$ref": "#/$defs/check_value"}
+      }
+    },
+    "receipt_ref": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["receipt"],
+      "properties": {
+        "receipt": {"type": "string", "minLength": 1, "maxLength": 128}
+      }
+    },
+    "location": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tab", "quote"],
+      "properties": {
+        "tab": {"type": "string", "minLength": 1},
+        "activity": {"type": "string", "minLength": 1},
+        "item": {"type": "integer", "minimum": 0},
+        "quote": {"type": "string", "minLength": 1}
+      }
+    },
+    "scope": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["tab"],
+      "properties": {
+        "tab": {"type": "string", "minLength": 1},
+        "activity": {"type": "string", "minLength": 1}
+      }
+    },
+    "finding": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "locations", "dimension", "severity", "claim"],
+      "properties": {
+        "id": {"$ref": "#/$defs/finding_id"},
+        "status": {"enum": ["active", "resolved", "persisting"]},
+        "locations": {
+          "type": "array",
+          "items": {"$ref": "#/$defs/location"}
+        },
+        "scope": {"$ref": "#/$defs/scope"},
+        "dimension": {
+          "enum": [
+            "job",
+            "language",
+            "learner_fit",
+            "activity",
+            "evidence_use",
+            "english",
+            "fact",
+            "recap",
+            "evidence_gap",
+            "plan_defect",
+            "engine_or_gate"
+          ]
+        },
+        "sub_dimension": {
+          "enum": [
+            "russianism",
+            "surzhyk",
+            "calque",
+            "paronym",
+            "government",
+            "agreement",
+            "orthography",
+            "register",
+            "euphony",
+            "stress"
+          ]
+        },
+        "severity": {"enum": ["BLOCKER", "MAJOR", "MINOR"]},
+        "claim": {"type": "string", "minLength": 1},
+        "evidence": {"$ref": "#/$defs/receipt_ref"},
+        "unsupported_by_source": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["searches"],
+          "properties": {
+            "searches": {
+              "type": "array",
+              "minItems": 1,
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": ["receipt", "outcome"],
+                "properties": {
+                  "receipt": {"type": "string", "minLength": 1, "maxLength": 128},
+                  "outcome": {"enum": ["no_hits", "hits_but_no_support", "unavailable", "error"]}
+                }
+              }
+            }
+          }
+        },
+        "source_conflict": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": ["a", "b"],
+          "properties": {
+            "a": {"$ref": "#/$defs/receipt_ref"},
+            "b": {"$ref": "#/$defs/receipt_ref"}
+          }
+        },
+        "expected": {"type": "string", "minLength": 1},
+        "could_be_a_gate": {
+          "oneOf": [
+            {"const": "no"},
+            {"type": "string", "pattern": "^yes .+$"}
+          ]
+        }
+      },
+      "allOf": [
+        {
+          "oneOf": [
+            {
+              "required": ["evidence"],
+              "not": {
+                "anyOf": [{"required": ["unsupported_by_source"]}, {"required": ["source_conflict"]}]
+              }
+            },
+            {
+              "required": ["unsupported_by_source"],
+              "not": {"anyOf": [{"required": ["evidence"]}, {"required": ["source_conflict"]}]}
+            },
+            {
+              "required": ["source_conflict"],
+              "not": {"anyOf": [{"required": ["evidence"]}, {"required": ["unsupported_by_source"]}]}
+            }
+          ]
+        },
+        {
+          "if": {
+            "properties": {"dimension": {"const": "language"}},
+            "required": ["dimension"]
+          },
+          "then": {"required": ["sub_dimension"]},
+          "else": {"not": {"required": ["sub_dimension"]}}
+        },
+        {
+          "if": {
+            "properties": {"locations": {"maxItems": 0}},
+            "required": ["locations"]
+          },
+          "then": {"required": ["scope"]},
+          "else": {"not": {"required": ["scope"]}}
+        }
+      ]
+    }
+  }
+}

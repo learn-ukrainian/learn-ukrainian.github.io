@@ -1498,6 +1498,83 @@ def _typed_identifier(namespace: str, typed_result: dict[str, Any]) -> str:
     )
 
 
+_REVIEW_ENV_KEYS = (
+    "LU_REVIEW_ATTEMPT_ID",
+    "LU_REVIEW_MANIFEST_SHA256",
+    "LU_REVIEW_LEDGER_PATH",
+)
+
+
+def _review_env_engaged() -> bool:
+    """True when the dispatch set any review-recording variable on this process."""
+    import os
+
+    return any(os.environ.get(key) for key in _REVIEW_ENV_KEYS)
+
+
+def _review_recorder():
+    """The local review ledger session, or None when recording is fully off.
+
+    All three variables unset keeps every tool result byte-identical to a
+    server without this mode. A partial set is an incomplete session: the
+    call is refused and nothing is written. This is not the V4 recorder.
+    """
+    if not _review_env_engaged():
+        return None
+    from scripts.review.receipts.ledger import session_from_environ
+
+    return session_from_environ()
+
+
+def _review_result_text(content: list[TextContent]) -> str:
+    return "\n".join(block.text for block in content) if content else ""
+
+
+def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextContent]:
+    line = f"receipt: {receipt_id}"
+    if not content:
+        return [TextContent(type="text", text=line)]
+    updated = list(content)
+    text = updated[-1].text
+    suffix = line if text.endswith("\n") or text == "" else "\n" + line
+    updated[-1] = TextContent(type="text", text=text + suffix)
+    return updated
+
+
+def _review_record(
+    recorder: Any, name: str, arguments: dict[str, Any], content: list[TextContent], *, status: str
+) -> list[TextContent]:
+    """Append the full tool result and return that result plus a receipt line."""
+    from scripts.review.receipts.ledger import freeze_arguments
+
+    try:
+        receipt_id = recorder.record(
+            tool=name,
+            arguments=freeze_arguments(arguments),
+            status=status,
+            result=_review_result_text(content),
+            server_version=_sha256_of_file(Path(__file__).resolve()),
+        )
+    except Exception as exc:
+        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")]
+    return _with_receipt(content, receipt_id)
+
+
+def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> list[TextContent] | None:
+    """Refuse a call that must not run. None means the handler may run."""
+    if recorder is None:
+        return None
+    from scripts.review.receipts.ledger import REVIEW_TOOLS
+
+    if recorder.mode != "on":
+        text = f"Review receipt recording is misconfigured: {recorder.error}"
+        return [TextContent(type="text", text=text)]
+    if name not in REVIEW_TOOLS:
+        text = f"Tool {name} is not in the review tool list."
+        return _review_record(recorder, name, arguments, [TextContent(type="text", text=text)], status="refused")
+    return None
+
+
 async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool, dict[str, Any] | None]:
     """Core tool-call dispatch. Returns ``(content, is_error, typed_outcome)``; never raises.
 
@@ -1513,6 +1590,11 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
     _discard_retired_v4_evidence_args(arguments)
     if _V4_ACTIVE_ATTEMPT.get() is not None and name not in {"verify_word", "verify_words", "verify_lemma", "verify_stress", "check_modern_form", "inspect_word", "inspect_words", "inspect_lemma"}:
         return [TextContent(type="text", text="V4 tool capability refused")], True, None
+    recorder = _review_recorder()
+    review_arguments = arguments if isinstance(arguments, dict) else {}
+    refused = _review_before_handler(recorder, name, review_arguments)
+    if refused is not None:
+        return refused, True, None
     try:
         # Dispatch to handler
         _handlers = {
@@ -1580,11 +1662,16 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
         )
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
+        if recorder is not None and recorder.mode == "on":
+            result = _review_record(recorder, name, review_arguments, result, status="ok")
         return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
-        return [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")], True, None
+        content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
+        if recorder is not None and recorder.mode == "on":
+            content = _review_record(recorder, name, review_arguments, content, status="error")
+        return content, True, None
 
 
 async def call_tool(name: str, arguments: dict[str, Any]) -> list[TextContent]:
@@ -1615,13 +1702,20 @@ async def _on_call_tool(_ctx: Any, params: CallToolRequestParams) -> CallToolRes
     safe, generic ``isError=True`` result. The raw exception message and
     argument values never reach this result's text — those stay
     server-side only, in the hash-only privacy log (``_log_tool_call``).
+    Review recording is the exception: when its environment is set, the
+    wire result is the recorded text plus the receipt line, so the seat
+    can cite the call. With that environment unset this stays generic.
     """
     try:
         _content, is_error, typed_outcome = await _dispatch_tool_call(params.name, dict(params.arguments or {}))
     except Exception:
         return CallToolResult(content=[TextContent(type="text", text="Tool call failed.")], isError=True)
+    if is_error and not _review_env_engaged():
+        return CallToolResult(
+            content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True
+        )
     if is_error:
-        return CallToolResult(content=[TextContent(type="text", text=f"Tool call failed: {params.name}.")], isError=True)
+        return CallToolResult(content=_content, isError=True)
     return CallToolResult(content=_content, structured_content=typed_outcome, isError=False)
 
 

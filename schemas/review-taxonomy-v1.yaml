@@ -1,0 +1,62 @@
+# Versioned review taxonomy (review contract #8430 r4).
+# The validator and the later scorer read this file. Check names are ASCII.
+# Lesson tab ids are the expanded document's (urok, slovnyk, vpravy, resursy).
+taxonomy: 1
+dimensions:
+  - job
+  - language
+  - learner_fit
+  - activity
+  - evidence_use
+  - english
+  - fact
+  - recap
+  - evidence_gap
+  - plan_defect
+  - engine_or_gate
+sub_dimensions:
+  language:
+    - russianism
+    - surzhyk
+    - calque
+    - paronym
+    - government
+    - agreement
+    - orthography
+    - register
+    - euphony
+    - stress
+kinds:
+  plan:
+    # Contract 1, the ten named checks. All required on every plan review.
+    checks:
+      - name: closing_shape
+      - name: title_describes_job
+      - name: title_quantities
+      - name: quoted_forms
+      - name: sequencing
+      - name: sizing
+      - name: inventory
+      - name: activities
+      - name: evidence_fit
+      - name: standard_and_ulp
+  lesson:
+    # The eight lesson dimensions. recap is required only when the manifest
+    # says recap: true. The three extra dimensions are optional checks: a
+    # finding of that dimension must be listed under the check of the same name.
+    checks:
+      - name: job
+      - name: language
+      - name: learner_fit
+      - name: activity
+      - name: evidence_use
+      - name: english
+      - name: fact
+      - name: recap
+        recap_only: true
+      - name: evidence_gap
+        optional: true
+      - name: plan_defect
+        optional: true
+      - name: engine_or_gate
+        optional: true
