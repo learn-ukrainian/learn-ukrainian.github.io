@@ -55,7 +55,7 @@ def test_formal_cross_family_pins_match_enabled_acp_routes():
         ("claude", "claude-opus-4-8", "claude-opus-4-8"),
         ("codex", "gpt-6-astra", "openai_frontier"),
         ("glm", "glm-5.3", "glm-5.3"),
-        ("grok", "grok-4.6", "grok-4.6"),
+        ("grok", "grok-4.7", "grok-4.7"),
     ],
 )
 def test_explicit_model_selects_every_formally_eligible_native_route(
@@ -80,8 +80,8 @@ def test_model_only_pin_ignores_non_formal_fallback_with_same_model():
         == "claude-fable-5"
     )
     assert (
-        resolve_requested_review_candidate("auto", "grok-4.6", REVIEW_CANDIDATES)
-        == "grok-4.6"
+        resolve_requested_review_candidate("auto", "grok-4.7", REVIEW_CANDIDATES)
+        == "grok-4.7"
     )
 
 

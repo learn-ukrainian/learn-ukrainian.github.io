@@ -371,10 +371,8 @@ def test_new_acpx_fleet_entries_are_direct_only(seat, adapter, model):
 def test_cursor_entry_is_well_formed():
     entry = get_agent_entry("cursor")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.cursor:CursorAdapter"
-    # Default flipped from "composer-2.5" to "auto" so cursor-agent picks the
-    # best available model from the user's plan instead of burning the
-    # per-model composer-2.5 quota every call.
-    assert entry["default_model"] == "auto"
+    # Default pin is grok-4.7 (#8464); catalog Cursor seat remains auto.
+    assert entry["default_model"] == "grok-4.7"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "bridge_only"
     assert {"content_writing", "content_review", "adversarial_review"} <= entry["capabilities"]
@@ -412,7 +410,7 @@ def test_kimi_entry_is_well_formed():
 def test_grok_build_entry_is_well_formed():
     entry = get_agent_entry("grok-build")
     assert entry["adapter"] == "scripts.agent_runtime.adapters.grok_build:GrokBuildAdapter"
-    assert entry["default_model"] == "grok-4.6"
+    assert entry["default_model"] == "grok-4.7"
     assert entry["default_effort"] == "high"
     assert entry["cli_available"] is True
     assert entry["resume_policy"] == "never"
@@ -465,7 +463,7 @@ def test_load_adapter_codex():
 def test_load_adapter_cursor():
     adapter = _load_adapter("cursor")
     assert adapter.name == "cursor"
-    assert adapter.default_model == "auto"
+    assert adapter.default_model == "grok-4.7"
     assert adapter.supported_modes == frozenset({"read-only", "workspace-write", "danger"})
 
 
@@ -551,7 +549,7 @@ def test_load_adapter_grok_native_seat():
     adapter = _load_adapter("grok")
     assert adapter.__class__.__name__ == "GrokBuildAdapter"
     assert adapter.name == "grok"
-    assert adapter.default_model == "grok-4.6"
+    assert adapter.default_model == "grok-4.7"
 
 
 def test_load_adapter_glm():

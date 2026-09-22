@@ -40,11 +40,9 @@ def test_cursor_adapter_build_invocation_read_only(adapter, tmp_path, monkeypatc
     # the real prompt on stdin to be ignored. Prompt delivery is stdin-only.
     assert "-" not in plan.cmd
     assert "--model" in plan.cmd
-    # Default flipped from "composer-2.5" to "auto" (2026-05-28). cursor-agent
-    # picks the best available model from the user's plan rather than burning
-    # the per-model composer-2.5 quota every call. Pass an explicit
-    # `model="composer-2.5"` only when that specific model is required.
-    assert "auto" in plan.cmd
+    # Default pin rotated to grok-4.7 (#8464). Pass an explicit model only when
+    # Auto / composer-2.5 / another allowlisted id is required.
+    assert "grok-4.7" in plan.cmd
     assert "--mode" in plan.cmd
     assert "ask" in plan.cmd
     assert "--trust" in plan.cmd
@@ -269,7 +267,7 @@ def test_cursor_adapter_attributes_concrete_model_from_stream_metadata(adapter):
 
     assert result.ok is True
     assert result.substitution is not None
-    assert result.substitution["requested_model"] == "auto"
+    assert result.substitution["requested_model"] == "grok-4.7"
     assert result.substitution["actual_model"] == "composer-2.5"
     assert result.substitution["actual_model_known"] is True
     assert result.substitution["source"] == "cursor-stream-json"

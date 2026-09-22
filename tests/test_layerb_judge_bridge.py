@@ -11,7 +11,7 @@ import pytest
 from scripts.audit import layerb_collect_emissions, layerb_judge_bridge, layerb_qualify, layerb_shadow
 
 PINNED_CODEX_MODEL = "gpt-6-astra"
-PINNED_GROK_MODEL = "grok-4.6"
+PINNED_GROK_MODEL = "grok-4.7"
 
 
 def _window(candidate_id: str = "candidate-1", raw: str = "Kyiv is the capital of Ukraine.") -> dict[str, Any]:
@@ -551,7 +551,7 @@ def test_grok_non_array_response_is_conservative(monkeypatch: pytest.MonkeyPatch
             None,
             "rollout_tool_activity",
         ),
-        ("model_mismatch", _result(), None, "grok-4.6-other", None, "model_pin"),
+        ("model_mismatch", _result(), None, "grok-4.7-other", None, "model_pin"),
         ("malformed_cli_json", _result(), None, PINNED_GROK_MODEL, "not-json", "output_decode"),
         ("malformed_model_json", "not-json", None, PINNED_GROK_MODEL, None, "output_decode"),
         (
@@ -1352,7 +1352,7 @@ def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
 
     # config_sha256 covers the complete canonical attestation, including the
     # argv template, schema, trace proof, and every disabled-tool control.
-    assert config["config_sha256"] == "9e108cd3aba0d4d0867444faa26449e8e620b1238021e620e30f04a51f9561b7"
+    assert config["config_sha256"] == "ae03f85bc6bc84fcbe0c4a847aea6f897c4e22d7aec615d0aee342ef065f8fee"
     assert config["family"] == "grok"
     assert config["model"] == PINNED_GROK_MODEL
     assert config["model_version"] == PINNED_GROK_MODEL
@@ -1360,7 +1360,7 @@ def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
     assert config["grok_flat_contract"] == layerb_judge_bridge.grok_flat_contract_material()
     assert config["prompt_template_version"] == layerb_judge_bridge.GROK_PROMPT_TEMPLATE_VERSION
     assert config["seat_transport"] == {
-        "argv_sha256": "48a3575bcaa54f030f0ecad89ff7e6773ec1ea26f39b7f9f703ffcd3f3ce58e8",
+        "argv_sha256": "af8937ac7232bd3f9b9d28e402ce4ac2c592a02fdc9927b096bfa820ef78ab74",
         "argv_template": config["seat_transport"]["argv_template"],
         "auth": "user-auth.json symlink only",
         "minimal_config_has_mcp_servers": False,
@@ -1388,7 +1388,7 @@ def test_grok_print_config_golden(capsys: pytest.CaptureFixture[str]) -> None:
 def test_grok_print_config_rejects_retired_model_pin(capsys: pytest.CaptureFixture[str]) -> None:
     """#6870: pin the literal retired model id, not the grok-build agent alias."""
     assert layerb_judge_bridge.main(["--judge-family", "grok", "--judge-model", "grok-4.5", "--print-config"]) == 2
-    assert "Grok Layer-B judges must use grok-4.6" in capsys.readouterr().err
+    assert "Grok Layer-B judges must use grok-4.7" in capsys.readouterr().err
 
 
 @pytest.mark.parametrize("key", ["model_id", "model_version", "resolved_model", "model"])
