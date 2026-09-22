@@ -411,8 +411,8 @@ def test_build_review_pr_prompt_has_contract_and_cap() -> None:
     assert "READ-ONLY REVIEW CONTRACT" in prompt
     assert "pull/5443" in prompt
     assert "code-review-findings.v1" in prompt
-    assert "gpt-6-astra" in prompt
-    assert "effort=medium" in prompt
+    assert "gpt-6-sol" in prompt
+    assert "effort=high" in prompt
     assert "confidence` value MUST be a JSON number" in prompt
     assert '`"P0"`, `"P1"`, `"P2"`, or `"P3"`' in prompt
     assert '`"maintainability"` invalidate' in prompt
@@ -506,7 +506,7 @@ def test_list_eligible_prints_seat_status_without_provisioning(capsys) -> None:
     assert "claude-sonnet-5" in names
     assert output["selected"]["name"] == "claude-sonnet-5"
     astra = next(s for s in seats if s["name"] == "openai_frontier")
-    assert astra["model"] == "gpt-6-astra"
+    assert astra["model"] == "gpt-6-sol"
     assert astra["status"] == "advisory_only"
     assert "same family" in astra["reason"]
     assert "not a formal cross-family gate" in astra["reason"]
