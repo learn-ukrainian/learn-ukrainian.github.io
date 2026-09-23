@@ -77,13 +77,25 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "c
 
 def detokenize(text: str) -> str:
     """Detokenize Ukrainian text from Stanza space-separated tokenization."""
-    # 0. Clean adjacent dashes and dash combos: e.g. "— -" -> "— "
+    # 0. Clean CJK characters, zero-width characters, and non-breaking spaces
+    text = text.replace("\u4e00", "—")
+    text = re.sub(r"[\u200b-\u200f\u202a-\u202e\ufeff]", "", text)
+    text = text.replace("\u00a0", " ")
+
+    # 0a. Close hyphenated compound particles and prefixes BEFORE converting isolated dashes
+    text = re.sub(r"\b([а-яіїєґА-ЯІЇЄҐ\w'-]+)\s*[—–-]\s*(от|таки|будь|небудь|бо|но|то)\b", r"\1-\2", text, flags=re.I)
+    text = re.sub(r"\b(будь|хто|що|як|де|куди|коли)\s*[—–-]\s*(будь|небудь|то)\b", r"\1-\2", text, flags=re.I)
+    text = re.sub(r"\b(по)\s*[—–-]\s*([а-яіїєґА-ЯІЇЄҐ\w']+(?:ому|ему|ськи|цьки|ки))\b", r"\1-\2", text, flags=re.I)
+    text = re.sub(r"\b(рок|поп|джаз|фолк|арт|веб|інтернет|онлайн|офіс|бізнес|прем'єр|віце|екс|міні|максі|міді|мікро|макро|топ|шоу|фітнес|блок)\s*[—–-]\s*([а-яіїєґА-ЯІЇЄҐ\w']+)\b", r"\1-\2", text, flags=re.I)
+    text = re.sub(r"\b([а-яіїєґА-ЯІЇЄҐ]{4,}(?:о|е|є))\s*[-–]\s*([а-яіїєґА-ЯІЇЄҐ]{5,}(?:ий|ого|ому|им|ім|а|ої|ій|у|ою|е|і|их|ими|я|є))\b", r"\1-\2", text, flags=re.I)
+
+    # 0b. Clean adjacent dashes and dash combos: e.g. "— -" -> "— "
     text = re.sub(r"[—–-]\s*[—–-]\s*", "— ", text)
     text = re.sub(r",\s*—\s*", ", — ", text)
-    # 0b. Clean hyphen-as-dash: replace space-hyphen-space and space-en-dash-space with standard em-dash
+    # 0c. Clean hyphen-as-dash: replace space-hyphen-space and space-en-dash-space with standard em-dash
     text = re.sub(r"\s+[-–]\s+", " — ", text)
     text = re.sub(r"\s+—\s+", " — ", text)
-    # 0c. Clean bracket/brace artifacts: e.g. "–}", "—}", "-}"
+    # 0d. Clean bracket/brace artifacts: e.g. "–}", "—}", "-}"
     text = re.sub(r"[—–-]\s*[\]\}\)]", "", text)
     # 1. Close spaces before punctuation: , . ! ? : ; % ) ] } » ”
     text = re.sub(r"\s+([,.\!?:;%\]\}\)»”])", r"\1", text)
@@ -97,8 +109,9 @@ def detokenize(text: str) -> str:
     text = re.sub(r",\s*\(", " (", text)
     # 4. Handle hyphenated compounds: e.g. "Санта - Круз" -> "Санта-Круз"
     text = re.sub(r"(\b[\w'-]+)\s*-\s*([\w'-]+\b)", r"\1-\2", text)
-    # 5. Handle decimal numbers with comma: e.g. "3, 3" -> "3,3"
+    # 5. Handle decimal numbers with comma or dot: e.g. "3, 3" -> "3,3", "1. 5" -> "1.5"
     text = re.sub(r"(\d+),\s+(\d+)", r"\1,\2", text)
+    text = re.sub(r"(\d+)\.\s+(\d+)", r"\1.\2", text)
     # 6. Handle ellipses like . . . -> ...
     text = re.sub(r"\.\s+\.\s+\.", "...", text)
     # 7. Normalize all apostrophe variants to standard ASCII '
@@ -165,6 +178,26 @@ RUSSIANISM_PATTERNS = [
     r"\bрішучесхаменув\w*\b",
     r"\bпо\s+лиці\b",
     r"\bвідміти(?:ти|в|ла|ли|мо|те|ть|всь|лася)\b",
+    r"\bвідміча\w*\b",
+    r"\bдо\s+тих\s+пір\b",
+    r"\bна\s+зараз\b",
+    r"\bзвітува\w*\b",
+    r"\bпо\s+моїй\s+милості\b",
+    r"\bявил\w*\b",
+    r"\bперевірч\w*\b",
+    r"\bув\s+[А-ЯІЇЄҐа-яіїєґ]\w*\b",
+    r"\bҐріммів\b",
+    r"\bнам\s+представили\b",
+    r"\bпредставили\s+(?:публіці|читачам|глядачам|нам|вам|їм|громаді|колективу)\b",
+    r"\bне\s+про\s+супереч\w*\b",
+    r"\bчерез\s+у\s+них\b",
+    r"\bвони\s+зробити\b",
+    r"\bтільки\s+те\s+й\s+дума\w*\b",
+    r"\bпо\s+офіс\w*\b",
+    r"\bз\s+керування\s+ними\b",
+    r"\bвпадатиме\s+за\b",
+    r"\bчасом\s+близько\s+сотень\b",
+    r"\bпітливість,\s*температур\w*\b",
     r"\bпокращува\w*\b",
     r"\b[ву]\s+деяк\w*\s+мір\w*\b",
     r"\b[ву]\s+сам(?:ої|ого)\s+[А-ЯІЇЄҐ]\w*\b",
@@ -262,8 +295,14 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # Strictly Cyrillic: zero Latin characters in controls
     if re.search(r"[a-zA-Z]", text):
         return False
-    # Reject math symbols or special characters
-    if any(c in text for c in "<>~=@#$^&*_+"):
+    # Reject CJK characters
+    if re.search(r"[\u4e00-\u9fff]", text):
+        return False
+    # Reject zero-width characters and control codes
+    if re.search(r"[\u200b-\u200f\u202a-\u202e\ufeff]", text):
+        return False
+    # Reject math symbols or special characters including slashes
+    if any(c in text for c in "<>~=@#$^&*_+/\\"):
         return False
     # Reject non-standard or curly apostrophes
     if re.search(r"[’ʼ‘`´ʹ‛]", text):
@@ -273,6 +312,14 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     # Reject editorial brackets/braces/ellipses: e.g. [...] or stray { } [ ]
     if re.search(r"\[\s*[\.…]+\s*\]", text) or any(c in text for c in "{}[]"):
+        return False
+    # Reject subordinate clause fragments at start
+    if re.search(r"^(?:Як\s+колись|Немовби|Немов|Наче|Неначе|Нібито|Ніби)\b", text):
+        return False
+    # Reject spaced dashes in compounds/particles
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:от|таки|будь|небудь|бо|но|то)\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b(?:будь|хто|що|як|де|куди|коли)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", text, re.IGNORECASE):
         return False
     # Reject mixed dashes (both en-dash and em-dash in same text)
     if "–" in text and "—" in text:
@@ -414,8 +461,14 @@ def is_valid_candidate(
     # No URLs
     if re.search(r"https?://", orig_text) or re.search(r"https?://", corr_text):
         return False
-    # Strictly Cyrillic: zero Latin characters in original and corrected texts
+    # Strictly Cyrillic: zero Latin, CJK, zero-width, or control characters
     if re.search(r"[a-zA-Z]", corr_text) or re.search(r"[a-zA-Z]", orig_text):
+        return False
+    if re.search(r"[\u4e00-\u9fff]", corr_text) or re.search(r"[\u4e00-\u9fff]", orig_text):
+        return False
+    if re.search(r"[\u200b-\u200f\u202a-\u202e\ufeff]", corr_text) or re.search(
+        r"[\u200b-\u200f\u202a-\u202e\ufeff]", orig_text
+    ):
         return False
     # Reject math symbols or special characters
     if any(c in corr_text for c in "<>~=@#$^&*_+") or any(c in orig_text for c in "<>~=@#$^&*_+"):
@@ -444,6 +497,12 @@ def is_valid_candidate(
         return False
     # Reject comma before parenthesis
     if re.search(r",\s*\(", orig_text) or re.search(r",\s*\(", corr_text):
+        return False
+    # Reject truncated sentences ending with a preposition
+    if re.search(r"\b(?:на|в|у|до|з|під|над|через|про|за|при|біля|від|для|без)\s*[\.!?]$", orig_text):
+        return False
+    # Reject adding dialogue dash when orig did not start with dash
+    if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
         return False
     # Unbalanced quotes or brackets
     if corr_text.count("«") != corr_text.count("»") or orig_text.count("«") != orig_text.count("»"):
@@ -492,8 +551,8 @@ def is_valid_candidate(
         re.search(r"\bвін\b", o_low) and not re.search(r"\bвін\b", c_low)
     ):
         return False
-    if (re.search(r"\bя\s+[а-яіїєґ]+ла\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+[вв]\b", c_low)) or (
-        re.search(r"\bя\s+[а-яіїєґ]+[вв]\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+ла\b", c_low)
+    if (re.search(r"\bя\s+[а-яіїєґ]+(?:ла|лася|лась)\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+(?:в|вся|всь)\b", c_low)) or (
+        re.search(r"\bя\s+[а-яіїєґ]+(?:в|вся|всь)\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+(?:ла|лася|лась)\b", c_low)
     ):
         return False
     if (re.search(r"\bя\s+була\b", o_low) and re.search(r"\bя\s+(?:був|знав)\b", c_low)) or (
@@ -519,6 +578,22 @@ def is_valid_candidate(
     ):
         return False
 
+    # Proper name protection
+    if (re.search(r"\bіванушк\w*\b", o_low) and re.search(r"\bівасик\w*\b", c_low)) or (
+        re.search(r"\bівасик\w*\b", o_low) and re.search(r"\bіванушк\w*\b", c_low)
+    ):
+        return False
+    if re.search(r"\bнюто\w*\b", o_low) and re.search(r"\bвпадатиме\b", c_low):
+        return False
+
+    # «Через [час]» -> «За [час]»
+    if re.search(r"\bчерез\s+(?:день|дні|днів|тиждень|тижні|тижнів|місяц\w*|рік|роки|років|хвилин\w*|годин\w*|час|якийсь\s+час)\b", o_low) and re.search(r"\bза\s+(?:день|дні|днів|тиждень|тижні|тижнів|місяц\w*|рік|роки|років|хвилин\w*|годин\w*|час|якийсь\s+час)\b", c_low):
+        return False
+
+    # Singular to plural referent shifts
+    if re.search(r"\bпервосвящен\w*\b", o_low) and re.search(r"\bпервосвященник\w*\b", c_low):
+        return False
+
     # Correlative "чим..., тим...": reject changing чим or тим
     if re.search(r"\bчим\b", o_low) and re.search(r"\bтим\b", o_low) and not (re.search(r"\bчим\b", c_low) and re.search(r"\bтим\b", c_low)):
         return False
@@ -528,12 +603,53 @@ def is_valid_candidate(
         return False
     if re.search(r"\bодин\s+від\s+одного\b", o_low) and re.search(r"\bодне\s+від\s+одного\b", c_low):
         return False
-    if re.search(r"\bчерез\s+тиждень\b", o_low) and re.search(r"\bза\s+тиждень\b", c_low):
-        return False
     if re.search(r"\bдоктор\w*\b", o_low) and re.search(r"\bлікар\w*\b", c_low):
         return False
     if ("зупинімося" in o_low and "зупинімось" in c_low) or ("зупинімось" in o_low and "зупинімося" in c_low):
         return False
+    if re.search(r"\bпідписник\w*\b", o_low) and re.search(r"\bчитач\w*\b", c_low):
+        return False
+    if re.search(r"\bпару\s+речень\b", o_low) and re.search(r"\bтрохи\b", c_low):
+        return False
+    if re.search(r"\bні\s+гроша\b", o_low) and re.search(r"\bні\s+копійки\b", c_low):
+        return False
+    if re.search(r"\bсподоба\w*\b", o_low) and re.search(r"\bподоба\w*\b", c_low):
+        return False
+    if re.search(r"\bночі\b", o_low) and re.search(r"\bранку\b", c_low):
+        return False
+    if re.search(r"\bспівставн\w*\b", o_low) and re.search(r"\bзіставлен\w*\b", c_low):
+        return False
+    if re.search(r"\bзадал\w*\s+питанням\b", o_low) and re.search(r"\bзацікавил\w*\b", c_low):
+        return False
+    if re.search(r"\bповені\s+на\s+землю\b", c_low) or re.search(r"\bвогнегасник\b", o_low):
+        return False
+    if re.search(r"^Це\s+неважливо,\s+оскільки\b", orig_text) and not re.search(r"\bневажливо\b", corr_text):
+        return False
+    if re.search(r"\bпотіння\b", o_low) and re.search(r"\bпітливість\b", c_low):
+        return False
+
+    # Gender agreement mismatch
+    if re.search(r"\bтака\s+(?:вже\s+й\s+|ще\s+й\s+)?[а-яіїєґ]+[еє]\b", c_low):
+        return False
+    if re.search(r"\bтаке\s+(?:вже\s+й\s+|ще\s+й\s+)?[а-яіїєґ]+[ая]\b", c_low):
+        return False
+
+    # Dangling subordinate clauses / missing main clause
+    if re.search(r",\s*а\s+що\s+[^,\.!?]+[\.!?]$", corr_text):
+        return False
+
+    # Antecedent-less object pronoun introduced
+    if not re.search(r"\b(?:ним|нею|ними)\b", o_low) and re.search(r"\bвін\s+(?:ним|нею|ними)\b", c_low):
+        return False
+
+    # Spaced dashes in compounds/particles
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:от|таки|будь|небудь|бо|но|то)\b", corr_text, re.IGNORECASE):
+        return False
+    if re.search(r"\b(?:будь|хто|що|як|де|куди|коли)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
+        return False
+    if re.search(r"\b(?:рок|поп|джаз|офіс|бізнес)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]+\b", corr_text, re.IGNORECASE):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -563,6 +679,18 @@ def is_valid_candidate(
     # Reject repeated word separated by a single intervening word: e.g. "приносять саме приносять"
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']{3,})\s+\S+\s+\1\b", corr_text, re.IGNORECASE):
         return False
+
+    # Reject repeated word (3+ chars) within 1 to 4 intervening words (e.g. "не треба молодої нареченої треба", "бухгалтер ... бухгалтера")
+    # except legitimate idioms like "день у день", "раз у раз", "рік у рік", "час від часу", "сам на сам"
+    words_c_3 = [w.lower() for w in re.findall(r"\b[а-яіїєґА-ЯІЇЄҐ']{3,}\b", corr_text)]
+    idioms_allowed = {("день", "день"), ("раз", "раз"), ("рік", "рік"), ("сам", "сам"), ("час", "час"), ("край", "край"), ("пліч", "пліч")}
+    for i in range(len(words_c_3)):
+        for dist in range(1, 5):
+            if i + dist + 1 < len(words_c_3):
+                w_a = words_c_3[i]
+                w_b = words_c_3[i + dist + 1]
+                if w_a == w_b and (w_a, w_b) not in idioms_allowed:
+                    return False
 
     # Reject adjacent stem repetition (e.g. з'явилася з'явила)
     words = re.findall(r"\b[\w'-]+\b", corr_text.lower())
