@@ -1,271 +1,180 @@
+"""Report-only sweep and exact-SHA comment verdict tests (#8509)."""
+
 from __future__ import annotations
 
-import time
-from datetime import UTC, datetime, timedelta
+import json
+from datetime import UTC, datetime
 from pathlib import Path
 
-from scripts.orchestration import integration_sweep
+import pytest
 
-NOW = datetime(2026, 8, 9, 12, tzinfo=UTC)
-HEAD = "a" * 40
+from scripts.orchestration import integration_sweep as sweep
+from scripts.review.record_cf_verdict import build_comment
+
+SHA = "a" * 40
+OTHER = "b" * 40
+START = "2026-09-23T12:00:00.000001+00:00"
 
 
-def _report(*, unique: bool = True, epics: list[int] | None = None) -> dict:
+def comment(
+    *, sha=SHA, task="review-one", started=START, verdict="APPROVED", login="fleet", association="MEMBER", edited=False
+):
+    body = build_comment(
+        sha=sha,
+        task_id=task,
+        started=started,
+        verdict=verdict,
+        model="gpt-6-sol",
+        family="openai",
+        reply="VERDICT: APPROVE",
+    )
     return {
-        "generated_at": int(time.time()),
-        "effective_membership": {
-            "42": {
-                "epics": epics if epics is not None else [4707],
-                "streams": ["infra"],
-                "via": "native",
-                "unique_stream": unique,
-            }
-        },
-        "open_issue_numbers": [42],
+        "id": task,
+        "body": body,
+        "user": {"login": login},
+        "author_association": association,
+        "created_at": "2026-09-23T13:00:00Z",
+        "updated_at": "2026-09-23T13:01:00Z" if edited else "2026-09-23T13:00:00Z",
     }
 
 
-def _pr(**changes: object) -> dict:
-    result = {
-        "number": 99,
+def pr(**updates):
+    data = {
+        "number": 42,
+        "headRefOid": SHA,
+        "headRefName": "codex/42",
+        "baseRefName": "main",
         "isDraft": False,
         "autoMergeRequest": None,
-        "assignees": [],
-        "updatedAt": (NOW - timedelta(hours=1, minutes=1)).isoformat(),
-        "reviewDecision": "APPROVED",
-        "headRefOid": HEAD,
-        "reviews": [{"state": "APPROVED", "commit": {"oid": HEAD}}],
+        "mergeable": "MERGEABLE",
         "statusCheckRollup": [
-            {
-                "name": "CI Gate",
-                "status": "COMPLETED",
-                "conclusion": "SUCCESS",
-                "startedAt": (NOW - timedelta(hours=1)).isoformat(),
-                "completedAt": (NOW - timedelta(minutes=59)).isoformat(),
-            }
+            {"name": "CI Gate", "status": "COMPLETED", "conclusion": "SUCCESS", "startedAt": "2026-09-23T12:00:00Z"}
         ],
-        "body": "Refs #42\n",
-        "closingIssuesReferences": [],
     }
-    result.update(changes)
-    return result
+    data.update(updates)
+    return data
 
 
-def test_decide_accepts_only_a_fully_proven_abandoned_pr() -> None:
-    decision = integration_sweep.decide(_pr(), _report(), ["CI Gate"], now=NOW)
-
-    assert decision.eligible is True
-    assert decision.reason == "stream_epic_4707"
-
-
-def test_decide_refuses_an_assigned_pr_even_when_every_other_gate_passes() -> None:
-    decision = integration_sweep.decide(_pr(assignees=[{"login": "owner"}]), _report(), ["CI Gate"], now=NOW)
-
-    assert decision == integration_sweep.Decision(99, False, "active_owner_assigned")
-
-
-def test_decide_refuses_a_stale_approval() -> None:
-    decision = integration_sweep.decide(
-        _pr(reviews=[{"state": "APPROVED", "commit": {"oid": "b" * 40}}]), _report(), ["CI Gate"], now=NOW
-    )
-
-    assert decision == integration_sweep.Decision(99, False, "current_head_review_missing")
-
-
-def test_decide_uses_the_latest_required_check_run() -> None:
-    old_success = _pr()["statusCheckRollup"][0]
-    pending = {
-        "name": "CI Gate",
-        "status": "IN_PROGRESS",
-        "conclusion": "",
-        "startedAt": (NOW - timedelta(minutes=1)).isoformat(),
-        "completedAt": None,
-    }
-    decision = integration_sweep.decide(_pr(statusCheckRollup=[old_success, pending]), _report(), ["CI Gate"], now=NOW)
-
-    assert decision == integration_sweep.Decision(99, False, "required_ci_not_green")
-
-
-def test_decide_refuses_missing_or_ambiguous_membership() -> None:
-    missing = integration_sweep.decide(_pr(body="No issue link"), _report(), ["CI Gate"], now=NOW)
-    ambiguous = integration_sweep.decide(_pr(), _report(unique=False, epics=[4707, 5703]), ["CI Gate"], now=NOW)
-
-    assert missing == integration_sweep.Decision(99, False, "no_explicit_issue_reference")
-    assert ambiguous == integration_sweep.Decision(99, False, "ambiguous_membership")
-
-
-def test_decide_accepts_an_exact_head_formal_review_comment() -> None:
-    comment = {
-        "body": (
-            "## Cross-family review (AGY / Gemini) — review of record\n\n"
-            f"**Head:** `{HEAD}`\n"
-            "**Reviewer family:** Gemini (AGY) — outside OpenAI author family\n\n"
-            "### VERDICT: APPROVED\n"
-        )
-    }
-
-    decision = integration_sweep.decide(
-        _pr(reviewDecision="", reviews=[]),
-        _report(),
-        ["CI Gate"],
-        now=NOW,
-        comments=[comment],
-    )
-
-    assert decision == integration_sweep.Decision(99, True, "stream_epic_4707")
-
-
-def test_run_arms_only_eligible_prs(monkeypatch) -> None:
-    class FakeAdapter:
-        repo_root = Path(".")
-
-        def __init__(self) -> None:
-            self.armed: list[int] = []
-
-        def required_check_contexts(self, _repository: str) -> list[str]:
-            return ["CI Gate"]
-
-        def list_open_prs(self, _repository: str) -> list[dict]:
-            return [_pr(), _pr(number=100, isDraft=True)]
-
-        def arm_auto_merge(self, _repository: str, number: int) -> None:
-            self.armed.append(number)
-
-    adapter = FakeAdapter()
-    monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
-
-    decisions = integration_sweep.run(adapter, "org/repo", apply=True, now=NOW)
-
-    assert [decision.eligible for decision in decisions] == [True, False]
-    assert adapter.armed == [99]
-
-
-def test_run_is_read_only_without_apply(monkeypatch) -> None:
-    class FakeAdapter:
-        repo_root = Path(".")
-
-        def required_check_contexts(self, _repository: str) -> list[str]:
-            return ["CI Gate"]
-
-        def list_open_prs(self, _repository: str) -> list[dict]:
-            return [_pr()]
-
-        def arm_auto_merge(self, _repository: str, _number: int) -> None:
-            raise AssertionError("dry run must not mutate GitHub")
-
-    monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
-
-    decisions = integration_sweep.run(FakeAdapter(), "org/repo", apply=False, now=NOW)
-
-    assert decisions == [integration_sweep.Decision(99, True, "stream_epic_4707")]
-
-
-def test_required_check_contexts_returns_documented_default_without_gh() -> None:
-    """GitHub removed rollup ``isRequired`` (#6748) and branch protection is admin-only (#6717)."""
-
-    def runner(args: list[str]) -> str:
-        raise AssertionError(f"required-context lookup must not invoke gh: {' '.join(args)}")
-
-    adapter = integration_sweep.GitHubAdapter(Path("."), runner=runner)
-
-    assert adapter.required_check_contexts("org/repo") == ["CI Gate"]
-
-
-def test_run_never_calls_gh_without_a_pr_number(monkeypatch) -> None:
-    """A PR without a usable number is refused and never reaches a gh call."""
-
-    class GuardedAdapter:
-        repo_root = Path(".")
-
-        def required_check_contexts(self, _repository: str) -> list[str]:
-            return ["CI Gate"]
-
-        def list_open_prs(self, _repository: str) -> list[dict]:
-            return [_pr(number=0), _pr(number=100, reviewDecision="", reviews=[], body="Refs #42\n")]
-
-        def comments(self, _repository: str, number: int) -> list[dict]:
-            assert integration_sweep._is_usable_pr_number(number), number
-            return []
-
-        def arm_auto_merge(self, _repository: str, number: int) -> None:
-            raise AssertionError(f"no PR should be armed: {number}")
-
-    monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
-
-    decisions = integration_sweep.run(GuardedAdapter(), "org/repo", apply=True, now=NOW)
-
-    assert decisions == [
-        integration_sweep.Decision(0, False, "invalid_pr_number"),
-        integration_sweep.Decision(100, False, "current_head_review_missing"),
+def test_latest_started_rejects_approval_then_rejection():
+    rows = [
+        comment(),
+        comment(task="review-two", started="2026-09-23T12:00:01.000001+00:00", verdict="CHANGES_REQUESTED"),
     ]
+    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "CHANGES_REQUESTED"
 
 
-def test_run_skips_comments_and_merge_when_number_unusable(monkeypatch) -> None:
-    """Even a pathological review-missing decision never invokes gh without a number."""
-
-    class GuardedAdapter:
-        repo_root = Path(".")
-
-        def required_check_contexts(self, _repository: str) -> list[str]:
-            return ["CI Gate"]
-
-        def list_open_prs(self, _repository: str) -> list[dict]:
-            return [_pr(number=0)]
-
-        def comments(self, _repository: str, number: int) -> list[dict]:
-            raise AssertionError(f"comments must not be fetched for number {number!r}")
-
-        def arm_auto_merge(self, _repository: str, number: int) -> None:
-            raise AssertionError(f"auto-merge must not be armed for number {number!r}")
-
-    def fake_decide(pr, report, contexts, *, now, comments=None):
-        del pr, report, contexts, now, comments
-        return integration_sweep.Decision(0, True, "current_head_review_missing")
-
-    monkeypatch.setattr(integration_sweep, "decide", fake_decide)
-    monkeypatch.setattr(integration_sweep.issue_stream_audit, "run_audit", lambda _root: _report())
-
-    decisions = integration_sweep.run(GuardedAdapter(), "org/repo", apply=True, now=NOW)
-
-    assert decisions == [integration_sweep.Decision(0, True, "current_head_review_missing")]
+def test_late_recorded_older_approval_does_not_overwrite_rejection():
+    rows = [
+        comment(task="reject", started="2026-09-23T12:00:01.000001+00:00", verdict="BLOCKED"),
+        comment(task="old-approval"),
+    ]
+    assert sweep.lookup_verdict(rows, SHA, "fleet").state == "BLOCKED"
 
 
-def test_main_empty_sweep_noops_exit_zero(monkeypatch, capsys) -> None:
-    """With nothing to comment on or apply, the sweep exits 0."""
-    monkeypatch.setattr(integration_sweep, "run", lambda _adapter, _repository, **_kwargs: [])
-
-    assert integration_sweep.main(["--repo", "org/repo", "--apply"]) == 0
-    assert capsys.readouterr().out.strip() == "[]"
-
-
-def test_main_schedule_soft_skips_http_403(monkeypatch, capsys) -> None:
-    monkeypatch.setenv("EVENT_NAME", "schedule")
-
-    def boom(*_args, **_kwargs):
-        raise integration_sweep.SweepError(
-            "gh: Resource not accessible by integration (HTTP 403)"
-        )
-
-    monkeypatch.setattr(integration_sweep, "run", boom)
-
-    assert integration_sweep.main(["--repo", "org/repo", "--apply"]) == 0
-    out = capsys.readouterr().out
-    assert out.startswith("integration sweep skipped:")
-    assert "HTTP 403" in out
+def test_same_second_microseconds_and_tie_rejection():
+    later = "2026-09-23T12:00:00.000002+00:00"
+    assert (
+        sweep.lookup_verdict([comment(verdict="BLOCKED"), comment(task="later", started=later)], SHA, "fleet").state
+        == "APPROVED"
+    )
+    assert sweep.lookup_verdict([comment(), comment(task="tie", verdict="BLOCKED")], SHA, "fleet").state == "BLOCKED"
 
 
-def test_main_non_schedule_still_refuses_http_403(monkeypatch, capsys) -> None:
-    monkeypatch.setenv("EVENT_NAME", "workflow_dispatch")
-    monkeypatch.delenv("GITHUB_EVENT_NAME", raising=False)
+@pytest.mark.parametrize("bad", ["edited", "malformed"])
+def test_edited_or_unparseable_marker_makes_sha_unknown(bad):
+    item = comment(edited=bad == "edited")
+    if bad == "malformed":
+        item["body"] = item["body"].replace("verdict=APPROVED", "verdict=MAYBE")
+    assert sweep.lookup_verdict([item], SHA, "fleet").state == "unknown"
 
-    def boom(*_args, **_kwargs):
-        raise integration_sweep.SweepError(
-            "gh: Resource not accessible by integration (HTTP 403)"
-        )
 
-    monkeypatch.setattr(integration_sweep, "run", boom)
+def test_lookup_failure_and_partial_data_unknown():
+    assert sweep.lookup_verdict(None, SHA, "fleet").state == "unknown"
+    assert sweep.lookup_verdict([comment()], SHA, "fleet", complete=False).state == "unknown"
+    assert sweep.lookup_verdict([[comment()]], SHA, "fleet").state == "unknown"
 
-    assert integration_sweep.main(["--repo", "org/repo"]) == 1
-    out = capsys.readouterr().out
-    assert out.startswith("integration sweep refused:")
-    assert "HTTP 403" in out
+
+def test_legacy_unmarked_comment_never_approves():
+    old = {"body": f"### Cross-family review\nhead: {SHA}\nVERDICT: APPROVED"}
+    assert sweep.lookup_verdict([old], SHA, "fleet").state == "CF-unrecorded"
+    assert sweep.lookup_verdict([{"body": "VERDICT: APPROVE"}], SHA, "fleet").state == "CF-unrecorded"
+    assert sweep.lookup_verdict([comment(sha=OTHER)], SHA, "fleet").state == "CF-stale"
+
+
+@pytest.mark.parametrize("login,association", [("outsider", "MEMBER"), ("fleet", "NONE"), ("fleet", "CONTRIBUTOR")])
+def test_untrusted_marker_ignored_and_listed(login, association):
+    verdict = sweep.lookup_verdict([comment(login=login, association=association)], SHA, "fleet")
+    assert verdict.state == "needs-CF"
+    assert verdict.untrusted_markers == ("review-one",)
+
+
+def test_untrusted_other_head_marker_does_not_claim_stale_review():
+    verdict = sweep.lookup_verdict([comment(sha=OTHER, login="outsider")], SHA, "fleet")
+    assert verdict.state == "needs-CF"
+    assert verdict.untrusted_markers == ("review-one",)
+
+
+def test_state_preserves_blockers_even_when_queued_or_armed():
+    verdict = sweep.Verdict("CHANGES_REQUESTED")
+    queued = sweep.classify_pr(pr(isDraft=True), verdict, queued=True, observed_at=START)
+    armed = sweep.classify_pr(pr(autoMergeRequest={"enabledAt": START}), verdict, queued=False, observed_at=START)
+    assert queued.state == "blocked draft"
+    assert "CHANGES_REQUESTED" in queued.blockers
+    assert armed.state == "armed"
+    assert "CHANGES_REQUESTED" in armed.blockers
+
+
+def test_ci_red_pending_and_ready():
+    approved = sweep.Verdict("APPROVED")
+    red = pr(
+        statusCheckRollup=[{"name": "CI Gate", "status": "COMPLETED", "conclusion": "FAILURE", "startedAt": START}]
+    )
+    pending = pr(statusCheckRollup=[])
+    assert sweep.classify_pr(red, approved, queued=False, observed_at=START).state == "CI-red CI Gate"
+    assert sweep.classify_pr(pending, approved, queued=False, observed_at=START).state == "CI-pending"
+    assert sweep.classify_pr(pr(), approved, queued=False, observed_at=START).state == "ready"
+
+
+def test_moved_head_between_observation_and_queue_lookup_reports_unknown():
+    def runner(args):
+        if args[:3] == ["gh", "api", "graphql"]:
+            return json.dumps({"data": {"repository": {"pullRequest": {"headRefOid": OTHER, "isInMergeQueue": False}}}})
+        raise AssertionError(args)
+
+    adapter = sweep.GitHubAdapter(Path.cwd(), runner=runner)
+    with pytest.raises(sweep.SweepError, match="head moved"):
+        adapter.queue_membership("owner/repo", pr())
+
+
+def test_paged_comments_reject_unpaginated_response():
+    adapter = sweep.GitHubAdapter(Path.cwd(), runner=lambda args: json.dumps([comment()]))
+    with pytest.raises(sweep.SweepError, match="pagination"):
+        adapter.comments("owner/repo", 42)
+
+
+def test_apply_refused_and_workflow_is_report_only(capsys):
+    assert sweep.main(["--repo", "owner/repo", "--apply"]) == 2
+    assert "report-only" in capsys.readouterr().out
+    workflow = Path(".github/workflows/integration-sweep.yml").read_text()
+    assert "--apply" not in workflow
+    assert "workflow_dispatch:\n    inputs:" not in workflow
+    assert "GITHUB_STEP_SUMMARY" in workflow
+
+
+def test_run_lookup_failure_is_unknown_with_queue_blocker():
+    class Adapter:
+        def list_open_prs(self, repository):
+            return [pr()]
+
+        def identity(self):
+            return "fleet"
+
+        def comments(self, repository, number):
+            raise sweep.SweepError("failure")
+
+        def queue_membership(self, repository, item):
+            raise sweep.SweepError("failure")
+
+    rows = sweep.run(Adapter(), "owner/repo", now=datetime(2026, 9, 23, tzinfo=UTC))
+    assert rows[0].state == "CF-unknown"
+    assert "queue lookup unknown" in rows[0].blockers
