@@ -165,6 +165,13 @@ _PROVIDER_SAFE_NAME_ALLOWLIST = {
     "codex": {
         "CODEX_HOME",
     },
+    # AGY_APP_DATA_DIR must reach the agy subprocess so a receipt-recording
+    # review attempt (#8617) keeps its app data (OAuth token link, transcripts)
+    # in the per-attempt scoped home. It is a directory path, never a
+    # credential; `HOME` already passes the global safe-name allowlist.
+    "agy": {
+        "AGY_APP_DATA_DIR",
+    },
     "deepseek": {
         "HERMES_HOME",
     },

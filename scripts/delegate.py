@@ -5679,6 +5679,31 @@ def _run_worker(
                     task_id=task_id,
                     tool_config=tool_config,
                 )
+            if (
+                strict_mcp_config
+                and review_id is not None
+                and attempt_id is not None
+                and mcp_config_path is not None
+                and agent == "agy"
+            ):
+                # agy has no per-invocation MCP flag and reads its servers from
+                # $HOME/.gemini/config, so the attempt runs under its scoped home (sibling
+                # of the .mcp.json) and is gated on the effective MCP set (#8617).
+                from scripts.agent_runtime.review_mcp import (
+                    agy_review_home_path,
+                    verify_agy_review_launch,
+                )
+
+                tool_config["agy_home_override"] = str(agy_review_home_path(mcp_config_path))
+                verify_agy_review_launch(
+                    config_path=mcp_config_path,
+                    cwd=cwd,
+                    mode=mode,
+                    model=model,
+                    effort=effort,
+                    task_id=task_id,
+                    tool_config=tool_config,
+                )
             if strict_mcp_config and agent == "cursor":
                 cursor_mcp_path = cwd / ".cursor" / "mcp.json"
                 if cursor_mcp_path.is_file():

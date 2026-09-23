@@ -543,3 +543,68 @@ def test_generic_pairing_dedupes_reemitted_pending_intent(tmp_path: Path) -> Non
         events, transcript_path=tmp_path / "transcript.jsonl"
     )
     assert [call["result"][0]["text"] for call in calls] == ["out-1", "out-2"]
+
+
+# --- per-attempt scoped home (#8617) ---------------------------------------------------
+
+
+def _build_with(tmp_path: Path, tool_config: dict | None):
+    return AgyAdapter().build_invocation(
+        prompt="hello",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="t-scoped",
+        session_id=None,
+        tool_config=tool_config,
+    )
+
+
+def test_agy_home_override_sets_home_and_app_data_dir(tmp_path: Path) -> None:
+    scoped = tmp_path / "att.agy-home"
+    plan = _build_with(tmp_path, {"agy_home_override": str(scoped)})
+    assert plan.env_overrides["HOME"] == str(scoped)
+    assert plan.env_overrides["AGY_APP_DATA_DIR"] == str(scoped / ".gemini" / "antigravity-cli")
+    assert "AGY_RUNTIME_LOG_FILE" in plan.env_overrides
+
+
+@pytest.mark.parametrize("tool_config", [None, {}, {"mcp_server_names": ["sources"]}, {"agy_home_override": ""}])
+def test_no_agy_home_override_leaves_home_and_app_data_alone(tmp_path: Path, tool_config: dict | None) -> None:
+    plan = _build_with(tmp_path, tool_config)
+    assert set(plan.env_overrides) == {"AGY_RUNTIME_LOG_FILE"}
+
+
+def test_transcript_path_follows_agy_app_data_dir_override(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    real_home = tmp_path / "real-home"
+    monkeypatch.setenv("HOME", str(real_home))
+    monkeypatch.setattr(Path, "home", classmethod(lambda _cls: real_home))
+    scoped = tmp_path / "att.agy-home"
+    plan = _build_with(tmp_path, {"agy_home_override": str(scoped)})
+    log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
+    log_file.write_text(f"conversation={CONVERSATION_ID}\n", encoding="utf-8")
+    try:
+        # The same conversation id exists under the real home too: the scoped one must win.
+        _write_transcript(real_home / ".gemini" / "antigravity-cli")
+        _write_transcript(scoped / ".gemini" / "antigravity-cli")
+        found = agy_module._transcript_path_from_plan(plan)
+    finally:
+        log_file.unlink(missing_ok=True)
+    assert found == agy_module._brain_transcript_path(scoped / ".gemini" / "antigravity-cli", CONVERSATION_ID)
+
+
+def test_transcript_path_defaults_to_real_home_without_override(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    real_home = tmp_path / "real-home"
+    monkeypatch.setattr(Path, "home", classmethod(lambda _cls: real_home))
+    plan = _build_with(tmp_path, None)
+    log_file = Path(plan.env_overrides["AGY_RUNTIME_LOG_FILE"])
+    log_file.write_text(f"conversation={CONVERSATION_ID}\n", encoding="utf-8")
+    try:
+        _write_transcript(real_home / ".gemini" / "antigravity-cli")
+        found = agy_module._transcript_path_from_plan(plan)
+    finally:
+        log_file.unlink(missing_ok=True)
+    assert found == agy_module._brain_transcript_path(real_home / ".gemini" / "antigravity-cli", CONVERSATION_ID)

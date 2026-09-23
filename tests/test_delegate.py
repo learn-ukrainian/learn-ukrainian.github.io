@@ -4531,6 +4531,153 @@ def test_run_worker_ordinary_codex_dispatch_is_unchanged(tmp_tasks_dir, tmp_path
     assert not any("mcp" in line for line in recorded), recorded
 
 
+def _prepare_agy_review(tmp_path, monkeypatch, extra_rows=()):
+    """Provision a real AGY review attempt plus a fake ``agy`` printing the effective MCP table."""
+    import json as _json
+
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+    app_data = tmp_path / "user-agy" / ".gemini" / "antigravity-cli"
+    app_data.mkdir(parents=True)
+    (app_data / "antigravity-oauth-token").write_text("{}\n", encoding="utf-8")
+    monkeypatch.setenv("AGY_APP_DATA_DIR", str(app_data))
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review: fixture\n", encoding="utf-8")
+    plan = prepare_review_attempt(
+        review_id="rev-agy",
+        attempt_id="att-agy",
+        manifest_path=manifest,
+        harness="agy",
+        receipts_root=tmp_path / "receipts",
+    )
+    expected = _json.loads(plan.config_path.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+    rows = [("sources", "stdio", "enabled", " ".join([expected["command"], *expected["args"]])), *extra_rows]
+    widths = [max(len(row[i]) for row in rows) + 2 for i in range(3)]
+    widths[0] = max(widths[0], len("NAME") + 2)
+    lines = ["NAME".ljust(widths[0]) + "TYPE".ljust(widths[1]) + "STATUS".ljust(widths[2]) + "COMMAND/URL"]
+    lines += ["".join(row[i].ljust(widths[i]) for i in range(3)) + row[3] for row in rows]
+    bin_dir = tmp_path / "fake-bin"
+    bin_dir.mkdir()
+    canned = tmp_path / "agy-table.txt"
+    canned.write_text("\n".join(lines) + "\n", encoding="utf-8")
+    log = tmp_path / "fake-agy.log"
+    fake = bin_dir / "agy"
+    # Record every invocation's argv: the dispatch-telemetry version probe legitimately
+    # runs `agy --version`, so only an `mcp` call is the gate.
+    fake.write_text(
+        f"#!/bin/sh\nprintf '%s|%s|%s\\n' \"$HOME\" \"$AGY_APP_DATA_DIR\" \"$*\" >> {log}\n"
+        f'case "$1" in mcp) cat {canned};; *) echo 1.2.9;; esac\n',
+        encoding="utf-8",
+    )
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ['PATH']}")
+    return plan, log
+
+
+def _run_agy_review_worker(task_id, tmp_path, plan):
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    return delegate._run_worker(
+        task_id=task_id,
+        agent="agy",
+        prompt="review with mcp__sources__verify_word",
+        mode="read-only",
+        cwd_str=str(tmp_path),
+        model=None,
+        hard_timeout=60,
+        review_id="rev-agy",
+        attempt_id="att-agy",
+        mcp_config_path=str(plan.config_path),
+        strict_mcp_config=True,
+    )
+
+
+def test_run_worker_agy_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters.agy import AgyAdapter
+    from scripts.agent_runtime.env_sanitize import build_agent_env
+
+    plan, log = _prepare_agy_review(tmp_path, monkeypatch)
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = _run_agy_review_worker("worker-agy-review", tmp_path, plan)
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config == {
+        "mcp_config_path": str(plan.config_path),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-agy",
+        "attempt_id": "att-agy",
+        "agy_home_override": str(plan.agy_home),
+    }
+    # agy has no allowed-tools mechanism, so no allowed_tools grant is set.
+    assert "allowed_tools" not in tool_config
+    # The gate ran once, under the scoped home.
+    gate_calls = [
+        line.split("|", 2) for line in log.read_text(encoding="utf-8").splitlines() if line.split("|", 2)[2] == "mcp list"
+    ]
+    assert len(gate_calls) == 1
+    assert gate_calls[0][0] == str(plan.agy_home)
+    assert gate_calls[0][1] == str(plan.agy_home / ".gemini" / "antigravity-cli")
+    # Final spawned env for the launch: scoped HOME and AGY_APP_DATA_DIR.
+    invocation = AgyAdapter().build_invocation(
+        prompt="review",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="worker-agy-review",
+        session_id=None,
+        tool_config=tool_config,
+    )
+    env = build_agent_env(provider="agy", overrides=invocation.env_overrides)
+    assert env["HOME"] == str(plan.agy_home)
+    assert env["AGY_APP_DATA_DIR"] == str(plan.agy_home / ".gemini" / "antigravity-cli")
+
+
+def test_run_worker_agy_review_refuses_extra_effective_server(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_agy_review(
+        tmp_path, monkeypatch, extra_rows=[("leak", "http", "enabled", "http://127.0.0.1:8766/mcp")]
+    )
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
+        rc = _run_agy_review_worker("worker-agy-review-leak", tmp_path, plan)
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path("worker-agy-review-leak"))
+    assert state is not None
+    assert "#8617" in state["stderr_excerpt"]
+    assert "leak" in state["stderr_excerpt"]
+
+
+def test_run_worker_ordinary_agy_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    calls = tmp_path / "agy-calls"
+    fake = fake_bin / "agy"
+    # Record every invocation's argv: the dispatch-telemetry version probe
+    # legitimately runs `agy --version`, so only an `mcp` call is forbidden.
+    fake.write_text(f'#!/bin/sh\necho "$*" >> {calls}\n', encoding="utf-8")
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:{os.environ['PATH']}")
+    task_id = "worker-agy-ordinary"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="agy",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {}
+    recorded = calls.read_text(encoding="utf-8").splitlines() if calls.exists() else []
+    assert not any(line.split()[:1] == ["mcp"] for line in recorded), recorded
+
+
 def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("worker-kimicc")
     delegate._write_state_atomic(state_path, {"task_id": "worker-kimicc", "harness": "kimicc"})
