@@ -52,6 +52,28 @@ def is_vocative_form(word: str) -> bool:
         return False
 
 
+@functools.lru_cache(maxsize=100000)
+def is_finite_active_verb(word: str) -> bool:
+    """Check if word is a finite active verb in VESUM (not an adjective, participle, or passive)."""
+    clean_word = word.strip().strip("«»\"'.,!?-–—;:()").lower()
+    if not clean_word:
+        return False
+    conn = _get_vesum_connection()
+    if conn is None:
+        return False
+    try:
+        cur = conn.cursor()
+        res = cur.execute(
+            "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
+            (clean_word, clean_word.capitalize(), clean_word.upper()),
+        ).fetchall()
+        has_active_verb = any(pos == "verb" and "adjp" not in tags and "pasv" not in tags for pos, tags in res)
+        has_passive = any("pasv" in tags or "adjp" in tags for pos, tags in res)
+        return has_active_verb and not has_passive
+    except Exception:
+        return False
+
+
 # ── 1. In-Scope Tag Mapping & Coarse Categories ─────────────────────────────
 
 IN_SCOPE_TAGS = {
@@ -595,7 +617,6 @@ def resolve_specific_linguistic_citation(
     if primary_tag == "G/VerbVoice":
         err_has_sya = err_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in err_lower.split())
         corr_has_sya = corr_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in corr_lower.split())
-        err_has_noto = err_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in err_lower.split())
         corr_has_noto = corr_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in corr_lower.split())
 
         # If both words retain -ся (e.g. зупинялася -> зупинилася), it is aspect/lexical, NOT voice! Fail closed.
@@ -610,21 +631,15 @@ def resolve_specific_linguistic_citation(
                 f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати штучних пасивних форм на «-ся», віддаючи перевагу питомим безособовим предикативним формам на «-но/-то» («{corr}» замість «{err}»)."
             )
 
-        # -ся passive replaced by active verb construction (replacement lacks -ся and lacks -но/-то)
-        if err_has_sya and not corr_has_sya and not corr_has_noto:
+        # -ся passive replaced by active verb construction ONLY if corr is a verified finite active verb in VESUM
+        # (e.g. поважаються -> поважають; NOT participles/adjectives like хвилюючийся -> схвильований)
+        if err_has_sya and not corr_has_sya and not corr_has_noto and is_finite_active_verb(corr):
             return (
                 "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
-                f"неприродну пасивну форму на «-ся» «{err}» замінено на питому конструкцію активного стану «{corr}»",
-                f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати невластивих пасивних форм дієслів на «-ся», віддаючи перевагу питомим активним зворотам («{corr}» замість «{err}»)."
+                f"неприродну пасивну форму на «-ся» «{err}» замінено на питому дієслівну конструкцію активного стану «{corr}»",
+                f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати невластивих пасивних форм дієслів на «-ся», віддаючи перевагу питомим активним дієслівним конструкціям («{corr}» замість «{err}»)."
             )
 
-        # -но/-то replaced by other form
-        if err_has_noto and not corr_has_noto:
-            return (
-                "Академічна граматика української мови / Олександр Пономарів",
-                f"безособову форму на «-но/-то» «{err}» узгоджено в реченні як «{corr}»",
-                f"Академічна граматика та Олександр Пономарів розглядають нормативне вживання предикативних форм на «-но», «-то»: у цьому контексті слід уживати «{corr}» замість «{err}»."
-            )
         return None
 
     # 8. Verb Aspect Form / Imperative / Adverbial Participle (G/VerbAForm)

@@ -45,12 +45,12 @@
     "clean_control_share": 0.25,
     "substantive_correction_share": 0.75,
     "category_counts": {
-      "syntax_structure": 1004,
-      "calque_lexical_grammatical": 1660,
+      "syntax_structure": 1005,
+      "calque_lexical_grammatical": 1662,
       "protective_authentic_control": 1719,
-      "case_government": 1597,
+      "case_government": 1604,
       "agreement_concord": 501,
-      "verb_morphology": 396
+      "verb_morphology": 386
     },
     "source_corpus_counts": {
       "ua_gec_2.0": 6477,

@@ -39,6 +39,7 @@ from scripts.projects.open_model_data.build_grammar_component_8342 import (
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     IN_SCOPE_TAGS,
     TAG_TO_COARSE_CATEGORY,
+    is_finite_active_verb,
 )
 
 GRAMMAR_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "components" / "grammar"
@@ -381,6 +382,12 @@ def test_held_out_token_jaccard_firewall(grammar_data):
 
 def test_linguistic_catalog_vocative_and_voice_precision(grammar_data):
     """Verify linguistic precision: vocatives cite Pravopys § 87, reflexive verbs don't falsely claim active voice."""
+    # Direct unit checks on is_finite_active_verb
+    assert is_finite_active_verb("поважають") is True
+    assert is_finite_active_verb("використовують") is True
+    assert is_finite_active_verb("схвильований") is False  # adjp:pasv
+    assert is_finite_active_verb("хвилюючийся") is False
+
     for r in grammar_data["all"]:
         if not r["is_erroneous"] or r["task_type"] != "explained_correction":
             continue
@@ -388,6 +395,11 @@ def test_linguistic_catalog_vocative_and_voice_precision(grammar_data):
         err_span = meta.get("error_span", "").strip().lower()
         repl_span = meta.get("replacement_span", "").strip().lower()
         full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+
+        # If active voice construction is claimed, replacement must not be a participle or adjective
+        if "активн" in full_text and ("пасивн" in full_text or "-ся" in full_text):
+            assert "схвильований" not in repl_span
+            assert "рекомендований" not in repl_span
 
         # If both err and repl contain reflexive -ся/-сь, must not claim passive-to-active
         if any(w.endswith(("ся", "сь")) for w in err_span.split()) and any(
@@ -427,6 +439,19 @@ def test_acceptance_review_sample_receipt_and_signoff():
     assert len(receipt["reviewed_sample_items"]) == 300
     assert receipt["verdict"] == "APPROVED"
     assert receipt["blocker_defect_count"] == 0
+
+    # Verify all 300 reviewer rationales are completely distinct and authentic
+    rationales = [item["reviewer_rationale"] for item in receipt["reviewed_sample_items"]]
+    assert len(set(rationales)) == 300, f"Expected 300 distinct rationales, got {len(set(rationales))}"
+
+    for item in receipt["reviewed_sample_items"]:
+        audit = item.get("item_verification_audit", {})
+        assert audit.get("query_norm_verified") is True
+        assert audit.get("vesum_morphology_verified") is True
+        assert audit.get("source_grounding_verified") is True
+        assert audit.get("chosen_rejected_pair_verified") is True
+        assert audit.get("zero_soviet_sum11_influence") is True
+        assert audit.get("held_out_firewall_verified") is True
 
     assert signoff["dataset_sha256"] == tmpl["dataset_sha256"]
     assert signoff["sample_seed"] == tmpl["sample_seed"]
