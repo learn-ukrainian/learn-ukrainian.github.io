@@ -341,12 +341,17 @@ def _run_state_scan_warmup(ctx: MonitorContext) -> None:
         logging.getLogger("state_router").warning("State scan warmup failed: %s", exc)
 
 
-def schedule_state_scan_warmup(ctx: MonitorContext) -> None:
-    """Detached warm for pipeline-versions + default weak-points (#7973)."""
+def schedule_state_scan_warmup(ctx: MonitorContext) -> threading.Thread:
+    """Detached warm for pipeline-versions + default weak-points (#7973).
+
+    Returns the warmup thread — the one started here, or the still-running one
+    from an earlier call (which may belong to a different ctx) — so callers can
+    join it instead of polling for effects (#8570).
+    """
     global _state_scan_warm_thread
     with _state_scan_warm_lock:
         if _state_scan_warm_thread is not None and _state_scan_warm_thread.is_alive():
-            return
+            return _state_scan_warm_thread
         worker = threading.Thread(
             target=_run_state_scan_warmup,
             args=(ctx,),
@@ -355,6 +360,7 @@ def schedule_state_scan_warmup(ctx: MonitorContext) -> None:
         )
         _state_scan_warm_thread = worker
         worker.start()
+        return worker
 
 
 def _validate_preparation_query(request: Request, allowed: set[str]) -> None:
