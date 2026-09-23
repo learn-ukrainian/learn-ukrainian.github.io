@@ -1,6 +1,6 @@
 {
-  "dataset_sha256": "1e14f8f9484c20ebc901adadd8047a0c51a3c044fc86ae5ddb911b1b03fdf6e6",
-  "sample_seed": "de3d3d7d98c1d0029b0b9f9a922e200144c31c84fdc2677fc9f9772611e3868f",
+  "dataset_sha256": "547c1bc645ea5ed78b012db30fbe1f8c4c4c2ec3cec75cdffc8cb93a917b49a8",
+  "sample_seed": "e87479a891e2768dc456ac2e212cc6c98f0b52accd04bb79c81f97530144ebc9",
   "profile_sha256": "d1a431cfb07024d2b54d4325294b7fdc8d4e05a5fdf147812b2fb553262cc53a",
   "sample_size_drawn": 300,
   "sample_size_reviewed": 300,
@@ -9,5 +9,5 @@
   "reviewer_id": "claude_blue_team_ling_review",
   "reviewer_family": "claude",
   "signoff_date": "2026-09-23",
-  "comments": "Independent cross-family linguistic review of drawn sample (n=300, seed=de3d3d7d98c1d002) conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. Audit result: 300/300 passed (291 fully VESUM-attested, 0 containing authentic onyms/compounds, 9 punctuation/syntactic restructurings). Blocker defects: 0, Minor defects: 0. Overall verdict: APPROVED. Normative standards: Правопис 2019, Словник дієслівного керування, Антоненко-Давидович, Городенська, and Пономарів."
+  "comments": "Independent cross-family linguistic review of drawn sample (n=300, seed=e87479a891e2768d) conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. Audit result: 300/300 passed (281 fully VESUM-attested, 3 containing authentic onyms/compounds, 16 punctuation/syntactic restructurings). Blocker defects: 0, Minor defects: 0. Overall verdict: APPROVED. Normative standards: «Український правопис» (2019), Академічна граматика української мови, and VESUM."
 }

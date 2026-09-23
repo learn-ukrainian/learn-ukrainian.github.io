@@ -80,10 +80,19 @@ def detokenize(text: str) -> str:
     # 0. Clean adjacent dashes and dash combos: e.g. "— -" -> "— "
     text = re.sub(r"[—–-]\s*[—–-]\s*", "— ", text)
     text = re.sub(r",\s*—\s*", ", — ", text)
+    # 0b. Clean hyphen-as-dash: replace space-hyphen-space and space-en-dash-space with standard em-dash
+    text = re.sub(r"\s+[-–]\s+", " — ", text)
+    text = re.sub(r"\s+—\s+", " — ", text)
+    # 0c. Clean bracket/brace artifacts: e.g. "–}", "—}", "-}"
+    text = re.sub(r"[—–-]\s*[\]\}\)]", "", text)
     # 1. Close spaces before punctuation: , . ! ? : ; % ) ] } » ”
     text = re.sub(r"\s+([,.\!?:;%\]\}\)»”])", r"\1", text)
     # 2. Close spaces after opening quotes/brackets: ( [ { « “
     text = re.sub(r"([(\[\{«“])\s+", r"\1", text)
+    # 2b. Close spaces inside straight quotes: " word -> "word, word " -> word"
+    text = re.sub(r'(^|[\s(])"\s+([а-яіїєґА-ЯІЇЄҐ\w])', r'\1"\2', text)
+    text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])\s+"([\s,.\!?:;)]|$)', r'\1"\2', text)
+    text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])"([а-яіїєґА-ЯІЇЄҐ\w])', r'\1" \2', text)
     # 3. Handle comma immediately before opening parenthesis: e.g. ", (" -> " ("
     text = re.sub(r",\s*\(", " (", text)
     # 4. Handle hyphenated compounds: e.g. "Санта - Круз" -> "Санта-Круз"
@@ -92,9 +101,10 @@ def detokenize(text: str) -> str:
     text = re.sub(r"(\d+),\s+(\d+)", r"\1,\2", text)
     # 6. Handle ellipses like . . . -> ...
     text = re.sub(r"\.\s+\.\s+\.", "...", text)
-    # 7. Handle apostrophes
-    text = re.sub(r"([’ʼ\x27])\s+", r"\1", text)
-    text = re.sub(r"\s+([’ʼ\x27])", r"\1", text)
+    # 7. Normalize all apostrophe variants to standard ASCII '
+    text = re.sub(r"[’ʼ‘`´ʹ‛\x27]", "'", text)
+    text = re.sub(r"'\s+", "'", text)
+    text = re.sub(r"\s+'", "'", text)
     return text.strip()
 
 
@@ -122,6 +132,7 @@ RUSSIANISM_PATTERNS = [
     r"\bчитаюч\w*\b",
     r"\bпрацююч\w*\b",
     r"\bзвисаюч\w*\b",
+    r"\bпідстрибуюч\w*\b",
     r"\bпроводжаюч\w*\b",
     r"\bпровожа\w*\b",
     r"\bрефлекту\w*\b",
@@ -152,12 +163,92 @@ RUSSIANISM_PATTERNS = [
     r"\b[ву]\s+метрі\b",
     r"\bпотрібні,\s*цікаві\b",
     r"\bрішучесхаменув\w*\b",
+    r"\bпо\s+лиці\b",
+    r"\bвідміти(?:ти|в|ла|ли|мо|те|ть|всь|лася)\b",
+    r"\bпокращува\w*\b",
+    r"\b[ву]\s+деяк\w*\s+мір\w*\b",
+    r"\b[ву]\s+сам(?:ої|ого)\s+[А-ЯІЇЄҐ]\w*\b",
+    r"\b[ву]\s+самої\b",
+    r"\bбрав\s+курс\w*\b",
+    r"\bбрати\s+курс\w*\b",
+    r"\b(?:[тм]рах|[їі]б|ху[йї]|пизд|бля[дт]|єбат|єбан|потрах)\w*\b",
+    r"\bто\s+[а-яіїєґ]+(?:ша|ший|ше|ші)\b",
+    r"\bтому\s+що\s+[а-яіїєґ\w\s]+,\s*то\b",
+    r"\bодне\s+від\s+одного\b",
+    r"\bпро\s+терен[а-яіїєґ\s,]+мудра\s+притча\b",
+    r"\bмалюнку\b",
+    r"\bзупинімося\b",
+    r"\bзупинімось\b",
+    r"\bборотьб\w*\s+(?!з\b|проти\b|за\b|між\b)[а-яіїєґ]+(?:ом|ем|ям|ою|ею|ями|ами|ях|ах|у|ю|і)\b",
+    r"\bщоб\s+(?:повністю|зовсім|дуже|абсолютно)\s+[а-яіїєґ]+(?:ння|ття)\b",
 ]
 
+ACTIVE_PARTICIPLE_EXCEPTIONS = {
+    "гарячий", "гаряча", "гаряче", "гарячі", "гарячого", "гарячій", "гарячим", "гарячих", "гарячими", "гарячу",
+    "дрімучий", "дрімуча", "дрімуче", "дрімучі", "дрімучого", "дрімучій", "дрімучим", "дрімучих", "дрімучими", "дрімучу",
+    "родючий", "родюча", "родюче", "родючі", "родючого", "родючій", "родючим", "родючих", "родючими", "родючу",
+    "живлючий", "живлюча", "живлюче", "живлючі", "живлючого", "живлючій", "живлючим", "живлючих", "живлючими", "живлючу",
+    "могутній", "могутня", "могутнє", "могутні",
+    "терплячий", "терпляча", "терпляче", "терплячі", "терплячого", "терплячій", "терплячим", "терплячих", "терплячими", "терплячу",
+    "балакучий", "балакуча", "балакуче", "балакучі",
+    "колючий", "колюча", "колюче", "колючі",
+    "пахучий", "пахуча", "пахуче", "пахучі",
+    "пекучий", "пекуча", "пекуче", "пекучі",
+    "лежачий", "лежача", "лежаче", "лежачі",
+    "сидячий", "сидяча", "сидяче", "сидячі",
+    "стоячий", "стояча", "стояче", "стоячі",
+    "ходячий", "ходяча", "ходяче", "ходячі",
+    "висячий", "висяча", "висяче", "висячі",
+    "невмирущий", "невмируща", "невмируще", "невмирущі",
+    "болючий", "болюча", "болюче", "болючі",
+    "блискучий", "блискуча", "блискуче", "блискучі",
+    "нетямущий", "тямущий", "значущий", "значуща", "значуще", "значущі",
+}
 
-def has_russianism(text: str) -> bool:
-    """Check for obvious Russianisms, Sovietisms, or vulgar slang."""
-    return any(re.search(pat, text, re.IGNORECASE) for pat in RUSSIANISM_PATTERNS)
+
+_VESUM_CONN: sqlite3.Connection | None = None
+
+
+def _get_vesum_cur() -> sqlite3.Cursor | None:
+    global _VESUM_CONN
+    if _VESUM_CONN is None:
+        db_path = PROJECT_ROOT / "data" / "vesum.db"
+        if db_path.is_file():
+            try:
+                _VESUM_CONN = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            except Exception:
+                _VESUM_CONN = None
+    return _VESUM_CONN.cursor() if _VESUM_CONN is not None else None
+
+
+def has_active_participle(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool:
+    """Detect non-normative present active participles (-учий, -ючий, -ачий, -ячий)."""
+    cur = vesum_cur or _get_vesum_cur()
+    matches = re.findall(
+        r"\b[а-яіїєґА-ЯІЇЄҐ]+(?:уч|юч|ач|яч)(?:ий|ого|ому|им|ім|а|ої|ій|у|ою|е|і|их|ими)\b",
+        text,
+        re.IGNORECASE,
+    )
+    for m in matches:
+        low = m.lower()
+        if low in ACTIVE_PARTICIPLE_EXCEPTIONS:
+            continue
+        if cur is not None:
+            rows = cur.execute("SELECT tags FROM forms_all WHERE word_form = ?", (low,)).fetchall()
+            if any("actv" in r[0] for r in rows):
+                return True
+            if rows and all("actv" not in r[0] for r in rows):
+                continue
+        if not any(low.startswith(p) for p in ("дит", "хлоп", "дівч", "собач", "теляч", "куряч", "котяч", "пташ", "жаб")):
+            return True
+    return False
+
+
+def has_russianism(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool:
+    """Check for obvious Russianisms, Sovietisms, vulgar slang, or active participles."""
+    if any(re.search(pat, text, re.IGNORECASE) for pat in RUSSIANISM_PATTERNS):
+        return True
+    return has_active_participle(text, vesum_cur=vesum_cur)
 
 
 def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool:
@@ -168,11 +259,29 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # Sentence must start with capital letter or quote + capital letter
     if not (s_strip[0].isupper() or (s_strip[0] in '«"“' and len(s_strip) > 1 and s_strip[1].isupper())):
         return False
-    # Strictly Cyrillic: reject any Latin characters in controls
+    # Strictly Cyrillic: zero Latin characters in controls
     if re.search(r"[a-zA-Z]", text):
+        return False
+    # Reject math symbols or special characters
+    if any(c in text for c in "<>~=@#$^&*_+"):
+        return False
+    # Reject non-standard or curly apostrophes
+    if re.search(r"[’ʼ‘`´ʹ‛]", text):
         return False
     # Reject emojis or unusual symbols
     if any(unicodedata.category(c) == "So" for c in text):
+        return False
+    # Reject editorial brackets/braces/ellipses: e.g. [...] or stray { } [ ]
+    if re.search(r"\[\s*[\.…]+\s*\]", text) or any(c in text for c in "{}[]"):
+        return False
+    # Reject mixed dashes (both en-dash and em-dash in same text)
+    if "–" in text and "—" in text:
+        return False
+    # Reject hyphen used as dash
+    if re.search(r"\s+-\s+", text):
+        return False
+    # Reject 'їх' before nouns as possessive
+    if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
     words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", text)
     # Reject short fragments, isolated words, or titles
@@ -212,7 +321,7 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     if re.search(r",\s*\(", text):
         return False
     # Reject Russianisms / slang
-    if has_russianism(text):
+    if has_russianism(text, vesum_cur=vesum_cur):
         return False
     # Reject doubled words and 2-word repeated sequences
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", text, re.IGNORECASE):
@@ -222,12 +331,23 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
 
     # Verify finite verb / copula presence and 100% VESUM attestation of all words
     if vesum_cur is not None:
+        # Reject 'їх' followed by noun or adjective (Russian possessive usage)
+        for m in re.finditer(r"\bїх\s+([а-яіїєґА-ЯІЇЄҐ'-]+)", text, re.IGNORECASE):
+            next_w = m.group(1).lower().strip("-'")
+            res = vesum_cur.execute(
+                "SELECT pos FROM forms_all WHERE word_form IN (?, ?, ?)",
+                (next_w, next_w.capitalize(), next_w.upper()),
+            ).fetchall()
+            if any(r[0] in ("noun", "adj") for r in res):
+                return False
+
         ctrl_words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w) for w in text.split()]
-        ctrl_words = [w.strip("-") for w in ctrl_words if w and w != "-"]
-        has_verb_or_copula = any(
-            w in {"є", "був", "була", "було", "були", "буде", "будуть", "нема", "немає"}
-            for w in ctrl_words
-        )
+        ctrl_words = [w.strip("-'") for w in ctrl_words if w and w not in {"-", "'"}]
+        predicative_words = {
+            "є", "був", "була", "було", "були", "буде", "будуть", "нема", "немає",
+            "це", "можна", "треба", "потрібно", "варто", "слід", "необхідно"
+        }
+        has_verb_or_copula = any(w in predicative_words for w in ctrl_words) or ("—" in text)
         for w in ctrl_words:
             if w.isdigit():
                 continue
@@ -252,6 +372,20 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
                 has_verb_or_copula = True
         if not has_verb_or_copula:
             return False
+
+        # Main clause verb check: verify sentence isn't just a verbless fragment with a subordinate clause
+        main_part = re.split(r",\s*(?:що|як[иіае]|де|коли|куди|звідки)\b", text, maxsplit=1, flags=re.IGNORECASE)[0]
+        main_words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w).strip("-'").lower() for w in main_part.split()]
+        main_words = [w for w in main_words if w and not w.isdigit()]
+        main_has_verb = any(w in predicative_words for w in main_words) or ("—" in main_part and len(main_words) >= 3)
+        if not main_has_verb:
+            for mw in main_words:
+                if vesum_cur.execute("SELECT 1 FROM forms_all WHERE word_form = ? AND pos = 'verb' LIMIT 1", (mw,)).fetchone():
+                    main_has_verb = True
+                    break
+        if not main_has_verb:
+            return False
+
     return True
 
 
@@ -280,15 +414,28 @@ def is_valid_candidate(
     # No URLs
     if re.search(r"https?://", orig_text) or re.search(r"https?://", corr_text):
         return False
-    # Latin character share <= 5%
-    cyr = len(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]", corr_text))
-    lat = len(re.findall(r"[a-zA-Z]", corr_text))
-    if lat > 0 and (lat / max(1, cyr + lat)) > 0.05:
+    # Strictly Cyrillic: zero Latin characters in original and corrected texts
+    if re.search(r"[a-zA-Z]", corr_text) or re.search(r"[a-zA-Z]", orig_text):
+        return False
+    # Reject math symbols or special characters
+    if any(c in corr_text for c in "<>~=@#$^&*_+") or any(c in orig_text for c in "<>~=@#$^&*_+"):
+        return False
+    # Reject non-standard or curly apostrophes
+    if re.search(r"[’ʼ‘`´ʹ‛]", corr_text) or re.search(r"[’ʼ‘`´ʹ‛]", orig_text):
         return False
     # Reject emojis
     if any(unicodedata.category(c) == "So" for c in corr_text) or any(
         unicodedata.category(c) == "So" for c in orig_text
     ):
+        return False
+    # Reject braces / brackets / editorial artifacts: e.g. "–}" or "{" or "}"
+    if any(c in corr_text for c in "{}[]") or any(c in orig_text for c in "{}[]"):
+        return False
+    # Reject mixed dashes (en and em dashes in same text)
+    if ("–" in corr_text and "—" in corr_text) or ("–" in orig_text and "—" in orig_text):
+        return False
+    # Reject hyphen-as-dash
+    if re.search(r"\s+-\s+", corr_text) or re.search(r"\s+-\s+", orig_text):
         return False
     # Reject triple repeated letters
     if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", orig_text, re.IGNORECASE) or re.search(
@@ -318,13 +465,86 @@ def is_valid_candidate(
     if len(re.findall(r"\bне\b", orig_text.lower())) != len(re.findall(r"\bне\b", corr_text.lower())):
         return False
 
-    # Reject wholesale essay rewrites where changed token share > 18% or > 3 changed words
+    # Check for pronoun / gender substitution without context
+    o_low = orig_text.lower()
+    c_low = corr_text.lower()
+    if (re.search(r"\bвін\b", o_low) and re.search(r"\bвона\b", c_low)) or (
+        re.search(r"\bвона\b", o_low) and re.search(r"\bвін\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bйого\b", o_low) and re.search(r"\bїї\b", c_low)) or (
+        re.search(r"\bїї\b", o_low) and re.search(r"\bйого\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bйому\b", o_low) and re.search(r"\bїй\b", c_low)) or (
+        re.search(r"\bїй\b", o_low) and re.search(r"\bйому\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bним\b", o_low) and re.search(r"\bнею\b", c_low)) or (
+        re.search(r"\bнею\b", o_low) and re.search(r"\bним\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bньому\b", o_low) and re.search(r"\bній\b", c_low)) or (
+        re.search(r"\bній\b", o_low) and re.search(r"\bньому\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bвона\b", o_low) and not re.search(r"\bвона\b", c_low)) or (
+        re.search(r"\bвін\b", o_low) and not re.search(r"\bвін\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bя\s+[а-яіїєґ]+ла\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+[вв]\b", c_low)) or (
+        re.search(r"\bя\s+[а-яіїєґ]+[вв]\b", o_low) and re.search(r"\bя\s+[а-яіїєґ]+ла\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bя\s+була\b", o_low) and re.search(r"\bя\s+(?:був|знав)\b", c_low)) or (
+        re.search(r"\bя\s+був\b", o_low) and re.search(r"\bя\s+(?:була|знала)\b", c_low)
+    ):
+        return False
+    if re.search(r"\bможе\b", o_low) and re.search(r"\bможу\b", c_low):
+        return False
+    if (re.search(r"\bви\b", o_low) and re.search(r"\bти\b", c_low)) or (
+        re.search(r"\bти\b", o_low) and re.search(r"\bви\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bвас\b", o_low) and re.search(r"\bтебе\b", c_low)) or (
+        re.search(r"\bтебе\b", o_low) and re.search(r"\bвас\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bвам\b", o_low) and re.search(r"\bтобі\b", c_low)) or (
+        re.search(r"\bтобі\b", o_low) and re.search(r"\bвам\b", c_low)
+    ):
+        return False
+    if (re.search(r"\bвами\b", o_low) and re.search(r"\bтобою\b", c_low)) or (
+        re.search(r"\bтобою\b", o_low) and re.search(r"\bвами\b", c_low)
+    ):
+        return False
+
+    # Correlative "чим..., тим...": reject changing чим or тим
+    if re.search(r"\bчим\b", o_low) and re.search(r"\bтим\b", o_low) and not (re.search(r"\bчим\b", c_low) and re.search(r"\bтим\b", c_low)):
+        return False
+
+    # Reject unwarranted lexical swaps
+    if re.search(r"\bнасос\w*\b", o_low) and re.search(r"\bпомп\w*\b", c_low):
+        return False
+    if re.search(r"\bодин\s+від\s+одного\b", o_low) and re.search(r"\bодне\s+від\s+одного\b", c_low):
+        return False
+    if re.search(r"\bчерез\s+тиждень\b", o_low) and re.search(r"\bза\s+тиждень\b", c_low):
+        return False
+    if re.search(r"\bдоктор\w*\b", o_low) and re.search(r"\bлікар\w*\b", c_low):
+        return False
+    if ("зупинімося" in o_low and "зупинімось" in c_low) or ("зупинімось" in o_low and "зупинімося" in c_low):
+        return False
+    # Reject unpaired comma after relative pronoun
+    if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
+        return False
+
+    # Reject wholesale essay rewrites where changed token share > 30%
     w1 = re.findall(r"\w+", orig_text.lower())
     w2 = re.findall(r"\w+", corr_text.lower())
     if not w1 or not w2:
         return False
     sm = difflib.SequenceMatcher(None, w1, w2)
-    if sm.ratio() < 0.70:
+    if sm.ratio() < 0.65:
         return False
     matched = sum(block.size for block in sm.get_matching_blocks())
     changed_words = max(len(w1), len(w2)) - matched
@@ -339,6 +559,9 @@ def is_valid_candidate(
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
         return False
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']+\s+[а-яіїєґА-ЯІЇЄҐ']+)\s+\1\b", corr_text, re.IGNORECASE):
+        return False
+    # Reject repeated word separated by a single intervening word: e.g. "приносять саме приносять"
+    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']{3,})\s+\S+\s+\1\b", corr_text, re.IGNORECASE):
         return False
 
     # Reject adjacent stem repetition (e.g. з'явилася з'явила)
@@ -356,13 +579,14 @@ def is_valid_candidate(
         return False
 
     # Reject Russianisms in orig_text and corr_text
-    if has_russianism(corr_text) or has_russianism(orig_text):
+    if has_russianism(corr_text, vesum_cur=vesum_cur) or has_russianism(orig_text, vesum_cur=vesum_cur):
         return False
 
     # Check ALL lowercase words in corr_text against VESUM
     if vesum_cur is not None:
-        for w in words:
-            if "-" in w or w[0].isupper() or len(w) <= 2:
+        words_c = re.findall(r"\b[\w'-]+\b", corr_text)
+        for w in words_c:
+            if "-" in w or w.isupper() or w[0].isupper() or len(w) <= 2:
                 continue
             row = vesum_cur.execute(
                 "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
@@ -719,8 +943,8 @@ def build_grammar_dataset(
                 )
                 primary_edit = sorted_in_scope[0]
                 primary_tag = primary_edit[2]
-                err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]])
-                repl_span = primary_edit[3]
+                err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
+                repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
 
                 eval_corrections.append(
@@ -841,8 +1065,8 @@ def build_grammar_dataset(
                 )
                 primary_edit = sorted_in_scope[0]
                 primary_tag = primary_edit[2]
-                err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]])
-                repl_span = primary_edit[3]
+                err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
+                repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
 
                 train_corrections.append(

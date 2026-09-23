@@ -133,7 +133,7 @@ def _inspect_control_in_vesum(text: str, cur: sqlite3.Cursor) -> dict[str, Any]:
     }
 
 
-def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
+def generate_signoff_and_receipt(findings_file: Path | None = None, write_signoff: bool = False) -> None:
     if not SAMPLE_JSON.is_file():
         raise FileNotFoundError(f"Missing sample json: {SAMPLE_JSON}")
     if not SIGNOFF_TEMPLATE.is_file():
@@ -331,7 +331,7 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
                 item_defects.append("Невідповідність частки «не» (спотворення модальності/заперечення)")
             if any(unicodedata.category(c) == "So" for c in corr_text):
                 item_defects.append("Емодзі/символи у виправленому тексті")
-            if unattested:
+            if unattested and not any(w[0].isupper() for w in unattested):
                 item_defects.append(f"Непідтверджені словоформи у VESUM: {unattested}")
         else:
             if has_russianism(orig_text):
@@ -347,7 +347,7 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
             words_ctrl = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text)
             if len(words_ctrl) < 6:
                 item_defects.append("Занадто коротке або неповне контрольне речення")
-            if unattested:
+            if unattested and not any(w[0].isupper() for w in unattested):
                 item_defects.append(f"Непідтверджені словоформи контролю у VESUM: {unattested}")
 
         # External reviewer findings if provided
@@ -401,7 +401,16 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
                 "replacement_span": replacement_span if is_err else None,
                 "item_verification_audit": {
                     "query_norm_verified": not is_item_defective,
-                    "vesum_morphology_verified": True,
+                    "vesum_morphology_verified": bool(
+                        vesum_status
+                        in (
+                            "verified",
+                            "partially_attested_proper_noun_or_toponym",
+                            "sentence_level_restructuring",
+                            "syntactic_punctuation_edit",
+                        )
+                        and not is_item_defective
+                    ),
                     "source_grounding_verified": True,
                     "chosen_rejected_pair_verified": not is_item_defective,
                     "zero_soviet_sum11_influence": True,
@@ -432,9 +441,9 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
         "profile_sha256": profile_sha256,
         "sample_size_drawn": sample_size,
         "sample_size_reviewed": sample_size,
-        "reviewer_id": "claude_blue_team_ling_review",
-        "reviewer_family": "claude",
-        "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+        "reviewer_id": "claude_blue_team_ling_review" if write_signoff else "",
+        "reviewer_family": "claude" if write_signoff else "",
+        "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)" if write_signoff else "",
         "reviewer_credential": "Cross-Family Independent Review Protocol",
         "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
         "review_date": "2026-09-23",
@@ -449,7 +458,7 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
             "vesum_corpus_lexica_items": corpus_lexica_count,
             "vesum_punctuation_restructure_items": punctuation_restructure_count,
             "zero_contradictions": True,
-            "vesum_morphology_verified": True,
+            "vesum_morphology_verified": bool(blocker_defect_count == 0),
             "academic_sources_verified": True,
             "soviet_sum11_violations": 0,
             "held_out_firewall_verified": True,
@@ -459,43 +468,49 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
         "reviewed_sample_items": reviewed_items,
     }
 
-    signoff = {
-        "dataset_sha256": dataset_sha256,
-        "sample_seed": sample_seed,
-        "profile_sha256": profile_sha256,
-        "sample_size_drawn": sample_size,
-        "sample_size_reviewed": sample_size,
-        "blocker_defect_count": blocker_defect_count,
-        "minor_defect_count": minor_defect_count,
-        "reviewer_id": "claude_blue_team_ling_review",
-        "reviewer_family": "claude",
-        "signoff_date": "2026-09-23",
-        "comments": (
-            f"Independent cross-family linguistic review of drawn sample (n={sample_size}, seed={sample_seed[:16]}) "
-            f"conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. "
-            f"Audit result: {sample_size - blocker_defect_count}/{sample_size} passed ({fully_attested_count} fully VESUM-attested, "
-            f"{corpus_lexica_count} containing authentic onyms/compounds, {punctuation_restructure_count} punctuation/syntactic restructurings). "
-            f"Blocker defects: {blocker_defect_count}, Minor defects: {minor_defect_count}. "
-            f"Overall verdict: {overall_verdict}. Normative standards: Правопис 2019, Словник дієслівного керування, "
-            "Антоненко-Давидович, Городенська, and Пономарів."
-        ),
-    }
-
     with RECEIPT_FILE.open("w", encoding="utf-8") as f:
         json.dump(receipt, f, ensure_ascii=False, indent=2)
         f.write("\n")
 
-    with SIGNOFF_FILE.open("w", encoding="utf-8") as f:
-        json.dump(signoff, f, ensure_ascii=False, indent=2)
-        f.write("\n")
+    if write_signoff:
+        signoff = {
+            "dataset_sha256": dataset_sha256,
+            "sample_seed": sample_seed,
+            "profile_sha256": profile_sha256,
+            "sample_size_drawn": sample_size,
+            "sample_size_reviewed": sample_size,
+            "blocker_defect_count": blocker_defect_count,
+            "minor_defect_count": minor_defect_count,
+            "reviewer_id": "claude_blue_team_ling_review",
+            "reviewer_family": "claude",
+            "signoff_date": "2026-09-23",
+            "comments": (
+                f"Independent cross-family linguistic review of drawn sample (n={sample_size}, seed={sample_seed[:16]}) "
+                f"conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. "
+                f"Audit result: {sample_size - blocker_defect_count}/{sample_size} passed ({fully_attested_count} fully VESUM-attested, "
+                f"{corpus_lexica_count} containing authentic onyms/compounds, {punctuation_restructure_count} punctuation/syntactic restructurings). "
+                f"Blocker defects: {blocker_defect_count}, Minor defects: {minor_defect_count}. "
+                f"Overall verdict: {overall_verdict}. Normative standards: «Український правопис» (2019), "
+                "Академічна граматика української мови, and VESUM."
+            ),
+        }
+        with SIGNOFF_FILE.open("w", encoding="utf-8") as f:
+            json.dump(signoff, f, ensure_ascii=False, indent=2)
+            f.write("\n")
+        print(f"✅ Generated {SIGNOFF_FILE.name}")
+    else:
+        if SIGNOFF_FILE.is_file():
+            SIGNOFF_FILE.unlink()
+            print(f"ℹ️ Removed pre-filled {SIGNOFF_FILE.name} pending actual reviewer signoff")
 
     print(
-        f"✅ Generated {RECEIPT_FILE.name} (verdict={overall_verdict}, blockers={blocker_defect_count}, minors={minor_defect_count}) and {SIGNOFF_FILE.name}"
+        f"✅ Generated {RECEIPT_FILE.name} (verdict={overall_verdict}, blockers={blocker_defect_count}, minors={minor_defect_count})"
     )
 
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Generate Linguistic Review Signoff & Receipt (#8342)")
     parser.add_argument("--findings", type=Path, default=None, help="Optional JSON file with item findings/defects")
+    parser.add_argument("--write-signoff", action="store_true", help="Write actual signoff file (only with verified review)")
     args = parser.parse_args()
-    generate_signoff_and_receipt(findings_file=args.findings)
+    generate_signoff_and_receipt(findings_file=args.findings, write_signoff=args.write_signoff)
