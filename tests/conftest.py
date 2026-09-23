@@ -24,6 +24,75 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
+
+def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[int, bool]:
+    """Return the size of a tree without following symlinks.
+
+    When a budget is supplied, stop as soon as the measured size exceeds it.
+    The boolean reports that the walk stopped early, so callers do not present
+    a lower bound as an exact size.
+    """
+    size = 0
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        with os.scandir(directory) as entries:
+            for entry in entries:
+                try:
+                    if entry.is_dir(follow_symlinks=False):
+                        pending.append(Path(entry.path))
+                    else:
+                        file_stat = entry.stat(follow_symlinks=False)
+                        size += getattr(file_stat, "st_blocks", 0) * 512 or file_stat.st_size
+                except FileNotFoundError:
+                    # A test may have removed a temp file while the walk ran.
+                    continue
+                if stop_after_bytes is not None and size > stop_after_bytes:
+                    return size, True
+    return size, False
+
+
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    """Report this session's temp usage and optionally enforce a CI budget."""
+    config = session.config
+    if hasattr(config, "workerinput"):
+        return
+
+    tmp_path_factory = getattr(config, "_tmp_path_factory", None)
+    if tmp_path_factory is None:
+        return
+    basetemp = tmp_path_factory.getbasetemp()
+    budget_value = os.environ.get("LU_PYTEST_TMP_BUDGET_GB")
+    budget_bytes: int | None = None
+    if budget_value is not None:
+        try:
+            budget_gb = float(budget_value)
+            if not (budget_gb >= 0 and budget_gb < float("inf")):
+                raise ValueError
+            budget_bytes = int(budget_gb * 1024**3)
+        except ValueError:
+            print(f"pytest-tmp: invalid LU_PYTEST_TMP_BUDGET_GB={budget_value!r}")
+            session.exitstatus = pytest.ExitCode.TESTS_FAILED
+            return
+
+    try:
+        size, stopped_early = _pytest_tmp_size(basetemp, budget_bytes)
+    except OSError as error:
+        print(f"pytest-tmp: unable to measure {basetemp}: {error}")
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+        return
+
+    size_gb = size / 1024**3
+    reported_size = f"at least {size:,} bytes (walk stopped at budget)" if stopped_early else f"{size_gb:.2f} GB"
+    print(f"pytest-tmp: {reported_size} in {basetemp}")
+    if budget_bytes is not None and size > budget_bytes:
+        print(
+            f"pytest-tmp: session temp size exceeded LU_PYTEST_TMP_BUDGET_GB={budget_value} "
+            f"({budget_bytes / 1024**3:.2f} GB)"
+        )
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
+
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
 # =============================================================================
@@ -195,9 +264,7 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv(
-        "LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json")
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
 
 
 @pytest.fixture(autouse=True)
@@ -452,10 +519,7 @@ def sparse_missing_tree_skip_reason(
     needed = _trees_needed_by_test(normalized, item_name)
     for tree in ("data/projects", "data/lexicon"):
         if tree in missing_trees and tree in needed:
-            return (
-                f"{tree} is absent from this sparse worktree; "
-                f"re-include it with --sparse-include {tree}"
-            )
+            return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
     return None
 
 
@@ -655,11 +719,7 @@ def _is_fixture(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[bool, bool]
         autouse = False
         if call is not None:
             for keyword in call.keywords:
-                if (
-                    keyword.arg == "autouse"
-                    and isinstance(keyword.value, ast.Constant)
-                    and keyword.value.value is True
-                ):
+                if keyword.arg == "autouse" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
                     autouse = True
         return True, autouse
     return False, False
@@ -811,9 +871,7 @@ def _analyze_test_module(
         if autouse:
             module_trees.update(direct.get(name, ()))
 
-    function_trees = tuple(
-        (name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees
-    )
+    function_trees = tuple((name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees)
     return frozenset(module_trees), function_trees
 
 

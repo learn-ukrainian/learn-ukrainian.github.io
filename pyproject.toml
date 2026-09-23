@@ -13,6 +13,9 @@ python_functions = ["test_*"]
 timeout = 120
 timeout_method = "thread"
 faulthandler_timeout = 110
+# Retain only failures so large successful temp sessions do not accumulate (#8572).
+tmp_path_retention_policy = "failed"
+tmp_path_retention_count = 1
 # atlas_release is publish-time only (requires data/atlas.db); run explicitly with -m atlas_release
 addopts = "-v --tb=short -m 'not atlas_release'"
 filterwarnings = [
