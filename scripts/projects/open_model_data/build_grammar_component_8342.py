@@ -486,6 +486,25 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r"\b(?:скоріше|швидше)\s+за\s+все\b", text, re.IGNORECASE):
         return False
+    # Claude R12 control defects
+    if re.search(r"\b[ву]\s+той\s+же\s+час\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b[Бб]ільш\s+того\b", text):
+        return False
+    if re.search(r"\bпри\s+як\w+\s+кожен\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bмає\s+місце\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bу\s+сфері\s+обслуговування,\s+ІТ-технологій\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bсудорожн\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bоправданн\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bвідтопирен\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bтрясця\s+його\s+матері\b", text, re.IGNORECASE):
+        return False
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -1002,7 +1021,7 @@ def is_valid_candidate(
         return False
     if re.search(r"\bрічка\s+бігла\s+швидко\b", o_low) and re.search(r"\bвода\s+у\s+річці\b", c_low):
         return False
-    if re.search(r"\bБідл\s+сказав\b", c_low) or "Бідл" in orig_text:
+    if re.search(r"\bбідл\s+сказав\b", c_low) or "Бідл" in orig_text:
         return False
     if re.search(r"\bінкрустован\w*\s+дрібними\s+діамантами\b", c_low) or re.search(r"\bгодинник\w*,\s*інкрустован\w*\b", c_low):
         return False
@@ -1030,7 +1049,7 @@ def is_valid_candidate(
         return False
     if re.search(r"\bкаже\s+бай-бай\b", c_low):
         return False
-    if re.search(r"\bКоролівсьво\w*\b", c_low):
+    if re.search(r"\bкоролівсьво\w*\b", c_low):
         return False
     if re.search(r"\bПигарев\b", corr_text):
         return False
@@ -1064,7 +1083,7 @@ def is_valid_candidate(
     # Claude R9: Meaning changed or content invented
     if re.search(r"\bісторики\s+фіксували\s+на\s+території\b", c_low) or re.search(r"\bявище\s+колабораціонізму\b", o_low):
         return False
-    if re.search(r"\bАзіз\s+Санзар\b", o_low) or re.search(r"\bСанджар\b", o_low):
+    if re.search(r"\bазіз\s+санзар\b", o_low) or re.search(r"\bсанджар\b", o_low):
         return False
     if "максимум" in o_low and re.search(r"\bщонайменше\s+наполовину\b", c_low):
         return False
@@ -1074,7 +1093,7 @@ def is_valid_candidate(
         return False
     if re.search(r"\b[Яя]кщо\s+ввімкнути\s+режим\b", corr_text):
         return False
-    if re.search(r"\bстиснут\w*\s+Паш\w*\b", c_low) or re.search(r"\bна\s+чиємусь\s+тулуп\w*\b", c_low):
+    if re.search(r"\bстиснут\w*\s+паш\w*\b", c_low) or re.search(r"\bна\s+чиємусь\s+тулуп\w*\b", c_low):
         return False
     if "дубинк" in o_low and re.search(r"\bпалиц\w*\b", c_low):
         return False
@@ -1104,7 +1123,7 @@ def is_valid_candidate(
         return False
     if re.search(r"\bгодини\s+з\s+чотири\b", c_low) or re.search(r"\b[Мм]орочився\s+він\b", c_low):
         return False
-    if re.search(r"\bБудуть\s+цікаві\s+ваші\s+варіанти\b", c_low):
+    if re.search(r"\bбудуть\s+цікаві\s+ваші\s+варіанти\b", c_low):
         return False
     if re.search(r"\bще\s+трохи\s+часу\s+і\s+на\s+піку\b", c_low):
         return False
@@ -1134,13 +1153,13 @@ def is_valid_candidate(
         return False
     if re.search(r"\bторкаючись\s+футляр\w*\b", o_low):
         return False
-    if re.search(r"\bПротестантськ\w*\b", o_low):
+    if re.search(r"\bпротестантськ\w*\b", o_low):
         return False
 
     # Claude R10: Morphology, agreement, and case government defects
     if re.search(r"\bпри\s+сталих\s+[а-яіїєґ]+\s+та\s+[а-яіїєґ]+и\b", c_low) or re.search(r"\bпри\s+сталих\s+тиску\b", c_low):
         return False
-    if re.search(r"\bпро\s+.*Понті\w+\s+Пілат\w*\b", c_low):
+    if re.search(r"\bпро\s+.*понті\w+\s+пілат\w*\b", c_low):
         return False
     if re.search(r"\bщо\s+їхн[яійєі]\s+(?:незліченна\s+)?кількість\b", c_low):
         return False
@@ -1186,7 +1205,8 @@ def is_valid_candidate(
         return False
 
     # Claude R10: Category F Valid-to-valid swaps & Self-contradictions
-    if re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\s+[а-яіїєґ]+ти\b", o_low) and not re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\b", c_low) and re.search(r"\b[а-яіїєґ]+(?:тиму|тимеш|тиме|тимемо|тимете|тимуть)\b", c_low):
+    if re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+){0,2}\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+ти(?:ся|сь)?\b", o_low) and \
+       re.search(r"\b[а-яіїєґА-ЯІЇЄҐ\x27-]+тим(?:у|еш|е|емо|ете|уть)(?:ться|ся|сь)?\b", c_low):
         return False
     if re.search(r"\b(?:читається\s+та\s+обговорюється|цінується|сприймалися\s+представниками|створювалась\s+різниця|вимірювався\s+струм|закладалися\s+їх|контролюється\s+комп['\’]?ютером)\b", o_low):
         return False
@@ -1242,7 +1262,7 @@ def is_valid_candidate(
         return False
 
     # Claude R11 Section A Grammar Defects
-    if re.search(r"\bпаралельн\w*\s+Малої\s+Бронної\b", c_low):
+    if re.search(r"\bпаралельн\w*\s+малої\s+бронної\b", c_low):
         return False
     if re.search(r"\bїхні\s+велич\b", c_low):
         return False
@@ -1272,7 +1292,7 @@ def is_valid_candidate(
         return False
     if re.search(r"\bзробленим\s+воно\s+буде\b", o_low):
         return False
-    if re.search(r"\bСтарий\s+добрий\s+Боб\b", o_low) and re.search(r"\bБобе\b", c_low):
+    if re.search(r"\bстарий\s+добрий\s+боб\b", o_low) and re.search(r"\bбобе\b", c_low):
         return False
     if re.search(r"\bрозревіл\w*\b", o_low) and re.search(r"\bрозрюмсал\w*\b", c_low):
         return False
@@ -1286,10 +1306,12 @@ def is_valid_candidate(
         return False
 
     # Claude R11 Section C Category F general gates
-    # Future tense analytic vs synthetic
-    if re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\s+[а-яіїєґА-ЯІЇЄҐ'-]+ти\b", o_low) and re.search(r"\b[а-яіїєґА-ЯІЇЄҐ'-]+тим(?:у|еш|е|емо|ете|уть)\b", c_low):
+    # Future tense analytic vs synthetic (including reflexives and intervening words)
+    if re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+){0,2}\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+ти(?:ся|сь)?\b", o_low) and \
+       re.search(r"\b[а-яіїєґА-ЯІЇЄҐ\x27-]+тим(?:у|еш|е|емо|ете|уть)(?:ться|ся|сь)?\b", c_low):
         return False
-    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ'-]+тим(?:у|еш|е|емо|ете|уть)\b", o_low) and re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\s+[а-яіїєґА-ЯІЇЄҐ'-]+ти\b", c_low):
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ\x27-]+тим(?:у|еш|е|емо|ете|уть)(?:ться|ся|сь)?\b", o_low) and \
+       re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)(?:\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+){0,2}\s+[а-яіїєґА-ЯІЇЄҐ\x27-]+ти(?:ся|сь)?\b", c_low):
         return False
     # Particle б/би
     if re.search(r"\bб\b", o_low) and re.search(r"\bби\b", c_low) and not re.search(r"\bби\b", o_low):
@@ -1334,6 +1356,108 @@ def is_valid_candidate(
     if re.search(r"\bнарн\w*\b", o_low) and re.search(r"\bгарн\w*\b", c_low):
         return False
     if re.search(r"\bяке\s+ж\s+було\b", o_low) and re.search(r"\bяким\s+же\s+було\b", c_low):
+        return False
+
+    # Claude R12 Group 1: Ungrammatical Gold Text / Introduced Errors
+    if re.search(r"\bпотоками[,\s]+розташован[иі]м\b", c_low):
+        return False
+    if re.search(r"\b\d+,\d+\s+км,\s+і\b", c_low):
+        return False
+    if re.search(r"\bя\s+[а-яіїєґ]+ли\b", c_low) and not re.search(r"\b(?:ми|і|та|з)\b", c_low):
+        return False
+    if re.search(r"\bположення\b.*\bфіксується\b", c_low):
+        return False
+    if re.search(r"\bприйшла-бо\b", c_low):
+        return False
+    if re.search(r"\bверхнього\s+примірника\b", c_low):
+        return False
+    if re.search(r"\bв\s+обмін\s+за\b", c_low):
+        return False
+    if re.search(r"\bтого\s+аспекту\s+що\b", c_low):
+        return False
+    if re.search(r"\bзатерпал\w*\b", c_low):
+        return False
+
+    # Claude R12 Group 2: Invented / Meaning-Changing Rewrites
+    if re.search(r"\bазіз\s+санзар\b", o_low) and re.search(r"\bвивчав\b", c_low):
+        return False
+    if re.search(r"\bзалучають\s+державу\b", c_low):
+        return False
+    if re.search(r"\bне\s+виправдовує\s+доріг\b", c_low):
+        return False
+    if re.search(r"\bвідпочивши\s+кілька\s+хвилин\b", o_low):
+        return False
+    if re.search(r"\bвибіжав\b", o_low) and re.search(r"\bвибігав\b", c_low):
+        return False
+    if re.search(r"\bповинні\s+будуть\b", o_low) and re.search(r"\bповинні\s+були\b", c_low):
+        return False
+    if re.search(r"\bпомерещ[аи]л\w*\b", o_low) and re.search(r"\bввижа\w*\b", c_low):
+        return False
+    if re.search(r"\bхто\s+прямує\b", c_low) and not re.search(r"\bхто\s+прямує\b", o_low):
+        return False
+    if re.search(r"\bна\s+варті\b", c_low) and not re.search(r"\bна\s+варті\b", o_low):
+        return False
+    if re.search(r"\bприведе\s+до\s+енергозбереження\b", c_low):
+        return False
+
+    # Claude R12 Group 3: Class-Level Closures & Category F Swaps
+    if re.search(r"\bне\s+більше\s+аніж\b", c_low):
+        return False
+    if re.search(r"\bневід[\x27\u2019\u02bc]?ємн\w*\b", o_low) and re.search(r"\bневіддільн\w*\b", c_low):
+        return False
+    if re.search(r"\bлайк\w*\b", o_low) and re.search(r"\bвподобайк\w*\b", c_low):
+        return False
+    if re.search(r"\bтуча\b", o_low) and re.search(r"\bхмара\b", c_low):
+        return False
+    if re.search(r"\bпісля\s+кожного\s+заняття\s+давалась\s+домашня\s+робота\b", o_low):
+        return False
+    if re.search(r"\bна\s+ґанок\b", o_low) and re.search(r"\bна\s+ґанку\b", c_low):
+        return False
+    if re.search(r"\bіз\s+лаштунків\b", o_low) and re.search(r"\bз-за\s+лаштунків\b", c_low):
+        return False
+    if re.search(r"\bспійман\w*\b", o_low) and re.search(r"\bпійман\w*\b", c_low):
+        return False
+    if re.search(r"\bнеможливим\b", o_low) and re.search(r"\bнеможливо\b", c_low):
+        return False
+    if re.search(r"\bжител\w*\b", o_low) and re.search(r"\bмешканц\w*\b", c_low):
+        return False
+    if re.search(r"\b[ву]\s+першу\s+чергу\b", o_low) and re.search(r"\bнасамперед\b", c_low):
+        return False
+    if re.search(r"\bрозглянемо\b", o_low) and re.search(r"\bрозгляньмо\b", c_low):
+        return False
+    if re.search(r"\bє\s+ті\b", o_low) and re.search(r"\bє\s+тими\b", c_low):
+        return False
+    if re.search(r"\bтер\s+(?:собі\s+)?лоб\b", o_low) and re.search(r"\bтер\s+(?:собі\s+)?лоба\b", c_low):
+        return False
+    if re.search(r"\bдичі\b", o_low) and re.search(r"\bдичини\b", c_low):
+        return False
+    if re.search(r"\bслабіш\w*\b", o_low) and re.search(r"\bслабш\w*\b", c_low):
+        return False
+    if re.search(r"\bкіньми\b", c_low):
+        return False
+    if re.search(r"\bкур[\x27\u2019\u02bc]?єрові\b", c_low) and re.search(r"\bкур[\x27\u2019\u02bc]?єру\b", o_low):
+        return False
+    if re.search(r"\bз\s+возу\b", o_low) and re.search(r"\bз\s+воза\b", c_low):
+        return False
+
+    # Claude R12 Group 5: Minor Russianisms & Specific Rows
+    if re.search(r"\bсудорожн\w*\b", c_low) or re.search(r"\bсудорожн\w*\b", o_low):
+        return False
+    if re.search(r"\bоправданн\w*\b", c_low) or re.search(r"\bоправданн\w*\b", o_low):
+        return False
+    if re.search(r"\bвідтопирен\w*\b", c_low) or re.search(r"\bвідтопирен\w*\b", o_low):
+        return False
+    if re.search(r"\bданий\b", o_low) and re.search(r"\bзгаданий\b", c_low):
+        return False
+    if re.search(r"\bв\s+рази\b", o_low) and re.search(r"\bсуттєво\b", c_low):
+        return False
+    if re.search(r"\bповернув\s+обличчя\b", o_low) and re.search(r"\bпоглянув\b", c_low):
+        return False
+    if re.search(r"\bтрясця\s+його\s+матері\b", o_low) or re.search(r"\bтрясця\s+його\s+матері\b", c_low):
+        return False
+    if re.search(r"\bмучав\w*\b", o_low):
+        return False
+    if re.search(r"\bхто\s+сидить\b", o_low) and re.search(r"\bхто\s+сидів\b", c_low):
         return False
 
     # Reject unpaired comma after relative pronoun
