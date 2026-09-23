@@ -38,6 +38,7 @@ from pathlib import Path
 from typing import Any
 
 from ..result import ParseResult
+from ..routes import is_retired_gpt56_model
 from ..tool_calls import normalize_tool_calls, parse_json_events
 from .base import InvocationPlan
 
@@ -138,6 +139,8 @@ class CursorAdapter:
         """
         if effort:
             _logger.debug("cursor adapter ignoring effort=%s (not supported by CLI)", effort)
+        if is_retired_gpt56_model(model):
+            raise ValueError(f"Cursor model {model!r} is retired; use an active model")
 
         # Resolve binary. shutil.which handles PATH lookup.
         # Prefer the UNAMBIGUOUS ``cursor-agent`` name. A generic ``agent`` on

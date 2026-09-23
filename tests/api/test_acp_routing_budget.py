@@ -123,7 +123,7 @@ def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
         "eligible": True,
         "freshness": "fresh",
         "age_s": 5,
-        "codexbar": {"windows": {"primary": {"remaining_pct": 20}}},
+        "codexbar": {"weekly_used_pct": 80, "windows": {"primary": {"remaining_pct": 20}}},
         "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
     })
     budget["reset_reserve"] = {"available": True, "provider": "codex", "remaining_resets": 2}

@@ -149,15 +149,18 @@ def codex_reset_reserve_eligible(
         return False
 
     windows: list[object] = []
+    weekly_windows: list[object] = []
     for source in (info.get("windows"), cb.get("windows"), info.get("provider_windows"), cb.get("provider_windows")):
         if isinstance(source, dict):
             windows.extend(source.values())
+            weekly_windows.extend(block for name, block in source.items() if name == "weekly")
     # CodexBar exposes both named windows and flat fields. A flat used value
     # can report exhaustion even when its matching remaining value is absent.
-    windows.extend(
-        {"remaining_pct": cb.get(f"{name}_remaining_pct"), "used_pct": cb.get(f"{name}_used_pct")}
-        for name in ("primary", "secondary", "tertiary", "weekly")
-    )
+    for name in ("primary", "secondary", "tertiary", "weekly"):
+        block = {"remaining_pct": cb.get(f"{name}_remaining_pct"), "used_pct": cb.get(f"{name}_used_pct")}
+        windows.append(block)
+        if name == "weekly":
+            weekly_windows.append(block)
     # The fresh notebook weekly report fills gaps in CodexBar. It is a
     # governing allotment window, not a cost-ledger estimate.
     notebook = info.get("notebook_report")
@@ -173,10 +176,12 @@ def codex_reset_reserve_eligible(
             or not 0 <= notebook_age < MAX_PROVIDER_AGE_SECONDS
         ):
             return False
-        windows.append(
-            {"remaining_pct": notebook.get("weekly_remaining_pct"), "used_pct": notebook.get("weekly_used_pct")}
-        )
+        weekly_block = {"remaining_pct": notebook.get("weekly_remaining_pct"), "used_pct": notebook.get("weekly_used_pct")}
+        windows.append(weekly_block)
+        weekly_windows.append(weekly_block)
     has_positive_window = False
+    has_positive_weekly = False
+    weekly_ids = {id(block) for block in weekly_windows}
     for block in windows:
         if not isinstance(block, dict):
             continue
@@ -193,12 +198,16 @@ def codex_reset_reserve_eligible(
                 return False
             if remaining <= 100:
                 has_positive_window = True
+                if id(block) in weekly_ids:
+                    has_positive_weekly = True
         if isinstance(used, (int, float)) and not isinstance(used, bool) and math.isfinite(used):
             if used >= 100:
                 return False
             if 0 <= used < 100:
                 has_positive_window = True
-    return has_positive_window
+                if id(block) in weekly_ids:
+                    has_positive_weekly = True
+    return has_positive_window and has_positive_weekly
 
 
 def codex_is_threatened(info: dict[str, Any] | None) -> bool:

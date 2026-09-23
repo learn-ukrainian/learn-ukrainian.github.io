@@ -349,6 +349,7 @@ def _codex_reserve_budget():
                 "age_s": 10,
                 "codexbar": {
                     "will_last_to_reset": False,
+                    "weekly_used_pct": 70.0,
                     "windows": {"primary": {"remaining_pct": 15.0}},
                 },
                 "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},

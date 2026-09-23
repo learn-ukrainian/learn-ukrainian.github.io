@@ -82,6 +82,7 @@ def test_reset_reserve_relaxes_only_eligible_threatened_codex():
             "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
             "codexbar": {
                 **budget["agents"]["codex"]["codexbar"],
+                "weekly_used_pct": 72.0,
                 "windows": {"primary": {"remaining_pct": 12.0}},
             },
         }
@@ -115,6 +116,7 @@ def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
             "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
             "codexbar": {
                 **budget["agents"]["codex"]["codexbar"],
+                "weekly_used_pct": 72.0,
                 "windows": {"primary": {"remaining_pct": 12.0}},
             },
         }

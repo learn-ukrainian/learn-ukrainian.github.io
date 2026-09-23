@@ -100,8 +100,18 @@ stampede one hot lane.
 **OpenRouter:** mainly **Pool + Gemma**. Not a general multi-model bus.
 
 **Codex near_cap / timed pause / deficit:** shed mechanical CI to Cursor `grok-4.7-high` / Flash / AGY /
-k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). **Return-at example:** Codex weekly window **2026-08-10T19:47Z** → auto-return
-to rotation. Novel/hard may stay on Astra/Luna among the 1–4 Codex drivers.
+k3-256k / GLM (`capacity_pick` + `dispatch_fallbacks: codex → cursor`). A valid operator reset
+reserve can temporarily admit Codex Sol despite a hot or near-cap pace signal. It never overrides
+an exhausted or unknown weekly allotment, runtime blockage, stale usage, or unhealthy route.
+Luna handles bounded work; Astra is summoned for hard advice, not implementation or review.
+
+The operator records a shared assertion at `batch_state/routing_budget/operator_reset_reserve.json`
+in the primary checkout. Its exact JSON fields are `schema_version` (`operator-reset-reserve.v1`),
+`provider` (`codex`), positive integer `remaining_resets`, and UTC ISO-8601 `confirmed_at` /
+`expires_at`. Expiry must be after confirmation and at most 24 hours later. Dispatch worktrees
+read the same assertion; missing, malformed, expired, or unverified input leaves the reserve
+unavailable. The assertion is read-only to routing and never decremented automatically. The
+operator must confirm and refresh the count and expiry; no agent infers them from usage data.
 
 ### Cursor pools (checked 2026-09-22)
 

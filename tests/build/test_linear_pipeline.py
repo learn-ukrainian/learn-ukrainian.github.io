@@ -4583,8 +4583,8 @@ def test_vesum_gate_hyphenated_compound_accepted_when_only_short_parts() -> None
 
 
 def test_codex_writer_and_reviewer_defaults_use_astra_with_explicit_effort():
-    assert linear_pipeline.WRITER_DEFAULTS["codex-tools"] == {"model": "gpt-6-astra", "effort": "high"}
-    assert linear_pipeline.REVIEWER_DEFAULTS["codex-tools"] == {"model": "gpt-6-astra", "effort": "high"}
+    assert linear_pipeline.WRITER_DEFAULTS["codex-tools"] == {"model": "gpt-6-sol", "effort": "high"}
+    assert linear_pipeline.REVIEWER_DEFAULTS["codex-tools"] == {"model": "gpt-6-sol", "effort": "high"}
 
 
 def test_agy_writer_and_reviewer_defaults_use_live_flash_with_preserved_effort():

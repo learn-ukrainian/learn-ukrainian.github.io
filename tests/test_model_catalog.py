@@ -843,7 +843,7 @@ def test_gpt56_routes_are_not_selected():
     models = catalog["models"]
     for model_id in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
         assert models[model_id]["lifecycle"] == "retired"
-        assert models[model_id]["transports"] == ["cursor"]
+        assert models[model_id]["transports"] == []
 
     # Historical model records may remain, but no executable selector may
     # resolve to the retired generation, including indirect review ladders.

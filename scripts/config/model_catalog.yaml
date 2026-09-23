@@ -326,7 +326,7 @@ models:
     tier: frontier_authority
     lifecycle: retired
     roles: [architecture, critical_review, bounded_advisory_envelope, difficult_debugging, final_synthesis]
-    transports: [cursor]
+    transports: []
     strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
     weaknesses: [scarce_frontier_quota, wasteful_for_routine_work, not_a_speed_winner]
     notes: >-
@@ -339,7 +339,7 @@ models:
     tier: frontier_practical
     lifecycle: retired
     roles: [implementation, investigation, standard_review]
-    transports: [cursor]
+    transports: []
     strengths: [balanced_quality_cost, agentic_coding]
     weaknesses: [not_default_final_authority]
     sources:
@@ -349,7 +349,7 @@ models:
     tier: economical
     lifecycle: retired
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
-    transports: [cursor]
+    transports: []
     strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]
     weaknesses: [not_sole_consequential_authority]
     sources:

@@ -95,7 +95,7 @@ def _eligible_codex() -> dict:
         "health": {"healthy": True},
         "freshness": "fresh",
         "age_s": 10,
-        "codexbar": {"will_last_to_reset": False, "windows": {"primary": {"remaining_pct": 12.0}}},
+        "codexbar": {"will_last_to_reset": False, "weekly_used_pct": 25.0, "windows": {"primary": {"remaining_pct": 12.0}}},
         "runtime": {
             "headroom_blocked": False,
             "rate_limited": 0,
@@ -118,6 +118,7 @@ def test_eligibility_requires_provider_runtime_and_health_headroom():
         lambda info: info["codexbar"]["windows"].update(secondary={"remaining_pct": 0}),
         lambda info: info["codexbar"]["windows"].update(secondary={"used_pct": 100}),
         lambda info: info["codexbar"].update(weekly_used_pct=100, weekly_remaining_pct=None),
+        lambda info: info["codexbar"].update(weekly_used_pct=None, weekly_remaining_pct=None),
         lambda info: info.update(notebook_report={
             "source": "notebook-report", "freshness": "fresh", "age_s": 5,
             "weekly_used_pct": 100, "weekly_remaining_pct": 0,
@@ -130,6 +131,19 @@ def test_eligibility_requires_provider_runtime_and_health_headroom():
         info = _eligible_codex()
         mutate(info)
         assert not codex_reset_reserve_eligible(reserve, info)
+
+
+def test_fresh_notebook_weekly_report_can_supply_missing_codexbar_weekly_window():
+    info = _eligible_codex()
+    info["codexbar"]["weekly_used_pct"] = None
+    info["notebook_report"] = {
+        "source": "notebook-report",
+        "freshness": "fresh",
+        "age_s": 5,
+        "weekly_used_pct": 40,
+        "weekly_remaining_pct": 60,
+    }
+    assert codex_reset_reserve_eligible({"available": True, "remaining_resets": 1}, info)
 
 
 def test_stale_routing_snapshot_cannot_use_reserve():
