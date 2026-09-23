@@ -121,6 +121,21 @@ def fetch_pr_info(repo_root: Path, pr_number: int, *, repo: str | None = None) -
     )
 
 
+def _head_is_ancestor_of_pr(repo_root: Path, head: str, pr_sha: str) -> tuple[bool, str | None]:
+    """Return whether ``head`` is on the PR, failing closed on Git errors."""
+    if head == pr_sha:
+        return True, None
+    on_pr = rw._run(
+        ["git", "merge-base", "--is-ancestor", head, pr_sha],
+        cwd=repo_root,
+    )
+    if on_pr.returncode == 0:
+        return True, None
+    if on_pr.returncode == 1:
+        return False, None
+    return False, f"cannot verify local ancestry: {(on_pr.stderr or '').strip() or 'git merge-base failed'}"
+
+
 def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
     """True when ``head`` is on the PR and not already on ``origin/main``.
 
@@ -129,11 +144,8 @@ def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
     Commits already on main are excluded: every older main checkout is an
     ancestor of a PR that branched from main.
     """
-    on_pr = rw._run(
-        ["git", "merge-base", "--is-ancestor", head, pr_sha],
-        cwd=repo_root,
-    )
-    if on_pr.returncode != 0:
+    on_pr, error = _head_is_ancestor_of_pr(repo_root, head, pr_sha)
+    if error is not None or not on_pr:
         return False
     on_main = rw._run(
         ["git", "merge-base", "--is-ancestor", head, "origin/main"],
@@ -141,6 +153,27 @@ def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
     )
     # 1 means "not an ancestor". Any other nonzero exit is an unreadable ref.
     return on_main.returncode == 1
+
+
+def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, str | None]:
+    """Fetch GitHub's current PR head and return its commit SHA.
+
+    The explicit source ref avoids relying on stale local or remote-tracking
+    refs. A failed fetch or unreadable fetched commit is never deletion proof.
+    """
+    ref = f"refs/pull/{pr_number}/head"
+    fetch = rw._run(["git", "fetch", "--no-tags", "origin", ref], cwd=repo_root)
+    if fetch.returncode != 0:
+        detail = (fetch.stderr or fetch.stdout or "git fetch failed").strip()
+        return None, f"cannot fetch live PR head {ref}: {detail}"
+    resolved = rw._run(["git", "rev-parse", "--verify", "FETCH_HEAD^{commit}"], cwd=repo_root)
+    if resolved.returncode != 0:
+        detail = (resolved.stderr or resolved.stdout or "git rev-parse failed").strip()
+        return None, f"cannot verify fetched PR head {ref}: {detail}"
+    sha = (resolved.stdout or "").strip()
+    if not sha:
+        return None, f"cannot verify fetched PR head {ref}: empty commit SHA"
+    return sha, None
 
 
 def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.WorktreeInfo]:
@@ -276,10 +309,19 @@ def verify_branch_gone(
     if local_lookup_error is not None:
         local_error = f"cannot verify local branch: {local_lookup_error}"
     elif apply and local_head is not None:
-        if expected_head is not None and local_head == expected_head:
-            local_error = guard_error or rw._prune_branch(
-                repo_root, branch, force=True, expected_head=expected_head
-            )
+        live_pr_head, fetch_error = _fetch_live_pr_head(repo_root, pr.number)
+        if fetch_error is not None:
+            local_error = fetch_error
+        elif live_pr_head is not None:
+            on_pr, ancestry_error = _head_is_ancestor_of_pr(repo_root, local_head, live_pr_head)
+            if ancestry_error is not None:
+                local_error = ancestry_error
+            elif on_pr:
+                local_error = guard_error or rw._prune_branch(
+                    repo_root, branch, force=True, expected_head=local_head
+                )
+            else:
+                local_error = "local head does not match merged PR head; refusing to delete"
         else:
             local_error = "local head does not match merged PR head; refusing to delete"
     local_after, local_after_error = _local_branch_head(repo_root, branch)
