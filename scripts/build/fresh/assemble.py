@@ -379,14 +379,34 @@ def assemble_expanded_document(
             add_unit("urok", None, None, None, "consolidation_lead_in", role, span_text, source="writer_prose")
 
     # 2. Tab: vpravy (Activities)
+    act_to_step: dict[str, str] = {}
+    for st in lesson_entry.get("steps", []):
+        if isinstance(st, dict):
+            st_id = st.get("id")
+            if st_id:
+                for act_ref in st.get("practice", []):
+                    if isinstance(act_ref, str):
+                        act_to_step[act_ref] = st_id
+
+    for st in draft.get("steps", []):
+        if isinstance(st, dict):
+            st_id = st.get("id")
+            if st_id:
+                for bl in st.get("blocks", []):
+                    if isinstance(bl, dict) and bl.get("kind") == "activity":
+                        act_ref = bl.get("ref")
+                        if isinstance(act_ref, str):
+                            act_to_step[act_ref] = st_id
+
     for act in draft.get("activities", []):
         if not isinstance(act, dict):
             continue
         act_id = act.get("id")
+        act_step = act_to_step.get(act_id) if act_id else None
         instr = act.get("instruction")
         if instr:
             for role, span_text in _split_inline_spans(str(instr), "instruction"):
-                add_unit("vpravy", None, act_id, None, "instruction", role, span_text, source="writer_prose")
+                add_unit("vpravy", act_step, act_id, None, "instruction", role, span_text, source="writer_prose")
 
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
@@ -395,23 +415,23 @@ def assemble_expanded_document(
             prompt = item.get("prompt") or item.get("sentence") or item.get("question") or item.get("cue")
             if prompt:
                 for role, span_text in _split_inline_spans(str(prompt), "item_prompt"):
-                    add_unit("vpravy", None, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                    add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
 
             answer = item.get("answer") or item.get("correct") or item.get("target")
             if answer:
                 for role, span_text in _split_inline_spans(str(answer), "item_answer"):
-                    add_unit("vpravy", None, act_id, item_idx, "answer", role, span_text, source="writer_prose")
+                    add_unit("vpravy", act_step, act_id, item_idx, "answer", role, span_text, source="writer_prose")
 
             opts = item.get("options") or item.get("choices") or item.get("distractors") or []
             for opt_idx, opt in enumerate(opts):
                 opt_str = str(opt.get("text") if isinstance(opt, dict) else opt)
                 for role, span_text in _split_inline_spans(opt_str, "item_option"):
-                    add_unit("vpravy", None, act_id, item_idx, f"opt_{opt_idx}", role, span_text, source="writer_prose")
+                    add_unit("vpravy", act_step, act_id, item_idx, f"opt_{opt_idx}", role, span_text, source="writer_prose")
 
             err_txt = item.get("error") or item.get("incorrect")
             if err_txt:
                 for role, span_text in _split_inline_spans(str(err_txt), "error_text"):
-                    add_unit("vpravy", None, act_id, item_idx, "error", role, span_text, source="writer_prose")
+                    add_unit("vpravy", act_step, act_id, item_idx, "error", role, span_text, source="writer_prose")
 
             pairs = item.get("pairs") or []
             for p_idx, pair in enumerate(pairs):
@@ -422,7 +442,7 @@ def assemble_expanded_document(
                         for role, span_text in _split_inline_spans(str(left), "item_prompt"):
                             add_unit(
                                 "vpravy",
-                                None,
+                                act_step,
                                 act_id,
                                 item_idx,
                                 f"pair_l_{p_idx}",
@@ -434,7 +454,7 @@ def assemble_expanded_document(
                         for role, span_text in _split_inline_spans(str(right), "item_answer"):
                             add_unit(
                                 "vpravy",
-                                None,
+                                act_step,
                                 act_id,
                                 item_idx,
                                 f"pair_r_{p_idx}",
