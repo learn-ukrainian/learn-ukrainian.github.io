@@ -143,7 +143,7 @@ def assemble_expanded_document(
         source: str = "writer_prose",
         ref: str | None = None,
     ) -> None:
-        clean = strip_accents(text)
+        clean = strip_accents(text) if source != "writer_prose" else text
         units.append(
             {
                 "tab": tab,
