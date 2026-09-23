@@ -217,6 +217,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
             file=sys.stderr,
         )
         return 1
+    stream_limit = int(getattr(args, "stream_limit", 40))
 
     try:
         from agents_extensions.shared.session_streams.db import SessionStreamDatabase
@@ -288,7 +289,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
                     stream_id=stream_id,
                     lease_summary=lease_summary,
                     repo=repo,
-                    stream_limit=int(getattr(args, "stream_limit", 40)),
+                    stream_limit=stream_limit,
                 )
                 return 2
         elif not prior_alive:
@@ -328,7 +329,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
                 stream_id=stream_id,
                 lease_summary=lease_summary,
                 repo=repo,
-                stream_limit=int(getattr(args, "stream_limit", 40)),
+                stream_limit=stream_limit,
             )
             return 2
 
@@ -382,7 +383,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
         stream=stream_id,
         handoff=None,
         out_dir=None,
-        stream_limit=40,
+        stream_limit=stream_limit,
     )
     mint_rc = _with_kimi_handoffs(_gl.cmd_mint, mint_ns)
     if mint_rc != 0:
@@ -397,7 +398,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
         stream_id=stream_id,
         lease_summary=lease_summary,
         repo=repo,
-        stream_limit=int(getattr(args, "stream_limit", 40)),
+        stream_limit=stream_limit,
     )
 
     kimi_handoff = epic_dir / "KIMI-DRIVER-HANDOFF.md"

@@ -858,6 +858,111 @@ def test_board_and_mint_share_a_custom_stream_limit(
     assert "preview (not minted)" not in stuck
 
 
+def test_kimi_bootstrap_auto_mint_uses_the_boards_stream_limit(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Kimi bootstrap mints with the same --stream-limit the board was given.
+
+    A limit of 4 selects the fuller older handoff. A hard-coded mint limit of
+    40 would load every entry and record the thinner newer file instead.
+    """
+    entries = [
+        {"type": "binding_order", "body": f"Binding order {i} forbids shortcuts in this lane."}
+        for i in range(1, 5)
+    ] + [
+        {"type": "negative_constraint", "body": "Never commit directly to main from a driver."},
+        {"type": "negative_constraint", "body": "Never merge without an independent cross-family review."},
+        {"type": "next_action", "body": "Stream next action one for this lane."},
+        {"type": "next_action", "body": "Stream next action two for this lane."},
+    ]
+
+    def _load(_stream_id: str, *, limit: int = 40) -> list[dict[str, str]]:
+        return [dict(item) for item in entries[: int(limit)]]
+
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", _load)
+
+    def _freeze(command, **_kwargs):
+        return subprocess.CompletedProcess(command, 0, stdout="minted\n", stderr="")
+
+    monkeypatch.setattr(grok_lane.subprocess, "run", _freeze)
+
+    class _Conn:
+        def execute(self, *_args, **_kwargs):
+            return self
+
+        def fetchone(self):
+            return None
+
+    class _Database:
+        def connect(self, **_kwargs):
+            return _Conn()
+
+    class _Lease:
+        stream_id = "epic:8588"
+        session_id = "session-test"
+        lease_id = "lease-test"
+        fencing_token = 1
+        generation = 1
+        ttl_seconds = 21600
+        version = 1
+
+    class _Store:
+        def __init__(self, _database):
+            pass
+
+        def open_session(self, **_kwargs):
+            return _Lease()
+
+        def append_entry(self, *_args, **_kwargs):
+            return None
+
+    db_mod = __import__(
+        "agents_extensions.shared.session_streams.db",
+        fromlist=["SessionStreamDatabase"],
+    )
+    store_mod = __import__(
+        "agents_extensions.shared.session_streams.store",
+        fromlist=["SessionStreamStore"],
+    )
+    monkeypatch.setattr(db_mod, "SessionStreamDatabase", _Database)
+    monkeypatch.setattr(store_mod, "SessionStreamStore", _Store)
+
+    epic = _epic(tmp_path)
+    _write(
+        epic / "KIMI-DRIVER-HANDOFF.md",
+        "# Kimi\n\n## Session 2026-09-23\n\nNo next or hands-off sections.\n",
+        mtime=9_000,
+    )
+    _write(
+        epic / "CLAUDE-DRIVER-HANDOFF.md",
+        _full("claude-sentinel", session="2026-09-18"),
+        mtime=1_000,
+    )
+
+    assert (
+        kimi_lane.main(
+            [
+                "--repo",
+                str(tmp_path),
+                "bootstrap",
+                "--epic",
+                "atlas",
+                "--stream",
+                "epic:8588",
+                "--stream-limit",
+                "4",
+            ]
+        )
+        == 0
+    )
+    meta = json.loads((epic / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
+    assert meta["stream_limit"] == 4
+    assert meta["handoff"].endswith("CLAUDE-DRIVER-HANDOFF.md")
+    assert "claude-sentinel" in (epic / "canary" / "facts.json").read_text(encoding="utf-8")
+    board = (epic / "KIMI-COLD-START.md").read_text(encoding="utf-8")
+    assert "**Handoff dual-write:** `.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md`" in board
+
+
 def test_rewrite_between_ranking_and_mint_keeps_the_ranked_text(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

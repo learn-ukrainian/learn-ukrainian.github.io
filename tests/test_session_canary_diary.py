@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import json
+import os
+import re
 import threading
 from pathlib import Path
+
+import pytest
 
 from scripts.session_canary import diary as d
 from scripts.session_canary import grok_lane as gl
@@ -219,6 +223,110 @@ def test_concurrent_edit_and_stamp_both_survive(tmp_path: Path) -> None:
     text = path.read_text(encoding="utf-8")
     assert "EDITOR_SENTINEL" in text
     assert "STAMP_SENTINEL" in text
+
+
+def _install_editor_on_first_skeleton_calls(
+    monkeypatch: pytest.MonkeyPatch,
+    path: Path,
+    versions: list[str],
+) -> dict[str, int]:
+    """Atomically replace ``path`` from inside the read-modify-write transform."""
+    real_ensure = d.ensure_diary_skeleton
+    calls = {"n": 0}
+
+    def _wrapped(text: str, **kwargs: object) -> str:
+        calls["n"] += 1
+        index = calls["n"] - 1
+        if index < len(versions):
+            editor = path.with_name(f".editor-{calls['n']}")
+            editor.write_text(versions[index], encoding="utf-8")
+            os.replace(editor, path)
+        return real_ensure(text, **kwargs)
+
+    monkeypatch.setattr(d, "ensure_diary_skeleton", _wrapped)
+    return calls
+
+
+def _write_original(path: Path) -> None:
+    path.write_text(
+        "# Handoff\n\n**Last diary stamp:** never\n\n"
+        "ORIGINAL_SENTINEL\n\n"
+        "## Next Drive\n1. old\n\n"
+        "## Diary — reverse chrono (newest first)\n\n",
+        encoding="utf-8",
+    )
+
+
+def _apply_stamp_or_handback(path: Path, kind: str) -> None:
+    if kind == "stamp":
+        d.append_diary_stamp(
+            path,
+            title="canary score PASS",
+            bullets=["STAMP_SENTINEL"],
+            stamp="2026-09-23T00:00Z",
+        )
+        return
+    d.append_handback(
+        path,
+        epic="harness",
+        stream_id="epic:4707",
+        reason="clean end",
+        pins=["pin"],
+        open_prs=["none"],
+        next_drive=["keep editor"],
+        hands_off=["lane"],
+        pending_user=["none"],
+        worktrees=[".worktrees/dispatch/cursor/x"],
+        canary_line="STAMP_SENTINEL",
+        stamp="2026-09-23T00:00Z",
+    )
+
+
+@pytest.mark.parametrize("kind", ["stamp", "handback"])
+def test_atomic_rename_between_read_and_write_keeps_editor_and_stamp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, kind: str
+) -> None:
+    """An editor that replaces the path after the read is retried, not lost."""
+    path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
+    _write_original(path)
+    editor = (
+        "# Handoff\n\n**Last diary stamp:** never\n\n"
+        "EDITOR_SENTINEL\n\n"
+        "## Next Drive\n1. from editor\n\n"
+        "## Diary — reverse chrono (newest first)\n\n"
+    )
+    _install_editor_on_first_skeleton_calls(monkeypatch, path, [editor])
+
+    _apply_stamp_or_handback(path, kind)
+
+    text = path.read_text(encoding="utf-8")
+    assert "EDITOR_SENTINEL" in text
+    assert "STAMP_SENTINEL" in text
+    assert "ORIGINAL_SENTINEL" not in text
+    assert sorted(item.name for item in path.parent.iterdir()) == [path.name]
+
+
+def test_editor_that_changes_every_attempt_raises_without_writing_stamp(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Exhausting the compare-and-replace bound leaves the editor's last bytes."""
+    path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
+    _write_original(path)
+    versions = [f"EDITOR_VERSION_{n}\n" for n in range(1, d.REWRITE_ATTEMPTS + 1)]
+    calls = _install_editor_on_first_skeleton_calls(monkeypatch, path, versions)
+
+    with pytest.raises(d.HandoffRewriteConflictError, match=re.escape(str(path))):
+        d.append_diary_stamp(
+            path,
+            title="canary score PASS",
+            bullets=["STAMP_SENTINEL"],
+            stamp="2026-09-23T00:00Z",
+        )
+
+    assert calls["n"] == d.REWRITE_ATTEMPTS
+    assert path.read_text(encoding="utf-8") == versions[-1]
+    assert "STAMP_SENTINEL" not in path.read_text(encoding="utf-8")
+    assert sorted(item.name for item in path.parent.iterdir()) == [path.name]
 
 
 def test_resolve_handoff_path_glm_preferred(tmp_path: Path) -> None:

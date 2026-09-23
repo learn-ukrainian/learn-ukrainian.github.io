@@ -10,6 +10,7 @@ from __future__ import annotations
 import fcntl
 import os
 import re
+import tempfile
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -21,6 +22,13 @@ NEXT_DRIVE_MARKER = "## Next Drive"
 WORKING_SET_MARKER = "## Active Working Set"
 HANDS_OFF_MARKER = "## Hands-off"
 HANDBACK_MARKER = "## STATE AT HANDBACK"
+# Bound for compare-and-replace. Exhaustion raises; it never writes blind.
+REWRITE_ATTEMPTS = 8
+
+
+class HandoffRewriteConflictError(RuntimeError):
+    """Compare-and-replace could not commit without dropping a newer version."""
+
 
 _LAST_STAMP_RE = re.compile(
     r"^(\*\*Last diary stamp:\*\*)\s*.+$",
@@ -153,61 +161,138 @@ def _write_fd(fd: int, data: bytes) -> None:
     os.fsync(fd)
 
 
+def _snapshot_path(path: Path) -> tuple[bytes | None, int]:
+    """Fresh open of ``path``. ``None`` means the path is absent."""
+    try:
+        fd = os.open(path, os.O_RDONLY)
+    except FileNotFoundError:
+        return None, 0o644
+    try:
+        mode = os.fstat(fd).st_mode & 0o777
+        return _read_fd(fd), mode
+    finally:
+        os.close(fd)
+
+
+def _write_temp_file(directory: Path, data: bytes, mode: int) -> Path:
+    """Write ``data`` beside the destination so ``os.replace`` stays on one filesystem."""
+    fd, name = tempfile.mkstemp(dir=directory, prefix=".handoff-", suffix=".tmp")
+    tmp = Path(name)
+    committed = False
+    try:
+        _write_fd(fd, data)
+        os.fchmod(fd, mode)
+        os.fsync(fd)
+        committed = True
+    finally:
+        os.close(fd)
+        if not committed:
+            tmp.unlink(missing_ok=True)
+    return tmp
+
+
+def _missing_recorded(path: Path, recorded_meta: Path) -> handoff_select.RecordedHandoffMissingError:
+    return handoff_select.RecordedHandoffMissingError(
+        f"recorded mint handoff missing: {path} (recorded in {recorded_meta}); "
+        "re-mint the canary — consumers must not re-rank handoffs"
+    )
+
+
+def _unreadable_recorded(
+    path: Path, recorded_meta: Path, exc: BaseException
+) -> handoff_select.RecordedHandoffMissingError:
+    return handoff_select.RecordedHandoffMissingError(
+        f"recorded mint handoff unreadable: {path} ({type(exc).__name__}: {exc}); "
+        f"recorded in {recorded_meta}; re-mint the canary — consumers must not re-rank handoffs"
+    )
+
+
 def rewrite_handoff_locked(
     path: Path,
     transform: Callable[[str], str],
     *,
     recorded_meta: Path | None = None,
 ) -> None:
-    """Read-modify-write with an exclusive flock held across both steps.
+    """Compare-and-replace the handoff by path, for stamp and handback alike.
 
-    A cooperating editor uses this same lock, so its write cannot land between
-    the read and the write. Advisory locks do not stop a raw ``write``; if the
-    bytes change before we commit, ``transform`` runs again on the new text so
-    both edits are kept. ``recorded_meta`` marks a mint-recorded path: a missing
-    or unreadable file raises :class:`handoff_select.RecordedHandoffMissingError`
-    instead of creating a replacement.
+    Each attempt reads the path with a fresh open, writes the transformed
+    bytes to a sibling temp (keeping the file mode), and ``os.replace`` only
+    when a second fresh read still matches. A mismatch deletes the temp and
+    retries. After :data:`REWRITE_ATTEMPTS` the function raises
+    :class:`HandoffRewriteConflictError` and does not write.
+
+    An exclusive flock on the parent directory serializes cooperating callers
+    of this helper across ``os.replace``. The lock is not the safety property:
+    a writer that never takes it is caught by the byte comparison.
+
+    Accepted residual: the window between the final comparison and
+    ``os.replace`` is not atomic against a non-cooperating editor. The threat
+    model is human-speed editing and agent tool edits, not adversarial writers.
+
+    ``recorded_meta`` marks a mint-recorded path: a missing or unreadable file
+    raises :class:`handoff_select.RecordedHandoffMissingError` instead of
+    creating a replacement.
     """
     path.parent.mkdir(parents=True, exist_ok=True)
     if recorded_meta is not None and not path.is_file():
-        raise handoff_select.RecordedHandoffMissingError(
-            f"recorded mint handoff missing: {path} (recorded in {recorded_meta}); "
-            "re-mint the canary — consumers must not re-rank handoffs"
-        )
-    flags = os.O_RDWR if recorded_meta is not None else os.O_RDWR | os.O_CREAT
+        raise _missing_recorded(path, recorded_meta)
+    dir_fd = os.open(path.parent, os.O_RDONLY)
     try:
-        fd = os.open(path, flags, 0o644)
-    except OSError as exc:
-        if recorded_meta is None:
-            raise
-        raise handoff_select.RecordedHandoffMissingError(
-            f"recorded mint handoff unreadable: {path} ({type(exc).__name__}: {exc}); "
-            f"recorded in {recorded_meta}; re-mint the canary — consumers must not re-rank handoffs"
-        ) from exc
-    try:
-        fcntl.flock(fd, fcntl.LOCK_EX)
-        for attempt in range(8):
-            raw = _read_fd(fd)
+        fcntl.flock(dir_fd, fcntl.LOCK_EX)
+        for _attempt in range(REWRITE_ATTEMPTS):
+            if recorded_meta is not None and not path.is_file():
+                raise _missing_recorded(path, recorded_meta)
             try:
-                text = raw.decode("utf-8") if recorded_meta is not None else raw.decode("utf-8", errors="replace")
+                raw, mode = _snapshot_path(path)
+            except OSError as exc:
+                if recorded_meta is None:
+                    raise
+                raise _unreadable_recorded(path, recorded_meta, exc) from exc
+            if raw is None:
+                if recorded_meta is not None:
+                    raise _missing_recorded(path, recorded_meta)
+                text_bytes = b""
+            else:
+                text_bytes = raw
+            try:
+                if recorded_meta is not None:
+                    text = text_bytes.decode("utf-8")
+                else:
+                    text = text_bytes.decode("utf-8", errors="replace")
             except UnicodeDecodeError as exc:
                 if recorded_meta is None:
                     raise
-                raise handoff_select.RecordedHandoffMissingError(
-                    f"recorded mint handoff unreadable: {path} ({type(exc).__name__}: {exc}); "
-                    f"recorded in {recorded_meta}; re-mint the canary — consumers must not re-rank handoffs"
-                ) from exc
+                raise _unreadable_recorded(path, recorded_meta, exc) from exc
             updated = transform(text)
             if updated and not updated.endswith("\n"):
                 updated += "\n"
             data = updated.encode("utf-8")
-            if attempt < 7 and _read_fd(fd) != raw:
-                continue
-            _write_fd(fd, data)
-            return
+            tmp = _write_temp_file(path.parent, data, mode)
+            try:
+                try:
+                    confirm, confirm_mode = _snapshot_path(path)
+                except OSError as exc:
+                    if recorded_meta is None:
+                        raise
+                    raise _unreadable_recorded(path, recorded_meta, exc) from exc
+                if confirm != raw:
+                    continue
+                if confirm_mode != mode:
+                    os.chmod(tmp, confirm_mode)
+                # Accepted residual: this comparison and os.replace are not atomic
+                # against a non-cooperating editor. The threat model is human-speed
+                # editing and agent tool edits, not adversarial writers.
+                os.replace(tmp, path)
+                return
+            finally:
+                if tmp.exists():
+                    tmp.unlink()
+        raise HandoffRewriteConflictError(
+            f"handoff rewrite lost the compare-and-replace race after {REWRITE_ATTEMPTS} attempts: {path}"
+        )
     finally:
-        fcntl.flock(fd, fcntl.LOCK_UN)
-        os.close(fd)
+        fcntl.flock(dir_fd, fcntl.LOCK_UN)
+        os.close(dir_fd)
 
 
 def append_diary_stamp(
@@ -222,10 +307,10 @@ def append_diary_stamp(
 ) -> str:
     """Prepend a diary entry; optionally replace Next Drive / Active Working Set. Returns stamp used.
 
-    The read and write share one flock. ``recorded_meta`` is the mint record
-    when ``path`` is that recorded file: the consumed read then raises
-    :class:`handoff_select.RecordedHandoffMissingError` if the file is missing
-    or unreadable.
+    The write is a path compare-and-replace (:func:`rewrite_handoff_locked`).
+    ``recorded_meta`` is the mint record when ``path`` is that recorded file:
+    the consumed read then raises :class:`handoff_select.RecordedHandoffMissingError`
+    if the file is missing or unreadable.
     """
     stamp = stamp or utc_stamp()
 
@@ -410,8 +495,9 @@ def append_handback(
 ) -> str:
     """Append STATE AT HANDBACK and a diary stamp. Sync Next Drive bullets.
 
-    The read and write share one flock. ``recorded_meta`` fails closed when
-    the recorded file is missing or unreadable at this read.
+    The write is a path compare-and-replace (:func:`rewrite_handoff_locked`).
+    ``recorded_meta`` fails closed when the recorded file is missing or
+    unreadable at this read.
     """
     stamp = stamp or utc_stamp()
 
