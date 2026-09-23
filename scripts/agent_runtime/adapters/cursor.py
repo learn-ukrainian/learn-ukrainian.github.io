@@ -266,7 +266,20 @@ class CursorAdapter:
 
     def _ensure_workspace_mcp_config(self, workspace: str, config: dict) -> None:
         """Mirror requested MCP servers into Cursor's workspace config."""
+        is_strict = bool(config.get("strict_mcp_config"))
+        if is_strict:
+            workspace_path = Path(workspace).resolve()
+            if (workspace_path / ".git").is_dir():
+                raise RuntimeError(
+                    "Cursor review attempt requires a dispatch worktree; "
+                    "refusing primary checkout workspace (#8517)"
+                )
+
         requested = config.get("mcp_server_names") or []
+        if not requested and is_strict:
+            source_path = Path(str(config.get("mcp_config_path") or ".mcp.json"))
+            source_servers = self._read_mcp_servers(source_path)
+            requested = list(source_servers.keys())
         if not requested:
             return
         if not isinstance(requested, list):
@@ -279,7 +292,7 @@ class CursorAdapter:
         missing: list[str] = []
         for name in requested:
             raw = source_servers.get(name)
-            if raw is None and name == "sources":
+            if raw is None and name == "sources" and not is_strict:
                 raw = {"url": "http://127.0.0.1:8766/mcp"}
             sanitized = self._cursor_server_config(raw)
             if sanitized is None:

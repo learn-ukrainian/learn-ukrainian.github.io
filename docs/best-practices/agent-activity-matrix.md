@@ -137,6 +137,15 @@ New evidence from judge-calibration bakeoffs (per `audit/INDEX-bakeoff-evidence.
 
 **Promote-protocol round 1 result (2026-05-18, #2132):** DeepSeek-pro proposed splitting the reviewer prompt into Phase 1 (deterministic content-word verification: batch verify_words + query_cefr_level + check_russian_shadow + search_heritage) and Phase 2 (dim-by-dim judgment). Bakeoff queued: DeepSeek-pro vs Codex on `a1/my-morning` post-#2128/#2127 merge.
 
+**Review seat harness eligibility (#8517):** Formal reviews require per-attempt recording of `sources` MCP tool calls into an attempt ledger via attempt-specific environment variables (`LU_REVIEW_ATTEMPT_ID`, `LU_REVIEW_MANIFEST_SHA256`, `LU_REVIEW_LEDGER_PATH`) launched over stdio, dropping the shared HTTP daemon entry.
+- **Eligible harnesses:** `claude` (Claude Code accepts `--strict-mcp-config --mcp-config` to isolate the attempt's stdio config) and `cursor` (mirrors the per-attempt stdio config into the worktree's `.cursor/mcp.json` without daemon URL fallback; requires a dispatch worktree).
+- **Ineligible harnesses:**
+  - `agy`: refused because it has only a single global MCP config (`~/.gemini/config/mcp_config.json`) and cannot take a per-attempt config.
+  - `codex`: refused because per-attempt stdio servers with environment variables are not yet proven (#8517).
+  - `grok`: refused because strict per-attempt MCP CLI flags are not yet proven (#8517).
+  - `kimicc`: refused because per-attempt stdio config is not yet supported (#8517).
+  - `kimi` (native) and Hermes-routed agents (`deepseek`, `grok-hermes`): refused because they read persistent global configuration rather than per-dispatch MCP configurations.
+
 ---
 
 ### 4.3 Wiki article writing
