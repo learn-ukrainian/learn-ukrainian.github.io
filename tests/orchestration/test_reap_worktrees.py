@@ -310,7 +310,7 @@ def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
     project_root = Path(__file__).resolve().parents[2]
     assert _raw_worktree_remove_callers(project_root) == {
         "scripts/ai_agent_bridge/_acp_execution.py": {"acp_execution_cwd"},
-        "scripts/delegate.py": {"_release_stale_branch_holders"},
+        "scripts/delegate.py": {"_release_stale_branch_holders", "_release_superseded_review_worktrees"},
         "scripts/fleet/post_task_reap.py": {"_remove_worktree"},
         "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
         "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},
@@ -1012,6 +1012,9 @@ def test_merged_pr_head_must_match_worktree_head(
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/mismatched")
     git(worktree, "push", "-u", "origin", "codex/mismatched")
+    (worktree / "only-here.txt").write_text("not on main\n", encoding="utf-8")
+    git(worktree, "add", "only-here.txt")
+    git(worktree, "commit", "-m", "not the pr head")
     patch_gh(
         monkeypatch,
         {"codex/mismatched": [{"number": 10, "state": "MERGED", "headRefOid": "0" * 40}]},
@@ -1063,6 +1066,9 @@ def test_closed_pr_requires_matching_worktree_head(
     repo = init_repo(tmp_path)
     matching = add_worktree(repo, "codex/closed-matching")
     mismatched = add_worktree(repo, "codex/closed-mismatched")
+    (mismatched / "only-here.txt").write_text("not on main\n", encoding="utf-8")
+    git(mismatched, "add", "only-here.txt")
+    git(mismatched, "commit", "-m", "not the closed pr head")
     patch_gh(
         monkeypatch,
         {
@@ -1713,30 +1719,81 @@ def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
     assert Path(blocked[0].path).exists()
 
 
-def test_merged_pr_same_tree_sibling_head_reaps(
+def test_merged_pr_same_tree_divergent_commit_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Squash leftovers with the same tree as the MERGED PR head still reap."""
+    """An identical tree at a commit the merged PR does not contain stays."""
     repo = init_repo(tmp_path)
-    worktree = add_worktree(repo, "codex/occupancy-fresh")
+    branch = "codex/occupancy-fresh"
+    worktree = add_worktree(repo, branch)
+    git(worktree, "push", "-u", "origin", branch)
     git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
     tree = git(worktree, "rev-parse", "HEAD^{tree}")
     parent = git(repo, "rev-parse", "main")
     pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
     patch_gh(
         monkeypatch,
-        {"codex/occupancy-fresh": [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
+        {branch: [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
     result = result_for(
-        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
         worktree,
     )
 
-    assert result.action == "removed"
-    assert result.reason == "PR #7067 MERGED"
-    assert not worktree.exists()
+    assert result.action == "skipped"
+    assert result.branch_pruned is False
+    assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
+    assert worktree.exists()
+    assert git(repo, "rev-parse", "--verify", branch)
+
+
+def test_merged_pr_ancestor_and_exact_head_are_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Containment is the PR head itself or an ancestor of it, including branch prune."""
+    repo = init_repo(tmp_path)
+    exact = add_worktree(repo, "codex/exact-head")
+    exact_head = git(exact, "rev-parse", "HEAD")
+    ancestor = add_worktree(repo, "codex/ancestor-head")
+    ancestor_head = git(ancestor, "rev-parse", "HEAD")
+    git(ancestor, "commit", "--allow-empty", "-m", "pr head ahead of the worktree")
+    ancestor_pr_head = git(ancestor, "rev-parse", "HEAD")
+    git(ancestor, "reset", "--hard", ancestor_head)
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/exact-head": [{"number": 31, "state": "MERGED", "headRefOid": exact_head}],
+            "codex/ancestor-head": [
+                {"number": 32, "state": "MERGED", "headRefOid": ancestor_pr_head}
+            ],
+        },
+    )
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        prune_merged_branches=True,
+    )
+
+    exact_result = result_for(results, exact)
+    ancestor_result = result_for(results, ancestor)
+    assert exact_result.action == "removed"
+    assert exact_result.reason == "PR #31 MERGED"
+    assert exact_result.branch_pruned is True
+    assert ancestor_result.action == "removed"
+    assert ancestor_result.reason == "PR #32 MERGED"
+    assert ancestor_result.branch_pruned is True
+    assert not exact.exists()
+    assert not ancestor.exists()
 
 
 def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(
@@ -1960,6 +2017,135 @@ def test_query_pr_states_accepts_every_real_gh_state(monkeypatch, state) -> None
 
     assert error is None
     assert [(s.number, s.state) for s in states] == [(7126, state)]
+
+
+# --- REST-first PR lookup with GraphQL fallback (#8536) --
+
+
+def _patch_gh_transports(
+    monkeypatch,
+    *,
+    rest: subprocess.CompletedProcess[str],
+    graphql: subprocess.CompletedProcess[str],
+) -> list[list[str]]:
+    """Route gh traffic: REST (`gh api`) and GraphQL (`gh pr list/view`) get
+    independent canned answers; the origin remote parses to a GitHub slug."""
+    gh_calls: list[list[str]] = []
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:3] == ["git", "remote", "get-url"]:
+            return subprocess.CompletedProcess(
+                args, 0, "git@github.com:learn-ukrainian/learn-ukrainian.github.io.git\n", ""
+            )
+        if args[:2] == ["gh", "api"]:
+            gh_calls.append(args)
+            return subprocess.CompletedProcess(args, rest.returncode, rest.stdout, rest.stderr)
+        if args[:2] == ["gh", "pr"]:
+            gh_calls.append(args)
+            return subprocess.CompletedProcess(args, graphql.returncode, graphql.stdout, graphql.stderr)
+        return _REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", fake_run)
+    return gh_calls
+
+
+def test_query_pr_states_rest_answer_is_used_when_graphql_is_down(monkeypatch) -> None:
+    calls = _patch_gh_transports(
+        monkeypatch,
+        rest=_gh_stdout(
+            json.dumps([
+                {
+                    "number": 8536,
+                    "state": "closed",
+                    "merged_at": "2026-09-22T10:00:00Z",
+                    "head": {"sha": "rest-sha"},
+                }
+            ])
+        ),
+        graphql=_gh_stdout("GraphQL: API rate limit exceeded", returncode=1),
+    )
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert error is None
+    assert [(s.number, s.state, s.head_sha) for s in states] == [(8536, "MERGED", "rest-sha")]
+    assert all(call[1] == "api" for call in calls)
+
+
+def test_query_pr_states_falls_back_to_graphql_when_rest_fails(monkeypatch) -> None:
+    calls = _patch_gh_transports(
+        monkeypatch,
+        rest=_gh_stdout("Not Found", returncode=1),
+        graphql=_gh_stdout(json.dumps([{"number": 8536, "state": "OPEN", "headRefOid": "gql-sha"}])),
+    )
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert error is None
+    assert [(s.number, s.state, s.head_sha) for s in states] == [(8536, "OPEN", "gql-sha")]
+    assert [call[1] for call in calls] == ["api", "pr"]
+
+
+def test_query_pr_states_fails_closed_when_both_transports_fail(monkeypatch) -> None:
+    _patch_gh_transports(
+        monkeypatch,
+        rest=_gh_stdout("rest down", returncode=1),
+        graphql=_gh_stdout("graphql down", returncode=1),
+    )
+
+    states, error = rw._query_pr_states(Path("/nonexistent"), "codex/task")
+
+    assert states == []
+    assert error is not None
+    assert "REST PR lookup failed" in error
+    assert "gh pr list failed" in error
+
+
+def test_query_pr_by_number_rest_first_with_graphql_fallback(monkeypatch) -> None:
+    calls = _patch_gh_transports(
+        monkeypatch,
+        rest=_gh_stdout(
+            json.dumps({"number": 99, "state": "open", "merged_at": None, "head": {"sha": "n-sha"}})
+        ),
+        graphql=_gh_stdout("graphql down", returncode=1),
+    )
+
+    states, error = rw._query_pr_by_number(Path("/nonexistent"), 99)
+
+    assert error is None
+    assert [(s.number, s.state, s.head_sha) for s in states] == [(99, "OPEN", "n-sha")]
+    assert all(call[1] == "api" for call in calls)
+
+
+def test_query_pr_by_number_fails_closed_when_both_transports_fail(monkeypatch) -> None:
+    _patch_gh_transports(
+        monkeypatch,
+        rest=_gh_stdout("rest down", returncode=1),
+        graphql=_gh_stdout("GraphQL: Could not resolve to a PullRequest with the number of 99.", returncode=1),
+    )
+
+    states, error = rw._query_pr_by_number(Path("/nonexistent"), 99)
+
+    assert states == []
+    assert error is not None
+    assert "REST PR lookup failed" in error
+    assert rw._is_not_a_pull_request_error(error)
+
+
+def test_parse_rest_pr_item_maps_merged_at_to_merged() -> None:
+    parsed, err = rw._parse_rest_pr_item(
+        {"number": 7, "state": "closed", "merged_at": "2026-09-22T00:00:00Z", "head": {"sha": "x"}}
+    )
+    assert err is None
+    assert (parsed.number, parsed.state, parsed.head_sha) == (7, "MERGED", "x")
+
+    parsed, err = rw._parse_rest_pr_item({"number": 7, "state": "closed", "merged_at": None, "head": {}})
+    assert err is None
+    assert (parsed.number, parsed.state, parsed.head_sha) == (7, "CLOSED", None)
+
+    parsed, err = rw._parse_rest_pr_item({"number": 7, "state": "bogus", "merged_at": None})
+    assert parsed is None
+    assert err is not None
 
 
 @pytest.mark.parametrize(
@@ -2246,20 +2432,30 @@ def test_active_worker_lease_reconciliation(tmp_path: Path, monkeypatch: pytest.
     assert worktree.exists()
 
 
+def _write_rollover_lease(repo: Path, replacement: dict[str, Any], *, cleanup_ready: bool = False) -> None:
+    rollover_dir = repo / ".agent" / "thread-rollovers" / "thread_1" / "cycle_1"
+    rollover_dir.mkdir(parents=True, exist_ok=True)
+    (rollover_dir / "lease.json").write_text(
+        json.dumps({
+            "cleanup": {"old_automation_ready_to_delete": cleanup_ready},
+            "replacement": replacement,
+        }),
+        encoding="utf-8",
+    )
+
+
 def test_active_rollover_lease_reconciliation(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     repo = init_repo(tmp_path)
     task_id = "rollover-task-456"
     branch = f"codex/{task_id}"
     worktree = add_worktree(repo, branch, path=repo / ".worktrees" / "dispatch" / "codex" / task_id)
     head_sha = git(worktree, "rev-parse", "HEAD")
-    rollover_dir = repo / ".agent" / "thread-rollovers" / "thread_1" / "cycle_1"
-    rollover_dir.mkdir(parents=True, exist_ok=True)
-    (rollover_dir / "lease.json").write_text(
-        json.dumps({
-            "cleanup": {"old_automation_ready_to_delete": False},
-            "replacement": {"status": "resumed", "source_checkout": {"full_head": head_sha}},
-        }),
-        encoding="utf-8",
+    _write_rollover_lease(
+        repo,
+        {
+            "status": "resumed",
+            "source_checkout": {"full_head": head_sha, "path": str(worktree)},
+        },
     )
     monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
@@ -2270,6 +2466,90 @@ def test_active_rollover_lease_reconciliation(tmp_path: Path, monkeypatch: pytes
     assert "active rollover lease" in res.reason
     assert rw.classify_preservation(res) == "active_dispatch"
     assert worktree.exists()
+
+
+def test_rollover_lease_does_not_protect_sibling_at_same_sha(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A packet that names worktree A protects only A: a sibling worktree at
+    the same HEAD SHA (every fresh worktree branched from the same commit) is
+    not protected (#8536)."""
+    repo = init_repo(tmp_path)
+    protected = add_worktree(repo, "codex/rollover-a", path=repo / ".worktrees" / "dispatch" / "codex" / "rollover-a")
+    sibling = add_worktree(repo, "codex/rollover-b", path=repo / ".worktrees" / "dispatch" / "codex" / "rollover-b")
+    head_sha = git(protected, "rev-parse", "HEAD")
+    assert git(sibling, "rev-parse", "HEAD") == head_sha
+    _write_rollover_lease(
+        repo,
+        {
+            "status": "resumed",
+            "source_checkout": {"full_head": head_sha, "path": str(protected)},
+        },
+    )
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/rollover-a": [{"number": 11, "state": "MERGED"}],
+            "codex/rollover-b": [{"number": 12, "state": "MERGED"}],
+        },
+    )
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[protected, sibling])
+    res_protected = result_for(results, protected)
+    res_sibling = result_for(results, sibling)
+    assert res_protected.action == "skipped"
+    assert "active rollover lease" in res_protected.reason
+    assert res_sibling.action == "removed"
+    assert protected.exists()
+    assert not sibling.exists()
+
+
+def test_rollover_lease_without_recorded_path_does_not_protect(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Legacy packets record only ``source_checkout.full_head``. A bare SHA
+    match must never protect a worktree (#8536)."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/rollover-legacy")
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    _write_rollover_lease(
+        repo,
+        {"status": "resumed", "source_checkout": {"full_head": head_sha}},
+    )
+    patch_gh(monkeypatch, {"codex/rollover-legacy": [{"number": 13, "state": "MERGED"}]})
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "removed"
+    assert not worktree.exists()
+
+
+def test_rollover_lease_cleanup_ready_does_not_protect(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/rollover-done")
+    head_sha = git(worktree, "rev-parse", "HEAD")
+    _write_rollover_lease(
+        repo,
+        {
+            "status": "resumed",
+            "source_checkout": {"full_head": head_sha, "path": str(worktree)},
+        },
+        cleanup_ready=True,
+    )
+    patch_gh(monkeypatch, {"codex/rollover-done": [{"number": 14, "state": "MERGED"}]})
+    monkeypatch.setattr(rw, "_active_task_ids", lambda: set())
+    monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
+
+    results = rw.reap_worktrees(repo_root=repo, apply=True, target_paths=[worktree])
+    res = result_for(results, worktree)
+    assert res.action == "removed"
+    assert not worktree.exists()
 
 
 def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
