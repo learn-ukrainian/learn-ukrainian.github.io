@@ -185,10 +185,18 @@ def _session_stream_store(tmp_path: Path) -> SessionStreamStore:
     return SessionStreamStore(database)
 
 
+_CURSOR_DRIVER_STREAM_ID = "epic:4707"
+
+
+@pytest.fixture
+def cursor_driver_stream_id() -> str:
+    return _CURSOR_DRIVER_STREAM_ID
+
+
 def _cursor_driver_store(tmp_path: Path, *, process_id: int = 99999, host_id: str | None = None) -> SessionStreamStore:
     store = _session_stream_store(tmp_path)
     store.open_session(
-        stream_id="epic:4707",
+        stream_id=_CURSOR_DRIVER_STREAM_ID,
         holder=LeaseHolder(
             agent="cursor",
             harness="cursor-agent",
@@ -732,7 +740,9 @@ def _refusing_cursor_dispatch_setup(monkeypatch, tmp_path, store):
     return _track_worker_spawns(monkeypatch)
 
 
-def test_dispatch_cursor_allows_worker_when_driver_lease_is_other_session(monkeypatch, tmp_path, capsys):
+def test_dispatch_cursor_allows_worker_when_driver_lease_is_other_session(
+    monkeypatch, tmp_path, capsys, cursor_driver_stream_id
+):
     """A live Cursor driver lease from another lane/session is a NOTE, not a refusal."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
@@ -745,7 +755,10 @@ def test_dispatch_cursor_allows_worker_when_driver_lease_is_other_session(monkey
     assert rc == 0
     assert len(spawned) == 1
     err = capsys.readouterr().err
-    assert "NOTE: Cursor driver live on epic:4707 (other session); spawning a separate Cursor worker." in err
+    assert (
+        f"NOTE: Cursor driver live on {cursor_driver_stream_id} (other session); "
+        "spawning a separate Cursor worker."
+    ) in err
     assert "CAPACITY REFUSED" not in err
 
 
@@ -775,7 +788,9 @@ def test_dispatch_cursor_refuses_when_lease_holder_is_current_process(monkeypatc
     assert "CAPACITY REFUSED" in capsys.readouterr().err
 
 
-def test_dispatch_cursor_allows_worker_when_lease_is_on_another_host(monkeypatch, tmp_path, capsys):
+def test_dispatch_cursor_allows_worker_when_lease_is_on_another_host(
+    monkeypatch, tmp_path, capsys, cursor_driver_stream_id
+):
     """A lease with a different holder_host_id belongs to another host's driver."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
@@ -793,7 +808,10 @@ def test_dispatch_cursor_allows_worker_when_lease_is_on_another_host(monkeypatch
     assert rc == 0
     assert len(spawned) == 1
     err = capsys.readouterr().err
-    assert "NOTE: Cursor driver live on epic:4707 (other session); spawning a separate Cursor worker." in err
+    assert (
+        f"NOTE: Cursor driver live on {cursor_driver_stream_id} (other session); "
+        "spawning a separate Cursor worker."
+    ) in err
     assert "CAPACITY REFUSED" not in err
 
 
