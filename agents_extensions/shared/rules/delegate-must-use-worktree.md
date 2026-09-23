@@ -39,6 +39,12 @@ nukes all Codex leftovers at once) and aligns the branch name
 (`codex/1657p2-verify-quote`) with the path
 (`.worktrees/dispatch/codex/1657p2-verify-quote/`).
 
+Default sparse checkout: dispatch worktrees exclude `curriculum/`, `wiki/`,
+`data/projects/`, `data/lexicon/` by default (~275 MB per worktree);
+re-include with `--sparse-include <dir>` (repeatable) or matching
+`--research-owned-path`; `--full-checkout` disables sparse; inside a worktree
+`git sparse-checkout add <dir>` adds a tree later.
+
 ## MANDATORY in every dispatch brief
 
 Every Codex / Gemini / Claude-headless dispatch prompt MUST include
@@ -68,11 +74,11 @@ create a feature branch in the main checkout. Concrete dispatch:
     # (Omit --effort to use the agent's own CLI/config default.)
 
 The main checkout (wherever the user is working) stays untouched on
-`main`. After the PR merges, the worktree is cleaned up by the user
-or the next agent session:
+`main`. After the PR merges, `merge_closeout` (the P0 reaper) removes
+the dispatch worktree and its local and remote branch. That cleanup is
+not a manual user step:
 
-    git worktree remove .worktrees/dispatch/<agent>/<task>
-    git branch -d <agent>/<task>
+    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 
 If the work truly cannot be done in a worktree (extremely rare —
 usually only repo-wide mass migrations), STOP and ask for approval
@@ -87,21 +93,17 @@ and worktree path from the task-id + agent.
 
 When a worktree's PR merges to main, the worktree and its branch MUST be
 deleted. This is NOT optional — stale worktrees accumulate and pollute
-`git worktree list`.
+`git worktree list`. The accountable command is `merge_closeout`, which
+proves the PR is merged and reaps every worktree tied to that head through
+the P0 reaper (no second deletion hand, no `--force`):
 
-Check with:
+    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 
-    git worktree list
+That removes the subtree worktree (`.worktrees/dispatch/<agent>/<task>`)
+and the branch. Older flat worktrees (`.worktrees/<name>`) are reaped the
+same way when they are registered against the merged head.
 
-Remove with (subtree layout — new):
-
-    git worktree remove .worktrees/dispatch/<agent>/<task>
-    git branch -d <agent>/<task>
-
-Remove with (flat layout — back-compat for older worktrees):
-
-    git worktree remove .worktrees/<name>
-    git branch -d <branch>
+Clean read-only / workspace-write dispatch worktrees are removed automatically when the task settles (#8548); dirty trees are kept.
 
 ## When YOU (not a delegated agent) need isolation
 
