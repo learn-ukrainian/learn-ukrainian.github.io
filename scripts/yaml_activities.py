@@ -90,6 +90,7 @@ class FillInItem:
     answer: str
     options: list[str]
     explanation: str | None = None
+    mode: str | None = None
 
 
 @dataclass
@@ -853,10 +854,11 @@ class ActivityParser:
         for item_data in self._item_rows(data):
             sentence = item_data.get('sentence') or item_data.get('prompt', '')
             answer = item_data.get('answer') or item_data.get('correct')
+            mode = item_data.get('mode')
             # A present "" is the contracted "no sign" choice (see lesson_gates
             # fill_in_item_defects), not a missing answer.
             if not answer and "" in (item_data.get('answer'), item_data.get('correct')):
-                items.append(FillInItem(sentence=sentence, answer="", options=item_data.get('options', []), explanation=item_data.get('explanation')))
+                items.append(FillInItem(sentence=sentence, answer="", options=item_data.get('options', []), explanation=item_data.get('explanation'), mode=mode))
                 continue
             if not answer:
                 blanks = item_data.get('blanks')
@@ -875,7 +877,7 @@ class ActivityParser:
                     sentence = sentence[:bracket.start()] + "___" + sentence[bracket.end():]
             if not answer:
                 raise KeyError("fill-in item needs answer, correct, blanks, or {answer} in the sentence")
-            items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation')))
+            items.append(FillInItem(sentence=sentence, answer=answer, options=item_data.get('options', []), explanation=item_data.get('explanation'), mode=mode))
         return FillInActivity(title=data.get('title', ''), instruction=data.get('instruction', ''), items=items)
 
     def _parse_cloze(self, data: dict) -> ClozeActivity:
@@ -1901,7 +1903,8 @@ class ActivityParser:
         items = [
             {"sentence": str(i.sentence), "answer": str(i.answer),
              "options": [str(opt) for opt in i.options],
-             **({"explanation": str(i.explanation)} if i.explanation else {})}
+             **({"explanation": str(i.explanation)} if i.explanation else {}),
+             **({"mode": str(i.mode)} if getattr(i, "mode", None) else {})}
             for i in activity.items
         ]
         return f"### {self._escape_jsx(heading)}\n\n<FillIn client:only='react' items={{JSON.parse(`{self._dump_safe_json(items)}`)}}{self._instruction_prop(activity.instruction)} isUkrainian={{{'true' if is_ukrainian_forced else 'false'}}} />"

@@ -191,7 +191,11 @@ def _convert_v6_fill_in(body: str) -> str:
     for item in items:
         sentence = _strip_stray_quotes(item.get("sentence", ""))
         answer = _strip_stray_quotes(item.get("answer", ""))
-        fill_items.append({"sentence": sentence, "answer": answer})
+        fill_item = {"sentence": sentence, "answer": answer}
+        mode = item.get("mode")
+        if mode:
+            fill_item["mode"] = str(mode)
+        fill_items.append(fill_item)
 
     return (
         f'<FillIn client:only="react"'

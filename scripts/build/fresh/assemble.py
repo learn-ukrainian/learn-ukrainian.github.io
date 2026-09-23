@@ -427,12 +427,14 @@ def assemble_expanded_document(
             if not isinstance(item, dict):
                 continue
 
-            prompt = item.get("prompt") or item.get("sentence") or item.get("question") or item.get("cue")
+            prompt = item.get("prompt") or item.get("sentence") or item.get("question") or item.get("cue") or item.get("statement")
             if prompt:
                 for role, span_text in _split_inline_spans(str(prompt), "item_prompt"):
                     add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
 
-            answer = item.get("answer") or item.get("correct") or item.get("target")
+            answer = item.get("answer") or item.get("target")
+            if not answer and not isinstance(item.get("correct"), bool):
+                answer = item.get("correct")
             if answer:
                 for role, span_text in _split_inline_spans(str(answer), "item_answer"):
                     add_unit("vpravy", act_step, act_id, item_idx, "answer", role, span_text, source="writer_prose")
@@ -1099,7 +1101,7 @@ def apply_stress_to_activities(
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
                 continue
-            for prompt_key in ("prompt", "sentence", "question", "cue"):
+            for prompt_key in ("prompt", "sentence", "question", "cue", "statement"):
                 if prompt_key in item and isinstance(item[prompt_key], str):
                     item[prompt_key] = format_act_text(act_id, item_idx, "prompt", item[prompt_key])
             for ans_key in ("answer", "correct", "target"):

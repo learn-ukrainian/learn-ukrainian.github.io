@@ -1769,3 +1769,204 @@ def test_cli_blocked_report_prints_tokens_and_failures(capsys, monkeypatch):
     assert "Blocking token: слово" in err
     assert "Blocking token: мова" in err
     assert "Stream failure: unresolved token at unit 2" in err
+
+
+def test_fill_in_modes_appear_in_assembler_fill_in_props(tmp_path, monkeypatch):
+    """Blocker: Both fill-in modes appear in generated <FillIn> props from the assembler."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": ["a1"],
+    }
+    plan_activities = [
+        {"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Fill-in focus"},
+    ]
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
+
+    act_fill = {
+        "id": "a1",
+        "instruction": "Заповніть пропуски.",
+        "items": [
+            {
+                "sentence": "Це ____ слово.",
+                "answer": "гарне",
+                "options": ["гарне", "гарна"],
+                "explanation": "Виберіть форму.",
+                "mode": "form-choice",
+            },
+            {
+                "sentence": "Це м____ясо.",
+                "answer": "'",
+                "options": ["'", ""],
+                "explanation": "Правопис апострофа.",
+                "mode": "orthography",
+            },
+        ],
+    }
+    draft = make_draft(
+        steps=[
+            {
+                "id": "s1",
+                "blocks": [
+                    {"kind": "prose", "text": "слово", "explains": ["W-1"]},
+                    {"kind": "activity", "ref": "a1"},
+                ],
+            }
+        ],
+        activities=[act_fill],
+        consolidation={"activities": []},
+        lesson_lock_entry_sha256="abc" * 21 + "a",
+    )
+
+    exp_doc, _ = assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+    mock_stream = type(
+        "MockStream",
+        (),
+        {
+            "tokens": [{"unit_index": 0, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}}],
+            "failures": [],
+        },
+    )()
+
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.planned_state",
+        lambda *args, **kwargs: type("State", (), {"cumulative_core_count": 10, "waiver": None})(),
+    )
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *args, **kwargs: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock,
+        "compute_lesson_lock",
+        lambda *args, **kwargs: {"lessons": [{"n": 1, "entry_sha256": "abc" * 21 + "a"}]},
+    )
+
+    state_dir = tmp_path / "state"
+    site_dir = tmp_path / "site"
+
+    res = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        output_dir=state_dir,
+        site_dir=site_dir,
+    )
+    assert res.passed is True
+    mdx = res.artifacts["mdx"]
+    assert "<FillIn client:only='react'" in mdx
+    assert '"mode": "form-choice"' in mdx
+    assert '"mode": "orthography"' in mdx
+
+
+def test_true_false_statement_resolved_and_stressed_in_true_false_output(tmp_path, monkeypatch):
+    """Major: True/false statement is in expanded units and gets stressed in <TrueFalse> output."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": [],
+    }
+    plan_activities = [
+        {"id": "a1", "type": "true-false", "placement": "workbook", "focus": "True-false focus"},
+    ]
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
+
+    act_tf = {
+        "id": "a1",
+        "instruction": "Правда чи ні?",
+        "items": [
+            {
+                "statement": "Це слово правда.",
+                "correct": True,
+                "explanation": "Так, це правда.",
+            }
+        ],
+    }
+    draft = make_draft(
+        steps=[
+            {
+                "id": "s1",
+                "blocks": [
+                    {"kind": "prose", "text": "слово", "explains": ["W-1"]},
+                ],
+            }
+        ],
+        activities=[act_tf],
+        consolidation={"activities": ["a1"]},
+        lesson_lock_entry_sha256="abc" * 21 + "a",
+    )
+
+    exp_doc, _ = assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+
+    stmt_units = [
+        (idx, u)
+        for idx, u in enumerate(exp_doc["units"])
+        if u.get("tab") == "vpravy" and u.get("activity") == "a1" and u.get("item") == 0 and u.get("block") == "prompt"
+    ]
+    assert len(stmt_units) == 1
+    stmt_idx, stmt_unit = stmt_units[0]
+    assert stmt_unit["role"] == "item_prompt"
+    assert stmt_unit["text"] == "Це слово правда."
+
+    mock_stream = type(
+        "MockStream",
+        (),
+        {
+            "tokens": [
+                {"unit_index": 0, "offset": 0, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}},
+                {"unit_index": stmt_idx, "offset": 3, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}},
+            ],
+            "failures": [],
+        },
+    )()
+
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.planned_state",
+        lambda *args, **kwargs: type("State", (), {"cumulative_core_count": 10, "waiver": None})(),
+    )
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *args, **kwargs: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock,
+        "compute_lesson_lock",
+        lambda *args, **kwargs: {"lessons": [{"n": 1, "entry_sha256": "abc" * 21 + "a"}]},
+    )
+
+    state_dir = tmp_path / "state"
+    site_dir = tmp_path / "site"
+
+    res = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        output_dir=state_dir,
+        site_dir=site_dir,
+    )
+    assert res.passed is True
+    mdx = res.artifacts["mdx"]
+    assert "<TrueFalse client:only='react'" in mdx
+    assert "Це сло́во правда." in mdx
