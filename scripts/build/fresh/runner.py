@@ -19,8 +19,9 @@ from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_re
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.learner_state import codes as learner_codes
 from scripts.curriculum.learner_state.inventory_gate import check_lesson
-from scripts.curriculum.learner_state.observed import write_observed
+from scripts.curriculum.learner_state.observed import ObservedError, write_observed
 from scripts.curriculum.resolver import codes, questions, receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
@@ -44,6 +45,21 @@ def _pass(number: int, details: dict[str, Any] | None = None) -> dict[str, Any]:
     if details is not None:
         row["details"] = details
     return row
+
+
+def _inventory_layer(code: str) -> str:
+    if code in {learner_codes.PLAN_NOT_FOUND, learner_codes.PLAN_YAML_INVALID,
+                learner_codes.PRIOR_PLANS_MISSING, learner_codes.POSITION_NOT_FOUND,
+                learner_codes.LESSON_NOT_FOUND, learner_codes.LEMMA_OUTSIDE_STATE}:
+        return "plan"
+    if code in {learner_codes.BASE_LAYER_MISSING, learner_codes.BASE_LAYER_UNRESOLVED,
+                learner_codes.PENDING_STRESS, learner_codes.LOCK_MISMATCH}:
+        return "pack"
+    if code in {learner_codes.EXPANDED_DOCUMENT_MISSING, learner_codes.EXPANDED_DOCUMENT_MISMATCH,
+                learner_codes.RESOLUTIONS_NOT_FOUND, learner_codes.RESOLUTIONS_INVALID,
+                learner_codes.UNKNOWN_TAB}:
+        return "engine"
+    return "writer"
 
 
 def _lesson(plan: dict[str, Any], n: int) -> dict[str, Any]:
@@ -126,7 +142,8 @@ def check_4_activities(draft: dict[str, Any], lesson: dict[str, Any], words: dic
                 return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
             if typ == "error-correction":
                 er = errors.get(item.get("error_ref"))
-                if (er is None or er.get("incorrect") not in item.get("sentence", "")
+                if (er is None or item.get("error_ref") not in (planned[aid].get("error_refs") or [])
+                        or er.get("incorrect") not in item.get("sentence", "")
                         or er.get("correct") != item.get("correction", item.get("answer"))):
                     return failure(4, "error_ref_mismatch", "writer", activity=aid, token=str(idx)), {}
             if (typ in {"quiz", "multiple-choice"} and "correct" in item and isinstance(item["correct"], int)
@@ -134,6 +151,15 @@ def check_4_activities(draft: dict[str, Any], lesson: dict[str, Any], words: dic
                 return failure(4, "answer_index_out_of_range", "writer", activity=aid, token=str(idx)), {}
             if "answers" in item and "options" in item and not set(item["answers"]) <= set(item["options"]):
                 return failure(4, "answers_not_subset", "writer", activity=aid, token=str(idx)), {}
+            if typ == "select":
+                correct_count = sum(option.get("correct") is True for option in item.get("options") or [])
+                if correct_count < max(2, item.get("min_correct", 2)):
+                    return failure(4, "select_correct_set_invalid", "writer", activity=aid, token=str(idx)), {}
+            if typ == "quiz" and isinstance(item.get("answer"), str):
+                offered = [option.get("text") if isinstance(option, dict) else option
+                           for option in item.get("options") or []]
+                if item["answer"] not in offered:
+                    return failure(4, "answer_not_in_options", "writer", activity=aid, token=str(idx)), {}
     return _pass(4), form_options
 
 
@@ -166,13 +192,24 @@ def check_6_count(expanded: dict[str, Any], target: int, words: dict[str, Any] |
     return _pass(6, details)
 
 
-def check_7_deterministic(stream: Any, lesson: dict[str, Any]) -> dict[str, Any]:
+def check_7_deterministic(stream: Any, lesson: dict[str, Any], draft: dict[str, Any] | None = None,
+                          form_options: dict[tuple[str, int], list[dict[str, Any]]] | None = None) -> dict[str, Any]:
+    for forms in (form_options or {}).values():
+        for form in forms:
+            if form.get("stress_source") == "pending" or not form.get("stressed"):
+                return failure(7, "pending_stress", "pack", token=form.get("form"))
     if stream.failures:
         first = stream.failures[0]
         layer = "pack" if first["code"] in {codes.LEMMA_OUTSIDE_STATE, codes.UNKNOWN_WORD_ID} else "writer"
         return failure(7, first.get("message") or first["code"], layer, code=first["code"],
                        step=first["unit"].get("step"), activity=first["unit"].get("activity"), token=first["token"])
     vocab = (lesson.get("inventory") or {}).get("vocabulary") or {}
+    drilled_forms = {
+        (item["record"], form["tags"])
+        for act in (draft or {}).get("activities") or []
+        for idx, item in enumerate(act.get("items") or [])
+        for form in (form_options or {}).get((act["id"], idx), [])
+    }
     for group in ("core", "recycled"):
         for item in vocab.get(group) or []:
             rid = item["evidence"] if isinstance(item, dict) else item
@@ -180,6 +217,8 @@ def check_7_deterministic(stream: Any, lesson: dict[str, Any]) -> dict[str, Any]
                 return failure(7, f"{group}_record_absent", "writer", token=rid)
     for item in vocab.get("core") or []:
         for tag in item.get("forms") or []:
+            if (item["evidence"], tag) in drilled_forms:
+                continue
             if not any(item["evidence"] in t.get("candidates", [])
                        and any(tag in r.get("forms", []) for r in t.get("readings", []))
                        and (t["unit"].get("step") is not None or t["unit"].get("activity") is not None)
@@ -344,7 +383,7 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
     except ResolverError as err:
         layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
         return finish(failure(7, err.message, layer, code=err.code))
-    row = check_7_deterministic(stream, lesson)
+    row = check_7_deterministic(stream, lesson, draft, form_options)
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
@@ -355,6 +394,8 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
     batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
     if batch["questions"] and not question_seat:
         return finish(failure(8, "question_seat_required", "driver"))
+    if batch["questions"] and (question_seat.count(":") != 1 or not all(question_seat.split(":"))):
+        return finish(failure(8, "question_seat_invalid", "driver"))
     try:
         questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
         if batch["questions"]:
@@ -379,19 +420,30 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
         return finish(failure(8, str(err), "writer" if isinstance(err, ResolverError) else "driver",
                               code=getattr(err, "code", None)))
     rows.append(_pass(8, {"questions": len(batch["questions"]), "answered": len(selections)}))
-    gate = inventory_gate(level, slug, n, stream, plans_dir=plans_dir, evidence_dir=evidence_dir,
-                          expanded=expanded_obj, resolutions_path=receipt_path)
+    try:
+        gate = inventory_gate(level, slug, n, stream, plans_dir=plans_dir, evidence_dir=evidence_dir,
+                              expanded=expanded_obj, resolutions_path=receipt_path)
+    except Exception as err:
+        return finish(failure(7, f"inventory_gate_error: {err}", "engine"))
     if not gate.ok:
         first = gate.failures[0]
-        return finish(failure(7, first.message, "pack" if first.code in {codes.UNKNOWN_WORD_ID, codes.LEMMA_OUTSIDE_STATE} else "writer",
+        return finish(failure(7, first.message, _inventory_layer(first.code),
                               code=first.code, token=first.token))
-    observed_writer(level, slug, n, resolutions_doc=receipt_doc, plans_dir=plans_dir,
-                    evidence_dir=evidence_dir, expanded=expanded_obj, state_dir=state_dir)
+    try:
+        observed_writer(level, slug, n, resolutions_doc=receipt_doc, plans_dir=plans_dir,
+                        evidence_dir=evidence_dir, expanded=expanded_obj, state_dir=state_dir)
+    except ObservedError as err:
+        return finish(failure(7, err.message, _inventory_layer(err.code), code=err.code))
+    except Exception as err:
+        return finish(failure(7, f"observed_index_error: {err}", "engine"))
     print_draft = _printable_form_draft(draft, form_options)
     print_expanded = _printable_form_expanded(expanded, form_options)
-    rendered = check_9_stress_and_render(print_expanded, print_draft, plan, pack, words, stream, level, slug, n,
-                                         repo_root=repo_root, output_dir=state_dir, site_dir=site_dir,
-                                         plans_dir=plans_dir, evidence_dir=evidence_dir)
+    try:
+        rendered = check_9_stress_and_render(print_expanded, print_draft, plan, pack, words, stream, level, slug, n,
+                                             repo_root=repo_root, output_dir=state_dir, site_dir=site_dir,
+                                             plans_dir=plans_dir, evidence_dir=evidence_dir)
+    except Exception as err:
+        return finish(failure(9, f"stress_or_render_error: {err}", "engine"))
     if not rendered.passed:
         layer = rendered.layer or "engine"
         return finish(failure(9, rendered.reason or "stress_or_render_failed", layer,

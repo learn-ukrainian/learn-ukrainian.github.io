@@ -14,7 +14,7 @@ import pytest
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
 from scripts.curriculum.evidence import lock
-from scripts.curriculum.learner_state.inventory_gate import GateReport
+from scripts.curriculum.learner_state.inventory_gate import GateFailure, GateReport
 from scripts.curriculum.resolver.inputs import Allowlist
 from tests.build.test_fresh_assemble import (
     make_draft,
@@ -151,7 +151,8 @@ class _FixtureSources:
         return type("Result", (), {"raw": {word: [] for word in words}})()
 
 
-def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:fixture", expected_inputs=None):
+def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:fixture", expected_inputs=None,
+                  inventory_gate=None):
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     monkeypatch.setattr(assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})())
     monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
@@ -170,7 +171,7 @@ def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:
         state_dir=state, repo_root=tmp_path, plans_dir=tmp_path, evidence_dir=tmp_path,
         question_seat=seat, question_dispatch=answer, sources=_FixtureSources(),
         allowlist=allowlist, site_dir=tmp_path / "site",
-        inventory_gate=lambda *a, **kw: GateReport("a1", "sample-slug", 1, ()),
+        inventory_gate=inventory_gate or (lambda *a, **kw: GateReport("a1", "sample-slug", 1, ())),
         observed_writer=lambda *a, **kw: None, expected_inputs=expected_inputs,
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
@@ -333,11 +334,28 @@ def test_runner_check_9_engine_failure_layer(tmp_path, monkeypatch):
     assert (bad["check"], bad["reason"], bad["layer"]) == (9, "fixture_render_error", "engine")
 
 
+def test_inventory_failure_is_reported_as_check_7_after_answers(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(two_senses=True)
+
+    def gate(level, slug, n, stream, **kwargs):
+        assert all(token["selected"] is not None for token in stream.open_tokens())
+        assert any(token["unit"].get("step") == "s1" for token in stream.tokens)
+        return GateReport(level, slug, n, (GateFailure(
+            "core_not_introduced", level, slug, n, "urok", "слово", "слово", "W-1", "fixture gate failure"),))
+
+    report, _, seen = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, inventory_gate=gate)
+    assert seen
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["code"], bad["layer"]) == (7, "core_not_introduced", "writer")
+    assert report["checks"][7]["status"] == "passed"
+
+
 def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     form = {**words["words"][0]["forms"][0], "form": "слова", "stressed": "слова\u0301",
             "tags": "noun:inanim:n:v_rod"}
     words["words"][0]["forms"].append(form)
+    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["forms"].append(form["tags"])
     plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
     plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Forms"}]
     draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
