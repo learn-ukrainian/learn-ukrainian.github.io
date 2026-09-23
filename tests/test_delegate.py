@@ -9527,9 +9527,7 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     assert state["worktree_branch"] is not None
 
 
-def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys
-):
+def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -9538,9 +9536,7 @@ def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(
     assert not marker.exists()
 
     # An ordinary attach still works before the review attempt marks the tree.
-    assert delegate.cmd_dispatch(
-        _write_args(task_id="unmarked", mode="read-only", cwd=str(dispatch_wt))
-    ) == 0
+    assert delegate.cmd_dispatch(_write_args(task_id="unmarked", mode="read-only", cwd=str(dispatch_wt))) == 0
     assert delegate._read_state(delegate._state_path("unmarked"))["worktree_reused"] is True
 
     delegate._mark_review_attempt_worktree(dispatch_wt, "review-original")
