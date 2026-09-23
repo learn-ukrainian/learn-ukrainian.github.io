@@ -30,7 +30,7 @@
 | UI / visual product design | K3 | Astra (systems UX adjudication only); Kimi consult non-UA | K3 `high`; Astra `xhigh` | provisional (K3 UI primacy needs bakeoffs) |
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
 | Critical CF review | Astra ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
-| Ukrainian language | Gemini 3.1 Pro (AGY) | LANGUAGE-LANES: codex/claude/grok-4.6 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated) |
+| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: codex/claude/grok-4.6 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated; 3.1 Pro only on explicit request (operator 2026-09-22)) |
 | Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | Luna `max` with exact owned paths + objective scope ceiling; others `medium`–`high`; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
@@ -51,7 +51,7 @@
 | **Sonnet 5** | Near-flagship coding at better cost; daily driver agentic | Escalate systemic ambiguity | Anthropic | Default worker |
 | **Grok 4.5** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker + CF review |
 | **Gemini 3.5 Flash** | Fast agentic/coding volume | Not release authority | Google / AGY | Volume worker |
-| **Gemini 3.1 Pro** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane |
+| **Gemini 3.8 Flash High** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane (3.1 Pro only on explicit request (operator 2026-09-22)) |
 | **K3** | Long-horizon coding; frontend/visual ideation | Maintainability ≠ demo; Moonshot route/egress | Moonshot | UI + long implement |
 | **GLM-5.3** | Deep bug/security; large-context code coherence | Weak UA pedagogy; **LOCAL-ONLY** China-egress | Zhipu / opencode local | Local CF code only; never CI |
 | **DeepSeek V4 Flash** | Economical coding + infra CF volume; Arena-practical frontend (operator preferred) | Not folk/UA/critical authority; Pro @ high = hard implement only (complex multi-file, hard lookup — 2026-08-13), never default | **First-party only** (`deepseek-direct` / Hermes); OpenRouter deepseek refused | Infra/code CF + worker |
@@ -157,7 +157,7 @@ Routine code/fix          → Sonnet 5 | Terra | Grok 4.5
 Hard code (ceiling)         → Astra | Fable 5 (after mid-tier wall or known ceiling)
 Orchestrate stream          → Opus 4.8 | Terra xhigh  (exactly one)
 UI / visual product         → K3 explore → Sonnet/Terra/Grok implement → Astra if systems-hard
-UA language                 → Gemini 3.1 Pro (AGY) + VESUM/sources
+UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro only on explicit request, operator 2026-09-22)
 Security/bug CF             → author-family-conditional (Grok/GLM/DeepSeek/Opus/…)
 Architecture decision       → Astra/Fable advisory → orchestrator decides
 Recon                       → Luna | Claude Haiku | Gemini 3.5 Flash

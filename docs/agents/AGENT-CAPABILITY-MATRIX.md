@@ -37,7 +37,7 @@ on 4 of those roles. Headline recommendations:
 |---|---|---|---|---|
 | 1 | **Claude** | `claude` (Code), `claude` (Desktop) | `claude-sonnet-4.6` (default), `claude-opus-4.7` (xhigh) | `scripts/delegate.py dispatch --agent claude`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-claude`; inline orchestrator |
 | 2 | **Codex** | `codex` (CLI), `codex` (Desktop) | `gpt-5.5` (xhigh) | `scripts/delegate.py dispatch --agent codex`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`; Codex Desktop UI |
-| 3 | **AGY** | `agy` | `Gemini 3.1 Pro (High)` (deep), `Gemini 3.5 Flash (High)` (routine) | `scripts/delegate.py dispatch --agent agy`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.1-pro-high` |
+| 3 | **AGY** | `agy` | `Gemini 3.8 Flash (High)` (routine & deep; 3.1 Pro only on explicit request, operator 2026-09-22) | `scripts/delegate.py dispatch --agent agy`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` |
 | 4 | **Grok** | `hermes -m grok-4.3` | `grok-4.3` | `scripts/delegate.py dispatch --agent grok`; `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-grok`; uses `hermes_grok.py` adapter |
 | 5 | **DeepSeek v4** | `hermes -z PROMPT -m deepseek-v4-pro\|flash` | `deepseek-v4-pro` (default), `deepseek-v4-flash` (lighter) | LIVE LANE — adapter `scripts/agent_runtime/adapters/hermes_deepseek.py` SHIPPED PR #2107 (2026-05-17, SHA `84ef22455e`). `delegate.py dispatch --agent deepseek` end-to-end smoke validated; first real-world write-mode dispatch landed PR #2112 (artifacts MD support, +192 lines + 10 tests, pytest green). REVERSED from opencode after 33% empty-output flake. Hermes wires `sources` MCP into the model session; model proactively verifies vocab via VESUM + CEFR. |
 | ~~6~~ | ~~Mistral~~ | ~~vibe -p~~ | — | **REMOVED 2026-05-17 (user-cancelled subscription)**. DeepSeek-flash via hermes covers the lane. |
@@ -320,8 +320,9 @@ scripts/delegate.py dispatch --agent codex --model gpt-5.5 --effort xhigh \
   --brief docs/dispatch-briefs/foo.md
 
 # AGY (Gemini-family route; direct agy --model uses display labels)
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "QUESTION" --task-id agy-question --to-model gemini-3.5-flash-high
-.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "DEEP QUESTION" --task-id agy-deep-question --to-model gemini-3.1-pro-high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "QUESTION" --task-id agy-question --to-model gemini-3.8-flash-high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "DEEP QUESTION" --task-id agy-deep-question --to-model gemini-3.8-flash-high
+# (3.1 Pro only on explicit request, operator 2026-09-22: --to-model gemini-3.1-pro-high)
 scripts/delegate.py dispatch --agent agy --brief docs/dispatch-briefs/foo.md
 
 # Grok (via hermes)

@@ -168,7 +168,7 @@ Use the live model catalog and rules as authority. Standing task-fit defaults:
 - Ukrainian pedagogy, CEFR, authoring, or content review uses only `agy`,
   `codex`, `claude`, or `grok-4.6`, with AGY
   `gemini-3.8-flash-high` first for current Ukrainian teaching voice and
-  `gemini-3.1-pro-high` for deep work when live policy permits. Require
+  `gemini-3.8-flash-high` for deep work when live policy permits. Require
   `sources`/VESUM evidence for linguistic claims.
 - Routine Codex implementation uses Terra; Luna or Spark may perform bounded
   mechanical work but are never sole consequential authority.

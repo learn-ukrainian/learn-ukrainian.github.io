@@ -468,7 +468,7 @@ models:
     roles: [implementation, agentic_coding, subagent_work, strong_review, multimodal_analysis]
     transports: [agy]
     strengths: [token_efficient_agentic_loops, fast_tool_use, coding_benchmark_gains, low_cost, fast_scoped_cf]
-    weaknesses: [not_default_critical_authority, deep_architecture_still_prefers_pro_or_sol]
+    weaknesses: [not_default_critical_authority, deep_architecture_prefers_sol]
     notes: >-
       Default AGY Flash pin (operator GO 2026-09-02). Live `agy models` probe
       2026-09-02 lists gemini-3.8-flash-high/medium/low; 3.7/3.6 stay in the
@@ -515,10 +515,10 @@ models:
     tier: frontier_practical
     lifecycle: active
     aliases: [gemini-3.1-pro-preview, gemini-3.1-pro]
-    roles: [deep_review, architecture_support, factual_review, multimodal_analysis]
+    roles: [architecture_support, factual_review, multimodal_analysis]
     transports: [agy]
     strengths: [complex_reasoning, deep_single_shot, multimodal_long_context]
-    weaknesses: [higher_latency_and_cost_than_3_7_flash, not_default_agentic_workhorse]
+    weaknesses: [higher_latency_and_cost_than_3_7_flash, not_default_agentic_workhorse, operator_2026_09_22_outperformed_by_3_8_flash_high]
     sources:
       - https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview
   gemini-3.5-flash-high:
@@ -1119,10 +1119,10 @@ orchestrator_seats:
   agy:
     model_id: gemini-3.8-flash-high
     effort: high
-    escalate_model_id: gemini-3.1-pro-high
+    escalate_model_id: gemini-3.8-flash-high
     escalate_effort: high
-    escalate_when: deep_single_shot_or_architecture
-    note: Google-family orchestrator; Flash default loop; Pro escalate only
+    escalate_when: n/a_same_sku
+    note: "Google-family seat; Flash default and deep (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only when explicitly requested)"
   cursor:
     model_id: auto
     effort: high

@@ -10,14 +10,14 @@
 # Pin a lane and auto-claim the stream lease through the driver entrypoint
 ./start-gemini-driver.sh --epic atlas
 
-# Use Gemini 3.1 Pro High for complex epic planning & orchestration
+# Optional: Use Gemini 3.1 Pro High on explicit request (Flash is default for routine and deep)
 ./start-gemini-driver.sh --epic harness --model gemini-3.1-pro-high
 
 # Pass an explicit driver prompt after the core's binding
 ./start-gemini-driver.sh --epic atlas "check issue streams and open PRs"
 
 # Non-epic mode — standard agy session
-./start-gemini.sh --model gemini-3.6-flash-high
+./start-gemini.sh --model gemini-3.8-flash-high
 ```
 
 ## Launcher Flags
@@ -27,7 +27,7 @@
 | `--epic <name>` | Pin lane (atlas, harness, hramatka, …) |
 | `--stream <id>` | Override stream id (default derived from epic) |
 | `--handoff-agent <id>` | Override `SESSION_HANDOFF_AGENT` |
-| `--model <id>` | Gemini model (`gemini-3.6-flash-high` [default], `pro` / `gemini-3.1-pro-high`, `gemini-3.5-flash-high`) |
+| `--model <id>` | Gemini model (`gemini-3.8-flash-high` [default], `gemini-3.7-flash-high`, `pro` / `gemini-3.1-pro-high` [explicit request only]) |
 | `--no-always-approve` | Require manual tool approval (do not pass `--dangerously-skip-permissions`) |
 | `--help-launcher` | Show launcher help |
 
@@ -46,8 +46,8 @@ The cold-start prompt explicitly tells Gemini **not** to open or resume the leas
 
 ## Gemini Model Selection for Orchestration
 
-- **`gemini-3.6-flash-high`** (Default): Extremely fast, high throughput, great for active task management, issue triage, and worktree dispatching.
-- **`gemini-3.1-pro-high`** (`--model pro`): Deep reasoning (1M-2M context window), ideal for complex epic planning, multi-file architecture decisions, and cross-agent review routing.
+- **`gemini-3.8-flash-high`** (Default): Extremely fast, high throughput; default for routine AND deep work (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro).
+- **`gemini-3.1-pro-high`** (`--model pro`): Deep reasoning (1M-2M context window); superseded as deep default by 3.8 Flash High; only on explicit request.
 
 ## Handoff Identity
 
