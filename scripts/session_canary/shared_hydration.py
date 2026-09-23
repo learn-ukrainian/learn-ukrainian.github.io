@@ -261,6 +261,17 @@ def _ok(value: Any) -> dict[str, Any]:
     return {"status": "ok", "value": sanitize_hydration_value(value)}
 
 
+def _same_json_value(actual: Any, expected: Any) -> bool:
+    """Compare an exact lease envelope without JSON bool/number coercion."""
+    if type(actual) is not type(expected):
+        return False
+    if isinstance(expected, dict):
+        return actual.keys() == expected.keys() and all(
+            _same_json_value(actual[key], value) for key, value in expected.items()
+        )
+    return actual == expected
+
+
 def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
     """Read one Monitor snapshot with a total deadline and a bounded body."""
     target = urlparse(monitor_url())
@@ -340,7 +351,7 @@ def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, An
         or not isinstance(current, dict)
         or current.get("state") != "active"
         or current.get("session_state") not in ("open", "rolling")
-        or any(current.get(key) != value for key, value in expected.items())
+        or any(not _same_json_value(current.get(key), value) for key, value in expected.items())
     ):
         raise LookupError("launcher lease mismatch")
     expires_at = current.get("expires_at")
