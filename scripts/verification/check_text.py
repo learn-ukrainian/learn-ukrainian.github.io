@@ -10,7 +10,6 @@ a single call:
 
 from __future__ import annotations
 
-import hashlib
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -23,7 +22,12 @@ from scripts.curriculum.resolver.tokenize import (
     lookup_form,
     tokenize,
 )
-from scripts.verification.check_ru_morph import check_russian_patterns_batch
+from scripts.lexicon.calque_corrections import CURATED_CALQUES, LEXICALISED_SAFE
+from scripts.verification.check_ru_morph import (
+    KNOWN_SHADOW_LEMMAS,
+    _morph_uk,
+    check_russian_patterns_batch,
+)
 from scripts.verification.stress import (
     STRESS_BATCH_CAP,
     _stress_positions_in_marked_string,
@@ -37,14 +41,19 @@ VALID_CHECKS = frozenset({"vesum", "stress", "russian_shadow", "ua_gec"})
 DEFAULT_CHECKS = ("vesum", "stress", "russian_shadow", "ua_gec")
 DEFAULT_UA_GEC_TAGS = ("F/Calque", "F/Collocation")
 
-_VESUM_HASH_CACHE: dict[tuple[int, int], str] = {}
+_VESUM_VERSION_CACHE: tuple[tuple[int, int], str] | None = None
 _UA_GEC_INDEX: dict[tuple[str, ...], list[dict[str, Any]]] | None = None
 _UA_GEC_SIGNATURE: tuple[int, int, int, int] | None = None
 _UA_GEC_MAX_LEN: int = 1
+_UA_GEC_DROPPED_SKIPPED_KIND: int = 0
 
 
 def _vesum_version() -> str:
-    """SHA-256 digest of vesum.db, cached by size and mtime."""
+    """Canonical VESUM identity from vesum_build_metadata.canonical_jsonl_sha256.
+
+    Cached by (size, mtime_ns) to avoid querying SQLite on every warm call.
+    """
+    global _VESUM_VERSION_CACHE
     try:
         from scripts.rag.config import VESUM_DB_PATH
 
@@ -52,13 +61,18 @@ def _vesum_version() -> str:
         if path.is_file():
             stat = path.stat()
             key = (stat.st_size, stat.st_mtime_ns)
-            if key in _VESUM_HASH_CACHE:
-                return _VESUM_HASH_CACHE[key]
-            with path.open("rb") as stream:
-                digest = hashlib.file_digest(stream, "sha256").hexdigest()
-            _VESUM_HASH_CACHE.clear()
-            _VESUM_HASH_CACHE[key] = digest
-            return digest
+            if _VESUM_VERSION_CACHE is not None and _VESUM_VERSION_CACHE[0] == key:
+                return _VESUM_VERSION_CACHE[1]
+            conn = sqlite3.connect(f"file:{path}?mode=ro", uri=True)
+            try:
+                cur = conn.execute("SELECT value FROM vesum_build_metadata WHERE key = 'canonical_jsonl_sha256'")
+                row = cur.fetchone()
+                if row and row[0]:
+                    digest = str(row[0])
+                    _VESUM_VERSION_CACHE = (key, digest)
+                    return digest
+            finally:
+                conn.close()
     except Exception:
         pass
     return "vesum-source-unversioned"
@@ -68,19 +82,23 @@ def _lower_first(text: str) -> str:
     return text[:1].lower() + text[1:]
 
 
-def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], int]:
+def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], int, int]:
     """In-memory UA-GEC index keyed on tokenized error tuple (lowercased lookups).
+
+    Rows whose error text contains skipped-kind tokens (latin, digits) are dropped
+    from the index to avoid sub-span false matches.
 
     Invalidated whenever data/sources.db file signature changes.
     """
-    global _UA_GEC_INDEX, _UA_GEC_SIGNATURE, _UA_GEC_MAX_LEN
+    global _UA_GEC_INDEX, _UA_GEC_SIGNATURE, _UA_GEC_MAX_LEN, _UA_GEC_DROPPED_SKIPPED_KIND
     sources_path = _sources_path()
     current_sig = _signature(sources_path)
     if _UA_GEC_INDEX is not None and current_sig == _UA_GEC_SIGNATURE:
-        return _UA_GEC_INDEX, _UA_GEC_MAX_LEN
+        return _UA_GEC_INDEX, _UA_GEC_MAX_LEN, _UA_GEC_DROPPED_SKIPPED_KIND
 
     index: dict[tuple[str, ...], list[dict[str, Any]]] = {}
     max_len = 1
+    dropped_count = 0
     if sources_path.is_file():
         conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
         conn.row_factory = sqlite3.Row
@@ -90,11 +108,11 @@ def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], in
             ).fetchall()
             for r in rows:
                 err_text = r["error"]
-                toks = tuple(
-                    t.lookup.lower()
-                    for t in tokenize(err_text)
-                    if t.kind not in SKIPPED_KINDS
-                )
+                raw_toks = tokenize(err_text)
+                if any(t.kind in SKIPPED_KINDS for t in raw_toks):
+                    dropped_count += 1
+                    continue
+                toks = tuple(t.lookup.lower() for t in raw_toks if t.kind not in SKIPPED_KINDS)
                 if not toks:
                     continue
                 if len(toks) > max_len:
@@ -114,7 +132,8 @@ def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], in
     _UA_GEC_INDEX = index
     _UA_GEC_SIGNATURE = current_sig
     _UA_GEC_MAX_LEN = max_len
-    return index, max_len
+    _UA_GEC_DROPPED_SKIPPED_KIND = dropped_count
+    return index, max_len, dropped_count
 
 
 def check_text(
@@ -202,24 +221,44 @@ def check_text(
                 }
             units.append((idx, item["id"], item["text"]))
 
-    active_checks = set(DEFAULT_CHECKS) if checks is None else {c for c in checks if c in VALID_CHECKS}
+    if checks is not None:
+        if not isinstance(checks, (list, tuple, set, frozenset)) or len(checks) == 0:
+            return {
+                "status": "error",
+                "error_code": "invalid_input",
+                "error": "invalid_input: 'checks' must be a nonempty list or tuple",
+            }
+        unknown_checks = [c for c in checks if c not in VALID_CHECKS]
+        if unknown_checks:
+            return {
+                "status": "error",
+                "error_code": "invalid_input",
+                "error": f"invalid_input: unknown check(s): {', '.join(repr(c) for c in unknown_checks)}. Valid checks: {', '.join(sorted(VALID_CHECKS))}",
+            }
+        active_checks = set(checks)
+    else:
+        active_checks = set(DEFAULT_CHECKS)
 
-    if max_findings is None or not isinstance(max_findings, int) or max_findings < 0:
-        max_findings = 200
+    if isinstance(max_findings, bool) or not isinstance(max_findings, int) or max_findings < 1:
+        return {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: 'max_findings' must be an integer >= 1",
+        }
 
     active_ua_gec_tags = set(DEFAULT_UA_GEC_TAGS) if ua_gec_tags is None else set(ua_gec_tags)
 
-    # Process stress_forms
+    # Process stress_forms (case-insensitive lookup form)
     stress_forms_map: dict[str, str] = {}
     if stress_forms:
         if isinstance(stress_forms, dict):
             for k, v in stress_forms.items():
                 if isinstance(k, str) and isinstance(v, str):
-                    stress_forms_map[lookup_form(_strip_stress(k))] = v
+                    stress_forms_map[lookup_form(_strip_stress(k)).lower()] = v
         elif isinstance(stress_forms, list):
             for sf in stress_forms:
                 if isinstance(sf, str):
-                    stress_forms_map[lookup_form(_strip_stress(sf))] = sf
+                    stress_forms_map[lookup_form(_strip_stress(sf)).lower()] = sf
 
     # 2. Tokenize and deduplicate
     total_tokens = 0
@@ -259,16 +298,11 @@ def check_text(
                     sent_init_caps.add(form)
                     break
 
-        query_words = list(
-            dict.fromkeys(unique_forms + [_lower_first(f) for f in sent_init_caps])
-        )
+        query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in sent_init_caps]))
         vesum_map = verify_words(query_words)
 
         for form in unique_forms:
-            is_verified = bool(
-                vesum_map.get(form)
-                or (form in sent_init_caps and vesum_map.get(_lower_first(form)))
-            )
+            is_verified = bool(vesum_map.get(form) or (form in sent_init_caps and vesum_map.get(_lower_first(form))))
 
             if is_verified:
                 vesum_verified_forms.add(form)
@@ -276,13 +310,15 @@ def check_text(
                 occurrences = tokens_by_form[form]
                 locs = [[item_id, t.start, t.end] for _, item_id, t in occurrences]
                 first_occ = occurrences[0]
-                raw_problems.append({
-                    "form": form,
-                    "check": "vesum",
-                    "detail": {"status": "no_vesum_row"},
-                    "locations": locs,
-                    "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
-                })
+                raw_problems.append(
+                    {
+                        "form": form,
+                        "check": "vesum",
+                        "detail": {"status": "no_vesum_row"},
+                        "locations": locs,
+                        "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
+                    }
+                )
     elif "russian_shadow" in active_checks and unique_forms:
         # If vesum was not requested in checks, but russian_shadow needs verified set:
         query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms]))
@@ -295,16 +331,9 @@ def check_text(
     stress_source_info: dict[str, Any] | None = None
     stress_notes: list[str] = []
     if "stress" in active_checks and unique_forms:
-        stress_query_forms: list[str] = []
-        for form in unique_forms:
-            if form in stress_forms_map:
-                stress_query_forms.append(stress_forms_map[form])
-            else:
-                stress_query_forms.append(form)
-
         all_stress_records: list[dict[str, Any]] = []
-        for i in range(0, len(stress_query_forms), STRESS_BATCH_CAP):
-            chunk = stress_query_forms[i : i + STRESS_BATCH_CAP]
+        for i in range(0, len(unique_forms), STRESS_BATCH_CAP):
+            chunk = unique_forms[i : i + STRESS_BATCH_CAP]
             chunk_res = verify_stresses(chunk)
             if stress_source_info is None:
                 stress_source_info = chunk_res.get("source")
@@ -323,33 +352,18 @@ def check_text(
             locs = [[item_id, t.start, t.end] for _, item_id, t in occurrences]
             first_occ = occurrences[0]
 
-            if form in stress_forms_map:
-                asserted = stress_forms_map[form]
-                _, asserted_indices = _stress_positions_in_marked_string(asserted)
-                has_matching_reading = any(
-                    r.get("vowel_indices") == asserted_indices for r in readings
-                )
-                if not has_matching_reading and readings:
-                    raw_problems.append({
-                        "form": form,
-                        "check": "stress",
-                        "detail": {
-                            "status": "stress_mismatch",
-                            "asserted_form": asserted,
-                            "readings": [
-                                {
-                                    "stressed_form": r.get("stressed_form"),
-                                    "vowel_indices": r.get("vowel_indices"),
-                                }
-                                for r in readings
-                            ],
-                        },
-                        "locations": locs,
-                        "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
-                    })
-            else:
-                if st == "ambiguous":
-                    raw_problems.append({
+            norm_f = form.lower()
+            if st == "ambiguous":
+                if norm_f in stress_forms_map:
+                    asserted = stress_forms_map[norm_f]
+                    _, asserted_indices = _stress_positions_in_marked_string(asserted)
+                    has_matching_reading = any(r.get("vowel_indices") == asserted_indices for r in readings)
+                    if has_matching_reading:
+                        # Ambiguity resolved by caller-asserted stress reading
+                        continue
+
+                raw_problems.append(
+                    {
                         "form": form,
                         "check": "stress",
                         "detail": {
@@ -364,7 +378,8 @@ def check_text(
                         },
                         "locations": locs,
                         "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
-                    })
+                    }
+                )
     else:
         stress_source_info = source_info()
 
@@ -376,113 +391,126 @@ def check_text(
         )
         for form in unique_forms:
             res = shadow_batch.get(form)
-            if not res or not res.get("matches_russian"):
-                continue
+            norm_word = form.lower().strip()
             occurrences = tokens_by_form[form]
             locs = [[item_id, t.start, t.end] for _, item_id, t in occurrences]
             first_occ = occurrences[0]
 
-            if res.get("is_curated"):
-                raw_problems.append({
-                    "form": form,
-                    "check": "russian_shadow",
-                    "detail": {
-                        "status": "russian_shadow",
-                        "curated": True,
-                        "russian_lemma": res.get("russian_lemma"),
-                        "ukrainian_alternative": res.get("ukrainian_alternative"),
-                    },
-                    "locations": locs,
-                    "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
-                })
-            else:
-                raw_suspicions.append({
-                    "form": form,
-                    "check": "russian_shadow",
-                    "detail": {
-                        "status": "suspicion",
-                        "label": "suspicion, not a verdict",
-                        "curated": False,
-                        "confidence": res.get("confidence", 0.0),
-                        "russian_lemma": res.get("russian_lemma"),
-                    },
-                    "locations": locs,
-                    "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
-                })
+            # Curated detection: check form and uk_lemma (excluding LEXICALISED_SAFE)
+            is_curated = False
+            curated_list: str | None = None
+            ukrainian_alternative: str | None = None
+
+            if norm_word not in LEXICALISED_SAFE:
+                uk_parses = _morph_uk.parse(norm_word)
+                uk_lemma = uk_parses[0].normal_form if uk_parses else norm_word
+                if uk_lemma not in LEXICALISED_SAFE:
+                    if norm_word in CURATED_CALQUES or uk_lemma in CURATED_CALQUES:
+                        is_curated = True
+                        curated_list = "curated_calques"
+                        calque_info = CURATED_CALQUES.get(norm_word) or CURATED_CALQUES.get(uk_lemma)
+                        if calque_info and "corrections" in calque_info:
+                            corrs = calque_info["corrections"]
+                            ukrainian_alternative = ", ".join(corrs) if isinstance(corrs, list) else str(corrs)
+                    elif norm_word in KNOWN_SHADOW_LEMMAS or uk_lemma in KNOWN_SHADOW_LEMMAS:
+                        is_curated = True
+                        curated_list = "known_shadow_lemmas"
+
+            if is_curated:
+                raw_problems.append(
+                    {
+                        "form": form,
+                        "check": "russian_shadow",
+                        "detail": {
+                            "status": "russian_shadow",
+                            "curated": True,
+                            "curated_list": curated_list,
+                            "russian_lemma": res.get("russian_lemma") if res else None,
+                            "ukrainian_alternative": ukrainian_alternative,
+                        },
+                        "locations": locs,
+                        "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
+                    }
+                )
+            elif res and res.get("matches_russian"):
+                raw_suspicions.append(
+                    {
+                        "form": form,
+                        "check": "russian_shadow",
+                        "detail": {
+                            "status": "suspicion",
+                            "label": "suspicion, not a verdict",
+                            "curated": False,
+                            "confidence": res.get("confidence", 0.0),
+                            "russian_lemma": res.get("russian_lemma"),
+                        },
+                        "locations": locs,
+                        "_first_loc": (first_occ[0], locs[0][1], locs[0][2]),
+                    }
+                )
 
     # 6. UA-GEC check
     sources_path = _sources_path()
     sources_sig = _signature(sources_path)
-    if "ua_gec" in active_checks and unit_sentences:
-        ua_gec_index, max_gec_len = _get_ua_gec_index()
+    dropped_gec_rows = 0
+    if sources_path.is_file():
+        ua_gec_index, max_gec_len, dropped_gec_rows = _get_ua_gec_index()
+    else:
+        ua_gec_index, max_gec_len = {}, 1
+
+    if "ua_gec" in active_checks and unit_sentences and ua_gec_index:
         ua_gec_findings: dict[tuple[str, ...], dict[str, Any]] = {}
 
         for item_idx, item_id, item_text, sentence_tokens in unit_sentences:
             m = len(sentence_tokens)
-            s = 0
-            while s < m:
-                matched = False
+            for s in range(m):
                 for L in range(min(m - s, max_gec_len), 0, -1):
                     span = sentence_tokens[s : s + L]
                     span_key = tuple(t.lookup.lower() for t in span)
                     matching_rows = ua_gec_index.get(span_key)
-                    if matching_rows:
-                        active_rows = [
-                            r for r in matching_rows if r["error_type"] in active_ua_gec_tags
+                    if not matching_rows:
+                        continue
+                    active_rows = [r for r in matching_rows if r["error_type"] in active_ua_gec_tags]
+                    if not active_rows:
+                        continue
+
+                    start_offset = span[0].start
+                    end_offset = span[-1].end
+                    loc = [item_id, start_offset, end_offset]
+                    form_text = item_text[start_offset:end_offset]
+
+                    if span_key in ua_gec_findings:
+                        if loc not in ua_gec_findings[span_key]["locations"]:
+                            ua_gec_findings[span_key]["locations"].append(loc)
+                    else:
+                        corrections_map: dict[str, set[str]] = {}
+                        for r in active_rows:
+                            corrections_map.setdefault(r["correct"], set()).add(str(r["doc_id"]))
+                        corrections = [
+                            {"correct": c, "doc_ids": sorted(list(docs))} for c, docs in corrections_map.items()
                         ]
-                        if active_rows:
-                            start_offset = span[0].start
-                            end_offset = span[-1].end
-                            loc = [item_id, start_offset, end_offset]
-                            form_text = item_text[start_offset:end_offset]
-
-                            if span_key in ua_gec_findings:
-                                ua_gec_findings[span_key]["locations"].append(loc)
-                            else:
-                                corrections_map: dict[str, set[str]] = {}
-                                for r in active_rows:
-                                    corrections_map.setdefault(r["correct"], set()).add(
-                                        str(r["doc_id"])
-                                    )
-                                corrections = [
-                                    {"correct": c, "doc_ids": sorted(list(docs))}
-                                    for c, docs in corrections_map.items()
-                                ]
-                                error_types = sorted(list({r["error_type"] for r in active_rows}))
-                                detail: dict[str, Any] = {
-                                    "status": "ua_gec_error",
-                                    "error_type": error_types[0]
-                                    if len(error_types) == 1
-                                    else error_types,
-                                    "corrections": corrections,
-                                }
-                                if any(t in ("G/Case", "G/Gender") for t in error_types):
-                                    all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
-                                    detail["note"] = (
-                                        f"corrected in that document ({', '.join(all_docs)})"
-                                    )
-                                ua_gec_findings[span_key] = {
-                                    "form": form_text,
-                                    "check": "ua_gec",
-                                    "detail": detail,
-                                    "locations": [loc],
-                                    "_first_loc": (item_idx, start_offset, end_offset),
-                                }
-
-                            s += L
-                            matched = True
-                            break
-                if not matched:
-                    s += 1
+                        error_types = sorted(list({r["error_type"] for r in active_rows}))
+                        detail: dict[str, Any] = {
+                            "status": "ua_gec_error",
+                            "error_type": error_types[0] if len(error_types) == 1 else error_types,
+                            "corrections": corrections,
+                        }
+                        if any(t in ("G/Case", "G/Gender") for t in error_types):
+                            all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
+                            detail["note"] = f"corrected in that document ({', '.join(all_docs)})"
+                        ua_gec_findings[span_key] = {
+                            "form": form_text,
+                            "check": "ua_gec",
+                            "detail": detail,
+                            "locations": [loc],
+                            "_first_loc": (item_idx, start_offset, end_offset),
+                        }
 
         for finding in ua_gec_findings.values():
             raw_problems.append(finding)
 
     # 7. Sorting and Truncation
-    all_findings = (
-        [(f, "problem") for f in raw_problems]
-        + [(f, "suspicion") for f in raw_suspicions]
-    )
+    all_findings = [(f, "problem") for f in raw_problems] + [(f, "suspicion") for f in raw_suspicions]
 
     def finding_sort_key(entry: tuple[dict[str, Any], str]) -> tuple[Any, ...]:
         f, cat = entry
@@ -533,6 +561,7 @@ def check_text(
         "stress": stress_source_info,
         "vesum_version": _vesum_version(),
         "ua_gec_file_signature": list(sources_sig) if sources_sig else None,
+        "ua_gec_dropped_skipped_kind_rows": dropped_gec_rows,
     }
 
     return {

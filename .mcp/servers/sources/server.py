@@ -2293,7 +2293,7 @@ async def handle_check_text(args: dict) -> list[TextContent]:
         max_findings=args.get("max_findings", 200),
         ua_gec_tags=args.get("ua_gec_tags"),
     )
-    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False, indent=2))]
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 
 
