@@ -4,6 +4,8 @@ import gzip
 import hashlib
 import io
 import json
+import os
+import stat
 from pathlib import Path
 
 import pytest
@@ -11,6 +13,11 @@ import pytest
 from scripts.lexicon import manifest_io
 
 STALE_POINTER_HINT = "Re-downloading cannot fix a stale pointer."
+
+
+@pytest.fixture(autouse=True)
+def _isolate_manifest_cache(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(manifest_io.MANIFEST_CACHE_ENV, str(tmp_path / "manifest-cache"))
 
 
 def _json_bytes(payload: dict) -> bytes:
@@ -322,3 +329,83 @@ def test_load_manifest_reports_final_download_error_after_prior_mismatch(
     assert "IncompleteRead" in str(excinfo.value)
     assert "gz sha256 mismatch" not in str(excinfo.value)
     assert not manifest_path.exists()
+
+
+def test_hydrate_hardlinks_readonly_cache_and_atomic_write_replaces_link(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = {"entries": [{"lemma": "кеш"}], "enrichment_generated": True}
+    json_bytes = _json_bytes(payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    assert manifest_io.load_manifest(path=manifest_path) == payload
+
+    cache_path = Path(os.environ[manifest_io.MANIFEST_CACHE_ENV]) / f"{_sha256(gz_bytes)}.json"
+    assert cache_path.is_file()
+    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o444
+    assert cache_path.read_bytes() == json_bytes
+    assert manifest_path.stat().st_ino == cache_path.stat().st_ino
+    assert manifest_path.read_bytes() == json_bytes
+
+    replacement = {"entries": [{"lemma": "заміна"}]}
+    manifest_io.write_manifest(manifest_path, replacement)
+    assert cache_path.read_bytes() == json_bytes
+    assert manifest_path.stat().st_ino != cache_path.stat().st_ino
+    assert json.loads(manifest_path.read_text(encoding="utf-8")) == replacement
+
+
+def test_hydrate_reuses_verified_cache_without_download(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = {"entries": [{"lemma": "повторний"}], "enrichment_generated": True}
+    json_bytes = _json_bytes(payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "site" / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    cache_path = Path(os.environ[manifest_io.MANIFEST_CACHE_ENV]) / f"{_sha256(gz_bytes)}.json"
+    cache_path.parent.mkdir(parents=True)
+    cache_path.write_bytes(json_bytes)
+    os.chmod(cache_path, 0o444)
+
+    def fail_urlopen(*_args, **_kwargs):
+        raise AssertionError("verified cache should not fetch")
+
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fail_urlopen)
+
+    assert manifest_io.load_manifest(path=manifest_path) == payload
+    assert manifest_path.stat().st_ino == cache_path.stat().st_ino
+
+
+def test_hydrate_copies_when_hardlink_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    payload = {"entries": [{"lemma": "копія"}], "enrichment_generated": True}
+    json_bytes = _json_bytes(payload)
+    gz_bytes = gzip.compress(json_bytes)
+    manifest_path = tmp_path / "lexicon-manifest.json"
+    pointer_path = tmp_path / "lexicon-manifest.pointer.json"
+    _write_pointer(pointer_path, json_bytes=json_bytes, gz_bytes=gz_bytes)
+    _pin_defaults(monkeypatch, manifest_path, pointer_path)
+    monkeypatch.setattr(manifest_io.urllib.request, "urlopen", lambda *_args, **_kwargs: io.BytesIO(gz_bytes))
+
+    def fail_link(src: str | Path, dst: str | Path) -> None:
+        raise OSError(18, "Invalid cross-device link")
+
+    monkeypatch.setattr(manifest_io.os, "link", fail_link)
+
+    assert manifest_io.load_manifest(path=manifest_path) == payload
+    cache_path = Path(os.environ[manifest_io.MANIFEST_CACHE_ENV]) / f"{_sha256(gz_bytes)}.json"
+    assert manifest_path.read_bytes() == json_bytes
+    assert manifest_path.stat().st_ino != cache_path.stat().st_ino
+    assert stat.S_IMODE(manifest_path.stat().st_mode) == 0o444
+    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o444

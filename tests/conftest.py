@@ -10,6 +10,7 @@ import ipaddress
 import os
 import socket
 import sqlite3
+import subprocess
 import sys
 import threading
 from collections.abc import Collection, Generator
@@ -399,6 +400,131 @@ def _install_socket_guard() -> None:
 
 # Install immediately upon conftest load (earliest hook preceding module/session fixtures)
 _install_socket_guard()
+
+
+# Dispatch worktrees drop these trees by default. Tests that read them skip
+# only while sparse-checkout is on AND the tree is absent. CI (sparse off)
+# always runs them.
+_SPARSE_PROJECTS_TEST_PREFIX = "tests/projects/open_model_data/"
+_SPARSE_LEXICON_TEST_PREFIX = "tests/lexicon/"
+_SPARSE_LEXICON_TEST_FILES = frozenset(
+    {
+        "tests/test_textbook_source_inventory_scope.py",
+        "tests/test_private_teacher_lesson_source_inventory.py",
+        "tests/test_promote_teacher_lesson_intake.py",
+        "tests/test_ohoiko_source_inventory_scope.py",
+    }
+)
+_SPARSE_LEXICON_TEST_NAMES: dict[str, frozenset[str]] = {
+    "tests/test_source_inventory_intake.py": frozenset({"test_committed_source_inventory_files_are_valid"}),
+    "tests/test_source_inventory_review_candidates.py": frozenset(
+        {"test_review_workflow_defaults_outside_repo"}
+    ),
+    "tests/test_generate_practice_deck.py": frozenset(
+        {
+            "test_live_paronym_pairs_yaml_is_valid_and_has_promoted_candidates",
+            "test_live_antonym_pairs_yaml_is_valid_and_has_promoted_candidates",
+            "test_live_homonym_pairs_yaml_is_valid_and_has_promoted_candidates",
+        }
+    ),
+    "tests/test_miyklas_relation_miner.py": frozenset(
+        {"test_cleaned_artifact_has_no_known_label_or_chopped_headwords"}
+    ),
+}
+
+
+def sparse_missing_tree_skip_reason(
+    rel_path: str,
+    *,
+    sparse_enabled: bool,
+    missing_trees: Collection[str],
+    item_name: str = "",
+) -> str | None:
+    """Skip reason when a sparse worktree is missing a tree the test reads.
+
+    Returns ``None`` when sparse-checkout is off, even if the tree is absent,
+    so CI (full checkout, sparse disabled) never skips these tests.
+    """
+    if not sparse_enabled:
+        return None
+    normalized = rel_path.replace("\\", "/").lstrip("./")
+    if "data/projects" in missing_trees and (
+        normalized == _SPARSE_PROJECTS_TEST_PREFIX.rstrip("/")
+        or normalized.startswith(_SPARSE_PROJECTS_TEST_PREFIX)
+    ):
+        return (
+            "data/projects is absent from this sparse worktree; "
+            "re-include it with --sparse-include data/projects"
+        )
+    if "data/lexicon" in missing_trees and _lexicon_test_needs_tree(normalized, item_name):
+        return (
+            "data/lexicon is absent from this sparse worktree; "
+            "re-include it with --sparse-include data/lexicon"
+        )
+    return None
+
+
+def _lexicon_test_needs_tree(rel_path: str, item_name: str) -> bool:
+    if rel_path == _SPARSE_LEXICON_TEST_PREFIX.rstrip("/") or rel_path.startswith(_SPARSE_LEXICON_TEST_PREFIX):
+        return True
+    if rel_path in _SPARSE_LEXICON_TEST_FILES:
+        return True
+    names = _SPARSE_LEXICON_TEST_NAMES.get(rel_path)
+    if names is None:
+        return False
+    base_name = item_name.split("[", 1)[0]
+    return base_name in names
+
+
+@functools.lru_cache(maxsize=1)
+def _sparse_checkout_enabled() -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "config", "--get", "--type=bool", "core.sparseCheckout"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0 and proc.stdout.strip().lower() == "true"
+
+
+def _sparse_missing_trees() -> frozenset[str]:
+    if not _sparse_checkout_enabled():
+        return frozenset()
+    missing: list[str] = []
+    for rel in ("data/projects", "data/lexicon"):
+        if not (_REPO_ROOT / rel).is_dir():
+            missing.append(rel)
+    return frozenset(missing)
+
+
+def _item_repo_rel(item: pytest.Item) -> str:
+    raw = getattr(item, "path", None) or getattr(item, "fspath", "")
+    path = Path(str(raw))
+    try:
+        return path.resolve().relative_to(_REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Skip tests whose sparse-excluded tree is not in this worktree."""
+    del config
+    missing = _sparse_missing_trees()
+    if not missing:
+        return
+    for item in items:
+        reason = sparse_missing_tree_skip_reason(
+            _item_repo_rel(item),
+            sparse_enabled=True,
+            missing_trees=missing,
+            item_name=item.name,
+        )
+        if reason:
+            item.add_marker(pytest.mark.skip(reason=reason))
 
 
 def pytest_configure(config: pytest.Config) -> None:

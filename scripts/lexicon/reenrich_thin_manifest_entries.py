@@ -39,7 +39,7 @@ from scripts.lexicon.derived_en_fallback import (
     derived_translation_fallback,
     manifest_lemma_index,
 )
-from scripts.lexicon.manifest_io import load_manifest
+from scripts.lexicon.manifest_io import _write_atomic, load_manifest
 from scripts.lexicon.publish_manifest import (
     DEFAULT_GZIP,
     DEFAULT_POINTER,
@@ -166,7 +166,7 @@ def _load_kaikki_lookup(path: Path) -> dict[str, dict[str, Any]]:
 
 
 def _write_manifest(path: Path, manifest: dict[str, Any]) -> None:
-    path.write_text(json.dumps(manifest, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _write_atomic(path, (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
 
 
 def _read_local_manifest(path: Path) -> dict[str, Any]:

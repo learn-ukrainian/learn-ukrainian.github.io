@@ -119,7 +119,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -3977,36 +3977,68 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 
 
 # Default cone sparse-checkout exclusions for dispatch worktrees.
-# curriculum/ + wiki/ are ~300MB of the ~550MB full tree; most infra/code
-# dispatches never edit them. Content work opts back in with
-# --sparse-include curriculum (and/or wiki) or --full-checkout.
-_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset({"curriculum", "wiki"})
+# Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
+# of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
+# data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
+# 450MB. Opt back in with --sparse-include or --full-checkout. wiki/ is still
+# a top-level tree (`git ls-tree -d HEAD wiki`), so it stays excluded.
+_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
+    {
+        "curriculum",
+        "wiki",
+        "data/projects",
+        "data/lexicon",
+    }
+)
+# Owned-path prefixes that re-include a default-excluded tree even when the
+# path itself is not under that tree (tests and scripts that read it).
+_SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
+    "data/projects": (
+        "data/projects",
+        "tests/projects/open_model_data",
+        "scripts/projects/open_model_data",
+    ),
+    "data/lexicon": (
+        "data/lexicon",
+        "scripts/lexicon",
+        "tests/lexicon",
+        "site",
+    ),
+}
+
+
+def _sparse_path_has_prefix(path: str, prefix: str) -> bool:
+    prefix = prefix.strip("/")
+    return path == prefix or path.startswith(prefix + "/")
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
-    """Normalize --sparse-include values to unique top-level directory names.
+    """Normalize --sparse-include values to unique default-excluded trees.
 
-    Fail closed: explicit values must be bare top-level names in the default
-    exclusion set (``curriculum``, ``wiki``). Nested paths and unknown names
-    raise :class:`ValueError` so content dispatches cannot silently miss trees.
+    Fail closed: explicit values must be names in the default exclusion set
+    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``). Other
+    nested paths and unknown names raise :class:`ValueError`.
     """
     if not raw:
         return ()
     seen: set[str] = set()
     ordered: list[str] = []
+    allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
     for item in raw:
         name = str(item).strip().strip("/")
-        if not name or name in {".", ".."}:
+        if not name or name in {".", ".."} or name.startswith("../") or "/../" in f"/{name}/":
             raise ValueError(
-                f"--sparse-include {item!r} is empty or invalid; pass a top-level name such as 'curriculum' or 'wiki'"
-            )
-        if "/" in name:
-            top = name.split("/", 1)[0]
-            raise ValueError(
-                f"--sparse-include {item!r} must be a top-level directory name (use {top!r}, not a nested path)"
+                f"--sparse-include {item!r} is empty or invalid; "
+                "pass a default-excluded tree such as 'curriculum', 'wiki', or 'data/projects'"
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
-            allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
+            if "/" in name:
+                top = name.split("/", 1)[0]
+                raise ValueError(
+                    f"--sparse-include {item!r} must name a default-excluded tree "
+                    f"(top-level example: {top!r}; nested exclusions: data/projects, data/lexicon). "
+                    f"Allowed: {allowed}"
+                )
             raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
         if name in seen:
             continue
@@ -4016,15 +4048,29 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
 
 
 def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
-    """Detect default-excluded top-level path prefixes referenced in a prompt."""
+    """Detect default-excluded path prefixes referenced in a prompt."""
     if not text:
         return ()
     found: list[str] = []
-    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT):
-        # Path-like reference: curriculum/… or `wiki/` — not bare English words.
+    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT, key=len, reverse=True):
+        # Path-like reference: curriculum/…, data/projects/… — not bare words.
         if re.search(rf"(?<![\w.-]){re.escape(name)}/", text):
             found.append(name)
     return tuple(found)
+
+
+def _sparse_tree_for_owned_path(raw: str) -> str | None:
+    """Return the excluded tree a research-owned path requires, if any."""
+    path = str(raw).strip().strip("/")
+    if not path:
+        return None
+    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT, key=len, reverse=True):
+        if _sparse_path_has_prefix(path, name):
+            return name
+    for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items():
+        if any(_sparse_path_has_prefix(path, prefix) for prefix in prefixes):
+            return tree
+    return None
 
 
 def _infer_sparse_include(
@@ -4033,19 +4079,19 @@ def _infer_sparse_include(
     owned_paths: Sequence[str] | None = None,
     prompt_text: str | None = None,
 ) -> tuple[str, ...]:
-    """Merge explicit includes with owned-path tops and prompt path references.
+    """Merge explicit includes with owned-path prefixes and prompt path references.
 
-    A dispatch that already declares ``--research-owned-path curriculum/...``
-    or whose brief references ``curriculum/`` / ``wiki/`` materializes those
-    trees without a second flag.
+    A dispatch that already declares ``--research-owned-path curriculum/...``,
+    ``scripts/projects/open_model_data/...``, or ``site/...`` materializes the
+    matching excluded tree without a second flag.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)
     for raw in owned_paths or ():
-        top = str(raw).strip().strip("/").split("/", 1)[0]
-        if top in _DISPATCH_SPARSE_EXCLUDE_DEFAULT and top not in seen:
-            seen.add(top)
-            merged.append(top)
+        name = _sparse_tree_for_owned_path(str(raw))
+        if name and name not in seen:
+            seen.add(name)
+            merged.append(name)
     for name in _infer_sparse_include_from_text(prompt_text):
         if name not in seen:
             seen.add(name)
@@ -4053,11 +4099,17 @@ def _infer_sparse_include(
     return tuple(merged)
 
 
-def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> list[str]:
-    """Return top-level directory names at ``at_ref`` inside a worktree."""
+def _list_worktree_dirs(worktree_path: Path, *tree_path: str, at_ref: str = "HEAD") -> list[str]:
+    """Return directory names from ``git ls-tree -d`` at ``at_ref``.
+
+    With no ``tree_path``, lists top-level directories. ``data/`` lists the
+    children (``data/projects``, …) so new ``data/*`` dirs are included
+    automatically and only the named exclusions drop out.
+    """
+    label = "/".join(tree_path) if tree_path else "top-level"
     try:
         proc = subprocess.run(
-            ["git", "ls-tree", "-d", "--name-only", at_ref],
+            ["git", "ls-tree", "-d", "--name-only", at_ref, *tree_path],
             cwd=worktree_path,
             capture_output=True,
             text=True,
@@ -4067,12 +4119,54 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
         )
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError(
-            f"could not list top-level dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s"
+            f"could not list {label} dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s"
         ) from exc
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
-        raise RuntimeError(f"could not list top-level dirs in {worktree_path}: {detail}")
+        raise RuntimeError(f"could not list {label} dirs in {worktree_path}: {detail}")
     return [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+
+
+def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> list[str]:
+    """Return top-level directory names at ``at_ref`` inside a worktree."""
+    return _list_worktree_dirs(worktree_path, at_ref=at_ref)
+
+
+def _dispatch_sparse_cone_dirs(
+    top_dirs: Sequence[str],
+    data_children: Sequence[str],
+    exclude: Collection[str],
+) -> tuple[list[str], list[str]]:
+    """Build a cone include list that drops excluded dirs at directory level.
+
+    Nested exclusions (``data/projects``) are expressed by listing the other
+    ``data/*`` children instead of the parent ``data`` directory. Cone mode
+    then keeps files that sit directly in ``data/``.
+    """
+    exclude_set = set(exclude)
+    cone: list[str] = []
+    excluded: list[str] = []
+    for name in top_dirs:
+        if name != "data":
+            if name in exclude_set:
+                excluded.append(name)
+            else:
+                cone.append(name)
+            continue
+        if "data" in exclude_set:
+            excluded.append("data")
+            continue
+        children = list(data_children)
+        dropped = [child for child in children if child in exclude_set]
+        if not dropped:
+            cone.append("data")
+            continue
+        for child in children:
+            if child in exclude_set:
+                excluded.append(child)
+            else:
+                cone.append(child)
+    return cone, sorted(excluded)
 
 
 def _apply_dispatch_sparse_checkout(
@@ -4083,10 +4177,9 @@ def _apply_dispatch_sparse_checkout(
 ) -> dict[str, Any]:
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
-    Default profile excludes ``curriculum/`` and ``wiki/`` so each dispatch
-    stays ~200MB instead of ~550MB. ``--full-checkout`` disables sparse mode.
-    ``--sparse-include DIR`` keeps named top-level dirs that would otherwise
-    be excluded (e.g. ``curriculum`` for module content work).
+    Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
+    (~633MB), and ``data/lexicon/`` (~277MB). ``--full-checkout`` disables
+    sparse mode. ``--sparse-include`` keeps a named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -4130,8 +4223,8 @@ def _apply_dispatch_sparse_checkout(
 
     exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
     all_dirs = _list_worktree_top_dirs(worktree_path)
-    included = [name for name in all_dirs if name not in exclude]
-    excluded = sorted(name for name in all_dirs if name in exclude)
+    data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
+    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
@@ -4152,7 +4245,10 @@ def _apply_dispatch_sparse_checkout(
         telemetry["error"] = detail
         raise RuntimeError(f"failed to init sparse-checkout in {worktree_path}: {detail}")
 
-    proc = _run_git(["git", "sparse-checkout", "set", "--", *included])
+    set_args = ["git", "sparse-checkout", "set", "--cone"]
+    if included:
+        set_args.extend(["--", *included])
+    proc = _run_git(set_args)
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "sparse-checkout set failed").strip()
         telemetry["error"] = detail
@@ -4165,7 +4261,8 @@ def _apply_dispatch_sparse_checkout(
     telemetry["applied"] = True
     print(
         f"🌲 dispatch sparse-checkout: excluded {', '.join(excluded)} "
-        f"in {worktree_path} (use --sparse-include / --full-checkout to keep them)",
+        f"in {worktree_path} "
+        "(git sparse-checkout add <dir>, or --sparse-include / --full-checkout)",
         file=sys.stderr,
     )
     return telemetry
@@ -4527,17 +4624,25 @@ def _augment_prompt_with_worktree(
     if sparse_telemetry and not sparse_telemetry.get("full_checkout"):
         excluded = sparse_telemetry.get("excluded") or []
         if excluded:
+            add_commands = " ".join(f"`git sparse-checkout add {name}`" for name in excluded)
             sparse_note = (
-                "Sparse-checkout is active: these top-level trees are NOT present: "
+                "Sparse-checkout is active: these trees are NOT present: "
                 + ", ".join(str(p) for p in excluded)
-                + ". If you need them, re-dispatch with --sparse-include <dir> "
-                "or --full-checkout (do not invent content for missing paths).\n"
+                + ". To materialize one inside this worktree, run "
+                + add_commands
+                + " (for example `git sparse-checkout add data/projects`). "
+                + "Do not invent content for missing paths.\n"
             )
     delivery_note = ""
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
+            "\n[write-mode closeout]\n"
+            "Commit your work.\n"
+            "`git push -u origin HEAD`\n"
+            "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
+            "Do not open or merge PRs unless the brief says so; "
+            "report the pushed head SHA and clean status.\n"
             "\n[optional delivery signal]\n"
-            "Commits on your dispatch branch are sufficient proof of delivery on their own. "
             "If you finish with zero commits (a verified no-op), you MAY end your final response "
             "with one machine-readable line as positive proof: "
             '`DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. '
@@ -8088,9 +8193,9 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help=(
             "Materialize the full git working tree in the dispatch worktree. "
-            "Default is cone sparse-checkout excluding curriculum/ and wiki/ "
-            "(~300MB saved per worktree). Use this for tasks that need the "
-            "entire tree without listing includes."
+            "Default cone sparse-checkout excludes curriculum/ (289MB), wiki/ (66MB), "
+            "data/projects/ (633MB), and data/lexicon/ (277MB), leaving a default "
+            "worktree under 450MB. Use this when the task needs the entire tree."
         ),
     )
     d.add_argument(
@@ -8099,9 +8204,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="DIR",
         help=(
-            "Keep a top-level directory that default sparse-checkout would "
-            "exclude (curriculum, wiki). Repeatable. Example: "
-            "--sparse-include curriculum for module content work."
+            "Keep a tree that default sparse-checkout would exclude "
+            "(curriculum, wiki, data/projects, data/lexicon). Repeatable. "
+            "Example: --sparse-include data/projects, or --sparse-include curriculum "
+            "for module content. Owned paths under those trees are included automatically."
         ),
     )
     d.add_argument(
