@@ -223,9 +223,16 @@ def _render_true_false(act: dict) -> str:
     """
     items = []
     for item in act.get("items", []):
+        correct = item.get("correct")
+        if correct is None:
+            correct = item.get("is_true")
+        if correct is None:
+            correct = item.get("isTrue")
+        if correct is None:
+            correct = item.get("answer", False)
         entry: dict[str, Any] = {
             "statement": item.get("statement", ""),
-            "isTrue": bool(item.get("correct", False)),
+            "isTrue": bool(correct),
         }
         if item.get("explanation"):
             entry["explanation"] = item["explanation"]

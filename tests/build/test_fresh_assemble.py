@@ -1970,3 +1970,154 @@ def test_true_false_statement_resolved_and_stressed_in_true_false_output(tmp_pat
     mdx = res.artifacts["mdx"]
     assert "<TrueFalse client:only='react'" in mdx
     assert "Це сло́во правда." in mdx
+
+
+def test_true_false_boolean_answer_and_correct_produce_no_answer_units_and_render_correctly(tmp_path, monkeypatch):
+    """Major: a true/false item with answer: true and one with correct: false produce no answer unit and render correctly."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": [],
+    }
+    plan_activities = [
+        {"id": "a1", "type": "true-false", "placement": "workbook", "focus": "True-false focus"},
+    ]
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
+
+    act_tf = {
+        "id": "a1",
+        "instruction": "Правда чи ні?",
+        "items": [
+            {
+                "statement": "Це слово правда.",
+                "answer": True,
+                "explanation": "Так, це правда.",
+            },
+            {
+                "statement": "Це слово неправда.",
+                "correct": False,
+                "explanation": "Ні, це неправда.",
+            },
+        ],
+    }
+    draft = make_draft(
+        steps=[
+            {
+                "id": "s1",
+                "blocks": [
+                    {"kind": "prose", "text": "слово", "explains": ["W-1"]},
+                ],
+            }
+        ],
+        activities=[act_tf],
+        consolidation={"activities": ["a1"]},
+        lesson_lock_entry_sha256="abc" * 21 + "a",
+    )
+
+    exp_doc, _ = assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+
+    # Neither boolean answer: true nor boolean correct: false must produce an answer text unit
+    answer_units = [
+        u
+        for u in exp_doc["units"]
+        if u.get("tab") == "vpravy"
+        and u.get("activity") == "a1"
+        and (u.get("role") == "item_answer" or u.get("block") == "answer")
+    ]
+    assert len(answer_units) == 0
+
+    stmt_units = [
+        (idx, u)
+        for idx, u in enumerate(exp_doc["units"])
+        if u.get("tab") == "vpravy" and u.get("activity") == "a1" and u.get("block") == "prompt"
+    ]
+    assert len(stmt_units) == 2
+    stmt_0_idx, stmt_0 = stmt_units[0]
+    stmt_1_idx, stmt_1 = stmt_units[1]
+    assert stmt_0["role"] == "item_prompt"
+    assert stmt_0["text"] == "Це слово правда."
+    assert stmt_1["role"] == "item_prompt"
+    assert stmt_1["text"] == "Це слово неправда."
+
+    mock_stream = type(
+        "MockStream",
+        (),
+        {
+            "tokens": [
+                {
+                    "unit_index": 0,
+                    "offset": 0,
+                    "token": "слово",
+                    "class": "resolved",
+                    "selected": {"stressed": "сло́во"},
+                },
+                {
+                    "unit_index": stmt_0_idx,
+                    "offset": 3,
+                    "token": "слово",
+                    "class": "resolved",
+                    "selected": {"stressed": "сло́во"},
+                },
+                {
+                    "unit_index": stmt_1_idx,
+                    "offset": 3,
+                    "token": "слово",
+                    "class": "resolved",
+                    "selected": {"stressed": "сло́во"},
+                },
+            ],
+            "failures": [],
+        },
+    )()
+
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.planned_state",
+        lambda *args, **kwargs: type("State", (), {"cumulative_core_count": 10, "waiver": None})(),
+    )
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *args, **kwargs: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock,
+        "compute_lesson_lock",
+        lambda *args, **kwargs: {"lessons": [{"n": 1, "entry_sha256": "abc" * 21 + "a"}]},
+    )
+
+    state_dir = tmp_path / "state"
+    site_dir = tmp_path / "site"
+
+    res = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        output_dir=state_dir,
+        site_dir=site_dir,
+    )
+    assert res.passed is True
+    mdx = res.artifacts["mdx"]
+    assert "<TrueFalse client:only='react'" in mdx
+    assert "Це сло́во правда." in mdx
+    assert "Це сло́во неправда." in mdx
+
+    m = re.search(r"<TrueFalse [^>]*items=\{JSON\.parse\(`([^`]+)`\)\}", mdx)
+    assert m is not None
+    tf_items = json.loads(m.group(1))
+    assert len(tf_items) == 2
+    assert tf_items[0]["statement"] == "Це сло́во правда."
+    assert tf_items[0]["isTrue"] is True
+    assert tf_items[0]["explanation"] == "Так, це правда."
+    assert tf_items[1]["statement"] == "Це сло́во неправда."
+    assert tf_items[1]["isTrue"] is False
+    assert tf_items[1]["explanation"] == "Ні, це неправда."

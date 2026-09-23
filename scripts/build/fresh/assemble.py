@@ -427,27 +427,46 @@ def assemble_expanded_document(
             if not isinstance(item, dict):
                 continue
 
-            prompt = item.get("prompt") or item.get("sentence") or item.get("question") or item.get("cue") or item.get("statement")
+            prompt = None
+            for key in ("prompt", "sentence", "question", "cue", "statement"):
+                val = item.get(key)
+                if val is not None and not isinstance(val, bool) and str(val).strip():
+                    prompt = str(val)
+                    break
             if prompt:
-                for role, span_text in _split_inline_spans(str(prompt), "item_prompt"):
+                for role, span_text in _split_inline_spans(prompt, "item_prompt"):
                     add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
 
-            answer = item.get("answer") or item.get("target")
-            if not answer and not isinstance(item.get("correct"), bool):
-                answer = item.get("correct")
+            # Answer-like candidate fields: exclude any boolean value (e.g. true/false activities
+            # where answer, correct, is_true, isTrue are boolean flags, not text to resolve/stress).
+            answer = None
+            for key in ("answer", "target", "correct", "is_true", "isTrue"):
+                val = item.get(key)
+                if val is not None and not isinstance(val, bool) and str(val).strip():
+                    answer = str(val)
+                    break
             if answer:
-                for role, span_text in _split_inline_spans(str(answer), "item_answer"):
+                for role, span_text in _split_inline_spans(answer, "item_answer"):
                     add_unit("vpravy", act_step, act_id, item_idx, "answer", role, span_text, source="writer_prose")
 
             opts = item.get("options") or item.get("choices") or item.get("distractors") or []
             for opt_idx, opt in enumerate(opts):
-                opt_str = str(opt.get("text") if isinstance(opt, dict) else opt)
-                for role, span_text in _split_inline_spans(opt_str, "item_option"):
-                    add_unit("vpravy", act_step, act_id, item_idx, f"opt_{opt_idx}", role, span_text, source="writer_prose")
+                if isinstance(opt, bool):
+                    continue
+                opt_val = opt.get("text") if isinstance(opt, dict) else opt
+                if opt_val is not None and not isinstance(opt_val, bool):
+                    opt_str = str(opt_val)
+                    for role, span_text in _split_inline_spans(opt_str, "item_option"):
+                        add_unit("vpravy", act_step, act_id, item_idx, f"opt_{opt_idx}", role, span_text, source="writer_prose")
 
-            err_txt = item.get("error") or item.get("incorrect")
+            err_txt = None
+            for key in ("error", "incorrect"):
+                val = item.get(key)
+                if val is not None and not isinstance(val, bool) and str(val).strip():
+                    err_txt = str(val)
+                    break
             if err_txt:
-                for role, span_text in _split_inline_spans(str(err_txt), "error_text"):
+                for role, span_text in _split_inline_spans(err_txt, "error_text"):
                     add_unit("vpravy", act_step, act_id, item_idx, "error", role, span_text, source="writer_prose")
 
             expl = item.get("explanation")
@@ -458,8 +477,12 @@ def assemble_expanded_document(
             pairs = item.get("pairs") or []
             for p_idx, pair in enumerate(pairs):
                 if isinstance(pair, dict):
-                    left = pair.get("left") or pair.get("prompt")
-                    right = pair.get("right") or pair.get("answer")
+                    left = pair.get("left") if not isinstance(pair.get("left"), bool) else None
+                    if left is None:
+                        left = pair.get("prompt") if not isinstance(pair.get("prompt"), bool) else None
+                    right = pair.get("right") if not isinstance(pair.get("right"), bool) else None
+                    if right is None:
+                        right = pair.get("answer") if not isinstance(pair.get("answer"), bool) else None
                     if left:
                         for role, span_text in _split_inline_spans(str(left), "item_prompt"):
                             add_unit(
@@ -1104,7 +1127,7 @@ def apply_stress_to_activities(
             for prompt_key in ("prompt", "sentence", "question", "cue", "statement"):
                 if prompt_key in item and isinstance(item[prompt_key], str):
                     item[prompt_key] = format_act_text(act_id, item_idx, "prompt", item[prompt_key])
-            for ans_key in ("answer", "correct", "target"):
+            for ans_key in ("answer", "correct", "target", "is_true", "isTrue"):
                 if ans_key in item and isinstance(item[ans_key], str):
                     item[ans_key] = format_act_text(act_id, item_idx, "answer", item[ans_key])
             for err_key in ("error", "incorrect"):
