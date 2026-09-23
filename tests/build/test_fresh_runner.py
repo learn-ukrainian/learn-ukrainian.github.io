@@ -12,7 +12,7 @@ from pathlib import Path
 import pytest
 
 from scripts.build.fresh import assemble, runner
-from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
+from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.inventory_gate import GateFailure, GateReport
 from scripts.curriculum.resolver.inputs import Allowlist
@@ -134,6 +134,27 @@ def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_less
     invalidate_lesson_resolution(tmp_path, 1)
     assert not (tmp_path / "lesson-1.resolutions.yaml").exists()
     assert (tmp_path / "lesson-2.resolutions.yaml").exists()
+
+
+def test_two_regenerations_route_third_failure_to_driver(tmp_path):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    inputs = {key: "a" * 64 for key in ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")}
+    for number in (1, 2, 3):
+        result = record_failure(path, "sample-slug", 1,
+                                {"check": number, "code": str(number), "reason": "failure", "layer": "writer"},
+                                inputs, at=f"2026-01-0{number}T00:00:00Z")
+    assert result["regenerations"] == 2
+    assert result["terminal_layer"] == "driver"
+
+
+def test_successful_regeneration_counts_even_without_a_second_failure(tmp_path):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    inputs = {key: "a" * 64 for key in ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")}
+    record_failure(path, "sample-slug", 1,
+                   {"check": 4, "code": "4", "reason": "failure", "layer": "writer"}, inputs,
+                   at="2026-01-01T00:00:00Z")
+    result = record_success(path, "sample-slug", 1)
+    assert result["regenerations"] == 1 and result["terminal_layer"] is None
 
 
 def test_each_check_failure_carries_layer():

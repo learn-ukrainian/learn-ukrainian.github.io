@@ -57,10 +57,20 @@ def record_failure(path: Path, slug: str, n: int, failure: dict[str, Any], input
     if previous_same:
         doc["terminal_layer"] = {"writer": "plan", "plan": "plan", "pack": "pack", "word_store": "pack",
                                  "engine": "driver", "driver": "driver"}[layer]
-    elif prior_count >= 2:
+    elif doc["regenerations"] >= 2:
         doc["terminal_layer"] = "driver"
     _validate(doc)
     lock.write(path, lock.yaml_bytes(doc))
+    return doc
+
+
+def record_success(path: Path, slug: str, n: int) -> dict[str, Any]:
+    """Count a regeneration that succeeded without another failure row."""
+    doc = load_ledger(path, slug, n)
+    if doc["attempts"] and doc["terminal_layer"] is None:
+        doc["regenerations"] = min(2, max(doc["regenerations"], len(doc["attempts"])))
+        _validate(doc)
+        lock.write(path, lock.yaml_bytes(doc))
     return doc
 
 

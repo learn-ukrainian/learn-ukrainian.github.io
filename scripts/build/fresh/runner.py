@@ -17,7 +17,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render
 from scripts.build.fresh.draft_schema import validate_draft
-from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
+from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes as learner_codes
 from scripts.curriculum.learner_state.inventory_gate import check_lesson
@@ -332,6 +332,8 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
         bad = next((r for r in rows if r["status"] == "failed"), None)
         if bad is not None:
             record_failure(ledger_path, slug, n, bad, ledger_inputs)
+        else:
+            record_success(ledger_path, slug, n)
         return doc
 
     previous = load_ledger(ledger_path, slug, n)
