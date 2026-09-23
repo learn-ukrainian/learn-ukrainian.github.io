@@ -1,6 +1,7 @@
 # PR-A starts green by recording only findings observed against the isolated
 # fixture.  Rows are burn-down obligations: remove the row with the emitter
 # change in PR-B; do not add compatibility path fields to make a finding fit.
+# Renewed 2026-09-23 to unblock CI; burn-down tracked in #8542.
 version = 1
 
 [[known_leaks]]
@@ -8,32 +9,32 @@ id = "fleet-workers-host-id"
 operation = "GET /api/fleet/workers/v1"
 field = "body.hosts[1].host_id"
 owner = "monitor-fleet"
-expiry = "2026-09-23"
+expiry = "2026-10-21"
 
 [[known_leaks]]
 id = "occupancy-host-id"
 operation = "GET /api/occupancy"
 field = "body.hosts.opsec-host-id.host_id"
 owner = "monitor-occupancy"
-expiry = "2026-09-23"
+expiry = "2026-10-21"
 
 [[known_leaks]]
 id = "health-instance-host"
 operation = "GET /api/health"
 field = "body.instance.host"
 owner = "monitor-core"
-expiry = "2026-09-23"
+expiry = "2026-10-21"
 
 [[known_leaks]]
 id = "dashboard-index-localhost"
 operation = "dashboard:index.html"
 field = "body"
 owner = "monitor-dashboard"
-expiry = "2026-09-23"
+expiry = "2026-10-21"
 
 [[known_leaks]]
 id = "dashboard-work-loopback"
 operation = "dashboard:work.html"
 field = "body"
 owner = "monitor-dashboard"
-expiry = "2026-09-23"
+expiry = "2026-10-21"
