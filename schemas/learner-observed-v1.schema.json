@@ -1,0 +1,179 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "learner-observed-v1.schema.json",
+  "type": "object",
+  "properties": {
+    "observed_schema": {
+      "const": 1
+    },
+    "lesson": {
+      "$ref": "#/$defs/lesson"
+    },
+    "records": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/record"
+      }
+    },
+    "untaught_forms": {
+      "$ref": "#/$defs/untaught_forms"
+    }
+  },
+  "required": [
+    "observed_schema",
+    "lesson",
+    "records",
+    "untaught_forms"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "lesson": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "level",
+        "slug",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+    "tab_counts": {
+      "type": "object",
+      "properties": {
+        "urok": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "slovnyk": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "vpravy": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "resursy": {
+          "type": "integer",
+          "minimum": 0
+        }
+      },
+      "required": [
+        "urok",
+        "slovnyk",
+        "vpravy",
+        "resursy"
+      ],
+      "additionalProperties": false
+    },
+    "form": {
+      "type": "object",
+      "properties": {
+        "tags": {
+          "type": "string",
+          "minLength": 1
+        },
+        "count_by_tab": {
+          "$ref": "#/$defs/tab_counts"
+        }
+      },
+      "required": [
+        "tags",
+        "count_by_tab"
+      ],
+      "additionalProperties": false
+    },
+    "record": {
+      "type": "object",
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^W-[A-Za-z0-9_-]+$"
+        },
+        "role": {
+          "enum": [
+            "taught",
+            "drilled",
+            "recycled",
+            "incidental",
+            "name",
+            "exposed"
+          ]
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/form"
+          }
+        }
+      },
+      "required": [
+        "id",
+        "role",
+        "forms"
+      ],
+      "additionalProperties": false
+    },
+    "untaught_form": {
+      "type": "object",
+      "properties": {
+        "record": {
+          "type": "string",
+          "pattern": "^W-[A-Za-z0-9_-]+$"
+        },
+        "tags": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        }
+      },
+      "required": [
+        "record",
+        "tags",
+        "category"
+      ],
+      "additionalProperties": false
+    },
+    "untaught_forms": {
+      "type": "object",
+      "properties": {
+        "count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "share": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/untaught_form"
+          }
+        }
+      },
+      "required": [
+        "count",
+        "share",
+        "forms"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

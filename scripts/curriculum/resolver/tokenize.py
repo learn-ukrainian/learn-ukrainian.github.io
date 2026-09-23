@@ -65,7 +65,7 @@ def _letter(ch: str) -> bool:
 
 
 def _kind(run: str) -> str:
-    letters = [ch for ch in run if unicodedata.category(ch)[0] == "L"]
+    letters = [ch for ch in run if unicodedata.category(ch)[0] == "L" and ch not in APOSTROPHES]
     digits = any(unicodedata.category(ch) == "Nd" for ch in run)
     if not letters:
         return "digits" if digits else "mixed"
