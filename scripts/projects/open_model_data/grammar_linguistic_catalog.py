@@ -34,7 +34,7 @@ def _get_vesum_connection() -> sqlite3.Connection | None:
 
 @functools.lru_cache(maxsize=100000)
 def is_vocative_form(word: str) -> bool:
-    """Check if word is a noun with a vocative form tag (v_kly) in VESUM (excluding pronouns)."""
+    """Check if word is a noun with a singular vocative form tag (v_kly) in VESUM (excluding pronouns and plurals)."""
     clean_word = word.strip().strip("«»\"'.,!?-–—;:()").lower()
     if not clean_word:
         return False
@@ -47,7 +47,14 @@ def is_vocative_form(word: str) -> bool:
             "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
             (clean_word, clean_word.capitalize(), clean_word.upper()),
         ).fetchall()
-        return any(pos == "noun" and "v_kly" in tags and "pron" not in tags for pos, tags in res)
+        return any(
+            pos == "noun"
+            and "v_kly" in tags
+            and ":p:" not in tags
+            and "p:" not in tags
+            and "pron" not in tags
+            for pos, tags in res
+        )
     except Exception:
         return False
 
@@ -569,21 +576,42 @@ def resolve_specific_linguistic_citation(
         if len(err_words) == 1 and len(corr_words) == 1:
             err_w, corr_w = err_words[0], corr_words[0]
             if is_vocative_form(corr_w) and not is_vocative_form(err_w):
-                # Also verify err_w is a single noun and NOT a pronoun
-                conn = _get_vesum_connection()
-                is_err_noun = False
-                if conn is not None:
-                    res_err = conn.cursor().execute(
-                        "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
-                        (err_w.lower(), err_w.capitalize(), err_w.upper()),
-                    ).fetchall()
-                    is_err_noun = any(pos == "noun" and "pron" not in tags for pos, tags in res_err)
-                if is_err_noun:
-                    return (
-                        "Український правопис (2019) § 87 / Олександр Пономарів «Культура слова»",
-                        f"помилкове вживання називного відмінка замість кличного у звертанні «{err}» виправлено на «{corr}»",
-                        f"«Український правопис» (2019, § 87) та норми культури мови (Олександр Пономарів) вимагають уживати у звертаннях кличний відмінок, а не називний: вживаємо «{corr}» замість «{err}»."
-                    )
+                # Verify corr_w is in genuine vocative position and NOT preceded by preposition or numeral
+                preps_and_nums = {
+                    "з-за", "із-за", "з-під", "з-над", "з", "із", "зі", "до", "в", "у", "на", "від",
+                    "по", "за", "під", "над", "перед", "про", "через", "при", "без", "для", "після",
+                    "коло", "біля", "проти", "серед", "крізь", "між", "поміж", "щодо", "згідно",
+                    "завдяки", "всупереч", "посеред", "внаслідок", "навколо", "поруч", "поза",
+                    "один", "одна", "одне", "одні", "два", "дві", "три", "чотири", "п'ять", "шість",
+                    "сім", "вісім", "дев'ять", "десять", "кілька", "декілька", "багато", "півтора", "півтори"
+                }
+                m_prec = re.search(r'(?:(\S+)\s+)?\b' + re.escape(corr_w) + r'\b', corr_text, re.IGNORECASE)
+                prec_w = m_prec.group(1).lower().strip("«»\"'.,!?-–—;:()") if (m_prec and m_prec.group(1)) else ""
+                is_governed = (prec_w in preps_and_nums) or prec_w.isdigit()
+
+                # Vocative position check: must be bounded by vocative punctuation
+                is_voc_pos = bool(
+                    re.search(r'(?:^|[«"“—–]\s*)\b' + re.escape(corr_w) + r'\b\s*[,!—–-]', corr_text, re.IGNORECASE)
+                    or re.search(r'[,—–-]\s*\b' + re.escape(corr_w) + r'\b\s*[.!?…»”"]?$', corr_text, re.IGNORECASE)
+                    or re.search(r'[,—–-]\s*\b' + re.escape(corr_w) + r'\b\s*[,!—–-]', corr_text, re.IGNORECASE)
+                )
+
+                if is_voc_pos and not is_governed:
+                    # Also verify err_w is a single noun and NOT a pronoun
+                    conn = _get_vesum_connection()
+                    is_err_noun = False
+                    if conn is not None:
+                        res_err = conn.cursor().execute(
+                            "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
+                            (err_w.lower(), err_w.capitalize(), err_w.upper()),
+                        ).fetchall()
+                        is_err_noun = any(pos == "noun" and "pron" not in tags for pos, tags in res_err)
+                    if is_err_noun:
+                        return (
+                            "Український правопис (2019) § 87 / Олександр Пономарів «Культура слова»",
+                            f"помилкове вживання називного відмінка замість кличного у звертанні «{err}» виправлено на «{corr}»",
+                            f"«Український правопис» (2019, § 87) та норми культури мови (Олександр Пономарів) вимагають уживати у звертаннях кличний відмінок, а не називний: вживаємо «{corr}» замість «{err}»."
+                        )
         return (
             "VESUM / Український правопис (2019)",
             f"помилку у відмінковій формі «{err}» виправлено на нормативну форму «{corr}»",
@@ -654,8 +682,7 @@ def resolve_specific_linguistic_citation(
     if primary_tag == "G/PartVoice":
         pv_sufs = (
             "чий", "чого", "чому", "чим", "чім", "ча", "чої", "чій", "чу", "чою", "че",
-            "чі", "чих", "чими", "ший", "шого", "шому", "шим", "шім", "ша", "шої", "шій",
-            "шу", "шою", "ше", "ші", "ших", "шими"
+            "чі", "чих", "чими"
         )
         if any(err_lower.endswith(s) for s in pv_sufs) or any(any(w.endswith(s) for s in pv_sufs) for w in err_lower.split()):
             return (
@@ -750,11 +777,20 @@ def resolve_specific_linguistic_citation(
                 "калькований сполучник «в той час як» замінено на питомий протиставний сполучник «тоді як»",
                 "Борис Антоненко-Давидович рекомендує вживати природні сполучники «тоді як», «тим часом як» замість кальки «в той час як»."
             )
+        # Drop "що -> який" and relative pronouns completely per Claude R7 B5
+        rel_words = (
+            "який", "яка", "яке", "які", "якого", "якій", "яким", "яких", "якому", "якою",
+            "котрий", "котра", "котре", "котрі", "котрого", "котрій", "котрим", "котрих", "котрому", "котрою"
+        )
+        if err_lower in {"що", "щодо"} or any(w.startswith(rel_words) for w in corr_lower.split()):
+            return None
+        if corr_lower in {"що", "щодо"} or any(w.startswith(rel_words) for w in err_lower.split()):
+            return None
+
         conj_words = {
-            "що", "щоб", "як", "якщо", "якби", "бо", "але", "а", "і", "й", "та", "хоч",
-            "хоча", "мов", "неначе", "наче", "ніби", "немов", "котрий", "котра", "котре",
-            "котрі", "який", "яка", "яке", "які", "чи", "тож", "проте", "однак", "зате",
-            "коли", "доки", "поки"
+            "щоб", "як", "якщо", "якби", "бо", "але", "а", "і", "й", "та", "хоч",
+            "хоча", "мов", "неначе", "наче", "ніби", "немов", "чи", "тож", "проте",
+            "однак", "зате", "коли", "доки", "поки"
         }
         if any(w in conj_words for w in err_lower.split()) or any(w in conj_words for w in corr_lower.split()):
             return (
