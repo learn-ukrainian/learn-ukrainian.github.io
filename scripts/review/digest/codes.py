@@ -25,11 +25,12 @@ BYTE_DRIFT = "byte_drift"
 DIGEST_SCHEMA_INVALID = "digest_schema_invalid"
 DIGEST_FILE_MISSING = "digest_file_missing"
 INVALID_ARGUMENT = "invalid_argument"
+PATH_FORBIDDEN = "path_forbidden"
 
 DESCRIPTIONS: dict[str, str] = {
     LOCK_MISMATCH: "failure: file bytes disagree with the lock sidecar or lock is missing",
     PLAN_MISSING: "failure: requested module plan file does not exist",
-    PLAN_INVALID: "failure: module plan file is invalid YAML or malformed",
+    PLAN_INVALID: "failure: module plan file is invalid YAML or breaks schema",
     LESSON_NOT_IN_PLAN: "failure: requested lesson number does not exist in module plan",
     PROVENANCE_MISSING: "failure: lesson provenance file does not exist",
     PROVENANCE_INVALID: "failure: lesson provenance file is invalid YAML or malformed",
@@ -44,6 +45,7 @@ DESCRIPTIONS: dict[str, str] = {
     DIGEST_SCHEMA_INVALID: "failure: generated digest breaks module-digest-v1 schema",
     DIGEST_FILE_MISSING: "failure: digest file or lock sidecar does not exist on disk (--check)",
     INVALID_ARGUMENT: "failure: CLI invocation arguments are invalid",
+    PATH_FORBIDDEN: "failure: requested path or argument violates isolation boundaries or escapes expected root",
 }
 
 

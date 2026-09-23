@@ -12,7 +12,7 @@ from pathlib import Path
 
 from . import codes
 from .error import DigestError
-from .generator import build_digest, check_digest, write_digest
+from .generator import ALLOWED_LEVELS, build_digest, check_digest, write_digest
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -44,6 +44,7 @@ def build_parser() -> argparse.ArgumentParser:
 
     parser.add_argument(
         "level",
+        choices=ALLOWED_LEVELS,
         help="CEFR level directory under curriculum/l2-uk-en/, e.g. a1, a2",
     )
     parser.add_argument(

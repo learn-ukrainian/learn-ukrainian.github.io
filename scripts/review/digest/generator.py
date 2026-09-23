@@ -7,6 +7,7 @@ Infers nothing; copies and counts from observed, resolutions, provenance, plan v
 from __future__ import annotations
 
 import hashlib
+import re
 from pathlib import Path
 from typing import Any
 
@@ -16,12 +17,73 @@ from scripts.curriculum.evidence import lock
 
 from . import codes
 from .error import DigestError
-from .schema import validate_digest
+from .schema import (
+    validate_digest,
+    validate_observed_schema,
+    validate_plan_schema,
+    validate_resolutions_schema,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 
 GENERATOR_VERSION: str = "1"
 DIGEST_SCHEMA: int = 1
+
+ALLOWED_LEVELS: tuple[str, ...] = ("a1", "a2", "b1", "b2", "c1", "c2")
+SLUG_PATTERN = re.compile(r"^[a-z0-9]+(?:-[a-z0-9]+)*$")
+
+
+def validate_level(level: str) -> None:
+    """Accept level only from the fixed set offered by the CLI."""
+    if not isinstance(level, str) or level not in ALLOWED_LEVELS:
+        raise DigestError(
+            codes.PATH_FORBIDDEN,
+            f"level {level!r} is not an allowed CEFR level ({', '.join(ALLOWED_LEVELS)})",
+        )
+
+
+def validate_slug(slug: str) -> None:
+    """Accept slug only if it matches ^[a-z0-9]+(?:-[a-z0-9]+)*$."""
+    if not isinstance(slug, str) or not SLUG_PATTERN.fullmatch(slug):
+        raise DigestError(
+            codes.PATH_FORBIDDEN,
+            f"slug {slug!r} must match pattern '^[a-z0-9]+(?:-[a-z0-9]+)*$'",
+        )
+
+
+def is_forbidden_path(path: Path) -> bool:
+    """Check if resolved path violates R-11 boundaries (curriculum/l2-uk-en/plans/, *-v1, wiki/)."""
+    parts = path.resolve().parts
+    for i in range(len(parts) - 2):
+        if parts[i : i + 3] == ("curriculum", "l2-uk-en", "plans"):
+            return True
+    if any(part.endswith("-v1") for part in parts):
+        return True
+    return any(part == "wiki" for part in parts)
+
+
+def validate_input_path(path: Path, expected_root: Path) -> Path:
+    """Resolve path, ensure it lies under expected_root, and verify it is not forbidden under R-11."""
+    resolved_root = expected_root.resolve()
+    resolved = path.resolve()
+    try:
+        if not resolved.is_relative_to(resolved_root):
+            raise DigestError(
+                codes.PATH_FORBIDDEN,
+                f"path {path} resolves outside expected root {resolved_root}: {resolved}",
+            )
+    except (ValueError, TypeError) as exc:
+        raise DigestError(
+            codes.PATH_FORBIDDEN,
+            f"path {path} is invalid: {exc}",
+        ) from exc
+
+    if is_forbidden_path(resolved):
+        raise DigestError(
+            codes.PATH_FORBIDDEN,
+            f"path {resolved} is forbidden under R-11",
+        )
+    return resolved
 
 
 def _sort_val(v: Any) -> tuple[int, Any]:
@@ -83,28 +145,36 @@ def build_digest(
     repo_root: Path | None = None,
 ) -> dict[str, Any]:
     """Build deterministic module digest dict for lessons 1...up_to-1."""
+    validate_level(level)
+    validate_slug(slug)
+
     if up_to < 1:
         raise DigestError(codes.INVALID_ARGUMENT, f"--up-to must be >= 1, got {up_to}")
 
     root = (repo_root or REPO_ROOT).resolve()
-    state_dir = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
+    expected_plan_root = (root / f"curriculum/l2-uk-en/lesson-plans/{level}").resolve()
+    expected_state_root = (root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}").resolve()
+    expected_mdx_root = (root / f"site/src/content/docs/{level}/{slug}").resolve()
+
     plan_path = root / f"curriculum/l2-uk-en/lesson-plans/{level}/{slug}.yaml"
-    mdx_dir = root / f"site/src/content/docs/{level}/{slug}"
+    resolved_plan_path = validate_input_path(plan_path, expected_plan_root)
 
-    if not plan_path.is_file():
-        raise DigestError(codes.PLAN_MISSING, f"module plan {plan_path} not found")
+    if not resolved_plan_path.is_file():
+        raise DigestError(codes.PLAN_MISSING, f"module plan {resolved_plan_path} not found")
 
-    plan_sha256 = compute_file_sha256(plan_path)
+    plan_sha256 = compute_file_sha256(resolved_plan_path)
     try:
-        plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+        plan_doc = yaml.safe_load(resolved_plan_path.read_text(encoding="utf-8"))
     except Exception as exc:
-        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} unreadable YAML: {exc}") from exc
+        raise DigestError(codes.PLAN_INVALID, f"module plan {resolved_plan_path} unreadable YAML: {exc}") from exc
 
     if not isinstance(plan_doc, dict):
-        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} is not a YAML mapping")
+        raise DigestError(codes.PLAN_INVALID, f"module plan {resolved_plan_path} is not a YAML mapping")
+
+    validate_plan_schema(plan_doc, resolved_plan_path, repo_root=root)
 
     plan_lessons_by_n: dict[int, dict[str, Any]] = {
-        l["n"]: l for l in plan_doc.get("lessons", []) if isinstance(l, dict) and "n" in l
+        l["n"]: l for l in plan_doc["lessons"]
     }
 
     sources: list[dict[str, Any]] = []
@@ -112,59 +182,67 @@ def build_digest(
 
     for k in range(1, up_to):
         if k not in plan_lessons_by_n:
-            raise DigestError(codes.LESSON_NOT_IN_PLAN, f"lesson {k} not found in module plan {plan_path}")
+            raise DigestError(codes.LESSON_NOT_IN_PLAN, f"lesson {k} not found in module plan {resolved_plan_path}")
 
-        mdx_path = mdx_dir / f"{k}.mdx"
-        if not mdx_path.is_file():
-            raise DigestError(codes.MDX_MISSING, f"lesson {k} MDX file {mdx_path} not found")
-        mdx_sha256 = compute_file_sha256(mdx_path)
+        mdx_path = root / f"site/src/content/docs/{level}/{slug}/{k}.mdx"
+        resolved_mdx = validate_input_path(mdx_path, expected_mdx_root)
+        if not resolved_mdx.is_file():
+            raise DigestError(codes.MDX_MISSING, f"lesson {k} MDX file {resolved_mdx} not found")
+        mdx_sha256 = compute_file_sha256(resolved_mdx)
 
-        obs_path = state_dir / f"lesson-{k}.observed.yaml"
-        if not obs_path.is_file():
-            raise DigestError(codes.OBSERVED_MISSING, f"observed state file {obs_path} not found")
+        obs_path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.observed.yaml"
+        resolved_obs = validate_input_path(obs_path, expected_state_root)
+        if not resolved_obs.is_file():
+            raise DigestError(codes.OBSERVED_MISSING, f"observed state file {resolved_obs} not found")
         try:
-            lock.require(obs_path)
+            lock.require(resolved_obs)
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
                 msg = msg[len(codes.LOCK_MISMATCH) + 2:]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
-        obs_sha256 = compute_file_sha256(obs_path)
+        obs_sha256 = compute_file_sha256(resolved_obs)
         try:
-            obs_doc = yaml.safe_load(obs_path.read_text(encoding="utf-8"))
+            obs_doc = yaml.safe_load(resolved_obs.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} unreadable: {exc}") from exc
+            raise DigestError(codes.OBSERVED_INVALID, f"observed file {resolved_obs} unreadable: {exc}") from exc
         if not isinstance(obs_doc, dict):
-            raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} is not a YAML mapping")
+            raise DigestError(codes.OBSERVED_INVALID, f"observed file {resolved_obs} is not a YAML mapping")
+        validate_observed_schema(obs_doc, resolved_obs, repo_root=root)
 
-        res_path = state_dir / f"lesson-{k}.resolutions.yaml"
-        if not res_path.is_file():
-            raise DigestError(codes.RESOLUTIONS_MISSING, f"resolutions file {res_path} not found")
+        res_path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.resolutions.yaml"
+        resolved_res = validate_input_path(res_path, expected_state_root)
+        if not resolved_res.is_file():
+            raise DigestError(codes.RESOLUTIONS_MISSING, f"resolutions file {resolved_res} not found")
         try:
-            lock.require(res_path)
+            lock.require(resolved_res)
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
                 msg = msg[len(codes.LOCK_MISMATCH) + 2:]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
-        res_sha256 = compute_file_sha256(res_path)
+        res_sha256 = compute_file_sha256(resolved_res)
         try:
-            res_doc = yaml.safe_load(res_path.read_text(encoding="utf-8"))
+            res_doc = yaml.safe_load(resolved_res.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} unreadable: {exc}") from exc
+            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {resolved_res} unreadable: {exc}") from exc
         if not isinstance(res_doc, dict):
-            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} is not a YAML mapping")
+            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {resolved_res} is not a YAML mapping")
+        validate_resolutions_schema(res_doc, resolved_res, repo_root=root)
 
-        prov_path = state_dir / f"lesson-{k}.provenance.yaml"
-        if not prov_path.is_file():
-            raise DigestError(codes.PROVENANCE_MISSING, f"provenance file {prov_path} not found")
-        prov_sha256 = compute_file_sha256(prov_path)
+        prov_path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.provenance.yaml"
+        resolved_prov = validate_input_path(prov_path, expected_state_root)
+        if not resolved_prov.is_file():
+            raise DigestError(codes.PROVENANCE_MISSING, f"provenance file {resolved_prov} not found")
+        prov_sha256 = compute_file_sha256(resolved_prov)
         try:
-            prov_doc = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+            prov_doc = yaml.safe_load(resolved_prov.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} unreadable: {exc}") from exc
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {resolved_prov} unreadable: {exc}") from exc
         if not isinstance(prov_doc, dict):
-            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} is not a YAML mapping")
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {resolved_prov} is not a YAML mapping")
+        if "spans" not in prov_doc or not isinstance(prov_doc["spans"], list):
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {resolved_prov} missing 'spans' list")
 
         sources.append(
             {
@@ -177,7 +255,7 @@ def build_digest(
         )
 
         prov_map: dict[tuple[Any, Any, Any, Any, Any], dict[str, Any]] = {}
-        for span in prov_doc.get("spans", []):
+        for span in prov_doc["spans"]:
             if isinstance(span, dict):
                 key = (
                     span.get("tab"),
@@ -192,37 +270,31 @@ def build_digest(
                         "ref": span.get("ref"),
                     }
 
-        observed_roles: dict[str, str] = {}
-        for rec in obs_doc.get("records", []):
-            if isinstance(rec, dict) and "id" in rec and "role" in rec:
-                observed_roles[rec["id"]] = rec["role"]
+        observed_roles: dict[str, str] = {
+            rec["id"]: rec["role"] for rec in obs_doc["records"]
+        }
 
         occurrences: list[dict[str, Any]] = []
         names: list[dict[str, Any]] = []
         dialogue_address_forms: list[dict[str, Any]] = []
 
-        tokens = res_doc.get("tokens", [])
+        tokens = res_doc["tokens"]
         for token in tokens:
-            if not isinstance(token, dict):
+            selected = token["selected"]
+            if not selected:
                 continue
-            selected = token.get("selected")
-            if not selected or not isinstance(selected, dict):
-                continue
-            rec_id = selected.get("record")
-            if not rec_id:
-                continue
-
-            forms = selected.get("forms") or []
+            rec_id = selected["record"]
+            forms = selected["forms"]
             pos = forms[0].split(":")[0] if forms else ""
 
             if rec_id not in observed_roles:
                 raise DigestError(
                     codes.RECORD_NOT_IN_OBSERVED,
-                    f"token record {rec_id} not found in observed index {obs_path}",
+                    f"token record {rec_id} not found in observed index {resolved_obs}",
                 )
             role = observed_roles[rec_id]
 
-            prov_str = token.get("provenance")
+            prov_str = token["provenance"]
             if prov_str == "deterministic":
                 chosen_by = "resolver"
                 question_ref = None
@@ -230,13 +302,13 @@ def build_digest(
                 chosen_by = "question"
                 question_ref = prov_str
 
-            unit = token.get("unit") or {}
+            unit = token["unit"]
             locator = {
-                "tab": unit.get("tab"),
+                "tab": unit["tab"],
                 "step": unit.get("step"),
-                "activity": unit.get("activity"),
-                "item": unit.get("item"),
-                "block": unit.get("block"),
+                "activity": unit["activity"],
+                "item": unit["item"],
+                "block": unit["block"],
             }
 
             tok_key = (
@@ -249,14 +321,14 @@ def build_digest(
             if tok_key not in prov_map:
                 raise DigestError(
                     codes.UNIT_NOT_IN_PROVENANCE,
-                    f"token unit {locator} not found in provenance spans of {prov_path}",
+                    f"token unit {locator} not found in provenance spans of {resolved_prov}",
                 )
             span_info = prov_map[tok_key]
             span_source = span_info.get("source")
             span_ref = span_info.get("ref")
 
-            offset = token.get("offset", 0)
-            length = len(token.get("token", ""))
+            offset = token["offset"]
+            length = len(token["token"])
 
             if role == "name":
                 names.append(
@@ -313,16 +385,15 @@ def build_digest(
 
         lesson_plan = plan_lessons_by_n[k]
         taught_grammar: list[str] = []
-        for step in lesson_plan.get("steps", []):
-            if isinstance(step, dict):
-                introduces = step.get("introduces")
-                if isinstance(introduces, dict):
-                    for gid in introduces.get("grammar", []):
-                        if isinstance(gid, str):
-                            taught_grammar.append(gid)
+        for step in lesson_plan["steps"]:
+            introduces = step.get("introduces")
+            if isinstance(introduces, dict):
+                for gid in introduces.get("grammar") or []:
+                    if isinstance(gid, str):
+                        taught_grammar.append(gid)
 
-        untaught = obs_doc.get("untaught_forms") or {}
-        raw_forms = untaught.get("forms", []) if isinstance(untaught, dict) else []
+        untaught = obs_doc["untaught_forms"]
+        raw_forms = untaught["forms"]
         encountered_unexplained = [
             {
                 "record": item["record"],
@@ -330,10 +401,6 @@ def build_digest(
                 "category": item["category"],
             }
             for item in raw_forms
-            if isinstance(item, dict)
-            and "record" in item
-            and "tags" in item
-            and "category" in item
         ]
 
         grammar_entry = {
@@ -342,11 +409,10 @@ def build_digest(
         }
 
         plan_dialogue = lesson_plan.get("dialogue")
-        if plan_dialogue and isinstance(plan_dialogue, dict):
+        if plan_dialogue is not None:
             places = [
                 p["name"]
-                for p in plan_dialogue.get("places", [])
-                if isinstance(p, dict) and "name" in p
+                for p in plan_dialogue.get("places") or []
             ]
             speakers = [
                 {
@@ -354,16 +420,12 @@ def build_digest(
                     "role": s["role"],
                     "gender": s["gender"],
                 }
-                for s in plan_dialogue.get("speakers", [])
-                if isinstance(s, dict)
-                and "name" in s
-                and "role" in s
-                and "gender" in s
+                for s in plan_dialogue["speakers"]
             ]
             dialogue_entry: dict[str, Any] | None = {
                 "step": plan_dialogue.get("step"),
-                "setting": plan_dialogue.get("setting", ""),
-                "register": plan_dialogue.get("register", "informal"),
+                "setting": plan_dialogue["setting"],
+                "register": plan_dialogue["register"],
                 "places": places,
                 "speakers": speakers,
                 "address_forms": dialogue_address_forms,
@@ -395,7 +457,7 @@ def build_digest(
         "lessons": lessons,
     }
 
-    validate_digest(digest_doc)
+    validate_digest(digest_doc, repo_root=root)
     return digest_doc
 
 
@@ -407,8 +469,12 @@ def digest_output_path(
     repo_root: Path | None = None,
 ) -> Path:
     """Return path to digest-upto-<n>.yaml."""
+    validate_level(level)
+    validate_slug(slug)
     root = (repo_root or REPO_ROOT).resolve()
-    return root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
+    expected_root = (root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}").resolve()
+    path = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
+    return validate_input_path(path, expected_root)
 
 
 def write_digest(
@@ -417,7 +483,9 @@ def write_digest(
     repo_root: Path | None = None,
 ) -> tuple[Path, str]:
     """Write digest and lock sidecar to disk, returning path and sha256."""
-    validate_digest(digest_doc)
+    validate_digest(digest_doc, repo_root=repo_root)
+    validate_level(digest_doc["level"])
+    validate_slug(digest_doc["slug"])
     path = digest_output_path(
         digest_doc["level"],
         digest_doc["slug"],
@@ -437,6 +505,8 @@ def check_digest(
     repo_root: Path | None = None,
 ) -> tuple[Path, str]:
     """Verify digest on disk against recomputed content without byte drift."""
+    validate_level(level)
+    validate_slug(slug)
     path = digest_output_path(level, slug, up_to, repo_root=repo_root)
     if not path.is_file():
         raise DigestError(codes.DIGEST_FILE_MISSING, f"digest file {path} not found")

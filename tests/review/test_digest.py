@@ -714,3 +714,191 @@ def test_cli_subprocess_invocation(tmp_path: Path) -> None:
     proc_fail = subprocess.run(cmd_check, capture_output=True, text=True, timeout=30)
     assert proc_fail.returncode == 1
     assert "failure:" in proc_fail.stderr or "digest_file_missing" in proc_fail.stderr
+
+
+@pytest.mark.parametrize(
+    "bad_slug",
+    [
+        "../../plans/lit-humor",
+        "plans/lit-humor",
+        "/etc/passwd",
+    ],
+)
+def test_path_traversal_slug_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_slug: str) -> None:
+    """R-11: Traversal slugs, slashes, and absolute paths fail with path_forbidden and read nothing."""
+    _setup_two_lesson_fixture(tmp_path)
+    forbidden_file = tmp_path / "curriculum/l2-uk-en/plans/lit-humor.yaml"
+    forbidden_file.parent.mkdir(parents=True, exist_ok=True)
+    forbidden_file.write_text("plan_schema: 1\n", encoding="utf-8")
+
+    opened_files: list[Path] = []
+    real_read_bytes = Path.read_bytes
+    real_read_text = Path.read_text
+
+    def mock_read_bytes(self: Path) -> bytes:
+        opened_files.append(self)
+        if "lit-humor" in str(self) or "passwd" in str(self):
+            raise AssertionError(f"Forbidden file read_bytes called: {self}")
+        return real_read_bytes(self)
+
+    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
+        opened_files.append(self)
+        if "lit-humor" in str(self) or "passwd" in str(self):
+            raise AssertionError(f"Forbidden file read_text called: {self}")
+        return real_read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
+    monkeypatch.setattr(Path, "read_text", mock_read_text)
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", bad_slug, 1, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+    assert not any("lit-humor" in str(p) or "passwd" in str(p) for p in opened_files)
+
+
+def test_symlink_pointing_outside_root_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """R-11: A symlinked input pointing outside its root fails with path_forbidden and reads nothing."""
+    _setup_two_lesson_fixture(tmp_path)
+    outside_dir = tmp_path / "outside_dir"
+    outside_dir.mkdir(parents=True, exist_ok=True)
+    secret_file = outside_dir / "secret.yaml"
+    secret_file.write_text("secret_content: 1\n", encoding="utf-8")
+
+    symlink_plan = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/mod-symlink.yaml"
+    symlink_plan.symlink_to(secret_file)
+
+    opened_files: list[Path] = []
+    real_read_bytes = Path.read_bytes
+    real_read_text = Path.read_text
+
+    def mock_read_bytes(self: Path) -> bytes:
+        opened_files.append(self)
+        if "secret" in str(self):
+            raise AssertionError(f"Forbidden secret file read_bytes called: {self}")
+        return real_read_bytes(self)
+
+    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
+        opened_files.append(self)
+        if "secret" in str(self):
+            raise AssertionError(f"Forbidden secret file read_text called: {self}")
+        return real_read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
+    monkeypatch.setattr(Path, "read_text", mock_read_text)
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-symlink", 1, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+    assert not any("secret" in str(p) for p in opened_files)
+
+
+def test_symlink_pointing_to_forbidden_dir_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """R-11: A symlinked input pointing under curriculum/l2-uk-en/plans/ fails with path_forbidden."""
+    _setup_two_lesson_fixture(tmp_path)
+    forbidden_dir = tmp_path / "curriculum/l2-uk-en/plans"
+    forbidden_dir.mkdir(parents=True, exist_ok=True)
+    forbidden_plan = forbidden_dir / "lit-humor.yaml"
+    forbidden_plan.write_text("plan_schema: 1\n", encoding="utf-8")
+
+    symlink_plan = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/mod-symlink-forbidden.yaml"
+    symlink_plan.symlink_to(forbidden_plan)
+
+    opened_files: list[Path] = []
+    real_read_bytes = Path.read_bytes
+
+    def mock_read_bytes(self: Path) -> bytes:
+        opened_files.append(self)
+        if "lit-humor" in str(self):
+            raise AssertionError(f"Forbidden file read_bytes called: {self}")
+        return real_read_bytes(self)
+
+    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-symlink-forbidden", 1, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+    assert not any("lit-humor" in str(p) for p in opened_files)
+
+
+def test_invalid_level_fails(tmp_path: Path) -> None:
+    """Invalid level not in CLI allowed choices fails with path_forbidden."""
+    _setup_two_lesson_fixture(tmp_path)
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a3", "mod-fixture", 1, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+
+
+def test_dialogue_missing_register_fails(tmp_path: Path) -> None:
+    """A dialogue missing required 'register' breaks schema and fails with plan_invalid."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    del plan_doc["lessons"][0]["dialogue"]["register"]
+    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PLAN_INVALID
+    assert str(paths["plan"]) in exc_info.value.message
+
+
+def test_malformed_dialogue_fails(tmp_path: Path) -> None:
+    """A malformed dialogue breaks schema and fails with plan_invalid (not silently null)."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    plan_doc["lessons"][0]["dialogue"] = "not a valid dialogue mapping"
+    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PLAN_INVALID
+    assert str(paths["plan"]) in exc_info.value.message
+
+
+def test_plan_lesson_with_no_steps_fails(tmp_path: Path) -> None:
+    """A plan lesson with no 'steps' breaks schema and fails with plan_invalid."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    del plan_doc["lessons"][0]["steps"]
+    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert exc_info.value.code == codes.PLAN_INVALID
+    assert str(paths["plan"]) in exc_info.value.message
+
+
+def test_observed_index_with_no_untaught_forms_fails(tmp_path: Path) -> None:
+    """An observed index with no 'untaught_forms' breaks schema and fails with observed_invalid."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    obs_doc = yaml.safe_load(paths["obs_1"].read_text(encoding="utf-8"))
+    del obs_doc["untaught_forms"]
+    lock.write(paths["obs_1"], lock.yaml_bytes(obs_doc))
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert exc_info.value.code == codes.OBSERVED_INVALID
+    assert str(paths["obs_1"]) in exc_info.value.message
+
+
+def test_resolutions_missing_tokens_fails(tmp_path: Path) -> None:
+    """Resolutions missing 'tokens' breaks schema and fails with resolutions_invalid."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    res_doc = yaml.safe_load(paths["res_1"].read_text(encoding="utf-8"))
+    del res_doc["tokens"]
+    lock.write(paths["res_1"], lock.yaml_bytes(res_doc))
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert exc_info.value.code == codes.RESOLUTIONS_INVALID
+    assert str(paths["res_1"]) in exc_info.value.message
+
+
+def test_optional_places_defaults_to_empty_list(tmp_path: Path) -> None:
+    """A dialogue omitting optional 'places' defaults to [] in digest."""
+    paths = _setup_two_lesson_fixture(tmp_path)
+    plan_doc = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    del plan_doc["lessons"][0]["dialogue"]["places"]
+    paths["plan"].write_bytes(yaml.safe_dump(plan_doc, allow_unicode=True, sort_keys=False).encode("utf-8"))
+
+    doc = build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
+    assert doc["lessons"][0]["dialogue"]["places"] == []
