@@ -7,9 +7,13 @@ deterministically without data/, MCP, or Node.
 
 from __future__ import annotations
 
+import pytest
+
 import scripts.build.linear_pipeline as lp
 import scripts.build.verify_shippable as vs
 from scripts.build import promote_quality_gate as pqg
+
+pytestmark = pytest.mark.reads_content
 
 
 def _mk(tmp_path):
