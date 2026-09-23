@@ -52,6 +52,8 @@ ROOT = Path(__file__).resolve().parents[2]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
+from scripts.session_canary import handoff_select
+
 
 def _infra_harness_stream_id(repo_root: Path | None = None) -> str:
     """Live infra stream id from the issue-stream registry (infra-harness anchor)."""
@@ -86,6 +88,9 @@ DEFAULT_SIM_THRESHOLD = 0.75
 N_ANCHORS = 10
 _CANARY_TIMEOUT_SECONDS = 30
 _TIMEOUT_RETURN_CODE = 124
+_NEXT_HEADING_MARKERS = ("next drive", "next after", "next action", "in flight", "live session")
+_HANDS_OFF_HEADING_MARKERS = ("hands-off", "handsoff", "do not", "out of scope")
+_SECTION_COUNT_LIMIT = 10_000
 
 
 def _utc_now() -> str:
@@ -97,14 +102,17 @@ def _canary_dir(repo: Path, epic: str) -> Path:
 
 
 def _handoff_candidates(repo: Path, epic: str, preferred: list[str] | None = None) -> list[Path]:
-    base = repo / ".claude" / f"{epic}-epic"
-    names = [
-        *(preferred or []),
-        "INTERIM-DRIVER-HANDOFF.md",
-        "CLAUDE-DRIVER-HANDOFF.md",
-        "CODEX-DRIVER-HANDOFF.md",
-    ]
-    return [base / n for n in names]
+    """Own-lane handoff first, then the freshest other existing candidate.
+
+    ``*.superseded.md`` is never returned. Missing names stay at the tail so an
+    empty epic dir still reports the lane's own filename first.
+    """
+    return handoff_select.lane_handoff_candidates(
+        repo,
+        epic,
+        handoff_select.GROK_FALLBACK_HANDOFF_NAMES,
+        preferred=list(preferred or []),
+    )
 
 
 def _read_text(path: Path, limit: int = 120_000) -> str:
@@ -173,6 +181,55 @@ def _extract_handoff_bullets(md: str, *, heading_substrings: tuple[str, ...], li
     return bullets
 
 
+def _handoff_section_counts(md: str) -> tuple[int, int]:
+    """Count Next and Hands-off bullets the minter can consume."""
+    next_n = len(
+        _extract_handoff_bullets(
+            md,
+            heading_substrings=_NEXT_HEADING_MARKERS,
+            limit=_SECTION_COUNT_LIMIT,
+        )
+    )
+    hands_n = len(
+        _extract_handoff_bullets(
+            md,
+            heading_substrings=_HANDS_OFF_HEADING_MARKERS,
+            limit=_SECTION_COUNT_LIMIT,
+        )
+    )
+    return next_n, hands_n
+
+
+def _format_anchor_shortfall(attempts: list[tuple[str, int, int, int]]) -> str:
+    """Name every handoff tried and its next/hands-off bullet counts."""
+    best = max((anchors for _rel, anchors, _next_n, _hands_n in attempts), default=0)
+    tried = ", ".join(
+        f"{rel} (next={next_n}, hands-off={hands_n})" for rel, _anchors, next_n, hands_n in attempts
+    )
+    if not tried:
+        tried = "(no handoff) (next=0, hands-off=0)"
+    return (
+        f"error: could only derive {best}/{N_ANCHORS} durable anchors; "
+        f"tried {tried}; "
+        "open a stream session and dual-write handoff next/hands-off sections, then re-mint"
+    )
+
+
+def _handoff_display(repo: Path, path: Path) -> str:
+    if path.is_relative_to(repo):
+        return str(path.relative_to(repo))
+    return str(path)
+
+
+def _resolve_handoff_override(repo: Path, raw: str | None) -> Path | None:
+    if not raw:
+        return None
+    path = Path(raw)
+    if not path.is_absolute():
+        path = repo / path
+    return path
+
+
 def _build_facts(
     *,
     epic: str,
@@ -180,6 +237,7 @@ def _build_facts(
     stream_entries: list[dict[str, str]],
     handoff_text: str,
     handoff_rel: str,
+    raise_on_shortfall: bool = True,
 ) -> list[dict[str, str]]:
     """Build exactly 10 unique {id,q,a} facts from durable sources only."""
     facts: list[dict[str, str]] = []
@@ -242,7 +300,7 @@ def _build_facts(
     # 4) Handoff dual-write: Next Drive (reserve workset slots after these)
     next_bullets = _extract_handoff_bullets(
         handoff_text,
-        heading_substrings=("next drive", "next after", "next action", "in flight", "live session"),
+        heading_substrings=_NEXT_HEADING_MARKERS,
     )
     for i, bullet in enumerate(next_bullets[:3], start=1):
         if not add(
@@ -264,7 +322,7 @@ def _build_facts(
 
     hands_off = _extract_handoff_bullets(
         handoff_text,
-        heading_substrings=("hands-off", "handsoff", "do not", "out of scope"),
+        heading_substrings=_HANDS_OFF_HEADING_MARKERS,
     )
     for i, bullet in enumerate(hands_off[:2], start=1):
         if not add(
@@ -306,13 +364,50 @@ def _build_facts(
             break
 
     if len(facts) < N_ANCHORS:
-        raise SystemExit(
-            f"error: could only derive {len(facts)}/{N_ANCHORS} durable anchors; "
-            "open a stream session and dual-write handoff next/hands-off sections, then re-mint"
-        )
+        if not raise_on_shortfall:
+            return facts
+        next_n, hands_n = _handoff_section_counts(handoff_text)
+        label = handoff_rel or "(no handoff)"
+        raise SystemExit(_format_anchor_shortfall([(label, len(facts), next_n, hands_n)]))
 
     # Exactly 10 — prefer earliest (highest-trust: identity + pins)
     return facts[:N_ANCHORS]
+
+
+def _facts_from_handoff_candidates(
+    *,
+    repo: Path,
+    epic: str,
+    stream_id: str,
+    stream_entries: list[dict[str, str]],
+    handoff_paths: list[Path],
+) -> tuple[list[dict[str, str]], str]:
+    """Use the first handoff that yields 10 anchors.
+
+    ``handoff_paths`` is already ordered: explicit ``--handoff``, then the
+    lane's own file, then the freshest remaining candidates. A short file is
+    recorded and the next candidate is tried before failing.
+    """
+    existing = [path for path in handoff_paths if path.is_file()]
+    sources: list[tuple[Path | None, str]] = (
+        [(path, _handoff_display(repo, path)) for path in existing] if existing else [(None, "(no handoff)")]
+    )
+    attempts: list[tuple[str, int, int, int]] = []
+    for path, rel in sources:
+        text = _read_text(path) if path is not None else ""
+        next_n, hands_n = _handoff_section_counts(text)
+        built = _build_facts(
+            epic=epic,
+            stream_id=stream_id,
+            stream_entries=stream_entries,
+            handoff_text=text,
+            handoff_rel=rel,
+            raise_on_shortfall=False,
+        )
+        attempts.append((rel, len(built), next_n, hands_n))
+        if len(built) >= N_ANCHORS:
+            return built[:N_ANCHORS], rel
+    raise SystemExit(_format_anchor_shortfall(attempts))
 
 
 def cmd_mint(args: argparse.Namespace) -> int:
@@ -326,31 +421,17 @@ def cmd_mint(args: argparse.Namespace) -> int:
         )
         return 1
 
-    handoff_path: Path | None = None
-    if args.handoff:
-        handoff_path = Path(args.handoff)
-        if not handoff_path.is_absolute():
-            handoff_path = repo / handoff_path
-    else:
-        preferred = getattr(args, "preferred", None)
-        for cand in _handoff_candidates(repo, epic, preferred=preferred):
-            if cand.is_file():
-                handoff_path = cand
-                break
-
-    handoff_text = _read_text(handoff_path) if handoff_path else ""
-    handoff_rel = (
-        str(handoff_path.relative_to(repo)) if handoff_path and handoff_path.is_relative_to(repo) else str(handoff_path or "")
-    )
-
+    explicit = _resolve_handoff_override(repo, getattr(args, "handoff", None))
+    ranked = _handoff_candidates(repo, epic, preferred=getattr(args, "preferred", None))
+    handoff_paths = handoff_select.ordered_mint_handoffs(ranked, explicit)
     stream_entries = _load_stream_entries(stream_id, limit=int(args.stream_limit))
     try:
-        facts = _build_facts(
+        facts, handoff_rel = _facts_from_handoff_candidates(
+            repo=repo,
             epic=epic,
             stream_id=stream_id,
             stream_entries=stream_entries,
-            handoff_text=handoff_text,
-            handoff_rel=handoff_rel or f".claude/{epic}-epic/",
+            handoff_paths=handoff_paths,
         )
     except SystemExit as exc:
         print(str(exc), file=sys.stderr)

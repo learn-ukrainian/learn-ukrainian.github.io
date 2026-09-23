@@ -35,7 +35,7 @@ from scripts.agent_runtime.adapters.glm import (
     assert_glm_egress_allowed,
 )
 from scripts.session_canary import grok_lane as _gl
-from scripts.session_canary import shared_hydration
+from scripts.session_canary import handoff_select, shared_hydration
 
 EPIC_STREAM_DEFAULTS = dict(_gl.EPIC_STREAM_DEFAULTS)
 
@@ -62,7 +62,12 @@ GLM_PREFERRED_HANDOFFS: list[str] = ["GLM-DRIVER-HANDOFF.md"]
 
 
 def _handoff_candidates(repo: Path, epic: str) -> list[Path]:
-    return _gl._handoff_candidates(repo, epic, preferred=GLM_PREFERRED_HANDOFFS)
+    return handoff_select.lane_handoff_candidates(
+        repo,
+        epic,
+        handoff_select.GROK_FALLBACK_HANDOFF_NAMES,
+        preferred=GLM_PREFERRED_HANDOFFS,
+    )
 
 
 def _cold_start_body(

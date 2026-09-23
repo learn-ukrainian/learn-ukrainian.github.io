@@ -29,6 +29,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.session_canary import grok_lane as _gl
+from scripts.session_canary import handoff_select
 
 EPIC_STREAM_DEFAULTS = dict(_gl.EPIC_STREAM_DEFAULTS)
 
@@ -45,13 +46,17 @@ def _epic_dir(repo: Path, epic: str) -> Path:
 
 
 def _handoff_candidates(repo: Path, epic: str) -> list[Path]:
-    base = _epic_dir(repo, epic)
-    return [
-        base / "KIMI-DRIVER-HANDOFF.md",
-        base / "INTERIM-DRIVER-HANDOFF.md",
-        base / "CLAUDE-DRIVER-HANDOFF.md",
-        base / "CODEX-DRIVER-HANDOFF.md",
-    ]
+    return handoff_select.lane_handoff_candidates(
+        repo,
+        epic,
+        (
+            "KIMI-DRIVER-HANDOFF.md",
+            "INTERIM-DRIVER-HANDOFF.md",
+            "CLAUDE-DRIVER-HANDOFF.md",
+            "CODEX-DRIVER-HANDOFF.md",
+        ),
+        preferred=("KIMI-DRIVER-HANDOFF.md",),
+    )
 
 
 def _cold_start_body(
