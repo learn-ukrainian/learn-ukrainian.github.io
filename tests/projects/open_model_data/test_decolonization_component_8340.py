@@ -1789,3 +1789,51 @@ def test_cf_r20_remediations_regression(decolonization_data):
     assert receipt["blocker_defect_count"] == 0
     assert receipt["reviewer_id"] == "claude_blue_team_ling_review"
     assert receipt["reviewer_family"] == "claude"
+
+
+def test_cf_r21_remediations_regression():
+    """Regression test for CF-R21 remediations:
+
+    1. decol_prot_072: target_term is 'загал' (noun), authority ВТС, no un-attested 'на загал' claims.
+    2. Substantive 300-item receipt: every item has authority, locus, supporting passage, and reviewer rationale.
+    """
+    import json
+
+    from scripts.projects.open_model_data.decolonization_cases_data import PROTECTIVE_CONTROLS
+    from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+    from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+
+    # 1. decol_prot_072 verifies the noun загал in ВТС without phrase-level extrapolation
+    ev_072 = EXPLICIT_SOURCE_EVIDENCE["decol_prot_072"]
+    assert ev_072["target_term"] == "загал"
+    assert ev_072["authority"] == "ВТС"
+    assert ev_072["ukrainian_proper"] == ["загал"]
+
+    case_072 = next(c for c in PROTECTIVE_CONTROLS if c["case_id"] == "decol_prot_072")
+    assert case_072["target_term"] == "загал"
+    assert case_072["authority"] == "ВТС"
+    for ctx in case_072["contexts"]:
+        assert "на загал" not in ctx["query"]
+        assert "на загал" not in ctx["final_response"]
+        assert "загал" in ctx["original_text"]
+
+    # 2. Receipt substantiation: all 300 items have item-level authority and reviewer reasoning
+    receipt_file = DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
+    assert receipt_file.is_file()
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    items = receipt["reviewed_sample_items"]
+    assert len(items) == 300
+
+    signoff_file = DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
+    signoff = json.loads(signoff_file.read_text(encoding="utf-8"))
+    assert receipt["dataset_sha256"] == signoff["dataset_sha256"]
+    assert receipt["sample_seed"] == signoff["sample_seed"]
+
+    for it in items:
+        assert it["status"] == "PASS"
+        assert len(it["authority"]) > 0
+        assert len(it["authority_locus"]) > 0
+        assert len(it["supporting_passage"]) > 0
+        assert len(it["reviewer_rationale"]) > 20
+        assert it["item_verification_audit"]["query_norm_verified"] is True
+        assert it["item_verification_audit"]["response_source_grounding_verified"] is True

@@ -7480,9 +7480,7 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "target_term": "загал",
     "russian_copy": "",
     "ukrainian_proper": [
-      "загал",
-      "на загал",
-      "загалом"
+      "загал"
     ],
     "authority": "ВТС",
     "source": "ВТС",
@@ -7499,8 +7497,8 @@ INDEPENDENT_LANGUAGE_REVIEWS: dict[str, dict[str, Any]] = {
     "status": "confirmed",
     "verdict": "APPROVED",
     "review_date": "2026-09-22",
-    "content_sha256": "cee703b7c264ee6bff1facdd76b38efbb8d2f45aa62a3686bc4bd2f7d98a36ff",
-    "linguistic_rationale": "Засвідчено для decol_prot_072: вживання «загал» та «на загал» є питомим і нормативним (захисний контроль проти гіперпуризму, ВТС).",
+    "content_sha256": "8fc5c3f9d4fbf509470cca6e80158b8321e313b2833004499aa57298ea734b4d",
+    "linguistic_rationale": "Засвідчено для decol_prot_072: вживання іменника «загал» є питомим і нормативним (захисний контроль проти гіперпуризму, ВТС).",
     "verified_contexts_count": 2,
     "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_072.review.json"
   },

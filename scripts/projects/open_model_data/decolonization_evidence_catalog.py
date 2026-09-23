@@ -4167,9 +4167,7 @@ EXPLICIT_SOURCE_EVIDENCE: dict[str, dict[str, Any]] = {
     "russian_copy": "",
     "authority": "ВТС",
     "ukrainian_proper": [
-      "загал",
-      "на загал",
-      "загалом"
+      "загал"
     ]
   },
   "decol_prot_073": {
