@@ -1039,3 +1039,119 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
     assert snapshot["running_processes"] == 1
     assert snapshot["tracks"]["hist"]["health"] == "healthy"
     assert snapshot["tracks"]["bio"]["health"] == "complete"
+
+
+def _batch_progress_stub(track: str) -> dict:
+    return {
+        "track": track,
+        "total_expected": 10,
+        "research_done": 3,
+        "remaining": 7,
+        "recent_30min": 0,
+        "throughput_per_hour": 0,
+        "last_created": None,
+    }
+
+
+def test_legacy_batch_snapshot_old_log_is_unknown_when_process_probe_fails(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    ctx = fixture_context(tmp_path)
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_scan_preseed_logs",
+        lambda ctx: [{"track": "hist", "complete": False, "age_seconds": 1200}],
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_check_build_processes",
+        lambda: ([], "ps: TimeoutExpired"),
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_scan_track_progress",
+        lambda ctx, track: _batch_progress_stub(track),
+    )
+
+    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+
+    assert snapshot["running_processes"] is None
+    assert snapshot["errors"] == ["ps: TimeoutExpired"]
+    assert snapshot["tracks"]["hist"]["health"] == "unknown"
+    assert snapshot["tracks"]["hist"]["reason"] == "ps: TimeoutExpired"
+
+
+def test_legacy_batch_snapshot_old_log_stays_dead_when_process_probe_succeeds(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    ctx = fixture_context(tmp_path)
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_scan_preseed_logs",
+        lambda ctx: [{"track": "hist", "complete": False, "age_seconds": 1200}],
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_check_build_processes",
+        lambda: ([], None),
+    )
+    monkeypatch.setattr(
+        fleet_router.legacy_comms,
+        "_scan_track_progress",
+        lambda ctx, track: _batch_progress_stub(track),
+    )
+
+    snapshot = fleet_router._legacy_batch_snapshot(ctx)
+
+    assert snapshot["running_processes"] == 0
+    assert "errors" not in snapshot
+    assert snapshot["tracks"]["hist"]["health"] == "dead"
+    assert "reason" not in snapshot["tracks"]["hist"]
+
+
+def test_operations_timed_out_process_probe_degrades_batch_section(
+    client: TestClient,
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(client.app.state, "ctx", fixture_context(tmp_path))
+
+    async def empty_processes(*, ctx: MonitorContext | None = None) -> dict:
+        return {"alive": 0, "processes": []}
+
+    async def empty_zombies(**_kwargs: object) -> dict:
+        return {"count": 0, "zombies": []}
+
+    def timed_out_batches(ctx: MonitorContext | None = None) -> dict:
+        return {
+            "running_processes": None,
+            "errors": ["ps: TimeoutExpired", "token=source-secret /tmp/private"],
+            "tracks": {
+                "hist": {
+                    "health": "unknown",
+                    "reason": "ps: TimeoutExpired",
+                    "total_expected": 4,
+                    "research_done": 1,
+                    "remaining": 3,
+                    "recent_30min": 0,
+                    "throughput_per_hour": 0,
+                }
+            },
+        }
+
+    monkeypatch.setattr(fleet_router.legacy_comms, "active_processes", empty_processes)
+    monkeypatch.setattr(fleet_router.legacy_comms, "detect_zombies", empty_zombies)
+    monkeypatch.setattr(fleet_router, "_legacy_batch_snapshot", timed_out_batches)
+
+    response = client.get("/api/fleet/operations")
+
+    assert response.status_code == 200
+    payload = response.json()
+    assert payload["batches"]["availability"] == "degraded"
+    assert payload["batches"]["running_processes"] is None
+    assert payload["batches"]["errors"] == ["ps: TimeoutExpired"]
+    assert payload["batches"]["tracks"][0]["health"] == "unknown"
+    assert "source-secret" not in response.text
+    assert "private" not in response.text

@@ -1080,22 +1080,27 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
         # Find matching process
         proc = next((p for p in processes if p["track"] == track), None)
 
-        # Determine health status
+        # Determine health status. A failed ps probe is not evidence the build exited.
         if log and log["complete"]:
             health = "complete"
         elif proc:
             health = "healthy" if tp["recent_30min"] > 0 or (log and log["age_seconds"] < 900) else "stalled"
+        elif process_error:
+            health = "unknown"
         elif log and not log["complete"] and log["age_seconds"] > 600:
             health = "dead"
         else:
             health = "unknown"
 
-        track_progress[track] = {
+        track_row = {
             **tp,
             "health": health,
             "log": log,
             "process": proc,
         }
+        if process_error and health == "unknown":
+            track_row["reason"] = process_error
+        track_progress[track] = track_row
 
     result = {
         "generated_at": datetime.now(UTC).isoformat(),

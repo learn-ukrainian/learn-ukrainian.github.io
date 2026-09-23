@@ -65,6 +65,7 @@ _ZOMBIE_TYPES = frozenset(
 _ZOMBIE_SEVERITIES = frozenset({"warning", "critical"})
 _BATCH_HEALTH = frozenset({"complete", "healthy", "stalled", "dead", "unknown"})
 _TRACK_LABEL = re.compile(r"^[A-Za-z0-9][A-Za-z0-9_-]{0,39}$")
+_PROBE_ERROR = re.compile(r"^ps: [A-Za-z][A-Za-z0-9_]{0,63}(?: \d{1,6})?$")
 _SAFE_FAILURE_PHASES = frozenset(
     {"admission", "transport", "provider", "result_parse", "postprocess"}
 )
@@ -828,6 +829,20 @@ def _safe_zombie_projection(raw: Any) -> dict[str, Any]:
     }
 
 
+def _safe_probe_errors(raw: Any) -> list[str]:
+    """Keep process-probe failures that name the failure class, not a path or secret."""
+    if not isinstance(raw, list):
+        return []
+    errors: list[str] = []
+    for item in raw[:8]:
+        if not isinstance(item, str):
+            continue
+        text = " ".join(item.split())
+        if _PROBE_ERROR.fullmatch(text):
+            errors.append(text)
+    return errors
+
+
 def _safe_batch_projection(raw: Any) -> dict[str, Any]:
     if not isinstance(raw, dict):
         return {
@@ -871,8 +886,10 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
             }
         )
 
-    return {
-        "availability": "available",
+    errors = _safe_probe_errors(raw.get("errors"))
+    probe_failed = raw.get("running_processes", 0) is None or bool(errors)
+    projected = {
+        "availability": "degraded" if probe_failed else "available",
         "total": sum(by_health.values()),
         "returned": len(tracks),
         "limit": MAX_OPERATIONS_ITEMS,
@@ -885,6 +902,9 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
         "by_health": dict(sorted(by_health.items())),
         "tracks": tracks,
     }
+    if errors:
+        projected["errors"] = errors
+    return projected
 
 
 def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
@@ -922,6 +942,9 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
                 and _non_negative_int(log.get("age_seconds")) < 900
             )
             health = "healthy" if recent > 0 or log_is_recent else "stalled"
+        elif process_error:
+            # A failed ps probe is not evidence the build exited.
+            health = "unknown"
         elif (
             log
             and not log.get("complete")
@@ -930,7 +953,10 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
             health = "dead"
         else:
             health = "unknown"
-        tracks[track] = {**progress, "health": health}
+        track_row = {**progress, "health": health}
+        if process_error and health == "unknown":
+            track_row["reason"] = process_error
+        tracks[track] = track_row
     snapshot: dict[str, Any] = {
         "running_processes": None if process_error else len(processes),
         "tracks": tracks,

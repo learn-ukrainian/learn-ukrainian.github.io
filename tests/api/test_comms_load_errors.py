@@ -4,8 +4,10 @@ from __future__ import annotations
 
 import json
 import logging
+import os
 import sqlite3
 import subprocess
+import time
 from pathlib import Path
 
 import pytest
@@ -121,6 +123,55 @@ def test_ps_timeout_is_not_reported_as_zero_processes(
     assert body["tracks"] == {}
     assert any("ps:" in item and "TimeoutExpired" in item for item in body["errors"])
     assert any("ps" in record.message.lower() for record in caplog.records)
+
+
+def _old_incomplete_log(tmp_path: Path, name: str = "hist-20260301-0100.log") -> None:
+    log_dir = tmp_path / "logs" / "research-preseed"
+    log_dir.mkdir(parents=True, exist_ok=True)
+    log_file = log_dir / name
+    log_file.write_text("Processing...\nVERDICT: PASS\n", encoding="utf-8")
+    old = time.time() - 1200
+    os.utime(log_file, (old, old))
+
+
+def test_ps_timeout_does_not_mark_old_incomplete_log_dead(
+    tmp_path: Path, comms_client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _old_incomplete_log(tmp_path)
+
+    def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd=["ps", "aux"], timeout=5)
+
+    monkeypatch.setattr("scripts.api.comms_router.subprocess.run", _timeout)
+
+    resp = comms_client.get("/api/comms/batch-progress")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    track = body["tracks"]["hist"]
+    assert body["running_processes"] is None
+    assert track["health"] == "unknown"
+    assert track["reason"] == "ps: TimeoutExpired"
+    assert "dead" not in {item["health"] for item in body["tracks"].values()}
+
+
+def test_old_incomplete_log_stays_dead_when_process_probe_succeeds(
+    tmp_path: Path, comms_client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _old_incomplete_log(tmp_path)
+
+    def _empty_ps(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        return subprocess.CompletedProcess(args=["ps", "aux"], returncode=0, stdout="", stderr="")
+
+    monkeypatch.setattr("scripts.api.comms_router.subprocess.run", _empty_ps)
+
+    resp = comms_client.get("/api/comms/batch-progress")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["running_processes"] == 0
+    assert body["tracks"]["hist"]["health"] == "dead"
+    assert "reason" not in body["tracks"]["hist"]
 
 
 def test_context_preview_failure_is_named(
