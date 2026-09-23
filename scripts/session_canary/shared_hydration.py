@@ -274,8 +274,10 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
         connection.request("GET", f"/api/epics/v1/{stream_id}?limit=1", headers={"Accept": "application/json"})
         # The request may consume most of the budget. Update the connected
         # socket before waiting for headers rather than reusing its old timeout.
-        if connection.sock is not None:
-            connection.sock.settimeout(remaining())
+        request_socket = connection.sock
+        if request_socket is None:
+            raise LookupError("Monitor response socket unavailable")
+        request_socket.settimeout(remaining())
         response = connection.getresponse()
         remaining()
         if response.status != 200:
@@ -283,12 +285,9 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
         body = bytearray()
         while True:
             seconds = remaining()
-            # HTTPConnection may detach the response socket for a closing
-            # connection. Both paths refer to the same socket used by read().
-            socket = connection.sock or getattr(getattr(response.fp, "raw", None), "_sock", None)
-            if socket is None:
-                raise LookupError("Monitor response socket unavailable")
-            socket.settimeout(seconds)
+            # HTTPConnection detaches its socket on Connection: close; retain
+            # the socket that was connected when the request was sent.
+            request_socket.settimeout(seconds)
             chunk = response.read(min(_STREAM_READ_CHUNK_BYTES, _MAX_STREAM_RESPONSE_BYTES + 1 - len(body)))
             if not chunk:
                 if response.length not in (None, 0):
@@ -325,7 +324,7 @@ def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, An
         response.get("stream_id") != canonical_stream_id
         or not isinstance(current, dict)
         or current.get("state") != "active"
-        or current.get("session_state") not in {"open", "rolling"}
+        or current.get("session_state") not in ("open", "rolling")
         or any(current.get(key) != value for key, value in expected.items())
     ):
         raise LookupError("launcher lease mismatch")
@@ -404,7 +403,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
             degradations.append("unsafe-stream-evidence")
             for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("unsafe-stream-evidence")
-        except (ArithmeticError, AttributeError, LookupError, OSError, RuntimeError, ValueError):
+        except (ArithmeticError, AttributeError, LookupError, OSError, RuntimeError, TypeError, ValueError):
             for field in ("lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("stream-evidence-unavailable")
 

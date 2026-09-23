@@ -222,6 +222,8 @@ def test_remote_expiry_overflow_blocks_without_traceback(monkeypatch: pytest.Mon
         ("holder.host_id", "other-host"),
         ("state", "closed"),
         ("session_state", "closed"),
+        ("session_state", []),
+        ("session_state", {}),
         ("expires_at", "2000-01-01T00:00:00Z"),
     ],
 )
@@ -341,8 +343,10 @@ def test_remote_transport_rejects_bad_responses_and_closes(
 
         def request(self, method: str, path: str, headers: dict[str, str]) -> None:
             assert method == "GET"
+            self.sock = Socket()
 
         def getresponse(self) -> Response:
+            self.sock = None
             return Response()
 
         def close(self) -> None:
@@ -418,11 +422,10 @@ def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pyt
     thread.start()
     monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
     try:
-        started = time.monotonic()
-        with pytest.raises(LookupError):
-            hydration._fetch_remote_stream("epic:5512", deadline=started + 0.05)
+        with pytest.raises(LookupError) as error:
+            hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 0.05)
         assert received.is_set()
-        assert time.monotonic() - started < 0.15
+        assert isinstance(error.value.__cause__, TimeoutError)
     finally:
         server.shutdown()
         server.server_close()
