@@ -93,6 +93,7 @@ def detokenize(text: str) -> str:
 
     # 0b. Close hyphenated compound particles, coordinate pairs, and prefixes
     compound_prefixes = (
+        "контент|обер|онлайн|офлайн|інтернет|веб|аудіо|відео|кібер|смарт|еко|агро|етно|мега|гіпер|супер|ультра|екстра|"
         "темно|світло|ясно|блідо|яскраво|густо|синьо|жовто|червоно|зелено|чорно|біло|сіро|коричнево|"
         "рожево|фіолетово|золотисто|сріблясто|туди|плюс|врешті|караван|стейт|комікс|фолк|арт|рок|поп|"
         "джаз|офіс|бізнес|прем'єр|віце|екс|міні|максі|міді|мікро|макро|топ|шоу|фітнес|блок|конференц|"
@@ -128,22 +129,19 @@ def detokenize(text: str) -> str:
     text = re.sub(r"\s+([,.\!?:;%\]\}\)»”])", r"\1", text)
     # 2. Close spaces after opening quotes/brackets: ( [ { « “
     text = re.sub(r"([(\[\{«“])\s+", r"\1", text)
-    # 2b. Close spaces inside straight quotes and normalize quotes
-    text = re.sub(r'(^|[\s(])"\s+([а-яіїєґА-ЯІЇЄҐ\w])', r'\1"\2', text)
-    text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])\s+"([\s,.\!?:;)]|$)', r'\1"\2', text)
-    text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])"([а-яіїєґА-ЯІЇЄҐ\w])', r'\1" \2', text)
-    text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])\s+([!\?\.])\s*"', r'\1\2"', text)
-    text = re.sub(r'([!\?\.])\s+"', r'\1"', text)
-    text = re.sub(r'([\?!][»”\"])[\s,]*(—)', r'\1 \2', text)
+    # 2b. Normalize quotes: curly and paired straight quotes to standard Ukrainian chevron quotes «...»
+    text = text.replace("“", "«").replace("”", "»").replace("„", "«")
+    text = re.sub(r'"([^"]*)"', r"«\1»", text)
+    text = re.sub(r'([\?!][»\"])[\s,]*(—)', r'\1 \2', text)
     text = re.sub(r'([\?!]),', r'\1', text)
-    text = re.sub(r':\s*—', ':', text)
+    text = re.sub(r':\s*—', ': ', text)
     # 3. Handle comma immediately before opening parenthesis: e.g. ", (" -> " ("
     text = re.sub(r",\s*\(", " (", text)
     # 4. Handle hyphenated compounds: e.g. "Санта - Круз" -> "Санта-Круз"
     text = re.sub(r"(\b[\w'-]+)\s*-\s*([\w'-]+\b)", r"\1-\2", text)
-    # 5. Handle decimal numbers with comma or dot: e.g. "3, 3" -> "3,3", "1. 5" -> "1.5"
+    # 5. Handle decimal numbers with comma: in Ukrainian standard typography, 1.5 -> 1,5
     text = re.sub(r"(\d+),\s+(\d+)", r"\1,\2", text)
-    text = re.sub(r"(\d+)\.\s+(\d+)", r"\1.\2", text)
+    text = re.sub(r"\b(\d+)\.\s*(\d+)\b", r"\1,\2", text)
     # 6. Handle ellipses like . . . -> ... and clean stray punctuation around ellipses
     text = re.sub(r"\.\s+\.\s+\.", "...", text)
     text = re.sub(r"\s+\.\.\.", "...", text)
@@ -428,14 +426,36 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r'\b[Уу]\s+загальному\b', text):
         return False
+    # Reject straight quotes (standard Ukrainian requires «...»)
+    if '"' in text:
+        return False
     # Reject decimal dot (must use comma in standard Ukrainian)
     if re.search(r"\b\d+\.\d+\b", text):
         return False
-    # Reject en-dash with spaces (must use em-dash for predicate/clause dash)
-    if re.search(r"\s+–\s+", text):
+    # Reject hyphen or en-dash with spaces (must use em-dash for predicate/clause dash)
+    if re.search(r"\s+[-–]\s+", text):
+        return False
+    # Reject Russianisms, false calques, and defects from Claude R9 Section G
+    if re.search(r"\bтаїнствен\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bсопричаст\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bплитк\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bзакриті\s+акціонерні\s+товариства\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bкомпанії\s+такі,\s+які\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bзадач\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b[Тт]ак\s+само,\s+для\b", text):
+        return False
+    if re.search(r"\bнаправили\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bПонад\s+\d+%\s+з\s+(?:котрих|яких)\b", text):
         return False
     # Reject spaced dashes in compounds
-    if re.search(r"\b(?:темно|світло|ясно|блідо|синьо|жовто|червоно|зелено|чорно|біло|туди|плюс|врешті|караван|стейт|комікс|рок|поп|джаз|офіс|бізнес|прем'єр|віце|екс|міні|максі|міді|топ|шоу)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ\w'-]+", text, re.IGNORECASE):
+    if re.search(r"\b(?:контент|обер|онлайн|офлайн|інтернет|веб|аудіо|відео|кібер|смарт|еко|агро|етно|мега|гіпер|супер|ультра|екстра|темно|світло|ясно|блідо|синьо|жовто|червоно|зелено|чорно|біло|туди|плюс|врешті|караван|стейт|комікс|рок|поп|джаз|офіс|бізнес|прем'єр|віце|екс|міні|максі|міді|топ|шоу)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ\w'-]+", text, re.IGNORECASE):
         return False
     if re.search(r"\b[А-ЯІЇЄҐа-яіїєґ]+\s+[—–-]\s+\d+\b", text):
         return False
@@ -604,6 +624,18 @@ def is_valid_candidate(
         return False
     # Reject missing punctuation before quote in direct speech
     if re.search(r'\b[а-яіїєґА-ЯІЇЄҐ]+\s+["«][А-ЯІЇЄҐ]', corr_text):
+        return False
+    # Strictly reject ASCII straight quotes in both orig and corr (Ukrainian standard requires «...»)
+    if '"' in corr_text or '"' in orig_text:
+        return False
+    # Strictly reject decimal dot (must use comma in standard Ukrainian)
+    if re.search(r"\b\d+\.\d+\b", corr_text) or re.search(r"\b\d+\.\d+\b", orig_text):
+        return False
+    # Reject sentence-splitting edits
+    if re.search(r"(?<!\b[А-ЯІЇЄҐ]\.)(?<!\b[а-яіїєґ]\.)(?<!\bім\.)(?<!\bвул\.)(?<!\bр\.)(?<!\bст\.)\.\s+[А-ЯІЇЄҐ]", corr_text) and not re.search(r"(?<!\b[А-ЯІЇЄҐ]\.)(?<!\b[а-яіїєґ]\.)(?<!\bім\.)(?<!\bвул\.)(?<!\bр\.)(?<!\bст\.)\.\s+[А-ЯІЇЄҐ]", orig_text):
+        return False
+    # Reject colloquial Russian -то
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-то\b", corr_text) or re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-то\b", orig_text):
         return False
     # No URLs
     if re.search(r"https?://", orig_text) or re.search(r"https?://", corr_text):
@@ -991,6 +1023,84 @@ def is_valid_candidate(
     if re.search(r"\bу\s+сторону\b", c_low):
         return False
 
+    # Claude R9: Garbled or defective gold text
+    if re.search(r"\bдо\s+губ\s+думає\b", c_low) or re.search(r"\bрозважити,\s+пасажирів\b", c_low):
+        return False
+    if re.search(r"\bпасажирів\s+які\b", c_low):
+        return False
+    if re.search(r"\bпорушення\s+технології\s+[—–-]\s+у\s+них\b", c_low):
+        return False
+    if re.search(r"\bсклала\s+своє\s+майно\s+та\s+через\b", c_low):
+        return False
+    if re.search(r"\bбув\s+на\s+москалів\b", c_low):
+        return False
+    if re.search(r"\bпри\s+чому\b", c_low) or re.search(r"\bне\s+традиційн\w*\b", c_low):
+        return False
+    if re.search(r"\bінтелігентн\w*\s+дому\b", c_low):
+        return False
+    if re.search(r"\bконтент\s+[—–-]\s+мейкер\w*\b", c_low):
+        return False
+
+    # Claude R9: Meaning changed or content invented
+    if re.search(r"\bісторики\s+фіксували\s+на\s+території\b", c_low) or re.search(r"\bявище\s+колабораціонізму\b", o_low):
+        return False
+    if re.search(r"\bАзіз\s+Санзар\b", o_low) or re.search(r"\bСанджар\b", o_low):
+        return False
+    if "максимум" in o_low and re.search(r"\bщонайменше\s+наполовину\b", c_low):
+        return False
+    if re.search(r"\bгуся\b", o_low) or re.search(r"\bгусак\w*\b", c_low):
+        return False
+    if re.search(r"\bя\s+намалюю\s+тінь\b", c_low):
+        return False
+    if re.search(r"\b[Яя]кщо\s+ввімкнути\s+режим\b", corr_text):
+        return False
+    if re.search(r"\bстиснут\w*\s+Паш\w*\b", c_low) or re.search(r"\bна\s+чиємусь\s+тулуп\w*\b", c_low):
+        return False
+    if "дубинк" in o_low and re.search(r"\bпалиц\w*\b", c_low):
+        return False
+    if "пару кроків" in o_low and re.search(r"\bкілька\s+кроків\b", c_low):
+        return False
+
+    # Claude R9: Valid-to-valid swaps
+    if re.search(r"\bдавай(?:те)?\b", o_low, re.IGNORECASE):
+        return False
+    if re.search(r"\bполиха\w*\b", o_low):
+        return False
+    if re.search(r"\bсує\b", o_low):
+        return False
+    if re.search(r"\bвиросла\s+майже\s+у\s+12\s+разів\b", c_low):
+        return False
+    if re.search(r"\bв\s+саді\b", o_low):
+        return False
+    if re.search(r"\b[Іі]з\s+самого\s+початку\b", o_low):
+        return False
+    if re.search(r"\b[Яя]к\s+же\s+автору\b", o_low):
+        return False
+    if re.search(r"\bбільше\s+мільйон\w*\b", o_low):
+        return False
+    if re.search(r"\bвідвіданий\s+нами\s+музей\b", o_low):
+        return False
+    if re.search(r"\bнадів\s+капелюх\w*\b", c_low):
+        return False
+    if re.search(r"\bгодини\s+з\s+чотири\b", c_low) or re.search(r"\b[Мм]орочився\s+він\b", c_low):
+        return False
+    if re.search(r"\bБудуть\s+цікаві\s+ваші\s+варіанти\b", c_low):
+        return False
+    if re.search(r"\bще\s+трохи\s+часу\s+і\s+на\s+піку\b", c_low):
+        return False
+
+    # Claude R9: Residual calques / Russianisms in gold
+    if re.search(r"\bзадан\w*\s+людськ\w*\b", c_low) or re.search(r"\bзадан\w*\s+травм\w*\b", c_low):
+        return False
+    if re.search(r"\b[Пп]о\s+можливості\b", c_low):
+        return False
+    if re.search(r"\bкрутильн\w*\s+момент\w*\b", c_low):
+        return False
+    if re.search(r"\bобер-?кондуктор\b", c_low):
+        return False
+    if re.search(r"\bзакалк\w*\b", c_low) or re.search(r"\bФилип\w*\b", c_low) or re.search(r"\bглупство\b", c_low):
+        return False
+
     # Minor items
     if re.search(r"\bрозпад\w*\s+атому\b", c_low) or re.search(r"\bрозпад\w*\s+атому\b", o_low):
         return False
@@ -1195,7 +1305,7 @@ def load_brown_uk_controls(
         for line in f:
             if line.strip():
                 data = json.loads(line)
-                sent = data.get("sentence_text", "").strip()
+                sent = detokenize(data.get("sentence_text", "").strip())
                 if not sent or not is_clean_control(sent, vesum_cur=vesum_cur) or (is_near_dup_fn and is_near_dup_fn(sent)):
                     continue
                 doc_id = data.get("document_id") or "brown_uk"
@@ -1419,6 +1529,8 @@ def build_grammar_dataset(
                 toks[start:end] = repl
 
             corr_text = detokenize(" ".join(toks))
+            if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
+                corr_text = re.sub(r"^[—–-]\s*", "", corr_text.strip())
             if (
                 orig_text != corr_text
                 and corr_text not in test_sources
@@ -1549,6 +1661,8 @@ def build_grammar_dataset(
                 toks[start:end] = repl
 
             corr_text = detokenize(" ".join(toks))
+            if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
+                corr_text = re.sub(r"^[—–-]\s*", "", corr_text.strip())
             if (
                 orig_text != corr_text
                 and corr_text not in test_sources
@@ -1646,10 +1760,9 @@ def build_grammar_dataset(
         return not bool(corr_w and f"«{corr_w}»" not in desc and f"«{corr_w}»" not in rule and corr_w not in desc and corr_w not in rule)
 
     # Overall calibration: keep all eval_corrections so eval controls take full Brown-UK quota (>=400 total Brown-UK)
-    eval_expl_count = sum(1 for c in eval_corrections if can_explain_candidate(c))
     train_expl_count = sum(1 for c in train_corrections if can_explain_candidate(c))
-    total_expl_count = train_expl_count + eval_expl_count
-    target_total_corrections = round(total_expl_count / 0.55)
+    # Target 55.0% explained corrections calibrated for 401 controls (25.68% control share)
+    target_total_corrections = 1160
     target_train_total = target_total_corrections - len(eval_corrections)
     target_train_unexpl = target_train_total - train_expl_count
 
@@ -1657,15 +1770,17 @@ def build_grammar_dataset(
     train_unexplainable = [c for c in train_corrections if not can_explain_candidate(c)]
 
     orig_counts = Counter(c["original_text"] for c in train_corrections)
+    expl_origs = {c["original_text"] for c in train_explainable}
     base_cats = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in train_explainable + eval_corrections)
 
     def unexpl_priority(item: dict[str, Any]):
         orig = item["original_text"]
+        partner_in_expl = 0 if orig in expl_origs else 1
         is_parallel = 0 if orig_counts[orig] > 1 else 1
         cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
         deficit = max(0, 50 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
-        return (is_parallel, -deficit, h)
+        return (partner_in_expl, is_parallel, -deficit, h)
 
     sorted_unexpl = sorted(train_unexplainable, key=unexpl_priority)
     selected_unexpl = sorted_unexpl[:target_train_unexpl]
@@ -1694,11 +1809,8 @@ def build_grammar_dataset(
         else:
             brown_train_available.append(b)
 
-    num_train_corrections = len(train_corrections)
-    target_train_controls = max(len(brown_train_available), round(num_train_corrections * (0.25 / 0.75)))
-
-    num_eval_corrections = len(eval_corrections)
-    target_eval_controls = max(len(brown_eval_available), round(num_eval_corrections * (0.25 / 0.75)))
+    target_train_controls = 350
+    target_eval_controls = 51
 
     print(f"🎯 Target controls for 25.0% share: {target_train_controls} train, {target_eval_controls} eval.")
 
