@@ -5,6 +5,7 @@ from __future__ import annotations
 import copy
 import hashlib
 import json
+import re
 import subprocess
 import sys
 from collections.abc import Callable
@@ -136,10 +137,21 @@ def check_4_activities(draft: dict[str, Any], lesson: dict[str, Any], words: dic
     return _pass(4), form_options
 
 
-def check_6_count(expanded: dict[str, Any], target: int) -> dict[str, Any]:
+def check_6_count(expanded: dict[str, Any], target: int, words: dict[str, Any] | None = None) -> dict[str, Any]:
     uk = total = 0
+    records = {w["id"]: w for w in (words or {}).get("words") or []}
     for unit in expanded["units"]:
         if unit["tab"] != "urok":
+            continue
+        if unit["role"] == "gloss_ref":
+            match = re.fullmatch(r"\{\{gloss:(W-[0-9]+)\}\}", unit["text"])
+            record = records.get(match.group(1)) if match else None
+            if record is None:
+                return failure(6, "gloss_record_missing", "pack", token=unit["text"])
+            lemma_count = len(tokenize(record["lemma"]))
+            gloss_count = len(tokenize(record.get("sense_gloss") or record.get("gloss_en") or ""))
+            uk += lemma_count
+            total += lemma_count + gloss_count
             continue
         for token in tokenize(unit["text"]):
             total += 1
@@ -210,6 +222,20 @@ def _printable_form_draft(draft: dict[str, Any], choices: dict[tuple[str, int], 
             item["options"] = [f["stressed"] for f in forms]
             answer = next(f for f in forms if f["tags"] == item["answer_tags"])
             item["answer"] = answer["stressed"]
+    return rendered
+
+
+def _printable_form_expanded(expanded: dict[str, Any],
+                             choices: dict[tuple[str, int], list[dict[str, Any]]]) -> dict[str, Any]:
+    rendered = copy.deepcopy(expanded)
+    for unit in rendered["units"]:
+        if unit["tab"] != "vpravy" or not isinstance(unit["item"], int):
+            continue
+        forms = choices.get((unit["activity"], unit["item"]))
+        block = unit["block"]
+        if forms is not None and isinstance(block, str) and block.startswith("opt_"):
+            index = int(block[4:])
+            unit["text"] = forms[index]["stressed"]
     return rendered
 
 
@@ -292,7 +318,7 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
                               step=assembled.step, activity=assembled.activity, token=assembled.token))
     expanded = assembled.artifacts["expanded_doc"]
     rows.append(_pass(5))
-    row = check_6_count(expanded, lesson["word_target"])
+    row = check_6_count(expanded, lesson["word_target"], words)
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
@@ -351,7 +377,8 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
     observed_writer(level, slug, n, resolutions_doc=receipt_doc, plans_dir=plans_dir,
                     evidence_dir=evidence_dir, expanded=expanded_obj, state_dir=state_dir)
     print_draft = _printable_form_draft(draft, form_options)
-    rendered = check_9_stress_and_render(expanded, print_draft, plan, pack, words, stream, level, slug, n,
+    print_expanded = _printable_form_expanded(expanded, form_options)
+    rendered = check_9_stress_and_render(print_expanded, print_draft, plan, pack, words, stream, level, slug, n,
                                          repo_root=repo_root, output_dir=state_dir, site_dir=site_dir,
                                          plans_dir=plans_dir, evidence_dir=evidence_dir)
     if not rendered.passed:

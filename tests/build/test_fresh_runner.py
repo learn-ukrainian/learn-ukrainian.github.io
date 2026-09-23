@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import copy
+import json
 import os
 import subprocess
 import sys
@@ -96,6 +97,16 @@ def test_counting_contract_urok_only_with_quoted_term_and_english():
     assert "word_target_not_calibrated" in row["details"]["not_checked"]
 
 
+def test_counting_contract_inline_gloss_uses_record_lemma_and_english_gloss():
+    word = make_word_record(1, "слово", gloss_en="word in English")
+    row = runner.check_6_count({"units": [
+        {"tab": "urok", "role": "gloss_ref", "text": "{{gloss:W-1}}"},
+        {"tab": "slovnyk", "role": "record_print", "text": "слово"},
+    ]}, 4, make_words_store(words=[word]))
+    assert row["details"]["urok_tokens"] == 4
+    assert row["details"]["ukrainian_tokens"] == 1
+
+
 def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_lesson(tmp_path):
     path = tmp_path / "lesson-1.regeneration.yaml"
     inputs = {key: "a" * 64 for key in ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")}
@@ -136,30 +147,39 @@ class _FixtureSources:
     def _vesum_identity(self):
         return "f" * 64, {}
 
+    def verify_words(self, words):
+        return type("Result", (), {"raw": {word: [] for word in words}})()
 
-def test_contract_fixture_same_stress_sense_through_checks_1_to_9(tmp_path, monkeypatch):
-    draft, plan, pack, words = _fixture(two_senses=True)
+
+def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:fixture"):
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     monkeypatch.setattr(assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})())
     monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
     monkeypatch.setattr(assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {"lessons": [{"n": 1, "entry_sha256": "0" * 64}]})
     monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": "a1"})())
-    seen = []
+    questions_seen = []
 
     def answer(batch, seat):
-        seen.extend(q["id"] for q in batch["questions"])
-        return {"answers": [{"id": q["id"], "record": "W-2" if q["unit"]["block"] == "inc_W-2" else "W-1"}
+        questions_seen.extend(q["id"] for q in batch["questions"])
+        return {"answers": [{"id": q["id"], "record": "W-2" if q["unit"]["block"] == "inc_W-2" else q["candidates"][0]["record"]}
                             for q in batch["questions"]]}
 
     state = tmp_path / "state"
     report = runner.run_lesson(
         "a1", "sample-slug", 1, draft=draft, plan=plan, pack=pack, words=words,
         state_dir=state, repo_root=tmp_path, plans_dir=tmp_path, evidence_dir=tmp_path,
-        question_seat="agy:fixture", question_dispatch=answer, sources=_FixtureSources(),
+        question_seat=seat, question_dispatch=answer, sources=_FixtureSources(),
         allowlist=allowlist, site_dir=tmp_path / "site",
         inventory_gate=lambda *a, **kw: GateReport("a1", "sample-slug", 1, ()),
         observed_writer=lambda *a, **kw: None,
     )
+    print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+    return report, state, questions_seen
+
+
+def test_contract_fixture_same_stress_sense_through_checks_1_to_9(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(two_senses=True)
+    report, state, seen = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     assert report["passed"] is True, report
     assert [r["status"] for r in report["checks"][:9]] == ["passed"] * 9
     assert seen
@@ -168,3 +188,92 @@ def test_contract_fixture_same_stress_sense_through_checks_1_to_9(tmp_path, monk
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
     assert "сло\u0301во" in mdx
     assert "other sense" in mdx
+
+
+def test_contract_fixture_marked_form_stops_at_check_7(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    words["words"][0]["forms"][0]["markers"] = ["arch"]
+    words["words"][0]["forms"][0]["learner"] = False
+    validate_fixture_words(words)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert bad["check"] == 7 and bad["layer"] == "pack" and bad["token"] == "слово"
+
+
+def test_contract_fixture_hyphenated_compound_through_check_9(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(text="слово-слово " * 11)
+    rec = words["words"][0]
+    rec["lemma"] = "слово-слово"
+    rec["forms"][0]["form"] = "слово-слово"
+    rec["forms"][0]["stressed"] = "сло\u0301во-сло\u0301во"
+    plan["lessons"][0]["inventory"]["vocabulary"]["core"][0]["lemma"] = "слово-слово"
+    validate_fixture_words(words)
+    validate_fixture_plan(plan)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    assert "сло\u0301во-сло\u0301во" in (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+
+
+def test_contract_fixture_intentional_error_item_through_check_9(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    pack["errors"] = [{"id": "E-001", "source": {"table": "ua_gec_errors", "id": 1},
+                       "incorrect": "слове", "correct": "слово", "error_type": "form", "pattern": "fixture"}]
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "error-correction", "placement": "inline",
+                                           "focus": "Correct", "error_refs": ["E-001"]}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Correct", "items": [
+        {"sentence": "слове", "error": "слове", "correction": "слово", "explanation": "Correct",
+         "error_ref": "E-001"}]}]
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    assert "слове" in (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+
+
+def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    draft["steps"][0]["id"] = "other"
+    validate_fixture_draft(draft)
+    first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    receipt = state / "lesson-1.resolutions.yaml"
+    lock.write(receipt, b"old")
+    plan["title"] = "Changed plan input"
+    validate_fixture_plan(plan)
+    second, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    ledger = load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)
+    assert first["checks"][2]["status"] == second["checks"][2]["status"] == "failed"
+    assert ledger["regenerations"] == 1 and ledger["terminal_layer"] == "plan"
+    assert not receipt.exists()
+
+
+def test_runner_form_choice_options_invalid_reports_check_4(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Forms"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Choose", "items": [
+        {"sentence": "____", "answer": "слово", "options": ["слово", "invented"],
+         "explanation": "Choose", "mode": "form-choice", "record": "W-1",
+         "answer_tags": words["words"][0]["forms"][0]["tags"]}]}]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["reason"], bad["layer"]) == (4, "form_choice_options_invalid", "writer")
+
+
+def test_runner_true_false_before_text_reports_check_3(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
+    draft["steps"][0]["blocks"].insert(0, {"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Read", "items": [
+        {"statement": "слово", "correct": True, "explanation": "Read"}]}]
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["reason"], bad["layer"]) == (3, "true_false_before_text", "writer")
