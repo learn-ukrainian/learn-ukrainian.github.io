@@ -433,7 +433,7 @@ review lane and document findings on the GH issue.
 ```bash
 printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-    --task-id review-NNN --to-model gemini-3.1-pro-high --review
+    --task-id review-NNN --to-model gemini-3.8-flash-high --review
 ```
 
 ## Channel bridge (#1190, shipped 2026-04-12)

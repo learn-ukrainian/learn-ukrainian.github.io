@@ -216,7 +216,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Slot | Agent | Score | Last verified | Evidence | Notes |
 | --- | --- | --- | --- | --- | --- |
 | **Primary (routine)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | metered; fast | ongoing | `scripts/ai_agent_bridge/__main__.py` | Default for low-stakes one-shot. |
-| **Primary (deep)** | AGY Gemini 3.1 Pro (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.1-pro-high` | qualitative | ongoing | same | When deep single-shot reasoning needed (prefer Pro over Flash); Codex/Claude/Astra high for higher stakes. |
+| **Primary (deep)** | AGY Gemini 3.8 Flash (High) via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy --to-model gemini-3.8-flash-high` | qualitative | ongoing | same | Default for deep work too (operator 2026-09-22: 3.8 Flash High outperforms 3.1 Pro; Pro only on explicit request); Codex/Claude/Astra high for higher stakes. |
 | Runner-up 1 | Codex via `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex` | high-judgment one-shot | ongoing | same | For implementation-y questions. |
 | Runner-up 2 | Claude inline | when orchestrator IS Claude | ongoing | same | The Q&A is me; no round-trip. |
 
@@ -254,7 +254,7 @@ repo-native long-tail and non-frontend evaluation remain incomplete.
 | Code review (PR diff) | Resolve the exact cross-family route with `closeout_cli resolve-reviewer --author-model <exact> --risk <level>`; dispatch its returned route, transport, and required timeout. |
 | Content review (load-bearing, VESUM) | **LANGUAGE-LANES only:** agy / codex / claude / grok-4.6 — **not** deepseek. ~~deepseek-v4-pro example retired~~ (language seats exclude deepseek; Pro is a code-only hard-implement seat since 2026-08-13). |
 | Q&A (routine) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-question --to-model gemini-3.8-flash-high` |
-| Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.1-pro-high` |
+| Q&A (deep) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy "PROMPT" --task-id agy-deep-question --to-model gemini-3.8-flash-high` |
 | Discuss (multi-agent) | `.venv/bin/python scripts/ai_agent_bridge/__main__.py discuss CHANNEL "TOPIC" --with codex,claude,agy` |
 | Search / locate | `Agent(subagent_type="Explore", model="haiku", description="...", prompt="...")` |
 | Status check (state) | `curl -s http://localhost:8765/api/state/...` |
