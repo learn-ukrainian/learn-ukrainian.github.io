@@ -669,7 +669,8 @@ def test_server_recording_off_is_byte_identical(server_module, monkeypatch: pyte
 
 
 def test_check_text_outcome_classification() -> None:
-    """A clean check is no hits; problems count; a missing source is not clean."""
+    """A clean check is no hits; problems and suspicions count; errors are not hits."""
+    error_facts = {"call_status": "ok", "hits": 0, "status": "error", "unavailable": False}
     clean = json.dumps(
         {"provenance": {}, "summary": {}, "problems": [], "suspicions": []},
         ensure_ascii=False,
@@ -700,6 +701,79 @@ def test_check_text_outcome_classification() -> None:
     assert missing_facts["status"] == "unavailable"
     assert missing_facts["hits"] == 0
     assert missing_facts["status"] != "no_hits"
+
+    invalid_input = json.dumps(
+        {
+            "status": "error",
+            "error_code": "invalid_input",
+            "error": "invalid_input: provide either 'text' or 'items', not both",
+        },
+        ensure_ascii=False,
+    )
+    assert classify_outcome("check_text", "ok", invalid_input) == error_facts
+
+    accent_in_input = json.dumps(
+        {
+            "status": "error",
+            "error_code": "accent_in_input",
+            "error": "accent_in_input: combining accent in input text",
+        },
+        ensure_ascii=False,
+    )
+    assert classify_outcome("check_text", "ok", accent_in_input) == error_facts
+
+    # max_findings=1 can keep a suspicion and drop the problems the summary still counts.
+    truncated = json.dumps(
+        {
+            "summary": {
+                "truncated": True,
+                "problems_per_check": {
+                    "vesum": 0,
+                    "stress": 2,
+                    "russian_shadow": 0,
+                    "ua_gec": 1,
+                },
+            },
+            "problems": [],
+            "suspicions": [{"form": "як", "check": "ua_gec"}],
+        },
+        ensure_ascii=False,
+    )
+    truncated_facts = classify_outcome("check_text", "ok", truncated)
+    assert truncated_facts == {"call_status": "ok", "hits": 3, "status": "hits_found", "unavailable": False}
+    assert truncated_facts["status"] != "no_hits"
+
+    truncated_only = json.dumps(
+        {
+            "summary": {
+                "truncated": True,
+                "problems_per_check": {"vesum": 0, "stress": 0, "russian_shadow": 0, "ua_gec": 0},
+            },
+            "problems": [],
+            "suspicions": [],
+        },
+        ensure_ascii=False,
+    )
+    assert classify_outcome("check_text", "ok", truncated_only)["status"] != "no_hits"
+
+    suspicions_only = json.dumps(
+        {
+            "summary": {
+                "truncated": False,
+                "problems_per_check": {
+                    "vesum": 0,
+                    "stress": 0,
+                    "russian_shadow": 0,
+                    "ua_gec": 0,
+                },
+            },
+            "problems": [],
+            "suspicions": [{"form": "слово", "check": "russian_shadow"}],
+        },
+        ensure_ascii=False,
+    )
+    suspicions_facts = classify_outcome("check_text", "ok", suspicions_only)
+    assert suspicions_facts == {"call_status": "ok", "hits": 1, "status": "hits_found", "unavailable": False}
 
 
 def test_check_text_call_is_recorded_and_receipt_resolves(
