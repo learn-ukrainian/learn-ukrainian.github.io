@@ -1693,3 +1693,99 @@ def test_cf_r15_phrase_attestation_regression() -> None:
         style_guide_cache=[],
     )
     assert res_053["status"] == "source_attested"
+
+
+def test_cf_r20_remediations_regression(decolonization_data):
+    """Verify CF-R20 findings remediations: ПЛИН, ЗАГАЛ, ЧАС, and sample review audit."""
+    import sqlite3
+
+    from scripts.projects.open_model_data.audit_dataset_acceptance import DEFAULT_SOURCES_DB, VESUM_DB_PATH
+    from scripts.projects.open_model_data.build_decolonization_cases import query_source_evidence
+    from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+    from scripts.projects.open_model_data.sum20_codification_records import (
+        COMMITTED_SUM20_RECORDS,
+        ensure_reproducible_sum20_table,
+    )
+
+    # 1. ПЛИН: published entry text has no appended '; з плином часу.'
+    plin = COMMITTED_SUM20_RECORDS["ПЛИН"]
+    assert "з плином часу" not in plin["article_text"]
+    assert "з плином часу" not in plin["definition_text"]
+    assert "плин часу майже не позначився на жінці (П. Загребельний)" in plin["article_text"]
+
+    # 2. ЗАГАЛ: published ВТС entry text has no appended usage notes
+    zagal = COMMITTED_SUM20_RECORDS["ЗАГАЛ"]
+    assert "Усталене вживання" not in zagal["article_text"]
+    assert "на загал — у цілому" not in zagal["article_text"]
+    assert zagal["article_text"] == "зага́л -у, ч. Велике коло, маса людей, товариство, широка громадськість; усі."
+    assert zagal["definition_text"] == "Велике коло, маса людей, товариство, широка громадськість; усі."
+
+    # 3. Case catalog: decol_prot_072 authority and source must be ВТС
+    ev_072 = EXPLICIT_SOURCE_EVIDENCE["decol_prot_072"]
+    assert ev_072["authority"] == "ВТС"
+    assert ev_072["source"] == "ВТС"
+    assert ev_072["target_term"] == "загал"
+    assert "загал" in ev_072["ukrainian_proper"]
+
+    # 4. ЧАС: author of quotation is О. Довженко, not М. Рильський
+    chas = COMMITTED_SUM20_RECORDS["ЧАС"]
+    assert "В той час я мріяв стати художником (О. Довженко)" in chas["article_text"]
+    assert "М. Рильський" not in chas["article_text"]
+
+    ev_074 = EXPLICIT_SOURCE_EVIDENCE["decol_prot_074"]
+    assert "В той час я мріяв стати художником (О. Довженко)" in ev_074["supporting_passage"]
+    assert "М. Рильський" not in ev_074["supporting_passage"]
+
+    # 5. Live query verification for all 3 remediated cases
+    v_conn = sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True)
+    v_cur = v_conn.cursor()
+
+    s_conn = sqlite3.connect(f"file:{DEFAULT_SOURCES_DB}?mode=ro", uri=True)
+    ensure_reproducible_sum20_table(s_conn)
+    s_cur = s_conn.cursor()
+
+    res_071 = query_source_evidence(
+        case_id="decol_prot_071",
+        term="плин часу",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=s_cur,
+        v_cur=v_cur,
+        style_guide_cache=[],
+    )
+    assert res_071["status"] == "source_attested"
+
+    res_072 = query_source_evidence(
+        case_id="decol_prot_072",
+        term="загал",
+        copy="",
+        auth="ВТС",
+        cat_name="protective_authentic",
+        s_cur=s_cur,
+        v_cur=v_cur,
+        style_guide_cache=[],
+    )
+    assert res_072["status"] == "source_attested"
+
+    res_074 = query_source_evidence(
+        case_id="decol_prot_074",
+        term="у той же час",
+        copy="",
+        auth="СУМ-20",
+        cat_name="protective_authentic",
+        s_cur=s_cur,
+        v_cur=v_cur,
+        style_guide_cache=[],
+    )
+    assert res_074["status"] == "source_attested"
+
+    # 6. Sample review receipt verification
+    receipt_file = DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
+    assert receipt_file.is_file(), f"Missing receipt file at {receipt_file}"
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    assert receipt["verdict"] == "APPROVED"
+    assert receipt["sample_size_reviewed"] == 300
+    assert receipt["blocker_defect_count"] == 0
+    assert receipt["reviewer_id"] == "claude_blue_team_ling_review"
+    assert receipt["reviewer_family"] == "claude"

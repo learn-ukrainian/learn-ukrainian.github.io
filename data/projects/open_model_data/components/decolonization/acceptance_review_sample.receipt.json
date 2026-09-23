@@ -1,0 +1,2730 @@
+{
+  "receipt_id": "REV-2026-09-23-OMD-8340-SAMPLE-REVIEW-300",
+  "review_type": "independent_cross_family_sample_audit",
+  "dataset_name": "decolonization_v1",
+  "dataset_sha256": "0835b9ed1a785c8a270cf59d56001d6d3aecf769f280135a8d7b1f6869e968e5",
+  "sample_seed": "282b2e165488b77b8c328ef556f7cb362bd9fcafa43970bff97c282d8a6ec832",
+  "profile_sha256": "bee13c3b07f4142fcfdb068a9160b14490b9c7e7225d12dc30b2633ebb7e7c08",
+  "sample_size_drawn": 300,
+  "sample_size_reviewed": 300,
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "review_date": "2026-09-23",
+  "verdict": "APPROVED",
+  "blocker_defect_count": 0,
+  "minor_defect_count": 0,
+  "audit_summary": {
+    "total_items_reviewed": 300,
+    "substantive_corrections": 207,
+    "protective_controls": 93,
+    "zero_contradictions": true,
+    "vesum_morphology_verified": true,
+    "academic_sources_verified": true,
+    "soviet_sum11_violations": 0
+  },
+  "reviewed_sample_items": [
+    {
+      "sample_index": 1,
+      "target_term": "додержувати слова",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "70a04465ea12e7cc796fb88bc7dd5b70e9d7b2b1ff47ab9f693c2ab2c25ad8c9"
+    },
+    {
+      "sample_index": 2,
+      "target_term": "разом з тим",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "90851c42ba1f939ac68a73d7c7cd51e5b3e0c71f2d3bdff6edf3b1b62ec2a444"
+    },
+    {
+      "sample_index": 3,
+      "target_term": "таким способом",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8aee4c86ec7216ba0efd2cd75bf31113f1fb0a2e9d92cfa7662c515790dfb0f6"
+    },
+    {
+      "sample_index": 4,
+      "target_term": "знатися на чомусь",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "e076e4f5654c505bf2f525d28cb8c4eb7666cf98172b3c5ea8d2e82487f2b0d1"
+    },
+    {
+      "sample_index": 5,
+      "target_term": "вживати заходів",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "72fd0030430665a49410e102730bc5aa742d696850d18dd786a900f1d66d5589"
+    },
+    {
+      "sample_index": 6,
+      "target_term": "позбутися звички",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d4daa238cce0ca97246896f0096a4932c43fb64f98e0eceb1a73013e9802f566"
+    },
+    {
+      "sample_index": 7,
+      "target_term": "стати в пригоді",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c31e6feef723ee6cccfe43179bd4e0be033d589b62b46c3af2ce49b1e6303782"
+    },
+    {
+      "sample_index": 8,
+      "target_term": "сидіти на протязі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "494329b17716b336d6c30ddda2439029b89b88fb9f46b8166deed42378def34c"
+    },
+    {
+      "sample_index": 9,
+      "target_term": "ставити запитання",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "24fa8da2b270363197f174754daa986c7a4d50c5a9d6d09fe119ca60635df40a"
+    },
+    {
+      "sample_index": 10,
+      "target_term": "допитливий",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a12fc4a3019dabfe020598c266577525bcd7c28abd67c07e3ac417e93607e3b2"
+    },
+    {
+      "sample_index": 11,
+      "target_term": "в першу чергу",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a0dd78f8762bd7df0517d5d713d7cf4796bee034e9233ec2c01793b9984a2822"
+    },
+    {
+      "sample_index": 12,
+      "target_term": "падати духом",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "980a700d5d030d105d93679a9e0b9e930963cd23fa049bd9c9bc7620b0d283c2"
+    },
+    {
+      "sample_index": 13,
+      "target_term": "ґудзик",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "37a9eff3a910f6bf327aa289b560e39ee926dfd7252246ca08ae5e969ef71582"
+    },
+    {
+      "sample_index": 14,
+      "target_term": "дзеркало",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "24f6dc86adc010f36d40511b9588ed725063e25a1d59f358da778ac502706522"
+    },
+    {
+      "sample_index": 15,
+      "target_term": "равлик",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "9bb35020e88ea0d50fbe555884f119fde94c33fa1d850411849644833782ec29"
+    },
+    {
+      "sample_index": 16,
+      "target_term": "вболівальник",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "45d26b1c14275eb4beb821e52dd1ddf03e3c32aadaa55703daa29da10e230291"
+    },
+    {
+      "sample_index": 17,
+      "target_term": "наступний",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "7a2247977c90eac07f4c1c5b7e357299ae5f78f84c552b2a7b9ab8bcf3eca69d"
+    },
+    {
+      "sample_index": 18,
+      "target_term": "знатися на чомусь",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "4c794cfc0e9bf99f9a400836eabcb53f57f27500b046bbaa3e2014ce4bd0fc91"
+    },
+    {
+      "sample_index": 19,
+      "target_term": "увімкнути",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d9a2535538e5014edc9451e3f5c126ecbf7e8bc6392045742bf7e437c4de1671"
+    },
+    {
+      "sample_index": 20,
+      "target_term": "мати попит",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "bba4b73aee6cd1005563d12b2b0c40969d244778c0ced1f7745af9a31800918b"
+    },
+    {
+      "sample_index": 21,
+      "target_term": "знагла",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "43a6f88b93416f7fcd36020402f8253ad5b0767e92fe2e3e98b4a0a3a04c6037"
+    },
+    {
+      "sample_index": 22,
+      "target_term": "висновок",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "11f597823c5f66ea0ff628cc245c72785187520656b33060056dd86c8264f51f"
+    },
+    {
+      "sample_index": 23,
+      "target_term": "тло",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0c2fde9b151f22b6de283be48fed2c223014b112fed23db517d5b4046237af33"
+    },
+    {
+      "sample_index": 24,
+      "target_term": "чинити опір",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "f13b9061aae1eb1fc0a88d43cc2c766748a9b43c2873f9fc54d359ddf6bd5ae7"
+    },
+    {
+      "sample_index": 25,
+      "target_term": "втратити свідомість",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "f79babe72a084ccea766b0cf55ee7b6f4c9f240133d21712822f9b1824e65e1e"
+    },
+    {
+      "sample_index": 26,
+      "target_term": "по суті",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "59b6532a6a4d5697271c1425929c541bde2f55c742d0c9d0da29ea367ba1c089"
+    },
+    {
+      "sample_index": 27,
+      "target_term": "о шостій годині",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5821e5854414dfa24da231339026edb5124d6031a3e51848e46bacefe02d8fbd"
+    },
+    {
+      "sample_index": 28,
+      "target_term": "знаходитися",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "65260e50021b763b02c2e51057cf3fdb684b53d79bdc826697792e28ccfe59dc"
+    },
+    {
+      "sample_index": 29,
+      "target_term": "оселедець",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "cd46d7a44eab109001425947783ca1a6c054ecece8a62ee01bd7093ea45641dc"
+    },
+    {
+      "sample_index": 30,
+      "target_term": "загал",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "e76ee5231ef49e2e577bdc1cf6ae28253eebb4d3baae166ba15c313d8f67c96a"
+    },
+    {
+      "sample_index": 31,
+      "target_term": "належати до",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4eaeeeaf07434986627df5092f8f3722f65345c33d35faace02fd895fa3a9c66"
+    },
+    {
+      "sample_index": 32,
+      "target_term": "після повернення",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "149a821ba9da3dce8bf6cc17871e894d79cd4ec164d322d15ac9873f188aeb0a"
+    },
+    {
+      "sample_index": 33,
+      "target_term": "на вимогу",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "92cf62b80a147c024167a13657c460f4067ec1bb0cba0f1140820f91b7e15e9f"
+    },
+    {
+      "sample_index": 34,
+      "target_term": "до смаку",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "7b148e4f490fef88ad80f847a88dcaa9852152dab52baf8c92ac49a0f90c3b28"
+    },
+    {
+      "sample_index": 35,
+      "target_term": "фіранка",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "325dafde5cc8d67477895c1bccdb1b483df5ca2ca118fd0e0c1b624161b537d8"
+    },
+    {
+      "sample_index": 36,
+      "target_term": "мабуть",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "465f38b18f6bb4a556708f9a517ecb8b4386fce9ea302fc671c0b1c5b8b356f7"
+    },
+    {
+      "sample_index": 37,
+      "target_term": "з власної волі",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f7751cb79de3bdc0aebedb740d2d8ad942f8a63870f3f8aa182e9b616006a6c1"
+    },
+    {
+      "sample_index": 38,
+      "target_term": "запобігати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5a97b3c2b92e5a5d9c425df1082ea1d5df1c6e20a84f71f886ff910632683778"
+    },
+    {
+      "sample_index": 39,
+      "target_term": "взяти до уваги",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "984438d453729806757aa413c0ed4bb24b0278dced0c451b91ba3c415d4bb31c"
+    },
+    {
+      "sample_index": 40,
+      "target_term": "надавати перевагу",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "6fd54c49b22357a3708450924993f21d01b03b9260e202441ad5fa9d2acf7e48"
+    },
+    {
+      "sample_index": 41,
+      "target_term": "тим часом",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "61b288b40b1606273a52eedb4e38df6e8b2e19e7765e130e1be28d145f3a2b8a"
+    },
+    {
+      "sample_index": 42,
+      "target_term": "тло",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8cad08182821ff10d69154c8b645fc96ae6c273f8b9879e39c4f1016e497a2c6"
+    },
+    {
+      "sample_index": 43,
+      "target_term": "у будні",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "84e7372cfc819376870eb3faeb8f0dd2f12bc16c803ab9c04b5a7ea39111ea59"
+    },
+    {
+      "sample_index": 44,
+      "target_term": "наводити приклад",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "53e6b5392f3ab44eac87cbb2f6140233b675a323d2c8971896b58b049b7bf5d0"
+    },
+    {
+      "sample_index": 45,
+      "target_term": "завдавати шкоди",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2bf308563c6fa44dcf0a521ec6c15b779810899e54c5d2446510949bbbcbaed3"
+    },
+    {
+      "sample_index": 46,
+      "target_term": "брати до серця",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "08fb1c88ec57fab5bcfead4f3acf5b95cdc0e53a80759ec03e7101839280caa1"
+    },
+    {
+      "sample_index": 47,
+      "target_term": "жаба",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "727924dedb397ad4faab8d49288c0863db2129b44efc65446b4bb9a4d3a03a55"
+    },
+    {
+      "sample_index": 48,
+      "target_term": "брати до серця",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "7146f3b2f6ec0df694d70c923e9b383ed810a622f7dc9551b8cca448c641ec3e"
+    },
+    {
+      "sample_index": 49,
+      "target_term": "повною мірою",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "3053ad6666e6aff8816bb4f3ed1536c0ccae56237c552b6156dd9fb297c8b584"
+    },
+    {
+      "sample_index": 50,
+      "target_term": "на радість",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "1a52278214062d4925b9e0becc922de8f5c6c654817bc198ac1ac505cfd45520"
+    },
+    {
+      "sample_index": 51,
+      "target_term": "вважати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4d1c2f8de3dcef7dd63eb1401aecfc89ce7f4408c15a3b031390d1417d1bd742"
+    },
+    {
+      "sample_index": 52,
+      "target_term": "чинне законодавство",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bacdadd85a217bc3945449cad73e557f6ec6cb2e03d883a9786ca0c15d2fb530"
+    },
+    {
+      "sample_index": 53,
+      "target_term": "на захист",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "11d26fe0604f8ba1eea4b95ac47dc81e3cd6a9cb735989f306d8aa7a9ddfa039"
+    },
+    {
+      "sample_index": 54,
+      "target_term": "накласти стягнення",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "970d7dfde94c9f0ce12fde5dd661df150ba59167786b39cde66c9b0d25f2b3ba"
+    },
+    {
+      "sample_index": 55,
+      "target_term": "дати спокій",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f349761b277033f0a72d337c2de48d611415d4e8b0f471f406c503374bced399"
+    },
+    {
+      "sample_index": 56,
+      "target_term": "скласти іспит",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "69379a2d943e982a687c45e803160a06f6f3a3b38c13c830d83931273f7a395c"
+    },
+    {
+      "sample_index": 57,
+      "target_term": "буфетник",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "76c932c035fae0c9ac6c38b3468a4cb25b3b34a8eb973913f6bbd0960d3b9448"
+    },
+    {
+      "sample_index": 58,
+      "target_term": "висловлювати подяку",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0a2e454e1f7256bbe6b4cf610c87f9ccdfc385caeb4b19e7b149e7798ecb416e"
+    },
+    {
+      "sample_index": 59,
+      "target_term": "перемикати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "951cd5ae85c4a7593ff19f35bd1c88458535a4cb72f872205253d3140987643c"
+    },
+    {
+      "sample_index": 60,
+      "target_term": "сходи",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8506a7e926159f9b0cabacef70c0c1905fa558a16e39bcd11c7c736ae029cfec"
+    },
+    {
+      "sample_index": 61,
+      "target_term": "заплющити",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "eaa36b8dcfb89c8a0c118e67fb7d639867761e02456e0031b74a306e3a065dc2"
+    },
+    {
+      "sample_index": 62,
+      "target_term": "підлога",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "81022e4f58caf16f3a1cf595ce1cec5ac8f547fb59cbc3a5060678a8f246b688"
+    },
+    {
+      "sample_index": 63,
+      "target_term": "брати до уваги",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1483a4dc8a8cbad3d648de006b658b3b81bc121242e487b84fb9adee29be9605"
+    },
+    {
+      "sample_index": 64,
+      "target_term": "годі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "043f644dd4e20c697aa04e4e8d788609123039c6bbdf0bd911d97210f000b64a"
+    },
+    {
+      "sample_index": 65,
+      "target_term": "згорнути",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1418014934e9c2faa6679e03425bce5c3fe6daa595d71e6fccddb970c6c0434a"
+    },
+    {
+      "sample_index": 66,
+      "target_term": "на свіжому повітрі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "ec45b0d1bd5220b5083bf4f5332e22d82ae9c81567e6191e5afd3ed38c61d584"
+    },
+    {
+      "sample_index": 67,
+      "target_term": "залізничний квиток",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4ffc73de818d7e020650ebaa5e0581f53ef590b40eea92f5b64daace734053c3"
+    },
+    {
+      "sample_index": 68,
+      "target_term": "за викликом",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "ec42c72e0f267135e143937342be15a0b51afb680ea14049cda9d717a2c9f247"
+    },
+    {
+      "sample_index": 69,
+      "target_term": "щопонеділка",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "590ec33b4e3f5bd935511c601b72bb7665e65e39b669209472740eb4398a378c"
+    },
+    {
+      "sample_index": 70,
+      "target_term": "бурмотіти",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c959af93bb3c845e63ad6b6a1e5e14bdc19aa24d91e0aa1bd43a6b1657938fbe"
+    },
+    {
+      "sample_index": 71,
+      "target_term": "мати на меті",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f961d6524ab5b65e8628e9c2b00ab6e6615c5c910559cf0ce79231f7cd90b7d5"
+    },
+    {
+      "sample_index": 72,
+      "target_term": "заходи щодо",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c1b72ca442939471fff35527259159385aca4a1f42f99abe0da5836e7d6158d0"
+    },
+    {
+      "sample_index": 73,
+      "target_term": "навмисне",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "9fbf8b7e5fe0aedd6d90e26086ba418d69ca3a4db608f9ccd0fdec166ea91976"
+    },
+    {
+      "sample_index": 74,
+      "target_term": "вочевидь",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "52f26bd33471446a508f034adb6034ff6f1ca7810523051ed53fcdd918cb51ca"
+    },
+    {
+      "sample_index": 75,
+      "target_term": "за вказівкою",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "890f88e51dc5052cae505e47da6da1bdbb6286868ac488c3eccd9d54a2f35528"
+    },
+    {
+      "sample_index": 76,
+      "target_term": "з власної волі",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "39f9104f61c9cf912166561271e6ddd627f64198e1e50ec9ada64540371589eb"
+    },
+    {
+      "sample_index": 77,
+      "target_term": "мати значення",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "48415cd20de0a1c1d4e7d4e622b11b1a86f4cbc0a5d4766e2d3626fd3c6f5376"
+    },
+    {
+      "sample_index": 78,
+      "target_term": "залюбки",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "35b4cae70b2a952d18ab11be126ebc46aa5004041e73595c8c2e5f13bf402e3b"
+    },
+    {
+      "sample_index": 79,
+      "target_term": "впадати в очі",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4e4f22b424e40c70061b1c1827e9dbe15757b5c8c057ddc864c1f296b97f64d2"
+    },
+    {
+      "sample_index": 80,
+      "target_term": "на прохання",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "77155564b685e32a140f9de5b5351d263a373fd1f698f2363df03f64d05094d2"
+    },
+    {
+      "sample_index": 81,
+      "target_term": "за зразком",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "054409c7ad6eba76ab90fae6239820b8cd1ed36393007e063bc5f42426f9c64d"
+    },
+    {
+      "sample_index": 82,
+      "target_term": "брати участь",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "22dbf2b600496eada257ea8c66479c3fbb1ee2b1a83b7cb00b45677de0f6f6e0"
+    },
+    {
+      "sample_index": 83,
+      "target_term": "безперечно",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "93d49504151ca9f046e5bf70b1b9d6580bccdf807ff80375ac68b1b9e33cdfd8"
+    },
+    {
+      "sample_index": 84,
+      "target_term": "кошик",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "faac6cfa93cb240531e0b914877fb95df6fdb5b0cfe52865c8d8118402cfd4d5"
+    },
+    {
+      "sample_index": 85,
+      "target_term": "тим часом",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "95386ee8a7834329312d306433e58169f7160aa948d1b50b8dcc7d195d44e9dc"
+    },
+    {
+      "sample_index": 86,
+      "target_term": "вимкнути",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4dbb2862fb1ca1883106e143d8563ff62d929460aa7a159b42f477b8a7a99702"
+    },
+    {
+      "sample_index": 87,
+      "target_term": "мабуть",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "9226719c824c3db56a9b4546dedf4d74634b3a51d9534db4ef50e71dd03fbf5e"
+    },
+    {
+      "sample_index": 88,
+      "target_term": "шахрай",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2514fac7c683be57a16c6ecce367778ffdc2dd2f035b6010afc1e64f98b5c4a2"
+    },
+    {
+      "sample_index": 89,
+      "target_term": "лижі",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "10bb7dcd3175405105270d813a1ab1d00d1ab96cdc7ebe00f667125dca1205ef"
+    },
+    {
+      "sample_index": 90,
+      "target_term": "шухляда",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1b6d4e219ff7f2622fb60f7011b689aea44cdefc8a152a6ee17e2481d71834b9"
+    },
+    {
+      "sample_index": 91,
+      "target_term": "незважаючи на",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f78128148b492288ae73b7a512780e0f2ed26434fb3bdc0d7afa1bc3815548d7"
+    },
+    {
+      "sample_index": 92,
+      "target_term": "передпокій",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8ecf28042fb7259db83e6b91fcf54803e4e94c9152c17540bbcb997e96d1c3ca"
+    },
+    {
+      "sample_index": 93,
+      "target_term": "ганчірка",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d2d55730299b0adbae567795dd80119de4b21314a2fd326b8b229bd1e497d376"
+    },
+    {
+      "sample_index": 94,
+      "target_term": "на шкоду",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "29f7a9f3c816661d84dee102784374e41009abe207499d5b4d0ccb722a1ef57e"
+    },
+    {
+      "sample_index": 95,
+      "target_term": "передпокій",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "37b65033d5b72c2ba96d053688e56d53683a26fd494a3a4fa9d9b04b44b60b30"
+    },
+    {
+      "sample_index": 96,
+      "target_term": "нанівець",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "a92f9941f8f04400fcfdc0b5170d3034157810216837fc86d1cd3c68f53221cb"
+    },
+    {
+      "sample_index": 97,
+      "target_term": "брати початок",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "6a3132c996bcf18702dd4c44b92ca24c899ebe4068634431e79a2873393a157b"
+    },
+    {
+      "sample_index": 98,
+      "target_term": "знагла",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "75283fd0313cf0475b82a620606f49e7d03397b5482cd13666ff53c7cb2d2b30"
+    },
+    {
+      "sample_index": 99,
+      "target_term": "набути чинності",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bdca104c566697fc4a3f1322f154f45406423fb67b7bb705b9ad35b5048030e1"
+    },
+    {
+      "sample_index": 100,
+      "target_term": "здобути освіту",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0732726689799060b84536fc599df6e479abc60518dce807ee2d055353d47958"
+    },
+    {
+      "sample_index": 101,
+      "target_term": "за винятком",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bf6bd36554bcdf3a9ad178cc56f1bf27c997d1fd25e3249b591f42c0b8db7bd2"
+    },
+    {
+      "sample_index": 102,
+      "target_term": "до речі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "ed5c6826e26c2159f978b3c92043885e95e0182e596d5d90122e4d45b6c31cb7"
+    },
+    {
+      "sample_index": 103,
+      "target_term": "на вимогу",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "aa5d57a3cc77366755c5a00aa951894dced23a91ee6a88b07001457f58dd20e7"
+    },
+    {
+      "sample_index": 104,
+      "target_term": "через неуважність",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "46c78774e62ca6c186adc9901f04247cd70c3e53548d1166c04fc2f30fd31ae7"
+    },
+    {
+      "sample_index": 105,
+      "target_term": "робити вигляд",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "313550f409d5170e4daeaa4b72353434dd8fd1a6dd2408eadd3487527853854c"
+    },
+    {
+      "sample_index": 106,
+      "target_term": "за фахом",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "00b051578323a67b5b5c8a2c86a69cd36714c40820eea3d3e04364d020d079d8"
+    },
+    {
+      "sample_index": 107,
+      "target_term": "брати шлюб",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "2098c0a0a5d2e48c25e57ec44bbd37792f01c4cec18842e183c76b29807794e7"
+    },
+    {
+      "sample_index": 108,
+      "target_term": "за дорученням",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "fe337f6abb775071aaba95c8f1101aa6cc10e70c40ecf9703a03d34adb3bd8ce"
+    },
+    {
+      "sample_index": 109,
+      "target_term": "на шкоду",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "ef68708e5b40c0fb46c1bac06fc44acce8eb2489cfdaadc040a52735880dfb76"
+    },
+    {
+      "sample_index": 110,
+      "target_term": "після прибуття",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bd1837d0a01499b08edf9ee073d96ff40cac9ce9102fbfe88c7fd0a4d2315189"
+    },
+    {
+      "sample_index": 111,
+      "target_term": "драбина",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5b146072cfa9b277299285d48ed6fabdf6eb7045dc37cf33b66b0cb4d9a1e249"
+    },
+    {
+      "sample_index": 112,
+      "target_term": "мати рацію",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4fd4076957cdac670529b9855a8543932189fce603823f68f02f6485bd712047"
+    },
+    {
+      "sample_index": 113,
+      "target_term": "впадати в око",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "602459a94797f791e52b18b82be510e4a50011713fc33749c7dbfe482c235e14"
+    },
+    {
+      "sample_index": 114,
+      "target_term": "брати до уваги",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d73a1acca82586276ef0826f428e5fedaa4a7f5177973d25add8a07a40bc3ebd"
+    },
+    {
+      "sample_index": 115,
+      "target_term": "скатертина",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "36eed2f5302106b5628740bf8b8dec2ac682f7269447cb3e49b36dadbd675277"
+    },
+    {
+      "sample_index": 116,
+      "target_term": "доходити згоди",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "ae68861241e2f8062125b93b0b65802dccb77762081c9b836d977730303ecb08"
+    },
+    {
+      "sample_index": 117,
+      "target_term": "розгорнути",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "9c482bdc4f5a653afb1a975cd92031ccfa1e4c2ff3d4b0207436503fdd5b123f"
+    },
+    {
+      "sample_index": 118,
+      "target_term": "годі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "812e83f9670474e43df769e72a09976827ff6d3d9dc4bd0553a3c9ab7555a183"
+    },
+    {
+      "sample_index": 119,
+      "target_term": "збігатися",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "6de0675d2d93ad7c65cea067162e1dcc65e5ec8d91fccbf123e459539e6bf9b1"
+    },
+    {
+      "sample_index": 120,
+      "target_term": "стравохід",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "49b24ffd37e374af209f21d431d7654094d8f2f8bb4fe62c051c671b1b30a923"
+    },
+    {
+      "sample_index": 121,
+      "target_term": "скасувати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a75dddc5a28c71e9ddf4bbd11871513b7cb2800596c5906f25db947b33a72990"
+    },
+    {
+      "sample_index": 122,
+      "target_term": "на виплат",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "2ec609072775de3fef00d1b6cf8d09a39f6851f5f70c643c602567c0cb5cfe98"
+    },
+    {
+      "sample_index": 123,
+      "target_term": "вважати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "54e13d814dc67b40e1f907b5a4891e91db177489a41d9bdd91447df1073dd9c0"
+    },
+    {
+      "sample_index": 124,
+      "target_term": "почуватися добре",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "7027f57fae71ff3ae9f6196de6b690fd091e608d52668ddd43d889c19b3375d3"
+    },
+    {
+      "sample_index": 125,
+      "target_term": "знаходитися",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "023318863f61c58ab68e091b48d08004e0fd33d18edb95dd8db5b11c8291d647"
+    },
+    {
+      "sample_index": 126,
+      "target_term": "на дозвіллі",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a2c66ef639754d19701124ae7692b06d7f0860a9ba69b1806b8f29e6ef397d84"
+    },
+    {
+      "sample_index": 127,
+      "target_term": "мати на увазі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "e16d9f97d76ff1ff18af8040aa13a9d7f5ce5e78906e876e49b20eecbc8cb4da"
+    },
+    {
+      "sample_index": 128,
+      "target_term": "у порівнянні з",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "dea1c3842f8163d45f8054e2f6e8aebc3108e8c0021683bb23c7f93a77cd9a2a"
+    },
+    {
+      "sample_index": 129,
+      "target_term": "на щастя",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "9d874ce46c9cf9132a2ae9fe963cb45639bfb5340e005eff85eed1359ce3c713"
+    },
+    {
+      "sample_index": 130,
+      "target_term": "за винятком",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5a6fffd0ac37ba77f8be6cf669d196385e0db74c5265b8c4362d8fbe1292f4ee"
+    },
+    {
+      "sample_index": 131,
+      "target_term": "гусак",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "790fe5475e390e6863423c72244374d622f853954cc409e6cdb1b5aebc8b7226"
+    },
+    {
+      "sample_index": 132,
+      "target_term": "приймати рішення",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5a2ff925b5bc43b5382ac5c95d5d84179abf43c7f14191b602ec73a253def165"
+    },
+    {
+      "sample_index": 133,
+      "target_term": "йдеться про",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f70a021711fd5553206651eea4fee5f96c82e82fbdd23c137b5e8f27a93a0c4d"
+    },
+    {
+      "sample_index": 134,
+      "target_term": "вирушити",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "556ce2c811f4adbda1640f77a336eae1bd5c743efa0609eeb0f75b99f871ee28"
+    },
+    {
+      "sample_index": 135,
+      "target_term": "у зв'язку з",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "193a6e1d4585ab549b58c485d83434dfb38ff4008577b948f775a84efa3def70"
+    },
+    {
+      "sample_index": 136,
+      "target_term": "докласти зусиль",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bfd2b95fcb768e9e25052b1d9b4fa163c2d3f2e3f66a43a17a14cc8153fd23e5"
+    },
+    {
+      "sample_index": 137,
+      "target_term": "ковзани",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "2d7f9d595683ff4c1202430550971ca905e4501852d502784bee431ec2cd146b"
+    },
+    {
+      "sample_index": 138,
+      "target_term": "капелюх",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "deb6502290e16a6cf9ed9df3854e7a215d29a4126287b3aa6b24c7cc0fef3ab8"
+    },
+    {
+      "sample_index": 139,
+      "target_term": "дотримуватися правил",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "de4828ed8240b5808032335466c2c661fd2e3e9dac4b26693cc2df33534b9bad"
+    },
+    {
+      "sample_index": 140,
+      "target_term": "передплата",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "374bf688804e7b5a5db13361a460449bde9de330fd100c33ab4857081e76f272"
+    },
+    {
+      "sample_index": 141,
+      "target_term": "відчинити",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d44ca0f80787bf31fa6d60644d2b507acd62700750684c78847d44e41ce703dd"
+    },
+    {
+      "sample_index": 142,
+      "target_term": "вибачатися",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "88f9b5e5102810a7f4020febc406071c0a027d789d1b1837f8e234c9e3692f74"
+    },
+    {
+      "sample_index": 143,
+      "target_term": "горобець",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "be1b873a9e4daae30250d9a28da1a1399b69c225cdb885f424a60947cbae4af9"
+    },
+    {
+      "sample_index": 144,
+      "target_term": "відповідно до вимог",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f2fed6fa9719a5aae49b2c8a8505ed6d7eaa4fc4e12c40bbe9a6988664e2862a"
+    },
+    {
+      "sample_index": 145,
+      "target_term": "згідно з постановою",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "eb1f275f6385c2362c383004d34f4bd5d09ce144156a3ffe4918beeec368612d"
+    },
+    {
+      "sample_index": 146,
+      "target_term": "наразі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bacf0df43384c77f29f4caf32434101c1c4d42f560c8a538034e52aecce0a7c1"
+    },
+    {
+      "sample_index": 147,
+      "target_term": "через хворобу",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "b0678bfbc3b924ab51342bc55ff2cb893d33e1ec3cf556e472a0a9488ad05d4a"
+    },
+    {
+      "sample_index": 148,
+      "target_term": "у вихідні",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "34e4891b57c00f2e55edcd7d0882f575322a7161e06331260c161e23219b80f2"
+    },
+    {
+      "sample_index": 149,
+      "target_term": "комір",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "e1ad0c3bd8d389d62a3efbbcf20b9a36255929ea64774166dff9864ab3bba9ec"
+    },
+    {
+      "sample_index": 150,
+      "target_term": "охочий",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f516a48d27d1869e23b6301a2daace2fe38571b288884deecf8dd57879f36764"
+    },
+    {
+      "sample_index": 151,
+      "target_term": "на користь",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0547fe64c6f9d533be386f151d4ef61780c1c47004347f41c28352ea33b444d2"
+    },
+    {
+      "sample_index": 152,
+      "target_term": "капелюх",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bd754eb807474083849db85125f4c09854a7f28ab457961463756eded0eadceb"
+    },
+    {
+      "sample_index": 153,
+      "target_term": "за власним бажанням",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "e35a4c17c3416553d52dde8de1ba44e5d83c23d7f8b71f9b97c7f968fcb7fd41"
+    },
+    {
+      "sample_index": 154,
+      "target_term": "завдавати шкоди",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a3d63ef24ec332c628c28f975f1033ca77d0757fe6cd27b965e288683caca3e9"
+    },
+    {
+      "sample_index": 155,
+      "target_term": "стати в пригоді",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d4e8d2d0141a0da48b9fcb3206225191ba9e4c4c005d34cd2bf16ab9d7caa7e4"
+    },
+    {
+      "sample_index": 156,
+      "target_term": "давати змогу",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "ed9c8c09231fcffe9874cf89e8a23ec200866c1ba9b0aa419a3605ef0a108b8b"
+    },
+    {
+      "sample_index": 157,
+      "target_term": "на мою думку",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "65fcdb81ac02e86aa10c52fc72a57fea7d8fc2c18c4370249243d27cf1c6d7a0"
+    },
+    {
+      "sample_index": 158,
+      "target_term": "переважна більшість",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "72325d629491f22588a4dc0f290e1d53ad6437436f7a0a20b3926bb5b5984c53"
+    },
+    {
+      "sample_index": 159,
+      "target_term": "відрядження",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "150096969e8fabfa0115cb3593c5d9d7ac6dd3d8805cbdbdfcfad60730c77f35"
+    },
+    {
+      "sample_index": 160,
+      "target_term": "на виплат",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "1069d48a2b55dde7cbe0c103593f288d87706d4d8777d64884f1e6933de5536e"
+    },
+    {
+      "sample_index": 161,
+      "target_term": "водночас",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "6c11c8e13a8e17218bd75369c29d4b0bb3d0e779b852f3ae807eb1d9ff05bedb"
+    },
+    {
+      "sample_index": 162,
+      "target_term": "стеля",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "996ff1a8a81d12a82f3cbe910761643732ce665cc0edbf7337fbc4b3b979b4dd"
+    },
+    {
+      "sample_index": 163,
+      "target_term": "звернути увагу",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "f48d00fd16595f556eea4d14885e0d0d5a02b4b7bfd42c125e42658ccb2a4f32"
+    },
+    {
+      "sample_index": 164,
+      "target_term": "екзаменаційний білет",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "779b52084210910168e1e7af8cb35d17282fed8128a72008d2f683b32de7ad57"
+    },
+    {
+      "sample_index": 165,
+      "target_term": "гусак",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "e4240bed75642bbabafb6c98c4b8d792f8e854bd460c20ffccf0c42669dd63e8"
+    },
+    {
+      "sample_index": 166,
+      "target_term": "йдеться про",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4b33299e5dcbe47f486ddaf0aae51c952c5095b26fe45b04a52b23d4387cbe5d"
+    },
+    {
+      "sample_index": 167,
+      "target_term": "переважна більшість",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d24c27a8cab737e18f73b187fa177db764be8985b8d00352daaab4b2d2232aea"
+    },
+    {
+      "sample_index": 168,
+      "target_term": "залізничний квиток",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4e2396e109aa5f1d2ea2ba3a28452f9e8497167d2f0315e734912acbd6adffcb"
+    },
+    {
+      "sample_index": 169,
+      "target_term": "сходи",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0d02dba451fda222a35b966063b7148a03239396740181e65fe99700c5c43750"
+    },
+    {
+      "sample_index": 170,
+      "target_term": "набути досвіду",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a2dc402944fb40cd64bb9fd39f8312b1da33c6c70baa33034e0f037fce624959"
+    },
+    {
+      "sample_index": 171,
+      "target_term": "справити враження",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "66c8ec450493a808f29c6d4471fa859e24ff5a3f83a420f39c332e4200419a8e"
+    },
+    {
+      "sample_index": 172,
+      "target_term": "падати духом",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "6ddab70cf1daeca0d8e379d4a27271d51385ab912cd98dc675b83d6856c0d0ae"
+    },
+    {
+      "sample_index": 173,
+      "target_term": "стравохід",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8b563b7ed3966222a23216a8dfccb1e899ed8798572993ec7f1df89ba5662261"
+    },
+    {
+      "sample_index": 174,
+      "target_term": "називати на ім'я",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "038ee3974245d06e516afb67c269e3a4ea4282b5da53ef6990d83d502698d410"
+    },
+    {
+      "sample_index": 175,
+      "target_term": "зробити внесок",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "98067c569fae89be867fe98cf91a8cf9d4e63003f63f836bb40ada3c067179cd"
+    },
+    {
+      "sample_index": 176,
+      "target_term": "кобіта",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "26848297e6d80f97c4d32c0a4f2fc7e8fd911ada7edafc21335111ecb8e02d23"
+    },
+    {
+      "sample_index": 177,
+      "target_term": "набути чинності",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "82059643cfa74ae748ed7425a03cb38396e323d11f4817bbacfcc67ce65933d5"
+    },
+    {
+      "sample_index": 178,
+      "target_term": "на захист",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2e1353e76aec49ef89e5971839f582249f3a8c6e29e0cc3e0953b3a38b202f1f"
+    },
+    {
+      "sample_index": 179,
+      "target_term": "горілиць",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d5152837df119ab818f88c6531010ca7b77b1602164e4f70826bf275a1747ce1"
+    },
+    {
+      "sample_index": 180,
+      "target_term": "допіру",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5e67825036aa894b10839182918b0fb71edb6d0e5539f9c034c44483db9696d2"
+    },
+    {
+      "sample_index": 181,
+      "target_term": "впадати у вічі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2b60112c870a3e0bb1ca699cf7f58f8824ac3e2bc979b9e574192ae5cef211f0"
+    },
+    {
+      "sample_index": 182,
+      "target_term": "чинне законодавство",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "28a9a4451a7183c62b91e92ea0f6fd989db4cffcec21429fc3fb88ebdedaf588"
+    },
+    {
+      "sample_index": 183,
+      "target_term": "рушник",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c74b1fa805abdfc192b5a4cb4175393007f15ccef100b06d2b87c23b518dd4df"
+    },
+    {
+      "sample_index": 184,
+      "target_term": "наступний",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "929b17071021f26ff228576c337ee25ea8d45e0f3af2848ea755bb8437c9cab2"
+    },
+    {
+      "sample_index": 185,
+      "target_term": "напередодні",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2a5c0c23fb6acb07eb8928761ffb4a04ce8ba29fac3f7b39f28c1dff8c178eab"
+    },
+    {
+      "sample_index": 186,
+      "target_term": "водночас",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f967afa0fc24d3fa281f0c269ce83f9c0741abc8f9f04d3eead33d15d0d62193"
+    },
+    {
+      "sample_index": 187,
+      "target_term": "метелик",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "c348ef74026b683a0cdffd7704ba470e467fbe5bf084311cc0e7997c330bdcb1"
+    },
+    {
+      "sample_index": 188,
+      "target_term": "запобігати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "6b1a0255d20c2dfc580a6c659065af675479a6c126466a810ece782a25aeaf11"
+    },
+    {
+      "sample_index": 189,
+      "target_term": "у вихідні дні",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "acfde17993e5ea790c8d8100a1d4f69afd380b2e55270b20d205a2dc61399751"
+    },
+    {
+      "sample_index": 190,
+      "target_term": "у порівнянні з",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "50354a50b62599472fc779c3b0fbf8d31d251b18da299ee9b0438afc80ed0b86"
+    },
+    {
+      "sample_index": 191,
+      "target_term": "будь ласка",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "61a84f77c82d80720ce31befc59e130c7728e8e301a656cbf5face294b6d0f70"
+    },
+    {
+      "sample_index": 192,
+      "target_term": "позбутися звички",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c81f35b70e82124a06ea05ef5d94c7f265a5ccf4b940f1b3e01c51fbe01a7008"
+    },
+    {
+      "sample_index": 193,
+      "target_term": "розгорнути",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4a337aa92438d7125059f3918e049bc0dbd498a4aca66b1a690a0f8230b2e0ae"
+    },
+    {
+      "sample_index": 194,
+      "target_term": "за викликом",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "2104ddea4182ddbac29b273bc02960c2c13a2b9bab7568e8103de7c88393f332"
+    },
+    {
+      "sample_index": 195,
+      "target_term": "у даному разі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "c2953604a9e6f90569c7dfc3cdba832be8afed499edcf011b38c864d05ded8d0"
+    },
+    {
+      "sample_index": 196,
+      "target_term": "у вихідні",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a70856a3bd67256b1b5228b006842c5c3b8d1b00e7b176ce672f26586a3b4243"
+    },
+    {
+      "sample_index": 197,
+      "target_term": "вибачатися",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4afac2e7dbe7621441abec04783f4437eaa4a561361c192e03bf07a706e0e805"
+    },
+    {
+      "sample_index": 198,
+      "target_term": "відкоркувати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "afc78fc771737981cd0686dae61ef001699349f70dfa504d873d4ff62bdbd630"
+    },
+    {
+      "sample_index": 199,
+      "target_term": "нанівець",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "f224aa65b946ed04892523f81aa87275dddaf499ca861c771ae5c140759b9a91"
+    },
+    {
+      "sample_index": 200,
+      "target_term": "коштом",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1128cff317f24dab66ee5376d5887a8c53b68721e46c623b8defb8ee043776bc"
+    },
+    {
+      "sample_index": 201,
+      "target_term": "на жаль",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bd96cab5d3b2d2f7d53b9e6f278287fbdc261f90b278c0217f82218121b396cf"
+    },
+    {
+      "sample_index": 202,
+      "target_term": "з нагоди ювілею",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "cc45d762f6524748e95771aefb0f19b5c448c53931be270bba86448f7be899bd"
+    },
+    {
+      "sample_index": 203,
+      "target_term": "за правилами",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "3ce1372db8f018ac140f2e16fa71f29c61b15013f87c997815b550f843815d5c"
+    },
+    {
+      "sample_index": 204,
+      "target_term": "після прибуття",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "478d923661accc75bafb931e766f7d37a44a1627e71f0c6c3507861e0ca99c0b"
+    },
+    {
+      "sample_index": 205,
+      "target_term": "брати участь",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "93a63c0d0d8abfb57c6b5599b52412bd7c34c30676f8876caca9e3e80c37bf09"
+    },
+    {
+      "sample_index": 206,
+      "target_term": "спало на думку",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "82a4e8c51bf8dede5f01d9068de590be32ee55fae297f3622a830ba682a400f2"
+    },
+    {
+      "sample_index": 207,
+      "target_term": "у відповідь на",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "21812bda2efb9de4cddcabb2d7e070cb1e1a3908eb293d7ce712b90e32852119"
+    },
+    {
+      "sample_index": 208,
+      "target_term": "святковий",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "313cfec0d8e7666fc89ea221f98c45d42fc4877d7a49c5b2140aeb2170cd98dc"
+    },
+    {
+      "sample_index": 209,
+      "target_term": "довкілля",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "dd1cac42ed3c82eb258a2e0bfc97366c30a1762180d28da1d283211bb878ee1b"
+    },
+    {
+      "sample_index": 210,
+      "target_term": "гарбуз",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "9c049e5e534216c988a0c4361ca5ab8a4d0282223c532957f1716ae902889ca1"
+    },
+    {
+      "sample_index": 211,
+      "target_term": "коштом",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1669d2489ba4f8f9489a2eb98820baf44802b56c80edeccd65b3ca5ac70a59d3"
+    },
+    {
+      "sample_index": 212,
+      "target_term": "за винятком",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "ed31d22d0a971d37b27b794dcc86b068314fa6b371f17733ef584acfb6e70558"
+    },
+    {
+      "sample_index": 213,
+      "target_term": "повідомити заздалегідь",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "fa475e5e5078360b04a7da32b35f9cc49d3c6fec4ba027b40d48f9bfff136277"
+    },
+    {
+      "sample_index": 214,
+      "target_term": "втратити свідомість",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "6ebf1d22cee07f9dd3368fde2e44d984b99178200ee160a97914d568c35650df"
+    },
+    {
+      "sample_index": 215,
+      "target_term": "через хворобу",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "54db7027320f85d7fd1da6ebb81baaa9f03b2596e1d70955f7f1159c56c91927"
+    },
+    {
+      "sample_index": 216,
+      "target_term": "за бажанням",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "eb7511e2fd78ec3a00e34cf85d5df41b967a3f1d9be72ab7f1e89ec2c9cc7772"
+    },
+    {
+      "sample_index": 217,
+      "target_term": "таким способом",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2d7160f5023b83ac5dc23045d6847ffa9de2158b3ba4a6d0790f0007f1223373"
+    },
+    {
+      "sample_index": 218,
+      "target_term": "за власним бажанням",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "b013c6a232ae0cc471ccbe275f235fa210dcf285bcc1ef7ffa4b78300abf3afb"
+    },
+    {
+      "sample_index": 219,
+      "target_term": "нести відповідальність",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "95eb768aba4e5c1a3da7e1cf15589b7685541257435d98f3fde294e47cc58639"
+    },
+    {
+      "sample_index": 220,
+      "target_term": "на щастя",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0795324772bf5abc3498b532633608b53e7816137970d94b995ff77b2accda4c"
+    },
+    {
+      "sample_index": 221,
+      "target_term": "вживати заходів",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "ca7c7acbdf3ffaed774cb507d2c4a2d8fef241f43963cd3212233605876222ff"
+    },
+    {
+      "sample_index": 222,
+      "target_term": "у відповідь на",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "5bd65b8a30e6ccd7d387134586a296e44daf39421b94d0075c6191802001b5aa"
+    },
+    {
+      "sample_index": 223,
+      "target_term": "в першу чергу",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "94022ddd220c532e6c80bfaa34f051a51aa83c001dd4cd1c379cbf55195ca21b"
+    },
+    {
+      "sample_index": 224,
+      "target_term": "брати до серця",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "fce4b6e6d0e023a857fad699806104f7c22d41c4ce815e4fbf9b1f7333561b94"
+    },
+    {
+      "sample_index": 225,
+      "target_term": "щодо цього",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8c1e8965904bb9810d6e7913dd1b1ef740b1bd53cc4ba0ab1adc5f14e893bd22"
+    },
+    {
+      "sample_index": 226,
+      "target_term": "ставитися до",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "acc0ec2ae680ec1a382a1ab8782f4f98efafdeaedb1b5b588dac306c857397ec"
+    },
+    {
+      "sample_index": 227,
+      "target_term": "за сумісництвом",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a672924681c1aaaf9f9d2acc8f0668d49d16b2e307b880dece06a4d447297953"
+    },
+    {
+      "sample_index": 228,
+      "target_term": "впадати в розпач",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "9dee19fe2c24b0d31847c56b130fd1b9452049c34cd3f7b2fd771a6ec140dcc9"
+    },
+    {
+      "sample_index": 229,
+      "target_term": "відкоркувати",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "2f57bbb819c5bc9a29f75a231556d0830a4a67713243f16863a3bc9ed19256c1"
+    },
+    {
+      "sample_index": 230,
+      "target_term": "на кожному кроці",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "dda6403261f059f34eda2a8a4b120222f6b0f8335bce918389d8fd9562bdfa9b"
+    },
+    {
+      "sample_index": 231,
+      "target_term": "шухляда",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4a3cf2730a1d26fad5d46493f06a795f8c155470e248599c33d008522f9afed5"
+    },
+    {
+      "sample_index": 232,
+      "target_term": "за зразком",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "bdbef9fecdefefbf5387615dd8b6d29507d89dec96fdf5e916fac780fdc29134"
+    },
+    {
+      "sample_index": 233,
+      "target_term": "відрядження",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "e24ebb3bfc050f619a581041bb0cf412b34be37244b1e811c0c7c7aa54462e73"
+    },
+    {
+      "sample_index": 234,
+      "target_term": "щодо цього",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "6956e7deceb072f699e4df0fa0a95522a3f6f71f2672f300c2011110109d8448"
+    },
+    {
+      "sample_index": 235,
+      "target_term": "за аналогією",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a0d07ab2d4a8a231cc4282fa6b72bb1032ebe75ee5df18ad6b04b8ca7c03368b"
+    },
+    {
+      "sample_index": 236,
+      "target_term": "кобіта",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "a4a19cc8bd96f2a8ec174ee128ae3607a933d42507aec4e5663ec6fd3fd259d1"
+    },
+    {
+      "sample_index": 237,
+      "target_term": "за правилами",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "0f95f5dd2d02dba5545a505e2db0d8f20e219cc11de989f76d1c922c6b7ac779"
+    },
+    {
+      "sample_index": 238,
+      "target_term": "заходи щодо",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "7ce2bf95fe00e11050f5b255c31396b26cc3bd09f6d01990a95aeadc1dd0e8ef"
+    },
+    {
+      "sample_index": 239,
+      "target_term": "завважити",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "604d492eecd9208b244e1315c77139ccf786148e475c5b55d86291eba504656e"
+    },
+    {
+      "sample_index": 240,
+      "target_term": "висловлювати подяку",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8f6e12ac78e8cb284ef94dccd9275dd78de1d5aa12499403f2946d33ccc60d4e"
+    },
+    {
+      "sample_index": 241,
+      "target_term": "набувати чинності",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "e8ac9c279de9facf2220cc28b9fde611b9ba64dab8f536d5a4cfa51f648e40fc"
+    },
+    {
+      "sample_index": 242,
+      "target_term": "оселедець",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "76f00a6031c253e22df7c66a542d0a0141a3ae48f96cf7d22436dad2174db67d"
+    },
+    {
+      "sample_index": 243,
+      "target_term": "подейкують",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "96d8481b39392cde39baf6dd4d9356f9d7f21f035068f215c2a6270f00371e4d"
+    },
+    {
+      "sample_index": 244,
+      "target_term": "щасливий",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "45976f7ec5d3fa48deb1a97c2432a8f49bc174dd3e8d33fb1e3198a7df91c73a"
+    },
+    {
+      "sample_index": 245,
+      "target_term": "залюбки",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "09e9b9d451ff28f486ee47ebb0ab053ff60da2b36753a60fc74fd23c19338c4b"
+    },
+    {
+      "sample_index": 246,
+      "target_term": "називати на ім'я",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "7ffee67aabcaa9acabf50758500d1ccb37f6c9676eb309e59e15e4f5d885c5d5"
+    },
+    {
+      "sample_index": 247,
+      "target_term": "брати початок",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "502d8c984b50a13d8858a811ba32086f0be7e1b0d4d576ef6b7b5317c5cbd75f"
+    },
+    {
+      "sample_index": 248,
+      "target_term": "гарбуз",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "c338753434adf9036747af7fe07b40241cbf1c1686afeed476affac0ac2e4f6f"
+    },
+    {
+      "sample_index": 249,
+      "target_term": "надавати перевагу",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "af97b2f22d1bbab5db347c1b2a97eb3dc95307ff985d11667ec8e3192b757550"
+    },
+    {
+      "sample_index": 250,
+      "target_term": "посуд",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "63206b60d51b874defaacdc9ffafdf0badb2811bc1a50887e35c324324eb8884"
+    },
+    {
+      "sample_index": 251,
+      "target_term": "нести відповідальність",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "c181f2b93f10c8a1910af6420ccb98f6e29389d54880c5d4a6c5526edf924894"
+    },
+    {
+      "sample_index": 252,
+      "target_term": "напередодні",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "83d0538a06b49ce4cce3033ad3dc94692b2a049cc67af2fc2282dd4a35e96564"
+    },
+    {
+      "sample_index": 253,
+      "target_term": "брати початок",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "db00b0f8fa255d28656995e2566254cac38969eed10fcdd48d94036b1c4d82fb"
+    },
+    {
+      "sample_index": 254,
+      "target_term": "на мою думку",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f607ac19bb54c0ec31b35800ad05b0425bac139beea17322152dc619fec6ec36"
+    },
+    {
+      "sample_index": 255,
+      "target_term": "на користь",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "632380c37e6fcb2fc9dd3d86f0cbed87c22903600a828f5009dc17d58602549b"
+    },
+    {
+      "sample_index": 256,
+      "target_term": "набувати чинності",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "cac3423d948578bf733b8116902a09a5832f3f545f009cb04e06dd0028380ad3"
+    },
+    {
+      "sample_index": 257,
+      "target_term": "за винятком",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "185b72e18c45361a3ca77d13b9b15f7fe5c7233d262866fb4544cb365714b321"
+    },
+    {
+      "sample_index": 258,
+      "target_term": "полуниці",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "e704a4accf49570396dcdd88236ced30cfb07129cac0f6e12be17ba5b71d3986"
+    },
+    {
+      "sample_index": 259,
+      "target_term": "до речі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "4903fdc770707da6fe93ea8e5794c317f63958a37259790057432fd600aa065e"
+    },
+    {
+      "sample_index": 260,
+      "target_term": "за вказівкою",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "35e87e1cb6585c0c200c63df9981891c004b32612d8953e0bc8670404c41cd0e"
+    },
+    {
+      "sample_index": 261,
+      "target_term": "зробити внесок",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "2b252361a1b39546a5856113421118ee8c16466bb5815227c876f45e64f51108"
+    },
+    {
+      "sample_index": 262,
+      "target_term": "шахрай",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f57731495f2e67f39370f1827b49385ffd79b578e53e8faf491df6f13835f876"
+    },
+    {
+      "sample_index": 263,
+      "target_term": "по обіді",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "089fa3c82c9c3da27644840c5216840d63cf1c6e097cca7a6769d5db1628c248"
+    },
+    {
+      "sample_index": 264,
+      "target_term": "з огляду на обставини",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "15f8628fb264fe1ba3cbb1d1c0734d2c0304d8717b785ca27c59a7283379e350"
+    },
+    {
+      "sample_index": 265,
+      "target_term": "давати змогу",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1c844555af4191ace17a6b8d1ad95abfee0fcbea0665962d620ad71a959d7400"
+    },
+    {
+      "sample_index": 266,
+      "target_term": "почуватися добре",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "fb82881a605b678eaf14f572a283586650b386606f2b9128c36700f947ed68e8"
+    },
+    {
+      "sample_index": 267,
+      "target_term": "свого часу",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1ea6fc8d1a374604bc71b2dfdb1ac1baf07f257bbf9d3c3bc23ca6ac79760fa4"
+    },
+    {
+      "sample_index": 268,
+      "target_term": "наводити приклад",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "3deac2f7046459be1ad82ae66562e5bd980adda6d607306bac65cfbe115160c7"
+    },
+    {
+      "sample_index": 269,
+      "target_term": "накласти стягнення",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "20b3a0ca69e89faf9314d32756f136f550626621aaadc6fa6b2f1dad84af3295"
+    },
+    {
+      "sample_index": 270,
+      "target_term": "знепритомніти",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "828d6aac7a26deb67eab15a1dfd835b1d5c868c432adc4fc70194c40e01b6dcd"
+    },
+    {
+      "sample_index": 271,
+      "target_term": "брати початок",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "a60267e9c7c19c1dc48d00608966ed0729fb6399604315c442b27dff7e4d030f"
+    },
+    {
+      "sample_index": 272,
+      "target_term": "бути правим",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "fca18892f491782fddfd8611467b893d39fd65d556040d9420c75b4a20ba243b"
+    },
+    {
+      "sample_index": 273,
+      "target_term": "впадати у вічі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "8a0cc413e3524b93ee6498ab788d6827392edbebaa1a17ff9cd3f3309097e751"
+    },
+    {
+      "sample_index": 274,
+      "target_term": "вести переговори",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "2b746a1c80e899a73ad0c99dbd9356225e61ec1ac0d2a6609a8bf52cf6bd465d"
+    },
+    {
+      "sample_index": 275,
+      "target_term": "навмисне",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "f5d17e89fb429f46b679c5e7c8d3c584b200d31ef1d5876b305c129713ca782d"
+    },
+    {
+      "sample_index": 276,
+      "target_term": "зазнати поразки",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "9e9decef15e6abc5146c7c585a8ea1a5a842b919c3097a94f8da3f2e501f2c4e"
+    },
+    {
+      "sample_index": 277,
+      "target_term": "плин часу",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "e8341f14df3801ad8ccf7292e90977c8b889d1529c0a93cef0f1a6cf04f3e3da"
+    },
+    {
+      "sample_index": 278,
+      "target_term": "жаба",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "106ff6fb43ad3ecb245d09aef97229ab82edc930ea91c1fc1c7170302bf042ce"
+    },
+    {
+      "sample_index": 279,
+      "target_term": "віддати належне",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "880c94fc672b2164688ba368cb735b7684d053b6cbad298233ed76b018558870"
+    },
+    {
+      "sample_index": 280,
+      "target_term": "передплата",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "3930dbba55c692043987451e77aa8500b63a38ce0f6bd44ba1a13b2a4cb3c144"
+    },
+    {
+      "sample_index": 281,
+      "target_term": "на свіжому повітрі",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "ff9caa64eaf457823596af9efbdc8e35cafd2fc708b15015b73db1c6dc937463"
+    },
+    {
+      "sample_index": 282,
+      "target_term": "цибуля",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "ec81ec574a26c0c0b7b535f513a5c721321c629814621e9a3e70ba474d3b50a2"
+    },
+    {
+      "sample_index": 283,
+      "target_term": "телефоном",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "1c04fbffee284a1cc1095e897e63ac45b39da8ca06a9fada794adc2eeba4a8ae"
+    },
+    {
+      "sample_index": 284,
+      "target_term": "скласти іспит",
+      "category": "calque_syntactic",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "89345f50fe959d1fa1c305ea3d4a13b48b9147f043d3164b21fe8c64f223b143"
+    },
+    {
+      "sample_index": 285,
+      "target_term": "загал",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "03cfa75e9477afaec8af697816bac1eaed48446f279bb42665a164f92fa20aba"
+    },
+    {
+      "sample_index": 286,
+      "target_term": "равлик",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "7d5d7d48df2405d8b575a6e2af3c3d00e4ff9a315729c237f1514dc48172e36a"
+    },
+    {
+      "sample_index": 287,
+      "target_term": "ковдра",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c0efd8a82508efa15b93c8c37794c70a399927bc53c9ef69d64ece45d4904d7a"
+    },
+    {
+      "sample_index": 288,
+      "target_term": "кошик",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c7b364c4b6d059296f5843b7d6d9030cd99d199b86b393c6a1adbe3a3d7a46e7"
+    },
+    {
+      "sample_index": 289,
+      "target_term": "горілиць",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "cf972438d7876b56251a6514fdae5b86c52f8a6f4725202d0000d380f396a404"
+    },
+    {
+      "sample_index": 290,
+      "target_term": "парасолька",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "c4189dc4f29810cabeac0842ae632676d2633f11ec849a737ff3ae364c0eac80"
+    },
+    {
+      "sample_index": 291,
+      "target_term": "хіба що",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "ec15fb9834ddec123c28587f92d4b652647692c16f3fe30ed4460831e673a5d1"
+    },
+    {
+      "sample_index": 292,
+      "target_term": "суниці",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "65a911f64989ec818d53e928ec0a42c18c30b2f1c7afbfc395720ba040d694a4"
+    },
+    {
+      "sample_index": 293,
+      "target_term": "телефоном",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "05348cd60517d1b984badae9a575535b066a96e478da8dc44bf54008bb793f72"
+    },
+    {
+      "sample_index": 294,
+      "target_term": "на жаль",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "d5a644d3ed2bdaedf570eed346b0d2b0e723b53c4fac90ad8b5ceff3b3835288"
+    },
+    {
+      "sample_index": 295,
+      "target_term": "горобець",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "bc30873733c74215081f9ee74261e9890417314f80b377fbbf1fbf86f15b7cfa"
+    },
+    {
+      "sample_index": 296,
+      "target_term": "приділяти увагу",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "b5d62f701f6f7b7f5933a661244d38295665eecfd2662eedff56ac3309175e7c"
+    },
+    {
+      "sample_index": 297,
+      "target_term": "взяти до уваги",
+      "category": "protective_authentic",
+      "is_erroneous": false,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "b3ba9701690a5e27142c8c9731e06afd9cdccf85b6ded430b333f41c49381664"
+    },
+    {
+      "sample_index": 298,
+      "target_term": "лелека",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "5bda8a9dc087bd1c0b3558144285f5f667a3b5422ead8e4eb9ee2b94b9892acb"
+    },
+    {
+      "sample_index": 299,
+      "target_term": "напам'ять",
+      "category": "calque_prepositional",
+      "is_erroneous": true,
+      "split": "eval",
+      "status": "PASS",
+      "content_hash": "f894bee91cda95a51df79398c1340024bf2985c11751e62561059bd0a93fa5f2"
+    },
+    {
+      "sample_index": 300,
+      "target_term": "листування",
+      "category": "calque_lexical",
+      "is_erroneous": true,
+      "split": "train",
+      "status": "PASS",
+      "content_hash": "03a9c0ebab05da8113f596163b5e0f1dd6ed167432ec4a4e5a8bbb317a778ba9"
+    }
+  ]
+}

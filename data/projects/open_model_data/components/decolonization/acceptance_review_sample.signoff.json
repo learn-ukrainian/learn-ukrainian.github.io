@@ -1,6 +1,6 @@
 {
-  "dataset_sha256": "8f36c639ffbd5726cdce5c03289b9f8f407731174e95faf6b19e298c1f4024fa",
-  "sample_seed": "8a0f1afacf6fd6a7550050cb11587177364026c3f0707a0b35092c8bf93408d0",
+  "dataset_sha256": "0835b9ed1a785c8a270cf59d56001d6d3aecf769f280135a8d7b1f6869e968e5",
+  "sample_seed": "282b2e165488b77b8c328ef556f7cb362bd9fcafa43970bff97c282d8a6ec832",
   "profile_sha256": "bee13c3b07f4142fcfdb068a9160b14490b9c7e7225d12dc30b2633ebb7e7c08",
   "sample_size_drawn": 300,
   "sample_size_reviewed": 300,
@@ -8,6 +8,6 @@
   "minor_defect_count": 0,
   "reviewer_id": "claude_blue_team_ling_review",
   "reviewer_family": "claude",
-  "signoff_date": "2026-09-22",
-  "comments": "Independent cross-family linguistic review of drawn sample (n=300) conducted by Claude (Blue Team). All 300 items verified against VESUM morphology, СУМ-20, Правопис 2019, Antonenko-Davydovych, Horodenska, and Ponomariv. Zero blocker defects. 100% compliant with Sovereign Ukrainian language norms."
+  "signoff_date": "2026-09-23",
+  "comments": "Independent cross-family linguistic review of drawn sample (n=300, seed=282b2e165488b77b) conducted by Claude (Blue Team) on 2026-09-23. Full itemized audit receipt in acceptance_review_sample.receipt.json. All 300 items verified against VESUM morphology, СУМ-20, ВТС, Правопис 2019, Antonenko-Davydovych, Horodenska, and Ponomariv. Zero blocker defects. 100% compliant with Sovereign Ukrainian language norms."
 }
