@@ -372,7 +372,7 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["codex"]["escalate_model_id"] == "gpt-6-astra"
     assert seats["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["effort"] == "high"
-    assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
+    assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
     # Operator 2026-09-22: Opus 5.5 drives; Fable 5.1 stays the advisor seat.
     assert seats["claude"]["model_id"] == "claude-opus-5-5"
     assert seats["claude"]["effort"] == "high"
@@ -387,12 +387,12 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     assert seats["cursor"]["unknown_auto_union_families"] == ["xai", "moonshot"]
 
 
-def test_orchestrator_escalate_pins_astra_high_and_pro():
-    """Each seat has default + escalate like AGY Flash→Pro (user 2026-07-22)."""
+def test_orchestrator_escalate_pins_astra_high_and_agy_flash():
+    """Each seat has default + escalate like AGY Flash, same-SKU escalation, operator 2026-09-22."""
     seats = load_model_catalog()["orchestrator_seats"]
     assert seats["claude"]["escalate_model_id"] == "gpt-6-astra"
     assert seats["claude"]["escalate_effort"] == "high"
-    assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
+    assert seats["agy"]["escalate_model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["escalate_effort"] == "high"
     # Codex reviewer escalation uses the same Astra high advisor pin.
     fc = load_model_catalog()["formal_cf_defaults"]
