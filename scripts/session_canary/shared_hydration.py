@@ -24,6 +24,10 @@ from urllib.parse import urlparse
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from agents_extensions.shared.session_streams.hooks import lease_from_environment
+from agents_extensions.shared.session_streams.model import parse_timestamp, validate_stream_id
+from scripts.session_supervisor.remote import RemoteEpicClient, monitor_url
+
 ROOT = Path(__file__).resolve().parents[2]
 HYDRATION_DEADLINE_SECONDS = 0.100
 _MAX_STREAM_RESPONSE_BYTES = 262_144
@@ -257,8 +261,6 @@ def _ok(value: Any) -> dict[str, Any]:
 
 def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
     """Read one Monitor snapshot with a total deadline and a bounded body."""
-    from scripts.session_supervisor.remote import monitor_url
-
     target = urlparse(monitor_url())
 
     def remaining() -> float:
@@ -289,10 +291,16 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
             socket.settimeout(seconds)
             chunk = response.read(min(_STREAM_READ_CHUNK_BYTES, _MAX_STREAM_RESPONSE_BYTES + 1 - len(body)))
             if not chunk:
+                if response.length not in (None, 0):
+                    raise LookupError("Monitor stream response incomplete")
                 break
             body.extend(chunk)
             if len(body) > _MAX_STREAM_RESPONSE_BYTES:
                 raise LookupError("Monitor stream response too large")
+            if response.isclosed():
+                if response.length not in (None, 0):
+                    raise LookupError("Monitor stream response incomplete")
+                break
         remaining()
         payload = json.loads(body)
         if not isinstance(payload, dict):
@@ -306,10 +314,6 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
 
 def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, Any]:
     """Read the authoritative Monitor stream and reconcile the exact launcher lease."""
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
-    from agents_extensions.shared.session_streams.model import parse_timestamp, validate_stream_id
-    from scripts.session_supervisor.remote import RemoteEpicClient
-
     canonical_stream_id = validate_stream_id(stream_id)
     lease = lease_from_environment()
     if lease.stream_id != canonical_stream_id:
@@ -331,7 +335,7 @@ def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, An
 
     try:
         digest = RemoteEpicClient.digest_from_response(response)
-    except (AttributeError, KeyError, TypeError, ValueError) as exc:
+    except (ArithmeticError, AttributeError, KeyError, TypeError, ValueError) as exc:
         raise LookupError("Monitor digest malformed") from exc
     if digest.stream_id != canonical_stream_id:
         raise LookupError("Monitor digest stream mismatch")
@@ -382,8 +386,6 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
     else:
         fields["driver_identity"] = _ok({"lane": lane_name})
     try:
-        from agents_extensions.shared.session_streams.model import validate_stream_id
-
         fields["stream_id"] = _ok(validate_stream_id(stream_id))
     except (ValueError, TypeError):
         fields["stream_id"] = _unavailable("invalid-stream-id")
@@ -402,7 +404,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
             degradations.append("unsafe-stream-evidence")
             for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("unsafe-stream-evidence")
-        except (AttributeError, LookupError, OSError, RuntimeError, ValueError):
+        except (ArithmeticError, AttributeError, LookupError, OSError, RuntimeError, ValueError):
             for field in ("lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("stream-evidence-unavailable")
 

@@ -2,8 +2,12 @@
 
 from __future__ import annotations
 
+import http.server
+import json
 import signal
+import threading
 import time
+from contextlib import suppress
 from copy import deepcopy
 from pathlib import Path
 from types import SimpleNamespace
@@ -173,6 +177,7 @@ def test_remote_next_action_becomes_exact_drive_boundary(monkeypatch: pytest.Mon
         {"stream_id": "epic:5513", "limit": 1, "recent": []},
         {"stream_id": "epic:5512", "limit": 1, "recent": ["x"]},
         {"stream_id": "epic:5512", "limit": 1, "recent": [{}]},
+        {"stream_id": "epic:5512", "limit": float("inf"), "recent": []},
     ],
 )
 def test_malformed_remote_digest_blocks_without_traceback(
@@ -180,6 +185,18 @@ def test_malformed_remote_digest_blocks_without_traceback(
 ) -> None:
     response = _remote_stream(monkeypatch)
     response["digest"] = digest
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+
+    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+
+    assert capsule["state"] == "blocked"
+    assert capsule["execution_allowed"] is False
+    assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
+
+
+def test_remote_expiry_overflow_blocks_without_traceback(monkeypatch: pytest.MonkeyPatch) -> None:
+    response = _remote_stream(monkeypatch)
+    response["lease"]["expires_at"] = "0001-01-01T00:00:00+05:00"
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
 
     capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
@@ -261,7 +278,13 @@ def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch:
 
         def getresponse(self) -> object:
             pieces = iter((b'{"stream_id":"epic:5512"}', b""))
-            return SimpleNamespace(status=200, fp=SimpleNamespace(raw=SimpleNamespace(_sock=self.sock)), read=lambda size: next(pieces))
+            return SimpleNamespace(
+                status=200,
+                fp=SimpleNamespace(raw=SimpleNamespace(_sock=self.sock)),
+                read=lambda size: next(pieces),
+                isclosed=lambda: False,
+                length=None,
+            )
 
         def close(self) -> None:
             calls["closed"] = True
@@ -299,11 +322,16 @@ def test_remote_transport_rejects_bad_responses_and_closes(
         def __init__(self) -> None:
             self.status = status
             self.offset = 0
+            self.length = len(body)
 
         def read(self, size: int) -> bytes:
             chunk = body[self.offset : self.offset + size]
             self.offset += len(chunk)
+            self.length -= len(chunk)
             return chunk
+
+        def isclosed(self) -> bool:
+            return self.length == 0
 
     class Connection:
         sock = None  # HTTPConnection detaches its socket on Connection: close.
@@ -325,6 +353,80 @@ def test_remote_transport_rejects_bad_responses_and_closes(
     with pytest.raises(LookupError):
         hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
     assert calls["closed"] is True
+
+
+@pytest.mark.parametrize("case", ["valid", "oversize", "truncated"])
+def test_remote_transport_real_loopback_connection_close(
+    monkeypatch: pytest.MonkeyPatch, case: str
+) -> None:
+    payload = (
+        b"x" * (hydration._MAX_STREAM_RESPONSE_BYTES + 1)
+        if case == "oversize"
+        else json.dumps({"stream_id": "epic:5512"}).encode()
+    )
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self) -> None:
+            assert self.path == "/api/epics/v1/epic:5512?limit=1"
+            self.send_response(200)
+            length = len(payload) + 10 if case == "truncated" else len(payload)
+            self.send_header("Content-Length", str(length))
+            self.send_header("Connection", "close")
+            self.end_headers()
+            with suppress(BrokenPipeError, ConnectionResetError):
+                self.wfile.write(payload)
+
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
+    try:
+        if case != "valid":
+            with pytest.raises(LookupError, match=r"too large|incomplete"):
+                hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
+        else:
+            assert hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1) == {
+                "stream_id": "epic:5512"
+            }
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=1)
+
+
+def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pytest.MonkeyPatch) -> None:
+    received = threading.Event()
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self) -> None:
+            received.set()
+            time.sleep(0.2)
+            try:
+                self.send_response(200)
+                self.end_headers()
+            except BrokenPipeError:
+                pass
+
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
+    try:
+        started = time.monotonic()
+        with pytest.raises(LookupError):
+            hydration._fetch_remote_stream("epic:5512", deadline=started + 0.05)
+        assert received.is_set()
+        assert time.monotonic() - started < 0.15
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=1)
 
 
 def test_terminating_process_group_reaps_child_without_zombie(monkeypatch: pytest.MonkeyPatch) -> None:

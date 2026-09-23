@@ -225,6 +225,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
 
 def _run_bound_codex_compact(tmp_path: Path) -> str:
     """Exercise the real bounded runner and canary handoff resolver."""
+    (tmp_path / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
     compact_hook.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
@@ -257,13 +258,27 @@ def _run_bound_codex_compact(tmp_path: Path) -> str:
         text=True,
         capture_output=True,
         check=False,
-        cwd=REPO_ROOT,
+        cwd=tmp_path.parent,
         env=environment,
         timeout=10,
     )
     assert completed.returncode == 0, completed.stderr
     output = json.loads(completed.stdout)["hookSpecificOutput"]
     assert output["hookEventName"] == "SessionStart"
+    legacy = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"hook_event_name": "PostCompact", "model": "claude-sonnet-5"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        cwd=tmp_path.parent,
+        env={key: value for key, value in environment.items() if key != "CODEX_COMPACT_SESSION_START"},
+        timeout=10,
+    )
+    assert legacy.returncode == 0, legacy.stderr
+    legacy_output = json.loads(legacy.stdout)
+    assert "hookSpecificOutput" not in legacy_output
+    assert legacy_output["additionalContext"] == output["additionalContext"]
     return output["additionalContext"]
 
 
