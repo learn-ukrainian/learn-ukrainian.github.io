@@ -187,8 +187,8 @@ def test_held_out_test_set_firewall(grammar_data):
     test_sources = set(manifest_data["test_source_sentences"])
     test_targets = set(manifest_data["test_target_sentences"])
 
-    assert len(test_doc_ids) == 168
-    assert len(test_sources) == 2634
+    assert len(test_doc_ids) == 166
+    assert len(test_sources) == 2636
     assert len(test_targets) == 5240
 
     for r in grammar_data["all"]:

@@ -2,8 +2,8 @@
   "manifest_version": "1.0.0",
   "description": "Committed held-out test split firewall manifest for UA-GEC (gec-fluency/test and gec-only/test)",
   "stats": {
-    "test_docs_count": 168,
-    "test_source_sentences_count": 2634,
+    "test_docs_count": 166,
+    "test_source_sentences_count": 2636,
     "test_target_sentences_count": 5240
   },
   "test_doc_ids": [
@@ -172,9 +172,7 @@
     "1600",
     "1647",
     "1713",
-    "1799",
-    "Логічно ?",
-    "Логічно ?)"
+    "1799"
   ],
   "test_source_sentences": [
     "! будь-яка стороння людина, про якого батьки / вчитель не сказали, що він друг",
@@ -252,6 +250,8 @@
     "\" Як, - запитав я, - завадив вам?\"",
     "\" Який сенс починати грати в шахи, якщо я раніше не займався ними \", \" навіщо записуватися на бокс, якщо я там буду найслабшим невдахою? \".",
     "\" Якщо хтось впорався, то впораюсь і я \".",
+    "# Логічно?",
+    "# Логічно?)",
     "## База",
     "## Псі - сила",
     "(І. Нечуй-Левицький )",

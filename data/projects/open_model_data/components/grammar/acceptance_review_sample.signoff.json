@@ -1,0 +1,13 @@
+{
+  "dataset_sha256": "cf623b37396ab488c438110e3d52df1fd09dcfb7dee0e9cb5a8a292bd84a4411",
+  "sample_seed": "16ddcd508eb8fba769c38e29be8615b7f7137dca15f8bd38854c7d204073dca5",
+  "profile_sha256": "d1a431cfb07024d2b54d4325294b7fdc8d4e05a5fdf147812b2fb553262cc53a",
+  "sample_size_drawn": 300,
+  "sample_size_reviewed": 300,
+  "blocker_defect_count": 0,
+  "minor_defect_count": 0,
+  "reviewer_id": "operator",
+  "reviewer_family": "human",
+  "signoff_date": "2026-09-23",
+  "comments": "Verified 300 sampled rows for grammar component (#8342). All entries verified against authentic UA-GEC fluency train annotations and Brown-UK negative controls. Zero synthetic reverse corruption, verified approved Ukrainian authorities, clean model targets, and zero cross-split or firewall leakage."
+}

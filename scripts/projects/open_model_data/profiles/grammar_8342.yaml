@@ -10,3 +10,7 @@ thresholds:
   max_correction_share: 0.80
   min_examples_per_category: 50
   max_single_category_share: 0.40
+  max_query_top1_share: 0.05
+  max_query_top5_share: 0.20
+  min_query_entropy: 0.80
+  min_query_unique_skeletons: 50

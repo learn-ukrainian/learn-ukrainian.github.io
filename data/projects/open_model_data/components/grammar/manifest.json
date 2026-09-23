@@ -4,21 +4,20 @@
   "task_type": "correction",
   "has_evaluation_split": true,
   "splits": {
-    "grammar_train_shard_01_of_15.jsonl": "train",
-    "grammar_train_shard_02_of_15.jsonl": "train",
-    "grammar_train_shard_03_of_15.jsonl": "train",
-    "grammar_train_shard_04_of_15.jsonl": "train",
-    "grammar_train_shard_05_of_15.jsonl": "train",
-    "grammar_train_shard_06_of_15.jsonl": "train",
-    "grammar_train_shard_07_of_15.jsonl": "train",
-    "grammar_train_shard_08_of_15.jsonl": "train",
-    "grammar_train_shard_09_of_15.jsonl": "train",
-    "grammar_train_shard_10_of_15.jsonl": "train",
-    "grammar_train_shard_11_of_15.jsonl": "train",
-    "grammar_train_shard_12_of_15.jsonl": "train",
-    "grammar_train_shard_13_of_15.jsonl": "train",
-    "grammar_train_shard_14_of_15.jsonl": "train",
-    "grammar_train_shard_15_of_15.jsonl": "train",
+    "grammar_train_shard_01_of_14.jsonl": "train",
+    "grammar_train_shard_02_of_14.jsonl": "train",
+    "grammar_train_shard_03_of_14.jsonl": "train",
+    "grammar_train_shard_04_of_14.jsonl": "train",
+    "grammar_train_shard_05_of_14.jsonl": "train",
+    "grammar_train_shard_06_of_14.jsonl": "train",
+    "grammar_train_shard_07_of_14.jsonl": "train",
+    "grammar_train_shard_08_of_14.jsonl": "train",
+    "grammar_train_shard_09_of_14.jsonl": "train",
+    "grammar_train_shard_10_of_14.jsonl": "train",
+    "grammar_train_shard_11_of_14.jsonl": "train",
+    "grammar_train_shard_12_of_14.jsonl": "train",
+    "grammar_train_shard_13_of_14.jsonl": "train",
+    "grammar_train_shard_14_of_14.jsonl": "train",
     "grammar_eval_shard_01_of_02.jsonl": "eval",
     "grammar_eval_shard_02_of_02.jsonl": "eval"
   },
@@ -38,27 +37,27 @@
     }
   },
   "statistics": {
-    "total_records": 6986,
-    "train_records": 6389,
+    "total_records": 6888,
+    "train_records": 6291,
     "eval_records": 597,
-    "substantive_corrections": 5240,
-    "clean_controls": 1746,
-    "clean_control_share": 0.2499,
-    "substantive_correction_share": 0.7501,
+    "substantive_corrections": 5166,
+    "clean_controls": 1722,
+    "clean_control_share": 0.25,
+    "substantive_correction_share": 0.75,
     "category_counts": {
-      "syntax_structure": 1013,
-      "calque_lexical_grammatical": 1694,
-      "protective_authentic_control": 1746,
-      "case_government": 1626,
-      "agreement_concord": 508,
-      "verb_morphology": 399
+      "syntax_structure": 1005,
+      "calque_lexical_grammatical": 1665,
+      "protective_authentic_control": 1722,
+      "case_government": 1598,
+      "agreement_concord": 501,
+      "verb_morphology": 397
     },
     "source_corpus_counts": {
-      "ua_gec_2.0": 6586,
+      "ua_gec_2.0": 6488,
       "brown_uk": 400
     },
     "license_counts": {
-      "CC BY 4.0": 6586,
+      "CC BY 4.0": 6488,
       "CC BY-NC-SA 4.0": 400
     }
   }

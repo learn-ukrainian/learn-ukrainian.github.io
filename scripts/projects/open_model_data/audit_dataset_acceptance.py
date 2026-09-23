@@ -575,10 +575,13 @@ def audit_check_2_form_letters(records: list[DatasetRecord], thresholds: dict[st
     failures = []
 
     # Query limits
+    max_q_top1 = thresholds.get("max_query_top1_share")
     max_q_top5 = thresholds.get("max_query_top5_share", 0.80)
     min_q_k = thresholds.get("min_query_unique_skeletons", 20)
     min_q_entropy = thresholds.get("min_query_entropy", 0.60)
     if total >= 20:
+        if max_q_top1 is not None and total >= 50 and q_stats["top1"] > max_q_top1:
+            failures.append(f"Query top 1 pattern covers {q_stats['top1']:.1%}, exceeding limit {max_q_top1:.1%}")
         if total >= 50 and q_stats["top5"] > max_q_top5:
             failures.append(f"Query top 5 patterns cover {q_stats['top5']:.1%}, exceeding limit {max_q_top5:.1%}")
         effective_min_q_k = min(min_q_k, max(3, total // 5))

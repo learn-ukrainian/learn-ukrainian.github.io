@@ -172,7 +172,8 @@ def parse_m2_sentences(m2_path: Path) -> list[dict[str, Any]]:
                     cur_sent = None
                     cur_edits = {}
                 continue
-            if line.startswith("S # "):
+            m_doc = re.match(r"^S # (\d{4})$", line)
+            if m_doc:
                 if cur_sent is not None:
                     records.append(
                         {
@@ -184,7 +185,7 @@ def parse_m2_sentences(m2_path: Path) -> list[dict[str, Any]]:
                     )
                     cur_sent = None
                     cur_edits = {}
-                doc_id = line[4:].strip()
+                doc_id = m_doc.group(1)
                 sent_idx = 0
             elif line.startswith("S "):
                 if cur_sent is not None:
@@ -271,58 +272,51 @@ def build_grammar_dataset(
     )
 
     # 5. Extract substantive corrections and pristine zero-error controls
-    seen_corrections: set[tuple[str, int, str, str]] = set()
+    seen_corrections: set[tuple[str, str]] = set()
     seen_control_texts: set[str] = set()
 
-    train_corrections = []
+    eval_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "eval"]
+    train_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "train"]
+
     eval_corrections = []
-    train_clean_candidates = []
     eval_clean_candidates = []
     parallel_target_retentions = 0
 
-    for item in raw_sentences:
+    # 5a. Process eval documents first
+    for item in eval_items_raw:
         d = item["doc_id"]
-        if d in test_doc_ids or d not in doc_splits:
-            continue
-        split = doc_splits[d]
         orig_tokens = item["sent_tokens"]
         orig_text = detokenize(" ".join(orig_tokens))
 
         if not orig_text or orig_text in test_sources or orig_text in test_targets:
             continue
 
-        # Check if sentence has zero errors across all annotators
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
             if orig_text not in seen_control_texts:
                 seen_control_texts.add(orig_text)
-                clean_item = {
-                    "doc_id": d,
-                    "doc_name": f"{d}.txt",
-                    "sent_idx": item["sent_idx"],
-                    "original_text": orig_text,
-                    "source_type": "ua_gec_gold_clean",
-                    "source_corpus": "ua_gec_2.0",
-                    "license": "CC BY 4.0",
-                }
-                if split == "eval":
-                    eval_clean_candidates.append(clean_item)
-                else:
-                    train_clean_candidates.append(clean_item)
+                eval_clean_candidates.append(
+                    {
+                        "doc_id": d,
+                        "doc_name": f"{d}.txt",
+                        "sent_idx": item["sent_idx"],
+                        "original_text": orig_text,
+                        "source_type": "ua_gec_gold_clean",
+                        "source_corpus": "ua_gec_2.0",
+                        "license": "CC BY 4.0",
+                    }
+                )
             continue
 
-        # Process in-scope substantive corrections
         distinct_targets_for_sentence: set[str] = set()
         for ann_id, edit_list in sorted(item["edits_by_ann"].items()):
             in_scope = [e for e in edit_list if e[2] in IN_SCOPE_TAGS]
             if not in_scope:
                 continue
 
-            # Apply ALL non-noop edits from this annotator so all concurrent errors (e.g. spelling) are resolved
             all_non_noop = [e for e in edit_list if e[2] != "noop"]
             all_sorted = sorted(all_non_noop, key=lambda x: (x[0], x[1]), reverse=True)
 
-            # Check overlap
             valid = True
             for i in range(len(all_sorted) - 1):
                 if all_sorted[i][0] < all_sorted[i + 1][1]:
@@ -342,10 +336,10 @@ def build_grammar_dataset(
                 and corr_text not in test_sources
                 and corr_text not in test_targets
             ):
-                tuple_key = (d, ann_id, orig_text, corr_text)
-                if tuple_key in seen_corrections:
+                pair_key = (orig_text, corr_text)
+                if pair_key in seen_corrections:
                     continue
-                seen_corrections.add(tuple_key)
+                seen_corrections.add(pair_key)
                 if len(distinct_targets_for_sentence) > 0:
                     parallel_target_retentions += 1
                 distinct_targets_for_sentence.add(corr_text)
@@ -369,26 +363,138 @@ def build_grammar_dataset(
                 repl_span = primary_edit[3]
                 all_tags = [e[2] for e in in_scope]
 
-                corr_item = {
-                    "doc_id": d,
-                    "doc_name": f"{d}.txt",
-                    "sent_idx": item["sent_idx"],
-                    "ann_id": ann_id,
-                    "original_text": orig_text,
-                    "corrected_text": corr_text,
-                    "primary_tag": primary_tag,
-                    "all_tags": all_tags,
-                    "err_span": err_span,
-                    "repl_span": repl_span,
-                    "source_type": "ua_gec_human_annotated",
-                    "source_corpus": "ua_gec_2.0",
-                    "license": "CC BY 4.0",
-                }
+                eval_corrections.append(
+                    {
+                        "doc_id": d,
+                        "doc_name": f"{d}.txt",
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "original_text": orig_text,
+                        "corrected_text": corr_text,
+                        "primary_tag": primary_tag,
+                        "all_tags": all_tags,
+                        "err_span": err_span,
+                        "repl_span": repl_span,
+                        "source_type": "ua_gec_human_annotated",
+                        "source_corpus": "ua_gec_2.0",
+                        "license": "CC BY 4.0",
+                    }
+                )
 
-                if split == "eval":
-                    eval_corrections.append(corr_item)
-                else:
-                    train_corrections.append(corr_item)
+    # Eval split sentences: strictly forbidden in train to guarantee zero leakage
+    eval_forbidden_sentences = (
+        {c["original_text"] for c in eval_corrections}
+        | {c["corrected_text"] for c in eval_corrections}
+        | {c["original_text"] for c in eval_clean_candidates}
+    )
+
+    # 5b. Process train documents
+    train_corrections = []
+    train_clean_candidates = []
+
+    for item in train_items_raw:
+        d = item["doc_id"]
+        orig_tokens = item["sent_tokens"]
+        orig_text = detokenize(" ".join(orig_tokens))
+
+        if (
+            not orig_text
+            or orig_text in test_sources
+            or orig_text in test_targets
+            or orig_text in eval_forbidden_sentences
+        ):
+            continue
+
+        all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
+        if not all_edits:
+            if orig_text not in seen_control_texts:
+                seen_control_texts.add(orig_text)
+                train_clean_candidates.append(
+                    {
+                        "doc_id": d,
+                        "doc_name": f"{d}.txt",
+                        "sent_idx": item["sent_idx"],
+                        "original_text": orig_text,
+                        "source_type": "ua_gec_gold_clean",
+                        "source_corpus": "ua_gec_2.0",
+                        "license": "CC BY 4.0",
+                    }
+                )
+            continue
+
+        distinct_targets_for_sentence: set[str] = set()
+        for ann_id, edit_list in sorted(item["edits_by_ann"].items()):
+            in_scope = [e for e in edit_list if e[2] in IN_SCOPE_TAGS]
+            if not in_scope:
+                continue
+
+            all_non_noop = [e for e in edit_list if e[2] != "noop"]
+            all_sorted = sorted(all_non_noop, key=lambda x: (x[0], x[1]), reverse=True)
+
+            valid = True
+            for i in range(len(all_sorted) - 1):
+                if all_sorted[i][0] < all_sorted[i + 1][1]:
+                    valid = False
+                    break
+            if not valid:
+                continue
+
+            toks = list(orig_tokens)
+            for start, end, _tag, corr in all_sorted:
+                repl = corr.split() if corr else []
+                toks[start:end] = repl
+
+            corr_text = detokenize(" ".join(toks))
+            if (
+                orig_text != corr_text
+                and corr_text not in test_sources
+                and corr_text not in test_targets
+                and corr_text not in eval_forbidden_sentences
+            ):
+                pair_key = (orig_text, corr_text)
+                if pair_key in seen_corrections:
+                    continue
+                seen_corrections.add(pair_key)
+                if len(distinct_targets_for_sentence) > 0:
+                    parallel_target_retentions += 1
+                distinct_targets_for_sentence.add(corr_text)
+
+                sorted_in_scope = sorted(
+                    in_scope,
+                    key=lambda e: (
+                        0 if resolve_specific_linguistic_citation(
+                            e[2],
+                            " ".join(orig_tokens[e[0] : e[1]]),
+                            e[3],
+                            orig_text,
+                            corr_text,
+                        ) is not None else 1,
+                        e[0],
+                    ),
+                )
+                primary_edit = sorted_in_scope[0]
+                primary_tag = primary_edit[2]
+                err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]])
+                repl_span = primary_edit[3]
+                all_tags = [e[2] for e in in_scope]
+
+                train_corrections.append(
+                    {
+                        "doc_id": d,
+                        "doc_name": f"{d}.txt",
+                        "sent_idx": item["sent_idx"],
+                        "ann_id": ann_id,
+                        "original_text": orig_text,
+                        "corrected_text": corr_text,
+                        "primary_tag": primary_tag,
+                        "all_tags": all_tags,
+                        "err_span": err_span,
+                        "repl_span": repl_span,
+                        "source_type": "ua_gec_human_annotated",
+                        "source_corpus": "ua_gec_2.0",
+                        "license": "CC BY 4.0",
+                    }
+                )
 
     print(
         f"📊 Extracted substantive corrections: {len(train_corrections)} train, "
@@ -668,6 +774,9 @@ def build_grammar_dataset(
     eval_dataset_records = format_records(eval_corrections, eval_controls, "eval")
 
     # 8. Write JSONL shards (< 1.8 MB each to respect repository 2,000,000 byte gate)
+    for old_shard in output_dir.glob("grammar_*_shard_*.jsonl"):
+        old_shard.unlink()
+
     train_shard_size = 450
     num_train_shards = (len(train_dataset_records) + train_shard_size - 1) // train_shard_size
     manifest_splits = {}
