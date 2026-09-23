@@ -136,7 +136,8 @@ def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cit
     card_path = CARDS_DIR / "a1.md"
     recap_plan = dict(sample_plan_entry)
     recap_plan["lesson"] = {"module": "a1/sounds-intro", "n": 2}
-    built_lessons = [{"n": 1, "title": "Lesson 1", "content": "draft_schema: 1"}]
+    built_lessons = [{"n": 1, "title": "Lesson 1", "content": "# Built lesson MDX",
+                      "sha256": hashlib.sha256(b"# Built lesson MDX").hexdigest()}]
 
     rendered = render_recap_prompt(
         plan_entry=recap_plan,
@@ -152,6 +153,8 @@ def test_render_recap_prompt(sample_plan_entry, sample_learner_state, sample_cit
 
     assert "## 2. Built Lessons of this Module" in rendered
     assert "Built Lesson 1: Lesson 1" in rendered
+    assert "```mdx\n# Built lesson MDX" in rendered
+    assert built_lessons[0]["sha256"] in rendered
     assert SCHEMA_EXEMPLAR_BEGIN in rendered
     assert SCHEMA_EXEMPLAR_END in rendered
 

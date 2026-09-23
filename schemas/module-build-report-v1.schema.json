@@ -1,0 +1,18 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fresh module build report",
+  "type": "object", "additionalProperties": false,
+  "required": ["level", "slug", "complete", "lessons"],
+  "properties": {
+    "level": {"type": "string"}, "slug": {"type": "string"}, "complete": {"type": "boolean"},
+    "lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
+      "required": ["n", "passed", "passed_through", "manifest_sha256", "stopping_check", "reason", "regenerations", "terminal_layer", "layer"],
+      "properties": {"n": {"type": "integer", "minimum": 1}, "passed": {"type": "boolean"},
+        "passed_through": {"type": "integer", "minimum": 0, "maximum": 12},
+        "manifest_sha256": {"anyOf": [{"type": "string", "pattern": "^[0-9a-f]{64}$"}, {"type": "null"}]},
+        "stopping_check": {"type": ["integer", "null"]}, "reason": {"type": ["string", "null"]},
+        "regenerations": {"type": "integer", "minimum": 0},
+        "terminal_layer": {"enum": [null, "plan", "pack", "driver"]},
+        "layer": {"enum": [null, "writer", "plan", "pack", "word_store", "engine", "driver"]}}}}
+  }
+}

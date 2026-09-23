@@ -10,6 +10,7 @@ import sys
 from pathlib import Path
 
 import pytest
+import yaml
 
 from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
@@ -204,7 +205,7 @@ class _FixtureSources:
 
 
 def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:fixture", expected_inputs=None,
-                  inventory_gate=None):
+                  inventory_gate=None, render_check=None, manifest_writer=None):
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     monkeypatch.setattr(assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})())
     monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
@@ -218,6 +219,10 @@ def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:
                             for q in batch["questions"]]}
 
     state = tmp_path / "state"
+    state.mkdir(exist_ok=True)
+    (state / "lesson-1.draft.yaml").write_bytes(lock.yaml_bytes(draft))
+    monkeypatch.setattr(runner, "write_manifest", manifest_writer or
+                        (lambda *a, **kw: ({"recap": False}, "a" * 64)))
     report = runner.run_lesson(
         "a1", "sample-slug", 1, draft=draft, plan=plan, pack=pack, words=words,
         state_dir=state, repo_root=tmp_path, plans_dir=tmp_path, evidence_dir=tmp_path,
@@ -225,6 +230,8 @@ def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:
         allowlist=allowlist, site_dir=tmp_path / "site",
         inventory_gate=inventory_gate or (lambda *a, **kw: GateReport("a1", "sample-slug", 1, ())),
         observed_writer=lambda *a, **kw: None, expected_inputs=expected_inputs,
+        render_check=render_check or (lambda *a, **kw: assemble.CheckResult(
+            check=11, passed=True, artifacts={"verify_shippable": {"shippable": True}})),
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     return report, state, questions_seen
@@ -241,6 +248,34 @@ def test_contract_fixture_same_stress_sense_through_checks_1_to_9(tmp_path, monk
     mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
     assert "сло\u0301во" in mdx
     assert "other sense" in mdx
+
+
+def test_check_11_failure_is_engine_layer_and_ledger_check_11(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words,
+                                     render_check=lambda *a, **kw: assemble.CheckResult(
+                                         check=11, passed=False, reason="render failed", layer="render",
+                                         artifacts={"verify_shippable": {"shippable": False}}))
+    failed = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (failed["check"], failed["layer"], failed["reason"]) == (11, "engine", "render failed")
+    assert failed["details"]["verify_shippable"]["shippable"] is False
+    assert load_ledger(state / "lesson-1.regeneration.yaml", "sample-slug", 1)["attempts"][0]["failed_check"] == 11
+    assert not (state / "lesson-1.manifest.yaml").exists()
+
+
+def test_check_12_failure_has_error_file_and_no_current_manifest(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+
+    def mismatch(*a, **kw):
+        raise ValueError("style card sidecar mismatch: docs/style-cards/a1.sha256")
+
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words,
+                                     manifest_writer=mismatch)
+    assert report["passed"] is False and report["passed_through"] == 12
+    assert yaml.safe_load((state / "lesson-1.gates.yaml").read_text(encoding="utf-8"))["passed"] is True
+    error = yaml.safe_load((state / "lesson-1.manifest-error.yaml").read_text(encoding="utf-8"))
+    assert error["check"] == 12 and error["layer"] == "engine" and "a1.sha256" in error["path"]
+    assert not (state / "lesson-1.manifest.yaml").exists()
 
 
 def test_contract_fixture_marked_form_stops_at_check_7(tmp_path, monkeypatch):

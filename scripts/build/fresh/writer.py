@@ -173,6 +173,8 @@ def dispatch_writer(
             "--research-role",
             "writer",
         ]
+        if model is not None:
+            dispatch_cmd.extend(("--model", model))
         disp_proc = subprocess.run(dispatch_cmd, capture_output=True, text=True, timeout=60, check=False)
         if disp_proc.returncode != 0:
             raise WriterCallError(
