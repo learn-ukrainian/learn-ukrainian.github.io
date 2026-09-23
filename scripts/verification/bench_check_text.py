@@ -40,9 +40,7 @@ from scripts.verification.vesum import verify_words
 
 DEFAULT_CHUNK_ID = "private-teacher-lessons-a_43833086dcbaea83555d"
 REDUCED_SAMPLE_TEXT = (
-    "Це гарний день для вивчення української мови. "
-    "Тут стоїть замок на високій горі. "
-    "Ми раді вітати всіх охочих учнів."
+    "Це гарний день для вивчення української мови. Тут стоїть замок на високій горі. Ми раді вітати всіх охочих учнів."
 )
 
 
@@ -101,9 +99,7 @@ def run_benchmark(
                     text = row[0]
                 else:
                     # Fallback to first chunk with >= 600 tokens
-                    cur = conn.execute(
-                        "SELECT text FROM textbooks WHERE char_count > 4000 ORDER BY id LIMIT 10"
-                    )
+                    cur = conn.execute("SELECT text FROM textbooks WHERE char_count > 4000 ORDER BY id LIMIT 10")
                     for (t_candidate,) in cur.fetchall():
                         toks = [t for t in tokenize(t_candidate) if t.kind not in SKIPPED_KINDS]
                         if len(toks) >= 600:
@@ -216,19 +212,35 @@ def format_table(results: dict[str, Any]) -> str:
     legacy = results["legacy"]
     ct = results["check_text"]
 
-    speedup = (
-        legacy["time_s"] / ct["time_s"] if ct["time_s"] > 0 else float("inf")
-    )
-    char_reduction = (
-        legacy["chars"] / ct["chars"] if ct["chars"] > 0 else float("inf")
-    )
+    speedup = legacy["time_s"] / ct["time_s"] if ct["time_s"] > 0 else float("inf")
+    char_reduction = legacy["chars"] / ct["chars"] if ct["chars"] > 0 else float("inf")
     call_reduction = legacy["calls"] / ct["calls"]
 
     rows = [
-        ("verify_words", steps["verify_words"]["calls"], f"{steps['verify_words']['time_s']:.4f}s", f"{steps['verify_words']['chars']:,}"),
-        ("check_russian_shadow", steps["check_russian_shadow"]["calls"], f"{steps['check_russian_shadow']['time_s']:.4f}s", f"{steps['check_russian_shadow']['chars']:,}"),
-        ("verify_stresses", steps["verify_stresses"]["calls"], f"{steps['verify_stresses']['time_s']:.4f}s", f"{steps['verify_stresses']['chars']:,}"),
-        ("search_ua_gec_errors", steps["search_ua_gec_errors"]["calls"], f"{steps['search_ua_gec_errors']['time_s']:.4f}s", f"{steps['search_ua_gec_errors']['chars']:,}"),
+        (
+            "verify_words",
+            steps["verify_words"]["calls"],
+            f"{steps['verify_words']['time_s']:.4f}s",
+            f"{steps['verify_words']['chars']:,}",
+        ),
+        (
+            "check_russian_shadow",
+            steps["check_russian_shadow"]["calls"],
+            f"{steps['check_russian_shadow']['time_s']:.4f}s",
+            f"{steps['check_russian_shadow']['chars']:,}",
+        ),
+        (
+            "verify_stresses",
+            steps["verify_stresses"]["calls"],
+            f"{steps['verify_stresses']['time_s']:.4f}s",
+            f"{steps['verify_stresses']['chars']:,}",
+        ),
+        (
+            "search_ua_gec_errors",
+            steps["search_ua_gec_errors"]["calls"],
+            f"{steps['search_ua_gec_errors']['time_s']:.4f}s",
+            f"{steps['search_ua_gec_errors']['chars']:,}",
+        ),
         ("---", "---", "---", "---"),
         ("Legacy per-tool total", legacy["calls"], f"{legacy['time_s']:.4f}s", f"{legacy['chars']:,}"),
         ("check_text (single call)", ct["calls"], f"{ct['time_s']:.4f}s", f"{ct['chars']:,}"),
@@ -259,9 +271,7 @@ def format_table(results: dict[str, Any]) -> str:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(
-        description="Benchmark check_text against legacy per-tool MCP handler path."
-    )
+    parser = argparse.ArgumentParser(description="Benchmark check_text against legacy per-tool MCP handler path.")
     parser.add_argument(
         "--chunk-id",
         default=DEFAULT_CHUNK_ID,
