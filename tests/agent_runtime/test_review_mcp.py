@@ -54,19 +54,19 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
     expected_python = primary_root / ".venv" / "bin" / "python"
     expected_server = primary_root / ".mcp" / "servers" / "sources" / "server.py"
 
-    # 1. Config path exists and has 0o644 permissions
+    # 1. Config path exists and has 0o600 permissions
     assert plan.config_path.is_file()
-    assert (plan.config_path.stat().st_mode & 0o777) == 0o644
+    assert (plan.config_path.stat().st_mode & 0o777) == 0o600
 
-    # 2. Ledger exists, is empty (0 bytes), and has 0o644 permissions
+    # 2. Ledger exists, is empty (0 bytes), and has 0o600 permissions
     assert plan.ledger_path.is_file()
     assert plan.ledger_path.stat().st_size == 0
-    assert (plan.ledger_path.stat().st_mode & 0o777) == 0o644
+    assert (plan.ledger_path.stat().st_mode & 0o777) == 0o600
 
-    # 3. Sidecar exists, holds <sha256>\n, and has 0o644 permissions (second sidecar removed #8517)
+    # 3. Sidecar exists, holds <sha256>\n, and has 0o600 permissions (second sidecar removed #8517)
     assert plan.sidecar_path.is_file()
     assert plan.sidecar_path.read_text(encoding="ascii") == f"{empty_sha256}\n"
-    assert (plan.sidecar_path.stat().st_mode & 0o777) == 0o644
+    assert (plan.sidecar_path.stat().st_mode & 0o777) == 0o600
 
     alt_sidecar = plan.ledger_path.parent / f"{attempt_id}.sha256"
     assert not alt_sidecar.exists()
@@ -95,6 +95,22 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
     }
     assert plan.mcp_config_path == plan.config_path
     assert plan.strict_mcp_config is True
+
+
+def test_prepare_review_attempt_files_mode_0o600(manifest_file: Path, tmp_path: Path) -> None:
+    plan = prepare_review_attempt(
+        review_id="rev-mode-001",
+        attempt_id="att-mode-001",
+        manifest_path=manifest_file,
+        harness="claude",
+        receipts_root=tmp_path / "receipts",
+    )
+    assert plan.ledger_path.is_file()
+    assert (plan.ledger_path.stat().st_mode & 0o777) == 0o600
+    assert plan.sidecar_path.is_file()
+    assert (plan.sidecar_path.stat().st_mode & 0o777) == 0o600
+    assert plan.config_path.is_file()
+    assert (plan.config_path.stat().st_mode & 0o777) == 0o600
 
 
 def test_prepare_review_attempt_refuses_agy(manifest_file: Path, tmp_path: Path) -> None:

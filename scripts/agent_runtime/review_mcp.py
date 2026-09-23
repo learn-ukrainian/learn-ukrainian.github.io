@@ -156,22 +156,26 @@ def prepare_review_attempt(
 
     created_paths: list[Path] = []
     try:
-        # Create empty ledger (0 bytes, 0o644) exclusively
-        fd_ledger = os.open(ledger_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        # Create empty ledger (0 bytes, 0o600) exclusively
+        fd_ledger = os.open(ledger_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         os.close(fd_ledger)
         created_paths.append(ledger_path)
 
         # Create sidecar containing empty SHA-256 + newline exclusively
-        fd_sidecar = os.open(sidecar_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        fd_sidecar = os.open(sidecar_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd_sidecar, "wb") as handle:
             handle.write(sidecar_bytes)
         created_paths.append(sidecar_path)
 
         # Create config exclusively
-        fd_config = os.open(config_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        fd_config = os.open(config_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o600)
         with os.fdopen(fd_config, "wb") as handle:
             handle.write(config_bytes)
         created_paths.append(config_path)
+
+        for target in created_paths:
+            if (target.stat().st_mode & 0o777) != 0o600:
+                os.chmod(target, 0o600)
     except FileExistsError as exc:
         for path in reversed(created_paths):
             with contextlib.suppress(OSError):
