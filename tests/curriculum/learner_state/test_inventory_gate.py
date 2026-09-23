@@ -984,7 +984,7 @@ def test_gate_gloss_absent_from_store_fails(tmp_path: Path) -> None:
     ]
     report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
     assert report.ok is False
-    assert any(f.code == codes.TOKEN_UNRESOLVED and f.record == "W-999" for f in report.failures)
+    assert any(f.code == codes.GLOSS_RECORD_MISSING and f.record == "W-999" for f in report.failures)
 
 
 def test_gate_word_store_unreadable_fails(tmp_path: Path) -> None:
@@ -1088,3 +1088,54 @@ def test_gate_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
     report = check_lesson("a1", "mod-01", 2, resolutions_path=res_path, **paths)
     assert report.ok is False
     assert any(f.code == codes.EXPANDED_DOCUMENT_MISMATCH for f in report.failures)
+
+
+def test_gate_stream_missing_inputs_fails_closed(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    tokens = [
+        {
+            "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+            "role": "record_print",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        }
+    ]
+    # Stream dict without 'inputs'
+    stream_no_inputs = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "tokens": tokens,
+        "failures": [],
+    }
+    report = check_lesson("a1", "mod-01", 2, stream_no_inputs, **paths)
+    assert report.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report.failures)
+    assert codes.INPUT_HASH_MISSING not in report.not_checked
+
+    # Stream dict with inputs=None
+    stream_none_inputs = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": None,
+        "tokens": tokens,
+        "failures": [],
+    }
+    report_none = check_lesson("a1", "mod-01", 2, stream_none_inputs, **paths)
+    assert report_none.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_none.failures)
+
+    # Stream object without 'inputs' attribute
+    stream_obj_no_inputs = type(
+        "StreamWithoutInputs",
+        (),
+        {
+            "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+            "tokens": tokens,
+            "failures": [],
+        },
+    )()
+
+    report_obj = check_lesson("a1", "mod-01", 2, stream_obj_no_inputs, **paths)
+    assert report_obj.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_obj.failures)

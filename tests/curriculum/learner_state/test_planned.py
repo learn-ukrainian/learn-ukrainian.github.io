@@ -304,7 +304,8 @@ def test_missing_earlier_plan_waiver_with_allow_missing_prior(tmp_path: Path) ->
         evidence_dir=evidence_dir,
     )
     assert state.waiver is not None
-    assert f"waived: {codes.PRIOR_PLANS_MISSING}" in state.waiver
+    assert f"waived: {codes.WAIVER_PRIOR_PLANS_MISSING}" in state.waiver
+    assert "(missing positions: [1])" in state.waiver
 
 
 def test_strict_refuses_waiver_even_with_allow_missing_prior(tmp_path: Path) -> None:
