@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_023",
+  "case_id": "decol_prot_023",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "разом з тим",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "разом з тим"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники та сполучники», с. 224",
+  "supporting_passage": "Усталена сполучна конструкція «разом з тим», кодифікована в українському науковому та публіцистичному стилях.",
+  "page": 224,
+  "article": "Разом з тим",
+  "section": "Прийменники та сполучники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d9076a8b44ed6e42bf3514c0f0cd5fac9b41cbcf26a3668ef68afb9b016c31f9",
+  "linguistic_rationale": "Засвідчено для decol_prot_023: вживання «разом з тим» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_023.review.json"
+}

@@ -629,14 +629,14 @@ from scripts.orchestration.claudex_supervisor import ClaudexSupervisor
 
 env = {
     "LEARN_UKRAINIAN_PROFILE_ID": "sol_lead",
-    "LEARN_UKRAINIAN_MAIN_MODEL_ID": "gpt-5.6-sol",
+    "LEARN_UKRAINIAN_MAIN_MODEL_ID": "gpt-6-sol",
     "LEARN_UKRAINIAN_TRANSPORT": "claudex",
     "LEARN_UKRAINIAN_TRUSTED": "1",
-    "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-5.6-luna",
+    "CLAUDE_CODE_SUBAGENT_MODEL": "gpt-6-luna",
 }
 supervisor = ClaudexSupervisor(
     "/bin/true",
-    ["--model", "gpt-5.6-sol", "--agent", "infra-orchestrator", "--epic", "harness"],
+    ["--model", "gpt-6-sol", "--agent", "infra-orchestrator", "--epic", "harness"],
     state_root=Path(state_root),
     env=env,
 )
@@ -648,7 +648,7 @@ PYEOF
 sol_hook_json=$(jq -nc \
   --arg session_id "official-sol-session" \
   --arg transcript_path "$sol_transcript" \
-  '{session_id: $session_id, transcript_path: $transcript_path, source: "startup", model: "gpt-5.6-sol", agent_type: "infra-orchestrator"}')
+  '{session_id: $session_id, transcript_path: $transcript_path, source: "startup", model: "gpt-6-sol", agent_type: "infra-orchestrator"}')
 output="$(run_hook "$fixture_root" 0 claude-infra stale-codex-session "$sol_hook_json" sol_lead "$supervisor_run_id" 0)"
 assert_contains "$output" "Profile: sol_lead" "supervised Sol profile"
 assert_contains "$output" "Declared Window: 272000" "supervised Sol window"
@@ -658,7 +658,7 @@ assert_contains "$output" "api/orient?lean=true&session=official-sol-session" "s
 assert_not_contains "$output" "CLAUDEX SUPERVISOR BIND FAILED" "supervised Sol binding"
 supervisor_runtime="$fixture_root/.agent/claudex-supervisors/$supervisor_run_id/runtime.json"
 [ "$(jq -r '.session_id' "$supervisor_runtime")" = "official-sol-session" ] || fail "supervisor did not bind the official session id"
-[ "$(jq -r '.session_model_id' "$supervisor_runtime")" = "gpt-5.6-sol" ] || fail "supervisor did not bind the official model"
+[ "$(jq -r '.session_model_id' "$supervisor_runtime")" = "gpt-6-sol" ] || fail "supervisor did not bind the official model"
 [ "$(jq -r '.handoff_agent' "$supervisor_runtime")" = "claude-infra" ] || fail "supervisor did not bind the handoff lane"
 
 printf 'marker_hit_stdout_bytes=%s\n' "$marker_bytes"

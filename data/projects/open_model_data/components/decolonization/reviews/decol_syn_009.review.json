@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_009",
+  "case_id": "decol_syn_009",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "скасувати",
+  "russian_copy": "відмінити",
+  "ukrainian_proper": [
+    "скасувати"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+  "supporting_passage": "Мене мало турбує правопис іноземних слів і прізвищ, а от написання українських слів із звуком g на початку чи в середині слова раз у раз змушує гостро відчувати брак скасованої літери при нескасованому звуці, який, звісно, скасувати в живій мові не можна, хоч би як того хотілося задля спрощення чи для якоїсь ще мети.",
+  "page": null,
+  "article": "Літера, за якою тужать",
+  "section": "ЩОБ ЯСКРАВО Й ТОЧНО",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8aa6e6ae856a363c6f6ce22976ed2bff74abf884f98af327ff5c186030d01320",
+  "linguistic_rationale": "Засвідчено для decol_syn_009: форма «відмінити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «скасувати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_009.review.json"
+}

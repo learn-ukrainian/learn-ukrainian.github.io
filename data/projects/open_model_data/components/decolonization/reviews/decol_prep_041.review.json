@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_041",
+  "case_id": "decol_prep_041",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "напам'ять",
+  "russian_copy": "по пам'яті",
+  "ukrainian_proper": [
+    "напам'ять",
+    "з пам'яті"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+  "supporting_passage": "Так що легше – завчати напам'ять оці 270 слів, щоб правильно вимовляти під час читання, чи відновити скасовану літеру й читати текст так, як написано?",
+  "page": null,
+  "article": "Літера, за якою тужать",
+  "section": "ЩОБ ЯСКРАВО Й ТОЧНО",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "7fb3db0b5f22272dac8d62e51e7e058ee263ed4c15f5d25050f8b6a9f6fa5b53",
+  "linguistic_rationale": "Засвідчено для decol_prep_041: форма «по пам'яті» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «напам'ять» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_041.review.json"
+}

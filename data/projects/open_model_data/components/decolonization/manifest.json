@@ -1,0 +1,23 @@
+{
+  "dataset_name": "decolonization_v1",
+  "version": "1.0.0",
+  "task_type": "correction",
+  "has_evaluation_split": true,
+  "splits": {
+    "decolonization_train.jsonl": "train",
+    "decolonization_eval.jsonl": "eval"
+  },
+  "description": "Verified Ukrainian decolonization, anti-calque reasoning, and protective authentic Ukrainian corpus (#8340).",
+  "governing_issues": [
+    "#8340",
+    "#6321"
+  ],
+  "statistics": {
+    "total_records": 500,
+    "train_records": 400,
+    "eval_records": 100,
+    "total_phenomena": 250,
+    "substantive_corrections": 350,
+    "protective_controls": 150
+  }
+}

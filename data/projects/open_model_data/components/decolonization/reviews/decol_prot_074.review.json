@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_074",
+  "case_id": "decol_prot_074",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "у той же час",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "у той же час",
+    "водночас"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 20, гасло «Час»",
+  "supporting_passage": "ЧАС, -у, ч. (12) Тим ча́сом <У (на, під) той [са́мий (са́ме, же)] час> (у той же час) – вказує на одночасність якоїсь дії з іншою: А тим часом гайдамаки Ножі освятили (Т. Шевченко); Що то за дівчина [Марта] під той час стала, боже мій, світе мій! (Марко Вовчок); Саме в той час князь Єремія вернувся з муштрів (І. Нечуй-Левицький); В той час я мріяв стати художником (О. Довженко); а гість тим часом, відкоркувавши пляшку, у вільній позі сидів на стільці (О. Гончар); у той же час.",
+  "page": "т. 20",
+  "article": "Час",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6a8cedd65982f758cbe96fbb4f45163dcf56235e11fef375b2ca98cf9a7c2e81",
+  "linguistic_rationale": "Засвідчено для decol_prot_074: вживання «у той же час» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_074.review.json"
+}

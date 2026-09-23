@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_042",
+  "case_id": "decol_lex_042",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ґудзик",
+  "russian_copy": "пуговиця",
+  "ukrainian_proper": [
+    "ґудзик"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 6, с. 15 / СУМ-20 «Ґудзик»",
+  "supporting_passage": "ҐУ́ДЗИК, а, ч. Застібка на одязі. Слово пишеться з початковою літерою ґ: «ґудзик». Російське «пуговица» в українській літературній мові не вживається і є ненормативним суржиком.",
+  "page": 15,
+  "article": "Буква Ґ, ґ",
+  "section": "Букви та звуки",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "41cbc494bba4efc3c7c6dce7488de7fc00e1782831e8ee626a82edf072c10ea8",
+  "linguistic_rationale": "Засвідчено для decol_lex_042: форма «пуговиця» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ґудзик» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_042.review.json"
+}

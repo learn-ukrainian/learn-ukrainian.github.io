@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_047",
+  "case_id": "decol_prep_047",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "до смаку",
+  "russian_copy": "по вкусу",
+  "ukrainian_proper": [
+    "до смаку"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 98",
+  "supporting_passage": "Відповідність уподобанням та естетичним оцінкам передають висловом «до смаку» або «до вподоби»: страва припала до смаку (а не «по вкусу»).",
+  "page": 98,
+  "article": "До смаку, а не по вкусу",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "89c20634d6126b56f2e9c5eb73a2fc5eb59b18910cd5a2d0c023d57be35237ac",
+  "linguistic_rationale": "Засвідчено для decol_prep_047: форма «по вкусу» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «до смаку» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_047.review.json"
+}

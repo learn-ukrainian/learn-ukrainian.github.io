@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_072",
+  "case_id": "decol_prot_072",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "загал",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "загал"
+  ],
+  "authority": "ВТС",
+  "source": "ВТС",
+  "authority_locus": "Великий тлумачний словник сучасної української мови (ВТС), гасло «Загал»",
+  "supporting_passage": "зага́л -у, ч. Велике коло, маса людей, товариство, широка громадськість; усі.",
+  "page": "",
+  "article": "Загал",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8fc5c3f9d4fbf509470cca6e80158b8321e313b2833004499aa57298ea734b4d",
+  "linguistic_rationale": "Засвідчено для decol_prot_072: вживання іменника «загал» є питомим і нормативним (захисний контроль проти гіперпуризму, ВТС).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_072.review.json"
+}

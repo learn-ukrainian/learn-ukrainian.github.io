@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_007",
+  "case_id": "decol_prep_007",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на прохання",
+  "russian_copy": "по проханню",
+  "ukrainian_proper": [
+    "на прохання"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+  "supporting_passage": "На позначення дії на чиюсь вимогу або побажання вживають прийменник «на»: на прохання (а не «по проханню»), на вимогу (а не «по вимозі»).",
+  "page": 74,
+  "article": "На прохання, а не по проханню",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ed31a72ce503341ad27e426fc40a89de8b30a511287ac899d5eadf086250aed0",
+  "linguistic_rationale": "Засвідчено для decol_prep_007: форма «по проханню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на прохання» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_007.review.json"
+}

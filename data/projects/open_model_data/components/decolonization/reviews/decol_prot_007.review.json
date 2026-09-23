@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_007",
+  "case_id": "decol_prot_007",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "завдяки зусиллям",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "завдяки зусиллям"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники», с. 222",
+  "supporting_passage": "Прийменник «завдяки» вказує на сприятливу причину чи обставину і є цілком нормативним в українській мові: завдяки допомозі, завдяки зусиллям.",
+  "page": 222,
+  "article": "Завдяки",
+  "section": "Прийменники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6558f7a72162882afb11204f152d8255e105b01fad7a1471d4b8d2c3f0a68c1f",
+  "linguistic_rationale": "Засвідчено для decol_prot_007: вживання «завдяки зусиллям» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_007.review.json"
+}

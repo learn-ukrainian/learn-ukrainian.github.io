@@ -20,20 +20,23 @@ class DeployError(Exception):
 
 
 EXPECTED = {
-    "model": "gpt-6-astra",
-    "model_reasoning_effort": "medium",
+    "model": "gpt-6-sol",
+    "model_reasoning_effort": "high",
     "agents": {
-        "default_subagent_model": "gpt-6-astra",
-        "default_subagent_reasoning_effort": "low",
+        "default_subagent_model": "gpt-6-luna",
+        "default_subagent_reasoning_effort": "high",
     },
 }
 PROFILE_ROLES = {
-    "luna_explorer_medium": ("gpt-5.6-luna", "medium", "read-only"),
-    "luna_explorer_high": ("gpt-5.6-luna", "high", "read-only"),
-    "astra_worker_low": ("gpt-6-astra", "low", "workspace-write"),
-    "astra_red_team_high": ("gpt-6-astra", "high", "read-only"),
+    "luna_explorer_medium": ("gpt-6-luna", "medium", "read-only"),
+    "luna_explorer_high": ("gpt-6-luna", "high", "read-only"),
+    "luna_coder_high": ("gpt-6-luna", "high", "workspace-write"),
+    "sol_coder_high": ("gpt-6-sol", "high", "workspace-write"),
+    "sol_red_team_high": ("gpt-6-sol", "high", "read-only"),
+    "sol_ukrainian_content_high": ("gpt-6-sol", "high", "workspace-write"),
     "astra_advisor_high": ("gpt-6-astra", "high", "read-only"),
 }
+SUPERSEDED_PROFILES = ("astra_worker_low", "astra_red_team_high")
 ROOT_SETTINGS = {key: value for key, value in EXPECTED.items() if key != "agents"}
 
 
@@ -162,6 +165,21 @@ def atomic_write(path: Path, data: bytes, mode: int = 0o600) -> None:
 def deploy(source: Path, home: Path, *, dry_run: bool = False, check: bool = False) -> int:
     home = safe_path(home)
     assets = source_assets(safe_path(source))
+    superseded = [
+        name
+        for name in SUPERSEDED_PROFILES
+        if safe_path(home / "agents" / f"{name}.toml").exists()
+    ]
+    if superseded:
+        for name in superseded:
+            print(f"agents/{name}.toml: superseded profile remains active")
+        if check:
+            return 1
+        if dry_run:
+            return 0
+        raise DeployError(
+            "move superseded profiles from active agents/ to a private backup before deployment"
+        )
     changes = []
     for relative, data in assets.items():
         target = safe_path(home / relative)

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_025",
+  "case_id": "decol_syn_025",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "заплющити",
+  "russian_copy": "закрити очі",
+  "ukrainian_proper": [
+    "заплющити"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 55 / СУМ-20 «Заплющувати»",
+  "supporting_passage": "Українською мовою очі не закривають, а заплющують (розплющують); двері не закривають, а зачиняють; книжку не закривають, а згортають.",
+  "page": 55,
+  "article": "Заплющувати очі, а не закривати",
+  "section": "Лексико-семантичні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5cd69de93813e27a240eabe486f67165fac94988c4d9c364cd8184daacda3f4b",
+  "linguistic_rationale": "Засвідчено для decol_syn_025: форма «закрити очі» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «заплющити» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_025.review.json"
+}

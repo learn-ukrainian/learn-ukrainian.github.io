@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_036",
+  "case_id": "decol_prep_036",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на захист",
+  "russian_copy": "у захист",
+  "ukrainian_proper": [
+    "на захист"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Захист і оборона»",
+  "supporting_passage": "Коцюбинський); \"Нема соломи, то нема чим і хату захистити від холоду\" (з живих уст); \"Росла в гаю конвалія під дубом високим, захищалась від негоди під віттям широким\" (Леся Українка).",
+  "page": null,
+  "article": "Захист і оборона",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "7935839f9658976ab30d3f6e455f77a6b08a9c5ea9a078c8ddde1cedfe4638cd",
+  "linguistic_rationale": "Засвідчено для decol_prep_036: форма «у захист» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на захист» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_036.review.json"
+}

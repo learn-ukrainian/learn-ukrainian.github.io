@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_013",
+  "case_id": "decol_prot_013",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "з огляду на обставини",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "з огляду на обставини"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Прийменники», с. 222",
+  "supporting_passage": "Усталений нормативний прийменниковий зворот «з огляду на» для позначення мотивації в офіційному і науковому мовленні.",
+  "page": 222,
+  "article": "З огляду на",
+  "section": "Прийменники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "57df8a107a506bdbc1d52f2622ff62a641275670210e5fa360c473743387b57a",
+  "linguistic_rationale": "Засвідчено для decol_prot_013: вживання «з огляду на обставини» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_013.review.json"
+}

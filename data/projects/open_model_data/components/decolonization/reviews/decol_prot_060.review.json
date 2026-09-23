@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_060",
+  "case_id": "decol_prot_060",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "набувати чинності",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "набувати чинності"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "source": "Катерина Городенська «Чи правильне слововживання?»",
+  "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 57",
+  "supporting_passage": "Нормативний юридичний вислів для позначення моменту набуття нормативно-правовим актом обов'язкової юридичної сили в українській правничій практиці.",
+  "page": 57,
+  "article": "Набувати чинності",
+  "section": "Граматичні та лексичні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ea993f24bffd0439948716ebe6657d456aeef28ec144ba47c9973203bdcf79d5",
+  "linguistic_rationale": "Засвідчено для decol_prot_060: вживання «набувати чинності» є питомим і нормативним (захисний контроль проти гіперпуризму, Катерина Городенська «Чи правильне слововживання?»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_060.review.json"
+}

@@ -1,0 +1,32 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_053",
+  "case_id": "decol_lex_053",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "лелека",
+  "russian_copy": "аіст",
+  "ukrainian_proper": [
+    "лелека",
+    "чорногуз",
+    "бусол"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Лелека»",
+  "supporting_passage": "ЛЕЛЕ́КА, и, ч. і ж. Великий перелітний птах із довгими ногами та прямим дзьобом (чорногуз, бусол, бузько). Російське «аист» в українській мові відсутнє; єдиними нормативними народними й літературними назвами є «лелека», «чорногуз», «бусол».",
+  "page": null,
+  "article": "Лелека",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "eb2e96089159aeb5356c696e85a87ec874862fe97ef66b57817ab81512cac651",
+  "linguistic_rationale": "Засвідчено для decol_lex_053: форма «аіст» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «лелека» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_053.review.json"
+}

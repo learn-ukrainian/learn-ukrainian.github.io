@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_026",
+  "case_id": "decol_lex_026",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "стравохід",
+  "russian_copy": "пищевод",
+  "ukrainian_proper": [
+    "стравохід"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 18, гасло «Стравохід»",
+  "supporting_passage": "СТРАВОХІД, -ходу, ч. Частина травного каналу, що з'єднує глотку зі шлунком. (Термін «пищевод» кваліфікується як ненормативний росіянізм).",
+  "page": "т. 18",
+  "article": "Стравохід",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9fb2dd5b1fc849285a79cdaea6146ada01f1dfa52fe073da67ac7507a9033082",
+  "linguistic_rationale": "Засвідчено для decol_lex_026: форма «пищевод» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «стравохід» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_026.review.json"
+}

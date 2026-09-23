@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_015",
+  "case_id": "decol_prot_015",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "брати до серця",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "брати до серця"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати до серця», с. 180",
+  "supporting_passage": "Питомий образний фразеологізм української народної і літературної мови.",
+  "page": 180,
+  "article": "Брати до серця",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "51978526fc795ebf8339ddc6f9c4e32e12dd6cac3813c65c3b9f03590c0e9399",
+  "linguistic_rationale": "Засвідчено для decol_prot_015: вживання «брати до серця» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_015.review.json"
+}

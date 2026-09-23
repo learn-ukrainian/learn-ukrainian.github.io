@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_013",
+  "case_id": "decol_prep_013",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "у справах",
+  "russian_copy": "по ділах",
+  "ukrainian_proper": [
+    "у справах"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 86",
+  "supporting_passage": "Коли йдеться про мету поїздки чи перебування, правильно вживати: поїхати у справах, прибути у приватних справах (а не «по ділах»).",
+  "page": 86,
+  "article": "У справах, а не по ділах",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a1f3e5273680ae1b5d3a9f9e9d48ad40f404c8e1f009a79eb7ae96c092ac0fa0",
+  "linguistic_rationale": "Засвідчено для decol_prep_013: форма «по ділах» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у справах» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_013.review.json"
+}

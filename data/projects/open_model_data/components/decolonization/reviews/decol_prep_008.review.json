@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_008",
+  "case_id": "decol_prep_008",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "з ініціативи",
+  "russian_copy": "по ініціативі",
+  "ukrainian_proper": [
+    "з ініціативи"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 75",
+  "supporting_passage": "Прийменник «з» уживаємо для вираження джерела або причини дії: з ініціативи, з власної ініціативи (а не «по ініціативі»).",
+  "page": 75,
+  "article": "З ініціативи, а не по ініціативі",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "0c61c1375dd5699369edddc6883f98218bfd53763d240cb32dc9b87895ce23ac",
+  "linguistic_rationale": "Засвідчено для decol_prep_008: форма «по ініціативі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з ініціативи» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_008.review.json"
+}

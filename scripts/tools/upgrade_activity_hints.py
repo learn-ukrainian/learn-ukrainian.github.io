@@ -157,7 +157,7 @@ Example output format:
 """
 
 
-def call_agy(prompt: str, model: str = "gemini-3.1-pro-high", timeout: int = 120) -> str | None:
+def call_agy(prompt: str, model: str = "gemini-3.8-flash-high", timeout: int = 120) -> str | None:
     """Call AGY through ai_agent_bridge and return stdout."""
     try:
         result = subprocess.run(
@@ -233,7 +233,7 @@ def upgrade_plan(
     plan_path: Path,
     *,
     dry_run: bool = False,
-    model: str = "gemini-3.1-pro-high",
+    model: str = "gemini-3.8-flash-high",
 ) -> tuple[int, list[str]]:
     """Upgrade vague activity_hints in a plan file.
 
@@ -342,7 +342,7 @@ def main():
     parser.add_argument("slug", nargs="?", help="Module slug (or --all for all plans)")
     parser.add_argument("--all", action="store_true", help="Process all plans with vague hints")
     parser.add_argument("--dry-run", action="store_true", help="Show what would change without modifying")
-    parser.add_argument("--model", default="gemini-3.1-pro-high", help="AGY model to use")
+    parser.add_argument("--model", default="gemini-3.8-flash-high", help="AGY model to use")
     args = parser.parse_args()
 
     logging.basicConfig(level=logging.INFO, format="%(levelname)s: %(message)s")

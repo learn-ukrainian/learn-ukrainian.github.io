@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_016",
+  "case_id": "decol_prep_016",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на дозвіллі",
+  "russian_copy": "на отдиху",
+  "ukrainian_proper": [
+    "на дозвіллі"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 68",
+  "supporting_passage": "Суржиковий зворот «на отдиху» в українській літературній мові замінюють питомими висловами: на дозвіллі, під час відпочинку, на відпочинку.",
+  "page": 68,
+  "article": "На дозвіллі, а не на отдиху",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5f3c95b4331890a9a13b3e827bcd08c8d195f35fdbae59d7bd4d33194557ea3e",
+  "linguistic_rationale": "Засвідчено для decol_prep_016: форма «на отдиху» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на дозвіллі» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_016.review.json"
+}

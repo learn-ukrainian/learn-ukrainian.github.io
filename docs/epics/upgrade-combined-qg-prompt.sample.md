@@ -1,4 +1,4 @@
-Independent Astra review after Gemini self-adjust. Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is better than a fluent guess; this corpus trains an LLM and tests the tools.
+Independent Sol review after Gemini self-adjust. Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is better than a fluent guess; this corpus trains an LLM and tests the tools.
 
 Score ALL five dimensions in ONE JSON object. The lesson artifacts appear ONCE below.
 Do not restate them. Do not emit five separate essays.

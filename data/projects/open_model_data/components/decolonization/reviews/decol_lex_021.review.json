@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_021",
+  "case_id": "decol_lex_021",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "залізничний квиток",
+  "russian_copy": "залізничний білет",
+  "ukrainian_proper": [
+    "залізничний квиток",
+    "проїзний квиток"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 63",
+  "supporting_passage": "Квиток — це документ, що засвідчує право користуватися транспортом або відвідувати видовища; слово білет вживається щодо екзаменаційних, банківських або лотерейних карток.",
+  "page": 63,
+  "article": "Квиток і білет",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e1eebff36b726ef2868c28942f974b466818961898863e21bc9af5d75b4f63ac",
+  "linguistic_rationale": "Засвідчено для decol_lex_021: форма «залізничний білет» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «залізничний квиток» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_021.review.json"
+}

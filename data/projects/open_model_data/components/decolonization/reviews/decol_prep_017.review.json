@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_017",
+  "case_id": "decol_prep_017",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "у справах служби",
+  "russian_copy": "по службі",
+  "ukrainian_proper": [
+    "у справах служби"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 89",
+  "supporting_passage": "Виконання обов'язків на роботі чи службі передають висловами: у справах служби, за службовим обов'язком (а не калькованим «по службі»).",
+  "page": 89,
+  "article": "У справах служби, а не по службі",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "0992b7c4497dc373b1b8cacf89c6f721d344e72784a7b1effa971401b178569c",
+  "linguistic_rationale": "Засвідчено для decol_prep_017: форма «по службі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у справах служби» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_017.review.json"
+}

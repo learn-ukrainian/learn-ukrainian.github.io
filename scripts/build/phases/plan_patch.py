@@ -18,7 +18,6 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from batch_gemini_config import PRO_MODEL
 from build.io_utils import write_text_atomic
 from build.prompt_literals import _format_prompt_literal_block, _strip_prompt_control_tags
 from common.thresholds import STYLE_REVIEW_TARGET
@@ -292,7 +291,7 @@ def _dispatch_gemini_plan_patch(
     prompt: str,
     *,
     task_id: str,
-    model: str = PRO_MODEL,
+    model: str = "gemini-3.8-flash-high",
     output_path: Path | None = None,
 ) -> tuple[bool, str]:
     """Dispatch the plan-patch prompt through ai_agent_bridge/Gemini."""
@@ -597,6 +596,7 @@ def run_plan_patch(
     score_history: list[float],
     contract_violations: list[dict],
     round_window: int | None = None,
+    model: str = "gemini-3.8-flash-high",
 ) -> PlanPatchResult:
     """Run the full plateau -> Gemini patch -> local apply flow."""
     structured_rounds = load_structured_review_rounds(orch_dir)
@@ -636,6 +636,7 @@ def run_plan_patch(
     ok, raw_output = _dispatch_gemini_plan_patch(
         prompt,
         task_id=f"plan-patch-{level}-{slug}",
+        model=model,
         output_path=output_path,
     )
     write_text_atomic(output_path, raw_output or "", encoding="utf-8")

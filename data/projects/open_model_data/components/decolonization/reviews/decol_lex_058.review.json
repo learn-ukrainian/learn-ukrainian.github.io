@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_058",
+  "case_id": "decol_lex_058",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ведмідь",
+  "russian_copy": "медвідь",
+  "ukrainian_proper": [
+    "ведмідь"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 10, с. 17 / СУМ-20 «Ведмідь»",
+  "supporting_passage": "ВЕДМІ́ДЬ, ме́дя, ч. Великий хижий ссавець із густою шерстю та незграбним тілом. В українській літературній мові закріпилася історична метатеза в-д-м: «ведмідь». Форма «медвідь» (за зразком рос. медведь) є діалектною або застарілою.",
+  "page": 17,
+  "article": "Історичні звукові зміни",
+  "section": "Чергування звуків",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b84dbe29c46c54ed0301694943a67375fb9f4952b1fe04396004b006a886c2e2",
+  "linguistic_rationale": "Засвідчено для decol_lex_058: форма «медвідь» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ведмідь» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_058.review.json"
+}

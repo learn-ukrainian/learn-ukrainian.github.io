@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_006",
+  "case_id": "decol_prot_006",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "будь ласка",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "будь ласка"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 49, п. 2, с. 65",
+  "supporting_passage": "Вставні вислови, утворені поєднанням слів, пишуться окремо: будь ласка.",
+  "page": "§ 49, п. 2, с. 65",
+  "article": "Вставні слова й сполучення слів",
+  "section": "Правопис слів разом, з дефісом, окремо",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ba647fb496c756bb3c04537e6acf4b6cf08db38a5d21af0b364dc21b8b4ee052",
+  "linguistic_rationale": "Засвідчено для decol_prot_006: вживання «будь ласка» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_006.review.json"
+}

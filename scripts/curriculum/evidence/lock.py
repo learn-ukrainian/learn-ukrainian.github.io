@@ -27,14 +27,14 @@ def _mkdir(path: Path) -> None:
         path.chmod(0o755)
 
 
-def atomic_write(path: Path, content: bytes) -> None:
+def atomic_write(path: Path, content: bytes, *, mode: int = 0o644) -> None:
     """Replace one file, with the temporary file on the same filesystem."""
     path = Path(path)
     _mkdir(path.parent)
     fd, temporary = tempfile.mkstemp(prefix=f".{path.name}.", dir=path.parent)
     try:
         with os.fdopen(fd, "wb") as stream:
-            os.fchmod(stream.fileno(), 0o644)
+            os.fchmod(stream.fileno(), mode)
             stream.write(content)
             stream.flush()
             os.fsync(stream.fileno())

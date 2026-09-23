@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_036",
+  "case_id": "decol_lex_036",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "підлога",
+  "russian_copy": "пол",
+  "ukrainian_proper": [
+    "підлога"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Підлога»",
+  "supporting_passage": "ПІДЛО́ГА, и, ж. Нижня частина приміщення, покриття, по якому ходять. Російське «пол» в українській мові в цьому значенні не вживається; нормативним словом є «підлога» (настилати підлогу, помити підлогу).",
+  "page": null,
+  "article": "Підлога",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b378372059a008aea4a8513ef91318d4942203200b3829ad595f1780b6889c21",
+  "linguistic_rationale": "Засвідчено для decol_lex_036: форма «пол» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «підлога» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_036.review.json"
+}

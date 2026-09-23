@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_039",
+  "case_id": "decol_syn_039",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "наводити приклад",
+  "russian_copy": "приводити приклад",
+  "ukrainian_proper": [
+    "наводити приклад"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 88",
+  "supporting_passage": "Приводити можна коня чи дитину; факти, докази, цитати та приклади українською мовою наводять: наводити приклад.",
+  "page": 88,
+  "article": "Наводити приклад, а не приводити приклад",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b33d45194b6197f480bdeef4222ef106de2aa3ebdbbba8b2fc119ecf39a22e84",
+  "linguistic_rationale": "Засвідчено для decol_syn_039: форма «приводити приклад» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «наводити приклад» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_039.review.json"
+}

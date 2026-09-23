@@ -3,8 +3,12 @@
 from __future__ import annotations
 
 import os
+import queue
+import time
+from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
+import psycopg
 import pytest
 
 from scripts.fleet_comms.artifacts import ArtifactStore, ArtifactStoreError
@@ -12,6 +16,7 @@ from scripts.fleet_comms.pg_schema import (
     MIGRATIONS,
     PG_BLOB_TABLE,
     PG_MIGRATION_TABLE,
+    PG_SCHEMA_MIGRATION_LOCK_KEY,
     PgSchemaError,
     apply_pg_schema,
     verify_pg_schema,
@@ -41,9 +46,7 @@ def test_apply_pg_schema_records_checksummed_receipts(pg_conn) -> None:
     assert highest == MIGRATIONS[-1].version
     rows = {
         int(row[0]): (str(row[1]), str(row[2]))
-        for row in pg_conn.execute(
-            f"SELECT version, name, checksum FROM {PG_MIGRATION_TABLE}"
-        )
+        for row in pg_conn.execute(f"SELECT version, name, checksum FROM {PG_MIGRATION_TABLE}")
     }
     for migration in MIGRATIONS:
         assert rows[migration.version] == (migration.name, migration.checksum)
@@ -55,6 +58,38 @@ def test_apply_pg_schema_records_checksummed_receipts(pg_conn) -> None:
     assert verify_pg_schema(pg_conn) == highest
     # Idempotent re-apply leaves receipts intact.
     assert apply_pg_schema(pg_conn) == highest
+
+
+def test_apply_pg_schema_waits_for_concurrent_migration(pg_conn) -> None:
+    """A second opener must wait before inspecting or changing the ledger."""
+    dsn = os.environ[_PG_DSN_ENV]
+    backend_ids: queue.Queue[int] = queue.Queue()
+
+    def apply_from_second_connection() -> int:
+        with psycopg.connect(dsn, autocommit=True) as conn:
+            backend_ids.put(conn.info.backend_pid)
+            return apply_pg_schema(conn)
+
+    with ThreadPoolExecutor(max_workers=1) as pool:
+        with pg_conn.transaction():
+            pg_conn.execute("SELECT pg_advisory_xact_lock(%s)", (PG_SCHEMA_MIGRATION_LOCK_KEY,))
+            future = pool.submit(apply_from_second_connection)
+            backend_id = backend_ids.get(timeout=5)
+            deadline = time.monotonic() + 5
+            while time.monotonic() < deadline:
+                row = pg_conn.execute(
+                    "SELECT wait_event_type, wait_event FROM pg_stat_activity WHERE pid = %s",
+                    (backend_id,),
+                ).fetchone()
+                if row == ("Lock", "advisory"):
+                    break
+                if future.done():
+                    future.result()
+                    pytest.fail("migration did not wait for the transaction-scoped lock")
+                time.sleep(0.01)
+            else:
+                pytest.fail("second migration did not reach the advisory lock")
+        assert future.result(timeout=5) == MIGRATIONS[-1].version
 
 
 def test_verify_pg_schema_detects_checksum_drift(pg_conn) -> None:
@@ -145,9 +180,7 @@ def test_open_readonly_pg_maps_missing_schema_not_undefined_table(
         raise AssertionError("readonly pg open must not apply_pg_schema")
 
     def missing_receipts(_conn):
-        raise psycopg.errors.UndefinedTable(
-            "relation fleet_comms_pg_schema_migrations does not exist"
-        )
+        raise psycopg.errors.UndefinedTable("relation fleet_comms_pg_schema_migrations does not exist")
 
     monkeypatch.setattr(artifacts_mod, "apply_pg_schema", forbid_apply)
     monkeypatch.setattr(pg_schema_mod, "_applied_migrations", missing_receipts)

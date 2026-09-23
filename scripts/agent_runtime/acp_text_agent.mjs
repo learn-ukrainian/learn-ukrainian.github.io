@@ -9,10 +9,14 @@
  * repository files. AGY uses plan+sandbox mode without permission bypasses;
  * Hermes uses an isolated config with an explicit empty CLI toolset, no
  * fallbacks, no MCP, no plugins, and no injected project rules.
+ *
+ * After handlers are installed and the stdin read loop is running, the
+ * process writes `acp-text-agent ready` to stderr. Stdout stays NDJSON.
  */
 
 import * as acp from '@agentclientprotocol/sdk';
 import { spawn } from 'node:child_process';
+import { writeSync } from 'node:fs';
 import { mkdtemp, mkdir, rm, symlink, writeFile } from 'node:fs/promises';
 import { homedir, tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -312,3 +316,8 @@ acp
       ?.terminate?.(new Error('provider cancelled by ACP client'));
   })
   .connect(stream);
+
+// connect() installs handlers and arms Connection.receive() before it
+// returns. A direct fd write is not buffered, so a client blocked on this
+// line cannot send the first request into a process that is still starting.
+writeSync(2, 'acp-text-agent ready\n');

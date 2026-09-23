@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_026",
+  "case_id": "decol_prot_026",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "щоправда",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "щоправда"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 43, § 49, с. 58",
+  "supporting_passage": "Вставні слова й сполучні конструкції: щоправда пишеться разом.",
+  "page": "§ 43, § 49, с. 58",
+  "article": "Правопис сполучників",
+  "section": "Сполучники та вставні слова",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "7f8d077bc451cfe3eed1a7006921f1ed9a66efd0dcb30486910f0f8d57059e02",
+  "linguistic_rationale": "Засвідчено для decol_prot_026: вживання «щоправда» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_026.review.json"
+}

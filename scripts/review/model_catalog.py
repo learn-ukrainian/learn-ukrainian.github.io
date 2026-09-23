@@ -90,9 +90,14 @@ def _require_string(value: Any, label: str) -> str:
     return value.strip()
 
 
-def _require_string_list(value: Any, label: str) -> list[str]:
-    if not isinstance(value, list) or not value or not all(isinstance(item, str) and item.strip() for item in value):
-        raise ModelCatalogError(f"{label} must be a non-empty list of strings")
+def _require_string_list(value: Any, label: str, *, allow_empty: bool = False) -> list[str]:
+    if (
+        not isinstance(value, list)
+        or (not value and not allow_empty)
+        or not all(isinstance(item, str) and item.strip() for item in value)
+    ):
+        qualifier = "a list" if allow_empty else "a non-empty list"
+        raise ModelCatalogError(f"{label} must be {qualifier} of strings")
     return [item.strip() for item in value]
 
 
@@ -387,7 +392,10 @@ def validate_catalog(data: Any) -> dict[str, Any]:
         if lifecycle not in VALID_LIFECYCLES:
             raise ModelCatalogError(f"models.{model_id}.lifecycle must be one of {sorted(VALID_LIFECYCLES)}")
         for field in ("roles", "transports", "strengths", "weaknesses", "sources"):
-            values = _require_string_list(model.get(field), f"models.{model_id}.{field}")
+            values = _require_string_list(
+                model.get(field), f"models.{model_id}.{field}",
+                allow_empty=field == "transports" and lifecycle == "retired",
+            )
             if field == "sources" and any(not source.startswith("https://") for source in values):
                 raise ModelCatalogError(f"models.{model_id}.sources must use https URLs")
         if model["family"] in {"openai", "xai"} and "hermes" in model["transports"]:

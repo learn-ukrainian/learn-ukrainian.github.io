@@ -356,7 +356,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         bucket["avg_duration_s"] = round(float(bucket["total_duration_s"]) / count, 1) if count else 0.0
         bucket["total_duration_s"] = round(float(bucket["total_duration_s"]), 1)
 
-    has_room, headroom_reason = has_codex_headroom("gpt-6-astra")
+    has_room, headroom_reason = has_codex_headroom("gpt-6-sol")
     return {
         "window": window,
         "entrypoint": entrypoint,
@@ -366,7 +366,7 @@ def _build_codex_usage_report(window: str, entrypoint: str) -> dict:
         "by_entrypoint": dict(sorted(by_entrypoint.items())),
         "recent_rate_limits": sorted(recent_rate_limits),
         "headroom": {
-            "model": "gpt-6-astra",
+            "model": "gpt-6-sol",
             "has_headroom": has_room,
             "reason": headroom_reason,
         },
@@ -459,7 +459,7 @@ def _build_parser() -> argparse.ArgumentParser:
     inbox_parser.add_argument(
         "--for",
         dest="for_llm",
-        default="gemini",
+        default=None,
         # type= runs before choices: an already-minted phantom
         # `{provider}-{empty-slots-area}` (e.g. grok-open-model-data, #7597)
         # normalizes to its provider so live sessions can drain.
@@ -1292,7 +1292,7 @@ def _dispatch_command(args):
 
             rc = dispatch_channel_command(args)
             sys.exit(rc)
-        check_inbox(args.for_llm)
+        check_inbox(args.for_llm or "gemini")
     elif args.command == "read":
         read_message(args.message_id)
     elif args.command == "send":
@@ -1732,14 +1732,29 @@ def _handle_slot_holder(args):
             print(f"no-live-holder (queue: {res.queue_location})")
 
 
+def _resolve_backlog_warn_agent(args) -> str | None:
+    """Seat whose queue an ``inbox`` backlog warning may name.
+
+    Identity order: the positional agent on ``inbox show``/``inbox run``, then
+    an explicit ``--for``, then ``SESSION_HANDOFF_AGENT``. ``None`` means no
+    seat identity is known, so no warning is emitted — only the owning seat
+    can drain its queue, and every other seat would see pure noise.
+    """
+    identity = getattr(args, "agent", None) or getattr(args, "for_llm", None)
+    if identity:
+        return identity
+    return os.environ.get("SESSION_HANDOFF_AGENT") or None
+
+
 def main():
     """CLI entry point."""
     parser = _build_parser()
     args = parser.parse_args()
-    if args.command is not None:
+    if args.command == "inbox":
         from ._channels_cli import _maybe_print_backlog_warnings
 
-        _maybe_print_backlog_warnings()
+        _maybe_print_backlog_warnings(_resolve_backlog_warn_agent(args))
+    if args.command is not None:
         maybe_print_timeout_notice()
     if not _dispatch_command(args):
         parser.print_help()

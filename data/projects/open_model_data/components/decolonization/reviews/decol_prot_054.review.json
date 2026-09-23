@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_054",
+  "case_id": "decol_prot_054",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "мати місце",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "мати місце"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 8, гасло «Місце» (див. також т. 7, гасло «Мати²»)",
+  "supporting_passage": "МІСЦЕ, -я, с. Ма́ти мі́сце див. ма́ти²; (див. МА́ТИ²: (68) Ма́ти мі́сце – бути, траплятися і т. ін.: Мені з достовірних джерел відомо, з якою гідністю відстояли ви свою любов проти натиску декотрих .. чорнильних душ, які ще подекуди мають місце (О. Гончар); Це було здорово, хоч і мала місце окрема граматична помилка (А. Крижанівський)).",
+  "page": "т. 8",
+  "article": "Місце",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "553a1566ef7b2232c5c2d0c71f947494ed85ebb2734897e9377b437ab2b87200",
+  "linguistic_rationale": "Засвідчено для decol_prot_054: вживання «мати місце» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_054.review.json"
+}

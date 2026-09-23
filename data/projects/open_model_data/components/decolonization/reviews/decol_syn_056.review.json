@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_056",
+  "case_id": "decol_syn_056",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "зробити внесок",
+  "russian_copy": "внести вклад",
+  "ukrainian_proper": [
+    "зробити внесок"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Зробити внесок», с. 184",
+  "supporting_passage": "Внесок у спільну справу або розвиток науки роблять: зробити вагомий внесок; «внести вклад» є калькою з російського «внести вклад».",
+  "page": 184,
+  "article": "Зробити внесок",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "717fe3b4a9b9634872b662f054eb85947e5cbc3a591d35e0dc0d197cf6907a62",
+  "linguistic_rationale": "Засвідчено для decol_syn_056: форма «внести вклад» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «зробити внесок» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_056.review.json"
+}

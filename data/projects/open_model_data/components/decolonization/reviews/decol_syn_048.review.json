@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_048",
+  "case_id": "decol_syn_048",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "порушити питання",
+  "russian_copy": "підняти питання",
+  "ukrainian_proper": [
+    "порушити питання"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Порушувати питання, підіймати», с. 154",
+  "supporting_passage": "Питання на зборах або нарадах порушують (порушити питання); підіймати можна фізичні предмети чи повстання.",
+  "page": 154,
+  "article": "Порушувати питання, підіймати",
+  "section": "Зауваження до низки дієслів",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9ebe2dd20d89e9d2ec7f8353183cba2830d6c1b551cb8ce064f5261b5c3e565a",
+  "linguistic_rationale": "Засвідчено для decol_syn_048: форма «підняти питання» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «порушити питання» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_048.review.json"
+}

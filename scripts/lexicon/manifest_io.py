@@ -7,6 +7,7 @@ import hashlib
 import http.client
 import json
 import os
+import shutil
 import urllib.error
 import urllib.parse
 import urllib.request
@@ -37,6 +38,13 @@ REQUIRED_POINTER_KEYS = (
 )
 DOWNLOAD_ATTEMPTS = 3
 FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
+# Content-addressed hydrate cache. The gitignored worktree file is a hardlink
+# (or a same-bytes copy across filesystems) onto this inode, so each dispatch
+# does not keep its own 269MB decompressed manifest.
+MANIFEST_CACHE_ENV = "LU_LEXICON_MANIFEST_CACHE"
+# Immutable cache bytes: the owning user may read. No write bit, and no
+# group or other access. Hydrate readers are that same user.
+_CACHE_FILE_MODE = 0o400
 
 # Per-section gate-provenance outcomes for the #5077 preserve-vs-retract contract.
 # Recorded in an entry's ``gate_provenance`` map so offline preserves and gate-ran
@@ -140,11 +148,78 @@ def _refuse_richer_local(path: Path, release_manifest: dict[str, Any]) -> None:
 
 
 def _write_atomic(path: Path, data: bytes) -> None:
+    """Replace ``path`` via a temp file in the same directory.
+
+    ``os.replace`` swaps the directory entry. A hardlink at ``path`` (the
+    shared manifest cache) is unlinked from this name and left untouched;
+    an in-place ``open(path, "w")`` would instead mutate that shared inode.
+    """
     path.parent.mkdir(parents=True, exist_ok=True)
     tmp_path = path.with_name(f"{path.name}.tmp")
     try:
         tmp_path.write_bytes(data)
         os.replace(tmp_path, path)
+    finally:
+        with suppress(FileNotFoundError):
+            tmp_path.unlink()
+
+
+def _manifest_cache_dir() -> Path:
+    """Directory for ``<gz_sha256>.json`` cache files, outside the repo."""
+    override = os.environ.get(MANIFEST_CACHE_ENV)
+    if override:
+        return Path(override).expanduser()
+    xdg = os.environ.get("XDG_CACHE_HOME")
+    base = Path(xdg).expanduser() if xdg else Path.home() / ".cache"
+    return base / "learn-ukrainian" / "lexicon-manifest"
+
+
+def _cache_file_for(gz_sha256: str) -> Path:
+    return _manifest_cache_dir() / f"{gz_sha256}.json"
+
+
+def _read_verified_cache(gz_sha256: str, json_sha256: str) -> bytes | None:
+    path = _cache_file_for(gz_sha256)
+    try:
+        data = path.read_bytes()
+    except OSError:
+        return None
+    if _sha256(data) != json_sha256:
+        return None
+    return data
+
+
+def _write_cache_readonly(path: Path, data: bytes) -> None:
+    path.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        tmp_path.write_bytes(data)
+        os.chmod(tmp_path, _CACHE_FILE_MODE)
+        os.replace(tmp_path, path)
+        os.chmod(path, _CACHE_FILE_MODE)
+    finally:
+        with suppress(FileNotFoundError):
+            tmp_path.unlink()
+
+
+def _publish_cached_file(cache_path: Path, dest: Path) -> None:
+    """Point ``dest`` at ``cache_path`` without mutating the cache inode.
+
+    Hardlink when both paths share a filesystem. Copy when ``os.link`` fails
+    (cross-device). Either way the destination directory entry is replaced
+    atomically, so a previous hardlink is not opened for in-place write.
+    """
+    dest.parent.mkdir(parents=True, exist_ok=True)
+    tmp_path = dest.with_name(f".{dest.name}.{os.getpid()}.linktmp")
+    try:
+        with suppress(FileNotFoundError):
+            tmp_path.unlink()
+        try:
+            os.link(cache_path, tmp_path)
+        except OSError:
+            shutil.copyfile(cache_path, tmp_path)
+            os.chmod(tmp_path, _CACHE_FILE_MODE)
+        os.replace(tmp_path, dest)
     finally:
         with suppress(FileNotFoundError):
             tmp_path.unlink()
@@ -190,7 +265,7 @@ def _download(pointer: dict[str, Any], *, attempt: int = 0) -> bytes:
         return response.read()
 
 
-def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
+def _download_verified_json(pointer: dict[str, Any]) -> bytes:
     gz_bytes: bytes | None = None
     gz_sha = ""
     last_error: BaseException | None = None
@@ -231,10 +306,28 @@ def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
             f"Manual recovery command: {RECOVERY_COMMAND}. "
             f"{STALE_POINTER_HINT}"
         )
+    return json_bytes
+
+
+def _hydrate(path: Path, pointer: dict[str, Any]) -> dict[str, Any]:
+    gz_sha = str(pointer["gz_sha256"])
+    json_sha = str(pointer["json_sha256"])
+    json_bytes = _read_verified_cache(gz_sha, json_sha)
+    cache_path = _cache_file_for(gz_sha)
+    if json_bytes is None:
+        json_bytes = _download_verified_json(pointer)
+        _write_cache_readonly(cache_path, json_bytes)
+        if _read_verified_cache(gz_sha, json_sha) != json_bytes:
+            raise ValueError(
+                f"manifest cache {cache_path} failed sha256 verification after write. "
+                f"Manual recovery command: {RECOVERY_COMMAND}"
+            )
+    else:
+        os.chmod(cache_path, _CACHE_FILE_MODE)
 
     manifest = _decode_manifest(json_bytes, pointer["asset_url"])
     _refuse_richer_local(path, manifest)
-    _write_atomic(path, json_bytes)
+    _publish_cached_file(cache_path, path)
     return manifest
 
 

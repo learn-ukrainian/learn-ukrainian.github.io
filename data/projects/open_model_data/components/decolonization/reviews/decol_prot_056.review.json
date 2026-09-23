@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_056",
+  "case_id": "decol_prot_056",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "ставити запитання",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "ставити запитання",
+    "ставити питання"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Ставити запитання, питати», с. 152",
+  "supporting_passage": "Словосполучення «ставити запитання» є загальнолітературною нормою поряд із «запитувати» чи «питати».",
+  "page": 152,
+  "article": "Ставити запитання, питати",
+  "section": "Зауваження до низки дієслів",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ea5b30fb56539cd87434e71bea4ebcdae1a7d33e387e699f99976fb59cb1a8df",
+  "linguistic_rationale": "Засвідчено для decol_prot_056: вживання «ставити запитання» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_056.review.json"
+}

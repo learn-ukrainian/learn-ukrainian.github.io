@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_050",
+  "case_id": "decol_prep_050",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "нанівець",
+  "russian_copy": "на нєт",
+  "ukrainian_proper": [
+    "нанівець"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄПРИСЛІВНИКИ», стаття «ДІЄПРИСЛІВНИКИ»",
+  "supporting_passage": "Отож нема потреби цуратися цього давнього способу висловлювання заради запозичених канцелярських штампів на зразок при виконанні, по одержанні тощо, які зводять нанівець природну красу нашої мови.",
+  "page": null,
+  "article": "ДІЄПРИСЛІВНИКИ",
+  "section": "ДІЄПРИСЛІВНИКИ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8c214cdd300f8c4ff6a9dc340c39f273c40fe72755aa94063eb6830479a67286",
+  "linguistic_rationale": "Засвідчено для decol_prep_050: форма «на нєт» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «нанівець» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_050.review.json"
+}

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_020",
+  "case_id": "decol_prep_020",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "у вихідні дні",
+  "russian_copy": "на вихідних днях",
+  "ukrainian_proper": [
+    "у вихідні дні"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 76",
+  "supporting_passage": "Українською мовою треба казати: у вихідні (дні), у вихідний (день), у робочі дні, а не на вихідних, на вихідних днях, по вихідних.",
+  "page": 76,
+  "article": "У вихідні (дні), а не на вихідних (днях)",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "5910c28dfe0c3b2fae2007e7767c5efb1befbd92eb5f93ee494399d6ba6173fc",
+  "linguistic_rationale": "Засвідчено для decol_prep_020: форма «на вихідних днях» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у вихідні дні» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_020.review.json"
+}

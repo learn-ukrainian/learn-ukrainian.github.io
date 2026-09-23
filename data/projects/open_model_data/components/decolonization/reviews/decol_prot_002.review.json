@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_002",
+  "case_id": "decol_prot_002",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "відігравати роль",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "відігравати роль",
+    "грати роль"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Відігравати»",
+  "supporting_passage": "ВІДІГРАВА́ТИ, раю́, рає́ш, недок., ВІДІГРА́ТИ, а́ю, а́єш, док. ◇ (2) Відіграва́ти роль / відігра́ти роль: а) (яку) мати певне значення: – Твої приватні чуття і думки не повинні в тій справі відогравати [відігравати] великої ролі (О. Кобилянська); Я згадую в своїй біографії про неї [дорогу на кінофабрику] лише тому, що вона відігравала і зараз відіграє в моєму повсякденному житті велику і погану роль (О. Довженко); Пригадую цей епізод лише тому, що він відіграє неабияку роль в подальшій долі Калинки (А. Дімаров).",
+  "page": "т. 3",
+  "article": "Відігравати",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e9e3ab14fd6641dec1250c0d61040983b99c259164afa13d9a86f47f898b15de",
+  "linguistic_rationale": "Засвідчено для decol_prot_002: вживання «відігравати роль» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_002.review.json"
+}

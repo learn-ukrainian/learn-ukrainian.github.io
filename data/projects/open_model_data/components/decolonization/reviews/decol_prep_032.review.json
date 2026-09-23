@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_032",
+  "case_id": "decol_prep_032",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за правилами",
+  "russian_copy": "по правилах",
+  "ukrainian_proper": [
+    "за правилами"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 82",
+  "supporting_passage": "Відповідність установленим нормам, статутам чи законам позначають прийменником «за» з орудним відмінком: діяти за правилами, за законом (а не «по правилах»).",
+  "page": 82,
+  "article": "За правилами, а не по правилах",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "74ed38cb75cf9d1232bc36d19a953987dcb9df321cd79326c3285d18a1ba84b5",
+  "linguistic_rationale": "Засвідчено для decol_prep_032: форма «по правилах» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за правилами» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_032.review.json"
+}

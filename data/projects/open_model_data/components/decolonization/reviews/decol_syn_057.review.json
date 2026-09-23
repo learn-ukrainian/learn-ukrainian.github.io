@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_057",
+  "case_id": "decol_syn_057",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "втратити свідомість",
+  "russian_copy": "лишитися чувств",
+  "ukrainian_proper": [
+    "втратити свідомість",
+    "знепритомніти"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Втратити свідомість, знепритомніти», с. 181",
+  "supporting_passage": "Замість вуличного суржику «лишитися чувств» слід уживати літературні вислови втратити свідомість, знепритомніти або зомліти.",
+  "page": 181,
+  "article": "Втратити свідомість, знепритомніти",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "67c9599a389d5be4ca187382e3be9a0a196e974273bb370f9a3f16e68d2f0255",
+  "linguistic_rationale": "Засвідчено для decol_syn_057: форма «лишитися чувств» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «втратити свідомість» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_057.review.json"
+}

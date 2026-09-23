@@ -9,10 +9,16 @@ RUNTIME_ROUTE_TOOL_CONFIG_KEY = "agent_runtime_route"
 HERMES_GLM_FORBIDDEN_MARKER = "HERMES_GLM_FORBIDDEN"
 
 _FORBIDDEN_GLM_MODEL_RE = re.compile(r"(^|[/_.:-])glm($|[/_.:-]|\d)", re.IGNORECASE)
+_RETIRED_GPT56_MODEL_RE = re.compile(r"(?:^|[/_:])gpt-5\.6-[a-z0-9._-]+$", re.IGNORECASE)
 
 
 def normalize_route_part(value: Any) -> str:
     return str(value or "").strip()
+
+
+def is_retired_gpt56_model(model: Any) -> bool:
+    """Reject explicit GPT-5.6 pins, including harness-qualified model IDs."""
+    return bool(_RETIRED_GPT56_MODEL_RE.search(normalize_route_part(model)))
 
 
 def is_forbidden_glm_route(provider: Any, model: Any) -> bool:

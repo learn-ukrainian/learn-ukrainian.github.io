@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_057",
+  "case_id": "decol_prot_057",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "робити вигляд",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "робити вигляд",
+    "удавати"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 2, гасло «Вигляд» (див. також гасло «Робити»)",
+  "supporting_passage": "ВИГЛЯД, -у, ч. Роби́ти / зроби́ти ви́гляд див. роби́ти; (див. РОБИТИ: (27) Роби́ти / зроби́ти ви́гляд – удавати що-небудь, прикидатися: У халаті голубому дамочка сиділа: То загляне у газету, То поп'є із фляги. Робить вигляд, що на Петю не зверта уваги (С. Олійник); Богдан стояв осторонь і робив вигляд, ніби його зовсім не стосується вся гра (Ю. Яновський); Сербин зробив вигляд, що в нього щось випало з рук, і хутко нахилився (Ю. Смолич)).",
+  "page": "т. 2",
+  "article": "Вигляд",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "37eb25c84e00520f23a316896528840a9ddedbcee34e1d96f2e898fd3047b3c4",
+  "linguistic_rationale": "Засвідчено для decol_prot_057: вживання «робити вигляд» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_057.review.json"
+}

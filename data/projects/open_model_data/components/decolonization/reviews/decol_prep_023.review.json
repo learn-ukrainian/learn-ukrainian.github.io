@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_023",
+  "case_id": "decol_prep_023",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "з нагоди ювілею",
+  "russian_copy": "по поводу ювілею",
+  "ukrainian_proper": [
+    "з нагоди ювілею"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 92",
+  "supporting_passage": "Привід урочистостей або відзначення знаменної дати позначають висловами «з нагоди» або «з приводу»: з нагоди ювілею, з приводу свята (а не «по поводу»).",
+  "page": 92,
+  "article": "З нагоди ювілею, а не по поводу ювілею",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8de847d57f52a5d27cbc37b69e2613415607d929005c1df1385e3c8ff3e4f8bc",
+  "linguistic_rationale": "Засвідчено для decol_prep_023: форма «по поводу ювілею» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «з нагоди ювілею» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_023.review.json"
+}

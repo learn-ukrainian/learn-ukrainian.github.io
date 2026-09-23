@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_008",
+  "case_id": "decol_syn_008",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "запобігати",
+  "russian_copy": "попереджати",
+  "ukrainian_proper": [
+    "запобігати"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ДІЄСЛОВА», стаття «Розгляньмо, як саме керують дієслова іменниками в певних відмінках.»",
+  "supporting_passage": "– Народна пісня), запобігати (\"Не хочуть у вельможних панів ласки запобігати\".",
+  "page": null,
+  "article": "Розгляньмо, як саме керують дієслова іменниками в певних відмінках.",
+  "section": "ДІЄСЛОВА",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "3d52fcccd9e9b9541e780e941e56062194a9bf9eafa13ab756c721c3fe102726",
+  "linguistic_rationale": "Засвідчено для decol_syn_008: форма «попереджати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «запобігати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_008.review.json"
+}

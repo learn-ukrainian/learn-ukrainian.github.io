@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_058",
+  "case_id": "decol_syn_058",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "чинити опір",
+  "russian_copy": "оказувати опір",
+  "ukrainian_proper": [
+    "чинити опір"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Чинити опір», с. 176",
+  "supporting_passage": "Опір ворогові або кривдникові чинять: чинити опір; зворот «оказувати опір» є канцеляризмом і калькою з російського «оказывать сопротивление».",
+  "page": 176,
+  "article": "Чинити опір",
+  "section": "Зауваження до дієслівно-іменникових сполук",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "1ac2c21e1e1308613706638a487ddd071b749321b5498d3a27259e78a3cb6006",
+  "linguistic_rationale": "Засвідчено для decol_syn_058: форма «оказувати опір» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «чинити опір» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_058.review.json"
+}

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_021",
+  "case_id": "decol_prot_021",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на щастя",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на щастя"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 43, § 49, с. 57",
+  "supporting_passage": "Прислівникові сполучення, що складаються з прийменника та іменника: на щастя.",
+  "page": "§ 43, § 49, с. 57",
+  "article": "Окреме написання прийменникових сполук",
+  "section": "Прислівники та вставні слова",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "7a96d103b06c34c027380eaf1559d84d49dce676224b5411d1cff266ecc61a61",
+  "linguistic_rationale": "Засвідчено для decol_prot_021: вживання «на щастя» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_021.review.json"
+}

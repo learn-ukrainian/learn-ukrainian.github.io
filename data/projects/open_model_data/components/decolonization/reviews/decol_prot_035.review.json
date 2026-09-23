@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_035",
+  "case_id": "decol_prot_035",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "хіба що",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "хіба що"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 44, с. 59",
+  "supporting_passage": "Складені частки та сполучники пишуться окремо: хіба що.",
+  "page": "§ 44, с. 59",
+  "article": "Правопис часток",
+  "section": "Частки та сполучники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "de0b7d91ac5fbeebd8b1dfd1b8c29b32958d166d528856ee998a292622043012",
+  "linguistic_rationale": "Засвідчено для decol_prot_035: вживання «хіба що» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_035.review.json"
+}

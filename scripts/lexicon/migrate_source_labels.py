@@ -24,6 +24,7 @@ if str(ROOT) not in sys.path:
 # gate imports this module in a minimal env without third-party deps (#5166 burn:
 # enrich_manifest pulls `requests` at module level).
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
+from scripts.lexicon.manifest_io import _write_atomic
 from scripts.lexicon.source_attribution import apply_entry_attribution, learner_facing_mirror_violations
 
 
@@ -35,7 +36,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _write_atomic(path, (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
 
 
 def _refresh_manifest_fingerprint(manifest: dict[str, Any], fingerprint_path: Path) -> None:

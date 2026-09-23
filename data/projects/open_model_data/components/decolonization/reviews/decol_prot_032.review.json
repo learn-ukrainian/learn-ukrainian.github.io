@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_032",
+  "case_id": "decol_prot_032",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "щодо цього",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "щодо цього"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ІМЕННИКИ», стаття «Родовий чи знахідний відмінок додатка»",
+  "supporting_passage": "Чи є якесь правило щодо цього?",
+  "page": null,
+  "article": "Родовий чи знахідний відмінок додатка",
+  "section": "ІМЕННИКИ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d440a24a3d4d3b0a9b5e70e9342eaf8fb81d7b668ec8e86350cd2f03053f7e27",
+  "linguistic_rationale": "Засвідчено для decol_prot_032: вживання «щодо цього» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_032.review.json"
+}

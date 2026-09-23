@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_059",
+  "case_id": "decol_lex_059",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ковзани",
+  "russian_copy": "коньки",
+  "ukrainian_proper": [
+    "ковзани"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Ковзани»",
+  "supporting_passage": "КОВЗАНИ́, і́в, мн. Вузькі сталеві полоззя, що прикріплюються до взуття для ковзання по льоду. Російське «коньки» в українській літературній мові замінюється нормативним словом «ковзани».",
+  "page": null,
+  "article": "Ковзани",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6cdbd735ee8442cc785132f943aa5446ede3bfe22a7a945dcce1977b08e21d60",
+  "linguistic_rationale": "Засвідчено для decol_lex_059: форма «коньки» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ковзани» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_059.review.json"
+}

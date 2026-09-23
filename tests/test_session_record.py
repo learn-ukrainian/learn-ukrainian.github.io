@@ -4,6 +4,7 @@ import json
 import os
 import stat
 import subprocess
+import sys
 from pathlib import Path
 
 import pytest
@@ -65,7 +66,7 @@ def test_update_session_writes_private_atomic_sol_record(tmp_path: Path) -> None
         "sol-session",
         transcript_path=os.fspath(transcript),
         source="startup",
-        observed_model="gpt-5.6-sol",
+        observed_model="gpt-6-sol",
         agent_type="infra-orchestrator",
         profile_id="sol_lead",
         provenance="session-start",
@@ -177,7 +178,7 @@ def test_env_file_exports_are_shell_safe_and_project_private(tmp_path: Path) -> 
     record = update_session(
         "quoted-session",
         transcript_path=os.fspath(transcript),
-        observed_model="gpt-5.6-sol",
+        observed_model="gpt-6-sol",
         profile_id="sol_lead",
         provenance="session-start",
         state_root=tmp_path,
@@ -211,7 +212,7 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
     script = PROJECT_ROOT / "scripts" / "lib" / "session_record.py"
     update = subprocess.run(
         [
-            os.fspath(PROJECT_ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             os.fspath(script),
             "--state-root",
             os.fspath(tmp_path),
@@ -221,7 +222,7 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
             "--profile-id",
             "sol_lead",
             "--observed-model",
-            "gpt-5.6-sol",
+            "gpt-6-sol",
         ],
         check=True,
         capture_output=True,
@@ -230,7 +231,7 @@ def test_cli_round_trip_uses_explicit_state_root(tmp_path: Path) -> None:
     )
     get = subprocess.run(
         [
-            os.fspath(PROJECT_ROOT / ".venv" / "bin" / "python"),
+            sys.executable,
             os.fspath(script),
             "--state-root",
             os.fspath(tmp_path),

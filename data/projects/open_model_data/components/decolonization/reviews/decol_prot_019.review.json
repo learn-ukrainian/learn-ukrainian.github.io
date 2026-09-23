@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_019",
+  "case_id": "decol_prot_019",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на жаль",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на жаль"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 43, § 49, с. 57",
+  "supporting_passage": "Прислівникові сполучення, що складаються з прийменника та іменника, пишуться окремо: на жаль.",
+  "page": "§ 43, § 49, с. 57",
+  "article": "Прислівникові сполучення з прийменником",
+  "section": "Прислівники та вставні слова",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d4207682d8cba469db7753bbdd265d56848e9115a1ed01e6eca6084e21158c9d",
+  "linguistic_rationale": "Засвідчено для decol_prot_019: вживання «на жаль» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_019.review.json"
+}

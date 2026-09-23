@@ -196,15 +196,12 @@ means do NOT shepherd, review-route, or enqueue it: **no time threshold, no exce
 one-hour timer could not tell an *abandoned* PR from an *owner-paused* one, so with parallel streams it
 made two sessions grab the same PR, or one merge another live stream's paused PR.
 
-**The cross-stream abandoned-PR net has exactly ONE owner — the INTEGRATION-OWNER ROLE** (default
+**The cross-stream landing net has exactly ONE owner — the INTEGRATION-OWNER ROLE** (default
 holder: Codex-main; a ROLE, not a hardcoded session/model — the roster owns repo-wide queue +
-integration + final merge judgment). Only that role sweeps out-of-stream PRs, and only ones sat green
-(CI + review gate passed) idle for MORE THAN 1 HOUR. **To avoid a liveness gap** (a down role-holder
-stranding a green PR forever), this net MUST run as a **scheduled integration sweep** owned by the role
-— it must not depend on any interactive session being live. (Until that scheduled sweep is wired, the
-role-holder runs it at session start/end — see follow-up.) The accountable lead enqueues
-in-stream PRs once current-head cross-family approval and green CI are verified;
-the merge queue is the primary landing path, and this net is a rare safety valve.
+integration + final merge judgment). The scheduled GitHub Actions integration sweep reports PR
+state only; it never arms, enqueues, or dequeues. The local merge-queue keeper (#8564) is the
+automatic landing actor under the operator's 2026-09-23 decision. The accountable lead enqueues
+in-stream PRs once current-head cross-family approval and green CI are verified.
 
 **Merge-cadence soft check (#5737 — operator/orchestrator expectation, not a hard gate).**
 No lane should routinely land **>5 PRs/day against one feature area**. Prefer one shippable
@@ -433,7 +430,7 @@ review lane and document findings on the GH issue.
 ```bash
 printf '%s\n' "Adversarial review for #NNN. Read {path}." | \
   .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-    --task-id review-NNN --to-model gemini-3.1-pro-high --review
+    --task-id review-NNN --to-model gemini-3.8-flash-high --review
 ```
 
 ## Channel bridge (#1190, shipped 2026-04-12)

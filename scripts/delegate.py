@@ -13,7 +13,7 @@ CLI:
     # Fire a task. Returns immediately with the task-id.
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-astra]
+        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-sol]
         [--allow-merge] [--force-new]
 
     # Check status without blocking.
@@ -119,7 +119,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Sequence
+from collections.abc import Collection, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -143,6 +143,9 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
+from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
+from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.orchestration import reaper_lifecycle
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
@@ -1230,9 +1233,7 @@ def _ensure_sibling_repo_worktree(
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
-        raise ValueError(
-            f"sibling worktree path {worktree_path} is outside target repo {root}"
-        ) from exc
+        raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
     worktree_branch = _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -1254,8 +1255,7 @@ def _ensure_sibling_repo_worktree(
         return worktree_path, worktree_branch, telemetry
     if dry_run:
         raise ValueError(
-            f"sibling --repo dry-run found no worktree at {worktree_path}; "
-            "rerun without --dry-run to create one"
+            f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
         )
     branch_name = _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
@@ -1275,9 +1275,7 @@ def _ensure_sibling_repo_worktree(
             env=_sanitized_git_env(),
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(
-            f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}"
-        ) from exc
+        raise RuntimeError(f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}") from exc
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
@@ -1351,6 +1349,21 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
 _FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
 _NO_DELIVERABLE_STATUS = "no_deliverable"
+# A clean read-only checkout holds no uncommitted deliverable. Every terminal
+# status the worker can persist is enough to drop it (#8536). Write-capable
+# modes stay on the danger rule: only a clean successful ``done``.
+_READ_ONLY_SETTLE_REAP_STATUSES = frozenset(
+    {
+        "done",
+        "failed",
+        _NO_DELIVERABLE_STATUS,
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "needs_finalize",
+    }
+)
 # Explicit unattested classification for Cursor Auto when no concrete model was
 # extracted (#6964 / #6953). Never record a bare ``"unknown"`` here.
 _CURSOR_UNKNOWN_MODEL = "unattested-harness"
@@ -4070,8 +4083,80 @@ def _auto_finalize_dirty_worktree(
     )
 
 
+def _checked_out_branch(worktree: Path) -> str | None:
+    """Return the branch checked out at ``worktree``, or None when detached."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    name = (proc.stdout or "").strip()
+    if not name or name == "HEAD":
+        return None
+    return name
+
+
+def _branch_ref_exists(repo_root: Path, branch: str) -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _should_reap_settled_worktree(
+    *,
+    mode: str,
+    keep_worktree: bool,
+    final_status: str,
+    returncode: int | None,
+    dirty_on_exit: bool | None,
+) -> bool:
+    """Return whether settle may remove this dispatch checkout.
+
+    ``ask-* --review`` reaches this path through ``delegate.py dispatch
+    --mode read-only --worktree``. The sealed snapshot helper tears its own
+    temp root down and is not a second worktree owner.
+
+    Dirty or unknown trees stay mounted. ``--keep-worktree`` stays mounted.
+    Read-only reaps on any terminal status. ``workspace-write`` uses the same
+    rule as ``danger``: status ``done`` and return code 0.
+    """
+    if keep_worktree or dirty_on_exit is not False:
+        return False
+    if mode == "read-only":
+        return final_status in _READ_ONLY_SETTLE_REAP_STATUSES
+    if mode in _WRITE_CAPABLE_MODES:
+        return final_status == "done" and returncode == 0
+    return False
+
+
 def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
-    """Try to reap a clean successful delegate worktree, returning state metadata."""
+    """Remove a settled worktree checkout and keep its branch ref.
+
+    The scheduled reaper's PR, rollover, and GraphQL gates skip the clean
+    read-only review checkouts this path exists to drop. Settle has already
+    proved the tree is clean, so removal is worktree-only: ``git branch``
+    is never invoked, and a missing branch ref after removal is an error.
+    """
+    branch = _checked_out_branch(worktree)
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
 
@@ -4080,36 +4165,72 @@ def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
         # failure like any other, not a reason to take down the caller.
         from scripts.orchestration import reap_worktrees
 
-        results = reap_worktrees.reap_worktrees(
-            repo_root=_REPO_ROOT,
-            apply=True,
-            preserve_then_reap=False,
-            target_paths=[worktree],
+        dirty = _worktree_is_dirty(worktree)
+        if dirty is not False:
+            return {
+                "action": "skipped",
+                "path": str(worktree),
+                "branch": branch,
+                "reason": "dirty or unknown; refusing worktree removal",
+                "dirty": dirty,
+                "pr": None,
+                "error": None,
+            }
+
+        # ``_remove_worktree`` is ``git worktree remove --force`` after the
+        # delete-target guard. It does not prune the branch. Force is required
+        # because a clean porcelain tree can still hold ignored residue such
+        # as a worker ``.venv``, which makes a non-force remove refuse.
+        error = reap_worktrees._remove_worktree(
+            _REPO_ROOT,
+            reap_worktrees.WorktreeInfo(
+                path=worktree,
+                branch=branch,
+                head=None,
+                detached=branch is None,
+            ),
         )
     except Exception as exc:
         return {
             "action": "error",
             "path": str(worktree),
+            "branch": branch,
             "reason": "reaper raised",
+            "dirty": None,
+            "pr": None,
             "error": f"{type(exc).__name__}: {exc}",
         }
 
-    if not results:
+    if error is not None:
         return {
-            "action": "skipped",
+            "action": "error",
             "path": str(worktree),
-            "reason": "target path was not evaluated",
-            "error": None,
+            "branch": branch,
+            "reason": "worktree removal failed",
+            "dirty": False,
+            "pr": None,
+            "error": error,
         }
-    result = results[0]
+
+    if branch is not None and not _branch_ref_exists(_REPO_ROOT, branch):
+        return {
+            "action": "error",
+            "path": str(worktree),
+            "branch": branch,
+            "reason": "branch ref missing after worktree removal",
+            "dirty": False,
+            "pr": None,
+            "error": f"refs/heads/{branch} was deleted",
+        }
+
     return {
-        "action": result.action,
-        "path": result.path,
-        "branch": result.branch,
-        "reason": result.reason,
-        "dirty": result.dirty,
-        "pr": result.pr,
-        "error": result.error,
+        "action": "removed",
+        "path": str(worktree),
+        "branch": branch,
+        "reason": "settled clean worktree; branch ref kept",
+        "dirty": False,
+        "pr": None,
+        "error": None,
     }
 
 
@@ -4325,36 +4446,108 @@ def _provision_data_symlinks(worktree_path: Path, main_repo_root: Path) -> None:
 
 
 # Default cone sparse-checkout exclusions for dispatch worktrees.
-# curriculum/ + wiki/ are ~300MB of the ~550MB full tree; most infra/code
-# dispatches never edit them. Content work opts back in with
-# --sparse-include curriculum (and/or wiki) or --full-checkout.
-_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset({"curriculum", "wiki"})
+# Measured 2026-09-23 on a full working tree (du -sh, .git excluded): 1.6GB,
+# of which curriculum/ is 289MB, wiki/ 66MB, data/projects/ 633MB, and
+# data/lexicon/ 277MB. Dropping those four leaves a default dispatch under
+# 450MB. Opt back in with --sparse-include or --full-checkout. wiki/ is still
+# a top-level tree (`git ls-tree -d HEAD wiki`), so it stays excluded.
+_DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
+    {
+        "curriculum",
+        "wiki",
+        "data/projects",
+        "data/lexicon",
+    }
+)
+# Owned-path prefixes that re-include a default-excluded tree even when the
+# path itself is not under that tree (tests and scripts that read it).
+# Filename stems end with "_" and match tests/test_open_model_*.py. Exact
+# files are listed only when grep shows that file reads the tree. ``site/``
+# consumes site/src/data/lexicon-*.json, not raw data/lexicon/.
+# ``tests/test_open_model_`` is content-gated: most of those modules never
+# read data/projects, and a blanket stem would check out ~633MB.
+_SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
+    "data/projects": (
+        "data/projects",
+        "tests/projects/open_model_data",
+        "scripts/projects/open_model_data",
+        "tests/test_open_model_",
+    ),
+    "data/lexicon": (
+        "data/lexicon",
+        "scripts/lexicon",
+        "tests/lexicon",
+        "tests/test_source_inventory_",
+        "scripts/audit/source_inventory_review_decisions.py",
+        "scripts/audit/generate_source_inventory_review_candidates.py",
+        "scripts/practice/author_densified_pairs.py",
+        "scripts/practice/creation_review.py",
+        "scripts/practice/thin_mode_source_inventory.py",
+    ),
+}
+# Stem prefixes whose match still has to mention the tree in that file.
+_SPARSE_REINCLUDE_CONTENT_MARKERS: dict[str, tuple[str, ...]] = {
+    "tests/test_open_model_": ("data/projects",),
+}
+
+
+def _sparse_path_has_prefix(path: str, prefix: str) -> bool:
+    prefix = prefix.strip("/")
+    return path == prefix or path.startswith(prefix + "/")
+
+
+def _sparse_reinclude_prefix_matches(path: str, prefix: str) -> bool:
+    """Match a directory prefix, an exact file, or a filename stem.
+
+    Stems end with ``_`` so ``tests/test_open_model_`` matches
+    ``tests/test_open_model_foundry_cli.py`` without also matching a
+    sibling directory.
+    """
+    if _sparse_path_has_prefix(path, prefix):
+        return True
+    return prefix.endswith("_") and path.startswith(prefix)
+
+
+def _reinclude_file_confirms(path: str, prefix: str) -> bool:
+    """Content-gated stems must mention the tree in the owned file."""
+    markers = _SPARSE_REINCLUDE_CONTENT_MARKERS.get(prefix)
+    if not markers:
+        return True
+    file_path = _REPO_ROOT / path
+    try:
+        text = file_path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return any(marker in text for marker in markers)
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
-    """Normalize --sparse-include values to unique top-level directory names.
+    """Normalize --sparse-include values to unique default-excluded trees.
 
-    Fail closed: explicit values must be bare top-level names in the default
-    exclusion set (``curriculum``, ``wiki``). Nested paths and unknown names
-    raise :class:`ValueError` so content dispatches cannot silently miss trees.
+    Fail closed: explicit values must be names in the default exclusion set
+    (``curriculum``, ``wiki``, ``data/projects``, ``data/lexicon``). Other
+    nested paths and unknown names raise :class:`ValueError`.
     """
     if not raw:
         return ()
     seen: set[str] = set()
     ordered: list[str] = []
+    allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
     for item in raw:
         name = str(item).strip().strip("/")
-        if not name or name in {".", ".."}:
+        if not name or name in {".", ".."} or name.startswith("../") or "/../" in f"/{name}/":
             raise ValueError(
-                f"--sparse-include {item!r} is empty or invalid; pass a top-level name such as 'curriculum' or 'wiki'"
-            )
-        if "/" in name:
-            top = name.split("/", 1)[0]
-            raise ValueError(
-                f"--sparse-include {item!r} must be a top-level directory name (use {top!r}, not a nested path)"
+                f"--sparse-include {item!r} is empty or invalid; "
+                "pass a default-excluded tree such as 'curriculum', 'wiki', or 'data/projects'"
             )
         if name not in _DISPATCH_SPARSE_EXCLUDE_DEFAULT:
-            allowed = ", ".join(sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT))
+            if "/" in name:
+                top = name.split("/", 1)[0]
+                raise ValueError(
+                    f"--sparse-include {item!r} must name a default-excluded tree "
+                    f"(top-level example: {top!r}; nested exclusions: data/projects, data/lexicon). "
+                    f"Allowed: {allowed}"
+                )
             raise ValueError(f"--sparse-include {name!r} is not a default-excluded tree; allowed: {allowed}")
         if name in seen:
             continue
@@ -4364,15 +4557,32 @@ def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
 
 
 def _infer_sparse_include_from_text(text: str | None) -> tuple[str, ...]:
-    """Detect default-excluded top-level path prefixes referenced in a prompt."""
+    """Detect default-excluded path prefixes referenced in a prompt."""
     if not text:
         return ()
     found: list[str] = []
-    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT):
-        # Path-like reference: curriculum/… or `wiki/` — not bare English words.
+    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT, key=len, reverse=True):
+        # Path-like reference: curriculum/…, data/projects/… — not bare words.
         if re.search(rf"(?<![\w.-]){re.escape(name)}/", text):
             found.append(name)
     return tuple(found)
+
+
+def _sparse_tree_for_owned_path(raw: str) -> str | None:
+    """Return the excluded tree a research-owned path requires, if any."""
+    path = str(raw).strip().strip("/")
+    if not path:
+        return None
+    for name in sorted(_DISPATCH_SPARSE_EXCLUDE_DEFAULT, key=len, reverse=True):
+        if _sparse_path_has_prefix(path, name):
+            return name
+    for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items():
+        if any(
+            _sparse_reinclude_prefix_matches(path, prefix) and _reinclude_file_confirms(path, prefix)
+            for prefix in prefixes
+        ):
+            return tree
+    return None
 
 
 def _infer_sparse_include(
@@ -4381,19 +4591,21 @@ def _infer_sparse_include(
     owned_paths: Sequence[str] | None = None,
     prompt_text: str | None = None,
 ) -> tuple[str, ...]:
-    """Merge explicit includes with owned-path tops and prompt path references.
+    """Merge explicit includes with owned-path prefixes and prompt path references.
 
-    A dispatch that already declares ``--research-owned-path curriculum/...``
-    or whose brief references ``curriculum/`` / ``wiki/`` materializes those
-    trees without a second flag.
+    A dispatch that already declares ``--research-owned-path curriculum/...``,
+    ``scripts/projects/open_model_data/...``, or a lexicon reader such as
+    ``scripts/lexicon/...`` materializes the matching excluded tree without a
+    second flag. ``site/...`` does not: the frontend reads runtime JSON under
+    ``site/src/data/``, not raw ``data/lexicon/``.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)
     for raw in owned_paths or ():
-        top = str(raw).strip().strip("/").split("/", 1)[0]
-        if top in _DISPATCH_SPARSE_EXCLUDE_DEFAULT and top not in seen:
-            seen.add(top)
-            merged.append(top)
+        name = _sparse_tree_for_owned_path(str(raw))
+        if name and name not in seen:
+            seen.add(name)
+            merged.append(name)
     for name in _infer_sparse_include_from_text(prompt_text):
         if name not in seen:
             seen.add(name)
@@ -4401,11 +4613,17 @@ def _infer_sparse_include(
     return tuple(merged)
 
 
-def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> list[str]:
-    """Return top-level directory names at ``at_ref`` inside a worktree."""
+def _list_worktree_dirs(worktree_path: Path, *tree_path: str, at_ref: str = "HEAD") -> list[str]:
+    """Return directory names from ``git ls-tree -d`` at ``at_ref``.
+
+    With no ``tree_path``, lists top-level directories. ``data/`` lists the
+    children (``data/projects``, …) so new ``data/*`` dirs are included
+    automatically and only the named exclusions drop out.
+    """
+    label = "/".join(tree_path) if tree_path else "top-level"
     try:
         proc = subprocess.run(
-            ["git", "ls-tree", "-d", "--name-only", at_ref],
+            ["git", "ls-tree", "-d", "--name-only", at_ref, *tree_path],
             cwd=worktree_path,
             capture_output=True,
             text=True,
@@ -4415,12 +4633,54 @@ def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> lis
         )
     except subprocess.TimeoutExpired as exc:
         raise RuntimeError(
-            f"could not list top-level dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s"
+            f"could not list {label} dirs in {worktree_path}: timed out after {DEFAULT_GIT_TIMEOUT_S}s"
         ) from exc
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "git ls-tree failed").strip()
-        raise RuntimeError(f"could not list top-level dirs in {worktree_path}: {detail}")
+        raise RuntimeError(f"could not list {label} dirs in {worktree_path}: {detail}")
     return [line.strip() for line in (proc.stdout or "").splitlines() if line.strip()]
+
+
+def _list_worktree_top_dirs(worktree_path: Path, *, at_ref: str = "HEAD") -> list[str]:
+    """Return top-level directory names at ``at_ref`` inside a worktree."""
+    return _list_worktree_dirs(worktree_path, at_ref=at_ref)
+
+
+def _dispatch_sparse_cone_dirs(
+    top_dirs: Sequence[str],
+    data_children: Sequence[str],
+    exclude: Collection[str],
+) -> tuple[list[str], list[str]]:
+    """Build a cone include list that drops excluded dirs at directory level.
+
+    Nested exclusions (``data/projects``) are expressed by listing the other
+    ``data/*`` children instead of the parent ``data`` directory. Cone mode
+    then keeps files that sit directly in ``data/``.
+    """
+    exclude_set = set(exclude)
+    cone: list[str] = []
+    excluded: list[str] = []
+    for name in top_dirs:
+        if name != "data":
+            if name in exclude_set:
+                excluded.append(name)
+            else:
+                cone.append(name)
+            continue
+        if "data" in exclude_set:
+            excluded.append("data")
+            continue
+        children = list(data_children)
+        dropped = [child for child in children if child in exclude_set]
+        if not dropped:
+            cone.append("data")
+            continue
+        for child in children:
+            if child in exclude_set:
+                excluded.append(child)
+            else:
+                cone.append(child)
+    return cone, sorted(excluded)
 
 
 def _apply_dispatch_sparse_checkout(
@@ -4431,10 +4691,9 @@ def _apply_dispatch_sparse_checkout(
 ) -> dict[str, Any]:
     """Apply (or disable) cone sparse-checkout on a dispatch worktree.
 
-    Default profile excludes ``curriculum/`` and ``wiki/`` so each dispatch
-    stays ~200MB instead of ~550MB. ``--full-checkout`` disables sparse mode.
-    ``--sparse-include DIR`` keeps named top-level dirs that would otherwise
-    be excluded (e.g. ``curriculum`` for module content work).
+    Default profile excludes ``curriculum/``, ``wiki/``, ``data/projects/``
+    (~633MB), and ``data/lexicon/`` (~277MB). ``--full-checkout`` disables
+    sparse mode. ``--sparse-include`` keeps a named excluded tree.
     """
     includes = _normalize_sparse_include(sparse_include)
     telemetry: dict[str, Any] = {
@@ -4478,8 +4737,8 @@ def _apply_dispatch_sparse_checkout(
 
     exclude = set(_DISPATCH_SPARSE_EXCLUDE_DEFAULT) - set(includes)
     all_dirs = _list_worktree_top_dirs(worktree_path)
-    included = [name for name in all_dirs if name not in exclude]
-    excluded = sorted(name for name in all_dirs if name in exclude)
+    data_children = _list_worktree_dirs(worktree_path, "data/") if "data" in all_dirs else []
+    included, excluded = _dispatch_sparse_cone_dirs(all_dirs, data_children, exclude)
     telemetry["excluded"] = excluded
     telemetry["included_dirs"] = included
 
@@ -4500,7 +4759,10 @@ def _apply_dispatch_sparse_checkout(
         telemetry["error"] = detail
         raise RuntimeError(f"failed to init sparse-checkout in {worktree_path}: {detail}")
 
-    proc = _run_git(["git", "sparse-checkout", "set", "--", *included])
+    set_args = ["git", "sparse-checkout", "set", "--cone"]
+    if included:
+        set_args.extend(["--", *included])
+    proc = _run_git(set_args)
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "sparse-checkout set failed").strip()
         telemetry["error"] = detail
@@ -4513,7 +4775,8 @@ def _apply_dispatch_sparse_checkout(
     telemetry["applied"] = True
     print(
         f"🌲 dispatch sparse-checkout: excluded {', '.join(excluded)} "
-        f"in {worktree_path} (use --sparse-include / --full-checkout to keep them)",
+        f"in {worktree_path} "
+        "(git sparse-checkout add <dir>, or --sparse-include / --full-checkout)",
         file=sys.stderr,
     )
     return telemetry
@@ -4876,17 +5139,25 @@ def _augment_prompt_with_worktree(
     if sparse_telemetry and not sparse_telemetry.get("full_checkout"):
         excluded = sparse_telemetry.get("excluded") or []
         if excluded:
+            add_commands = " ".join(f"`git sparse-checkout add {name}`" for name in excluded)
             sparse_note = (
-                "Sparse-checkout is active: these top-level trees are NOT present: "
+                "Sparse-checkout is active: these trees are NOT present: "
                 + ", ".join(str(p) for p in excluded)
-                + ". If you need them, re-dispatch with --sparse-include <dir> "
-                "or --full-checkout (do not invent content for missing paths).\n"
+                + ". To materialize one inside this worktree, run "
+                + add_commands
+                + " (for example `git sparse-checkout add data/projects`). "
+                + "Do not invent content for missing paths.\n"
             )
     delivery_note = ""
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
+            "\n[write-mode closeout]\n"
+            "Commit your work.\n"
+            "`git push -u origin HEAD`\n"
+            "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
+            "Do not open or merge PRs unless the brief says so; "
+            "report the pushed head SHA and clean status.\n"
             "\n[optional delivery signal]\n"
-            "Commits on your dispatch branch are sufficient proof of delivery on their own. "
             "If you finish with zero commits (a verified no-op), you MAY end your final response "
             "with one machine-readable line as positive proof: "
             '`DELIVERABLE: {"outcome":"no_change","reason":"why no changes are required"}`. '
@@ -5186,6 +5457,10 @@ def _run_worker(
     runtime_tmp_namespace_root: str | None = None,
     run_nonce: str | None = None,
     require_review_verdict: bool = False,
+    review_id: str | None = None,
+    attempt_id: str | None = None,
+    mcp_config_path: str | None = None,
+    strict_mcp_config: bool = False,
 ) -> int:
     """Worker main loop. Invokes the runtime, updates the state file.
 
@@ -5316,7 +5591,27 @@ def _run_worker(
                 tool_config["harness"] = harness
             if mode == "read-only" and runtime_tmp_root is not None:
                 tool_config["read_only_tmp_root"] = runtime_tmp_root
-            tool_config = tool_config or None
+            if mcp_config_path is not None:
+                tool_config["mcp_config_path"] = mcp_config_path
+            if strict_mcp_config:
+                tool_config["strict_mcp_config"] = True
+                tool_config["mcp_server_names"] = ["sources"]
+            if review_id is not None:
+                tool_config["review_id"] = review_id
+            if attempt_id is not None:
+                tool_config["attempt_id"] = attempt_id
+            cursor_mcp_path: Path | None = None
+            cursor_mcp_backup: bytes | None = None
+            cursor_mcp_existed: bool = False
+            if strict_mcp_config and agent == "cursor":
+                cursor_mcp_path = cwd / ".cursor" / "mcp.json"
+                if cursor_mcp_path.is_file():
+                    cursor_mcp_existed = True
+                    try:
+                        cursor_mcp_backup = cursor_mcp_path.read_bytes()
+                    except OSError:
+                        cursor_mcp_backup = None
+
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -5391,6 +5686,14 @@ def _run_worker(
             stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
+            if cursor_mcp_path is not None:
+                try:
+                    if cursor_mcp_existed and cursor_mcp_backup is not None:
+                        cursor_mcp_path.write_bytes(cursor_mcp_backup)
+                    elif not cursor_mcp_existed and cursor_mcp_path.is_file():
+                        cursor_mcp_path.unlink()
+                except OSError as exc:
+                    print(f"⚠️  failed to restore {cursor_mcp_path}: {exc}", file=sys.stderr)
             if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
                 # This cleanup runs AFTER the worker has finished but BEFORE the
                 # guarded span below, and it catches Exception rather than the
@@ -5438,6 +5741,9 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        if strict_mcp_config:
+            final_state["worktree_disallow_reuse"] = True
+            final_state["worktree_review_attempt_only"] = True
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
@@ -5535,9 +5841,8 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if (
-                        normalized_branch not in containment.PROTECTED_BRANCHES
-                        and not (commits_ahead == 0 and dirty_on_exit is False)
+                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
+                        commits_ahead == 0 and dirty_on_exit is False
                     ):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
@@ -5738,14 +6043,15 @@ def _run_worker(
         # instant CLI failure is visible in both task state and its stderr log.
         print(stderr_excerpt, file=sys.stderr, flush=True)
 
+    # Read-only checkout snapshots (read_only_checkout_pre/post) already ran
+    # above. Reap only after that comparison.
     worktree_reap: dict[str, Any] | None = None
-    if (
-        worktree_path
-        and mode == "danger"
-        and not keep_worktree
-        and final_status == "done"
-        and returncode == 0
-        and dirty_on_exit is False
+    if worktree_path and _should_reap_settled_worktree(
+        mode=mode,
+        keep_worktree=keep_worktree,
+        final_status=final_status,
+        returncode=returncode,
+        dirty_on_exit=dirty_on_exit,
     ):
         worktree_reap = _reap_finished_worktree(Path(worktree_path))
 
@@ -6168,9 +6474,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from agent_runtime.routes import is_retired_gpt56_model
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
+    if is_retired_gpt56_model(getattr(args, "model", None)):
+        print(f"❌ retired GPT-5.6 model {args.model!r} is not a dispatch route", file=sys.stderr)
+        return 2
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -6181,6 +6491,50 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     except ValueError as exc:
         print(f"❌ {exc}", file=sys.stderr)
         return 2
+
+    review_attempt = getattr(args, "review_attempt", None)
+    review_id = getattr(args, "review_id", None)
+    attempt_id = getattr(args, "attempt_id", None)
+    review_plan = None
+    if review_attempt or review_id or attempt_id:
+        if not (review_attempt and review_id and attempt_id):
+            print(
+                "❌ --review-attempt, --review-id, and --attempt-id must be used together",
+                file=sys.stderr,
+            )
+            return 2
+        manifest_path = Path(review_attempt)
+        if not manifest_path.is_file():
+            print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
+            return 2
+
+        retired_target = resolve_retired_agent_alias(args.agent)
+        if retired_target:
+            print(
+                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+
+        effective_harness = requested_harness or args.agent
+        from scripts.agent_runtime.review_mcp import (
+            SUPPORTED_HARNESSES,
+            UNSUPPORTED_HARNESS_REASONS,
+        )
+
+        if effective_harness in UNSUPPORTED_HARNESS_REASONS:
+            print(
+                f"❌ review attempt refused for {args.agent}: {UNSUPPORTED_HARNESS_REASONS[effective_harness]} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+        if effective_harness not in SUPPORTED_HARNESSES:
+            print(
+                f"❌ review attempt refused for {args.agent}: unsupported harness {effective_harness!r} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+
     worktree_arg = getattr(args, "worktree", None)
     requested_branch = getattr(args, "branch", None)
     full_checkout = bool(getattr(args, "full_checkout", False))
@@ -6434,6 +6788,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     retired_target = resolve_retired_agent_alias(args.agent)
     requested_agent = args.agent
     if retired_target:
+        if review_attempt:
+            print(
+                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
+                file=sys.stderr,
+            )
+            return 2
         agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
         print(
             f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
@@ -6457,6 +6817,48 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             return 2
     else:
         dispatch_agent = requested_agent
+
+    if review_attempt and dispatch_agent != requested_agent:
+        print(
+            f"❌ review attempt refused: agent substitution from {requested_agent} to {dispatch_agent} (budget guard) is not allowed (#8517)",
+            file=sys.stderr,
+        )
+        return 2
+
+    if review_attempt:
+        from scripts.agent_runtime.review_mcp import (
+            SUPPORTED_HARNESSES,
+            UNSUPPORTED_HARNESS_REASONS,
+        )
+
+        final_harness = requested_harness or dispatch_agent
+        if final_harness in UNSUPPORTED_HARNESS_REASONS:
+            print(
+                f"❌ review attempt refused for {dispatch_agent}: {UNSUPPORTED_HARNESS_REASONS[final_harness]} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+        if final_harness not in SUPPORTED_HARNESSES:
+            print(
+                f"❌ review attempt refused for {dispatch_agent}: unsupported harness {final_harness!r} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+
+        if dispatch_agent == "cursor" or requested_harness == "cursor":
+            has_worktree = False
+            if worktree_arg:
+                has_worktree = True
+            elif args.cwd:
+                candidate_cwd = _resolve_cwd_path(args.cwd)
+                if _resolve_verified_worktree_path(candidate_cwd):
+                    has_worktree = True
+            if not has_worktree:
+                print(
+                    "❌ review attempt for cursor requires a dispatch worktree; refusing primary checkout (#8517)",
+                    file=sys.stderr,
+                )
+                return 2
 
     explicit_model = getattr(args, "model", None)
     if (
@@ -6786,6 +7188,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(run_nonce)
         return 0
 
+    if review_attempt:
+        from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+        effective_harness = requested_harness or dispatch_agent
+        try:
+            review_plan = prepare_review_attempt(
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_path=Path(review_attempt),
+                harness=effective_harness,
+            )
+        except (ValueError, FileExistsError) as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
@@ -7006,6 +7423,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
             initial_state["task_lifecycle"] = lifecycle_carrier
+        if review_plan is not None:
+            initial_state["worktree_disallow_reuse"] = True
+            initial_state["worktree_review_attempt_only"] = True
         initial_state = _with_optional_research_state(initial_state, research_state)
         _write_state_atomic(state_path, initial_state)
 
@@ -7097,6 +7517,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             cmd.extend(["--effort", effort])
         if run_nonce:
             cmd.extend(["--run-nonce", run_nonce])
+        if review_plan is not None:
+            cmd.extend(
+                [
+                    "--review-id",
+                    str(review_id),
+                    "--attempt-id",
+                    str(attempt_id),
+                    "--mcp-config-path",
+                    str(review_plan.config_path),
+                    "--strict-mcp-config",
+                ]
+            )
 
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
@@ -7606,17 +8038,30 @@ def _resolve_agent_with_budget_guard(
     agent_info = agents.get(requested, {}) or {}
     status = _budget_lane_status(requested, agent_info if isinstance(agent_info, dict) else {})
     will_last = _budget_will_last_to_reset(agent_info if isinstance(agent_info, dict) else {})
+    reserve = _load_reset_reserve(_REPO_ROOT)
+    reserve_relaxes = (
+        requested == "codex"
+        and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
+        and _codex_reset_reserve_eligible(
+            reserve,
+            agent_info if isinstance(agent_info, dict) else {},
+            snapshot_stale=is_stale,
+        )
+    )
+    if reserve_relaxes:
+        print(
+            f"⚠ Codex reset reserve active ({reserve.get('remaining_resets')} confirmed reset(s) remaining); "
+            "provider and runtime headroom checks passed.",
+            file=sys.stderr,
+        )
     burn = (
         agent_info.get("burn_pct_7d")
         if requested != "claude"
         else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
     )
 
-    needs_action, reason = _budget_needs_hard_capacity_action(
-        status=status,
-        will_last=will_last,
-        is_stale=is_stale,
-        records_loaded=records_loaded,
+    needs_action, reason = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
+        status=status, will_last=will_last, is_stale=is_stale, records_loaded=records_loaded,
     )
     if not needs_action:
         return requested
@@ -7640,6 +8085,7 @@ def _resolve_agent_with_budget_guard(
                 agents if isinstance(agents, dict) else {},
                 is_stale=is_stale,
                 records_loaded=records_loaded,
+                reset_reserve=reserve,
             )
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
@@ -7669,6 +8115,7 @@ def _language_lane_substitute(
     *,
     is_stale: bool,
     records_loaded: int,
+    reset_reserve: dict[str, Any] | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy/grok (#8449)."""
     seat = requested
@@ -7677,7 +8124,15 @@ def _language_lane_substitute(
         info = agents.get(seat, {}) or {}
         status = _budget_lane_status(seat, info if isinstance(info, dict) else {})
         will_last = _budget_will_last_to_reset(info if isinstance(info, dict) else {})
-        needs, why = _budget_needs_hard_capacity_action(
+        info_dict = info if isinstance(info, dict) else {}
+        reserve_relaxes = (
+            seat == "codex"
+            and _codex_is_threatened(info_dict)
+            and _codex_reset_reserve_eligible(
+                reset_reserve or {}, info_dict, snapshot_stale=is_stale
+            )
+        )
+        needs, why = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
             status=status,
             will_last=will_last,
             is_stale=is_stale,
@@ -8279,6 +8734,10 @@ def cmd_worker(args: argparse.Namespace) -> int:
         runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
         runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
         run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
+        review_id=getattr(args, "review_id", None),
+        attempt_id=getattr(args, "attempt_id", None),
+        mcp_config_path=getattr(args, "mcp_config_path", None),
+        strict_mcp_config=bool(getattr(args, "strict_mcp_config", False)),
     )
 
 
@@ -8407,7 +8866,7 @@ def build_parser() -> argparse.ArgumentParser:
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
     d.add_argument(
-        "--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview."
+        "--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview."
     )
     d.add_argument(
         "--provider",
@@ -8499,13 +8958,44 @@ def build_parser() -> argparse.ArgumentParser:
         ),
     )
     d.add_argument(
+        "--review-attempt",
+        default=None,
+        metavar="MANIFEST",
+        help=(
+            "Path to manifest YAML file for formal review attempt recording (#8517). "
+            "Used together with --review-id and --attempt-id to launch a per-attempt "
+            "stdio sources MCP server with ledger receipts. Default: None. "
+            "Example: --review-attempt batch_state/manifests/rev-1.yaml"
+        ),
+    )
+    d.add_argument(
+        "--review-id",
+        default=None,
+        metavar="REVIEW_ID",
+        help=(
+            "Formal review identifier for receipt recording (#8517). Required when "
+            "--review-attempt is set; must match the review id in receipt paths. "
+            "Default: None. Example: --review-id rev-20260922-001"
+        ),
+    )
+    d.add_argument(
+        "--attempt-id",
+        default=None,
+        metavar="ATTEMPT_ID",
+        help=(
+            "Unique attempt identifier for receipt recording (#8517). Required when "
+            "--review-attempt is set; names the attempt ledger <attempt_id>.jsonl. "
+            "Default: None. Example: --attempt-id att-01"
+        ),
+    )
+    d.add_argument(
         "--full-checkout",
         action="store_true",
         help=(
             "Materialize the full git working tree in the dispatch worktree. "
-            "Default is cone sparse-checkout excluding curriculum/ and wiki/ "
-            "(~300MB saved per worktree). Use this for tasks that need the "
-            "entire tree without listing includes."
+            "Default cone sparse-checkout excludes curriculum/ (289MB), wiki/ (66MB), "
+            "data/projects/ (633MB), and data/lexicon/ (277MB), leaving a default "
+            "worktree under 450MB. Use this when the task needs the entire tree."
         ),
     )
     d.add_argument(
@@ -8514,9 +9004,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=None,
         metavar="DIR",
         help=(
-            "Keep a top-level directory that default sparse-checkout would "
-            "exclude (curriculum, wiki). Repeatable. Example: "
-            "--sparse-include curriculum for module content work."
+            "Keep a tree that default sparse-checkout would exclude "
+            "(curriculum, wiki, data/projects, data/lexicon). Repeatable. "
+            "Example: --sparse-include data/projects, or --sparse-include curriculum "
+            "for module content. Owned paths under those trees are included automatically."
         ),
     )
     d.add_argument(
@@ -8828,6 +9319,10 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.add_argument("--run-nonce", default=None)
+    wk.add_argument("--review-id", default=None)
+    wk.add_argument("--attempt-id", default=None)
+    wk.add_argument("--mcp-config-path", default=None)
+    wk.add_argument("--strict-mcp-config", action="store_true")
     wk.set_defaults(func=cmd_worker)
 
     return p

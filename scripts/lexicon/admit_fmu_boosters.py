@@ -42,7 +42,7 @@ from scripts.audit.source_inventory_review_decisions import source_inventory_key
 from scripts.lexicon import enrich_manifest
 from scripts.lexicon.build_data_manifest import _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
-from scripts.lexicon.manifest_io import load_manifest
+from scripts.lexicon.manifest_io import _write_atomic, load_manifest
 from scripts.verification.vesum import verify_word
 
 MANIFEST_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
@@ -873,7 +873,7 @@ def admit_fmu_boosters(*, dry_run: bool = False) -> dict[str, Any]:
 
     print(f"Writing updated manifest to {MANIFEST_PATH}...")
     manifest_bytes = (json.dumps(manifest_data, ensure_ascii=False, indent=2) + "\n").encode("utf-8")
-    MANIFEST_PATH.write_bytes(manifest_bytes)
+    _write_atomic(MANIFEST_PATH, manifest_bytes)
     json_sha256 = hashlib.sha256(manifest_bytes).hexdigest()
     json_bytes = len(manifest_bytes)
 

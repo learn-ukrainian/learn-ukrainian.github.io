@@ -494,3 +494,81 @@ def test_apply_plan_patch_rejects_protected_fields_but_applies_legal_changes(
             "reason": "protected_field_violation",
         }
     ]
+
+
+def test_dispatch_gemini_plan_patch_explicit_pro_passes_model_to_cmd(monkeypatch) -> None:
+    """Explicit Pro model passed to _dispatch_gemini_plan_patch must win."""
+    captured_cmd = []
+
+    def fake_run(cmd, *args, **kwargs):
+        captured_cmd.extend(cmd)
+        return type("Completed", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(plan_patch.subprocess, "run", fake_run)
+    plan_patch._dispatch_gemini_plan_patch("prompt", task_id="task-pro", model="gemini-3.1-pro-high")
+    assert "--model" in captured_cmd
+    model_idx = captured_cmd.index("--model")
+    assert captured_cmd[model_idx + 1] == "gemini-3.1-pro-high"
+
+
+def test_dispatch_gemini_plan_patch_default_passes_flash_to_cmd(monkeypatch) -> None:
+    """Default invocation of _dispatch_gemini_plan_patch uses Flash High."""
+    captured_cmd = []
+
+    def fake_run(cmd, *args, **kwargs):
+        captured_cmd.extend(cmd)
+        return type("Completed", (), {"returncode": 0, "stdout": "", "stderr": ""})()
+
+    monkeypatch.setattr(plan_patch.subprocess, "run", fake_run)
+    plan_patch._dispatch_gemini_plan_patch("prompt", task_id="task-flash")
+    assert "--model" in captured_cmd
+    model_idx = captured_cmd.index("--model")
+    assert captured_cmd[model_idx + 1] == "gemini-3.8-flash-high"
+
+
+def test_run_plan_patch_forwards_explicit_pro_model(tmp_path: Path, monkeypatch) -> None:
+    """run_plan_patch must forward explicit model to _dispatch_gemini_plan_patch."""
+    plan_path = tmp_path / "plan.yaml"
+    plan_path.write_text("slug: a1--test\nversion: 2.0.0\n", "utf-8")
+    orch_dir = tmp_path / "orch"
+    orch_dir.mkdir(parents=True)
+    for round_num in (1, 2):
+        (orch_dir / f"review-structured-r{round_num}.yaml").write_text(
+            yaml.safe_dump(
+                {
+                    "round": round_num,
+                    "findings": [
+                        {
+                            "dimension": "Dialogue & conversation quality",
+                            "severity": "HIGH",
+                            "location": "Dialogue",
+                            "issue": "Dialogue situation is not grounded in the plan.",
+                            "fix": "Give the speakers a concrete place and task.",
+                        }
+                    ],
+                }
+            ),
+            "utf-8",
+        )
+
+    captured_dispatch: dict[str, object] = {}
+
+    def fake_dispatch(prompt, *, task_id, model="gemini-3.8-flash-high", output_path=None):
+        captured_dispatch["task_id"] = task_id
+        captured_dispatch["model"] = model
+        return True, "===PLAN_PATCH_START===\ndecision: noop\ncomplaint_summary: ok\nchanges: []\n===PLAN_PATCH_END===\n"
+
+    monkeypatch.setattr(plan_patch, "_dispatch_gemini_plan_patch", fake_dispatch)
+
+    result = plan_patch.run_plan_patch(
+        level="a1",
+        slug="a1--test",
+        plan_path=plan_path,
+        orch_dir=orch_dir,
+        score_history=[7.0, 7.0],
+        contract_violations=[],
+        model="gemini-3.1-pro-high",
+    )
+
+    assert captured_dispatch["model"] == "gemini-3.1-pro-high"
+    assert result.reason == "Gemini declined to patch the plan"

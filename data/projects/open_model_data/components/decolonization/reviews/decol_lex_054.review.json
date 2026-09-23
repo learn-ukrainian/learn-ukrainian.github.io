@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_054",
+  "case_id": "decol_lex_054",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "метелик",
+  "russian_copy": "бабочка",
+  "ukrainian_proper": [
+    "метелик"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Метелик»",
+  "supporting_passage": "МЕТЕ́ЛИК, а, ч. Комаха з двома парами великих крил, укритих різнокольоровими лусочками. Російське «бабочка» в українській мові є суржиковим спотворенням; нормативне літературне слово — «метелик».",
+  "page": null,
+  "article": "Метелик",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b98bc3cc8c11ab41b6c4f37515bbacb9296636ae9da202532f16900a23bfc28b",
+  "linguistic_rationale": "Засвідчено для decol_lex_054: форма «бабочка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «метелик» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_054.review.json"
+}

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_043",
+  "case_id": "decol_syn_043",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "брати до серця",
+  "russian_copy": "приймати близько до серця",
+  "ukrainian_proper": [
+    "брати до серця"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати до серця», с. 180",
+  "supporting_passage": "Замість калькованого «приймати близько до серця» питома українська фразеологія має вислів брати до серця або брати собі до голови.",
+  "page": 180,
+  "article": "Брати до серця",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e4416f6dbd368f84d0107f2a4ecd70c2b1dca5a053a9c3535460449d3a970e3a",
+  "linguistic_rationale": "Засвідчено для decol_syn_043: форма «приймати близько до серця» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати до серця» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_043.review.json"
+}

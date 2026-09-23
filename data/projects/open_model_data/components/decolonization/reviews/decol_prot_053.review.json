@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_053",
+  "case_id": "decol_prot_053",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "з точки зору",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "з точки зору",
+    "з погляду"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Точка»",
+  "supporting_passage": "ТОЧКА, -и, ж. Точка зору кого, чия — певний погляд на що-небудь, розуміння чогось: Дельфіни — надзвичайно цікавий об'єкт з точки зору біоніки, біохімії, гідромеханіки, акустики (із журн.).",
+  "page": "т. 19",
+  "article": "Точка",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6e2c6069529ead51cbad7506213e6f6f15e6a8570f586cfc080d5f4d2a913c22",
+  "linguistic_rationale": "Засвідчено для decol_prot_053: вживання «з точки зору» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_053.review.json"
+}

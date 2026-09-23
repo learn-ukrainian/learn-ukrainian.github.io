@@ -386,8 +386,8 @@ def test_concept_extraction_defaults_to_astra(monkeypatch):
 
     monkeypatch.setattr(audit.subprocess, "run", backend)
     assert audit.run_codex_concept_extraction("fixture") == {"concepts": []}
-    assert seen[0][seen[0].index("-m") + 1] == "gpt-6-astra"
-    audit.run_codex_concept_extraction("fixture", model="gpt-6-astra")
+    assert seen[0][seen[0].index("-m") + 1] == "gpt-6-sol"
+    audit.run_codex_concept_extraction("fixture", model="gpt-6-sol")
     assert len(seen) == 2
 
 
@@ -400,5 +400,5 @@ def test_concept_extraction_rejects_override_before_preparation(monkeypatch):
     monkeypatch.setattr(audit.tempfile, "TemporaryDirectory", forbidden)
     monkeypatch.setattr(audit.subprocess, "run", forbidden)
     for model in ("gpt-5.5", "unknown", ""):
-        with pytest.raises(ValueError, match="requires gpt-6-astra"):
+        with pytest.raises(ValueError, match="requires gpt-6-sol"):
             audit.run_codex_concept_extraction("fixture", model=model)

@@ -23,6 +23,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from scripts.lexicon import enrich_manifest
+from scripts.lexicon.manifest_io import _write_atomic
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -33,7 +34,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
-    path.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    _write_atomic(path, (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8"))
 
 
 def _load_kaikki_lookup(path: Path) -> dict[str, dict[str, Any]]:

@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_028",
+  "case_id": "decol_syn_028",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "просити вибачення",
+  "russian_copy": "приносити вибачення",
+  "ukrainian_proper": [
+    "просити вибачення",
+    "перепрошувати"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Вибачатися, прощати, дарувати, перепрошувати»",
+  "supporting_passage": "Так само не можна казати: \"За ці слова треба вибачатись\", – а слід: \"треба попросити вибачення\" або \"треба перепросити\".",
+  "page": null,
+  "article": "Вибачатися, прощати, дарувати, перепрошувати",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "11a583d98f8eef396b5e3e7ab26d1cd1713c8da9ad3b1a6c183057a3c838eeed",
+  "linguistic_rationale": "Засвідчено для decol_syn_028: форма «приносити вибачення» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «просити вибачення» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_028.review.json"
+}

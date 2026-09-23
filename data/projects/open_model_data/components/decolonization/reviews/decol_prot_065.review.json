@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_065",
+  "case_id": "decol_prot_065",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "за бажанням",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "за бажанням"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 1, гасло «Бажання»",
+  "supporting_passage": "БАЖА́ННЯ, я, с. 1. Прагнення, потяг до здійснення чого-небудь; хотіння: в усьому нехай виявляються Богові ваші бажання (Біблія); бажання верховодити (Панас Мирний); охопило бажання швидше пересісти на коней (О. Гончар). (Прийменникове вживання: за бажанням — відповідно до чийогось бажання: за бажанням самих тавричан (О. Гончар); за бажанням (СУМ-20: Факультативний — який відвідують або вивчають за бажанням)).",
+  "page": "т. 1",
+  "article": "Бажання",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "df12609c1cf7fb4b59d16653937ab347bcd363de9ea82104ec834bb0d7cc95cd",
+  "linguistic_rationale": "Засвідчено для decol_prot_065: вживання «за бажанням» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_065.review.json"
+}

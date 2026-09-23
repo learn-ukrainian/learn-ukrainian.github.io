@@ -5,7 +5,7 @@ double-assembly produces byte-identical archives across hosts:
 
 - ``date_time`` fixed to DOS epoch (1980-01-01 00:00:00)
 - ``create_system`` = 3 (Unix)
-- ``external_attr`` = regular file 0o644 (Unix mode in high 16 bits)
+- ``external_attr`` = regular file mode 0644 (Unix mode in high 16 bits)
 - no extra fields
 - stable entry ordering (caller supplies sorted paths)
 - ``ZIP_DEFLATED`` at pinned compression level
@@ -28,7 +28,7 @@ ZIP_EPOCH = (1980, 1, 1, 0, 0, 0)
 # Unix create_system value (PKZIP Appnote).
 CREATE_SYSTEM_UNIX = 3
 
-# Regular file mode 0o644 << 16 (Unix external_attr convention).
+# Regular file mode 0644 << 16 (Unix external_attr convention).
 EXTERNAL_ATTR_FILE = 0o100644 << 16
 
 # Pinned deflate level (matches gzip mtime=0 discipline in export_runtime_shards).

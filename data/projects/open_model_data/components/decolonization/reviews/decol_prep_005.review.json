@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_005",
+  "case_id": "decol_prep_005",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "у будні",
+  "russian_copy": "по буднях",
+  "ukrainian_proper": [
+    "у будні"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 76",
+  "supporting_passage": "Періодичність і повторюваність дій у робочі дні передають конструкцією зі знахідним відмінком: у будні або щодня (а не калькованим «по буднях»).",
+  "page": 76,
+  "article": "У будні, а не по буднях",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "08bb90001afe5c3bbb49f6bb78142bc87849b6ae4371f0ca415f5226a62f354d",
+  "linguistic_rationale": "Засвідчено для decol_prep_005: форма «по буднях» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «у будні» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_005.review.json"
+}

@@ -1003,6 +1003,16 @@ def test_wait_detects_zombie_and_returns_nonzero(tmp_tasks_dir, capsys):
 # ---------------------------------------------------------------------------
 
 
+@pytest.mark.parametrize("model", ["gpt-5.6-sol", "codex/gpt-5.6-luna", "cursor:gpt-5.6-terra"])
+def test_dispatch_rejects_retired_gpt56_model_before_spawn(tmp_tasks_dir, capsys, model):
+    args = delegate.build_parser().parse_args(
+        ["dispatch", "--agent", "cursor", "--model", model, "--task-id", "retired-model", "--prompt", "review"]
+    )
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path("retired-model")) is None
+    assert "retired GPT-5.6 model" in capsys.readouterr().err
+
+
 @pytest.mark.parametrize("agent", ["grok", "grok-build"])
 @pytest.mark.parametrize("effort", ["xhigh", "max"])
 def test_dispatch_rejects_unsupported_native_grok_effort_before_spawn(
@@ -4613,13 +4623,14 @@ def _make_run_stub(
             rc = 0 if rebase_ok else 1
             return subprocess.CompletedProcess(cmd, rc, "", "")
         if cmd[:2] == ["git", "ls-tree"]:
-            # Default top-level dirs for sparse-checkout tests / ensure_worktree.
-            return subprocess.CompletedProcess(
-                cmd,
-                0,
-                "curriculum\ndocs\nscripts\nsite\ntests\nwiki\n",
-                "",
-            )
+            # Default dirs for sparse-checkout tests / ensure_worktree.
+            # ``data/`` is listed separately so nested exclusions can drop
+            # data/projects and data/lexicon while keeping sibling data dirs.
+            if cmd[-1:] == ["data/"]:
+                listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
+            else:
+                listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
+            return subprocess.CompletedProcess(cmd, 0, listing, "")
         if cmd[:2] == ["git", "sparse-checkout"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
@@ -5800,6 +5811,9 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The capacity gate reads the live session-stream store. A Cursor worker
+    # running this suite holds that lease; this test is about branch reuse.
+    monkeypatch.setattr(delegate, "_find_live_cursor_driver_lease", lambda: None)
     args = argparse.Namespace(
         agent="cursor",
         task_id="branch-reuse-dry-run",
@@ -6271,9 +6285,13 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     assert set_calls, "default dispatch worktree must apply sparse-checkout set"
     assert "curriculum" not in set_calls[0]
     assert "wiki" not in set_calls[0]
+    assert "data/projects" not in set_calls[0]
+    assert "data/lexicon" not in set_calls[0]
+    assert "data/raw" in set_calls[0]
+    assert "--cone" in set_calls[0]
     assert "scripts" in set_calls[0]
     assert telemetry["sparse"] is not None
-    assert telemetry["sparse"]["excluded"] == ["curriculum", "wiki"]
+    assert telemetry["sparse"]["excluded"] == ["curriculum", "data/lexicon", "data/projects", "wiki"]
     assert telemetry["local_venv"] == {"present": False, "kind": None, "path": None}
 
 
@@ -6327,6 +6345,10 @@ def test_normalize_sparse_include_dedupes_and_strips():
         "curriculum",
         "wiki",
     )
+    assert delegate._normalize_sparse_include(["data/projects/", " data/lexicon "]) == (
+        "data/projects",
+        "data/lexicon",
+    )
 
 
 def test_normalize_sparse_include_rejects_nested_and_unknown():
@@ -6336,6 +6358,8 @@ def test_normalize_sparse_include_rejects_nested_and_unknown():
         delegate._normalize_sparse_include(["curriculum/l2-uk-en"])
     with pytest.raises(ValueError, match="not a default-excluded"):
         delegate._normalize_sparse_include(["scripts"])
+    with pytest.raises(ValueError, match="must name a default-excluded tree"):
+        delegate._normalize_sparse_include(["data/raw"])
     with pytest.raises(ValueError, match="empty or invalid"):
         delegate._normalize_sparse_include([""])
 
@@ -6358,6 +6382,58 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         prompt_text="Discuss Wikipedia articles without path refs.",
     )
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/projects/open_model_data/mine.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/projects/open_model_data/test_mine.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["site/src/pages/index.astro"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_foundry_cli.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_data_timeouts.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/audit/source_inventory_intake.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_source_inventory_intake.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/author_densified_pairs.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/noun_mechanics_engine.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        prompt_text="Read data/projects/foo.jsonl and leave data/raw alone.",
+    ) == ("data/projects",)
 
 
 def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
@@ -6413,10 +6489,17 @@ def test_augment_prompt_mentions_sparse_exclusions():
     text = delegate._augment_prompt_with_worktree(
         "do work",
         Path("/tmp/wt"),
-        sparse_telemetry={"full_checkout": False, "excluded": ["curriculum", "wiki"]},
+        sparse_telemetry={
+            "full_checkout": False,
+            "excluded": ["curriculum", "data/projects", "wiki"],
+        },
     )
     assert "curriculum" in text
     assert "wiki" in text
+    assert "data/projects" in text
+    assert "git sparse-checkout add data/projects" in text
+    assert "git sparse-checkout add curriculum" in text
+    assert "re-dispatch" not in text
     assert "sparse" in text.lower() or "Sparse" in text
 
 
@@ -6442,6 +6525,10 @@ def test_augment_write_prompt_offers_optional_delivery_declaration():
     assert "DELIVERABLE:" in text
     assert '"outcome":"no_change"' in text
     assert "optional" in text.lower()
+    assert "git push -u origin HEAD" in text
+    assert "git status --porcelain" in text
+    assert "Do not open or merge PRs unless the brief says so" in text
+    assert "sufficient proof of delivery" not in text
 
 
 def test_augment_read_only_prompt_omits_delivery_declaration():
@@ -7775,6 +7862,9 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The capacity gate reads the live session-stream store. A Cursor worker
+    # running this suite holds that lease; this test is about branch reuse.
+    monkeypatch.setattr(delegate, "_find_live_cursor_driver_lease", lambda: None)
     args = argparse.Namespace(
         agent="cursor",
         task_id="branch-reuse-stale-main",
@@ -7843,6 +7933,11 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
         d = primary / name
         d.mkdir()
         (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
+    for name in ("projects", "lexicon", "raw"):
+        d = primary / "data" / name
+        d.mkdir(parents=True)
+        (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
+    (primary / "data" / "readme.txt").write_text("data-root\n", encoding="utf-8")
     (primary / "README.md").write_text("root\n", encoding="utf-8")
     git("add", ".")
     git("commit", "-m", "init")
@@ -7853,24 +7948,33 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
 
     meta = delegate._apply_dispatch_sparse_checkout(worktree)
     assert meta["applied"] is True
-    assert meta["excluded"] == ["curriculum", "wiki"]
+    assert meta["excluded"] == ["curriculum", "data/lexicon", "data/projects", "wiki"]
     assert not (worktree / "curriculum").exists()
     assert not (worktree / "wiki").exists()
+    assert not (worktree / "data" / "projects").exists()
+    assert not (worktree / "data" / "lexicon").exists()
+    assert (worktree / "data" / "raw" / "f.txt").is_file()
+    assert (worktree / "data" / "readme.txt").is_file()
     assert (worktree / "scripts" / "f.txt").is_file()
     assert (worktree / "README.md").is_file()
     # Primary must remain full.
     assert (primary / "curriculum" / "f.txt").is_file()
     assert (primary / "wiki" / "f.txt").is_file()
+    assert (primary / "data" / "projects" / "f.txt").is_file()
 
-    meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum",))
-    assert meta2["excluded"] == ["wiki"]
+    meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum", "data/projects"))
+    assert meta2["excluded"] == ["data/lexicon", "wiki"]
     assert (worktree / "curriculum" / "f.txt").is_file()
+    assert (worktree / "data" / "projects" / "f.txt").is_file()
+    assert not (worktree / "data" / "lexicon").exists()
     assert not (worktree / "wiki").exists()
 
     meta3 = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=True)
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "wiki" / "f.txt").is_file()
+    assert (worktree / "data" / "projects" / "f.txt").is_file()
+    assert (worktree / "data" / "lexicon" / "f.txt").is_file()
 
 
 def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):
@@ -8034,6 +8138,254 @@ def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkey
     out = delegate._reap_finished_worktree(tmp_path)
     assert isinstance(out, dict)
     assert out.get("ok") is not True
+
+
+def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
+    """Primary plus one linked dispatch worktree on its own branch."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _init_git_repo_for_test(primary, monkeypatch)
+    subprocess.run(
+        ["git", "config", "commit.gpgsign", "false"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    (primary / "README").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README"], cwd=primary, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "base"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    branch = f"cursor/{task_id}"
+    worktree = primary / ".worktrees" / "dispatch" / "cursor" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "worktree", "add", "-b", branch, str(worktree), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
+    return primary.resolve(), worktree.resolve(), branch
+
+
+def _branch_ref_present(primary: Path, branch: str) -> bool:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}"],
+        cwd=primary,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    return proc.returncode == 0
+
+
+def _run_settle_reap_worker(
+    *,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    task_id: str,
+    mode: str,
+    ok: bool = True,
+    response: str = "reviewed the change",
+    returncode: int = 0,
+    dirty: bool = False,
+    keep_worktree: bool = False,
+    require_review_verdict: bool = False,
+    commits_ahead: int | None = None,
+):
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    if dirty:
+        (worktree / "leak.txt").write_text("uncommitted\n", encoding="utf-8")
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "status": "running",
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "worktree_branch": branch,
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": ok,
+            "response": response,
+            "stderr_excerpt": None if ok else "worker failed",
+            "returncode": returncode,
+            "rate_limited": False,
+            "model": "gpt-5.6-terra",
+            "effort": "medium",
+            "cli_version": "fixture",
+        },
+    )()
+    with contextlib.ExitStack() as stack:
+        stack.enter_context(patch("agent_runtime.runner.invoke", return_value=mock_result))
+        if commits_ahead is not None:
+            stack.enter_context(patch.object(delegate, "_count_commits_ahead", return_value=commits_ahead))
+        delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="review the diff",
+            mode=mode,
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="medium",
+            keep_worktree=keep_worktree,
+            require_review_verdict=require_review_verdict,
+        )
+    state = delegate._read_state(state_path)
+    assert state is not None
+    return primary, worktree, branch, state
+
+
+def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A clean read-only checkout is removed on done; the branch ref stays."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-clean",
+        mode="read-only",
+    )
+
+    assert state["status"] == "done"
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["error"] is None
+    assert state["worktree_reap"]["branch"] == branch
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_dirty_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Uncommitted files in a read-only checkout are kept and reported."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-dirty",
+        mode="read-only",
+        dirty=True,
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_dirty_on_exit"] is True
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+    assert (worktree / "leak.txt").is_file()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_failed_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A failed read-only run still drops a clean checkout."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-failed",
+        mode="read-only",
+        ok=False,
+        response="could not finish",
+        returncode=1,
+    )
+
+    assert state["status"] == "failed"
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["branch"] == branch
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_no_deliverable_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A clean read-only review with no verdict is still removed."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-noverdict",
+        mode="read-only",
+        response="I will keep looking and report later.",
+        require_review_verdict=True,
+    )
+
+    assert state["status"] == "no_deliverable"
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_workspace_write_done_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A clean successful workspace-write checkout is removed, same as danger."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ww-done",
+        mode="workspace-write",
+        response='DELIVERABLE: {"outcome":"no_change","reason":"already correct"}',
+        commits_ahead=0,
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_dirty_on_exit"] is False
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["error"] is None
+    assert state["worktree_reap"]["branch"] == branch
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_keep_worktree_flag_keeps_clean_read_only_checkout(tmp_tasks_dir, tmp_path, monkeypatch):
+    """``--keep-worktree`` leaves a clean read-only checkout mounted."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-keep",
+        mode="read-only",
+        keep_worktree=True,
+    )
+
+    assert state["status"] == "done"
+    assert state["keep_worktree"] is True
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Danger still reaps only a clean successful done, not a failed run."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-danger-failed",
+        mode="danger",
+        ok=False,
+        response="could not finish",
+        returncode=1,
+        commits_ahead=0,
+    )
+
+    assert state["status"] == "failed"
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
 
 
 def test_run_worker_records_completion_even_when_cancelled_during_finalize(

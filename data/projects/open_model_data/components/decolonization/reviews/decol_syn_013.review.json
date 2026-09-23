@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_013",
+  "case_id": "decol_syn_013",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "стати в пригоді",
+  "russian_copy": "пригодитися",
+  "ukrainian_proper": [
+    "стати в пригоді"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Нагода й пригода»",
+  "supporting_passage": "Іменник \"пригода\" може означати також потребу, користь: \"Годувала собі дочку для своєї пригоди, щоб принесла із криниці холодної води\" (народна пісня), – від чого є вислів \"стати в пригоді\": \"Не бий мене, чоловіче добрий, я тобі у великій пригоді стану\" (казка).",
+  "page": null,
+  "article": "Нагода й пригода",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "af3d8ca1ffd013b6ace976fe34839dd44b176685ea0745bab903e82dc80b8ca7",
+  "linguistic_rationale": "Засвідчено для decol_syn_013: форма «пригодитися» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «стати в пригоді» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_013.review.json"
+}

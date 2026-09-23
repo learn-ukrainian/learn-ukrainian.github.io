@@ -62,7 +62,7 @@ def _enforce_cf_preflight(args: argparse.Namespace, module_dir: Path | None = No
 FETCH_TIMEOUT_S = 30
 GIT_ARTIFACT_TIMEOUT_S = 30
 # Wall clock for the whole --worktree child. A 4-lesson upgrade is writer +
-# Gemini QG + Astra QG per lesson; DEFAULT_WRITER_TIMEOUT_S is per-call silence,
+# Gemini QG + Sol QG per lesson; DEFAULT_WRITER_TIMEOUT_S is per-call silence,
 # not the pipeline. 30 minutes killed A1 5-7 mid-QG.
 WORKTREE_CHILD_TIMEOUT_S = 8 * 3600
 WORKTREE_AUTO = "auto"
@@ -2124,7 +2124,7 @@ def _land_overview_or_fail(module_dir: Path, source_dir: Path, plan: Mapping[str
 
 
 UPGRADE_INDEPENDENT_REVIEWER = "codex-tools"
-UPGRADE_INDEPENDENT_EFFORT = "medium"
+UPGRADE_INDEPENDENT_EFFORT = "high"
 
 
 def _upgrade_gemini_adjust_then_astra(
@@ -2140,7 +2140,7 @@ def _upgrade_gemini_adjust_then_astra(
     effort: str | None,
     content_override: str | None = None,
 ) -> dict[str, Any]:
-    """Gemini reviews and may rewrite; Astra (medium) is the independent gate."""
+    """Gemini reviews and may rewrite; Sol (high) is the independent gate."""
     try:
         self_review = _run_llm_qg(
             plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
@@ -2153,7 +2153,7 @@ def _upgrade_gemini_adjust_then_astra(
         )
     except linear_pipeline.LinearPipelineError as exc:
         self_review = {"passed": False, "error": str(exc), "skipped_adjust": True}
-        print(f"[upgrade] Gemini self-review failed ({exc}); continuing to Astra", file=sys.stderr, flush=True)
+        print(f"[upgrade] Gemini self-review failed ({exc}); continuing to Sol", file=sys.stderr, flush=True)
     linear_pipeline.write_json(module_dir / "llm_qg_gemini.json", self_review)
     if not _llm_qg_payload_passes(self_review) and content_override is None and not self_review.get("skipped_adjust"):
         adjust = (
@@ -2177,7 +2177,7 @@ def _upgrade_gemini_adjust_then_astra(
         plan=plan, plan_content=plan_content, module_dir=module_dir, writer=writer,
         reviewer_override=independent_reviewer, profile="core",
         stdout_silence_timeout=stdout_silence_timeout,
-        review_context=review_context + "\nIndependent Astra review after Gemini self-adjust. "
+        review_context=review_context + "\nIndependent Sol review after Gemini self-adjust. "
             "Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is "
             "better than a fluent guess; this corpus trains an LLM and tests the tools.",
         content_override=content_override, effort_override=UPGRADE_INDEPENDENT_EFFORT,
@@ -2247,7 +2247,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
         writer_family = resolve_family(linear_pipeline.WRITER_DEFAULTS[writer]["model"])
         independent_family = resolve_family(linear_pipeline.REVIEWER_DEFAULTS[independent_reviewer]["model"])
         if writer_family in UNRESOLVED_AUTHOR_FAMILIES or independent_family in UNRESOLVED_AUTHOR_FAMILIES or writer_family == independent_family:
-            raise linear_pipeline.LinearPipelineError("Upgrade independent review (Astra) must be a different identified family from the Gemini writer")
+            raise linear_pipeline.LinearPipelineError("Upgrade independent review (Sol) must be a different identified family from the Gemini writer")
         writer_identity = {"writer": writer, "model": linear_pipeline.WRITER_DEFAULTS[writer]["model"], "effort": args.effort or linear_pipeline.WRITER_DEFAULTS[writer]["effort"]}
         review_identity = json.dumps({
             "writer": writer_identity,
@@ -2317,7 +2317,7 @@ def _run_upgrade(args: argparse.Namespace) -> int:
             )
             linear_pipeline.write_json(lesson_dir / "llm_qg.json", review)
             if not _llm_qg_payload_passes(review):
-                raise linear_pipeline.LinearPipelineError(f"Lesson {n} Astra review failed")
+                raise linear_pipeline.LinearPipelineError(f"Lesson {n} Sol review failed")
             prior_vocabulary.extend(str(entry["lemma"]) for entry in linear_pipeline.load_yaml(lesson_dir / "vocabulary.yaml"))
 
         phase = "module_coherence"

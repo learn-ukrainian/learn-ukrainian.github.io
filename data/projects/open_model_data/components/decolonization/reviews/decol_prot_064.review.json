@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_064",
+  "case_id": "decol_prot_064",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "мати значення",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "мати значення"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Великий тлумачний словник сучасної української мови (ВТС), гасло «Значення» (див. також СУМ-20, гасло «Мати²»)",
+  "supporting_passage": "зна́чення -я, с. 1》 Громадська, політична, історична і т. ін. вага, роль кого-, чого-небудь; важливість. 2》 Сутність чого-небудь; зміст. (див. СУМ-20, МА́ТИ²: (9) Ма́ти зна́чення – бути важливим для кого-, чого-небудь: Що не кажи, а ці святки, цей свят-вечір, маланки, ці колядки й щедрівки мають для мене значення (М. Коцюбинський); – Закохався?! Хто вона? – Яке це має значення? (В. Дрозд); мати значення).",
+  "page": "т. 5",
+  "article": "Значення",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e298eddf9ab5be094d720439133cf56e3f29ff2d2b6566a32f5d027cde08cc95",
+  "linguistic_rationale": "Засвідчено для decol_prot_064: вживання «мати значення» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_064.review.json"
+}

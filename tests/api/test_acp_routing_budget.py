@@ -117,6 +117,34 @@ def test_acp_routing_preserves_runtime_budget_evidence(monkeypatch, budget):
     assert result["recommendation"]["primary_agent_for_code"] == "codex"
 
 
+def test_acp_preserves_verified_codex_reset_reserve(monkeypatch, budget):
+    budget["agents"]["codex"].update({
+        "status": "near_cap",
+        "eligible": True,
+        "freshness": "fresh",
+        "age_s": 5,
+        "codexbar": {"weekly_used_pct": 80, "windows": {"primary": {"remaining_pct": 20}}},
+        "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+    })
+    budget["reset_reserve"] = {"available": True, "provider": "codex", "remaining_resets": 2}
+    health = {lane: _health(True) for lane in budget["agents"]}
+    monkeypatch.setattr(state_router, "probe_acp_health", lambda _cwd: deepcopy(health))
+    monkeypatch.setattr(
+        state_router,
+        "_recommend_agent",
+        lambda *_args, **_kwargs: {"primary_agent_for_code": "cursor", "rationale": "cooler", "warnings": []},
+    )
+
+    result = state_router.compute_routing_budget(transport="acp")
+    assert result["agents"]["codex"]["status"] == "near_cap"
+    assert result["recommendation"]["primary_agent_for_code"] == "codex"
+    assert "ACP compatibility" in result["recommendation"]["rationale"]
+
+    health["codex"] = _health(False)
+    result = state_router.compute_routing_budget(transport="acp")
+    assert result["recommendation"]["primary_agent_for_code"] == "cursor"
+
+
 def test_acp_no_inline_transport_fallback_when_all_lanes_hot(monkeypatch, budget):
     for info in budget["agents"].values():
         info["status"] = "hot"

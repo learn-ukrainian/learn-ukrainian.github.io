@@ -28,8 +28,8 @@ AGY **is** an orchestrator seat for fleet-comms (#5512):
 
 | Role | Model | Status |
 | --- | --- | --- |
-| Orchestrator loop | `gemini-3.6-flash-high` @ high | **Live** (`orchestrator_seats.agy`) |
-| Deep escalate | `gemini-3.1-pro-high` @ high | Optional, not default loop |
+| Orchestrator loop | `gemini-3.8-flash-high` @ high | **Live** (`orchestrator_seats.agy`) |
+| Deep escalate | `gemini-3.8-flash-high` @ high | Same SKU escalation (`orchestrator_seats.agy`) |
 | Sealed formal CF *reviewer* | — | **Blocked** until isolation proof (#5555) |
 
 When AGY orchestrates, it **requests** CF via `review-pr`
@@ -38,10 +38,10 @@ When AGY orchestrates, it **requests** CF via `review-pr`
 ## Live lane (non-formal / orchestrator)
 
 ```bash
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.6-flash-high \
+.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high \
   --mode danger --worktree --task-id <task> --prompt-file BRIEF
 .venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy - \
-  --task-id agy-orch --to-model gemini-3.6-flash-high
+  --task-id agy-orch --to-model gemini-3.8-flash-high
 ```
 
 ## Substitute formal CF

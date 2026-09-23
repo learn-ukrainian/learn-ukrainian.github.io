@@ -566,7 +566,7 @@ def _build_parser() -> argparse.ArgumentParser:
         required=True,
         help=(
             "Concrete seat/model id, or '<ambiguous-harness>:<concrete-model>' "
-            "(e.g. 'cursor:gpt-5.6-sol') to disambiguate a multi-model harness session."
+            "(e.g. 'cursor:claude-opus-5-5') to disambiguate a multi-model harness session."
         ),
     )
     p_reviewer.add_argument(

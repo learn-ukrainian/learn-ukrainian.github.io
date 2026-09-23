@@ -499,7 +499,7 @@ def test_backlog_banner_triggers_for_old_pending_delivery(monkeypatch, capsys):
     old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
     _set_message_created_at(str(thread[0]["message_id"]), old_ts)
 
-    exit_code = _run_cli(["inbox", "show", "claude"])
+    exit_code = _run_cli(["inbox", "show", "codex"])
 
     assert exit_code == 0
     captured = capsys.readouterr()
@@ -514,11 +514,83 @@ def test_backlog_banner_triggers_for_old_pending_delivery(monkeypatch, capsys):
     )
 
 
+def test_backlog_banner_silent_for_other_seats_backlog(monkeypatch, capsys):
+    """Only the owning seat can drain its queue: another seat's stale backlog
+    is noise on this seat's CLI calls and must not be warned."""
+    thread = _make_thread("codex", count=1)
+    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
+    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
+    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
+
+    exit_code = _run_cli(["inbox", "show", "claude"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "pending deliveries" not in captured.err
+
+
+def test_backlog_banner_warns_once_for_own_queue_on_plain_inbox(monkeypatch, capsys):
+    thread = _make_thread("codex", count=1)
+    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
+    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
+    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
+
+    exit_code = _run_cli(["inbox", "--for", "codex"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert captured.err.count("pending deliveries") == 1
+    assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
+
+
+def test_backlog_banner_falls_back_to_session_handoff_agent(monkeypatch, capsys):
+    thread = _make_thread("codex", count=1)
+    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
+    monkeypatch.setenv("SESSION_HANDOFF_AGENT", "codex")
+    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
+    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
+
+    exit_code = _run_cli(["inbox"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "⚠️  codex has 1 pending deliveries (oldest 6h12m)." in captured.err
+
+
+def test_backlog_banner_silent_without_identity(monkeypatch, capsys):
+    thread = _make_thread("codex", count=1)
+    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
+    monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
+    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
+    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
+
+    exit_code = _run_cli(["inbox"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "pending deliveries" not in captured.err
+
+
+def test_backlog_banner_never_fires_for_ask_commands(monkeypatch, capsys):
+    thread = _make_thread("codex", count=1)
+    monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
+    monkeypatch.delenv("SESSION_HANDOFF_AGENT", raising=False)
+    old_ts = (datetime.now(UTC) - timedelta(hours=6, minutes=12)).isoformat()
+    _set_message_created_at(str(thread[0]["message_id"]), old_ts)
+    monkeypatch.setattr(_cli, "_handle_acp_compat", lambda *a, **k: None)
+
+    exit_code = _run_cli(["ask-codex", "hello", "--from", "claude"])
+
+    assert exit_code == 0
+    captured = capsys.readouterr()
+    assert "pending deliveries" not in captured.err
+
+
 def test_backlog_banner_does_not_trigger_for_fresh_pending_delivery(monkeypatch, capsys):
     _make_thread("codex", count=1)
     monkeypatch.setenv("AB_BACKLOG_WARN_HOURS", "2")
 
-    exit_code = _run_cli(["inbox", "show", "claude"])
+    exit_code = _run_cli(["inbox", "show", "codex"])
 
     assert exit_code == 0
     captured = capsys.readouterr()

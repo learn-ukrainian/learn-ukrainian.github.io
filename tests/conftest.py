@@ -4,12 +4,14 @@ Pytest configuration and shared fixtures for audit tests.
 Provides reusable content snippets and module templates for testing.
 """
 
+import ast
 import contextlib
 import functools
 import ipaddress
 import os
 import socket
 import sqlite3
+import subprocess
 import sys
 import threading
 from collections.abc import Collection, Generator
@@ -21,6 +23,84 @@ import pytest
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[int, bool]:
+    """Return the size of a tree without following symlinks.
+
+    When a budget is supplied, stop as soon as the measured size exceeds it.
+    The boolean reports that the walk stopped early, so callers do not present
+    a lower bound as an exact size.
+    """
+    size = 0
+    pending = [root]
+    while pending:
+        directory = pending.pop()
+        try:
+            entries_context = os.scandir(directory)
+        except (FileNotFoundError, PermissionError):
+            # A temp directory may disappear or become unreadable during teardown.
+            continue
+        with entries_context as entries:
+            for entry in entries:
+                try:
+                    if entry.is_dir(follow_symlinks=False):
+                        pending.append(Path(entry.path))
+                    else:
+                        file_stat = entry.stat(follow_symlinks=False)
+                        size += getattr(file_stat, "st_blocks", 0) * 512 or file_stat.st_size
+                except FileNotFoundError:
+                    # A test may have removed a temp file while the walk ran.
+                    continue
+                if stop_after_bytes is not None and size > stop_after_bytes:
+                    return size, True
+    return size, False
+
+
+def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
+    """Report this session's temp usage and optionally enforce a CI budget."""
+    config = session.config
+    if hasattr(config, "workerinput"):
+        return
+
+    tmp_path_factory = getattr(config, "_tmp_path_factory", None)
+    if tmp_path_factory is None:
+        return
+    if getattr(tmp_path_factory, "_basetemp", None) is None:
+        return
+    basetemp = tmp_path_factory.getbasetemp()
+    budget_value = os.environ.get("LU_PYTEST_TMP_BUDGET_GB")
+    if budget_value is not None and not budget_value.strip():
+        budget_value = None
+    budget_bytes: int | None = None
+    if budget_value is not None:
+        try:
+            budget_gb = float(budget_value)
+            if not (budget_gb >= 0 and budget_gb < float("inf")):
+                raise ValueError
+            budget_bytes = int(budget_gb * 1024**3)
+        except ValueError:
+            print(f"pytest-tmp: invalid LU_PYTEST_TMP_BUDGET_GB={budget_value!r}")
+            session.exitstatus = pytest.ExitCode.TESTS_FAILED
+            return
+
+    try:
+        size, stopped_early = _pytest_tmp_size(basetemp, budget_bytes)
+    except OSError as error:
+        print(f"pytest-tmp: unable to measure {basetemp}: {error}")
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+        return
+
+    size_gb = size / 1024**3
+    reported_size = f"at least {size:,} bytes (walk stopped at budget)" if stopped_early else f"{size_gb:.2f} GB"
+    print(f"pytest-tmp: {reported_size} in {basetemp}")
+    if budget_bytes is not None and size > budget_bytes:
+        print(
+            f"pytest-tmp: session temp size exceeded LU_PYTEST_TMP_BUDGET_GB={budget_value} "
+            f"({budget_bytes / 1024**3:.2f} GB)"
+        )
+        session.exitstatus = pytest.ExitCode.TESTS_FAILED
+
 
 # =============================================================================
 # CI FILE-PLANE SHARD ALLOWLIST (ci-shard-balance-2026-09-07)
@@ -92,19 +172,25 @@ def _get_breadcrumb_file() -> Path | None:
     if not breadcrumb_dir_str:
         return None
     dir_path = Path(breadcrumb_dir_str)
-    dir_path.mkdir(parents=True, exist_ok=True)
+    try:
+        dir_path.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return None
     worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
     return dir_path / f"breadcrumb_{worker_id}.txt"
 
 
 def _append_breadcrumb(line: str) -> None:
-    breadcrumb_file = _get_breadcrumb_file()
-    if breadcrumb_file:
-        with open(breadcrumb_file, "a", encoding="utf-8") as f:
-            f.write(line)
-            f.flush()
-            with contextlib.suppress(OSError):
-                os.fsync(f.fileno())
+    try:
+        breadcrumb_file = _get_breadcrumb_file()
+        if breadcrumb_file:
+            with open(breadcrumb_file, "a", encoding="utf-8") as f:
+                f.write(line)
+                f.flush()
+                with contextlib.suppress(OSError):
+                    os.fsync(f.fileno())
+    except OSError:
+        pass
 
 
 def pytest_runtest_logstart(nodeid: str, location: tuple[str, int | None, str]) -> None:
@@ -401,8 +487,472 @@ def _install_socket_guard() -> None:
 _install_socket_guard()
 
 
+# Dispatch worktrees drop these trees by default. Tests that read them skip
+# only while sparse-checkout is on AND the tree is absent. CI (sparse off)
+# always runs them. Needs are derived from the test module (path joins,
+# Path/open arguments, imported path constants, fixtures, and
+# pytest.mark.needs_sparse_tree), not from a hand list. A string that only
+# mentions the tree name is not a read.
+_SPARSE_TREE_DIRS: dict[str, tuple[str, ...]] = {
+    "data/projects": ("tests/projects/open_model_data",),
+    "data/lexicon": ("tests/lexicon",),
+}
+_SPARSE_TREES = frozenset(_SPARSE_TREE_DIRS)
+_SPARSE_READ_ATTRS = frozenset(
+    {
+        "read_text",
+        "read_bytes",
+        "glob",
+        "rglob",
+        "iterdir",
+        "open",
+        "exists",
+        "stat",
+    }
+)
+
+
+def sparse_missing_tree_skip_reason(
+    rel_path: str,
+    *,
+    sparse_enabled: bool,
+    missing_trees: Collection[str],
+    item_name: str = "",
+) -> str | None:
+    """Skip reason when a sparse worktree is missing a tree the test reads.
+
+    Returns ``None`` when sparse-checkout is off, even if the tree is absent,
+    so CI (full checkout, sparse disabled) never skips these tests.
+    """
+    if not sparse_enabled:
+        return None
+    normalized = rel_path.replace("\\", "/").lstrip("./")
+    needed = _trees_needed_by_test(normalized, item_name)
+    for tree in ("data/projects", "data/lexicon"):
+        if tree in missing_trees and tree in needed:
+            return (
+                f"{tree} is absent from this sparse worktree; "
+                f"re-include it with --sparse-include {tree}"
+            )
+    return None
+
+
+def _trees_needed_by_test(rel_path: str, item_name: str) -> frozenset[str]:
+    needed: set[str] = set()
+    for tree, prefixes in _SPARSE_TREE_DIRS.items():
+        if any(rel_path == prefix or rel_path.startswith(prefix + "/") for prefix in prefixes):
+            needed.add(tree)
+    analysis = _analyze_test_module(rel_path)
+    if analysis is not None:
+        module_trees, function_pairs = analysis
+        needed.update(module_trees)
+        base_name = item_name.split("[", 1)[0]
+        needed.update(dict(function_pairs).get(base_name, ()))
+    return frozenset(needed)
+
+
+def _path_trees(text: str, *, allow_bare: bool = False) -> set[str]:
+    """Trees named by a path.
+
+    A bare ``data/lexicon`` string is the skip/re-include identifier, not a
+    file read. A path into the tree (``data/lexicon/...``) counts, and so does
+    a path-join whose final path is exactly the tree directory.
+    """
+    normalized = text.replace("\\", "/")
+    found: set[str] = set()
+    for tree in ("data/projects", "data/lexicon"):
+        into_tree = f"{tree}/" in normalized
+        bare_tree = allow_bare and (normalized == tree or normalized.endswith(f"/{tree}"))
+        if into_tree or bare_tree:
+            found.add(tree)
+    return found
+
+
+def _div_parts(node: ast.AST) -> list[str]:
+    if isinstance(node, ast.BinOp) and isinstance(node.op, ast.Div):
+        return _div_parts(node.left) + _div_parts(node.right)
+    if isinstance(node, ast.Constant) and isinstance(node.value, str):
+        return [node.value]
+    return []
+
+
+def _resolve_module(dotted: str) -> Path | None:
+    rel = Path(*dotted.split("."))
+    for candidate in (_REPO_ROOT / rel.with_suffix(".py"), _REPO_ROOT / rel / "__init__.py"):
+        if candidate.is_file():
+            return candidate
+    return None
+
+
+_EXPORT_CACHE: dict[str, tuple[tuple[str, frozenset[str]], ...]] = {}
+_EXPORT_STACK: set[str] = set()
+
+
+def _module_exports(abs_path: str) -> tuple[tuple[str, frozenset[str]], ...]:
+    """Module-level names whose values reference a sparse data tree."""
+    cached = _EXPORT_CACHE.get(abs_path)
+    if cached is not None:
+        return cached
+    if abs_path in _EXPORT_STACK:
+        return ()
+    _EXPORT_STACK.add(abs_path)
+    result: tuple[tuple[str, frozenset[str]], ...] = ()
+    try:
+        path = Path(abs_path)
+        try:
+            tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+        except (OSError, SyntaxError, UnicodeError):
+            return ()
+        else:
+            names: dict[str, set[str]] = {}
+            aliases: dict[str, Path] = {}
+            _collect_imports(tree, names, aliases)
+            for stmt in tree.body:
+                targets: list[ast.expr] = []
+                value: ast.expr | None = None
+                if isinstance(stmt, ast.Assign):
+                    targets = list(stmt.targets)
+                    value = stmt.value
+                elif isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+                    targets = [stmt.target]
+                    value = stmt.value
+                if value is None:
+                    continue
+                trees = _expr_trees(value, names, aliases)
+                for target in targets:
+                    if isinstance(target, ast.Name) and trees:
+                        names[target.id] = set(trees)
+            result = tuple((name, frozenset(bound)) for name, bound in names.items() if bound)
+    finally:
+        _EXPORT_STACK.discard(abs_path)
+    _EXPORT_CACHE[abs_path] = result
+    return result
+
+
+def _export_map(path: Path) -> dict[str, frozenset[str]]:
+    return dict(_module_exports(str(path.resolve())))
+
+
+def _collect_imports(
+    tree: ast.AST,
+    names: dict[str, set[str]],
+    aliases: dict[str, Path],
+) -> None:
+    for stmt in tree.body if isinstance(tree, ast.Module) else []:
+        if isinstance(stmt, ast.Import):
+            for alias in stmt.names:
+                module = _resolve_module(alias.name)
+                if module is not None:
+                    aliases[alias.asname or alias.name.split(".", 1)[0]] = module
+        elif isinstance(stmt, ast.ImportFrom) and stmt.module and stmt.level == 0:
+            for alias in stmt.names:
+                if alias.name == "*":
+                    continue
+                submodule = _resolve_module(f"{stmt.module}.{alias.name}")
+                bound = alias.asname or alias.name
+                if submodule is not None:
+                    aliases[bound] = submodule
+                    continue
+                source = _resolve_module(stmt.module)
+                if source is None:
+                    continue
+                exported = _export_map(source).get(alias.name)
+                if exported:
+                    names[bound] = set(exported)
+
+
+def _string_is_path_operand(node: ast.Constant, parent: ast.AST | None) -> bool:
+    """True when a string is a filesystem path, not prose that mentions one."""
+    if isinstance(parent, ast.BinOp) and isinstance(parent.op, ast.Div):
+        return node is parent.left or node is parent.right
+    if isinstance(parent, ast.Attribute) and parent.attr in _SPARSE_READ_ATTRS:
+        return node is parent.value
+    if not isinstance(parent, ast.Call):
+        return False
+    func = parent.func
+    is_path_call = (isinstance(func, ast.Name) and func.id in {"Path", "open"}) or (
+        isinstance(func, ast.Attribute) and func.attr in _SPARSE_READ_ATTRS
+    )
+    return is_path_call and any(node is arg for arg in parent.args)
+
+
+def _expr_trees(
+    node: ast.AST,
+    names: dict[str, set[str]],
+    aliases: dict[str, Path],
+) -> set[str]:
+    found: set[str] = set()
+    parents: dict[ast.AST, ast.AST] = {}
+    for parent in ast.walk(node):
+        for child in ast.iter_child_nodes(parent):
+            parents[child] = parent
+    for child in ast.walk(node):
+        if isinstance(child, ast.Constant) and isinstance(child.value, str):
+            if _string_is_path_operand(child, parents.get(child)):
+                found.update(_path_trees(child.value))
+        elif isinstance(child, ast.BinOp) and isinstance(child.op, ast.Div):
+            parts = _div_parts(child)
+            if len(parts) >= 2:
+                found.update(_path_trees("/".join(parts), allow_bare=True))
+        elif isinstance(child, ast.Name) and isinstance(child.ctx, ast.Load):
+            found.update(names.get(child.id, ()))
+        elif (
+            isinstance(child, ast.Attribute)
+            and isinstance(child.value, ast.Name)
+            and isinstance(child.value.ctx, ast.Load)
+        ):
+            module = aliases.get(child.value.id)
+            if module is not None:
+                found.update(_export_map(module).get(child.attr, ()))
+    return found
+
+
+def _marker_trees(node: ast.AST) -> set[str]:
+    found: set[str] = set()
+    if isinstance(node, (ast.List, ast.Tuple)):
+        for elt in node.elts:
+            found.update(_marker_trees(elt))
+        return found
+    if not isinstance(node, ast.Call) or not isinstance(node.func, ast.Attribute):
+        return found
+    if node.func.attr != "needs_sparse_tree":
+        return found
+    for arg in node.args:
+        if isinstance(arg, ast.Constant) and arg.value in _SPARSE_TREES:
+            found.add(str(arg.value))
+    return found
+
+
+def _is_fixture(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[bool, bool]:
+    for dec in fn.decorator_list:
+        call = dec if isinstance(dec, ast.Call) else None
+        func = call.func if call is not None else dec
+        name = func.attr if isinstance(func, ast.Attribute) else (func.id if isinstance(func, ast.Name) else "")
+        if name != "fixture":
+            continue
+        autouse = False
+        if call is not None:
+            for keyword in call.keywords:
+                if (
+                    keyword.arg == "autouse"
+                    and isinstance(keyword.value, ast.Constant)
+                    and keyword.value.value is True
+                ):
+                    autouse = True
+        return True, autouse
+    return False, False
+
+
+def _function_body(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> list[ast.stmt]:
+    body = list(fn.body)
+    if (
+        body
+        and isinstance(body[0], ast.Expr)
+        and isinstance(body[0].value, ast.Constant)
+        and isinstance(body[0].value.value, str)
+    ):
+        return body[1:]
+    return body
+
+
+def _has_read_call(node: ast.AST) -> bool:
+    for child in ast.walk(node):
+        if not isinstance(child, ast.Call):
+            continue
+        func = child.func
+        if isinstance(func, ast.Name) and func.id == "open":
+            return True
+        if isinstance(func, ast.Attribute) and func.attr in _SPARSE_READ_ATTRS:
+            return True
+    return False
+
+
+def _decorator_trees(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+    found: set[str] = set()
+    for dec in fn.decorator_list:
+        found.update(_marker_trees(dec))
+    return found
+
+
+def _local_calls(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+    calls: set[str] = set()
+    for stmt in _function_body(fn):
+        for node in ast.walk(stmt):
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name):
+                calls.add(node.func.id)
+    return calls
+
+
+def _usefixtures(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> set[str]:
+    names: set[str] = set()
+    for dec in fn.decorator_list:
+        if not isinstance(dec, ast.Call) or not isinstance(dec.func, ast.Attribute):
+            continue
+        if dec.func.attr != "usefixtures":
+            continue
+        for arg in dec.args:
+            if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
+                names.add(arg.value)
+    return names
+
+
+@functools.lru_cache(maxsize=512)
+def _analyze_test_module(
+    rel_path: str,
+) -> tuple[frozenset[str], tuple[tuple[str, frozenset[str]], ...]] | None:
+    path = _REPO_ROOT / rel_path
+    if not path.is_file() or path.suffix != ".py":
+        return None
+    try:
+        tree = ast.parse(path.read_text(encoding="utf-8"), filename=str(path))
+    except (OSError, SyntaxError, UnicodeError):
+        return None
+    names: dict[str, set[str]] = {}
+    aliases: dict[str, Path] = {}
+    _collect_imports(tree, names, aliases)
+    module_trees: set[str] = set()
+    for stmt in tree.body:
+        if (
+            isinstance(stmt, ast.Assign)
+            and len(stmt.targets) == 1
+            and isinstance(stmt.targets[0], ast.Name)
+            and stmt.targets[0].id == "pytestmark"
+        ):
+            module_trees.update(_marker_trees(stmt.value))
+        if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef, ast.ClassDef)):
+            continue
+        if _has_read_call(stmt):
+            module_trees.update(_expr_trees(stmt, names, aliases))
+        targets = []
+        value: ast.expr | None = None
+        if isinstance(stmt, ast.Assign):
+            targets = list(stmt.targets)
+            value = stmt.value
+        elif isinstance(stmt, ast.AnnAssign) and stmt.value is not None:
+            targets = [stmt.target]
+            value = stmt.value
+        if value is None:
+            continue
+        trees = _expr_trees(value, names, aliases)
+        for target in targets:
+            if isinstance(target, ast.Name) and trees:
+                names[target.id] = set(trees)
+
+    functions: dict[str, list[ast.FunctionDef | ast.AsyncFunctionDef]] = {}
+
+    def _add_function(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> None:
+        functions.setdefault(fn.name, []).append(fn)
+
+    for stmt in tree.body:
+        if isinstance(stmt, (ast.FunctionDef, ast.AsyncFunctionDef)):
+            _add_function(stmt)
+        elif isinstance(stmt, ast.ClassDef):
+            for child in stmt.body:
+                if isinstance(child, (ast.FunctionDef, ast.AsyncFunctionDef)):
+                    _add_function(child)
+
+    direct: dict[str, set[str]] = {}
+    calls: dict[str, set[str]] = {}
+    fixtures: dict[str, bool] = {}
+    for name, defs in functions.items():
+        trees: set[str] = set()
+        called: set[str] = set()
+        autouse = False
+        is_fixture = False
+        for fn in defs:
+            for stmt in _function_body(fn):
+                trees.update(_expr_trees(stmt, names, aliases))
+            trees.update(_decorator_trees(fn))
+            called.update(_local_calls(fn))
+            found, fn_autouse = _is_fixture(fn)
+            is_fixture = is_fixture or found
+            autouse = autouse or fn_autouse
+            for arg in (*fn.args.args, *fn.args.kwonlyargs):
+                if arg.arg in functions:
+                    called.add(arg.arg)
+            called.update(_usefixtures(fn))
+        direct[name] = trees
+        calls[name] = called
+        if is_fixture:
+            fixtures[name] = autouse
+
+    changed = True
+    while changed:
+        changed = False
+        for name, called in calls.items():
+            for callee in called:
+                extra = direct.get(callee)
+                if extra and not extra <= direct[name]:
+                    direct[name].update(extra)
+                    changed = True
+    for name, autouse in fixtures.items():
+        if autouse:
+            module_trees.update(direct.get(name, ()))
+
+    function_trees = tuple(
+        (name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees
+    )
+    return frozenset(module_trees), function_trees
+
+
+@functools.lru_cache(maxsize=1)
+def _sparse_checkout_enabled() -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(_REPO_ROOT), "config", "--get", "--type=bool", "core.sparseCheckout"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0 and proc.stdout.strip().lower() == "true"
+
+
+def _sparse_missing_trees() -> frozenset[str]:
+    if not _sparse_checkout_enabled():
+        return frozenset()
+    missing: list[str] = []
+    for rel in ("data/projects", "data/lexicon"):
+        if not (_REPO_ROOT / rel).is_dir():
+            missing.append(rel)
+    return frozenset(missing)
+
+
+def _item_repo_rel(item: pytest.Item) -> str:
+    raw = getattr(item, "path", None) or getattr(item, "fspath", "")
+    path = Path(str(raw))
+    try:
+        return path.resolve().relative_to(_REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
+def pytest_collection_modifyitems(config: pytest.Config, items: list[pytest.Item]) -> None:
+    """Skip tests whose sparse-excluded tree is not in this worktree."""
+    del config
+    missing = _sparse_missing_trees()
+    if not missing:
+        return
+    for item in items:
+        reason = sparse_missing_tree_skip_reason(
+            _item_repo_rel(item),
+            sparse_enabled=True,
+            missing_trees=missing,
+            item_name=item.name,
+        )
+        if reason:
+            item.add_marker(pytest.mark.skip(reason=reason))
+
+
 def pytest_configure(config: pytest.Config) -> None:
     _install_socket_guard()
+    config.addinivalue_line(
+        "markers",
+        "needs_sparse_tree(tree): test reads data/projects or data/lexicon; "
+        "skipped when sparse-checkout omits that tree",
+    )
     # The live app's request middleware defaults to 10s. Tests that drive
     # TestClient(api_main.app) and read the real decision/ADR tree have
     # exceeded that under xdist and come back as 504 (#8439). The assertions

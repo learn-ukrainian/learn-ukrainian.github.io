@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_052",
+  "case_id": "decol_syn_052",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "опанувати мову",
+  "russian_copy": "оволодіти мовою",
+  "ukrainian_proper": [
+    "опанувати мову"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Опановувати, опанувати», с. 149",
+  "supporting_passage": "Знаннями, мовою чи фахом опановують через наполегливе навчання — опановувати мову, опанувати спеціальність.",
+  "page": 149,
+  "article": "Опановувати, опанувати",
+  "section": "Зауваження до низки дієслів",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ca88e9efb768803accd439a28b48596b7ef583e2a66d54ce1d0586035dbecedb",
+  "linguistic_rationale": "Засвідчено для decol_syn_052: форма «оволодіти мовою» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «опанувати мову» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_052.review.json"
+}

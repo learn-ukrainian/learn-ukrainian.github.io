@@ -1,8 +1,8 @@
 # Portable home defaults approved by the operator.
 # The deployer changes only the four keys below in the existing home config.
-model = "gpt-6-astra"
-model_reasoning_effort = "medium"
+model = "gpt-6-sol"
+model_reasoning_effort = "high"
 
 [agents]
-default_subagent_model = "gpt-6-astra"
-default_subagent_reasoning_effort = "low"
+default_subagent_model = "gpt-6-luna"
+default_subagent_reasoning_effort = "high"

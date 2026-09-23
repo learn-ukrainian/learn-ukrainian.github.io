@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_039",
+  "case_id": "decol_prep_039",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за сумісництвом",
+  "russian_copy": "по сумісництву",
+  "ukrainian_proper": [
+    "за сумісництвом"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 89",
+  "supporting_passage": "Трудові відносини вторинної зайнятості позначають конструкцією з прийменником «за»: працювати за сумісництвом (а не «по сумісництву»).",
+  "page": 89,
+  "article": "За сумісництвом, а не по сумісництву",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "0af1459ef61aa70287aa74fa87652cd51f649a433da61146c6e01b49a54d295f",
+  "linguistic_rationale": "Засвідчено для decol_prep_039: форма «по сумісництву» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за сумісництвом» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_039.review.json"
+}

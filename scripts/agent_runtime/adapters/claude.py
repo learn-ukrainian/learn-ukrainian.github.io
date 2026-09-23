@@ -401,7 +401,11 @@ class ClaudeAdapter:
         # MCP tool restrictions (pipeline reviewers)
         mcp_config_path = tc.get("mcp_config_path")
         allowed_tools = tc.get("allowed_tools")
-        if mcp_config_path and allowed_tools and not review_isolation:
+        if tc.get("strict_mcp_config") and mcp_config_path and not review_isolation:
+            cmd.extend(["--strict-mcp-config", "--mcp-config", str(mcp_config_path)])
+            if allowed_tools:
+                cmd.extend(["--allowedTools", allowed_tools])
+        elif mcp_config_path and allowed_tools and not review_isolation:
             cmd.extend(["--mcp-config", str(mcp_config_path), "--allowedTools", allowed_tools])
 
         # Cache-warmth optimization (CC 2.1.98+)

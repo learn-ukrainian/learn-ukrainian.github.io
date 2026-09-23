@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_022",
+  "case_id": "decol_syn_022",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "вимкнути",
+  "russian_copy": "виключити",
+  "ukrainian_proper": [
+    "вимкнути"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 105",
+  "supporting_passage": "Виключати можна зі складу організації або з університету; прилади, електрику й мотори українською мовою вимикають.",
+  "page": 105,
+  "article": "Вимикати, вимкнути, а не виключити",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "b574b71c56973275d2b46f887e21af5e692def8a908e74ca5cbf3af9a5f26b8f",
+  "linguistic_rationale": "Засвідчено для decol_syn_022: форма «виключити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вимкнути» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_022.review.json"
+}

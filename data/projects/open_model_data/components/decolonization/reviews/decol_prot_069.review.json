@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_069",
+  "case_id": "decol_prot_069",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "впадати у відчай",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "впадати у відчай"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 2, гасло «Відчай» (див. також ВТС, гасло «Відчай»)",
+  "supporting_passage": "ВІ́ДЧАЙ, ю, ч. Почуття сильного душевного болю, безвиході; розпач: Настуся знов підвелась і почала походжати по салоні з якоюсь тугою на серці, з одчаєм на душі (І. Нечуй-Левицький); Останній одчай огортав православних (М. Грушевський); Передсмертний відчай охопив його серце (Ю. Яновський); Палив мене такий великий відчай, отак би встав та й безвісти забіг! (Л. Костенко); (ВТС: Впадати у відчай).",
+  "page": "т. 2",
+  "article": "Відчай",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9a80dbc8aebc965b3d6f4a3f3e42d563a93ba14a9c6256c05e07a2d72d454f05",
+  "linguistic_rationale": "Засвідчено для decol_prot_069: вживання «впадати у відчай» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_069.review.json"
+}

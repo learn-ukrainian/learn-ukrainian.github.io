@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_004",
+  "case_id": "decol_syn_004",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "збігатися",
+  "russian_copy": "співпадати",
+  "ukrainian_proper": [
+    "збігатися"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Співпадати й збігатися, сходитись, зійтись»",
+  "supporting_passage": "\"Моя точка зору не співпадає з думкою моїх колег\", – читаємо в одній дисертації, де науковий працівник забув або не знав, що дієслова співпадати нема в українській мові, це – калька з російського совпадать.",
+  "page": null,
+  "article": "Співпадати й збігатися, сходитись, зійтись",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "4b94b7a31054dc2a5f9f36649180ad5eea58064be8b505a7845f3b25a2dbac16",
+  "linguistic_rationale": "Засвідчено для decol_syn_004: форма «співпадати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «збігатися» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_004.review.json"
+}

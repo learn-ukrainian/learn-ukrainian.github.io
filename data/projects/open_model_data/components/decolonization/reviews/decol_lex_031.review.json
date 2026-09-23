@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_031",
+  "case_id": "decol_lex_031",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "оселедець",
+  "russian_copy": "сельодка",
+  "ukrainian_proper": [
+    "оселедець"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Оселедець»",
+  "supporting_passage": "ОСЕЛЕ́ДЕЦЬ, дця, ч. Морська промислова риба роду оселедцевих, а також страва з неї. Російське просторічне «селедка/сельодка» є грубим суржиковим спотворенням, в українській мові вживається нормативне «оселедець».",
+  "page": null,
+  "article": "Оселедець",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9d968fb579d41c1a120f98e9e43bded7844a677a31c381dea30a2899edbf122e",
+  "linguistic_rationale": "Засвідчено для decol_lex_031: форма «сельодка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «оселедець» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_031.review.json"
+}

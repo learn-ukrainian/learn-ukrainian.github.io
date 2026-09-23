@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_063",
+  "case_id": "decol_prot_063",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "приділяти увагу",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "приділяти увагу",
+    "звертати увагу"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 15, гасло «Приділяти»",
+  "supporting_passage": "ПРИДІЛЯ́ТИ, я́ю, я́єш, недок., ПРИДІЛИ́ТИ, ділю́, ді́лиш, док., що. (1) Приділя́ти ува́гу / приділи́ти ува́гу (бага́то ува́ги) кому, чому – виділяти кого-, що-небудь як об'єкт особливої уваги: Особливу увагу йому приділяла Євдокія Іванівна (І. Сенченко); Варто в пожовтневому періоді назвати переклад [“Слова о полку Ігоревім”] Наталі Забіли... Приділили увагу цьому безсмертному творові й інші наші поети (М. Рильський); Як то приємно для батька, коли його синові приділяють багато .. уваги і дивуються його успіхам (Григорій Тютюнник).",
+  "page": "т. 15",
+  "article": "Приділяти",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "0b98690523740d0f09c67bb9c94d27ceadb977714dbea7e5b79d14e9011b98a2",
+  "linguistic_rationale": "Засвідчено для decol_prot_063: вживання «приділяти увагу» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_063.review.json"
+}

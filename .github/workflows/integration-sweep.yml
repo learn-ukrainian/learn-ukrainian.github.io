@@ -1,19 +1,10 @@
 name: Integration sweep
 
-# The integration-owner role's abandoned-PR liveness net (#5029). This is
-# deliberately scheduled rather than session-bound: scheduled runs execute
-# from main, while manual runs are dry-run unless an operator explicitly opts
-# into applying the already fail-closed decision checks.
+# Read-only PR landing report. The local merge-queue keeper (#8564) owns landing.
 on:
   schedule:
     - cron: '7,22,37,52 * * * *'
   workflow_dispatch:
-    inputs:
-      apply:
-        description: Arm eligible PRs after the same fail-closed checks.
-        required: false
-        default: false
-        type: boolean
 
 concurrency:
   group: integration-sweep
@@ -22,7 +13,7 @@ concurrency:
 permissions:
   contents: read
   issues: read
-  pull-requests: write
+  pull-requests: read
   # Read access to check/status metadata for the PR statusCheckRollup the sweep
   # requires for the required-CI decision. Branch-protection REST is off-limits
   # to GITHUB_TOKEN and rollup isRequired was removed by GitHub (#6748); the
@@ -32,7 +23,7 @@ permissions:
 
 jobs:
   sweep:
-    name: Abandoned PR liveness sweep
+    name: PR landing report
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -44,18 +35,10 @@ jobs:
         with:
           python-version: '3.12'
 
-      - name: Install stream-audit dependency
-        run: python -m pip install --disable-pip-version-check pyyaml
-
-      - name: Sweep abandoned PRs
+      - name: Report PR landing state
         env:
           GH_TOKEN: ${{ github.token }}
-          EVENT_NAME: ${{ github.event_name }}
-          APPLY: ${{ inputs.apply }}
           REPOSITORY: ${{ github.repository }}
         run: |
-          args=()
-          if [[ "$EVENT_NAME" == "schedule" || "$APPLY" == "true" ]]; then
-            args+=(--apply)
-          fi
-          python -m scripts.orchestration.integration_sweep --repo "$REPOSITORY" "${args[@]}"
+          python -m scripts.orchestration.integration_sweep --report --repo "$REPOSITORY" | tee "$RUNNER_TEMP/integration-sweep.txt"
+          cat "$RUNNER_TEMP/integration-sweep.txt" >> "$GITHUB_STEP_SUMMARY"

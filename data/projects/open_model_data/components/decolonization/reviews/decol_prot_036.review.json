@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_036",
+  "case_id": "decol_prot_036",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "незважаючи на",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "незважаючи на"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 45, с. 60",
+  "supporting_passage": "Складені прийменники пишуться окремо: незважаючи на.",
+  "page": "§ 45, с. 60",
+  "article": "Складені похідні прийменники",
+  "section": "Прийменники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fc8be5f5618fe93d2c16650752144e033e451039f1d7ee85f3b6b0f79f07905d",
+  "linguistic_rationale": "Засвідчено для decol_prot_036: вживання «незважаючи на» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_036.review.json"
+}

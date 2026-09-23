@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_047",
+  "case_id": "decol_syn_047",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "надавати допомогу",
+  "russian_copy": "оказувати допомогу",
+  "ukrainian_proper": [
+    "надавати допомогу"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до дієслівно-іменникових сполук», стаття «Надавати допомогу, подавати поміч», с. 174",
+  "supporting_passage": "Замість канцеляризму «оказувати допомогу» нормативними є вислови надавати допомогу, подавати поміч або просто допомагати.",
+  "page": 174,
+  "article": "Надавати допомогу, подавати поміч",
+  "section": "Зауваження до дієслівно-іменникових сполук",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "98c41d26f92a8a828679fa873f5b5d3d114efa89e9f8e27650c2344e39251c4c",
+  "linguistic_rationale": "Засвідчено для decol_syn_047: форма «оказувати допомогу» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «надавати допомогу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_047.review.json"
+}

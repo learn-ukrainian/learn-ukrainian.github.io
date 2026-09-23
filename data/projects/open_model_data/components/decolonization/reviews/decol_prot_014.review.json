@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_014",
+  "case_id": "decol_prot_014",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на мою думку",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на мою думку"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ПРИЙМЕННИКИ», стаття «По, за, з, на»",
+  "supporting_passage": "Виходячи з наших мовних традицій, цю фразу краще було б сказати так: \"На мою думку (або – на мій погляд, чи як на мене), так не можна робити\".",
+  "page": null,
+  "article": "По, за, з, на",
+  "section": "ПРИЙМЕННИКИ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c677d54041f040be304f74413abf47fdd77bd845318c62d96effbb613a6c903f",
+  "linguistic_rationale": "Засвідчено для decol_prot_014: вживання «на мою думку» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_014.review.json"
+}

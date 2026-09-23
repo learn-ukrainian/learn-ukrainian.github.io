@@ -97,7 +97,7 @@ def _parse_naturalness_json(raw_output: str) -> dict | None:
     return parsed if "score" in parsed else None
 
 
-def call_agy(prompt: str, task_id: str) -> tuple[str, dict]:
+def call_agy(prompt: str, task_id: str, model: str = "gemini-3.8-flash-high") -> tuple[str, dict]:
     """Call AGY and return raw response + parsed JSON."""
     try:
         result = subprocess.run(
@@ -108,7 +108,7 @@ def call_agy(prompt: str, task_id: str) -> tuple[str, dict]:
                 "-",  # read prompt from stdin
                 "--task-id", task_id,
                 "--from", "claude",
-                "--to-model", "gemini-3.1-pro-high",
+                "--to-model", model,
                 "--stdout-only",
             ],
             capture_output=True,
@@ -292,7 +292,8 @@ def update_meta_naturalness(meta_path: Path, score: int, status: str, feedback: 
 def check_naturalness(
     md_file_path: str,
     update_meta: bool = True,
-    force: bool = False
+    force: bool = False,
+    model: str = "gemini-3.8-flash-high",
 ) -> tuple[int, str]:
     """
     Check naturalness with dual AI validation.
@@ -331,7 +332,7 @@ def check_naturalness(
 
     # Call AGY
     print("  📤 Sending to AGY...")
-    gemini_raw, gemini_parsed = call_agy(prompt, task_id)
+    gemini_raw, gemini_parsed = call_agy(prompt, task_id, model=model)
     print(f"  📥 Gemini: {gemini_parsed.get('score', '?')}/10 - {gemini_parsed.get('status', '?')}")
 
     # Call Claude (headless)
@@ -365,13 +366,15 @@ if __name__ == '__main__':
     parser.add_argument('file', help='Path to markdown file')
     parser.add_argument('--no-update', action='store_true', help='Do not update meta.yaml')
     parser.add_argument('--force', action='store_true', help='Re-check even if already evaluated')
+    parser.add_argument('--model', default='gemini-3.8-flash-high', help='Gemini model to use')
 
     args = parser.parse_args()
 
     score, status = check_naturalness(
         args.file,
         update_meta=not args.no_update,
-        force=args.force
+        force=args.force,
+        model=args.model,
     )
 
     print(f"\nResult: {score}/10 ({status})")

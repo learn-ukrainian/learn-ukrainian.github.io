@@ -72,16 +72,16 @@ lint: #5642 / `scripts/lint/lint_fleet_roster.py`.
 
 | Seat | Default (loop) | Escalate (deep) | Sealed formal CF as *reviewer* |
 | --- | --- | --- | --- |
-| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-5.6-sol` @ xhigh** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
-| **codex** | `gpt-5.6-terra` @ high | **`gpt-5.6-sol` @ xhigh** | yes (`review-pr --reviewer codex`) |
-| **grok** | `grok-4.6` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
-| **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.1-pro-high` @ high** | no until #5555 — still *requests* CF |
-| **cursor** | `grok-4.7` @ high (allowlist: `grok-4.7`, `composer-2.5`) | **`gpt-5.6-sol` @ xhigh** | no — formal CF requires attested `resolved_model` |
+| **claude** | `claude-opus-5-5` @ high (operator 2026-09-22) | **`gpt-6-astra` @ high** (cross-family) | yes (`review-pr --reviewer claude`; Sonnet default, Fable explicit) |
+| **codex** | `gpt-6-sol` @ high | **`gpt-6-astra` @ high** | yes (`review-pr --reviewer codex`) |
+| **grok** | `grok-4.7` @ high | same SKU (Cursor = avail. fallback) | yes (`review-pr --reviewer grok`) |
+| **agy** | `gemini-3.8-flash-high` @ high | **`gemini-3.8-flash-high` @ high** | no until #5555 — still *requests* CF |
+| **cursor** | `auto` @ high (allowlist: `grok-4.7`, `composer-2.5`) | **`gpt-6-astra` @ high** | no — formal CF requires attested `resolved_model` |
 
 <!-- fleet-roster-projection:begin orchestrator_seats -->
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
-| agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
+| agy | gemini-3.8-flash-high | high | gemini-3.8-flash-high | high |
 | claude | claude-opus-5-5 | high | gpt-6-astra | high |
 | codex | gpt-6-sol | high | gpt-6-astra | high |
 | cursor | auto | high | gpt-6-astra | high |
@@ -93,11 +93,10 @@ Escalate when: architecture, hard multi-file judgment, high-stakes synthesis —
 ```bash
 # AGY default / escalate
 .venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.8-flash-high ...
-.venv/bin/python scripts/delegate.py dispatch --agent agy --model gemini-3.1-pro-high ...
 # Claude escalate
-.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-fable-5 ...
-# Codex named alternate / formal-CF authority escalate
-.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-5.6-sol ...
+.venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5-5 ...
+# Codex named advisor escalate
+.venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra ...
 ```
 
 ## Formal CF defaults (orchestrator-ready)
@@ -142,13 +141,13 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
   --initiator codex/orchestrator \
-  --author-model gpt-5.6-sol --author-family openai \
+  --author-model gpt-6-sol --author-family openai \
   --review-profile code --risk high
 
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
   --initiator codex/orchestrator \
-  --author-model gpt-5.6-sol --author-family openai \
+  --author-model gpt-6-sol --author-family openai \
   --reviewer claude --model claude-fable-5 --effort high \
   --override-reason "operator-requested Fable dissent"
 
@@ -212,7 +211,7 @@ not erase routing evidence.
 
 Do **not** write `laguna-s2`, `laguna.s2`, or `laguna.m1` as IDs — hyphens and the `m.1` minor are load-bearing.
 
-- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.7 Flash (agy)** → Grok (native then Cursor explicit `grok-4.6`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
+- Resolve-reviewer: **critical** keeps Sol/Fable authority first; **high/medium/low** walk Terra → Sonnet 5 → **Gemini 3.8 Flash (agy)** → Grok (native then Cursor explicit `grok-4.7`) → K3 → GLM → DS-Pro → pool **S 2.1** → pool **XS 2.1** / 3.5 Flash …
 - Grok uses the proven exact-head source-blind ACP path. Kimi K3's adapter is implemented but stays fail-closed until an authenticated sealed canary passes. AGY's text-only ACP wrapper cannot consume the parent-owned sealed MCP; legacy native-isolation helpers stay unsupported.
 - Isolation runbooks: `docs/runbooks/agy-formal-cf-isolation.md` · `kimi-formal-cf-isolation.md` · `grok-formal-cf-isolation.md`
 

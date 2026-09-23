@@ -61,7 +61,7 @@ class TestListTools:
             "get_full_text", "get_chunk_context", "collection_stats", "mcp_server_identity",
             "verify_word", "verify_source_attribution", "verify_words", "vet_vocabulary", "verify_lemma", "verify_quote", "check_modern_form",
             "inspect_word", "inspect_words", "inspect_lemma",
-            "verify_stress", "verify_stresses",
+            "verify_stress", "verify_stresses", "check_text",
             "query_wikipedia", "query_grac", "query_ulif", "query_ulif_synonyms",
             "query_ulif_antonyms", "query_ulif_phraseology",
             "query_r2u", "query_e2u", "query_sum20", "query_slovnyk_me",

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_019",
+  "case_id": "decol_prep_019",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за власним бажанням",
+  "russian_copy": "по власному бажанню",
+  "ukrainian_proper": [
+    "за власним бажанням"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+  "supporting_passage": "Нормативними є вислови: за власним бажанням, за власним розсудом, на бажання (а не «по власному бажанню»).",
+  "page": 74,
+  "article": "За власним бажанням, а не по власному бажанню",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "1f15851eeacda0210866fac4d3444d5422130254590cf0494e1d09fc2d58453c",
+  "linguistic_rationale": "Засвідчено для decol_prep_019: форма «по власному бажанню» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за власним бажанням» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_019.review.json"
+}

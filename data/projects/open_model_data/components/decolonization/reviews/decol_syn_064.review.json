@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_064",
+  "case_id": "decol_syn_064",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "повідомити заздалегідь",
+  "russian_copy": "поставити в ізвєстность",
+  "ukrainian_proper": [
+    "повідомити заздалегідь",
+    "довести до відома"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Повідомляти»",
+  "supporting_passage": "ПОВІДОМЛЯ́ТИ, я́ю, я́єш, недок., ПОВІДО́МИТИ, млю, миш; мн. повідо́млять; док., кого, кому і без дод. Доводити до чийого-небудь відома; сповіщати: Зробіть у книгарні наказ щоб вони вислали .. всі належні мені примірники, рівночасно повідомляючи мене, що й коли вислане (М. Коцюбинський); На порозі з'являється мати. Вона повідомляє, як радісну таємницю, що прийшла кравчиха (О. Донченко); Моє діло .. повідомити його точно про справи для нього цікаві (Леся Українка). (Повідомити заздалегідь — заздалегідь довести до чийого-небудь відома).",
+  "page": null,
+  "article": "Повідомляти заздалегідь",
+  "section": "Ділове мовлення",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a82a8da5f8b169903b32de4b912a285005691a0209eeb0b4800c6e6aa08e973c",
+  "linguistic_rationale": "Засвідчено для decol_syn_064: форма «поставити в ізвєстность» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «повідомити заздалегідь» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_064.review.json"
+}

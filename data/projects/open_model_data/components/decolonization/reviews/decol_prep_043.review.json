@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_043",
+  "case_id": "decol_prep_043",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на шкоду",
+  "russian_copy": "в ущерб",
+  "ukrainian_proper": [
+    "на шкоду"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Залишати й покидати»",
+  "supporting_passage": "Часто думають, що слова залишати й покидати є абсолютні синоніми, між якими нема різниці, а тому, мовляв, до них можна вдаватись довільно; ба навіть спостерігаємо, як дієслово залишати, іноді на шкоду стилю викладу, майже витиснуло покидати, яке стало траплятися в нас дуже рідко.",
+  "page": null,
+  "article": "Залишати й покидати",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a9f765a21fe801584afbcf73c13105829d154266464e99142f028177d30f4c9d",
+  "linguistic_rationale": "Засвідчено для decol_prep_043: форма «в ущерб» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на шкоду» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_043.review.json"
+}

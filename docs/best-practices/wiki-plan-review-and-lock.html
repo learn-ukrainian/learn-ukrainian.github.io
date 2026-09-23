@@ -93,11 +93,11 @@
 
   h2 { font-size: 22px; margin-top: 48px; border-bottom: 1px solid var(--rule); padding-bottom: 8px; }
   h3 { font-size: 18px; margin-top: 32px; }
-  
+
   table { width: 100%; border-collapse: collapse; margin: 24px 0; font-family: var(--sans); font-size: 14px; }
   th { text-align: left; background: var(--surface-2); padding: 10px 12px; border: 1px solid var(--rule); }
   td { padding: 10px 12px; border: 1px solid var(--rule); vertical-align: top; }
-  
+
   .callout {
     padding: 16px;
     border-radius: 4px;
@@ -272,7 +272,7 @@ review_notes: &gt;-
 <hr />
 <h2>AC-4 — Adversarial review (Gemini) before PR</h2>
 <p>Spawn Gemini via the bridge:</p>
-<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-gemini \
+<pre><code class="language-bash">.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-agy \
   &quot;Adversarial review of #&lt;N&gt; review-and-lock for &lt;slug&gt; wiki + plan. \
    Read the diff. Look for: \
    (1) wiki fixes that introduce NEW gaps while closing documented ones, \
@@ -280,7 +280,7 @@ review_notes: &gt;-
    (3) plan-review checklist missing categories that the latest systemic audit would have caught, \
    (4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step), \
    (5) hallucinated vocab not verifiable in VESUM.&quot; \
-  --task-id &lt;N&gt;-review --model gemini-3.1-pro-preview
+  --task-id &lt;N&gt;-review --to-model gemini-3.8-flash-high
 </code></pre>
 <p>Address findings. If non-trivial, a second round is expected — don't short-circuit.</p>
 <hr />
