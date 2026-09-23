@@ -37,6 +37,7 @@ ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 REVIEW_TOOLS = frozenset(
     {
         "verify_words",
+        "check_text",
         "inspect_word",
         "inspect_words",
         "verify_stress",
