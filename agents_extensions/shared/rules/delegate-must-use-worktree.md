@@ -68,11 +68,11 @@ create a feature branch in the main checkout. Concrete dispatch:
     # (Omit --effort to use the agent's own CLI/config default.)
 
 The main checkout (wherever the user is working) stays untouched on
-`main`. After the PR merges, `merge_closeout` (the P0 reaper) removes
-the dispatch worktree and its local and remote branch. That cleanup is
-not a manual user step:
+`main`. After the PR merges, the worktree is cleaned up by the user
+or the next agent session:
 
-    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
+    git worktree remove .worktrees/dispatch/<agent>/<task>
+    git branch -d <agent>/<task>
 
 If the work truly cannot be done in a worktree (extremely rare —
 usually only repo-wide mass migrations), STOP and ask for approval
@@ -87,15 +87,21 @@ and worktree path from the task-id + agent.
 
 When a worktree's PR merges to main, the worktree and its branch MUST be
 deleted. This is NOT optional — stale worktrees accumulate and pollute
-`git worktree list`. The accountable command is `merge_closeout`, which
-proves the PR is merged and reaps every worktree tied to that head through
-the P0 reaper (no second deletion hand, no `--force`):
+`git worktree list`.
 
-    .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
+Check with:
 
-That removes the subtree worktree (`.worktrees/dispatch/<agent>/<task>`)
-and the branch. Older flat worktrees (`.worktrees/<name>`) are reaped the
-same way when they are registered against the merged head.
+    git worktree list
+
+Remove with (subtree layout — new):
+
+    git worktree remove .worktrees/dispatch/<agent>/<task>
+    git branch -d <agent>/<task>
+
+Remove with (flat layout — back-compat for older worktrees):
+
+    git worktree remove .worktrees/<name>
+    git branch -d <branch>
 
 ## When YOU (not a delegated agent) need isolation
 
