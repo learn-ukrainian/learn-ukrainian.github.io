@@ -1584,7 +1584,7 @@ def test_taught_forms_reach_component_data(tmp_path, monkeypatch):
     lesson = make_plan_lesson(
         1,
         [step],
-        core_words=[{"evidence": "W-1", "forms": ["noun:anim:m:v_rod", "noun:anim:m:v_dav"]}],
+        core_words=[w1],
     )
     plan = make_plan(lessons=[lesson])
 
