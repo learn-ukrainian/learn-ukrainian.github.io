@@ -95,7 +95,7 @@ When a worktree's PR merges to main, the worktree and its branch MUST be
 deleted. This is NOT optional — stale worktrees accumulate and pollute
 `git worktree list`. The accountable command is `merge_closeout`, which
 proves the PR is merged and reaps every worktree tied to that head through
-the P0 reaper (no second deletion hand, no `--force`):
+the P0 reaper (do not delete worktrees or branches by hand, and never run `git worktree remove --force` yourself):
 
     .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 
