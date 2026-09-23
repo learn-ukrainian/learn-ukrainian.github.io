@@ -596,6 +596,7 @@ def run_plan_patch(
     score_history: list[float],
     contract_violations: list[dict],
     round_window: int | None = None,
+    model: str = "gemini-3.8-flash-high",
 ) -> PlanPatchResult:
     """Run the full plateau -> Gemini patch -> local apply flow."""
     structured_rounds = load_structured_review_rounds(orch_dir)
@@ -635,6 +636,7 @@ def run_plan_patch(
     ok, raw_output = _dispatch_gemini_plan_patch(
         prompt,
         task_id=f"plan-patch-{level}-{slug}",
+        model=model,
         output_path=output_path,
     )
     write_text_atomic(output_path, raw_output or "", encoding="utf-8")

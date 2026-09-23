@@ -12,7 +12,10 @@ import threading
 import time
 from pathlib import Path
 
-from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+try:
+    from utils.claude_version import supports_exclude_dynamic_system_prompt_sections
+except ModuleNotFoundError:
+    from scripts.utils.claude_version import supports_exclude_dynamic_system_prompt_sections
 
 # Late imports to avoid circular dependencies
 _pipeline_lib = None
@@ -206,11 +209,14 @@ def dispatch_gemini(
     stdout_only: bool = False, allow_write: bool = False,
     output_file: Path | None = None, timeout: int = 1800,
 ) -> tuple[bool, str]:
-    """Dispatch a prompt to Gemini with stdout_only=True and flash→pro fallback.
+    """Dispatch a prompt to Gemini with stdout_only=True and Flash fallback.
 
     This is the default dispatch used by the pipeline. Always forces stdout_only=True.
-    If the specified model is Flash and it fails due to rate limiting, retries with Pro.
+    Default calls use Flash and fall back only across Flash rungs (Flash High → Flash Lite).
+    Pro is used only when explicitly requested by the caller.
     """
+    requested_model = model
+    is_explicit_pro = bool(requested_model and "pro" in requested_model.lower())
     if model is None:
         model = "gemini-3.8-flash-high"
     ok, output = dispatch_gemini_raw(
@@ -221,8 +227,13 @@ def dispatch_gemini(
     # Fallback cascade: try other models if rate-limited or timed out
     should_fallback = not ok and (_is_rate_limited(output) or output.strip() == "")
     if should_fallback:
-        # Build fallback chain: flash → flash-lite → pro (skip the one that just failed)
-        all_models = [_flash_model(), _flash_lite_model(), _pro_model()]
+        # Build fallback chain:
+        # Operator rule (2026-09-22): Pro is used ONLY when a caller explicitly asks for it.
+        # Default/Flash calls never reach Pro; explicit Pro requests keep Pro and its fallbacks.
+        if is_explicit_pro:
+            all_models = [_pro_model(), _flash_model(), _flash_lite_model()]
+        else:
+            all_models = [_flash_model(), _flash_lite_model()]
         # Deduplicate while preserving order
         seen = set()
         fallbacks = []
@@ -244,6 +255,7 @@ def dispatch_gemini(
                 break
             reason = "also failed"
     return ok, output
+
 
 
 # ---------------------------------------------------------------------------

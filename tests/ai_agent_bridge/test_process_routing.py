@@ -273,10 +273,14 @@ def test_resolve_compat_model_tracks_pin_rotation(monkeypatch) -> None:
     assert registered_participant_model("agy") == "gemini-9.9-flash-high"
     assert resolve_compat_model("gemini", "gemini-3-flash-preview") == "gemini-9.9-flash-high"
     assert resolve_compat_model("gemini", "gemini-3.7-flash") == "gemini-9.9-flash-high"
+    # Explicit Pro requests are never rewritten to Flash pin (Sol r3)
+    assert resolve_compat_model("gemini", "gemini-3.1-pro-high") == "gemini-3.1-pro-high"
+    assert resolve_compat_model("gemini", "gemini-3.1-pro-preview") == "gemini-3.1-pro-high"
     # Non-legacy slugs pass through for the route resolver to judge loudly.
     assert resolve_compat_model("gemini", "not-a-gemini-model") == "not-a-gemini-model"
     # Non-agy seats never get rewritten.
     assert resolve_compat_model("cursor", "composer-2") == "composer-2"
+
 
 
 def test_converse_default_model_is_none_so_registry_pin_applies() -> None:
@@ -322,11 +326,18 @@ def test_converse_default_tracks_pin_rotation(monkeypatch) -> None:
     converse_gemini("hello", "t-1")
     assert captured["model"] == "gemini-9.9-flash-high"
 
-    converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
+    converse_gemini("hello", "t-1", model="gemini-3-flash-preview")
     assert captured["model"] == "gemini-9.9-flash-high"
+
+    converse_gemini("hello", "t-1", model="gemini-3.1-pro-preview")
+    assert captured["model"] == "gemini-3.1-pro-high"
+
+    converse_gemini("hello", "t-1", model="gemini-3.1-pro-high")
+    assert captured["model"] == "gemini-3.1-pro-high"
 
     converse_gemini("hello", "t-1", model="not-a-gemini-model")
     assert captured["model"] == "not-a-gemini-model"
+
 
 
 def test_default_gemini_model_resolves_from_registry_and_tracks_rotation(monkeypatch) -> None:

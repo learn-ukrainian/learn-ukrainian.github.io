@@ -180,15 +180,19 @@ def test_ask_codex_infers_from_claude_agent_name(
 
 
 def test_legacy_gemini_model_slugs_map_to_live_agy_pin() -> None:
-    """Legacy gemini* slugs resolve to the AGY seat's live registry pin (#6894)."""
+    """Legacy Flash slugs resolve to AGY Flash pin; explicit Pro resolves to canonical Pro."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     from scripts.ai_agent_bridge._acp_compat import resolve_compat_model
 
     pin = ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
-    assert resolve_compat_model("gemini", "gemini-3.1-pro-preview") == pin
+    # Legacy Flash slugs map to the AGY seat's live Flash pin (#6894)
     assert resolve_compat_model("gemini", "gemini-3.0-flash-preview") == pin
-    assert resolve_compat_model("gemini", "Gemini 3.1 Pro (High)") == pin
+    assert resolve_compat_model("gemini", "gemini-3-flash-preview") == pin
+    # Explicit Pro requests resolve to canonical Pro and are never rewritten to Flash pin (Sol r3)
+    assert resolve_compat_model("gemini", "gemini-3.1-pro-high") == "gemini-3.1-pro-high"
+    assert resolve_compat_model("gemini", "gemini-3.1-pro-preview") == "gemini-3.1-pro-high"
+    assert resolve_compat_model("gemini", "Gemini 3.1 Pro (High)") == "gemini-3.1-pro-high"
     # No explicit model → None, so the route resolver applies the pin itself.
     assert resolve_compat_model("gemini", None) is None
 
@@ -204,7 +208,9 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
 
     monkeypatch.setattr("scripts.ai_agent_bridge._acp_compat.run_compat_ask", fake_compat)
     parser = _cli._build_parser()
-    args = parser.parse_args(
+
+    # Case 1: Explicit Pro request routes to canonical Pro
+    args_pro = parser.parse_args(
         [
             "ask-gemini",
             "hello",
@@ -218,13 +224,29 @@ def test_ask_gemini_shim_routes_to_agy_with_mapped_model(
         ]
     )
 
-    assert _cli._dispatch_command(args) is True
+    assert _cli._dispatch_command(args_pro) is True
     assert captured["content"] == "hello"
     assert captured["task_id"] == "task-1"
     assert captured["source"] == "codex"
-    # Legacy slugs map to the AGY seat's live registry pin, not a static slug.
-    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
-
-    assert captured["model"] == ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
+    assert captured["model"] == "gemini-3.1-pro-high"
     assert captured["target"] == "gemini"
     assert captured["stdout_only"] is True
+
+    # Case 2: Legacy Flash slug routes to AGY live registry pin
+    from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
+
+    args_flash = parser.parse_args(
+        [
+            "ask-gemini",
+            "hello flash",
+            "--task-id",
+            "task-2",
+            "--model",
+            "gemini-3.0-flash-preview",
+            "--stdout-only",
+            "--from",
+            "codex",
+        ]
+    )
+    assert _cli._dispatch_command(args_flash) is True
+    assert captured["model"] == ACPX_SUPPORTED_PARTICIPANTS["agy"]["model"]
