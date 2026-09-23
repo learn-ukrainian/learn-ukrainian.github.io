@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import shlex
 import shutil
 import signal
 import subprocess
@@ -295,12 +296,72 @@ def test_canary_failure_closes_lease_and_refuses_driver_launch(tmp_path: Path) -
     assert "PROVIDER_EXEC" not in result.stdout
 
 
+# Bound for the child-and-parent readiness handshake. Startup under a loaded
+# runner can take much longer than the old 2s provider lifetime; the wait is
+# still finite so a hung launcher fails the test.
+_LAUNCHER_READY_TIMEOUT_S = 60
+
+
+def _blocking_signal_provider(signal_marker: Path, child_ready: Path) -> str:
+    """Trap first, publish readiness, then block until the signal arrives.
+
+    A fixed ``sleep`` budget exits 88 under load before the parent forwards.
+    The ready file is touched only after the trap is installed.
+    """
+    marker = shlex.quote(os.fspath(signal_marker))
+    ready = shlex.quote(os.fspath(child_ready))
+    return (
+        f'trap "touch {marker}; exit 0" INT TERM HUP\n'
+        f"touch {ready}\n"
+        "while :; do\n"
+        "  sleep 0.1\n"
+        "done\n"
+    )
+
+
+def _append_forward_ready_hook(launcher_core: Path, forward_ready: Path) -> None:
+    """Publish readiness from the driver wait loop, after forwarding traps exist."""
+    ready = shlex.quote(os.fspath(forward_ready))
+    launcher_core.write_text(
+        launcher_core.read_text(encoding="utf-8")
+        + "\n# Test override of the launcher_driver_wait_hook seam (#8556).\n"
+        + "launcher_driver_wait_hook() {\n"
+        + f"  if [ ! -e {ready} ]; then touch {ready}; fi\n"
+        + "}\n",
+        encoding="utf-8",
+    )
+
+
+def _wait_for_launcher_readiness(
+    process: subprocess.Popen[str],
+    ready_paths: list[Path],
+    *,
+    timeout: float = _LAUNCHER_READY_TIMEOUT_S,
+) -> None:
+    deadline = time.monotonic() + timeout
+    while time.monotonic() < deadline:
+        if all(path.is_file() for path in ready_paths):
+            return
+        if process.poll() is not None:
+            break
+        time.sleep(0.05)
+    if process.poll() is None:
+        process.kill()
+    stdout, stderr = process.communicate(timeout=10)
+    missing = ", ".join(os.fspath(path) for path in ready_paths if not path.is_file())
+    pytest.fail(
+        "timed out waiting for launcher readiness "
+        f"(missing {missing}, rc={process.returncode}):\n{stdout}{stderr}"
+    )
+
+
 def _core_driver_exit_fixture(
     tmp_path: Path,
     *,
     provider_body: str,
     failed_close_attempts: int = 0,
     close_stderr: str = "",
+    forward_ready: Path | None = None,
 ) -> tuple[Path, Path, Path, Path]:
     """Build a provider-neutral driver with observable close attempts.
 
@@ -321,6 +382,8 @@ def _core_driver_exit_fixture(
         destination = root / relative
         destination.parent.mkdir(parents=True, exist_ok=True)
         shutil.copy2(REPO / relative, destination)
+    if forward_ready is not None:
+        _append_forward_ready_hook(root / "scripts/lib/launcher_core.sh", forward_ready)
     watcher = root / "scripts" / "ai_agent_bridge" / "inbox_watch.sh"
     watcher.parent.mkdir(parents=True)
     watcher.write_text("#!/usr/bin/env bash\nexec sleep 300\n", encoding="utf-8")
@@ -422,17 +485,12 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
     expected_exit: int,
 ) -> None:
     signal_marker = tmp_path / "signal-received"
-    child_started = tmp_path / "child-started"
-    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+    child_ready = tmp_path / "child-ready"
+    forward_ready = tmp_path / "forward-ready"
+    launcher, close_attempts, close_marker, _child_started = _core_driver_exit_fixture(
         tmp_path,
-        provider_body=(
-            f"trap 'touch {os.fspath(signal_marker)!r}; exit 0' INT TERM HUP\n"
-            f"touch {os.fspath(child_started)!r}\n"
-            "for _ in {1..20}; do\n"
-            "  sleep 0.1\n"
-            "done\n"
-            "exit 88\n"
-        ),
+        provider_body=_blocking_signal_provider(signal_marker, child_ready),
+        forward_ready=forward_ready,
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     original_handler = signal.signal(termination_signal, signal.SIG_DFL)
@@ -445,20 +503,9 @@ def test_driver_termination_forwards_signal_and_closes_exact_lease(
             stderr=subprocess.PIPE,
             text=True,
         )
-        deadline = time.monotonic() + 30
-        while time.monotonic() < deadline:
-            if child_started.is_file():
-                break
-            if process.poll() is not None:
-                break
-            time.sleep(0.01)
-        if not child_started.is_file():
-            process.kill()
-            stdout, stderr = process.communicate(timeout=10)
-            pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
-
+        _wait_for_launcher_readiness(process, [child_ready, forward_ready])
         process.send_signal(termination_signal)
-        stdout, stderr = process.communicate(timeout=30)
+        stdout, stderr = process.communicate(timeout=_LAUNCHER_READY_TIMEOUT_S)
         assert signal_marker.is_file(), (
             f"provider child never received forwarded signal (rc={process.returncode}):\n{stdout}{stderr}"
         )
@@ -547,20 +594,15 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
 ) -> None:
     """#671: a forwarded TERM/HUP exit code must not become the close failure's."""
     signal_marker = tmp_path / "signal-received"
-    child_started = tmp_path / "child-started"
+    child_ready = tmp_path / "child-ready"
+    forward_ready = tmp_path / "forward-ready"
     hostile_stderr = "session-supervisor: Monitor API unreachable; no remote claim was made\n$(evil)\n"
-    launcher, close_attempts, close_marker, child_started = _core_driver_exit_fixture(
+    launcher, close_attempts, close_marker, _child_started = _core_driver_exit_fixture(
         tmp_path,
-        provider_body=(
-            f"trap 'touch {os.fspath(signal_marker)!r}; exit 0' INT TERM HUP\n"
-            f"touch {os.fspath(child_started)!r}\n"
-            "for _ in {1..20}; do\n"
-            "  sleep 0.1\n"
-            "done\n"
-            "exit 88\n"
-        ),
+        provider_body=_blocking_signal_provider(signal_marker, child_ready),
         failed_close_attempts=100,
         close_stderr=hostile_stderr,
+        forward_ready=forward_ready,
     )
     env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     env["LC_DRIVER_CLOSE_RETRY_SECONDS"] = "1"
@@ -574,20 +616,9 @@ def test_signal_forwarding_with_close_failure_keeps_signal_exit_and_classifies(
             stderr=subprocess.PIPE,
             text=True,
         )
-        deadline = time.monotonic() + 30
-        while time.monotonic() < deadline:
-            if child_started.is_file():
-                break
-            if process.poll() is not None:
-                break
-            time.sleep(0.01)
-        if not child_started.is_file():
-            process.kill()
-            stdout, stderr = process.communicate(timeout=10)
-            pytest.fail(f"provider child never started (launcher rc={process.returncode}):\n{stdout}{stderr}")
-
+        _wait_for_launcher_readiness(process, [child_ready, forward_ready])
         process.send_signal(termination_signal)
-        stdout, stderr = process.communicate(timeout=30)
+        stdout, stderr = process.communicate(timeout=_LAUNCHER_READY_TIMEOUT_S)
         assert signal_marker.is_file(), (
             f"provider child never received forwarded signal (rc={process.returncode}):\n{stdout}{stderr}"
         )
@@ -657,7 +688,7 @@ def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_
         text=True, start_new_session=True,
     )
     try:
-        stdout, stderr = process.communicate(timeout=10)
+        stdout, stderr = process.communicate(timeout=_LAUNCHER_READY_TIMEOUT_S)
         assert process.returncode == 143, stdout + stderr
         assert signal_marker.is_file()
         assert close_marker.is_file()
@@ -666,7 +697,7 @@ def test_driver_signal_between_watcher_spawn_and_pid_capture_reaps_children(tmp_
         # Also reap fixture descendants if the regression leaves an orphan.
         with suppress(ProcessLookupError):
             os.killpg(process.pid, signal.SIGKILL)
-        process.communicate(timeout=10)
+        process.communicate(timeout=_LAUNCHER_READY_TIMEOUT_S)
 
 
 def test_real_store_driver_close_successor_and_expired_recovery(tmp_path: Path) -> None:

@@ -327,8 +327,14 @@ EOF
 # These hooks are called by the existing launcher process loop. The watcher
 # may prepare a handoff, but never owns lease renewal/release or process exit.
 session_supervisor_start_inbox_watch() {
-  local watcher
-  watcher="$(cd "$(dirname "${BASH_SOURCE[0]}")/../ai_agent_bridge" && pwd)/inbox_watch.sh" || return 1
+  local watcher bridge_dir
+  # One substitution per command. This runs while the driver INT/TERM/HUP traps
+  # are installed; a nested $(...) lets bash abort the trap ("unexpected EOF
+  # while looking for matching ')'") and exit 2 before the signal is forwarded
+  # (#8556).
+  bridge_dir="$(dirname "${BASH_SOURCE[0]}")"
+  bridge_dir="$(cd "$bridge_dir/../ai_agent_bridge" && pwd)" || return 1
+  watcher="$bridge_dir/inbox_watch.sh"
   [ -x "$watcher" ] || return 1
   LC_SUPERVISORY_WAKE_FILE="$(mktemp)" || return 1
   # Read by the launcher_core.sh process wait loop.
