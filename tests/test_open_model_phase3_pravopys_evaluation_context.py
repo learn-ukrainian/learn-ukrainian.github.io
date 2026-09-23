@@ -20,6 +20,14 @@ SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_pravopys_evaluat
 EVAL_RECEIPT = ROOT / "data/projects/open_model_data/inventory/phase3_evaluation_context_manifest_receipt_v1.json"
 
 
+def _skip_without_pravopys_schema() -> None:
+    if not SCHEMA.is_file():
+        pytest.skip(
+            "data/projects is absent from this sparse worktree; "
+            "re-include it with --sparse-include data/projects"
+        )
+
+
 def _prav_row(
     family: str,
     section_path: list[str],
@@ -675,6 +683,7 @@ def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypat
 def test_private_output_rejects_wrong_mode_and_ancestor_symlink(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
 
@@ -1024,6 +1033,7 @@ def test_unicode_offset_round_trip_drift_fails_closed() -> None:
 def test_materialize_writes_restricted_private_output_and_text_free_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     receipt = prav_context.materialize(
@@ -1057,6 +1067,7 @@ def test_public_schema_is_closed_and_text_free() -> None:
 
 
 def test_deterministic_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     first = prav_context.materialize(
@@ -1174,6 +1185,7 @@ def test_validate_receipt_rejects_receipt_self_hash_drift() -> None:
 def test_verify_existing_rejects_tampered_private_jsonl(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
     prav_context.materialize(
@@ -1203,6 +1215,7 @@ def test_verify_existing_rejects_tampered_private_jsonl(
 def test_verify_existing_rejects_tampered_public_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
     prav_context.materialize(

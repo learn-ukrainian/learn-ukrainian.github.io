@@ -27,6 +27,7 @@ A4 and A5 themselves are not rebuilt from scratch here.
 from __future__ import annotations
 
 import copy
+import functools
 import json
 import shutil
 from pathlib import Path
@@ -47,11 +48,44 @@ def _load(name: str) -> dict[str, Any]:
     return json.loads((ADMISSION / name).read_text(encoding="utf-8"))
 
 
-REAL_A2 = _load("dataset_v4_a2_source_operation_admission_receipt_v1.json")
-REAL_A4 = _load("dataset_v4_a4_deterministic_extraction_receipt_v1.json")
-REAL_A5 = _load("dataset_v4_a5_evidence_enrichment_receipt_v1.json")
-REAL_MANIFEST = _load("dataset_v4_pilot_slot_manifest_v1.json")
-REAL_SEAL_RECEIPT = _load("dataset_v4_a3_heldout_source_family_seal_receipt_v1.json")
+@functools.cache
+def _real_a2() -> dict[str, Any]:
+    return _load("dataset_v4_a2_source_operation_admission_receipt_v1.json")
+
+
+@functools.cache
+def _real_a4() -> dict[str, Any]:
+    return _load("dataset_v4_a4_deterministic_extraction_receipt_v1.json")
+
+
+@functools.cache
+def _real_a5() -> dict[str, Any]:
+    return _load("dataset_v4_a5_evidence_enrichment_receipt_v1.json")
+
+
+@functools.cache
+def _real_manifest() -> dict[str, Any]:
+    return _load("dataset_v4_pilot_slot_manifest_v1.json")
+
+
+@functools.cache
+def _real_seal_receipt() -> dict[str, Any]:
+    return _load("dataset_v4_a3_heldout_source_family_seal_receipt_v1.json")
+
+
+def __getattr__(name: str) -> dict[str, Any]:
+    """Keep ``chain.REAL_*`` attribute access without reading at import."""
+    loaders = {
+        "REAL_A2": _real_a2,
+        "REAL_A4": _real_a4,
+        "REAL_A5": _real_a5,
+        "REAL_MANIFEST": _real_manifest,
+        "REAL_SEAL_RECEIPT": _real_seal_receipt,
+    }
+    loader = loaders.get(name)
+    if loader is None:
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return loader()
 
 
 def _top_up_supporting_units_for_candidate_family_floor(supporting_ids: list[str]) -> list[str]:
@@ -63,8 +97,8 @@ def _top_up_supporting_units_for_candidate_family_floor(supporting_ids: list[str
     real, unmutated unit ids from other registered families,
     deterministically, only when the stratum's own real supporting ids do
     not already meet the floor -- never invents a fake unit id."""
-    registry = REAL_SEAL_RECEIPT["source_family_registry"]
-    heldout_count = REAL_SEAL_RECEIPT["heldout_partition_seal"]["heldout_count"]
+    registry = _real_seal_receipt()["source_family_registry"]
+    heldout_count = _real_seal_receipt()["heldout_partition_seal"]["heldout_count"]
     mapping = floor.unit_to_family_map(registry)
     supporting = list(supporting_ids)
     have_families = {mapping[u] for u in supporting if u in mapping}
@@ -86,7 +120,7 @@ def resolved_a2_receipt(resolved_stratum: str) -> dict[str, Any]:
     real, unresolved residual stays untouched. ``resolved_stratum``'s own
     ``supporting_existing_source_unit_ids`` is topped up (real ids only) so
     the stratum's manifest ``ASSIGNED`` transition below meets Invariant D1."""
-    receipt = copy.deepcopy(REAL_A2)
+    receipt = copy.deepcopy(_real_a2())
     resolved_ids: set[str] = set()
     for coverage in receipt["stratum_coverage_map"]:
         if coverage["stratum"] == resolved_stratum:
@@ -101,7 +135,7 @@ def resolved_a2_receipt(resolved_stratum: str) -> dict[str, Any]:
 def assigned_manifest(resolved_stratum: str) -> dict[str, Any]:
     """The frozen manifest with exactly ``resolved_stratum``'s
     ``assignment_state`` flipped to ``ASSIGNED``."""
-    manifest = copy.deepcopy(REAL_MANIFEST)
+    manifest = copy.deepcopy(_real_manifest())
     for series in manifest["slot_series"]:
         if series["stratum"] == resolved_stratum:
             series["assignment_state"] = "ASSIGNED"
@@ -116,10 +150,10 @@ def build_synthetic_chain_root(tmp_path: Path, *, resolved_stratum: str) -> Path
     resolved_a2 = resolved_a2_receipt(resolved_stratum)
     manifest = assigned_manifest(resolved_stratum)
 
-    synthetic_a4 = copy.deepcopy(REAL_A4)
+    synthetic_a4 = copy.deepcopy(_real_a4())
     synthetic_a4["bindings"]["a2_source_operation_admission"]["sha256"] = a4.sha256_text(json.dumps(resolved_a2))
 
-    synthetic_a5 = copy.deepcopy(REAL_A5)
+    synthetic_a5 = copy.deepcopy(_real_a5())
     synthetic_a5["bindings"]["a2_source_operation_admission"]["sha256"] = a4.sha256_text(json.dumps(resolved_a2))
     synthetic_a5["bindings"]["a4_deterministic_extraction"]["sha256"] = a4.sha256_text(json.dumps(synthetic_a4))
 

@@ -45,6 +45,11 @@ def _write_json(path: Path, value: object) -> None:
 
 
 def _contract() -> dict[str, Any]:
+    if not P1.is_file():
+        pytest.skip(
+            "data/projects is absent from this sparse worktree; "
+            "re-include it with --sparse-include data/projects"
+        )
     return copy.deepcopy(p2.build_contract())
 
 
@@ -1008,9 +1013,27 @@ def test_semantic_case_roles_remain_blocked_even_with_a_satisfied_p1_stratum(
     assert p2.validate_case_record(_case(record_kind)) is False
 
 
-@pytest.mark.parametrize(
-    ("record_kind", "mutation"),
-    [
+def _case_state_mutation_params() -> list[object]:
+    """Mutation rows for the case-state table.
+
+    The rows that name a frozen P1 cell read ``data/projects``. When that tree
+    is absent, return one explicit skip instead of an empty parameter list.
+    """
+    if not P1.is_file():
+        return [
+            pytest.param(
+                "absent",
+                {},
+                id="data-projects-absent",
+                marks=pytest.mark.skip(
+                    reason=(
+                        "data/projects is absent from this sparse worktree; "
+                        "re-include it with --sparse-include data/projects"
+                    )
+                ),
+            )
+        ]
+    return [
         ("protected_historical_context", {"modern_normalization": True}),
         ("protected_historical_context", {"historical_identity": "modern_standard_ukrainian"}),
         ("protected_historical_context", {"period_id": ""}),
@@ -1026,8 +1049,10 @@ def test_semantic_case_roles_remain_blocked_even_with_a_satisfied_p1_stratum(
         ("coverage_blocked", {"authority": copy.deepcopy(AUTHORITY)}),
         ("coverage_blocked", {"coverage_stratum_id": _cell_id("not_applicable_with_evidence")}),
         ("coverage_blocked", {"coverage_stratum_id": "p1-cell:not-frozen"}),
-    ],
-)
+    ]
+
+
+@pytest.mark.parametrize(("record_kind", "mutation"), _case_state_mutation_params())
 def test_case_state_mutations_fail_closed(
     record_kind: str, mutation: dict[str, Any], monkeypatch: pytest.MonkeyPatch
 ) -> None:
