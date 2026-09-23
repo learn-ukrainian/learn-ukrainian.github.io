@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import os
+import re
 import subprocess
 from pathlib import Path
 
@@ -387,3 +388,82 @@ def test_explicit_superseded_path_is_not_minted(tmp_path: Path, monkeypatch: pyt
     answers = _answers(tmp_path)
     assert "claude-sentinel" in answers
     assert "superseded-sentinel" not in answers
+
+
+def test_gemini_board_and_mint_both_fall_through_a_short_own_handoff(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """Board before mint must name the same file mint records (#8588 finding 5)."""
+    _patch_mint(monkeypatch)
+    epic = _epic(tmp_path)
+    _write(
+        epic / "GEMINI-DRIVER-HANDOFF.md",
+        "# Gemini\n\n## Session 2026-09-23\n\nNo next or hands-off sections.\n",
+        mtime=9_000,
+    )
+    _write(
+        epic / "CLAUDE-DRIVER-HANDOFF.md",
+        _full("claude-sentinel", session="2026-09-23"),
+        mtime=1_000,
+    )
+
+    assert (
+        gemini_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "atlas", "--stream", "lane-test"])
+        == 0
+    )
+    board = (epic / "GEMINI-COLD-START.md").read_text(encoding="utf-8")
+    assert "**Handoff dual-write:** `.claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md`" in board
+
+    assert _mint(gemini_lane, tmp_path) == 0
+    meta = json.loads((tmp_path / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
+    assert meta["handoff"].endswith("CLAUDE-DRIVER-HANDOFF.md")
+    assert "claude-sentinel" in _answers(tmp_path)
+
+
+def test_score_and_board_fail_closed_when_the_recorded_handoff_is_removed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """After mint, consumers use only the recorded file — never re-rank (#8588 finding 6)."""
+    _patch_mint(monkeypatch)
+    epic = _epic(tmp_path)
+    gemini = epic / "GEMINI-DRIVER-HANDOFF.md"
+    _write(gemini, _full("gemini-sentinel", session="2026-09-23"), mtime=9_000)
+    _write(
+        epic / "CLAUDE-DRIVER-HANDOFF.md",
+        _full("claude-sentinel", session="2026-09-23"),
+        mtime=1_000,
+    )
+
+    assert gemini_lane.main(["--repo", str(tmp_path), "mint", "--epic", "atlas", "--stream", "lane-test"]) == 0
+    canary = epic / "canary"
+    meta = json.loads((canary / "mint_meta.json").read_text(encoding="utf-8"))
+    assert meta["handoff"].endswith("GEMINI-DRIVER-HANDOFF.md")
+    facts = json.loads((canary / "facts.json").read_text(encoding="utf-8"))
+    (canary / "probe.json").write_text(json.dumps({"anchors": facts}), encoding="utf-8")
+
+    gemini.unlink()
+
+    with pytest.raises(handoff_select.RecordedHandoffMissingError, match=re.escape("GEMINI-DRIVER-HANDOFF.md")):
+        gemini_lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "atlas", "--stream", "lane-test"])
+
+    answers = tmp_path / "answers.json"
+    answers.write_text(json.dumps({fact["id"]: fact["a"] for fact in facts}), encoding="utf-8")
+    with pytest.raises(handoff_select.RecordedHandoffMissingError, match=re.escape("GEMINI-DRIVER-HANDOFF.md")):
+        gemini_lane.main(
+            [
+                "--repo",
+                str(tmp_path),
+                "score",
+                "--epic",
+                "atlas",
+                "--stream",
+                "lane-test",
+                "--answers",
+                str(answers),
+            ]
+        )
+
+    # Restore the recorded file: the normal recorded-file path still wins.
+    _write(gemini, _full("gemini-sentinel", session="2026-09-23"), mtime=9_000)
+    bound = grok_lane._bound_handoff_path(tmp_path, "atlas", out_dir=canary)
+    assert bound == gemini

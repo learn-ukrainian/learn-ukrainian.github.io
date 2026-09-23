@@ -45,6 +45,7 @@ import json
 import re
 import subprocess
 import sys
+from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
@@ -406,21 +407,27 @@ def _build_facts(
     return facts[:N_ANCHORS]
 
 
-def _facts_from_handoff_candidates(
+def select_handoff(
     *,
     repo: Path,
     epic: str,
     stream_id: str,
     stream_entries: list[dict[str, str]],
-    handoff_paths: list[Path],
-) -> tuple[list[dict[str, str]], str]:
-    """Use the first handoff that yields 10 anchors.
+    candidates: Sequence[Path],
+    explicit: Path | None = None,
+) -> tuple[Path | None, str, list[tuple[str, int, int, int]]]:
+    """First handoff that yields 10 anchors. Mint and the board both call this.
 
-    ``handoff_paths`` is already ordered: explicit ``--handoff``, then the
-    freshness ranking. A short file is recorded and the next candidate is
-    tried before failing. The path that succeeds is what later consumers use.
+    ``candidates`` is already freshness-ranked; ``explicit`` (``--handoff``)
+    goes first. A candidate whose next/hands-off + stream facts cannot reach
+    10 anchors is skipped and the next candidate is tried. Returns
+    ``(path, reason, per-candidate counts)``: reason is the selected file's
+    repo-relative label (``"(no handoff)"`` when the stream alone suffices),
+    and counts are ``(label, anchors, next, hands-off)`` per attempt.
+    An empty reason means every candidate fell short.
     """
-    existing = [path for path in handoff_paths if path.is_file()]
+    ordered = handoff_select.ordered_mint_handoffs(list(candidates), explicit)
+    existing = [path for path in ordered if path.is_file()]
     sources: list[tuple[Path | None, str]] = (
         [(path, _handoff_display(repo, path)) for path in existing] if existing else [(None, "(no handoff)")]
     )
@@ -438,8 +445,21 @@ def _facts_from_handoff_candidates(
         )
         attempts.append((rel, len(built), next_n, hands_n))
         if len(built) >= N_ANCHORS:
-            return built[:N_ANCHORS], rel
-    raise SystemExit(_format_anchor_shortfall(attempts))
+            return path, rel, attempts
+    return None, "", attempts
+
+
+def select_board_handoff(repo: Path, epic: str, stream_id: str, candidates: Sequence[Path]) -> Path | None:
+    """Board-time pick through the same anchor-yield selection mint runs."""
+    stream_entries = _load_stream_entries(stream_id)
+    path, _reason, _counts = select_handoff(
+        repo=repo,
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=stream_entries,
+        candidates=candidates,
+    )
+    return path
 
 
 def cmd_mint(args: argparse.Namespace) -> int:
@@ -455,19 +475,26 @@ def cmd_mint(args: argparse.Namespace) -> int:
 
     explicit = _resolve_handoff_override(repo, getattr(args, "handoff", None))
     ranked = _handoff_candidates(repo, epic, preferred=getattr(args, "preferred", None))
-    handoff_paths = handoff_select.ordered_mint_handoffs(ranked, explicit)
     stream_entries = _load_stream_entries(stream_id, limit=int(args.stream_limit))
-    try:
-        facts, handoff_rel = _facts_from_handoff_candidates(
-            repo=repo,
-            epic=epic,
-            stream_id=stream_id,
-            stream_entries=stream_entries,
-            handoff_paths=handoff_paths,
-        )
-    except SystemExit as exc:
-        print(str(exc), file=sys.stderr)
+    selected, handoff_rel, attempts = select_handoff(
+        repo=repo,
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=stream_entries,
+        candidates=ranked,
+        explicit=explicit,
+    )
+    if not handoff_rel:
+        print(_format_anchor_shortfall(attempts), file=sys.stderr)
         return 1
+    facts = _build_facts(
+        epic=epic,
+        stream_id=stream_id,
+        stream_entries=stream_entries,
+        handoff_text=_read_text(selected) if selected is not None else "",
+        handoff_rel=handoff_rel,
+        raise_on_shortfall=False,
+    )[:N_ANCHORS]
 
     out_dir = Path(args.out_dir) if args.out_dir else _canary_dir(repo, epic)
     out_dir.mkdir(parents=True, exist_ok=True)
@@ -738,11 +765,15 @@ def cmd_score(args: argparse.Namespace) -> int:
                         "  4) Anything not dual-written before compact may have evaporated\n"
                         "=== END RE-GROUND ===\n"
                     )
+                except handoff_select.RecordedHandoffMissingError:
+                    raise
                 except Exception as hexc:  # fail-open: score already succeeded
                     print(
                         f"warning: auto-hydrate skipped ({type(hexc).__name__}: {hexc})",
                         file=sys.stderr,
                     )
+    except handoff_select.RecordedHandoffMissingError:
+        raise
     except Exception as exc:  # fail-open: never block score exit codes
         print(f"warning: diary dual-write skipped ({type(exc).__name__}: {exc})", file=sys.stderr)
 

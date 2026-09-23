@@ -178,7 +178,7 @@ def _write_cold_start(
     handoff_rel = handoff_select.board_handoff_rel(
         repo,
         epic,
-        lambda: _handoff_candidates(repo, epic),
+        lambda: _gl.select_board_handoff(repo, epic, stream_id, _handoff_candidates(repo, epic)),
         fallback_name="INTERIM-DRIVER-HANDOFF.md",
     )
     (epic_dir / "KIMI-COLD-START.md").write_text(

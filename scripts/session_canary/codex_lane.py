@@ -153,7 +153,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     handoff_rel = handoff_select.board_handoff_rel(
         repo,
         epic,
-        lambda: _handoff_candidates(repo, epic),
+        lambda: _gl.select_board_handoff(repo, epic, stream_id, _handoff_candidates(repo, epic)),
         fallback_name="CODEX-DRIVER-HANDOFF.md",
     )
     board_path = epic_path / "CODEX-COLD-START.md"

@@ -7,8 +7,13 @@ A stale ``INTERIM-DRIVER-HANDOFF.md`` therefore beat a newer
 1. An explicit ``--handoff`` path, when the caller supplies one.
 2. The file a successful mint already recorded, when a later consumer is
    continuing that canary. Consumers must pass that path through. They must
-   not rank again.
-3. Otherwise the freshest existing candidate. Own-lane is only a tiebreak.
+   not rank again: when ``mint_meta.json`` records a file that is gone or
+   unreadable, :func:`recorded_mint_handoff` raises
+   :class:`RecordedHandoffMissingError` instead of returning None.
+3. Otherwise the candidate the shared anchor-yield selection picks. Mint and
+   the cold-start board both run that one selection, so a handoff too short
+   to yield 10 anchors is skipped identically in both places. Freshness ranks
+   the candidates fed into it; own-lane is only a tiebreak.
 
 Freshness is a single calendar date per file, never a mix of a session
 timestamp and an mtime:
@@ -188,23 +193,40 @@ def chosen_handoff_path(candidates: Sequence[Path]) -> Path | None:
     return None
 
 
+class RecordedHandoffMissingError(RuntimeError):
+    """A mint-recorded handoff is gone or unreadable; consumers must not re-rank."""
+
+
 def recorded_mint_handoff(repo: Path, epic: str, out_dir: Path | None = None) -> Path | None:
-    """Handoff path a successful mint already selected, if that file is still present."""
+    """Handoff path a successful mint already selected.
+
+    Returns None only when no mint selection was recorded. When
+    ``mint_meta.json`` exists but cannot be read, or the recorded file is
+    gone or superseded, raise :class:`RecordedHandoffMissingError` naming the
+    recorded path — falling back to a fresh ranking would let score/board
+    drift from the minted canary.
+    """
     meta_path = (out_dir if out_dir is not None else repo / ".claude" / f"{epic}-epic" / "canary") / "mint_meta.json"
     if not meta_path.is_file():
         return None
     try:
         payload = json.loads(meta_path.read_text(encoding="utf-8"))
-    except (OSError, UnicodeError, json.JSONDecodeError):
-        return None
+    except (OSError, UnicodeError, json.JSONDecodeError) as exc:
+        raise RecordedHandoffMissingError(
+            f"recorded mint selection unreadable: {meta_path} ({exc}); "
+            "re-mint the canary — consumers must not re-rank handoffs"
+        ) from exc
     raw = payload.get("handoff") if isinstance(payload, dict) else None
-    if not isinstance(raw, str) or not raw.strip():
+    if not isinstance(raw, str) or not raw.strip() or raw == "(no handoff)":
         return None
     path = Path(raw)
     if not path.is_absolute():
         path = repo / path
     if not path.is_file() or is_superseded_handoff(path):
-        return None
+        raise RecordedHandoffMissingError(
+            f"recorded mint handoff missing: {path} (recorded in {meta_path}); "
+            "re-mint the canary — consumers must not re-rank handoffs"
+        )
     return path
 
 
@@ -218,17 +240,21 @@ def display_repo_path(repo: Path, path: Path) -> str:
 def board_handoff_rel(
     repo: Path,
     epic: str,
-    load_candidates: Callable[[], Sequence[Path]],
+    select: Callable[[], Path | None],
     *,
     fallback_name: str,
 ) -> str:
     """Cold-start board path. A recorded mint selection is returned as-is.
 
-    ``load_candidates`` runs only when mint has not already selected a file,
-    so the board cannot pick a different handoff from the canary.
+    ``select`` runs only when mint has not already selected a file, and it
+    must be the same anchor-yield selection mint runs, so the board cannot
+    name a handoff mint would skip. A recorded file that has gone missing
+    raises :class:`RecordedHandoffMissingError` instead of re-ranking.
     """
     recorded = recorded_mint_handoff(repo, epic)
-    chosen = recorded if recorded is not None else chosen_handoff_path(load_candidates())
+    if recorded is not None:
+        return display_repo_path(repo, recorded)
+    chosen = select()
     if chosen is None:
         return f".claude/{epic}-epic/{fallback_name}"
     return display_repo_path(repo, chosen)
