@@ -20,7 +20,12 @@ _SERVICE_STATES = frozenset(
     {"running", "stopped", "degraded", "tunneled", "unavailable", "blocked"}
 )
 _REPO_KEYS = frozenset({"learn-ukrainian", "sibling"})
-_SERVING_MODES = frozenset({"release", "checkout"})
+_SERVING_MODES = frozenset({"release", "checkout", "unknown"})
+# Why a running service's code identity could not be resolved (#8591). Only
+# ``serving_mode: "unknown"`` rows carry one, and they must carry one.
+_UNRESOLVED_REASONS = frozenset(
+    {"no_listener_pid", "cwd_unreadable", "cwd_not_git_repo", "head_unresolvable"}
+)
 _PORT_HINT = re.compile(r"(?i)(?:^|[^0-9])(?:port|:[0-9]{2,5})(?:[^0-9]|$)")
 _LANE_USAGE_ALLOWED_KEYS = frozenset({"lane", "window", "used_pct", "resets_at"})
 _LANE_USAGE_WINDOWS = frozenset({"weekly"})
@@ -167,13 +172,13 @@ def validate_report_document(document: dict[str, Any]) -> None:
         if not isinstance(name, str) or not _SERVICE_NAME_RE.fullmatch(name):
             raise ProjectStateValidationError("invalid service name")
         state = service.get("state")
-        if state not in _SERVICE_STATES:
+        if not isinstance(state, str) or state not in _SERVICE_STATES:
             raise ProjectStateValidationError("invalid service state")
         repo = service.get("repo")
-        if repo not in _REPO_KEYS:
+        if not isinstance(repo, str) or repo not in _REPO_KEYS:
             raise ProjectStateValidationError("invalid service repo")
         mode = service.get("serving_mode")
-        if mode not in _SERVING_MODES:
+        if not isinstance(mode, str) or mode not in _SERVING_MODES:
             raise ProjectStateValidationError("invalid serving_mode")
         serving_sha = service.get("serving_sha")
         checkout_sha = service.get("checkout_sha")
@@ -189,6 +194,16 @@ def validate_report_document(document: dict[str, Any]) -> None:
             raise ProjectStateValidationError("release mode requires serving_sha when running")
         if mode == "checkout" and checkout_sha is None and state == "running":
             raise ProjectStateValidationError("checkout mode requires checkout_sha when running")
+        unresolved_reason = service.get("unresolved_reason")
+        if mode == "unknown":
+            if state != "running":
+                raise ProjectStateValidationError("unknown mode is only valid when running")
+            if serving_sha is not None or checkout_sha is not None:
+                raise ProjectStateValidationError("unknown mode must not carry a sha")
+            if not isinstance(unresolved_reason, str) or unresolved_reason not in _UNRESOLVED_REASONS:
+                raise ProjectStateValidationError("invalid unresolved_reason")
+        elif unresolved_reason is not None:
+            raise ProjectStateValidationError("unresolved_reason requires unknown mode")
 
     collected_at = document.get("collected_at")
     if not isinstance(collected_at, str) or not _COLLECTED_AT_RE.fullmatch(collected_at):

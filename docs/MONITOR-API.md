@@ -398,6 +398,16 @@ mode (`sources` and `astro` today). `origin_main_age_s > 3600` degrades all
 drift to `unknown` with a `stale_upstream` attention item. Sibling `work`
 services return `drift: not_applicable`.
 
+A running service whose code identity cannot be resolved is reported with
+`serving_mode: "unknown"`, both SHAs `null`, `drift: "unknown"`, and a
+machine-readable `unresolved_reason`: `no_listener_pid` (no listener pid for the
+port), `cwd_unreadable` (the listener's working directory cannot be read),
+`cwd_not_git_repo` (the working directory is neither a release dir nor a git
+checkout), or `head_unresolvable` (a git checkout whose `HEAD` does not resolve).
+One unresolved service never fails the whole report. `unresolved_reason` is
+`null` for every other mode. Ingest rejects `unknown` rows that are not running,
+carry a SHA, or name any other reason, and rejects a reason on any other mode.
+
 ```bash
 curl -s http://localhost:8765/api/fleet/projects/v1 | python3 -m json.tool
 ```
@@ -412,6 +422,9 @@ read freshness window (15 minutes).
 ```bash
 .venv/bin/python scripts/api/project_state_local.py report
 ```
+
+The reporter includes `lane_usage` by probing local subscription lanes; set
+`MONITOR_PROJECT_STATE_LANE_USAGE=0` to skip those probes (hermetic tests).
 
 Operator timer install: `docs/runbooks/project-state-reporter.md`.
 

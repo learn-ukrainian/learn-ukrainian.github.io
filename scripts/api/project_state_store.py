@@ -288,6 +288,7 @@ def shape_host_payload(
                 "serving_mode": service["serving_mode"],
                 "serving_sha": service.get("serving_sha"),
                 "checkout_sha": service.get("checkout_sha"),
+                "unresolved_reason": service.get("unresolved_reason"),
                 "drift": drift,
             }
         )

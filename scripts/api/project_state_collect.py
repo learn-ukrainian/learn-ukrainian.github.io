@@ -127,7 +127,10 @@ def collect_worktree_count(repo_root: Path) -> int:
 
 
 def classify_serving_root(cwd: Path) -> dict[str, Any]:
-    resolved = cwd.resolve()
+    try:
+        resolved = cwd.resolve()
+    except OSError:
+        return _unresolved_serving("cwd_unreadable")
     if is_release_root(resolved):
         sha = resolved.name
         if _FULL_SHA_RE.fullmatch(sha):
@@ -143,10 +146,18 @@ def classify_serving_root(cwd: Path) -> dict[str, Any]:
             "serving_sha": None,
             "checkout_sha": head,
         }
+    if _git(resolved, "rev-parse", "--git-dir") is None:
+        return _unresolved_serving("cwd_not_git_repo")
+    return _unresolved_serving("head_unresolvable")
+
+
+def _unresolved_serving(reason: str) -> dict[str, Any]:
+    """Serving fields for a running service whose code identity cannot be resolved (#8591)."""
     return {
-        "serving_mode": "checkout",
+        "serving_mode": "unknown",
         "serving_sha": None,
         "checkout_sha": None,
+        "unresolved_reason": reason,
     }
 
 
@@ -268,14 +279,18 @@ def collect_service_row(
     if state != "running":
         return row
 
+    # A running service is never reported as checkout-without-sha: when its
+    # code identity cannot be resolved the row says so explicitly instead of
+    # failing validation of the whole report (#8591).
     pid = pid_fn(definition.name)
     if pid is None:
+        row.update(_unresolved_serving("no_listener_pid"))
         return row
     cwd = cwd_fn(pid)
     if cwd is None:
+        row.update(_unresolved_serving("cwd_unreadable"))
         return row
-    classified = classify_serving_root(cwd)
-    row.update(classified)
+    row.update(classify_serving_root(cwd))
     return row
 
 
