@@ -402,7 +402,7 @@ def test_apply_stress_and_check_9(tmp_path):
                 "job": "Greet people",
                 "steps": [{"id": "s1"}],
                 "activities": [],
-                "inventory": {"vocabulary": {"core": [], "incidental": []}},
+                "inventory": {"vocabulary": {"core": [], "incidental": [], "recycled": []}},
             }
         ]
     }
