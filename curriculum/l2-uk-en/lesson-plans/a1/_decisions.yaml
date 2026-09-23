@@ -1,0 +1,156 @@
+schema: 1
+generator:
+  path: scripts/curriculum/arc/generate_decisions.py
+  sha256: 5c10305349443115497cc5c8bf769cdeba8c2f71bce322cada3a95e40322ce28
+level: a1
+sources:
+- doc: docs/epics/fresh-build-a1-arc.md
+  heading: '## 2. Decisions'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-build-program.md
+    line: '| Arcs A1, A2, B1, B2 | `docs/epics/fresh-build-{a1,a2,b1,b2}-arc.md` | all four accepted by the operator 2026-09-21; only A1 has its generated `_arc.yaml` |'
+  doc_sha256: 319bd259d43fd6f917e2f720285c38d33d59b850561f3dd186ead12f0226df13
+  section_sha256: e0cf80d3ed52201afe8341d23dea50203cac85931c085e80ded82acba0437f5d
+  text: |+
+    ## 2. Decisions
+
+    **D1 — Keep the 55 positions and slugs; rebuild what is inside them.** The v1 sequence was built
+    from the Standard and, read module by module, stays inside its A1 ceiling: genitive, dative and
+    instrumental appear only as marked chunks (`у мене є`, `мені подобається`, `з/без + noun`,
+    `автобусом`, `вітаю з …`). Keeping positions means: `/a1/<slug>/` parallels `/a1-v1/<slug>/`; the
+    immersion bands, which are keyed by module number (R-30), keep working unchanged; and review
+    effort goes into lessons, not into re-arguing order. Position 45 keeps its v1 job and gains the
+    home theme (D6).
+
+    **D2 — What was actually broken, and is fixed by this arc:**
+    1. *Literacy scope.* Module 1's subtitle promised seven letters while its body listed all 33
+       (`plans/a1/sounds-letters-and-hello.yaml:17` vs `:141-205`). With lessons there is no reason to
+       cram: §4 gives an honest inventory per module and lesson.
+    2. *The level plan contradicts the Standard.* `curriculum/l2-uk-en/plans/a1.yaml:34-40` claims
+       genitive "basic" and cardinals 1–1000 as grammar scope; `STATE-STANDARD-COMPLIANCE-ANALYSIS.md:23`
+       claims five cases. Both are replaced by §3 of this arc.
+    3. *No lesson grain.* Every module was one 1,200-word block. §5 estimates lessons per module.
+    4. *Skills the Standard requires were thin:* writing (forms, postcard, SMS), listening, real-world
+       reading. §5 assigns them as lesson duties, not as extra modules.
+    5. *Unsourced teaching points.* "Open / closed syllable" is taught in v1 Module 1 but has no hit in
+       the grade 1–5 textbooks in the corpus. It is dropped unless the evidence pack finds a source.
+
+    **D3 — Chunk first, system later (ULP), bounded by the Standard.** A construction may be used as a
+    memorised chunk before its grammar is taught, if and only if the plan marks it `chunk` and the
+    lesson does not analyse it. §3 is the single table of what is a system and what is a chunk at A1.
+
+    **D4 — Every module ends with a recap lesson in the ULP review shape** (R-03): a short
+    first-person story side by side in Ukrainian and English, Ukrainian-only questions about it, one
+    production task. Checkpoint modules are made of such lessons plus a self-check and introduce
+    nothing new.
+
+    **D0 — The Standard is the minimum; ULP is the schedule (operator, 2026-09-21).** Everything the
+    Standard lists for A1 must be owned by a position. Teaching something *earlier* than the Standard
+    places it is allowed when Anna Ohoiko's ULP does so at the matching point of its course, and the
+    arc records the ULP evidence next to it. The level→season map is
+    `docs/best-practices/ulp-presentation-pattern.md:256-268`: positions 1–40 ≈ ULP Season 1,
+    positions 41–55 ≈ the Season 2 transition. "Earlier than the Standard" without ULP evidence is
+    still not done.
+
+    **D6 — Position 45 keeps its v1 job and gains the home theme.** r2 of this arc removed the
+    `що / де / коли` clauses from A1 because the Standard first lists them at A2 (`:1408-1411`) and B1
+    (`:2406`). Under D0 that was the wrong test. Measured in the ULP lesson notes (`data/sources.db`,
+    `ulp-1-00…`, `ulp-2-00…`): Season 1 already uses these clauses in running text, unexplained —
+    `, що` from lesson 5, `, де` from lesson 17, `, коли` from lesson 20 — and Season 2 uses `, що` 82
+    times from lesson 41 on. Position 45 sits in the Season 2 band, so first complex sentences belong
+    there. ULP's lesson 45 is the review story «Мій дім»; position 45 therefore carries the Standard
+    theme **Дім, помешкання** (`:489-493`), which had no owner, as the content its clauses talk about.
+    The slug `when-and-where` and the position number stay.
+
+    **D5 — A pronunciation strand runs through the whole level**, not only the first four modules:
+    a short trainer inside a lesson roughly every sixth module (и; soft consonants; р; intonation;
+    `-шся` / `-ться`; unstressed е / и), using the ULP trainer videos that are in the corpus.
+
+- doc: docs/epics/fresh-build-a1-arc.md
+  heading: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-a1-arc.md
+    line: '## 6. Decisions on the six open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)'
+  doc_sha256: 319bd259d43fd6f917e2f720285c38d33d59b850561f3dd186ead12f0226df13
+  section_sha256: dcb7c50f6fce61ff44312d31a5c8c38484c9618dc0bda1eaada15a23bd3c7d67
+  text: |+
+    ## 6. Decisions on the six open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently recommended the same on 2–6)
+
+    1. **Size:** flexible — see Sizing above. No target total.
+    2. **Past and future stay at positions 48–51** for A1; the order is reconsidered when A2 is planned.
+    3. **Locative before accusative:** place (29–30) → direction (31) → object (37, 40).
+    4. **Cardinal numerals are vocabulary only;** no numeral + noun agreement system at A1.
+    5. **Дім / помешкання** is owned by position 45 as the theme of its complex sentences (D6);
+       household objects are already met at 9 and 12.
+    6. **Letter order authority is Захарійчук,** the primer ingested page by page. It is not reopened for
+       A1 if another primer is ingested later.
+
+- doc: docs/epics/fresh-build-plan-schema.md
+  heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-plan-schema.md
+    line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
+  doc_sha256: 17922871ee95d70843b4296c979acc61a43d2c9e212acbfbb628d499bab1e426
+  section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
+  text: |
+    ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)
+
+    1. **Steps are fixed structure.** Which steps exist, their order, their evidence and their practice
+       activities are binding and machine-checked; the wording inside a step is the writer's. An awkward
+       step order is fixed in the plan, not improvised around.
+    2. **Shared word store per level.** `curriculum/l2-uk-en/evidence/<level>/_words.yaml` (+ `.lock`)
+       holds one record per lemma sense for the whole level, with where it is first introduced. Module
+       packs keep texts, exercises, examples, errors, videos and standard lines, and reference words by
+       id. A correction (for example a ULIF stress fix) is made once. The store is versioned; a change
+       lists the modules whose plans cite the changed records so they can be re-verified.
+    3. **`minutes` is kept and computed**, not typed: reading time from the word target, a per-type time
+       per activity, and the video durations from the pack. The arc review uses it to spot overloaded
+       lessons; no gate fails on it.
+    4. **Start clean.** No v1 plan is converted. v1 plans stay on disk as the record of `/a1-v1/` and
+       are never read by the new engine. The arc author may look up which textbook pages they cited and
+       re-verifies each citation through the MCP before using it (R-11).
+
+    Resolved earlier in r2: form-grain vocabulary (kept for stress and for what a lesson teaches; as a limit on what a writer may use it was lifted in revision 8, §4), core vs incidental, planned vs observed learner
+    state, lesson-grain immersion, quantity-only deterministic title check, dialogue fields,
+    `examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
+
+    Added after #8403: a text quote is anchored by **verbatim text + content hash + (source file,
+    page)**. `chunk_id` is a convenience locator only — textbook chunk ids shifted on a re-chunk and
+    left 93 wiki registries dangling, so an id alone is not a stable reference.
+- doc: docs/epics/fresh-build-writer-contract.md
+  heading: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-writer-contract.md
+    line: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
+  doc_sha256: 8280ff04386f1dc169f65457f5c27eba055556319524a36580fbf85b5b13dfc0
+  section_sha256: 285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4
+  text: |+
+    ## Decisions of the operator, 2026-09-21 (unchanged in r3)
+    Question 1 he answered himself; on the others he said **"i accept the defaults"**, so each proposal is a decision.
+    1. **Any form of an allowed lemma may be used; an untaught form is memorised, not explained** (§3; plan schema revision 8).
+    2. **The writer types no stress marks; the engine applies them and never guesses.** An ambiguous token gets one constrained question, answered by a language-lane seat and checked in review. The pilot measures how many tokens need it.
+    2a. **Словник and Ресурси are generated, not written** — with the sense the lesson uses, the government of a verb or preposition where the word record carries it, grouping by the plan's steps, and the plan's `use:` line in Ресурси. All from sourced fields.
+    3. **One style card per band — A1, A2, B1+.** Exemplars only under the three conditions of §5.
+    4. **Two regenerations of a lesson, then the driver;** the same check failing twice is not retried but goes to the plan or the pack.
+
+    **What is still missing before this design is final:** the operator's acceptance of r3 (two independent seats have read it).
+
+- doc: docs/epics/fresh-build-build-program.md
+  heading: '## 6. The operator''s decisions (2026-09-22, his words)'
+  accepted: '2026-09-22'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-build-program.md
+    line: '## 6. The operator''s decisions (2026-09-22, his words)'
+  doc_sha256: 64de6ced1c7415fbb9370dfa529870d5c03dbeb6afef2bad4b7f30b0737838b2
+  section_sha256: c05d262d386151e122faeae9afdfd2c14836306e52c0fd13a00e03c7a15cbdb7
+  text: |+
+    ## 6. The operator's decisions (2026-09-22, his words)
+    1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), written after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The position 1 pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
+    2. **Replacing the `content-review` skill** for fresh-build lessons (#8430 deliverable (h)) — **"go"**; it is WP 24 (an agent-system change, done with his go on record).
+    3. **The two contracts** (#8430 r4, #8431 r3) — **"i accept and we will improve it if needed"**; their status lines record it. A later improvement is a design revision with two independent seats, as before.
+
+...

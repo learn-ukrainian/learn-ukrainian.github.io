@@ -1,0 +1,167 @@
+schema: 1
+generator:
+  path: scripts/curriculum/arc/generate_decisions.py
+  sha256: 5c10305349443115497cc5c8bf769cdeba8c2f71bce322cada3a95e40322ce28
+level: b1
+sources:
+- doc: docs/epics/fresh-build-b1-arc.md
+  heading: '## 2. Decisions'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-b1-arc.md
+    line: '> Sub-epic #8397, issue #8427. Status: **accepted by the operator 2026-09-21** (r4, by the curriculum-upgrade driver).'
+  doc_sha256: 4eb17c163dedabcbd19990cd22f0eafca28a43769ce55b07bdf02295dd4d62f9
+  section_sha256: 47cef3731ef3d42cd478ac04981a537999d29724522776bcd2dc8c4be32f7e4e
+  text: |+
+    ## 2. Decisions
+
+    **D0 — At B1 the Standard and the school textbooks order the grammar; ULP shapes the lesson.**
+    R-32 says ULP is the schedule. At B1 ULP has no grammar schedule to follow: Seasons 4–6 are topical
+    and return to grammar in small boxes wherever a text needs it (§1). What ULP does fix at this level
+    is the **shape of a lesson**: a Ukrainian-only text worth reading for its own sake, one small
+    grammar focus drawn from it, practice on that focus, vocabulary in context. Every B1 teaching lesson
+    has that shape. The grammar **order** follows the Standard's B1 catalogue and the order in which the
+    Ukrainian school textbooks of grades 5–8 build the same topics, which is also where the
+    explanations' wording comes from (A2 positions 61–66 prepared the learner to read them).
+
+    **D1 — Keep the 94 positions and slugs; rebuild what is inside them.** `/b1/<slug>/` parallels the
+    archive, the single immersion band cannot shift, and the v1 order already follows the Standard's
+    B1 catalogue group by group. Slugs that use English school terms (`gerunds-…` for the adverbial
+    participle) stay as URLs; the lessons use the Ukrainian term.
+
+    **D2 — Recycle, do not re-teach, what A2 already taught on ULP evidence.** Positions 2 and 5
+    (futures), 22 (real conditions), 35–40 (motion prefixes), 46 (adverbs), 77–82 (clauses with `який`,
+    `коли`, `якщо`, `хоча`) open with a short diagnostic recap of the A2 lesson and spend their lessons
+    on what B1 adds: all persons and irregular stems, the Standard's wider meaning lists, oblique-case
+    `який`, simultaneity versus sequence with `коли`, the unreal condition, the further concessive
+    conjunctions. A position whose whole job A2 already did would be a drag; none was found, but the
+    plan review checks each of them for it.
+
+    **D3 — Two blocks go beyond the Standard's B1; both are recognition only.**
+
+    | Item | Evidence | Standard | Position |
+    | --- | --- | --- | --- |
+    | Passive and impersonal forms, first contact | ULP Seasons 4–6: the terms occur in 13 lessons (121, 141, 153, 162, 163, 169, 172, 174, 186, 189, 190, 204 and one more); school textbooks grades 7–8 | impersonal sentences first at B2 (`:3414`) | 30 |
+    | Possessive adjectives | named and taught in the school textbooks (Авраменко grade 6, 2023, p. 136; Караман grade 10, 2018, p. 131); **no ULP lesson teaches them**; ULP texts use a few (an unambiguous sample of stems gives under twenty uses across Seasons 2–6) | **B2** `:3121-3126` — "adjectives of masculine gender with a zero ending" and their plurals; the Standard's own examples are possessive adjectives, though it does not use the term | 49 |
+
+    Position 30 stays a recognition module: the B2 arc owns the passive system (its first ten modules).
+    Position 49 likewise: the Standard places the declension of possessive adjectives at B2, and R-32
+    allows teaching something earlier than the Standard places it only on ULP evidence, which does not
+    exist here. **Correction (r3):** r1 and r2 of this arc said the Standard lists possessive adjectives at
+    no level. That was false. The driver and the reviewer both searched the Standard for the *term* and
+    not for the forms; the forms are at `:3121-3126`. See decision 2 in §8.
+
+    **D4 — The theme Суспільні відносини is owned on purpose, not in passing.** The Standard's B1 adds
+    a theme the lower levels do not have: social institutions, social problems, the structure of the
+    state, **війна і мир**, social and political events (`:1905-1910`). v1 had one candidate owner,
+    position 73. In a curriculum built for learners of the language of a country at war, this theme is
+    not an appendix: 73 owns institutions, the state and the media; 92 owns social problems as the
+    matter of its debates; 91 owns telling what one witnessed (`:1628`, `:1698-1699`), including the
+    war, in texts chosen by the evidence pack from the corpus. No lesson invents facts about the war;
+    every such text is sourced.
+
+    **D5 — Reading real texts starts at the beginning of the level, not at position 88.** The Standard
+    asks for unadapted prose excerpts, diaries, memoirs, interviews and short official papers
+    (`:1566-1582`). Every theme module carries one authentic or lightly abridged text from the corpus as
+    its reading duty; position 88 consolidates the skill on literary prose.
+
+    **D6 — Review rhythm.** Every module closes with a recap in the ULP review shape (R-03), Ukrainian
+    only. Checkpoints take the Season 3 "voice message" shape for listening and add a production task at
+    the Standard's B1 sizes.
+
+- doc: docs/epics/fresh-build-b1-arc.md
+  heading: '## 8. Decisions on the five open questions (operator, 2026-09-21)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-b1-arc.md
+    line: '## 8. Decisions on the five open questions (operator, 2026-09-21)'
+  doc_sha256: 4eb17c163dedabcbd19990cd22f0eafca28a43769ce55b07bdf02295dd4d62f9
+  section_sha256: 765026e10547b82176998430a87aadddc0579604744014fc3b3b3147528b1aaa
+  text: |+
+    ## 8. Decisions on the five open questions (operator, 2026-09-21)
+
+    1. **Keep all 94 slugs and positions (D1):** yes.
+    2. **Possessive adjectives (49): recognition only at B1; B2 owns them as a system.** History of
+       this decision, kept because it went wrong once: the operator first accepted a dedicated
+       two-lesson teaching module, on the driver's statement that the Standard lists possessive
+       adjectives at no level. **That statement was false** — the Standard places their declension at B2
+       (`:3121-3126`) — so R-32 applies, and there is no ULP evidence for teaching them earlier. The
+       driver reopened the question and put two options to the operator: recognition at B1 with the
+       system at B2, or a waiver of R-32 for this one item. **The operator chose the first ("option
+       1"); no waiver was taken.** Position 49 keeps its slug and two lessons: the learner meets and
+       understands these adjectives in texts and consolidates the adjective formation of 48. This is in
+       substance what the reviewer asked for (r1 and r2, MAJOR).
+    3. **The theme Суспільні відносини, війна і мир included, is owned by 73, 92 and 91 (D4)**, with
+       every text about the war taken from the corpus and sourced: yes.
+    4. **Passive and impersonal forms at 30 are recognition only**; the system is B2's: yes.
+    5. **The motion block keeps ten positions** although A2 now teaches the common prefixes:
+       yes for the arc, with the prefix positions cut to two lessons each (r1 review); the plan review
+       of 35–40 decides whether two of them should be merged.
+
+- doc: docs/epics/fresh-build-plan-schema.md
+  heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-plan-schema.md
+    line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
+  doc_sha256: 17922871ee95d70843b4296c979acc61a43d2c9e212acbfbb628d499bab1e426
+  section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
+  text: |
+    ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)
+
+    1. **Steps are fixed structure.** Which steps exist, their order, their evidence and their practice
+       activities are binding and machine-checked; the wording inside a step is the writer's. An awkward
+       step order is fixed in the plan, not improvised around.
+    2. **Shared word store per level.** `curriculum/l2-uk-en/evidence/<level>/_words.yaml` (+ `.lock`)
+       holds one record per lemma sense for the whole level, with where it is first introduced. Module
+       packs keep texts, exercises, examples, errors, videos and standard lines, and reference words by
+       id. A correction (for example a ULIF stress fix) is made once. The store is versioned; a change
+       lists the modules whose plans cite the changed records so they can be re-verified.
+    3. **`minutes` is kept and computed**, not typed: reading time from the word target, a per-type time
+       per activity, and the video durations from the pack. The arc review uses it to spot overloaded
+       lessons; no gate fails on it.
+    4. **Start clean.** No v1 plan is converted. v1 plans stay on disk as the record of `/a1-v1/` and
+       are never read by the new engine. The arc author may look up which textbook pages they cited and
+       re-verifies each citation through the MCP before using it (R-11).
+
+    Resolved earlier in r2: form-grain vocabulary (kept for stress and for what a lesson teaches; as a limit on what a writer may use it was lifted in revision 8, §4), core vs incidental, planned vs observed learner
+    state, lesson-grain immersion, quantity-only deterministic title check, dialogue fields,
+    `examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
+
+    Added after #8403: a text quote is anchored by **verbatim text + content hash + (source file,
+    page)**. `chunk_id` is a convenience locator only — textbook chunk ids shifted on a re-chunk and
+    left 93 wiki registries dangling, so an id alone is not a stable reference.
+- doc: docs/epics/fresh-build-writer-contract.md
+  heading: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-writer-contract.md
+    line: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
+  doc_sha256: 8280ff04386f1dc169f65457f5c27eba055556319524a36580fbf85b5b13dfc0
+  section_sha256: 285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4
+  text: |+
+    ## Decisions of the operator, 2026-09-21 (unchanged in r3)
+    Question 1 he answered himself; on the others he said **"i accept the defaults"**, so each proposal is a decision.
+    1. **Any form of an allowed lemma may be used; an untaught form is memorised, not explained** (§3; plan schema revision 8).
+    2. **The writer types no stress marks; the engine applies them and never guesses.** An ambiguous token gets one constrained question, answered by a language-lane seat and checked in review. The pilot measures how many tokens need it.
+    2a. **Словник and Ресурси are generated, not written** — with the sense the lesson uses, the government of a verb or preposition where the word record carries it, grouping by the plan's steps, and the plan's `use:` line in Ресурси. All from sourced fields.
+    3. **One style card per band — A1, A2, B1+.** Exemplars only under the three conditions of §5.
+    4. **Two regenerations of a lesson, then the driver;** the same check failing twice is not retried but goes to the plan or the pack.
+
+    **What is still missing before this design is final:** the operator's acceptance of r3 (two independent seats have read it).
+
+- doc: docs/epics/fresh-build-build-program.md
+  heading: '## 6. The operator''s decisions (2026-09-22, his words)'
+  accepted: '2026-09-22'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-build-program.md
+    line: '## 6. The operator''s decisions (2026-09-22, his words)'
+  doc_sha256: 64de6ced1c7415fbb9370dfa529870d5c03dbeb6afef2bad4b7f30b0737838b2
+  section_sha256: c05d262d386151e122faeae9afdfd2c14836306e52c0fd13a00e03c7a15cbdb7
+  text: |+
+    ## 6. The operator's decisions (2026-09-22, his words)
+    1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), written after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The position 1 pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
+    2. **Replacing the `content-review` skill** for fresh-build lessons (#8430 deliverable (h)) — **"go"**; it is WP 24 (an agent-system change, done with his go on record).
+    3. **The two contracts** (#8430 r4, #8431 r3) — **"i accept and we will improve it if needed"**; their status lines record it. A later improvement is a design revision with two independent seats, as before.
+
+...

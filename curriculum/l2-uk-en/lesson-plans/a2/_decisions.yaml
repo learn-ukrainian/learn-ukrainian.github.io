@@ -1,0 +1,191 @@
+schema: 1
+generator:
+  path: scripts/curriculum/arc/generate_decisions.py
+  sha256: 5c10305349443115497cc5c8bf769cdeba8c2f71bce322cada3a95e40322ce28
+level: a2
+sources:
+- doc: docs/epics/fresh-build-a2-arc.md
+  heading: '## 2. Decisions'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-a2-arc.md
+    line: '> Sub-epic #8397, issue #8424. Status: **accepted by the operator 2026-09-21** (r2, by the curriculum-upgrade driver).'
+  doc_sha256: 3023551e407b25d93dd905744d9866aea678533e162eb1cb5522d50381932522
+  section_sha256: 253ab2dcc8fc4763dee03359cb0b1c54b1fe414341fa4ecb1c4fea7eb7f05083
+  text: |+
+    ## 2. Decisions
+
+    **D0 — The Standard is the minimum; ULP is the schedule (R-32).** Everything the Standard lists for
+    A2 is owned by a position (§3, §6). Teaching something the Standard places at B1 is allowed at A2
+    only where ULP teaches it in Season 2–3, and the ULP lesson is cited next to it. Where ULP teaches
+    something in Season 3 that this arc still leaves to B1, that is said openly (D5) — R-32 permits
+    earlier teaching, it does not require it.
+
+    **D1 — Keep the 69 positions and slugs; rebuild what is inside them.** Reasons, as for A1:
+    `/a2/<slug>/` parallels the archived `/a2-v1/<slug>/` (requirements Q11); the A2 immersion bands
+    are keyed by module number and keep working unchanged (§7); and review effort goes into lessons,
+    not into re-arguing a module order that already follows the Standard. The v1 order was checked
+    against the ULP schedule and differs in three places, each handled without moving a slug (D2–D4).
+
+    **D2 — Aspect: idea first, system later — the ULP order, with the v1 positions.** ULP gives the
+    imperfective / perfective idea early (Season 1, lesson 34) and the system in Season 3 (lessons
+    91–94 «Using perfective and imperfective verb aspects», «Forming perfective verb aspect», «Sound
+    changes between imperfective and perfective verbs»; futures at 96–98). The Standard asks A2 only
+    for aspect **pairs as word formation** (`:1380-1381`) and the perfective future (`:1359`).
+    Positions 2–3 therefore teach recognition of pairs as vocabulary, so that every later A2 text may
+    narrate in the perfective past; positions 40–42 teach the system. No lesson before 40 asks the
+    learner to choose an aspect.
+
+    **D3 — Plural of the cases: met inside each case block, systematised at 32–34.** ULP teaches the
+    nominative plural first (lessons 42–44; ours is A1 position 13) and then brings the plural into
+    each case block (plural is discussed in lessons 48, 53, 56, 62 and 66). The Standard wants every
+    case in singular and plural (`:1201-1202`). Positions 5–31 are singular-first; each block's theme
+    module (15, 22, 30) meets that case's plural in its texts as marked, unanalysed forms; position 14
+    systematises the genitive plural, which the quantity expressions of the Standard need early
+    (`:1271-1272`); positions 32–34 systematise the rest.
+
+    **D4 — Metalanguage is taught at the point of need; positions 61–66 consolidate it.** From the
+    first A2 module the theory is written in simple Ukrainian (live band rule `a2-bridge`), so the
+    learner needs the words for it from the first module, not at position 61. Each grammar term is
+    `core` vocabulary of the lesson that first uses it, in Ukrainian categories (відмінок, рід, число,
+    вид, час, спосіб, речення). Positions 61–66 keep their slugs and become the bridge to B1: reading
+    and using grammar explanations the way a Ukrainian school textbook in the corpus words them. They
+    introduce no new grammar.
+
+    **D5 — What stays out of A2 although ULP Season 3 has it.** Participles and adverbial participles
+    (ULP 107–108; Standard B1 `:2372-2375`), the conditional mood (ULP 119; B1 `:2297`), the first
+    person plural imperative (B1 `:2293`), declension of cardinal numerals (B1 `:2089`) and of
+    demonstratives (B1 `:2108-2110`). Reason: they are not needed for any A2 skill or theme of the
+    Standard, the live A2 writing rule already excludes participles, and B1 owns them. They may occur
+    in a quoted authentic text as glossed, unanalysed forms.
+
+    **D6 — What A2 teaches beyond the Standard's A2, on ULP evidence.**
+
+    | Item | ULP evidence | Standard places it | Position |
+    | --- | --- | --- | --- |
+    | Synthetic future of imperfective verbs | lesson 98 «Future imperfective and perfective»: 7 such forms in the notes, 17 in review lesson 99 | B1 `:2287-2289` | 41 |
+    | Prefixed verbs of motion | lessons 81–89, one or two prefixes per lesson | B1 `:2336` | 43 |
+    | Indefinite and negative pronouns and adverbs | lessons 102 and 106 | not listed for A2 | 57 |
+    | Formation of adverbs | lessons 101 and 103 | A2 lists adverbs only inside the temporal intentions (`:1067-1068`) | 54 |
+    | Clauses with `коли`, `якщо`, `хоча` | lesson 116 «Complex sentences with adverbial clauses» | `якщо` and concessive clauses are B1 (`:2415`, `:2423`) | 47, 51 |
+    | Attributive clauses with `який` | lesson 117 «Complex sentences with attributive clauses» | B1 `:2399` onward | 49 |
+    | `щоб` with the past tense | lesson 118 | A2 has `щоб` of purpose only (`:1415-1416`) | 48 |
+
+    **D7 — `свій` is a small system at A2; `себе` is set phrases only.** The Standard does not list
+    `свій` among the A2 possessives (`:1248-1254`), but its own A2 text types require the learner to
+    speak and write «про … свій дім, своє місто й рідну країну» (`:930`, `:1000-1001`), and ULP uses
+    forms of `свій` 66 times in Season 2 and 123 times in Season 3, glossing it at lesson 44. `себе` is
+    B1 in the Standard (`:2107`); ULP uses its forms 16 times in Season 2 and 61 in Season 3 and explains
+    it only late in Season 3. (Counts are whole-word matches in the lesson notes after removing the
+    combining stress marks, which the notes print on many forms; without that step a pattern misses
+    the stressed forms — draft r1 of this arc and its reviewer both undercounted for that reason.) Position 56 keeps its slug: `свій` versus `мій` / `його` as a system, the
+    forms of `себе` inside fixed expressions chosen by the evidence pack.
+
+    **D8 — Numerals at A2 are agreement, not declension.** The Standard's A2 has the genitive after
+    cardinal numerals and quantity words (`:1271-1272`), the full declension of `один` (`:1241-1242`)
+    and declined ordinals (`:1236-1240`). Declension of the other cardinals is B1 (`:2089`). Position 6
+    owns ordinals and dates, position 14 the genitive plural after quantities, position 55 numeral +
+    noun agreement and `один`. ULP treats numeral + noun agreement mostly in Season 4 (lessons 138,
+    149, 159); the Standard, not ULP, is the reason it is in A2.
+
+    **D9 — Review rhythm.** Every module closes with a recap in the ULP review shape (R-03). From
+    position 8 the recap story is Ukrainian only, with a glossary instead of the side-by-side English
+    of A1 (R-15). ULP Season 3 closes each block with a voice message; A2 checkpoints use that shape
+    for listening.
+
+    **D10 — The ULP history course (lessons 71–80) is reading material, not a module block.** History
+    as a subject belongs to the seminar tracks. Evidence packs may take short passages from it as A2
+    reading texts where the vocabulary fits.
+
+- doc: docs/epics/fresh-build-a2-arc.md
+  heading: '## 8. Decisions on the five open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently agreed with all five)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-a2-arc.md
+    line: '## 8. Decisions on the five open questions (operator accepted the driver''s proposals, 2026-09-21; the reviewer independently agreed with all five)'
+  doc_sha256: 3023551e407b25d93dd905744d9866aea678533e162eb1cb5522d50381932522
+  section_sha256: 68b53515f471a146a92ba3a01d7696150cb90e18d8d463d12c54a797bab0a577
+  text: |+
+    ## 8. Decisions on the five open questions (operator accepted the driver's proposals, 2026-09-21; the reviewer independently agreed with all five)
+
+    1. **Keep all 69 slugs and positions (D1):** yes. The alternative — re-ordering A2 to ULP's
+       exact order (plural first, accusative block between dative and instrumental) — would break URL
+       parity with `/a2-v1/` and shift immersion bands for no gain the three decisions D2–D4 do not
+       already deliver.
+    2. **Prefixed motion verbs:** one large module (43), not two — one module of about seven
+       lessons, because a slug for a second one does not exist and R-02 forbids squeezing. If the plan
+       review finds it too long, lessons on travel situations move into 45, which is its theme partner.
+    3. **Metalanguage at the point of need (D4):** yes. It changes the job of positions 61–66
+       from "first teaching of grammar terms" to "reading grammar explanations as a Ukrainian textbook
+       words them".
+    4. **Participles and the conditional stay in B1 (D5)** although ULP Season 3 has them: yes.
+    5. **`свій` as a system, `себе` as set phrases (D7):** yes; the language lanes confirm from
+       the sources which fixed expressions with `себе` are frequent enough for A2.
+
+- doc: docs/epics/fresh-build-plan-schema.md
+  heading: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-plan-schema.md
+    line: '## 7. Design decisions (operator accepted the driver''s recommendations, 2026-09-21)'
+  doc_sha256: 17922871ee95d70843b4296c979acc61a43d2c9e212acbfbb628d499bab1e426
+  section_sha256: 5b306454965ee1efc321d932bbd8b009eb7ada6582a7a09bb2afd20c652a6646
+  text: |
+    ## 7. Design decisions (operator accepted the driver's recommendations, 2026-09-21)
+
+    1. **Steps are fixed structure.** Which steps exist, their order, their evidence and their practice
+       activities are binding and machine-checked; the wording inside a step is the writer's. An awkward
+       step order is fixed in the plan, not improvised around.
+    2. **Shared word store per level.** `curriculum/l2-uk-en/evidence/<level>/_words.yaml` (+ `.lock`)
+       holds one record per lemma sense for the whole level, with where it is first introduced. Module
+       packs keep texts, exercises, examples, errors, videos and standard lines, and reference words by
+       id. A correction (for example a ULIF stress fix) is made once. The store is versioned; a change
+       lists the modules whose plans cite the changed records so they can be re-verified.
+    3. **`minutes` is kept and computed**, not typed: reading time from the word target, a per-type time
+       per activity, and the video durations from the pack. The arc review uses it to spot overloaded
+       lessons; no gate fails on it.
+    4. **Start clean.** No v1 plan is converted. v1 plans stay on disk as the record of `/a1-v1/` and
+       are never read by the new engine. The arc author may look up which textbook pages they cited and
+       re-verifies each citation through the MCP before using it (R-11).
+
+    Resolved earlier in r2: form-grain vocabulary (kept for stress and for what a lesson teaches; as a limit on what a writer may use it was lifted in revision 8, §4), core vs incidental, planned vs observed learner
+    state, lesson-grain immersion, quantity-only deterministic title check, dialogue fields,
+    `examples`/`errors` shapes, optional `phonetics` and `reading_passages`.
+
+    Added after #8403: a text quote is anchored by **verbatim text + content hash + (source file,
+    page)**. `chunk_id` is a convenience locator only — textbook chunk ids shifted on a re-chunk and
+    left 93 wiki registries dangling, so an id alone is not a stable reference.
+- doc: docs/epics/fresh-build-writer-contract.md
+  heading: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
+  accepted: '2026-09-21'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-writer-contract.md
+    line: '## Decisions of the operator, 2026-09-21 (unchanged in r3)'
+  doc_sha256: 8280ff04386f1dc169f65457f5c27eba055556319524a36580fbf85b5b13dfc0
+  section_sha256: 285057bde594a5026ec9901179aa5df53c902268668b80e5945489336187a2b4
+  text: |+
+    ## Decisions of the operator, 2026-09-21 (unchanged in r3)
+    Question 1 he answered himself; on the others he said **"i accept the defaults"**, so each proposal is a decision.
+    1. **Any form of an allowed lemma may be used; an untaught form is memorised, not explained** (§3; plan schema revision 8).
+    2. **The writer types no stress marks; the engine applies them and never guesses.** An ambiguous token gets one constrained question, answered by a language-lane seat and checked in review. The pilot measures how many tokens need it.
+    2a. **Словник and Ресурси are generated, not written** — with the sense the lesson uses, the government of a verb or preposition where the word record carries it, grouping by the plan's steps, and the plan's `use:` line in Ресурси. All from sourced fields.
+    3. **One style card per band — A1, A2, B1+.** Exemplars only under the three conditions of §5.
+    4. **Two regenerations of a lesson, then the driver;** the same check failing twice is not retried but goes to the plan or the pack.
+
+    **What is still missing before this design is final:** the operator's acceptance of r3 (two independent seats have read it).
+
+- doc: docs/epics/fresh-build-build-program.md
+  heading: '## 6. The operator''s decisions (2026-09-22, his words)'
+  accepted: '2026-09-22'
+  accepted_evidence:
+    doc: docs/epics/fresh-build-build-program.md
+    line: '## 6. The operator''s decisions (2026-09-22, his words)'
+  doc_sha256: 64de6ced1c7415fbb9370dfa529870d5c03dbeb6afef2bad4b7f30b0737838b2
+  section_sha256: c05d262d386151e122faeae9afdfd2c14836306e52c0fd13a00e03c7a15cbdb7
+  text: |+
+    ## 6. The operator's decisions (2026-09-22, his words)
+    1. **R-19 — "i did not want to retire fill-in and true-false but improve them"** → the in-place redesign is decided; it is WP 23. Background: the decision card is #8397 comment 5773129143 (r2, sha256 `39e3f785ebab4b8c`), written after the cross-family discussion (design seat's r1 proposal; AGY's tooled critique, comment 5773123014). **Recommended: constrain and specialise `fill-in` and `true-false` in place** (`fill-in` with required 2–4 store-generated form options and an A1 orthography mode, no free typing inline at A1–A2; `true-false` only as a post-text check with a required, text-citing explanation; explanation register by level). Rejected: retire-and-replace with a new `choose-the-form` type. The position 1 pilot can run under the current allowlist; A1 plans at volume should not be written before this is decided.
+    2. **Replacing the `content-review` skill** for fresh-build lessons (#8430 deliverable (h)) — **"go"**; it is WP 24 (an agent-system change, done with his go on record).
+    3. **The two contracts** (#8430 r4, #8431 r3) — **"i accept and we will improve it if needed"**; their status lines record it. A later improvement is a design revision with two independent seats, as before.
+
+...
