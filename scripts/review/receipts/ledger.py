@@ -8,7 +8,7 @@ jsonl path; the review id is the parent directory name and must equal the
 attempt id's sibling stem.
 
 Writes replace the whole file atomically and only by appending one JSON
-line. File mode is 0o644. Snapshot hashes come from
+line. File mode is 0o600. Snapshot hashes come from
 ``Sources._fingerprint`` (sources.db), ``Sources._vesum_identity`` (VESUM
 build metadata), and ``stress.source_info`` (the trie digest).
 """
@@ -76,7 +76,13 @@ class LedgerHashStaleLastLine(LedgerError):
 @contextmanager
 def _flock_path(lock_path: Path):
     lock_path.parent.mkdir(parents=True, exist_ok=True)
-    with open(lock_path, "a") as f:
+    fd = os.open(lock_path, os.O_CREAT | os.O_RDWR | os.O_APPEND, 0o600)
+    try:
+        os.fchmod(fd, 0o600)
+    except BaseException:
+        os.close(fd)
+        raise
+    with open(fd, "a") as f:
         fcntl.flock(f.fileno(), fcntl.LOCK_EX)
         try:
             yield
@@ -144,14 +150,14 @@ def _write_verified(path: Path, content: bytes) -> None:
     atomic_write(path, content)
     atomic_write(_sidecar(path), (_digest(content) + "\n").encode("ascii"))
     for target in (path, _sidecar(path)):
-        if (target.stat().st_mode & 0o777) != 0o644:
-            os.chmod(target, 0o644)
+        if (target.stat().st_mode & 0o777) != 0o600:
+            os.chmod(target, 0o600)
 
 
 def create_empty_ledger(path: Path | str) -> Path:
     """Create an empty ledger file (0 bytes) and its .sha256 sidecar.
 
-    Sets permissions to 0o644.
+    Sets permissions to 0o600.
     """
     target = Path(path)
     target.parent.mkdir(parents=True, exist_ok=True)

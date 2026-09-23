@@ -281,10 +281,25 @@ def test_ledger_round_trip_same_bytes(tmp_path: Path) -> None:
     line = path.read_bytes().splitlines()[0]
     assert loaded["result"] == result
     assert line == dumps(loaded).encode("utf-8")
-    assert (path.stat().st_mode & 0o777) == 0o644
+    assert (path.stat().st_mode & 0o777) == 0o600
     sidecar = path.with_name(path.name + ".sha256")
     assert sidecar.read_text(encoding="ascii") == hashlib.sha256(path.read_bytes()).hexdigest() + "\n"
-    assert (sidecar.stat().st_mode & 0o777) == 0o644
+    assert (sidecar.stat().st_mode & 0o777) == 0o600
+
+
+def test_ledger_and_sidecar_mode_0o600_after_append(tmp_path: Path) -> None:
+    path = tmp_path / "review-1" / "attempt-1.jsonl"
+    _record(path, manifest="ab" * 32, result="first-result")
+    sidecar = path.with_name(path.name + ".sha256")
+    lock_path = path.with_name(path.name + ".lock")
+    assert (path.stat().st_mode & 0o777) == 0o600
+    assert (sidecar.stat().st_mode & 0o777) == 0o600
+    assert (lock_path.stat().st_mode & 0o777) == 0o600
+
+    _record(path, manifest="ab" * 32, result="second-result")
+    assert (path.stat().st_mode & 0o777) == 0o600
+    assert (sidecar.stat().st_mode & 0o777) == 0o600
+    assert (lock_path.stat().st_mode & 0o777) == 0o600
 
 
 def test_ledger_append_only_and_sidecar_mismatch(tmp_path: Path) -> None:
@@ -858,8 +873,8 @@ def test_create_empty_ledger_helper(tmp_path: Path) -> None:
     assert target.is_file() and target.stat().st_size == 0
     sidecar = target.with_name(target.name + ".sha256")
     assert sidecar.is_file()
-    assert (target.stat().st_mode & 0o777) == 0o644
-    assert (sidecar.stat().st_mode & 0o777) == 0o644
+    assert (target.stat().st_mode & 0o777) == 0o600
+    assert (sidecar.stat().st_mode & 0o777) == 0o600
     assert records(target) == []
 
 
