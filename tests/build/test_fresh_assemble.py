@@ -527,11 +527,8 @@ def test_step_ids_on_units_in_expanded_document():
             "items": [
                 {
                     "question": "Question 1",
-                    "options": [
-                        {"text": "Opt 1", "correct": True},
-                        {"text": "Opt 2", "correct": False},
-                    ],
-                    "correct": "Opt 1",
+                    "options": ["Opt 1", "Opt 2"],
+                    "correct": 0,
                     "explanation": "Opt 1 explanation",
                 }
             ],
@@ -760,11 +757,8 @@ def test_activities_stress_applied_from_stream():
         "items": [
             {
                 "question": "What is {{uk:слово}}?",
-                "options": [
-                    {"text": "слово", "correct": True},
-                    {"text": "інше", "correct": False},
-                ],
-                "correct": "слово",
+                "options": ["слово", "інше"],
+                "correct": 0,
                 "explanation": "Because {{gloss:W-1}} means word",
             }
         ],
