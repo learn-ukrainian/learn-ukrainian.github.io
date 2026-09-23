@@ -17,6 +17,7 @@ import pytest
 from jsonschema import Draft202012Validator, ValidationError
 
 from scripts.projects.open_model_data import freeze_phase3_p2_contracts as p2
+from tests.sparse_trees import tree_absent
 
 ROOT = Path(__file__).resolve().parents[1]
 DATA = ROOT / "data/projects/open_model_data"
@@ -45,7 +46,9 @@ def _write_json(path: Path, value: object) -> None:
 
 
 def _contract() -> dict[str, Any]:
-    if not P1.is_file():
+    # Keyed on the whole sparse-excluded tree: when data/projects is present
+    # but P1 is missing, the test must fail, as it did before (#8581).
+    if tree_absent("data/projects"):
         pytest.skip(
             "data/projects is absent from this sparse worktree; "
             "re-include it with --sparse-include data/projects"
@@ -1016,10 +1019,12 @@ def test_semantic_case_roles_remain_blocked_even_with_a_satisfied_p1_stratum(
 def _case_state_mutation_params() -> list[object]:
     """Mutation rows for the case-state table.
 
-    The rows that name a frozen P1 cell read ``data/projects``. When that tree
-    is absent, return one explicit skip instead of an empty parameter list.
+    The rows that name a frozen P1 cell read ``data/projects``. When that
+    whole tree is absent, return one explicit skip instead of an empty
+    parameter list. A present tree with a missing P1 file must keep failing,
+    as it did before (#8581).
     """
-    if not P1.is_file():
+    if tree_absent("data/projects"):
         return [
             pytest.param(
                 "absent",

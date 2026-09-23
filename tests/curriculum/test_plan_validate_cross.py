@@ -30,6 +30,7 @@ from scripts.curriculum.validate import codes
 from scripts.curriculum.validate.scope import compute_scope, letter_runs, write_scope_sidecar
 from scripts.curriculum.validate.validate import Report, validate_plan
 from scripts.curriculum.validate.validate import main as validate_main
+from tests.sparse_trees import tree_absent
 
 pytestmark = pytest.mark.reads_content
 
@@ -37,12 +38,10 @@ REPO_ROOT = Path(__file__).resolve().parents[2]
 LEVEL = "a1"
 
 
-def _arc_yaml() -> Path:
-    return REPO_ROOT / "curriculum/l2-uk-en/lesson-plans/a1/_arc.yaml"
-
-
 def _skip_if_arc_absent() -> None:
-    if not _arc_yaml().is_file():
+    # Keyed on the whole sparse-excluded tree: when curriculum/ is present but
+    # the arc file is missing, the test must fail, as it did before (#8581).
+    if tree_absent("curriculum"):
         pytest.skip(
             "curriculum is absent from this sparse worktree; "
             "re-include it with --sparse-include curriculum"
@@ -685,9 +684,11 @@ def all_cross_cases() -> list[CrossCase]:
 def _cross_case_parameters() -> list[object]:
     """Parameter list for the cross-case table.
 
-    When the A1 arc is absent, return one explicit skip instead of reading it.
+    When the whole curriculum tree is absent, return one explicit skip
+    instead of reading it. A present tree with a missing arc file must keep
+    failing, as it did before (#8581).
     """
-    if not _arc_yaml().is_file():
+    if tree_absent("curriculum"):
         return [
             pytest.param(
                 None,

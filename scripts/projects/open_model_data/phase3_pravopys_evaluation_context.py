@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import threading
 import time
 from collections import Counter
 from collections.abc import Mapping, Sequence
@@ -63,25 +64,36 @@ PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256 = (
 )
 
 
+_PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_PATH = (
+    DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
+)
+_RECEIPT_FILE_HASH_LOCK = threading.Lock()
+
+
 def _pinned_evaluation_context_manifest_receipt_file_sha256() -> str:
-    """Hash the pinned manifest receipt on first use so import does not read it."""
+    """Hash the pinned manifest receipt on first use so import does not read it.
+
+    First use is thread-safe: the double-checked lock guarantees the file is
+    hashed exactly once even when two threads race the initial read. A
+    missing receipt raises ``EvaluationContextManifestError`` from
+    ``eval_manifest.sha256_file``, exactly as the pre-lazy module-level
+    constant did at import time; this never returns a placeholder.
+    """
     pinned = globals().get("PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256")
     if isinstance(pinned, str):
         return pinned
-    pinned = eval_manifest.sha256_file(DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json")
-    globals()["PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256"] = pinned
-    return pinned
+    with _RECEIPT_FILE_HASH_LOCK:
+        pinned = globals().get("PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256")
+        if isinstance(pinned, str):
+            return pinned
+        digest = eval_manifest.sha256_file(_PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_PATH)
+        globals()["PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256"] = digest
+        return digest
 
 
 def __getattr__(name: str) -> str:
     if name != "PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256":
         raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
-    receipt = DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
-    if not receipt.is_file():
-        # monkeypatch.setattr reads the current value before replacing it.
-        # A missing sparse tree must not raise here; the helper still hashes
-        # the real receipt once a caller needs the digest and the file exists.
-        return ""
     return _pinned_evaluation_context_manifest_receipt_file_sha256()
 
 
