@@ -877,7 +877,11 @@ def _safe_batch_projection(raw: Any) -> dict[str, Any]:
         "returned": len(tracks),
         "limit": MAX_OPERATIONS_ITEMS,
         "truncated": sum(by_health.values()) > len(tracks),
-        "running_processes": _non_negative_int(raw.get("running_processes")),
+        "running_processes": (
+            None
+            if raw.get("running_processes", 0) is None
+            else _non_negative_int(raw.get("running_processes"))
+        ),
         "by_health": dict(sorted(by_health.items())),
         "tracks": tracks,
     }
@@ -887,7 +891,7 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
     """Collect the existing batch read models without populating their cache."""
     resolved_ctx = resolve_context(ctx)
     logs = legacy_comms._scan_preseed_logs(resolved_ctx)
-    processes = legacy_comms._check_build_processes()
+    processes, process_error = legacy_comms._check_build_processes()
     all_tracks = {
         str(item.get("track"))
         for item in [*logs, *processes]
@@ -927,7 +931,13 @@ def _legacy_batch_snapshot(ctx: MonitorContext | None = None) -> dict[str, Any]:
         else:
             health = "unknown"
         tracks[track] = {**progress, "health": health}
-    return {"running_processes": len(processes), "tracks": tracks}
+    snapshot: dict[str, Any] = {
+        "running_processes": None if process_error else len(processes),
+        "tracks": tracks,
+    }
+    if process_error:
+        snapshot["errors"] = [process_error]
+    return snapshot
 
 
 @router.get("/operations")

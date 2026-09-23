@@ -21,7 +21,7 @@ router = APIRouter()
 # Wall-clock bound so a hung dispatcher scan cannot pin a FastAPI worker.
 DISPATCHER_SCAN_TIMEOUT_S = 120.0
 
-_JSON_LOAD_ERRORS = (OSError, json.JSONDecodeError, UnicodeDecodeError)
+_JSON_LOAD_ERRORS = (OSError, json.JSONDecodeError, UnicodeDecodeError, RecursionError)
 
 
 def _load_track_json(path: Path, track: str) -> tuple[Any, str | None]:

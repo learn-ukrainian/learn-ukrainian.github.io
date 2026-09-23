@@ -77,6 +77,8 @@ router = APIRouter(tags=["comms"], route_class=LegacyCommsTelemetryRoute)
 # (#7269 step 5): this module keeps no module-global Path seams.
 
 BATCH_LOG_TAIL_BYTES = 256 * 1024
+# Linux pid_max ceiling. Signal 0 against 0, negatives, or huge ints is not a liveness check.
+_MAX_PROBE_PID = 2**22
 DEFAULT_ACTIVITY_AGENTS = (
     "claude",
     "codex",
@@ -767,6 +769,13 @@ async def comms_stats(ctx: MonitorContext = Depends(get_ctx)):
 # ==================== HEALTH ====================
 
 
+def _is_probeable_pid(pid: object) -> bool:
+    """True for an int PID in ``1.._MAX_PROBE_PID``. Bool is not an int here."""
+    if isinstance(pid, bool) or not isinstance(pid, int):
+        return False
+    return 1 <= pid <= _MAX_PROBE_PID
+
+
 @router.get("/health")
 async def broker_health(ctx: MonitorContext = Depends(get_ctx)):
     """Broker DB writable, queue depth."""
@@ -780,6 +789,7 @@ async def broker_health(ctx: MonitorContext = Depends(get_ctx)):
         "pid_dir_exists": pid_dir.exists(),
         "alive_processes": 0,
     }
+    errors: list[str] = []
 
     if message_db.exists():
         health["db_size_kb"] = round(message_db.stat().st_size / 1024, 1)
@@ -792,30 +802,40 @@ async def broker_health(ctx: MonitorContext = Depends(get_ctx)):
                     "SELECT COUNT(*) FROM messages WHERE acknowledged = 0"
                 ).fetchone()[0]
                 conn.close()
-        except Exception:
-            pass
+        except Exception as exc:
+            logger.warning("comms health: broker DB probe failed: %s", exc)
+            errors.append(f"db: {type(exc).__name__}")
 
     if pid_dir.exists():
-        load_errors: list[str] = []
         for pf in pid_dir.glob("*.json"):
             try:
                 data = json.loads(pf.read_text(encoding="utf-8"))
             except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
                 logger.warning("comms health: failed to load pid file %s: %s", pf.name, exc)
-                load_errors.append(f"{pf.name}: {type(exc).__name__}")
+                errors.append(f"{pf.name}: {type(exc).__name__}")
                 continue
             if not isinstance(data, dict):
                 logger.warning("comms health: pid file %s is not an object", pf.name)
-                load_errors.append(f"{pf.name}: invalid record")
+                errors.append(f"{pf.name}: invalid record")
+                continue
+            pid = data.get("pid")
+            if not _is_probeable_pid(pid):
+                logger.warning("comms health: pid file %s has invalid pid", pf.name)
+                errors.append(f"{pf.name}: invalid pid")
                 continue
             try:
-                os.kill(data.get("pid", 0), 0)
-            except (OSError, TypeError, ValueError):
+                os.kill(pid, 0)
+            except OSError:
                 # Dead or unsignalable process: not a file-load failure.
                 continue
+            except (OverflowError, ValueError, TypeError) as exc:
+                logger.warning("comms health: pid file %s probe failed: %s", pf.name, exc)
+                errors.append(f"{pf.name}: {type(exc).__name__}")
+                continue
             health["alive_processes"] += 1
-        if load_errors:
-            health["errors"] = load_errors
+
+    if errors:
+        health["errors"] = errors
 
     return health
 
@@ -984,8 +1004,12 @@ def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
     return progress
 
 
-def _check_build_processes() -> list[dict]:
-    """Find running legacy build_module.py processes."""
+def _check_build_processes() -> tuple[list[dict], str | None]:
+    """Find running legacy build_module.py processes.
+
+    ``([], error)`` means ``ps`` failed or timed out. That is not an empty
+    process list: callers must not report it as zero running processes.
+    """
     try:
         result = subprocess.run(
             ["ps", "aux"],
@@ -993,25 +1017,32 @@ def _check_build_processes() -> list[dict]:
             text=True,
             timeout=5,
         )
-        procs = []
-        for line in result.stdout.splitlines():
-            if "build_module.py" in line and "python" in line.lower():
-                parts = line.split()
-                pid = int(parts[1])
-                # Extract track from command line
-                track_match = re.search(r"build_module\.py\s+(\S+)", line)
-                track = track_match.group(1) if track_match else "unknown"
-                procs.append(
-                    {
-                        "pid": pid,
-                        "track": track,
-                        "version": "legacy",
-                        "cmd": " ".join(parts[10:])[:200],
-                    }
-                )
-        return procs
-    except Exception:
-        return []
+    except subprocess.TimeoutExpired as exc:
+        logger.warning("batch progress: ps timed out: %s", exc)
+        return [], "ps: TimeoutExpired"
+    except Exception as exc:
+        logger.warning("batch progress: ps failed: %s", exc)
+        return [], f"ps: {type(exc).__name__}"
+    if result.returncode != 0:
+        logger.warning("batch progress: ps exited %s", result.returncode)
+        return [], f"ps: exit {result.returncode}"
+    procs = []
+    for line in result.stdout.splitlines():
+        if "build_module.py" in line and "python" in line.lower():
+            parts = line.split()
+            pid = int(parts[1])
+            # Extract track from command line
+            track_match = re.search(r"build_module\.py\s+(\S+)", line)
+            track = track_match.group(1) if track_match else "unknown"
+            procs.append(
+                {
+                    "pid": pid,
+                    "track": track,
+                    "version": "legacy",
+                    "cmd": " ".join(parts[10:])[:200],
+                }
+            )
+    return procs, None
 
 
 @router.get("/batch-progress")
@@ -1025,10 +1056,11 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
     if cached is not None:
         return cached
 
-    logs, processes = await asyncio.gather(
+    logs, process_probe = await asyncio.gather(
         asyncio.to_thread(_scan_preseed_logs, ctx),
         asyncio.to_thread(_check_build_processes),
     )
+    processes, process_error = process_probe
 
     # Get all tracks that have logs or processes
     all_tracks = set()
@@ -1067,9 +1099,11 @@ async def batch_progress(ctx: MonitorContext = Depends(get_ctx)):
 
     result = {
         "generated_at": datetime.now(UTC).isoformat(),
-        "running_processes": len(processes),
+        "running_processes": None if process_error else len(processes),
         "tracks": track_progress,
     }
+    if process_error:
+        result["errors"] = [process_error]
     cache_set(cache_key, result)
     return result
 
@@ -1467,16 +1501,18 @@ async def get_channel_endpoint(name: str, ctx: MonitorContext = Depends(get_ctx)
     # Context preview (best-effort — reads from the filesystem)
     context_preview = ""
     context_sha = ""
+    context_errors: list[str] = []
     try:
         # safe_join enforces CodeQL-recognized containment under CONTEXT_ROOT.
         ctx_path = safe_join(_ch.CONTEXT_ROOT, safe_name, "context.md")
         if ctx_path.is_file():
             context_preview = ctx_path.read_text("utf-8")[:2000]
             context_sha = _ch.context_sha256(ctx_path)
-    except Exception:
-        pass  # context fetch is non-critical
+    except Exception as exc:
+        logger.warning("channel %s context preview failed: %s", safe_name, exc)
+        context_errors.append(f"context_preview: {type(exc).__name__}")
 
-    return {
+    payload = {
         "name": row["name"],
         "description": row["description"] or "",
         "include": [s for s in (row["include"] or "").split(",") if s],
@@ -1487,6 +1523,9 @@ async def get_channel_endpoint(name: str, ctx: MonitorContext = Depends(get_ctx)
         "context_preview": context_preview,
         "context_sha256": context_sha,
     }
+    if context_errors:
+        payload["errors"] = context_errors
+    return payload
 
 
 @router.get("/channels/{name}/messages")

@@ -1013,7 +1013,7 @@ def test_operations_batch_snapshot_reuses_uncached_read_models(
     monkeypatch.setattr(
         fleet_router.legacy_comms,
         "_check_build_processes",
-        lambda: [{"track": "hist", "pid": 123, "cmd": "private command"}],
+        lambda: ([{"track": "hist", "pid": 123, "cmd": "private command"}], None),
     )
     monkeypatch.setattr(
         fleet_router.legacy_comms,

@@ -119,6 +119,25 @@ def test_corrupt_usage_summary_surfaces_track_error(tmp_path: Path, batch_client
     assert any("a1" in item and "summary_a1.json" in item for item in body["errors"])
 
 
+def test_deeply_nested_checkpoint_json_surfaces_recursion_error(
+    tmp_path: Path, batch_client: TestClient, caplog: pytest.LogCaptureFixture
+) -> None:
+    state_dir = tmp_path / "batch_state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    depth = 20_000
+    (state_dir / "checkpoint_a1.json").write_text("[" * depth + "]" * depth, encoding="utf-8")
+    (state_dir / "checkpoint_b1.json").write_text(json.dumps({"cp": 2}), encoding="utf-8")
+
+    with caplog.at_level(logging.WARNING, logger="scripts.api.batch_router"):
+        resp = batch_client.get("/api/batch/checkpoints")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["b1"] == {"cp": 2}
+    assert any("a1" in item and "RecursionError" in item and "checkpoint_a1.json" in item for item in body["errors"])
+    assert any("checkpoint_a1.json" in record.message for record in caplog.records)
+
+
 def test_dispatcher_scan_timeout_returns_degraded_response(
     batch_client: TestClient, monkeypatch: pytest.MonkeyPatch
 ) -> None:

@@ -4,6 +4,8 @@ from __future__ import annotations
 
 import json
 import logging
+import sqlite3
+import subprocess
 from pathlib import Path
 
 import pytest
@@ -28,7 +30,8 @@ def test_corrupt_pid_file_is_surfaced_and_dead_pid_is_not(
     pid_dir = tmp_path / ".mcp" / "servers" / "message-broker" / "pids"
     pid_dir.mkdir(parents=True, exist_ok=True)
     (pid_dir / "broken.json").write_text("{not-json", encoding="utf-8")
-    (pid_dir / "dead.json").write_text(json.dumps({"pid": 2**31 - 1}), encoding="utf-8")
+    # In-range but unused: a dead pid is not a load error. 2**31-1 is above the probe cap.
+    (pid_dir / "dead.json").write_text(json.dumps({"pid": 2**22}), encoding="utf-8")
 
     with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
         resp = comms_client.get("/api/comms/health")
@@ -56,3 +59,118 @@ def test_corrupt_curriculum_yaml_surfaces_track_error(
     assert body["total_expected"] == 0
     assert any("a1" in item and "curriculum.yaml" in item for item in body["errors"])
     assert any("curriculum.yaml" in record.message for record in caplog.records)
+
+
+def test_invalid_pid_records_are_named_and_not_counted_alive(
+    tmp_path: Path, comms_client: TestClient, caplog: pytest.LogCaptureFixture
+) -> None:
+    pid_dir = tmp_path / ".mcp" / "servers" / "message-broker" / "pids"
+    pid_dir.mkdir(parents=True, exist_ok=True)
+    records = {
+        "missing.json": {},
+        "huge.json": {"pid": 10**100},
+        "text.json": {"pid": "abc"},
+        "negative.json": {"pid": -1},
+    }
+    for name, payload in records.items():
+        (pid_dir / name).write_text(json.dumps(payload), encoding="utf-8")
+
+    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+        resp = comms_client.get("/api/comms/health")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["alive_processes"] == 0
+    for name in records:
+        assert any(name in item and "invalid pid" in item for item in body["errors"])
+    assert any("invalid pid" in record.message for record in caplog.records)
+
+
+def test_broker_db_probe_failure_is_named(
+    tmp_path: Path, comms_client: TestClient, caplog: pytest.LogCaptureFixture
+) -> None:
+    db_path = tmp_path / ".mcp" / "servers" / "message-broker" / "messages.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    db_path.mkdir()
+
+    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+        resp = comms_client.get("/api/comms/health")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["db_exists"] is True
+    assert body["db_writable"] is False
+    assert any("db:" in item and "OperationalError" in item for item in body["errors"])
+    assert any("broker DB" in record.message for record in caplog.records)
+
+
+def test_ps_timeout_is_not_reported_as_zero_processes(
+    comms_client: TestClient, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd=["ps", "aux"], timeout=5)
+
+    monkeypatch.setattr("scripts.api.comms_router.subprocess.run", _timeout)
+
+    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+        resp = comms_client.get("/api/comms/batch-progress")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["running_processes"] is None
+    assert body["tracks"] == {}
+    assert any("ps:" in item and "TimeoutExpired" in item for item in body["errors"])
+    assert any("ps" in record.message.lower() for record in caplog.records)
+
+
+def test_context_preview_failure_is_named(
+    tmp_path: Path, comms_client: TestClient, monkeypatch: pytest.MonkeyPatch, caplog: pytest.LogCaptureFixture
+) -> None:
+    db_path = tmp_path / ".mcp" / "servers" / "message-broker" / "messages.db"
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    conn = sqlite3.connect(db_path)
+    conn.executescript(
+        """
+        CREATE TABLE channels (
+            name TEXT PRIMARY KEY, created_at TEXT, description TEXT, include TEXT, subscribers TEXT
+        );
+        CREATE TABLE channel_messages (
+            message_id TEXT PRIMARY KEY, channel TEXT
+        );
+        CREATE TABLE deliveries (
+            delivery_id TEXT PRIMARY KEY, message_id TEXT, status TEXT
+        );
+        """
+    )
+    conn.execute(
+        "INSERT INTO channels (name, created_at, description, include, subscribers) VALUES (?, ?, ?, ?, ?)",
+        ("reviews", "2026-09-23T00:00:00Z", "", "", ""),
+    )
+    conn.commit()
+    conn.close()
+
+    context_root = tmp_path / "contexts"
+    preview = context_root / "reviews" / "context.md"
+    preview.parent.mkdir(parents=True)
+    preview.write_text("pinned context", encoding="utf-8")
+    monkeypatch.setattr("scripts.ai_agent_bridge._channels.CONTEXT_ROOT", context_root)
+
+    original = Path.read_text
+
+    def _unreadable(self: Path, *args: object, **kwargs: object) -> str:
+        if self.name == "context.md":
+            raise OSError("context unreadable")
+        return original(self, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", _unreadable)
+
+    with caplog.at_level(logging.WARNING, logger="scripts.api.comms_router"):
+        resp = comms_client.get("/api/comms/channels/reviews")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["name"] == "reviews"
+    assert body["context_preview"] == ""
+    assert body["context_sha256"] == ""
+    assert any("context_preview:" in item and "OSError" in item for item in body["errors"])
+    assert any("context preview" in record.message for record in caplog.records)
