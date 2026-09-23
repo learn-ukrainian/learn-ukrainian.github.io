@@ -100,7 +100,11 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         # resolve the model itself before consulting task provenance.
         family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
         if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+            if not TASK_ID.fullmatch(model):
+                raise RecordError("author model unknown")
             task_file = task_root / f"{model}.json"
+            if not task_file.resolve().is_relative_to(task_root.resolve()):
+                raise RecordError("author task provenance unavailable")
             if task_file.exists():
                 # The common X-Agent trailer names a task, not a model. Resolve
                 # that task's recorded model only after validating its provenance.
@@ -122,8 +126,6 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
             elif harness in SINGLE_FAMILY_HARNESSES:
                 family = SINGLE_FAMILY_HARNESSES[harness]
             else:
-                if not TASK_ID.fullmatch(model):
-                    raise RecordError("author model unknown")
                 raise RecordError("author task provenance unavailable")
         if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
             raise RecordError("author family unknown")

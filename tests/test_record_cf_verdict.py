@@ -277,6 +277,32 @@ def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
 
 
+@pytest.mark.parametrize("trailer", ["codex/../../package", "kimi/../invalid"])
+def test_invalid_author_model_is_rejected_before_task_file_read(monkeypatch, tmp_path, trailer):
+    tasks = tmp_path / "tasks"
+    harness, model = trailer.split("/", 1)
+    decoy = tasks / f"{model}.json"
+    decoy.parent.mkdir(parents=True, exist_ok=True)
+    decoy.write_text(json.dumps({"repository": REPOSITORY, "agent": harness, "model": "gpt-6-sol"}))
+    attempted_reads = []
+    original_read_text = Path.read_text
+
+    def track_reads(path, *args, **kwargs):
+        if path.resolve() == decoy.resolve():
+            attempted_reads.append(path)
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", track_reads)
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {trailer}"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="author model unknown"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+    assert attempted_reads == []
+
+
 def test_kimi_task_record_conflict_is_checked_before_single_family_fallback(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="codex")
