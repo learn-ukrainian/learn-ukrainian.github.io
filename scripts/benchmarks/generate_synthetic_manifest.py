@@ -15,6 +15,7 @@ import random
 import sys
 import time
 from collections.abc import Iterator
+from contextlib import suppress
 from pathlib import Path
 from typing import Any
 
@@ -24,8 +25,31 @@ DEFAULT_OUT = Path("/tmp/synthetic-lexicon-manifest.json")
 DEFAULT_COUNT = 410_000
 DEFAULT_SEED = 42
 DEFAULT_MIN_DISK_GB = 25.0
+MIN_CLI_DISK_GB = 25.0
 SYNTHETIC_SLUG_SUFFIX = "--syn{index:07d}"
 SYNTHETIC_TIMESTAMP = "2026-09-23T00:00:00+00:00"
+
+
+def resolve_manifest_path(path: Path) -> Path:
+    """Resolve a manifest path against ROOT if relative and existing under ROOT."""
+    resolved = path if path.is_absolute() else (ROOT / path)
+    return resolved.resolve() if resolved.exists() else (Path.cwd() / path).resolve()
+
+
+def assert_different_paths(source_path: Path, output_path: Path) -> None:
+    """Refuse generation when output resolves to the same file as source manifest."""
+    source_resolved = resolve_manifest_path(source_path)
+    output_resolved = resolve_manifest_path(output_path)
+
+    is_same = source_resolved == output_resolved
+    if not is_same and source_resolved.exists() and output_resolved.exists():
+        with suppress(OSError):
+            is_same = source_resolved.samefile(output_resolved)
+
+    if is_same:
+        raise ValueError(
+            f"Refusing to overwrite source manifest: output path '{output_path}' resolves to the same file as source path '{source_path}' ({source_resolved})"
+        )
 
 
 def check_free_disk_space(target_path: Path, min_gb: float = DEFAULT_MIN_DISK_GB) -> float:
@@ -137,11 +161,13 @@ def generate_synthetic_manifest(
 ) -> dict[str, Any]:
     """Deterministically stream a synthetic manifest with exact count entries.
 
-    Streams output directly to avoid holding the full 410k dataset in memory.
+    Streams output directly to a sibling temporary file and atomically replaces
+    only after a complete write, preventing partial files and preserving existing destinations.
     """
     if count < 1:
         raise ValueError(f"count must be at least 1, got {count}")
 
+    assert_different_paths(source_path, output_path)
     free_gb = check_free_disk_space(output_path, min_gb=min_disk_gb)
     t0 = time.monotonic()
 
@@ -150,7 +176,8 @@ def generate_synthetic_manifest(
     source_entries, _ = load_source_entries(source_path)
     source_count = len(source_entries)
 
-    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_resolved = resolve_manifest_path(output_path)
+    output_resolved.parent.mkdir(parents=True, exist_ok=True)
     hasher = hashlib.sha256()
     bytes_written = 0
 
@@ -174,31 +201,40 @@ def generate_synthetic_manifest(
             file=sys.stderr,
         )
 
-    with open(output_path, "w", encoding="utf-8", buffering=1024 * 1024) as f:
-        f.write(header)
-        header_bytes = header.encode("utf-8")
-        hasher.update(header_bytes)
-        bytes_written += len(header_bytes)
+    temp_path = output_resolved.with_name(f".{output_resolved.name}.{os.getpid()}.{time.time_ns()}.tmp")
+    try:
+        with open(temp_path, "w", encoding="utf-8", buffering=1024 * 1024) as f:
+            f.write(header)
+            header_bytes = header.encode("utf-8")
+            hasher.update(header_bytes)
+            bytes_written += len(header_bytes)
 
-        first = True
-        report_step = 50_000
+            first = True
+            report_step = 50_000
 
-        for entries_written, entry in enumerate(generate_entry_stream(source_entries, count, seed), start=1):
-            line = ("    " if first else ",\n    ") + json.dumps(entry, ensure_ascii=False)
-            first = False
-            f.write(line)
-            line_bytes = line.encode("utf-8")
-            hasher.update(line_bytes)
-            bytes_written += len(line_bytes)
+            for entries_written, entry in enumerate(generate_entry_stream(source_entries, count, seed), start=1):
+                line = ("    " if first else ",\n    ") + json.dumps(entry, ensure_ascii=False)
+                first = False
+                f.write(line)
+                line_bytes = line.encode("utf-8")
+                hasher.update(line_bytes)
+                bytes_written += len(line_bytes)
 
-            if not quiet and entries_written % report_step == 0:
-                print(f"  ... {entries_written:,} / {count:,} entries written", file=sys.stderr)
+                if not quiet and entries_written % report_step == 0:
+                    print(f"  ... {entries_written:,} / {count:,} entries written", file=sys.stderr)
 
-        footer = "\n  ]\n}\n"
-        f.write(footer)
-        footer_bytes = footer.encode("utf-8")
-        hasher.update(footer_bytes)
-        bytes_written += len(footer_bytes)
+            footer = "\n  ]\n}\n"
+            f.write(footer)
+            footer_bytes = footer.encode("utf-8")
+            hasher.update(footer_bytes)
+            bytes_written += len(footer_bytes)
+
+        temp_path.replace(output_resolved)
+    except BaseException:
+        if temp_path.exists():
+            with suppress(OSError):
+                temp_path.unlink()
+        raise
 
     duration = time.monotonic() - t0
     digest = hasher.hexdigest()
@@ -231,6 +267,18 @@ def generate_synthetic_manifest(
         )
 
     return summary
+
+
+def _parse_min_disk_gb(val: str) -> float:
+    try:
+        gb = float(val)
+    except ValueError:
+        raise argparse.ArgumentTypeError(f"Invalid float value: {val!r}") from None
+    if gb < MIN_CLI_DISK_GB:
+        raise argparse.ArgumentTypeError(
+            f"--min-disk-gb cannot be set below {MIN_CLI_DISK_GB:.1f} GB floor (got {gb})"
+        )
+    return gb
 
 
 def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
@@ -292,9 +340,9 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
     )
     parser.add_argument(
         "--min-disk-gb",
-        type=float,
+        type=_parse_min_disk_gb,
         default=DEFAULT_MIN_DISK_GB,
-        help="Minimum required free disk space in GB before generation proceeds (default: 25.0).",
+        help="Minimum required free disk space in GB before generation proceeds; mandatory floor is 25.0 GB (default: 25.0).",
     )
     parser.add_argument(
         "--quiet",
@@ -307,6 +355,12 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
+    if args.min_disk_gb < MIN_CLI_DISK_GB:
+        print(
+            f"generate_synthetic_manifest error: --min-disk-gb cannot be set below {MIN_CLI_DISK_GB:.1f} GB floor (got {args.min_disk_gb})",
+            file=sys.stderr,
+        )
+        return 2
     try:
         summary = generate_synthetic_manifest(
             source_path=args.source,

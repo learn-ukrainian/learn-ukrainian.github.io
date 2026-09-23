@@ -11,6 +11,9 @@ import pytest
 from scripts.atlas import atlas_db
 from scripts.atlas.export_runtime_shards import export_runtime_shards
 from scripts.benchmarks.generate_synthetic_manifest import (
+    DEFAULT_MIN_DISK_GB,
+    DEFAULT_SOURCE,
+    MIN_CLI_DISK_GB,
     SYNTHETIC_SLUG_SUFFIX,
     check_free_disk_space,
     generate_synthetic_manifest,
@@ -207,9 +210,10 @@ def test_free_disk_space_guard(tmp_path: Path) -> None:
         f_bavail = 10 * (1024**3) // 4096
         f_frsize = 4096
 
-    with patch("os.statvfs", return_value=FakeStat()):
-        with pytest.raises(RuntimeError, match="Insufficient free disk space"):
-            check_free_disk_space(tmp_path / "test.json", min_gb=25.0)
+    with patch("os.statvfs", return_value=FakeStat()), pytest.raises(
+        RuntimeError, match="Insufficient free disk space"
+    ):
+        check_free_disk_space(tmp_path / "test.json", min_gb=25.0)
 
 
 def test_cli_main_success(sample_source_manifest: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
@@ -237,10 +241,137 @@ def test_cli_main_success(sample_source_manifest: Path, tmp_path: Path, capsys: 
     assert out.exists()
 
 
+def test_source_and_output_equality_rejected(sample_source_manifest: Path) -> None:
+    """Verify specifying the same path for --source and --output is refused and leaves source intact."""
+    initial_bytes = sample_source_manifest.read_bytes()
+
+    # Direct programmatic call must raise ValueError
+    with pytest.raises(ValueError, match="Refusing to overwrite source manifest"):
+        generate_synthetic_manifest(
+            source_path=sample_source_manifest,
+            output_path=sample_source_manifest,
+            count=10,
+            quiet=True,
+        )
+
+    # Bytes must remain strictly unmodified
+    assert sample_source_manifest.read_bytes() == initial_bytes
+
+
+def test_cli_source_and_output_equality_refused(
+    sample_source_manifest: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Verify CLI refuses source/output equality with clear error and exit code 1."""
+    initial_bytes = sample_source_manifest.read_bytes()
+
+    exit_code = main(
+        [
+            "--source",
+            str(sample_source_manifest),
+            "--output",
+            str(sample_source_manifest),
+            "--quiet",
+        ]
+    )
+    assert exit_code == 1
+    captured = capsys.readouterr()
+    assert "Refusing to overwrite source manifest" in captured.err
+    assert sample_source_manifest.read_bytes() == initial_bytes
+
+
+def test_midstream_failure_preserves_existing_output_and_cleans_temp(
+    sample_source_manifest: Path,
+    tmp_path: Path,
+) -> None:
+    """Verify mid-stream streaming failure preserves existing output file and cleans sibling temp."""
+    out_file = tmp_path / "destination-manifest.json"
+    sentinel_content = b'{"sentinel": "previous-valid-manifest-do-not-clobber"}\n'
+    out_file.write_bytes(sentinel_content)
+
+    # Simulate an error during streaming (after writing header)
+    def _exploding_stream(*args: object, **kwargs: object):
+        yield {"lemma": "test", "url_slug": "test"}
+        raise RuntimeError("Simulated failure mid-stream")
+
+    with patch(
+        "scripts.benchmarks.generate_synthetic_manifest.generate_entry_stream",
+        side_effect=_exploding_stream,
+    ), pytest.raises(RuntimeError, match="Simulated failure mid-stream"):
+        generate_synthetic_manifest(
+            source_path=sample_source_manifest,
+            output_path=out_file,
+            count=5,
+            quiet=True,
+        )
+
+    # Destination file must be completely intact with existing sentinel content
+    assert out_file.exists()
+    assert out_file.read_bytes() == sentinel_content
+
+    # No leftover sibling temp files should remain in destination directory
+    leftover_temps = list(tmp_path.glob(".*.tmp"))
+    assert leftover_temps == []
+
+
+def test_cli_min_disk_floor_enforced(
+    sample_source_manifest: Path,
+    tmp_path: Path,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    """Verify CLI strictly enforces 25 GB minimum disk floor and refuses lower values (#8307)."""
+    out = tmp_path / "test-floor.json"
+
+    # --min-disk-gb 0 must be rejected by argparse
+    with pytest.raises(SystemExit) as exc_info:
+        main(
+            [
+                "--source",
+                str(sample_source_manifest),
+                "--output",
+                str(out),
+                "--min-disk-gb",
+                "0",
+            ]
+        )
+    assert exc_info.value.code == 2
+    captured = capsys.readouterr()
+    assert "--min-disk-gb cannot be set below 25.0 GB floor (got 0.0)" in captured.err
+
+    # --min-disk-gb 24.9 must also be rejected
+    with pytest.raises(SystemExit) as exc_info:
+        main(
+            [
+                "--source",
+                str(sample_source_manifest),
+                "--output",
+                str(out),
+                "--min-disk-gb",
+                "24.9",
+            ]
+        )
+    assert exc_info.value.code == 2
+    captured = capsys.readouterr()
+    assert "--min-disk-gb cannot be set below 25.0 GB floor" in captured.err
+
+    # Internal parameter remains available for internal test callers
+    assert MIN_CLI_DISK_GB == 25.0
+    assert DEFAULT_MIN_DISK_GB == 25.0
+
+    # Programmatic call with lower min_disk_gb succeeds without CLI rejection
+    res = generate_synthetic_manifest(
+        source_path=sample_source_manifest,
+        output_path=out,
+        count=2,
+        min_disk_gb=1.0,
+        quiet=True,
+    )
+    assert res["outcome"] == "success"
+    assert out.exists()
+
+
 def test_real_manifest_integration_small_scale(tmp_path: Path) -> None:
     """Integration test: sample from the real public manifest and verify atlas_db compatibility."""
-    from scripts.benchmarks.generate_synthetic_manifest import DEFAULT_SOURCE
-
     if not DEFAULT_SOURCE.exists():
         pytest.skip(f"Default source manifest not present at {DEFAULT_SOURCE}")
 
