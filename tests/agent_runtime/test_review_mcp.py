@@ -23,6 +23,7 @@ from scripts.agent_runtime.review_mcp import (
     prepare_review_attempt,
 )
 from scripts.common.repo_root import resolve_repo_root
+from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 
 @pytest.fixture
@@ -88,11 +89,14 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
 
     # 5. Plan properties and adapter options
     assert plan.manifest_sha256 == expected_manifest_sha
-    assert plan.adapter_options == {
+    expected_options = {
         "mcp_config_path": str(plan.config_path),
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
     }
+    if harness == "claude":
+        expected_options["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
+    assert plan.adapter_options == expected_options
     assert plan.mcp_config_path == plan.config_path
     assert plan.strict_mcp_config is True
 
@@ -293,10 +297,14 @@ def test_delegate_dispatch_incomplete_review_attempt_flags(
     assert "--review-attempt, --review-id, and --attempt-id must be used together" in captured.err
 
 
-def test_claude_adapter_command_line_contains_strict_flags(tmp_path: Path) -> None:
-    config_file = tmp_path / "custom-mcp.json"
-    config_file.write_text('{"mcpServers":{}}\n', encoding="utf-8")
-
+def test_claude_adapter_command_line_contains_review_grant(manifest_file: Path, tmp_path: Path) -> None:
+    review_plan = prepare_review_attempt(
+        review_id="rev-cli-001",
+        attempt_id="att-cli-001",
+        manifest_path=manifest_file,
+        harness="claude",
+        receipts_root=tmp_path / "receipts",
+    )
     adapter = ClaudeAdapter()
     plan = adapter.build_invocation(
         prompt="review content",
@@ -305,19 +313,33 @@ def test_claude_adapter_command_line_contains_strict_flags(tmp_path: Path) -> No
         model=None,
         task_id="review-claude-task",
         session_id=None,
-        tool_config={
-            "mcp_config_path": str(config_file),
-            "strict_mcp_config": True,
-            "allowed_tools": "Read,Grep",
-        },
+        tool_config=review_plan.adapter_options,
     )
 
-    assert "--strict-mcp-config" in plan.cmd
-    assert "--mcp-config" in plan.cmd
-    idx = plan.cmd.index("--mcp-config")
-    assert plan.cmd[idx + 1] == str(config_file)
-    tools_idx = plan.cmd.index("--allowedTools")
-    assert plan.cmd[tools_idx + 1] == "Read,Grep"
+    idx = plan.cmd.index("--strict-mcp-config")
+    assert plan.cmd[idx : idx + 5] == [
+        "--strict-mcp-config",
+        "--mcp-config",
+        str(review_plan.config_path),
+        "--allowedTools",
+        ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
+    ]
+
+
+def test_claude_adapter_ordinary_dispatch_has_no_review_flags(tmp_path: Path) -> None:
+    plan = ClaudeAdapter().build_invocation(
+        prompt="ordinary task",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id="ordinary-claude-task",
+        session_id=None,
+        tool_config=None,
+    )
+
+    assert "--strict-mcp-config" not in plan.cmd
+    assert "--mcp-config" not in plan.cmd
+    assert "--allowedTools" not in plan.cmd
 
 
 def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:
@@ -547,7 +569,7 @@ def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path)
 
     with patch("shutil.which", return_value="/usr/local/bin/cursor-agent"):
         adapter = CursorAdapter()
-        adapter.build_invocation(
+        cursor_plan = adapter.build_invocation(
             prompt="review content",
             mode="read-only",
             cwd=tmp_path,
@@ -558,8 +580,10 @@ def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path)
                 "cursor_workspace": str(tmp_path),
                 "mcp_config_path": str(attempt_conf),
                 "strict_mcp_config": True,
+                "mcp_server_names": ["sources"],
             },
         )
+    assert "--approve-mcps" in cursor_plan.cmd
 
     # 3. Worktree's .cursor/mcp.json now has the stdio server replacing the daemon URL
     updated = json.loads(cursor_mcp.read_text(encoding="utf-8"))

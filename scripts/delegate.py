@@ -5650,6 +5650,10 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
+            if strict_mcp_config and review_id is not None and attempt_id is not None and agent == "claude":
+                from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
+
+                tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
             if strict_mcp_config and agent == "cursor":
                 cursor_mcp_path = cwd / ".cursor" / "mcp.json"
                 if cursor_mcp_path.is_file():

@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import resolve_repo_root
+from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
@@ -74,6 +75,13 @@ class ReviewMcpPlan:
     @property
     def strict_mcp_config(self) -> bool:
         return True
+
+
+def review_tools_allowed_csv(harness: str) -> str | None:
+    """Return the explicit sources permission grant for Claude review attempts."""
+    if harness.lower().strip() != "claude":
+        return None
+    return ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
 
 
 def prepare_review_attempt(
@@ -192,6 +200,9 @@ def prepare_review_attempt(
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
     }
+    allowed_tools = review_tools_allowed_csv(canonical_harness)
+    if allowed_tools is not None:
+        adapter_options["allowed_tools"] = allowed_tools
 
     return ReviewMcpPlan(
         config_path=config_path,
