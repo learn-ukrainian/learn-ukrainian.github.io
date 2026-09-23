@@ -769,12 +769,12 @@ const uk: Record<ChromeKey, string> = {
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',
   'atlas.practiceUnavailable': 'Ще немає в наборі практики',
-  'arc.state.plan_reviewed': 'plan reviewed',
-  'arc.state.built': 'built',
-  'arc.checkpoint': 'Checkpoint',
-  'arc.scope.letters': 'letters',
-  'arc.scope.grammarPoints': 'grammar points',
-  'arc.scope.coreLemmas': 'core words',
+  'arc.state.plan_reviewed': 'план перевірено',
+  'arc.state.built': 'збудовано',
+  'arc.checkpoint': 'Контрольна точка',
+  'arc.scope.letters': 'літер',
+  'arc.scope.grammarPoints': 'граматичні теми',
+  'arc.scope.coreLemmas': 'базових слів',
 };
 
 export const CHROME_STRINGS = { en, uk } satisfies Record<ChromeLocale, Record<ChromeKey, string>>;
