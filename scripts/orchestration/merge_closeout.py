@@ -84,7 +84,75 @@ def _run_gh(
 
 
 def fetch_pr_info(repo_root: Path, pr_number: int, *, repo: str | None = None) -> PullRequestInfo:
-    """Read PR state from GitHub. Raises when the state cannot be proven."""
+    """Read PR state from GitHub, preferring REST's core quota."""
+    info, rest_error = _fetch_pr_info_rest(repo_root, pr_number, repo=repo)
+    if info is not None:
+        return info
+
+    info, graphql_error = _fetch_pr_info_graphql(repo_root, pr_number, repo=repo)
+    if info is not None:
+        return info
+    raise MergeCloseoutError(f"{rest_error}; {graphql_error}")
+
+
+def _fetch_pr_info_rest(
+    repo_root: Path, pr_number: int, *, repo: str | None
+) -> tuple[PullRequestInfo | None, str]:
+    if repo is None:
+        slug = rw._github_owner_repo(repo_root)
+        if slug is None:
+            return None, "REST PR lookup failed: origin owner/repo could not be determined"
+        owner, repo_name = slug
+    else:
+        parts = repo.split("/")
+        if len(parts) != 2 or not all(parts):
+            return None, f"REST PR lookup failed: invalid --repo value {repo!r}; expected owner/name"
+        owner, repo_name = parts
+
+    args = ["gh", "api", "-X", "GET", f"repos/{owner}/{repo_name}/pulls/{pr_number}"]
+    try:
+        proc = _run_gh(args, cwd=repo_root, timeout=LIVE_PR_FETCH_TIMEOUT)
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return None, f"REST PR lookup failed: {exc}"
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip()
+        return None, f"REST PR lookup failed: {detail or f'exit {proc.returncode}'}"
+    try:
+        payload = json.loads(proc.stdout or "null")
+    except json.JSONDecodeError as exc:
+        return None, f"REST PR lookup returned invalid JSON: {exc}"
+
+    if not isinstance(payload, dict):
+        return None, "REST PR lookup returned a non-object payload"
+    if "merged_at" not in payload:
+        return None, "REST PR payload is missing merged_at"
+    number = payload.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number != pr_number:
+        return None, "REST PR payload has an unusable PR number"
+    merged_at = payload.get("merged_at")
+    if merged_at is not None:
+        if not isinstance(merged_at, str) or not merged_at:
+            return None, "REST PR payload has an unusable merged_at value"
+        state = "MERGED"
+    else:
+        raw_state = payload.get("state")
+        if not isinstance(raw_state, str) or raw_state.lower() not in {"open", "closed"}:
+            return None, "REST PR payload has an unusable state"
+        state = raw_state.upper()
+
+    head = payload.get("head")
+    if not isinstance(head, dict):
+        return None, "REST PR payload has an unusable head"
+    head_ref = head.get("ref")
+    head_sha = head.get("sha")
+    if not isinstance(head_ref, str) or not head_ref or not isinstance(head_sha, str) or not head_sha:
+        return None, "REST PR payload has unusable head ref or sha"
+    return PullRequestInfo(pr_number, state, head_ref, head_sha), ""
+
+
+def _fetch_pr_info_graphql(
+    repo_root: Path, pr_number: int, *, repo: str | None
+) -> tuple[PullRequestInfo | None, str]:
     args = [
         "gh",
         "pr",
@@ -98,27 +166,28 @@ def fetch_pr_info(repo_root: Path, pr_number: int, *, repo: str | None = None) -
     try:
         proc = _run_gh(args, cwd=repo_root)
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
-        raise MergeCloseoutError(f"gh pr view {pr_number} failed: {exc}") from exc
+        return None, f"gh pr view {pr_number} failed: {exc}"
     if proc.returncode != 0:
         detail = (proc.stderr or proc.stdout or "").strip()
-        raise MergeCloseoutError(
-            f"gh pr view {pr_number} failed: {detail or f'exit {proc.returncode}'}"
-        )
+        return None, f"gh pr view {pr_number} failed: {detail or f'exit {proc.returncode}'}"
     try:
         payload = json.loads(proc.stdout or "{}")
     except json.JSONDecodeError as exc:
-        raise MergeCloseoutError(f"gh pr view {pr_number} returned invalid JSON: {exc}") from exc
+        return None, f"gh pr view {pr_number} returned invalid JSON: {exc}"
     if not isinstance(payload, dict):
-        raise MergeCloseoutError(f"gh pr view {pr_number} returned a non-object payload")
+        return None, f"gh pr view {pr_number} returned a non-object payload"
 
     state = str(payload.get("state") or "").upper()
     head_ref = payload.get("headRefName")
     head_sha = payload.get("headRefOid")
-    return PullRequestInfo(
-        number=pr_number,
-        state=state,
-        head_ref_name=str(head_ref) if head_ref else None,
-        head_sha=str(head_sha) if head_sha else None,
+    return (
+        PullRequestInfo(
+            number=pr_number,
+            state=state,
+            head_ref_name=str(head_ref) if head_ref else None,
+            head_sha=str(head_sha) if head_sha else None,
+        ),
+        "",
     )
 
 

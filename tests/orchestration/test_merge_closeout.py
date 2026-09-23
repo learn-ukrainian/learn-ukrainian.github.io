@@ -131,6 +131,14 @@ def patch_gh(
     def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
         if args and args[0] == "gh":
             calls.append(args)
+            if args[1:3] == ["api", "-X"]:
+                payload = {
+                    "number": pr_number,
+                    "state": "closed" if state == "MERGED" else state.lower(),
+                    "merged_at": "2026-01-02T03:04:05Z" if state == "MERGED" else None,
+                    "head": {"ref": head_ref_name, "sha": head_sha},
+                }
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
             if args[1:3] == ["pr", "view"]:
                 payload = {
                     "number": pr_number,
@@ -147,6 +155,7 @@ def patch_gh(
                 return subprocess.CompletedProcess(args, 0, json.dumps(sha_prs.get(sha, [])), "")
         return _REAL_RUN(args, **kwargs)
 
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
     monkeypatch.setattr(mc.subprocess, "run", fake_run)
     monkeypatch.setattr(rw.subprocess, "run", fake_run)
     return calls
@@ -167,6 +176,135 @@ def test_fetch_pr_info_parses_gh_payload(tmp_path: Path, monkeypatch: pytest.Mon
     assert pr == mc.PullRequestInfo(
         number=42, state="MERGED", head_ref_name="codex/feature", head_sha="deadbeef"
     )
+
+
+@pytest.mark.parametrize(
+    ("raw_state", "merged_at", "expected_state"),
+    [("closed", "2026-01-02T03:04:05Z", "MERGED"), ("open", None, "OPEN"), ("closed", None, "CLOSED")],
+)
+def test_fetch_pr_info_maps_rest_state(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    raw_state: str,
+    merged_at: str | None,
+    expected_state: str,
+) -> None:
+    repo = init_repo(tmp_path)
+    calls: list[list[str]] = []
+    payload = {
+        "number": 42,
+        "state": raw_state,
+        "merged_at": merged_at,
+        "head": {"ref": "codex/feature", "sha": "deadbeef"},
+    }
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:3] == ["gh", "api", "-X"]:
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        return _REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
+    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+
+    pr = mc.fetch_pr_info(repo, 42)
+
+    assert pr == mc.PullRequestInfo(42, expected_state, "codex/feature", "deadbeef")
+    assert len(calls) == 1
+    assert calls[0][-1] == "repos/learn-ukrainian/learn-ukrainian.github.io/pulls/42"
+
+
+def test_fetch_pr_info_rest_failure_falls_back_to_graphql(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args and args[0] == "gh":
+            calls.append(args)
+            if args[1:3] == ["api", "-X"]:
+                return subprocess.CompletedProcess(args, 1, "", "REST unavailable")
+            if args[1:3] == ["pr", "view"]:
+                payload = {"number": 42, "state": "MERGED", "headRefName": "fallback", "headRefOid": "bead"}
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        return _REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
+    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+
+    pr = mc.fetch_pr_info(repo, 42)
+
+    assert pr == mc.PullRequestInfo(42, "MERGED", "fallback", "bead")
+    assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
+
+
+def test_fetch_pr_info_both_fail_includes_both_errors(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args and args[0] == "gh":
+            if args[1:3] == ["api", "-X"]:
+                return subprocess.CompletedProcess(args, 1, "", "REST unavailable")
+            return subprocess.CompletedProcess(args, 1, "", "GraphQL unavailable")
+        return _REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
+    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+
+    with pytest.raises(mc.MergeCloseoutError) as exc_info:
+        mc.fetch_pr_info(repo, 42)
+
+    assert "REST unavailable" in str(exc_info.value)
+    assert "GraphQL unavailable" in str(exc_info.value)
+
+
+def test_fetch_pr_info_malformed_rest_falls_back_instead_of_guessing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    calls: list[list[str]] = []
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args and args[0] == "gh":
+            calls.append(args)
+            if args[1:3] == ["api", "-X"]:
+                return subprocess.CompletedProcess(args, 0, json.dumps({"number": 42, "state": "unknown"}), "")
+            if args[1:3] == ["pr", "view"]:
+                payload = {"number": 42, "state": "OPEN", "headRefName": "safe", "headRefOid": "sha"}
+                return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        return _REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_github_owner_repo", lambda _: ("learn-ukrainian", "learn-ukrainian.github.io"))
+    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+
+    pr = mc.fetch_pr_info(repo, 42)
+
+    assert pr == mc.PullRequestInfo(42, "OPEN", "safe", "sha")
+    assert [call[1:3] for call in calls] == [["api", "-X"], ["pr", "view"]]
+
+
+def test_fetch_pr_info_honors_repo_override_for_rest(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    calls: list[list[str]] = []
+    payload = {"number": 42, "state": "open", "merged_at": None, "head": {"ref": "override", "sha": "sha"}}
+
+    def fake_run(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args and args[0] == "gh":
+            calls.append(args)
+            return subprocess.CompletedProcess(args, 0, json.dumps(payload), "")
+        return _REAL_RUN(args, **kwargs)
+
+    monkeypatch.setattr(mc.subprocess, "run", fake_run)
+
+    pr = mc.fetch_pr_info(repo, 42, repo="other/project")
+
+    assert pr == mc.PullRequestInfo(42, "OPEN", "override", "sha")
+    assert calls[0][-1] == "repos/other/project/pulls/42"
 
 
 def test_run_merge_closeout_fails_closed_when_not_merged(
