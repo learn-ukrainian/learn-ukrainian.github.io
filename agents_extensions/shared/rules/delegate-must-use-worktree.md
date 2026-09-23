@@ -74,9 +74,9 @@ create a feature branch in the main checkout. Concrete dispatch:
     # (Omit --effort to use the agent's own CLI/config default.)
 
 The main checkout (wherever the user is working) stays untouched on
-`main`. After the PR merges, `merge_closeout` (the P0 reaper) removes
-the dispatch worktree and its local and remote branch. That cleanup is
-not a manual user step:
+`main`. After the PR merges, `merge_closeout` (the closeout wrapper that
+invokes the P0 reaper, `reap_worktrees`) removes the dispatch worktree
+and its local and remote branch. That cleanup is not a manual user step:
 
     .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 
@@ -95,7 +95,8 @@ When a worktree's PR merges to main, the worktree and its branch MUST be
 deleted. This is NOT optional — stale worktrees accumulate and pollute
 `git worktree list`. The accountable command is `merge_closeout`, which
 proves the PR is merged and reaps every worktree tied to that head through
-the P0 reaper (do not delete worktrees or branches by hand, and never run `git worktree remove --force` yourself):
+the P0 reaper (use `merge_closeout` / the reaper as the normal path;
+manual removal only as the contract allows):
 
     .venv/bin/python -m scripts.orchestration.merge_closeout <PR_NUMBER> --apply
 
@@ -103,7 +104,10 @@ That removes the subtree worktree (`.worktrees/dispatch/<agent>/<task>`)
 and the branch. Older flat worktrees (`.worktrees/<name>`) are reaped the
 same way when they are registered against the merged head.
 
-Clean read-only / workspace-write dispatch worktrees are removed automatically when the task settles (#8548); dirty trees are kept.
+Clean `read-only` dispatch worktrees are removed automatically on any
+terminal status; clean `workspace-write` and `danger` trees are removed
+only on `done` with exit code 0 (#8548); `--keep-worktree` and dirty trees
+are kept.
 
 ## When YOU (not a delegated agent) need isolation
 
