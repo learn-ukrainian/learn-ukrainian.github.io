@@ -25,6 +25,7 @@ import math
 import re
 import sqlite3
 import sys
+import unicodedata
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -76,6 +77,9 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "c
 
 def detokenize(text: str) -> str:
     """Detokenize Ukrainian text from Stanza space-separated tokenization."""
+    # 0. Clean adjacent dashes and dash combos: e.g. "— -" -> "— "
+    text = re.sub(r"[—–-]\s*[—–-]\s*", "— ", text)
+    text = re.sub(r",\s*—\s*", ", — ", text)
     # 1. Close spaces before punctuation: , . ! ? : ; % ) ] } » ”
     text = re.sub(r"\s+([,.\!?:;%\]\}\)»”])", r"\1", text)
     # 2. Close spaces after opening quotes/brackets: ( [ { « “
@@ -108,12 +112,46 @@ RUSSIANISM_PATTERNS = [
     r"\bслідуюч\w*\b",
     r"\bоточуюч\w*\b",
     r"\bбажаюч\w*\b",
+    r"\bпалаюч\w*\b",
+    r"\bпадаюч\w*\b",
+    r"\bдіюч\w*\b",
+    r"\bіснуюч\w*\b",
+    r"\bведуч\w*\b",
+    r"\bкеруюч\w*\b",
+    r"\bзнаюч\w*\b",
+    r"\bчитаюч\w*\b",
+    r"\bпрацююч\w*\b",
+    r"\bзвисаюч\w*\b",
+    r"\bпроводжаюч\w*\b",
+    r"\bпровожа\w*\b",
+    r"\bрефлекту\w*\b",
+    r"\bоперу\w*\s+з\b",
+    r"\bвраховуючи\s+той\s+факт\b",
     r"\bвпадл\w*\b",
     r"\bгаплик\b",
     r"\bшо\b",
     r"\bбухло\b",
-    r"\bчувак\w*\b",
+    r"\bчува[кч]\w*\b",
     r"\bуткнув\b",
+    r"\bспоглядаючи\s+на\b",
+    r"\bнапередодні\s+кабінет\w*\b",
+    r"\bне\s+порівняти\s+тяжк\w*\b",
+    r"\bза\s+\w+\s+хвилин\w*\s+десят\w*\b",
+    r"\bвід\s+знає\b",
+    r"\bсвинськ\w*\b",
+    r"\bжалі\w+ся\b",
+    r"\bпропагандиськ\w*\b",
+    r"\bкому\s+попало\b",
+    r"\bна\s+підхваті\b",
+    r"\bсморка\w*\b",
+    r"\bможе-таки\b",
+    r"\bавось\b",
+    r"\bв\s+[вф][а-яіїєґ]\w*\b",
+    r"\bпальт(?:і|а|ом|у|ів|ами|ах)\b",
+    r"\bкін(?:і|а|ом|у|ів|ами|ах)\b",
+    r"\b[ву]\s+метрі\b",
+    r"\bпотрібні,\s*цікаві\b",
+    r"\bрішучесхаменув\w*\b",
 ]
 
 
@@ -126,23 +164,46 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     """Check that control sentence is a clean, authentic, complete Ukrainian sentence."""
     if not text:
         return False
-    words = text.split()
+    s_strip = text.strip()
+    # Sentence must start with capital letter or quote + capital letter
+    if not (s_strip[0].isupper() or (s_strip[0] in '«"“' and len(s_strip) > 1 and s_strip[1].isupper())):
+        return False
+    # Strictly Cyrillic: reject any Latin characters in controls
+    if re.search(r"[a-zA-Z]", text):
+        return False
+    # Reject emojis or unusual symbols
+    if any(unicodedata.category(c) == "So" for c in text):
+        return False
+    words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", text)
     # Reject short fragments, isolated words, or titles
-    if len(words) < 5 or len(text) < 25:
+    if len(words) < 6 or len(text) < 30:
+        return False
+    # Reject leading dashes (dialogue fragments without speaker attribution)
+    if text.strip().startswith(("—", "–", "-")):
         return False
     # Reject URLs
     if re.search(r"https?://", text):
-        return False
-    # Reject high Latin character ratio (English quotes/titles)
-    cyr = len(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]", text))
-    lat = len(re.findall(r"[a-zA-Z]", text))
-    if lat > 0 and (lat / max(1, cyr + lat)) > 0.05:
         return False
     # Must end with terminal sentence punctuation: . ! ? ... » ” "
     if not re.search(r"[.!?…»”\"]$", text.strip()):
         return False
     # Disallow colons, semicolons, or dashes at the end (incomplete sentences / headings)
     if text.strip().endswith((";", ":", ",", "-", "–", "—")):
+        return False
+    # Unbalanced quotes or brackets
+    if text.count("«") != text.count("»"):
+        return False
+    if text.count('"') % 2 != 0:
+        return False
+    if text.count("“") != text.count("”"):
+        return False
+    if text.count("(") != text.count(")"):
+        return False
+    # Dash artifacts
+    if re.search(r"[—–-]\s*[—–-]", text):
+        return False
+    # Stray floating quotes
+    if re.search(r'\s+["«»“”„]\s+', text):
         return False
     # Reject triple repeated letters
     if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", text, re.IGNORECASE):
@@ -153,18 +214,44 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # Reject Russianisms / slang
     if has_russianism(text):
         return False
-    # Verify lowercase words in VESUM
+    # Reject doubled words and 2-word repeated sequences
+    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']+\s+[а-яіїєґА-ЯІЇЄҐ']+)\s+\1\b", text, re.IGNORECASE):
+        return False
+
+    # Verify finite verb / copula presence and 100% VESUM attestation of all words
     if vesum_cur is not None:
-        w_list = re.findall(r"\b[\w'-]+\b", text)
-        for w in w_list:
-            if "-" in w or w[0].isupper() or len(w) <= 2:
+        ctrl_words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w) for w in text.split()]
+        ctrl_words = [w.strip("-") for w in ctrl_words if w and w != "-"]
+        has_verb_or_copula = any(
+            w in {"є", "був", "була", "було", "були", "буде", "будуть", "нема", "немає"}
+            for w in ctrl_words
+        )
+        for w in ctrl_words:
+            if w.isdigit():
                 continue
+            clean = w.lower()
             row = vesum_cur.execute(
-                "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
-                (w.lower(),),
+                "SELECT pos FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                (clean, clean.capitalize(), clean.upper()),
             ).fetchone()
+            if not row and "-" in clean:
+                parts = [p for p in clean.split("-") if p and not p.isdigit()]
+                if parts and all(
+                    vesum_cur.execute(
+                        "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                        (p, p.capitalize(), p.upper()),
+                    ).fetchone()
+                    for p in parts
+                ):
+                    row = ("part",)
             if not row:
                 return False
+            if not has_verb_or_copula and row[0] == "verb":
+                has_verb_or_copula = True
+        if not has_verb_or_copula:
+            return False
     return True
 
 
@@ -177,8 +264,13 @@ def is_valid_candidate(
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
     if not orig_text or not corr_text or orig_text == corr_text:
         return False
-    # Must have >= 5 words
-    if len(orig_text.split()) < 5 or len(corr_text.split()) < 5:
+    # Reject pure word insertions where start == end
+    if any(e[0] == e[1] for e in in_scope):
+        return False
+    # Real word counts
+    w1_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text)
+    w2_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", corr_text)
+    if len(w1_words) < 5 or len(w2_words) < 5:
         return False
     # Terminal punctuation: must end with . ! ? ... » ” "
     if not re.search(r"[.!?…»”\"]$", corr_text.strip()):
@@ -193,6 +285,11 @@ def is_valid_candidate(
     lat = len(re.findall(r"[a-zA-Z]", corr_text))
     if lat > 0 and (lat / max(1, cyr + lat)) > 0.05:
         return False
+    # Reject emojis
+    if any(unicodedata.category(c) == "So" for c in corr_text) or any(
+        unicodedata.category(c) == "So" for c in orig_text
+    ):
+        return False
     # Reject triple repeated letters
     if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", orig_text, re.IGNORECASE) or re.search(
         r"([а-яіїєґА-ЯІЇЄҐ])\1\1", corr_text, re.IGNORECASE
@@ -201,7 +298,27 @@ def is_valid_candidate(
     # Reject comma before parenthesis
     if re.search(r",\s*\(", orig_text) or re.search(r",\s*\(", corr_text):
         return False
-    # Reject wholesale essay rewrites where changed token share > 30%
+    # Unbalanced quotes or brackets
+    if corr_text.count("«") != corr_text.count("»") or orig_text.count("«") != orig_text.count("»"):
+        return False
+    if corr_text.count('"') % 2 != 0 or orig_text.count('"') % 2 != 0:
+        return False
+    if corr_text.count("“") != corr_text.count("”"):
+        return False
+    if corr_text.count("(") != corr_text.count(")"):
+        return False
+    # Dash artifacts
+    if re.search(r"[—–-]\s*[—–-]", orig_text) or re.search(r"[—–-]\s*[—–-]", corr_text):
+        return False
+    # Stray floating quotes
+    if re.search(r'\s+["«»“”„]\s+', corr_text):
+        return False
+
+    # Negation consistency: do not flip polarity
+    if len(re.findall(r"\bне\b", orig_text.lower())) != len(re.findall(r"\bне\b", corr_text.lower())):
+        return False
+
+    # Reject wholesale essay rewrites where changed token share > 18% or > 3 changed words
     w1 = re.findall(r"\w+", orig_text.lower())
     w2 = re.findall(r"\w+", corr_text.lower())
     if not w1 or not w2:
@@ -209,28 +326,37 @@ def is_valid_candidate(
     sm = difflib.SequenceMatcher(None, w1, w2)
     if sm.ratio() < 0.70:
         return False
-    # For short sentences (<= 8 words), disallow > 2 changed words
-    if len(w1) <= 8:
-        matched = sum(block.size for block in sm.get_matching_blocks())
-        if (len(w1) - matched) > 2:
-            return False
-    # Reject adjacent doubled words
+    matched = sum(block.size for block in sm.get_matching_blocks())
+    changed_words = max(len(w1), len(w2)) - matched
+    if changed_words > 7:
+        return False
+    if len(w1) <= 8 and changed_words > 2:
+        return False
+    if len(w1) <= 14 and changed_words > 5:
+        return False
+
+    # Reject adjacent doubled words and 2-word repeated sequences
     if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
         return False
+    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']+\s+[а-яіїєґА-ЯІЇЄҐ']+)\s+\1\b", corr_text, re.IGNORECASE):
+        return False
+
     # Reject adjacent stem repetition (e.g. з'явилася з'явила)
     words = re.findall(r"\b[\w'-]+\b", corr_text.lower())
     for i in range(len(words) - 1):
         a, b = words[i], words[i + 1]
         if len(a) >= 5 and len(b) >= 5 and (a.startswith(b[:4]) or b.startswith(a[:4])):
             return False
+
     # Reject missing sentence punctuation before capitalized pronoun/conjunction
     if re.search(
         r"[а-яіїєґ]\s+(Так|Він|Вона|Вони|Ми|Ви|Це|Але|Проте|Тоді|Якщо|Однак|Тому)\b",
         corr_text,
     ):
         return False
-    # Reject Russianisms in corr_text
-    if has_russianism(corr_text):
+
+    # Reject Russianisms in orig_text and corr_text
+    if has_russianism(corr_text) or has_russianism(orig_text):
         return False
 
     # Check ALL lowercase words in corr_text against VESUM
@@ -785,20 +911,19 @@ def build_grammar_dataset(
             break
         train_controls.append(item)
 
-    # Populate eval controls: from gold UA-GEC eval clean candidates, supplemented by brown_eval_available if needed
+    # Populate eval controls: prioritize Brown-UK eval partition, then gold UA-GEC eval clean
     eval_controls = []
+    for b in brown_eval_available:
+        if len(eval_controls) >= target_eval_controls:
+            break
+        if b["original_text"] not in seen_control_texts:
+            seen_control_texts.add(b["original_text"])
+            eval_controls.append(b)
+
     for item in eval_clean_candidates:
         if len(eval_controls) >= target_eval_controls:
             break
         eval_controls.append(item)
-
-    if len(eval_controls) < target_eval_controls:
-        for b in brown_eval_available:
-            if len(eval_controls) >= target_eval_controls:
-                break
-            if b["original_text"] not in seen_control_texts:
-                seen_control_texts.add(b["original_text"])
-                eval_controls.append(b)
 
     print(
         f"✅ Formed train slice: {len(train_corrections)} corrections + {len(train_controls)} controls = "
@@ -861,7 +986,7 @@ def build_grammar_dataset(
                 if not query:
                     query = build_query(orig_text, reg, seed_idx)
 
-            is_explained = (idx % 100 < 68)
+            is_explained = (idx % 100 < 65)
 
             if is_err:
                 corr_text = item["corrected_text"]
@@ -1018,8 +1143,8 @@ def build_grammar_dataset(
     for old_shard in output_dir.glob("grammar_*_shard_*.jsonl"):
         old_shard.unlink()
 
-    train_shard_size = 450
-    num_train_shards = (len(train_dataset_records) + train_shard_size - 1) // train_shard_size
+    num_train_shards = 8
+    train_shard_size = (len(train_dataset_records) + num_train_shards - 1) // num_train_shards
     manifest_splits = {}
 
     for shard_idx in range(num_train_shards):
@@ -1031,8 +1156,8 @@ def build_grammar_dataset(
                 f.write(json.dumps(r, ensure_ascii=False) + "\n")
         manifest_splits[fname] = "train"
 
-    eval_shard_size = 300
-    num_eval_shards = (len(eval_dataset_records) + eval_shard_size - 1) // eval_shard_size
+    num_eval_shards = 2
+    eval_shard_size = (len(eval_dataset_records) + num_eval_shards - 1) // num_eval_shards
 
     for shard_idx in range(num_eval_shards):
         shard_records = eval_dataset_records[shard_idx * eval_shard_size : (shard_idx + 1) * eval_shard_size]

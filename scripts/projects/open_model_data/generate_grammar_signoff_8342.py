@@ -15,6 +15,7 @@ import json
 import re
 import sqlite3
 import sys
+import unicodedata
 from pathlib import Path
 from typing import Any
 
@@ -40,8 +41,9 @@ VESUM_DB = Path("data/vesum.db")
 
 def _inspect_span_in_vesum(span: str, cur: sqlite3.Cursor) -> dict[str, Any]:
     """Inspect replacement span words in VESUM with exact status and attestations."""
-    words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ'-]", "", w) for w in span.split()]
-    words = [w for w in words if w]
+    span_norm = span.replace("’", "'").replace("ʼ", "'")
+    words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ'-]", "", w) for w in span_norm.split()]
+    words = [w.strip("'-") for w in words if w.strip("'-")]
     if not words:
         return {
             "status": "syntactic_punctuation_edit",
@@ -58,6 +60,16 @@ def _inspect_span_in_vesum(span: str, cur: sqlite3.Cursor) -> dict[str, Any]:
             "SELECT lemma, pos, tags FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
             (clean, clean.capitalize(), clean.upper()),
         ).fetchall()
+        if not rows and "-" in clean:
+            parts = [p for p in clean.split("-") if p and not p.isdigit()]
+            if parts and all(
+                cur.execute(
+                    "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                    (p, p.capitalize(), p.upper()),
+                ).fetchone()
+                for p in parts
+            ):
+                rows = [("-".join(parts), "compound", "compound")]
         if rows:
             lemma, pos, tags = rows[0]
             attested.append(w)
@@ -82,16 +94,30 @@ def _inspect_span_in_vesum(span: str, cur: sqlite3.Cursor) -> dict[str, Any]:
 
 def _inspect_control_in_vesum(text: str, cur: sqlite3.Cursor) -> dict[str, Any]:
     """Inspect all tokens in control text against VESUM."""
-    words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ'-]", "", w) for w in text.split()]
-    words = [w for w in words if w]
+    text_norm = text.replace("’", "'").replace("ʼ", "'")
+    words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w) for w in text_norm.split()]
+    words = [w.strip("-'") for w in words if w and w not in {"-", "'"}]
     attested = []
     unattested = []
     for w in words:
+        if w.isdigit():
+            attested.append(w)
+            continue
         clean = w.lower()
         row = cur.execute(
             "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
             (clean, clean.capitalize(), clean.upper()),
         ).fetchone()
+        if not row and "-" in clean:
+            parts = [p for p in clean.split("-") if p and not p.isdigit()]
+            if parts and all(
+                cur.execute(
+                    "SELECT 1 FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                    (p, p.capitalize(), p.upper()),
+                ).fetchone()
+                for p in parts
+            ):
+                row = (1,)
         if row:
             attested.append(w)
         else:
@@ -291,15 +317,38 @@ def generate_signoff_and_receipt(findings_file: Path | None = None) -> None:
                 item_defects.append("Росіянізм або ненормативна калька у виправленому тексті")
             if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
                 item_defects.append("Подвоєне сусіднє слово у виправленому тексті")
+            if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ']+\s+[а-яіїєґА-ЯІЇЄҐ']+)\s+\1\b", corr_text, re.IGNORECASE):
+                item_defects.append("Подвоєне багатослівне сполучення у виправленому тексті")
             if re.search(r"[а-яіїєґ]\s+(Так|Він|Вона|Вони|Ми|Ви|Це|Але|Проте|Тоді|Якщо|Однак|Тому)\b", corr_text):
                 item_defects.append("Втрачено розділовий знак між реченнями перед великою літерою")
             if not re.search(r"[.!?…»”\"]$", corr_text.strip()):
                 item_defects.append("Відсутній кінцевий розділовий знак речення")
+            if corr_text.count("«") != corr_text.count("»") or corr_text.count('"') % 2 != 0:
+                item_defects.append("Незбалансовані лапки у виправленому тексті")
+            if re.search(r"[—–-]\s*[—–-]", corr_text):
+                item_defects.append("Дефісні/тире артефакти у виправленому тексті")
+            if len(re.findall(r"\bне\b", orig_text.lower())) != len(re.findall(r"\bне\b", corr_text.lower())):
+                item_defects.append("Невідповідність частки «не» (спотворення модальності/заперечення)")
+            if any(unicodedata.category(c) == "So" for c in corr_text):
+                item_defects.append("Емодзі/символи у виправленому тексті")
+            if unattested:
+                item_defects.append(f"Непідтверджені словоформи у VESUM: {unattested}")
         else:
             if has_russianism(orig_text):
                 item_defects.append("Росіянізм або ненормативна калька у контрольному реченні")
             if not re.search(r"[.!?…»”\"]$", orig_text.strip()):
                 item_defects.append("Відсутній кінцевий розділовий знак контрольного речення")
+            if orig_text.count("«") != orig_text.count("»") or orig_text.count('"') % 2 != 0:
+                item_defects.append("Незбалансовані лапки у контрольному реченні")
+            if re.search(r"[—–-]\s*[—–-]", orig_text):
+                item_defects.append("Дефісні/тире артефакти у контрольному реченні")
+            if any(unicodedata.category(c) == "So" for c in orig_text):
+                item_defects.append("Емодзі/символи у контрольному реченні")
+            words_ctrl = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text)
+            if len(words_ctrl) < 6:
+                item_defects.append("Занадто коротке або неповне контрольне речення")
+            if unattested:
+                item_defects.append(f"Непідтверджені словоформи контролю у VESUM: {unattested}")
 
         # External reviewer findings if provided
         sample_idx = item["sample_index"]
