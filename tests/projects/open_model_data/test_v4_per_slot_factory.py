@@ -15,6 +15,7 @@ from __future__ import annotations
 
 import ast
 import copy
+import functools
 import json
 import stat
 from pathlib import Path
@@ -42,13 +43,12 @@ A9_RECEIPT_PATH = ADMISSION / "dataset_v4_a9_evaluation_package_receipt_v1.json"
 FACTORY_RECEIPT_PATH = ADMISSION / "dataset_v4_per_slot_private_factory_receipt_v1.json"
 FACTORY_SCHEMA_PATH = CONTRACTS / "dataset_v4_per_slot_private_factory_receipt_v1.schema.json"
 
-REAL_MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
-REAL_A2_RECEIPT = json.loads(A2_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_A6_RECEIPT = json.loads(A6_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_A7_RECEIPT = json.loads(A7_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_A8_RECEIPT = json.loads(A8_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_A9_RECEIPT = json.loads(A9_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_FACTORY_RECEIPT = json.loads(FACTORY_RECEIPT_PATH.read_text(encoding="utf-8"))
+
+@functools.cache
+def _cached_json(path: Path) -> dict:
+    """Read a JSON artifact on first use so collection survives a sparse worktree."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
 
 # The forbidden slot->HMAC/source-unit vocabulary this dispatch exists to
 # keep out of every public V4 artifact -- see PR #7646's own
@@ -68,14 +68,14 @@ def _all_keys(value: object) -> set[str]:
 
 
 def test_stratum_eligibility_covers_every_manifest_stratum_exactly_once() -> None:
-    eligibility = ev.stratum_eligibility(REAL_MANIFEST, REAL_A2_RECEIPT)
+    eligibility = ev.stratum_eligibility(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH))
     assert len(eligibility) == 8
-    assert {record["stratum"] for record in eligibility} == {s["stratum"] for s in REAL_MANIFEST["slot_series"]}
+    assert {record["stratum"] for record in eligibility} == {s["stratum"] for s in _cached_json(MANIFEST_PATH)["slot_series"]}
 
 
 def test_stratum_eligibility_against_real_production_data_is_zero_eligible() -> None:
     # Matches the binding contract's own "0 assigned / 100 residual" count.
-    eligibility = ev.stratum_eligibility(REAL_MANIFEST, REAL_A2_RECEIPT)
+    eligibility = ev.stratum_eligibility(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH))
     assert all(not record["prerequisite_eligible"] for record in eligibility)
     assert ev.eligible_slot_ids(eligibility) == set()
 
@@ -96,21 +96,21 @@ def test_stratum_eligibility_refuses_a_coverage_entry_referencing_an_absent_resi
     """The first hole the cycle-1 stubbed tests exploited: a coverage entry
     referencing a residual id absent from A2's own residuals list must
     refuse, never silently drop the reference."""
-    tampered = copy.deepcopy(REAL_A2_RECEIPT)
+    tampered = copy.deepcopy(_cached_json(A2_RECEIPT_PATH))
     tampered["stratum_coverage_map"][0]["residual_ids"] = ["a2-residual-does-not-exist"]
     with pytest.raises(ValueError, match="absent from A2's own residuals"):
-        ev.stratum_eligibility(REAL_MANIFEST, tampered)
+        ev.stratum_eligibility(_cached_json(MANIFEST_PATH), tampered)
 
 
 def test_stratum_eligibility_refuses_an_empty_residual_list_without_a_resolved_coverage_state() -> None:
     """The second hole: a coverage entry cannot legitimately clear its
     residual_ids without a matching ``coverage_state: "resolved"``
     transition -- deleting a residual without that transition refuses."""
-    tampered = copy.deepcopy(REAL_A2_RECEIPT)
+    tampered = copy.deepcopy(_cached_json(A2_RECEIPT_PATH))
     tampered["stratum_coverage_map"][0]["residual_ids"] = []
     # coverage_state left at its real, non-resolved value.
     with pytest.raises(ValueError, match="coverage_state"):
-        ev.stratum_eligibility(REAL_MANIFEST, tampered)
+        ev.stratum_eligibility(_cached_json(MANIFEST_PATH), tampered)
 
 
 # --- the synthetic partial-prerequisite chain: every validator live --------
@@ -151,7 +151,7 @@ def test_partition_refuses_a_slot_in_both_completion_and_residual_lists() -> Non
     always independently recomputes today's real completion count as 0 (no
     execution mechanism exists yet), which would otherwise mask which
     specific check refused a hand-tampered receipt."""
-    total = set(a6.all_frozen_slot_ids(REAL_MANIFEST))
+    total = set(a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH)))
     completion = {"v4p-standard-correct-001"}
     residual = total - completion  # correct complement...
     residual.add("v4p-standard-correct-001")  # ...deliberately re-added: now overlaps completion.
@@ -162,7 +162,7 @@ def test_partition_refuses_a_slot_in_both_completion_and_residual_lists() -> Non
 def test_partition_refuses_a_slot_dropped_from_both_completion_and_residual_lists() -> None:
     """Gap: a slot that is neither complete nor residual must refuse --
     never a silently forgotten slot."""
-    total = set(a6.all_frozen_slot_ids(REAL_MANIFEST))
+    total = set(a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH)))
     completion = {"v4p-standard-correct-001"}
     residual = total - completion - {"v4p-standard-correct-002"}  # a second slot silently dropped from both.
     with pytest.raises(ValueError, match="partition"):
@@ -199,7 +199,7 @@ def test_a2_deleting_a_residual_without_a_resolved_coverage_state_refuses() -> N
     legitimate way a residual clears -- a receipt hand-edited to drop a
     residual without it must be refused by every stage's own eligibility
     derivation, not just by a schema shape check."""
-    tampered_a2 = copy.deepcopy(REAL_A2_RECEIPT)
+    tampered_a2 = copy.deepcopy(_cached_json(A2_RECEIPT_PATH))
     tampered_a2["residuals"] = [r for r in tampered_a2["residuals"] if r["subject_id"] != "standard_correct"]
     for coverage in tampered_a2["stratum_coverage_map"]:
         if coverage["stratum"] == "standard_correct":
@@ -207,7 +207,7 @@ def test_a2_deleting_a_residual_without_a_resolved_coverage_state_refuses() -> N
             # coverage_state deliberately left at its real, unresolved value.
     for module, error_cls in ((a6, a6.ArenaWiringError), (a7, a7.OriginalRowFactoryError), (a8, a8.AdmissionAssemblyError), (a9, a9.EvaluationPackageError)):
         with pytest.raises(error_cls, match="coverage_state"):
-            module.ev.stratum_eligibility(REAL_MANIFEST, tampered_a2, error_cls=error_cls)
+            module.ev.stratum_eligibility(_cached_json(MANIFEST_PATH), tampered_a2, error_cls=error_cls)
 
 
 # --- suite-level guard: no stubbed validator behind a nonzero-completion claim ---
@@ -248,42 +248,42 @@ def test_no_test_in_this_suite_asserts_nonzero_completion_behind_a_stubbed_valid
 def test_factory_receipt_matches_schema() -> None:
     schema = json.loads(FACTORY_SCHEMA_PATH.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
-    errors = list(Draft202012Validator(schema).iter_errors(REAL_FACTORY_RECEIPT))
+    errors = list(Draft202012Validator(schema).iter_errors(_cached_json(FACTORY_RECEIPT_PATH)))
     assert not errors, errors[0].message if errors else None
 
 
 def test_factory_receipt_validates_independently_against_real_public_artifacts() -> None:
-    assert factory.validate_receipt_independently(REAL_FACTORY_RECEIPT) is None
+    assert factory.validate_receipt_independently(_cached_json(FACTORY_RECEIPT_PATH)) is None
 
 
 def test_factory_receipt_denominator_is_the_frozen_100_public_slots() -> None:
-    assert REAL_FACTORY_RECEIPT["frozen_slot_denominator"]["total_slots"] == 100
-    all_ids = [slot_id for stratum in REAL_FACTORY_RECEIPT["frozen_slot_denominator"]["strata"] for slot_id in stratum["slot_ids"]]
+    assert _cached_json(FACTORY_RECEIPT_PATH)["frozen_slot_denominator"]["total_slots"] == 100
+    all_ids = [slot_id for stratum in _cached_json(FACTORY_RECEIPT_PATH)["frozen_slot_denominator"]["strata"] for slot_id in stratum["slot_ids"]]
     assert len(all_ids) == 100 and len(set(all_ids)) == 100
 
 
 def test_factory_receipt_counts_match_the_binding_contracts_zero_assigned_hundred_residual() -> None:
-    assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_prerequisite_eligible"] == 0
-    assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_stage_complete"] == 0
-    assert REAL_FACTORY_RECEIPT["per_slot_gate"]["slots_residual"] == 100
-    assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_prerequisite_eligible"] == 0
-    assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_stage_complete"] == 0
-    assert REAL_FACTORY_RECEIPT["execution_counters"]["slots_residual"] == 100
+    assert _cached_json(FACTORY_RECEIPT_PATH)["per_slot_gate"]["slots_prerequisite_eligible"] == 0
+    assert _cached_json(FACTORY_RECEIPT_PATH)["per_slot_gate"]["slots_stage_complete"] == 0
+    assert _cached_json(FACTORY_RECEIPT_PATH)["per_slot_gate"]["slots_residual"] == 100
+    assert _cached_json(FACTORY_RECEIPT_PATH)["execution_counters"]["slots_prerequisite_eligible"] == 0
+    assert _cached_json(FACTORY_RECEIPT_PATH)["execution_counters"]["slots_stage_complete"] == 0
+    assert _cached_json(FACTORY_RECEIPT_PATH)["execution_counters"]["slots_residual"] == 100
 
 
 def test_factory_receipt_dataset_rows_emitted_and_private_rows_constructed_stay_zero() -> None:
-    assert REAL_FACTORY_RECEIPT["execution_counters"]["dataset_rows_emitted"] == 0
-    assert REAL_FACTORY_RECEIPT["execution_counters"]["private_rows_constructed"] == 0
+    assert _cached_json(FACTORY_RECEIPT_PATH)["execution_counters"]["dataset_rows_emitted"] == 0
+    assert _cached_json(FACTORY_RECEIPT_PATH)["execution_counters"]["private_rows_constructed"] == 0
 
 
 def test_factory_receipt_reason_code_totals_sum_to_the_full_denominator() -> None:
-    totals = REAL_FACTORY_RECEIPT["reason_code_totals"]
+    totals = _cached_json(FACTORY_RECEIPT_PATH)["reason_code_totals"]
     assert sum(totals.values()) == 100
     assert set(totals) == set(ev.RESIDUAL_REASON_CODES)
 
 
 def test_factory_receipt_never_claims_a_stronger_release_state() -> None:
-    serialized = json.dumps(REAL_FACTORY_RECEIPT, ensure_ascii=False, sort_keys=True)
+    serialized = json.dumps(_cached_json(FACTORY_RECEIPT_PATH), ensure_ascii=False, sort_keys=True)
     for claim in ("TRAINING_READY_SILVER", "ARENA_SLICE_READY", "TRAINING_READY_GOLD_SUBSET", "GOLD_UPGRADE_READY", "EPIC_DONE"):
         assert claim not in serialized
 
@@ -293,23 +293,23 @@ def test_factory_receipt_has_no_slot_keyed_hmac_or_source_unit_table() -> None:
     Neither ``frozen_slot_denominator.strata`` (per-stratum, not per-slot,
     and carries no HMAC) nor any other field may carry a slot->HMAC or
     slot->source-unit binding."""
-    serialized = json.dumps(REAL_FACTORY_RECEIPT, ensure_ascii=False, sort_keys=True)
+    serialized = json.dumps(_cached_json(FACTORY_RECEIPT_PATH), ensure_ascii=False, sort_keys=True)
     for needle in FORBIDDEN_PUBLIC_TERMS:
         assert needle not in serialized, f"forbidden public term leaked into the receipt: {needle}"
-    keys = _all_keys(REAL_FACTORY_RECEIPT)
+    keys = _all_keys(_cached_json(FACTORY_RECEIPT_PATH))
     assert not keys & factory.FORBIDDEN_PUBLIC_HMAC_KEYS
     assert not keys & factory.FORBIDDEN_KEYS
 
 
 def test_factory_receipt_never_references_a4_private_ledger_or_a3_heldout_membership() -> None:
-    assert REAL_FACTORY_RECEIPT["safety_assertions"]["a4_private_ledger_opened"] is False
-    assert REAL_FACTORY_RECEIPT["safety_assertions"]["held_out_membership_referenced"] is False
-    assert REAL_FACTORY_RECEIPT["safety_assertions"]["slot_to_source_unit_table_published"] is False
-    assert REAL_FACTORY_RECEIPT["safety_assertions"]["slot_to_commitment_table_published"] is False
+    assert _cached_json(FACTORY_RECEIPT_PATH)["safety_assertions"]["a4_private_ledger_opened"] is False
+    assert _cached_json(FACTORY_RECEIPT_PATH)["safety_assertions"]["held_out_membership_referenced"] is False
+    assert _cached_json(FACTORY_RECEIPT_PATH)["safety_assertions"]["slot_to_source_unit_table_published"] is False
+    assert _cached_json(FACTORY_RECEIPT_PATH)["safety_assertions"]["slot_to_commitment_table_published"] is False
 
 
 def test_factory_receipt_bindings_hash_to_disk() -> None:
-    for name, binding in REAL_FACTORY_RECEIPT["bindings"].items():
+    for name, binding in _cached_json(FACTORY_RECEIPT_PATH)["bindings"].items():
         from learn_ukrainian_v4_runtime import resources
         logical = binding["path"]
         if logical.startswith("scripts/"):
@@ -329,7 +329,7 @@ def test_private_ledger_is_a_pure_function_of_public_artifacts_only() -> None:
     # Identical to this module's own already-public per-stratum eligibility
     # signal -- nothing here is secret; it lives under batch_state/ only
     # because that is this repo's private operational-state home.
-    assert ledger["stratum_eligibility"] == REAL_FACTORY_RECEIPT["prerequisite_eligibility"]
+    assert ledger["stratum_eligibility"] == _cached_json(FACTORY_RECEIPT_PATH)["prerequisite_eligibility"]
 
 
 def test_private_ledger_never_carries_a_slot_to_source_unit_or_commitment_binding() -> None:
@@ -361,28 +361,28 @@ def test_private_ledger_default_path_is_under_gitignored_batch_state() -> None:
 
 
 def test_factory_refuses_a_forged_slots_ready_claim() -> None:
-    receipt = copy.deepcopy(REAL_FACTORY_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
     receipt["per_slot_gate"] = {**receipt["per_slot_gate"], "slots_stage_complete": 100, "slots_residual": 0, "blocked_reason_code": None}
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)
 
 
 def test_factory_refuses_a_nonzero_private_rows_constructed_claim() -> None:
-    receipt = copy.deepcopy(REAL_FACTORY_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
     receipt["execution_counters"]["private_rows_constructed"] = 1
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)
 
 
 def test_factory_refuses_a_nonzero_dataset_rows_emitted_claim() -> None:
-    receipt = copy.deepcopy(REAL_FACTORY_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
     receipt["execution_counters"]["dataset_rows_emitted"] = 1
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)
 
 
 def test_factory_refuses_an_injected_slot_to_commitment_field() -> None:
-    receipt = copy.deepcopy(REAL_FACTORY_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
     receipt["per_slot_gate"] = dict(receipt["per_slot_gate"])
     receipt["per_slot_gate"]["commitment_sha256"] = "a" * 64
     with pytest.raises(factory.PrivateFactoryError):
@@ -390,7 +390,7 @@ def test_factory_refuses_an_injected_slot_to_commitment_field() -> None:
 
 
 def test_factory_refuses_a_tampered_binding_hash() -> None:
-    receipt = copy.deepcopy(REAL_FACTORY_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(FACTORY_RECEIPT_PATH))
     receipt["bindings"]["a7_original_row_factory"]["sha256"] = "0" * 64
     with pytest.raises(factory.PrivateFactoryError):
         factory.validate_receipt_independently(receipt)

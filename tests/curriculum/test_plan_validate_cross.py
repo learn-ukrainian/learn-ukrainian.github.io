@@ -30,11 +30,24 @@ from scripts.curriculum.validate import codes
 from scripts.curriculum.validate.scope import compute_scope, letter_runs, write_scope_sidecar
 from scripts.curriculum.validate.validate import Report, validate_plan
 from scripts.curriculum.validate.validate import main as validate_main
+from tests.sparse_trees import tree_absent
 
 pytestmark = pytest.mark.reads_content
 
 REPO_ROOT = Path(__file__).resolve().parents[2]
 LEVEL = "a1"
+
+
+def _skip_if_arc_absent() -> None:
+    # Keyed on the whole sparse-excluded tree: when curriculum/ is present but
+    # the arc file is missing, the test must fail, as it did before (#8581).
+    if tree_absent("curriculum"):
+        pytest.skip(
+            "curriculum is absent from this sparse worktree; "
+            "re-include it with --sparse-include curriculum"
+        )
+
+
 SLUG = "mod-one"
 ARC_DOC_REL = "docs/epics/fresh-build-a1-arc.md"
 
@@ -444,54 +457,56 @@ RULE4_CASES = [
     ),
 ]
 
-ARC_CASES = [
-    CrossCase(
-        "rule5_arc_file_missing",
-        plans=[target_plan()],
-        arc=None,
-        expected=frozenset({codes.ARC_UNAVAILABLE}),
-    ),
-    CrossCase(
-        "rule5_wrong_position",
-        plans=[target_plan()],
-        arc=[arc_position(2, SLUG)],
-        expected=frozenset({codes.ARC_REF_UNKNOWN}),
-    ),
-    CrossCase(
-        "rule5_slug_differs_from_arc",
-        plans=[target_plan()],
-        arc=[arc_position(1, "mod-other")],
-        expected=frozenset({codes.ARC_SLUG_MISMATCH}),
-    ),
-    CrossCase(
-        "rule5_missing_and_extra_letters",
-        plans=[target_plan(letters=_letters(0, 1) + _letters(5, 6))],
-        arc=[arc_position(1, SLUG, _letters(0, 3))],
-        expected=frozenset({codes.ARC_LETTERS_MISMATCH}),
-    ),
-    CrossCase(
-        "rule5_letter_introduced_by_two_lessons",
-        plans=[
-            make_plan(
-                SLUG,
-                1,
-                [
-                    teach_lesson(1, "lesson-one", letters=_letters(0, 1)),
-                    teach_lesson(2, "lesson-two", letters=_letters(0, 1)),
-                    recap_lesson(3),
-                ],
-            )
-        ],
-        arc=[arc_position(1, SLUG, _letters(0, 1))],
-        expected=frozenset({codes.LETTER_INTRODUCED_TWICE}),
-    ),
-    CrossCase(
-        "rule5_letters_in_non_literacy_position",
-        plans=[target_plan(letters=_letters(0, 1))],
-        arc=[arc_position(1, SLUG)],
-        expected=frozenset({codes.LETTERS_IN_NON_LITERACY_PLAN}),
-    ),
-]
+
+def arc_cases() -> list[CrossCase]:
+    return [
+        CrossCase(
+            "rule5_arc_file_missing",
+            plans=[target_plan()],
+            arc=None,
+            expected=frozenset({codes.ARC_UNAVAILABLE}),
+        ),
+        CrossCase(
+            "rule5_wrong_position",
+            plans=[target_plan()],
+            arc=[arc_position(2, SLUG)],
+            expected=frozenset({codes.ARC_REF_UNKNOWN}),
+        ),
+        CrossCase(
+            "rule5_slug_differs_from_arc",
+            plans=[target_plan()],
+            arc=[arc_position(1, "mod-other")],
+            expected=frozenset({codes.ARC_SLUG_MISMATCH}),
+        ),
+        CrossCase(
+            "rule5_missing_and_extra_letters",
+            plans=[target_plan(letters=_letters(0, 1) + _letters(5, 6))],
+            arc=[arc_position(1, SLUG, _letters(0, 3))],
+            expected=frozenset({codes.ARC_LETTERS_MISMATCH}),
+        ),
+        CrossCase(
+            "rule5_letter_introduced_by_two_lessons",
+            plans=[
+                make_plan(
+                    SLUG,
+                    1,
+                    [
+                        teach_lesson(1, "lesson-one", letters=_letters(0, 1)),
+                        teach_lesson(2, "lesson-two", letters=_letters(0, 1)),
+                        recap_lesson(3),
+                    ],
+                )
+            ],
+            arc=[arc_position(1, SLUG, _letters(0, 1))],
+            expected=frozenset({codes.LETTER_INTRODUCED_TWICE}),
+        ),
+        CrossCase(
+            "rule5_letters_in_non_literacy_position",
+            plans=[target_plan(letters=_letters(0, 1))],
+            arc=[arc_position(1, SLUG)],
+            expected=frozenset({codes.LETTERS_IN_NON_LITERACY_PLAN}),
+        ),
+    ]
 
 REGISTRY_CASES = [
     CrossCase(
@@ -614,53 +629,84 @@ SCOPE_CASES = [
     ),
 ]
 
-TITLE_CASES = [
-    CrossCase(
-        "title_seven_enumerated_over_33_taught",
-        plans=[
-            make_plan(
-                SLUG,
-                1,
-                [
-                    teach_lesson(1, "lesson-one", letters=_letters(0, 13)),
-                    teach_lesson(2, "lesson-two", letters=_letters_union()[13:25]),
-                    teach_lesson(3, "lesson-three", letters=_letters_union()[25:]),
-                    recap_lesson(4),
-                ],
-                subtitle="Літери " + " ".join(_letters(0, 7)),
-            )
-        ],
-        arc=[arc_position(1, SLUG, _letters_union())],
-        expected=frozenset({codes.TITLE_LETTER_ENUMERATION_MISMATCH}),
-    ),
-    CrossCase(
-        "title_single_letter_is_not_a_run",
-        plans=[target_plan(letters=_letters(0, 2), title=f"The letter {_letters(0, 1)[0]} first")],
-        arc=[arc_position(1, SLUG, _letters(0, 2))],
-    ),
-    CrossCase(
-        "title_one_letter_ukrainian_word_is_not_a_run",
-        plans=[target_plan(letters=_letters(0, 2), subtitle="Я і ти читаємо разом")],
-        arc=[arc_position(1, SLUG, _letters(0, 2))],
-    ),
-    CrossCase(
-        "title_lesson_title_enumerating_subset_is_ignored",
-        plans=[
-            make_plan(
-                SLUG,
-                1,
-                [
-                    teach_lesson(1, "lesson-one", letters=_letters(0, 3), title="Літери " + " ".join(_letters(0, 2))),
-                    recap_lesson(2),
-                ],
-            )
-        ],
-        arc=[arc_position(1, SLUG, _letters(0, 3))],
-    ),
-]
+
+def title_cases() -> list[CrossCase]:
+    return [
+        CrossCase(
+            "title_seven_enumerated_over_33_taught",
+            plans=[
+                make_plan(
+                    SLUG,
+                    1,
+                    [
+                        teach_lesson(1, "lesson-one", letters=_letters(0, 13)),
+                        teach_lesson(2, "lesson-two", letters=_letters_union()[13:25]),
+                        teach_lesson(3, "lesson-three", letters=_letters_union()[25:]),
+                        recap_lesson(4),
+                    ],
+                    subtitle="Літери " + " ".join(_letters(0, 7)),
+                )
+            ],
+            arc=[arc_position(1, SLUG, _letters_union())],
+            expected=frozenset({codes.TITLE_LETTER_ENUMERATION_MISMATCH}),
+        ),
+        CrossCase(
+            "title_single_letter_is_not_a_run",
+            plans=[target_plan(letters=_letters(0, 2), title=f"The letter {_letters(0, 1)[0]} first")],
+            arc=[arc_position(1, SLUG, _letters(0, 2))],
+        ),
+        CrossCase(
+            "title_one_letter_ukrainian_word_is_not_a_run",
+            plans=[target_plan(letters=_letters(0, 2), subtitle="Я і ти читаємо разом")],
+            arc=[arc_position(1, SLUG, _letters(0, 2))],
+        ),
+        CrossCase(
+            "title_lesson_title_enumerating_subset_is_ignored",
+            plans=[
+                make_plan(
+                    SLUG,
+                    1,
+                    [
+                        teach_lesson(1, "lesson-one", letters=_letters(0, 3), title="Літери " + " ".join(_letters(0, 2))),
+                        recap_lesson(2),
+                    ],
+                )
+            ],
+            arc=[arc_position(1, SLUG, _letters(0, 3))],
+        ),
+    ]
 
 
-ALL_CROSS_CASES = RULE4_CASES + ARC_CASES + REGISTRY_CASES + SCOPE_CASES + TITLE_CASES
+def all_cross_cases() -> list[CrossCase]:
+    return [*RULE4_CASES, *arc_cases(), *REGISTRY_CASES, *SCOPE_CASES, *title_cases()]
+
+
+def _cross_case_parameters() -> list[object]:
+    """Parameter list for the cross-case table.
+
+    When the whole curriculum tree is absent, return one explicit skip
+    instead of reading it. A present tree with a missing arc file must keep
+    failing, as it did before (#8581).
+    """
+    if tree_absent("curriculum"):
+        return [
+            pytest.param(
+                None,
+                id="curriculum-absent",
+                marks=pytest.mark.skip(
+                    reason=(
+                        "curriculum is absent from this sparse worktree; "
+                        "re-include it with --sparse-include curriculum"
+                    )
+                ),
+            )
+        ]
+    return all_cross_cases()
+
+
+def _cross_case_id(case: object) -> str:
+    name = getattr(case, "name", None)
+    return name if isinstance(name, str) else "curriculum-absent"
 
 
 def run_cross(root: Path, case: CrossCase) -> Report:
@@ -676,7 +722,7 @@ def run_cross(root: Path, case: CrossCase) -> Report:
     return validate_plan(LEVEL, case.target, plan_path=paths[case.target], **case.kwargs)
 
 
-@pytest.mark.parametrize("case", ALL_CROSS_CASES, ids=lambda case: case.name)
+@pytest.mark.parametrize("case", _cross_case_parameters(), ids=_cross_case_id)
 def test_cross_case(tmp_path: Path, case: CrossCase) -> None:
     report = run_cross(tmp_path, case)
     assert {o.code for o in report.failures} == set(case.expected), report.render_text()
@@ -701,7 +747,8 @@ def test_missing_prior_lists_positions(tmp_path: Path) -> None:
 
 
 def test_letters_mismatch_reports_missing_and_extra_separately(tmp_path: Path) -> None:
-    case = next(case for case in ARC_CASES if case.name == "rule5_missing_and_extra_letters")
+    _skip_if_arc_absent()
+    case = next(case for case in arc_cases() if case.name == "rule5_missing_and_extra_letters")
     report = run_cross(tmp_path, case)
     outcomes = [o for o in report.failures if o.code == codes.ARC_LETTERS_MISMATCH]
     assert len(outcomes) == 2, report.render_text()
@@ -735,6 +782,7 @@ def test_title_quantities_quotes_digits(tmp_path: Path) -> None:
 def test_real_position1_letters_through_load_arc(tmp_path: Path) -> None:
     """A plan matching the real position-1 arc (letters via load_arc) passes, and a
     title enumerating exactly the scope letter list passes the title check."""
+    _skip_if_arc_absent()
     letters = real_position_letters(1)
     slug = "sounds-letters-and-hello"
     paths = write_level(
@@ -768,7 +816,8 @@ def test_real_position1_letters_through_load_arc(tmp_path: Path) -> None:
 
 
 def test_title_seven_over_33_message(tmp_path: Path) -> None:
-    case = next(case for case in TITLE_CASES if case.name == "title_seven_enumerated_over_33_taught")
+    _skip_if_arc_absent()
+    case = next(case for case in title_cases() if case.name == "title_seven_enumerated_over_33_taught")
     report = run_cross(tmp_path, case)
     outcome = next(o for o in report.failures if o.code == codes.TITLE_LETTER_ENUMERATION_MISMATCH)
     assert "missing:" in outcome.message
@@ -777,6 +826,7 @@ def test_title_seven_over_33_message(tmp_path: Path) -> None:
 
 def test_letter_runs_boundaries() -> None:
     """The definition of 'a run of enumerated single letters' at its edges."""
+    _skip_if_arc_absent()
     letters = real_position_letters(1)
     a, o, u = letters[0], letters[1], letters[2]
     assert letter_runs(f"{a}") == []  # one letter alone is not a run
@@ -792,6 +842,7 @@ def test_letter_runs_boundaries() -> None:
 
 
 def _write_scope_twice_and_validate(root: Path) -> tuple[Report, Path]:
+    _skip_if_arc_absent()
     plan = target_plan(grammar=["G-a1-001"], core=["W-012"], letters=_letters(0, 2))
     paths = write_level(
         root,
@@ -1116,8 +1167,9 @@ def test_all_subprocess_clean_environment_strict(tmp_path: Path) -> None:
 
 
 def produced_cross_codes(root: Path) -> set[str]:
+    _skip_if_arc_absent()
     produced: set[str] = set()
-    for index, case in enumerate(ALL_CROSS_CASES):
+    for index, case in enumerate(all_cross_cases()):
         produced |= run_cross(root / f"case-{index}", case).codes()
     for index, scenario in enumerate(GIT_SCENARIOS):
         produced |= run_git_scenario(root / f"git-{index}", scenario).codes()

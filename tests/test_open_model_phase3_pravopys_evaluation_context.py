@@ -14,10 +14,21 @@ from jsonschema import Draft202012Validator
 
 from scripts.projects.open_model_data import phase3_evaluation_context_manifest as eval_manifest
 from scripts.projects.open_model_data import phase3_pravopys_evaluation_context as prav_context
+from tests.sparse_trees import tree_absent
 
 ROOT = Path(__file__).resolve().parents[1]
 SCHEMA = ROOT / "data/projects/open_model_data/contracts/phase3_pravopys_evaluation_context_receipt_v1.schema.json"
 EVAL_RECEIPT = ROOT / "data/projects/open_model_data/inventory/phase3_evaluation_context_manifest_receipt_v1.json"
+
+
+def _skip_without_pravopys_schema() -> None:
+    # Keyed on the whole sparse-excluded tree: when data/projects is present
+    # but the schema file is missing, the test must fail, as before (#8581).
+    if tree_absent("data/projects"):
+        pytest.skip(
+            "data/projects is absent from this sparse worktree; "
+            "re-include it with --sparse-include data/projects"
+        )
 
 
 def _prav_row(
@@ -215,8 +226,11 @@ def _patch_fixture_pins(
         "PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256",
         eval_manifest.receipt_sha256(json.loads(paths["evaluation_manifest_receipt"].read_text(encoding="utf-8"))),
     )
-    monkeypatch.setattr(
-        prav_context,
+    # setitem on __dict__, not setattr: the lazy module __getattr__ raises
+    # when the real receipt is absent (sparse worktree), and setattr would
+    # pre-read the current value through it (#8581).
+    monkeypatch.setitem(
+        prav_context.__dict__,
         "PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256",
         prav_context.sha256_file(paths["evaluation_manifest_receipt"]),
     )
@@ -675,6 +689,7 @@ def test_private_input_modes_and_symlinks_are_rejected(tmp_path: Path, monkeypat
 def test_private_output_rejects_wrong_mode_and_ancestor_symlink(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
 
@@ -1024,6 +1039,7 @@ def test_unicode_offset_round_trip_drift_fails_closed() -> None:
 def test_materialize_writes_restricted_private_output_and_text_free_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     receipt = prav_context.materialize(
@@ -1057,6 +1073,7 @@ def test_public_schema_is_closed_and_text_free() -> None:
 
 
 def test_deterministic_output(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5)
     first = prav_context.materialize(
@@ -1126,8 +1143,11 @@ def test_evaluation_context_manifest_receipt_body_drift_fails_closed(
     receipt["receipt_sha256"] = "0" * 64
     drifted.write_bytes(EVAL_RECEIPT.read_bytes().replace(original_body.encode("ascii"), b"0" * 64))
     assert json.loads(drifted.read_bytes().decode("utf-8"))["receipt_sha256"] == "0" * 64
-    monkeypatch.setattr(
-        prav_context,
+    # setitem on __dict__, not setattr: the lazy module __getattr__ raises
+    # when the real receipt is absent (sparse worktree), and setattr would
+    # pre-read the current value through it (#8581).
+    monkeypatch.setitem(
+        prav_context.__dict__,
         "PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256",
         prav_context.sha256_file(drifted),
     )
@@ -1174,6 +1194,7 @@ def test_validate_receipt_rejects_receipt_self_hash_drift() -> None:
 def test_verify_existing_rejects_tampered_private_jsonl(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
     prav_context.materialize(
@@ -1203,6 +1224,7 @@ def test_verify_existing_rejects_tampered_private_jsonl(
 def test_verify_existing_rejects_tampered_public_receipt(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
+    _skip_without_pravopys_schema()
     paths = _fixture_bundle(tmp_path)
     _patch_fixture_pins(monkeypatch, paths, row_count=5, stub_prav_validate=False)
     prav_context.materialize(

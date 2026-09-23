@@ -9,6 +9,7 @@ family_id/source_unit_id below is synthetic, never a real V4 family.
 from __future__ import annotations
 
 import copy
+import functools
 import json
 import os
 import secrets
@@ -24,10 +25,19 @@ ROOT = Path(__file__).resolve().parents[3]
 REAL_SEAL_RECEIPT_PATH = (
     ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 )
-REAL_SEAL_RECEIPT = json.loads(REAL_SEAL_RECEIPT_PATH.read_text(encoding="utf-8"))
+
+
+@functools.cache
+def _cached_json(path: Path) -> dict:
+    """Read a JSON artifact on first use so collection survives a sparse worktree."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
 
 FAMILY_IDS = [f"fam-synthetic-{index:02d}" for index in range(9)]
-assert len(FAMILY_IDS) == len(REAL_SEAL_RECEIPT["source_family_registry"]["families"])
+
+
+def test_synthetic_family_count_matches_the_real_seal_registry() -> None:
+    assert len(FAMILY_IDS) == len(_cached_json(REAL_SEAL_RECEIPT_PATH)["source_family_registry"]["families"])
 
 
 def _seal_receipt_shape(family_ids: list[str]) -> dict:
@@ -35,7 +45,7 @@ def _seal_receipt_shape(family_ids: list[str]) -> dict:
     checked-in one -- same bindings/access_firewall/everything else -- with
     only the family registry swapped for synthetic ids and the commitments
     cleared (unsealed)."""
-    receipt = copy.deepcopy(REAL_SEAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_SEAL_RECEIPT_PATH))
     receipt["source_family_registry"]["families"] = [
         {
             "family_id": fid,
@@ -371,9 +381,9 @@ def test_validate_public_receipt_independently_detects_count_tamper(tmp_path: Pa
 def test_real_seal_receipt_family_registry_supports_the_packet_module() -> None:
     """The real, checked-in production seal receipt has the shape this
     module expects -- exercised without ever touching a private artifact."""
-    families = REAL_SEAL_RECEIPT["source_family_registry"]["families"]
+    families = _cached_json(REAL_SEAL_RECEIPT_PATH)["source_family_registry"]["families"]
     real_family_ids = sorted(family["family_id"] for family in families)
-    ids = packet.builder_eligible_source_unit_ids(REAL_SEAL_RECEIPT, real_family_ids[:1])
+    ids = packet.builder_eligible_source_unit_ids(_cached_json(REAL_SEAL_RECEIPT_PATH), real_family_ids[:1])
     assert ids  # at least one source_unit_id resolves for a real family_id
 
 

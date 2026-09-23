@@ -22,6 +22,8 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from tests import sparse_trees
+
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 
 
@@ -911,12 +913,13 @@ def _sparse_checkout_enabled() -> bool:
 
 
 def _sparse_missing_trees() -> frozenset[str]:
+    forced = sparse_trees.forced_missing_trees() & _SPARSE_TREES
     if not _sparse_checkout_enabled():
-        return frozenset()
-    missing: list[str] = []
+        return frozenset(forced)
+    missing = set(forced)
     for rel in ("data/projects", "data/lexicon"):
         if not (_REPO_ROOT / rel).is_dir():
-            missing.append(rel)
+            missing.add(rel)
     return frozenset(missing)
 
 

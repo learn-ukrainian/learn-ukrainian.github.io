@@ -7,6 +7,8 @@ from types import ModuleType
 
 import pytest
 
+from tests import sparse_trees
+
 
 def _conftest() -> ModuleType:
     for module in sys.modules.values():
@@ -158,3 +160,27 @@ def test_sparse_on_does_not_skip_when_tree_is_present() -> None:
         item_name="test_mine",
     )
     assert reason is None
+
+
+def test_force_env_makes_trees_read_as_absent(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "data/projects, curriculum,")
+    assert sparse_trees.tree_absent("data/projects")
+    assert sparse_trees.tree_absent("curriculum")
+    # A tree that is never sparse-excluded and always present stays present.
+    monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "")
+    assert not sparse_trees.tree_absent("tests")
+
+
+def test_force_env_feeds_the_conftest_skip_predicate(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setenv(sparse_trees.FORCE_MISSING_TREES_ENV, "data/projects,data/lexicon")
+    conftest = _conftest()
+    missing = conftest._sparse_missing_trees()
+    assert {"data/projects", "data/lexicon"} <= set(missing)
+    reason = conftest.sparse_missing_tree_skip_reason(
+        "tests/projects/open_model_data/test_mine.py",
+        sparse_enabled=True,
+        missing_trees=missing,
+        item_name="test_mine",
+    )
+    assert reason is not None
+    assert "--sparse-include data/projects" in reason
