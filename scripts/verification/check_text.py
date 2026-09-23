@@ -19,7 +19,6 @@ from scripts.curriculum.evidence.sources import _signature, _sources_path
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import (
     Token,
-    _strip_stress,
     has_accent,
     lookup_form,
     tokenize,
@@ -28,6 +27,7 @@ from scripts.verification.check_ru_morph import check_russian_patterns_batch
 from scripts.verification.stress import (
     STRESS_BATCH_CAP,
     _stress_positions_in_marked_string,
+    _strip_stress,
     source_info,
     verify_stresses,
 )
