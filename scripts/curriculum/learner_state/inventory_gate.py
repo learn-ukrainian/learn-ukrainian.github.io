@@ -18,6 +18,7 @@ is lemma_outside_state.
 
 from __future__ import annotations
 
+from collections.abc import Mapping
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
@@ -566,7 +567,19 @@ def check_lesson(
             stream_inputs = getattr(stream, "inputs", None)
             has_inputs = stream_inputs is not None
 
-        if not has_inputs or not isinstance(stream_inputs, dict):
+        if (
+            not has_inputs
+            or not isinstance(stream_inputs, (dict, Mapping))
+            or not stream_inputs
+            or "expanded_sha256" not in stream_inputs
+            or not stream_inputs["expanded_sha256"]
+            or not isinstance(stream_inputs["expanded_sha256"], str)
+        ):
+            msg = (
+                "in-memory stream has no inputs"
+                if not has_inputs or not stream_inputs
+                else "in-memory stream inputs missing expanded_sha256"
+            )
             return GateReport(
                 level=level,
                 slug=slug,
@@ -581,70 +594,55 @@ def check_lesson(
                         token=None,
                         sentence=None,
                         record=None,
-                        message="in-memory stream has no inputs",
+                        message=msg,
                     ),
                 ),
                 not_checked=tuple(not_checked),
             )
-        expected_expanded_sha256 = stream_inputs.get("expanded_sha256")
+        expected_expanded_sha256 = stream_inputs["expanded_sha256"]
     else:
         res_inputs = res_doc.get("inputs") if isinstance(res_doc, dict) else {}
         expected_expanded_sha256 = res_inputs.get("expanded_sha256") if isinstance(res_inputs, dict) else None
 
     expanded_doc = expanded
-    if stream is None or expected_expanded_sha256 is not None:
-        if expanded_doc is None:
-            exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
-            expanded_doc, failure = _load_expanded_document(exp_file, level, slug, lesson_n, required=True)
-            if failure is not None:
-                return GateReport(
-                    level=level,
-                    slug=slug,
-                    lesson_n=lesson_n,
-                    failures=(failure,),
-                    not_checked=tuple(not_checked),
-                )
-
-        doc_sha256 = getattr(expanded_doc, "sha256", None) or (
-            expanded_doc.get("sha256") if isinstance(expanded_doc, dict) else None
-        )
-        if expected_expanded_sha256 is not None and doc_sha256 != expected_expanded_sha256:
-            origin = "stream inputs" if stream is not None else "receipts inputs"
+    if expanded_doc is None:
+        exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
+        expanded_doc, failure = _load_expanded_document(exp_file, level, slug, lesson_n, required=True)
+        if failure is not None:
             return GateReport(
                 level=level,
                 slug=slug,
                 lesson_n=lesson_n,
-                failures=(
-                    GateFailure(
-                        code=codes.EXPANDED_DOCUMENT_MISMATCH,
-                        level=level,
-                        slug=slug,
-                        lesson=lesson_n,
-                        tab="expanded",
-                        token=None,
-                        sentence=None,
-                        record=None,
-                        message=(
-                            f"expanded document sha256 {doc_sha256!r} differs from "
-                            f"{origin} {expected_expanded_sha256!r}"
-                        ),
-                    ),
-                ),
+                failures=(failure,),
                 not_checked=tuple(not_checked),
             )
-    else:
-        # stream is not None and expected_expanded_sha256 is None
-        if expanded_doc is None:
-            exp_file = expanded_path or (evidence_root / "_state" / slug / f"lesson-{lesson_n}.expanded.yaml")
-            expanded_doc, failure = _load_expanded_document(exp_file, level, slug, lesson_n, required=False)
-            if failure is not None:
-                return GateReport(
+
+    doc_sha256 = getattr(expanded_doc, "sha256", None) or (
+        expanded_doc.get("sha256") if isinstance(expanded_doc, dict) else None
+    )
+    if expected_expanded_sha256 is not None and doc_sha256 != expected_expanded_sha256:
+        origin = "stream inputs" if stream is not None else "receipts inputs"
+        return GateReport(
+            level=level,
+            slug=slug,
+            lesson_n=lesson_n,
+            failures=(
+                GateFailure(
+                    code=codes.EXPANDED_DOCUMENT_MISMATCH,
                     level=level,
                     slug=slug,
-                    lesson_n=lesson_n,
-                    failures=(failure,),
-                    not_checked=tuple(not_checked),
-                )
+                    lesson=lesson_n,
+                    tab="expanded",
+                    token=None,
+                    sentence=None,
+                    record=None,
+                    message=(
+                        f"expanded document sha256 {doc_sha256!r} differs from {origin} {expected_expanded_sha256!r}"
+                    ),
+                ),
+            ),
+            not_checked=tuple(not_checked),
+        )
 
     units_by_locator: dict[tuple[Any, Any, Any, Any], Any] = {}
     if expanded_doc is not None:
