@@ -10,6 +10,7 @@ a single call:
 
 from __future__ import annotations
 
+import os
 import sqlite3
 from pathlib import Path
 from typing import Any
@@ -39,13 +40,31 @@ from scripts.verification.vesum import verify_words
 
 VALID_CHECKS = frozenset({"vesum", "stress", "russian_shadow", "ua_gec"})
 DEFAULT_CHECKS = ("vesum", "stress", "russian_shadow", "ua_gec")
+VALID_UA_GEC_TAGS = frozenset({"F/Calque", "F/Collocation", "G/Case", "G/Gender"})
 DEFAULT_UA_GEC_TAGS = ("F/Calque", "F/Collocation")
+KNOWN_UA_GEC_COLLOCATIONS = frozenset({("як", "він"), ("до", "того")})
 
 _VESUM_VERSION_CACHE: tuple[tuple[int, int], str] | None = None
 _UA_GEC_INDEX: dict[tuple[str, ...], list[dict[str, Any]]] | None = None
 _UA_GEC_SIGNATURE: tuple[int, int, int, int] | None = None
 _UA_GEC_MAX_LEN: int = 1
 _UA_GEC_DROPPED_SKIPPED_KIND: int = 0
+
+
+def _sources_path_resolved() -> Path:
+    override = os.environ.get("LU_SOURCES_DB")
+    if override:
+        return Path(override)
+    return _sources_path()
+
+
+def _vesum_path_resolved() -> Path:
+    override = os.environ.get("VESUM_DB_PATH")
+    if override:
+        return Path(override)
+    from scripts.rag.config import VESUM_DB_PATH
+
+    return Path(VESUM_DB_PATH)
 
 
 def _vesum_version() -> str:
@@ -55,9 +74,7 @@ def _vesum_version() -> str:
     """
     global _VESUM_VERSION_CACHE
     try:
-        from scripts.rag.config import VESUM_DB_PATH
-
-        path = Path(VESUM_DB_PATH)
+        path = _vesum_path_resolved()
         if path.is_file():
             stat = path.stat()
             key = (stat.st_size, stat.st_mtime_ns)
@@ -91,7 +108,9 @@ def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], in
     Invalidated whenever data/sources.db file signature changes.
     """
     global _UA_GEC_INDEX, _UA_GEC_SIGNATURE, _UA_GEC_MAX_LEN, _UA_GEC_DROPPED_SKIPPED_KIND
-    sources_path = _sources_path()
+    sources_path = _sources_path_resolved()
+    if not sources_path.is_file():
+        raise FileNotFoundError(f"sources database not found at {sources_path}")
     current_sig = _signature(sources_path)
     if _UA_GEC_INDEX is not None and current_sig == _UA_GEC_SIGNATURE:
         return _UA_GEC_INDEX, _UA_GEC_MAX_LEN, _UA_GEC_DROPPED_SKIPPED_KIND
@@ -99,35 +118,32 @@ def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], in
     index: dict[tuple[str, ...], list[dict[str, Any]]] = {}
     max_len = 1
     dropped_count = 0
-    if sources_path.is_file():
-        conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
-        conn.row_factory = sqlite3.Row
-        try:
-            rows = conn.execute(
-                "SELECT id, error, correct, error_type, doc_id, is_native FROM ua_gec_errors"
-            ).fetchall()
-            for r in rows:
-                err_text = r["error"]
-                raw_toks = tokenize(err_text)
-                if any(t.kind in SKIPPED_KINDS for t in raw_toks):
-                    dropped_count += 1
-                    continue
-                toks = tuple(t.lookup.lower() for t in raw_toks if t.kind not in SKIPPED_KINDS)
-                if not toks:
-                    continue
-                if len(toks) > max_len:
-                    max_len = len(toks)
-                row_dict = {
-                    "id": r["id"],
-                    "error": r["error"],
-                    "correct": r["correct"],
-                    "error_type": r["error_type"],
-                    "doc_id": r["doc_id"],
-                    "is_native": r["is_native"],
-                }
-                index.setdefault(toks, []).append(row_dict)
-        finally:
-            conn.close()
+    conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    conn.row_factory = sqlite3.Row
+    try:
+        rows = conn.execute("SELECT id, error, correct, error_type, doc_id, is_native FROM ua_gec_errors").fetchall()
+        for r in rows:
+            err_text = r["error"]
+            raw_toks = tokenize(err_text)
+            if any(t.kind in SKIPPED_KINDS for t in raw_toks):
+                dropped_count += 1
+                continue
+            toks = tuple(t.lookup.lower() for t in raw_toks if t.kind not in SKIPPED_KINDS)
+            if not toks:
+                continue
+            if len(toks) > max_len:
+                max_len = len(toks)
+            row_dict = {
+                "id": r["id"],
+                "error": r["error"],
+                "correct": r["correct"],
+                "error_type": r["error_type"],
+                "doc_id": r["doc_id"],
+                "is_native": r["is_native"],
+            }
+            index.setdefault(toks, []).append(row_dict)
+    finally:
+        conn.close()
 
     _UA_GEC_INDEX = index
     _UA_GEC_SIGNATURE = current_sig
@@ -246,7 +262,27 @@ def check_text(
             "error": "invalid_input: 'max_findings' must be an integer >= 1",
         }
 
-    active_ua_gec_tags = set(DEFAULT_UA_GEC_TAGS) if ua_gec_tags is None else set(ua_gec_tags)
+    if ua_gec_tags is not None:
+        if (
+            isinstance(ua_gec_tags, str)
+            or not isinstance(ua_gec_tags, (list, tuple, set, frozenset))
+            or len(ua_gec_tags) == 0
+        ):
+            return {
+                "status": "error",
+                "error_code": "invalid_input",
+                "error": "invalid_input: 'ua_gec_tags' must be a nonempty list or tuple of valid tags",
+            }
+        unknown_tags = [t for t in ua_gec_tags if t not in VALID_UA_GEC_TAGS]
+        if unknown_tags:
+            return {
+                "status": "error",
+                "error_code": "invalid_input",
+                "error": f"invalid_input: unknown ua_gec_tags: {', '.join(repr(t) for t in unknown_tags)}. Valid tags: {', '.join(sorted(VALID_UA_GEC_TAGS))}",
+            }
+        active_ua_gec_tags = set(ua_gec_tags)
+    else:
+        active_ua_gec_tags = set(DEFAULT_UA_GEC_TAGS)
 
     # Process stress_forms (case-insensitive lookup form)
     stress_forms_map: dict[str, str] = {}
@@ -267,19 +303,24 @@ def check_text(
 
     for item_idx, item_id, item_text in units:
         unit_toks = tokenize(item_text)
-        filtered_toks = [t for t in unit_toks if t.kind not in SKIPPED_KINDS]
-        total_tokens += len(filtered_toks)
+        current_sentence: list[Token] = []
 
-        for t in filtered_toks:
+        for t in unit_toks:
+            if t.kind in SKIPPED_KINDS:
+                # Skipped-kind tokens (latin, digits) break contiguity for UA-GEC spans
+                if current_sentence:
+                    unit_sentences.append((item_idx, item_id, item_text, current_sentence))
+                    current_sentence = []
+                continue
+
+            total_tokens += 1
             tokens_by_form.setdefault(t.lookup, []).append((item_idx, item_id, t))
 
-        # Sentence grouping for UA-GEC
-        current_sentence: list[Token] = []
-        for t in filtered_toks:
             if t.sentence_initial and current_sentence:
                 unit_sentences.append((item_idx, item_id, item_text, current_sentence))
                 current_sentence = []
             current_sentence.append(t)
+
         if current_sentence:
             unit_sentences.append((item_idx, item_id, item_text, current_sentence))
 
@@ -290,6 +331,16 @@ def check_text(
 
     # 3. VESUM check
     vesum_verified_forms: set[str] = set()
+    vesum_path: Path | None = None
+    if ("vesum" in active_checks or "russian_shadow" in active_checks) and unique_forms:
+        vesum_path = _vesum_path_resolved()
+        if not vesum_path.is_file():
+            return {
+                "status": "error",
+                "error_code": "source_unavailable",
+                "error": f"source_unavailable: VESUM database not found at {vesum_path}",
+            }
+
     if "vesum" in active_checks and unique_forms:
         sent_init_caps: set[str] = set()
         for form, occurrences in tokens_by_form.items():
@@ -299,7 +350,14 @@ def check_text(
                     break
 
         query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in sent_init_caps]))
-        vesum_map = verify_words(query_words)
+        try:
+            vesum_map = verify_words(query_words, db_path=vesum_path)
+        except FileNotFoundError as err:
+            return {
+                "status": "error",
+                "error_code": "source_unavailable",
+                "error": f"source_unavailable: {err}",
+            }
 
         for form in unique_forms:
             is_verified = bool(vesum_map.get(form) or (form in sent_init_caps and vesum_map.get(_lower_first(form))))
@@ -322,7 +380,14 @@ def check_text(
     elif "russian_shadow" in active_checks and unique_forms:
         # If vesum was not requested in checks, but russian_shadow needs verified set:
         query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms]))
-        vesum_map = verify_words(query_words)
+        try:
+            vesum_map = verify_words(query_words, db_path=vesum_path)
+        except FileNotFoundError as err:
+            return {
+                "status": "error",
+                "error_code": "source_unavailable",
+                "error": f"source_unavailable: {err}",
+            }
         for form in unique_forms:
             if vesum_map.get(form) or vesum_map.get(_lower_first(form)):
                 vesum_verified_forms.add(form)
@@ -450,13 +515,22 @@ def check_text(
                 )
 
     # 6. UA-GEC check
-    sources_path = _sources_path()
-    sources_sig = _signature(sources_path)
     dropped_gec_rows = 0
-    if sources_path.is_file():
-        ua_gec_index, max_gec_len, dropped_gec_rows = _get_ua_gec_index()
-    else:
-        ua_gec_index, max_gec_len = {}, 1
+    sources_sig = None
+    ua_gec_index: dict[tuple[str, ...], list[dict[str, Any]]] = {}
+    max_gec_len = 1
+
+    if "ua_gec" in active_checks:
+        sources_path = _sources_path_resolved()
+        sources_sig = _signature(sources_path)
+        try:
+            ua_gec_index, max_gec_len, dropped_gec_rows = _get_ua_gec_index()
+        except FileNotFoundError as err:
+            return {
+                "status": "error",
+                "error_code": "source_unavailable",
+                "error": f"source_unavailable: {err}",
+            }
 
     if "ua_gec" in active_checks and unit_sentences and ua_gec_index:
         ua_gec_findings: dict[tuple[str, ...], dict[str, Any]] = {}
@@ -492,23 +566,32 @@ def check_text(
                         error_types = sorted(list({r["error_type"] for r in active_rows}))
                         all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
                         is_single_token = len(span_key) == 1
-                        if is_single_token:
+                        is_collocation = span_key in KNOWN_UA_GEC_COLLOCATIONS or any(
+                            r["error_type"] == "F/Collocation" for r in active_rows
+                        )
+                        is_multi_token_calque = (
+                            (not is_single_token)
+                            and (not is_collocation)
+                            and all(r["error_type"] == "F/Calque" for r in active_rows)
+                        )
+                        if is_multi_token_calque:
                             detail: dict[str, Any] = {
-                                "status": "suspicion",
-                                "label": (
-                                    "single-word UA-GEC correction in one document's context; suspicion, not a verdict"
-                                ),
-                                "error_type": error_types[0] if len(error_types) == 1 else error_types,
-                                "doc_ids": all_docs,
-                                "corrections": corrections,
-                            }
-                        else:
-                            detail = {
                                 "status": "ua_gec_error",
                                 "error_type": error_types[0] if len(error_types) == 1 else error_types,
                                 "doc_ids": all_docs,
                                 "corrections": corrections,
                             }
+                            is_suspicion = False
+                        else:
+                            detail = {
+                                "status": "suspicion",
+                                "label": ("UA-GEC correction in one document's context; suspicion, not a verdict"),
+                                "error_type": error_types[0] if len(error_types) == 1 else error_types,
+                                "doc_ids": all_docs,
+                                "corrections": corrections,
+                            }
+                            is_suspicion = True
+
                         if any(t in ("G/Case", "G/Gender") for t in error_types):
                             detail["note"] = f"corrected in that document ({', '.join(all_docs)})"
                         ua_gec_findings[span_key] = {
@@ -517,7 +600,7 @@ def check_text(
                             "detail": detail,
                             "locations": [loc],
                             "_first_loc": (item_idx, start_offset, end_offset),
-                            "_is_suspicion": is_single_token,
+                            "_is_suspicion": is_suspicion,
                         }
 
         for finding in ua_gec_findings.values():

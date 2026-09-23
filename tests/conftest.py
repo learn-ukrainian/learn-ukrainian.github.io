@@ -121,8 +121,22 @@ def _require_data_artifact(
     required_sqlite_tables: Collection[str] = (),
 ) -> Path:
     """Return a local data artifact or skip tests that cannot run without it."""
-    data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
-    artifact = data_root / relative_path
+    if relative_path == "data/sources.db" and os.environ.get("LU_SOURCES_DB"):
+        artifact = Path(os.environ["LU_SOURCES_DB"])
+    elif relative_path == "data/vesum.db" and os.environ.get("VESUM_DB_PATH"):
+        artifact = Path(os.environ["VESUM_DB_PATH"])
+    else:
+        data_root = Path(os.environ.get("LEARN_UKRAINIAN_TEST_DATA_ROOT", _REPO_ROOT))
+        artifact = data_root / relative_path
+        if not artifact.is_file():
+            try:
+                from scripts.guardrails.worktree_containment import resolve_main_root
+
+                main_artifact = resolve_main_root(data_root) / relative_path
+                if main_artifact.is_file():
+                    artifact = main_artifact
+            except Exception:
+                pass
     if not artifact.is_file():
         pytest.skip(f"requires {relative_path} (not provisioned in CI)")
 
@@ -130,7 +144,8 @@ def _require_data_artifact(
         try:
             with sqlite3.connect(f"file:{artifact}?mode=ro", uri=True) as connection:
                 available_tables = {
-                    row[0] for row in connection.execute("SELECT name FROM sqlite_master WHERE type = 'table'")
+                    row[0]
+                    for row in connection.execute("SELECT name FROM sqlite_master WHERE type IN ('table', 'view')")
                 }
         except sqlite3.Error:
             available_tables = set()
@@ -187,9 +202,7 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv(
-        "LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json")
-    )
+    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
 
 
 @pytest.fixture(autouse=True)

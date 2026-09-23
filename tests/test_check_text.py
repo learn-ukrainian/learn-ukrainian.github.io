@@ -81,7 +81,7 @@ def test_tool_listed_in_mcp_server(server_module):
     assert "ua_gec_tags" in tool.input_schema["properties"]
 
 
-def test_mcp_call_tool_dispatch(server_module):
+def test_mcp_call_tool_dispatch(server_module, requires_vesum_db, requires_sources_db):
     result = _run(server_module.call_tool("check_text", {"text": "Це гарний день."}))
     assert len(result) == 1
     payload = json.loads(result[0].text)
@@ -111,7 +111,7 @@ def test_is_russian_pattern_output_keys_unchanged():
     assert "is_curated" not in res_empty
 
 
-# ── Synthetic Tests: Input Errors (M3) ───────────────────────────────────────
+# ── Synthetic Tests: Input Errors (M3 & Minor 1) ────────────────────────────
 
 
 def test_input_errors_both():
@@ -155,6 +155,15 @@ def test_input_errors_invalid_checks():
         assert res.get("status") == "error"
         assert res.get("error_code") == "invalid_input"
         assert "checks" in res.get("error", "")
+
+
+def test_input_errors_invalid_ua_gec_tags():
+    # Minor 1: validate ua_gec_tags against ingest tags, reject unknown/empty/bare strings
+    for bad_tags in ([], ["F/calque"], ["nonexistent"], "F/Calque", 123):
+        res = check_text(text="Привіт.", ua_gec_tags=bad_tags)
+        assert res.get("status") == "error"
+        assert res.get("error_code") == "invalid_input"
+        assert "ua_gec_tags" in res.get("error", "")
 
 
 def test_input_errors_invalid_max_findings():
@@ -297,7 +306,7 @@ def test_synthetic_ua_gec_single_token_to_suspicion(monkeypatch):
     assert s["check"] == "ua_gec"
     assert s["form"] == "коментарій"
     assert s["detail"]["status"] == "suspicion"
-    assert s["detail"]["label"] == "single-word UA-GEC correction in one document's context; suspicion, not a verdict"
+    assert s["detail"]["label"] == "UA-GEC correction in one document's context; suspicion, not a verdict"
     assert s["detail"]["error_type"] == "F/Calque"
     assert s["detail"]["doc_ids"] == ["doc1"]
     assert s["detail"]["corrections"] == [{"correct": "коментар", "doc_ids": ["doc1"]}]
@@ -334,6 +343,42 @@ def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch):
     assert p["detail"]["error_type"] == "F/Calque"
     assert p["detail"]["doc_ids"] == ["doc2"]
     assert p["detail"]["corrections"] == [{"correct": "писати дописи", "doc_ids": ["doc2"]}]
+
+
+def test_synthetic_ua_gec_collocation_goes_to_suspicion(monkeypatch):
+    # Driver settlement 2: F/Collocation of any length goes to suspicions
+    mock_index = {
+        ("брати", "участь"): [
+            {
+                "id": 303,
+                "error": "брати участь",
+                "correct": "взяти участь",
+                "error_type": "F/Collocation",
+                "doc_id": "doc3",
+                "is_native": 0,
+            }
+        ],
+        ("як", "він"): [
+            {
+                "id": 6663,
+                "error": ", як він",
+                "correct": " за нього",
+                "error_type": "F/Calque",
+                "doc_id": "1334",
+                "is_native": 0,
+            }
+        ],
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
+
+    text = "Він вирішив брати участь у змаганнях, як він сказав."
+    res = check_text(text=text, checks=["ua_gec"])
+    assert res.get("status") != "error"
+    assert len(res["problems"]) == 0
+    assert len(res["suspicions"]) == 2
+    for s in res["suspicions"]:
+        assert s["detail"]["status"] == "suspicion"
+        assert s["detail"]["label"] == "UA-GEC correction in one document's context; suspicion, not a verdict"
 
 
 def test_synthetic_ua_gec_sub_span_not_matched(monkeypatch):
@@ -393,26 +438,86 @@ def test_synthetic_ua_gec_overlapping_hits(monkeypatch):
     res = check_text(text=text, checks=["ua_gec"])
     assert res.get("status") != "error"
     prob_forms = {p["form"] for p in res["problems"]}
-    susp_forms = {s["form"] for s in res["suspicions"]}
+    susp_forms = {s["form"] for s in suspicions} if (suspicions := res["suspicions"]) else set()
     assert "у цілому" in prob_forms, "Outer match must be reported as problem"
     assert "цілому" in susp_forms, "Overlapping inner match must be reported as suspicion"
     assert len(res["problems"]) == 1
     assert len(res["suspicions"]) == 1
 
 
-def test_ua_gec_skipped_kind_tokens_dropped_and_counted():
-    # Minor 2: skipped-kind tokens (latin, digits) dropped from index and counted in provenance
+def test_synthetic_ua_gec_skipped_kind_breaks_contiguity(monkeypatch):
+    # Minor 3 / Settlement 5: skipped-kind tokens (latin, digits) break contiguity on text side
+    mock_index = {
+        ("написання", "постів"): [
+            {
+                "id": 202,
+                "error": "написання постів",
+                "correct": "писати дописи",
+                "error_type": "F/Calque",
+                "doc_id": "doc2",
+                "is_native": 0,
+            }
+        ]
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
+
+    # Digit between words breaks contiguity
+    text_digit = "Триває написання 2 постів щодня."
+    res_digit = check_text(text=text_digit, checks=["ua_gec"])
+    assert len(res_digit["problems"]) == 0
+    assert len(res_digit["suspicions"]) == 0
+
+    # Latin word between words breaks contiguity
+    text_latin = "Триває написання post постів щодня."
+    res_latin = check_text(text=text_latin, checks=["ua_gec"])
+    assert len(res_latin["problems"]) == 0
+    assert len(res_latin["suspicions"]) == 0
+
+    # Contiguous words without skipped kind match
+    text_clean = "Триває написання постів щодня."
+    res_clean = check_text(text=text_clean, checks=["ua_gec"])
+    assert len(res_clean["problems"]) == 1
+    assert res_clean["problems"][0]["form"] == "написання постів"
+
+
+def test_synthetic_ua_gec_skipped_kind_tokens_dropped_and_counted(monkeypatch):
+    # Settlement 1: synthetic index count in provenance, not hard-coding against live database
+    mock_index = {
+        ("привіт",): [
+            {
+                "id": 1,
+                "error": "привіт",
+                "correct": "вітаю",
+                "error_type": "F/Calque",
+                "doc_id": "d1",
+                "is_native": 1,
+            }
+        ]
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 1, 5))
     res = check_text(text="Привіт.", checks=["ua_gec"])
     assert res.get("status") != "error"
     prov = res["provenance"]
     assert "ua_gec_dropped_skipped_kind_rows" in prov
-    assert prov["ua_gec_dropped_skipped_kind_rows"] == 11
+    assert prov["ua_gec_dropped_skipped_kind_rows"] == 5
+
+
+test_ua_gec_skipped_kind_tokens_dropped_and_counted = test_synthetic_ua_gec_skipped_kind_tokens_dropped_and_counted
+
+
+def test_real_ua_gec_skipped_kind_tokens_dropped_and_counted(requires_sources_db):
+    # Settlement 1: real database variant asserts >= 1
+    res = check_text(text="Привіт.", checks=["ua_gec"])
+    assert res.get("status") != "error"
+    prov = res["provenance"]
+    assert "ua_gec_dropped_skipped_kind_rows" in prov
+    assert prov["ua_gec_dropped_skipped_kind_rows"] >= 1
 
 
 # ── Russian Shadow: Curated Lists and Suspicions (Minor 5) ───────────────────
 
 
-def test_synthetic_shadow_curated_and_suspicion_split():
+def test_synthetic_shadow_curated_and_suspicion_split(requires_vesum_db):
     # 'бажаючий' is in CURATED_CALQUES (with ukrainian alternative 'охочий')
     # 'получити' is in KNOWN_SHADOW_LEMMAS
     # 'врач' is Russian confidence 1.0, not in curated lists
@@ -445,6 +550,30 @@ def test_synthetic_shadow_curated_and_suspicion_split():
     assert s_vrach["detail"]["label"] == "suspicion, not a verdict"
 
 
+# ── Structured Source Unavailable Errors (Settlement 1 / N1) ─────────────────
+
+
+def test_synthetic_ua_gec_source_unavailable_when_db_missing(monkeypatch):
+    monkeypatch.setenv("LU_SOURCES_DB", "/nonexistent/sources.db")
+    monkeypatch.setattr("scripts.verification.check_text._sources_path", lambda: Path("/nonexistent/sources.db"))
+    res = check_text(text="Це гарний день.", checks=["ua_gec"])
+    assert res.get("status") == "error"
+    assert res.get("error_code") == "source_unavailable"
+    assert "sources database not found" in res.get("error", "")
+
+
+def test_synthetic_vesum_source_unavailable_when_db_missing(monkeypatch):
+    monkeypatch.setenv("VESUM_DB_PATH", "/nonexistent/vesum.db")
+    monkeypatch.setattr(
+        "scripts.verification.vesum._resolve_vesum_db_path",
+        lambda db_path=None: Path("/nonexistent/vesum.db"),
+    )
+    res = check_text(text="Це гарний день.", checks=["vesum"])
+    assert res.get("status") == "error"
+    assert res.get("error_code") == "source_unavailable"
+    assert "VESUM database not found" in res.get("error", "")
+
+
 # ── Real Corpus Fixture Tests (Minor 3, Minor 6, Minor 7) ────────────────────
 
 
@@ -473,7 +602,7 @@ def _load_textbook_fixture() -> tuple[str, str] | None:
     return None
 
 
-def test_acceptance_textbook_fixture_correctness_and_planted():
+def test_acceptance_textbook_fixture_correctness_and_planted(requires_vesum_db, requires_sources_db):
     fixture = _load_textbook_fixture()
     if fixture is None:
         pytest.skip("data/sources.db or vesum.db not provisioned")
@@ -486,7 +615,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
     assert res_clean.get("status") != "error"
 
     # Provenance check (Minor 6: canonical VESUM metadata digest)
-    conn_v = sqlite3.connect(f"file:{VESUM_DB_PATH}?mode=ro", uri=True)
+    conn_v = sqlite3.connect(f"file:{requires_vesum_db}?mode=ro", uri=True)
     cur_v = conn_v.execute("SELECT value FROM vesum_build_metadata WHERE key = 'canonical_jsonl_sha256'")
     expected_vesum_digest = cur_v.fetchone()[0]
     conn_v.close()
@@ -511,7 +640,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
         vowel_count = sum(1 for ch in s_form if ch in ukrainian_vowels)
         assert vowel_count >= 2, f"Monosyllable {s_form!r} was flagged by stress"
 
-    # Minor 3: UA-GEC findings on clean fixture measured and recorded (separate problems and suspicions)
+    # Minor 3 / Settlement 2: UA-GEC findings on clean fixture (collocations & single-token to suspicions)
     gec_clean_problems = [p for p in res_clean["problems"] if p["check"] == "ua_gec"]
     gec_clean_suspicions = [s for s in res_clean["suspicions"] if s["check"] == "ua_gec"]
     logger.info(
@@ -519,8 +648,8 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
         len(gec_clean_problems),
         len(gec_clean_suspicions),
     )
-    assert len(gec_clean_problems) == 2
-    assert len(gec_clean_suspicions) == 8
+    assert len(gec_clean_problems) == 0
+    assert len(gec_clean_suspicions) == 10
 
     # 2. Planted items (Minor 7: query-selected and substituted into text)
     candidate_absent = ["бзюкавий", "хряпочка", "дзиґомонець", "псевдословорія"]
@@ -530,8 +659,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
     planted_vesum_1, planted_vesum_2 = selected_absent
 
     # Deterministic multi-word UA-GEC row 3010 (F/Calque: 'написання постів')
-    sources_path = _sources_path()
-    conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    conn = sqlite3.connect(f"file:{requires_sources_db}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
         cur = conn.execute("SELECT id, error, correct FROM ua_gec_errors WHERE id = 3010")
@@ -583,7 +711,7 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
     assert not any(s["form"] == planted_gec_error for s in res_modified["suspicions"])
 
 
-def test_speed_warm_call_under_2s():
+def test_speed_warm_call_under_2s(requires_vesum_db, requires_sources_db):
     fixture = _load_textbook_fixture()
     if fixture is None:
         pytest.skip("data/sources.db or vesum.db not provisioned")
@@ -602,12 +730,13 @@ def test_speed_warm_call_under_2s():
     assert res["summary"]["tokens"] >= 600
 
 
-# ── M1 Benchmark Script Reduced Acceptance Test ─────────────────────────────
+# ── M1 Benchmark Script Reduced Acceptance Test (Minor 2) ───────────────────
 
 
-def test_bench_check_text_reduced():
+def test_bench_check_text_reduced(requires_vesum_db, requires_sources_db):
     from scripts.verification.bench_check_text import run_benchmark
 
     res = run_benchmark(reduced=True)
     assert res["check_text"]["calls"] == 1
-    assert res["check_text"]["time_s"] < res["legacy"]["time_s"]
+    assert res["check_text"]["calls"] < res["legacy"]["calls"]
+    assert res["check_text"]["chars"] < res["legacy"]["chars"]

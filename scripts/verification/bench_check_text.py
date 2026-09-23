@@ -129,6 +129,14 @@ def run_benchmark(
         sentence_spans.append(text[s_start:s_end].strip())
 
     # ── 1. Legacy Per-Tool Path ──────────────────────────────────────────────
+    # Warm-up legacy path
+    _ = verify_words(unique_forms)
+    if unique_forms:
+        _ = is_russian_pattern(unique_forms[0])
+    _ = verify_stresses(unique_forms[: min(len(unique_forms), STRESS_BATCH_CAP)])
+    if sentence_spans:
+        _ = search_ua_gec_errors(sentence_spans[0], tag_filter=["F/Calque", "F/Collocation"], limit=10)
+
     # A. verify_words (1 call)
     t0 = time.perf_counter()
     vw_res = verify_words(unique_forms)
