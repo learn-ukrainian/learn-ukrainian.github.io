@@ -316,7 +316,7 @@ def test_synthetic_ua_gec_single_token_to_suspicion(monkeypatch):
 test_synthetic_ua_gec_one_word_whole_span = test_synthetic_ua_gec_single_token_to_suspicion
 
 
-def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch):
+def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch, tmp_path):
     mock_index = {
         ("написання", "постів"): [
             {
@@ -330,6 +330,15 @@ def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch):
         ]
     }
     monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
+    # Closed-class decisions must not read the live vesum.db. Empty rows are
+    # not closed-class, so the multi-token calque stays a problem.
+    vesum_file = tmp_path / "vesum.db"
+    vesum_file.touch()
+    monkeypatch.setattr("scripts.verification.check_text._vesum_path_resolved", lambda: vesum_file)
+    monkeypatch.setattr(
+        "scripts.verification.check_text.verify_words",
+        lambda words, **kwargs: {word: [] for word in words},
+    )
 
     text = "Триває написання постів щодня."
     res = check_text(text=text, checks=["ua_gec"])
@@ -600,6 +609,51 @@ def test_synthetic_vesum_source_unavailable_when_db_missing(monkeypatch):
     assert res.get("status") == "error"
     assert res.get("error_code") == "source_unavailable"
     assert "VESUM database not found" in res.get("error", "")
+
+
+def test_ua_gec_only_missing_vesum_is_source_unavailable(monkeypatch):
+    """Closed-class spans must not become problems when VESUM cannot be read."""
+    mock_index = {
+        ("як", "він"): [
+            {
+                "id": 6663,
+                "error": ", як він",
+                "correct": " за нього",
+                "error_type": "F/Calque",
+                "doc_id": "1334",
+                "is_native": 0,
+            }
+        ],
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
+    missing = Path("/nonexistent/vesum-check-text.db")
+    monkeypatch.setattr("scripts.verification.check_text._vesum_path_resolved", lambda: missing)
+
+    res = check_text(text="Він сказав так, як він думав.", checks=["ua_gec"])
+
+    assert res == {
+        "status": "error",
+        "error_code": "source_unavailable",
+        "error": f"source_unavailable: VESUM database not found at {missing}",
+    }
+    assert "problems" not in res
+
+
+def test_ua_gec_network_sources_path_returns_source_unavailable(monkeypatch):
+    from scripts.storage.topology import ActiveDatabaseNetworkError
+
+    def raise_network() -> Path:
+        raise ActiveDatabaseNetworkError(
+            "Active sources.db must remain on local storage; "
+            "refused network path (repository_data_on_network_filesystem)."
+        )
+
+    monkeypatch.setattr("scripts.verification.check_text._sources_path_resolved", raise_network)
+    res = check_text(text="Це гарний день.", checks=["ua_gec"])
+    assert res.get("status") == "error"
+    assert res.get("error_code") == "source_unavailable"
+    assert str(res.get("error", "")).startswith("source_unavailable:")
+    assert "refused network path" in res.get("error", "")
 
 
 # ── Real Corpus Fixture Tests (Minor 3, Minor 6, Minor 7) ────────────────────

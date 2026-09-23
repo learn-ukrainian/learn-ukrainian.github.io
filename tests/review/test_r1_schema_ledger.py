@@ -34,6 +34,7 @@ from scripts.review.receipts.ledger import (
     records,
     session_from_environ,
 )
+from scripts.review.receipts.outcomes import classify_outcome
 from scripts.review.validate import codes
 from scripts.review.validate.validate import fold_quote, main, validate_review
 
@@ -665,6 +666,66 @@ def test_server_recording_off_is_byte_identical(server_module, monkeypatch: pyte
     wire = _run(server_module._on_call_tool(None, params))
     assert wire.is_error is True
     assert wire.content[0].text == "Tool call failed: nonexistent_tool."
+
+
+def test_check_text_outcome_classification() -> None:
+    """A clean check is no hits; problems count; a missing source is not clean."""
+    clean = json.dumps(
+        {"provenance": {}, "summary": {}, "problems": [], "suspicions": []},
+        ensure_ascii=False,
+    )
+    clean_facts = classify_outcome("check_text", "ok", clean)
+    assert clean_facts == {"call_status": "ok", "hits": 0, "status": "no_hits", "unavailable": False}
+
+    problems = json.dumps(
+        {
+            "problems": [{"form": "написання постів", "check": "ua_gec"}],
+            "suspicions": [],
+        },
+        ensure_ascii=False,
+    )
+    problem_facts = classify_outcome("check_text", "ok", problems)
+    assert problem_facts == {"call_status": "ok", "hits": 1, "status": "hits_found", "unavailable": False}
+
+    missing = json.dumps(
+        {
+            "status": "error",
+            "error_code": "source_unavailable",
+            "error": "source_unavailable: VESUM database not found at /nonexistent/vesum.db",
+        },
+        ensure_ascii=False,
+    )
+    missing_facts = classify_outcome("check_text", "ok", missing)
+    assert missing_facts["unavailable"] is True
+    assert missing_facts["status"] == "unavailable"
+    assert missing_facts["hits"] == 0
+    assert missing_facts["status"] != "no_hits"
+
+
+def test_check_text_call_is_recorded_and_receipt_resolves(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    payload = json.dumps(
+        {"provenance": {}, "summary": {}, "problems": [], "suspicions": []},
+        ensure_ascii=False,
+    )
+
+    async def fake(_arguments):
+        return [TextContent(type="text", text=payload)]
+
+    monkeypatch.setattr(server_module, "handle_check_text", fake)
+    result = _run(server_module.call_tool("check_text", {"text": "Привіт."}))
+    receipt = result[0].text.splitlines()[-1].removeprefix("receipt: ")
+    assert result[0].text == payload + "\nreceipt: " + receipt
+    stored = lookup(ledger, receipt)
+    assert stored["tool"] == "check_text"
+    assert stored["status"] == "ok"
+    assert stored["result"] == payload
+    assert "check_text" in REVIEW_TOOLS
 
 
 def test_server_records_full_result_and_refuses_other_tools(

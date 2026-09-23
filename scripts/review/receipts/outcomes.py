@@ -3,10 +3,11 @@
 Decides whether a tool call produced no hits, hits but no support, unavailable,
 or error from structured facts captured at record time.
 
-Real "no result" forms across the 16 review tools in .mcp/servers/sources/server.py:
-----------------------------------------------------------------------------------
+Real "no result" forms across the review tools in .mcp/servers/sources/server.py:
+--------------------------------------------------------------------------------
 Tool                  Line(s) in server.py  "No result" wording / pattern
 --------------------  --------------------  --------------------------------------
+check_text            2433                  JSON problems: [] ; source_unavailable is not clean
 check_russian_shadow  1200-1202             JSON {"matches_russian": false, "confidence": 0.0}
 verify_quote          1264-1275             JSON {"matched": false, "best_confidence": 0.0, "matched_lines": []}
 search_text           1737                  "No results found."
@@ -35,9 +36,14 @@ import json
 import re
 from typing import Any
 
-# Table of 16 review tools with cited line numbers in server.py
-# and their characteristic "no result" indicator.
+# Review tools with cited line numbers in server.py and their characteristic
+# "no result" indicator. check_text's clean result is an empty problems list;
+# a source_unavailable error is not that result.
 REVIEW_TOOL_NO_RESULT_PATTERNS: dict[str, dict[str, Any]] = {
+    "check_text": {
+        "line": 2433,
+        "pattern": '{"problems": []}',
+    },
     "check_russian_shadow": {
         "line": 1202,
         "pattern": '{"matches_russian": false}',
@@ -122,7 +128,20 @@ def _extract_json(text: str) -> Any | None:
     return None
 
 
+def _check_text_source_unavailable(text: str, parsed: Any | None) -> bool:
+    """True when check_text failed because a source database could not be read."""
+    if isinstance(parsed, dict):
+        if parsed.get("error_code") == "source_unavailable":
+            return True
+        error = parsed.get("error")
+        return parsed.get("status") == "error" and "source_unavailable" in str(error)
+    return "source_unavailable" in text
+
+
 def _classify_tool_hits(tool: str, text: str, parsed: Any | None) -> int:
+    if tool == "check_text" and isinstance(parsed, dict) and isinstance(parsed.get("problems"), list):
+        return len(parsed["problems"])
+
     if tool == "check_russian_shadow":
         if isinstance(parsed, dict):
             return 1 if parsed.get("matches_russian") else 0
@@ -288,6 +307,12 @@ def classify_outcome(tool: str, status: str, result: str) -> dict[str, Any]:
     text = result if isinstance(result, str) else ""
     stripped = text.strip()
     parsed = _extract_json(text)
+
+    # check_text embeds source_unavailable in a successful tool return. That is
+    # not a clean (no problems) result, and the generic hit fallback must not
+    # see the JSON first.
+    if tool == "check_text" and _check_text_source_unavailable(text, parsed):
+        return {"call_status": "ok", "hits": 0, "status": "unavailable", "unavailable": True}
 
     # Check for unavailable status / marker
     unavailable = "unavailable" in text.casefold() or (
