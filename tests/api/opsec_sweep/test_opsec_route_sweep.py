@@ -35,6 +35,7 @@ from scripts.api import (
     opsec_scan,
     route_contracts,
     state_helpers,
+    state_router,
 )
 from scripts.api import main as api_main
 from scripts.api.monitor_context import fixture_context
@@ -269,6 +270,20 @@ def isolated_fixture(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> Isolate
         issues_router,
         "_run_gh",
         lambda *_args, **_kwargs: (127, "", "fixture gh unavailable"),
+    )
+    monkeypatch.setattr(
+        state_router,
+        "probe_graphql_budget",
+        lambda: {
+            "source": "graphql.rateLimit",
+            "limit": None,
+            "remaining": None,
+            "used": None,
+            "reset_at": None,
+            "exhausted": None,
+            "error": "fixture gh unavailable",
+            "checked_at": "2026-01-01T00:00:00Z",
+        },
     )
     # NOTE (#7413): epics graph audit sidecars and spawn workers are isolated
     # so the sweep never reads/writes host cache or spawns refresh jobs.
