@@ -1528,7 +1528,6 @@ def test_expanded_schema_min_items_on_units():
                 "block": "prose_0",
                 "role": "instruction",
                 "text": "test",
-                "source": "writer_prose",
             }
         ],
     }
