@@ -122,6 +122,7 @@ def test_native_codex_profile_accepts_gpt6_and_rejects_other_models(model: str) 
     assert trusted["transport"] == "native_codex"
     assert trusted["trusted"]
     assert trusted["main_model_id"] == model
+    assert trusted["expected_main_model_id"] == model
     assert trusted["main_context_window_tokens"] == 272_000
     assert mismatch["profile_id"] == "fallback"
     assert mismatch["resolution_reason"] == "model-mismatch"

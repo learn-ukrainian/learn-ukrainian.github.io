@@ -36,6 +36,7 @@ PROFILE_ROLES = {
     "sol_ukrainian_content_high": ("gpt-6-sol", "high", "workspace-write"),
     "astra_advisor_high": ("gpt-6-astra", "high", "read-only"),
 }
+SUPERSEDED_PROFILES = ("astra_worker_low", "astra_red_team_high")
 ROOT_SETTINGS = {key: value for key, value in EXPECTED.items() if key != "agents"}
 
 
@@ -164,6 +165,21 @@ def atomic_write(path: Path, data: bytes, mode: int = 0o600) -> None:
 def deploy(source: Path, home: Path, *, dry_run: bool = False, check: bool = False) -> int:
     home = safe_path(home)
     assets = source_assets(safe_path(source))
+    superseded = [
+        name
+        for name in SUPERSEDED_PROFILES
+        if safe_path(home / "agents" / f"{name}.toml").exists()
+    ]
+    if superseded:
+        for name in superseded:
+            print(f"agents/{name}.toml: superseded profile remains active")
+        if check:
+            return 1
+        if dry_run:
+            return 0
+        raise DeployError(
+            "move superseded profiles from active agents/ to a private backup before deployment"
+        )
     changes = []
     for relative, data in assets.items():
         target = safe_path(home / relative)

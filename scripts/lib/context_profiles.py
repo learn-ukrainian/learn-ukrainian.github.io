@@ -209,7 +209,11 @@ def resolve_profile(
             "trusted": reason == "explicit-profile",
             "model_mismatch": model_mismatch,
             "expected_profile_id": expected.get("profile_id") if expected else None,
-            "expected_main_model_id": expected.get("main_model_id") if expected else None,
+            "expected_main_model_id": (
+                effective["main_model_id"]
+                if expected and reason == "explicit-profile" and expected["transport"] == "native_codex"
+                else expected.get("main_model_id") if expected else None
+            ),
             "expected_main_context_window_tokens": (
                 expected.get("main_context_window_tokens") if expected else None
             ),

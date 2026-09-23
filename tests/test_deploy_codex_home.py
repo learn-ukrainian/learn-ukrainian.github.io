@@ -115,6 +115,28 @@ def test_read_only_clean_install(source):
     assert snapshot(home) == before
 
 
+@pytest.mark.parametrize("name", deployer.SUPERSEDED_PROFILES)
+def test_superseded_profiles_must_be_retired_before_deployment(source, name):
+    home = source.parent / "home"
+    agents = home / "agents"
+    agents.mkdir(parents=True)
+    old = agents / f"{name}.toml"
+    old.write_text("existing managed profile\n")
+    before = snapshot(home)
+
+    assert deployer.deploy(source, home, dry_run=True) == 0
+    assert deployer.deploy(source, home, check=True) == 1
+    with pytest.raises(deployer.DeployError, match="superseded profiles"):
+        deployer.deploy(source, home)
+    assert snapshot(home) == before
+
+    backup = home / "retired"
+    backup.mkdir(mode=0o700)
+    old.rename(backup / old.name)
+    assert deployer.deploy(source, home) == 0
+    assert (backup / old.name).read_text() == "existing managed profile\n"
+
+
 @pytest.mark.parametrize(
     "config",
     [

@@ -56,13 +56,13 @@ home's `.deploy-backups/` directory. A failure must be investigated using its
 receipt before retrying; per-file atomic replacement is not a multi-file
 transaction. Dry-run and check modes do not write.
 
-The old names `astra_worker_low`, `astra_red_team_high`,
-`luna_explorer_xhigh`, `luna_worker_max`, `sol_worker_high`, and
-`terra_worker_high` are retired from source. The deployer preserves existing
-target files with those names. Inspect them and move only confirmed obsolete
-profiles into a private backup outside the active `agents/` directory. Record
-the moves for rollback. Preserve unrelated profiles. An old profile left in
-`agents/` remains selectable even after the new profiles deploy.
+The old names `astra_worker_low` and `astra_red_team_high` are superseded.
+The deployer refuses to apply changes while either remains active. Inspect
+those target files and move them into a private backup outside `agents/`
+before deployment; record the moves for rollback. Older retired names
+(`luna_explorer_xhigh`, `luna_worker_max`, `sol_worker_high`,
+`terra_worker_high`) remain preserved by the deployer and require the same
+manual inspection if present. Preserve unrelated profiles.
 
 Start a fresh task and inspect the loaded catalog after deployment. Check quota
 and health, then run a bounded representative spawn to verify model, effort,
