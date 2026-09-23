@@ -24,6 +24,7 @@ function position(overrides: Partial<ArcPosition>): ArcPosition {
     est_lessons: 3,
     lessons: null,
     built_lessons: [],
+    lesson_numbers: [],
     lesson_titles: [],
     scope: null,
     state: 'planned',
@@ -160,6 +161,7 @@ describe('ArcModule', () => {
           state: 'plan_reviewed',
           lessons: 2,
           built_lessons: [1],
+          lesson_numbers: [1, 2],
           lesson_titles: ['Перший', 'Другий'],
           scope: { letters: 13, grammar_points: 2, core_lemmas: 30 },
         })}
@@ -174,6 +176,25 @@ describe('ArcModule', () => {
     expect(screen.getByText('2 граматичні теми')).toBeTruthy();
     expect(screen.getByText('30 core words')).toBeTruthy();
     expect(screen.getByText('30 базових слів')).toBeTruthy();
+  });
+});
+
+describe('lesson links', () => {
+  it('link each lesson by its own number, not by list position', () => {
+    render(
+      <ArcModule
+        level="a1"
+        position={position({
+          state: 'plan_reviewed',
+          lessons: 2,
+          built_lessons: [7],
+          lesson_numbers: [7, 8],
+          lesson_titles: ['Сьомий', 'Восьмий'],
+        })}
+      />,
+    );
+    expect(screen.getByRole('link', { name: 'Сьомий' }).getAttribute('href')).toBe('/a1/alpha/7/');
+    expect(screen.queryByRole('link', { name: 'Восьмий' })).toBeNull();
   });
 });
 

@@ -48,8 +48,8 @@ export default function ArcModule({ level, position }: ArcModuleProps): ReactNod
             <ChromeText k="sidebar.lessons" /> · <ArcLessonCount count={position.lessons} />
           </h2>
           <ol className={styles.lessonList}>
-            {position.lesson_titles.map((title, index) => {
-              const n = index + 1;
+            {position.lesson_numbers.map((n, index) => {
+              const title = position.lesson_titles[index];
               return (
                 <li key={n}>
                   {position.built_lessons.includes(n)

@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 from pathlib import Path
 
 import pytest
@@ -75,9 +76,18 @@ def _states(root: gen.Roots, arc: list[ArcPosition]) -> dict[str, str]:
     return {record["slug"]: record["state"] for record in data["positions"]}
 
 
+LEVEL_STATUS = (
+    "# header\n\na1:\n  planned: 99  # note kept\n  status: auto\n  description: \"x\"\n\n"
+    "a2:\n  planned: 76\n  status: auto\n"
+)
+
+
 @pytest.fixture
 def root(tmp_path: Path) -> gen.Roots:
-    return gen.Roots(tmp_path, LEVEL)
+    roots = gen.Roots(tmp_path, LEVEL)
+    roots.level_status.parent.mkdir(parents=True)
+    roots.level_status.write_text(LEVEL_STATUS, encoding="utf-8")
+    return roots
 
 
 def test_real_arc_generates_55_planned_positions_and_is_current() -> None:
@@ -86,12 +96,14 @@ def test_real_arc_generates_55_planned_positions_and_is_current() -> None:
     files = gen.generated_files(roots, arc)
 
     assert len(arc) == 55
-    assert len(files) == 55 + 2
+    assert len(files) == 55 + 3
     assert gen.stale_files(files) == [], "run python -m scripts.build.build_arc_landing a1 --write"
     records = json.loads(files[roots.data_json])["positions"]
     assert [r["position"] for r in records] == list(range(1, 56))
     assert {r["state"] for r in records} == {"planned"}
     assert all(r["previous_edition_href"] == f"/a1-v1/{r['slug']}/" for r in records)
+    status = yaml.safe_load(roots.level_status.read_text(encoding="utf-8"))
+    assert status["a1"]["planned"] == len(arc)
 
 
 def test_generation_is_byte_stable(root: gen.Roots) -> None:
@@ -167,10 +179,12 @@ def test_plan_supplies_title_lessons_and_scope(root: gen.Roots) -> None:
 
     assert alpha["title_uk"] == "Звуки і привіт"
     assert alpha["lessons"] == 3
+    assert alpha["lesson_numbers"] == [1, 2, 3]
     assert alpha["lesson_titles"] == ["Урок 1", "Урок 2", "Урок 3"]
     assert alpha["scope"] == {"letters": 13, "grammar_points": 2, "core_lemmas": 30}
     assert 'title: "Звуки і привіт"' in files[root.docs / "alpha" / "index.mdx"]
     assert (beta["title_uk"], beta["lessons"], beta["scope"], beta["lesson_titles"]) == (None, None, None, [])
+    assert beta["lesson_numbers"] == []
     assert 'title: "Beta"' in files[root.docs / "beta" / "index.mdx"]
 
 
@@ -220,9 +234,70 @@ def test_check_passes_after_write_and_fails_on_each_stale_output(
     assert _run_main(monkeypatch, root, "--check") == 0
 
 
-def test_a1_level_status_count_equals_the_arc() -> None:
-    status = yaml.safe_load((REPO_ROOT / "docs/l2-uk-en/level-status.yaml").read_text(encoding="utf-8"))
-    assert status["a1"]["planned"] == len(load_arc(LEVEL))
+def test_check_fails_when_level_status_count_differs_and_write_fixes_only_that_value(
+    root: gen.Roots, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert _run_main(monkeypatch, root, "--write") == 0
+    assert root.level_status.read_text(encoding="utf-8") == LEVEL_STATUS.replace("planned: 99", "planned: 2")
+    assert _run_main(monkeypatch, root, "--check") == 0
+
+    root.level_status.write_text(LEVEL_STATUS, encoding="utf-8")
+    capsys.readouterr()
+    assert _run_main(monkeypatch, root, "--check") == 1
+    assert "level-status.yaml" in capsys.readouterr().err
+
+
+def test_level_status_without_the_level_block_fails_loudly() -> None:
+    with pytest.raises(ValueError, match="no `a1:` block"):
+        gen.render_level_status("a2:\n  planned: 1\n", "a1", 55)
+
+
+def test_check_fails_on_an_index_page_for_a_slug_outside_the_arc(
+    root: gen.Roots, monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]
+) -> None:
+    assert _run_main(monkeypatch, root, "--write") == 0
+    (root.docs / "alpha" / "1.mdx").write_text("---\ntitle: x\n---\n", encoding="utf-8")  # lesson: not ours
+    (root.docs / "not-in-arc").mkdir()
+    assert _run_main(monkeypatch, root, "--check") == 0, "a directory without index.mdx is not a page"
+
+    (root.docs / "not-in-arc" / "1.mdx").write_text("x", encoding="utf-8")
+    assert _run_main(monkeypatch, root, "--check") == 0, "lesson files are ignored"
+
+    (root.docs / "not-in-arc" / "index.mdx").write_text("x", encoding="utf-8")
+    capsys.readouterr()
+    assert _run_main(monkeypatch, root, "--check") == 1
+    assert "not-in-arc" in capsys.readouterr().err
+    assert gen.orphan_pages(root, _arc("alpha", "beta")) == [root.docs / "not-in-arc" / "index.mdx"]
+
+
+def _plan_with_lessons(root: gen.Roots, slug: str, numbers: list[int]) -> None:
+    _write_yaml(
+        root.plans / f"{slug}.yaml",
+        {"plan_schema": 2, "slug": slug, "title": "T", "lessons": [{"n": n, "title": f"Урок {n}"} for n in numbers]},
+    )
+
+
+@pytest.mark.parametrize("numbers", [[2], [1, 3], [1, 1], [2, 1], [0, 1], [1, 2, 4]])
+def test_plan_lesson_numbers_must_be_exactly_one_to_n(root: gen.Roots, numbers: list[int]) -> None:
+    _plan_with_lessons(root, "alpha", numbers)
+    _review(root, "alpha", "plan-review.yaml")
+    for n in set(numbers):
+        _lesson_built(root, "alpha", n)
+    with pytest.raises(ValueError, match=rf"alpha.*1\.\.N.*{re.escape(str(numbers))}"):
+        gen.generated_files(root, _arc("alpha"))
+
+
+def test_display_job_drops_line_references_and_backticks() -> None:
+    assert gen.display_job("Name common professions (`:485`) and more") == "Name common professions and more"
+    assert gen.display_job("Read the text (`:549-551`).") == "Read the text."
+    assert gen.display_job("Use `є` and `немає` (`:12`)") == "Use є and немає"
+    assert gen.display_job("Plain text, (not a ref)") == "Plain text, (not a ref)"
+
+
+def test_real_arc_jobs_carry_no_line_references_or_backticks() -> None:
+    roots = gen.Roots(REPO_ROOT, LEVEL)
+    data = json.loads(gen.generated_files(roots, load_arc(LEVEL))[roots.data_json])
+    assert not [r["slug"] for r in data["positions"] if "`" in r["job"] or "(:" in r["job"]]
 
 
 def test_legacy_landing_generators_skip_arc_levels(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

@@ -22,6 +22,7 @@ export type ArcPosition = {
   est_lessons: number;
   lessons: number | null;
   built_lessons: number[];
+  lesson_numbers: number[];
   lesson_titles: string[];
   scope: ArcScope | null;
   state: ArcState;
