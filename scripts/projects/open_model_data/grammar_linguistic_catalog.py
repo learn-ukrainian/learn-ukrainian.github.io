@@ -54,7 +54,7 @@ def is_vocative_form(word: str) -> bool:
 
 @functools.lru_cache(maxsize=100000)
 def is_finite_active_verb(word: str) -> bool:
-    """Check if word is a finite active verb in VESUM (not an adjective, participle, or passive)."""
+    """Check if word is a finite active verb in VESUM (not an infinitive, adjective, participle, or passive)."""
     clean_word = word.strip().strip("«»\"'.,!?-–—;:()").lower()
     if not clean_word:
         return False
@@ -67,9 +67,12 @@ def is_finite_active_verb(word: str) -> bool:
             "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
             (clean_word, clean_word.capitalize(), clean_word.upper()),
         ).fetchall()
-        has_active_verb = any(pos == "verb" and "adjp" not in tags and "pasv" not in tags for pos, tags in res)
-        has_passive = any("pasv" in tags or "adjp" in tags for pos, tags in res)
-        return has_active_verb and not has_passive
+        has_active_finite = any(
+            pos == "verb" and "adjp" not in tags and "pasv" not in tags and "inf" not in tags
+            for pos, tags in res
+        )
+        has_non_finite_or_passive = any("pasv" in tags or "adjp" in tags or "inf" in tags for pos, tags in res)
+        return has_active_finite and not has_non_finite_or_passive
     except Exception:
         return False
 
@@ -613,33 +616,9 @@ def resolve_specific_linguistic_citation(
             f"«Український правопис» (2019, § 32) та словникова база VESUM регламентують нормативні числові закінчення іменників і прикметників: вживаємо «{corr}» замість «{err}»."
         )
 
-    # 7. Verb Voice (G/VerbVoice): strict distinction between -ся passives and -но/-то forms
+    # 7. Verb Voice (G/VerbVoice): heterogeneous tag covering reflexive usage, modal infinitives,
+    # and passives; fails closed to silent_rewrite to prevent overbroad voice explanations.
     if primary_tag == "G/VerbVoice":
-        err_has_sya = err_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in err_lower.split())
-        corr_has_sya = corr_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in corr_lower.split())
-        corr_has_noto = corr_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in corr_lower.split())
-
-        # If both words retain -ся (e.g. зупинялася -> зупинилася), it is aspect/lexical, NOT voice! Fail closed.
-        if err_has_sya and corr_has_sya:
-            return None
-
-        # -ся passive replaced by impersonal -но/-то
-        if err_has_sya and corr_has_noto:
-            return (
-                "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
-                f"неприродну пасивну форму дієслова на «-ся» «{err}» замінено на безособову предикативну форму на «-но/-то» «{corr}»",
-                f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати штучних пасивних форм на «-ся», віддаючи перевагу питомим безособовим предикативним формам на «-но/-то» («{corr}» замість «{err}»)."
-            )
-
-        # -ся passive replaced by active verb construction ONLY if corr is a verified finite active verb in VESUM
-        # (e.g. поважаються -> поважають; NOT participles/adjectives like хвилюючийся -> схвильований)
-        if err_has_sya and not corr_has_sya and not corr_has_noto and is_finite_active_verb(corr):
-            return (
-                "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
-                f"неприродну пасивну форму на «-ся» «{err}» замінено на питому дієслівну конструкцію активного стану «{corr}»",
-                f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати невластивих пасивних форм дієслів на «-ся», віддаючи перевагу питомим активним дієслівним конструкціям («{corr}» замість «{err}»)."
-            )
-
         return None
 
     # 8. Verb Aspect Form / Imperative / Adverbial Participle (G/VerbAForm)

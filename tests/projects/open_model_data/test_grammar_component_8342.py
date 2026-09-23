@@ -385,8 +385,12 @@ def test_linguistic_catalog_vocative_and_voice_precision(grammar_data):
     # Direct unit checks on is_finite_active_verb
     assert is_finite_active_verb("поважають") is True
     assert is_finite_active_verb("використовують") is True
+    assert is_finite_active_verb("використовувати") is False  # infinitive
     assert is_finite_active_verb("схвильований") is False  # adjp:pasv
     assert is_finite_active_verb("хвилюючийся") is False
+
+    # G/VerbVoice is heterogeneous and must fail closed to silent_rewrite
+    assert all(r["task_type"] == "silent_rewrite" for r in grammar_data["all"] if r.get("tag") == "G/VerbVoice")
 
     for r in grammar_data["all"]:
         if not r["is_erroneous"] or r["task_type"] != "explained_correction":

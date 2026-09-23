@@ -46,11 +46,11 @@
     "substantive_correction_share": 0.75,
     "category_counts": {
       "syntax_structure": 1005,
-      "calque_lexical_grammatical": 1662,
+      "calque_lexical_grammatical": 1664,
       "protective_authentic_control": 1719,
-      "case_government": 1604,
+      "case_government": 1622,
       "agreement_concord": 501,
-      "verb_morphology": 386
+      "verb_morphology": 366
     },
     "source_corpus_counts": {
       "ua_gec_2.0": 6477,

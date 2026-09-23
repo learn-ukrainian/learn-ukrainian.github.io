@@ -682,7 +682,7 @@ def build_grammar_dataset(
                 if not query:
                     query = build_query(orig_text, reg, seed_idx)
 
-            is_explained = (idx % 100 < 66)
+            is_explained = (idx % 100 < 68)
 
             if is_err:
                 corr_text = item["corrected_text"]
