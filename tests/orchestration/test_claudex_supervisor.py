@@ -2,10 +2,12 @@ from __future__ import annotations
 
 import json
 import os
+import shutil
 import stat
 import subprocess
 import sys
 import time
+from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
 from types import SimpleNamespace
@@ -33,6 +35,94 @@ _CANONICAL_REPO_ROOT = th.canonical_state_root(_REPO_ROOT)
 
 def _repo_python() -> Path:
     return project_python()
+
+
+@pytest.fixture
+def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
+    """Build the minimal repo needed to exercise interpreter resolution in a worktree."""
+    repo = tmp_path / "canonical_repo"
+    repo.mkdir()
+    git_env = os.environ.copy()
+    git_env.update(
+        {
+            "GIT_CONFIG_NOSYSTEM": "1",
+            "GIT_CONFIG_GLOBAL": os.devnull,
+            "GIT_AUTHOR_NAME": "Fixture Author",
+            "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
+            "GIT_COMMITTER_NAME": "Fixture Author",
+            "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
+            "GIT_TERMINAL_PROMPT": "0",
+            "GIT_ALLOW_PROTOCOL": "file",
+        }
+    )
+
+    # This is the supervisor's explicit import closure for script-by-path use.
+    required_files = (
+        "scripts/__init__.py",
+        "scripts/context_canary.py",
+        "scripts/lib/context_profiles.py",
+        "scripts/lib/session_record.py",
+        "scripts/orchestration/claudex_supervisor.py",
+        "scripts/orchestration/task_identity.py",
+        "scripts/orchestration/thread_handoff.py",
+        "scripts/orchestration/thread_handoff_canary.py",
+        "scripts/orchestration/task_family/__init__.py",
+        "scripts/orchestration/task_family/codex_state.py",
+        "scripts/orchestration/task_family/graph.py",
+        "scripts/orchestration/task_family/model.py",
+        "scripts/orchestration/task_family/planner.py",
+        "scripts/orchestration/task_family/rollover.py",
+        "scripts/orchestration/task_family/rollover_registry.py",
+        "scripts/orchestration/task_family/storage.py",
+        "agents_extensions/shared/schemas/rollover-registry.v1.schema.json",
+        "agents_extensions/shared/schemas/task-identity.v1.schema.json",
+    )
+    for relative_path in required_files:
+        source = _REPO_ROOT / relative_path
+        destination = repo / relative_path
+        destination.parent.mkdir(parents=True, exist_ok=True)
+        shutil.copy2(source, destination)
+
+    def git(*args: str) -> None:
+        subprocess.run(
+            ["git", *args],
+            cwd=repo,
+            env=git_env,
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+
+    git("init", "--quiet")
+    git("add", "--", *required_files)
+    git("commit", "--quiet", "-m", "minimal supervisor fixture")
+
+    canonical_python = repo / ".venv/bin/python"
+    canonical_python.parent.mkdir(parents=True)
+    canonical_python.symlink_to(_repo_python())
+    shared_venv = _repo_python().parent.parent
+    shutil.copy2(shared_venv / "pyvenv.cfg", canonical_python.parent.parent / "pyvenv.cfg")
+    python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
+    site_packages = shared_venv / "lib" / python_version / "site-packages"
+    fixture_site_packages = canonical_python.parent.parent / "lib" / python_version / "site-packages"
+    fixture_site_packages.parent.mkdir(parents=True)
+    fixture_site_packages.symlink_to(site_packages)
+
+    worktree = tmp_path / "venv_less_wt"
+    git("worktree", "add", "--quiet", "--detach", os.fspath(worktree), "HEAD")
+    assert not (worktree / ".venv").exists()
+    fixture = SimpleNamespace(repo=repo, worktree=worktree, canonical_python=canonical_python)
+    try:
+        yield fixture
+    finally:
+        subprocess.run(
+            ["git", "worktree", "remove", "--force", os.fspath(worktree)],
+            cwd=repo,
+            env=git_env,
+            check=False,
+            capture_output=True,
+            text=True,
+        )
 
 
 _SUPERVISOR = _REPO_ROOT / "scripts/orchestration/claudex_supervisor.py"
@@ -531,7 +621,11 @@ def test_relaunch_failure_leaves_handoff_lease_for_manual_recovery(tmp_path: Pat
     assert preserved["replacement"]["status"] == "pending_start"
 
 
-def test_resolve_relaunch_python_priorities(monkeypatch: pytest.MonkeyPatch, tmp_path: Path) -> None:
+def test_resolve_relaunch_python_priorities(
+    monkeypatch: pytest.MonkeyPatch,
+    tmp_path: Path,
+    venv_less_linked_worktree: SimpleNamespace,
+) -> None:
     sentinel_python = tmp_path / "sentinel_python"
     sentinel_python.touch(mode=0o755)
     monkeypatch.setattr(sys, "executable", os.fspath(sentinel_python))
@@ -543,25 +637,10 @@ def test_resolve_relaunch_python_priorities(monkeypatch: pytest.MonkeyPatch, tmp
     local_python.touch(mode=0o755)
     assert resolve_relaunch_python(mock_local) == local_python
 
-    # 2. Venv-less checkout in git repository finds canonical venv
-    worktree = tmp_path / "venv_less_wt"
-    subprocess.run(
-        ["git", "worktree", "add", "--detach", os.fspath(worktree), "HEAD"],
-        cwd=_REPO_ROOT,
-        check=True,
-        capture_output=True,
-        timeout=30,
+    # 2. Venv-less linked checkout resolves the canonical fixture interpreter.
+    assert resolve_relaunch_python(venv_less_linked_worktree.worktree) == (
+        venv_less_linked_worktree.canonical_python
     )
-    try:
-        assert resolve_relaunch_python(worktree) == _repo_python()
-    finally:
-        subprocess.run(
-            ["git", "worktree", "remove", "--force", os.fspath(worktree)],
-            cwd=_REPO_ROOT,
-            check=False,
-            capture_output=True,
-            timeout=30,
-        )
 
     # 3. Non-git directory falls back to sys.executable
     non_git = tmp_path / "non_git"
@@ -569,53 +648,39 @@ def test_resolve_relaunch_python_priorities(monkeypatch: pytest.MonkeyPatch, tmp
     assert resolve_relaunch_python(non_git) == sentinel_python
 
 
-def test_supervisor_launches_in_venv_less_worktree(tmp_path: Path) -> None:
+def test_supervisor_launches_in_venv_less_worktree(
+    tmp_path: Path,
+    venv_less_linked_worktree: SimpleNamespace,
+) -> None:
     """Issue #7210: supervisor child relaunch must work from venv-less linked worktrees."""
-    worktree = tmp_path / "venv_less_wt"
-    subprocess.run(
-        ["git", "worktree", "add", "--detach", os.fspath(worktree), "HEAD"],
-        cwd=_REPO_ROOT,
-        check=True,
-        capture_output=True,
-        timeout=30,
+    worktree = venv_less_linked_worktree.worktree
+    child = tmp_path / "child.py"
+    child_log = tmp_path / "child.jsonl"
+    _write_child(child, wait_on_first_launch=False)
+    raw_path = os.environ.get("PATH", "")
+    repo_venv_bin = _repo_python().parent.resolve()
+    cleaned_path = os.pathsep.join(
+        p for p in raw_path.split(os.pathsep) if p and Path(p).resolve() != repo_venv_bin
     )
-    try:
-        assert not (worktree / ".venv").exists()
-        child = tmp_path / "child.py"
-        child_log = tmp_path / "child.jsonl"
-        _write_child(child, wait_on_first_launch=False)
-        raw_path = os.environ.get("PATH", "")
-        repo_venv_bin = _repo_python().parent.resolve()
-        cleaned_path = os.pathsep.join(
-            p for p in raw_path.split(os.pathsep) if p and Path(p).resolve() != repo_venv_bin
-        )
-        env = _route_env(
-            PATH=cleaned_path,
-            CLAUDEX_SUPERVISOR_TEST_STATE_ROOT=os.fspath(tmp_path),
-            SUPERVISOR_CHILD_LOG=os.fspath(child_log),
-        )
-        supervisor_script = worktree / "scripts/orchestration/claudex_supervisor.py"
-        supervisor_script.write_text(_SUPERVISOR.read_text(encoding="utf-8"), encoding="utf-8")
-        completed = subprocess.run(
-            [os.fspath(_repo_python()), os.fspath(supervisor_script), os.fspath(child), *_argv()],
-            cwd=worktree,
-            env=env,
-            capture_output=True,
-            text=True,
-            timeout=60,
-        )
-        assert completed.returncode == 7, completed.stderr
-        rows = _wait_for_log(child_log, 1)
-        assert len(rows) == 1, f"expected 1 log row, got {len(rows)}\nstderr:\n{completed.stderr}"
-        assert Path(rows[0]["executable"]) == _repo_python(), (
-            f"expected child interpreter {_repo_python()} but got {rows[0]['executable']}\n"
-            f"supervisor stderr:\n{completed.stderr}"
-        )
-    finally:
-        subprocess.run(
-            ["git", "worktree", "remove", "--force", os.fspath(worktree)],
-            cwd=_REPO_ROOT,
-            check=False,
-            capture_output=True,
-            timeout=30,
-        )
+    env = _route_env(
+        PATH=cleaned_path,
+        CLAUDEX_SUPERVISOR_TEST_STATE_ROOT=os.fspath(tmp_path),
+        SUPERVISOR_CHILD_LOG=os.fspath(child_log),
+    )
+    supervisor_script = worktree / "scripts/orchestration/claudex_supervisor.py"
+    completed = subprocess.run(
+        [os.fspath(_repo_python()), os.fspath(supervisor_script), os.fspath(child), *_argv()],
+        cwd=worktree,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=60,
+    )
+    assert completed.returncode == 7, completed.stderr
+    rows = _wait_for_log(child_log, 1)
+    assert len(rows) == 1, f"expected 1 log row, got {len(rows)}\nstderr:\n{completed.stderr}"
+    assert Path(rows[0]["executable"]) == venv_less_linked_worktree.canonical_python, (
+        "expected child interpreter "
+        f"{venv_less_linked_worktree.canonical_python} but got {rows[0]['executable']}\n"
+        f"supervisor stderr:\n{completed.stderr}"
+    )
