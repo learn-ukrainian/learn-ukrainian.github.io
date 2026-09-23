@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_073",
+  "case_id": "decol_prot_073",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "на свіжому повітрі",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "на свіжому повітрі"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 14, гасло «Повітря»",
+  "supporting_passage": "ПОВІ́ТРЯ, -я, с. 1. Невидима газоподібна речовина... На свіжому повітрі: От би коли лягти отам під коморою, на свіжому повітрі – і заснулося б!.. (Панас Мирний); Оксен поплескав його по блідих щоках, які свідчили про те, що дитина просиділа цілу зиму в хаті і не бувала на свіжому повітрі (Григорій Тютюнник).",
+  "page": "т. 14",
+  "article": "Повітря",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c4d8567c0eed43f22b5177f96797d2858f3229fdf27cfd59c356ad58429f33da",
+  "linguistic_rationale": "Засвідчено для decol_prot_073: вживання «на свіжому повітрі» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_073.review.json"
+}

@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_002",
+  "case_id": "decol_lex_002",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "капелюх",
+  "russian_copy": "шляпа",
+  "ukrainian_proper": [
+    "капелюх",
+    "бриль"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Капелюх»",
+  "supporting_passage": "КАПЕЛЮ́Х, а, ч. Головний убір, переважно з крисами (полями). Ненормативне суржикове утворення «шляпа» (від рос. шляпа) не відповідає українській літературній нормі; нормативним загальновживаним словом є капелюх або бриль.",
+  "page": null,
+  "article": "Капелюх",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "2385b152c34adf5a57eae58a767adaf18b125c6d483c9ff3e8c79f940ec3dbae",
+  "linguistic_rationale": "Засвідчено для decol_lex_002: форма «шляпа» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «капелюх» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_002.review.json"
+}

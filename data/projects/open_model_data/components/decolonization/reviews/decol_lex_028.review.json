@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_028",
+  "case_id": "decol_lex_028",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "бурмотіти",
+  "russian_copy": "бормотати",
+  "ukrainian_proper": [
+    "бурмотіти"
+  ],
+  "authority": "UA-GEC (Syvokon et al., 2023)",
+  "source": "UA-GEC v2.0",
+  "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #5134 (документ 0736, анотатор 1), тип F/Calque (бормотати -> бурмотіти)",
+  "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 0736, анотатор 1): «бормотати» -> «бурмотіти»",
+  "page": null,
+  "article": null,
+  "section": null,
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "4f99e3b2cc5e56fb746ed0711eb6d2f1dddcfb9ec38f67c5604b1a733b28bcbe",
+  "linguistic_rationale": "Засвідчено для decol_lex_028: форма «бормотати» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «бурмотіти» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_028.review.json"
+}

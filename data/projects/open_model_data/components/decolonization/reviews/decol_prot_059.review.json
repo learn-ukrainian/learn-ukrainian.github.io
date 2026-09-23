@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_059",
+  "case_id": "decol_prot_059",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "вибачатися",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "вибачатися",
+    "просити вибачення"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 2, гасло «Вибачатися»",
+  "supporting_passage": "ВИБАЧА́ТИСЯ, а́юся, а́єшся, недок., ВИ́БАЧИТИСЯ, чуся, чишся, док. 1. Просити вибачення: Виходжу я з двору, а Семенюта дякує і вибачається, що нема чого дати за роботу (В. Барка); Знала, що даремно образила подругу. Першою думкою було вибачитись (О. Донченко). 2. тільки недок., 1 ос. теп. ч., розм. Уживається у знач.: прошу вибачення, вибачте: Дуже вибачаюсь, що самому ніколи забігти до Вас (Панас Мирний); Виходить, значить, я – не чоловік, а якесь, вибачаюсь, непорозуміння... (Б. Антоненко-Давидович); – Вибачаюся, – промимрив Білинкевич (Ю. Андрухович).",
+  "page": "т. 2",
+  "article": "Вибачатися",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "1cf394b2f66b79f926b8a7ca4141117c7c6c9fe363c3aa189abe9b94264191a5",
+  "linguistic_rationale": "Засвідчено для decol_prot_059: вживання «вибачатися» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_059.review.json"
+}

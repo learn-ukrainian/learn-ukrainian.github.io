@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_027",
+  "case_id": "decol_prep_027",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "на кожному кроці",
+  "russian_copy": "на кожнім кроку",
+  "ukrainian_proper": [
+    "на кожному кроці"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЩОБ ЯСКРАВО Й ТОЧНО», стаття «Літера, за якою тужать»",
+  "supporting_passage": "й цьогорічний тритомний Російсько–український словник того самого інституту… Так що заважає нам нині виправити останню невиправлену помилку наших нерозважних попередників, яка дошкульно дається нам узнаки на кожному кроці?",
+  "page": null,
+  "article": "Літера, за якою тужать",
+  "section": "ЩОБ ЯСКРАВО Й ТОЧНО",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "713ecf84444c8aa39e450cd651d520641cf8cedc0a88e8338f8ddd7c61fb3df9",
+  "linguistic_rationale": "Засвідчено для decol_prep_027: форма «на кожнім кроку» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «на кожному кроці» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_027.review.json"
+}

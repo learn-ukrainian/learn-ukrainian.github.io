@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_075",
+  "case_id": "decol_prot_075",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "брати початок",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "брати початок"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Брати початок», с. 179",
+  "supporting_passage": "Усталений географічний і публіцистичний вислів для опису витоків річки чи початку історичного явища.",
+  "page": 179,
+  "article": "Брати початок",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "d0f95adbeb86624dc8fc4685c555dc480b8121a44b2f53ad7b2fc69ba1c4188e",
+  "linguistic_rationale": "Засвідчено для decol_prot_075: вживання «брати початок» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_075.review.json"
+}

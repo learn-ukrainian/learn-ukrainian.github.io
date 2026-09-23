@@ -1,0 +1,32 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_003",
+  "case_id": "decol_prot_003",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "кобіта",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "кобіта",
+    "жінка",
+    "дівчина"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 7, гасло «Кобіта»",
+  "supporting_passage": "КОБІТА, -и, ж., діал., розм. Жінка або дівчина. Зафіксовано в західноукраїнському фольклорі та класичній літературі (І. Франко, Ю. Винничук).",
+  "page": "т. 7",
+  "article": "Кобіта",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f54a3aa97e655d083798fa6f28844981c7ff12f10285169d36934222450cde8c",
+  "linguistic_rationale": "Засвідчено для decol_prot_003: вживання «кобіта» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_003.review.json"
+}

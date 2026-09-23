@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_032",
+  "case_id": "decol_syn_032",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "мати дотичність",
+  "russian_copy": "мати відношення до",
+  "ukrainian_proper": [
+    "мати дотичність",
+    "бути причетним"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "source": "Катерина Городенська «Чи правильне слововживання?»",
+  "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 88",
+  "supporting_passage": "Словосполучення «мати відношення до» когось чи чогось є калькованим перекладом російського «иметь отношение к». Українською мовою слід уживати дієслова стосуватися, бути причетним або мати дотичність.",
+  "page": 88,
+  "article": "Стосуватися, а не мати відношення",
+  "section": "Граматичні та лексичні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "2e2fa4f428605117f0bda4c2ce3f430d0bbabdc381a4ee066c73c848f7df336f",
+  "linguistic_rationale": "Засвідчено для decol_syn_032: форма «мати відношення до» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «мати дотичність» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_032.review.json"
+}

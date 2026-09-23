@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_060",
+  "case_id": "decol_lex_060",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "лижі",
+  "russian_copy": "лижи",
+  "ukrainian_proper": [
+    "лижі"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 12, с. 19 / СУМ-20 «Лижі»",
+  "supporting_passage": "ЛИ́ЖІ, лиж, мн. Довгі дерев'яні або пластикові смуги для пересування по снігу. В українській мові після шиплячих у закінченнях множини пишеться і: «лижі», а не російське «лижи» (з ы/и).",
+  "page": 19,
+  "article": "Закінчення іменників після шиплячих",
+  "section": "Правопис закінчень",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "72be8b70193a0377539575406be85f36ec70b53710eeadbe5863791c9d7b8909",
+  "linguistic_rationale": "Засвідчено для decol_lex_060: форма «лижи» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «лижі» перевірено за VESUM та кодифіковано (Український правопис (2019)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_060.review.json"
+}

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_030",
+  "case_id": "decol_prep_030",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за аналогією",
+  "russian_copy": "по аналогії",
+  "ukrainian_proper": [
+    "за аналогією"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Двоєчник, двієчник, двійкар»",
+  "supporting_passage": "Синонімом до слова \"двієчник\" може бути таке ж похідне від іменника \"двійка\" слово \"двійкар\", утворене за аналогією до інших іменників із суфіксом — к-, наприклад: \"шапкар\" – від слова \"шапка\", \"байкар\" – від \"байка\".",
+  "page": null,
+  "article": "Двоєчник, двієчник, двійкар",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "a3088a1430abc2a27ca21eb10bc0811a05ef8393fe1881c944ffd30269aacd54",
+  "linguistic_rationale": "Засвідчено для decol_prep_030: форма «по аналогії» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за аналогією» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_030.review.json"
+}

@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_029",
+  "case_id": "decol_syn_029",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "давати змогу",
+  "russian_copy": "дозволяти",
+  "ukrainian_proper": [
+    "давати змогу",
+    "надавати можливість"
+  ],
+  "authority": "UA-GEC (Syvokon et al., 2023)",
+  "source": "UA-GEC v2.0",
+  "authority_locus": "Корпус UA-GEC v2.0 (UNLP 2023), запис #3127 (документ 0029, анотатор 1), тип F/Calque (дозволяє -> дає змогу)",
+  "supporting_passage": "Корпус UA-GEC v2.0: анотація F/Calque (документ 0029, анотатор 1): «дозволяє» -> «дає змогу»",
+  "page": null,
+  "article": null,
+  "section": null,
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ec2fa33776be0ad993897f83e36136db4abbc889b34183c69c58c30d60156e09",
+  "linguistic_rationale": "Засвідчено для decol_syn_029: форма «дозволяти» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «давати змогу» перевірено за VESUM та кодифіковано (UA-GEC (Syvokon et al., 2023)). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_029.review.json"
+}

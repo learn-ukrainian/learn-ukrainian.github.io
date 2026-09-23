@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_019",
+  "case_id": "decol_syn_019",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "підбивати підсумки",
+  "russian_copy": "підводити підсумки",
+  "ukrainian_proper": [
+    "підбивати підсумки"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 96",
+  "supporting_passage": "Не підводити підсумки, а підбивати підсумки або підсумовувати. Підводити можна когось (під монастир, підводити людину).",
+  "page": 96,
+  "article": "Підбивати підсумки, а не підводити підсумки",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "455e7cb8a15e70eb464bdd0d4e07365daf784a9f765775987a2c75a7a3f731ca",
+  "linguistic_rationale": "Засвідчено для decol_syn_019: форма «підводити підсумки» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «підбивати підсумки» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_019.review.json"
+}

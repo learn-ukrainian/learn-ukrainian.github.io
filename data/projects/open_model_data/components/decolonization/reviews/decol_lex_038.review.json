@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_038",
+  "case_id": "decol_lex_038",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "драбина",
+  "russian_copy": "лестниця",
+  "ukrainian_proper": [
+    "драбина"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Драбина»",
+  "supporting_passage": "ДРАБИ́НА, и, ж. Пристрій з щаблями для піднімання або спускання. Російське «лестница» перекладається українською мовою як «драбина» (переносна, приставна) або «сходи» (стаціонарні); слово «лестниця» є суржиком.",
+  "page": null,
+  "article": "Драбина",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "721a5dc713098e5e2aca917967c5a90e9f3f393a5990b6131591a0141c7a7629",
+  "linguistic_rationale": "Засвідчено для decol_lex_038: форма «лестниця» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «драбина» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_038.review.json"
+}

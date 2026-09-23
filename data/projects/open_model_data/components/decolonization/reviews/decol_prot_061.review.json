@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_061",
+  "case_id": "decol_prot_061",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "у даному разі",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "у даному разі",
+    "в цьому разі"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Великий тлумачний словник сучасної української мови (ВТС), гасло «Даний»",
+  "supporting_passage": "да́ний -а, -е. 1》 Дієприкм. пас. мин. ч. до дати 1). 2》 у знач. прикм. Цей, наявний. (У даному разі — у цьому, наявному разі).",
+  "page": "т. 3",
+  "article": "Даний",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "cbca17deb08283c620261910f78953cee04ddd197de346397c7ec6b5f3501a04",
+  "linguistic_rationale": "Засвідчено для decol_prot_061: вживання «у даному разі» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_061.review.json"
+}

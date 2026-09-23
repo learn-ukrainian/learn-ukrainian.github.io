@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_055",
+  "case_id": "decol_syn_055",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "досягти мети",
+  "russian_copy": "досягнути цілі",
+  "ukrainian_proper": [
+    "досягти мети"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Досягати, досягти мети», с. 145",
+  "supporting_passage": "Мети, цілей і результатів українською мовою досягають: досягти поставленої мети; уживання «досягнути цілі» часто є буквалістичним перекладом.",
+  "page": 145,
+  "article": "Досягати, досягти мети",
+  "section": "Зауваження до низки дієслів",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "f5df50ceede7439b3f8e52ef171d55f4a72cb8caae1c7a90dcbb537e16a70d68",
+  "linguistic_rationale": "Засвідчено для decol_syn_055: форма «досягнути цілі» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «досягти мети» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_055.review.json"
+}

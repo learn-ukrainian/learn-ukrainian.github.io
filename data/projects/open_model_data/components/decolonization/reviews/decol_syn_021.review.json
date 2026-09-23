@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_021",
+  "case_id": "decol_syn_021",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "увімкнути",
+  "russian_copy": "включити",
+  "ukrainian_proper": [
+    "увімкнути"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 104",
+  "supporting_passage": "Слово «включити» у значенні запуску приладу чи струму є калькою з російської; нормативно: вмикати, увімкнути (струм, радіо, прилад).",
+  "page": 104,
+  "article": "Вмикати, увімкнути, а не включити",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6ce03fdbe3f075387a1eb8fce8f4dbbb07ab09d2380b896b93b5dec0b67e98d0",
+  "linguistic_rationale": "Засвідчено для decol_syn_021: форма «включити» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «увімкнути» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_021.review.json"
+}

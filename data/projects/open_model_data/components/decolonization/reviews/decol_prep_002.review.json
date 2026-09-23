@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_002",
+  "case_id": "decol_prep_002",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "через хворобу",
+  "russian_copy": "по хворобі",
+  "ukrainian_proper": [
+    "через хворобу"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 73",
+  "supporting_passage": "Причину відсутності або невиконання обов'язків передають за допомогою прийменника «через» із знахідним відмінком: через хворобу (а не «по хворобі»), через сімейні обставини, через поважні причини.",
+  "page": 73,
+  "article": "Через хворобу, а не по хворобі",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "3c7d6828f3542ff2d7368a5ecaa3357926cd4df7cce27d448055538fd85189ea",
+  "linguistic_rationale": "Засвідчено для decol_prep_002: форма «по хворобі» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «через хворобу» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_002.review.json"
+}

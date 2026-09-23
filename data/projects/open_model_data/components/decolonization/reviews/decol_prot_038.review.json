@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_038",
+  "case_id": "decol_prot_038",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "подейкують",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "подейкують"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 14, гасло «Подейкувати»",
+  "supporting_passage": "ПОДЕЙКУВАТИ, -ую, -уєш. Говорити, переказувати, розносити чутки. Питоме безособове вживання: подейкують, що...",
+  "page": "т. 14",
+  "article": "Подейкувати",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "2f7cd18d18df7f09e2b4d5760520b017fc868fc491f1b23db42d3a117130a561",
+  "linguistic_rationale": "Засвідчено для decol_prot_038: вживання «подейкують» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_038.review.json"
+}

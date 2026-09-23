@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_012",
+  "case_id": "decol_prep_012",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "телефоном",
+  "russian_copy": "по телефону",
+  "ukrainian_proper": [
+    "телефоном"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 85",
+  "supporting_passage": "Засіб зв'язку в літературній мові передається безприйменниковим орудним відмінком: повідомити телефоном, надіслати телеграфом, сповістити поштою (а не «по телефону»).",
+  "page": 85,
+  "article": "Телефоном, а не по телефону",
+  "section": "Лексика і фразеологія: культура слововживання",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "bc23f1a4d28b163c750f2b785a95bd2803dd4270ec315c33bb1b4170eb83494b",
+  "linguistic_rationale": "Засвідчено для decol_prep_012: форма «по телефону» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «телефоном» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_012.review.json"
+}

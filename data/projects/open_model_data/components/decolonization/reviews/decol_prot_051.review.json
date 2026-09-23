@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_051",
+  "case_id": "decol_prot_051",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "сидіти на протязі",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "сидіти на протязі"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Відкривати, відчиняти, розгортати», с. 130",
+  "supporting_passage": "Слово протяг у значенні струменя повітря є абсолютно автентичним українським словом, зафіксованим у класиці: «Зачини вікно, бо буде протяг».",
+  "page": 130,
+  "article": "Відкривати, відчиняти, розгортати",
+  "section": "Зауваження до низки дієслів",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "2b31e813d03a6f19005f89a44ca7a603b4c0d4ba08c145bbdafb06011a2b9e2b",
+  "linguistic_rationale": "Засвідчено для decol_prot_051: вживання «сидіти на протязі» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_051.review.json"
+}

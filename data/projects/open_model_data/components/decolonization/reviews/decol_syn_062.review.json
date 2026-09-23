@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_062",
+  "case_id": "decol_syn_062",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "почуватися добре",
+  "russian_copy": "відчувати себе добре",
+  "ukrainian_proper": [
+    "почуватися добре"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 130",
+  "supporting_passage": "Конструкція «відчувати себе» є калькою російського «чувствовать себя»; українською кажуть почуватися: як ви почуваєтеся?",
+  "page": 130,
+  "article": "Почуватися добре, а не відчувати себе",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "454eb70a3727ea24911b8d9de884d69f5000832a7a87343c68ac8fd03f2d9ef4",
+  "linguistic_rationale": "Засвідчено для decol_syn_062: форма «відчувати себе добре» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «почуватися добре» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_062.review.json"
+}

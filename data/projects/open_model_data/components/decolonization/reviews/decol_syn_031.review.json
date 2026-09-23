@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_031",
+  "case_id": "decol_syn_031",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "називати на ім'я",
+  "russian_copy": "звати по імені",
+  "ukrainian_proper": [
+    "називати на ім'я"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Називати на ім'я», с. 185",
+  "supporting_passage": "Конструкція «звати по імені» є калькою з російського «звать по имени»; по-українському кажуть називати на ім'я або кликати на ймення.",
+  "page": 185,
+  "article": "Називати на ім'я",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9beee37bad52ace54bddf67295ac8815743943a7b47498d0193a089ac53935e4",
+  "linguistic_rationale": "Засвідчено для decol_syn_031: форма «звати по імені» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «називати на ім'я» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_031.review.json"
+}

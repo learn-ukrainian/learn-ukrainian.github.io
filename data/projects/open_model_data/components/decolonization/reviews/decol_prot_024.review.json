@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_024",
+  "case_id": "decol_prot_024",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "свого часу",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "свого часу"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Свого часу», с. 188",
+  "supporting_passage": "Нормативна часова конструкція української літературної мови: свого часу він зробив чимало корисного.",
+  "page": 188,
+  "article": "Свого часу",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8a3f8c50b04cd3e13a0d606c8c961669731ae26abbf5205039f44aba26ce4498",
+  "linguistic_rationale": "Засвідчено для decol_prot_024: вживання «свого часу» є питомим і нормативним (захисний контроль проти гіперпуризму, Борис Антоненко-Давидович «Як ми говоримо»).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_024.review.json"
+}

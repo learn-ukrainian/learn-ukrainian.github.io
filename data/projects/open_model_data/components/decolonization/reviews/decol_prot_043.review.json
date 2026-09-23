@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_043",
+  "case_id": "decol_prot_043",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "вочевидь",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "вочевидь"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 43, с. 56",
+  "supporting_passage": "Складні прислівники: вочевидь пишеться разом.",
+  "page": "§ 43, с. 56",
+  "article": "Написання прислівників разом",
+  "section": "Складні прислівники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "2bf51f479a6f0de1f07d70c3de9421391d81c0d6fb34acfbf91419986504cc8c",
+  "linguistic_rationale": "Засвідчено для decol_prot_043: вживання «вочевидь» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_043.review.json"
+}

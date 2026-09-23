@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_037",
+  "case_id": "decol_prot_037",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "завважити",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "завважити"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 5, гасло «Завважити»",
+  "supporting_passage": "ЗАВВАЖИТИ, -жу, -жиш. Звернути увагу на щось, запримітити, висловити зауваження. Нормативне літературне дієслово.",
+  "page": "т. 5",
+  "article": "Завважити",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "12aa9de3f380f0cf386e5e0a1db1f42b5c129159966789e38bf271c0cb1f147a",
+  "linguistic_rationale": "Засвідчено для decol_prot_037: вживання «завважити» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_037.review.json"
+}

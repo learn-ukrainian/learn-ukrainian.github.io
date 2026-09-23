@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_048",
+  "case_id": "decol_lex_048",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "комір",
+  "russian_copy": "воротнік",
+  "ukrainian_proper": [
+    "комір"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Комір»",
+  "supporting_passage": "КО́МІР, а, ч. Деталь одягу, якою обшивають викот навколо шиї. Російське слово «воротник» в українській мові є грубим суржиком; нормативним літературним словом є «комір».",
+  "page": null,
+  "article": "Комір",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "941824b8cb253fd7a56796be8b97f5f407a40753e76e1db3fe252508e90d3554",
+  "linguistic_rationale": "Засвідчено для decol_lex_048: форма «воротнік» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «комір» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_048.review.json"
+}

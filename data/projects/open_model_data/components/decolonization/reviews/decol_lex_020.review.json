@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_020",
+  "case_id": "decol_lex_020",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "тло",
+  "russian_copy": "фон",
+  "ukrainian_proper": [
+    "тло"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 74",
+  "supporting_passage": "Російський вислів «на фоне» перекладається українською мовою «на тлі»: на тлі цих подій, на тлі золотого осіннього лісу тощо.",
+  "page": 74,
+  "article": "На тлі, а не на фоні",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9111b84c91ceef7659984b6798a28bb138413552a70564b15053581a07951fd2",
+  "linguistic_rationale": "Засвідчено для decol_lex_020: форма «фон» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «тло» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_020.review.json"
+}

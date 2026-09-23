@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_009",
+  "case_id": "decol_lex_009",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "передпокій",
+  "russian_copy": "прихожа",
+  "ukrainian_proper": [
+    "передпокій"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Передпокій» / Пономарів, с. 48",
+  "supporting_passage": "ПЕРЕДПОКІ́Й, ко́ю, ч. Нежила кімната при вході в помешкання, яка з'єднує вхідні двері з іншими кімнатами. Російське «прихожая» в українській мові перекладається як передпокій або сіни (у сільській хаті); форма «прихожа» є ненормативним суржиком.",
+  "page": null,
+  "article": "Передпокій",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "e1ce6064b52879ca5dab07bab8173cbe6b0f5f3e390f1eebcaa51c4c1bd81b92",
+  "linguistic_rationale": "Засвідчено для decol_lex_009: форма «прихожа» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «передпокій» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_009.review.json"
+}

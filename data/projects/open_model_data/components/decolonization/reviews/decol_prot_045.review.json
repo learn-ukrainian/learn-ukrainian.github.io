@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_045",
+  "case_id": "decol_prot_045",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "бути правим",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "бути правим",
+    "мати рацію"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Правий²»",
+  "supporting_passage": "ПРА́ВИЙ ², рідко ПРАВ, а, е. 1. Який не має або не почуває за собою провини: Чи хто правий, чи неправий (Леся Українка); Хто там правий, а хто винуватий (Панас Мирний); // Який має рацію у чомусь (бути правим): Своє взяв та й прав (Номис); Оксані було тяжко признати, що інший раз свекруха її права (Грицько Григоренко); Значить, сто раз я правий був учора, коли на диспуті з панами говорив: матерія – вічна (П. Тичина); бути правим.",
+  "page": "т. 14",
+  "article": "Правий",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "44057e87b10b9ee167ff4e1e0a223310acb83537f3150b873dbda7202c4ef668",
+  "linguistic_rationale": "Засвідчено для decol_prot_045: вживання «бути правим» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_045.review.json"
+}

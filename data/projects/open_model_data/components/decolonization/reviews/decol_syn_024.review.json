@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_024",
+  "case_id": "decol_syn_024",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "відкоркувати",
+  "russian_copy": "відкрити пляшку",
+  "ukrainian_proper": [
+    "відкоркувати"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Відкорковувати»",
+  "supporting_passage": "ВІДКОРКО́ВУВАТИ, ую, уєш, недок., ВІДКОРКУВА́ТИ, у́ю, у́єш, док., що. Відкривати, витягнувши корок, пробку і т. ін. з отвору чого-небудь: Два лакеї Адасеві раз у раз відкорковують бутельки та наливають чарки (І. Франко); Никифор Назарович .. відкорковує пляшки з горілкою, вином та нарзаном (В. Козаченко); – Гаразд, – прошепотів я й нечутно відкоркував пляшку (В. Коротич).",
+  "page": null,
+  "article": "Відкорковувати",
+  "section": "Дієслівна норма",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "4f76824daaad7896d7b77c8eefc6f06c4810b9f3f47de78a79086ae058a75399",
+  "linguistic_rationale": "Засвідчено для decol_syn_024: форма «відкрити пляшку» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «відкоркувати» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_024.review.json"
+}

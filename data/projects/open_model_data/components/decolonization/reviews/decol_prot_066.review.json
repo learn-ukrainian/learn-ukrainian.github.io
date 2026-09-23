@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_066",
+  "case_id": "decol_prot_066",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "по суті",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "по суті",
+    "по суті справи"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 19, гасло «Суть»",
+  "supporting_passage": "СУТЬ, -і, ж. По су́ті [спра́ви]: а) насправді; в дійсності: Петро Степанович формально став цивільним співробітником військової газети, а по суті – ще ближче зійшовся з військовими (В. Кучер); По суті, нічого ще не зроблено в житті, .. всі оті будовані і незбудовані твої кораблі, вони всі попереду (О. Гончар); Говорити (відповідати) по суті — говорити (відповідати) про головне, суттєве: Оксен торкнув Гната пужалном по чоботі: – Говори по суті! (Григорій Тютюнник).",
+  "page": "т. 19",
+  "article": "Суть",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "bcb8bf95e990eed83a98ba85369980d14f2acdd1d97d4eb2c8b2fa38963f9944",
+  "linguistic_rationale": "Засвідчено для decol_prot_066: вживання «по суті» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_066.review.json"
+}

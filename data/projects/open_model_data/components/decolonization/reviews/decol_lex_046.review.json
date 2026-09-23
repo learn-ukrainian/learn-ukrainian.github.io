@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_046",
+  "case_id": "decol_lex_046",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "ганчірка",
+  "russian_copy": "тряпка",
+  "ukrainian_proper": [
+    "ганчірка"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Ганчірка»",
+  "supporting_passage": "ГАНЧІ́РКА, и, ж. Шматок старої, зношеної тканини, що використовується для миття, витирання пилу або підлоги. Російське «тряпка» в українській мові є суржиковим росіянізмом, літературною нормою є «ганчірка».",
+  "page": null,
+  "article": "Ганчірка",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fd51edfaba1f8fe3d3f2e50aed2d23f98b17ae8181d3b8fef38211e33bb2684d",
+  "linguistic_rationale": "Засвідчено для decol_lex_046: форма «тряпка» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «ганчірка» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_046.review.json"
+}

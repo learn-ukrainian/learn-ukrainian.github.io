@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_039",
+  "case_id": "decol_lex_039",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "сходи",
+  "russian_copy": "ступеньки",
+  "ukrainian_proper": [
+    "сходи",
+    "східці"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), гасло «Сходи»",
+  "supporting_passage": "СХО́ДИ, ів, мн. Споруда у вигляді ряду східців для переходу з одного рівня на інший, а також самі східці. Російське «ступеньки» є суржиковим калькуванням; нормативним українським словом є «сходи» або «східці».",
+  "page": null,
+  "article": "Сходи",
+  "section": "Лексикографічні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "8bb5fcab892b409675e3d41ee84bce9b9a350ced79336354a00810bf063fd544",
+  "linguistic_rationale": "Засвідчено для decol_lex_039: форма «ступеньки» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «сходи» перевірено за VESUM та кодифіковано (СУМ-20). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_039.review.json"
+}

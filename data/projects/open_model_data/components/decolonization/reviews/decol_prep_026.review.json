@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_026",
+  "case_id": "decol_prep_026",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "за винятком",
+  "russian_copy": "за виключенням",
+  "ukrainian_proper": [
+    "за винятком"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради» (К.: Либідь), с. 154",
+  "supporting_passage": "Російському вислову «за исключением» в українській літературній мові відповідає прийменниковий зворот «за винятком» (або крім, опріч).",
+  "page": 154,
+  "article": "За винятком, а не за виключенням",
+  "section": "Лексика і фразеологія",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "405a02862b5f9e6b1ce0b14e203ed3f8b64c03bb0fe85d18919c903599f4d160",
+  "linguistic_rationale": "Засвідчено для decol_prep_026: форма «за виключенням» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «за винятком» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_026.review.json"
+}

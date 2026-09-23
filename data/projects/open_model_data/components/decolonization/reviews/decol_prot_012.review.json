@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_012",
+  "case_id": "decol_prot_012",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "згідно з постановою",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "згідно з постановою"
+  ],
+  "authority": "Український правопис (2019)",
+  "source": "Український правопис (2019)",
+  "authority_locus": "Український правопис (2019), § 45, с. 60",
+  "supporting_passage": "Складні прийменники, утворені з прислівників чи іменників з первинними прийменниками, пишуться окремо: згідно з, відповідно до.",
+  "page": "§ 45, с. 60",
+  "article": "Правопис складених прийменників",
+  "section": "Прийменники",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "85f019c4f64a689e402f57654a244a1f8ace244450e2412a04064568beade925",
+  "linguistic_rationale": "Засвідчено для decol_prot_012: вживання «згідно з постановою» є питомим і нормативним (захисний контроль проти гіперпуризму, Український правопис (2019)).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_012.review.json"
+}

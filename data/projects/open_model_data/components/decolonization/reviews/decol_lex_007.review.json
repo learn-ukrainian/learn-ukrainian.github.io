@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_007",
+  "case_id": "decol_lex_007",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "колишній",
+  "russian_copy": "бувший",
+  "ukrainian_proper": [
+    "колишній"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 66",
+  "supporting_passage": "Замість невластивих активних дієприкметників минулого часу на -вш- (бувший) вживаємо прикметник «колишній» (колишній директор, колишній колега).",
+  "page": 66,
+  "article": "Колишній, а не бувший",
+  "section": "Морфологічна норма",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "606848de8b3e2c174f47e62fd3f4b1af16ec532865235df5cb08aecda9aa2bd1",
+  "linguistic_rationale": "Засвідчено для decol_lex_007: форма «бувший» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «колишній» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_007.review.json"
+}

@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_002",
+  "case_id": "decol_syn_002",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "вважати",
+  "russian_copy": "рахувати",
+  "ukrainian_proper": [
+    "вважати"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Рахувати, рахуватися, числити, числитися, уважати»",
+  "supporting_passage": "Усі ці вислови – неправильні, бо дієслова рахувати, рахуватися, числити, числитися та іменник рахунок – це тільки математичні поняття: \"А було колись так, що люди не знали, як рахувати час\" (М.",
+  "page": null,
+  "article": "Рахувати, рахуватися, числити, числитися, уважати",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fe77ffdb0aea161f3f636018eb99b527852effe63bf932df702da83c7f6c836b",
+  "linguistic_rationale": "Засвідчено для decol_syn_002: форма «рахувати» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «вважати» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_002.review.json"
+}

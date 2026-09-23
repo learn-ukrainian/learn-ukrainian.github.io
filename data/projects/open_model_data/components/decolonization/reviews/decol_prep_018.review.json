@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prep_018",
+  "case_id": "decol_prep_018",
+  "category": "calque_prepositional",
+  "is_erroneous": true,
+  "target_term": "коштом",
+  "russian_copy": "за рахунок",
+  "ukrainian_proper": [
+    "коштом",
+    "завдяки"
+  ],
+  "authority": "Катерина Городенська «Чи правильне слововживання?»",
+  "source": "Катерина Городенська «Чи правильне слововживання?»",
+  "authority_locus": "Катерина Городенська «Чи правильне слововживання?» (К.: ВД «Києво-Могилянська академія»), с. 148",
+  "supporting_passage": "Зворот «за рахунок» у значенні джерела фінансування чи засобу є калькою російського «за счёт». Українською слід уживати: коштом підприємства, за кошти громади або завдяки наполегливій праці.",
+  "page": 148,
+  "article": "Коштом, а не за рахунок",
+  "section": "Граматичні та лексичні норми",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "1f35d3d89df0e21bf2efe4ca860eff0c1f078cdda9b5684fba5f4f2a09de6e91",
+  "linguistic_rationale": "Засвідчено для decol_prep_018: форма «за рахунок» кваліфікується як calque_prepositional з російської мови. Нормативний еквівалент «коштом» перевірено за VESUM та кодифіковано (Катерина Городенська «Чи правильне слововживання?»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prep_018.review.json"
+}

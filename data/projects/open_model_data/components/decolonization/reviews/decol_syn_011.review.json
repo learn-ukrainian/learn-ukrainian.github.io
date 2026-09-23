@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_011",
+  "case_id": "decol_syn_011",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "ухвалити пропозицію",
+  "russian_copy": "прийняти пропозицію",
+  "ukrainian_proper": [
+    "ухвалити пропозицію",
+    "схвалити пропозицію"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію»",
+  "supporting_passage": "Негаразд буде по-українському сказати прийняти пропозицію; треба – схвалити пропозицію, якщо присутні на зборах поставились до запропонованого прихильно, й ухвалити пропозицію, якщо пропозиція стала резолюцією зборів. Узагалі, замість вислову прийняти постанову краще користуватись тільки дієсловом ухвалити або постановити.",
+  "page": null,
+  "article": "Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c0c870ddf732404abe4e38e012e6c6998422d63b6804b5f01ab2201abecbafa2",
+  "linguistic_rationale": "Засвідчено для decol_syn_011: форма «прийняти пропозицію» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «ухвалити пропозицію» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_011.review.json"
+}

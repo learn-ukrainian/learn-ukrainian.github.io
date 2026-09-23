@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_040",
+  "case_id": "decol_syn_040",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "доводити до ладу",
+  "russian_copy": "приводити в порядок",
+  "ukrainian_proper": [
+    "доводити до ладу",
+    "упорядковувати"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Доводити до ладу», с. 184",
+  "supporting_passage": "Вислів «приводити в порядок» є калькою російського «приводить в порядок»; питомі українські вислови — доводити до ладу, опоряджати, упорядковувати.",
+  "page": 184,
+  "article": "Доводити до ладу",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "3589c8c930293493fefe42b876758461b678728e9236152c629ab286f50eac5e",
+  "linguistic_rationale": "Засвідчено для decol_syn_040: форма «приводити в порядок» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «доводити до ладу» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_040.review.json"
+}

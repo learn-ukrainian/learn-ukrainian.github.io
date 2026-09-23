@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_027",
+  "case_id": "decol_syn_027",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "згорнути",
+  "russian_copy": "закрити зошит",
+  "ukrainian_proper": [
+    "згорнути"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Відкривати, відчиняти, розгортати»",
+  "supporting_passage": "Коли мовиться про книжку або зошит, то треба казати: розгорнути, а не розкрити, згорнути, а не закрити: \"Я розгорнула книжку і прочитала епіграф\" (Леся Українка); \"Книжку згорнув, сховав у свою шаховку\" (Б.",
+  "page": null,
+  "article": "Відкривати, відчиняти, розгортати",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "9e7b1d3c6ebb5fc475047bb09cc3174aa2b2d940d55d570236032e0910400fb1",
+  "linguistic_rationale": "Засвідчено для decol_syn_027: форма «закрити зошит» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «згорнути» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_027.review.json"
+}

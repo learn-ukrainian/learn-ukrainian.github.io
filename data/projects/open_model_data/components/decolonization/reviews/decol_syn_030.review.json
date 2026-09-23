@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_030",
+  "case_id": "decol_syn_030",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "спало на думку",
+  "russian_copy": "прийшло в голову",
+  "ukrainian_proper": [
+    "спало на думку"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до фразеології», стаття «Спало на думку, прийшло на гадку», с. 182",
+  "supporting_passage": "Вислів «прийшло в голову» є калькою російського «пришло в голову»; українською кажуть спало на думку або прийшло на думку.",
+  "page": 182,
+  "article": "Спало на думку, прийшло на гадку",
+  "section": "Зауваження до фразеології",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "fc6165e03f03cc692ffdae016886821545718311f80348d885b49c2f05ab79c0",
+  "linguistic_rationale": "Засвідчено для decol_syn_030: форма «прийшло в голову» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «спало на думку» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_030.review.json"
+}

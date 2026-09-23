@@ -1,0 +1,32 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_046",
+  "case_id": "decol_prot_046",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "знаходитися",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "знаходитися",
+    "перебувати",
+    "розташовуватися"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Великий тлумачний словник сучасної української мови (ВТС), гасло «Знаходитися»",
+  "supporting_passage": "знахо́дитися -джуся, -дишся, недок., знайтися, знайдуся, знайдешся, док. 3》 тільки недок., розм. Бути, перебувати, міститися де-небудь. || Перебувати в якому-небудь стані чи положенні.",
+  "page": "т. 6",
+  "article": "Знаходитися",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "14d6f535a17d5efc793171815bbab6df753fe6b4e553b442485ced75ff44f177",
+  "linguistic_rationale": "Засвідчено для decol_prot_046: вживання «знаходитися» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_046.review.json"
+}

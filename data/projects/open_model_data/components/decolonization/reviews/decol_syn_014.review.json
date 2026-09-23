@@ -1,0 +1,31 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_014",
+  "case_id": "decol_syn_014",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "таким способом",
+  "russian_copy": "таким шляхом",
+  "ukrainian_proper": [
+    "таким способом",
+    "таким чином"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ», стаття «Шлях, дорога, путь, путівець, спосіб» (с. 77)",
+  "supporting_passage": "Російському вислову \"таким путём\" відповідає український \"таким способом\" (або \"таким чином\"): \"Батьки приводили дітей до школи, і Раїса таким способом знайомилась з селянами\" (М. Коцюбинський); \"Таким чином я добув вищу освіту\" (з живих уст). До речі, останнім часом став дуже поширюватися в до нас західноукраїнський вислів \"у такий спосіб\", що подекуди витискує вислів \"таким способом\"... Краще додержуватися скрізь загальноукраїнського давнього вислову \"таким способом\", що не має впливу інших мов... \"А яким способом ви досягаєте такого великого врожаю картоплі?\".",
+  "page": 77,
+  "article": "Шлях, дорога, путь, путівець, спосіб",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ІМЕННИКІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "6736dd1e57a124177463e60bac0ef7268937f07930ba552e87bb9ce51f1a0d8a",
+  "linguistic_rationale": "Засвідчено для decol_syn_014: форма «таким шляхом» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «таким способом» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_014.review.json"
+}

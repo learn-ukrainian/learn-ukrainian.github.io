@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_lex_006",
+  "case_id": "decol_lex_006",
+  "category": "calque_lexical",
+  "is_erroneous": true,
+  "target_term": "наступний",
+  "russian_copy": "слідуючий",
+  "ukrainian_proper": [
+    "наступний"
+  ],
+  "authority": "Олександр Пономарів «Культура слова»",
+  "source": "Олександр Пономарів «Культура слова»",
+  "authority_locus": "Олександр Пономарів «Культура слова: мовностилістичні поради», с. 65 / Підручник 10 клас (Глазова), с. 27",
+  "supporting_passage": "В українській мові немає активних дієприкметників на -уч-, -яч-. Замість кальки «слідуючий» треба вживати «наступний» (наступного дня, наступна зупинка, наступний промовець) або займенник «такий» (такі факти).",
+  "page": 65,
+  "article": "Наступний, а не слідуючий",
+  "section": "Морфологічна норма",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "abcb2b00035055c376be05b7dfbd5bc11908a899fd1409978a7b90b8793c4c78",
+  "linguistic_rationale": "Засвідчено для decol_lex_006: форма «слідуючий» кваліфікується як calque_lexical з російської мови. Нормативний еквівалент «наступний» перевірено за VESUM та кодифіковано (Олександр Пономарів «Культура слова»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_lex_006.review.json"
+}

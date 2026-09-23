@@ -94,19 +94,25 @@ def _get_breadcrumb_file() -> Path | None:
     if not breadcrumb_dir_str:
         return None
     dir_path = Path(breadcrumb_dir_str)
-    dir_path.mkdir(parents=True, exist_ok=True)
+    try:
+        dir_path.mkdir(parents=True, exist_ok=True)
+    except OSError:
+        return None
     worker_id = os.environ.get("PYTEST_XDIST_WORKER", "master")
     return dir_path / f"breadcrumb_{worker_id}.txt"
 
 
 def _append_breadcrumb(line: str) -> None:
-    breadcrumb_file = _get_breadcrumb_file()
-    if breadcrumb_file:
-        with open(breadcrumb_file, "a", encoding="utf-8") as f:
-            f.write(line)
-            f.flush()
-            with contextlib.suppress(OSError):
-                os.fsync(f.fileno())
+    try:
+        breadcrumb_file = _get_breadcrumb_file()
+        if breadcrumb_file:
+            with open(breadcrumb_file, "a", encoding="utf-8") as f:
+                f.write(line)
+                f.flush()
+                with contextlib.suppress(OSError):
+                    os.fsync(f.fileno())
+    except OSError:
+        pass
 
 
 def pytest_runtest_logstart(nodeid: str, location: tuple[str, int | None, str]) -> None:

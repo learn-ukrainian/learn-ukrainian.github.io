@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_001",
+  "case_id": "decol_syn_001",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "брати участь",
+  "russian_copy": "приймати участь",
+  "ukrainian_proper": [
+    "брати участь"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ», стаття «Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію»",
+  "supporting_passage": "Недобре надруковано в одній районній газеті: \"У збиральній кампанії прийняли участь не тільки школярі, а й старі люди села\". Тут треба було написати взяли участь, як і в інших аналогічних випадках: \"Ч...",
+  "page": null,
+  "article": "Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію",
+  "section": "ЗАУВАЖЕННЯ ДО НИЗКИ ДІЄСЛІВ",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "ee41b3bfb4474602a69b7fb71538bd906cef8526f23580173236a327594b5e9c",
+  "linguistic_rationale": "Засвідчено для decol_syn_001: форма «приймати участь» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «брати участь» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_001.review.json"
+}

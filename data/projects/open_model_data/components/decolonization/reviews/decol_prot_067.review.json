@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_prot_067",
+  "case_id": "decol_prot_067",
+  "category": "protective_authentic",
+  "is_erroneous": false,
+  "target_term": "повною мірою",
+  "russian_copy": "",
+  "ukrainian_proper": [
+    "повною мірою"
+  ],
+  "authority": "СУМ-20",
+  "source": "СУМ-20",
+  "authority_locus": "Словник української мови у 20 томах (СУМ-20), т. 8, гасло «Міра»",
+  "supporting_passage": "МІ́РА, -и, ж. По́вною мі́рою: а) цілком, повністю: Поліпшення якісних показників економіки пов'язане з пошуком нових рішень, які б дали змогу повною мірою використати досягнення науки і техніки (з газ.); Слід підкреслити, що проблема забруднення довкілля набула планетарного характеру і не може бути повною мірою розв'язана ні в межах окремого регіону, ні навіть в межах окремої країни (з наук. літ.); б) сповна: Але за ваші шакалячі зрадницькі кусання ми відміримо повною мірою (В. Еллан-Блакитний).",
+  "page": "т. 8",
+  "article": "Міра",
+  "section": "Реєстр літературної мови",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "379f82d58f8d02f0863723027e0e12e8a09db9d2c1026e08dafaeaa813bf16fe",
+  "linguistic_rationale": "Засвідчено для decol_prot_067: вживання «повною мірою» є питомим і нормативним (захисний контроль проти гіперпуризму, СУМ-20).",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_prot_067.review.json"
+}

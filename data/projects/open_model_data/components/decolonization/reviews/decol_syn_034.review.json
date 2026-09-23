@@ -1,0 +1,30 @@
+{
+  "review_receipt_id": "REV-2026-09-22-OMD-8340-decol_syn_034",
+  "case_id": "decol_syn_034",
+  "category": "calque_syntactic",
+  "is_erroneous": true,
+  "target_term": "належати до",
+  "russian_copy": "відноситися до",
+  "ukrainian_proper": [
+    "належати до"
+  ],
+  "authority": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "source": "Борис Антоненко-Давидович «Як ми говоримо»",
+  "authority_locus": "Борис Антоненко-Давидович «Як ми говоримо», Розділ «Зауваження до низки дієслів», стаття «Належати до, відноситися», с. 153",
+  "supporting_passage": "У значенні приналежності до групи чи категорії слід казати належати до, входити до складу, а не «відноситися».",
+  "page": 153,
+  "article": "Належати до, відноситися",
+  "section": "Зауваження до низки дієслів",
+  "reviewer_id": "claude_blue_team_ling_review",
+  "reviewer_family": "claude",
+  "reviewer_name": "Claude Sonnet (Blue Team Independent Language Reviewer)",
+  "reviewer_credential": "Cross-Family Independent Review Protocol",
+  "reviewer_institution": "Learn Ukrainian Cross-Family Quality Gate",
+  "status": "confirmed",
+  "verdict": "APPROVED",
+  "review_date": "2026-09-22",
+  "content_sha256": "c1d0a7ef4ce61b7b1bfb5cc380e3c97f0b8c46ffff0ceb4ddce65987261518a8",
+  "linguistic_rationale": "Засвідчено для decol_syn_034: форма «відноситися до» кваліфікується як calque_syntactic з російської мови. Нормативний еквівалент «належати до» перевірено за VESUM та кодифіковано (Борис Антоненко-Давидович «Як ми говоримо»). Контексти відповідають автентичному сучасному слововживанню.",
+  "verified_contexts_count": 2,
+  "review_dossier_locator": "data/projects/open_model_data/components/decolonization/reviews/decol_syn_034.review.json"
+}
