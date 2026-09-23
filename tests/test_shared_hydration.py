@@ -76,9 +76,6 @@ def test_unsafe_stream_evidence_resets_driver_identity(monkeypatch: pytest.Monke
 
 
 def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
-    from agents_extensions.shared.session_streams.hooks import lease_from_environment
-    from scripts.session_supervisor.remote import RemoteEpicClient
-
     values = {
         "SESSION_STREAM_ID": "epic:5512",
         "SESSION_STREAM_SESSION_ID": "session-fixture",
@@ -94,11 +91,23 @@ def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
     for key, value in values.items():
         monkeypatch.setenv(key, value)
     monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
-    lease = lease_from_environment()
     return {
         "stream_id": "epic:5512",
         "lease": {
-            **RemoteEpicClient._lease_payload(lease),
+            "stream_id": "epic:5512",
+            "session_id": "session-fixture",
+            "lease_id": "lease-fixture",
+            "generation": 2,
+            "fencing_token": 7,
+            "holder": {
+                "agent": "gemini",
+                "harness": "agy",
+                "instance_id": "agy-fixture",
+                "task_id": "launcher-fixture",
+                "process_id": 1234,
+                "holder_kind": "process",
+                "host_id": None,
+            },
             "state": "active",
             "session_state": "open",
             "expires_at": "2099-01-01T00:00:00Z",
@@ -123,6 +132,61 @@ def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(monkeypa
     assert capsule["next_drive_boundary"]["value"]["kind"] == "queue_orientation"
     assert capsule["next_drive_boundary"]["value"]["entry_id"] == 0
     assert capsule["fencing_token"]["value"] == 7
+
+
+def test_remote_next_action_becomes_exact_drive_boundary(monkeypatch: pytest.MonkeyPatch) -> None:
+    response = _remote_stream(monkeypatch)
+    response["digest"]["recent"] = [
+        {
+            "entry_id": 12,
+            "stream_id": "epic:5512",
+            "session_id": "session-fixture",
+            "agent": "gemini",
+            "harness": "agy",
+            "ts": "2026-09-23T00:00:00Z",
+            "type": "next_action",
+            "body": "Reconcile issue 5512.",
+            "body_sha256": "0" * 64,
+            "idempotency_key": "fixture-next-action",
+            "refs": [],
+        }
+    ]
+    response["digest"]["high_water_entry_id"] = 12
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+
+    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+
+    assert capsule["execution_allowed"] is True
+    assert capsule["next_drive_boundary"]["value"] == {
+        "kind": "stream_next_action",
+        "entry_id": 12,
+        "instruction": "Reconcile issue 5512.",
+    }
+
+
+@pytest.mark.parametrize(
+    "digest",
+    [
+        None,
+        [],
+        {},
+        {"stream_id": "epic:5513", "limit": 1, "recent": []},
+        {"stream_id": "epic:5512", "limit": 1, "recent": ["x"]},
+        {"stream_id": "epic:5512", "limit": 1, "recent": [{}]},
+    ],
+)
+def test_malformed_remote_digest_blocks_without_traceback(
+    monkeypatch: pytest.MonkeyPatch, digest: object
+) -> None:
+    response = _remote_stream(monkeypatch)
+    response["digest"] = digest
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+
+    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+
+    assert capsule["state"] == "blocked"
+    assert capsule["execution_allowed"] is False
+    assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
 
 
 @pytest.mark.parametrize(
@@ -208,6 +272,58 @@ def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch:
     assert result == {"stream_id": "epic:5512"}
     assert calls["request"] == ("GET", "/api/epics/v1/epic:5512?limit=1")
     assert calls["timeout_set"] is True
+    assert calls["closed"] is True
+
+
+@pytest.mark.parametrize(
+    ("status", "body"),
+    [
+        (503, b"{}"),
+        (200, b"not-json"),
+        (200, b"[]"),
+        (200, b"{" + b"x" * (hydration._MAX_STREAM_RESPONSE_BYTES + 1)),
+    ],
+)
+def test_remote_transport_rejects_bad_responses_and_closes(
+    monkeypatch: pytest.MonkeyPatch, status: int, body: bytes
+) -> None:
+    calls: dict[str, bool] = {}
+
+    class Socket:
+        def settimeout(self, seconds: float) -> None:
+            assert seconds > 0
+
+    class Response:
+        fp = SimpleNamespace(raw=SimpleNamespace(_sock=Socket()))
+
+        def __init__(self) -> None:
+            self.status = status
+            self.offset = 0
+
+        def read(self, size: int) -> bytes:
+            chunk = body[self.offset : self.offset + size]
+            self.offset += len(chunk)
+            return chunk
+
+    class Connection:
+        sock = None  # HTTPConnection detaches its socket on Connection: close.
+
+        def __init__(self, host: str, port: int, timeout: float) -> None:
+            pass
+
+        def request(self, method: str, path: str, headers: dict[str, str]) -> None:
+            assert method == "GET"
+
+        def getresponse(self) -> Response:
+            return Response()
+
+        def close(self) -> None:
+            calls["closed"] = True
+
+    monkeypatch.setattr(hydration.http.client, "HTTPConnection", Connection)
+
+    with pytest.raises(LookupError):
+        hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
     assert calls["closed"] is True
 
 

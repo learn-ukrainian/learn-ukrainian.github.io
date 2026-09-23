@@ -270,8 +270,12 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
     connection = http.client.HTTPConnection(target.hostname, target.port, timeout=remaining())
     try:
         connection.request("GET", f"/api/epics/v1/{stream_id}?limit=1", headers={"Accept": "application/json"})
-        remaining()
+        # The request may consume most of the budget. Update the connected
+        # socket before waiting for headers rather than reusing its old timeout.
+        if connection.sock is not None:
+            connection.sock.settimeout(remaining())
         response = connection.getresponse()
+        remaining()
         if response.status != 200:
             raise LookupError("Monitor stream unavailable")
         body = bytearray()
@@ -327,7 +331,7 @@ def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, An
 
     try:
         digest = RemoteEpicClient.digest_from_response(response)
-    except (KeyError, TypeError, ValueError) as exc:
+    except (AttributeError, KeyError, TypeError, ValueError) as exc:
         raise LookupError("Monitor digest malformed") from exc
     if digest.stream_id != canonical_stream_id:
         raise LookupError("Monitor digest stream mismatch")
@@ -398,7 +402,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
             degradations.append("unsafe-stream-evidence")
             for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("unsafe-stream-evidence")
-        except (LookupError, OSError, RuntimeError, ValueError):
+        except (AttributeError, LookupError, OSError, RuntimeError, ValueError):
             for field in ("lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("stream-evidence-unavailable")
 
