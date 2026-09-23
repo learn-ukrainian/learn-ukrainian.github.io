@@ -30,7 +30,11 @@ import subprocess
 import sys
 from pathlib import Path
 
+import pytest
+
 from tests.sparse_trees import FORCE_MISSING_TREES_ENV, REPO_ROOT_ENV
+
+pytestmark = pytest.mark.reads_content
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ABSENT_TREES = ("curriculum", "wiki", "data/projects", "data/lexicon")
