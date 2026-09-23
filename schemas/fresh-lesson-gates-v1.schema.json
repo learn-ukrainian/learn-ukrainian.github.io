@@ -1,0 +1,27 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Fresh lesson gates report",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["level", "slug", "n", "passed", "checks"],
+  "properties": {
+    "level": {"type": "string", "minLength": 1},
+    "slug": {"type": "string", "minLength": 1},
+    "n": {"type": "integer", "minimum": 1},
+    "passed": {"type": "boolean"},
+    "checks": {"type": "array", "minItems": 1, "items": {"type": "object", "additionalProperties": false,
+      "required": ["check", "status"],
+      "properties": {
+        "check": {"type": "integer", "minimum": 1, "maximum": 12},
+        "status": {"enum": ["passed", "failed", "not_checked"]},
+        "code": {"type": "string"},
+        "reason": {"type": "string"},
+        "layer": {"enum": ["writer", "plan", "pack", "word_store", "engine", "driver"]},
+        "step": {"type": ["string", "null"]},
+        "activity": {"type": ["string", "null"]},
+        "token": {"type": ["string", "null"]},
+        "details": {"type": "object"}
+      }
+    }}
+  }
+}

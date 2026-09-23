@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import sys
 from pathlib import Path
@@ -269,6 +270,45 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
 
+    p_build = subparsers.add_parser(
+        "build",
+        help="Run ordered fresh lesson checks 1-9 and write gates state",
+        description=(
+            "Run ordered checks 1-9 for one fresh lesson and record the gate results.\n"
+            "Use after a lesson draft and locked evidence exist; provide a question seat when open questions need answers."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1\n"
+            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6-sol\n\n"
+            "Outputs:\n"
+            "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n\n"
+            "Exit codes:\n"
+            "  0: All checks passed\n"
+            "  1: A check failed or an input could not be loaded\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/runner.py, fresh lesson build issue #8397"
+        ),
+    )
+    p_build.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
+    p_build.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
+    p_build.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
+    p_build.add_argument(
+        "--question-seat",
+        default=None,
+        help=(
+            "Explicit agent:model seat for open questions (e.g. codex:gpt-6-sol; no default). "
+            "If absent when the lesson has open questions, stops with question_seat_required"
+        ),
+    )
+    p_build.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
+    )
+
     return parser
 
 
@@ -434,6 +474,39 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     repo_root = _resolve_repo_root(args)
     cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None
+
+    if args.command == "build":
+        from scripts.build.fresh.runner import run_lesson
+
+        try:
+            plan, _lesson_entry, pack, words, paths = _load_lesson_data(
+                args.level, args.slug, args.lesson, repo_root=repo_root
+            )
+            state_dir = paths["state_dir"] / args.slug
+            draft_path = state_dir / f"lesson-{args.lesson}.draft.yaml"
+            draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
+            position = plan.get("arc_ref", {}).get("position", 1)
+            learner = planned_state(
+                args.level, position, args.lesson, allow_missing_prior=True,
+                plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
+            )
+            expected = _compute_input_hashes(paths, args.lesson, learner)
+            _card_path, _card, expected["style_card_sha256"] = style_card_info(args.level, cards_dir=cards_dir)
+            prompt_path = state_dir / f"lesson-{args.lesson}.prompt.md"
+            if prompt_path.is_file():
+                expected["prompt_sha256"] = hashlib.sha256(prompt_path.read_bytes()).hexdigest()
+            report = run_lesson(
+                args.level, args.slug, args.lesson, draft=draft, plan=plan, pack=pack, words=words,
+                state_dir=state_dir, repo_root=repo_root, plans_dir=paths["plan"].parent,
+                evidence_dir=paths["words"].parent, question_seat=args.question_seat,
+                site_dir=repo_root / "site" / "src" / "content" / "docs" / args.level / args.slug,
+                expected_inputs=expected,
+            )
+            print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+            return 0 if report["passed"] else 1
+        except (OSError, ValueError, KeyError) as err:
+            print(json.dumps({"check": 1, "reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
+            return 1
 
     if args.command == "render-prompt":
         plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(

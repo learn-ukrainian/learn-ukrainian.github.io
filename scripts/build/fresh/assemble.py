@@ -337,6 +337,9 @@ def assemble_expanded_document(
                             span_text,
                             source="writer_prose",
                         )
+                for line_idx, line in enumerate(block.get("en", [])):
+                    add_unit("urok", step_id, None, None, f"bilingual_en_{block_idx}_{line_idx}",
+                             "vesum_exempt", str(line), source="writer_prose")
 
             elif kind in ("culture", "tip", "summary", "callout"):
                 txt = block.get("text", "")
@@ -378,6 +381,9 @@ def assemble_expanded_document(
                                 span_text,
                                 source="writer_prose",
                             )
+                for line_idx, line in enumerate(dial.get("translation_en") or []):
+                    add_unit("urok", step_id, None, None, f"dialogue_translation_{line_idx}",
+                             "vesum_exempt", str(line), source="writer_prose")
 
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")
@@ -434,13 +440,23 @@ def assemble_expanded_document(
                     prompt = str(val)
                     break
             if prompt:
-                for role, span_text in _split_inline_spans(prompt, "item_prompt"):
-                    add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                error_text = item.get("error") if plan_acts_by_id[act_id].get("type") == "error-correction" else None
+                if isinstance(error_text, str) and error_text and error_text in prompt:
+                    before, after = prompt.split(error_text, 1)
+                    for role, span_text in _split_inline_spans(before, "item_prompt"):
+                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                    add_unit("vpravy", act_step, act_id, item_idx, "prompt", "error_text", error_text,
+                             source="writer_prose")
+                    for role, span_text in _split_inline_spans(after, "item_prompt"):
+                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
+                else:
+                    for role, span_text in _split_inline_spans(prompt, "item_prompt"):
+                        add_unit("vpravy", act_step, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
 
             # Answer-like candidate fields: exclude any boolean value (e.g. true/false activities
             # where answer, correct, is_true, isTrue are boolean flags, not text to resolve/stress).
             answer = None
-            for key in ("answer", "target", "correct", "is_true", "isTrue"):
+            for key in ("answer", "correction", "target", "correct", "is_true", "isTrue"):
                 val = item.get(key)
                 if val is not None and not isinstance(val, bool) and str(val).strip():
                     answer = str(val)
