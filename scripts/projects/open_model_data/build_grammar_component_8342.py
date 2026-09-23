@@ -18,10 +18,12 @@ Features:
 from __future__ import annotations
 
 import argparse
+import difflib
 import hashlib
 import json
 import math
 import re
+import sqlite3
 import sys
 from collections import Counter, defaultdict
 from pathlib import Path
@@ -75,15 +77,80 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "c
 def detokenize(text: str) -> str:
     """Detokenize Ukrainian text from Stanza space-separated tokenization."""
     # 1. Close spaces before punctuation: , . ! ? : ; % ) ] } » ”
-    text = re.sub(r"\s+([,.\!?:;%\]\}»”])", r"\1", text)
+    text = re.sub(r"\s+([,.\!?:;%\]\}\)»”])", r"\1", text)
     # 2. Close spaces after opening quotes/brackets: ( [ { « “
     text = re.sub(r"([(\[\{«“])\s+", r"\1", text)
-    # 3. Handle ellipses like . . . -> ...
+    # 3. Handle comma immediately before opening parenthesis: e.g. ", (" -> " ("
+    text = re.sub(r",\s*\(", " (", text)
+    # 4. Handle hyphenated compounds: e.g. "Санта - Круз" -> "Санта-Круз"
+    text = re.sub(r"(\b[\w'-]+)\s*-\s*([\w'-]+\b)", r"\1-\2", text)
+    # 5. Handle decimal numbers with comma: e.g. "3, 3" -> "3,3"
+    text = re.sub(r"(\d+),\s+(\d+)", r"\1,\2", text)
+    # 6. Handle ellipses like . . . -> ...
     text = re.sub(r"\.\s+\.\s+\.", "...", text)
-    # 4. Handle apostrophes
+    # 7. Handle apostrophes
     text = re.sub(r"([’ʼ\x27])\s+", r"\1", text)
     text = re.sub(r"\s+([’ʼ\x27])", r"\1", text)
     return text.strip()
+
+
+def is_clean_control(text: str) -> bool:
+    """Check that control sentence does not contain annotator typos or malformed punctuation."""
+    if not text:
+        return False
+    # Reject triple repeated letters
+    if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", text, re.IGNORECASE):
+        return False
+    # Reject comma before parenthesis
+    return not bool(re.search(r",\s*\(", text))
+
+
+def is_valid_candidate(
+    orig_text: str,
+    corr_text: str,
+    in_scope: list[tuple[int, int, str, str]],
+    vesum_cur: sqlite3.Cursor | None = None,
+) -> bool:
+    """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
+    if not orig_text or not corr_text or orig_text == corr_text:
+        return False
+    # Reject triple repeated letters (annotator typos like "олеографіїї")
+    if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", orig_text, re.IGNORECASE) or re.search(
+        r"([а-яіїєґА-ЯІЇЄҐ])\1\1", corr_text, re.IGNORECASE
+    ):
+        return False
+    # Reject comma before parenthesis
+    if re.search(r",\s*\(", orig_text) or re.search(r",\s*\(", corr_text):
+        return False
+    # Reject wholesale essay rewrites where changed token share > 30%
+    w1 = re.findall(r"\w+", orig_text.lower())
+    w2 = re.findall(r"\w+", corr_text.lower())
+    if not w1 or not w2:
+        return False
+    sm = difflib.SequenceMatcher(None, w1, w2)
+    if sm.ratio() < 0.70:
+        return False
+    # For short sentences (<= 8 words), disallow > 2 changed words
+    if len(w1) <= 8:
+        matched = sum(block.size for block in sm.get_matching_blocks())
+        if (len(w1) - matched) > 2:
+            return False
+
+    # Check replacement span tokens in VESUM
+    if vesum_cur is not None:
+        for _s, _e, _t, corr_span in in_scope:
+            words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ'-]", "", w) for w in corr_span.split()]
+            for w in words:
+                if not w or "-" in w or w[0].isupper() or len(w) <= 2:
+                    continue
+                row = vesum_cur.execute(
+                    "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
+                    (w.lower(),),
+                ).fetchone()
+                if not row:
+                    return False
+
+    return True
 
 
 def load_held_out_firewall(
@@ -177,7 +244,7 @@ def load_brown_uk_controls(
             if line.strip():
                 data = json.loads(line)
                 sent = data.get("sentence_text", "").strip()
-                if not sent or (is_near_dup_fn and is_near_dup_fn(sent)):
+                if not sent or not is_clean_control(sent) or (is_near_dup_fn and is_near_dup_fn(sent)):
                     continue
                 doc_id = data.get("document_id") or "brown_uk"
                 doc_name = data.get("source_metadata", {}).get("doc_name") or f"{doc_id}.txt"
@@ -329,6 +396,10 @@ def build_grammar_dataset(
     seen_corrections: set[tuple[str, str]] = set()
     seen_control_texts: set[str] = set()
 
+    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+    vesum_conn = sqlite3.connect(f"file:{vesum_db_path}?mode=ro", uri=True)
+    vesum_cur = vesum_conn.cursor()
+
     eval_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "eval"]
     train_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "train"]
 
@@ -352,7 +423,11 @@ def build_grammar_dataset(
 
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
-            if orig_text not in seen_control_texts and not is_test_near_duplicate(orig_text):
+            if (
+                is_clean_control(orig_text)
+                and orig_text not in seen_control_texts
+                and not is_test_near_duplicate(orig_text)
+            ):
                 seen_control_texts.add(orig_text)
                 eval_clean_candidates.append(
                     {
@@ -395,6 +470,7 @@ def build_grammar_dataset(
                 and corr_text not in test_sources
                 and corr_text not in test_targets
                 and not is_test_near_duplicate(corr_text)
+                and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur)
             ):
                 pair_key = (orig_text, corr_text)
                 if pair_key in seen_corrections:
@@ -468,7 +544,11 @@ def build_grammar_dataset(
 
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
-            if orig_text not in seen_control_texts and not is_test_near_duplicate(orig_text):
+            if (
+                is_clean_control(orig_text)
+                and orig_text not in seen_control_texts
+                and not is_test_near_duplicate(orig_text)
+            ):
                 seen_control_texts.add(orig_text)
                 train_clean_candidates.append(
                     {
@@ -512,6 +592,7 @@ def build_grammar_dataset(
                 and corr_text not in test_targets
                 and corr_text not in eval_forbidden_sentences
                 and not is_test_near_duplicate(corr_text)
+                and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur)
             ):
                 pair_key = (orig_text, corr_text)
                 if pair_key in seen_corrections:
@@ -942,6 +1023,8 @@ def build_grammar_dataset(
         json.dump(manifest, f, ensure_ascii=False, indent=2)
         f.write("\n")
     print(f"💾 Wrote dataset manifest to {manifest_file.name}.")
+
+    vesum_conn.close()
 
     return manifest
 

@@ -4,20 +4,18 @@
   "task_type": "correction",
   "has_evaluation_split": true,
   "splits": {
-    "grammar_train_shard_01_of_14.jsonl": "train",
-    "grammar_train_shard_02_of_14.jsonl": "train",
-    "grammar_train_shard_03_of_14.jsonl": "train",
-    "grammar_train_shard_04_of_14.jsonl": "train",
-    "grammar_train_shard_05_of_14.jsonl": "train",
-    "grammar_train_shard_06_of_14.jsonl": "train",
-    "grammar_train_shard_07_of_14.jsonl": "train",
-    "grammar_train_shard_08_of_14.jsonl": "train",
-    "grammar_train_shard_09_of_14.jsonl": "train",
-    "grammar_train_shard_10_of_14.jsonl": "train",
-    "grammar_train_shard_11_of_14.jsonl": "train",
-    "grammar_train_shard_12_of_14.jsonl": "train",
-    "grammar_train_shard_13_of_14.jsonl": "train",
-    "grammar_train_shard_14_of_14.jsonl": "train",
+    "grammar_train_shard_01_of_12.jsonl": "train",
+    "grammar_train_shard_02_of_12.jsonl": "train",
+    "grammar_train_shard_03_of_12.jsonl": "train",
+    "grammar_train_shard_04_of_12.jsonl": "train",
+    "grammar_train_shard_05_of_12.jsonl": "train",
+    "grammar_train_shard_06_of_12.jsonl": "train",
+    "grammar_train_shard_07_of_12.jsonl": "train",
+    "grammar_train_shard_08_of_12.jsonl": "train",
+    "grammar_train_shard_09_of_12.jsonl": "train",
+    "grammar_train_shard_10_of_12.jsonl": "train",
+    "grammar_train_shard_11_of_12.jsonl": "train",
+    "grammar_train_shard_12_of_12.jsonl": "train",
     "grammar_eval_shard_01_of_02.jsonl": "eval",
     "grammar_eval_shard_02_of_02.jsonl": "eval"
   },
@@ -37,27 +35,27 @@
     }
   },
   "statistics": {
-    "total_records": 6877,
-    "train_records": 6280,
-    "eval_records": 597,
-    "substantive_corrections": 5158,
-    "clean_controls": 1719,
+    "total_records": 5867,
+    "train_records": 5348,
+    "eval_records": 519,
+    "substantive_corrections": 4400,
+    "clean_controls": 1467,
     "clean_control_share": 0.25,
     "substantive_correction_share": 0.75,
     "category_counts": {
-      "syntax_structure": 1005,
-      "calque_lexical_grammatical": 1664,
-      "protective_authentic_control": 1719,
-      "case_government": 1622,
-      "agreement_concord": 501,
-      "verb_morphology": 366
+      "calque_lexical_grammatical": 1443,
+      "case_government": 1309,
+      "protective_authentic_control": 1467,
+      "syntax_structure": 920,
+      "agreement_concord": 415,
+      "verb_morphology": 313
     },
     "source_corpus_counts": {
-      "ua_gec_2.0": 6477,
+      "ua_gec_2.0": 5467,
       "brown_uk": 400
     },
     "license_counts": {
-      "CC BY 4.0": 6477,
+      "CC BY 4.0": 5467,
       "CC BY-NC-SA 4.0": 400
     }
   }
