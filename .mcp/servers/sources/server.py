@@ -1641,8 +1641,11 @@ def _with_receipt(content: list[TextContent], receipt_id: str) -> list[TextConte
 
 def _review_record(
     recorder: Any, name: str, arguments: dict[str, Any], content: list[TextContent], *, status: str
-) -> tuple[list[TextContent], bool]:
-    """Append the full tool result and return (content, recording_error)."""
+) -> tuple[list[TextContent], bool, str | None]:
+    """Append the full tool result and return (content, recording_error, receipt_id).
+
+    ``receipt_id`` is None exactly when recording failed.
+    """
     from scripts.review.receipts.ledger import freeze_arguments
 
     try:
@@ -1654,8 +1657,20 @@ def _review_record(
             server_version=_review_server_version(),
         )
     except Exception as exc:
-        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True
-    return _with_receipt(content, receipt_id), False
+        return [TextContent(type="text", text=f"Review receipt recording failed: {type(exc).__name__}")], True, None
+    return _with_receipt(content, receipt_id), False, receipt_id
+
+
+def _outcome_with_receipt(typed_outcome: dict[str, Any] | None, receipt_id: str | None) -> dict[str, Any] | None:
+    """Copy the typed outcome with a top-level ``receipt`` so the structured channel carries it.
+
+    MCP clients present ``structuredContent`` to the model when it is set, so
+    the text-only ``receipt:`` line would never reach the seat. The recorded
+    ledger result and the V4 typed invocation keep the untouched original.
+    """
+    if typed_outcome is None or not isinstance(typed_outcome, dict) or receipt_id is None:
+        return typed_outcome
+    return {**typed_outcome, "receipt": receipt_id}
 
 
 def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) -> tuple[list[TextContent], bool] | None:
@@ -1669,7 +1684,9 @@ def _review_before_handler(recorder: Any, name: str, arguments: dict[str, Any]) 
         return [TextContent(type="text", text=text)], True
     if name not in REVIEW_TOOLS:
         text = f"Tool {name} is not in the review tool list."
-        content, _rec_err = _review_record(recorder, name, arguments, [TextContent(type="text", text=text)], status="refused")
+        content, _rec_err, _receipt = _review_record(
+            recorder, name, arguments, [TextContent(type="text", text=text)], status="refused"
+        )
         return content, True
     return None
 
@@ -1765,16 +1782,17 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
         if typed_outcome is not None and isinstance(typed_outcome, dict) and "disposition" in typed_outcome:
             _record_v4_typed_invocation(name=name, typed_outcome=typed_outcome)
         if recorder is not None and recorder.mode == "on":
-            result, rec_err = _review_record(recorder, name, review_arguments, result, status="ok")
+            result, rec_err, receipt_id = _review_record(recorder, name, review_arguments, result, status="ok")
             if rec_err:
                 return result, True, None
+            typed_outcome = _outcome_with_receipt(typed_outcome, receipt_id)
         return result, False, typed_outcome
     except Exception as e:
         _elapsed = _time.monotonic() - _t0
         _log_tool_call(name, arguments, duration_s=_elapsed, error=f"{type(e).__name__}: {e}", privacy_mode=privacy_mode)
         content = [TextContent(type="text", text=f"Error in {name}: {type(e).__name__}: {e}")]
         if recorder is not None and recorder.mode == "on":
-            content, _rec_err = _review_record(recorder, name, review_arguments, content, status="error")
+            content, _rec_err, _receipt = _review_record(recorder, name, review_arguments, content, status="error")
         return content, True, None
 
 
