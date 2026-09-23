@@ -1837,3 +1837,36 @@ def test_cf_r21_remediations_regression():
         assert len(it["reviewer_rationale"]) > 20
         assert it["item_verification_audit"]["query_norm_verified"] is True
         assert it["item_verification_audit"]["response_source_grounding_verified"] is True
+
+
+def test_cf_r22_remediations_regression():
+    """Regression test for CF-R22 remediations:
+
+    1. decol_syn_023: supporting_passage in Antonenko-Davydovych addresses doors/windows, not the declension of 'кіл'.
+    2. Substantive correction rationales in receipt: never label the accepted target_term as a calque or Russianism.
+    """
+    import json
+
+    from scripts.projects.open_model_data.decolonization_cases_data import SYNTACTIC_CALQUES
+    from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+    from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+
+    # 1. decol_syn_023 source locus and supporting passage
+    ev_023 = EXPLICIT_SOURCE_EVIDENCE["decol_syn_023"]
+    assert "відчиняти можна двері, вікна, браму" in ev_023["supporting_passage"]
+    assert "Відкривати, відчиняти, розгортати" in ev_023["locus"]
+    assert "іменник \"кіл\"" not in ev_023["supporting_passage"]
+
+    case_023 = next(c for c in SYNTACTIC_CALQUES if c["case_id"] == "decol_syn_023")
+    assert case_023["target_term"] == "відчинити"
+
+    # 2. Receipt item rationales
+    receipt_file = DECOLONIZATION_DIR / "acceptance_review_sample.receipt.json"
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    for it in receipt["reviewed_sample_items"]:
+        rat = it["reviewer_rationale"]
+        if it["is_erroneous"]:
+            # Rationale must not call the accepted target_term a calque or Russianism
+            assert f"росіянізм «{it['target_term']}»" not in rat
+            assert f"кальку / росіянізм «{it['target_term']}»" not in rat
+            assert "Нормативний варіант слововживання" in rat
