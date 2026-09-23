@@ -83,7 +83,7 @@ def test_expanded_document_schema_valid():
                 "activity": None,
                 "item": None,
                 "block": 0,
-                "role": "exposition",
+                "role": "narration",
                 "text": "Hello world and plain Ukrainian text without accents",
             },
             {
@@ -101,7 +101,7 @@ def test_expanded_document_schema_valid():
                 "activity": None,
                 "item": None,
                 "block": None,
-                "role": "reference",
+                "role": "record_print",
                 "text": "Plain lemma",
             },
         ],
@@ -126,7 +126,7 @@ def test_combining_accent_fails_expanded_schema_and_check_5():
                 "activity": None,
                 "item": None,
                 "block": 0,
-                "role": "exposition",
+                "role": "narration",
                 "text": "Украї\u0301на",  # combining acute
             }
         ],
@@ -362,7 +362,7 @@ def test_apply_stress_and_check_9(tmp_path):
                 "activity": None,
                 "item": None,
                 "block": 0,
-                "role": "exposition",
+                "role": "narration",
                 "text": "добрий день",
             }
         ],
