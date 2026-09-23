@@ -215,10 +215,39 @@ def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
         fresh=True,
     )
     assert rep["shippable"] is True
-    assert rep["render_fully_validated"] is True
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["mdx_render"] is True
     assert steps["plan_valid"] is True
+
+
+def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
+    """Test verify with fresh=True and astro_build=True sets render_fully_validated."""
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+    site_mod.mkdir(parents=True)
+    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
+
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plan_dir.mkdir(parents=True)
+    plan_file = plan_dir / "greetings.yaml"
+    plan_file.write_text("module: greetings\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
+    )
+    monkeypatch.setattr(vs, "_astro_build", lambda log_path: True)
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+        astro_build=True,
+    )
+    assert rep["shippable"] is True
+    assert rep["render_fully_validated"] is True
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["astro_build"] is True
 
 
 def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
