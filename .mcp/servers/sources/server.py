@@ -17,6 +17,7 @@ Tools:
     - search_sources, search_text, search_literary, search_external, get_chunk_context
     - verify_word, verify_words, verify_lemma, vet_vocabulary (VESUM)
     - verify_stress, verify_stresses (stress oracle: ukrainian-word-stress trie + override layer + VESUM join)
+    - check_text (single-call verification of text or exercise items)
     - query_wikipedia, query_pravopys, query_e2u, query_r2u, query_ulif
     - search_definitions, search_grinchenko_1907, search_esum, search_idioms, search_synonyms
     - search_slovnyk_me, search_heritage
@@ -589,6 +590,54 @@ async def list_tools() -> list[Tool]:
                     },
                 },
                 "required": ["words"],
+            },
+        ),
+        _tool(
+            name="check_text",
+            description="check a lesson, a passage or a set of exercise items in one call; problems are sourced, suspicions are labelled",
+            inputSchema={
+                "type": "object",
+                "properties": {
+                    "text": {
+                        "type": "string",
+                        "description": "Ukrainian text to verify (mutually exclusive with items).",
+                    },
+                    "items": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "id": {"type": ["string", "integer"]},
+                                "text": {"type": "string"},
+                            },
+                            "required": ["id", "text"],
+                        },
+                        "description": "List of exercise items with id and text (max 200 items; mutually exclusive with text).",
+                    },
+                    "checks": {
+                        "type": "array",
+                        "items": {
+                            "type": "string",
+                            "enum": ["vesum", "stress", "russian_shadow", "ua_gec"],
+                        },
+                        "description": "Subset of checks to run: vesum, stress, russian_shadow, ua_gec (default: all four).",
+                    },
+                    "stress_forms": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "Optional list of forms with asserted stress positions, matched against token.lookup after accent stripping.",
+                    },
+                    "max_findings": {
+                        "type": "integer",
+                        "description": "Maximum number of findings to return (default 200).",
+                        "default": 200,
+                    },
+                    "ua_gec_tags": {
+                        "type": "array",
+                        "items": {"type": "string"},
+                        "description": "UA-GEC error tags to check (default: ['F/Calque', 'F/Collocation']).",
+                    },
+                },
             },
         ),
         # ── Live source query tools ──────────────────────────────
@@ -1537,6 +1586,7 @@ async def _dispatch_tool_call(name: str, arguments: dict[str, Any]) -> tuple[lis
             "inspect_lemma": lambda: handle_inspect_lemma(arguments),
             "verify_stress": lambda: handle_verify_stress(arguments),
             "verify_stresses": lambda: handle_verify_stresses(arguments),
+            "check_text": lambda: handle_check_text(arguments),
             "query_wikipedia": lambda: handle_query_wikipedia(arguments),
             "query_grac": lambda: handle_query_grac(arguments),
             "query_ulif": lambda: handle_query_ulif(arguments),
@@ -2228,6 +2278,21 @@ async def handle_verify_stresses(args: dict) -> list[TextContent]:
         }
         return [TextContent(type="text", text=json.dumps(payload, ensure_ascii=False))]
     result = await asyncio.to_thread(verify_stresses, words, pos if pos else None)
+    return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
+
+
+async def handle_check_text(args: dict) -> list[TextContent]:
+    from scripts.verification.check_text import check_text
+
+    result = await asyncio.to_thread(
+        check_text,
+        text=args.get("text"),
+        items=args.get("items"),
+        checks=args.get("checks"),
+        stress_forms=args.get("stress_forms"),
+        max_findings=args.get("max_findings", 200),
+        ua_gec_tags=args.get("ua_gec_tags"),
+    )
     return [TextContent(type="text", text=json.dumps(result, ensure_ascii=False))]
 
 
