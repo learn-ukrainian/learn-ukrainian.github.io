@@ -41,6 +41,9 @@ NORMALIZED = {
 }
 TASK_ID = re.compile(r"[A-Za-z0-9][A-Za-z0-9._-]*(?:/[A-Za-z0-9][A-Za-z0-9._-]*)*\Z")
 MAX_COMMENT_BYTES = 65_000
+# Kimi CLI task records can identify the harness without naming its model;
+# this harness is single-family and always runs Moonshot models.
+SINGLE_FAMILY_HARNESSES = {"kimi": "moonshot"}
 
 
 class RecordError(RuntimeError):
@@ -93,31 +96,35 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         harness, model = trailers[0].split("/", 1)
         if not harness or not model:
             raise RecordError("author model unknown")
-        family = resolve_author_family(model)
-        # Cursor has historically required harness-aware resolution. For all
-        # other harnesses, use that form when the bare model is unresolved.
-        if harness == "cursor" or family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-            family = resolve_author_family(f"{harness}:{model}")
+        # Cursor has historically required harness-aware resolution; otherwise
+        # resolve the model itself before consulting task provenance.
+        family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
         if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
-            # The common X-Agent trailer names a task, not a model. Resolve
-            # that task's recorded model; the trailer alone is insufficient.
-            if not TASK_ID.fullmatch(model):
-                raise RecordError("author model unknown")
-            try:
-                author_task = json.loads((task_root / f"{model}.json").read_text(encoding="utf-8"))
-            except (OSError, ValueError) as exc:
-                raise RecordError("author task provenance unavailable") from exc
-            if author_task.get("repository") != repository or not str(author_task.get("agent") or "").startswith(
-                harness
-            ):
-                raise RecordError("author task provenance conflicts with commit trailer")
-            if harness.startswith("cursor"):
-                if author_task.get("resolved_model_known") is not True:
-                    raise RecordError("author family unknown")
-                author_model = author_task.get("resolved_model")
+            task_file = task_root / f"{model}.json"
+            if task_file.exists():
+                # The common X-Agent trailer names a task, not a model. Resolve
+                # that task's recorded model only after validating its provenance.
+                try:
+                    author_task = json.loads(task_file.read_text(encoding="utf-8"))
+                except (OSError, ValueError) as exc:
+                    raise RecordError("author task provenance unavailable") from exc
+                if author_task.get("repository") != repository or not str(
+                    author_task.get("agent") or ""
+                ).startswith(harness):
+                    raise RecordError("author task provenance conflicts with commit trailer")
+                if harness.startswith("cursor"):
+                    if author_task.get("resolved_model_known") is not True:
+                        raise RecordError("author family unknown")
+                    author_model = author_task.get("resolved_model")
+                else:
+                    author_model = author_task.get("model")
+                family = resolve_author_family(str(author_model or ""))
+            elif harness in SINGLE_FAMILY_HARNESSES:
+                family = SINGLE_FAMILY_HARNESSES[harness]
             else:
-                author_model = author_task.get("model")
-            family = resolve_author_family(str(author_model or ""))
+                if not TASK_ID.fullmatch(model):
+                    raise RecordError("author model unknown")
+                raise RecordError("author task provenance unavailable")
         if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
             raise RecordError("author family unknown")
         if family == CURSOR_AUTO_UNION_FAMILY:

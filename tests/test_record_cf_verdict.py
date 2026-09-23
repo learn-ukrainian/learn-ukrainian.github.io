@@ -268,13 +268,48 @@ def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_pa
 
 def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
-    write_task(tasks, task_id="author-task", model="gemini-3.8-flash-high", agent="agy")
+    write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="agy")
     monkeypatch.setattr(
         recorder,
         "_pages",
         lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
     )
-    assert recorder.author_families(REPOSITORY, 42, tasks) == {"google"}
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
+
+
+def test_kimi_task_record_conflict_is_checked_before_single_family_fallback(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="codex")
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: kimi/author-task"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="provenance conflicts"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.mark.parametrize("harness", ["codex", "agy", "claude"])
+def test_missing_task_record_fails_closed_for_multifamily_harnesses(monkeypatch, tmp_path, harness):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {harness}/impl-missing-task"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="author task provenance unavailable"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_task_record_agent_conflict_is_checked_for_agy(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-task", model="claude-opus-5", agent="claude")
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="provenance conflicts"):
+        recorder.author_families(REPOSITORY, 42, tasks)
 
 
 def test_comment_truncation_retains_marker():
