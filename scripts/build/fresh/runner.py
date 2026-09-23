@@ -311,6 +311,10 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
+    # The current question/receipt schemas predate E3a's step locator field.
+    # Keep the step on the stream used by the inventory gate; serialize the
+    # schema-compatible occurrence locator for questions and receipts.
+    token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
     batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
     if batch["questions"] and not question_seat:
         return finish(failure(8, "question_seat_required", "driver"))
@@ -330,6 +334,9 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
         for token, receipt in zip(stream.tokens, receipt_doc["tokens"], strict=True):
             token["selected"] = receipt["selected"]
             token["provenance"] = receipt["provenance"]
+        for token, step in zip(stream.tokens, token_steps, strict=True):
+            if step is not None:
+                token["unit"] = {**token["unit"], "step": step}
         stream.inputs["receipts_sha256"] = receipt_sha
     except (ResolverError, ValueError, RuntimeError, OSError) as err:
         return finish(failure(8, str(err), "writer" if isinstance(err, ResolverError) else "driver",
