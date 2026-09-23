@@ -4,9 +4,9 @@ profiles:
   native_codex:
     profile_id: native_codex
     transport: native_codex
-    main_model_id: gpt-6-astra
+    main_model_id: gpt-6-sol
     model_id_patterns:
-      - '^gpt-6-astra$'
+      - '^gpt-6-(sol|luna|astra)$'
     main_context_window_tokens: 272000
     # Native Codex owns compaction; effective window capacity is not its trigger.
     auto_compact_capacity_tokens: null

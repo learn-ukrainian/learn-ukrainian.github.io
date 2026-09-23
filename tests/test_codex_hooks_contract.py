@@ -103,7 +103,6 @@ def test_codex_project_config_leaves_root_model_user_selectable() -> None:
     assert config["features"] == {
         "hooks": True,
         "multi_agent": True,
-        "remote_compaction_v2": True,
         "memories": False,
         "multi_agent_v2": {
             "enabled": True,

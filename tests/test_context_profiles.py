@@ -55,8 +55,8 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     assert profiles["native_codex"] == {
         "profile_id": "native_codex",
         "transport": "native_codex",
-        "main_model_id": "gpt-6-astra",
-        "model_id_patterns": [r"^gpt-6-astra$"],
+        "main_model_id": "gpt-6-sol",
+        "model_id_patterns": [r"^gpt-6-(sol|luna|astra)$"],
         "main_context_window_tokens": 272_000,
         "auto_compact_capacity_tokens": None,
         "cold_start_profile": "compact",
@@ -113,13 +113,16 @@ def test_production_registry_separates_sol_capacity_values() -> None:
     }
 
 
-def test_native_codex_profile_accepts_astra_and_rejects_other_models() -> None:
-    trusted = resolve_profile("native_codex", "gpt-6-astra")
+@pytest.mark.parametrize("model", ["gpt-6-sol", "gpt-6-luna", "gpt-6-astra"])
+def test_native_codex_profile_accepts_gpt6_and_rejects_other_models(model: str) -> None:
+    trusted = resolve_profile("native_codex", model)
     mismatch = resolve_profile("native_codex", "gpt-5.6-terra")
 
     assert trusted["profile_id"] == "native_codex"
     assert trusted["transport"] == "native_codex"
     assert trusted["trusted"]
+    assert trusted["main_model_id"] == model
+    assert trusted["expected_main_model_id"] == model
     assert trusted["main_context_window_tokens"] == 272_000
     assert mismatch["profile_id"] == "fallback"
     assert mismatch["resolution_reason"] == "model-mismatch"
