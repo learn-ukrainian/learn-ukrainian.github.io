@@ -147,6 +147,10 @@ V6_PHASE_ORDER = _V6_PHASES
 # jumps (NTP sync, DST, manual clock edits) — see GH #1309 reviewer
 # BLOCKER. Monotonic values are only valid within this process; the
 # dict is in-memory anyway, so restart clears it naturally.
+#
+# The clock is a module-level seam so tests can advance cache time
+# explicitly and wait on completion signals instead of asserting
+# wall-clock staleness budgets on loaded CI runners (#8583).
 
 import concurrent.futures
 import threading
@@ -160,6 +164,7 @@ if TYPE_CHECKING:
 _ttl_cache: dict[str, tuple[float, object]] = {}
 _inflight_futures: dict[str, concurrent.futures.Future] = {}
 _inflight_lock = threading.Lock()
+_ttl_clock: Callable[[], float] = time.monotonic
 
 T = TypeVar("T")
 
@@ -191,7 +196,7 @@ def ctx_scoped_ttl_key(ctx: MonitorContext, *parts: object) -> str:
 def cache_get(key: str, ttl: float) -> object | None:
     """Return cached value if still within TTL, else None."""
     entry = _ttl_cache.get(key)
-    if entry and (time.monotonic() - entry[0]) < ttl:
+    if entry and (_ttl_clock() - entry[0]) < ttl:
         return entry[1]
     return None
 
@@ -201,7 +206,7 @@ def cache_get_with_age(key: str, ttl: float) -> tuple[object, float] | None:
     entry = _ttl_cache.get(key)
     if entry is None:
         return None
-    age = time.monotonic() - entry[0]
+    age = _ttl_clock() - entry[0]
     if age < ttl:
         return entry[1], age
     return None
@@ -209,7 +214,7 @@ def cache_get_with_age(key: str, ttl: float) -> tuple[object, float] | None:
 
 def cache_set(key: str, value: object) -> None:
     """Store a value in the TTL cache."""
-    _ttl_cache[key] = (time.monotonic(), value)
+    _ttl_cache[key] = (_ttl_clock(), value)
 
 
 def cache_get_or_compute(  # noqa: UP047 — ruff pyflakes lacks PEP 695 type-param support here
