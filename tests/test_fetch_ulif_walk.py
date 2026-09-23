@@ -8,9 +8,11 @@ import sqlite3
 import subprocess
 import sys
 from pathlib import Path
+from typing import ClassVar
 
 import pytest
 
+from scripts.lexicon.runner import fetch_ulif_homonyms as ulif_walk
 from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_FORBIDDEN,
     EXIT_OK,
@@ -19,6 +21,9 @@ from scripts.lexicon.runner.fetch_ulif_homonyms import (
     HttpResult,
     RunnerLock,
     SpellingLedger,
+    _resume_window_offset,
+    normalize_ulif_spelling,
+    parse_register_list,
     parse_stored,
     run_walk,
     status_text,
@@ -614,11 +619,402 @@ def test_resume_fast_forward_when_search_offsets(tmp_path: Path):
 
     # Verify that fast-forward searched for page 1 headword "а" to begin pagination
     ff_searches = [
-        req
-        for method, req in server2.requests_log
-        if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
+        req for method, req in server2.requests_log if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
     ]
     assert len(ff_searches) == 1
+
+
+@pytest.mark.parametrize(
+    ("page", "fixture", "offset"),
+    [
+        (3136, "register-page-3136-offset-4.html", 4),
+        (248, "register-page-248-offset-2.html", 2),
+    ],
+)
+def test_recorded_ulif_search_windows_map_to_canonical_rows(tmp_path: Path, page: int, fixture: str, offset: int):
+    rows = parse_register_list(_html(fixture))
+    assert len(rows) == 25
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        for i, row in enumerate(rows):
+            canonical_page, index = divmod((page - 1) * 25 - offset + i, 25)
+            ledger.ensure_row(
+                canonical_page + 1,
+                index,
+                select_arg=str(row["select"]),
+                stressed_headword=str(row["stressed"]),
+                normalized_spelling=normalize_ulif_spelling(str(row["unstressed"])),
+            )
+        anchor = rows[offset]["stressed"]
+        ledger.ensure_page(page, start_headword=anchor, row_count=25)
+        assert (
+            _resume_window_offset(
+                ledger, rows, target_page=page, anchor_headword=anchor, anchor_page=page, anchor_index=0
+            )
+            == offset
+        )
+        assert rows[offset]["stressed"] == ("зі" if page == 3136 else "Арка́нза́с")
+    finally:
+        ledger.close()
+
+
+class ShiftedWindowServer:
+    words: ClassVar[list[str]] = [f"w{i:03d}" for i in range(100)]
+
+    def __init__(self, offset: int, *, mode: str = "direct", fail_nextpage_500_times: int = 0) -> None:
+        self.offset = offset
+        self.mode = mode
+        self.fail_nextpage_500_times = fail_nextpage_500_times
+        self.requests: list[tuple[str, dict[str, str] | None]] = []
+
+    def _window(self, start: int, *, mutate: str = "") -> str:
+        words = self.words[start : start + 25].copy()
+        if mutate == "duplicate":
+            words[0] = self.words[25]
+        elif mutate == "duplicate_aligned":
+            words[1] = self.words[25]
+        elif mutate == "mismatch":
+            words[1] = "wrong"
+        elif mutate == "absent":
+            words = self.words[:25]
+        return _register_html(words, f"VS-{start}", has_next=start + 25 < len(self.words), register_size=100)
+
+    def __call__(self, method: str, data: dict[str, str] | None) -> HttpResult:
+        self.requests.append((method, data))
+        if method == "GET":
+            return HttpResult(
+                200,
+                '<input name="__VIEWSTATE" value="SEED" />'
+                '<input name="__VIEWSTATEGENERATOR" value="GEN" />'
+                '<input name="__EVENTVALIDATION" value="EV-SEED" />',
+                {},
+            )
+        assert data is not None
+        if "ctl00$ContentPlaceHolder1$search.x" in data:
+            word = data.get("ctl00$ContentPlaceHolder1$tsearch")
+            if word == "а":
+                return HttpResult(200, self._window(0), {})
+            if word == self.words[25]:
+                mutation = "absent" if self.mode in {"fast_forward", "terminal_previous"} else self.mode
+                start = 25 if self.mode == "duplicate_aligned" else 25 - self.offset
+                return HttpResult(200, self._window(start, mutate=mutation), {})
+            if word == self.words[24]:
+                if self.mode == "terminal_previous":
+                    return HttpResult(
+                        200, _register_html(self.words[:25], "VS-0", has_next=False, register_size=100), {}
+                    )
+                start = 25 if self.mode == "fast_forward" else 25 - self.offset
+                return HttpResult(200, self._window(start), {})
+        if "ctl00$ContentPlaceHolder1$nextpage.x" in data:
+            if self.fail_nextpage_500_times > 0:
+                self.fail_nextpage_500_times -= 1
+                return HttpResult(500, "Injected nextpage 500", {})
+            start = int(data["__VIEWSTATE"].split("-")[1]) + 25
+            if self.mode == "reset":
+                start = 0
+            elif self.mode == "overlap":
+                start -= 2
+            return HttpResult(200, self._window(start), {})
+        if data.get("__EVENTTARGET") == "ctl00$ContentPlaceHolder1$dgv":
+            start = int(data["__VIEWSTATE"].split("-")[1])
+            index = int(data["__EVENTARGUMENT"].split("$")[1])
+            word = self.words[start + index]
+            return HttpResult(200, _entry_html(word, "synthetic", f"ENTRY-{start + index}", register_size=100), {})
+        return HttpResult(200, "<html></html>", {})
+
+
+def _seed_shifted_ledger(state_dir: Path) -> None:
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        for page in (1, 2):
+            words = ShiftedWindowServer.words[(page - 1) * 25 : page * 25]
+            ledger.ensure_page(page, start_headword=words[0], end_headword=words[-1], row_count=25, register_size=100)
+            for index, word in enumerate(words):
+                ledger.ensure_row(
+                    page,
+                    index,
+                    select_arg=f"Select${index}",
+                    stressed_headword=word,
+                    normalized_spelling=word,
+                )
+                if page == 1:
+                    ledger.mark_row(page, index, "completed")
+            if page == 1:
+                ledger.mark_page(page, "completed")
+    finally:
+        ledger.close()
+
+
+@pytest.mark.parametrize("offset", [0, 2, 4, 24])
+def test_shifted_resume_completes_canonical_pages_across_windows(tmp_path: Path, offset: int, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(offset)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        max_pages=2,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_OK
+    assert f"k={offset}" in capsys.readouterr().err
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert [ledger.get_page(page)["state"] for page in (1, 2, 3)] == ["completed"] * 3
+        assert [row["stressed_headword"] for row in ledger.page_rows(2)] == server.words[25:50]
+        assert [row["stressed_headword"] for row in ledger.page_rows(3)] == server.words[50:75]
+        assert all(row["state"] == "completed" for page in (2, 3) for row in ledger.page_rows(page))
+        entry_positions = [
+            row["register_position"]
+            for row in ledger.conn.execute("SELECT register_position FROM responses WHERE role = 'entry' ORDER BY id")
+        ]
+        assert entry_positions == [f"{page}:{index}" for page in (2, 3) for index in range(25)]
+    finally:
+        ledger.close()
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for method, data in server.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == ["w025"]
+
+
+@pytest.mark.parametrize("mode", ["reset", "overlap"])
+def test_shifted_resume_rejects_next_window_drift_before_writing_rows(tmp_path: Path, mode: str):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, mode=mode)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        max_pages=2,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.page_rows(3) == []
+        assert ledger.get_page(2)["state"] == "retry_scheduled"
+    finally:
+        ledger.close()
+
+
+@pytest.mark.parametrize(
+    ("before", "after"),
+    [
+        ("абазинський", "Аба́зівка"),  # live ledger page 2: и -> і
+        ("авіапатрульний", "авіапатрулюва́ння"),  # page 23: ь -> ю
+        ("ад'ютантський", "Аелі́та"),  # pages 78-79: apostrophe and capital
+    ],
+)
+def test_ulif_order_key_accepts_recorded_boundaries(before: str, after: str):
+    assert ulif_walk._register_order_key(before) <= ulif_walk._register_order_key(after)
+
+
+def test_first_unrecorded_page_uses_previous_ledger_boundary(tmp_path: Path):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        ledger.ensure_row(
+            1, 24, select_arg="Select$24", stressed_headword="абазинський", normalized_spelling="абазинський"
+        )
+        ulif_walk._verify_first_unrecorded_page(
+            ledger,
+            [{"stressed": "Аба́зівка"}, {"stressed": "абазія"}],
+            25,
+        )
+        with pytest.raises(ulif_walk.SessionInvalid, match="register_regression"):
+            ulif_walk._verify_first_unrecorded_page(
+                ledger,
+                [{"stressed": "а"}, {"stressed": "абазія"}],
+                25,
+            )
+    finally:
+        ledger.close()
+
+
+def test_resume_without_target_start_searches_previous_end_first(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.conn.execute("UPDATE register_pages SET start_headword = '' WHERE page_num = 2")
+        ledger.conn.execute("DELETE FROM register_rows WHERE page_num = 2")
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    server = ShiftedWindowServer(4)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=server,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for _, data in server.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == ["w024"]
+
+
+def test_shifted_page_requires_all_recorded_rows_before_completion(tmp_path: Path, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4)
+    original = SpellingLedger.page_rows
+
+    def omit_one_row(self, page_num: int):
+        rows = original(self, page_num)
+        return [row for row in rows if page_num != 2 or row["row_index"] != 10]
+
+    monkeypatch.setattr(SpellingLedger, "page_rows", omit_one_row)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        max_pages=1,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.get_page(2)["state"] == "retry_scheduled"
+    finally:
+        ledger.close()
+
+
+def test_failed_reseed_never_reuses_stale_window(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, fail_nextpage_500_times=1)
+
+    def failing_reseed(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET" and server.requests:
+            server.requests.append((method, data))
+            return HttpResult(500, "Injected reseed GET 500", {})
+        return server(method, data)
+
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        transport=failing_reseed,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    assert sum(bool(data and "ctl00$ContentPlaceHolder1$nextpage.x" in data) for _, data in server.requests) == 1
+
+
+@pytest.mark.parametrize("mode", ["absent", "duplicate", "duplicate_aligned", "fast_forward"])
+def test_resume_search_fallbacks(tmp_path: Path, mode: str, capsys):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, mode=mode)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        max_pages=1,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_OK
+    output = capsys.readouterr().err
+    assert ("fast-forwarding" if mode == "fast_forward" else "previous-page end search") in output
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for method, data in server.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == (["w025", "w024", "а"] if mode == "fast_forward" else ["w025", "w024"])
+
+
+def test_shifted_resume_mapped_row_mismatch_stops_before_entry_click(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, mode="mismatch")
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    assert not any(data and data.get("__EVENTTARGET") == "ctl00$ContentPlaceHolder1$dgv" for _, data in server.requests)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.get_page(2)["error"] == "resume_mismatch"
+    finally:
+        ledger.close()
+
+
+def test_shifted_resume_persistent_nextpage_failure_exhausts_retries(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, fail_nextpage_500_times=10)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    assert sum(bool(data and "ctl00$ContentPlaceHolder1$nextpage.x" in data) for _, data in server.requests) == 3
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.get_page(2)["state"] == "retry_scheduled"
+    finally:
+        ledger.close()
+
+
+def test_previous_end_terminal_window_cannot_finish_unseen_target_page(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, mode="terminal_previous")
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_USAGE
+    assert not any(data and data.get("__EVENTTARGET") == "ctl00$ContentPlaceHolder1$dgv" for _, data in server.requests)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.get_page(2)["error"] == "resume_mismatch"
+    finally:
+        ledger.close()
 
 
 def test_startup_resume_fast_forward_recovers_after_injected_session_invalid(tmp_path: Path):
@@ -659,9 +1055,7 @@ def test_startup_resume_fast_forward_recovers_after_injected_session_invalid(tmp
 
     # Verify that fast-forward was attempted twice (two searches for "а" from fresh seeds)
     ff_searches = [
-        req
-        for method, req in server2.requests_log
-        if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
+        req for method, req in server2.requests_log if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
     ]
     assert len(ff_searches) == 2
 
@@ -795,9 +1189,7 @@ def test_mid_walk_fast_forward_recovers_after_injected_session_invalid(tmp_path:
 
     # Page 1 normal search ("а") + reseed attempt 1 fast-forward ("а") + reseed attempt 2 fast-forward ("а") >= 2
     ff_searches = [
-        req
-        for method, req in server.requests_log
-        if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
+        req for method, req in server.requests_log if req and req.get("ctl00$ContentPlaceHolder1$tsearch") == "а"
     ]
     assert len(ff_searches) >= 2
 
