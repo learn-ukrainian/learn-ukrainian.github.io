@@ -259,10 +259,112 @@ def _worktree_clean(path: Path) -> bool | None:
 # an absence -- callers read "no open PR" as permission to delete.
 _PR_STATES = frozenset({"OPEN", "MERGED", "CLOSED"})
 
+_GH_REMOTE_RE = re.compile(r"github\.com[:/](?P<owner>[^/]+)/(?P<repo>[^/]+?)(?:\.git)?/?$")
+
+
+def _github_owner_repo(repo_root: Path) -> tuple[str, str] | None:
+    """Parse the origin remote into an (owner, repo) pair without a network call."""
+    proc = _run(["git", "remote", "get-url", "origin"], cwd=repo_root)
+    if proc.returncode != 0:
+        return None
+    match = _GH_REMOTE_RE.search((proc.stdout or "").strip())
+    if match is None:
+        return None
+    return match.group("owner"), match.group("repo")
+
+
+def _parse_rest_pr_item(item: Any) -> tuple[PullRequestState | None, str | None]:
+    """Map one REST pull object onto ``PullRequestState``; unreadable is an error."""
+    if not isinstance(item, dict):
+        return None, "REST PR payload row is not an object"
+    number = item.get("number")
+    if isinstance(number, bool) or not isinstance(number, int) or number <= 0:
+        return None, "REST PR payload row has no usable PR number"
+    # ``merged_at`` is authoritative: REST keeps ``state == "closed"`` for both
+    # merged and plainly closed PRs.
+    merged_at = item.get("merged_at")
+    if isinstance(merged_at, str) and merged_at:
+        state = "MERGED"
+    else:
+        raw_state = item.get("state")
+        state = str(raw_state).upper() if isinstance(raw_state, str) else ""
+        if state not in _PR_STATES:
+            return None, "REST PR payload row has an unusable state"
+    head = item.get("head")
+    head_sha = head.get("sha") if isinstance(head, dict) else None
+    return (
+        PullRequestState(
+            number=number,
+            state=state,
+            head_sha=str(head_sha) if head_sha else None,
+        ),
+        None,
+    )
+
+
+def _query_pr_states_rest(repo_root: Path, branch: str) -> tuple[list[PullRequestState], str | None]:
+    """Branch-head PR lookup over the REST core quota (#8536).
+
+    ``gh pr list`` runs on the GraphQL quota, which is shared and easily
+    exhausted (#8535); ``GET /repos/{owner}/{repo}/pulls?head=...`` answers
+    the same question from the core quota, so it is tried first.
+    """
+    slug = _github_owner_repo(repo_root)
+    if slug is None:
+        return [], "REST PR lookup failed: origin owner/repo could not be determined"
+    owner, repo = slug
+    try:
+        proc = _run(
+            [
+                "gh",
+                "api",
+                "-X",
+                "GET",
+                f"repos/{owner}/{repo}/pulls",
+                "-f",
+                f"head={owner}:{branch}",
+                "-f",
+                "state=all",
+                "-f",
+                "per_page=10",
+            ],
+            cwd=repo_root,
+            timeout=30,
+        )
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return [], f"REST PR lookup failed: {exc}"
+    if proc.returncode != 0:
+        return [], f"REST PR lookup failed: {_format_failure(proc)}"
+    try:
+        raw_items = json.loads(proc.stdout or "[]")
+    except json.JSONDecodeError as exc:
+        return [], f"REST PR lookup returned invalid JSON: {exc}"
+    if not isinstance(raw_items, list):
+        return [], "REST PR lookup returned a non-list payload"
+    states: list[PullRequestState] = []
+    for item in raw_items:
+        parsed, err = _parse_rest_pr_item(item)
+        if err is not None or parsed is None:
+            return [], err or "REST PR lookup returned an unusable row"
+        states.append(parsed)
+    return states, None
+
 
 def _query_pr_states(repo_root: Path, branch: str | None) -> tuple[list[PullRequestState], str | None]:
     if not branch:
         return [], None
+    states, rest_error = _query_pr_states_rest(repo_root, branch)
+    if rest_error is None:
+        return states, None
+    states, graphql_error = _query_pr_states_graphql(repo_root, branch)
+    if graphql_error is None:
+        return states, None
+    # Both transports failed: fail closed and keep both reasons so operators
+    # can tell a quota outage from a malformed answer.
+    return [], f"{rest_error}; {graphql_error}"
+
+
+def _query_pr_states_graphql(repo_root: Path, branch: str) -> tuple[list[PullRequestState], str | None]:
     try:
         proc = _run(
             [
@@ -352,8 +454,47 @@ def _is_not_a_pull_request_error(message: str) -> bool:
     return "Could not resolve to a PullRequest" in message
 
 
+def _query_pr_by_number_rest(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
+    """Single-PR lookup over the REST core quota (#8536)."""
+    slug = _github_owner_repo(repo_root)
+    if slug is None:
+        return [], "REST PR lookup failed: origin owner/repo could not be determined"
+    owner, repo = slug
+    try:
+        proc = _run(
+            ["gh", "api", "-X", "GET", f"repos/{owner}/{repo}/pulls/{number}"],
+            cwd=repo_root,
+            timeout=30,
+        )
+    except (FileNotFoundError, subprocess.SubprocessError) as exc:
+        return [], f"REST PR lookup failed: {exc}"
+    if proc.returncode != 0:
+        return [], f"REST PR lookup failed: {_format_failure(proc)}"
+    try:
+        item = json.loads(proc.stdout or "null")
+    except json.JSONDecodeError as exc:
+        return [], f"REST PR lookup returned invalid JSON: {exc}"
+    parsed, err = _parse_rest_pr_item(item)
+    if err is not None or parsed is None:
+        return [], err or "REST PR lookup returned an unusable payload"
+    return [parsed], None
+
+
 def _query_pr_by_number(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     """Look up one PR by number. Fail closed: an unreadable answer is an error."""
+    states, rest_error = _query_pr_by_number_rest(repo_root, number)
+    if rest_error is None:
+        return states, None
+    states, graphql_error = _query_pr_by_number_graphql(repo_root, number)
+    if graphql_error is None:
+        return states, None
+    # The GraphQL reason stays in the combined message: review branches can
+    # encode an issue number, and callers recognise the GraphQL "not a
+    # PullRequest" answer as an absence rather than an unreadable guard.
+    return [], f"{rest_error}; {graphql_error}"
+
+
+def _query_pr_by_number_graphql(repo_root: Path, number: int) -> tuple[list[PullRequestState], str | None]:
     try:
         proc = _run(
             [
@@ -683,29 +824,62 @@ def _worktree_review_pr_number(repo_root: Path, info: WorktreeInfo) -> int | Non
     return None
 
 
+def _sha_is_ancestor(cwd: Path, sha: str, descendant: str) -> bool:
+    """True when ``sha`` is an ancestor of ``descendant``. A git error is not."""
+    proc = _run(
+        ["git", "merge-base", "--is-ancestor", sha, descendant],
+        cwd=cwd,
+    )
+    return proc.returncode == 0
+
+
 def _pr_matches_worktree_head(
     info: WorktreeInfo,
     pr_state: PullRequestState | None,
 ) -> bool:
+    """True when the tip is the PR head or an ancestor of that head.
+
+    Callers use this as deletion proof for worktree removal and for merged
+    branch pruning. An identical tree at a divergent commit is not
+    containment; ``_same_tree_hint`` may report it, and it never returns true
+    here. Ancestor of ``origin/main`` is a separate proof, checked beside this
+    one. A git error is not ancestry.
+    """
     if pr_state is None or not pr_state.head_sha or not info.head:
         return False
     if pr_state.head_sha == info.head:
         return True
-    proc = _run(
-        ["git", "merge-base", "--is-ancestor", info.head, pr_state.head_sha],
-        cwd=info.path,
-    )
-    if proc.returncode == 0:
-        return True
-    # Squash/recommit leftovers often keep the same tree at a sibling SHA
-    # that is neither the PR head nor an ancestor of it.  git diff --quiet
-    # is 0 only when both objects exist and the trees are identical; a
-    # missing or dummy headRefOid fails closed.
+    return _sha_is_ancestor(info.path, info.head, pr_state.head_sha)
+
+
+def _tip_is_ancestor_of_origin_main(info: WorktreeInfo) -> bool:
+    """True when the recorded tip, not a same-tree sibling, is on origin/main."""
+    if not info.head:
+        return False
+    return _sha_is_ancestor(info.path, info.head, "origin/main")
+
+
+def _same_tree_hint(
+    info: WorktreeInfo,
+    pr_state: PullRequestState | None,
+) -> str | None:
+    """Report an identical tree. Never deletion proof.
+
+    ``git diff --quiet`` is 0 only when both objects exist and the trees
+    match. A missing or dummy head, or any diff, is not a hint.
+    """
+    if pr_state is None or not pr_state.head_sha or not info.head:
+        return None
+    if pr_state.head_sha == info.head:
+        return None
     tree = _run(
         ["git", "diff", "--quiet", pr_state.head_sha, info.head],
         cwd=info.path,
     )
-    return tree.returncode == 0
+    if tree.returncode != 0:
+        return None
+    label = f"PR #{pr_state.number}" if pr_state.number is not None else "PR"
+    return f"same tree as {label} head; not deletion proof"
 
 
 def _live_cwd_paths(repo_root: Path) -> set[Path] | None:
@@ -1102,8 +1276,57 @@ def classify_preservation(result: ReapResult) -> str:
     return "uncertain"
 
 
+# Packet fields that may name the worktree path a live rollover protects.
+# ``thread_handoff.source_checkout_binding`` historically recorded only the
+# source HEAD SHA; matching on that SHA protected every sibling worktree
+# created from the same commit, from any lane (#8536). Protection is by
+# recorded path only: a packet that names no path protects nothing (the
+# primary checkout is never reaped anyway).
+_ROLLOVER_SOURCE_PATH_KEYS = ("path", "repo_root", "worktree", "worktree_path")
+_ROLLOVER_PROTECTED_LIST_KEYS = ("protected_worktrees", "protected_paths", "worktrees")
+
+
+def _normalize_rollover_path(raw: Any, base: Path) -> str | None:
+    if not isinstance(raw, str) or not raw.strip():
+        return None
+    try:
+        path = Path(raw)
+        if not path.is_absolute():
+            path = base / path
+        return os.path.realpath(path)
+    except OSError:
+        return None
+
+
+def _rollover_protected_paths(data: dict[str, Any], base: Path) -> set[str]:
+    paths: set[str] = set()
+    replacement = data.get("replacement")
+    if not isinstance(replacement, dict):
+        replacement = {}
+    source_checkout = replacement.get("source_checkout")
+    if isinstance(source_checkout, dict):
+        for key in _ROLLOVER_SOURCE_PATH_KEYS:
+            normalized = _normalize_rollover_path(source_checkout.get(key), base)
+            if normalized:
+                paths.add(normalized)
+    for container in (data, replacement):
+        for key in _ROLLOVER_PROTECTED_LIST_KEYS:
+            entries = container.get(key)
+            if not isinstance(entries, list):
+                continue
+            for entry in entries:
+                if isinstance(entry, dict):
+                    normalized = _normalize_rollover_path(entry.get("path") or entry.get("worktree"), base)
+                else:
+                    normalized = _normalize_rollover_path(entry, base)
+                if normalized:
+                    paths.add(normalized)
+    return paths
+
+
 def _has_active_rollover_lease(repo_root: Path, info: WorktreeInfo) -> str | None:
     primary = primary_checkout_root(repo_root)
+    worktree_path = os.path.realpath(info.path)
     for candidate_dir in (
         primary / ".agent" / "thread-rollovers",
         primary / "batch_state" / "thread-rollovers",
@@ -1120,10 +1343,9 @@ def _has_active_rollover_lease(repo_root: Path, info: WorktreeInfo) -> str | Non
                     if cleanup_info.get("old_automation_ready_to_delete") is True:
                         continue
                     replacement = data.get("replacement", {})
-                    if replacement.get("status") in {"prepared", "pending_start", "resumed"}:
-                        source_checkout = replacement.get("source_checkout", {})
-                        if source_checkout.get("full_head") and source_checkout.get("full_head") == info.head:
-                            return f"active rollover lease {lease_file.parent.name}"
+                    active = replacement.get("status") in {"prepared", "pending_start", "resumed"}
+                    if active and worktree_path in _rollover_protected_paths(data, primary):
+                        return f"active rollover lease {lease_file.parent.name}"
                 except Exception:
                     continue
         except Exception:
@@ -1457,6 +1679,8 @@ def _qualifying_reason(
                 # Review branches are local-only; a missing origin branch
                 # cannot prove that their extra commits are safe to discard.
                 return None
+            if _tip_is_ancestor_of_origin_main(info):
+                return f"{pr_label} MERGED; HEAD is an ancestor of origin/main"
             # Squash merges may leave extra local reconcile commits. A gone
             # origin branch permits cleanup without an exact PR-head match.
             if info.branch is not None and not _origin_branch_present(info.path, info.branch):
@@ -2047,6 +2271,20 @@ def _reap_qualified_worktree(
                 error=recovery_error,
             )
 
+        # Decide branch deletion while the worktree directory still exists.
+        # ``git merge-base`` cannot run with a cwd that ``worktree remove``
+        # has already deleted, and a same-tree sibling is not proof.
+        prune_contained = False
+        if (
+            prune_merged_branches
+            and info.branch is not None
+            and pr_state is not None
+            and pr_state.state == "MERGED"
+        ):
+            prune_contained = _pr_matches_worktree_head(
+                info, pr_state
+            ) or _tip_is_ancestor_of_origin_main(info)
+
         remove_error = _remove_worktree(repo_root, info)
         if remove_error is not None:
             return ReapResult(
@@ -2062,13 +2300,7 @@ def _reap_qualified_worktree(
 
         branch_prune_error = None
         branch_pruned = False
-        if (
-            prune_merged_branches
-            and info.branch is not None
-            and pr_state is not None
-            and pr_state.state == "MERGED"
-            and _pr_matches_worktree_head(info, pr_state)
-        ):
+        if prune_contained:
             branch_prune_error = _prune_branch(
                 repo_root,
                 info.branch,
@@ -2349,6 +2581,10 @@ def reap_worktrees(
                             if pr_error
                             else "no reap condition matched"
                         )
+                if not pr_unknown and reason.startswith("no reap condition matched"):
+                    hint = _same_tree_hint(info, pr_state)
+                    if hint:
+                        reason = f"{reason}; {hint}"
                 results.append(
                     ReapResult(
                         path=str(info.path),
