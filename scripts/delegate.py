@@ -5654,6 +5654,31 @@ def _run_worker(
                 from scripts.agent_runtime.review_mcp import review_tools_allowed_csv
 
                 tool_config["allowed_tools"] = review_tools_allowed_csv(agent)
+            if (
+                strict_mcp_config
+                and review_id is not None
+                and attempt_id is not None
+                and mcp_config_path is not None
+                and agent == "codex"
+            ):
+                # Codex has no --mcp-config: -c mcp_servers.* MERGES with global config, so
+                # the attempt runs under its scoped CODEX_HOME (sibling of the .mcp.json)
+                # with no daemon URL override, and is gated on the effective MCP set (#8517).
+                from scripts.agent_runtime.review_mcp import (
+                    codex_review_home_path,
+                    verify_codex_review_launch,
+                )
+
+                tool_config["codex_home_override"] = str(codex_review_home_path(mcp_config_path))
+                verify_codex_review_launch(
+                    config_path=mcp_config_path,
+                    cwd=cwd,
+                    mode=mode,
+                    model=model,
+                    effort=effort,
+                    task_id=task_id,
+                    tool_config=tool_config,
+                )
             if strict_mcp_config and agent == "cursor":
                 cursor_mcp_path = cwd / ".cursor" / "mcp.json"
                 if cursor_mcp_path.is_file():

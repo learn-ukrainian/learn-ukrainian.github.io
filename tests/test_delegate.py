@@ -4347,6 +4347,190 @@ def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
     }
 
 
+def _codex_worker_result():
+    return type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+
+def _prepare_codex_review(tmp_path, monkeypatch, extra_servers=()):
+    """Provision a real Codex review attempt plus a fake ``codex`` printing the effective MCP set."""
+    import json as _json
+    import os as _os
+
+    from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+    user_home = tmp_path / "user-codex"
+    user_home.mkdir()
+    (user_home / "auth.json").write_text("{}\n", encoding="utf-8")
+    monkeypatch.setenv("CODEX_HOME", str(user_home))
+    manifest = tmp_path / "manifest.yaml"
+    manifest.write_text("review: fixture\n", encoding="utf-8")
+    plan = prepare_review_attempt(
+        review_id="rev-codex",
+        attempt_id="att-codex",
+        manifest_path=manifest,
+        harness="codex",
+        receipts_root=tmp_path / "receipts",
+    )
+    expected = _json.loads(plan.config_path.read_text(encoding="utf-8"))["mcpServers"]["sources"]
+    servers = [
+        {
+            "name": "sources",
+            "enabled": True,
+            "transport": {
+                "type": "stdio",
+                "command": expected["command"],
+                "args": expected["args"],
+                "env": expected["env"],
+            },
+        },
+        *extra_servers,
+    ]
+    bin_dir = tmp_path / "fake-bin"
+    bin_dir.mkdir()
+    canned = tmp_path / "servers.json"
+    canned.write_text(_json.dumps(servers), encoding="utf-8")
+    log = tmp_path / "fake-codex.log"
+    fake = bin_dir / "codex"
+    fake.write_text(
+        f"#!/bin/sh\nprintf '%s|%s\\n' \"$CODEX_HOME\" \"$*\" >> {log}\ncat {canned}\n",
+        encoding="utf-8",
+    )
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{bin_dir}{_os.pathsep}{_os.environ['PATH']}")
+    return plan, log
+
+
+def test_run_worker_codex_review_uses_scoped_home_and_passes_gate(tmp_tasks_dir, tmp_path, monkeypatch):
+    from scripts.agent_runtime.adapters.codex import CodexAdapter
+
+    plan, log = _prepare_codex_review(tmp_path, monkeypatch)
+    task_id = "worker-codex-review"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="review with mcp__sources__verify_word",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            review_id="rev-codex",
+            attempt_id="att-codex",
+            mcp_config_path=str(plan.config_path),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    tool_config = mock_invoke.call_args.kwargs["tool_config"]
+    assert tool_config == {
+        "mcp_config_path": str(plan.config_path),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-codex",
+        "attempt_id": "att-codex",
+        "codex_home_override": str(plan.codex_home),
+    }
+    # The gate ran under the exact scoped home with the launch config flags.
+    gate_calls = [
+        line.split("|", 1)
+        for line in log.read_text(encoding="utf-8").splitlines()
+        if line.split("|", 1)[1].startswith("mcp list --json")
+    ]
+    assert len(gate_calls) == 1
+    logged_home, logged_args = gate_calls[0]
+    assert logged_home == str(plan.codex_home)
+    assert 'mcp_servers.sources.default_tools_approval_mode="approve"' in logged_args
+    # Final launch argv/env: scoped CODEX_HOME, no daemon sources URL override.
+    invocation = CodexAdapter().build_invocation(
+        prompt="review with mcp__sources__verify_word",
+        mode="read-only",
+        cwd=tmp_path,
+        model=None,
+        task_id=task_id,
+        session_id=None,
+        tool_config=tool_config,
+    )
+    assert invocation.env_overrides["CODEX_HOME"] == str(plan.codex_home)
+    assert not any("mcp_servers.sources.url" in item or "8766" in item for item in invocation.cmd)
+
+
+def test_run_worker_codex_review_refuses_extra_effective_server(tmp_tasks_dir, tmp_path, monkeypatch):
+    plan, _log = _prepare_codex_review(
+        tmp_path,
+        monkeypatch,
+        extra_servers=[{"name": "leak", "enabled": True, "transport": {"type": "stdio", "command": "/bin/true"}}],
+    )
+    task_id = "worker-codex-review-leak"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke") as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            review_id="rev-codex",
+            attempt_id="att-codex",
+            mcp_config_path=str(plan.config_path),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 1
+    mock_invoke.assert_not_called()
+    state = delegate._read_state(delegate._state_path(task_id))
+    assert state is not None
+    assert "#8517" in state["stderr_excerpt"]
+    assert "leak" in state["stderr_excerpt"]
+
+
+def test_run_worker_ordinary_codex_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
+    fake_bin = tmp_path / "fake-bin"
+    fake_bin.mkdir()
+    calls = tmp_path / "codex-calls"
+    fake = fake_bin / "codex"
+    # Record every invocation's argv: the dispatch-telemetry version probe
+    # legitimately runs `codex --version`, so only the MCP gate is forbidden.
+    fake.write_text(f'#!/bin/sh\necho "$*" >> {calls}\n', encoding="utf-8")
+    fake.chmod(0o755)
+    monkeypatch.setenv("PATH", f"{fake_bin}:{os.environ['PATH']}")
+    task_id = "worker-codex-ordinary"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+
+    with patch("agent_runtime.runner.invoke", return_value=_codex_worker_result()) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="codex",
+            prompt="hi",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {}
+    recorded = calls.read_text(encoding="utf-8").splitlines() if calls.exists() else []
+    assert not any("mcp" in line for line in recorded), recorded
+
+
 def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("worker-kimicc")
     delegate._write_state_atomic(state_path, {"task_id": "worker-kimicc", "harness": "kimicc"})
