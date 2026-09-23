@@ -1029,7 +1029,7 @@ def test_merged_pr_head_must_match_worktree_head(
     assert worktree.exists()
 
 
-def test_merged_pr_mismatched_head_origin_gone_is_removed(
+def test_merged_pr_origin_gone_extra_unpushed_commit_needs_attention(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
@@ -1038,9 +1038,11 @@ def test_merged_pr_mismatched_head_origin_gone_is_removed(
     worktree = add_worktree(repo, branch)
     pr_head = git(worktree, "rev-parse", "HEAD")
     git(worktree, "push", "-u", "origin", branch)
+    git(repo, "push", "origin", f"{pr_head}:refs/pull/10/head")
     (worktree / "reconcile.txt").write_text("local reconcile\n", encoding="utf-8")
     git(worktree, "add", "reconcile.txt")
     git(worktree, "commit", "-m", "reconcile after squash merge")
+    unpushed_head = git(worktree, "rev-parse", "HEAD")
     git(repo, "push", "origin", "--delete", branch)
     patch_gh(
         monkeypatch,
@@ -1052,11 +1054,86 @@ def test_merged_pr_mismatched_head_origin_gone_is_removed(
         worktree,
     )
 
+    assert result.action == "skipped"
+    assert "needs_attention" in result.reason
+    assert unpushed_head in result.reason
+    assert rw.classify_preservation(result) == "needs_attention"
+    assert worktree.exists()
+    assert_main_checkout_unchanged(repo)
+
+
+def test_merged_pr_origin_gone_squash_equivalent_tip_is_reaped(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/squash-only"
+    worktree = add_worktree(repo, branch)
+    base = git(repo, "rev-parse", "main")
+    (worktree / "change.txt").write_text("squashed change\n", encoding="utf-8")
+    git(worktree, "add", "change.txt")
+    git(worktree, "commit", "-m", "PR change")
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", branch)
+    git(repo, "push", "origin", f"{pr_head}:refs/pull/11/head")
+    # Local reconciliation rewrites the PR commit with the same patch.
+    git(worktree, "reset", "--hard", base)
+    (worktree / "change.txt").write_text("squashed change\n", encoding="utf-8")
+    git(worktree, "add", "change.txt")
+    git(worktree, "commit", "-m", "reconciled local patch")
+    (repo / "change.txt").write_text("squashed change\n", encoding="utf-8")
+    git(repo, "add", "change.txt")
+    git(repo, "commit", "-m", "squash PR")
+    git(repo, "push", "origin", "main")
+    git(repo, "push", "origin", "--delete", branch)
+    patch_gh(monkeypatch, {branch: [{"number": 11, "state": "MERGED", "headRefOid": pr_head}]})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, safe_only=True), worktree)
+
     assert result.action == "removed"
-    assert "MERGED" in result.reason
     assert "origin branch gone" in result.reason
     assert not worktree.exists()
-    assert_main_checkout_unchanged(repo)
+
+
+def test_merged_pr_origin_gone_pr_head_tip_is_reaped(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/pr-head-tip"
+    worktree = add_worktree(repo, branch)
+    git(worktree, "commit", "--allow-empty", "-m", "PR head")
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", branch)
+    git(repo, "push", "origin", f"{pr_head}:refs/pull/12/head")
+    git(repo, "push", "origin", "--delete", branch)
+    patch_gh(monkeypatch, {branch: [{"number": 12, "state": "MERGED", "headRefOid": pr_head}]})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, safe_only=True), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_merged_pr_origin_gone_fetch_failure_needs_attention(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    repo = init_repo(tmp_path)
+    branch = "codex/missing-pr-ref"
+    worktree = add_worktree(repo, branch)
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(worktree, "push", "-u", "origin", branch)
+    git(worktree, "commit", "--allow-empty", "-m", "local follow-up")
+    unpushed_head = git(worktree, "rev-parse", "HEAD")
+    git(repo, "push", "origin", "--delete", branch)
+    # No refs/pull/13/head in the real bare remote: fetch must fail closed.
+    patch_gh(monkeypatch, {branch: [{"number": 13, "state": "MERGED", "headRefOid": pr_head}]})
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True, safe_only=True), worktree)
+
+    assert result.action == "skipped"
+    assert "needs_attention" in result.reason
+    assert unpushed_head in result.reason
+    assert rw.classify_preservation(result) == "needs_attention"
+    assert worktree.exists()
 
 
 def test_closed_pr_requires_matching_worktree_head(
