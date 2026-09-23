@@ -435,7 +435,7 @@ def assemble_expanded_document(
 
             expl = item.get("explanation")
             if expl and isinstance(expl, str):
-                for role, span_text in _split_inline_spans(expl, "item_explanation"):
+                for role, span_text in _split_inline_spans(expl, "instruction"):
                     add_unit("vpravy", act_step, act_id, item_idx, "explanation", role, span_text, source="writer_prose")
 
             pairs = item.get("pairs") or []
