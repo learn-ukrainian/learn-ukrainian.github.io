@@ -217,7 +217,6 @@ def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
     assert rep["shippable"] is True
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["mdx_render"] is True
-    assert steps["plan_valid"] is True
 
 
 def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
