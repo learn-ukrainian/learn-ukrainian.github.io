@@ -450,7 +450,7 @@ def _record_for(operation: Operation, openapi_by_key: Mapping[str, Any]) -> Exer
             path_values=path_values,
             owner="monitor-infra",
             reason="mutation has no approved disposable-store recipe in PR-A",
-            expiry="2026-09-23",
+            expiry="2026-10-22",
             expected_statuses=statuses,
         )
 
