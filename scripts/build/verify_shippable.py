@@ -141,23 +141,27 @@ def _url_is_live(url: str) -> bool:
     return ok
 
 
-def _default_module_dir(level: str, slug: str) -> Path:
-    return CURRICULUM / level / slug
+def _default_module_dir(level: str, slug: str, repo_root: Path | None = None) -> Path:
+    base = (repo_root / "curriculum" / "l2-uk-en") if repo_root else CURRICULUM
+    return base / level / slug
 
 
-def _default_plan_path(level: str, slug: str) -> Path:
+def _default_plan_path(level: str, slug: str, repo_root: Path | None = None) -> Path:
     from scripts.level_config import base_level
 
     level = base_level(level)
-    return CURRICULUM / "plans" / level / f"{slug}.yaml"
+    base = (repo_root / "curriculum" / "l2-uk-en") if repo_root else CURRICULUM
+    return base / "plans" / level / f"{slug}.yaml"
 
 
-def _fresh_module_dir(level: str, slug: str) -> Path:
-    return SITE_DOCS / level / slug
+def _fresh_module_dir(level: str, slug: str, repo_root: Path | None = None) -> Path:
+    base = (repo_root / "site" / "src" / "content" / "docs") if repo_root else SITE_DOCS
+    return base / level / slug
 
 
-def _fresh_plan_path(level: str, slug: str) -> Path:
-    return CURRICULUM / "lesson-plans" / level / f"{slug}.yaml"
+def _fresh_plan_path(level: str, slug: str, repo_root: Path | None = None) -> Path:
+    base = (repo_root / "curriculum" / "l2-uk-en") if repo_root else CURRICULUM
+    return base / "lesson-plans" / level / f"{slug}.yaml"
 
 
 def _site_mdx_path(level: str, slug: str) -> Path:
