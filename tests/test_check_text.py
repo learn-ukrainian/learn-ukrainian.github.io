@@ -5,7 +5,7 @@ Validates:
 - Synthetic tests: input errors (both/neither/caps/accents/checks/max_findings),
   dedup, locations, item IDs, truncation order, 501 stress chunking,
   stress_forms case insensitivity and ambiguity resolution,
-  UA-GEC whole span matching, UA-GEC sub-span non-matching,
+  UA-GEC multi-token problems vs single-token suspicions, sub-span non-matching,
   UA-GEC overlapping hits, skipped-kind token dropping and counting in provenance,
   shadow curated list attribution and suspicion separation
 - Regression test proving is_russian_pattern output keys are unchanged (M2)
@@ -273,7 +273,7 @@ def test_stress_forms_case_insensitive_and_ambiguity_resolution():
 # ── Synthetic Tests: UA-GEC Whole Span, Overlapping, and Skipped Kinds ──────
 
 
-def test_synthetic_ua_gec_one_word_whole_span(monkeypatch):
+def test_synthetic_ua_gec_single_token_to_suspicion(monkeypatch):
     mock_index = {
         ("коментарій",): [
             {
@@ -291,13 +291,49 @@ def test_synthetic_ua_gec_one_word_whole_span(monkeypatch):
     text = "Мій коментарій важливий."
     res = check_text(text=text, checks=["ua_gec"])
     assert res.get("status") != "error"
-    problems = res["problems"]
-    assert len(problems) == 1
-    p = problems[0]
+    assert len(res["problems"]) == 0
+    assert len(res["suspicions"]) == 1
+    s = res["suspicions"][0]
+    assert s["check"] == "ua_gec"
+    assert s["form"] == "коментарій"
+    assert s["detail"]["status"] == "suspicion"
+    assert s["detail"]["label"] == "single-word UA-GEC correction in one document's context; suspicion, not a verdict"
+    assert s["detail"]["error_type"] == "F/Calque"
+    assert s["detail"]["doc_ids"] == ["doc1"]
+    assert s["detail"]["corrections"] == [{"correct": "коментар", "doc_ids": ["doc1"]}]
+
+
+# Backward-compatible alias for existing test node id
+test_synthetic_ua_gec_one_word_whole_span = test_synthetic_ua_gec_single_token_to_suspicion
+
+
+def test_synthetic_ua_gec_multi_token_stays_in_problems(monkeypatch):
+    mock_index = {
+        ("написання", "постів"): [
+            {
+                "id": 202,
+                "error": "написання постів",
+                "correct": "писати дописи",
+                "error_type": "F/Calque",
+                "doc_id": "doc2",
+                "is_native": 0,
+            }
+        ]
+    }
+    monkeypatch.setattr("scripts.verification.check_text._get_ua_gec_index", lambda: (mock_index, 2, 0))
+
+    text = "Триває написання постів щодня."
+    res = check_text(text=text, checks=["ua_gec"])
+    assert res.get("status") != "error"
+    assert len(res["suspicions"]) == 0
+    assert len(res["problems"]) == 1
+    p = res["problems"][0]
     assert p["check"] == "ua_gec"
-    assert p["form"] == "коментарій"
+    assert p["form"] == "написання постів"
+    assert p["detail"]["status"] == "ua_gec_error"
     assert p["detail"]["error_type"] == "F/Calque"
-    assert p["detail"]["corrections"] == [{"correct": "коментар", "doc_ids": ["doc1"]}]
+    assert p["detail"]["doc_ids"] == ["doc2"]
+    assert p["detail"]["corrections"] == [{"correct": "писати дописи", "doc_ids": ["doc2"]}]
 
 
 def test_synthetic_ua_gec_sub_span_not_matched(monkeypatch):
@@ -318,6 +354,7 @@ def test_synthetic_ua_gec_sub_span_not_matched(monkeypatch):
     text_subspan = "Триває написання нового твору."
     res_subspan = check_text(text=text_subspan, checks=["ua_gec"])
     assert len(res_subspan["problems"]) == 0, "Sub-span of longer UA-GEC error must NOT match"
+    assert len(res_subspan["suspicions"]) == 0
 
     text_full = "Триває написання постів щодня."
     res_full = check_text(text=text_full, checks=["ua_gec"])
@@ -355,10 +392,12 @@ def test_synthetic_ua_gec_overlapping_hits(monkeypatch):
     text = "Все відбулося у цілому добре."
     res = check_text(text=text, checks=["ua_gec"])
     assert res.get("status") != "error"
-    forms = {p["form"] for p in res["problems"]}
-    assert "у цілому" in forms, "Outer match must be reported"
-    assert "цілому" in forms, "Overlapping inner match must also be reported"
-    assert len(res["problems"]) == 2
+    prob_forms = {p["form"] for p in res["problems"]}
+    susp_forms = {s["form"] for s in res["suspicions"]}
+    assert "у цілому" in prob_forms, "Outer match must be reported as problem"
+    assert "цілому" in susp_forms, "Overlapping inner match must be reported as suspicion"
+    assert len(res["problems"]) == 1
+    assert len(res["suspicions"]) == 1
 
 
 def test_ua_gec_skipped_kind_tokens_dropped_and_counted():
@@ -472,10 +511,16 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
         vowel_count = sum(1 for ch in s_form if ch in ukrainian_vowels)
         assert vowel_count >= 2, f"Monosyllable {s_form!r} was flagged by stress"
 
-    # Minor 3: UA-GEC findings on clean fixture measured and recorded
+    # Minor 3: UA-GEC findings on clean fixture measured and recorded (separate problems and suspicions)
     gec_clean_problems = [p for p in res_clean["problems"] if p["check"] == "ua_gec"]
-    logger.info("Clean fixture UA-GEC findings count: %d", len(gec_clean_problems))
-    assert len(gec_clean_problems) == 10
+    gec_clean_suspicions = [s for s in res_clean["suspicions"] if s["check"] == "ua_gec"]
+    logger.info(
+        "Clean fixture UA-GEC findings: %d problems, %d suspicions",
+        len(gec_clean_problems),
+        len(gec_clean_suspicions),
+    )
+    assert len(gec_clean_problems) == 2
+    assert len(gec_clean_suspicions) == 8
 
     # 2. Planted items (Minor 7: query-selected and substituted into text)
     candidate_absent = ["бзюкавий", "хряпочка", "дзиґомонець", "псевдословорія"]
@@ -484,19 +529,18 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
     assert len(selected_absent) == 2
     planted_vesum_1, planted_vesum_2 = selected_absent
 
-    # Deterministic UA-GEC row with ORDER BY id LIMIT 1
+    # Deterministic multi-word UA-GEC row 3010 (F/Calque: 'написання постів')
     sources_path = _sources_path()
     conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     try:
-        cur = conn.execute(
-            "SELECT id, error, correct FROM ua_gec_errors WHERE error_type = 'F/Calque' AND length(error) > 5 ORDER BY id LIMIT 1"
-        )
+        cur = conn.execute("SELECT id, error, correct FROM ua_gec_errors WHERE id = 3010")
         gec_row = cur.fetchone()
     finally:
         conn.close()
 
     assert gec_row is not None
+    assert gec_row["id"] == 3010
     planted_gec_error = gec_row["error"]
 
     # Substitute into text at token locations
@@ -530,12 +574,13 @@ def test_acceptance_textbook_fixture_correctness_and_planted():
     assert modified_text[loc2[1] : loc2[2]] == planted_vesum_2
 
     p_gec = next(
-        (p for p in problems if p["check"] == "ua_gec" and planted_gec_error.lower() in p["form"].lower()),
+        (p for p in problems if p["check"] == "ua_gec" and p["form"] == planted_gec_error),
         None,
     )
-    assert p_gec is not None, f"Planted UA-GEC error {planted_gec_error} not detected"
+    assert p_gec is not None, f"Planted UA-GEC error {planted_gec_error} not detected in problems"
     loc_gec = p_gec["locations"][0]
     assert modified_text[loc_gec[1] : loc_gec[2]] == planted_gec_error
+    assert not any(s["form"] == planted_gec_error for s in res_modified["suspicions"])
 
 
 def test_speed_warm_call_under_2s():

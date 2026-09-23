@@ -5,7 +5,7 @@ a single call:
   - VESUM morphology existence (with sentence-initial capital fallback)
   - Stress oracle verification (chunked at STRESS_BATCH_CAP)
   - Russian-shadow morphology detection (curated problems vs heuristic suspicions)
-  - UA-GEC full-span error detection (sentence-bounded contiguous matching)
+  - UA-GEC full-span error detection (multi-token problems vs single-token suspicions)
 """
 
 from __future__ import annotations
@@ -490,13 +490,26 @@ def check_text(
                             {"correct": c, "doc_ids": sorted(list(docs))} for c, docs in corrections_map.items()
                         ]
                         error_types = sorted(list({r["error_type"] for r in active_rows}))
-                        detail: dict[str, Any] = {
-                            "status": "ua_gec_error",
-                            "error_type": error_types[0] if len(error_types) == 1 else error_types,
-                            "corrections": corrections,
-                        }
+                        all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
+                        is_single_token = len(span_key) == 1
+                        if is_single_token:
+                            detail: dict[str, Any] = {
+                                "status": "suspicion",
+                                "label": (
+                                    "single-word UA-GEC correction in one document's context; suspicion, not a verdict"
+                                ),
+                                "error_type": error_types[0] if len(error_types) == 1 else error_types,
+                                "doc_ids": all_docs,
+                                "corrections": corrections,
+                            }
+                        else:
+                            detail = {
+                                "status": "ua_gec_error",
+                                "error_type": error_types[0] if len(error_types) == 1 else error_types,
+                                "doc_ids": all_docs,
+                                "corrections": corrections,
+                            }
                         if any(t in ("G/Case", "G/Gender") for t in error_types):
-                            all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
                             detail["note"] = f"corrected in that document ({', '.join(all_docs)})"
                         ua_gec_findings[span_key] = {
                             "form": form_text,
@@ -504,10 +517,14 @@ def check_text(
                             "detail": detail,
                             "locations": [loc],
                             "_first_loc": (item_idx, start_offset, end_offset),
+                            "_is_suspicion": is_single_token,
                         }
 
         for finding in ua_gec_findings.values():
-            raw_problems.append(finding)
+            if finding.pop("_is_suspicion", False):
+                raw_suspicions.append(finding)
+            else:
+                raw_problems.append(finding)
 
     # 7. Sorting and Truncation
     all_findings = [(f, "problem") for f in raw_problems] + [(f, "suspicion") for f in raw_suspicions]
