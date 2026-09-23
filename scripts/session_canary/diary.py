@@ -10,7 +10,7 @@ from __future__ import annotations
 import fcntl
 import os
 import re
-import tempfile
+import stat
 from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
@@ -161,34 +161,61 @@ def _write_fd(fd: int, data: bytes) -> None:
     os.fsync(fd)
 
 
-def _snapshot_path(path: Path) -> tuple[bytes | None, int]:
-    """Fresh open of ``path``. ``None`` means the path is absent."""
+def _snapshot_path(path: Path) -> tuple[bytes | None, int | None]:
+    """Fresh open of ``path``. Content ``None`` means the path is absent.
+
+    The mode is :func:`stat.S_IMODE` (permission bits plus setuid, setgid, and
+    sticky). An absent path returns mode ``None`` so creation keeps the
+    process umask instead of forcing one.
+    """
     try:
         fd = os.open(path, os.O_RDONLY)
     except FileNotFoundError:
-        return None, 0o644
+        return None, None
     try:
-        mode = os.fstat(fd).st_mode & 0o777
+        mode = stat.S_IMODE(os.fstat(fd).st_mode)
         return _read_fd(fd), mode
     finally:
         os.close(fd)
 
 
-def _write_temp_file(directory: Path, data: bytes, mode: int) -> Path:
-    """Write ``data`` beside the destination so ``os.replace`` stays on one filesystem."""
-    fd, name = tempfile.mkstemp(dir=directory, prefix=".handoff-", suffix=".tmp")
-    tmp = Path(name)
+def _write_temp_file(directory: Path, data: bytes, mode: int | None) -> Path:
+    """Write ``data`` in ``directory`` so ``os.replace`` stays on one filesystem.
+
+    ``mode`` is the full :func:`stat.S_IMODE` of an existing target, applied
+    with ``os.fchmod`` and not masked to ``0o777``. ``None`` creates the file
+    at open's default ``0o666`` so the process umask applies.
+    """
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = -1
+    tmp: Path | None = None
     committed = False
     try:
+        for _ in range(128):
+            candidate = directory / f".handoff-{os.urandom(8).hex()}.tmp"
+            try:
+                fd = os.open(candidate, flags, 0o666)
+            except FileExistsError:
+                continue
+            tmp = candidate
+            break
+        if tmp is None or fd < 0:
+            raise OSError(f"could not create a handoff temp in {directory}")
         _write_fd(fd, data)
-        os.fchmod(fd, mode)
+        if mode is not None:
+            os.fchmod(fd, mode)
         os.fsync(fd)
         committed = True
+        return tmp
     finally:
-        os.close(fd)
-        if not committed:
+        if fd >= 0:
+            os.close(fd)
+        if tmp is not None and not committed:
             tmp.unlink(missing_ok=True)
-    return tmp
 
 
 def _missing_recorded(path: Path, recorded_meta: Path) -> handoff_select.RecordedHandoffMissingError:
@@ -215,11 +242,17 @@ def rewrite_handoff_locked(
 ) -> None:
     """Compare-and-replace the handoff by path, for stamp and handback alike.
 
-    Each attempt reads the path with a fresh open, writes the transformed
-    bytes to a sibling temp (keeping the file mode), and ``os.replace`` only
-    when a second fresh read still matches. A mismatch deletes the temp and
-    retries. After :data:`REWRITE_ATTEMPTS` the function raises
+    Each attempt resolves ``path`` with ``os.path.realpath`` once, reads that
+    target, writes the transformed bytes to a temp in the target's directory,
+    and ``os.replace`` onto the target only when a second fresh read of that
+    same target still matches. A symlink handoff is left in place, still
+    pointing at the stamped file. A mismatch deletes the temp and retries.
+    After :data:`REWRITE_ATTEMPTS` the function raises
     :class:`HandoffRewriteConflictError` and does not write.
+
+    An existing target keeps its full mode, including setuid, setgid, and
+    sticky. An absent target is created with open's default mode so the
+    process umask applies.
 
     An exclusive flock on the parent directory serializes cooperating callers
     of this helper across ``os.replace``. The lock is not the safety property:
@@ -242,8 +275,11 @@ def rewrite_handoff_locked(
         for _attempt in range(REWRITE_ATTEMPTS):
             if recorded_meta is not None and not path.is_file():
                 raise _missing_recorded(path, recorded_meta)
+            # Once per attempt: read, compare, and replace this path only.
+            # A symlink retarget after this point is the next attempt's read.
+            target = Path(os.path.realpath(path))
             try:
-                raw, mode = _snapshot_path(path)
+                raw, mode = _snapshot_path(target)
             except OSError as exc:
                 if recorded_meta is None:
                     raise
@@ -267,22 +303,22 @@ def rewrite_handoff_locked(
             if updated and not updated.endswith("\n"):
                 updated += "\n"
             data = updated.encode("utf-8")
-            tmp = _write_temp_file(path.parent, data, mode)
+            tmp = _write_temp_file(target.parent, data, mode)
             try:
                 try:
-                    confirm, confirm_mode = _snapshot_path(path)
+                    confirm, confirm_mode = _snapshot_path(target)
                 except OSError as exc:
                     if recorded_meta is None:
                         raise
                     raise _unreadable_recorded(path, recorded_meta, exc) from exc
                 if confirm != raw:
                     continue
-                if confirm_mode != mode:
+                if confirm_mode != mode and confirm_mode is not None:
                     os.chmod(tmp, confirm_mode)
                 # Accepted residual: this comparison and os.replace are not atomic
                 # against a non-cooperating editor. The threat model is human-speed
                 # editing and agent tool edits, not adversarial writers.
-                os.replace(tmp, path)
+                os.replace(tmp, target)
                 return
             finally:
                 if tmp.exists():
