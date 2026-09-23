@@ -554,7 +554,7 @@ class TestCommsBatchProgress:
     """Tests for /api/comms/batch-progress endpoint."""
 
     def test_batch_progress_empty(self, comms_client, mock_project_root):
-        with patch("scripts.api.comms_router._check_build_processes", return_value=[]):
+        with patch("scripts.api.comms_router._check_build_processes", return_value=([], None)):
             r = comms_client.get("/api/comms/batch-progress")
         data = r.json()
         assert "tracks" in data
@@ -564,7 +564,7 @@ class TestCommsBatchProgress:
         log_dir = mock_project_root / "logs" / "research-preseed"
         log_file = log_dir / "hist-20260301-0100.log"
         log_file.write_text("VERDICT: PASS\nVERDICT: PASS\nVERDICT: FAIL\nBATCH COMPLETE\nPassed: 2\n")
-        with patch("scripts.api.comms_router._check_build_processes", return_value=[]):
+        with patch("scripts.api.comms_router._check_build_processes", return_value=([], None)):
             r = comms_client.get("/api/comms/batch-progress")
         data = r.json()
         assert "hist" in data["tracks"]
@@ -575,7 +575,7 @@ class TestCommsBatchProgress:
         log_file = log_dir / "bio-20260301-0100.log"
         log_file.write_text("Processing...\nVERDICT: PASS\n")
         procs = [{"pid": 123, "track": "bio", "cmd": "python build_module.py bio 1"}]
-        with patch("scripts.api.comms_router._check_build_processes", return_value=procs):
+        with patch("scripts.api.comms_router._check_build_processes", return_value=(procs, None)):
             r = comms_client.get("/api/comms/batch-progress")
         data = r.json()
         assert data["running_processes"] == 1
@@ -1480,14 +1480,16 @@ class TestCommsInternalHelpers:
         from scripts.api.comms_router import _check_build_processes
         with patch("subprocess.run") as mock_run:
             mock_run.return_value = MagicMock(stdout="user 123 0.0 0.0 python build_module.py hist 1\n", returncode=0)
-            result = _check_build_processes()
-        assert isinstance(result, list)
+            processes, error = _check_build_processes()
+        assert error is None
+        assert isinstance(processes, list)
 
     def test_check_build_processes_failure(self, _patch_config):
         from scripts.api.comms_router import _check_build_processes
         with patch("subprocess.run", side_effect=Exception("no ps")):
-            result = _check_build_processes()
-        assert result == []
+            processes, error = _check_build_processes()
+        assert processes == []
+        assert error == "ps: Exception"
 
     def test_scan_track_progress_no_dir(self, _patch_config, mock_project_root):
         from scripts.api.comms_router import _scan_track_progress

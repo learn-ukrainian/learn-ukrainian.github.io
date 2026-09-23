@@ -508,9 +508,18 @@ function renderOperations(data) {
 
   const batches = data.batches || {};
   const batchRows = (batches.tracks || []).map(item => `<tr><td class="mono">${escapeHtml(short(item.track))}</td><td>${pill(item.health)}</td><td>${escapeHtml(short(item.research_done, '0'))}/${escapeHtml(short(item.total_expected, '0'))}</td><td>${escapeHtml(short(item.remaining, '0'))}</td><td>${escapeHtml(short(item.throughput_per_hour, '0'))}/h</td></tr>`);
-  const batchEmpty = batches.availability === 'unavailable' ? 'Batch read model unavailable.' : 'No batch tracks observed in the available read models.';
+  const batchErrors = (Array.isArray(batches.errors) ? batches.errors : [])
+    .filter(item => typeof item === 'string' && item.length > 0 && item.length <= 80);
+  const batchDegraded = batches.availability === 'degraded'
+    ? `<div class="empty">Availability: degraded${batchErrors.length ? ` · ${escapeHtml(batchErrors.join(' · '))}` : ''}</div>`
+    : '';
+  const batchEmpty = batches.availability === 'unavailable'
+    ? 'Batch read model unavailable.'
+    : batches.availability === 'degraded'
+      ? 'No batch tracks observed while the process probe is degraded.'
+      : 'No batch tracks observed in the available read models.';
   const batchBound = batches.truncated ? `<div class="empty">Showing ${escapeHtml(short(batches.returned, '0'))} of ${escapeHtml(short(batches.total, '0'))} sanitized tracks.</div>` : '';
-  document.getElementById('batch-operations-content').innerHTML = batchBound + table(['Track', 'Health', 'Research', 'Remaining', 'Throughput'], batchRows, batchEmpty);
+  document.getElementById('batch-operations-content').innerHTML = batchDegraded + batchBound + table(['Track', 'Health', 'Research', 'Remaining', 'Throughput'], batchRows, batchEmpty);
 }
 
 function renderRequests(data) {

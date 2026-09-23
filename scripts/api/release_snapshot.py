@@ -30,6 +30,10 @@ from scripts.common.release_layout import (
 
 ARCHIVE_PATHS: tuple[str, ...] = ("scripts", "schemas")
 
+# A hung lsof must not stall release pruning or API startup. On timeout the
+# probe fails closed and pruning is skipped, same as when lsof is missing.
+LSOF_TIMEOUT_S = 10.0
+
 
 class ReleaseSnapshotError(RuntimeError):
     """Raised when a release cannot be safely built, validated, or published."""
@@ -292,11 +296,28 @@ def _release_directories(releases_dir: Path) -> list[Path]:
     )
 
 
+def _default_process_runner(
+    args: Sequence[str],
+    *,
+    capture_output: bool = False,
+    text: bool = False,
+    check: bool = False,
+) -> subprocess.CompletedProcess[str]:
+    """Production runner. The timeout is on this call, not on a bare ``subprocess.run`` default."""
+    return subprocess.run(
+        list(args),
+        capture_output=capture_output,
+        text=text,
+        check=check,
+        timeout=LSOF_TIMEOUT_S,
+    )
+
+
 def _live_release_shas(
     releases_dir: Path,
     *,
     lsof_command: Sequence[str] = ("lsof", "-n", "-P", "-d", "cwd", "-Fpn"),
-    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = _default_process_runner,
 ) -> set[str] | None:
     """Return release SHAs with a live process cwd, or ``None`` if unknown.
 
@@ -311,7 +332,7 @@ def _live_release_shas(
             text=True,
             check=False,
         )
-    except OSError:
+    except (OSError, subprocess.TimeoutExpired):
         return None
     if result.returncode != 0:
         return None
@@ -363,7 +384,7 @@ def prune_releases(
     repo_root: Path,
     *,
     keep: int = 3,
-    runner: Callable[..., subprocess.CompletedProcess[str]] = subprocess.run,
+    runner: Callable[..., subprocess.CompletedProcess[str]] = _default_process_runner,
 ) -> PruneResult:
     """Remove only old, unowned releases while retaining the newest ``keep``.
 
