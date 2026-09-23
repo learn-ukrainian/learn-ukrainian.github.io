@@ -24,6 +24,7 @@ Verifies:
 
 from __future__ import annotations
 
+import hashlib
 import json
 from pathlib import Path
 from typing import Any
@@ -41,6 +42,30 @@ pytestmark = pytest.mark.reads_content
 REPO_ROOT = Path(__file__).resolve().parents[3]
 RECEIPTS_SCHEMA_PATH = REPO_ROOT / "schemas/resolution-receipts-v1.schema.json"
 
+EXP_DOC_L2 = {
+    "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+    "units": [
+        {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok1 sent"},
+        {"tab": "urok", "activity": None, "item": None, "block": 1, "role": "narration", "text": "tok2 sent"},
+        {"tab": "urok", "activity": None, "item": None, "block": 2, "role": "narration", "text": "tok-u sent"},
+        {"tab": "urok", "activity": None, "item": None, "block": 3, "role": "narration", "text": "tok-v sent"},
+        {"tab": "urok", "activity": None, "item": None, "block": 4, "role": "dialogue_line", "text": "tok-spk sent"},
+        {"tab": "urok", "activity": None, "item": None, "block": 5, "role": "narration", "text": "tok3 sent"},
+        {"tab": "urok", "activity": "a1", "item": 0, "block": 0, "role": "item_prompt", "text": "tok1 sent"},
+    ],
+}
+EXP_BYTES_L2 = yaml.safe_dump(EXP_DOC_L2, allow_unicode=True, sort_keys=False).encode("utf-8")
+EXP_SHA256_L2 = hashlib.sha256(EXP_BYTES_L2).hexdigest()
+
+EXP_DOC_L1 = {
+    "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+    "units": [
+        {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok1 sent"},
+    ],
+}
+EXP_BYTES_L1 = yaml.safe_dump(EXP_DOC_L1, allow_unicode=True, sort_keys=False).encode("utf-8")
+EXP_SHA256_L1 = hashlib.sha256(EXP_BYTES_L1).hexdigest()
+
 
 def _write_yaml(path: Path, data: object) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
@@ -49,7 +74,7 @@ def _write_yaml(path: Path, data: object) -> None:
     lock.write(path, content)
 
 
-def _setup_fixture(root: Path, level: str = "a1") -> dict[str, Path]:
+def _setup_fixture(root: Path, level: str = "a1", *, create_expanded: bool = True) -> dict[str, Path]:
     plans_dir = root / f"curriculum/l2-uk-en/lesson-plans/{level}"
     evidence_dir = root / f"curriculum/l2-uk-en/evidence/{level}"
     plans_dir.mkdir(parents=True, exist_ok=True)
@@ -241,6 +266,17 @@ def _setup_fixture(root: Path, level: str = "a1") -> dict[str, Path]:
     }
     _write_yaml(plans_dir / "mod-01.yaml", plan)
 
+    if create_expanded:
+        res_dir = evidence_dir / "_state" / "mod-01"
+        res_dir.mkdir(parents=True, exist_ok=True)
+        p2 = res_dir / "lesson-2.expanded.yaml"
+        p2.write_bytes(EXP_BYTES_L2)
+        lock.write(p2, EXP_BYTES_L2)
+
+        p1 = res_dir / "lesson-1.expanded.yaml"
+        p1.write_bytes(EXP_BYTES_L1)
+        lock.write(p1, EXP_BYTES_L1)
+
     return {
         "plans_dir": plans_dir,
         "evidence_dir": evidence_dir,
@@ -250,11 +286,26 @@ def _setup_fixture(root: Path, level: str = "a1") -> dict[str, Path]:
 
 
 def _make_stream(
-    tokens: list[dict[str, Any]], failures: list[dict[str, Any]] | None = None, lesson_n: int = 2
+    tokens: list[dict[str, Any]],
+    failures: list[dict[str, Any]] | None = None,
+    lesson_n: int = 2,
+    inputs: dict[str, Any] | None = None,
+    expanded_sha256: str | None = None,
 ) -> dict[str, Any]:
+    if inputs is not None:
+        stream_inputs = inputs
+    else:
+        sha = expanded_sha256 or (EXP_SHA256_L2 if lesson_n == 2 else EXP_SHA256_L1)
+        stream_inputs = {
+            "expanded_sha256": sha,
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        }
     return {
         "lesson": {"level": "a1", "slug": "mod-01", "n": lesson_n},
-        "inputs": {},
+        "inputs": stream_inputs,
         "tokens": tokens,
         "failures": failures or [],
     }
@@ -949,8 +1000,18 @@ def test_gate_allow_missing_prior_records_waiver(tmp_path: Path) -> None:
             "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
         }
     ]
+    exp_mod_02 = evidence_dir / "_state" / "mod-02" / "lesson-1.expanded.yaml"
+    exp_doc_mod_02 = {
+        "lesson": {"level": "a1", "slug": "mod-02", "n": 1},
+        "units": [
+            {"tab": "urok", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok1 sent"},
+        ],
+    }
+    _write_yaml(exp_mod_02, exp_doc_mod_02)
+
     stream = _make_stream(tokens, lesson_n=1)
     stream["lesson"]["slug"] = "mod-02"
+    stream["inputs"]["expanded_sha256"] = hashlib.sha256(exp_mod_02.read_bytes()).hexdigest()
 
     report = check_lesson(
         "a1",
@@ -984,7 +1045,7 @@ def test_gate_gloss_absent_from_store_fails(tmp_path: Path) -> None:
     ]
     report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
     assert report.ok is False
-    assert any(f.code == codes.TOKEN_UNRESOLVED and f.record == "W-999" for f in report.failures)
+    assert any(f.code == codes.GLOSS_RECORD_MISSING and f.record == "W-999" for f in report.failures)
 
 
 def test_gate_word_store_unreadable_fails(tmp_path: Path) -> None:
@@ -1008,7 +1069,7 @@ def test_gate_word_store_unreadable_fails(tmp_path: Path) -> None:
 
 
 def test_gate_missing_expanded_document_fails(tmp_path: Path) -> None:
-    paths = _setup_fixture(tmp_path)
+    paths = _setup_fixture(tmp_path, create_expanded=False)
     evidence_dir = paths["evidence_dir"]
     res_dir = evidence_dir / "_state" / "mod-01"
     res_dir.mkdir(parents=True, exist_ok=True)
@@ -1086,5 +1147,144 @@ def test_gate_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
     _write_yaml(res_path, res_doc)
 
     report = check_lesson("a1", "mod-01", 2, resolutions_path=res_path, **paths)
+    assert report.ok is False
+    assert any(f.code == codes.EXPANDED_DOCUMENT_MISMATCH for f in report.failures)
+
+
+def test_gate_stream_missing_inputs_fails_closed(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    tokens = [
+        {
+            "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+            "role": "record_print",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        }
+    ]
+    # 1. Stream dict without 'inputs'
+    stream_no_inputs = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "tokens": tokens,
+        "failures": [],
+    }
+    report = check_lesson("a1", "mod-01", 2, stream_no_inputs, **paths)
+    assert report.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report.failures)
+    assert codes.INPUT_HASH_MISSING not in report.not_checked
+
+    # 2. Stream dict with inputs=None
+    stream_none_inputs = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": None,
+        "tokens": tokens,
+        "failures": [],
+    }
+    report_none = check_lesson("a1", "mod-01", 2, stream_none_inputs, **paths)
+    assert report_none.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_none.failures)
+
+    # 3. Stream dict with empty mapping inputs={}
+    stream_empty_inputs = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": {},
+        "tokens": tokens,
+        "failures": [],
+    }
+    report_empty = check_lesson("a1", "mod-01", 2, stream_empty_inputs, **paths)
+    assert report_empty.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_empty.failures)
+
+    # 4. Stream dict with missing 'expanded_sha256' key
+    stream_missing_key = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+        "inputs": {
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": tokens,
+        "failures": [],
+    }
+    report_missing_key = check_lesson("a1", "mod-01", 2, stream_missing_key, **paths)
+    assert report_missing_key.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_missing_key.failures)
+
+    # 5. Stream dict with expanded_sha256=None or empty
+    for bad_hash in (None, "", 12345):
+        stream_bad_val = {
+            "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+            "inputs": {"expanded_sha256": bad_hash},
+            "tokens": tokens,
+            "failures": [],
+        }
+        report_bad_val = check_lesson("a1", "mod-01", 2, stream_bad_val, **paths)
+        assert report_bad_val.ok is False
+        assert any(f.code == codes.INPUT_HASH_MISSING for f in report_bad_val.failures)
+
+    # 6. Stream object without 'inputs' attribute
+    stream_obj_no_inputs = type(
+        "StreamWithoutInputs",
+        (),
+        {
+            "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+            "tokens": tokens,
+            "failures": [],
+        },
+    )()
+
+    report_obj = check_lesson("a1", "mod-01", 2, stream_obj_no_inputs, **paths)
+    assert report_obj.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_obj.failures)
+
+    # 7. Stream object with empty mapping inputs
+    stream_obj_empty = type(
+        "StreamEmptyInputs",
+        (),
+        {
+            "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+            "inputs": {},
+            "tokens": tokens,
+            "failures": [],
+        },
+    )()
+    report_obj_empty = check_lesson("a1", "mod-01", 2, stream_obj_empty, **paths)
+    assert report_obj_empty.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_obj_empty.failures)
+
+    # 8. Stream object with missing key in inputs
+    stream_obj_missing_key = type(
+        "StreamMissingKeyInputs",
+        (),
+        {
+            "lesson": {"level": "a1", "slug": "mod-01", "n": 2},
+            "inputs": {"other": "value"},
+            "tokens": tokens,
+            "failures": [],
+        },
+    )()
+    report_obj_mk = check_lesson("a1", "mod-01", 2, stream_obj_missing_key, **paths)
+    assert report_obj_mk.ok is False
+    assert any(f.code == codes.INPUT_HASH_MISSING for f in report_obj_mk.failures)
+
+
+def test_gate_stream_mismatched_expanded_hash_fails(tmp_path: Path) -> None:
+    paths = _setup_fixture(tmp_path)
+    tokens = [
+        {
+            "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+            "role": "record_print",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        }
+    ]
+    stream = _make_stream(tokens, lesson_n=2, expanded_sha256="f" * 64)
+    report = check_lesson("a1", "mod-01", 2, stream, **paths)
     assert report.ok is False
     assert any(f.code == codes.EXPANDED_DOCUMENT_MISMATCH for f in report.failures)

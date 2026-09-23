@@ -191,7 +191,7 @@ def planned_state(
                 f"missing prior plan(s) for position(s) {missing_prior}; --strict refuses waiver",
             )
         if allow_missing_prior:
-            waiver = f"waived: {codes.PRIOR_PLANS_MISSING} (missing positions: {missing_prior})"
+            waiver = f"waived: {codes.WAIVER_PRIOR_PLANS_MISSING} (missing positions: {missing_prior})"
         else:
             raise PlannedStateError(
                 codes.PRIOR_PLANS_MISSING,
