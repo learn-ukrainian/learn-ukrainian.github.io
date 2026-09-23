@@ -620,6 +620,17 @@
               "explanation": {
                 "type": "string",
                 "minLength": 1
+              },
+              "mode": {
+                "enum": ["form-choice"]
+              },
+              "record": {
+                "type": "string",
+                "pattern": "^W-[0-9]*[1-9][0-9]*$"
+              },
+              "answer_tags": {
+                "type": "string",
+                "minLength": 1
               }
             },
             "additionalProperties": false

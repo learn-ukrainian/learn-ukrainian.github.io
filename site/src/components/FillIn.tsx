@@ -59,6 +59,11 @@ export interface FillInQuestionProps {
   /** Feedback shown after the learner submits an answer. */
   explanation?: string;
   /**
+   * Fresh-build item mode. Absent on every existing module, which keeps today's rendering.
+   * @ukrainianText false
+   */
+  mode?: 'form-choice' | 'orthography';
+  /**
    * UI language flag for Ukrainian labels and feedback.
    * @ukrainianText false
    */
@@ -74,6 +79,7 @@ export function FillInQuestion({
   answer,
   options = [],
   explanation,
+  mode,
   isUkrainian,
   onComplete,
   disabled = false,
@@ -146,6 +152,67 @@ export function FillInQuestion({
   const answerLabel = isUkrainian ? '✗ Правильна відповідь:' : '✗ The answer is:';
   const checkLabel = isUkrainian ? 'Перевірити' : 'Check Answer';
   const emptyAnswerLabel = isUkrainian ? '(нічого не вставляємо)' : '(nothing goes here)';
+
+  if (mode === 'form-choice' || mode === 'orthography') {
+    const modeParts = sentence.split(/_{3,}|\[blank\]/);
+    const slotClass =
+      mode === 'orthography'
+        ? styles.orthographySlot
+        : `${styles.modeBlank} ${showResult ? (isCorrect ? styles.correct : styles.incorrect) : ''}`;
+    return (
+      <div className={styles.fillInQuestion} data-activity="fillin-question" data-mode={mode}>
+        <p className={styles.sentenceWithBlank}>
+          {parseMarkdown(modeParts[0] || '')}
+          <span
+            className={slotClass}
+            data-activity="fillin-blank"
+            {...(mode === 'orthography' ? { 'data-orthography-slot': 'true' } : {})}
+          >
+            {selected !== null ? selected || BLANK_SLOT : BLANK_SLOT}
+          </span>
+          {parseMarkdown(modeParts[1] || '')}
+        </p>
+        {options.length > 0 && (
+          <div className={styles.optionChips} data-activity="fillin-chips">
+            {coloredOptions.map((option, index) => (
+              <button
+                key={index}
+                type="button"
+                className={styles.chip}
+                aria-pressed={selected === option.text}
+                onClick={() => handleSelect(option.text)}
+                aria-label={option.text === '' ? 'empty' : undefined}
+                disabled={disabled || showResult}
+              >
+                {option.text || BLANK_SLOT}
+              </button>
+            ))}
+          </div>
+        )}
+        {showResult && (
+          <div className={styles.buttonRow}>
+            <button type="button" className={styles.resetButton} onClick={handleReset} disabled={disabled}>
+              {retryLabel}
+            </button>
+          </div>
+        )}
+        {showResult && (
+          <div
+            className={`${styles.feedback} ${isCorrect ? styles.feedbackCorrect : styles.feedbackIncorrect}`}
+            data-activity="fillin-feedback"
+            data-correct={isCorrect ? 'true' : 'false'}
+          >
+            {isCorrect ? correctLabel : `${answerLabel} ${answer || emptyAnswerLabel}`}
+            {explanation && (
+              <p className={styles.explanation} data-activity="fillin-explanation">
+                {explanation}
+              </p>
+            )}
+          </div>
+        )}
+      </div>
+    );
+  }
 
   return (
     <div className={styles.fillInQuestion} data-activity="fillin-question">
@@ -258,6 +325,11 @@ interface FillInItem {
   options?: string[];
   /** Feedback shown after the learner submits an answer. */
   explanation?: string;
+  /**
+   * @schemaDescription Fresh-build mode. Items without it keep the select renderer.
+   * @ukrainianText false
+   */
+  mode?: 'form-choice' | 'orthography';
 }
 
 interface FillInProps {
@@ -284,13 +356,15 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
 
   const [answers, setAnswers] = useState<Record<number, string>>({});
   const [showResults, setShowResults] = useState(false);
+  const batchCount = items.filter((item) => item.mode !== 'form-choice' && item.mode !== 'orthography').length;
+  const showBatchControls = items.length === 0 || batchCount > 0;
 
   const handleSelect = (index: number, value: string) => {
     if (value === '') return; // the unset placeholder is not an answer
     setAnswers({ ...answers, [index]: value === EMPTY_OPTION_VALUE ? '' : value });
   };
 
-  const allAnswered = Object.keys(answers).length === items.length;
+  const allAnswered = Object.keys(answers).length === batchCount;
   const headerLabel = isUkrainian ? 'Заповніть пропуски' : 'Fill in the Blank';
   const checkBtnLabel = isUkrainian ? 'Перевірити' : 'Check Answers';
   const retryBtnLabel = isUkrainian ? 'Спробувати знову' : 'Try Again';
@@ -309,6 +383,19 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
       )}
       <div className={styles.activityContent}>
         {items.map((item, index) => {
+          if (item.mode === 'form-choice' || item.mode === 'orthography') {
+            return (
+              <FillInQuestion
+                key={index}
+                sentence={item.sentence}
+                answer={item.answer}
+                options={item.options}
+                explanation={item.explanation}
+                isUkrainian={isUkrainian}
+                mode={item.mode}
+              />
+            );
+          }
           const parts = item.sentence.split(/_{3,}/); // Match 3+ underscores
           const isCorrect = index in answers && answers[index] === item.answer;
 
@@ -343,7 +430,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
           );
         })}
 
-        <div className={styles.controls}>
+        {showBatchControls && <div className={styles.controls}>
           {!showResults ? (
             <button
               className={styles.checkButton}
@@ -363,7 +450,7 @@ export default function FillIn({ items, instruction, isUkrainian: bakedIsUkraini
               {retryBtnLabel}
             </button>
           )}
-        </div>
+        </div>}
       </div>
     </div>
   );

@@ -441,12 +441,48 @@ def _post_write_plan(new_plan_path: Path) -> Post:
     return post
 
 
+def _define_true_false(plan: dict, activity_id: str) -> None:
+    plan["lessons"][0]["activities"].append(
+        {"id": activity_id, "type": "true-false", "placement": "inline", "focus": "Check the text."}
+    )
+
+
+def _practice_add(plan: dict, step_id: str, activity_id: str) -> None:
+    for step in plan["lessons"][0]["steps"]:
+        if step["id"] == step_id:
+            step["practice"] = [*step.get("practice", []), activity_id]
+
+
+def _consolidation_add(plan: dict, activity_id: str) -> None:
+    plan["lessons"][0]["consolidation"] = [*plan["lessons"][0].get("consolidation", []), activity_id]
+
+
+def _need_quote(plan: dict, step_id: str) -> None:
+    for step in plan["lessons"][0]["steps"]:
+        if step["id"] == step_id:
+            step["needs"] = [*step.get("needs", []), "quote"]
+
+
 VALID_CASES = [
     Case("valid_literacy_r9"),
     Case("valid_non_literacy", build=build_non_literacy),
     Case("valid_cyrillic_lemma", build=build_cyrillic_lemma),
     Case("valid_checkpoint", build=build_checkpoint),
     Case("valid_closing_shape_b", build=build_shape_b, notes=frozenset({codes.CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW})),
+    Case(
+        "true_false_on_dialogue_step",
+        mutate=_mutate(lambda p, pk, w: (_define_true_false(p, "a4"), _practice_add(p, "s3", "a4"))),
+    ),
+    Case(
+        "true_false_on_quote_step",
+        mutate=_mutate(
+            lambda p, pk, w: (_need_quote(p, "s2"), _define_true_false(p, "a4"), _practice_add(p, "s2", "a4"))
+        ),
+    ),
+    Case(
+        "true_false_in_consolidation",
+        mutate=_mutate(lambda p, pk, w: (_define_true_false(p, "a4"), _consolidation_add(p, "a4"))),
+    ),
 ]
 
 FAILING_CASES = [
@@ -792,6 +828,36 @@ FAILING_CASES = [
         "error_ref_id_not_e_shaped",
         mutate=_mutate(lambda p, pk, w: p["lessons"][0]["activities"][1].__setitem__("error_refs", ["X-001"])),
         expected=frozenset({codes.SCHEMA_VIOLATION}),
+    ),
+    Case(
+        "true_false_not_post_text",
+        mutate=_mutate(lambda p, pk, w: (_define_true_false(p, "a4"), _practice_add(p, "s1", "a4"))),
+        expected=frozenset({codes.TRUE_FALSE_NOT_POST_TEXT}),
+    ),
+    Case(
+        "true_false_over_text_count",
+        mutate=_mutate(
+            lambda p, pk, w: (
+                _define_true_false(p, "a4"),
+                _define_true_false(p, "a5"),
+                _practice_add(p, "s3", "a4"),
+                _consolidation_add(p, "a5"),
+            )
+        ),
+        expected=frozenset({codes.TRUE_FALSE_OVER_TEXT_COUNT}),
+    ),
+    Case(
+        "true_false_run",
+        mutate=_mutate(
+            lambda p, pk, w: (
+                _need_quote(p, "s2"),
+                _define_true_false(p, "a4"),
+                _define_true_false(p, "a5"),
+                _consolidation_add(p, "a4"),
+                _consolidation_add(p, "a5"),
+            )
+        ),
+        expected=frozenset({codes.TRUE_FALSE_RUN}),
     ),
     Case(
         "error_ref_not_an_error_record",

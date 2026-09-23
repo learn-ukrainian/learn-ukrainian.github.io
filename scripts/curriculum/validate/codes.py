@@ -82,6 +82,11 @@ ERROR_REFS_MISSING = "error_refs_missing"
 ERROR_REFS_FORBIDDEN = "error_refs_forbidden"
 ERROR_REF_NOT_ERROR_RECORD = "error_ref_not_error_record"
 
+# --- true-false placement (R-19) -------------------------------------------
+TRUE_FALSE_NOT_POST_TEXT = "true_false_not_post_text"
+TRUE_FALSE_OVER_TEXT_COUNT = "true_false_over_text_count"
+TRUE_FALSE_RUN = "true_false_run"
+
 # --- rule 4, cross-plan part: earlier plans and earlier positions ----------
 POSITION_CLAIMED_TWICE = "position_claimed_twice"
 PRIOR_PLAN_UNREADABLE = "prior_plan_unreadable"
@@ -191,6 +196,9 @@ DESCRIPTIONS = {
     ERROR_REFS_MISSING: "failure (r9): an error-correction activity carries no error_refs",
     ERROR_REFS_FORBIDDEN: "failure (r9): error_refs on an activity whose type is not error-correction",
     ERROR_REF_NOT_ERROR_RECORD: "failure (r9): an error_refs id exists in the pack but is not an E- error record",
+    TRUE_FALSE_NOT_POST_TEXT: "failure (R-19): a true-false activity is outside the practice of a text-hosting step and outside consolidation of a lesson that has one",
+    TRUE_FALSE_OVER_TEXT_COUNT: "failure (R-19): true-false activities in practice and consolidation together outnumber the lesson's text-hosting steps",
+    TRUE_FALSE_RUN: "failure (R-19): two true-false activities are adjacent in consolidation",
     CLOSING_SHAPE_B_NEEDS_PLAN_REVIEW: "note (rule 1b): the teach + closes_with_recap closing shape is used; the plan review must confirm it",
     POSITION_CLAIMED_TWICE: "failure (rule 4): two plan files claim the same arc position",
     PRIOR_PLAN_UNREADABLE: "failure (rule 4): a sibling plan file cannot be read, so earlier introductions cannot be trusted",

@@ -365,3 +365,78 @@ describe('empty-string fill-in choice', () => {
     expect(container.querySelectorAll('[class*="correctHint"]')).toHaveLength(0);
   });
 });
+
+describe('FillIn mode', () => {
+  beforeEach(() => {
+    document.documentElement.dataset.chromeLocale = 'en';
+  });
+
+  test('an item without mode still renders a select, not pressed chips', () => {
+    const { container } = render(
+      <FillIn items={[{ sentence: 'The sun is ___.', answer: 'yellow', options: ['yellow', 'blue'] }]} />,
+    );
+    expect(container.querySelectorAll('select')).toHaveLength(1);
+    expect(chipsIn(container)).toHaveLength(0);
+    expect(container.querySelector('input')).toBeNull();
+  });
+
+  test('a question without mode keeps coloured draggable chips', () => {
+    const { container } = render(
+      <FillInQuestion sentence="The capital is ___." answer="Kyiv" options={['Kyiv', 'Lviv']} />,
+    );
+    const chip = chipsIn(container)[0];
+    expect(chip).toHaveAttribute('draggable', 'true');
+    expect(chip.style.backgroundColor).not.toBe('');
+    expect(chip).not.toHaveAttribute('aria-pressed');
+  });
+
+  test('form-choice chips are uniform tap buttons and show the explanation', async () => {
+    const user = userEvent.setup();
+    const { container } = render(
+      <FillIn
+        items={[
+          {
+            sentence: 'Pick ___ one.',
+            answer: 'the',
+            options: ['the', 'a'],
+            mode: 'form-choice',
+            explanation: 'The sentence names it.',
+          },
+        ]}
+      />,
+    );
+    expect(container.querySelector('select')).toBeNull();
+    expect(container.querySelector('input')).toBeNull();
+    expect(checkButton(container)).toBeUndefined();
+    const chips = chipsIn(container);
+    expect(chips).toHaveLength(2);
+    for (const chip of chips) {
+      expect(chip).toHaveAttribute('aria-pressed', 'false');
+      expect(chip).not.toHaveAttribute('draggable');
+      expect(chip.getAttribute('style') ?? '').not.toMatch(/background/i);
+    }
+    await user.click(chipByText(container, 'the'));
+    expect(chipByText(container, 'the')).toHaveAttribute('aria-pressed', 'true');
+    const note = container.querySelector('[data-activity="fillin-explanation"]');
+    expect(note).toHaveTextContent('The sentence names it.');
+    expect(note?.className).toMatch(/explanation/);
+  });
+
+  test('orthography keeps the blank inside the word and has no input', () => {
+    const { container } = render(
+      <FillInQuestion
+        mode="orthography"
+        sentence="pre___post"
+        answer="x"
+        options={['x', 'y']}
+        explanation="After the choice."
+      />,
+    );
+    const slot = container.querySelector('[data-orthography-slot]');
+    expect(slot).toBeInTheDocument();
+    expect(slot?.parentElement?.textContent).toContain('pre');
+    expect(slot?.parentElement?.textContent).toContain('post');
+    expect(container.querySelector('input')).toBeNull();
+    expect(chipsIn(container)[0]).not.toHaveAttribute('draggable');
+  });
+});

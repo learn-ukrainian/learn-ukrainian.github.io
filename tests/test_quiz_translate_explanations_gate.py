@@ -127,6 +127,29 @@ def test_real_quiz_translate_explanations_pass() -> None:
     assert result == {"passed": True, "checked": 3, "violations": []}
 
 
+def test_true_false_is_explanation_required() -> None:
+    from scripts.build.linear_pipeline import _ACTIVITY_EXPLANATION_REQUIRED_TYPES
+
+    expected = frozenset({"quiz", "translate", "fill-in", "true-false"})
+    assert expected == _ACTIVITY_EXPLANATION_REQUIRED_TYPES
+
+
+def test_true_false_missing_explanation_fails() -> None:
+    result = _quiz_translate_explanation_gate(
+        [
+            {
+                "id": "tf-1",
+                "type": "true-false",
+                "items": [{"statement": "The text says it.", "correct": True}],
+            }
+        ]
+    )
+    assert result["passed"] is False
+    assert result["checked"] == 1
+    assert result["violations"][0]["activity_type"] == "true-false"
+    assert result["violations"][0]["reason"] == "missing"
+
+
 def test_quiz_translate_explanation_gate_runs_after_schema() -> None:
     assert PYTHON_QG_GATE_ORDER.index("activity_schema") < PYTHON_QG_GATE_ORDER.index(
         "quiz_translate_explanations"
