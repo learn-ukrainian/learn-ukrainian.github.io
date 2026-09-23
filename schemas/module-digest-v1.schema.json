@@ -1,0 +1,505 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "module-digest-v1.schema.json",
+  "title": "ModuleDigestV1",
+  "type": "object",
+  "required": [
+    "digest_schema",
+    "generator_version",
+    "level",
+    "slug",
+    "up_to",
+    "plan_sha256",
+    "sources",
+    "lessons"
+  ],
+  "additionalProperties": false,
+  "properties": {
+    "digest_schema": {
+      "const": 1
+    },
+    "generator_version": {
+      "type": "string"
+    },
+    "level": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+$"
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9-]+$"
+    },
+    "up_to": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sources": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/source"
+      }
+    },
+    "lessons": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/lesson"
+      }
+    }
+  },
+  "$defs": {
+    "source": {
+      "type": "object",
+      "required": [
+        "lesson",
+        "mdx_sha256",
+        "observed_sha256",
+        "resolutions_sha256",
+        "provenance_sha256"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lesson": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "mdx_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "observed_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "resolutions_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "provenance_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        }
+      }
+    },
+    "locator": {
+      "type": "object",
+      "required": [
+        "tab",
+        "step",
+        "activity",
+        "item",
+        "block"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "tab": {
+          "type": "string",
+          "enum": [
+            "urok",
+            "slovnyk",
+            "vpravy",
+            "resursy"
+          ]
+        },
+        "step": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "activity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 0
+        },
+        "block": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        }
+      }
+    },
+    "occurrence": {
+      "type": "object",
+      "required": [
+        "record",
+        "pos",
+        "forms",
+        "role",
+        "chosen_by",
+        "question_ref",
+        "locator",
+        "offset",
+        "length",
+        "span_source",
+        "span_ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "record": {
+          "type": "string",
+          "pattern": "^W-[A-Za-z0-9_.-]+$"
+        },
+        "pos": {
+          "type": "string",
+          "minLength": 1
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "role": {
+          "type": "string",
+          "enum": [
+            "taught",
+            "drilled",
+            "recycled",
+            "incidental",
+            "exposed"
+          ]
+        },
+        "chosen_by": {
+          "type": "string",
+          "enum": [
+            "resolver",
+            "question"
+          ]
+        },
+        "question_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "span_source": {
+          "type": "string",
+          "enum": [
+            "writer_prose",
+            "record"
+          ]
+        },
+        "span_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "name_occurrence": {
+      "type": "object",
+      "required": [
+        "record",
+        "pos",
+        "forms",
+        "chosen_by",
+        "question_ref",
+        "locator",
+        "offset",
+        "length",
+        "span_source",
+        "span_ref"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "record": {
+          "type": "string",
+          "pattern": "^W-[A-Za-z0-9_.-]+$"
+        },
+        "pos": {
+          "type": "string",
+          "minLength": 1
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "chosen_by": {
+          "type": "string",
+          "enum": [
+            "resolver",
+            "question"
+          ]
+        },
+        "question_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "span_source": {
+          "type": "string",
+          "enum": [
+            "writer_prose",
+            "record"
+          ]
+        },
+        "span_ref": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      }
+    },
+    "encountered_unexplained": {
+      "type": "object",
+      "required": [
+        "record",
+        "tags",
+        "category"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "record": {
+          "type": "string",
+          "pattern": "^W-[A-Za-z0-9_.-]+$"
+        },
+        "tags": {
+          "type": "string",
+          "minLength": 1
+        },
+        "category": {
+          "type": "string",
+          "minLength": 1
+        }
+      }
+    },
+    "grammar": {
+      "type": "object",
+      "required": [
+        "taught",
+        "encountered_unexplained"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "taught": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "encountered_unexplained": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/encountered_unexplained"
+          }
+        }
+      }
+    },
+    "speaker": {
+      "type": "object",
+      "required": [
+        "name",
+        "role",
+        "gender"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string"
+        },
+        "role": {
+          "type": "string"
+        },
+        "gender": {
+          "type": "string",
+          "enum": [
+            "m",
+            "f"
+          ]
+        }
+      }
+    },
+    "address_form": {
+      "type": "object",
+      "required": [
+        "record",
+        "forms",
+        "kind",
+        "number",
+        "locator",
+        "offset",
+        "length"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "record": {
+          "type": "string",
+          "pattern": "^W-[A-Za-z0-9_.-]+$"
+        },
+        "forms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "minLength": 1
+          }
+        },
+        "kind": {
+          "type": "string",
+          "enum": [
+            "second_person",
+            "vocative"
+          ]
+        },
+        "number": {
+          "type": [
+            "string",
+            "null"
+          ],
+          "enum": [
+            "s",
+            "p",
+            null
+          ]
+        },
+        "locator": {
+          "$ref": "#/$defs/locator"
+        },
+        "offset": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "length": {
+          "type": "integer",
+          "minimum": 1
+        }
+      }
+    },
+    "dialogue": {
+      "type": "object",
+      "required": [
+        "step",
+        "setting",
+        "register",
+        "places",
+        "speakers",
+        "address_forms"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "step": {
+          "type": "string",
+          "minLength": 1
+        },
+        "setting": {
+          "type": "string"
+        },
+        "register": {
+          "type": "string",
+          "enum": [
+            "informal",
+            "formal"
+          ]
+        },
+        "places": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "speakers": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/speaker"
+          }
+        },
+        "address_forms": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/address_form"
+          }
+        }
+      }
+    },
+    "lesson": {
+      "type": "object",
+      "required": [
+        "lesson",
+        "occurrences",
+        "names",
+        "grammar",
+        "dialogue"
+      ],
+      "additionalProperties": false,
+      "properties": {
+        "lesson": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "occurrences": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/occurrence"
+          }
+        },
+        "names": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/name_occurrence"
+          }
+        },
+        "grammar": {
+          "$ref": "#/$defs/grammar"
+        },
+        "dialogue": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/dialogue"
+            }
+          ]
+        }
+      }
+    }
+  }
+}

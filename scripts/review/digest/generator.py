@@ -1,0 +1,459 @@
+"""Module digest generator implementation (#8430 WP 15 Part R2a).
+
+Aggregates recorded decisions across lessons 1...n-1 of a module.
+Infers nothing; copies and counts from observed, resolutions, provenance, plan v2, and MDX.
+"""
+
+from __future__ import annotations
+
+import hashlib
+from pathlib import Path
+from typing import Any
+
+import yaml
+
+from scripts.curriculum.evidence import lock
+
+from . import codes
+from .error import DigestError
+from .schema import validate_digest
+
+REPO_ROOT = Path(__file__).resolve().parents[3]
+
+GENERATOR_VERSION: str = "1"
+DIGEST_SCHEMA: int = 1
+
+
+def _sort_val(v: Any) -> tuple[int, Any]:
+    """Helper to sort nullable integers and strings with null sorting first."""
+    if v is None:
+        return (0, "")
+    if isinstance(v, int):
+        return (1, v)
+    return (2, str(v))
+
+
+def _sort_key_locator(item: dict[str, Any]) -> tuple:
+    """Sort key matching (locator.tab, step, activity, item, block, offset) with null first."""
+    loc = item["locator"]
+    return (
+        _sort_val(loc.get("tab")),
+        _sort_val(loc.get("step")),
+        _sort_val(loc.get("activity")),
+        _sort_val(loc.get("item")),
+        _sort_val(loc.get("block")),
+        _sort_val(item.get("offset")),
+        _sort_val(item.get("record")),
+    )
+
+
+def classify_address_form(forms: list[str]) -> tuple[str, str | None] | None:
+    """Classify address form from VESUM tag strings.
+
+    Precedence: second_person over vocative.
+    Returns (kind, number) where kind in ("second_person", "vocative") and number in ("s", "p", None).
+    """
+    for tag in forms:
+        atoms = set(tag.split(":"))
+        if {"pron", "pers", "2"}.issubset(atoms):
+            if "s" in atoms:
+                return ("second_person", "s")
+            elif "p" in atoms:
+                return ("second_person", "p")
+            return ("second_person", None)
+
+    for tag in forms:
+        atoms = set(tag.split(":"))
+        if "v_kly" in atoms:
+            return ("vocative", None)
+
+    return None
+
+
+def compute_file_sha256(path: Path) -> str:
+    """Compute sha256 hex digest of file bytes."""
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def build_digest(
+    level: str,
+    slug: str,
+    up_to: int,
+    *,
+    repo_root: Path | None = None,
+) -> dict[str, Any]:
+    """Build deterministic module digest dict for lessons 1...up_to-1."""
+    if up_to < 1:
+        raise DigestError(codes.INVALID_ARGUMENT, f"--up-to must be >= 1, got {up_to}")
+
+    root = (repo_root or REPO_ROOT).resolve()
+    state_dir = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
+    plan_path = root / f"curriculum/l2-uk-en/lesson-plans/{level}/{slug}.yaml"
+    mdx_dir = root / f"site/src/content/docs/{level}/{slug}"
+
+    if not plan_path.is_file():
+        raise DigestError(codes.PLAN_MISSING, f"module plan {plan_path} not found")
+
+    plan_sha256 = compute_file_sha256(plan_path)
+    try:
+        plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
+    except Exception as exc:
+        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} unreadable YAML: {exc}") from exc
+
+    if not isinstance(plan_doc, dict):
+        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} is not a YAML mapping")
+
+    plan_lessons_by_n: dict[int, dict[str, Any]] = {
+        l["n"]: l for l in plan_doc.get("lessons", []) if isinstance(l, dict) and "n" in l
+    }
+
+    sources: list[dict[str, Any]] = []
+    lessons: list[dict[str, Any]] = []
+
+    for k in range(1, up_to):
+        if k not in plan_lessons_by_n:
+            raise DigestError(codes.LESSON_NOT_IN_PLAN, f"lesson {k} not found in module plan {plan_path}")
+
+        mdx_path = mdx_dir / f"{k}.mdx"
+        if not mdx_path.is_file():
+            raise DigestError(codes.MDX_MISSING, f"lesson {k} MDX file {mdx_path} not found")
+        mdx_sha256 = compute_file_sha256(mdx_path)
+
+        obs_path = state_dir / f"lesson-{k}.observed.yaml"
+        if not obs_path.is_file():
+            raise DigestError(codes.OBSERVED_MISSING, f"observed state file {obs_path} not found")
+        try:
+            lock.require(obs_path)
+        except ValueError as exc:
+            msg = str(exc)
+            if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
+                msg = msg[len(codes.LOCK_MISMATCH) + 2:]
+            raise DigestError(codes.LOCK_MISMATCH, msg) from exc
+        obs_sha256 = compute_file_sha256(obs_path)
+        try:
+            obs_doc = yaml.safe_load(obs_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} unreadable: {exc}") from exc
+        if not isinstance(obs_doc, dict):
+            raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} is not a YAML mapping")
+
+        res_path = state_dir / f"lesson-{k}.resolutions.yaml"
+        if not res_path.is_file():
+            raise DigestError(codes.RESOLUTIONS_MISSING, f"resolutions file {res_path} not found")
+        try:
+            lock.require(res_path)
+        except ValueError as exc:
+            msg = str(exc)
+            if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
+                msg = msg[len(codes.LOCK_MISMATCH) + 2:]
+            raise DigestError(codes.LOCK_MISMATCH, msg) from exc
+        res_sha256 = compute_file_sha256(res_path)
+        try:
+            res_doc = yaml.safe_load(res_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} unreadable: {exc}") from exc
+        if not isinstance(res_doc, dict):
+            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} is not a YAML mapping")
+
+        prov_path = state_dir / f"lesson-{k}.provenance.yaml"
+        if not prov_path.is_file():
+            raise DigestError(codes.PROVENANCE_MISSING, f"provenance file {prov_path} not found")
+        prov_sha256 = compute_file_sha256(prov_path)
+        try:
+            prov_doc = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
+        except Exception as exc:
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} unreadable: {exc}") from exc
+        if not isinstance(prov_doc, dict):
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} is not a YAML mapping")
+
+        sources.append(
+            {
+                "lesson": k,
+                "mdx_sha256": mdx_sha256,
+                "observed_sha256": obs_sha256,
+                "resolutions_sha256": res_sha256,
+                "provenance_sha256": prov_sha256,
+            }
+        )
+
+        prov_map: dict[tuple[Any, Any, Any, Any, Any], dict[str, Any]] = {}
+        for span in prov_doc.get("spans", []):
+            if isinstance(span, dict):
+                key = (
+                    span.get("tab"),
+                    span.get("step"),
+                    span.get("activity"),
+                    span.get("item"),
+                    span.get("block"),
+                )
+                if key not in prov_map:
+                    prov_map[key] = {
+                        "source": span.get("source"),
+                        "ref": span.get("ref"),
+                    }
+
+        observed_roles: dict[str, str] = {}
+        for rec in obs_doc.get("records", []):
+            if isinstance(rec, dict) and "id" in rec and "role" in rec:
+                observed_roles[rec["id"]] = rec["role"]
+
+        occurrences: list[dict[str, Any]] = []
+        names: list[dict[str, Any]] = []
+        dialogue_address_forms: list[dict[str, Any]] = []
+
+        tokens = res_doc.get("tokens", [])
+        for token in tokens:
+            if not isinstance(token, dict):
+                continue
+            selected = token.get("selected")
+            if not selected or not isinstance(selected, dict):
+                continue
+            rec_id = selected.get("record")
+            if not rec_id:
+                continue
+
+            forms = selected.get("forms") or []
+            pos = forms[0].split(":")[0] if forms else ""
+
+            if rec_id not in observed_roles:
+                raise DigestError(
+                    codes.RECORD_NOT_IN_OBSERVED,
+                    f"token record {rec_id} not found in observed index {obs_path}",
+                )
+            role = observed_roles[rec_id]
+
+            prov_str = token.get("provenance")
+            if prov_str == "deterministic":
+                chosen_by = "resolver"
+                question_ref = None
+            else:
+                chosen_by = "question"
+                question_ref = prov_str
+
+            unit = token.get("unit") or {}
+            locator = {
+                "tab": unit.get("tab"),
+                "step": unit.get("step"),
+                "activity": unit.get("activity"),
+                "item": unit.get("item"),
+                "block": unit.get("block"),
+            }
+
+            tok_key = (
+                locator["tab"],
+                locator["step"],
+                locator["activity"],
+                locator["item"],
+                locator["block"],
+            )
+            if tok_key not in prov_map:
+                raise DigestError(
+                    codes.UNIT_NOT_IN_PROVENANCE,
+                    f"token unit {locator} not found in provenance spans of {prov_path}",
+                )
+            span_info = prov_map[tok_key]
+            span_source = span_info.get("source")
+            span_ref = span_info.get("ref")
+
+            offset = token.get("offset", 0)
+            length = len(token.get("token", ""))
+
+            if role == "name":
+                names.append(
+                    {
+                        "record": rec_id,
+                        "pos": pos,
+                        "forms": list(forms),
+                        "chosen_by": chosen_by,
+                        "question_ref": question_ref,
+                        "locator": locator,
+                        "offset": offset,
+                        "length": length,
+                        "span_source": span_source,
+                        "span_ref": span_ref,
+                    }
+                )
+            else:
+                occurrences.append(
+                    {
+                        "record": rec_id,
+                        "pos": pos,
+                        "forms": list(forms),
+                        "role": role,
+                        "chosen_by": chosen_by,
+                        "question_ref": question_ref,
+                        "locator": locator,
+                        "offset": offset,
+                        "length": length,
+                        "span_source": span_source,
+                        "span_ref": span_ref,
+                    }
+                )
+
+            block = locator["block"]
+            if isinstance(block, str) and block.startswith("dialogue_"):
+                af_info = classify_address_form(forms)
+                if af_info is not None:
+                    af_kind, af_number = af_info
+                    dialogue_address_forms.append(
+                        {
+                            "record": rec_id,
+                            "forms": list(forms),
+                            "kind": af_kind,
+                            "number": af_number,
+                            "locator": locator,
+                            "offset": offset,
+                            "length": length,
+                        }
+                    )
+
+        occurrences.sort(key=_sort_key_locator)
+        names.sort(key=_sort_key_locator)
+        dialogue_address_forms.sort(key=_sort_key_locator)
+
+        lesson_plan = plan_lessons_by_n[k]
+        taught_grammar: list[str] = []
+        for step in lesson_plan.get("steps", []):
+            if isinstance(step, dict):
+                introduces = step.get("introduces")
+                if isinstance(introduces, dict):
+                    for gid in introduces.get("grammar", []):
+                        if isinstance(gid, str):
+                            taught_grammar.append(gid)
+
+        untaught = obs_doc.get("untaught_forms") or {}
+        raw_forms = untaught.get("forms", []) if isinstance(untaught, dict) else []
+        encountered_unexplained = [
+            {
+                "record": item["record"],
+                "tags": item["tags"],
+                "category": item["category"],
+            }
+            for item in raw_forms
+            if isinstance(item, dict)
+            and "record" in item
+            and "tags" in item
+            and "category" in item
+        ]
+
+        grammar_entry = {
+            "taught": taught_grammar,
+            "encountered_unexplained": encountered_unexplained,
+        }
+
+        plan_dialogue = lesson_plan.get("dialogue")
+        if plan_dialogue and isinstance(plan_dialogue, dict):
+            places = [
+                p["name"]
+                for p in plan_dialogue.get("places", [])
+                if isinstance(p, dict) and "name" in p
+            ]
+            speakers = [
+                {
+                    "name": s["name"],
+                    "role": s["role"],
+                    "gender": s["gender"],
+                }
+                for s in plan_dialogue.get("speakers", [])
+                if isinstance(s, dict)
+                and "name" in s
+                and "role" in s
+                and "gender" in s
+            ]
+            dialogue_entry: dict[str, Any] | None = {
+                "step": plan_dialogue.get("step"),
+                "setting": plan_dialogue.get("setting", ""),
+                "register": plan_dialogue.get("register", "informal"),
+                "places": places,
+                "speakers": speakers,
+                "address_forms": dialogue_address_forms,
+            }
+        else:
+            dialogue_entry = None
+
+        lessons.append(
+            {
+                "lesson": k,
+                "occurrences": occurrences,
+                "names": names,
+                "grammar": grammar_entry,
+                "dialogue": dialogue_entry,
+            }
+        )
+
+    sources.sort(key=lambda s: s["lesson"])
+    lessons.sort(key=lambda l: l["lesson"])
+
+    digest_doc: dict[str, Any] = {
+        "digest_schema": DIGEST_SCHEMA,
+        "generator_version": GENERATOR_VERSION,
+        "level": level,
+        "slug": slug,
+        "up_to": up_to,
+        "plan_sha256": plan_sha256,
+        "sources": sources,
+        "lessons": lessons,
+    }
+
+    validate_digest(digest_doc)
+    return digest_doc
+
+
+def digest_output_path(
+    level: str,
+    slug: str,
+    up_to: int,
+    *,
+    repo_root: Path | None = None,
+) -> Path:
+    """Return path to digest-upto-<n>.yaml."""
+    root = (repo_root or REPO_ROOT).resolve()
+    return root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
+
+
+def write_digest(
+    digest_doc: dict[str, Any],
+    *,
+    repo_root: Path | None = None,
+) -> tuple[Path, str]:
+    """Write digest and lock sidecar to disk, returning path and sha256."""
+    validate_digest(digest_doc)
+    path = digest_output_path(
+        digest_doc["level"],
+        digest_doc["slug"],
+        digest_doc["up_to"],
+        repo_root=repo_root,
+    )
+    content_bytes = lock.yaml_bytes(digest_doc)
+    sha256 = lock.write(path, content_bytes)
+    return path, sha256
+
+
+def check_digest(
+    level: str,
+    slug: str,
+    up_to: int,
+    *,
+    repo_root: Path | None = None,
+) -> tuple[Path, str]:
+    """Verify digest on disk against recomputed content without byte drift."""
+    path = digest_output_path(level, slug, up_to, repo_root=repo_root)
+    if not path.is_file():
+        raise DigestError(codes.DIGEST_FILE_MISSING, f"digest file {path} not found")
+    lock_path = Path(f"{path}.lock")
+    if not lock_path.is_file():
+        raise DigestError(codes.DIGEST_FILE_MISSING, f"lock file {lock_path} not found")
+    if not lock.check(path):
+        raise DigestError(codes.LOCK_MISMATCH, f"digest lock check failed for {path}")
+
+    computed_doc = build_digest(level, slug, up_to, repo_root=repo_root)
+    expected_bytes = lock.yaml_bytes(computed_doc)
+    actual_bytes = path.read_bytes()
+
+    if actual_bytes != expected_bytes:
+        raise DigestError(
+            codes.BYTE_DRIFT,
+            f"digest file on disk disagrees with recomputed bytes: {path}",
+        )
+
+    return path, hashlib.sha256(actual_bytes).hexdigest()
