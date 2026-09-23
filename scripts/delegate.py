@@ -2773,6 +2773,354 @@ def _stale_branch_holder_releasable(path: Path, branch: str) -> tuple[bool, str]
     return False, f"task still active or invalid status (status={status})"
 
 
+_REVIEW_SERIES_RE = re.compile(r"^(?P<stem>review-.+)-r(?P<round>[1-9][0-9]*)$")
+
+
+def _review_series(task_id: str) -> tuple[str, int] | None:
+    """Return ``(stem, round)`` for a review task, or None for other tasks.
+
+    ``review-gpt6-routing`` is round 0. ``review-gpt6-routing-r7`` is round 7
+    of that same series. A later round replaces every earlier checkout.
+    """
+    name = task_id.strip().strip("/")
+    if not name.startswith("review-"):
+        return None
+    match = _REVIEW_SERIES_RE.fullmatch(name)
+    if match is None:
+        return name, 0
+    return match.group("stem"), int(match.group("round"))
+
+
+def _dispatch_worktree_components() -> list[tuple[Path, str]]:
+    """Return ``(path, task component)`` for registered dispatch worktrees."""
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return []
+    if proc.returncode != 0:
+        return []
+    found: list[tuple[Path, str]] = []
+    current: Path | None = None
+    for line in [*(proc.stdout or "").splitlines(), ""]:
+        if not line:
+            if current is not None:
+                parts = _dispatch_layout_parts(current)
+                if parts is not None:
+                    found.append((current, parts[1]))
+            current = None
+        elif line.startswith("worktree "):
+            current = Path(line.removeprefix("worktree ").strip())
+    return found
+
+
+def _live_origin_branch_shas(cwd: Path, branches: list[str]) -> dict[str, str] | None:
+    """Return live ``refs/heads/<name>`` SHAs from one batched ``ls-remote``.
+
+    ``None`` means the lookup itself failed (git error, unreachable origin,
+    timeout) and proves nothing. A branch absent from a successful mapping is
+    genuinely gone from the remote; its local tracking ref is a stale cache.
+    """
+    if not branches:
+        return {}
+    patterns = sorted({f"refs/heads/{branch}" for branch in branches})
+    try:
+        proc = subprocess.run(
+            ["git", "ls-remote", "origin", *patterns],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    live: dict[str, str] = {}
+    for line in (proc.stdout or "").splitlines():
+        parts = line.split()
+        if len(parts) != 2:
+            continue
+        sha, ref = parts
+        if ref.startswith("refs/heads/"):
+            live[ref.removeprefix("refs/heads/")] = sha
+    return live
+
+
+def _commit_is_durably_contained(cwd: Path, sha: str) -> bool:
+    """True when ``sha`` is on ``origin/main`` or a live origin branch.
+
+    A local ``refs/remotes/origin/*`` ref is a cache, not proof: the remote
+    branch may already be deleted while the tracking ref still contains the
+    tip. Every tracking-ref candidate is re-verified against the live remote;
+    containment counts only when the live SHA equals the cached tracking SHA
+    or has ``sha`` as an ancestor. Any git error, a missing remote ref, or an
+    unreadable live SHA is not containment. A clean worktree is not enough:
+    its commits may exist only in that checkout.
+    """
+    try:
+        ancestor = subprocess.run(
+            ["git", "merge-base", "--is-ancestor", sha, "origin/main"],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if ancestor.returncode == 0:
+        return True
+    if ancestor.returncode != 1:
+        return False
+    try:
+        listed = subprocess.run(
+            [
+                "git",
+                "for-each-ref",
+                "--contains",
+                sha,
+                "--format=%(refname)%09%(objectname)",
+                "refs/remotes/origin",
+            ],
+            cwd=cwd,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    if listed.returncode != 0:
+        return False
+    candidates: list[tuple[str, str]] = []
+    for line in (listed.stdout or "").splitlines():
+        parts = line.split("\t")
+        if len(parts) != 2:
+            continue
+        ref, tracking_sha = parts
+        if ref.startswith("refs/remotes/origin/"):
+            candidates.append((ref.removeprefix("refs/remotes/origin/"), tracking_sha))
+    live = _live_origin_branch_shas(cwd, [name for name, _ in candidates])
+    if live is None:
+        return False
+    for name, tracking_sha in candidates:
+        live_sha = live.get(name)
+        if live_sha is None:
+            continue
+        if live_sha == tracking_sha:
+            return True
+        try:
+            contains = subprocess.run(
+                ["git", "merge-base", "--is-ancestor", sha, live_sha],
+                cwd=cwd,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired):
+            continue
+        if contains.returncode == 0:
+            return True
+    return False
+
+
+def _worktree_head_is_durably_contained(path: Path) -> bool:
+    sha = _resolve_sha(path, "HEAD")
+    if not sha:
+        return False
+    return _commit_is_durably_contained(path, sha)
+
+
+def _superseded_review_releasable(path: Path) -> tuple[bool, str]:
+    """A finished review checkout can go once a later round of the same series starts.
+
+    Cleanliness and liveness are required. The checkout does not have to match
+    ``origin/<branch>``: a detached earlier round no longer holds the branch,
+    which is why the branch-holder release never saw it. Removal still requires
+    a separate containment proof of HEAD; this predicate does not provide it.
+    """
+    if reaper_lifecycle.is_reap_pending(_REPO_ROOT, path):
+        return False, "reaper lifecycle reservation is pending"
+    if not _worktree_is_clean(path):
+        return False, "dirty"
+    unparseable = _bound_task_state_unparseable_reason(path)
+    if unparseable is not None:
+        return False, unparseable
+    task_id, task_state = _task_state_for_worktree(path)
+    activity = _branch_holder_activity_reason(
+        path,
+        task_id=task_id,
+        task_state=task_state,
+    )
+    if activity is not None:
+        return False, activity
+    if task_state is None:
+        return True, "clean; task record absent; activity probes empty"
+    status = str(task_state.get("status") or "")
+    if status in _BRANCH_HOLDER_RELEASABLE_STATUSES:
+        return True, f"clean; task status={status}"
+    return False, f"task still active or invalid status (status={status})"
+
+
+def _release_superseded_review_worktrees(task_id: str, *, dry_run: bool) -> list[Path]:
+    """Remove earlier rounds of this review series before the new checkout is made."""
+    series = _review_series(task_id)
+    if series is None:
+        return []
+    stem, current_round = series
+    released: list[Path] = []
+    for path, component in _dispatch_worktree_components():
+        earlier = _review_series(component)
+        if earlier is None:
+            continue
+        earlier_stem, earlier_round = earlier
+        if earlier_stem != stem or earlier_round >= current_round:
+            continue
+        ok, reason = _superseded_review_releasable(path)
+        if not ok:
+            print(
+                f"ℹ️  earlier review {path} kept ({reason})",
+                file=sys.stderr,
+            )
+            continue
+        if not _worktree_head_is_durably_contained(path):
+            print(
+                f"ℹ️  earlier review {path} kept (tip not contained in main or a remote ref)",
+                file=sys.stderr,
+            )
+            continue
+        scratch_branch = _scratch_branch_for_review_checkout(path, component)
+        if dry_run:
+            print(
+                f"🌲 dry-run: would remove superseded review worktree {path} ({reason})",
+                file=sys.stderr,
+            )
+            released.append(path)
+            continue
+        try:
+            proc = subprocess.run(
+                ["git", "worktree", "remove", str(path)],
+                cwd=_REPO_ROOT,
+                capture_output=True,
+                text=True,
+                check=False,
+                env=_sanitized_git_env(),
+                timeout=DEFAULT_GIT_TIMEOUT_S,
+            )
+        except (OSError, subprocess.TimeoutExpired) as exc:
+            print(
+                f"⚠️  failed to remove superseded review worktree {path}: {type(exc).__name__}: {exc}",
+                file=sys.stderr,
+            )
+            continue
+        if proc.returncode != 0:
+            print(
+                f"⚠️  failed to remove superseded review worktree {path}: {_format_process_failure(proc)}",
+                file=sys.stderr,
+            )
+            continue
+        print(
+            f"🌲 removed superseded review worktree {path} ({reason})",
+            file=sys.stderr,
+        )
+        if scratch_branch is not None:
+            _delete_local_branch(scratch_branch)
+        released.append(path)
+    return released
+
+
+def _scratch_branch_for_review_checkout(path: Path, component: str) -> str | None:
+    """The local branch named for this review round, if the checkout is on it."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=path,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    name = (proc.stdout or "").strip()
+    if proc.returncode != 0 or not name or name == "HEAD":
+        return None
+    if name.split("/")[-1] != component:
+        return None
+    return name
+
+
+def _delete_local_branch(branch: str) -> None:
+    if any(item == branch for item in _checked_out_branch_names()):
+        print(f"ℹ️  kept local branch {branch}; another checkout still has it", file=sys.stderr)
+        return
+    sha = _resolve_sha(_REPO_ROOT, f"refs/heads/{branch}")
+    if not sha or not _commit_is_durably_contained(_REPO_ROOT, sha):
+        print(
+            f"ℹ️  kept local branch {branch}; tip not contained in main or a remote ref",
+            file=sys.stderr,
+        )
+        return
+    try:
+        proc = subprocess.run(
+            ["git", "branch", "-D", branch],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        print(
+            f"⚠️  failed to delete local branch {branch}: {type(exc).__name__}: {exc}",
+            file=sys.stderr,
+        )
+        return
+    if proc.returncode != 0:
+        print(
+            f"⚠️  failed to delete local branch {branch}: {_format_process_failure(proc)}",
+            file=sys.stderr,
+        )
+        return
+    print(f"🌲 deleted superseded review branch {branch}", file=sys.stderr)
+
+
+def _checked_out_branch_names() -> list[str]:
+    names: list[str] = []
+    try:
+        proc = subprocess.run(
+            ["git", "worktree", "list", "--porcelain"],
+            cwd=_REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return names
+    for line in (proc.stdout or "").splitlines():
+        if line.startswith("branch refs/heads/"):
+            names.append(line.removeprefix("branch refs/heads/").strip())
+    return names
+
+
 def _release_stale_branch_holders(
     *,
     branch: str,
@@ -4318,6 +4666,7 @@ def _ensure_worktree(
         "sparse": None,
         "local_venv": None,
     }
+    _release_superseded_review_worktrees(task_id, dry_run=dry_run)
 
     if requested_branch:
         if resolved_base_sha is None:
