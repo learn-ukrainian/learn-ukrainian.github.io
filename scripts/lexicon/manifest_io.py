@@ -42,9 +42,9 @@ FORCE_HYDRATE_ENV = "ATLAS_MANIFEST_FORCE_HYDRATE"
 # (or a same-bytes copy across filesystems) onto this inode, so each dispatch
 # does not keep its own 269MB decompressed manifest.
 MANIFEST_CACHE_ENV = "LU_LEXICON_MANIFEST_CACHE"
-# Immutable cache bytes: owner and group may read. No write bit, and no
-# access for other users.
-_CACHE_FILE_MODE = 0o440
+# Immutable cache bytes: the owning user may read. No write bit, and no
+# group or other access. Hydrate readers are that same user.
+_CACHE_FILE_MODE = 0o400
 
 # Per-section gate-provenance outcomes for the #5077 preserve-vs-retract contract.
 # Recorded in an entry's ``gate_provenance`` map so offline preserves and gate-ran

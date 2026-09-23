@@ -349,7 +349,7 @@ def test_hydrate_hardlinks_readonly_cache_and_atomic_write_replaces_link(
 
     cache_path = Path(os.environ[manifest_io.MANIFEST_CACHE_ENV]) / f"{_sha256(gz_bytes)}.json"
     assert cache_path.is_file()
-    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o440
+    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o400
     assert cache_path.read_bytes() == json_bytes
     assert manifest_path.stat().st_ino == cache_path.stat().st_ino
     assert manifest_path.read_bytes() == json_bytes
@@ -375,7 +375,7 @@ def test_hydrate_reuses_verified_cache_without_download(
     cache_path = Path(os.environ[manifest_io.MANIFEST_CACHE_ENV]) / f"{_sha256(gz_bytes)}.json"
     cache_path.parent.mkdir(parents=True)
     cache_path.write_bytes(json_bytes)
-    os.chmod(cache_path, 0o440)
+    os.chmod(cache_path, 0o400)
 
     def fail_urlopen(*_args, **_kwargs):
         raise AssertionError("verified cache should not fetch")
@@ -383,8 +383,8 @@ def test_hydrate_reuses_verified_cache_without_download(
     monkeypatch.setattr(manifest_io.urllib.request, "urlopen", fail_urlopen)
 
     assert manifest_io.load_manifest(path=manifest_path) == payload
-    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o440
-    assert stat.S_IMODE(manifest_path.stat().st_mode) == 0o440
+    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o400
+    assert stat.S_IMODE(manifest_path.stat().st_mode) == 0o400
     assert manifest_path.stat().st_ino == cache_path.stat().st_ino
 
 
@@ -410,8 +410,8 @@ def test_hydrate_copies_when_hardlink_fails(
     cache_path = Path(os.environ[manifest_io.MANIFEST_CACHE_ENV]) / f"{_sha256(gz_bytes)}.json"
     assert manifest_path.read_bytes() == json_bytes
     assert manifest_path.stat().st_ino != cache_path.stat().st_ino
-    assert stat.S_IMODE(manifest_path.stat().st_mode) == 0o440
-    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o440
+    assert stat.S_IMODE(manifest_path.stat().st_mode) == 0o400
+    assert stat.S_IMODE(cache_path.stat().st_mode) == 0o400
 
 
 _MANIFEST_FILENAME = "lexicon-manifest.json"
