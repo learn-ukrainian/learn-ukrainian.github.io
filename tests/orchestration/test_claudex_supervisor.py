@@ -6,6 +6,7 @@ import shutil
 import stat
 import subprocess
 import sys
+import sysconfig
 import time
 from collections.abc import Iterator
 from datetime import UTC, datetime, timedelta
@@ -42,7 +43,9 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
     """Build the minimal repo needed to exercise interpreter resolution in a worktree."""
     repo = tmp_path / "canonical_repo"
     repo.mkdir()
-    git_env = os.environ.copy()
+    # Hooks and other callers may export repository-local GIT_* state. Never
+    # let fixture Git commands inherit it or operate on the caller's repository.
+    git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
     git_env.update(
         {
             "GIT_CONFIG_NOSYSTEM": "1",
@@ -91,6 +94,7 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
             check=True,
             capture_output=True,
             text=True,
+            timeout=30,
         )
 
     git("init", "--quiet")
@@ -102,9 +106,17 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
     canonical_python.symlink_to(_repo_python())
     shared_venv = _repo_python().parent.parent
     shutil.copy2(shared_venv / "pyvenv.cfg", canonical_python.parent.parent / "pyvenv.cfg")
-    python_version = f"python{sys.version_info.major}.{sys.version_info.minor}"
-    site_packages = shared_venv / "lib" / python_version / "site-packages"
-    fixture_site_packages = canonical_python.parent.parent / "lib" / python_version / "site-packages"
+    site_packages = Path(sysconfig.get_paths()["purelib"])
+    if not site_packages.is_dir():
+        pytest.fail(f"shared interpreter purelib path does not exist: {site_packages}")
+    try:
+        purelib_from_prefix = site_packages.relative_to(Path(sys.prefix))
+    except ValueError:
+        pytest.fail(
+            "shared interpreter purelib path is outside its sys.prefix; cannot construct "
+            f"the fixture venv layout: purelib={site_packages}, sys.prefix={sys.prefix}"
+        )
+    fixture_site_packages = canonical_python.parent.parent / purelib_from_prefix
     fixture_site_packages.parent.mkdir(parents=True)
     fixture_site_packages.symlink_to(site_packages)
 
@@ -122,7 +134,69 @@ def venv_less_linked_worktree(tmp_path: Path) -> Iterator[SimpleNamespace]:
             check=False,
             capture_output=True,
             text=True,
+            timeout=30,
         )
+
+
+def test_venv_less_fixture_ignores_inherited_git_repository_environment(
+    monkeypatch: pytest.MonkeyPatch,
+    request: pytest.FixtureRequest,
+    tmp_path: Path,
+) -> None:
+    """Fixture Git commands must stay in their temp repo under hostile hook env."""
+    decoy = tmp_path / "decoy_repo"
+    decoy.mkdir()
+    clean_git_env = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    git_config = {
+        "GIT_CONFIG_NOSYSTEM": "1",
+        "GIT_CONFIG_GLOBAL": os.devnull,
+        "GIT_AUTHOR_NAME": "Fixture Author",
+        "GIT_AUTHOR_EMAIL": "fixture@example.invalid",
+        "GIT_COMMITTER_NAME": "Fixture Author",
+        "GIT_COMMITTER_EMAIL": "fixture@example.invalid",
+        "GIT_TERMINAL_PROMPT": "0",
+    }
+    clean_git_env.update(git_config)
+
+    def git(*args: str) -> str:
+        completed = subprocess.run(
+            ["git", *args],
+            cwd=decoy,
+            env=clean_git_env,
+            check=True,
+            capture_output=True,
+            text=True,
+            timeout=30,
+        )
+        return completed.stdout.strip()
+
+    subprocess.run(["git", "init", "--quiet"], cwd=decoy, env=clean_git_env, check=True, timeout=30)
+    (decoy / "sentinel.txt").write_text("decoy repo must remain untouched\n", encoding="utf-8")
+    git("add", "sentinel.txt")
+    subprocess.run(
+        ["git", "commit", "--quiet", "-m", "decoy baseline"],
+        cwd=decoy,
+        env=clean_git_env,
+        check=True,
+        capture_output=True,
+        text=True,
+        timeout=30,
+    )
+    original_head = git("rev-parse", "HEAD")
+    original_index = (decoy / ".git/index").read_bytes()
+    original_worktrees = git("worktree", "list", "--porcelain")
+    shared_python = _repo_python()
+    monkeypatch.setattr(sys.modules[__name__], "_repo_python", lambda: shared_python)
+
+    monkeypatch.setenv("GIT_DIR", os.fspath(decoy / ".git"))
+    monkeypatch.setenv("GIT_WORK_TREE", os.fspath(decoy))
+    fixture = request.getfixturevalue("venv_less_linked_worktree")
+
+    assert (fixture.repo / ".git").is_dir()
+    assert git("rev-parse", "HEAD") == original_head
+    assert (decoy / ".git/index").read_bytes() == original_index
+    assert git("worktree", "list", "--porcelain") == original_worktrees
+    assert git("status", "--porcelain") == ""
 
 
 _SUPERVISOR = _REPO_ROOT / "scripts/orchestration/claudex_supervisor.py"
