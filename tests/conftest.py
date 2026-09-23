@@ -36,7 +36,12 @@ def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[i
     pending = [root]
     while pending:
         directory = pending.pop()
-        with os.scandir(directory) as entries:
+        try:
+            entries_context = os.scandir(directory)
+        except (FileNotFoundError, PermissionError):
+            # A temp directory may disappear or become unreadable during teardown.
+            continue
+        with entries_context as entries:
             for entry in entries:
                 try:
                     if entry.is_dir(follow_symlinks=False):
@@ -61,8 +66,12 @@ def pytest_sessionfinish(session: pytest.Session, exitstatus: int) -> None:
     tmp_path_factory = getattr(config, "_tmp_path_factory", None)
     if tmp_path_factory is None:
         return
+    if getattr(tmp_path_factory, "_basetemp", None) is None:
+        return
     basetemp = tmp_path_factory.getbasetemp()
     budget_value = os.environ.get("LU_PYTEST_TMP_BUDGET_GB")
+    if budget_value is not None and not budget_value.strip():
+        budget_value = None
     budget_bytes: int | None = None
     if budget_value is not None:
         try:
@@ -264,7 +273,9 @@ def _isolate_llm_qg_runtime_stores(tmp_path, monkeypatch):
     monkeypatch their own.
     """
     monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_DB", str(tmp_path / "llm_qg.db"))
-    monkeypatch.setenv("LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json"))
+    monkeypatch.setenv(
+        "LEARN_UKRAINIAN_LLM_QG_CIRCUIT", str(tmp_path / "llm_qg_live_circuit.json")
+    )
 
 
 @pytest.fixture(autouse=True)
@@ -519,7 +530,10 @@ def sparse_missing_tree_skip_reason(
     needed = _trees_needed_by_test(normalized, item_name)
     for tree in ("data/projects", "data/lexicon"):
         if tree in missing_trees and tree in needed:
-            return f"{tree} is absent from this sparse worktree; re-include it with --sparse-include {tree}"
+            return (
+                f"{tree} is absent from this sparse worktree; "
+                f"re-include it with --sparse-include {tree}"
+            )
     return None
 
 
@@ -719,7 +733,11 @@ def _is_fixture(fn: ast.FunctionDef | ast.AsyncFunctionDef) -> tuple[bool, bool]
         autouse = False
         if call is not None:
             for keyword in call.keywords:
-                if keyword.arg == "autouse" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True:
+                if (
+                    keyword.arg == "autouse"
+                    and isinstance(keyword.value, ast.Constant)
+                    and keyword.value.value is True
+                ):
                     autouse = True
         return True, autouse
     return False, False
@@ -871,7 +889,9 @@ def _analyze_test_module(
         if autouse:
             module_trees.update(direct.get(name, ()))
 
-    function_trees = tuple((name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees)
+    function_trees = tuple(
+        (name, frozenset(trees)) for name, trees in sorted(direct.items()) if trees
+    )
     return frozenset(module_trees), function_trees
 
 
