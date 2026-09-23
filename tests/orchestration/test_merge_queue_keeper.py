@@ -182,6 +182,33 @@ def test_queued_recorded_approval_then_hold_revokes(tmp_path: Path) -> None:
     assert ("dequeue", "PR_node_42") in fake.actions
 
 
+@pytest.mark.parametrize("label", ["do-not-merge", "blocked"])
+def test_approved_green_hold_label_is_not_enqueued(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str
+) -> None:
+    labels = [{"name": label.upper()}]
+    fake = FakeGitHub(
+        pr(labels={"totalCount": 1, "pageInfo": {"hasNextPage": False}, "nodes": labels})
+    )
+    fake.fresh["labels"] = labels
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert not failed
+    assert "enqueue" not in mutations(fake)
+    assert "reason=hold" in lines[0]
+
+
+@pytest.mark.parametrize("label", ["do-not-merge", "blocked"])
+def test_queued_hold_label_is_revoked(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, label: str
+) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.fresh["labels"] = [{"name": label.upper()}]
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "#42 revoked: hold" in lines
+
+
 def test_queued_legacy_red_ci_revokes(tmp_path: Path) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
@@ -333,6 +360,24 @@ def test_zero_exit_without_membership_is_failure(tmp_path: Path, monkeypatch: py
     fake.membership_result = False
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
     assert failed and any("without queue membership" in line for line in lines)
+
+
+def test_enqueue_without_membership_but_armed_auto_merge_reports_armed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake = FakeGitHub()
+    fake.membership_result = False
+    fake.fresh["autoMergeRequest"] = {"enabledAt": "2026-09-23T13:00:00Z"}
+    lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
+    assert not failed
+    assert any(line == "#42 armed" for line in lines)
+    assert not any("FAILED" in line for line in lines)
+
+
+def test_help_epilog_documents_hold_mechanisms() -> None:
+    epilog = keeper.build_parser().epilog or ""
+    assert "labels" in epilog
+    assert "[hold]" in epilog
 
 
 def test_third_drop_stops_and_comments(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

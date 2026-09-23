@@ -20,12 +20,17 @@ from scripts.orchestration.integration_sweep import Verdict, classify_pr, lookup
 FLOOR = 500
 MARKER = "<!-- mq-keeper head={head} reason={reason} -->"
 HOLD_TITLE = re.compile(r"\[(?:needs operator go|hold)\]", re.I)
-HOLD_LABELS = {"needs-operator-go", "hold"}
+HOLD_LABELS = {"needs-operator-go", "hold", "do-not-merge", "blocked"}
 SHA = re.compile(r"[0-9a-f]{40}\Z")
 
 
 class KeeperError(RuntimeError):
     """A GitHub response or mutation was incomplete or failed."""
+
+
+def _auto_merge_armed(row: Mapping[str, Any]) -> bool:
+    request = row.get("autoMergeRequest")
+    return isinstance(request, Mapping) and bool(request.get("enabledAt"))
 
 
 class GitHub:
@@ -401,7 +406,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         key = str(number)
         approved_before = previous.get("approved", {}).get(key) == head
         queued = pr.get("isInMergeQueue")
-        armed = bool(pr.get("autoMergeRequest"))
+        armed = _auto_merge_armed(pr)
         if queued is True:
             queued_now[key] = head
         queue_enabled = snap["queues"].get(pr.get("baseRefName"))
@@ -536,9 +541,14 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             elif reason == "ready":
                 gh.enqueue(number, head)
                 if not gh.membership(number):
-                    raise KeeperError("enqueue returned success without queue membership")
-                queued_now[key] = head
-                lines.append(f"#{number} enqueued")
+                    after_enqueue = gh.current(number)
+                    if _auto_merge_armed(after_enqueue):
+                        lines.append(f"#{number} armed")
+                    else:
+                        raise KeeperError("enqueue returned success without queue membership or armed auto-merge")
+                else:
+                    queued_now[key] = head
+                    lines.append(f"#{number} enqueued")
                 estimated_remaining -= 30
             if (
                 reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
@@ -592,7 +602,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(
         description="Guard and replenish approved, green pull requests in configured merge queues.\nUse --report to inspect and --apply only for authorized local scheduling.",
         formatter_class=argparse.RawDescriptionHelpFormatter,
-        epilog="Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nExit codes: 0 success/lock overlap; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
+        epilog="Examples:\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --report\n  /home/ops/learn-ukrainian/.venv/bin/python -m scripts.orchestration.merge_queue_keeper --apply\nHold mechanisms: labels (needs-operator-go, hold, do-not-merge, blocked) and the [hold] or [needs operator go] title marker.\nOutputs: PR states; --apply also mutates queue/comments and local batch_state.\nExit codes: 0 success/lock overlap; 1 lookup or mutation failure.\nRelated: #8564, integration_sweep.py, record_cf_verdict.py.",
     )
     group = parser.add_mutually_exclusive_group()
     group.add_argument("--report", action="store_true", help="Read-only report (default).")
