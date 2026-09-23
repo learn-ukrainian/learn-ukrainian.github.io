@@ -1,6 +1,14 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
+while IFS= read -r variable; do
+  case "$variable" in
+    SESSION_*|LEARN_UKRAINIAN_*|LU_*|CLAUDE_*|CODEX_*|GEMINI_*|KIMI_*|AGY_*|GROK_*|CURSOR_*)
+      unset "$variable"
+      ;;
+  esac
+done < <(compgen -e)
+
 unset GIT_ALTERNATE_OBJECT_DIRECTORIES GIT_COMMON_DIR GIT_DIR GIT_INDEX_FILE
 unset GIT_OBJECT_DIRECTORY GIT_PREFIX GIT_WORK_TREE
 

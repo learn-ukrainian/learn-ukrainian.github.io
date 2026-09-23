@@ -24,6 +24,22 @@ import yaml
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _HOOK_TEST = _REPO_ROOT / "scripts" / "audit" / "test_session_setup_hook.sh"
+_FIXTURE_ENV_KEYS = ("PATH", "HOME", "TMPDIR", "LANG")
+
+
+def _fixture_environment() -> dict[str, str]:
+    return {
+        name: os.environ[name]
+        for name in _FIXTURE_ENV_KEYS
+        if name in os.environ
+    }
+
+
+def _fixture_allowlist() -> list[str]:
+    return [
+        f"{name}={value}"
+        for name, value in _fixture_environment().items()
+    ]
 
 
 def _canonical_python() -> Path:
@@ -50,7 +66,7 @@ def _stream_id_from_registry(stream_key: str) -> str:
 def test_session_setup_hook_handoff_fixtures() -> None:
     assert _HOOK_TEST.is_file(), f"missing hook test: {_HOOK_TEST}"
     result = subprocess.run(
-        ["bash", str(_HOOK_TEST)],
+        ["env", "-i", *_fixture_allowlist(), "bash", str(_HOOK_TEST)],
         cwd=_REPO_ROOT,
         capture_output=True,
         text=True,
@@ -143,7 +159,7 @@ def test_session_setup_renders_remote_epic_state_and_fails_open(tmp_path: Path) 
     thread.start()
 
     hook = _REPO_ROOT / "agents_extensions/shared/hooks/session-setup.sh"
-    env = os.environ.copy()
+    env = _fixture_environment()
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(project_dir),
@@ -234,7 +250,7 @@ def test_session_setup_reports_machine_repairs_without_applying_them(
 
     node_modules = project / "node_modules"
     node_modules.symlink_to(node_modules)
-    env = os.environ.copy()
+    env = _fixture_environment()
     env.update(
         {
             "CLAUDE_PROJECT_DIR": str(project),
@@ -337,8 +353,7 @@ def test_session_setup_drift_fp_regression(tmp_path: Path) -> None:
         "XDG_DATA_HOME": str(tmp_path / "xdg-data"),
         "XDG_STATE_HOME": str(tmp_path / "xdg-state"),
         "GH_CONFIG_DIR": str(tmp_path / "gh-config"),
-        "PATH": f"{venv_bin}:{os.environ.get('PATH', '')}",
-        "PYTHONPATH": os.environ.get("PYTHONPATH", ""),
+        "PATH": f"{venv_bin}:{_fixture_environment().get('PATH', '')}",
         "CODEX_CANONICAL_REPO_ROOT": str(canonical_dir),
         "LEARN_UKRAINIAN_REQUESTED_PROFILE_ID": "native_claude",
         "CLAUDE_PROFILE_RESOLVER_SH": str(
