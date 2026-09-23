@@ -4154,6 +4154,86 @@ def _should_reap_settled_worktree(
     return False
 
 
+# Every status a finished worker persists. Any other value on a sibling
+# record, including ``needs_finalize``, ``spawning``, ``running``, ``""``,
+# a missing status, or an unknown value, still claims its worktree (#8610).
+_SETTLE_REAP_RELEASED_CLAIM_STATUSES = frozenset(
+    {
+        "done",
+        "failed",
+        _NO_DELIVERABLE_STATUS,
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "dry_run",
+    }
+)
+
+
+def _settled_worktree_reap_refusal(
+    worktree: Path,
+    *,
+    task_id: str,
+    created_by_this_dispatch: bool | None,
+) -> dict[str, Any] | None:
+    """Return a ``worktree_reap`` skip record when settle must not remove ``worktree``.
+
+    Settle removes only a checkout this dispatch created. An attached or
+    reused checkout belongs to another task, and that owner reaps it (#8610).
+    Ownership that cannot be established fails closed.
+
+    As defence in depth, a sibling task record whose status still claims
+    the worktree and whose ``worktree_path`` resolves to the same path also
+    blocks removal, even when ``worktree_reused`` was mis-recorded. A
+    sibling record that cannot be read or parsed blocks removal too, since
+    its claim cannot be ruled out. Returns ``None`` when removal may proceed.
+    """
+
+    def skipped(reason: str) -> dict[str, Any]:
+        return {
+            "action": "skipped",
+            "path": str(worktree),
+            "branch": None,
+            "reason": reason,
+            "dirty": None,
+            "pr": None,
+            "error": None,
+        }
+
+    if created_by_this_dispatch is None:
+        return skipped("worktree ownership unknown; refusing worktree removal")
+    if not created_by_this_dispatch:
+        return skipped("reused worktree; owner reaps")
+
+    target = worktree.resolve()
+    own_state = _state_path(task_id)
+    try:
+        state_files = sorted(_TASKS_DIR.glob("*.json"))
+    except OSError as exc:
+        return skipped(f"task claims unreadable ({type(exc).__name__}); refusing worktree removal")
+    for state_file in state_files:
+        if state_file == own_state:
+            continue
+        try:
+            record = json.loads(state_file.read_text(encoding="utf-8"))
+        except FileNotFoundError:
+            # Removed between glob and read: it no longer claims anything.
+            continue
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            record = None
+        claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
+        if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
+            return skipped(f"task record {state_file.name} unreadable; refusing worktree removal")
+        if record.get("task_id") == task_id or not claimed_path:
+            continue
+        if record.get("status") in _SETTLE_REAP_RELEASED_CLAIM_STATUSES:
+            continue
+        if Path(claimed_path).resolve() == target:
+            return skipped(f"worktree claimed by active task {record.get('task_id') or state_file.stem}")
+    return None
+
+
 def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
     """Remove a settled worktree checkout and keep its branch ref.
 
@@ -5829,6 +5909,14 @@ def _run_worker(
         # worktree exited dirty so follow-up reviewers can see at a glance
         # that the dispatched agent left uncommitted changes behind.
         worktree_path = final_state.get("worktree_path")
+        # Ownership is fixed at launch: only a worktree_path recorded with an
+        # explicit ``worktree_reused: false`` was created by this dispatch. A
+        # path derived from cwd below, or a legacy record without the flag,
+        # has unknown ownership and settle will not remove it (#8610).
+        reused_flag = final_state.get("worktree_reused")
+        worktree_created_by_dispatch = (
+            (reused_flag is False) if worktree_path and isinstance(reused_flag, bool) else None
+        )
         if not worktree_path and final_state.get("cwd"):
             candidate_cwd = Path(final_state.get("cwd"))
             resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
@@ -6104,7 +6192,11 @@ def _run_worker(
         returncode=returncode,
         dirty_on_exit=dirty_on_exit,
     ):
-        worktree_reap = _reap_finished_worktree(Path(worktree_path))
+        worktree_reap = _settled_worktree_reap_refusal(
+            Path(worktree_path),
+            task_id=task_id,
+            created_by_this_dispatch=worktree_created_by_dispatch,
+        ) or _reap_finished_worktree(Path(worktree_path))
 
     usage_record = getattr(result, "usage_record", None)
     result_substitution = getattr(result, "substitution", None)

@@ -8342,21 +8342,34 @@ def _run_settle_reap_worker(
     keep_worktree: bool = False,
     require_review_verdict: bool = False,
     commits_ahead: int | None = None,
+    worktree_reused: bool | None = False,
+    sibling_records: dict[str, Any] | None = None,
 ):
     primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
     if dirty:
         (worktree / "leak.txt").write_text("uncommitted\n", encoding="utf-8")
     state_path = delegate._state_path(task_id)
-    delegate._write_state_atomic(
-        state_path,
-        {
-            "task_id": task_id,
-            "status": "running",
-            "worktree_path": str(worktree),
-            "worktree_base": "main",
-            "worktree_branch": branch,
-        },
-    )
+    own_state: dict[str, Any] = {
+        "task_id": task_id,
+        "status": "running",
+        "worktree_path": str(worktree),
+        "worktree_base": "main",
+        "worktree_branch": branch,
+    }
+    if worktree_reused is not None:
+        own_state["worktree_reused"] = worktree_reused
+    delegate._write_state_atomic(state_path, own_state)
+    # Sibling task records share the tmp tasks dir. A dict names this
+    # worktree via ``worktree_path``; a str is written raw (corrupt record).
+    for sibling_id, record in (sibling_records or {}).items():
+        sibling_path = delegate._state_path(sibling_id)
+        if isinstance(record, str):
+            sibling_path.write_text(record, encoding="utf-8")
+        else:
+            delegate._write_state_atomic(
+                sibling_path,
+                {"task_id": sibling_id, "worktree_path": str(worktree), **record},
+            )
     mock_result = type(
         "_Result",
         (),
@@ -8507,6 +8520,103 @@ def test_keep_worktree_flag_keeps_clean_read_only_checkout(tmp_tasks_dir, tmp_pa
     assert state["worktree_reap"] is None
     assert worktree.exists()
     assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_review_attached_to_live_implementer_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 (a): a review that reused a running implementer's checkout never removes it."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="review-8607-hermetic-worktree-cf",
+        mode="read-only",
+        worktree_reused=True,
+        sibling_records={"impl-8607": {"status": "running", "mode": "danger", "worktree_reused": False}},
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reused"] is True
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "reused worktree; owner reaps"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_review_in_own_worktree_still_removed_past_finished_claims(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610 (b): a checkout this dispatch created is still removed; finished records do not claim it."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-own",
+        mode="read-only",
+        sibling_records={
+            "old-done": {"status": "done"},
+            "old-dry-run": {"status": "dry_run"},
+            "elsewhere": {"status": "running", "worktree_path": str(tmp_path / "other")},
+        },
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize("claim_status", ["running", "spawning", "", "needs_finalize", None])
+def test_active_sibling_claim_blocks_reap_when_reused_flag_is_mis_set(
+    tmp_tasks_dir, tmp_path, monkeypatch, claim_status
+):
+    """#8610 (c): another non-terminal task naming the path blocks removal even with reused=False."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-misset",
+        mode="read-only",
+        worktree_reused=False,
+        sibling_records={"impl-owner": {"status": claim_status}},
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-owner"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+@pytest.mark.parametrize("corrupt", ['{"task_id": "half', "[1, 2]", '{"worktree_path": 7}'])
+def test_unreadable_sibling_task_record_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch, corrupt):
+    """#8610: a sibling record whose claim cannot be read fails closed."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-corrupt-sibling",
+        mode="read-only",
+        sibling_records={"broken": corrupt},
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "task record broken.json unreadable; refusing worktree removal"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_unknown_worktree_ownership_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: a record without ``worktree_reused`` cannot prove creation, so settle keeps it."""
+    _primary, worktree, _branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-legacy",
+        mode="read-only",
+        worktree_reused=None,
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree ownership unknown; refusing worktree removal"
+    assert worktree.exists()
 
 
 def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
