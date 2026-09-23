@@ -332,11 +332,13 @@ def test_orthography_malformed_item_returns_draft_error_not_type_error() -> None
 def test_draft_schema_import_does_not_import_linear_pipeline() -> None:
     import subprocess
     import sys
+    from pathlib import Path
 
+    repo_root = Path(__file__).resolve().parents[2]
     cmd = [
         sys.executable,
         "-c",
         "import sys, scripts.build.fresh.draft_schema; assert 'scripts.build.linear_pipeline' not in sys.modules",
     ]
-    result = subprocess.run(cmd, capture_output=True, text=True)
+    result = subprocess.run(cmd, capture_output=True, text=True, timeout=60, cwd=repo_root)
     assert result.returncode == 0, result.stderr
