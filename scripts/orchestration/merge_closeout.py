@@ -121,11 +121,33 @@ def fetch_pr_info(repo_root: Path, pr_number: int, *, repo: str | None = None) -
     )
 
 
-def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.WorktreeInfo]:
-    """Worktrees under ``.worktrees/`` whose branch or exact HEAD matches the PR.
+def _head_belongs_only_to_pr(repo_root: Path, head: str, pr_sha: str) -> bool:
+    """True when ``head`` is on the PR and not already on ``origin/main``.
 
-    Matching by exact HEAD sha (not only branch name) is required to also
-    catch detached review-checkout siblings of the same merged commit.
+    A detached review of an earlier PR commit is not the merged tip and is
+    not the PR branch, so branch-name and exact-SHA matching both miss it.
+    Commits already on main are excluded: every older main checkout is an
+    ancestor of a PR that branched from main.
+    """
+    on_pr = rw._run(
+        ["git", "merge-base", "--is-ancestor", head, pr_sha],
+        cwd=repo_root,
+    )
+    if on_pr.returncode != 0:
+        return False
+    on_main = rw._run(
+        ["git", "merge-base", "--is-ancestor", head, "origin/main"],
+        cwd=repo_root,
+    )
+    # 1 means "not an ancestor". Any other nonzero exit is an unreadable ref.
+    return on_main.returncode == 1
+
+
+def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.WorktreeInfo]:
+    """Worktrees under ``.worktrees/`` that belong to this merged PR.
+
+    A match is the PR branch, the exact merged head, or a detached checkout
+    of an earlier commit that exists only on that PR.
     """
     primary = rw.primary_checkout_root(repo_root)
     matches: list[rw.WorktreeInfo] = []
@@ -137,7 +159,13 @@ def find_matching_worktrees(repo_root: Path, pr: PullRequestInfo) -> list[rw.Wor
             continue
         branch_match = pr.head_ref_name is not None and info.branch == pr.head_ref_name
         sha_match = pr.head_sha is not None and info.head == pr.head_sha
-        if branch_match or sha_match:
+        earlier_pr_commit = (
+            pr.head_sha is not None
+            and info.head is not None
+            and not sha_match
+            and _head_belongs_only_to_pr(repo_root, info.head, pr.head_sha)
+        )
+        if branch_match or sha_match or earlier_pr_commit:
             matches.append(info)
     return matches
 

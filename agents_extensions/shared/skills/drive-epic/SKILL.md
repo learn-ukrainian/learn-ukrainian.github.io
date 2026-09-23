@@ -586,10 +586,12 @@ After `MERGED`, follow the numbered order below: reaper first, then branch delet
    [`worktree-cleanup.md`](../../../../docs/runbooks/worktree-cleanup.md) for the
    kill switch, rescue restore, and allowlisted dual paths before using
    `git worktree remove`.
-4. **Branches** — `merge_closeout --apply` already proves and, where needed, deletes
-   both the remote and local branch (exact-head-match only). Delete manually only if
-   its output reports a residual (fallback); then run `git fetch --prune` and
-   `git worktree prune`.
+4. **Branches** — `merge_closeout --apply` deletes the pull request's remote and
+   local branch. A squash merge still counts: the old tip is the PR head, not a
+   commit on `main`. Agent scratch refs (`*/review-*`, `rescue/*`, `pr-*`) are not
+   a pull request head; the hygiene sweep deletes them when they have no open PR,
+   and a later review round deletes the earlier round's branch. Do not leave those
+   refs behind. Then run `git fetch --prune`.
 5. **Prove** — `df -h /` and `git worktree list` show no zombie for that PR.
 
 **Do not** treat merge alone as closeout. **Do not** run sealed formal CF.
