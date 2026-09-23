@@ -27,6 +27,7 @@ from learn_ukrainian_v4_runtime.resources import resource_root
 
 PG_BLOB_TABLE = "fleet_comms_artifact_blobs"
 PG_MIGRATION_TABLE = "fleet_comms_pg_schema_migrations"
+PG_SCHEMA_MIGRATION_LOCK_KEY = int.from_bytes(hashlib.sha256(b"fleet_comms_pg_schema").digest()[:8], "big", signed=True)
 
 
 class PgSchemaError(RuntimeError):
@@ -231,6 +232,32 @@ def _ensure_migration_table(conn: Any) -> None:
     )
 
 
+def _ensure_operation_roles(conn: Any) -> None:
+    """Create V4's cluster-wide roles safely across separate databases.
+
+    Advisory locks are database-scoped. Two migrations in different databases
+    can therefore race on pg_authid even while each owns its migration lock.
+    Keep the versioned SQL unchanged so existing checksummed receipts remain
+    valid; the SQL's role checks become idempotent after this setup.
+    """
+    conn.execute(
+        """DO $$ BEGIN
+            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'hramatka_v4_control_writer') THEN
+                BEGIN
+                    CREATE ROLE hramatka_v4_control_writer NOLOGIN;
+                EXCEPTION WHEN duplicate_object OR unique_violation THEN NULL;
+                END;
+            END IF;
+            IF NOT EXISTS (SELECT FROM pg_roles WHERE rolname = 'hramatka_v4_sources_writer') THEN
+                BEGIN
+                    CREATE ROLE hramatka_v4_sources_writer NOLOGIN;
+                EXCEPTION WHEN duplicate_object OR unique_violation THEN NULL;
+                END;
+            END IF;
+        END $$"""
+    )
+
+
 def _applied_migrations(conn: Any) -> dict[int, tuple[str, str]]:
     rows = conn.execute(f"SELECT version, name, checksum FROM {PG_MIGRATION_TABLE}").fetchall()
     applied: dict[int, tuple[str, str]] = {}
@@ -279,16 +306,23 @@ def apply_pg_schema(conn: Any) -> int:
     """Apply each known pg migration atomically and refuse unknown future versions.
 
     Idempotent: ``CREATE TABLE IF NOT EXISTS`` plus a receipt row per version.
+    A transaction-scoped lock serializes first-run DDL and receipt reads across
+    concurrent openers of the same database.
     Returns the highest applied version.
     """
     known = {migration.version: migration for migration in MIGRATIONS}
     with conn.transaction():
+        # IF NOT EXISTS is not atomic against another session creating the
+        # table's implicit composite type. Lock before even creating the ledger.
+        conn.execute("SELECT pg_advisory_xact_lock(%s)", (PG_SCHEMA_MIGRATION_LOCK_KEY,))
         _ensure_migration_table(conn)
         applied = _applied_migrations(conn)
         _validate_applied_migrations(applied, known)
         for migration in MIGRATIONS:
             if migration.version in applied:
                 continue
+            if migration.version == 6:
+                _ensure_operation_roles(conn)
             for statement in migration.statements:
                 conn.execute(statement)
             conn.execute(
