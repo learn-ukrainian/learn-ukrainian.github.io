@@ -71,7 +71,12 @@ def _patch_orient_sources(monkeypatch) -> None:
     monkeypatch.setattr(
         api_main,
         "_collect_capacity_orient_data",
-        lambda ctx=None: {"lanes": {"codex": {"in_flight": 0, "healthy": True, "burn_pct_7d": 10.0, "remaining_pct": 90.0, "status": "cool"}}, "primary_recommendation": "codex"},
+        lambda ctx=None: {
+            "lanes": {
+                "codex": {"in_flight": 0, "healthy": True, "burn_pct_7d": 10.0, "remaining_pct": 90.0, "status": "cool"}
+            },
+            "primary_recommendation": "codex",
+        },
     )
     monkeypatch.setattr(api_main, "_collect_bridge_pending_orient_data", lambda ctx=None: {})
     monkeypatch.setattr(
@@ -80,12 +85,20 @@ def _patch_orient_sources(monkeypatch) -> None:
         lambda ctx=None: {"counts": {"total": 0, "live_pending": 0}, "actionable": [], "errors": []},
     )
     monkeypatch.setattr(
-        api_main, "_collect_wiki_orient_data", lambda ctx=None: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}}
+        api_main,
+        "_collect_wiki_orient_data",
+        lambda ctx=None: {"by_track": {"hist": {"compiled": 1, "total": 2, "pct": 50.0}}},
     )
     monkeypatch.setattr(
         api_main,
         "_collect_health_orient_data",
-        lambda ctx=None: {"api": True, "mcp_sources": False, "mcp_rag": False, "sources_db": True, "message_broker": True},
+        lambda ctx=None: {
+            "api": True,
+            "mcp_sources": False,
+            "mcp_rag": False,
+            "sources_db": True,
+            "message_broker": True,
+        },
     )
     monkeypatch.setattr(
         api_main,
@@ -108,7 +121,8 @@ def _git(repo: Path, *args: str) -> subprocess.CompletedProcess[str]:
         check=True,
         capture_output=True,
         text=True,
-        env=_clean_git_env(), timeout=30,
+        env=_clean_git_env(),
+        timeout=30,
     )
 
 
@@ -120,7 +134,8 @@ def _init_orient_git_repo(tmp_path: Path) -> Path:
         check=True,
         capture_output=True,
         text=True,
-        env=_clean_git_env(), timeout=30,
+        env=_clean_git_env(),
+        timeout=30,
     )
     _git(repo, "config", "user.email", "test@example.com")
     _git(repo, "config", "user.name", "Test")
@@ -722,16 +737,18 @@ def test_orient_includes_capacity_section(monkeypatch):
 def test_orient_issues_collector_uses_five_second_subprocess_timeout(monkeypatch):
     captured: dict[str, float] = {}
 
-    def fake_run_command(args, *, timeout: float = 2.0, ctx=None):
+    def fake_list(repo, *, limit, timeout, cache=None):
         captured["timeout"] = timeout
+        captured["limit"] = limit
         raise RuntimeError("gh unavailable for timeout assertion")
 
-    monkeypatch.setattr(api_main, "_run_command", fake_run_command)
+    monkeypatch.setattr(api_main.github_rest, "list_open_issues", fake_list)
 
     with pytest.raises(RuntimeError, match="gh unavailable"):
         api_main._collect_issues_orient_data()
 
     assert captured["timeout"] == 5.0
+    assert captured["limit"] == 10
 
 
 def test_lean_orient_hung_capacity_and_health_do_not_stall_other_sections(monkeypatch):
