@@ -1758,7 +1758,7 @@ def test_cli_blocked_report_prints_tokens_and_failures(capsys, monkeypatch):
         "stream_failures": ["unresolved token at unit 2"],
         "message": "stream has 2 blocking token(s) and 1 failure(s); refusing site write",
     }
-    monkeypatch.setattr("scripts.build.fresh.cli.assemble_lesson", lambda *args, **kwargs: blocked_rep)
+    monkeypatch.setattr("scripts.build.fresh.assemble.assemble_lesson", lambda *args, **kwargs: blocked_rep)
 
     rc = cli.main(["assemble", "--level", "a1", "--slug", "sample-slug", "--lesson", "1"])
     assert rc == 1
