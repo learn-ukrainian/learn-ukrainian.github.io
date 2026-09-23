@@ -310,7 +310,7 @@ def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
     project_root = Path(__file__).resolve().parents[2]
     assert _raw_worktree_remove_callers(project_root) == {
         "scripts/ai_agent_bridge/_acp_execution.py": {"acp_execution_cwd"},
-        "scripts/delegate.py": {"_release_stale_branch_holders"},
+        "scripts/delegate.py": {"_release_stale_branch_holders", "_release_superseded_review_worktrees"},
         "scripts/fleet/post_task_reap.py": {"_remove_worktree"},
         "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
         "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},
@@ -1012,6 +1012,9 @@ def test_merged_pr_head_must_match_worktree_head(
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/mismatched")
     git(worktree, "push", "-u", "origin", "codex/mismatched")
+    (worktree / "only-here.txt").write_text("not on main\n", encoding="utf-8")
+    git(worktree, "add", "only-here.txt")
+    git(worktree, "commit", "-m", "not the pr head")
     patch_gh(
         monkeypatch,
         {"codex/mismatched": [{"number": 10, "state": "MERGED", "headRefOid": "0" * 40}]},
@@ -1063,6 +1066,9 @@ def test_closed_pr_requires_matching_worktree_head(
     repo = init_repo(tmp_path)
     matching = add_worktree(repo, "codex/closed-matching")
     mismatched = add_worktree(repo, "codex/closed-mismatched")
+    (mismatched / "only-here.txt").write_text("not on main\n", encoding="utf-8")
+    git(mismatched, "add", "only-here.txt")
+    git(mismatched, "commit", "-m", "not the closed pr head")
     patch_gh(
         monkeypatch,
         {
@@ -1713,30 +1719,81 @@ def test_p0_dynamic_cap_ceiling_stops_run_in_apply_mode(
     assert Path(blocked[0].path).exists()
 
 
-def test_merged_pr_same_tree_sibling_head_reaps(
+def test_merged_pr_same_tree_divergent_commit_is_kept(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
-    """Squash leftovers with the same tree as the MERGED PR head still reap."""
+    """An identical tree at a commit the merged PR does not contain stays."""
     repo = init_repo(tmp_path)
-    worktree = add_worktree(repo, "codex/occupancy-fresh")
+    branch = "codex/occupancy-fresh"
+    worktree = add_worktree(repo, branch)
+    git(worktree, "push", "-u", "origin", branch)
     git(worktree, "commit", "--allow-empty", "-m", "sibling of merged head")
     tree = git(worktree, "rev-parse", "HEAD^{tree}")
     parent = git(repo, "rev-parse", "main")
     pr_head = git(repo, "commit-tree", tree, "-p", parent, "-m", "merged pr head")
     patch_gh(
         monkeypatch,
-        {"codex/occupancy-fresh": [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
+        {branch: [{"number": 7067, "state": "MERGED", "headRefOid": pr_head}]},
     )
 
     result = result_for(
-        rw.reap_worktrees(repo_root=repo, apply=True, live_cwds=set()),
+        rw.reap_worktrees(
+            repo_root=repo,
+            apply=True,
+            live_cwds=set(),
+            prune_merged_branches=True,
+        ),
         worktree,
     )
 
-    assert result.action == "removed"
-    assert result.reason == "PR #7067 MERGED"
-    assert not worktree.exists()
+    assert result.action == "skipped"
+    assert result.branch_pruned is False
+    assert "same tree as PR #7067 head; not deletion proof" in (result.reason or "")
+    assert worktree.exists()
+    assert git(repo, "rev-parse", "--verify", branch)
+
+
+def test_merged_pr_ancestor_and_exact_head_are_removed(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """Containment is the PR head itself or an ancestor of it, including branch prune."""
+    repo = init_repo(tmp_path)
+    exact = add_worktree(repo, "codex/exact-head")
+    exact_head = git(exact, "rev-parse", "HEAD")
+    ancestor = add_worktree(repo, "codex/ancestor-head")
+    ancestor_head = git(ancestor, "rev-parse", "HEAD")
+    git(ancestor, "commit", "--allow-empty", "-m", "pr head ahead of the worktree")
+    ancestor_pr_head = git(ancestor, "rev-parse", "HEAD")
+    git(ancestor, "reset", "--hard", ancestor_head)
+    patch_gh(
+        monkeypatch,
+        {
+            "codex/exact-head": [{"number": 31, "state": "MERGED", "headRefOid": exact_head}],
+            "codex/ancestor-head": [
+                {"number": 32, "state": "MERGED", "headRefOid": ancestor_pr_head}
+            ],
+        },
+    )
+
+    results = rw.reap_worktrees(
+        repo_root=repo,
+        apply=True,
+        live_cwds=set(),
+        prune_merged_branches=True,
+    )
+
+    exact_result = result_for(results, exact)
+    ancestor_result = result_for(results, ancestor)
+    assert exact_result.action == "removed"
+    assert exact_result.reason == "PR #31 MERGED"
+    assert exact_result.branch_pruned is True
+    assert ancestor_result.action == "removed"
+    assert ancestor_result.reason == "PR #32 MERGED"
+    assert ancestor_result.branch_pruned is True
+    assert not exact.exists()
+    assert not ancestor.exists()
 
 
 def test_abandoned_main_dispatch_reaps_when_origin_gone_and_old(

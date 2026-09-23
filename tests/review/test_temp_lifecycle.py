@@ -143,9 +143,9 @@ def test_fetch_failure_degrades_gracefully(tmp_path: Path, monkeypatch: pytest.M
         lambda r: (_ for _ in ()).throw(RuntimeError("adoption probe failed")),
     )
     monkeypatch.setattr(reap_worktrees, "find_needs_finalize_worktrees", lambda r: [])
-    monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_gone_local_branches", lambda r, apply: [])
-    monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_stale_origin_branches", lambda r, apply: [])
-    monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_untracked_local_branches", lambda r, apply: [])
+    monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_gone_local_branches", lambda r, apply, **_: [])
+    monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_stale_origin_branches", lambda r, apply, **_: [])
+    monkeypatch.setattr(scheduled_worktree_cleanup, "cleanup_untracked_local_branches", lambda r, apply, **_: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "find_orphaned_worktree_directories", lambda r: [])
     monkeypatch.setattr(scheduled_worktree_cleanup, "_git_maintenance", lambda r, apply: {"ok": True})
     monkeypatch.setattr(scheduled_worktree_cleanup, "sweep_review_temp_orphans", lambda: {"roots_reaped": 0})
