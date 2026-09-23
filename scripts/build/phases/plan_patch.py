@@ -18,7 +18,6 @@ from pathlib import Path
 from typing import Any
 
 import yaml
-from batch_gemini_config import PRO_MODEL
 from build.io_utils import write_text_atomic
 from build.prompt_literals import _format_prompt_literal_block, _strip_prompt_control_tags
 from common.thresholds import STYLE_REVIEW_TARGET
@@ -292,7 +291,7 @@ def _dispatch_gemini_plan_patch(
     prompt: str,
     *,
     task_id: str,
-    model: str = PRO_MODEL,
+    model: str = "gemini-3.8-flash-high",
     output_path: Path | None = None,
 ) -> tuple[bool, str]:
     """Dispatch the plan-patch prompt through ai_agent_bridge/Gemini."""

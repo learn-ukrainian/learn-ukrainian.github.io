@@ -120,7 +120,7 @@ _LEGACY_GEMINI_TO_AGY_MODEL = {
 
 def _agy_model(model: str | None) -> str:
     if not model:
-        return "gemini-3.1-pro-high"
+        return "gemini-3.8-flash-high"
     return _LEGACY_GEMINI_TO_AGY_MODEL.get(model, model)
 
 
@@ -149,7 +149,7 @@ def dispatch_gemini_raw(
 
     Returns (success, raw_output_text).
     """
-    model = _agy_model(model or _pro_model())
+    model = _agy_model(model)
     args = [
         str(_SCRIPTS_DIR / "ai_agent_bridge/__main__.py"), "ask-agy",
         "-",  # read prompt from stdin
@@ -212,7 +212,7 @@ def dispatch_gemini(
     If the specified model is Flash and it fails due to rate limiting, retries with Pro.
     """
     if model is None:
-        model = _pro_model()
+        model = "gemini-3.8-flash-high"
     ok, output = dispatch_gemini_raw(
         prompt, task_id, model=model,
         stdout_only=True,  # Always stdout-only in pipeline

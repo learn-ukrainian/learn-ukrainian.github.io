@@ -97,7 +97,7 @@ def _parse_naturalness_json(raw_output: str) -> dict | None:
     return parsed if "score" in parsed else None
 
 
-def call_agy(prompt: str, task_id: str) -> tuple[str, dict]:
+def call_agy(prompt: str, task_id: str, model: str = "gemini-3.8-flash-high") -> tuple[str, dict]:
     """Call AGY and return raw response + parsed JSON."""
     try:
         result = subprocess.run(
@@ -108,7 +108,7 @@ def call_agy(prompt: str, task_id: str) -> tuple[str, dict]:
                 "-",  # read prompt from stdin
                 "--task-id", task_id,
                 "--from", "claude",
-                "--to-model", "gemini-3.1-pro-high",
+                "--to-model", model,
                 "--stdout-only",
             ],
             capture_output=True,

@@ -18,7 +18,7 @@ Each cell carries:
 - **Known weakness** — failure mode we've observed.
 - **Known strength** — what they do uniquely well.
 
-**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. Example: Opus 4.8 may be the *best* adversarial reviewer, while Pool is primary for a low-risk review and Gemini 3.1 Pro for a medium-risk review. The machine-enforced ladder is `scripts/config/model_catalog.yaml`.
+**Best ≠ primary.** Best = highest eval score. Primary = the cheapest/healthiest route that still clears the task-risk quality floor. Example: Opus 4.8 may be the *best* adversarial reviewer, while Pool is primary for a low-risk review and Gemini 3.8 Flash High for a medium-risk review (3.1 Pro only on explicit request, operator 2026-09-22). The machine-enforced ladder is `scripts/config/model_catalog.yaml`.
 
 ---
 
@@ -384,8 +384,8 @@ Listed by priority for next-session fill:
 
 | Rank routine | Model | Cost |
 | --- | --- | --- |
-| 1 ✅ | AGY Gemini 3.7 Flash (High) | metered |
-| 1 deep ✅ | AGY Gemini 3.1 Pro (High) | metered |
+| 1 ✅ | AGY Gemini 3.8 Flash (High) | metered |
+| 1 deep ✅ | AGY Gemini 3.8 Flash (High) (3.1 Pro only on explicit request, operator 2026-09-22) | metered |
 | 2 ✅ | Codex GPT-5.5 (`.venv/bin/python scripts/ai_agent_bridge/__main__.py ask-codex`) | $$ |
 | ❓ | Qwen-3.6-plus | $ |
 

@@ -161,7 +161,7 @@ Spawn AGY via the bridge:
    (3) plan-review checklist missing categories that the latest systemic audit would have caught, \
    (4) this rubric doc drifting from what was actually applied (worked example must match rubric step-for-step), \
    (5) hallucinated vocab not verifiable in VESUM." \
-  --task-id <N>-review --to-model gemini-3.1-pro-high
+  --task-id <N>-review --to-model gemini-3.8-flash-high
 ```
 
 Address findings. If non-trivial, a second round is expected — don't short-circuit.
