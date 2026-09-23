@@ -8,9 +8,11 @@ single file inside it is missing (that case must keep failing, as it did
 before lazy reads were introduced).
 
 ``SPARSE_TEST_FORCE_MISSING_TREES`` is a comma-separated, test-only override
-that makes the listed trees read as absent. The sparse collection guard uses
-it to exercise the absent-tree collection paths in a subprocess without
-copying the checkout.
+that makes the listed trees read as absent. The sparse collection guard sets
+it in a child process, and that child also installs an audit hook so direct
+reads of those trees raise ``FileNotFoundError``. ``tree_absent()`` and the
+filesystem therefore agree. ``SPARSE_TEST_REPO_ROOT`` is the checkout whose
+trees the hook hides.
 """
 
 from __future__ import annotations
@@ -20,6 +22,7 @@ from pathlib import Path
 
 REPO_ROOT = Path(__file__).resolve().parents[1]
 FORCE_MISSING_TREES_ENV = "SPARSE_TEST_FORCE_MISSING_TREES"
+REPO_ROOT_ENV = "SPARSE_TEST_REPO_ROOT"
 
 
 def _normalize(rel_tree: str) -> str:
