@@ -10,6 +10,7 @@ Verifies:
 
 from __future__ import annotations
 
+import hashlib
 import json
 import os
 import subprocess
@@ -19,6 +20,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes
 
 pytestmark = pytest.mark.reads_content
@@ -57,9 +59,51 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
             "ulif_forms": "0" * 64,
         },
         "words": [
-            {"id": "W-BASE-01", "lemma": "base-w1", "pos": "pron"},
-            {"id": "W-CORE-01", "lemma": "core-w1", "pos": "noun"},
-            {"id": "W-CORE-02", "lemma": "core-w2", "pos": "verb"},
+            {
+                "id": "W-1",
+                "lemma": "base-w1",
+                "pos": "pron",
+                "forms": [
+                    {
+                        "form": "base-w1",
+                        "tags": "pron",
+                        "stressed": "base-w1",
+                        "stress_source": "none",
+                        "markers": [],
+                        "learner": True,
+                    }
+                ],
+            },
+            {
+                "id": "W-10",
+                "lemma": "core-w1",
+                "pos": "noun",
+                "forms": [
+                    {
+                        "form": "core-w1",
+                        "tags": "noun:inanim:m:v_naz",
+                        "stressed": "tok1",
+                        "stress_source": "ulif",
+                        "markers": [],
+                        "learner": True,
+                    }
+                ],
+            },
+            {
+                "id": "W-11",
+                "lemma": "core-w2",
+                "pos": "verb",
+                "forms": [
+                    {
+                        "form": "core-w2",
+                        "tags": "verb:pres:s:1",
+                        "stressed": "core-w2",
+                        "stress_source": "ulif",
+                        "markers": [],
+                        "learner": True,
+                    }
+                ],
+            },
         ],
     }
     _write_yaml(evidence_dir / "_words.yaml", words_store)
@@ -85,7 +129,7 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                 "word_target": 10,
                 "inventory": {
                     "vocabulary": {
-                        "core": [{"lemma": "core-w1", "evidence": "W-CORE-01"}],
+                        "core": [{"lemma": "core-w1", "evidence": "W-10", "forms": ["noun:inanim:m:v_naz"]}],
                     }
                 },
                 "steps": [
@@ -93,7 +137,7 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                         "id": "s1",
                         "kind": "teach",
                         "teach": "T1",
-                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-CORE-01"]},
+                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-10"]},
                         "uses": {"grammar": [], "vocabulary": []},
                         "evidence": ["E-01"],
                         "practice": ["a1"],
@@ -111,8 +155,8 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                 "word_target": 10,
                 "inventory": {
                     "vocabulary": {
-                        "core": [{"lemma": "core-w2", "evidence": "W-CORE-02"}],
-                        "recycled": ["W-CORE-01"],
+                        "core": [{"lemma": "core-w2", "evidence": "W-11", "forms": ["verb:pres:s:1"]}],
+                        "recycled": ["W-10"],
                     }
                 },
                 "steps": [
@@ -120,8 +164,8 @@ def _setup_fixture(root: Path, level: str = "a1") -> tuple[Path, Path]:
                         "id": "s1",
                         "kind": "teach",
                         "teach": "T2",
-                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-CORE-02"]},
-                        "uses": {"grammar": [], "vocabulary": ["W-CORE-01"]},
+                        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-11"]},
+                        "uses": {"grammar": [], "vocabulary": ["W-10"]},
                         "evidence": ["E-02"],
                         "practice": ["a1"],
                     }
@@ -201,8 +245,8 @@ def test_cli_planned_json_output(tmp_path: Path) -> None:
     assert payload["position"] == 1
     assert payload["lesson_n"] == 2
     assert payload["cumulative_core_count"] == 1
-    assert "W-CORE-01" in payload["core_ids"]
-    assert "W-BASE-01" in payload["base_ids"]
+    assert "W-10" in payload["core_ids"]
+    assert "W-1" in payload["base_ids"]
 
 
 def test_cli_band_json_output(tmp_path: Path) -> None:
@@ -384,3 +428,206 @@ def test_cli_band_a1_strict_refuses_waiver(tmp_path: Path) -> None:
     )
     assert res.returncode == 1
     assert "prior_plans_missing" in res.stderr
+
+
+def test_cli_observed_and_gate_pass(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    state_dir = evidence_dir / "_state" / "mod-01"
+    state_dir.mkdir(parents=True, exist_ok=True)
+
+    exp_doc = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "units": [{"tab": "urok", "activity": None, "item": None, "block": 0, "role": "record_print", "text": "tok1"}],
+    }
+    exp_path = state_dir / "lesson-1.expanded.yaml"
+    exp_bytes = yaml.safe_dump(exp_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    exp_path.write_bytes(exp_bytes)
+    lock.write(exp_path, exp_bytes)
+
+    res_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "inputs": {
+            "expanded_sha256": hashlib.sha256(exp_bytes).hexdigest(),
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "urok", "activity": None, "item": None, "block": 0},
+                "offset": 0,
+                "token": "tok1",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-10"],
+                "selected": {"record": "W-10", "forms": ["noun:inanim:m:v_naz"], "stressed": "tok1"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    res_path = state_dir / "lesson-1.resolutions.yaml"
+    res_bytes = yaml.safe_dump(res_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    res_path.write_bytes(res_bytes)
+    lock.write(res_path, res_bytes)
+
+    # 1. observed command
+    res_obs = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "observed",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_obs.returncode == 0
+    obs_payload = json.loads(res_obs.stdout)
+    assert obs_payload["observed_schema"] == 1
+    assert obs_payload["lesson"]["slug"] == "mod-01"
+    assert len(obs_payload["records"]) == 1
+    assert obs_payload["records"][0]["id"] == "W-10"
+
+    # 2. gate command
+    res_gate = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "gate",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_gate.returncode == 0
+    gate_payload = json.loads(res_gate.stdout)
+    assert gate_payload["ok"] is True
+    assert gate_payload["failures"] == []
+
+
+def test_cli_gate_failing_output(tmp_path: Path) -> None:
+    plans_dir, evidence_dir = _setup_fixture(tmp_path)
+    state_dir = evidence_dir / "_state" / "mod-01"
+    state_dir.mkdir(parents=True, exist_ok=True)
+
+    exp_doc = {
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "units": [
+            {
+                "tab": "vpravy",
+                "activity": "a1",
+                "item": 0,
+                "block": 0,
+                "role": "item_prompt",
+                "text": "bad-tok",
+            }
+        ],
+    }
+    exp_path = state_dir / "lesson-1.expanded.yaml"
+    exp_bytes = yaml.safe_dump(exp_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    exp_path.write_bytes(exp_bytes)
+    lock.write(exp_path, exp_bytes)
+
+    # Token outside allowlist
+    res_doc = {
+        "resolutions_schema": 1,
+        "lesson": {"level": "a1", "slug": "mod-01", "n": 1},
+        "inputs": {
+            "expanded_sha256": hashlib.sha256(exp_bytes).hexdigest(),
+            "allowlist_sha256": "0" * 64,
+            "words_lock": "0" * 64,
+            "vesum": "0" * 64,
+            "trie_digest": "0" * 64,
+        },
+        "tokens": [
+            {
+                "unit": {"tab": "vpravy", "activity": "a1", "item": 0, "block": 0},
+                "offset": 0,
+                "token": "bad-tok",
+                "surface": "sentence_token",
+                "class": "resolved",
+                "candidates": ["W-99"],
+                "selected": {"record": "W-99", "forms": ["noun:inanim:m:v_naz"], "stressed": "bad-tok"},
+                "provenance": "deterministic",
+            }
+        ],
+    }
+    res_path = state_dir / "lesson-1.resolutions.yaml"
+    res_bytes = yaml.safe_dump(res_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
+    res_path.write_bytes(res_bytes)
+    lock.write(res_path, res_bytes)
+
+    # Text mode: exits 1 and writes failure to stderr
+    res_gate_txt = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "gate",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_gate_txt.returncode == 1
+    assert "lemma_outside_state" in res_gate_txt.stderr
+    assert "bad-tok" in res_gate_txt.stderr
+    assert "vpravy" in res_gate_txt.stderr
+
+    # JSON mode: exits 1 and emits ok: false
+    res_gate_json = subprocess.run(
+        [
+            PYTHON,
+            "-m",
+            "scripts.curriculum.learner_state",
+            "gate",
+            "a1",
+            "mod-01",
+            "1",
+            "--plans-dir",
+            str(plans_dir),
+            "--evidence-dir",
+            str(evidence_dir),
+            "--json",
+        ],
+        capture_output=True,
+        text=True,
+        timeout=30,
+        env={**os.environ, "PYTHONPATH": "."},
+    )
+    assert res_gate_json.returncode == 1
+    payload = json.loads(res_gate_json.stdout)
+    assert payload["ok"] is False
+    assert len(payload["failures"]) >= 1
+    codes_found = {f["code"] for f in payload["failures"]}
+    assert "lemma_outside_state" in codes_found

@@ -58,18 +58,81 @@ COMBINING_ACCENTS = ("\u0300", "\u0301")
 #: The invariants validated by code, not by the schema (contract §2, §3, §4, §1c).
 CODE_CHECKS: tuple[tuple[str, str], ...] = (
     ("no_combining_accent", "no U+0300/U+0301 in any string of the draft, activity items included (§3)"),
-    ("inline_markup", "every string of the draft matches INLINE_MARKUP_RE; activity payload strings match ACTIVITY_MARKUP_RE (§1d, §6)"),
+    (
+        "inline_markup",
+        "every string of the draft matches INLINE_MARKUP_RE; activity payload strings match ACTIVITY_MARKUP_RE (§1d, §6)",
+    ),
     ("step_ids_unique", "step ids are unique within the draft"),
     ("activity_ids_unique", "activity ids are unique within the draft"),
     ("activity_ref_declared", "every `activity` block and consolidation entry names an id declared in `activities`"),
     ("activity_declared_used", "every declared activity is placed once — in a step or in consolidation"),
-    ("dialogue_block_once", "a `dialogue` block appears at most once, and exactly when top-level `dialogue` is present"),
+    (
+        "dialogue_block_once",
+        "a `dialogue` block appears at most once, and exactly when top-level `dialogue` is present",
+    ),
     ("bilingual_equal_length", "`bilingual.uk` and `bilingual.en` have equal length (§2)"),
     ("translation_en_length", "`dialogue.translation_en` has one entry per line, or is absent (§2)"),
     ("gap_steps_exist", "every `gaps[].step` is a step of the draft (§4)"),
     ("gap_steps_empty", "the steps with empty blocks are exactly the steps named in `gaps` (§4)"),
-    ("activity_items_per_type", "given the plan's type map, each activity's payload validates against its `<type>-<level>` definition (§1c)"),
+    (
+        "activity_items_per_type",
+        "given the plan's type map, each activity's payload validates against its `<type>-<level>` definition (§1c)",
+    ),
+    (
+        "activity_fresh_constraints",
+        "a fresh-build payload whose plan type has an entry in schemas/fresh-activity-constraints-v1.json meets that entry (R-19); existing modules are not validated here",
+    ),
 )
+
+#: Loaded once. The test validates this document against :data:`FRESH_CONSTRAINTS_META`.
+FRESH_CONSTRAINTS_NAME = "fresh-activity-constraints-v1.json"
+FRESH_CONSTRAINTS_META: dict = {
+    "$schema": "http://json-schema.org/draft-07/schema#",
+    "type": "object",
+    "additionalProperties": False,
+    "required": [
+        "version",
+        "blank_marker",
+        "record_pattern",
+        "answer_tags_min_length",
+        "orthography_lists",
+        "b2_true_false_cap",
+        "by_type",
+    ],
+    "properties": {
+        "version": {"const": 1},
+        "blank_marker": {"type": "string", "minLength": 1},
+        "record_pattern": {"const": "^W-[0-9]*[1-9][0-9]*$"},
+        "answer_tags_min_length": {"const": 1},
+        "orthography_lists": {
+            "type": "array",
+            "minItems": 5,
+            "maxItems": 5,
+            "items": {
+                "type": "object",
+                "additionalProperties": False,
+                "required": ["id", "options", "record_id"],
+                "properties": {
+                    "id": {"type": "string", "minLength": 1},
+                    "options": {"type": "array", "minItems": 2, "maxItems": 2, "items": {"type": "string"}},
+                    "record_id": {"type": "string", "minLength": 1},
+                    "also_record_id": {"type": "string", "minLength": 1},
+                },
+            },
+        },
+        "deferred": {"type": "string", "minLength": 1},
+        "b2_true_false_cap": {
+            "type": "object",
+            "additionalProperties": False,
+            "required": ["applied", "why"],
+            "properties": {
+                "applied": {"const": False},
+                "why": {"type": "string", "minLength": 1},
+            },
+        },
+        "by_type": {"type": "object", "minProperties": 1},
+    },
+}
 
 
 @dataclass(frozen=True)
@@ -151,6 +214,174 @@ def activity_payload_schema(definition: dict) -> dict:
     return derived
 
 
+@lru_cache(maxsize=8)
+def load_fresh_constraints(schemas_dir: str) -> dict:
+    """The fresh-build constraint document, loaded once per schemas directory and checked against its meta-schema."""
+    with (Path(schemas_dir) / FRESH_CONSTRAINTS_NAME).open(encoding="utf-8") as handle:
+        data = json.load(handle)
+    validator = Draft7Validator(FRESH_CONSTRAINTS_META)
+    failures = sorted(validator.iter_errors(data), key=lambda error: [str(part) for part in error.absolute_path])
+    if failures:
+        detail = "; ".join(f"{_pointer(error.absolute_path)}: {error.message}" for error in failures)
+        raise ValueError(f"{FRESH_CONSTRAINTS_NAME} does not match its meta-schema: {detail}")
+    return data
+
+
+def _activity_fresh_constraint_errors(
+    draft: dict,
+    level: str,
+    schemas_dir: Path | None,
+    activity_types: Mapping[str, str],
+) -> list[DraftError]:
+    """Code check ``activity_fresh_constraints``.
+
+    ``activity_payload_schema`` only restates a level-schema definition (it keeps ``properties`` and
+    drops plan meta keys). The constraint file is not that shape: a blank count, a closed option
+    list, and a per-activity item cap are not properties it can require. This check applies them
+    with its own walk. It runs only for a plan type that has an entry, so existing modules — which
+    never pass through draft validation — are untouched.
+    """
+    data = load_fresh_constraints(str(schemas_dir or SCHEMAS_DIR))
+    by_type = data["by_type"]
+    blank_re = re.compile(data["blank_marker"])
+    record_re = re.compile(data["record_pattern"])
+    tags_min = data["answer_tags_min_length"]
+    lists = data["orthography_lists"]
+    errors: list[DraftError] = []
+    for a_index, activity in enumerate(draft.get("activities", [])):
+        path = f"/activities/{a_index}"
+        if not isinstance(activity, dict):
+            continue
+        type_name = activity_types.get(activity.get("id"))
+        if type_name is None:
+            continue
+        key = f"{type_name}-{level}"
+        rule = by_type.get(key)
+        if rule is None:
+            continue
+        items = activity.get("items")
+        items_max = rule.get("items_max")
+        if items_max is not None and isinstance(items, list) and len(items) > items_max:
+            errors.append(
+                DraftError(
+                    "activity_fresh_constraints",
+                    path + "/items",
+                    f"{key}: {len(items)} items exceeds the cap of {items_max}",
+                )
+            )
+        if "modes" not in rule:
+            continue
+        if not isinstance(items, list):
+            errors.append(DraftError("activity_fresh_constraints", path + "/items", f"{key}: items must be a list"))
+            continue
+        modes = rule["modes"]
+        for i_index, item in enumerate(items):
+            item_path = f"{path}/items/{i_index}"
+            if not isinstance(item, dict):
+                errors.append(DraftError("activity_fresh_constraints", item_path, f"{key}: item is not an object"))
+                continue
+            sentence = item.get("sentence")
+            blank_count = len(blank_re.findall(sentence)) if isinstance(sentence, str) else 0
+            if blank_count != rule["sentence_blanks"]:
+                errors.append(
+                    DraftError(
+                        "activity_fresh_constraints",
+                        item_path + "/sentence",
+                        f"{key}: sentence must contain exactly {rule['sentence_blanks']} blank marker ({blank_count} found)",
+                    )
+                )
+            mode = item.get("mode")
+            if mode not in modes:
+                if mode == "orthography":
+                    reason = f"{key}: orthography is admitted only at a1"
+                elif mode is None:
+                    reason = f"{key}: mode is required"
+                else:
+                    reason = f"{key}: mode {mode!r} is not admitted"
+                errors.append(DraftError("activity_fresh_constraints", item_path + "/mode", reason))
+                continue
+            spec = modes[mode]
+            if "options_min" in spec:
+                record = item.get("record")
+                if not isinstance(record, str) or record_re.fullmatch(record) is None:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/record",
+                            f"{key}: form-choice requires record matching {data['record_pattern']}",
+                        )
+                    )
+                tags = item.get("answer_tags")
+                if not isinstance(tags, str) or len(tags) < tags_min:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/answer_tags",
+                            f"{key}: form-choice requires answer_tags with minLength {tags_min}",
+                        )
+                    )
+                options = item.get("options")
+                if not isinstance(options, list) or not spec["options_min"] <= len(options) <= spec["options_max"]:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/options",
+                            f"{key}: form-choice options must have {spec['options_min']} to {spec['options_max']} entries",
+                        )
+                    )
+            elif spec.get("options_from") == "orthography_lists":
+                # Canonical apostrophe translation table is scripts.build.linear_pipeline._VESUM_APOSTROPHE_TRANSLATION.
+                # Imported lazily so importing draft_schema does not incur importing linear_pipeline.
+                from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
+
+                options = item.get("options")
+                match = None
+                if isinstance(options, list) and all(isinstance(o, str) for o in options):
+                    norm_options = [opt.translate(_VESUM_APOSTROPHE_TRANSLATION) for opt in options]
+                    norm_options_set = set(norm_options)
+                    for entry in lists:
+                        entry_options = [
+                            opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt
+                            for opt in entry["options"]
+                        ]
+                        if len(options) == len(entry["options"]) and norm_options_set == set(entry_options):
+                            match = entry
+                            break
+                if match is None:
+                    errors.append(
+                        DraftError(
+                            "activity_fresh_constraints",
+                            item_path + "/options",
+                            f"{key}: orthography options must equal exactly one closed list",
+                        )
+                    )
+                else:
+                    raw_answer = item.get("answer")
+                    if not isinstance(raw_answer, str):
+                        errors.append(
+                            DraftError(
+                                "activity_fresh_constraints",
+                                item_path + "/answer",
+                                f"{key}: orthography answer is outside its option list",
+                            )
+                        )
+                    else:
+                        norm_answer = raw_answer.translate(_VESUM_APOSTROPHE_TRANSLATION)
+                        entry_options_set = {
+                            opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt
+                            for opt in match["options"]
+                        }
+                        if norm_answer not in entry_options_set or raw_answer not in options:
+                            errors.append(
+                                DraftError(
+                                    "activity_fresh_constraints",
+                                    item_path + "/answer",
+                                    f"{key}: orthography answer is outside its option list",
+                                )
+                            )
+    return errors
+
+
 def strings_in(node: object, path: str = "") -> Iterator[tuple[str, str]]:
     """Yield ``(json_pointer, string)`` for every string in the draft (keys excluded)."""
     if isinstance(node, str):
@@ -181,14 +412,28 @@ def _schema_errors(draft: object, level: str | None, schemas_dir: Path | None) -
     return out
 
 
-def _code_errors(draft: dict, level: str | None, schemas_dir: Path | None, activity_types: Mapping[str, str] | None) -> list[DraftError]:
+def _code_errors(
+    draft: dict, level: str | None, schemas_dir: Path | None, activity_types: Mapping[str, str] | None
+) -> list[DraftError]:
     errors: list[DraftError] = []
 
     for path, text in strings_in(draft):
         if any(accent in unicodedata.normalize("NFD", text) for accent in COMBINING_ACCENTS):
-            errors.append(DraftError("no_combining_accent", path, "combining accent (U+0300/U+0301) in a draft string; the writer writes plain text (§3)"))
+            errors.append(
+                DraftError(
+                    "no_combining_accent",
+                    path,
+                    "combining accent (U+0300/U+0301) in a draft string; the writer writes plain text (§3)",
+                )
+            )
         elif not _markup_re_for(path).fullmatch(text):
-            errors.append(DraftError("inline_markup", path, "string violates the inline-markup contract: only {{gloss:W-…}} and {{uk:…}} (plus the level schema's blank markers inside an activity payload), no nesting, no stray brace"))
+            errors.append(
+                DraftError(
+                    "inline_markup",
+                    path,
+                    "string violates the inline-markup contract: only {{gloss:W-…}} and {{uk:…}} (plus the level schema's blank markers inside an activity payload), no nesting, no stray brace",
+                )
+            )
 
     steps = draft.get("steps", [])
     step_ids = [s.get("id") for s in steps]
@@ -198,7 +443,9 @@ def _code_errors(draft: dict, level: str | None, schemas_dir: Path | None, activ
     activities = draft.get("activities", [])
     activity_ids = [a.get("id") for a in activities]
     for activity_id in sorted({a for a in activity_ids if activity_ids.count(a) > 1}):
-        errors.append(DraftError("activity_ids_unique", "/activities", f"activity id {activity_id!r} appears more than once"))
+        errors.append(
+            DraftError("activity_ids_unique", "/activities", f"activity id {activity_id!r} appears more than once")
+        )
     declared = set(activity_ids)
 
     placed: list[str] = []
@@ -210,36 +457,78 @@ def _code_errors(draft: dict, level: str | None, schemas_dir: Path | None, activ
             if kind == "activity":
                 placed.append(block.get("ref"))
                 if block.get("ref") not in declared:
-                    errors.append(DraftError("activity_ref_declared", path + "/ref", f"activity {block.get('ref')!r} is not declared in `activities`"))
+                    errors.append(
+                        DraftError(
+                            "activity_ref_declared",
+                            path + "/ref",
+                            f"activity {block.get('ref')!r} is not declared in `activities`",
+                        )
+                    )
             elif kind == "dialogue":
                 dialogue_blocks.append(path)
             elif kind == "bilingual" and len(block.get("uk", [])) != len(block.get("en", [])):
-                errors.append(DraftError("bilingual_equal_length", path, f"uk has {len(block.get('uk', []))} lines, en has {len(block.get('en', []))}"))
+                errors.append(
+                    DraftError(
+                        "bilingual_equal_length",
+                        path,
+                        f"uk has {len(block.get('uk', []))} lines, en has {len(block.get('en', []))}",
+                    )
+                )
     for c_index, ref in enumerate(draft.get("consolidation", {}).get("activities", [])):
         placed.append(ref)
         if ref not in declared:
-            errors.append(DraftError("activity_ref_declared", f"/consolidation/activities/{c_index}", f"activity {ref!r} is not declared in `activities`"))
+            errors.append(
+                DraftError(
+                    "activity_ref_declared",
+                    f"/consolidation/activities/{c_index}",
+                    f"activity {ref!r} is not declared in `activities`",
+                )
+            )
     for activity_id in activity_ids:
         count = placed.count(activity_id)
         if count != 1:
-            errors.append(DraftError("activity_declared_used", "/activities", f"activity {activity_id!r} is placed {count} times; expected once (a step block or consolidation)"))
+            errors.append(
+                DraftError(
+                    "activity_declared_used",
+                    "/activities",
+                    f"activity {activity_id!r} is placed {count} times; expected once (a step block or consolidation)",
+                )
+            )
 
     has_dialogue = "dialogue" in draft
     if len(dialogue_blocks) > 1:
         errors.append(DraftError("dialogue_block_once", dialogue_blocks[1], "more than one `dialogue` block"))
     elif bool(dialogue_blocks) != has_dialogue:
-        errors.append(DraftError("dialogue_block_once", dialogue_blocks[0] if dialogue_blocks else "/dialogue", "a `dialogue` block and the top-level `dialogue` must appear together"))
+        errors.append(
+            DraftError(
+                "dialogue_block_once",
+                dialogue_blocks[0] if dialogue_blocks else "/dialogue",
+                "a `dialogue` block and the top-level `dialogue` must appear together",
+            )
+        )
     if has_dialogue:
         lines = draft["dialogue"].get("lines", [])
         translation = draft["dialogue"].get("translation_en")
         if translation is not None and len(translation) != len(lines):
-            errors.append(DraftError("translation_en_length", "/dialogue/translation_en", f"{len(translation)} entries for {len(lines)} lines"))
+            errors.append(
+                DraftError(
+                    "translation_en_length",
+                    "/dialogue/translation_en",
+                    f"{len(translation)} entries for {len(lines)} lines",
+                )
+            )
 
     gap_steps: list[str] = []
     for g_index, gap in enumerate(draft.get("gaps", [])):
         gap_steps.append(gap.get("step"))
         if gap.get("step") not in step_ids:
-            errors.append(DraftError("gap_steps_exist", f"/gaps/{g_index}/step", f"gap names step {gap.get('step')!r}, which is not a step of the draft"))
+            errors.append(
+                DraftError(
+                    "gap_steps_exist",
+                    f"/gaps/{g_index}/step",
+                    f"gap names step {gap.get('step')!r}, which is not a step of the draft",
+                )
+            )
     empty_steps = {s.get("id") for s in steps if not s.get("blocks")}
     if empty_steps != set(gap_steps):
         errors.append(
@@ -252,10 +541,13 @@ def _code_errors(draft: dict, level: str | None, schemas_dir: Path | None, activ
 
     if activity_types is not None and level is not None:
         errors.extend(_activity_type_errors(draft, level, schemas_dir, activity_types))
+        errors.extend(_activity_fresh_constraint_errors(draft, level, schemas_dir, activity_types))
     return errors
 
 
-def _activity_type_errors(draft: dict, level: str, schemas_dir: Path | None, activity_types: Mapping[str, str]) -> list[DraftError]:
+def _activity_type_errors(
+    draft: dict, level: str, schemas_dir: Path | None, activity_types: Mapping[str, str]
+) -> list[DraftError]:
     """Code check ``activity_items_per_type``: each payload against its exact ``<type>-<level>`` definition."""
     errors: list[DraftError] = []
     definitions = activity_definitions(level, schemas_dir)
@@ -268,16 +560,32 @@ def _activity_type_errors(draft: dict, level: str, schemas_dir: Path | None, act
         activity_id = activity.get("id")
         type_name = activity_types.get(activity_id)
         if type_name is None:
-            errors.append(DraftError("activity_items_per_type", path, f"activity {activity_id!r} has no type in the plan's type map"))
+            errors.append(
+                DraftError(
+                    "activity_items_per_type", path, f"activity {activity_id!r} has no type in the plan's type map"
+                )
+            )
             continue
         if type_name not in definitions:
-            errors.append(DraftError("activity_items_per_type", path, f"type {type_name!r} is not in the {level} allowlist {sorted(definitions)}"))
+            errors.append(
+                DraftError(
+                    "activity_items_per_type",
+                    path,
+                    f"type {type_name!r} is not in the {level} allowlist {sorted(definitions)}",
+                )
+            )
             continue
         payload = {k: v for k, v in activity.items() if k not in ("id", "instruction")}
         checker = Draft7Validator(activity_payload_schema(definitions[type_name]), registry=registry)
         for error in sorted(checker.iter_errors(payload), key=lambda e: [str(p) for p in e.absolute_path]):
             chosen = best_match([error]) or error
-            errors.append(DraftError("activity_items_per_type", path + _pointer(chosen.absolute_path), f"{type_name}-{level}: {chosen.message}"))
+            errors.append(
+                DraftError(
+                    "activity_items_per_type",
+                    path + _pointer(chosen.absolute_path),
+                    f"{type_name}-{level}: {chosen.message}",
+                )
+            )
     return errors
 
 
@@ -306,8 +614,13 @@ def validate_draft(
         # per-type message is available: report it instead of the union's for that activity.
         if activity_types is not None and level is not None and isinstance(draft.get("activities"), list):
             typed = _activity_type_errors(draft, level, schemas_dir, activity_types)
+            fresh = _activity_fresh_constraint_errors(draft, level, schemas_dir, activity_types)
             replaced = {e.path.split("/")[2] for e in typed if e.path.startswith("/activities/")}
-            errors = [e for e in errors if not (e.path.startswith("/activities/") and e.path.split("/")[2] in replaced)] + typed
+            errors = (
+                [e for e in errors if not (e.path.startswith("/activities/") and e.path.split("/")[2] in replaced)]
+                + typed
+                + fresh
+            )
         return errors
     return _code_errors(draft, level, schemas_dir, activity_types)
 

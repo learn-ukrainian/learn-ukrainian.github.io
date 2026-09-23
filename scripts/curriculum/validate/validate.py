@@ -531,6 +531,83 @@ def _check_dialogue_and_needs(report: Report, plan: dict) -> None:
                     )
 
 
+def _text_hosting_step_ids(lesson: dict) -> set[str]:
+    """Steps a true-false statement is checked against.
+
+    A text host is the step named by ``dialogue.step``, or a step whose ``needs``
+    contain ``quote``. Bilingual passages and ``video`` / ``culture`` needs are
+    excluded on purpose: they are not texts a statement is checked against at
+    this stage.
+    """
+    step_ids = {step["id"] for step in lesson.get("steps") or []}
+    hosts: set[str] = set()
+    dialogue = lesson.get("dialogue")
+    if isinstance(dialogue, dict) and dialogue.get("step") in step_ids:
+        hosts.add(dialogue["step"])
+    for step in lesson.get("steps") or []:
+        if "quote" in (step.get("needs") or []):
+            hosts.add(step["id"])
+    return hosts
+
+
+def _activity_is_true_false(catalog: dict, activity_id: str) -> bool:
+    activity = catalog.get(activity_id)
+    return isinstance(activity, dict) and activity.get("type") == "true-false"
+
+
+def _check_true_false_placement(report: Report, plan: dict) -> None:
+    """R-19: true-false follows a text, stays within the text count, and does not run together."""
+    for lesson in plan["lessons"]:
+        n = lesson["n"]
+        hosts = _text_hosting_step_ids(lesson)
+        by_id = {activity["id"]: activity for activity in lesson.get("activities") or []}
+
+        practice_refs: list[tuple[str, str]] = []
+        for step in lesson.get("steps") or []:
+            for activity_id in step.get("practice") or []:
+                if not _activity_is_true_false(by_id, activity_id):
+                    continue
+                practice_refs.append((step["id"], activity_id))
+                if step["id"] not in hosts:
+                    _fail(
+                        report,
+                        codes.TRUE_FALSE_NOT_POST_TEXT,
+                        f"true-false activity {activity_id} is in the practice of step {step['id']}, "
+                        "which hosts neither the dialogue nor a quote (R-19)",
+                        lesson=n,
+                        step=step["id"],
+                    )
+        consolidation = list(lesson.get("consolidation") or [])
+        consolidation_refs = [
+            activity_id for activity_id in consolidation if _activity_is_true_false(by_id, activity_id)
+        ]
+        if consolidation_refs and not hosts:
+            for activity_id in consolidation_refs:
+                _fail(
+                    report,
+                    codes.TRUE_FALSE_NOT_POST_TEXT,
+                    f"true-false activity {activity_id} is in consolidation, and this lesson has no text-hosting step (R-19)",
+                    lesson=n,
+                )
+        total = len(practice_refs) + len(consolidation_refs)
+        if total > len(hosts):
+            _fail(
+                report,
+                codes.TRUE_FALSE_OVER_TEXT_COUNT,
+                f"{total} true-false activities (practice and consolidation together) and {len(hosts)} text-hosting steps (R-19)",
+                lesson=n,
+            )
+        for index in range(len(consolidation) - 1):
+            left, right = consolidation[index], consolidation[index + 1]
+            if _activity_is_true_false(by_id, left) and _activity_is_true_false(by_id, right):
+                _fail(
+                    report,
+                    codes.TRUE_FALSE_RUN,
+                    f"true-false activities {left} and {right} are adjacent in consolidation (R-19)",
+                    lesson=n,
+                )
+
+
 def _check_word_facts(report: Report, plan: dict, store) -> None:
     """Rule 7's lemma/forms equality and the r8 incidental forms ban."""
     for lesson in plan["lessons"]:
@@ -807,6 +884,7 @@ def validate_plan(
     allowlist = _activity_allowlist(report, level, activity_schema_path)
     _check_activities(report, plan, allowlist)
     _check_dialogue_and_needs(report, plan)
+    _check_true_false_placement(report, plan)
 
     if pack is not None and store is not None:
         pack_ids = pack.ids

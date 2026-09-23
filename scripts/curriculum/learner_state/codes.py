@@ -7,6 +7,8 @@ No literal code strings elsewhere in this package.
 
 from __future__ import annotations
 
+from scripts.curriculum.evidence import codes as evidence_codes
+
 # --- Failures: input and plan discovery --------------------------------------
 PLAN_NOT_FOUND = "plan_not_found"
 PLAN_YAML_INVALID = "plan_yaml_invalid"
@@ -36,11 +38,26 @@ TAUGHT_FORM_ABSENT = "taught_form_absent"
 TOKEN_UNRESOLVED = "token_unresolved"
 PENDING_STRESS = "pending_stress"
 
+# --- Failures: expanded document ---------------------------------------------
+EXPANDED_DOCUMENT_MISSING = "expanded_document_missing"
+EXPANDED_DOCUMENT_MISMATCH = "expanded_document_mismatch"
+
+# --- Failures: observed index and resolutions receipts -----------------------
+RESOLUTIONS_NOT_FOUND = "resolutions_not_found"
+RESOLUTIONS_INVALID = "resolutions_invalid"
+OBSERVED_SCHEMA_INVALID = "observed_schema_invalid"
+OBSERVED_YAML_INVALID = "observed_yaml_invalid"
+LOCK_MISMATCH = evidence_codes.LOCK_MISMATCH
+UNKNOWN_TAB = "unknown_tab"
+
 # --- Reports -----------------------------------------------------------------
 UNTAUGHT_FORMS = "untaught_forms"
+STRESS_CERTAIN_IDENTITY_OPEN = "stress_certain_identity_open"
 
 # --- Not Checked -------------------------------------------------------------
 LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED = "lesson_structural_minimums_not_calibrated"
+INTRODUCING_STEP_NOT_LOCATABLE = "introducing_step_not_locatable"
+WAIVER_PRIOR_PLANS_MISSING = PRIOR_PLANS_MISSING
 
 # --- Descriptions for --help and reporting -----------------------------------
 DESCRIPTIONS: dict[str, str] = {
@@ -61,9 +78,21 @@ DESCRIPTIONS: dict[str, str] = {
     TAUGHT_FORM_ABSENT: "failure: taught form declared in plan does not appear in a teaching position",
     TOKEN_UNRESOLVED: "failure: token is outside allowlist or unclassifiable in resolution stream",
     PENDING_STRESS: "failure: resolved form has pending stress in word store",
+    EXPANDED_DOCUMENT_MISSING: "failure: expanded document file does not exist or failed to load",
+    EXPANDED_DOCUMENT_MISMATCH: "failure: expanded document sha256 disagrees with receipts inputs or lock",
+    RESOLUTIONS_NOT_FOUND: "failure: lesson resolutions receipts file does not exist",
+    RESOLUTIONS_INVALID: "failure: lesson resolutions receipts file is invalid or tampered",
+    OBSERVED_SCHEMA_INVALID: "failure: observed index document breaks learner-observed-v1 schema",
+    OBSERVED_YAML_INVALID: "failure: observed index YAML is invalid",
+    LOCK_MISMATCH: "failure: file bytes disagree with lock sidecar",
+    UNKNOWN_TAB: "failure: token occurrence has unknown tab outside urok|slovnyk|vpravy|resursy",
     UNTAUGHT_FORMS: "report: forms whose grammatical category is not yet taught at this position",
+    STRESS_CERTAIN_IDENTITY_OPEN: ("report: several records share one stressed spelling; non-blocking open question"),
     LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED: (
         "not_checked: lesson-level structural minimums are uncalibrated (module minimums apply)"
+    ),
+    INTRODUCING_STEP_NOT_LOCATABLE: (
+        "not_checked: introducing step cannot be located until expanded-document units carry step id"
     ),
 }
 
@@ -86,12 +115,26 @@ FAILURE_CODES = frozenset(
         TAUGHT_FORM_ABSENT,
         TOKEN_UNRESOLVED,
         PENDING_STRESS,
+        EXPANDED_DOCUMENT_MISSING,
+        EXPANDED_DOCUMENT_MISMATCH,
+        RESOLUTIONS_NOT_FOUND,
+        RESOLUTIONS_INVALID,
+        OBSERVED_SCHEMA_INVALID,
+        OBSERVED_YAML_INVALID,
+        LOCK_MISMATCH,
+        UNKNOWN_TAB,
     }
 )
 
-REPORT_CODES = frozenset({UNTAUGHT_FORMS})
+REPORT_CODES = frozenset({UNTAUGHT_FORMS, STRESS_CERTAIN_IDENTITY_OPEN})
 
-NOT_CHECKED_CODES = frozenset({LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED})
+NOT_CHECKED_CODES = frozenset(
+    {
+        LESSON_STRUCTURAL_MINIMUMS_NOT_CALIBRATED,
+        INTRODUCING_STEP_NOT_LOCATABLE,
+        WAIVER_PRIOR_PLANS_MISSING,
+    }
+)
 
 
 def help_text() -> str:

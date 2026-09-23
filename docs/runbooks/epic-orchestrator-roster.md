@@ -76,7 +76,13 @@ already enforces today:
 - **Worker dispatch:** `scripts/delegate.py` `_check_capacity_hint` keeps the
   ordinary busy-lane note, but reads the session-stream store before a Cursor
   dispatch. A live Cursor process-driver lease refuses `dispatch --agent cursor`
-  before spawn; `--force-agent` overrides that refusal with an explicit NOTE.
+  before spawn **only when the dispatch is self-dispatch from within that
+  driver's session** (lease `holder_process_id` is the dispatching process or
+  an ancestor on the same `holder_host_id`) — the case that deadlocks the
+  single-concurrency lane. A live lease held by any other lane, session, or
+  host prints a NOTE naming the lease stream and spawns a separate worker;
+  concurrent Cursor workers are supported. `--force-agent` overrides the
+  self-dispatch refusal with an explicit NOTE.
 - **Fleet endpoint metadata:** `concurrency_limit: 1` on the `cursor` endpoint is
   declarative / API-surfaced and is not used as a general worker cap. The
   session-stream lease is the dispatch admission signal for the Cursor driver.

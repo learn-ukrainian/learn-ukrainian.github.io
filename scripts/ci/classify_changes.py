@@ -144,13 +144,23 @@ def hits_shared_root_denylist(path: str) -> bool:
         return True
     if p.startswith("scripts/audit/") and p.endswith(".json") and p.count("/") == 2:
         return True
-    if name == "conftest.py" or p.endswith("/conftest.py"):
+    if name in {"conftest.py", "pytest.ini", "setup.cfg", "tox.ini"} or p.endswith("/conftest.py"):
         return True
-    if p in {"pyproject.toml", "uv.lock", "requirements.lock", ".python-version"}:
+    if p in {
+        "pyproject.toml",
+        "pytest.ini",
+        "setup.cfg",
+        "tox.ini",
+        "uv.lock",
+        "requirements.lock",
+        ".python-version",
+    }:
         return True
     if name.startswith("requirements") and name.endswith(".txt"):
         return True
     if p.startswith(("packages/", "schemas/", "site/", "curriculum/")):
+        return True
+    if p.startswith("tests/") and not is_test_file(p):
         return True
     return p == "docs/lesson-schema.yaml" or (p.startswith("docs/") and p.endswith(".yaml"))
 

@@ -55,15 +55,20 @@ case "$MODE" in
   post-tool-use)
     printf '%s' "$PAYLOAD" \
       | CLAUDE_PROJECT_DIR="$SCRIPT_ROOT" bash "$HOOKS_DIR/tool-timing.sh"
-    printf '%s' "$PAYLOAD" \
-      | CLAUDE_PROJECT_DIR="$SCRIPT_ROOT" bash "$HOOKS_DIR/stamp-pytest.sh"
+    # stamp-pytest only inspects a Bash `command` (#8529); running it for
+    # every other tool payload was pure interpreter-startup cost.
+    TOOL_NAME=$(printf '%s' "$PAYLOAD" | jq -r '.tool_name // empty' 2>/dev/null || true)
+    if [ "$TOOL_NAME" = "Bash" ]; then
+      printf '%s' "$PAYLOAD" \
+        | CLAUDE_PROJECT_DIR="$SCRIPT_ROOT" bash "$HOOKS_DIR/stamp-pytest.sh"
+    fi
     ;;
 
   user-prompt-submit)
     printf '%s' "$PAYLOAD" \
       | CLAUDE_PROJECT_DIR="$CANONICAL_ROOT" \
         LEARN_UK_HOOK_RECIPIENT=codex \
-        bash "$HOOKS_DIR/check-gemini-inbox.sh"
+        bash "$HOOKS_DIR/check-agent-inbox.sh"
     ;;
 
   *)

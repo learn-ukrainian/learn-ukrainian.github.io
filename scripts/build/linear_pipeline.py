@@ -962,7 +962,8 @@ _ACTIVITY_ITEM_FIELD_PURPOSES: dict[str, str] = {
     "answer": "the corrected form",
 }
 # #8214: fill-in needs teaching feedback too (blocks apostrophe/soft-sign micro-blank comedy).
-_ACTIVITY_EXPLANATION_REQUIRED_TYPES = frozenset({"quiz", "translate", "fill-in"})
+# R-19: true-false does too. Rebuilding a module whose true-false items lack an explanation fails this gate.
+_ACTIVITY_EXPLANATION_REQUIRED_TYPES = frozenset({"quiz", "translate", "fill-in", "true-false"})
 _VESUM_ABBREVIATION_RE = re.compile(r"\bдіал\.", re.IGNORECASE)
 
 # String fields whose values are user-facing prose (subject to AI-slop checks).
@@ -10601,7 +10602,7 @@ def _format_activity_schema_diagnostic(violations: list[dict[str, Any]]) -> str:
 
 
 def _quiz_translate_explanation_gate(activities: list[dict[str, Any]]) -> dict[str, Any]:
-    """Require teaching feedback for quiz, translate, and fill-in items (#8214)."""
+    """Require teaching feedback for quiz, translate, fill-in, and true-false items (#8214, R-19)."""
     violations: list[dict[str, Any]] = []
     checked = 0
 
