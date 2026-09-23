@@ -152,13 +152,30 @@ def codex_reset_reserve_eligible(
     for source in (info.get("windows"), cb.get("windows"), info.get("provider_windows"), cb.get("provider_windows")):
         if isinstance(source, dict):
             windows.extend(source.values())
-    # CodexBar's flat Codex fields are the same authoritative provider windows
-    # as the named `windows` blocks; keep this allowlist provider-specific so a
-    # ledger-derived `info.remaining_pct` cannot qualify the reserve.
+    # CodexBar exposes both named windows and flat fields. A flat used value
+    # can report exhaustion even when its matching remaining value is absent.
     windows.extend(
-        {"remaining_pct": cb.get(key)}
-        for key in ("primary_remaining_pct", "weekly_remaining_pct", "secondary_remaining_pct")
+        {"remaining_pct": cb.get(f"{name}_remaining_pct"), "used_pct": cb.get(f"{name}_used_pct")}
+        for name in ("primary", "secondary", "tertiary", "weekly")
     )
+    # The fresh notebook weekly report fills gaps in CodexBar. It is a
+    # governing allotment window, not a cost-ledger estimate.
+    notebook = info.get("notebook_report")
+    if notebook is not None:
+        if not isinstance(notebook, dict) or notebook.get("source") != "notebook-report":
+            return False
+        notebook_age = notebook.get("age_s")
+        if (
+            notebook.get("freshness") != "fresh"
+            or isinstance(notebook_age, bool)
+            or not isinstance(notebook_age, (int, float))
+            or not math.isfinite(notebook_age)
+            or not 0 <= notebook_age < MAX_PROVIDER_AGE_SECONDS
+        ):
+            return False
+        windows.append(
+            {"remaining_pct": notebook.get("weekly_remaining_pct"), "used_pct": notebook.get("weekly_used_pct")}
+        )
     has_positive_window = False
     for block in windows:
         if not isinstance(block, dict):

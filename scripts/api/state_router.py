@@ -1839,6 +1839,11 @@ def compute_routing_budget(
     if transport == "dispatch":
         return budget
 
+    dispatch_codex = budget["agents"].get("codex")
+    reserve_relaxes_codex = codex_is_threatened(dispatch_codex) and codex_reset_reserve_eligible(
+        budget.get("reset_reserve", {}), dispatch_codex, now=now,
+        snapshot_stale=budget.get("diagnostics", {}).get("stale", False),
+    )
     health = probe_acp_health(project_root or Path(__file__).resolve().parents[2])
     warnings = list(budget["recommendation"].get("warnings", []))
     prepaid_budgets, _ = _load_agent_budgets(budget_config_path)
@@ -1875,6 +1880,12 @@ def compute_routing_budget(
         reset_imminent_hours=diagnostics.get("reset_imminent_hours", 6),
         is_stale=diagnostics.get("stale", False),
     )
+    if reserve_relaxes_codex and budget["agents"].get("codex", {}).get("eligible") is True:
+        budget["recommendation"]["primary_agent_for_code"] = "codex"
+        budget["recommendation"]["rationale"] = (
+            "Operator-confirmed Codex reset reserve permits the GPT-6 Sol code lane; "
+            "provider windows, runtime headroom, and ACP compatibility were freshly verified."
+        )
     primary = budget["recommendation"]["primary_agent_for_code"]
     if primary and budget["agents"].get(primary, {}).get("eligible") is not True:
         budget["recommendation"]["primary_agent_for_code"] = None

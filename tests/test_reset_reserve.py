@@ -117,6 +117,15 @@ def test_eligibility_requires_provider_runtime_and_health_headroom():
         lambda info: info["codexbar"]["windows"]["primary"].update(remaining_pct=0),
         lambda info: info["codexbar"]["windows"].update(secondary={"remaining_pct": 0}),
         lambda info: info["codexbar"]["windows"].update(secondary={"used_pct": 100}),
+        lambda info: info["codexbar"].update(weekly_used_pct=100, weekly_remaining_pct=None),
+        lambda info: info.update(notebook_report={
+            "source": "notebook-report", "freshness": "fresh", "age_s": 5,
+            "weekly_used_pct": 100, "weekly_remaining_pct": 0,
+        }),
+        lambda info: info.update(notebook_report={
+            "source": "notebook-report", "freshness": "stale_last_good", "age_s": 901,
+            "weekly_used_pct": 20, "weekly_remaining_pct": 80,
+        }),
     ):
         info = _eligible_codex()
         mutate(info)

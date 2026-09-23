@@ -29,7 +29,7 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
-| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design, high-stakes CF of record | **claude-fable-5** (Fable), **gpt-6-astra** (Astra @ high), Opus-class when roster says so |
+| **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design; high-stakes CF of record only on an eligible non-Astra route | **claude-fable-5** (Fable), **gpt-6-astra** (Astra @ high, advisory only), Opus-class when roster says so |
 | **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3, Grok 4.7 (review/CF, not judge) |
 | **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
 
