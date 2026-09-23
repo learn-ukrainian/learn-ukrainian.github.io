@@ -77,25 +77,33 @@ DEFAULT_OUTPUT_DIR = PROJECT_ROOT / "data" / "projects" / "open_model_data" / "c
 
 def detokenize(text: str) -> str:
     """Detokenize Ukrainian text from Stanza space-separated tokenization."""
-    # 0. Clean CJK characters, zero-width characters, and non-breaking spaces
+    if not text:
+        return ""
+    # 0. Clean CJK brackets, zero-width characters, and non-breaking spaces
+    text = text.replace("《", "«").replace("》", "»")
     text = text.replace("\u4e00", "—")
     text = re.sub(r"[\u200b-\u200f\u202a-\u202e\ufeff]", "", text)
     text = text.replace("\u00a0", " ")
 
-    # 0a. Close hyphenated compound particles and prefixes BEFORE converting isolated dashes
+    # 0a. Close hyphenated initials, stretched words, and numeric ranges BEFORE converting isolated dashes
+    text = re.sub(r"\b([А-ЯІЇЄҐ])\.\s*[—–-]\s*([А-ЯІЇЄҐ])\.", r"\1.-\2.", text)
+    text = re.sub(r"\b([а-яіїєґА-ЯІЇЄҐ])-([а-яіїєґА-ЯІЇЄҐ])\s*[—–-]\s*([а-яіїєґА-ЯІЇЄҐ])\b", r"\1-\2-\3", text)
+    text = re.sub(r"(\d+)\s*[—–-]\s*(\d+)", r"\1–\2", text)
+
+    # 0b. Close hyphenated compound particles and prefixes
     text = re.sub(r"\b([а-яіїєґА-ЯІЇЄҐ\w'-]+)\s*[—–-]\s*(от|таки|будь|небудь|бо|но|то)\b", r"\1-\2", text, flags=re.I)
     text = re.sub(r"\b(будь|хто|що|як|де|куди|коли)\s*[—–-]\s*(будь|небудь|то)\b", r"\1-\2", text, flags=re.I)
     text = re.sub(r"\b(по)\s*[—–-]\s*([а-яіїєґА-ЯІЇЄҐ\w']+(?:ому|ему|ськи|цьки|ки))\b", r"\1-\2", text, flags=re.I)
     text = re.sub(r"\b(рок|поп|джаз|фолк|арт|веб|інтернет|онлайн|офіс|бізнес|прем'єр|віце|екс|міні|максі|міді|мікро|макро|топ|шоу|фітнес|блок)\s*[—–-]\s*([а-яіїєґА-ЯІЇЄҐ\w']+)\b", r"\1-\2", text, flags=re.I)
     text = re.sub(r"\b([а-яіїєґА-ЯІЇЄҐ]{4,}(?:о|е|є))\s*[-–]\s*([а-яіїєґА-ЯІЇЄҐ]{5,}(?:ий|ого|ому|им|ім|а|ої|ій|у|ою|е|і|их|ими|я|є))\b", r"\1-\2", text, flags=re.I)
 
-    # 0b. Clean adjacent dashes and dash combos: e.g. "— -" -> "— "
+    # 0c. Clean adjacent dashes and dash combos: e.g. "— -" -> "— "
     text = re.sub(r"[—–-]\s*[—–-]\s*", "— ", text)
     text = re.sub(r",\s*—\s*", ", — ", text)
-    # 0c. Clean hyphen-as-dash: replace space-hyphen-space and space-en-dash-space with standard em-dash
+    # 0d. Clean hyphen-as-dash: replace space-hyphen-space and space-en-dash-space with standard em-dash
     text = re.sub(r"\s+[-–]\s+", " — ", text)
     text = re.sub(r"\s+—\s+", " — ", text)
-    # 0d. Clean bracket/brace artifacts: e.g. "–}", "—}", "-}"
+    # 0e. Clean bracket/brace artifacts: e.g. "–}", "—}", "-}"
     text = re.sub(r"[—–-]\s*[\]\}\)]", "", text)
     # 1. Close spaces before punctuation: , . ! ? : ; % ) ] } » ”
     text = re.sub(r"\s+([,.\!?:;%\]\}\)»”])", r"\1", text)
@@ -105,6 +113,8 @@ def detokenize(text: str) -> str:
     text = re.sub(r'(^|[\s(])"\s+([а-яіїєґА-ЯІЇЄҐ\w])', r'\1"\2', text)
     text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])\s+"([\s,.\!?:;)]|$)', r'\1"\2', text)
     text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])"([а-яіїєґА-ЯІЇЄҐ\w])', r'\1" \2', text)
+    text = re.sub(r'([а-яіїєґА-ЯІЇЄҐ\w])\s+([!\?\.])\s*"', r'\1\2"', text)
+    text = re.sub(r'([!\?\.])\s+"', r'\1"', text)
     # 3. Handle comma immediately before opening parenthesis: e.g. ", (" -> " ("
     text = re.sub(r",\s*\(", " (", text)
     # 4. Handle hyphenated compounds: e.g. "Санта - Круз" -> "Санта-Круз"
@@ -112,8 +122,13 @@ def detokenize(text: str) -> str:
     # 5. Handle decimal numbers with comma or dot: e.g. "3, 3" -> "3,3", "1. 5" -> "1.5"
     text = re.sub(r"(\d+),\s+(\d+)", r"\1,\2", text)
     text = re.sub(r"(\d+)\.\s+(\d+)", r"\1.\2", text)
-    # 6. Handle ellipses like . . . -> ...
+    # 6. Handle ellipses like . . . -> ... and clean stray punctuation around ellipses
     text = re.sub(r"\.\s+\.\s+\.", "...", text)
+    text = re.sub(r"\s+\.\.\.", "...", text)
+    text = re.sub(r"\.\.\.\s*[,;:]+", "...", text)
+    text = re.sub(r"\.\.\.\s+", "... ", text)
+    text = re.sub(r"[,;:]+\s*([»”\"\)])", r"\1", text)
+    text = re.sub(r"([«“\(\[])\s*[,;:]+", r"\1", text)
     # 7. Normalize all apostrophe variants to standard ASCII '
     text = re.sub(r"[’ʼ‘`´ʹ‛\x27]", "'", text)
     text = re.sub(r"'\s+", "'", text)
@@ -214,6 +229,7 @@ RUSSIANISM_PATTERNS = [
     r"\bзупинімось\b",
     r"\bборотьб\w*\s+(?!з\b|проти\b|за\b|між\b)[а-яіїєґ]+(?:ом|ем|ям|ою|ею|ями|ами|ях|ах|у|ю|і)\b",
     r"\bщоб\s+(?:повністю|зовсім|дуже|абсолютно)\s+[а-яіїєґ]+(?:ння|ття)\b",
+    r"\bвиясни\w*\b",
 ]
 
 ACTIVE_PARTICIPLE_EXCEPTIONS = {
@@ -295,8 +311,8 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # Strictly Cyrillic: zero Latin characters in controls
     if re.search(r"[a-zA-Z]", text):
         return False
-    # Reject CJK characters
-    if re.search(r"[\u4e00-\u9fff]", text):
+    # Reject CJK characters and East Asian punctuation
+    if re.search(r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", text):
         return False
     # Reject zero-width characters and control codes
     if re.search(r"[\u200b-\u200f\u202a-\u202e\ufeff]", text):
@@ -315,6 +331,32 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     # Reject subordinate clause fragments at start
     if re.search(r"^(?:Як\s+колись|Немовби|Немов|Наче|Неначе|Нібито|Ніби)\b", text):
+        return False
+    # Reject direct address with masculine nominative personal names instead of vocative
+    if re.search(
+        r"\b(?:Ти|ти),\s+(?:Іван|Петро|Михайло|Олександр|Дмитро|Андрій|Тарас|Сергій|Володимир|Юрій|Богдан|Василь|Степан|Остап|Орест|Ярослав|Максим|Павло)\b",
+        text,
+    ):
+        return False
+    # Reject broken agreement or garbled constructions
+    if re.search(r"\bНайважливіше\s+—\s+додаєте\b", text):
+        return False
+    if re.search(r"\bзахоплені\s+загальним\s+порушенням\b", text):
+        return False
+    # Reject split «не»
+    if re.search(r"\bне\s+(?:високоточн|правильн|можлив|виправдан|доречн|безпечн|великод|вдачн)\w*\b", text):
+        return False
+    # Reject spaced dashes in initials, stretched words, or numeric ranges
+    if re.search(r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", text):
+        return False
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]-[а-яіїєґА-ЯІЇЄҐ]\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]\b", text):
+        return False
+    if re.search(r"\d+\s+—\s+\d+", text):
+        return False
+    # Reject spaced ellipses or ellipses with stray punctuation
+    if re.search(r"\s+\.\.\.", text):
+        return False
+    if re.search(r"\.\.\.[,;:]", text) or re.search(r"[,;:]+\s*[»”\"]", text):
         return False
     # Reject spaced dashes in compounds/particles
     if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+\s+[—–-]\s+(?:от|таки|будь|небудь|бо|но|то)\b", text, re.IGNORECASE):
@@ -464,11 +506,27 @@ def is_valid_candidate(
     # Strictly Cyrillic: zero Latin, CJK, zero-width, or control characters
     if re.search(r"[a-zA-Z]", corr_text) or re.search(r"[a-zA-Z]", orig_text):
         return False
-    if re.search(r"[\u4e00-\u9fff]", corr_text) or re.search(r"[\u4e00-\u9fff]", orig_text):
+    if re.search(r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", corr_text) or re.search(
+        r"[\u2e80-\u9fff\u3000-\u303f\uff00-\uffef]", orig_text
+    ):
         return False
     if re.search(r"[\u200b-\u200f\u202a-\u202e\ufeff]", corr_text) or re.search(
         r"[\u200b-\u200f\u202a-\u202e\ufeff]", orig_text
     ):
+        return False
+    # Reject spaced ellipses or ellipses with stray punctuation
+    if re.search(r"\s+\.\.\.", corr_text) or re.search(r"\s+\.\.\.", orig_text):
+        return False
+    if re.search(r"\.\.\.[,;:]", corr_text) or re.search(r"[,;:]+\s*[»”\"]", corr_text):
+        return False
+    # Reject spaced dashes in initials, stretched words, or numeric ranges
+    if re.search(r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", corr_text) or re.search(
+        r"\b[А-ЯІЇЄҐ]\.\s*[—–-]\s*[А-ЯІЇЄҐ]\.", orig_text
+    ):
+        return False
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]-[а-яіїєґА-ЯІЇЄҐ]\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ]\b", corr_text):
+        return False
+    if re.search(r"\d+\s+—\s+\d+", corr_text) or re.search(r"\d+\s+—\s+\d+", orig_text):
         return False
     # Reject math symbols or special characters
     if any(c in corr_text for c in "<>~=@#$^&*_+") or any(c in orig_text for c in "<>~=@#$^&*_+"):
@@ -627,6 +685,24 @@ def is_valid_candidate(
         return False
     if re.search(r"\bпотіння\b", o_low) and re.search(r"\bпітливість\b", c_low):
         return False
+    if re.search(r"\bтеплим\s+океаном\b", c_low):
+        return False
+    if re.search(r"\bгосподи\s+[—–-]\s+боже\b", c_low):
+        return False
+    if (re.search(r"\b(?:він|вона|воно)\b", o_low) or re.search(r"\bчого\s+так\s+поспішал[аов]\b", o_low)) and re.search(r"\bпоспішали\b", c_low):
+        return False
+    if re.search(r"\boy-auch\b|\bой-ауч\b", c_low):
+        return False
+    if re.search(r"\bущемленн\w*\b", c_low) or re.search(r"\bущемленн\w*\b", o_low):
+        return False
+    if re.search(r"\bутисків\s+прав\b", c_low):
+        return False
+    if re.search(r"\bспіріт\w*\b", o_low) or re.search(r"\bпримаро\b", c_low):
+        return False
+    if re.search(r"\bсплять\s+не\s+вчасно\b", o_low) and re.search(r"\bне\s+сплять\s+вчасно\b", c_low):
+        return False
+    if re.search(r"\bяк\s+би\s+він\s+не\s+запізнився\b", o_low):
+        return False
 
     # Gender agreement mismatch
     if re.search(r"\bтака\s+(?:вже\s+й\s+|ще\s+й\s+)?[а-яіїєґ]+[еє]\b", c_low):
@@ -710,8 +786,29 @@ def is_valid_candidate(
     if has_russianism(corr_text, vesum_cur=vesum_cur) or has_russianism(orig_text, vesum_cur=vesum_cur):
         return False
 
-    # Check ALL lowercase words in corr_text against VESUM
+    # Check ALL lowercase words in corr_text against VESUM and ensure finite verb / copula presence
     if vesum_cur is not None:
+        cand_words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ0-9'-]", "", w) for w in corr_text.split()]
+        cand_words = [w.strip("-'").lower() for w in cand_words if w and w not in {"-", "'"}]
+        predicative_words = {
+            "є", "був", "була", "було", "були", "буде", "будуть", "нема", "немає",
+            "це", "можна", "треба", "потрібно", "варто", "слід", "необхідно"
+        }
+        has_verb_or_copula = any(w in predicative_words for w in cand_words) or ("—" in corr_text and len(cand_words) >= 4)
+        if not has_verb_or_copula:
+            for w in cand_words:
+                if w.isdigit():
+                    continue
+                row = vesum_cur.execute(
+                    "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?) LIMIT 1",
+                    (w, w.capitalize(), w.upper()),
+                ).fetchone()
+                if row and row[0] == "verb" and "inf" not in row[1] and "adjp" not in row[1] and "advp" not in row[1]:
+                    has_verb_or_copula = True
+                    break
+        if not has_verb_or_copula:
+            return False
+
         words_c = re.findall(r"\b[\w'-]+\b", corr_text)
         for w in words_c:
             if "-" in w or w.isupper() or w[0].isupper() or len(w) <= 2:
@@ -1074,6 +1171,7 @@ def build_grammar_dataset(
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
+                content_edits = [e for e in all_non_noop if e[2] not in ("Punctuation", "Spelling", "noop")]
 
                 eval_corrections.append(
                     {
@@ -1087,6 +1185,8 @@ def build_grammar_dataset(
                         "all_tags": all_tags,
                         "err_span": err_span,
                         "repl_span": repl_span,
+                        "num_content_edits": len(content_edits),
+                        "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in content_edits),
                         "source_type": "ua_gec_human_annotated",
                         "source_corpus": "ua_gec_2.0",
                         "license": "CC BY 4.0",
@@ -1196,6 +1296,7 @@ def build_grammar_dataset(
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
+                content_edits = [e for e in all_non_noop if e[2] not in ("Punctuation", "Spelling", "noop")]
 
                 train_corrections.append(
                     {
@@ -1209,6 +1310,8 @@ def build_grammar_dataset(
                         "all_tags": all_tags,
                         "err_span": err_span,
                         "repl_span": repl_span,
+                        "num_content_edits": len(content_edits),
+                        "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in content_edits),
                         "source_type": "ua_gec_human_annotated",
                         "source_corpus": "ua_gec_2.0",
                         "license": "CC BY 4.0",
@@ -1307,6 +1410,40 @@ def build_grammar_dataset(
             key=lambda x: hashlib.sha256(f"{x[1]['doc_id']}_{x[1]['original_text']}".encode()).hexdigest()
         )
 
+        # Determine explainable candidates: strictly single category and no gender-head-noun decoupling
+        def can_explain_candidate(cand_item: dict[str, Any]) -> bool:
+            tags = cand_item.get("all_tags", [])
+            cats = {TAG_TO_COARSE_CATEGORY.get(t, t) for t in tags}
+            if len(cats) > 1 or len(set(tags)) > 1:
+                return False
+            # Gender agreement decoupling: gender shifts with modified head nouns must fail closed
+            if cand_item.get("primary_tag") == "G/Gender" and cand_item.get("num_content_edits", 1) > 1:
+                return False
+            cit = resolve_specific_linguistic_citation(
+                cand_item["primary_tag"],
+                cand_item.get("err_span", ""),
+                cand_item.get("repl_span", ""),
+                cand_item["original_text"],
+                cand_item["corrected_text"],
+            )
+            return cit is not None
+
+        total_err_count = len(corrections)
+        target_explained_count = round(total_err_count * 0.55)
+        eligible_err_indices = [
+            i for i, (is_err, it) in enumerate(all_raw_items)
+            if is_err and can_explain_candidate(it)
+        ]
+
+        # Prioritize pure grammar candidates over candidates with incidental stylistic edits
+        eligible_err_indices.sort(
+            key=lambda i: (
+                1 if all_raw_items[i][1].get("has_other_content", False) else 0,
+                i,
+            )
+        )
+        explained_err_indices = set(eligible_err_indices[:target_explained_count])
+
         # Assign task mix: calibrated to land ~55% explained corrections post citation drop
         used_queries: set[str] = set()
         for idx, (is_err, item) in enumerate(all_raw_items):
@@ -1338,7 +1475,7 @@ def build_grammar_dataset(
                 if not query:
                     query = build_query(orig_text, reg, seed_idx)
 
-            is_explained = (idx % 100 < 65)
+            is_explained = (idx in explained_err_indices) if is_err else (idx % 100 < 55)
 
             if is_err:
                 corr_text = item["corrected_text"]

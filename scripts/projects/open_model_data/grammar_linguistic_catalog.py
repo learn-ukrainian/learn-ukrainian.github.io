@@ -34,7 +34,7 @@ def _get_vesum_connection() -> sqlite3.Connection | None:
 
 @functools.lru_cache(maxsize=100000)
 def is_vocative_form(word: str) -> bool:
-    """Check if word has a vocative form tag (v_kly) in VESUM."""
+    """Check if word is a noun with a vocative form tag (v_kly) in VESUM (excluding pronouns)."""
     clean_word = word.strip().strip("«»\"'.,!?-–—;:()").lower()
     if not clean_word:
         return False
@@ -44,10 +44,10 @@ def is_vocative_form(word: str) -> bool:
     try:
         cur = conn.cursor()
         res = cur.execute(
-            "SELECT tags FROM forms_all WHERE word_form IN (?, ?, ?)",
+            "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
             (clean_word, clean_word.capitalize(), clean_word.upper()),
         ).fetchall()
-        return any("v_kly" in row[0] for row in res)
+        return any(pos == "noun" and "v_kly" in tags and "pron" not in tags for pos, tags in res)
     except Exception:
         return False
 
@@ -564,14 +564,26 @@ def resolve_specific_linguistic_citation(
 
     # 3. Case government and inflection (G/Case)
     if primary_tag == "G/Case":
-        corr_voc = any(is_vocative_form(w) for w in corr.split())
-        err_voc = any(is_vocative_form(w) for w in err.split())
-        if corr_voc and not err_voc:
-            return (
-                "Український правопис (2019) § 87 / Олександр Пономарів «Культура слова»",
-                f"помилкове вживання називного відмінка замість кличного у звертанні «{err}» виправлено на «{corr}»",
-                f"«Український правопис» (2019, § 87) та норми культури мови (Олександр Пономарів) вимагають уживати у звертаннях кличний відмінок, а не називний: вживаємо «{corr}» замість «{err}»."
-            )
+        err_words = err.strip().split()
+        corr_words = corr.strip().split()
+        if len(err_words) == 1 and len(corr_words) == 1:
+            err_w, corr_w = err_words[0], corr_words[0]
+            if is_vocative_form(corr_w) and not is_vocative_form(err_w):
+                # Also verify err_w is a single noun and NOT a pronoun
+                conn = _get_vesum_connection()
+                is_err_noun = False
+                if conn is not None:
+                    res_err = conn.cursor().execute(
+                        "SELECT pos, tags FROM forms_all WHERE word_form IN (?, ?, ?)",
+                        (err_w.lower(), err_w.capitalize(), err_w.upper()),
+                    ).fetchall()
+                    is_err_noun = any(pos == "noun" and "pron" not in tags for pos, tags in res_err)
+                if is_err_noun:
+                    return (
+                        "Український правопис (2019) § 87 / Олександр Пономарів «Культура слова»",
+                        f"помилкове вживання називного відмінка замість кличного у звертанні «{err}» виправлено на «{corr}»",
+                        f"«Український правопис» (2019, § 87) та норми культури мови (Олександр Пономарів) вимагають уживати у звертаннях кличний відмінок, а не називний: вживаємо «{corr}» замість «{err}»."
+                    )
         return (
             "VESUM / Український правопис (2019)",
             f"помилку у відмінковій формі «{err}» виправлено на нормативну форму «{corr}»",
