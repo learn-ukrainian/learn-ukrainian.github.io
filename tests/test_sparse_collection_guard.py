@@ -274,6 +274,19 @@ def _present_fake_repo(tmp_path: Path) -> tuple[Path, Path]:
     return fake, curriculum_file
 
 
+def _curriculum_repo(tmp_path: Path) -> tuple[Path, Path]:
+    """Return ``(repo, curriculum_file)`` with only the curriculum tree present.
+
+    The guard hides every forced tree whether or not that directory exists.
+    These probes only need a file inside ``curriculum/``.
+    """
+    fake = tmp_path / "full-checkout"
+    curriculum_file = fake / "curriculum" / "lesson.txt"
+    curriculum_file.parent.mkdir(parents=True)
+    curriculum_file.write_text("привіт\n", encoding="utf-8")
+    return fake, curriculum_file
+
+
 def _write_module(directory: Path, name: str, source: str) -> Path:
     directory.mkdir(parents=True, exist_ok=True)
     path = directory / name
@@ -427,3 +440,191 @@ def test_guard_child_existence_checks_hide_present_trees(tmp_path: Path) -> None
     assert curriculum_file.exists()
     assert os.path.exists(curriculum_file)
     assert os.stat(curriculum_file).st_size > 0
+
+
+def _guarded_probe(
+    source: str,
+    *,
+    cwd: Path,
+    repo_root: Path,
+    extra_env: dict[str, str] | None = None,
+) -> subprocess.CompletedProcess[str]:
+    """Run ``source`` in a child that has installed the collection guard."""
+    env = os.environ.copy()
+    env[FORCE_MISSING_TREES_ENV] = ",".join(_ABSENT_TREES)
+    env[REPO_ROOT_ENV] = str(Path(os.path.abspath(repo_root)))
+    prior = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(_REPO_ROOT) if not prior else f"{_REPO_ROOT}{os.pathsep}{prior}"
+    if extra_env:
+        env.update(extra_env)
+    return subprocess.run(
+        [sys.executable, "-c", source],
+        cwd=cwd,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+
+
+def test_guard_blocks_symlink_repointed_into_a_tree(tmp_path: Path) -> None:
+    """A symlink allowed on first resolution is hidden after it is re-pointed.
+
+    The child resolves the link while it points at an outside file, then
+    points the same path at a file inside ``curriculum/``. The second read
+    must fail in that same process.
+    """
+    fake, curriculum_file = _curriculum_repo(tmp_path)
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside\n", encoding="utf-8")
+    link = tmp_path / "moving-link"
+    link.symlink_to(outside)
+    neutral = tmp_path / "neutral"
+    neutral.mkdir()
+    completed = _guarded_probe(
+        "import os\n"
+        "from pathlib import Path\n"
+        "import tests.sparse_collection_audit\n"
+        "link = os.environ['LINK']\n"
+        "first = Path(link).read_text(encoding='utf-8')\n"
+        "assert first == 'outside\\n', first\n"
+        "print('first=outside')\n"
+        "os.remove(link)\n"
+        "os.symlink(os.environ['INSIDE'], link)\n"
+        "try:\n"
+        "    Path(link).read_text(encoding='utf-8')\n"
+        "    print('repoint=visible')\n"
+        "except FileNotFoundError as exc:\n"
+        "    print(f'repoint={exc.errno}')\n",
+        cwd=neutral,
+        repo_root=fake,
+        extra_env={"LINK": str(link), "INSIDE": str(curriculum_file)},
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert "first=outside" in completed.stdout
+    assert f"repoint={errno.ENOENT}" in completed.stdout
+    assert "repoint=visible" not in completed.stdout
+
+
+def test_guard_blocks_proc_cwd_after_chdir(tmp_path: Path) -> None:
+    """``/proc/self/cwd/...`` is resolved against the cwd of the call.
+
+    The child first reads through ``/proc/self/cwd`` from an outside
+    directory, then changes into the repo and reads a tree file through the
+    same spelling.
+    """
+    fake, _curriculum_file = _curriculum_repo(tmp_path)
+    start = tmp_path / "start"
+    start.mkdir()
+    (start / "outside.txt").write_text("outside\n", encoding="utf-8")
+    completed = _guarded_probe(
+        "import os\n"
+        "from pathlib import Path\n"
+        "import tests.sparse_collection_audit\n"
+        "first = Path('/proc/self/cwd/outside.txt').read_text(encoding='utf-8')\n"
+        "assert first == 'outside\\n', first\n"
+        "print('first=outside')\n"
+        "os.chdir(os.environ['REPO'])\n"
+        "try:\n"
+        "    Path('/proc/self/cwd/curriculum/lesson.txt').read_text(encoding='utf-8')\n"
+        "    print('after=visible')\n"
+        "except FileNotFoundError as exc:\n"
+        "    print(f'after={exc.errno}')\n",
+        cwd=start,
+        repo_root=fake,
+        extra_env={"REPO": str(fake)},
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert "first=outside" in completed.stdout
+    assert f"after={errno.ENOENT}" in completed.stdout
+    assert "after=visible" not in completed.stdout
+
+
+def test_guard_open_relative_to_dir_fd(tmp_path: Path) -> None:
+    """``os.open(relative, dir_fd=...)`` follows that directory, not cwd.
+
+    The tree directory fd is opened before the guard is installed: once the
+    guard is active, opening that directory is already hidden. The same
+    relative spelling must then be hidden for that fd and allowed for an
+    outside directory fd. The outside fd is opened only after the tree fd is
+    closed, so a reused descriptor number still has to be resolved again.
+    ``os.stat`` of the resulting integer fd is left unguarded.
+    """
+    fake, curriculum_file = _curriculum_repo(tmp_path)
+    outside_dir = tmp_path / "outside-dir"
+    outside_dir.mkdir()
+    (outside_dir / "lesson.txt").write_text("outside\n", encoding="utf-8")
+    neutral = tmp_path / "neutral"
+    neutral.mkdir()
+    completed = _guarded_probe(
+        "import os\n"
+        "tree_fd = os.open(os.environ['TREE_DIR'], os.O_RDONLY)\n"
+        "import tests.sparse_collection_audit\n"
+        "try:\n"
+        "    try:\n"
+        "        leaked = os.open('lesson.txt', os.O_RDONLY, dir_fd=tree_fd)\n"
+        "    except FileNotFoundError as exc:\n"
+        "        print(f'tree={exc.errno}')\n"
+        "    else:\n"
+        "        os.close(leaked)\n"
+        "        print('tree=visible')\n"
+        "finally:\n"
+        "    os.close(tree_fd)\n"
+        "out_fd = os.open(os.environ['OUT_DIR'], os.O_RDONLY)\n"
+        "try:\n"
+        "    opened = os.open('lesson.txt', os.O_RDONLY, dir_fd=out_fd)\n"
+        "    try:\n"
+        "        os.stat(opened)\n"
+        "        data = os.read(opened, 64)\n"
+        "    finally:\n"
+        "        os.close(opened)\n"
+        "    print('outside=' + data.decode())\n"
+        "finally:\n"
+        "    os.close(out_fd)\n",
+        cwd=neutral,
+        repo_root=fake,
+        extra_env={"TREE_DIR": str(curriculum_file.parent), "OUT_DIR": str(outside_dir)},
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert f"tree={errno.ENOENT}" in completed.stdout
+    assert "tree=visible" not in completed.stdout
+    assert "outside=outside\n" in completed.stdout
+
+
+def test_guard_lstat_outside_symlink_returns_metadata(tmp_path: Path) -> None:
+    """No-follow calls return an outside symlink, including ``/proc/self/cwd``.
+
+    The child changes into the tree root, so ``/proc/self/cwd`` names that
+    root. ``os.lstat`` and ``os.stat(..., follow_symlinks=False)`` must return
+    the symlink's own metadata. An outside symlink whose target is inside the
+    tree is likewise not hidden.
+    """
+    fake, curriculum_file = _curriculum_repo(tmp_path)
+    outside_link = tmp_path / "into-tree-link"
+    outside_link.symlink_to(curriculum_file)
+    neutral = tmp_path / "neutral"
+    neutral.mkdir()
+    completed = _guarded_probe(
+        "import os\n"
+        "import stat\n"
+        "import tests.sparse_collection_audit\n"
+        "os.chdir(os.environ['TREE_DIR'])\n"
+        "for label, st in (\n"
+        "    ('proc', os.lstat('/proc/self/cwd')),\n"
+        "    ('proc_stat', os.stat('/proc/self/cwd', follow_symlinks=False)),\n"
+        "    ('link', os.lstat(os.environ['OUTSIDE_LINK'])),\n"
+        "):\n"
+        "    print(label + '=' + ('symlink' if stat.S_ISLNK(st.st_mode) else 'other'))\n",
+        cwd=neutral,
+        repo_root=fake,
+        extra_env={"TREE_DIR": str(curriculum_file.parent), "OUTSIDE_LINK": str(outside_link)},
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert "proc=symlink" in completed.stdout
+    assert "proc_stat=symlink" in completed.stdout
+    assert "link=symlink" in completed.stdout
