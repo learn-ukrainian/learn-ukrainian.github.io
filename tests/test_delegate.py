@@ -4613,13 +4613,14 @@ def _make_run_stub(
             rc = 0 if rebase_ok else 1
             return subprocess.CompletedProcess(cmd, rc, "", "")
         if cmd[:2] == ["git", "ls-tree"]:
-            # Default top-level dirs for sparse-checkout tests / ensure_worktree.
-            return subprocess.CompletedProcess(
-                cmd,
-                0,
-                "curriculum\ndocs\nscripts\nsite\ntests\nwiki\n",
-                "",
-            )
+            # Default dirs for sparse-checkout tests / ensure_worktree.
+            # ``data/`` is listed separately so nested exclusions can drop
+            # data/projects and data/lexicon while keeping sibling data dirs.
+            if cmd[-1:] == ["data/"]:
+                listing = "data/corpus_audit\ndata/lexicon\ndata/projects\ndata/raw\n"
+            else:
+                listing = "curriculum\ndata\ndocs\nscripts\nsite\ntests\nwiki\n"
+            return subprocess.CompletedProcess(cmd, 0, listing, "")
         if cmd[:2] == ["git", "sparse-checkout"]:
             return subprocess.CompletedProcess(cmd, 0, "", "")
         return subprocess.CompletedProcess(cmd, 0, "", "")
@@ -5800,6 +5801,9 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The capacity gate reads the live session-stream store. A Cursor worker
+    # running this suite holds that lease; this test is about branch reuse.
+    monkeypatch.setattr(delegate, "_find_live_cursor_driver_lease", lambda: None)
     args = argparse.Namespace(
         agent="cursor",
         task_id="branch-reuse-dry-run",
@@ -6271,9 +6275,13 @@ def test_ensure_worktree_branches_from_origin_main(tmp_tasks_dir, tmp_path, monk
     assert set_calls, "default dispatch worktree must apply sparse-checkout set"
     assert "curriculum" not in set_calls[0]
     assert "wiki" not in set_calls[0]
+    assert "data/projects" not in set_calls[0]
+    assert "data/lexicon" not in set_calls[0]
+    assert "data/raw" in set_calls[0]
+    assert "--cone" in set_calls[0]
     assert "scripts" in set_calls[0]
     assert telemetry["sparse"] is not None
-    assert telemetry["sparse"]["excluded"] == ["curriculum", "wiki"]
+    assert telemetry["sparse"]["excluded"] == ["curriculum", "data/lexicon", "data/projects", "wiki"]
     assert telemetry["local_venv"] == {"present": False, "kind": None, "path": None}
 
 
@@ -6327,6 +6335,10 @@ def test_normalize_sparse_include_dedupes_and_strips():
         "curriculum",
         "wiki",
     )
+    assert delegate._normalize_sparse_include(["data/projects/", " data/lexicon "]) == (
+        "data/projects",
+        "data/lexicon",
+    )
 
 
 def test_normalize_sparse_include_rejects_nested_and_unknown():
@@ -6336,6 +6348,8 @@ def test_normalize_sparse_include_rejects_nested_and_unknown():
         delegate._normalize_sparse_include(["curriculum/l2-uk-en"])
     with pytest.raises(ValueError, match="not a default-excluded"):
         delegate._normalize_sparse_include(["scripts"])
+    with pytest.raises(ValueError, match="must name a default-excluded tree"):
+        delegate._normalize_sparse_include(["data/raw"])
     with pytest.raises(ValueError, match="empty or invalid"):
         delegate._normalize_sparse_include([""])
 
@@ -6358,6 +6372,58 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         prompt_text="Discuss Wikipedia articles without path refs.",
     )
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/projects/open_model_data/mine.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/projects/open_model_data/test_mine.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["site/src/pages/index.astro"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_foundry_cli.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_data_timeouts.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/audit/source_inventory_intake.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_source_inventory_intake.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/author_densified_pairs.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/noun_mechanics_engine.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        prompt_text="Read data/projects/foo.jsonl and leave data/raw alone.",
+    ) == ("data/projects",)
 
 
 def test_apply_dispatch_sparse_checkout_full_disables(tmp_path, monkeypatch):
@@ -6413,10 +6479,17 @@ def test_augment_prompt_mentions_sparse_exclusions():
     text = delegate._augment_prompt_with_worktree(
         "do work",
         Path("/tmp/wt"),
-        sparse_telemetry={"full_checkout": False, "excluded": ["curriculum", "wiki"]},
+        sparse_telemetry={
+            "full_checkout": False,
+            "excluded": ["curriculum", "data/projects", "wiki"],
+        },
     )
     assert "curriculum" in text
     assert "wiki" in text
+    assert "data/projects" in text
+    assert "git sparse-checkout add data/projects" in text
+    assert "git sparse-checkout add curriculum" in text
+    assert "re-dispatch" not in text
     assert "sparse" in text.lower() or "Sparse" in text
 
 
@@ -6442,6 +6515,10 @@ def test_augment_write_prompt_offers_optional_delivery_declaration():
     assert "DELIVERABLE:" in text
     assert '"outcome":"no_change"' in text
     assert "optional" in text.lower()
+    assert "git push -u origin HEAD" in text
+    assert "git status --porcelain" in text
+    assert "Do not open or merge PRs unless the brief says so" in text
+    assert "sufficient proof of delivery" not in text
 
 
 def test_augment_read_only_prompt_omits_delivery_declaration():
@@ -7775,6 +7852,9 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The capacity gate reads the live session-stream store. A Cursor worker
+    # running this suite holds that lease; this test is about branch reuse.
+    monkeypatch.setattr(delegate, "_find_live_cursor_driver_lease", lambda: None)
     args = argparse.Namespace(
         agent="cursor",
         task_id="branch-reuse-stale-main",
@@ -7843,6 +7923,11 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
         d = primary / name
         d.mkdir()
         (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
+    for name in ("projects", "lexicon", "raw"):
+        d = primary / "data" / name
+        d.mkdir(parents=True)
+        (d / "f.txt").write_text(f"{name}\n", encoding="utf-8")
+    (primary / "data" / "readme.txt").write_text("data-root\n", encoding="utf-8")
     (primary / "README.md").write_text("root\n", encoding="utf-8")
     git("add", ".")
     git("commit", "-m", "init")
@@ -7853,24 +7938,33 @@ def test_apply_dispatch_sparse_checkout_real_git(tmp_path):
 
     meta = delegate._apply_dispatch_sparse_checkout(worktree)
     assert meta["applied"] is True
-    assert meta["excluded"] == ["curriculum", "wiki"]
+    assert meta["excluded"] == ["curriculum", "data/lexicon", "data/projects", "wiki"]
     assert not (worktree / "curriculum").exists()
     assert not (worktree / "wiki").exists()
+    assert not (worktree / "data" / "projects").exists()
+    assert not (worktree / "data" / "lexicon").exists()
+    assert (worktree / "data" / "raw" / "f.txt").is_file()
+    assert (worktree / "data" / "readme.txt").is_file()
     assert (worktree / "scripts" / "f.txt").is_file()
     assert (worktree / "README.md").is_file()
     # Primary must remain full.
     assert (primary / "curriculum" / "f.txt").is_file()
     assert (primary / "wiki" / "f.txt").is_file()
+    assert (primary / "data" / "projects" / "f.txt").is_file()
 
-    meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum",))
-    assert meta2["excluded"] == ["wiki"]
+    meta2 = delegate._apply_dispatch_sparse_checkout(worktree, sparse_include=("curriculum", "data/projects"))
+    assert meta2["excluded"] == ["data/lexicon", "wiki"]
     assert (worktree / "curriculum" / "f.txt").is_file()
+    assert (worktree / "data" / "projects" / "f.txt").is_file()
+    assert not (worktree / "data" / "lexicon").exists()
     assert not (worktree / "wiki").exists()
 
     meta3 = delegate._apply_dispatch_sparse_checkout(worktree, full_checkout=True)
     assert meta3["full_checkout"] is True
     assert (worktree / "curriculum" / "f.txt").is_file()
     assert (worktree / "wiki" / "f.txt").is_file()
+    assert (worktree / "data" / "projects" / "f.txt").is_file()
+    assert (worktree / "data" / "lexicon" / "f.txt").is_file()
 
 
 def test_count_commits_ahead_treats_a_vanished_worktree_as_unknown(tmp_path):

@@ -39,6 +39,7 @@ if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from scripts.lexicon.lemma_normalization import strip_acute_stress
+from scripts.lexicon.manifest_io import _write_atomic
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
 CURRICULUM_MANIFEST = CURRICULUM_ROOT / "curriculum.yaml"
@@ -667,10 +668,9 @@ def main(argv: Sequence[str] | None = None) -> int:
         )
 
     manifest = build_manifest()
-    MANIFEST_PATH.parent.mkdir(parents=True, exist_ok=True)
-    MANIFEST_PATH.write_text(
-        json.dumps(manifest, ensure_ascii=False, indent=2) + "\n",
-        encoding="utf-8",
+    _write_atomic(
+        MANIFEST_PATH,
+        (json.dumps(manifest, ensure_ascii=False, indent=2) + "\n").encode("utf-8"),
     )
     stats = manifest["stats"]
     print(

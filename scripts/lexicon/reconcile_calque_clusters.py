@@ -35,6 +35,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.guardrails.worktree_containment import resolve_main_root
 from scripts.lexicon.manifest_fingerprint import build_fingerprint, write_fingerprint
+from scripts.lexicon.manifest_io import _write_atomic
 from scripts.verification.vesum import get_vesum_conn, verify_lemma
 
 PRIMARY_ROOT = resolve_main_root(PROJECT_ROOT) or PROJECT_ROOT
@@ -715,8 +716,10 @@ class CalqueReconciliationEngine:
                         }
                     except Exception as e:
                         print(f"Warning: could not refresh manifest fingerprint: {e}", file=sys.stderr)
-                with open(self.manifest_path, "w", encoding="utf-8") as f:
-                    json.dump(manifest_data, f, ensure_ascii=False, indent=2)
+                _write_atomic(
+                    self.manifest_path,
+                    json.dumps(manifest_data, ensure_ascii=False, indent=2).encode("utf-8"),
+                )
 
         results["inflow_queue"] = sorted(
             inflow_map.values(),

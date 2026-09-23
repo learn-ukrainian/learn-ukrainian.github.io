@@ -42,6 +42,7 @@ from scripts.lexicon.enrich_manifest import (
 )
 from scripts.lexicon.lemma_normalization import strip_acute_stress
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
+from scripts.lexicon.manifest_io import _write_atomic
 
 DEFAULT_CANDIDATES_PATH = PROJECT_ROOT / "data/lexicon/stem_slice_2a_candidates.json"
 MANIFEST_PATH = PROJECT_ROOT / "site/src/data/lexicon-manifest.json"
@@ -351,9 +352,9 @@ def admit_slice_2a(
 
     if not dry_run:
         print(f"Writing updated manifest to {MANIFEST_PATH}...")
-        MANIFEST_PATH.write_text(
-            json.dumps(manifest_data, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+        _write_atomic(
+            MANIFEST_PATH,
+            (json.dumps(manifest_data, ensure_ascii=False, indent=2) + "\n").encode("utf-8"),
         )
         print(f"Updating fingerprint sidecar {FINGERPRINT_PATH}...")
         write_fingerprint(FINGERPRINT_PATH, root=PROJECT_ROOT)

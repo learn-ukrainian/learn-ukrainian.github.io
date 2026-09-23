@@ -28,6 +28,7 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from scripts.lexicon.build_data_manifest import LEMMA_FIELDS, _lemma_key, _slug_for_url
 from scripts.lexicon.manifest_fingerprint import write_fingerprint
+from scripts.lexicon.manifest_io import _write_atomic
 from scripts.verification.vesum import verify_words
 
 CURRICULUM_ROOT = PROJECT_ROOT / "curriculum" / "l2-uk-en"
@@ -123,9 +124,9 @@ def fill_manifest_from_vocab(
         entries.sort(key=lambda item: str(item.get("lemma") or ""))
         _merge_manifest_modules(payload, modules)
         _refresh_manifest_stats(payload)
-        manifest_path.write_text(
-            json.dumps(payload, ensure_ascii=False, indent=2) + "\n",
-            encoding="utf-8",
+        _write_atomic(
+            manifest_path,
+            (json.dumps(payload, ensure_ascii=False, indent=2) + "\n").encode("utf-8"),
         )
         manifest_written = True
         if enrich:

@@ -57,6 +57,8 @@ except ModuleNotFoundError:
     from curated_heteronyms_batch12 import CURATED_HETERONYMS_BATCH_12
     from curated_heteronyms_batch13 import CURATED_HETERONYMS_BATCH_13
 
+from scripts.lexicon.manifest_io import write_manifest
+
 
 @lru_cache(maxsize=1)
 def _resolve_primary_checkout() -> Path | None:
@@ -710,8 +712,9 @@ def apply_heteronyms(
                         manifest_dirty = True
                         updated_counts["manifest_entries"] += 1
             if manifest_dirty:
-                with open(m_file, "w", encoding="utf-8") as f:
-                    json.dump(manifest_data, f, ensure_ascii=False, indent=2)
+                # Replace the directory entry. An in-place open() would mutate
+                # the read-only shared manifest cache inode.
+                write_manifest(m_file, manifest_data)
         except Exception as ex:
             print(f"Warning: could not update manifest at {m_file}: {ex}", file=sys.stderr)
 

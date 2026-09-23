@@ -745,7 +745,10 @@ def build_parser() -> argparse.ArgumentParser:
         action="append",
         default=None,
         metavar="DIR",
-        help="Pass through to delegate.py: keep a default-excluded top-level dir (curriculum, wiki).",
+        help=(
+            "Pass through to delegate.py: keep a default-excluded tree "
+            "(curriculum, wiki, data/projects, data/lexicon)."
+        ),
     )
     dispatch.add_argument("--base", default="main")
     dispatch.add_argument("--hard-timeout", type=int, default=7200)
