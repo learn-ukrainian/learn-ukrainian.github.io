@@ -53,7 +53,7 @@ Do NOT rename test files — they describe what they test.
 | `scripts/pipeline_lib.py` | 1 (docstring) |
 | `scripts/batch_gemini_config.py` | 1 (comment) |
 | `claude_extensions/phases/gemini/phase-A-*.md` | 5 files (header ref) |
-| `claude_extensions/hooks/check-gemini-inbox.sh` | 1 (comment) |
+| `claude_extensions/hooks/check-agent-inbox.sh` | 1 (comment) |
 
 ### 1.5 Bulk update docs (12 files)
 

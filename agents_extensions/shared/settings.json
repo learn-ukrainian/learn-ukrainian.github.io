@@ -712,7 +712,12 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/context-monitor.sh",
             "timeout": 5
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
@@ -748,7 +753,12 @@
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/tool-timing.sh",
             "timeout": 1
-          },
+          }
+        ]
+      },
+      {
+        "matcher": "Bash",
+        "hooks": [
           {
             "type": "command",
             "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/stamp-pytest.sh",
@@ -762,7 +772,7 @@
         "hooks": [
           {
             "type": "command",
-            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-gemini-inbox.sh",
+            "command": "$CLAUDE_PROJECT_DIR/.claude/hooks/check-agent-inbox.sh",
             "timeout": 5
           },
           {

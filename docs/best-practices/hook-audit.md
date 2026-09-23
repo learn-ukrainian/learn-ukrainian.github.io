@@ -44,7 +44,7 @@ To prevent dirty checkout drift while preserving Entire CLI functionality:
 | `session-setup` | yes (Claude) | thin or skip if no epic | ~1s cold |
 | `post-compact` full scan | yes (Claude epic) | **skip** when Grok + no `SESSION_EPIC` | ~2s → ~0 |
 | `context-monitor` every tool | yes (Claude) | **skip** for Grok unless `GROK_CONTEXT_MONITOR=1` | high frequency |
-| `stamp-pytest` every PostToolUse | keep fire-and-forget | skip for Grok | |
+| `stamp-pytest` PostToolUse/PostToolUseFailure (Bash only) | keep fire-and-forget | skip for Grok | |
 | Entire CLI hooks | no-op if missing | no-op | still spawn shell — OK |
 | Auto-audit FileChanged curriculum | Claude only | off | |
 

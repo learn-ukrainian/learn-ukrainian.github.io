@@ -226,9 +226,12 @@ deadlines for the curriculum scan and rollover-health read under the existing
 ## Pytest stamp and pre-push guard
 
 `agents_extensions/shared/hooks/stamp-pytest.sh` is the deployed
-`PostToolUse`/`PostToolUseFailure` writer. It delegates parsing and marker
-identity to `.githooks/pytest_stamp.py`; `.githooks/check-pytest-stamp.py` uses
-that same contract in the tracked `pre-push` chain.
+`PostToolUse`/`PostToolUseFailure` writer, scoped to the `Bash` matcher in
+both events — `.githooks/pytest_stamp.py` only inspects a Bash `command`, so
+other tool payloads never pay the interpreter startup (#8529). It delegates
+parsing and marker identity to `.githooks/pytest_stamp.py`;
+`.githooks/check-pytest-stamp.py` uses that same contract in the tracked
+`pre-push` chain.
 
 A marker is namespaced to the canonical Git common directory, exact registered
 worktree, and checked-out branch. A fresh marker from another clone, worktree,

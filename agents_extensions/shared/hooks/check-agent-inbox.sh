@@ -1,6 +1,13 @@
 #!/bin/bash
-# Hook: Check for unread cross-agent messages on every prompt submit
+# Hook: Check for unread cross-agent messages on every prompt submit.
+# Serves every agent seat (claude/codex/gemini/agy/grok/orchestrator) via
+# LEARN_UK_HOOK_RECIPIENT; the Gemini CLI seat is retired, the name is not.
 # Uses the live inbox CLI so fleet-comms remains the authority for messages.
+#
+# Fast path (#8529): a read-only, 1 s-bounded unread COUNT against the same
+# broker DB the CLI reads skips the Python bridge startup entirely when the
+# inbox is empty. Any probe uncertainty falls through to the live CLI so
+# messages are never hidden.
 #
 # PIPELINE GUARD: Skips during build_module / ai_agent_bridge runs
 # to prevent ping-pong between automated pipeline phases.
@@ -27,9 +34,70 @@ if [ ! -x "$PROJECT_DIR/.venv/bin/python" ]; then
   exit 0
 fi
 
+# Fast path: probe the same broker DB the bridge CLI reads
+# (scripts/ai_agent_bridge/_config.py DB_PATH → _messaging.py check_inbox)
+# with a read-only, 1 s-bounded unread count. Zero unread → exit silently
+# without paying the Python bridge startup. DB missing/locked/error, schema
+# drift, or an inconclusive result → fall through to the live CLI below.
+DB_FILE="${AB_DB_PATH:-}"
+if [ -z "$DB_FILE" ]; then
+  GIT_COMMON_DIR=$(git -C "$PROJECT_DIR" rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+  if [ -n "$GIT_COMMON_DIR" ]; then
+    DB_FILE="$(dirname "$GIT_COMMON_DIR")/.mcp/servers/message-broker/messages.db"
+  fi
+fi
+
+if [ -n "$DB_FILE" ] && [ -f "$DB_FILE" ]; then
+  # Mirror check_inbox recipient resolution for the seats this hook serves:
+  # resolve_recipient_alias is identity for registered seats, and
+  # seat_read_aliases dual-reads only grok ↔ grok-build. RECIPIENT is already
+  # whitelisted above, so interpolating it into SQL cannot inject.
+  case "$RECIPIENT" in
+    grok|grok-build) TO_LLM_SQL="'grok','grok-build'" ;;
+    *) TO_LLM_SQL="'$RECIPIENT'" ;;
+  esac
+  # "unread" matches _message_consumption_state: neither acknowledged nor
+  # consumed by a live driver (NULL is falsy in Python, 0 via COALESCE here).
+  UNREAD_COUNT=""
+  if command -v sqlite3 >/dev/null 2>&1; then
+    UNREAD_COUNT=$(sqlite3 -readonly -cmd ".timeout 1000" "$DB_FILE" \
+      "SELECT COUNT(*) FROM messages WHERE to_llm IN ($TO_LLM_SQL) AND COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0;" \
+      2>/dev/null || true)
+  else
+    # stdlib-only fallback for hosts without the sqlite3 CLI; prints nothing
+    # on any error so the live CLI below stays the authority.
+    UNREAD_COUNT=$("$PROJECT_DIR/.venv/bin/python" - "$DB_FILE" "$RECIPIENT" <<'PYEOF'
+import sqlite3
+import sys
+
+db, recipient = sys.argv[1], sys.argv[2]
+recipients = ("grok", "grok-build") if recipient in ("grok", "grok-build") else (recipient,)
+try:
+    conn = sqlite3.connect(f"file:{db}?mode=ro", uri=True, timeout=1.0)
+    try:
+        placeholders = ",".join("?" * len(recipients))
+        row = conn.execute(
+            f"SELECT COUNT(*) FROM messages WHERE to_llm IN ({placeholders}) "
+            "AND COALESCE(acknowledged, 0) = 0 AND COALESCE(consumed_by_live_driver, 0) = 0",
+            recipients,
+        ).fetchone()
+        print(row[0])
+    finally:
+        conn.close()
+except Exception:
+    pass
+PYEOF
+    )
+  fi
+  case "$UNREAD_COUNT" in
+    ''|*[!0-9]*) ;;  # probe inconclusive → the live CLI decides below
+    0) exit 0 ;;
+  esac
+fi
+
 # Ask the live CLI for the recipient's inbox. Keep its existing output as the
-# source of both the count and the bounded preview; do not read the retired
-# MCP broker from this hook.
+# source of both the count and the bounded preview; the fast path above only
+# ever short-circuits a proven-empty inbox, never replaces this listing.
 INBOX_OUTPUT=$("$PROJECT_DIR/.venv/bin/python" -m scripts.ai_agent_bridge inbox --for "$RECIPIENT" 2>/dev/null) || exit 0
 
 # The legacy human listing emits `N unread`; the live channel listing emits a
