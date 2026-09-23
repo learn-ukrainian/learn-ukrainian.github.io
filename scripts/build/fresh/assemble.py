@@ -102,7 +102,7 @@ def _split_inline_spans(text: str, default_role: str) -> list[tuple[str, str]]:
         if gloss_match:
             spans.append(("gloss_ref", strip_accents(part)))
             continue
-        spans.append((default_role, strip_accents(part)))
+        spans.append((default_role, part))
 
     return spans
 
