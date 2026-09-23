@@ -33,23 +33,33 @@ def resolve_handoff_path(
     epic: str,
     override: str | Path | None = None,
     preferred: list[str] | None = None,
+    *,
+    out_dir: Path | None = None,
 ) -> Path:
+    """Same selection as mint: explicit path, else the recorded mint file, else freshness.
+
+    Own-lane (``preferred``) ties an equal freshness date. It does not outrank
+    a newer handoff. A recorded mint path is returned without ranking again.
+    """
     if override:
         p = Path(override)
         return p if p.is_absolute() else (repo / p)
-    base = repo / ".claude" / f"{epic}-epic"
-    candidates = [
-        *(preferred or []),
-        "INTERIM-DRIVER-HANDOFF.md",
-        "CLAUDE-DRIVER-HANDOFF.md",
-        "CODEX-DRIVER-HANDOFF.md",
-    ]
-    for name in candidates:
-        cand = base / name
-        if cand.is_file():
-            return cand
-    # Prefer INTERIM as write target for Grok interim drivers.
-    return base / "INTERIM-DRIVER-HANDOFF.md"
+    from scripts.session_canary import handoff_select
+
+    recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
+    if recorded is not None:
+        return recorded
+    ranked = handoff_select.lane_handoff_candidates(
+        repo,
+        epic,
+        handoff_select.LANE_HANDOFF_NAMES,
+        preferred=list(preferred or []),
+    )
+    chosen = handoff_select.chosen_handoff_path(ranked)
+    if chosen is not None:
+        return chosen
+    fallback = next(iter(preferred or ()), "INTERIM-DRIVER-HANDOFF.md")
+    return repo / ".claude" / f"{epic}-epic" / fallback
 
 
 def _ensure_section(text: str, heading: str, default_body: str) -> str:

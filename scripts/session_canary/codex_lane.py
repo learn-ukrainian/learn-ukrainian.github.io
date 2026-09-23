@@ -150,11 +150,11 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
     stream_id = _stream_id(args)
     epic_path = _epic_dir(repo, epic)
     epic_path.mkdir(parents=True, exist_ok=True)
-    handoffs = _handoff_candidates(repo, epic)
-    handoff_rel = (
-        str(handoffs[0].relative_to(repo))
-        if handoffs[0].exists()
-        else f".claude/{epic}-epic/CODEX-DRIVER-HANDOFF.md"
+    handoff_rel = handoff_select.board_handoff_rel(
+        repo,
+        epic,
+        lambda: _handoff_candidates(repo, epic),
+        fallback_name="CODEX-DRIVER-HANDOFF.md",
     )
     board_path = epic_path / "CODEX-COLD-START.md"
     lease_summary = (

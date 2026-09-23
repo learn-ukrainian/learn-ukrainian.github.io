@@ -101,18 +101,50 @@ def _canary_dir(repo: Path, epic: str) -> Path:
     return repo / ".claude" / f"{epic}-epic" / "canary"
 
 
+_OWN_HANDOFF = "GROK-DRIVER-HANDOFF.md"
+
+
 def _handoff_candidates(repo: Path, epic: str, preferred: list[str] | None = None) -> list[Path]:
-    """Own-lane handoff first, then the freshest other existing candidate.
+    """Freshest lane handoff. Own-lane ties the same freshness date only.
 
     ``*.superseded.md`` is never returned. Missing names stay at the tail so an
     empty epic dir still reports the lane's own filename first.
     """
+    own = [_OWN_HANDOFF] if preferred is None else [name for name in preferred if name]
     return handoff_select.lane_handoff_candidates(
         repo,
         epic,
-        handoff_select.GROK_FALLBACK_HANDOFF_NAMES,
-        preferred=list(preferred or []),
+        handoff_select.LANE_HANDOFF_NAMES,
+        preferred=own,
     )
+
+
+def _bound_handoff_path(
+    repo: Path,
+    epic: str,
+    *,
+    explicit: str | Path | None = None,
+    preferred: list[str] | None = None,
+    out_dir: Path | None = None,
+) -> Path:
+    """Handoff mint, score, and hydrate must share.
+
+    An explicit path wins. Otherwise the file mint already recorded wins, and
+    the ranker runs only when there is no recorded selection.
+    """
+    override = _resolve_handoff_override(repo, str(explicit) if explicit else None)
+    if override is not None and not handoff_select.is_superseded_handoff(override):
+        return override
+    recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
+    if recorded is not None:
+        return recorded
+    ranked = _handoff_candidates(repo, epic, preferred=preferred)
+    chosen = handoff_select.chosen_handoff_path(ranked)
+    if chosen is not None:
+        return chosen
+    if ranked:
+        return ranked[0]
+    return repo / ".claude" / f"{epic}-epic" / "INTERIM-DRIVER-HANDOFF.md"
 
 
 def _read_text(path: Path, limit: int = 120_000) -> str:
@@ -385,8 +417,8 @@ def _facts_from_handoff_candidates(
     """Use the first handoff that yields 10 anchors.
 
     ``handoff_paths`` is already ordered: explicit ``--handoff``, then the
-    lane's own file, then the freshest remaining candidates. A short file is
-    recorded and the next candidate is tried before failing.
+    freshness ranking. A short file is recorded and the next candidate is
+    tried before failing. The path that succeeds is what later consumers use.
     """
     existing = [path for path in handoff_paths if path.is_file()]
     sources: list[tuple[Path | None, str]] = (
@@ -613,8 +645,12 @@ def cmd_score(args: argparse.Namespace) -> int:
         from scripts.session_canary import diary as diary_mod
 
         preferred = getattr(args, "preferred", None)
-        handoff_path = diary_mod.resolve_handoff_path(
-            repo, epic, getattr(args, "handoff", None), preferred=preferred
+        handoff_path = _bound_handoff_path(
+            repo,
+            epic,
+            explicit=getattr(args, "handoff", None),
+            preferred=preferred,
+            out_dir=out_dir,
         )
         canary_line = diary_mod.format_canary_score_line(
             verdict=verdict,
@@ -682,7 +718,7 @@ def cmd_score(args: argparse.Namespace) -> int:
                         repo=repo,
                         epic=epic,
                         stream_id=stream_id,
-                        handoff=getattr(args, "handoff", None),
+                        handoff=handoff_path,
                         out_dir=out_dir,
                         max_tokens=int(getattr(args, "hydrate_max_tokens", 1400)),
                         write=bool(getattr(args, "hydrate_write", False)),
@@ -751,7 +787,13 @@ def emit_hydrate_capsule(
 
     epic = epic.strip().lower()
     stream_id = (stream_id or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")).strip()
-    handoff_path = diary_mod.resolve_handoff_path(repo, epic, handoff, preferred=preferred)
+    handoff_path = _bound_handoff_path(
+        repo,
+        epic,
+        explicit=handoff,
+        preferred=preferred,
+        out_dir=out_dir,
+    )
     if not handoff_path.is_file():
         print(f"error: diary handoff missing: {handoff_path}", file=sys.stderr)
         return 1, {"error": "missing_handoff", "handoff": str(handoff_path)}
@@ -951,7 +993,13 @@ def cmd_stamp(args: argparse.Namespace) -> int:
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
     preferred = getattr(args, "preferred", None)
-    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff, preferred=preferred)
+    path = _bound_handoff_path(
+        repo,
+        epic,
+        explicit=args.handoff,
+        preferred=preferred,
+        out_dir=Path(args.out_dir) if getattr(args, "out_dir", None) else None,
+    )
     bullets = list(args.bullet or [])
     if args.title and not bullets:
         bullets = [args.title]
@@ -982,7 +1030,13 @@ def cmd_handback(args: argparse.Namespace) -> int:
     epic = args.epic.strip().lower()
     stream = args.stream or EPIC_STREAM_DEFAULTS.get(epic, "epic:N")
     preferred = getattr(args, "preferred", None)
-    path = diary_mod.resolve_handoff_path(repo, epic, args.handoff, preferred=preferred)
+    path = _bound_handoff_path(
+        repo,
+        epic,
+        explicit=args.handoff,
+        preferred=preferred,
+        out_dir=Path(args.out_dir) if getattr(args, "out_dir", None) else None,
+    )
     next_drive = list(args.next or []) or ["Load STATE AT HANDBACK + stream; mint canary; resume"]
     canary_line = args.canary_line or "canary not scored this close"
     stamp = diary_mod.append_handback(

@@ -175,14 +175,12 @@ def _write_cold_start(
     lease_summary: str,
     repo: Path,
 ) -> None:
-    handoff_rel = f".claude/{epic}-epic/INTERIM-DRIVER-HANDOFF.md"
-    for cand in _handoff_candidates(repo, epic):
-        if cand.is_file():
-            try:
-                handoff_rel = str(cand.relative_to(repo))
-            except ValueError:
-                handoff_rel = str(cand)
-            break
+    handoff_rel = handoff_select.board_handoff_rel(
+        repo,
+        epic,
+        lambda: _handoff_candidates(repo, epic),
+        fallback_name="INTERIM-DRIVER-HANDOFF.md",
+    )
     (epic_dir / "KIMI-COLD-START.md").write_text(
         _cold_start_body(
             epic=epic,
@@ -370,12 +368,7 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
         out_dir=None,
         stream_limit=40,
     )
-    original_candidates = _gl._handoff_candidates
-    try:
-        _gl._handoff_candidates = lambda r, e, preferred=None: _handoff_candidates(r, e)  # type: ignore[assignment]
-        mint_rc = _gl.cmd_mint(mint_ns)
-    finally:
-        _gl._handoff_candidates = original_candidates
+    mint_rc = _with_kimi_handoffs(_gl.cmd_mint, mint_ns)
     if mint_rc != 0:
         print(
             f"warning: canary mint returned {mint_rc} (cold-start file still written)",
@@ -454,13 +447,21 @@ See `docs/runbooks/kimi-orchestrator.md`.
     return 0
 
 
-def _cmd_mint_kimi(args: argparse.Namespace) -> int:
+def _with_kimi_handoffs(function: Any, args: argparse.Namespace) -> int:
     original = _gl._handoff_candidates
     try:
         _gl._handoff_candidates = lambda r, e, preferred=None: _handoff_candidates(r, e)  # type: ignore[assignment]
-        return _gl.cmd_mint(args)
+        return int(function(args))
     finally:
         _gl._handoff_candidates = original
+
+
+def _cmd_mint_kimi(args: argparse.Namespace) -> int:
+    return _with_kimi_handoffs(_gl.cmd_mint, args)
+
+
+def _cmd_score_kimi(args: argparse.Namespace) -> int:
+    return _with_kimi_handoffs(_gl.cmd_score, args)
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -515,7 +516,7 @@ def build_parser() -> argparse.ArgumentParser:
     score.add_argument("--hands-off", default="")
     score.add_argument("--pending-user", default="")
     score.add_argument("--worktrees", default="")
-    score.set_defaults(func=_gl.cmd_score)
+    score.set_defaults(func=_cmd_score_kimi)
 
     status = sub.add_parser("status", help="Show canary artifacts + last verdict")
     status.add_argument("--epic", default="harness")

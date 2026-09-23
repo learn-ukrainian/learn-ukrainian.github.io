@@ -1,4 +1,4 @@
-"""Handoff selection prefers the lane file, then the freshest valid candidate."""
+"""Handoff selection ranks one freshness date, with own-lane as a same-day tiebreak."""
 
 from __future__ import annotations
 
@@ -23,7 +23,7 @@ _LANES = (
     (gemini_lane, "GEMINI-DRIVER-HANDOFF.md"),
     (kimi_lane, "KIMI-DRIVER-HANDOFF.md"),
     (glm_lane, "GLM-DRIVER-HANDOFF.md"),
-    (grok_lane, None),
+    (grok_lane, "GROK-DRIVER-HANDOFF.md"),
 )
 
 
@@ -111,11 +111,38 @@ def test_own_lane_handoff_wins_when_fresh(tmp_path: Path, lane, own_name: str) -
 
 
 @pytest.mark.parametrize(("lane", "own_name"), [row for row in _LANES if row[1]])
-def test_own_lane_handoff_outranks_a_newer_shared_file(tmp_path: Path, lane, own_name: str) -> None:
+def test_stale_own_lane_loses_to_a_fresher_claude_handoff(tmp_path: Path, lane, own_name: str) -> None:
     epic = _epic(tmp_path)
-    _write(epic / own_name, "own\n", mtime=1_000)
-    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "newer shared\n", mtime=8_000)
+    _write(epic / own_name, "## Session 2026-09-18\n\nown\n", mtime=9_000_000_000)
+    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\nclaude\n", mtime=50)
+    assert _existing(lane._handoff_candidates(tmp_path, "atlas"))[0] == "CLAUDE-DRIVER-HANDOFF.md"
+
+
+@pytest.mark.parametrize(("lane", "own_name"), [row for row in _LANES if row[1]])
+def test_same_day_own_lane_handoff_wins_the_tie(tmp_path: Path, lane, own_name: str) -> None:
+    epic = _epic(tmp_path)
+    _write(epic / own_name, "## Session 2026-09-23\n\nown\n", mtime=50)
+    if own_name != "CLAUDE-DRIVER-HANDOFF.md":
+        _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\nclaude\n", mtime=9_000_000_000)
     assert _existing(lane._handoff_candidates(tmp_path, "atlas"))[0] == own_name
+
+
+def test_touched_undated_interim_loses_to_dated_claude(tmp_path: Path) -> None:
+    epic = _epic(tmp_path)
+    _write(epic / "INTERIM-DRIVER-HANDOFF.md", "# Interim\n\nno session heading\n", mtime=5_000_000_000)
+    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\nfresh\n", mtime=50)
+    assert _existing(grok_lane._handoff_candidates(tmp_path, "atlas"))[0] == "CLAUDE-DRIVER-HANDOFF.md"
+
+
+def test_grok_handoff_is_selectable_when_it_is_the_freshest(tmp_path: Path) -> None:
+    epic = tmp_path / ".claude" / "infra-epic"
+    epic.mkdir(parents=True)
+    _write(epic / "GROK-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\ngrok\n", mtime=50)
+    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-18\n\nclaude\n", mtime=9_000_000_000)
+    _write(epic / "INTERIM-DRIVER-HANDOFF.md", "undated interim\n", mtime=9_000_000_000)
+    ranked = _existing(grok_lane._handoff_candidates(tmp_path, "infra"))
+    assert ranked[0] == "GROK-DRIVER-HANDOFF.md"
+    assert "GROK-DRIVER-HANDOFF.md" in ranked
 
 
 def test_session_heading_beats_equal_mtime_and_a_later_touch(tmp_path: Path) -> None:
@@ -273,6 +300,80 @@ def test_explicit_shortfall_falls_through_before_failing(
 
     assert _mint(grok_lane, tmp_path, ["--handoff", str(explicit)]) == 0
     assert "claude-sentinel" in _answers(tmp_path)
+
+
+def test_kimi_board_matches_canary_handoff_after_fallthrough(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    _patch_mint(monkeypatch)
+    epic = _epic(tmp_path)
+    _write(
+        epic / "KIMI-DRIVER-HANDOFF.md",
+        "# Kimi\n\n## Session 2026-09-23\n\nNo next or hands-off sections.\n",
+        mtime=8_000,
+    )
+    _write(
+        epic / "CLAUDE-DRIVER-HANDOFF.md",
+        _full("claude-sentinel", session="2026-09-23"),
+        mtime=1_000,
+    )
+
+    assert (
+        kimi_lane.main(
+            ["--repo", str(tmp_path), "mint", "--epic", "atlas", "--stream", "lane-test"]
+        )
+        == 0
+    )
+    meta = json.loads((epic / "canary" / "mint_meta.json").read_text(encoding="utf-8"))
+    assert meta["handoff"].endswith("CLAUDE-DRIVER-HANDOFF.md")
+    assert "claude-sentinel" in (epic / "canary" / "facts.json").read_text(encoding="utf-8")
+
+    kimi_lane._write_cold_start(
+        epic,
+        epic="atlas",
+        stream_id="lane-test",
+        lease_summary="test",
+        repo=tmp_path,
+    )
+    board = (epic / "KIMI-COLD-START.md").read_text(encoding="utf-8")
+    assert meta["handoff"] in board
+    bound = grok_lane._bound_handoff_path(tmp_path, "atlas")
+    assert handoff_select.display_repo_path(tmp_path, bound) == meta["handoff"]
+
+
+@pytest.mark.parametrize(
+    ("lane", "board_name"),
+    [
+        (codex_lane, "CODEX-COLD-START.md"),
+        (gemini_lane, "GEMINI-COLD-START.md"),
+        (glm_lane, "GLM-COLD-START.md"),
+        (kimi_lane, "KIMI-COLD-START.md"),
+    ],
+)
+def test_cold_start_board_uses_the_recorded_mint_file(tmp_path: Path, lane, board_name: str) -> None:
+    epic = _epic(tmp_path)
+    canary = epic / "canary"
+    canary.mkdir()
+    own = {
+        codex_lane: "CODEX-DRIVER-HANDOFF.md",
+        gemini_lane: "GEMINI-DRIVER-HANDOFF.md",
+        glm_lane: "GLM-DRIVER-HANDOFF.md",
+        kimi_lane: "KIMI-DRIVER-HANDOFF.md",
+    }[lane]
+    _write(epic / own, "## Session 2026-09-23\n\nown\n", mtime=9_000)
+    _write(epic / "CLAUDE-DRIVER-HANDOFF.md", "## Session 2026-09-23\n\nclaude\n", mtime=1)
+    recorded = ".claude/atlas-epic/CLAUDE-DRIVER-HANDOFF.md"
+    (canary / "mint_meta.json").write_text(json.dumps({"handoff": recorded}), encoding="utf-8")
+
+    if lane is kimi_lane:
+        lane._write_cold_start(
+            epic, epic="atlas", stream_id="lane-test", lease_summary="test", repo=tmp_path
+        )
+    else:
+        assert lane.main(["--repo", str(tmp_path), "bootstrap", "--epic", "atlas"]) == 0
+
+    board = (epic / board_name).read_text(encoding="utf-8")
+    assert f"**Handoff dual-write:** `{recorded}`" in board
 
 
 def test_explicit_superseded_path_is_not_minted(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:

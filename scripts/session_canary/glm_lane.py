@@ -317,11 +317,11 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
 
     epic_dir = _epic_dir(repo, epic)
     epic_dir.mkdir(parents=True, exist_ok=True)
-    handoffs = _handoff_candidates(repo, epic)
-    handoff_rel = (
-        str(handoffs[0].relative_to(repo))
-        if handoffs[0].exists()
-        else f".claude/{epic}-epic/GLM-DRIVER-HANDOFF.md"
+    handoff_rel = handoff_select.board_handoff_rel(
+        repo,
+        epic,
+        lambda: _handoff_candidates(repo, epic),
+        fallback_name="GLM-DRIVER-HANDOFF.md",
     )
 
     board_path = epic_dir / "GLM-COLD-START.md"
