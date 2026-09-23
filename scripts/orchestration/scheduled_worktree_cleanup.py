@@ -509,6 +509,9 @@ def _query_pr_by_number(
     repo_root: Path,
     number: int,
 ) -> tuple[list[reap_worktrees.PullRequestState], str | None]:
+    states, rest_error = reap_worktrees._query_pr_by_number_rest(repo_root, number)
+    if rest_error is None:
+        return states, None
     try:
         proc = reap_worktrees._run(
             [
@@ -523,9 +526,9 @@ def _query_pr_by_number(
             timeout=30,
         )
     except (FileNotFoundError, subprocess.SubprocessError) as exc:
-        return [], f"gh pr view failed: {exc}"
+        return [], f"{rest_error}; gh pr view failed: {exc}"
     if proc.returncode != 0:
-        return [], f"gh pr view failed: {reap_worktrees._format_failure(proc)}"
+        return [], f"{rest_error}; gh pr view failed: {reap_worktrees._format_failure(proc)}"
     try:
         item = json.loads(proc.stdout or "{}")
     except json.JSONDecodeError as exc:
