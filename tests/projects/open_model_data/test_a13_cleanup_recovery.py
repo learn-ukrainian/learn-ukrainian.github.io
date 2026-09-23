@@ -15,6 +15,7 @@ the real, unmonkeypatched chain against the real production artifacts.
 from __future__ import annotations
 
 import copy
+import functools
 import json
 from pathlib import Path
 
@@ -42,10 +43,12 @@ MANIFEST_PATH = ADMISSION / "dataset_v4_pilot_slot_manifest_v1.json"
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
-REAL_RECEIPT = json.loads(RECEIPT.read_text(encoding="utf-8"))
-REAL_A2_RECEIPT = json.loads(A2_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_A12_RECEIPT = json.loads(A12_RECEIPT_PATH.read_text(encoding="utf-8"))
-REAL_MANIFEST = json.loads(MANIFEST_PATH.read_text(encoding="utf-8"))
+
+@functools.cache
+def _cached_json(path: Path) -> dict:
+    """Read a JSON artifact on first use so collection survives a sparse worktree."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
 
 FORBIDDEN_KEYS = a13.FORBIDDEN_KEYS
 FORBIDDEN_SUBSTRINGS = a13.FORBIDDEN_SUBSTRINGS
@@ -67,9 +70,9 @@ def _write_receipt_tree(tmp_path: Path, *, a2=None, manifest=None, a12_receipt=N
     the whole upstream chain."""
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else REAL_A2_RECEIPT))
-    (admission_dir / "dataset_v4_a12_gold_overlay_gate_receipt_v1.json").write_text(json.dumps(a12_receipt if a12_receipt is not None else REAL_A12_RECEIPT))
-    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else REAL_MANIFEST))
+    (admission_dir / "dataset_v4_a2_source_operation_admission_receipt_v1.json").write_text(json.dumps(a2 if a2 is not None else _cached_json(A2_RECEIPT_PATH)))
+    (admission_dir / "dataset_v4_a12_gold_overlay_gate_receipt_v1.json").write_text(json.dumps(a12_receipt if a12_receipt is not None else _cached_json(A12_RECEIPT_PATH)))
+    (admission_dir / "dataset_v4_pilot_slot_manifest_v1.json").write_text(json.dumps(manifest if manifest is not None else _cached_json(MANIFEST_PATH)))
     return tmp_path
 
 
@@ -130,7 +133,7 @@ def test_a13_state_reports_rights_unresolved_and_slots_unassigned_when_both_pend
 
 def test_a13_state_reports_rights_unresolved_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
+    assigned_manifest = copy.deepcopy(_cached_json(MANIFEST_PATH))
     for series in assigned_manifest["slot_series"]:
         series["assignment_state"] = "ASSIGNED"
     _write_receipt_tree(tmp_path, manifest=assigned_manifest)
@@ -142,7 +145,7 @@ def test_a13_state_reports_rights_unresolved_only(tmp_path: Path, monkeypatch: p
 
 def test_a13_state_reports_slot_assignment_pending_only(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
+    resolved_a2 = copy.deepcopy(_cached_json(A2_RECEIPT_PATH))
     resolved_a2["residuals"] = []
     _write_receipt_tree(tmp_path, a2=resolved_a2)
     state = a13.check_cleanup_recovery_state(tmp_path)
@@ -155,9 +158,9 @@ def test_a13_state_never_reports_epic_closed_even_when_fully_resolved(tmp_path: 
     """Proves epic_closed can never flip true by accident: it is hardcoded
     False regardless of upstream resolution state."""
     _fast_a12(monkeypatch)
-    resolved_a2 = copy.deepcopy(REAL_A2_RECEIPT)
+    resolved_a2 = copy.deepcopy(_cached_json(A2_RECEIPT_PATH))
     resolved_a2["residuals"] = []
-    assigned_manifest = copy.deepcopy(REAL_MANIFEST)
+    assigned_manifest = copy.deepcopy(_cached_json(MANIFEST_PATH))
     for series in assigned_manifest["slot_series"]:
         series["assignment_state"] = "ASSIGNED"
     _write_receipt_tree(tmp_path, a2=resolved_a2, manifest=assigned_manifest)
@@ -185,10 +188,10 @@ def test_a13_named_residual_reuses_the_a2_a3_owner_role_and_never_deletes_to_clo
 
 def test_a13_residuals_are_one_typed_entry_per_frozen_slot_never_a_silent_drop() -> None:
     state = a13.check_cleanup_recovery_state()
-    residuals = a13.derive_a13_slot_residuals(REAL_MANIFEST, REAL_A2_RECEIPT, state)
+    residuals = a13.derive_a13_slot_residuals(_cached_json(MANIFEST_PATH), _cached_json(A2_RECEIPT_PATH), state)
     assert len(residuals) == 100
     assert len({r["residual_id"] for r in residuals}) == 100
-    assert {r["subject_id"] for r in residuals} == set(a13.a12.a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(REAL_MANIFEST))
+    assert {r["subject_id"] for r in residuals} == set(a13.a12.a11.a10.a9.a8.a7.a6.all_frozen_slot_ids(_cached_json(MANIFEST_PATH)))
     assert all(r["stage"] == "A13" for r in residuals)
     assert {r["reason_code"] for r in residuals} == {"rights_unknown", "source_incomplete", "independence_unavailable"}
     # Never a fabricated cleanup/recovery verdict standing in for the missing released row.
@@ -239,25 +242,25 @@ def test_a13_engine_wiring_reuses_the_shared_admission_engine_unmodified() -> No
 
 
 def test_a13_receipt_validates_independently_against_the_real_public_artifacts() -> None:
-    assert a13.validate_receipt_independently(REAL_RECEIPT) is None
+    assert a13.validate_receipt_independently(_cached_json(RECEIPT)) is None
 
 
 def test_a13_receipt_matches_schema() -> None:
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
     Draft202012Validator.check_schema(schema)
-    errors = list(Draft202012Validator(schema).iter_errors(REAL_RECEIPT))
+    errors = list(Draft202012Validator(schema).iter_errors(_cached_json(RECEIPT)))
     assert not errors, errors[0].message if errors else None
 
 
 def test_a13_receipt_binds_v4_sha_and_control_surfaces() -> None:
-    assert REAL_RECEIPT["controlling_outcome_sha256"] == V4_SHA256
-    assert REAL_RECEIPT["control_surfaces"] == {
+    assert _cached_json(RECEIPT)["controlling_outcome_sha256"] == V4_SHA256
+    assert _cached_json(RECEIPT)["control_surfaces"] == {
         "public_control_issue": 7423,
         "pilot_child_issue": 7430,
         "private_operational_board": 622,
     }
-    assert REAL_RECEIPT["bindings"]["a12_gold_overlay_gate"]["sha256"] == a13.sha256_file(A12_RECEIPT_PATH)
-    assert REAL_RECEIPT["bindings"]["pilot_slot_manifest"]["sha256"] == a13.sha256_file(MANIFEST_PATH)
+    assert _cached_json(RECEIPT)["bindings"]["a12_gold_overlay_gate"]["sha256"] == a13.sha256_file(A12_RECEIPT_PATH)
+    assert _cached_json(RECEIPT)["bindings"]["pilot_slot_manifest"]["sha256"] == a13.sha256_file(MANIFEST_PATH)
 
 
 def test_a13_receipt_binds_the_merged_a12_receipt_by_its_known_public_sha() -> None:
@@ -282,24 +285,24 @@ def test_a13_receipt_carries_forward_every_a2_a4_a5_a6_a7_a8_a9_a10_a11_a12_resi
     )
     for receipt_key, path, source_key in pairs:
         source = json.loads(path.read_text(encoding="utf-8"))
-        assert {e["residual_id"] for e in REAL_RECEIPT[receipt_key]} == {e["residual_id"] for e in source[source_key]}
-        assert all(e["status"] == "unresolved_carried_to_a13" for e in REAL_RECEIPT[receipt_key])
+        assert {e["residual_id"] for e in _cached_json(RECEIPT)[receipt_key]} == {e["residual_id"] for e in source[source_key]}
+        assert all(e["status"] == "unresolved_carried_to_a13" for e in _cached_json(RECEIPT)[receipt_key])
 
 
 def test_a13_receipt_denominator_stays_100_and_visible() -> None:
-    assert REAL_RECEIPT["frozen_slot_denominator"]["total_slots"] == 100
-    assert REAL_RECEIPT["execution_counters"]["frozen_slot_count"] == 100
-    assert len(REAL_RECEIPT["a13_residuals"]) == 100
-    assert REAL_RECEIPT["recovery_state"]["denominator_stable"] is True
+    assert _cached_json(RECEIPT)["frozen_slot_denominator"]["total_slots"] == 100
+    assert _cached_json(RECEIPT)["execution_counters"]["frozen_slot_count"] == 100
+    assert len(_cached_json(RECEIPT)["a13_residuals"]) == 100
+    assert _cached_json(RECEIPT)["recovery_state"]["denominator_stable"] is True
 
 
 def test_a13_receipt_never_claims_a_stronger_release_state_than_the_evidence() -> None:
-    assert REAL_RECEIPT["status"] == "A13_CLEANUP_RECOVERY_WIRED_TEXT_FREE_NO_STRONGER_RELEASE_STATE_CLAIM"
-    assert REAL_RECEIPT["recovery_state"]["epic_closed"] is False
-    serialized = json.dumps(REAL_RECEIPT, ensure_ascii=False, sort_keys=True)
+    assert _cached_json(RECEIPT)["status"] == "A13_CLEANUP_RECOVERY_WIRED_TEXT_FREE_NO_STRONGER_RELEASE_STATE_CLAIM"
+    assert _cached_json(RECEIPT)["recovery_state"]["epic_closed"] is False
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     for forbidden in ("EPIC_DONE", "TRAINING_READY_SILVER", "TRAINING_READY_GOLD_SUBSET", "GOLD_UPGRADE_READY", "EVAL_ARTIFACT_READY", "PILOT_REVIEW_PASSED", "ARENA_SLICE_READY", "ADMITTED_SLICE_READY"):
         assert forbidden not in serialized, forbidden
-    safety = REAL_RECEIPT["safety_assertions"]
+    safety = _cached_json(RECEIPT)["safety_assertions"]
     assert safety["epic_done_claimed"] is False
     assert safety["training_ready_silver_claimed"] is False
     assert safety["training_ready_gold_subset_claimed"] is False
@@ -309,15 +312,15 @@ def test_a13_receipt_never_claims_a_stronger_release_state_than_the_evidence() -
 
 
 def test_a13_receipt_dataset_rows_emitted_stays_zero() -> None:
-    assert REAL_RECEIPT["execution_counters"]["dataset_rows_emitted"] == 0
-    assert REAL_RECEIPT["engine_wiring"]["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
-    assert REAL_RECEIPT["safety_assertions"]["rows_not_admitted"] is True
+    assert _cached_json(RECEIPT)["execution_counters"]["dataset_rows_emitted"] == 0
+    assert _cached_json(RECEIPT)["engine_wiring"]["admission_receipt"]["counts"] == {"input_rows": 0, "admitted_rows": 0, "rejected_rows": 0}
+    assert _cached_json(RECEIPT)["safety_assertions"]["rows_not_admitted"] is True
 
 
 def test_a13_receipt_never_deletes_a_forbidden_path_or_touches_private_artifacts() -> None:
-    assert REAL_RECEIPT["execution_counters"]["temp_outputs_reaped"] == 0
-    assert REAL_RECEIPT["execution_counters"]["forbidden_paths_touched"] == 0
-    safety = REAL_RECEIPT["safety_assertions"]
+    assert _cached_json(RECEIPT)["execution_counters"]["temp_outputs_reaped"] == 0
+    assert _cached_json(RECEIPT)["execution_counters"]["forbidden_paths_touched"] == 0
+    safety = _cached_json(RECEIPT)["safety_assertions"]
     assert safety["held_out_membership_referenced"] is False
     assert safety["held_out_membership_opened"] is False
     assert safety["held_out_membership_deleted"] is False
@@ -330,17 +333,17 @@ def test_a13_receipt_never_deletes_a_forbidden_path_or_touches_private_artifacts
 
 
 def test_a13_receipt_never_names_source_text_a_held_out_family_or_a_plaintext_source_id() -> None:
-    keys = _all_keys(REAL_RECEIPT)
+    keys = _all_keys(_cached_json(RECEIPT))
     assert not keys & FORBIDDEN_KEYS
-    serialized = json.dumps(REAL_RECEIPT, ensure_ascii=False, sort_keys=True)
+    serialized = json.dumps(_cached_json(RECEIPT), ensure_ascii=False, sort_keys=True)
     assert not any(needle in serialized for needle in FORBIDDEN_SUBSTRINGS)
-    assert REAL_RECEIPT["a13_residuals"][0]["subject_id"].startswith("v4p-")
+    assert _cached_json(RECEIPT)["a13_residuals"][0]["subject_id"].startswith("v4p-")
 
 
 def test_a13_bindings_hash_to_disk_for_every_bound_artifact() -> None:
     from learn_ukrainian_v4_runtime.resources import resource_root
 
-    for name, binding in REAL_RECEIPT["bindings"].items():
+    for name, binding in _cached_json(RECEIPT)["bindings"].items():
         path = resource_root() / (
             "provenance/v1/blobs/sha256/" + binding["sha256"] + ".blob"
             if binding["path"].startswith("scripts/") else binding["path"]
@@ -350,7 +353,7 @@ def test_a13_bindings_hash_to_disk_for_every_bound_artifact() -> None:
 
 
 def test_a13_receipt_eligibility_all_false() -> None:
-    assert REAL_RECEIPT["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
+    assert _cached_json(RECEIPT)["eligibility"] == {"gold": False, "training": False, "evaluation": False, "teaching": False, "coverage": False}
 
 
 # --- fail-closed on tampering (fast: monkeypatched a12 validity) ----------------
@@ -358,14 +361,14 @@ def test_a13_receipt_eligibility_all_false() -> None:
 
 def test_a13_refuses_a_tampered_binding_hash(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["bindings"]["a12_gold_overlay_gate"]["sha256"] = "0" * 64
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
 
 
 def test_a13_refuses_a_receipt_bound_to_an_unmerged_a12_receipt_sha() -> None:
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["bindings"]["a12_gold_overlay_gate"]["sha256"] = "1" * 64
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_bound_to_merged_a12_receipt(receipt)
@@ -373,7 +376,7 @@ def test_a13_refuses_a_receipt_bound_to_an_unmerged_a12_receipt_sha() -> None:
 
 def test_a13_refuses_a_forged_epic_closed_claim(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["recovery_state"]["epic_closed"] = True
     with pytest.raises((a13.CleanupRecoveryError, Exception)):
         a13.validate_receipt_independently(receipt)
@@ -381,7 +384,7 @@ def test_a13_refuses_a_forged_epic_closed_claim(monkeypatch: pytest.MonkeyPatch)
 
 def test_a13_refuses_a_dropped_a12_residual(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["a12_residuals_carried_forward"].pop()
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
@@ -389,7 +392,7 @@ def test_a13_refuses_a_dropped_a12_residual(monkeypatch: pytest.MonkeyPatch) -> 
 
 def test_a13_refuses_a_missing_frozen_slot_residual(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["a13_residuals"].pop()
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
@@ -397,7 +400,7 @@ def test_a13_refuses_a_missing_frozen_slot_residual(monkeypatch: pytest.MonkeyPa
 
 def test_a13_refuses_a_nonzero_dataset_rows_emitted_claim(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["execution_counters"]["dataset_rows_emitted"] = 1
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
@@ -405,7 +408,7 @@ def test_a13_refuses_a_nonzero_dataset_rows_emitted_claim(monkeypatch: pytest.Mo
 
 def test_a13_refuses_a_nonzero_temp_outputs_reaped_claim(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["execution_counters"]["temp_outputs_reaped"] = 1
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
@@ -413,7 +416,7 @@ def test_a13_refuses_a_nonzero_temp_outputs_reaped_claim(monkeypatch: pytest.Mon
 
 def test_a13_refuses_a_weakened_cleanup_policy_dropping_a_forbidden_path(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["cleanup_policy"]["forbidden_paths"] = [p for p in receipt["cleanup_policy"]["forbidden_paths"] if p != "data/sources.db"]
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
@@ -421,7 +424,7 @@ def test_a13_refuses_a_weakened_cleanup_policy_dropping_a_forbidden_path(monkeyp
 
 def test_a13_refuses_a_forged_named_residual_owner(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["named_residual"]["owner_role"] = "A13"
     with pytest.raises((a13.CleanupRecoveryError, Exception)):
         a13.validate_receipt_independently(receipt)
@@ -429,7 +432,7 @@ def test_a13_refuses_a_forged_named_residual_owner(monkeypatch: pytest.MonkeyPat
 
 def test_a13_refuses_a_tampered_model_only_bases_blocked_list(monkeypatch: pytest.MonkeyPatch) -> None:
     _fast_a12(monkeypatch)
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["engine_wiring"]["model_only_bases_blocked"] = ["model_agreement"]
     with pytest.raises(a13.CleanupRecoveryError):
         a13.validate_receipt_independently(receipt)
@@ -437,7 +440,7 @@ def test_a13_refuses_a_tampered_model_only_bases_blocked_list(monkeypatch: pytes
 
 def test_a13_refuses_a_forged_epic_done_status_string() -> None:
     schema = json.loads(SCHEMA.read_text(encoding="utf-8"))
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(RECEIPT))
     receipt["status"] = "EPIC_DONE"
     errors = list(Draft202012Validator(schema).iter_errors(receipt))
     assert errors
@@ -449,4 +452,4 @@ def test_a13_forbidden_completion_claims_include_epic_done_and_upstream_ready_te
     assert "TRAINING_READY_SILVER" in a13.FORBIDDEN_COMPLETION_CLAIMS
     assert "TRAINING_READY_GOLD_SUBSET" in a13.FORBIDDEN_COMPLETION_CLAIMS
     # The status string itself must never accidentally contain a forbidden term.
-    assert not any(claim in REAL_RECEIPT["status"] for claim in a13.FORBIDDEN_COMPLETION_CLAIMS)
+    assert not any(claim in _cached_json(RECEIPT)["status"] for claim in a13.FORBIDDEN_COMPLETION_CLAIMS)

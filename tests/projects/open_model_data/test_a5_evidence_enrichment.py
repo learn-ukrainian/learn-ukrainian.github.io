@@ -12,6 +12,7 @@ using only public files on disk.
 from __future__ import annotations
 
 import copy
+import functools
 import hashlib
 import json
 from pathlib import Path
@@ -31,7 +32,13 @@ RECEIPT = ADMISSION / "dataset_v4_a5_evidence_enrichment_receipt_v1.json"
 SCHEMA = CONTRACTS / "dataset_v4_a5_evidence_enrichment_receipt_v1.schema.json"
 A2_RECEIPT_PATH = ADMISSION / "dataset_v4_a2_source_operation_admission_receipt_v1.json"
 A4_RECEIPT_PATH = ADMISSION / "dataset_v4_a4_deterministic_extraction_receipt_v1.json"
-REAL_A4_RECEIPT = json.loads(A4_RECEIPT_PATH.read_text(encoding="utf-8"))
+
+
+@functools.cache
+def _cached_json(path: Path) -> dict:
+    """Read a JSON artifact on first use so collection survives a sparse worktree."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
 
 V4_SHA256 = "78a1edad36f7bab31f77470fcbf95e1542adbcd9ff5701a6c539a2cfdc49ff20"
 
@@ -314,7 +321,7 @@ def test_gate_closed_when_a4_receipt_missing(tmp_path: Path) -> None:
 def test_gate_closed_when_a4_receipt_is_invalid(tmp_path: Path) -> None:
     admission_dir = tmp_path / "data/projects/open_model_data/admission"
     admission_dir.mkdir(parents=True)
-    forged = copy.deepcopy(REAL_A4_RECEIPT)
+    forged = copy.deepcopy(_cached_json(A4_RECEIPT_PATH))
     forged["bindings"]["a2_source_operation_admission"]["sha256"] = "0" * 64
     (admission_dir / "dataset_v4_a4_deterministic_extraction_receipt_v1.json").write_text(json.dumps(forged))
 

@@ -10,6 +10,7 @@ committed hashes -- those stay opaque here, as they must in production.
 from __future__ import annotations
 
 import copy
+import functools
 import json
 import os
 import secrets
@@ -25,10 +26,19 @@ ROOT = Path(__file__).resolve().parents[3]
 REAL_RECEIPT_PATH = (
     ROOT / "data/projects/open_model_data/admission/dataset_v4_a3_heldout_source_family_seal_receipt_v1.json"
 )
-REAL_RECEIPT = json.loads(REAL_RECEIPT_PATH.read_text(encoding="utf-8"))
+
+
+@functools.cache
+def _cached_json(path: Path) -> dict:
+    """Read a JSON artifact on first use so collection survives a sparse worktree."""
+    return json.loads(path.read_text(encoding="utf-8"))
+
 
 FAMILY_IDS = [f"fam-synthetic-{index:02d}" for index in range(9)]
-assert len(FAMILY_IDS) == len(REAL_RECEIPT["source_family_registry"]["families"])
+
+
+def test_synthetic_family_count_matches_the_real_seal_registry() -> None:
+    assert len(FAMILY_IDS) == len(_cached_json(REAL_RECEIPT_PATH)["source_family_registry"]["families"])
 
 
 @pytest.fixture(autouse=True)
@@ -56,8 +66,8 @@ def _receipt_shape(family_ids: list[str]) -> dict:
     the exact schema/algorithm-metadata/binding-hash independent-validation
     path production runs, not a stand-in of it.
     """
-    assert len(family_ids) == len(REAL_RECEIPT["source_family_registry"]["families"])
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    assert len(family_ids) == len(_cached_json(REAL_RECEIPT_PATH)["source_family_registry"]["families"])
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["source_family_registry"]["families"] = [
         {
             "family_id": fid,
@@ -602,7 +612,7 @@ def test_a3_heldout_assignment_test_salt_override_requires_32_bytes(
 
 
 def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_descriptor_sha256(tmp_path: Path) -> None:
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["heldout_partition_seal"]["assignment_algorithm"]["algorithm_descriptor_sha256"] = "0" * 64
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
@@ -616,7 +626,7 @@ def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_metadata_field(t
     """A mismatched individual metadata field (heldout_fraction) must be
     caught independently of the descriptor hash comparison -- not just
     trusted because some other field still matches."""
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["heldout_partition_seal"]["assignment_algorithm"]["heldout_fraction"] = 0.5
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
@@ -627,7 +637,7 @@ def test_a3_heldout_main_refuses_receipt_with_altered_algorithm_metadata_field(t
 
 
 def test_a3_heldout_main_refuses_receipt_with_altered_heldout_count(tmp_path: Path) -> None:
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["heldout_partition_seal"]["heldout_count"] = 2
     receipt["heldout_partition_seal"]["builder_eligible_count"] = 7
     receipt_path = _write_receipt(tmp_path, receipt)
@@ -641,7 +651,7 @@ def test_a3_heldout_main_refuses_receipt_with_altered_heldout_count(tmp_path: Pa
 def test_a3_heldout_main_refuses_receipt_with_altered_binding_hash(tmp_path: Path) -> None:
     """A binding's declared sha256 is never trusted -- the actual file named
     by ``path`` is hashed and must match."""
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["bindings"]["slot_manifest"]["sha256"] = "0" * 64
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
@@ -657,7 +667,7 @@ def test_a3_heldout_main_refuses_receipt_with_builder_role_heldout_visibility_fl
     not merely by binding-hash drift on a rerun, but by
     ``validate_access_firewall_invariants`` on the very first run, before
     any private artifact exists."""
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     a4 = next(role for role in receipt["access_firewall"] if role["role_id"] == "A4_deterministic_extraction")
     a4["heldout_family_pool_visible"] = True
     receipt_path = _write_receipt(tmp_path, receipt)
@@ -672,7 +682,7 @@ def test_a3_heldout_main_refuses_receipt_with_dropped_cycle007_denial(tmp_path: 
     """A denied Cycle007 fingerprint flipped to not-denied must be refused
     unconditionally by ``validate_cycle007_denial_invariants``, independent
     of any private artifact."""
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["cycle007_denial"]["denied_fingerprints"][0]["denied"] = False
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
@@ -683,7 +693,7 @@ def test_a3_heldout_main_refuses_receipt_with_dropped_cycle007_denial(tmp_path: 
 
 
 def test_a3_heldout_main_refuses_receipt_with_cycle007_denial_flipped(tmp_path: Path) -> None:
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["cycle007_denial"]["reused_in_v4"] = True
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
@@ -744,7 +754,7 @@ def test_a3_heldout_main_refuses_sealed_receipt_that_fails_schema(tmp_path: Path
     schema-conformant -- a schema-forbidden field (e.g. a smuggled salt_hex
     on a binding) is refused even though every other independent check
     (algorithm metadata, counts, on-disk binding hash) still passes."""
-    receipt = copy.deepcopy(REAL_RECEIPT)
+    receipt = copy.deepcopy(_cached_json(REAL_RECEIPT_PATH))
     receipt["bindings"]["slot_manifest"]["salt_hex"] = "00" * 32
     receipt_path = _write_receipt(tmp_path, receipt)
     private_dir = tmp_path / "private"
@@ -762,7 +772,7 @@ def test_a3_heldout_main_accepts_the_real_sealed_receipt_unmutated() -> None:
     unable to pass its own validation. Does not exercise --generate here:
     a fresh random salt can never reproduce the real receipt's already-
     sealed commitments, which is a separate (and already-tested) refusal."""
-    assignment.validate_receipt_independently(copy.deepcopy(REAL_RECEIPT))
+    assignment.validate_receipt_independently(copy.deepcopy(_cached_json(REAL_RECEIPT_PATH)))
 
 
 # --- legacy artifact migration (pre receipt_binding_sha256) ----------------

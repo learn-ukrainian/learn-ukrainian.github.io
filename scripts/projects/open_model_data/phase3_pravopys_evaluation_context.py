@@ -19,6 +19,7 @@ import subprocess
 import sys
 import tarfile
 import tempfile
+import threading
 import time
 from collections import Counter
 from collections.abc import Mapping, Sequence
@@ -61,9 +62,41 @@ PINNED_EVALUATION_CONTEXT_MANIFEST_JSONL_SHA256 = "62e9dd450f18257ad841e0b3141bd
 PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256 = (
     "f01d8efd0a1279d7cf4b742ad6909de4a7d2a3866195b7f7e1b56d8e1e2598d1"
 )
-PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256 = eval_manifest.sha256_file(
+
+
+_PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_PATH = (
     DATA / "inventory/phase3_evaluation_context_manifest_receipt_v1.json"
 )
+_RECEIPT_FILE_HASH_LOCK = threading.Lock()
+
+
+def _pinned_evaluation_context_manifest_receipt_file_sha256() -> str:
+    """Hash the pinned manifest receipt on first use so import does not read it.
+
+    First use is thread-safe: the double-checked lock guarantees the file is
+    hashed exactly once even when two threads race the initial read. A
+    missing receipt raises ``EvaluationContextManifestError`` from
+    ``eval_manifest.sha256_file``, exactly as the pre-lazy module-level
+    constant did at import time; this never returns a placeholder.
+    """
+    pinned = globals().get("PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256")
+    if isinstance(pinned, str):
+        return pinned
+    with _RECEIPT_FILE_HASH_LOCK:
+        pinned = globals().get("PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256")
+        if isinstance(pinned, str):
+            return pinned
+        digest = eval_manifest.sha256_file(_PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_PATH)
+        globals()["PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256"] = digest
+        return digest
+
+
+def __getattr__(name: str) -> str:
+    if name != "PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256":
+        raise AttributeError(f"module {__name__!r} has no attribute {name!r}")
+    return _pinned_evaluation_context_manifest_receipt_file_sha256()
+
+
 PINNED_PRAVOPYS_2019_PDF_SHA256 = "9adcb3e7e6b68db62719a4e8b0c34d7b1f4abde2986c694ab77662f2791ad24c"
 PINNED_PRAVOPYS_2026_PDF_SHA256 = "e593956bfba6737d991a76fa86970db9c10a5cd7fd8895bae67f2b9a950c3a92"
 
@@ -295,7 +328,7 @@ def _validate_evaluation_context_manifest_receipt(path: Path) -> dict[str, Any]:
         validated = eval_manifest.validate_receipt(receipt)
     except eval_manifest.EvaluationContextManifestError as exc:
         raise PravopysEvaluationContextError(str(exc)) from exc
-    require(sha256_file(path) == PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256, "manifest receipt file drift")
+    require(sha256_file(path) == _pinned_evaluation_context_manifest_receipt_file_sha256(), "manifest receipt file drift")
     require(
         validated["receipt_sha256"] == PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256,
         "manifest receipt body drift",
@@ -589,7 +622,7 @@ def validate_receipt(receipt: Mapping[str, Any]) -> dict[str, Any]:
         "partition_manifest_sha256": PINNED_PARTITION_SHA256,
         "evaluation_context_manifest_jsonl_sha256": PINNED_EVALUATION_CONTEXT_MANIFEST_JSONL_SHA256,
         "evaluation_context_manifest_receipt_body_sha256": PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256,
-        "evaluation_context_manifest_receipt_file_sha256": PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256,
+        "evaluation_context_manifest_receipt_file_sha256": _pinned_evaluation_context_manifest_receipt_file_sha256(),
         "pravopys_2019_pdf_sha256": PINNED_PRAVOPYS_2019_PDF_SHA256,
         "pravopys_2026_pdf_sha256": PINNED_PRAVOPYS_2026_PDF_SHA256,
         "custody_tarball_sha256": PINNED_CUSTODY_TARBALL_SHA256,
@@ -780,7 +813,7 @@ def _build_receipt(
             "partition_manifest_sha256": PINNED_PARTITION_SHA256,
             "evaluation_context_manifest_jsonl_sha256": PINNED_EVALUATION_CONTEXT_MANIFEST_JSONL_SHA256,
             "evaluation_context_manifest_receipt_body_sha256": PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_BODY_SHA256,
-            "evaluation_context_manifest_receipt_file_sha256": PINNED_EVALUATION_CONTEXT_MANIFEST_RECEIPT_FILE_SHA256,
+            "evaluation_context_manifest_receipt_file_sha256": _pinned_evaluation_context_manifest_receipt_file_sha256(),
             "pravopys_2019_pdf_sha256": PINNED_PRAVOPYS_2019_PDF_SHA256,
             "pravopys_2026_pdf_sha256": PINNED_PRAVOPYS_2026_PDF_SHA256,
             "custody_tarball_sha256": custody_tarball_sha256,
