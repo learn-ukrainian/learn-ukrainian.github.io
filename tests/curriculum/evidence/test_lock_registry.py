@@ -65,6 +65,16 @@ def test_atomic_failure_keeps_previous_bytes(monkeypatch, tmp_path):
     assert sorted(p.name for p in tmp_path.iterdir()) == ["synthetic.yaml", "synthetic.yaml.lock"]
 
 
+def test_atomic_write_mode_default_and_custom(tmp_path: Path) -> None:
+    target_default = tmp_path / "default.txt"
+    lock.atomic_write(target_default, b"public")
+    assert stat.S_IMODE(target_default.stat().st_mode) == 0o644
+
+    target_private = tmp_path / "private.txt"
+    lock.atomic_write(target_private, b"secret", mode=0o600)
+    assert stat.S_IMODE(target_private.stat().st_mode) == 0o600
+
+
 def test_tombstone_never_reused_and_append_only(tmp_path):
     path = tmp_path / "synthetic-registry.yaml"
     rows = registry.load(path)

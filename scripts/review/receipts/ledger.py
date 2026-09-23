@@ -147,11 +147,8 @@ def _read_verified(path: Path, *, allow_missing: bool = False) -> bytes:
 
 
 def _write_verified(path: Path, content: bytes) -> None:
-    atomic_write(path, content)
-    atomic_write(_sidecar(path), (_digest(content) + "\n").encode("ascii"))
-    for target in (path, _sidecar(path)):
-        if (target.stat().st_mode & 0o777) != 0o600:
-            os.chmod(target, 0o600)
+    atomic_write(path, content, mode=0o600)
+    atomic_write(_sidecar(path), (_digest(content) + "\n").encode("ascii"), mode=0o600)
 
 
 def create_empty_ledger(path: Path | str) -> Path:

@@ -11,6 +11,7 @@ import asyncio
 import hashlib
 import importlib.util
 import json
+import os
 import sqlite3
 import subprocess
 import sys
@@ -300,6 +301,32 @@ def test_ledger_and_sidecar_mode_0o600_after_append(tmp_path: Path) -> None:
     assert (path.stat().st_mode & 0o777) == 0o600
     assert (sidecar.stat().st_mode & 0o777) == 0o600
     assert (lock_path.stat().st_mode & 0o777) == 0o600
+
+
+def test_ledger_atomic_write_sets_mode_0o600_before_replace(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    path = tmp_path / "review-1" / "attempt-1.jsonl"
+    observed: list[tuple[str, int]] = []
+    real_replace = os.replace
+
+    def recording_replace(src: str | os.PathLike[str], dst: str | os.PathLike[str]) -> None:
+        src_path = Path(src)
+        observed.append((src_path.name, src_path.stat().st_mode & 0o777))
+        real_replace(src, dst)
+
+    monkeypatch.setattr(os, "replace", recording_replace)
+
+    _record(path, manifest="ab" * 32, result="first-result")
+
+    assert len(observed) == 2
+    for name, mode in observed:
+        assert mode == 0o600, f"Expected 0o600 at replace time for {name}, got {oct(mode)}"
+
+    observed.clear()
+    empty_path = tmp_path / "empty" / "attempt-2.jsonl"
+    create_empty_ledger(empty_path)
+    assert len(observed) == 2
+    for name, mode in observed:
+        assert mode == 0o600, f"Expected 0o600 at replace time for {name}, got {oct(mode)}"
 
 
 def test_ledger_append_only_and_sidecar_mismatch(tmp_path: Path) -> None:
