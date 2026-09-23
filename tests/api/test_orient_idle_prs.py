@@ -2,7 +2,6 @@
 
 from __future__ import annotations
 
-import json
 import subprocess
 import threading
 import time
@@ -58,21 +57,13 @@ def _reset_idle_pr_state():
     api_main._idle_pr_next_retry_at.clear()
 
 
-
 def test_idle_pr_collector_excludes_fresh_red_and_unreviewed_prs(monkeypatch):
     now = datetime.now(UTC)
     approved_by_comment = _pr(
         102,
         updated_at=now - timedelta(hours=2),
         reviewDecision="",
-        comments=[
-            {
-                "body": (
-                    "## Cross-family CF (Grok / xAI)\n"
-                    f"**VERDICT: APPROVE** at head `{102:040x}`."
-                )
-            }
-        ],
+        comments=[{"body": (f"## Cross-family CF (Grok / xAI)\n**VERDICT: APPROVE** at head `{102:040x}`.")}],
     )
     payload = [
         _pr(101, updated_at=now - timedelta(hours=2)),
@@ -94,13 +85,7 @@ def test_idle_pr_collector_excludes_fresh_red_and_unreviewed_prs(monkeypatch):
         _pr(105, updated_at=now - timedelta(hours=2), reviewDecision="", comments=[]),
     ]
 
-    monkeypatch.setattr(
-        api_main,
-        "_run_command",
-        lambda *args, **kwargs: subprocess.CompletedProcess(
-            args=args[0], returncode=0, stdout=json.dumps(payload), stderr=""
-        ),
-    )
+    monkeypatch.setattr(api_main.github_rest, "list_open_prs", lambda *args, **kwargs: payload)
     result = api_main._collect_idle_prs_orient_data()
 
     assert [row["number"] for row in result["idle_prs"]] == [101, 102]
@@ -139,14 +124,7 @@ def test_blocked_merge_state_with_green_cf_review_is_eligible():
         updated_at=NOW - timedelta(hours=2),
         reviewDecision="",
         mergeStateStatus="BLOCKED",
-        comments=[
-            {
-                "body": (
-                    "## Cross-family CF (Grok / xAI)\n"
-                    f"**VERDICT: APPROVE** at head `{107:040x}`."
-                )
-            }
-        ],
+        comments=[{"body": (f"## Cross-family CF (Grok / xAI)\n**VERDICT: APPROVE** at head `{107:040x}`.")}],
     )
 
     assert api_main._eligible_idle_pr(pr, now=NOW) == {

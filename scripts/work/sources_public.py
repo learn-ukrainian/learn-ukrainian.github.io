@@ -1,8 +1,9 @@
 """Public-only source collectors for the Work projection.
 
-Warm path rules (frozen):
-- at most two GitHub list enumerations per repository (issues + PRs)
-- no per-item issue/PR/comment/check detail calls
+Warm path rules:
+- issues and PRs are conditional REST lists (shared ETag cache), cap 1000
+- check runs, reviews, and mergeability are conditional REST reads bounded by
+  the open PR count; a 304 is served from cache and is not stored as a new body
 - class-4 only: delegate/active, delegate/tasks, fleet/reviews
 - streams only via the public-stripped issues/streams projection
 - never read delegate result bodies or sealed review blobs
@@ -20,6 +21,7 @@ from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import Any
 
+import scripts.github_rest_cache as github_rest
 from scripts.work import SOURCE_PRIVATE, SOURCE_PUBLIC
 
 GH_ENUM_LIMIT = 1000
@@ -235,6 +237,67 @@ def _run_gh(args: list[str], timeout_s: float = SECTION_TIMEOUT_S) -> tuple[int,
         return 127, "", f"{type(exc).__name__}: {exc}"
 
 
+def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
+    """Conditional REST issue list. Errors are not cached as a successful section."""
+    try:
+        payload = github_rest.list_open_issues(repo, limit=limit, timeout=SECTION_TIMEOUT_S)
+    except github_rest.GitHubRestTimeout:
+        return SectionResult("issues", "timeout", reason="gh_issue_list_timeout")
+    except github_rest.GitHubRestError as exc:
+        return SectionResult("issues", "unavailable", reason=str(exc)[:200])
+    if not isinstance(payload, list):
+        return SectionResult("issues", "degraded", reason="gh_issue_list_not_list")
+    truncated = len(payload) >= limit
+    return SectionResult(
+        "issues",
+        "truncated" if truncated else "ok",
+        payload=payload,
+        count=len(payload),
+        truncated=truncated,
+    )
+
+
+def _fetch_open_prs_rest(repo: str, limit: int) -> SectionResult:
+    """Conditional REST pull list plus one detail pass per open pull."""
+    try:
+        payload = github_rest.list_open_prs(repo, limit=limit, timeout=SECTION_TIMEOUT_S)
+    except github_rest.GitHubRestTimeout:
+        return SectionResult("prs", "timeout", reason="gh_pr_list_timeout")
+    except github_rest.GitHubRestError as exc:
+        return SectionResult("prs", "unavailable", reason=str(exc)[:200])
+    if not isinstance(payload, list):
+        return SectionResult("prs", "degraded", reason="gh_pr_list_not_list")
+    truncated = len(payload) >= limit
+    return SectionResult(
+        "prs",
+        "truncated" if truncated else "ok",
+        payload=payload,
+        count=len(payload),
+        truncated=truncated,
+    )
+
+
+def _fetch_issue_states_rest(
+    repo: str,
+    numbers: list[int],
+    timeout_s: float,
+) -> dict[str, str]:
+    """Conditional REST issue reads. Timeouts and errors omit numbers; nothing is cached as success."""
+    from scripts.work.relations import issue_work_id
+
+    try:
+        found = github_rest.issue_states(repo, numbers, timeout=timeout_s)
+    except github_rest.GitHubRestTimeout:
+        return {}
+    except github_rest.GitHubRestError:
+        return {}
+    states: dict[str, str] = {}
+    for number, state in found.items():
+        states[issue_work_id(repo, number)] = state
+        states[str(number)] = state
+    return states
+
+
 def fetch_open_issues(
     repository_id: str | None = None,
     *,
@@ -245,10 +308,13 @@ def fetch_open_issues(
 
     *repository_id* is admitted against the closed public identity before any
     runner or GitHub invocation. Foreign, cased, suffixed, or whitespace-padded
-    ids fail closed and never reach ``gh``.
+    ids fail closed and never reach ``gh``. Production (no injected runner)
+    uses the shared REST ETag cache. An injected runner is the fixture seam.
     """
     repo = admit_public_repository_id(repository_id)
-    run = runner or _run_gh
+    if runner is None:
+        return _fetch_open_issues_rest(repo, limit)
+    run = runner
     code, stdout, stderr = run(
         [
             "gh",
@@ -295,14 +361,19 @@ def fetch_open_prs(
     limit: int = GH_ENUM_LIMIT,
     runner: Callable[[list[str], float], tuple[int, str, str]] | None = None,
 ) -> SectionResult:
-    """One open-PR list enumeration with rollup fields only (no detail fan-out).
+    """Open PRs with the rollup fields consumers read.
 
     *repository_id* is admitted against the closed public identity before any
     runner or GitHub invocation. Foreign, cased, suffixed, or whitespace-padded
-    ids fail closed and never reach ``gh``.
+    ids fail closed and never reach ``gh``. Production (no injected runner)
+    uses the shared REST ETag cache. Check runs, reviews, and mergeability are
+    conditional reads bounded by the open PR count. An injected runner is the
+    fixture seam.
     """
     repo = admit_public_repository_id(repository_id)
-    run = runner or _run_gh
+    if runner is None:
+        return _fetch_open_prs_rest(repo, limit)
+    run = runner
     code, stdout, stderr = run(
         [
             "gh",
@@ -349,8 +420,9 @@ _ISSUE_STATE_CACHE_TTL_S = 300.0
 
 
 def clear_issue_state_cache() -> None:
-    """Clear the batched issue state cache (for tests)."""
+    """Clear cached issue lifecycles (fixture runner TTL and the shared REST ETags)."""
     _ISSUE_STATE_CACHE.clear()
+    github_rest.shared_cache().clear()
 
 
 def fetch_issue_states_batched(
@@ -361,10 +433,11 @@ def fetch_issue_states_batched(
     timeout_s: float = SECTION_TIMEOUT_S,
     cache_ttl_s: float = _ISSUE_STATE_CACHE_TTL_S,
 ) -> dict[str, str]:
-    """Fetch lifecycles for specific issue numbers in one batched GraphQL query.
+    """Fetch lifecycles for specific issue numbers.
 
-    Warm-path compliant: single request using GraphQL field aliases; never
-    enumerates or loops per item.
+    Production uses conditional REST GETs bounded by ``numbers`` (ETag cache,
+    errors and 404s omitted and not cached). An injected runner keeps the
+    batched GraphQL fixture seam.
 
     Returns a mapping of `{work_id: "closed" | "open", str(number): "closed" | "open"}`.
     If the lookup fails, times out, or an issue is not found, it is omitted
@@ -373,11 +446,13 @@ def fetch_issue_states_batched(
     if not numbers:
         return {}
     repo = admit_public_repository_id(repository_id)
-    owner, name = repo.split("/", 1)
-
     unique_numbers = sorted({int(n) for n in numbers if int(n) > 0})
     if not unique_numbers:
         return {}
+    if runner is None:
+        return _fetch_issue_states_rest(repo, unique_numbers, timeout_s)
+
+    owner, name = repo.split("/", 1)
 
     from scripts.work.relations import issue_work_id
 
@@ -403,17 +478,8 @@ def fetch_issue_states_batched(
     if not needed:
         return states
 
-    aliases = "\n".join(
-        f"    i{num}: issue(number: {num}) {{ number state }}"
-        for num in needed
-    )
-    query = (
-        f"query {{\n"
-        f"  repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{\n"
-        f"{aliases}\n"
-        f"  }}\n"
-        f"}}"
-    )
+    aliases = "\n".join(f"    i{num}: issue(number: {num}) {{ number state }}" for num in needed)
+    query = f"query {{\n  repository(owner: {json.dumps(owner)}, name: {json.dumps(name)}) {{\n{aliases}\n  }}\n}}"
 
     run = runner or _run_gh
     code, stdout, _stderr = run(

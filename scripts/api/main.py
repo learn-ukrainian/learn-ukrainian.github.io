@@ -12,7 +12,6 @@ Each team owns their router file. No conflicts.
 
 import asyncio
 import functools
-import json
 import logging
 import os
 import re
@@ -34,6 +33,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse, RedirectResponse
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
+import scripts.github_rest_cache as github_rest
 from scripts.common.release_layout import is_release_root
 from scripts.guardrails import worktree_containment
 from scripts.research import registry as reg
@@ -261,7 +261,6 @@ async def global_exception_handler(request: Request, exc: Exception):
 _SERVER_START = datetime.now(UTC)
 
 
-
 # --- /api/orient caching + failure isolation (GH #1309) ----------------
 #
 # Per-section TTLs (seconds). Tuned for each collector's cost + change
@@ -419,7 +418,9 @@ def _isoformat_z(value: datetime) -> str:
     return value.astimezone(UTC).isoformat().replace("+00:00", "Z")
 
 
-def _run_command(args: list[str], *, timeout: float = 2.0, ctx: MonitorContext | None = None) -> subprocess.CompletedProcess[str]:
+def _run_command(
+    args: list[str], *, timeout: float = 2.0, ctx: MonitorContext | None = None
+) -> subprocess.CompletedProcess[str]:
     resolved_ctx = resolve_context(ctx)
     cwd = resolved_ctx.roots.live_repo_root if args and args[0] == "git" else resolved_ctx.roots.project_root
     if not Path(cwd).exists():
@@ -503,35 +504,20 @@ def _collect_git_orient_data(ctx: MonitorContext | None = None) -> dict:
 
 
 def _collect_issues_orient_data(ctx: MonitorContext | None = None) -> dict:
-    """Fetch open GitHub issues via ``gh``.
+    """Fetch open GitHub issues via conditional REST.
 
-    Raises ``RuntimeError`` on any failure (subprocess error, non-zero
-    exit, malformed JSON). Raising is important — ``_cached_orient_section``
-    only caches successful returns, so a transient ``gh`` blip must
-    not poison the issues cache for the full TTL window (reviewer
-    BLOCKER, GH #1309).
+    Raises ``RuntimeError`` on any failure. Raising is important —
+    ``_cached_orient_section`` only caches successful returns, so a
+    transient GitHub blip must not poison the issues cache for the full
+    TTL window (reviewer BLOCKER, GH #1309). Timeouts surface as
+    ``RuntimeError`` the same way a failed ``gh`` subprocess did.
     """
-    cmd = [
-        "gh",
-        "issue",
-        "list",
-        "--state",
-        "open",
-        "--limit",
-        "10",
-        "--json",
-        "number,title,labels,createdAt",
-    ]
-    proc = _run_command(cmd, timeout=5.0, ctx=ctx)
-
-    if proc.returncode != 0:
-        error = proc.stderr.strip() or proc.stdout.strip() or "gh issue list failed"
-        raise RuntimeError(error)
-
     try:
-        payload = json.loads(proc.stdout or "[]")
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"invalid gh json: {exc}") from exc
+        payload = github_rest.list_open_issues(IDLE_PR_REPOSITORY, limit=10, timeout=5.0)
+    except github_rest.GitHubRestTimeout as exc:
+        raise RuntimeError(str(exc)) from exc
+    except github_rest.GitHubRestError as exc:
+        raise RuntimeError(str(exc)) from exc
 
     now = datetime.now(UTC)
     issues = []
@@ -675,30 +661,23 @@ def _collect_idle_prs_orient_data(ctx: MonitorContext | None = None) -> dict[str
     """Fetch and filter the compact green+reviewed+idle PR projection.
 
     This function is only called by the detached refresh worker. The endpoint
-    itself uses ``_cached_idle_pr_section`` and never waits for this ``gh``
-    subprocess.
+    itself uses ``_cached_idle_pr_section`` and never waits for GitHub.
+    Check runs, reviews, and issue comments are conditional REST reads bounded
+    by the open PR count. A timeout raises ``subprocess.TimeoutExpired`` so the
+    worker reports ``gh_timeout``. Other failures raise ``RuntimeError`` and
+    are not cached.
     """
-    cmd = [
-        "gh",
-        "pr",
-        "list",
-        "--repo",
-        IDLE_PR_REPOSITORY,
-        "--state",
-        "open",
-        "--limit",
-        "1000",
-        "--json",
-        "number,state,isDraft,headRefName,headRefOid,updatedAt,reviewDecision,reviews,comments,statusCheckRollup,mergeStateStatus",
-    ]
-    proc = _run_command(cmd, timeout=IDLE_PR_FETCH_TIMEOUT_S, ctx=ctx)
-    if proc.returncode != 0:
-        error = proc.stderr.strip() or proc.stdout.strip() or "gh pr list failed"
-        raise RuntimeError(error)
     try:
-        payload = json.loads(proc.stdout or "[]")
-    except json.JSONDecodeError as exc:
-        raise RuntimeError(f"invalid gh json: {exc}") from exc
+        payload = github_rest.list_open_prs(
+            IDLE_PR_REPOSITORY,
+            limit=1000,
+            timeout=IDLE_PR_FETCH_TIMEOUT_S,
+            include_comments=True,
+        )
+    except github_rest.GitHubRestTimeout as exc:
+        raise subprocess.TimeoutExpired(cmd=["gh", "api"], timeout=exc.timeout) from exc
+    except github_rest.GitHubRestError as exc:
+        raise RuntimeError(str(exc)) from exc
     if not isinstance(payload, list):
         raise RuntimeError("gh pr list returned a non-list payload")
 
@@ -806,9 +785,7 @@ def reset_detached_orient_state_for_tests() -> None:
     _detached_orient_last_error.clear()
 
 
-def _schedule_detached_orient_refresh(
-    key: str, collector: Callable[[], Any], cache_key: str | None = None
-) -> bool:
+def _schedule_detached_orient_refresh(key: str, collector: Callable[[], Any], cache_key: str | None = None) -> bool:
     """Start a single-flight worker for ``key``. Return True if this call started it."""
     with _detached_orient_lock:
         state_key = cache_key or f"orient_{key}"
@@ -826,9 +803,7 @@ def _schedule_detached_orient_refresh(
         return True
 
 
-def _run_detached_orient_refresh(
-    key: str, collector: Callable[[], Any], cache_key: str
-) -> None:
+def _run_detached_orient_refresh(key: str, collector: Callable[[], Any], cache_key: str) -> None:
     ttl = ORIENT_SECTION_TTLS.get(key, 60.0)
     try:
         value = collector()

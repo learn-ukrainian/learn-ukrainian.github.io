@@ -195,10 +195,12 @@ server remain on `8768` and `4333`, respectively.
 At a query instant the public projection represents exactly once (or counts in a
 typed omission):
 
-1. Open public issues — one `gh issue list` enumeration, cap **1000**,
-   `truncated=true` when incomplete.
-2. Open public PRs — one `gh pr list` enumeration, same cap. No per-item
-   detail/comment/check fan-out on refresh.
+1. Open public issues — one conditional REST list (`If-None-Match`), cap **1000**,
+   `truncated=true` when incomplete. Pull requests that the issues API mixes in
+   are dropped.
+2. Open public PRs — one conditional REST list, same cap. Check runs, reviews,
+   and mergeability are conditional REST reads bounded by the open PR count.
+   A 304 is served from the shared ETag cache and does not replace the cached body.
 3. Complete public `GET /api/issues/streams` response (private cache keys stripped).
 4. Class-4 summaries only:
    - `GET /api/delegate/active`
