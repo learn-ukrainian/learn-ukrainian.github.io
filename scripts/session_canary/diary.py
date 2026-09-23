@@ -183,8 +183,8 @@ def _write_temp_file(directory: Path, data: bytes, mode: int | None) -> Path:
     """Write ``data`` in ``directory`` so ``os.replace`` stays on one filesystem.
 
     ``mode`` is the full :func:`stat.S_IMODE` of an existing target, applied
-    with ``os.fchmod`` and not masked to ``0o777``. ``None`` creates the file
-    at open's default ``0o666`` so the process umask applies.
+    with ``os.fchmod`` and not reduced to owner/group/other permission bits.
+    ``None`` creates the file at ``0o644`` so the process umask applies.
     """
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     if hasattr(os, "O_CLOEXEC"):
@@ -198,7 +198,7 @@ def _write_temp_file(directory: Path, data: bytes, mode: int | None) -> Path:
         for _ in range(128):
             candidate = directory / f".handoff-{os.urandom(8).hex()}.tmp"
             try:
-                fd = os.open(candidate, flags, 0o666)
+                fd = os.open(candidate, flags, 0o644)
             except FileExistsError:
                 continue
             tmp = candidate
@@ -251,8 +251,8 @@ def rewrite_handoff_locked(
     :class:`HandoffRewriteConflictError` and does not write.
 
     An existing target keeps its full mode, including setuid, setgid, and
-    sticky. An absent target is created with open's default mode so the
-    process umask applies.
+    sticky. An absent target is created at ``0o644`` so the process umask
+    applies.
 
     An exclusive flock on the parent directory serializes cooperating callers
     of this helper across ``os.replace``. The lock is not the safety property:

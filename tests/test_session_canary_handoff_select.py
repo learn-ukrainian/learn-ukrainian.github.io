@@ -898,7 +898,7 @@ def test_kimi_bootstrap_auto_mint_uses_the_boards_stream_limit(
             return _Conn()
 
     class _Lease:
-        stream_id = "epic:8588"
+        stream_id = "epic:1001"
         session_id = "session-test"
         lease_id = "lease-test"
         fencing_token = 1
@@ -948,7 +948,7 @@ def test_kimi_bootstrap_auto_mint_uses_the_boards_stream_limit(
                 "--epic",
                 "atlas",
                 "--stream",
-                "epic:8588",
+                "epic:1001",
                 "--stream-limit",
                 "4",
             ]

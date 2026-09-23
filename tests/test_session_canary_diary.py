@@ -392,6 +392,26 @@ def test_absent_handoff_follows_umask(tmp_path: Path) -> None:
     assert "STAMP_SENTINEL" in path.read_text(encoding="utf-8")
 
 
+def test_absent_handoff_is_not_world_writable_under_umask_zero(tmp_path: Path) -> None:
+    """A new handoff (no existing file, mode None) stays non-world-writable at umask 0."""
+    path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
+    previous = os.umask(0)
+    try:
+        d.append_diary_stamp(
+            path,
+            title="merged PR",
+            bullets=["STAMP_SENTINEL"],
+            stamp="2026-09-23T00:00Z",
+        )
+    finally:
+        os.umask(previous)
+
+    mode = stat.S_IMODE(path.stat().st_mode)
+    assert mode & stat.S_IWOTH == 0
+    assert mode == 0o644
+    assert "STAMP_SENTINEL" in path.read_text(encoding="utf-8")
+
+
 def test_resolve_handoff_path_glm_preferred(tmp_path: Path) -> None:
     epic_dir = tmp_path / ".claude" / "harness-epic"
     epic_dir.mkdir(parents=True)
