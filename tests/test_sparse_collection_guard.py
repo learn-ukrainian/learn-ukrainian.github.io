@@ -665,3 +665,39 @@ def test_guard_lstat_outside_symlink_returns_metadata(tmp_path: Path) -> None:
     assert "proc=symlink" in completed.stdout
     assert "proc_stat=symlink" in completed.stdout
     assert "link=symlink" in completed.stdout
+
+
+def test_guarded_open_without_mode_matches_umask(tmp_path: Path) -> None:
+    """A create that omits mode keeps ``os.open``'s own default.
+
+    The child sets one umask, creates a file with the unguarded ``os.open``
+    before the hook is installed, then creates another with the guarded
+    ``os.open`` and no mode argument. Both permission masks must match
+    ``0o777 & ~umask``.
+    """
+    fake, _curriculum_file = _curriculum_repo(tmp_path)
+    outside = tmp_path / "outside"
+    outside.mkdir()
+    completed = _guarded_probe(
+        "import os\n"
+        "import stat\n"
+        "os.umask(0o027)\n"
+        "plain = os.path.join(os.environ['OUT_DIR'], 'plain')\n"
+        "fd = os.open(plain, os.O_CREAT | os.O_WRONLY | os.O_EXCL)\n"
+        "os.close(fd)\n"
+        "before = stat.S_IMODE(os.stat(plain).st_mode)\n"
+        "import tests.sparse_collection_audit\n"
+        "guarded = os.path.join(os.environ['OUT_DIR'], 'guarded')\n"
+        "fd = os.open(guarded, os.O_CREAT | os.O_WRONLY | os.O_EXCL)\n"
+        "os.close(fd)\n"
+        "after = stat.S_IMODE(os.stat(guarded).st_mode)\n"
+        "print(f'before={before:o}')\n"
+        "print(f'after={after:o}')\n",
+        cwd=outside,
+        repo_root=fake,
+        extra_env={"OUT_DIR": str(outside)},
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert "before=750" in completed.stdout
+    assert "after=750" in completed.stdout

@@ -22,7 +22,9 @@ does not re-enter the guard.
 ``open``, ``os.listdir``, ``os.scandir``, ``sqlite3.connect``, and
 ``glob.glob`` go through the audit hook. That ``open`` event is
 ``(path, mode, flags)`` and does not include ``dir_fd``, so ``os.open`` is
-wrapped too. A relative path plus ``dir_fd`` is resolved against
+wrapped too. The wrapper does not name a mode, so a call that omits one
+keeps ``os.open``'s own default. A relative path plus ``dir_fd`` is resolved
+against
 ``os.readlink("/proc/self/fd/<dir_fd>")``, or against cwd if that readlink
 fails. ``os.stat`` and ``os.lstat`` have no audit event and are wrapped.
 ``os.lstat`` and ``follow_symlinks=False`` resolve only the parent directory
@@ -202,9 +204,9 @@ def _guarded_lstat(path: object, *, dir_fd: int | None = None):
     return _ORIG_LSTAT(path, dir_fd=dir_fd)
 
 
-def _guarded_open(path: object, flags: int, mode: int = 0o777, *, dir_fd: int | None = None):
+def _guarded_open(path: object, flags: int, *args: object, dir_fd: int | None = None, **kwargs: object):
     if getattr(_GUARD, "busy", False):
-        return _ORIG_OPEN(path, flags, mode, dir_fd=dir_fd)
+        return _ORIG_OPEN(path, flags, *args, dir_fd=dir_fd, **kwargs)
     filename = _hidden_filename(path, dir_fd=dir_fd, follow_symlinks=True)
     if filename is not None:
         raise FileNotFoundError(errno.ENOENT, os.strerror(errno.ENOENT), filename)
@@ -212,7 +214,7 @@ def _guarded_open(path: object, flags: int, mode: int = 0o777, *, dir_fd: int | 
     # already applied the directory fd.
     _GUARD.busy = True
     try:
-        return _ORIG_OPEN(path, flags, mode, dir_fd=dir_fd)
+        return _ORIG_OPEN(path, flags, *args, dir_fd=dir_fd, **kwargs)
     finally:
         _GUARD.busy = False
 
