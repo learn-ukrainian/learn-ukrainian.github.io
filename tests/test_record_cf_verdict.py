@@ -218,15 +218,124 @@ def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
         recorder.author_families(REPOSITORY, 42, tasks)
 
 
+@pytest.mark.parametrize(
+    "trailer,expected",
+    [
+        ("kimi/k2", {"moonshot"}),
+        ("codex/gpt-6-luna", {"openai"}),
+        ("cursor/grok-4.7", {"xai"}),
+    ],
+)
+def test_author_family_resolves_model_with_harness_fallback(monkeypatch, tmp_path, trailer, expected):
+    def commit(value):
+        return {"commit": {"message": f"work\n\nX-Agent: {value}"}}
+
+    monkeypatch.setattr(recorder, "_pages", lambda args: [commit(trailer)])
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == expected
+
+
+def test_unknown_harness_model_is_refused(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "work\n\nX-Agent: unknownharness/x"}}],
+    )
+    with pytest.raises(recorder.RecordError):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_cursor_auto_union_family_is_refused(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/auto"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="mixed or unknown"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_path):
+    def commit(trailer):
+        return {"commit": {"message": f"work\n\nX-Agent: {trailer}"}}
+
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [commit("grok/grok-4.7"), commit("kimi/k2")],
+    )
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"xai", "moonshot"}
+
+
 def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
-    write_task(tasks, task_id="author-task", model="gemini-3.8-flash-high", agent="agy")
+    write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="agy")
     monkeypatch.setattr(
         recorder,
         "_pages",
         lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
     )
-    assert recorder.author_families(REPOSITORY, 42, tasks) == {"google"}
+    assert recorder.author_families(REPOSITORY, 42, tasks) == {"openai"}
+
+
+@pytest.mark.parametrize("trailer", ["codex/../../package", "kimi/../invalid"])
+def test_invalid_author_model_is_rejected_before_task_file_read(monkeypatch, tmp_path, trailer):
+    tasks = tmp_path / "tasks"
+    harness, model = trailer.split("/", 1)
+    decoy = tasks / f"{model}.json"
+    decoy.parent.mkdir(parents=True, exist_ok=True)
+    decoy.write_text(json.dumps({"repository": REPOSITORY, "agent": harness, "model": "gpt-6-sol"}))
+    attempted_reads = []
+    original_read_text = Path.read_text
+
+    def track_reads(path, *args, **kwargs):
+        if path.resolve() == decoy.resolve():
+            attempted_reads.append(path)
+        return original_read_text(path, *args, **kwargs)
+
+    monkeypatch.setattr(Path, "read_text", track_reads)
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {trailer}"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="author model unknown"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+    assert attempted_reads == []
+
+
+def test_kimi_task_record_conflict_is_checked_before_single_family_fallback(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-task", model="gpt-6-sol", agent="codex")
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: kimi/author-task"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="provenance conflicts"):
+        recorder.author_families(REPOSITORY, 42, tasks)
+
+
+@pytest.mark.parametrize("harness", ["codex", "agy", "claude"])
+def test_missing_task_record_fails_closed_for_multifamily_harnesses(monkeypatch, tmp_path, harness):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": f"feat: work\n\nX-Agent: {harness}/impl-missing-task"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="author task provenance unavailable"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_task_record_agent_conflict_is_checked_for_agy(monkeypatch, tmp_path):
+    tasks = tmp_path / "tasks"
+    write_task(tasks, task_id="author-task", model="claude-opus-5", agent="claude")
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "feat: work\n\nX-Agent: agy/author-task"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="provenance conflicts"):
+        recorder.author_families(REPOSITORY, 42, tasks)
 
 
 def test_comment_truncation_retains_marker():
