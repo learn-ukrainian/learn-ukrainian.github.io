@@ -23,6 +23,7 @@ GENERATOR_DEPENDENCIES = {
     PROJECT_ROOT / "scripts/build/lesson_assembler.py",
 }
 NAV_FRONTMATTER_RE = re.compile(r"^(prev|next):(?:\s|$)")
+ARC_GENERATED_RE = re.compile(r"^arc_kind:\s*(landing|module)\s*$", re.MULTILINE)
 DEFAULT_GIT_TIMEOUT_SECONDS: float = 30.0
 
 def get_legacy_levels() -> set[str]:
@@ -100,6 +101,22 @@ def is_whitespace_only(file_path: Path, base: str | None = None, cached: bool = 
         return output == ""
     except (subprocess.CalledProcessError, subprocess.TimeoutExpired):
         return False
+
+def is_arc_generated(mdx_path: Path) -> bool:
+    """True for pages scripts/build/build_arc_landing.py generates (frontmatter ``arc_kind``).
+
+    Their source is the accepted arc plus the plans and build state, not a
+    per-module curriculum directory; CI's ``build_arc_landing <level> --check``
+    is their parity gate.
+    """
+    try:
+        text = mdx_path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    if not text.startswith("---\n"):
+        return False
+    frontmatter = text.split("\n---\n", 1)[0]
+    return ARC_GENERATED_RE.search(frontmatter) is not None
 
 def has_generator_change(changed_files: set[Path]) -> bool:
     """Return true when the MDX generator itself is part of the change set."""
@@ -188,6 +205,9 @@ def check_parity(mdx_files: list[Path], changed_files: set[Path], base: str | No
             continue
 
         if level in legacy_levels:
+            continue
+
+        if is_arc_generated(mdx_path):
             continue
 
         # Check if it's a whitespace-only change

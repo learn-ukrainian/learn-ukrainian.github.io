@@ -1,0 +1,80 @@
+/* Fresh-arc landing (#8397): layout comes from LevelLanding.module.css; this adds the arc-only pieces. */
+
+.header {
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-size: 1.75rem;
+  font-weight: 700;
+  margin: 0 0 0.3rem 0;
+}
+
+.summary {
+  color: var(--sl-color-gray-3);
+  font-size: 0.9rem;
+  margin: 0;
+}
+
+.previous {
+  display: inline-block;
+  margin-top: 0.6rem;
+  font-size: 0.9rem;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 0.25rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+}
+
+.badge {
+  border: 1px solid var(--sl-color-gray-5, #ccc);
+  border-radius: 6px;
+  padding: 1px 8px;
+  font-weight: 600;
+}
+
+.built,
+.reviewed {
+  border-color: var(--sl-color-accent, #ffd700);
+}
+
+.checkpoint {
+  margin-left: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  color: var(--sl-color-accent, #b8860b);
+}
+
+.titleEn {
+  font-weight: 400;
+  opacity: 0.75;
+}
+
+.scope {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.5rem;
+  margin: 1rem 0;
+  padding: 0;
+  list-style: none;
+}
+
+.scope strong {
+  font-size: 1.25rem;
+  margin-right: 0.3rem;
+}
+
+.lessonList {
+  padding-left: 1.5rem;
+}
+
+.lessonPlanned {
+  color: var(--sl-color-gray-3);
+}

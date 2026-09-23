@@ -12,7 +12,7 @@
 #   <10% -> "Planned"
 
 a1:
-  planned: 64
+  planned: 55  # the accepted arc's position count (load_arc); a test keeps them equal
   status: auto
   description: "Beginner — Cyrillic alphabet, basic grammar, practical scenarios"
   introduction: |

@@ -396,6 +396,18 @@ const en = {
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Practice this word →',
   'atlas.practiceUnavailable': 'Not in the practice pool yet',
+
+  // Fresh-arc landing / module pages (#8397). The `planned` and `reviewed`
+  // states, the previous-edition link and the lessons heading reuse the
+  // existing keys `status.planned`, `status.reviewed`, `home.track.a1Previous`
+  // and `sidebar.lessons`. The Ukrainian values below wait for the language
+  // reviewer; until then they repeat the English, never a guess.
+  'arc.state.plan_reviewed': 'plan reviewed',
+  'arc.state.built': 'built',
+  'arc.checkpoint': 'Checkpoint',
+  'arc.scope.letters': 'letters',
+  'arc.scope.grammarPoints': 'grammar points',
+  'arc.scope.coreLemmas': 'core words',
 } as const;
 
 export type ChromeKey = keyof typeof en;
@@ -757,6 +769,12 @@ const uk: Record<ChromeKey, string> = {
   // Word Atlas entry chrome (#5435 reverse habit loop)
   'atlas.practiceThisWord': 'Практикувати це слово →',
   'atlas.practiceUnavailable': 'Ще немає в наборі практики',
+  'arc.state.plan_reviewed': 'plan reviewed',
+  'arc.state.built': 'built',
+  'arc.checkpoint': 'Checkpoint',
+  'arc.scope.letters': 'letters',
+  'arc.scope.grammarPoints': 'grammar points',
+  'arc.scope.coreLemmas': 'core words',
 };
 
 export const CHROME_STRINGS = { en, uk } satisfies Record<ChromeLocale, Record<ChromeKey, string>>;
@@ -791,6 +809,16 @@ export function chromeDualHtml(enText: string, ukText: string): string {
 export function formatWotdWordCount(count: number): Record<ChromeLocale, string> {
   const enNoun = count === 1 ? 'word' : 'words';
   const ukNoun = pluralizeUk(count, ['слово', 'слова', 'слів']);
+  return {
+    en: `${count} ${enNoun}`,
+    uk: `${count} ${ukNoun}`,
+  };
+}
+
+/** Pluralized «N lesson(s) / урок|уроки|уроків» for module and lesson-list chrome. */
+export function formatLessonCount(count: number): Record<ChromeLocale, string> {
+  const enNoun = count === 1 ? 'lesson' : 'lessons';
+  const ukNoun = pluralizeUk(count, ['урок', 'уроки', 'уроків']);
   return {
     en: `${count} ${enNoun}`,
     uk: `${count} ${ukNoun}`,
