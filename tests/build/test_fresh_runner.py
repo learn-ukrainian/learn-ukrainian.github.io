@@ -151,7 +151,7 @@ class _FixtureSources:
         return type("Result", (), {"raw": {word: [] for word in words}})()
 
 
-def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:fixture"):
+def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:fixture", expected_inputs=None):
     allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
     monkeypatch.setattr(assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})())
     monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
@@ -171,7 +171,7 @@ def _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, *, seat="agy:
         question_seat=seat, question_dispatch=answer, sources=_FixtureSources(),
         allowlist=allowlist, site_dir=tmp_path / "site",
         inventory_gate=lambda *a, **kw: GateReport("a1", "sample-slug", 1, ()),
-        observed_writer=lambda *a, **kw: None,
+        observed_writer=lambda *a, **kw: None, expected_inputs=expected_inputs,
     )
     print(json.dumps(report, ensure_ascii=False, sort_keys=True))
     return report, state, questions_seen
@@ -277,3 +277,83 @@ def test_runner_true_false_before_text_reports_check_3(tmp_path, monkeypatch):
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["reason"], bad["layer"]) == (3, "true_false_before_text", "writer")
+
+
+def test_runner_check_1_echo_hash_failure(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words,
+                                 expected_inputs={"plan_sha256": "f" * 64})
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (1, "writer")
+
+
+def test_runner_check_2_declared_gap(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    draft["status"] = "evidence_gap"
+    draft["gaps"] = [{"step": "s1", "need": "example", "detail": "Missing evidence"}]
+    validate_fixture_draft(draft)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (2, "pack")
+
+
+def test_runner_check_5_missing_record(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    draft["steps"][0]["blocks"].append({"kind": "example", "ref": "EX-1"})
+    plan["lessons"][0]["steps"][0]["evidence"].append("EX-1")
+    validate_fixture_draft(draft)
+    validate_fixture_plan(plan)
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (5, "pack")
+
+
+def test_runner_check_6_target_is_lesson_minimum(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(text="слово")
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"], bad["details"]["urok_tokens"]) == (6, "writer", 1)
+
+
+def test_runner_check_8_requires_explicit_seat(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(two_senses=True)
+    report, _, seen = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, seat=None)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["reason"], bad["layer"]) == (8, "question_seat_required", "driver")
+    assert seen == []
+
+
+def test_runner_check_9_engine_failure_layer(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    monkeypatch.setattr(runner, "check_9_stress_and_render", lambda *a, **kw:
+                        assemble.CheckResult(check=9, passed=False, reason="fixture_render_error", layer="engine"))
+    report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["reason"], bad["layer"]) == (9, "fixture_render_error", "engine")
+
+
+def test_form_choice_prints_store_spelling_and_state_is_byte_stable(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+    form = {**words["words"][0]["forms"][0], "form": "слова", "stressed": "слова\u0301",
+            "tags": "noun:inanim:n:v_rod"}
+    words["words"][0]["forms"].append(form)
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Forms"}]
+    draft["steps"][0]["blocks"].append({"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Choose", "items": [
+        {"sentence": "____", "answer": "слово", "options": ["слово", "слова"],
+         "explanation": "Choose", "mode": "form-choice", "record": "W-1",
+         "answer_tags": words["words"][0]["forms"][0]["tags"]}]}]
+    validate_fixture_words(words)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert first["passed"] is True, first
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert "сло\u0301во" in mdx and "слова\u0301" in mdx
+    before = {name: (state / name).read_bytes() for name in (
+        "lesson-1.expanded.yaml", "lesson-1.questions.yaml", "lesson-1.resolutions.yaml",
+        "lesson-1.stressed.yaml", "lesson-1.gates.yaml")}
+    second, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert second == first
+    assert {name: (state / name).read_bytes() for name in before} == before

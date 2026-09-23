@@ -196,19 +196,30 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     state = repo_root / "batch_state" / "tasks"
     state.mkdir(parents=True, exist_ok=True)
     task_id = f"questions-{batch['lesson']['level']}-{batch['lesson']['slug']}-{batch['lesson']['n']}"
-    prompt = state / f"{task_id}.prompt.yaml"
-    lock.atomic_write(prompt, lock.yaml_bytes(batch))
+    prompt = state / f"{task_id}.prompt.md"
+    instruction = (
+        "Choose exactly one offered candidate for every question using its sentence. "
+        "Return only YAML with an answers list; each entry has id and record, "
+        "and stressed when a record has multiple offered readings. "
+        "Use only offered record identifiers and stressed spellings.\n\n"
+    )
+    lock.atomic_write(prompt, instruction.encode("utf-8") + lock.yaml_bytes(batch))
     cmd = [sys.executable, str(repo_root / "scripts" / "delegate.py"), "dispatch", "--agent", agent,
            "--model", model, "--mode", "read-only", "--worktree", "--task-id", task_id,
-           "--prompt-file", str(prompt), "--research-role", "writer"]
+           "--prompt-file", str(prompt), "--research-role", "writer",
+           "--research-task-family", "constrained-resolution", "--research-track", batch["lesson"]["level"],
+           "--research-owned-path", f"curriculum/l2-uk-en/evidence/{batch['lesson']['level']}/_state/"
+                                    f"{batch['lesson']['slug']}/lesson-{batch['lesson']['n']}.questions.yaml"]
     sent = subprocess.run(cmd, capture_output=True, text=True, timeout=60, check=False)
     if sent.returncode:
         raise RuntimeError(f"question dispatch failed: {sent.stderr.strip()}")
-    done = subprocess.run([sys.executable, str(repo_root / "scripts" / "delegate.py"), "wait", task_id],
-                          capture_output=True, text=True, timeout=1800, check=False)
+    done = subprocess.run([sys.executable, str(repo_root / "scripts" / "delegate.py"), "wait", task_id,
+                           "--timeout", "1800"], capture_output=True, text=True, timeout=1830, check=False)
     if done.returncode:
         raise RuntimeError(f"question wait failed: {done.stderr.strip()}")
     result = json.loads(done.stdout)
+    if result.get("status") != "done" or not result.get("result_file"):
+        raise RuntimeError("question dispatch did not finish with an answer file")
     return yaml.safe_load(Path(result["result_file"]).read_text(encoding="utf-8"))
 
 

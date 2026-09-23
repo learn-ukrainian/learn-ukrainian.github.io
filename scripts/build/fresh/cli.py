@@ -453,9 +453,16 @@ def main(argv: list[str] | None = None) -> int:
             state_dir = paths["state_dir"] / args.slug
             draft_path = state_dir / f"lesson-{args.lesson}.draft.yaml"
             draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
-            expected = {"plan_sha256": hashlib.sha256(paths["plan"].read_bytes()).hexdigest(),
-                        "pack_lock": hashlib.sha256(paths["pack"].read_bytes()).hexdigest(),
-                        "words_lock": hashlib.sha256(paths["words"].read_bytes()).hexdigest()}
+            position = plan.get("arc_ref", {}).get("position", 1)
+            learner = planned_state(
+                args.level, position, args.lesson, allow_missing_prior=True,
+                plans_dir=paths["plan"].parent, evidence_dir=paths["words"].parent,
+            )
+            expected = _compute_input_hashes(paths, args.lesson, learner)
+            _card_path, _card, expected["style_card_sha256"] = style_card_info(args.level, cards_dir=cards_dir)
+            prompt_path = state_dir / f"lesson-{args.lesson}.prompt.md"
+            if prompt_path.is_file():
+                expected["prompt_sha256"] = hashlib.sha256(prompt_path.read_bytes()).hexdigest()
             report = run_lesson(
                 args.level, args.slug, args.lesson, draft=draft, plan=plan, pack=pack, words=words,
                 state_dir=state_dir, repo_root=repo_root, plans_dir=paths["plan"].parent,
