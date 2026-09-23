@@ -653,6 +653,18 @@ Remote reporters may include an optional `lane_usage` array on `POST /api/fleet/
 
 `GET /api/state/routing-budget` consumes the same weekly rows as `source: notebook-report` with `age_s` when CodexBar on the API host has no authoritative weekly sample; the pinned `records_loaded=0` suppression lifts only when such data exists.
 
+### GitHub GraphQL budget
+
+`GET /api/state/github-budget` returns one `gh api graphql` observation of
+`rateLimit { limit remaining used resetAt }`. It is cached in-process for 60
+seconds, with concurrent cache misses coalesced into one probe. A successful
+zero remaining balance and GitHub's explicit `RATE_LIMIT` /
+`graphql_rate_limit` error both report `exhausted: true`; other command or
+response failures report `exhausted: null` and an error. This endpoint does not
+use `/rate_limit`, whose REST GraphQL summary can disagree with the live
+GraphQL API response. The read itself costs at least one GraphQL point per
+[GitHub's GraphQL rate-limit documentation](https://docs.github.com/en/graphql/overview/rate-limits-and-node-limits-for-the-graphql-api).
+
 On a running event loop, a missing or expired cache entry and `fresh=true` wait for the shared load probe before responding. A successful sample younger than 30s is `fresh`. Refresh starts at 15s so a live heartbeat does not wait until the window expires; while that probe runs, the same sample stays `fresh` for 15s past the window. Cached metrics between 45 and 300 seconds old may still be returned as `stale` while a refresh runs.
 
 Refresh is armed autonomously, not only by readers: every successful sample schedules a one-shot loop timer for `max(0, 15s - age)`, so a poller that only reads at ~30s still gets a fresh collect without sending a GET. The timer is cancelled when a probe starts or the cache is cleared, and re-arms after each probe — success or failure — while a cache entry remains (a failed probe restarts the full 15s interval, so an unreachable host is not hot-looped). Ordinary reads do not start a new collect during that failure backoff; `fresh=true` still forces a probe.

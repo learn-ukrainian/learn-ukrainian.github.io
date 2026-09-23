@@ -65,6 +65,7 @@ from scripts.fleet.reset_reserve import (
     codex_reset_reserve_eligible,
     load_reset_reserve,
 )
+from scripts.github_graphql_budget import probe_graphql_budget
 from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
@@ -1940,6 +1941,17 @@ async def routing_budget(
         project_root=ctx.roots.project_root,
         curriculum_root=ctx.roots.curriculum_root,
         batch_state_dir=ctx.roots.batch_state_dir,
+    )
+
+
+@router.get("/github-budget")
+async def github_budget():
+    """Return a shared, one-minute cached GraphQL rateLimit observation."""
+    return await asyncio.to_thread(
+        cache_get_or_compute,
+        "github_graphql_budget",
+        60.0,
+        probe_graphql_budget,
     )
 
 
