@@ -468,6 +468,43 @@ def _guarded_probe(
     )
 
 
+def test_guard_blocks_symlink_created_after_absent_exists_check(tmp_path: Path) -> None:
+    """An absent absolute path is not remembered as outside the trees.
+
+    The child calls ``Path(alias).exists()`` while ``alias`` is missing, then
+    creates that name as a symlink to a file inside ``curriculum/``. ``open``
+    of the same path must fail in that process.
+    """
+    fake, curriculum_file = _curriculum_repo(tmp_path)
+    alias = tmp_path / "absent-alias"
+    assert not alias.exists()
+    neutral = tmp_path / "neutral"
+    neutral.mkdir()
+    completed = _guarded_probe(
+        "import os\n"
+        "from pathlib import Path\n"
+        "import tests.sparse_collection_audit\n"
+        "alias = os.environ['ALIAS']\n"
+        "assert Path(alias).exists() is False\n"
+        "print('exists=false')\n"
+        "os.symlink(os.environ['INSIDE'], alias)\n"
+        "try:\n"
+        "    open(alias, encoding='utf-8').close()\n"
+        "    print('open=visible')\n"
+        "except FileNotFoundError as exc:\n"
+        "    print(f'open={exc.errno}')\n",
+        cwd=neutral,
+        repo_root=fake,
+        extra_env={"ALIAS": str(alias), "INSIDE": str(curriculum_file)},
+    )
+    output = completed.stdout + completed.stderr
+    assert completed.returncode == 0, output
+    assert "exists=false" in completed.stdout
+    assert f"open={errno.ENOENT}" in completed.stdout
+    assert "open=visible" not in completed.stdout
+    assert alias.read_text(encoding="utf-8") == "привіт\n"
+
+
 def test_guard_blocks_symlink_repointed_into_a_tree(tmp_path: Path) -> None:
     """A symlink allowed on first resolution is hidden after it is re-pointed.
 
