@@ -9,9 +9,10 @@ before lazy reads were introduced).
 
 ``SPARSE_TEST_FORCE_MISSING_TREES`` is a comma-separated, test-only override
 that makes the listed trees read as absent. The sparse collection guard sets
-it in a child process, and that child also installs an audit hook so direct
-reads of those trees raise ``FileNotFoundError``. ``tree_absent()`` and the
-filesystem therefore agree. ``SPARSE_TEST_REPO_ROOT`` is the checkout whose
+it in a child process, and that child also installs an audit hook plus
+``os.stat`` / ``os.lstat`` wrappers so direct reads and existence checks of
+those trees raise ``FileNotFoundError``. ``tree_absent()`` and the filesystem
+therefore agree. ``SPARSE_TEST_REPO_ROOT`` is the checkout whose
 trees the hook hides.
 """
 

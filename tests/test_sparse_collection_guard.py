@@ -6,9 +6,11 @@ filesystems). A child ``pytest --collect-only`` sets
 ``tests/conftest.py``'s ``sparse_missing_tree_skip_reason`` consumes — treats
 ``curriculum/``, ``wiki/``, ``data/projects/``, and ``data/lexicon/`` as
 absent. The same child loads ``tests.sparse_collection_audit``, which raises
-``FileNotFoundError`` for reads of those trees. The environment variable
-alone does not hide files on a full checkout; the hook does, and it is
-installed only in that child.
+``FileNotFoundError`` for reads of those trees and for ``os.stat`` /
+``os.lstat`` (so ``Path.exists()`` agrees). Paths are resolved, so a symlink
+or ``/proc/self/cwd`` spelling is the same as the tree's real path. The
+environment variable alone does not hide files on a full checkout; the hook
+does, and it is installed only in that child.
 
 Coverage is derived, not sampled: every test module whose module-level code
 (imports, assignments, decorators, parametrize arguments) names one of the
@@ -21,6 +23,7 @@ guard fast.
 from __future__ import annotations
 
 import ast
+import errno
 import os
 import re
 import subprocess
@@ -200,10 +203,15 @@ def _write_eager_modules(directory: Path, curriculum_file: Path, lexicon: Path) 
     return [reader, lister]
 
 
-def _assert_eager_collection_fails(modules: list[Path], *, repo_root: Path) -> None:
+def _assert_eager_collection_fails(
+    modules: list[Path],
+    *,
+    repo_root: Path,
+    cwd: Path | None = None,
+) -> None:
     completed = collect_with_absent_trees(
         [str(module) for module in modules],
-        cwd=modules[0].parent,
+        cwd=cwd or modules[0].parent,
         repo_root=repo_root,
     )
     output = completed.stdout + completed.stderr
@@ -250,3 +258,172 @@ def test_guard_child_errors_on_eager_reads_of_present_trees(tmp_path: Path) -> N
         _write_eager_modules(tmp_path / "worktree-modules", worktree_file, worktree_lexicon),
         repo_root=_REPO_ROOT,
     )
+
+
+def _present_fake_repo(tmp_path: Path) -> tuple[Path, Path]:
+    """Return ``(repo, curriculum_file)`` with all four sparse trees present."""
+    fake = tmp_path / "full-checkout"
+    curriculum_file = fake / "curriculum" / "lesson.txt"
+    curriculum_file.parent.mkdir(parents=True)
+    curriculum_file.write_text("привіт\n", encoding="utf-8")
+    lexicon = fake / "data" / "lexicon"
+    lexicon.mkdir(parents=True)
+    (lexicon / "entry.json").write_text("{}\n", encoding="utf-8")
+    (fake / "wiki").mkdir()
+    (fake / "data" / "projects").mkdir()
+    return fake, curriculum_file
+
+
+def _write_module(directory: Path, name: str, source: str) -> Path:
+    directory.mkdir(parents=True, exist_ok=True)
+    path = directory / name
+    path.write_text(source, encoding="utf-8")
+    return path
+
+
+def test_guard_child_blocks_proc_cwd_and_symlink_reads(tmp_path: Path) -> None:
+    """A read whose spelling is not the tree root still fails collection.
+
+    ``/proc/self/cwd/<tree>/…``, a symlink created outside the tree, and a
+    ``..`` segment after that symlink all resolve inside it. The parent
+    process has no hook, so the same paths still read.
+    """
+    fake, curriculum_file = _present_fake_repo(tmp_path)
+    link = tmp_path / "into-tree"
+    link.symlink_to(curriculum_file)
+    alias_dir = tmp_path / "alias-dir"
+    alias_dir.symlink_to(curriculum_file.parent)
+    dotdot = os.path.join(tmp_path, "alias-dir", "..", "curriculum", "lesson.txt")
+    assert curriculum_file.read_text(encoding="utf-8") == "привіт\n"
+    assert link.read_text(encoding="utf-8") == "привіт\n"
+    assert Path(dotdot).read_text(encoding="utf-8") == "привіт\n"
+    modules = tmp_path / "resolved-modules"
+    proc_reader = _write_module(
+        modules,
+        "test_proc_cwd_read.py",
+        "from pathlib import Path\n"
+        "Path('/proc/self/cwd/curriculum/lesson.txt').read_text(encoding='utf-8')\n"
+        "\n"
+        "def test_proc_cwd_read() -> None:\n"
+        "    pass\n",
+    )
+    link_reader = _write_module(
+        modules,
+        "test_symlink_read.py",
+        "from pathlib import Path\n"
+        f"Path({str(link)!r}).read_text(encoding='utf-8')\n"
+        "\n"
+        "def test_symlink_read() -> None:\n"
+        "    pass\n",
+    )
+    dotdot_reader = _write_module(
+        modules,
+        "test_symlink_dotdot_read.py",
+        "from pathlib import Path\n"
+        f"Path({dotdot!r}).read_text(encoding='utf-8')\n"
+        "\n"
+        "def test_symlink_dotdot_read() -> None:\n"
+        "    pass\n",
+    )
+    _assert_eager_collection_fails(
+        [proc_reader, link_reader, dotdot_reader],
+        repo_root=fake,
+        cwd=fake,
+    )
+    assert curriculum_file.read_text(encoding="utf-8") == "привіт\n"
+    assert link.read_text(encoding="utf-8") == "привіт\n"
+    assert Path(dotdot).read_text(encoding="utf-8") == "привіт\n"
+
+
+def test_guard_child_existence_checks_hide_present_trees(tmp_path: Path) -> None:
+    """``Path.exists()`` is false in the guarded child, and that aborts collection.
+
+    The parent still sees the file. The child is a separate process: a direct
+    probe checks ``Path.exists()``, ``os.path.exists()``, ``Path.is_dir()``,
+    ``os.stat``, and ``os.lstat``, then a module-level ``if not p.exists():
+    raise`` fails collection. ``dir_fd`` and ``follow_symlinks`` still reach
+    ``os.stat`` for a path outside the trees.
+    """
+    fake, curriculum_file = _present_fake_repo(tmp_path)
+    outside = tmp_path / "outside.txt"
+    outside.write_text("outside\n", encoding="utf-8")
+    outside_link = tmp_path / "outside-link"
+    outside_link.symlink_to(outside)
+    assert curriculum_file.exists()
+    assert os.path.exists(curriculum_file)
+    assert curriculum_file.parent.is_dir()
+    assert os.stat(curriculum_file).st_size > 0
+
+    env = os.environ.copy()
+    env[FORCE_MISSING_TREES_ENV] = ",".join(_ABSENT_TREES)
+    env[REPO_ROOT_ENV] = str(Path(os.path.abspath(fake)))
+    prior = env.get("PYTHONPATH", "")
+    env["PYTHONPATH"] = str(_REPO_ROOT) if not prior else f"{_REPO_ROOT}{os.pathsep}{prior}"
+    env["TREE_FILE"] = str(curriculum_file)
+    env["TREE_DIR"] = str(curriculum_file.parent)
+    env["OUTSIDE_FILE"] = str(outside)
+    env["OUTSIDE_LINK"] = str(outside_link)
+    probe = subprocess.run(
+        [
+            sys.executable,
+            "-c",
+            "import os\n"
+            "import stat\n"
+            "from pathlib import Path\n"
+            "import tests.sparse_collection_audit\n"
+            "tree_file = Path(os.environ['TREE_FILE'])\n"
+            "tree_dir = Path(os.environ['TREE_DIR'])\n"
+            "outside = os.environ['OUTSIDE_FILE']\n"
+            "link = os.environ['OUTSIDE_LINK']\n"
+            "print('exists=' + str(tree_file.exists()).lower())\n"
+            "print('path_exists=' + str(os.path.exists(tree_file)).lower())\n"
+            "print('is_dir=' + str(tree_dir.is_dir()).lower())\n"
+            "for label, fn in (('stat', os.stat), ('lstat', os.lstat)):\n"
+            "    try:\n"
+            "        fn(tree_file)\n"
+            "        print(label + '=visible')\n"
+            "    except FileNotFoundError as exc:\n"
+            "        print(f'{label}={exc.errno}')\n"
+            "os.stat(outside, follow_symlinks=True)\n"
+            "followed = os.stat(link, follow_symlinks=False)\n"
+            "assert stat.S_ISLNK(followed.st_mode)\n"
+            "parent = os.path.dirname(outside)\n"
+            "fd = os.open(parent, os.O_RDONLY)\n"
+            "try:\n"
+            "    os.stat(os.path.basename(outside), dir_fd=fd, follow_symlinks=True)\n"
+            "    os.lstat(os.path.basename(outside), dir_fd=fd)\n"
+            "finally:\n"
+            "    os.close(fd)\n"
+            "print('outside=ok')\n",
+        ],
+        cwd=fake,
+        env=env,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    probe_output = probe.stdout + probe.stderr
+    assert probe.returncode == 0, probe_output
+    assert "exists=false" in probe.stdout
+    assert "path_exists=false" in probe.stdout
+    assert "is_dir=false" in probe.stdout
+    assert f"stat={errno.ENOENT}" in probe.stdout
+    assert f"lstat={errno.ENOENT}" in probe.stdout
+    assert "outside=ok" in probe.stdout
+
+    module = _write_module(
+        tmp_path / "exists-modules",
+        "test_exists_aborts_collection.py",
+        "from pathlib import Path\n"
+        f"p = Path({str(curriculum_file)!r})\n"
+        "if not p.exists():\n"
+        "    raise FileNotFoundError(p)\n"
+        "\n"
+        "def test_exists_aborts_collection() -> None:\n"
+        "    pass\n",
+    )
+    _assert_eager_collection_fails([module], repo_root=fake, cwd=fake)
+    assert curriculum_file.exists()
+    assert os.path.exists(curriculum_file)
+    assert os.stat(curriculum_file).st_size > 0
