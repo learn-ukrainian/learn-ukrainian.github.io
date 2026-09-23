@@ -31,7 +31,7 @@ def _evidence() -> dict[str, object]:
 
 def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.MonkeyPatch) -> None:
     monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     validator = Draft202012Validator(hydration.HYDRATION_CAPSULE_V1_SCHEMA, format_checker=FormatChecker())
     assert list(validator.iter_errors(capsule)) == []
@@ -45,7 +45,7 @@ def test_deadline_is_monotonic_and_degrades_without_blocking(monkeypatch: pytest
     monkeypatch.setattr(hydration.time, "monotonic", lambda: next(clock))
     monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["state"] == "degraded"
     assert capsule["degradation_reasons"] == ["deadline-exceeded"]
@@ -58,7 +58,7 @@ def test_unavailable_critical_evidence_fails_closed(monkeypatch: pytest.MonkeyPa
         raise LookupError("missing")
 
     monkeypatch.setattr(hydration, "_collect_stream_evidence", unavailable)
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["state"] == "blocked"
     assert capsule["execution_allowed"] is False
@@ -75,7 +75,7 @@ def test_unsafe_stream_evidence_resets_driver_identity(monkeypatch: pytest.Monke
     }
     monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: unsafe_evidence)
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
         assert capsule[field] == {"status": "unavailable", "reason": "unsafe-stream-evidence"}
@@ -83,7 +83,7 @@ def test_unsafe_stream_evidence_resets_driver_identity(monkeypatch: pytest.Monke
 
 def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
     values = {
-        "SESSION_STREAM_ID": "epic:5512",
+        "SESSION_STREAM_ID": "epic:123",
         "SESSION_STREAM_SESSION_ID": "session-fixture",
         "SESSION_STREAM_LEASE_ID": "lease-fixture",
         "SESSION_STREAM_GENERATION": "2",
@@ -98,9 +98,9 @@ def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
         monkeypatch.setenv(key, value)
     monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
     return {
-        "stream_id": "epic:5512",
+        "stream_id": "epic:123",
         "lease": {
-            "stream_id": "epic:5512",
+            "stream_id": "epic:123",
             "session_id": "session-fixture",
             "lease_id": "lease-fixture",
             "generation": 2,
@@ -119,7 +119,7 @@ def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
             "expires_at": "2099-01-01T00:00:00Z",
         },
         "digest": {
-            "stream_id": "epic:5512",
+            "stream_id": "epic:123",
             "limit": 1,
             "pinned": [],
             "recent": [],
@@ -137,7 +137,7 @@ def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(monkeypa
 
     monkeypatch.setattr(sqlite3, "connect", local_db_forbidden)
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["execution_allowed"] is True
     assert capsule["next_drive_boundary"]["value"]["kind"] == "queue_orientation"
@@ -150,7 +150,7 @@ def test_remote_next_action_becomes_exact_drive_boundary(monkeypatch: pytest.Mon
     response["digest"]["recent"] = [
         {
             "entry_id": 12,
-            "stream_id": "epic:5512",
+            "stream_id": "epic:123",
             "session_id": "session-fixture",
             "agent": "gemini",
             "harness": "agy",
@@ -165,7 +165,7 @@ def test_remote_next_action_becomes_exact_drive_boundary(monkeypatch: pytest.Mon
     response["digest"]["high_water_entry_id"] = 12
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["execution_allowed"] is True
     assert capsule["next_drive_boundary"]["value"] == {
@@ -181,10 +181,10 @@ def test_remote_next_action_becomes_exact_drive_boundary(monkeypatch: pytest.Mon
         None,
         [],
         {},
-        {"stream_id": "epic:5513", "limit": 1, "recent": []},
-        {"stream_id": "epic:5512", "limit": 1, "recent": ["x"]},
-        {"stream_id": "epic:5512", "limit": 1, "recent": [{}]},
-        {"stream_id": "epic:5512", "limit": float("inf"), "recent": []},
+        {"stream_id": "epic:1001", "limit": 1, "recent": []},
+        {"stream_id": "epic:123", "limit": 1, "recent": ["x"]},
+        {"stream_id": "epic:123", "limit": 1, "recent": [{}]},
+        {"stream_id": "epic:123", "limit": float("inf"), "recent": []},
     ],
 )
 def test_malformed_remote_digest_blocks_without_traceback(
@@ -194,7 +194,7 @@ def test_malformed_remote_digest_blocks_without_traceback(
     response["digest"] = digest
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["state"] == "blocked"
     assert capsule["execution_allowed"] is False
@@ -206,7 +206,7 @@ def test_remote_expiry_overflow_blocks_without_traceback(monkeypatch: pytest.Mon
     response["lease"]["expires_at"] = "0001-01-01T00:00:00+05:00"
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["state"] == "blocked"
     assert capsule["execution_allowed"] is False
@@ -216,7 +216,7 @@ def test_remote_expiry_overflow_blocks_without_traceback(monkeypatch: pytest.Mon
 @pytest.mark.parametrize(
     ("field", "value"),
     [
-        ("stream_id", "epic:5513"),
+        ("stream_id", "epic:1001"),
         ("session_id", "session-other"),
         ("lease_id", "lease-other"),
         ("generation", 3),
@@ -251,7 +251,7 @@ def test_remote_launcher_lease_mismatch_blocks(
     target[field] = value
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
 
-    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+    capsule = hydration.build_hydration_capsule("epic:123", "gemini")
 
     assert capsule["execution_allowed"] is False
     assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
@@ -261,7 +261,7 @@ def test_missing_launcher_lease_or_remote_timeout_blocks(monkeypatch: pytest.Mon
     response = _remote_stream(monkeypatch)
     monkeypatch.delenv("SESSION_STREAM_LEASE_ID")
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
-    assert hydration.build_hydration_capsule("epic:5512", "gemini")["execution_allowed"] is False
+    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is False
 
     monkeypatch.setenv("SESSION_STREAM_LEASE_ID", "lease-fixture")
 
@@ -269,7 +269,7 @@ def test_missing_launcher_lease_or_remote_timeout_blocks(monkeypatch: pytest.Mon
         raise TimeoutError("timeout")
 
     monkeypatch.setattr(hydration, "_fetch_remote_stream", timed_out)
-    assert hydration.build_hydration_capsule("epic:5512", "gemini")["execution_allowed"] is False
+    assert hydration.build_hydration_capsule("epic:123", "gemini")["execution_allowed"] is False
 
 
 def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch: pytest.MonkeyPatch) -> None:
@@ -290,7 +290,7 @@ def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch:
             calls["request"] = (method, path)
 
         def getresponse(self) -> object:
-            pieces = iter((b'{"stream_id":"epic:5512"}', b""))
+            pieces = iter((b'{"stream_id":"epic:123"}', b""))
             return SimpleNamespace(
                 status=200,
                 fp=SimpleNamespace(raw=SimpleNamespace(_sock=self.sock)),
@@ -303,10 +303,10 @@ def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch:
             calls["closed"] = True
 
     monkeypatch.setattr(hydration.http.client, "HTTPConnection", Connection)
-    result = hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
+    result = hydration._fetch_remote_stream("epic:123", deadline=time.monotonic() + 1)
 
-    assert result == {"stream_id": "epic:5512"}
-    assert calls["request"] == ("GET", "/api/epics/v1/epic:5512?limit=1")
+    assert result == {"stream_id": "epic:123"}
+    assert calls["request"] == ("GET", "/api/epics/v1/epic:123?limit=1")
     assert calls["timeout_set"] is True
     assert calls["closed"] is True
 
@@ -366,7 +366,7 @@ def test_remote_transport_rejects_bad_responses_and_closes(
     monkeypatch.setattr(hydration.http.client, "HTTPConnection", Connection)
 
     with pytest.raises(LookupError):
-        hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
+        hydration._fetch_remote_stream("epic:123", deadline=time.monotonic() + 1)
     assert calls["closed"] is True
 
 
@@ -377,12 +377,12 @@ def test_remote_transport_real_loopback_connection_close(
     payload = (
         b"x" * (hydration._MAX_STREAM_RESPONSE_BYTES + 1)
         if case == "oversize"
-        else json.dumps({"stream_id": "epic:5512"}).encode()
+        else json.dumps({"stream_id": "epic:123"}).encode()
     )
 
     class Handler(http.server.BaseHTTPRequestHandler):
         def do_GET(self) -> None:
-            assert self.path == "/api/epics/v1/epic:5512?limit=1"
+            assert self.path == "/api/epics/v1/epic:123?limit=1"
             self.send_response(200)
             length = len(payload) + 10 if case == "truncated" else len(payload)
             self.send_header("Content-Length", str(length))
@@ -401,10 +401,10 @@ def test_remote_transport_real_loopback_connection_close(
     try:
         if case != "valid":
             with pytest.raises(LookupError, match=r"too large|incomplete"):
-                hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
+                hydration._fetch_remote_stream("epic:123", deadline=time.monotonic() + 1)
         else:
-            assert hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1) == {
-                "stream_id": "epic:5512"
+            assert hydration._fetch_remote_stream("epic:123", deadline=time.monotonic() + 1) == {
+                "stream_id": "epic:123"
             }
     finally:
         server.shutdown()
@@ -434,7 +434,7 @@ def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pyt
     monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
     try:
         with pytest.raises(LookupError) as error:
-            hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 0.05)
+            hydration._fetch_remote_stream("epic:123", deadline=time.monotonic() + 0.05)
         assert received.is_set()
         assert isinstance(error.value.__cause__, (TimeoutError, http.client.RemoteDisconnected))
     finally:
@@ -479,7 +479,7 @@ def test_remote_transport_real_loopback_drip_obeys_total_deadline(
     try:
         started = time.monotonic()
         with pytest.raises(LookupError):
-            hydration._fetch_remote_stream("epic:5512", deadline=started + 0.1)
+            hydration._fetch_remote_stream("epic:123", deadline=started + 0.1)
         assert received.is_set()
         assert time.monotonic() - started < 0.5
     finally:
