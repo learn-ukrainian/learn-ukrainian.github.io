@@ -232,8 +232,8 @@ def test_parallel_annotator_retention(grammar_data):
         orig_to_targets[orig].add(corr)
 
     multi_target_sents = {orig: targets for orig, targets in orig_to_targets.items() if len(targets) > 1}
-    assert len(multi_target_sents) >= 40, (
-        f"Expected >= 40 sentences with retained distinct parallel annotator targets, "
+    assert len(multi_target_sents) >= 25, (
+        f"Expected >= 25 sentences with retained distinct parallel annotator targets, "
         f"got {len(multi_target_sents)}"
     )
 

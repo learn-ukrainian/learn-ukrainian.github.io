@@ -472,11 +472,19 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r"\b(?:туди\s+[—–-]\s+сюди|плюс\s+[—–-]\s+мінус|врешті\s+[—–-]\s+решт|караван\s+[—–-]\s+сара[їя]|стейт\s+[—–-]\s+машин\w*|комікс\s+[—–-]\s+вестерн\w*)\b", text, re.IGNORECASE):
         return False
-    # Reject garbled syntax
-    if re.search(r"\bЛюбов\s+до\s+волі\b", text):
+    # Safety: reject graphic / violent / forensic / morbid / vulgar content
+    if re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b", text, re.IGNORECASE):
         return False
-    # Safety: reject graphic / violent / forensic / morbid content
-    if re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*)\b", text, re.IGNORECASE):
+    # Claude R11 control defects
+    if re.search(r"\bПриступаючи\b", text):
+        return False
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ]+-[тТ]а\b", text):
+        return False
+    if re.search(r"\bпоказу\w*\s+собою\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"^[Іі]\s+є,\s+на\s+його\s+думку", text):
+        return False
+    if re.search(r"\b(?:скоріше|швидше)\s+за\s+все\b", text, re.IGNORECASE):
         return False
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -592,11 +600,12 @@ def is_valid_candidate(
     corr_text: str,
     in_scope: list[tuple[int, int, str, str]],
     vesum_cur: sqlite3.Cursor | None = None,
+    orig_tokens: list[str] | None = None,
 ) -> bool:
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
-    # Safety: reject graphic / violent / forensic / morbid content
-    if re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*)\b", orig_text, re.IGNORECASE) or \
-       re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*)\b", corr_text, re.IGNORECASE):
+    # Safety: reject graphic / violent / forensic / morbid / vulgar content
+    if re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b", orig_text, re.IGNORECASE) or \
+       re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*|поц\w*|статев\w+\s+член\w*)\b", corr_text, re.IGNORECASE):
         return False
     # Reject pure word insertions where start == end
     if any(e[0] == e[1] and re.search(r"[а-яіїєґА-ЯІЇЄҐ\w]", e[3]) for e in in_scope):
@@ -1232,6 +1241,101 @@ def is_valid_candidate(
     if re.search(r"\bяк\s+побажаєте\b", c_low):
         return False
 
+    # Claude R11 Section A Grammar Defects
+    if re.search(r"\bпаралельн\w*\s+Малої\s+Бронної\b", c_low):
+        return False
+    if re.search(r"\bїхні\s+велич\b", c_low):
+        return False
+    if re.search(r"\bвсі\s+це\s+драконівські\b", c_low):
+        return False
+    if re.search(r"\bпро\s+політику\s+та\s+літератури\b", c_low):
+        return False
+    if re.search(r"\bЗапам[\x27\u2019\u02bc]яталалося\b", corr_text, re.IGNORECASE) or re.search(r"\bпустим\s+ротом\b", c_low):
+        return False
+    if re.search(r"\b(?:скоріше|швидше)\s+за\s+все\b", c_low):
+        return False
+
+    # Claude R11 Section B Invented / Meaning-changing rewrites
+    if re.search(r"\bсуспільств\w*\b", o_low) and re.search(r"\bлюдств\w*\b", c_low):
+        return False
+    if re.search(r"\bподібн\w*\s+площ\w*\b", o_low) and re.search(r"\bтакою\s+самою\b", c_low):
+        return False
+    if re.search(r"\bбачити\s+цю\s+атмосферу\b", o_low) and re.search(r"\bвідчувати\b", c_low):
+        return False
+    if re.search(r"\bпродукту\b", c_low) and not re.search(r"\bпродукту\b", o_low):
+        return False
+    if re.search(r"\bздобути\s+завдяки\s+книгам\b", c_low):
+        return False
+    if re.search(r"\bзробити\s+сюрприз\b", c_low):
+        return False
+    if re.search(r"\bзаповним\b", o_low) and re.search(r"\bзаповнив\b", c_low):
+        return False
+    if re.search(r"\bзробленим\s+воно\s+буде\b", o_low):
+        return False
+    if re.search(r"\bСтарий\s+добрий\s+Боб\b", o_low) and re.search(r"\bБобе\b", c_low):
+        return False
+    if re.search(r"\bрозревіл\w*\b", o_low) and re.search(r"\bрозрюмсал\w*\b", c_low):
+        return False
+    if re.search(r"\bшибанувш\w*\b", o_low):
+        return False
+    if re.search(r"\bспадав\b", c_low) and not re.search(r"\bспадав\b", o_low):
+        return False
+    if re.search(r"\bбула\s+вже\s+ланкова\b", c_low):
+        return False
+    if re.search(r"\bна\s+спільну\s+користь\b", o_low) and re.search(r"\bдля\s+спільної\s+користі\b", c_low):
+        return False
+
+    # Claude R11 Section C Category F general gates
+    # Future tense analytic vs synthetic
+    if re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\s+[а-яіїєґА-ЯІЇЄҐ'-]+ти\b", o_low) and re.search(r"\b[а-яіїєґА-ЯІЇЄҐ'-]+тим(?:у|еш|е|емо|ете|уть)\b", c_low):
+        return False
+    if re.search(r"\b[а-яіїєґА-ЯІЇЄҐ'-]+тим(?:у|еш|е|емо|ете|уть)\b", o_low) and re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\s+[а-яіїєґА-ЯІЇЄҐ'-]+ти\b", c_low):
+        return False
+    # Particle б/би
+    if re.search(r"\bб\b", o_low) and re.search(r"\bби\b", c_low) and not re.search(r"\bби\b", o_low):
+        return False
+    if re.search(r"\bби\b", o_low) and re.search(r"\bб\b", c_low) and not re.search(r"\bб\b", o_low):
+        return False
+    # Relative pronoun swap що -> який
+    if orig_tokens:
+        for start, end, _tag, repl in in_scope:
+            if start < len(orig_tokens):
+                err_w = " ".join(orig_tokens[start:end]).lower().strip()
+                repl_w = repl.lower().strip()
+                if err_w == "що" and re.match(r"^як(?:ий|а|е|і|ого|ій|им|их|ому|ою|у)\b", repl_w):
+                    return False
+    # Reflexive passive to active conversion
+    if orig_tokens:
+        for start, end, _tag, repl in in_scope:
+            if start < len(orig_tokens):
+                err_w = " ".join(orig_tokens[start:end]).lower().strip()
+                repl_w = repl.lower().strip()
+                if (
+                    (err_w.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in err_w.split()))
+                    and not repl_w.endswith(("ся", "сь"))
+                    and (any(repl_w.endswith(suf) for suf in ("ють", "ять", "уть", "ать", "ли", "в", "ла", "ло", "є", "ють.", "ять.", "уть.", "ать.")) or "можна" in repl_w)
+                ):
+                    return False
+    # Lexical Category F swaps
+    if re.search(r"\bпару\b", o_low) and re.search(r"\bкільк\w*\b", c_low):
+        return False
+    if re.search(r"\bколи\s+б\b", o_low) and re.search(r"\bякби\b", c_low):
+        return False
+    if re.search(r"\bпідряд\b", o_low) and re.search(r"\bпоспіль\b", c_low):
+        return False
+    if re.search(r"\bбільше\s+того\b", o_low) and re.search(r"\bба\s+більше\b", c_low):
+        return False
+    if re.search(r"\bсправля\w*\s+враженн\w*\b", o_low) and re.search(r"\bвража\w*\b", c_low):
+        return False
+    if re.search(r"\bпалити\b", o_low) and re.search(r"\bкурити\b", c_low):
+        return False
+    if re.search(r"\bдатчан\w*\b", o_low) and re.search(r"\bданц\w*\b", c_low):
+        return False
+    if re.search(r"\bнарн\w*\b", o_low) and re.search(r"\bгарн\w*\b", c_low):
+        return False
+    if re.search(r"\bяке\s+ж\s+було\b", o_low) and re.search(r"\bяким\s+же\s+було\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -1660,7 +1764,7 @@ def build_grammar_dataset(
                 and corr_text not in test_sources
                 and corr_text not in test_targets
                 and not is_test_near_duplicate(corr_text)
-                and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur)
+                and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens)
             ):
                 pair_key = (orig_text, corr_text)
                 if pair_key in seen_corrections:
@@ -1803,7 +1907,7 @@ def build_grammar_dataset(
                 and corr_text not in test_targets
                 and corr_text not in eval_forbidden_sentences
                 and not is_test_near_duplicate(corr_text)
-                and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur)
+                and is_valid_candidate(orig_text, corr_text, in_scope, vesum_cur, orig_tokens=orig_tokens)
             ):
                 pair_key = (orig_text, corr_text)
                 if pair_key in seen_corrections:
