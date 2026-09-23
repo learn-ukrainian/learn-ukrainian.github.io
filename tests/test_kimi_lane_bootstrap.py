@@ -4,9 +4,11 @@ from __future__ import annotations
 
 from pathlib import Path
 
+import pytest
 import yaml
 
-from scripts.session_canary import kimi_lane
+from scripts.session_canary import grok_lane, kimi_lane
+from tests.test_session_canary_handoff_select import _STREAM, _full
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
 _ISSUE_STREAMS = _REPO_ROOT / "scripts" / "config" / "issue_streams.yaml"
@@ -36,10 +38,12 @@ def test_cold_start_body_contains_binding_rules() -> None:
     assert "#5556" in body
 
 
-def test_write_cold_start_creates_file(tmp_path: Path) -> None:
-    epic_dir = tmp_path / ".claude" / "harness-epic"
-    epic_dir.mkdir(parents=True)
-    (epic_dir / "INTERIM-DRIVER-HANDOFF.md").write_text("# interim\n", encoding="utf-8")
+def _patch_stream(monkeypatch: pytest.MonkeyPatch) -> None:
+    """Same stream the handoff-select tests use, so anchor yield does not follow the live DB."""
+    monkeypatch.setattr(grok_lane, "_load_stream_entries", lambda *_args, **_kwargs: list(_STREAM))
+
+
+def _write_cold_start(epic_dir: Path, tmp_path: Path) -> str:
     kimi_lane._write_cold_start(
         epic_dir,
         epic="harness",
@@ -47,11 +51,33 @@ def test_write_cold_start_creates_file(tmp_path: Path) -> None:
         lease_summary="opened test",
         repo=tmp_path,
     )
+    return (epic_dir / "KIMI-COLD-START.md").read_text(encoding="utf-8")
+
+
+def test_write_cold_start_creates_file(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _patch_stream(monkeypatch)
+    epic_dir = tmp_path / ".claude" / "harness-epic"
+    epic_dir.mkdir(parents=True)
+    (epic_dir / "INTERIM-DRIVER-HANDOFF.md").write_text(
+        _full("interim-sentinel", session="2026-09-23"),
+        encoding="utf-8",
+    )
     path = epic_dir / "KIMI-COLD-START.md"
+    text = _write_cold_start(epic_dir, tmp_path)
     assert path.is_file()
-    text = path.read_text(encoding="utf-8")
     assert INFRA_STREAM_ID in text
     assert "INTERIM-DRIVER-HANDOFF.md" in text
+
+
+def test_write_cold_start_skips_a_thin_handoff(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    """A handoff below the 10-anchor minimum is not named on the board."""
+    _patch_stream(monkeypatch)
+    epic_dir = tmp_path / ".claude" / "harness-epic"
+    epic_dir.mkdir(parents=True)
+    (epic_dir / "INTERIM-DRIVER-HANDOFF.md").write_text("# interim\n", encoding="utf-8")
+    text = _write_cold_start(epic_dir, tmp_path)
+    assert "**Handoff dual-write:** `(no handoff)`" in text
+    assert "INTERIM-DRIVER-HANDOFF.md" not in text
 
 
 def test_handoff_candidates_prefer_kimi_driver(tmp_path: Path) -> None:

@@ -7,16 +7,28 @@ emits a fixed STATE AT HANDBACK block on FAIL or clean close.
 
 from __future__ import annotations
 
+import fcntl
+import os
 import re
-from collections.abc import Sequence
+import stat
+from collections.abc import Callable, Sequence
 from datetime import UTC, datetime
 from pathlib import Path
+
+from scripts.session_canary import handoff_select
 
 DIARY_MARKER = "## 📔 Diary — reverse chrono (newest first)"
 NEXT_DRIVE_MARKER = "## Next Drive"
 WORKING_SET_MARKER = "## Active Working Set"
 HANDS_OFF_MARKER = "## Hands-off"
 HANDBACK_MARKER = "## STATE AT HANDBACK"
+# Bound for compare-and-replace. Exhaustion raises; it never writes blind.
+REWRITE_ATTEMPTS = 8
+
+
+class HandoffRewriteConflictError(RuntimeError):
+    """Compare-and-replace could not commit without dropping a newer version."""
+
 
 _LAST_STAMP_RE = re.compile(
     r"^(\*\*Last diary stamp:\*\*)\s*.+$",
@@ -33,23 +45,40 @@ def resolve_handoff_path(
     epic: str,
     override: str | Path | None = None,
     preferred: list[str] | None = None,
-) -> Path:
+    *,
+    out_dir: Path | None = None,
+) -> Path | handoff_select.NoHandoff:
+    """Same selection as mint: explicit path, else the recorded mint file, else freshness.
+
+    Own-lane (``preferred``) ties an equal freshness date. It does not outrank
+    a newer handoff. A recorded mint path is returned without ranking again
+    and without a content check. A recorded null is
+    :data:`handoff_select.NO_HANDOFF` and is not re-selected. Absent
+    ``mint_meta.json`` still ranks by freshness. An explicit override is this
+    call only. The read that consumes a recorded file raises
+    :class:`handoff_select.RecordedHandoffMissingError` when that file is
+    missing or unreadable.
+    """
     if override:
         p = Path(override)
         return p if p.is_absolute() else (repo / p)
-    base = repo / ".claude" / f"{epic}-epic"
-    candidates = [
-        *(preferred or []),
-        "INTERIM-DRIVER-HANDOFF.md",
-        "CLAUDE-DRIVER-HANDOFF.md",
-        "CODEX-DRIVER-HANDOFF.md",
-    ]
-    for name in candidates:
-        cand = base / name
-        if cand.is_file():
-            return cand
-    # Prefer INTERIM as write target for Grok interim drivers.
-    return base / "INTERIM-DRIVER-HANDOFF.md"
+
+    recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
+    if isinstance(recorded, handoff_select.NoHandoff):
+        return recorded
+    if isinstance(recorded, Path):
+        return recorded
+    ranked = handoff_select.lane_handoff_candidates(
+        repo,
+        epic,
+        handoff_select.LANE_HANDOFF_NAMES,
+        preferred=list(preferred or []),
+    )
+    chosen = handoff_select.chosen_handoff_path(ranked)
+    if chosen is not None:
+        return chosen
+    fallback = next(iter(preferred or ()), "INTERIM-DRIVER-HANDOFF.md")
+    return repo / ".claude" / f"{epic}-epic" / fallback
 
 
 def _ensure_section(text: str, heading: str, default_body: str) -> str:
@@ -109,6 +138,200 @@ def ensure_diary_skeleton(text: str, *, epic: str, stream_id: str) -> str:
     return text
 
 
+def _read_fd(fd: int) -> bytes:
+    os.lseek(fd, 0, os.SEEK_SET)
+    chunks: list[bytes] = []
+    while True:
+        block = os.read(fd, 1024 * 1024)
+        if not block:
+            break
+        chunks.append(block)
+    return b"".join(chunks)
+
+
+def _write_fd(fd: int, data: bytes) -> None:
+    os.lseek(fd, 0, os.SEEK_SET)
+    os.ftruncate(fd, 0)
+    view = memoryview(data)
+    while view:
+        written = os.write(fd, view)
+        if written <= 0:
+            raise OSError(f"short write to handoff fd {fd}")
+        view = view[written:]
+    os.fsync(fd)
+
+
+def _snapshot_path(path: Path) -> tuple[bytes | None, int | None]:
+    """Fresh open of ``path``. Content ``None`` means the path is absent.
+
+    The mode is :func:`stat.S_IMODE` (permission bits plus setuid, setgid, and
+    sticky). An absent path returns mode ``None`` so creation uses owner-only
+    ``0o600``; the process umask can only remove bits.
+    """
+    try:
+        fd = os.open(path, os.O_RDONLY)
+    except FileNotFoundError:
+        return None, None
+    try:
+        mode = stat.S_IMODE(os.fstat(fd).st_mode)
+        return _read_fd(fd), mode
+    finally:
+        os.close(fd)
+
+
+def _write_temp_file(directory: Path, data: bytes, mode: int | None) -> Path:
+    """Write ``data`` in ``directory`` so ``os.replace`` stays on one filesystem.
+
+    ``mode`` is the full :func:`stat.S_IMODE` of an existing target, applied
+    with ``os.fchmod`` and not reduced to owner/group/other permission bits.
+    ``None`` creates the file at owner-only ``0o600``. The process umask can
+    only remove bits from that mask.
+    """
+    flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+    if hasattr(os, "O_CLOEXEC"):
+        flags |= os.O_CLOEXEC
+    if hasattr(os, "O_NOFOLLOW"):
+        flags |= os.O_NOFOLLOW
+    fd = -1
+    tmp: Path | None = None
+    committed = False
+    try:
+        for _ in range(128):
+            candidate = directory / f".handoff-{os.urandom(8).hex()}.tmp"
+            try:
+                fd = os.open(candidate, flags, 0o600)
+            except FileExistsError:
+                continue
+            tmp = candidate
+            break
+        if tmp is None or fd < 0:
+            raise OSError(f"could not create a handoff temp in {directory}")
+        _write_fd(fd, data)
+        if mode is not None:
+            os.fchmod(fd, mode)
+        os.fsync(fd)
+        committed = True
+        return tmp
+    finally:
+        if fd >= 0:
+            os.close(fd)
+        if tmp is not None and not committed:
+            tmp.unlink(missing_ok=True)
+
+
+def _missing_recorded(path: Path, recorded_meta: Path) -> handoff_select.RecordedHandoffMissingError:
+    return handoff_select.RecordedHandoffMissingError(
+        f"recorded mint handoff missing: {path} (recorded in {recorded_meta}); "
+        "re-mint the canary — consumers must not re-rank handoffs"
+    )
+
+
+def _unreadable_recorded(
+    path: Path, recorded_meta: Path, exc: BaseException
+) -> handoff_select.RecordedHandoffMissingError:
+    return handoff_select.RecordedHandoffMissingError(
+        f"recorded mint handoff unreadable: {path} ({type(exc).__name__}: {exc}); "
+        f"recorded in {recorded_meta}; re-mint the canary — consumers must not re-rank handoffs"
+    )
+
+
+def rewrite_handoff_locked(
+    path: Path,
+    transform: Callable[[str], str],
+    *,
+    recorded_meta: Path | None = None,
+) -> None:
+    """Compare-and-replace the handoff by path, for stamp and handback alike.
+
+    Each attempt resolves ``path`` with ``os.path.realpath`` once, reads that
+    target, writes the transformed bytes to a temp in the target's directory,
+    and ``os.replace`` onto the target only when a second fresh read of that
+    same target still matches. A symlink handoff is left in place, still
+    pointing at the stamped file. A mismatch deletes the temp and retries.
+    After :data:`REWRITE_ATTEMPTS` the function raises
+    :class:`HandoffRewriteConflictError` and does not write.
+
+    An existing target keeps its full mode, including setuid, setgid, and
+    sticky. An absent target is created owner-only (``0o600``); the process
+    umask can only remove bits.
+
+    An exclusive flock on the parent directory serializes cooperating callers
+    of this helper across ``os.replace``. The lock is not the safety property:
+    a writer that never takes it is caught by the byte comparison.
+
+    Accepted residual: the window between the final comparison and
+    ``os.replace`` is not atomic against a non-cooperating editor. The threat
+    model is human-speed editing and agent tool edits, not adversarial writers.
+
+    ``recorded_meta`` marks a mint-recorded path: a missing or unreadable file
+    raises :class:`handoff_select.RecordedHandoffMissingError` instead of
+    creating a replacement.
+    """
+    path.parent.mkdir(parents=True, exist_ok=True)
+    if recorded_meta is not None and not path.is_file():
+        raise _missing_recorded(path, recorded_meta)
+    dir_fd = os.open(path.parent, os.O_RDONLY)
+    try:
+        fcntl.flock(dir_fd, fcntl.LOCK_EX)
+        for _attempt in range(REWRITE_ATTEMPTS):
+            if recorded_meta is not None and not path.is_file():
+                raise _missing_recorded(path, recorded_meta)
+            # Once per attempt: read, compare, and replace this path only.
+            # A symlink retarget after this point is the next attempt's read.
+            target = Path(os.path.realpath(path))
+            try:
+                raw, mode = _snapshot_path(target)
+            except OSError as exc:
+                if recorded_meta is None:
+                    raise
+                raise _unreadable_recorded(path, recorded_meta, exc) from exc
+            if raw is None:
+                if recorded_meta is not None:
+                    raise _missing_recorded(path, recorded_meta)
+                text_bytes = b""
+            else:
+                text_bytes = raw
+            try:
+                if recorded_meta is not None:
+                    text = text_bytes.decode("utf-8")
+                else:
+                    text = text_bytes.decode("utf-8", errors="replace")
+            except UnicodeDecodeError as exc:
+                if recorded_meta is None:
+                    raise
+                raise _unreadable_recorded(path, recorded_meta, exc) from exc
+            updated = transform(text)
+            if updated and not updated.endswith("\n"):
+                updated += "\n"
+            data = updated.encode("utf-8")
+            tmp = _write_temp_file(target.parent, data, mode)
+            try:
+                try:
+                    confirm, confirm_mode = _snapshot_path(target)
+                except OSError as exc:
+                    if recorded_meta is None:
+                        raise
+                    raise _unreadable_recorded(path, recorded_meta, exc) from exc
+                if confirm != raw:
+                    continue
+                if confirm_mode != mode and confirm_mode is not None:
+                    os.chmod(tmp, confirm_mode)
+                # Accepted residual: this comparison and os.replace are not atomic
+                # against a non-cooperating editor. The threat model is human-speed
+                # editing and agent tool edits, not adversarial writers.
+                os.replace(tmp, target)
+                return
+            finally:
+                if tmp.exists():
+                    tmp.unlink()
+        raise HandoffRewriteConflictError(
+            f"handoff rewrite lost the compare-and-replace race after {REWRITE_ATTEMPTS} attempts: {path}"
+        )
+    finally:
+        fcntl.flock(dir_fd, fcntl.LOCK_UN)
+        os.close(dir_fd)
+
+
 def append_diary_stamp(
     path: Path,
     *,
@@ -117,38 +340,40 @@ def append_diary_stamp(
     next_drive: Sequence[str] | None = None,
     working_set: Sequence[str] | None = None,
     stamp: str | None = None,
+    recorded_meta: Path | None = None,
 ) -> str:
-    """Prepend a diary entry; optionally replace Next Drive / Active Working Set. Returns stamp used."""
+    """Prepend a diary entry; optionally replace Next Drive / Active Working Set. Returns stamp used.
+
+    The write is a path compare-and-replace (:func:`rewrite_handoff_locked`).
+    ``recorded_meta`` is the mint record when ``path`` is that recorded file:
+    the consumed read then raises :class:`handoff_select.RecordedHandoffMissingError`
+    if the file is missing or unreadable.
+    """
     stamp = stamp or utc_stamp()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    text = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
-    text = ensure_diary_skeleton(text, epic=path.parent.name.replace("-epic", ""), stream_id="epic:?")
 
-    # Update last stamp
-    if _LAST_STAMP_RE.search(text):
-        text = _LAST_STAMP_RE.sub(rf"\1 {stamp}", text, count=1)
+    def transform(text: str) -> str:
+        text = ensure_diary_skeleton(text, epic=path.parent.name.replace("-epic", ""), stream_id="epic:?")
+        if _LAST_STAMP_RE.search(text):
+            text = _LAST_STAMP_RE.sub(rf"\1 {stamp}", text, count=1)
+        bullet_lines = "\n".join(f"- {b.strip()}" for b in bullets if b and b.strip())
+        entry = f"### {stamp} — {title.strip()}\n{bullet_lines}\n\n"
+        diary_re = re.compile(
+            r"^(##\s+.*Diary[^\n]*\n\n)",
+            re.MULTILINE | re.IGNORECASE,
+        )
+        match = diary_re.search(text)
+        text = (
+            text[: match.end()] + entry + text[match.end() :]
+            if match
+            else text.rstrip() + f"\n\n{DIARY_MARKER}\n\n" + entry
+        )
+        if next_drive is not None:
+            text = replace_next_drive_bullets(text, next_drive)
+        if working_set is not None:
+            text = replace_working_set_bullets(text, working_set)
+        return text
 
-    bullet_lines = "\n".join(f"- {b.strip()}" for b in bullets if b and b.strip())
-    entry = f"### {stamp} — {title.strip()}\n{bullet_lines}\n\n"
-
-    # Insert under diary marker
-    diary_re = re.compile(
-        r"^(##\s+.*Diary[^\n]*\n\n)",
-        re.MULTILINE | re.IGNORECASE,
-    )
-    m = diary_re.search(text)
-    text = (
-        text[: m.end()] + entry + text[m.end() :]
-        if m
-        else text.rstrip() + f"\n\n{DIARY_MARKER}\n\n" + entry
-    )
-
-    if next_drive is not None:
-        text = replace_next_drive_bullets(text, next_drive)
-    if working_set is not None:
-        text = replace_working_set_bullets(text, working_set)
-
-    path.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
+    rewrite_handoff_locked(path, transform, recorded_meta=recorded_meta)
     return stamp
 
 
@@ -303,50 +528,52 @@ def append_handback(
     canary_line: str,
     notes: Sequence[str] = (),
     stamp: str | None = None,
+    recorded_meta: Path | None = None,
 ) -> str:
-    """Append STATE AT HANDBACK and a diary stamp. Sync Next Drive bullets."""
+    """Append STATE AT HANDBACK and a diary stamp. Sync Next Drive bullets.
+
+    The write is a path compare-and-replace (:func:`rewrite_handoff_locked`).
+    ``recorded_meta`` fails closed when the recorded file is missing or
+    unreadable at this read.
+    """
     stamp = stamp or utc_stamp()
-    path.parent.mkdir(parents=True, exist_ok=True)
-    text = path.read_text(encoding="utf-8", errors="replace") if path.is_file() else ""
-    text = ensure_diary_skeleton(text, epic=epic, stream_id=stream_id)
-    if _LAST_STAMP_RE.search(text):
-        text = _LAST_STAMP_RE.sub(rf"\1 {stamp}", text, count=1)
 
-    block = format_handback_block(
-        stamp=stamp,
-        epic=epic,
-        stream_id=stream_id,
-        reason=reason,
-        pins=pins,
-        open_prs=open_prs,
-        next_drive=next_drive,
-        hands_off=hands_off,
-        pending_user=pending_user,
-        worktrees=worktrees,
-        canary_line=canary_line,
-        notes=notes,
-    )
+    def transform(text: str) -> str:
+        text = ensure_diary_skeleton(text, epic=epic, stream_id=stream_id)
+        if _LAST_STAMP_RE.search(text):
+            text = _LAST_STAMP_RE.sub(rf"\1 {stamp}", text, count=1)
+        block = format_handback_block(
+            stamp=stamp,
+            epic=epic,
+            stream_id=stream_id,
+            reason=reason,
+            pins=pins,
+            open_prs=open_prs,
+            next_drive=next_drive,
+            hands_off=hands_off,
+            pending_user=pending_user,
+            worktrees=worktrees,
+            canary_line=canary_line,
+            notes=notes,
+        )
+        # Keep history: always append a new handback block (never delete prior ones).
+        text = text.rstrip() + "\n\n" + block
+        text = replace_next_drive_bullets(text, next_drive)
+        diary_entry = (
+            f"### {stamp} — STATE AT HANDBACK ({reason.strip()})\n"
+            f"- {canary_line.strip()}\n"
+            f"- Full block under `{HANDBACK_MARKER}` below/above.\n"
+            f"- Successor must mint canary after loading this file + stream.\n\n"
+        )
+        diary_re = re.compile(r"^(##\s+.*Diary[^\n]*\n\n)", re.MULTILINE | re.IGNORECASE)
+        match = diary_re.search(text)
+        if match:
+            text = text[: match.end()] + diary_entry + text[match.end() :]
+        else:
+            text = text.rstrip() + f"\n\n{DIARY_MARKER}\n\n" + diary_entry
+        return text
 
-    # Keep history: always append a new handback block (never delete prior ones).
-    text = text.rstrip() + "\n\n" + block
-
-    text = replace_next_drive_bullets(text, next_drive)
-
-    # Diary stamp pointing at handback
-    diary_entry = (
-        f"### {stamp} — STATE AT HANDBACK ({reason.strip()})\n"
-        f"- {canary_line.strip()}\n"
-        f"- Full block under `{HANDBACK_MARKER}` below/above.\n"
-        f"- Successor must mint canary after loading this file + stream.\n\n"
-    )
-    diary_re = re.compile(r"^(##\s+.*Diary[^\n]*\n\n)", re.MULTILINE | re.IGNORECASE)
-    m = diary_re.search(text)
-    if m:
-        text = text[: m.end()] + diary_entry + text[m.end() :]
-    else:
-        text = text.rstrip() + f"\n\n{DIARY_MARKER}\n\n" + diary_entry
-
-    path.write_text(text if text.endswith("\n") else text + "\n", encoding="utf-8")
+    rewrite_handoff_locked(path, transform, recorded_meta=recorded_meta)
     return stamp
 
 
