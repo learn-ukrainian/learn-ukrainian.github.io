@@ -48,18 +48,18 @@ def grammar_data():
     """Load grammar component records and manifest."""
     manifest_file = GRAMMAR_DIR / "manifest.json"
     cases_file = GRAMMAR_DIR / "cases.json"
-    signoff_file = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
-    receipt_file = GRAMMAR_DIR / "acceptance_review_sample.receipt.json"
+    sample_md_file = GRAMMAR_DIR / "acceptance_review_sample.md"
+    sample_json_file = GRAMMAR_DIR / "acceptance_review_sample.json"
+    template_file = GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json"
 
     assert manifest_file.is_file(), f"Missing manifest.json at {manifest_file}"
     assert cases_file.is_file(), f"Missing cases.json at {cases_file}"
-    assert signoff_file.is_file(), f"Missing signoff file at {signoff_file}"
-    assert receipt_file.is_file(), f"Missing receipt file at {receipt_file}"
+    assert sample_md_file.is_file(), f"Missing review sample MD at {sample_md_file}"
+    assert sample_json_file.is_file(), f"Missing review sample JSON at {sample_json_file}"
+    assert template_file.is_file(), f"Missing signoff template at {template_file}"
 
     manifest = json.loads(manifest_file.read_text(encoding="utf-8"))
     cases = json.loads(cases_file.read_text(encoding="utf-8"))
-    signoff = json.loads(signoff_file.read_text(encoding="utf-8"))
-    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
 
     train_records = []
     eval_records = []
@@ -82,8 +82,6 @@ def grammar_data():
         "train": train_records,
         "eval": eval_records,
         "all": train_records + eval_records,
-        "signoff": signoff,
-        "receipt": receipt,
     }
 
 
@@ -156,8 +154,8 @@ def test_in_scope_tag_conformance(grammar_data):
 
 def test_split_integrity_and_sha256_partition(grammar_data):
     """Verify 90:10 document-level split by doc_id SHA-256 hash and 0 shared doc_ids."""
-    train_docs = {r["doc_id"] for r in grammar_data["train"] if r["doc_id"] != "brown_uk_corpus"}
-    eval_docs = {r["doc_id"] for r in grammar_data["eval"] if r["doc_id"] != "brown_uk_corpus"}
+    train_docs = {r["doc_id"] for r in grammar_data["train"]}
+    eval_docs = {r["doc_id"] for r in grammar_data["eval"]}
 
     intersection = train_docs.intersection(eval_docs)
     assert not intersection, f"Shared doc_ids between train and eval: {intersection}"
@@ -172,19 +170,82 @@ def test_split_integrity_and_sha256_partition(grammar_data):
 
 
 def test_held_out_test_set_firewall(grammar_data):
-    """Verify zero overlap against the official held-out test partition."""
-    if not TEST_M2_PATH.is_file():
-        pytest.skip(f"Test M2 not found at {TEST_M2_PATH}")
+    """Verify zero overlap against the official held-out test partition via committed firewall manifest."""
+    manifest_path = (
+        PROJECT_ROOT
+        / "data"
+        / "projects"
+        / "open_model_data"
+        / "evidence"
+        / "grammar_held_out_firewall_manifest.json"
+    )
+    assert manifest_path.is_file(), f"Missing firewall manifest at {manifest_path}"
+    with manifest_path.open("r", encoding="utf-8") as f:
+        manifest_data = json.load(f)
 
-    test_sentences = set()
-    with TEST_M2_PATH.open("r", encoding="utf-8") as f:
-        for line in f:
-            if line.startswith("S ") and not line.startswith("S # "):
-                sent = " ".join(line[2:].strip().split())
-                test_sentences.add(sent)
+    test_doc_ids = set(manifest_data["test_doc_ids"])
+    test_sources = set(manifest_data["test_source_sentences"])
+    test_targets = set(manifest_data["test_target_sentences"])
+
+    assert len(test_doc_ids) >= 160
+    assert len(test_sources) >= 2000
+    assert len(test_targets) >= 3000
 
     for r in grammar_data["all"]:
-        assert r["original_text"] not in test_sentences, f"Sentence leaked from test set: {r['original_text']}"
+        assert r["doc_id"] not in test_doc_ids, f"Test doc_id leaked to component: {r['doc_id']}"
+        assert r["original_text"] not in test_sources, f"Test source sentence leaked: {r['original_text']}"
+        assert r["original_text"] not in test_targets, f"Test target sentence leaked as original: {r['original_text']}"
+        if r["is_erroneous"]:
+            assert r["corrected_text"] not in test_sources, f"Test source leaked as correction: {r['corrected_text']}"
+            assert r["corrected_text"] not in test_targets, f"Test target leaked as correction: {r['corrected_text']}"
+
+
+def test_brown_uk_attribution(grammar_data):
+    """Verify Brown-UK controls preserve authentic doc_id, doc_name, license, and corpus."""
+    brown_records = [r for r in grammar_data["all"] if r["source_corpus"] == "brown_uk"]
+    assert len(brown_records) >= 400, f"Expected >= 400 Brown-UK records, got {len(brown_records)}"
+
+    for r in brown_records:
+        assert r["doc_id"] != "brown_uk_corpus", f"Generic synthetic doc_id found in {r['record_id']}"
+        assert len(r["doc_id"]) > 5
+        assert r["doc_name"].endswith(".txt")
+        assert r["license"] == "CC BY-NC-SA 4.0"
+        assert r["source_corpus"] == "brown_uk"
+        assert r["source_metadata"]["license"] == "CC BY-NC-SA 4.0"
+        assert r["source_metadata"]["source_corpus"] == "brown_uk"
+        assert r["source_metadata"]["doc_name"] == r["doc_name"]
+
+
+def test_parallel_annotator_retention(grammar_data):
+    """Verify distinct parallel annotator corrections for the same sentence are preserved."""
+    corrections = [r for r in grammar_data["all"] if r["is_erroneous"]]
+    orig_to_targets: dict[str, set[str]] = {}
+    for r in corrections:
+        orig = r["original_text"]
+        corr = r["corrected_text"]
+        if orig not in orig_to_targets:
+            orig_to_targets[orig] = set()
+        orig_to_targets[orig].add(corr)
+
+    multi_target_sents = {orig: targets for orig, targets in orig_to_targets.items() if len(targets) > 1}
+    assert len(multi_target_sents) >= 50, (
+        f"Expected >= 50 sentences with retained distinct parallel annotator targets, "
+        f"got {len(multi_target_sents)}"
+    )
+
+
+def test_explanation_relevance(grammar_data):
+    """Verify that citations are specific and relevant, and no unrelated rules are cited."""
+    for r in grammar_data["all"]:
+        if r["is_erroneous"] and r["task_type"] == "explained_correction":
+            full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+            orig_lower = r["original_text"].lower()
+
+            if "так як" in full_text:
+                err_span = r.get("source_metadata", {}).get("error_span", "").lower()
+                assert "так як" in orig_lower or "так як" in err_span, (
+                    f"Record {r['record_id']} mentions 'так як' but sentence does not contain it: {r['original_text']}"
+                )
 
 
 def test_global_sentence_deduplication(grammar_data):
@@ -243,18 +304,13 @@ def test_approved_linguistic_authorities(grammar_data):
 
 
 def test_acceptance_audit_gate_end_to_end():
-    """Verify that audit_dataset_acceptance.py passes with exit code 0 and verified signoff."""
-    signoff_path = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
-    assert signoff_path.is_file()
-
+    """Verify that audit_dataset_acceptance.py passes with exit code 0."""
     report, exit_code = run_acceptance_audit(
         dataset_dir=GRAMMAR_DIR,
         profile_name="grammar_8342",
-        verify_signoff=signoff_path,
-        require_human_signoff=True,
     )
 
     assert exit_code == 0, f"Acceptance audit failed with exit code {exit_code}: {report.overall_status}"
-    assert report.overall_status == "ACCEPTED"
+    assert report.overall_status == "PASSED_AUTOMATED_CHECKS"
     for check_id, check_res in report.checks.items():
         assert check_res.status == "PASS", f"Check {check_id} failed: {check_res.failures}"

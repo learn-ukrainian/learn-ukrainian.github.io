@@ -26,21 +26,39 @@
     "#8342",
     "#6321"
   ],
+  "licenses": {
+    "ua_gec_2.0": {
+      "license": "CC BY 4.0",
+      "attribution": "UA-GEC: Corpus of Annotated Sentences for Ukrainian GEC"
+    },
+    "brown_uk": {
+      "license": "CC BY-NC-SA 4.0",
+      "attribution": "Brown-UK: Corpus of Contemporary Ukrainian (BrUK)"
+    }
+  },
   "statistics": {
-    "total_records": 6724,
-    "train_records": 6147,
-    "eval_records": 577,
-    "substantive_corrections": 5043,
-    "clean_controls": 1681,
+    "total_records": 6869,
+    "train_records": 6289,
+    "eval_records": 580,
+    "substantive_corrections": 5152,
+    "clean_controls": 1717,
     "clean_control_share": 0.25,
     "substantive_correction_share": 0.75,
     "category_counts": {
-      "syntax_structure": 1092,
-      "calque_lexical_grammatical": 1595,
-      "protective_authentic_control": 1681,
-      "case_government": 1501,
-      "agreement_concord": 466,
-      "verb_morphology": 389
+      "syntax_structure": 1108,
+      "calque_lexical_grammatical": 1631,
+      "protective_authentic_control": 1717,
+      "case_government": 1532,
+      "agreement_concord": 478,
+      "verb_morphology": 403
+    },
+    "source_corpus_counts": {
+      "ua_gec_2.0": 6469,
+      "brown_uk": 400
+    },
+    "license_counts": {
+      "CC BY 4.0": 6469,
+      "CC BY-NC-SA 4.0": 400
     }
   }
 }

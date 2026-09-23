@@ -48,6 +48,14 @@ DEFAULT_UA_GEC_TRAIN_M2 = (
 DEFAULT_UA_GEC_TEST_M2 = (
     PROJECT_ROOT / "data" / "ua-gec" / "data" / "gec-fluency" / "test" / "gec-fluency.test.m2"
 )
+DEFAULT_FIREWALL_MANIFEST = (
+    PROJECT_ROOT
+    / "data"
+    / "projects"
+    / "open_model_data"
+    / "evidence"
+    / "grammar_held_out_firewall_manifest.json"
+)
 DEFAULT_BROWN_UK_EVAL = (
     PROJECT_ROOT
     / "data"
@@ -74,31 +82,79 @@ def detokenize(text: str) -> str:
     return text.strip()
 
 
-def load_test_sentences_blacklist(test_m2_path: Path) -> set[str]:
-    """Extract all sentences from held-out test split for strict firewall."""
-    blacklist = set()
-    if not test_m2_path.is_file():
-        return blacklist
-    with test_m2_path.open("r", encoding="utf-8") as f:
-        for line in f:
-            line = line.strip()
-            if line.startswith("S ") and not line.startswith("S # "):
-                blacklist.add(detokenize(line[2:].strip()))
-    return blacklist
+def load_held_out_firewall(
+    manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
+    test_m2_path: Path | None = DEFAULT_UA_GEC_TEST_M2,
+) -> tuple[set[str], set[str], set[str]]:
+    """Load complete held-out test split firewall (doc IDs, source sentences, target sentences).
+
+    Fails closed if the persistent committed firewall manifest is missing or empty.
+    """
+    if not manifest_path.is_file():
+        raise RuntimeError(
+            f"Held-out test firewall manifest missing at {manifest_path}. "
+            "Cannot proceed without guaranteed test partition containment."
+        )
+
+    with manifest_path.open("r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    test_doc_ids = set(data.get("test_doc_ids", []))
+    test_sources = set(data.get("test_source_sentences", []))
+    test_targets = set(data.get("test_target_sentences", []))
+
+    if not test_doc_ids or not test_sources or not test_targets:
+        raise RuntimeError(
+            f"Held-out test firewall manifest at {manifest_path} is empty or invalid. "
+            f"Stats: docs={len(test_doc_ids)}, sources={len(test_sources)}, targets={len(test_targets)}"
+        )
+
+    # Optionally supplement from raw test M2 if available
+    if test_m2_path and test_m2_path.is_file():
+        with test_m2_path.open("r", encoding="utf-8") as f:
+            for line in f:
+                line = line.strip()
+                if line.startswith("S # "):
+                    test_doc_ids.add(line[4:].strip())
+                elif line.startswith("S ") and not line.startswith("S # "):
+                    test_sources.add(detokenize(line[2:].strip()))
+                elif line.startswith("A "):
+                    parts = line[2:].split("|||")
+                    if len(parts) > 2 and parts[2]:
+                        test_targets.add(detokenize(parts[2].strip()))
+
+    return test_doc_ids, test_sources, test_targets
 
 
-def load_brown_uk_controls(brown_path: Path) -> list[str]:
-    """Load pristine control sentences from Brown-UK corpus."""
-    controls = []
+def load_brown_uk_controls(brown_path: Path) -> list[dict[str, Any]]:
+    """Load pristine control sentences with authentic attribution from Brown-UK corpus."""
     if not brown_path.is_file():
-        return controls
+        raise RuntimeError(f"Required Brown-UK control file missing at {brown_path}")
+    controls = []
+    brown_doc_counters: Counter[str] = Counter()
     with brown_path.open("r", encoding="utf-8") as f:
         for line in f:
             if line.strip():
                 data = json.loads(line)
                 sent = data.get("sentence_text", "").strip()
+                doc_id = data.get("document_id") or "brown_uk"
+                doc_name = data.get("source_metadata", {}).get("doc_name") or f"{doc_id}.txt"
+                eval_id = data.get("eval_id")
+                sent_idx = brown_doc_counters[doc_id]
+                brown_doc_counters[doc_id] += 1
                 if sent:
-                    controls.append(sent)
+                    controls.append(
+                        {
+                            "doc_id": doc_id,
+                            "doc_name": doc_name,
+                            "eval_id": eval_id,
+                            "sent_idx": sent_idx,
+                            "original_text": sent,
+                            "source_type": "brown_uk_good",
+                            "source_corpus": "brown_uk",
+                            "license": "CC BY-NC-SA 4.0",
+                        }
+                    )
     return controls
 
 
@@ -180,6 +236,7 @@ def parse_m2_sentences(m2_path: Path) -> list[dict[str, Any]]:
 def build_grammar_dataset(
     train_m2_path: Path = DEFAULT_UA_GEC_TRAIN_M2,
     test_m2_path: Path = DEFAULT_UA_GEC_TEST_M2,
+    firewall_manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
     brown_path: Path = DEFAULT_BROWN_UK_EVAL,
     output_dir: Path = DEFAULT_OUTPUT_DIR,
 ) -> dict[str, Any]:
@@ -187,65 +244,86 @@ def build_grammar_dataset(
     print("🚀 Initializing Grammar Component Build (#8342)...")
     output_dir.mkdir(parents=True, exist_ok=True)
 
-    # 1. Load test firewall blacklist
-    test_blacklist = load_test_sentences_blacklist(test_m2_path)
-    print(f"🔒 Loaded {len(test_blacklist)} held-out test sentences into firewall blacklist.")
+    # 1. Load test firewall blacklist (Fail-closed)
+    test_doc_ids, test_sources, test_targets = load_held_out_firewall(
+        manifest_path=firewall_manifest_path,
+        test_m2_path=test_m2_path,
+    )
+    print(
+        f"🔒 Held-out test firewall active: {len(test_doc_ids)} docs, "
+        f"{len(test_sources)} source sents, {len(test_targets)} target sents."
+    )
 
     # 2. Load Brown-UK pristine controls
     brown_controls = load_brown_uk_controls(brown_path)
     print(f"📖 Loaded {len(brown_controls)} pristine Brown-UK control sentences.")
 
     # 3. Parse UA-GEC train sentences
+    if not train_m2_path.is_file():
+        raise RuntimeError(f"UA-GEC train M2 missing at {train_m2_path}")
     raw_sentences = parse_m2_sentences(train_m2_path)
     print(f"📄 Parsed {len(raw_sentences)} sentences from {train_m2_path.name}.")
 
-    # 4. Partition documents 90:10 by doc_id SHA-256 hash
+    # 4. Partition UA-GEC documents 90:10 by doc_id SHA-256 hash (filtering test doc IDs)
     doc_splits = {}
     for item in raw_sentences:
         d = item["doc_id"]
+        if d in test_doc_ids:
+            continue
         if d not in doc_splits:
             h = int(hashlib.sha256(d.encode("utf-8")).hexdigest(), 16)
             doc_splits[d] = "eval" if (h % 10 == 0) else "train"
 
     train_doc_count = sum(1 for s in doc_splits.values() if s == "train")
     eval_doc_count = sum(1 for s in doc_splits.values() if s == "eval")
-    print(f"🔀 Document partition: {train_doc_count} train docs ({train_doc_count/len(doc_splits):.1%}), {eval_doc_count} eval docs ({eval_doc_count/len(doc_splits):.1%}).")
+    print(
+        f"🔀 UA-GEC partition: {train_doc_count} train docs ({train_doc_count/len(doc_splits):.1%}), "
+        f"{eval_doc_count} eval docs ({eval_doc_count/len(doc_splits):.1%})."
+    )
 
     # 5. Extract substantive corrections and pristine zero-error controls
-    seen_sentences: set[str] = set()
-    seen_sentences.update(test_blacklist)
+    seen_corrections: set[tuple[str, str]] = set()
+    seen_control_texts: set[str] = set()
 
     train_corrections = []
     eval_corrections = []
     train_clean_candidates = []
     eval_clean_candidates = []
+    parallel_target_retentions = 0
 
     for item in raw_sentences:
         d = item["doc_id"]
+        if d in test_doc_ids or d not in doc_splits:
+            continue
         split = doc_splits[d]
         orig_tokens = item["sent_tokens"]
         orig_text = detokenize(" ".join(orig_tokens))
 
-        if not orig_text or orig_text in seen_sentences:
+        if not orig_text or orig_text in test_sources or orig_text in test_targets:
             continue
 
         # Check if sentence has zero errors across all annotators
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
-            seen_sentences.add(orig_text)
-            clean_item = {
-                "doc_id": d,
-                "sent_idx": item["sent_idx"],
-                "original_text": orig_text,
-                "source_type": "ua_gec_gold_clean",
-            }
-            if split == "eval":
-                eval_clean_candidates.append(clean_item)
-            else:
-                train_clean_candidates.append(clean_item)
+            if orig_text not in seen_control_texts:
+                seen_control_texts.add(orig_text)
+                clean_item = {
+                    "doc_id": d,
+                    "doc_name": f"{d}.txt",
+                    "sent_idx": item["sent_idx"],
+                    "original_text": orig_text,
+                    "source_type": "ua_gec_gold_clean",
+                    "source_corpus": "ua_gec_2.0",
+                    "license": "CC BY 4.0",
+                }
+                if split == "eval":
+                    eval_clean_candidates.append(clean_item)
+                else:
+                    train_clean_candidates.append(clean_item)
             continue
 
         # Process in-scope substantive corrections
+        distinct_targets_for_sentence: set[str] = set()
         for ann_id, edit_list in sorted(item["edits_by_ann"].items()):
             in_scope = [e for e in edit_list if e[2] in IN_SCOPE_TAGS]
             if not in_scope:
@@ -269,8 +347,19 @@ def build_grammar_dataset(
                 toks[start:end] = repl
 
             corr_text = detokenize(" ".join(toks))
-            if orig_text != corr_text and orig_text not in seen_sentences:
-                seen_sentences.add(orig_text)
+            if (
+                orig_text != corr_text
+                and corr_text not in test_sources
+                and corr_text not in test_targets
+            ):
+                pair_key = (orig_text, corr_text)
+                if pair_key in seen_corrections:
+                    continue
+                seen_corrections.add(pair_key)
+                if len(distinct_targets_for_sentence) > 0:
+                    parallel_target_retentions += 1
+                distinct_targets_for_sentence.add(corr_text)
+
                 primary_tag = in_scope[0][2]
                 err_span = " ".join(orig_tokens[in_scope[0][0] : in_scope[0][1]])
                 repl_span = in_scope[0][3]
@@ -278,6 +367,7 @@ def build_grammar_dataset(
 
                 corr_item = {
                     "doc_id": d,
+                    "doc_name": f"{d}.txt",
                     "sent_idx": item["sent_idx"],
                     "ann_id": ann_id,
                     "original_text": orig_text,
@@ -287,6 +377,8 @@ def build_grammar_dataset(
                     "err_span": err_span,
                     "repl_span": repl_span,
                     "source_type": "ua_gec_human_annotated",
+                    "source_corpus": "ua_gec_2.0",
+                    "license": "CC BY 4.0",
                 }
 
                 if split == "eval":
@@ -294,11 +386,13 @@ def build_grammar_dataset(
                 else:
                     train_corrections.append(corr_item)
 
-    print(f"📊 Extracted substantive corrections: {len(train_corrections)} train, {len(eval_corrections)} eval.")
+    print(
+        f"📊 Extracted substantive corrections: {len(train_corrections)} train, "
+        f"{len(eval_corrections)} eval. Parallel annotator target retentions: {parallel_target_retentions}."
+    )
     print(f"🛡️  Extracted clean control candidates: {len(train_clean_candidates)} train, {len(eval_clean_candidates)} eval.")
 
     # 6. Formulate exact 75.0% corrections / 25.0% controls mixture
-    # Controls needed: num_corrections * (0.25 / 0.75) = num_corrections / 3
     num_train_corrections = len(train_corrections)
     target_train_controls = round(num_train_corrections * (0.25 / 0.75))
 
@@ -307,52 +401,62 @@ def build_grammar_dataset(
 
     print(f"🎯 Target controls for 25.0% share: {target_train_controls} train, {target_eval_controls} eval.")
 
+    # Partition Brown-UK controls strictly by doc_id hash (90:10)
+    brown_train_available = []
+    brown_eval_available = []
+    seen_corr_sources = {p[0] for p in seen_corrections}
+
+    for b in brown_controls:
+        txt = b["original_text"]
+        if (
+            txt in test_sources
+            or txt in test_targets
+            or txt in seen_control_texts
+            or txt in seen_corr_sources
+        ):
+            continue
+        h = int(hashlib.sha256(b["doc_id"].encode("utf-8")).hexdigest(), 16)
+        if h % 10 == 0:
+            brown_eval_available.append(b)
+        else:
+            brown_train_available.append(b)
+
     # Populate train controls: prioritize Brown-UK (up to 400), then gold UA-GEC train clean
     train_controls = []
-    brown_available = [s for s in brown_controls if s not in seen_sentences]
-    brown_train_allocation = min(400, len(brown_available))
+    brown_train_allocation = min(400, len(brown_train_available))
 
-    for s in brown_available[:brown_train_allocation]:
-        seen_sentences.add(s)
-        train_controls.append(
-            {
-                "doc_id": "brown_uk_corpus",
-                "sent_idx": len(train_controls),
-                "original_text": s,
-                "source_type": "brown_uk_good",
-            }
-        )
+    for b in brown_train_available[:brown_train_allocation]:
+        seen_control_texts.add(b["original_text"])
+        train_controls.append(b)
 
     for item in train_clean_candidates:
         if len(train_controls) >= target_train_controls:
             break
         train_controls.append(item)
 
-    # Populate eval controls: from gold UA-GEC eval clean candidates
+    # Populate eval controls: from gold UA-GEC eval clean candidates, supplemented by brown_eval_available if needed
     eval_controls = []
     for item in eval_clean_candidates:
         if len(eval_controls) >= target_eval_controls:
             break
         eval_controls.append(item)
 
-    # If eval clean candidates are slightly fewer, draw from remaining Brown-UK controls
     if len(eval_controls) < target_eval_controls:
-        for s in brown_available[brown_train_allocation:]:
+        for b in brown_eval_available:
             if len(eval_controls) >= target_eval_controls:
                 break
-            if s not in seen_sentences:
-                seen_sentences.add(s)
-                eval_controls.append(
-                    {
-                        "doc_id": "brown_uk_corpus",
-                        "sent_idx": len(eval_controls),
-                        "original_text": s,
-                        "source_type": "brown_uk_good",
-                    }
-                )
+            if b["original_text"] not in seen_control_texts:
+                seen_control_texts.add(b["original_text"])
+                eval_controls.append(b)
 
-    print(f"✅ Formed train slice: {len(train_corrections)} corrections + {len(train_controls)} controls = {len(train_corrections) + len(train_controls)} total (control share: {len(train_controls) / (len(train_corrections) + len(train_controls)):.2%}).")
-    print(f"✅ Formed eval slice: {len(eval_corrections)} corrections + {len(eval_controls)} controls = {len(eval_corrections) + len(eval_controls)} total (control share: {len(eval_controls) / (len(eval_corrections) + len(eval_controls)):.2%}).")
+    print(
+        f"✅ Formed train slice: {len(train_corrections)} corrections + {len(train_controls)} controls = "
+        f"{len(train_corrections) + len(train_controls)} total (control share: {len(train_controls) / (len(train_corrections) + len(train_controls)):.2%})."
+    )
+    print(
+        f"✅ Formed eval slice: {len(eval_corrections)} corrections + {len(eval_controls)} controls = "
+        f"{len(eval_corrections) + len(eval_controls)} total (control share: {len(eval_controls) / (len(eval_corrections) + len(eval_controls)):.2%})."
+    )
 
     # 7. Build records with diversified queries, 45/55 task mix, and authoritative citations
     def format_records(
@@ -396,9 +500,12 @@ def build_grammar_dataset(
                 err_span = item["err_span"]
                 repl_span = item["repl_span"]
                 doc_id = item["doc_id"]
+                doc_name = item.get("doc_name") or f"{doc_id}.txt"
                 ann_id = item.get("ann_id", 0)
                 sent_idx = item.get("sent_idx", idx)
                 record_id = f"gram_{doc_id}_s{sent_idx}_a{ann_id}"
+                source_corpus = item.get("source_corpus", "ua_gec_2.0")
+                license_type = item.get("license", "CC BY 4.0")
 
                 if split_name == "eval":
                     reasoning_steps, final_response, source_meta = build_reasoning_and_response_eval(
@@ -425,22 +532,26 @@ def build_grammar_dataset(
                         seed_index=seed_idx,
                     )
 
+                actual_task_type = "explained_correction" if reasoning_steps else "silent_rewrite"
+
                 source_meta["doc_id"] = doc_id
+                source_meta["doc_name"] = doc_name
                 source_meta["annotator_id"] = ann_id
-                source_meta["license"] = "CC BY 4.0"
-                source_meta["source_corpus"] = "ua_gec_2.0"
-                source_meta["task_type"] = "explained_correction" if is_explained else "silent_rewrite"
+                source_meta["license"] = license_type
+                source_meta["source_corpus"] = source_corpus
+                source_meta["task_type"] = actual_task_type
 
                 rec = {
                     "record_id": record_id,
                     "doc_id": doc_id,
+                    "doc_name": doc_name,
                     "split": split_name,
                     "category": coarse_category,
                     "tag": primary_tag,
                     "in_scope_tags": item["all_tags"],
                     "disposition": "correction",
                     "is_erroneous": True,
-                    "task_type": "explained_correction" if is_explained else "silent_rewrite",
+                    "task_type": actual_task_type,
                     "register": reg,
                     "query": query,
                     "original_text": orig_text,
@@ -449,15 +560,24 @@ def build_grammar_dataset(
                     "reasoning_steps": reasoning_steps,
                     "chosen": corr_text,
                     "rejected": orig_text,
+                    "source_corpus": source_corpus,
+                    "license": license_type,
                     "source_metadata": source_meta,
                 }
             else:
                 doc_id = item["doc_id"]
+                doc_name = item.get("doc_name") or f"{doc_id}.txt"
                 sent_idx = item.get("sent_idx", idx)
                 record_id = f"ctrl_{doc_id}_s{sent_idx}"
                 coarse_category = "protective_authentic_control"
-                source_corpus = "brown_uk_good" if "brown" in item["source_type"] else "ua_gec_2.0"
-                license_type = "CC BY-NC-SA 4.0" if "brown" in item["source_type"] else "CC BY 4.0"
+                source_corpus = item.get(
+                    "source_corpus",
+                    "brown_uk" if "brown" in item.get("source_type", "") else "ua_gec_2.0",
+                )
+                license_type = item.get(
+                    "license",
+                    "CC BY-NC-SA 4.0" if "brown" in item.get("source_type", "") else "CC BY 4.0",
+                )
 
                 if split_name == "eval":
                     reasoning_steps, final_response, source_meta = build_reasoning_and_response_eval(
@@ -484,21 +604,27 @@ def build_grammar_dataset(
                         seed_index=seed_idx,
                     )
 
+                actual_task_type = "explained_control" if reasoning_steps else "silent_control"
+
                 source_meta["doc_id"] = doc_id
+                source_meta["doc_name"] = doc_name
+                if item.get("eval_id"):
+                    source_meta["eval_id"] = item["eval_id"]
                 source_meta["license"] = license_type
                 source_meta["source_corpus"] = source_corpus
-                source_meta["task_type"] = "explained_control" if is_explained else "silent_control"
+                source_meta["task_type"] = actual_task_type
 
                 rec = {
                     "record_id": record_id,
                     "doc_id": doc_id,
+                    "doc_name": doc_name,
                     "split": split_name,
                     "category": coarse_category,
                     "tag": "control_clean",
                     "in_scope_tags": [],
                     "disposition": "control",
                     "is_erroneous": False,
-                    "task_type": "explained_control" if is_explained else "silent_control",
+                    "task_type": actual_task_type,
                     "register": reg,
                     "query": query,
                     "original_text": orig_text,
@@ -507,6 +633,8 @@ def build_grammar_dataset(
                     "reasoning_steps": reasoning_steps,
                     "chosen": orig_text,
                     "rejected": None,
+                    "source_corpus": source_corpus,
+                    "license": license_type,
                     "source_metadata": source_meta,
                 }
 
@@ -591,6 +719,16 @@ def build_grammar_dataset(
         "splits": manifest_splits,
         "description": "Verified Ukrainian grammar, valency, and morphosyntactic corrections rebuilt from authentic human-annotated sentences in UA-GEC (#8342).",
         "governing_issues": ["#8342", "#6321"],
+        "licenses": {
+            "ua_gec_2.0": {
+                "license": "CC BY 4.0",
+                "attribution": "UA-GEC: Corpus of Annotated Sentences for Ukrainian GEC",
+            },
+            "brown_uk": {
+                "license": "CC BY-NC-SA 4.0",
+                "attribution": "Brown-UK: Corpus of Contemporary Ukrainian (BrUK)",
+            },
+        },
         "statistics": {
             "total_records": total_records,
             "train_records": len(train_dataset_records),
@@ -600,6 +738,8 @@ def build_grammar_dataset(
             "clean_control_share": round(total_controls / total_records, 4),
             "substantive_correction_share": round(total_corrections / total_records, 4),
             "category_counts": dict(Counter(r["category"] for r in train_dataset_records + eval_dataset_records)),
+            "source_corpus_counts": dict(Counter(r["source_corpus"] for r in train_dataset_records + eval_dataset_records)),
+            "license_counts": dict(Counter(r["license"] for r in train_dataset_records + eval_dataset_records)),
         },
     }
 
@@ -616,6 +756,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Build Grammar Component Dataset (#8342)")
     parser.add_argument("--train-m2", type=Path, default=DEFAULT_UA_GEC_TRAIN_M2)
     parser.add_argument("--test-m2", type=Path, default=DEFAULT_UA_GEC_TEST_M2)
+    parser.add_argument("--firewall-manifest", type=Path, default=DEFAULT_FIREWALL_MANIFEST)
     parser.add_argument("--brown", type=Path, default=DEFAULT_BROWN_UK_EVAL)
     parser.add_argument("--output-dir", type=Path, default=DEFAULT_OUTPUT_DIR)
     args = parser.parse_args()
@@ -623,6 +764,7 @@ if __name__ == "__main__":
     build_grammar_dataset(
         train_m2_path=args.train_m2,
         test_m2_path=args.test_m2,
+        firewall_manifest_path=args.firewall_manifest,
         brown_path=args.brown,
         output_dir=args.output_dir,
     )
