@@ -11,6 +11,7 @@ import pytest
 
 from scripts.orchestration import merge_queue_keeper as keeper
 from scripts.orchestration.integration_sweep import Verdict
+from scripts.review.record_cf_verdict import build_comment
 
 HEAD_A = "a" * 40
 HEAD_B = "b" * 40
@@ -132,6 +133,113 @@ def run(
 
 def mutations(fake: FakeGitHub) -> list[str]:
     return [kind for kind, _ in fake.actions]
+
+
+def recorded(verdict: str, started: str, head: str = HEAD_A) -> dict[str, Any]:
+    return {
+        "body": build_comment(
+            sha=head,
+            task_id="review",
+            started=started,
+            verdict=verdict,
+            model="gpt-6-sol",
+            family="openai",
+            reply="VERDICT: " + verdict,
+        ),
+        "user": {"login": "driver"},
+        "author_association": "MEMBER",
+        "created_at": "2026-09-23T13:00:00Z",
+        "updated_at": "2026-09-23T13:00:00Z",
+    }
+
+
+def test_queued_legacy_approval_is_report_only(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == []
+    assert "reason=needs-CF" in lines[0]
+
+
+def test_queued_recorded_rejection_revokes(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [
+        recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00"),
+        recorded("CHANGES_REQUESTED", "2026-09-23T12:00:01.000001+00:00"),
+    ]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert ("dequeue", "PR_node_42") in fake.actions
+    assert "CF-changes_requested" in lines[0]
+
+
+def test_queued_recorded_approval_then_hold_revokes(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    fake.fresh["labels"] = [{"name": "hold"}]
+    keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
+
+
+def test_queued_legacy_red_ci_revokes(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [{"body": "VERDICT: APPROVE", "user": {"login": "driver"}}]
+    fake.check_rows = checks(conclusion="failure")
+    keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
+
+
+def test_queued_verdict_lookup_error_reports_without_revocation(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    monkeypatch.setattr(
+        keeper, "lookup_verdict", lambda *args: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
+    )
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == []
+    assert "reason=CF-unknown" in lines[0]
+
+
+def test_queued_red_ci_revokes_even_when_verdict_lookup_errors(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.check_rows = checks(conclusion="failure")
+    monkeypatch.setattr(
+        keeper, "lookup_verdict", lambda *args: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
+    )
+    keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
+
+
+def test_queued_red_ci_wins_over_other_pending_check(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.check_rows = checks(conclusion="pending", status="in_progress")
+    fake.check_rows[1].update(status="completed", conclusion="failure")
+    keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
+
+
+def test_queued_approval_then_unknown_marker_revokes(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True))
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    path = tmp_path / "state.json"
+    keeper.run(fake, path, apply=True)
+    assert mutations(fake) == []
+    fake.comments_rows[0]["updated_at"] = "2026-09-23T13:00:01Z"
+    keeper.run(fake, path, apply=True)
+    assert ("dequeue", "PR_node_42") in fake.actions
+
+
+def test_queued_stale_recorded_approval_is_report_only(tmp_path: Path) -> None:
+    fake = FakeGitHub(pr(isInMergeQueue=True, headRefOid=HEAD_B))
+    fake.check_rows = checks(HEAD_B)
+    fake.comments_rows = [recorded("APPROVED", "2026-09-23T12:00:00.000001+00:00")]
+    lines, failed = keeper.run(fake, tmp_path / "state.json", apply=True)
+    assert not failed
+    assert mutations(fake) == []
+    assert "reason=needs-CF" in lines[0]
 
 
 def test_enqueue_happy_path(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
@@ -322,12 +430,12 @@ def test_missing_membership_field_never_enqueues(tmp_path: Path, monkeypatch: py
     assert "enqueue" not in mutations(fake)
 
 
-def test_unknown_fresh_read_revokes_queued(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+def test_unknown_fresh_read_leaves_queued_untouched(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
     fake = FakeGitHub(pr(isInMergeQueue=True))
     fake.current = lambda number: (_ for _ in ()).throw(keeper.KeeperError("lookup failed"))
     lines, failed = run(fake, tmp_path / "state.json", monkeypatch)
     assert not failed
-    assert ("dequeue", "PR_node_42") in fake.actions
+    assert mutations(fake) == []
     assert any("fresh-read-unknown" in line for line in lines)
 
 

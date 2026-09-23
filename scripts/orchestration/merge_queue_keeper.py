@@ -239,18 +239,19 @@ def _check_state(checks: list[dict[str, Any]], head: str) -> str:
             return "CI-unknown"
         names[row["name"]].append(row)
     required = ["CI Gate", *(name for name in names if name.startswith("Analyze ("))]
-    if len(required) == 1:
-        return "CodeQL-pending"
+    pending: str | None = "CodeQL-pending" if len(required) == 1 else None
     for name in required:
         rows = names.get(name, [])
         if not rows:
-            return f"CI-pending-{name}"
+            pending = pending or f"CI-pending-{name}"
+            continue
         row = max(rows, key=lambda item: item.get("started_at") or item.get("created_at") or "")
         if row.get("status") != "completed":
-            return f"CI-pending-{name}"
+            pending = pending or f"CI-pending-{name}"
+            continue
         if row.get("conclusion") != "success":
             return f"CI-red-{name}"
-    return "ok"
+    return pending or "ok"
 
 
 def _reason(row: Mapping[str, Any], verdict: Verdict, check_state: str, drops: int, queue_enabled: bool | None) -> str:
@@ -287,6 +288,7 @@ def _load(path: Path) -> dict[str, Any]:
         not isinstance(data, dict)
         or not isinstance(data.get("queued"), dict)
         or not isinstance(data.get("drops"), dict)
+        or not isinstance(data.get("approved", {}), dict)
     ):
         raise KeeperError("keeper state malformed")
     return data
@@ -307,6 +309,35 @@ def _ever_approved(comments: list[dict[str, Any]], login: str) -> bool:
         if marker:
             heads.add(marker["sha"])
     return any(lookup_verdict(comments, head, login).state == "APPROVED" for head in heads)
+
+
+def _recorded_approval_for_head(comments: list[dict[str, Any]], head: str, login: str) -> bool:
+    """Find a recorder-approved head even when a later marker changed the verdict."""
+    return any(
+        isinstance(row, dict)
+        and isinstance(row.get("body"), str)
+        and (marker := parse_marker(row["body"])) is not None
+        and marker["sha"] == head
+        and lookup_verdict([row], head, login).state == "APPROVED"
+        for row in comments
+    )
+
+
+def _revoke_reason(
+    row: Mapping[str, Any], verdict: Verdict, checks: str, approved_before: bool, verdict_lookup_ok: bool
+) -> str | None:
+    """Only fresh, positive blockers may remove a queued or armed PR."""
+    if row.get("isDraft") is True:
+        return "draft"
+    if _hold(row) is True:
+        return "hold"
+    if checks.startswith("CI-red-"):
+        return checks
+    if verdict.state in {"CHANGES_REQUESTED", "BLOCKED"}:
+        return f"CF-{verdict.state.lower()}"
+    if verdict_lookup_ok and verdict.state == "unknown" and approved_before:
+        return "CF-unknown-after-approval"
+    return None
 
 
 def _comment_once(
@@ -359,6 +390,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
     budget = estimated_remaining - 30 >= FLOOR
     previous = _load(state_path)
     queued_now: dict[str, str] = {}
+    approved_now: dict[str, str] = {}
     login = gh.identity()
     observed = datetime.now(UTC).isoformat()
     for pr in snap["prs"]:
@@ -367,6 +399,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
             lines.append("invalid PR identity: unknown, no mutation")
             continue
         key = str(number)
+        approved_before = previous.get("approved", {}).get(key) == head
         queued = pr.get("isInMergeQueue")
         armed = bool(pr.get("autoMergeRequest"))
         if queued is True:
@@ -381,6 +414,10 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         except KeeperError:
             comments, verdict, checks, check_rows = [], Verdict("unknown"), "CI-unknown", []
             comment_safe = False
+        if comment_safe and _recorded_approval_for_head(comments, head, login):
+            approved_before = True
+        if approved_before:
+            approved_now[key] = head
         drop_key = f"{number}:{head}"
         drops = int(previous["drops"].get(drop_key, 0))
         dropped = key in previous["queued"] and queued is False
@@ -429,6 +466,9 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         if queued is not True and not armed and queue_enabled is not True:
             continue
         try:
+            current_verdict = Verdict("unknown")
+            current_checks = "CI-unknown"
+            verdict_lookup_ok = False
             try:
                 current = gh.current(number)
             except KeeperError:
@@ -452,25 +492,47 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 try:
                     current_comments = gh.comments(number)
                     current_verdict = lookup_verdict(current_comments, head, login)
-                    current_checks = _check_state(gh.checks(head), head)
                 except KeeperError:
-                    reason = "fresh-evidence-unknown"
+                    current_comments, current_verdict = [], Verdict("unknown")
                     comment_safe = False
+                    verdict_lookup_ok = False
                 else:
-                    reason = _reason(current, current_verdict, current_checks, drops, queue_enabled)
+                    verdict_lookup_ok = True
                     comments = current_comments
                     comment_safe = True
                     verdict = current_verdict
+                    if _recorded_approval_for_head(current_comments, head, login):
+                        approved_before = True
+                        approved_now[key] = head
+                try:
+                    current_checks = _check_state(gh.checks(head), head)
+                except KeeperError:
+                    current_checks = "CI-unknown"
+                reason = (
+                    _reason(current, current_verdict, current_checks, drops, queue_enabled)
+                    if verdict_lookup_ok
+                    else "fresh-evidence-unknown"
+                )
             if queued is True or armed:
-                if reason != "ready":
+                revoke = (
+                    _revoke_reason(current, current_verdict, current_checks, approved_before, verdict_lookup_ok)
+                    if current
+                    and current_head == head
+                    and current.get("state") == "OPEN"
+                    and current.get("baseRefName") == pr.get("baseRefName")
+                    else None
+                )
+                if revoke is not None:
                     if queued is True:
                         gh.dequeue(node_id)
                     else:
                         gh.disarm(number)
-                    lines.append(f"#{number} revoked: {reason}")
+                    lines.append(f"#{number} revoked: {revoke}")
                     if queued is True:
                         queued_now.pop(key, None)
                     estimated_remaining -= 30
+                elif reason != "ready":
+                    lines.append(f"#{number} held: {reason}")
             elif reason == "ready":
                 gh.enqueue(number, head)
                 if not gh.membership(number):
@@ -478,7 +540,11 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
                 queued_now[key] = head
                 lines.append(f"#{number} enqueued")
                 estimated_remaining -= 30
-            if reason != "ready" and comment_safe and (_ever_approved(comments, login) or dropped):
+            if (
+                reason not in {"ready", "needs-CF", "CF-unknown", "fresh-evidence-unknown", "fresh-read-unknown"}
+                and comment_safe
+                and (_ever_approved(comments, login) or dropped)
+            ):
                 _comment_once(gh, number, head, reason, comments, login, detail)
             elif dropped and detail and comment_safe:
                 _comment_once(gh, number, head, "queue-drop", comments, login, detail)
@@ -490,6 +556,7 @@ def run(gh: GitHub, state_path: Path, *, apply: bool = False) -> tuple[list[str]
         budget = estimated_remaining - 30 >= FLOOR
     if apply:
         previous["queued"] = queued_now
+        previous["approved"] = approved_now
         previous["observed"] = observed
         cutoff = datetime.now(UTC) - timedelta(hours=24)
         failures = [
