@@ -9,6 +9,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import re
 import subprocess
 import sys
 from collections.abc import Callable, Sequence
@@ -47,11 +48,42 @@ def _payload(
 
 def _has_rate_limit_error(value: object) -> bool:
     if isinstance(value, dict):
-        if value.get("type") == "RATE_LIMIT" or value.get("code") == "graphql_rate_limit":
+        if value.get("type") in {"RATE_LIMIT", "RATE_LIMITED"} or value.get("code") == "graphql_rate_limit":
             return True
         return any(_has_rate_limit_error(item) for item in value.values())
     if isinstance(value, list):
         return any(_has_rate_limit_error(item) for item in value)
+    return False
+
+
+def _has_http_rate_limit_error(value: object, *, returncode: int | None, stderr: str) -> bool:
+    http_status_in_stderr = re.search(r"\bHTTP\s+(?:403|429)\b", stderr, flags=re.IGNORECASE) is not None
+
+    if isinstance(value, dict):
+        status = value.get("status")
+        message = value.get("message")
+        if (
+            str(status) in {"403", "429"}
+            or (returncode not in (None, 0) and http_status_in_stderr)
+        ) and isinstance(message, str) and "api rate limit exceeded" in message.casefold():
+            return True
+        return any(
+            _has_http_rate_limit_error(item, returncode=returncode, stderr=stderr)
+            for item in value.values()
+        )
+    if isinstance(value, list):
+        return any(_has_http_rate_limit_error(item, returncode=returncode, stderr=stderr) for item in value)
+    return False
+
+
+def _has_secondary_rate_limit_error(value: object) -> bool:
+    if isinstance(value, dict):
+        message = value.get("message")
+        if isinstance(message, str) and "you have exceeded a secondary rate limit" in message.casefold():
+            return True
+        return any(_has_secondary_rate_limit_error(item) for item in value.values())
+    if isinstance(value, list):
+        return any(_has_secondary_rate_limit_error(item) for item in value)
     return False
 
 
@@ -92,7 +124,7 @@ def _run(
 
 
 def probe_graphql_budget(
-    runner: Callable[..., Any] = subprocess.run,
+    runner: Callable[..., Any] | None = None,
 ) -> dict[str, Any]:
     """Return one bounded ``rateLimit`` observation; never consult REST.
 
@@ -100,25 +132,13 @@ def probe_graphql_budget(
     that every GraphQL API call costs at least one point, including this probe.
     """
     checked_at = _checked_at()
-    _proc, stdout, stderr, returncode, local_error = _run(runner)
+    _proc, stdout, stderr, returncode, local_error = _run(runner or subprocess.run)
     if local_error:
         return _payload(checked_at=checked_at, exhausted=None, error=local_error)
 
     try:
         decoded = json.loads(stdout)
     except (TypeError, json.JSONDecodeError):
-        # gh versions may print a structured GraphQL error instead of a result.
-        try:
-            diagnostic = json.loads(stderr or stdout)
-        except (TypeError, json.JSONDecodeError):
-            diagnostic = None
-        if _has_rate_limit_error(diagnostic):
-            return _payload(
-                checked_at=checked_at,
-                remaining=0,
-                exhausted=True,
-                error=_safe_error(stdout, stderr, "GraphQL rate limit exhausted"),
-            )
         return _payload(
             checked_at=checked_at,
             exhausted=None,
@@ -128,7 +148,18 @@ def probe_graphql_budget(
     if not isinstance(decoded, dict):
         return _payload(checked_at=checked_at, exhausted=None, error="GraphQL response was not an object")
 
-    if _has_rate_limit_error(decoded):
+    if _has_secondary_rate_limit_error(decoded):
+        # Secondary limits are a separate abuse-control mechanism, not proof
+        # that the primary GraphQL point budget is exhausted.
+        return _payload(
+            checked_at=checked_at,
+            exhausted=None,
+            error=_safe_error(stdout, stderr, "GitHub secondary rate limit; primary budget is unknown"),
+        )
+
+    if _has_rate_limit_error(decoded) or _has_http_rate_limit_error(
+        decoded, returncode=returncode, stderr=stderr
+    ):
         return _payload(
             checked_at=checked_at,
             remaining=0,

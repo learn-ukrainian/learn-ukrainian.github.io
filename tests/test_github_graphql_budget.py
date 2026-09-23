@@ -48,20 +48,46 @@ def test_healthy_probe_uses_one_graphql_rate_limit_query() -> None:
 
 
 @pytest.mark.parametrize(
-    "detail",
+    "error",
     [
-        {"type": "RATE_LIMIT", "message": "exhausted"},
-        {"code": "graphql_rate_limit", "message": "exhausted"},
+        {"type": "RATE_LIMITED", "message": "API rate limit exceeded"},
+        {"type": "RATE_LIMIT", "message": "API rate limit exceeded"},
+        {"code": "graphql_rate_limit", "message": "API rate limit exceeded"},
     ],
 )
-def test_exhausted_graphql_error_is_signal(detail: dict) -> None:
+def test_exhausted_graphql_error_is_signal(error: dict) -> None:
+    stdout = json.dumps({"data": None, "errors": [error]})
     result = probe.probe_graphql_budget(
-        _runner(json.dumps(detail), returncode=1)
+        _runner(stdout, stderr="gh: GraphQL: API rate limit exceeded", returncode=1)
     )
 
     assert result["exhausted"] is True
     assert result["remaining"] == 0
     assert result["error"]
+
+
+@pytest.mark.parametrize("status", [403, 429])
+def test_http_rate_limit_body_is_exhaustion(status: int) -> None:
+    body = {
+        "message": "API rate limit exceeded for user ID 123",
+        "documentation_url": "https://docs.github.com/rest",
+    }
+    result = probe.probe_graphql_budget(
+        _runner(json.dumps(body), stderr=f"gh: HTTP {status}: API rate limit exceeded", returncode=1)
+    )
+
+    assert result["exhausted"] is True
+    assert result["remaining"] == 0
+
+
+def test_secondary_rate_limit_is_unknown_with_explicit_error() -> None:
+    body = {"message": "You have exceeded a secondary rate limit."}
+    result = probe.probe_graphql_budget(
+        _runner(json.dumps(body), stderr="gh: HTTP 403: You have exceeded a secondary rate limit.", returncode=1)
+    )
+
+    assert result["exhausted"] is None
+    assert "secondary rate limit" in result["error"].casefold()
 
 
 @pytest.mark.parametrize(
@@ -97,6 +123,39 @@ def test_timeout_is_unknown_and_bounded() -> None:
     result = probe.probe_graphql_budget(timeout)
     assert result["exhausted"] is None
     assert "timed out" in result["error"]
+
+
+@pytest.mark.parametrize(
+    ("exhausted", "expected_code", "expected_output"),
+    [
+        (False, 0, "GitHub GraphQL budget: healthy (8 points remaining)\n"),
+        (True, 2, "GitHub GraphQL budget: exhausted (0 points remaining)\n"),
+        (None, 3, "GitHub GraphQL budget: unknown: unavailable\n"),
+    ],
+)
+def test_main_human_output_and_exit_codes(
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+    exhausted: bool | None,
+    expected_code: int,
+    expected_output: str,
+) -> None:
+    monkeypatch.setattr(probe, "probe_graphql_budget", lambda: {
+        "exhausted": exhausted,
+        "remaining": 8 if exhausted is False else 0 if exhausted is True else None,
+        "error": "unavailable" if exhausted is None else None,
+    })
+
+    assert probe.main([]) == expected_code
+    assert capsys.readouterr().out == expected_output
+
+
+def test_main_json_output(monkeypatch: pytest.MonkeyPatch, capsys: pytest.CaptureFixture[str]) -> None:
+    payload = {"source": "graphql.rateLimit", "remaining": 8, "exhausted": False, "error": None}
+    monkeypatch.setattr(probe, "probe_graphql_budget", lambda: payload)
+
+    assert probe.main(["--json"]) == 0
+    assert capsys.readouterr().out == json.dumps(payload, separators=(",", ":")) + "\n"
 
 
 def test_ttl_cache_and_single_flight(monkeypatch: pytest.MonkeyPatch) -> None:
