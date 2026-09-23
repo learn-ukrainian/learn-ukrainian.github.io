@@ -1,0 +1,13 @@
+---
+description: An owned open pull request is merged, closed, or being fixed before the session ends
+alwaysApply: true
+---
+
+# Never leave a PR sitting
+
+An open pull request this seat owns is unfinished.
+
+- Merge it after exact-head cross-family APPROVE and a green CI Gate on that same head. Then run `merge_closeout --apply`. Do not pass `--delete-branch` while the merge queue still holds the PR.
+- Close it when it is obsolete, and delete its branch.
+- A conflict, a queue kick, red CI, or review changes are work in the same session. Fix them. If the head moves, get a new exact-head review before merge.
+- Do not end a session by reporting an open pull request and stopping. "CI is running" and "queued" are not a stopping point. Stay until it merges, or until a fix for the failure is in flight.
