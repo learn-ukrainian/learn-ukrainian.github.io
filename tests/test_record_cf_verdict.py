@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import subprocess
 from concurrent.futures import ThreadPoolExecutor
 from pathlib import Path
 
@@ -58,6 +59,16 @@ def test_full_nested_task_id_is_safe_and_loadable(tmp_path):
     assert reply == "VERDICT: APPROVE"
     with pytest.raises(recorder.RecordError, match="invalid task id"):
         recorder._task("codex/../review-one", tmp_path)
+
+
+def test_repo_root_timeout_fails_closed(monkeypatch):
+    def timeout(*args, **kwargs):
+        assert kwargs["timeout"] == 30
+        raise subprocess.TimeoutExpired(args[0], kwargs["timeout"])
+
+    monkeypatch.setattr(recorder.subprocess, "run", timeout)
+    with pytest.raises(recorder.RecordError, match="Git repository lookup timed out after 30 seconds"):
+        recorder._repo_root()
 
 
 @pytest.mark.parametrize("reply", ["No verdict", "VERDICT: APPROVE\nVERDICT: BLOCKED"])

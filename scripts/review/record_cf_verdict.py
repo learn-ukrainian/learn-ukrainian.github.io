@@ -123,7 +123,14 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
 
 
 def _repo_root() -> Path:
-    result = subprocess.run(["git", "rev-parse", "--git-common-dir"], capture_output=True, text=True, check=True)
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "--git-common-dir"], capture_output=True, text=True, check=True, timeout=30
+        )
+    except subprocess.TimeoutExpired as exc:
+        raise RecordError("Git repository lookup timed out after 30 seconds") from exc
+    except (OSError, subprocess.CalledProcessError) as exc:
+        raise RecordError("Git repository lookup failed") from exc
     return Path(result.stdout.strip()).resolve().parent
 
 
