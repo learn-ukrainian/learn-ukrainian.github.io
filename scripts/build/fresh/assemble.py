@@ -433,6 +433,11 @@ def assemble_expanded_document(
                 for role, span_text in _split_inline_spans(str(err_txt), "error_text"):
                     add_unit("vpravy", act_step, act_id, item_idx, "error", role, span_text, source="writer_prose")
 
+            expl = item.get("explanation")
+            if expl and isinstance(expl, str):
+                for role, span_text in _split_inline_spans(expl, "item_explanation"):
+                    add_unit("vpravy", act_step, act_id, item_idx, "explanation", role, span_text, source="writer_prose")
+
             pairs = item.get("pairs") or []
             for p_idx, pair in enumerate(pairs):
                 if isinstance(pair, dict):
@@ -1074,14 +1079,16 @@ def apply_stress_to_activities(
             if not isinstance(item, dict):
                 continue
             for prompt_key in ("prompt", "sentence", "question", "cue"):
-                if prompt_key in item:
+                if prompt_key in item and isinstance(item[prompt_key], str):
                     item[prompt_key] = format_act_text(act_id, item_idx, "prompt", item[prompt_key])
             for ans_key in ("answer", "correct", "target"):
-                if ans_key in item:
+                if ans_key in item and isinstance(item[ans_key], str):
                     item[ans_key] = format_act_text(act_id, item_idx, "answer", item[ans_key])
             for err_key in ("error", "incorrect"):
-                if err_key in item:
+                if err_key in item and isinstance(item[err_key], str):
                     item[err_key] = format_act_text(act_id, item_idx, "error", item[err_key])
+            if "explanation" in item and isinstance(item["explanation"], str):
+                item["explanation"] = format_act_text(act_id, item_idx, "explanation", item["explanation"])
             for opt_key in ("options", "choices", "distractors"):
                 if opt_key in item and isinstance(item[opt_key], list):
                     new_opts = []
