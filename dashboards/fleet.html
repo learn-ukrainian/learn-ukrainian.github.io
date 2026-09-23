@@ -566,10 +566,13 @@ function renderProjects(data) {
     services.forEach((service, index) => {
       const drift = service.drift;
       const driftLabel = drift === true ? 'drift' : drift === false ? 'sync' : String(drift || 'unknown');
-      const modeBadge = service.serving_mode === 'checkout' ? 'checkout' : 'release';
-      const sha = service.serving_mode === 'checkout'
-        ? short(service.checkout_sha, '—')
-        : short(service.serving_sha, '—');
+      const unresolved = service.serving_mode === 'unknown';
+      const modeBadge = unresolved ? 'unresolved' : service.serving_mode === 'checkout' ? 'checkout' : 'release';
+      const sha = unresolved
+        ? short(service.unresolved_reason, 'unknown reason').replaceAll('_', ' ')
+        : service.serving_mode === 'checkout'
+          ? short(service.checkout_sha, '—')
+          : short(service.serving_sha, '—');
       const attention = index === 0 && Array.isArray(host.attention) && host.attention.length
         ? host.attention.join(', ')
         : '—';

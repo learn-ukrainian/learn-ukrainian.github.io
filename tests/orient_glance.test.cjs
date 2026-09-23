@@ -60,6 +60,8 @@ test('release and checkout SHA drift, unknown upstream, stale report, sibling', 
   assert.doesNotMatch(render({...project,freshness:'stale',services:[service]}), /in sync/);
   assert.doesNotMatch(render({...project,services:[{...service,drift:'unknown'}]}), /in sync/);
   assert.doesNotMatch(render({...project,services:[{...service,repo:'sibling',drift:'not_applicable'}]}), /bbbbbbbb<\/td><td>bbbbbbbb/);
+  const unresolved = render({...project,services:[{...service,serving_mode:'unknown',checkout_sha:null,unresolved_reason:'cwd_not_git_repo',drift:'unknown'}]});
+  assert.match(unresolved, /<td>running<\/td><td>unresolved<\/td><td>bbbbbbbb<\/td><td>unknown<\/td><\/tr>/);
 });
 test('untrusted fields are escaped and invalid host identifiers never displayed', () => {
   const {context:c} = setup();

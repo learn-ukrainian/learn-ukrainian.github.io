@@ -15,6 +15,7 @@ from fastapi.testclient import TestClient
 
 from scripts.api import project_state_router as router_mod
 from scripts.api.main import app
+from scripts.api.project_state_sanitize import ProjectStateValidationError, validate_report_document
 from scripts.api.project_state_store import REPORT_TTL_SECONDS, reset_project_state_store, upsert_report
 from tests.api.test_project_state_collect import _init_repo
 
@@ -240,6 +241,61 @@ def test_report_validation_rejects_forbidden_tokens(monkeypatch: pytest.MonkeyPa
         }
     ]
     assert _post_report(bad_doc).status_code == 400
+
+
+def _unknown_service(name: str = "api", **overrides: Any) -> dict[str, Any]:
+    row = {
+        **_service(name, serving_mode="unknown", serving_sha=None),
+        "unresolved_reason": "cwd_not_git_repo",
+    }
+    row.update(overrides)
+    return row
+
+
+def test_unresolved_running_service_is_stored_and_rendered_unknown(monkeypatch: pytest.MonkeyPatch) -> None:
+    """#8591: one unresolvable service is reported explicitly, never failing the report."""
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    monkeypatch.setattr(router_mod, "_self_host_ids", lambda: set())
+    posted = _post_report(_document(services=[_unknown_service(), _service("sources")]))
+    assert posted.status_code == 200, posted.text
+    host = client.get("/api/fleet/projects/v1?host_id=host-worker").json()["hosts"]["host-worker"]
+    unresolved, resolved = host["services"]
+    assert unresolved["serving_mode"] == "unknown"
+    assert unresolved["unresolved_reason"] == "cwd_not_git_repo"
+    assert unresolved["drift"] == "unknown"
+    assert "drift:api" not in host["attention"]
+    assert resolved["unresolved_reason"] is None
+    assert resolved["drift"] is False
+
+
+@pytest.mark.parametrize(
+    ("service", "message"),
+    [
+        (
+            _service("api", serving_mode="checkout", serving_sha=None, checkout_sha=None),
+            "checkout mode requires checkout_sha when running",
+        ),
+        (_unknown_service(serving_sha=SHA_MAIN), "unknown mode must not carry a sha"),
+        (_unknown_service(checkout_sha=SHA_MAIN), "unknown mode must not carry a sha"),
+        (_unknown_service(unresolved_reason="lsof_exploded"), "invalid unresolved_reason"),
+        (_unknown_service(unresolved_reason=None), "invalid unresolved_reason"),
+        (_unknown_service(unresolved_reason=["cwd_unreadable"]), "invalid unresolved_reason"),
+        (_unknown_service(state="stopped"), "unknown mode is only valid when running"),
+        (
+            {**_service("api"), "unresolved_reason": "no_listener_pid"},
+            "unresolved_reason requires unknown mode",
+        ),
+        (_service("api", serving_mode="guessed"), "invalid serving_mode"),
+        ({**_service("api"), "serving_mode": ["release"]}, "invalid serving_mode"),
+    ],
+)
+def test_malformed_serving_identity_is_still_rejected(
+    monkeypatch: pytest.MonkeyPatch, service: dict[str, Any], message: str
+) -> None:
+    with pytest.raises(ProjectStateValidationError, match=message):
+        validate_report_document(_document(services=[service]))
+    monkeypatch.setenv("MONITOR_OCCUPANCY_HOST_IDS", _PLACEHOLDER_MAP)
+    assert _post_report(_document(services=[service])).status_code == 400
 
 
 def test_projects_opsec_no_paths_or_hostnames(monkeypatch: pytest.MonkeyPatch) -> None:
