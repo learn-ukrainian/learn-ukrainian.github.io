@@ -270,12 +270,44 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
 
-    p_build = subparsers.add_parser("build", help="Run ordered fresh lesson checks 1-9 and write gates state")
-    p_build.add_argument("level", choices=LEVELS)
-    p_build.add_argument("slug")
-    p_build.add_argument("--lesson", "-n", type=int, required=True)
-    p_build.add_argument("--question-seat", help="Explicit agent:model seat for constrained questions")
-    p_build.add_argument("--repo-root", type=Path, default=None)
+    p_build = subparsers.add_parser(
+        "build",
+        help="Run ordered fresh lesson checks 1-9 and write gates state",
+        description=(
+            "Run ordered checks 1-9 for one fresh lesson and record the gate results.\n"
+            "Use after a lesson draft and locked evidence exist; provide a question seat when open questions need answers."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1\n"
+            "  .venv/bin/python -m scripts.build.fresh build a1 sounds-letters-and-hello --lesson 1 --question-seat codex:gpt-6-sol\n\n"
+            "Outputs:\n"
+            "  Prints a JSON gate report; writes lesson-<n>.gates.yaml and other lesson state files under evidence/<level>/_state/<slug>/.\n\n"
+            "Exit codes:\n"
+            "  0: All checks passed\n"
+            "  1: A check failed or an input could not be loaded\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/runner.py, fresh lesson build issue #8397"
+        ),
+    )
+    p_build.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
+    p_build.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
+    p_build.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
+    p_build.add_argument(
+        "--question-seat",
+        default=None,
+        help=(
+            "Explicit agent:model seat for open questions (e.g. codex:gpt-6-sol; no default). "
+            "If absent when the lesson has open questions, stops with question_seat_required"
+        ),
+    )
+    p_build.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
+    )
 
     return parser
 
