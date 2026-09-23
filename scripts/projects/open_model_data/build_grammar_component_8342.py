@@ -512,6 +512,17 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r"^[«\"“]?Тим\s+часом,", text):
         return False
+    # Claude R14 control defects
+    if re.search(r"[А-ЯІЇЄҐ][а-яіїєґ]+\s+[—–-]\s+[А-ЯІЇЄҐ][а-яіїєґ]+", text):
+        return False
+    if re.search(r"\bдіапазоном\s+різних\s+виборів\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bнедоторканост\w*\b", text, re.IGNORECASE) or re.search(r"\bнедоторканість\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bз\s+старим\b", text, re.IGNORECASE) or re.search(r"\bз\s+щетинистим\b", text, re.IGNORECASE) or re.search(r"\bодним\s+з\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", text, re.IGNORECASE):
+        return False
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -1573,6 +1584,106 @@ def is_valid_candidate(
     if re.search(r"\bв\s+ряд\s+кращих\b", o_low) and re.search(r"\bв\s+ряд\s+найкращих\b", c_low):
         return False
 
+    # Claude R14 Section 1: Ungrammatical Gold Text
+    if re.search(r"\bнаді\w*\s+на\s+щастя\b", c_low) or re.search(r"\bзапаморочил\w*\s+у\s+голові\b", c_low):
+        return False
+    if re.search(r"\bрозтягнуло\s+і\s+сплющ\w*\b", c_low):
+        return False
+    if re.search(r"\bшкірян\w*\s+завод\b", c_low):
+        return False
+    if re.search(r"\bневірою,\s+що\b", c_low) or re.search(r"\bвпадала\s+цифра\b", c_low):
+        return False
+    if re.search(r"[А-ЯІЇЄҐ][а-яіїєґ]+\s+[—–-]\s+[А-ЯІЇЄҐ][а-яіїєґ]+", orig_text) or re.search(r"[А-ЯІЇЄҐ][а-яіїєґ]+\s+[—–-]\s+[А-ЯІЇЄҐ][а-яіїєґ]+", corr_text):
+        return False
+    if re.search(r"\bсформувати\s+кемпінг\b", c_low) or re.search(r"\bіспанської\s+місії\b", c_low):
+        return False
+
+    # Claude R14 Section 2: Invented / Meaning-Changing Rewrites & False Claims
+    if re.search(r"\bшахрайство\b", o_low) and re.search(r"\bшахраювати\b", c_low):
+        return False
+    if re.search(r"\bконкретна\s+фаза\b", c_low) or (re.search(r"\bяка\s+фаза\b", o_low) and re.search(r"\bяку\s+функцію\b", o_low)):
+        return False
+    if re.search(r"\bшипаст\w*\b", o_low) and re.search(r"\bкуслив\w*\b", c_low):
+        return False
+    if re.search(r"\bкедрові\s+гальма\b", c_low) or re.search(r"\bформі\s+зграї\b", c_low) or re.search(r"\bпоклавши\s+коням\b", c_low):
+        return False
+    if re.search(r"\bрізнокольоровій\s+дівчині\b", c_low) or re.search(r"\bзавдяки\s+пораненню\b", c_low):
+        return False
+    if re.search(r"\bвсього\b", o_low) and re.search(r"\b(?:лише|тільки)\b", c_low) and not re.search(r"\bвсього\b", c_low):
+        return False
+
+    # Claude R14 Section 3: Valid-Variant Swaps & Unneeded Rewrites
+    if re.search(r"\bна\s+рідкість\b", o_low) and re.search(r"\bна\s+диво\b", c_low):
+        return False
+    if re.search(r"\bна\s+додачу\b", o_low) and re.search(r"\bокрім\s+цього\b", c_low):
+        return False
+    if re.search(r"\bдо\s+чотирьох\s+годин\b", o_low) and re.search(r"\bдо\s+четвертої\b", c_low):
+        return False
+    if re.search(r"\bнайняв\b", o_low) and re.search(r"\bвинайняв\b", c_low):
+        return False
+    if re.search(r"\bдорожч\w*\s+від\b", o_low) and re.search(r"\bдорожч\w*\s+за\b", c_low):
+        return False
+    if re.search(r"\bйшов\b", o_low) and re.search(r"\bминав\b", c_low):
+        return False
+    if re.search(r"\bпригадується\b", o_low) and re.search(r"\bпригадую\b", c_low):
+        return False
+    if re.search(r"\bкращими\b", o_low) and re.search(r"\bнайкращими\b", c_low):
+        return False
+    if re.search(r"\bсанів\b", o_low) and re.search(r"\bсанок\b", c_low):
+        return False
+    if re.search(r"\bв\s+той\s+серпневий\s+вечір\b", o_low) and re.search(r"\bтого\s+серпневого\s+вечора\b", c_low):
+        return False
+    if re.search(r"\bвелосипеду\b", o_low) and re.search(r"\bвелосипеда\b", c_low):
+        return False
+    if re.search(r"\bподарунку\b", o_low) and re.search(r"\bподарунка\b", c_low):
+        return False
+    if re.search(r"\bпо\s+нитці\s+подій\b", o_low) or re.search(r"\bз\s+кінця\s+до\s+начала\b", o_low):
+        return False
+    if re.search(r"\bсприймав\s+за\s+належне\b", o_low):
+        return False
+    if re.search(r"\bпоглинаючи\s+місце\b", o_low):
+        return False
+    if re.search(r"\bхто\s+забрідає\b", o_low):
+        return False
+    if re.search(r"\bколи\s+потрапляєш\b.*\bпочинаєш\b", o_low):
+        return False
+    if re.search(r"\bі\s+свій\s+підхід\s+до\b", c_low):
+        return False
+    if re.search(r"\bозвуч\w*\s+кімнату\b", o_low) or re.search(r"\bпронизливим\s+носовим\s+свистом\b", o_low):
+        return False
+    if re.search(r"\bабсолютно\b", o_low) and re.search(r"\bдуже\b", c_low):
+        return False
+    if re.search(r"\bна\s+власній\s+території\b", o_low):
+        return False
+    if re.search(r"\bтаким\s+чином\b", o_low) and re.search(r"\bотак\b", c_low):
+        return False
+    if re.search(r"\bдана\s+проблема\b", o_low) and re.search(r"\bтака\b", c_low):
+        return False
+    if re.search(r"\bяк[\s-]небудь\b", o_low) and not re.search(r"\bяк[\s-]небудь\b", c_low):
+        return False
+    if re.search(r"\bзгадан[іi]\s+нижче\b", c_low):
+        return False
+
+    # Conflicting gold targets across candidates
+    if re.search(r"\bостовбенів\b", o_low):
+        return False
+    if re.search(r"\bспівбесіда,\s+яка\s+тобі\b", o_low):
+        return False
+    if re.search(r"\bмолекулярна\s+динаміка\s+покриває\s+час\w*\b", o_low):
+        return False
+    if re.search(r"\bя\s+навчався\s+у\s+вузі\b", o_low):
+        return False
+
+    # Claude R14 Section 4: Dangling Participle, Euphony, Idioms, Slurs & Hygiene
+    if re.search(r"\bспираючись\s+на\s+твою\s+розповідь\b", c_low):
+        return False
+    if re.search(r"\bз\s+старим\b", c_low) or re.search(r"\bз\s+щетинистим\b", c_low) or re.search(r"\bодним\s+з\s+вагомих\b", c_low):
+        return False
+    if re.search(r"\bфільк\w*\s+грамот\w*\b", c_low) or re.search(r"\bфільчин\w*\s+грамот\w*\b", c_low):
+        return False
+    if re.search(r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", o_low) or re.search(r"\b(?:гівн\w*|тьолк\w*|москаль\w*|курв\w*|бляд\w*|сучк\w*|хуй\w*|пізд\w*|нахуй\w*|похуй\w*)\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -2041,6 +2152,8 @@ def build_grammar_dataset(
                         repl_w = e[3].lower().strip()
                         if (orig_w, repl_w) not in euphony_pairs:
                             content_edits.append(e)
+                    elif e[2] in ("Typography", "Format"):
+                        pass
                     else:
                         content_edits.append(e)
 
@@ -2184,6 +2297,8 @@ def build_grammar_dataset(
                         repl_w = e[3].lower().strip()
                         if (orig_w, repl_w) not in euphony_pairs:
                             content_edits.append(e)
+                    elif e[2] in ("Typography", "Format"):
+                        pass
                     else:
                         content_edits.append(e)
 
@@ -2247,7 +2362,7 @@ def build_grammar_dataset(
     train_explainable = [c for c in train_corrections if can_explain_candidate(c)]
     train_unexplainable = [c for c in train_corrections if not can_explain_candidate(c)]
 
-    target_total_corrections = 1106
+    target_total_corrections = 1083
     total_expl_needed = round(target_total_corrections * 0.55)
     target_train_expl = min(len(train_explainable), max(0, total_expl_needed - eval_expl_count))
     target_train_total = target_total_corrections - len(eval_corrections)
@@ -2305,7 +2420,7 @@ def build_grammar_dataset(
             brown_train_available.append(b)
 
     target_train_controls = 330
-    target_eval_controls = 51
+    target_eval_controls = 50
 
     print(f"🎯 Target controls for 25.0% share: {target_train_controls} train, {target_eval_controls} eval.")
 
