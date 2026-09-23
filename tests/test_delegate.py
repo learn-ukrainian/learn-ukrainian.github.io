@@ -35,6 +35,7 @@ from agent_runtime.result import ParseResult
 from agent_runtime.telemetry import InvocationTelemetry
 
 from scripts.orchestration import job_host_exec
+from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 
 @pytest.fixture
@@ -4300,6 +4301,50 @@ def test_run_worker_forwards_max_budget_usd_to_runtime(tmp_tasks_dir, tmp_path):
     state = delegate._read_state(state_path)
     assert state is not None
     assert state["max_budget_usd"] == 0.5
+
+
+def test_run_worker_grants_review_tools_to_claude(tmp_tasks_dir, tmp_path):
+    task_id = "worker-claude-review-grant"
+    delegate._write_state_atomic(delegate._state_path(task_id), {"task_id": task_id})
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": True,
+            "response": "done",
+            "stderr_excerpt": None,
+            "returncode": 0,
+            "rate_limited": False,
+            "model": "fixture",
+            "effort": "unknown",
+            "cli_version": "fixture",
+        },
+    )()
+
+    with patch("agent_runtime.runner.invoke", return_value=mock_result) as mock_invoke:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="claude",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            review_id="rev-test",
+            attempt_id="att-test",
+            mcp_config_path=str(tmp_path / "review.mcp.json"),
+            strict_mcp_config=True,
+        )
+
+    assert rc == 0
+    assert mock_invoke.call_args.kwargs["tool_config"] == {
+        "mcp_config_path": str(tmp_path / "review.mcp.json"),
+        "strict_mcp_config": True,
+        "mcp_server_names": ["sources"],
+        "review_id": "rev-test",
+        "attempt_id": "att-test",
+        "allowed_tools": ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS)),
+    }
 
 
 def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
