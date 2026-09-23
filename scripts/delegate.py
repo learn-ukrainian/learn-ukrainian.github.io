@@ -3992,24 +3992,64 @@ _DISPATCH_SPARSE_EXCLUDE_DEFAULT = frozenset(
 )
 # Owned-path prefixes that re-include a default-excluded tree even when the
 # path itself is not under that tree (tests and scripts that read it).
+# Filename stems end with "_" and match tests/test_open_model_*.py. Exact
+# files are listed only when grep shows that file reads the tree. ``site/``
+# consumes site/src/data/lexicon-*.json, not raw data/lexicon/.
+# ``tests/test_open_model_`` is content-gated: most of those modules never
+# read data/projects, and a blanket stem would check out ~633MB.
 _SPARSE_OWNED_PATH_REINCLUDE: dict[str, tuple[str, ...]] = {
     "data/projects": (
         "data/projects",
         "tests/projects/open_model_data",
         "scripts/projects/open_model_data",
+        "tests/test_open_model_",
     ),
     "data/lexicon": (
         "data/lexicon",
         "scripts/lexicon",
         "tests/lexicon",
-        "site",
+        "tests/test_source_inventory_",
+        "scripts/audit/source_inventory_review_decisions.py",
+        "scripts/audit/generate_source_inventory_review_candidates.py",
+        "scripts/practice/author_densified_pairs.py",
+        "scripts/practice/creation_review.py",
+        "scripts/practice/thin_mode_source_inventory.py",
     ),
+}
+# Stem prefixes whose match still has to mention the tree in that file.
+_SPARSE_REINCLUDE_CONTENT_MARKERS: dict[str, tuple[str, ...]] = {
+    "tests/test_open_model_": ("data/projects",),
 }
 
 
 def _sparse_path_has_prefix(path: str, prefix: str) -> bool:
     prefix = prefix.strip("/")
     return path == prefix or path.startswith(prefix + "/")
+
+
+def _sparse_reinclude_prefix_matches(path: str, prefix: str) -> bool:
+    """Match a directory prefix, an exact file, or a filename stem.
+
+    Stems end with ``_`` so ``tests/test_open_model_`` matches
+    ``tests/test_open_model_foundry_cli.py`` without also matching a
+    sibling directory.
+    """
+    if _sparse_path_has_prefix(path, prefix):
+        return True
+    return prefix.endswith("_") and path.startswith(prefix)
+
+
+def _reinclude_file_confirms(path: str, prefix: str) -> bool:
+    """Content-gated stems must mention the tree in the owned file."""
+    markers = _SPARSE_REINCLUDE_CONTENT_MARKERS.get(prefix)
+    if not markers:
+        return True
+    file_path = _REPO_ROOT / path
+    try:
+        text = file_path.read_text(encoding="utf-8")
+    except OSError:
+        return False
+    return any(marker in text for marker in markers)
 
 
 def _normalize_sparse_include(raw: Sequence[str] | None) -> tuple[str, ...]:
@@ -4068,7 +4108,10 @@ def _sparse_tree_for_owned_path(raw: str) -> str | None:
         if _sparse_path_has_prefix(path, name):
             return name
     for tree, prefixes in _SPARSE_OWNED_PATH_REINCLUDE.items():
-        if any(_sparse_path_has_prefix(path, prefix) for prefix in prefixes):
+        if any(
+            _sparse_reinclude_prefix_matches(path, prefix) and _reinclude_file_confirms(path, prefix)
+            for prefix in prefixes
+        ):
             return tree
     return None
 
@@ -4082,8 +4125,10 @@ def _infer_sparse_include(
     """Merge explicit includes with owned-path prefixes and prompt path references.
 
     A dispatch that already declares ``--research-owned-path curriculum/...``,
-    ``scripts/projects/open_model_data/...``, or ``site/...`` materializes the
-    matching excluded tree without a second flag.
+    ``scripts/projects/open_model_data/...``, or a lexicon reader such as
+    ``scripts/lexicon/...`` materializes the matching excluded tree without a
+    second flag. ``site/...`` does not: the frontend reads runtime JSON under
+    ``site/src/data/``, not raw ``data/lexicon/``.
     """
     merged: list[str] = list(_normalize_sparse_include(explicit))
     seen = set(merged)

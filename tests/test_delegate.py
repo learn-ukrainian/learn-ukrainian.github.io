@@ -5801,6 +5801,9 @@ def test_branch_reuse_dry_run_validates_existing_worktree_without_adding(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The capacity gate reads the live session-stream store. A Cursor worker
+    # running this suite holds that lease; this test is about branch reuse.
+    monkeypatch.setattr(delegate, "_find_live_cursor_driver_lease", lambda: None)
     args = argparse.Namespace(
         agent="cursor",
         task_id="branch-reuse-dry-run",
@@ -6381,6 +6384,42 @@ def test_infer_sparse_include_from_owned_paths_and_prompt():
         None,
         owned_paths=["scripts/lexicon/manifest_io.py", "site/src/pages/index.astro"],
     ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["site/src/pages/index.astro"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_foundry_cli.py"],
+    ) == ("data/projects",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_open_model_data_timeouts.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/audit/source_inventory_review_decisions.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/audit/source_inventory_intake.py"],
+    ) == ()
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["tests/test_source_inventory_intake.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/author_densified_pairs.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/thin_mode_source_inventory.py"],
+    ) == ("data/lexicon",)
+    assert delegate._infer_sparse_include(
+        None,
+        owned_paths=["scripts/practice/noun_mechanics_engine.py"],
+    ) == ()
     assert delegate._infer_sparse_include(
         None,
         prompt_text="Read data/projects/foo.jsonl and leave data/raw alone.",
@@ -7813,6 +7852,9 @@ def test_branch_reuse_validates_staleness_against_the_branch_not_main(
         return base_stub(cmd, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "run", fake_run)
+    # The capacity gate reads the live session-stream store. A Cursor worker
+    # running this suite holds that lease; this test is about branch reuse.
+    monkeypatch.setattr(delegate, "_find_live_cursor_driver_lease", lambda: None)
     args = argparse.Namespace(
         agent="cursor",
         task_id="branch-reuse-stale-main",
