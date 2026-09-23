@@ -1117,7 +1117,7 @@ def test_check_9_lock_mismatch_and_missing_lock_fails(monkeypatch):
         1,
     )
     assert res.passed is False
-    assert "missing inputs.lesson_lock_entry_sha256" in (res.reason or "")
+    assert "missing lesson_lock_entry_sha256" in (res.reason or "")
 
     # Draft with mismatched lock entry
     draft_mismatch = make_draft(
