@@ -394,12 +394,16 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
     # schema-compatible occurrence locator for questions and receipts.
     token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
     batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
+    try:
+        questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
+    except (ResolverError, OSError) as err:
+        return finish(failure(8, f"question_batch_invalid: {err}", "engine",
+                              code=getattr(err, "code", None)))
     if batch["questions"] and not question_seat:
         return finish(failure(8, "question_seat_required", "driver"))
     if batch["questions"] and (question_seat.count(":") != 1 or not all(question_seat.split(":"))):
         return finish(failure(8, "question_seat_invalid", "driver"))
     try:
-        questions.write_questions(state_dir / f"lesson-{n}.questions.yaml", batch)
         if batch["questions"]:
             answer_doc = (question_dispatch or (lambda b, s: dispatch_questions(b, s, repo_root=repo_root)))(batch, question_seat)
             selections = receipts.apply_answers(batch, answer_doc, question_seat.replace(":", "@"))

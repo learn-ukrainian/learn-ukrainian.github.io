@@ -329,10 +329,11 @@ def test_runner_check_6_target_is_lesson_minimum(tmp_path, monkeypatch):
 
 def test_runner_check_8_requires_explicit_seat(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture(two_senses=True)
-    report, _, seen = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, seat=None)
+    report, state, seen = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, seat=None)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
     assert (bad["check"], bad["reason"], bad["layer"]) == (8, "question_seat_required", "driver")
     assert seen == []
+    assert lock.check(state / "lesson-1.questions.yaml")
 
 
 def test_runner_check_9_engine_failure_layer(tmp_path, monkeypatch):
