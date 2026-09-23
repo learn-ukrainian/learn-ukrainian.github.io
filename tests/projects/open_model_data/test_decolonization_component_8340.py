@@ -1870,3 +1870,42 @@ def test_cf_r22_remediations_regression():
             assert f"росіянізм «{it['target_term']}»" not in rat
             assert f"кальку / росіянізм «{it['target_term']}»" not in rat
             assert "Нормативний варіант слововживання" in rat
+
+
+def test_cf_r23_remediations_regression():
+    """Regression test for CF-R23 remediations:
+
+    1. decol_syn_011: Retarget from spurious 'віддавати перевагу' (codified in СУМ-20) to
+       authentic syntactic calque 'прийняти пропозицію' -> 'ухвалити пропозицію', directly
+       condemned in Antonenko-Davydovych's article «Приймати участь – брати участь, приймати
+       пропозицію – ухвалювати пропозицію».
+    2. 'віддавати перевагу' is nowhere condemned as an erroneous calque in cases.json.
+    """
+    import json
+
+    from scripts.projects.open_model_data.decolonization_cases_data import SYNTACTIC_CALQUES
+    from scripts.projects.open_model_data.decolonization_evidence_catalog import EXPLICIT_SOURCE_EVIDENCE
+    from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+
+    # 1. decol_syn_011 in catalog and cases data
+    ev_011 = EXPLICIT_SOURCE_EVIDENCE["decol_syn_011"]
+    assert ev_011["target_term"] == "ухвалити пропозицію"
+    assert ev_011["russian_copy"] == "прийняти пропозицію"
+    assert "Приймати участь – брати участь, приймати пропозицію – ухвалювати пропозицію" in ev_011["locus"]
+    assert "Негаразд буде по-українському сказати прийняти пропозицію" in ev_011["supporting_passage"]
+
+    case_011 = next(c for c in SYNTACTIC_CALQUES if c["case_id"] == "decol_syn_011")
+    assert case_011["target_term"] == "ухвалити пропозицію"
+    assert case_011["russian_copy"] == "прийняти пропозицію"
+
+    # 2. Check cases.json
+    cases_file = DECOLONIZATION_DIR / "cases.json"
+    cases = json.loads(cases_file.read_text(encoding="utf-8"))
+    c_011 = next(c for c in cases if c["case_id"] == "decol_syn_011")
+    assert c_011["target_term"] == "ухвалити пропозицію"
+    assert c_011["russian_copy"] == "прийняти пропозицію"
+
+    # Ensure 'віддавати перевагу' is not condemned as an erroneous Russianism
+    for c in cases:
+        if c.get("is_erroneous"):
+            assert c.get("russian_copy") != "віддавати перевагу"
