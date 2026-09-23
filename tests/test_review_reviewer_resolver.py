@@ -227,7 +227,7 @@ def test_high_risk_anthropic_author_gets_strong_practical_formal_gate():
 def test_critical_anthropic_author_gets_astra_as_formal_gate():
     resolution = resolve_reviewer(ResolverInputs(author_model="claude", risk="critical"))
     assert resolution.selected.name == "openai_frontier"
-    assert resolution.selected.concrete_model == "gpt-6-astra"
+    assert resolution.selected.concrete_model == "gpt-6-sol"
 
 
 def test_high_risk_openai_author_gets_sonnet_not_fable():
@@ -992,7 +992,7 @@ def test_practical_ladder_starts_with_astra_then_fallbacks():
 
 
 def test_candidate_constants_preserve_expected_identity():
-    assert OPENAI_FRONTIER.concrete_model == "gpt-6-astra"
+    assert OPENAI_FRONTIER.concrete_model == "gpt-6-sol"
     assert KIMI_K3.concrete_model == "kimi-code/k3"
     assert KIMI_K3.transport == "native_kimi"
     assert POOL.concrete_model == "poolside/laguna-s-2.1"
@@ -1057,4 +1057,4 @@ def test_actual_catalog_resolver_imports_and_selects_approved_codex_model():
     assert "gpt-5.6-terra" not in REVIEW_CANDIDATES
     result = resolve_reviewer(ResolverInputs(author_model="claude", risk="medium"))
     assert result.selected is not None
-    assert result.selected.concrete_model == "gpt-6-astra"
+    assert result.selected.concrete_model == "gpt-6-sol"

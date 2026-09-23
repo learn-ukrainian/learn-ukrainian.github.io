@@ -48,6 +48,21 @@ def synthetic_sources(tmp_path):
             CREATE TABLE dmklinger_uk_en (id INTEGER PRIMARY KEY, word TEXT, pos TEXT,
                 translations TEXT, text TEXT, source TEXT);
             CREATE TABLE puls_cefr (id INTEGER PRIMARY KEY, word TEXT, level TEXT);
+            CREATE TABLE textbook_sections (section_id INTEGER PRIMARY KEY, source_file TEXT,
+                grade INTEGER, section_title TEXT, section_number INTEGER, page_start INTEGER,
+                page_end INTEGER, chunk_count INTEGER, full_text TEXT);
+            CREATE TABLE textbooks (id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT,
+                text TEXT, source_file TEXT, grade INTEGER, author TEXT, char_count INTEGER,
+                parent_section_id INTEGER, author_uk TEXT, subject TEXT);
+            CREATE TABLE literary_texts (id INTEGER PRIMARY KEY, chunk_id TEXT, title TEXT,
+                text TEXT, source_file TEXT, author TEXT, work TEXT, work_id TEXT, year INTEGER,
+                genre TEXT, language_period TEXT, char_count INTEGER, source_url TEXT);
+            CREATE TABLE ua_gec_errors (id INTEGER PRIMARY KEY, error TEXT, correct TEXT,
+                error_type TEXT, doc_id TEXT, annotator_id TEXT, partition TEXT, is_native INTEGER,
+                source_lang TEXT);
+            CREATE TABLE style_guide (id INTEGER PRIMARY KEY, word TEXT, section TEXT,
+                text TEXT, source TEXT, word_lower TEXT, excerpt_full TEXT, page INTEGER,
+                russianism_pattern TEXT);
         """)
         conn.executemany(
             "INSERT INTO ulif_dictua_entries VALUES (?,?,?,?,?,?,?,?,?)",
@@ -72,4 +87,106 @@ def synthetic_sources(tmp_path):
             ],
         )
         conn.execute("INSERT INTO puls_cefr VALUES (1, 'synthetic', 'A1')")
+        conn.execute(
+            "INSERT INTO textbook_sections VALUES (?,?,?,?,?,?,?,?,?)",
+            (10, "synthetic-file-1", 1, "synthetic section", 1, 42, 42, 2, "synthetic section text"),
+        )
+        conn.executemany(
+            "INSERT INTO textbooks VALUES (?,?,?,?,?,?,?,?,?,?,?)",
+            [
+                (
+                    1,
+                    "chunk-1",
+                    "title 1",
+                    "synthetic-first middle text synthetic-last",
+                    "synthetic-file-1",
+                    1,
+                    "synthetic-author",
+                    40,
+                    10,
+                    "synthetic-author-uk",
+                    "mova",
+                ),
+                (
+                    2,
+                    "chunk-2",
+                    "title 2",
+                    "second chunk text for testing",
+                    "synthetic-file-1",
+                    1,
+                    "synthetic-author",
+                    35,
+                    10,
+                    "synthetic-author-uk",
+                    "mova",
+                ),
+                (
+                    3,
+                    "chunk-3",
+                    "title 3",
+                    "no section chunk synthetic-start to synthetic-end",
+                    "synthetic-file-2",
+                    2,
+                    "author 2",
+                    45,
+                    None,
+                    "author-uk",
+                    "chytannia",
+                ),
+            ],
+        )
+        conn.execute(
+            "INSERT INTO literary_texts VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?)",
+            (
+                1,
+                "lit-1",
+                "lit title",
+                "synthetic literary sentence quote",
+                "synthetic-lit-file",
+                "author",
+                "work",
+                "w1",
+                1920,
+                "prose",
+                "modern",
+                30,
+                "",
+            ),
+        )
+        conn.executemany(
+            "INSERT INTO ua_gec_errors VALUES (?,?,?,?,?,?,?,?,?)",
+            [
+                (1, "synthetic-bad", "synthetic-good", "Grammar", "doc1", "ann1", "train", 1, "uk"),
+                (2, "synthetic-dup-err", "synthetic-dup-corr", "Lexical", "doc2", "ann1", "train", 1, "uk"),
+                (3, "synthetic-dup-err", "synthetic-dup-corr", "Lexical", "doc3", "ann2", "train", 1, "uk"),
+            ],
+        )
+        conn.execute(
+            "INSERT INTO style_guide VALUES (?,?,?,?,?,?,?,?,?)",
+            (
+                1,
+                "synthetic-note-word",
+                "synthetic-sec",
+                "synthetic note explanation text",
+                "style guide",
+                "synthetic-note-word",
+                "synthetic excerpt",
+                5,
+                "synthetic pattern",
+            ),
+        )
+    return path
+
+
+@pytest.fixture
+def synthetic_standard(tmp_path):
+    path = tmp_path / "synthetic-standard.txt"
+    lines = [
+        "synthetic standard line 1",
+        "synthetic standard line 2",
+        "synthetic standard line 3",
+        "synthetic standard line 4",
+        "synthetic standard line 5",
+    ]
+    path.write_text("\n".join(lines) + "\n", encoding="utf-8")
     return path

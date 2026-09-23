@@ -24,6 +24,37 @@ Every journey runs in a fresh context (clean storage) with its own trace. All ar
   **C7** settings drawer, deck picker, level switch · **C8** phone pass (defaults to phone,android).
   Each mode journey opens the mode, records what rendered, attempts one interaction and screenshots.
 
+## Detector (#8477)
+
+Slices only watch. `--detect` plays one A1 Flashcards session with the same player as
+`s1-flashcards-a1-10` and **exits 1** when the session breaks a rule:
+
+1. **Progress** — every `practice-session-progress` reading (start + after each answer) must go
+   `0/{budget}` → `{budget}/{budget}` in +1 steps with a fixed denominator (`--budget 10|20`, default 20).
+   `0/9` … `9/9` after clicking 20 fails.
+2. **`pageerror`** — any uncaught page error fails.
+3. **Pronunciation** — the flashcard control is pressed once; `/audio/pronunciation/manifest.json` 404, a
+   `window.speechSynthesis.speak` call, or no clip request/`play()` fails. Voice quality is not scored.
+
+```bash
+cd site
+node e2e/scouting/run.mjs --detect --budget 20 --live --out /tmp/detect-20; echo exit=$?
+node --test e2e/scouting/invariants.test.mjs        # pure rules, no browser
+```
+
+The pure rules live in `invariants.mjs`; the report gains a `verdict` block. Slices C1–C8 record the
+same `progressReadings`, `progressCheck` and `pronunciation` fields but stay observational (exit 0).
+
+`fixtures/mock-hub.mjs` is a throwaway hub with the same DOM contract, for proving the exit codes
+without the live site (which currently fails both rules: `0/8` for any budget, empty manifest):
+
+```bash
+node e2e/scouting/fixtures/mock-hub.mjs --port 4322 &                      # clean -> exit 0
+node e2e/scouting/fixtures/mock-hub.mjs --port 4323 --broken progress &    # 0/9 … 9/9 -> exit 1
+node e2e/scouting/run.mjs --detect --budget 20 --base http://127.0.0.1:4323 --out /tmp/detect-mock
+```
+`--broken audio` (manifest 404 → browser voice) and `--broken pageerror` also exit 1.
+
 Output (in `--out`, gitignored under `reports/artifacts/`): `<ts>-report-<slice>.{json,md}`, `*.png`, `*.zip` traces.
 
 ## Viewing traces

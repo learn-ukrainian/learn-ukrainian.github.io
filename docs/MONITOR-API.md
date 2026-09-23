@@ -3518,7 +3518,7 @@ store summaries rather than full arguments or raw tool results.
 ## Documentation Artifacts — `/artifacts/` (#1814)
 
 > **Mounted prefix:** `/artifacts` (NOT `/api/artifacts` and NOT `/files`).
-> Browser-friendly: `localhost:8765/artifacts/docs/session-state/2026-05-09-late-night-gemini-tools-cwd-fix.html` renders the HTML directly. The `/api/` prefix is reserved for JSON endpoints.
+> Browser-friendly: `localhost:8765/artifacts/docs/MONITOR-API.md` renders a tracked doc directly. The `/api/` prefix is reserved for JSON endpoints.
 
 Local API serving for project documentation, reports, and session state. Supports
 both directory listings and raw file serving (HTML, MD, assets).

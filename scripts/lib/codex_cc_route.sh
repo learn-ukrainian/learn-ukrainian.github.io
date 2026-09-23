@@ -4,10 +4,13 @@
 
 codex_cc_configure_route() {
   local model="$1"
-  if [ "$model" != gpt-6-astra ]; then
-    echo "Error: Codex model $model rejected; only gpt-6-astra is approved." >&2
-    return 2
-  fi
+  case "$model" in
+    gpt-6-sol|gpt-6-luna|gpt-6-astra) ;;
+    *)
+      echo "Error: Codex model $model rejected; approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol." >&2
+      return 2
+      ;;
+  esac
   local base="${CODEX_CC_BASE_URL:-http://127.0.0.1:8317}"
   base="${base%/}"
   case "$base" in

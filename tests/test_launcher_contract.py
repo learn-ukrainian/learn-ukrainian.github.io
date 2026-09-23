@@ -187,7 +187,7 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 
     governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", env={"SESSION_EPIC": "foreign"})
     assert governor.returncode == 0, governor.stderr
-    assert "--model gpt-6-astra" in governor.stdout
+    assert "--model gpt-6-sol" in governor.stdout
     assert "governor SESSION_EPIC=<unset>" in governor.stdout
     assert "would claim lease" not in governor.stdout
 
@@ -195,8 +195,8 @@ def test_codex_driver_preserves_transport_probe_and_lease_guard() -> None:
 @pytest.mark.parametrize(
     ("launcher", "args", "model", "effort"),
     [
-        ("start-codex.sh", [], "gpt-6-astra", "low"),
-        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-astra", "high"),
+        ("start-codex.sh", [], "gpt-6-sol", "high"),
+        ("start-codex-driver.sh", ["--epic", "devops"], "gpt-6-sol", "high"),
         ("start-codex.sh", ["--model", "gpt-6-astra", "--effort", "max"], "gpt-6-astra", "max"),
     ],
 )
@@ -930,12 +930,13 @@ def test_claude_driver_injects_lane_agent_type() -> None:
     result = run_launcher("start-claude-driver.sh", "--epic", "infra")
     assert result.returncode == 0, result.stderr
     assert "launcher: would select agent infra-orchestrator for lane infra" in result.stdout
-    assert "would exec claude --agent infra-orchestrator " in result.stdout
+    # The driver pins --model/--effort first (Opus 5.5 default), then --agent.
+    assert "would exec claude --model claude-opus-5-5\\[1m\\] --effort high --agent infra-orchestrator " in result.stdout
 
     explicit = run_launcher("start-claude-driver.sh", "--epic", "infra", "--agent", "curriculum-orchestrator")
     assert explicit.returncode == 0, explicit.stderr
     assert "would select agent" not in explicit.stdout
-    assert "would exec claude --agent curriculum-orchestrator " in explicit.stdout
+    assert "--effort high --agent curriculum-orchestrator " in explicit.stdout
 
     # Stream aliases (fleet_taxonomy.yaml) must not fall back to the curriculum
     # settings default: atlas-practice canonicalizes to the atlas area (#F1, r3).
@@ -1040,7 +1041,7 @@ def test_hermes_help_never_probes_or_claims(provider: str) -> None:
 
 
 @pytest.mark.parametrize("provider,model,route", (
-    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6-astra", "openai-codex"),
+    ("grok", "grok-4.7", "xai-oauth"), ("codex", "gpt-6-sol", "openai-codex"),
 ))
 def test_hermes_real_exec_preserves_literal_prompt_argv(
     tmp_path: Path, provider: str, model: str, route: str,

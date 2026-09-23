@@ -6,6 +6,7 @@ Re-derives every fact from current sources; read-only.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import sys
 from collections.abc import Callable
@@ -405,6 +406,385 @@ def main(argv: list[str] | None = None) -> int:
         print(f"  override forms: {result.get('override_forms_count', 0)}")
         print(f"  unresolved un-cited records: {result.get('unresolved_uncited_count', 0)}")
 
+        for warn in result.get("warnings", []):
+            print(f"WARNING: {warn}", file=sys.stderr)
+        for err in result.get("errors", []):
+            print(f"ERROR: {err}", file=sys.stderr)
+
+    return 1 if result["status"] == "failed" else 0
+
+
+def verify_pack(
+    level: str,
+    slug: str,
+    *,
+    evidence_dir: Path | None = None,
+    plans_dir: Path | None = None,
+    sources_instance: sources.Sources | None = None,
+    standard_path: Path | None = None,
+    offline: bool = False,
+    strict: bool = False,
+    report: Callable[[str], None] | None = None,
+) -> dict[str, Any]:
+    """Verify integrity of a module evidence pack against sources, locks, and State Standard."""
+    if strict and offline:
+        return {
+            "status": "failed",
+            "level": level,
+            "slug": slug,
+            "module": f"{level}/{slug}",
+            "errors": [f"{codes.INVALID_REQUEST}: --strict and --offline together are refused"],
+            "warnings": [],
+            "reports": [],
+            "chunk_id_moved": [],
+            "not_checked": [],
+        }
+
+    evidence_base = (
+        Path(evidence_dir) if evidence_dir is not None else REPO_ROOT / "curriculum/l2-uk-en/evidence" / level
+    )
+    pack_path = evidence_base / f"{slug}.yaml"
+
+    errors: list[str] = []
+    warnings: list[str] = []
+    reports: list[str] = []
+    chunk_id_moved: list[str] = []
+    not_checked: list[str] = []
+
+    if not pack_path.is_file():
+        return {
+            "status": "failed",
+            "level": level,
+            "slug": slug,
+            "module": f"{level}/{slug}",
+            "errors": [f"{codes.SOURCE_UNAVAILABLE}: pack file missing at {pack_path}"],
+            "warnings": [],
+            "reports": [],
+            "chunk_id_moved": [],
+            "not_checked": [],
+        }
+
+    # 1. Lock check
+    if not lock.check(pack_path):
+        errors.append(f"{codes.LOCK_MISMATCH}: pack file lock mismatch: {pack_path}")
+
+    # 2. Schema check & forbidden words field
+    try:
+        pack_doc = yaml.safe_load(pack_path.read_text(encoding="utf-8"))
+        if not isinstance(pack_doc, dict):
+            errors.append(f"{codes.INVALID_REQUEST}: {pack_path} is not a valid YAML mapping")
+            return {
+                "status": "failed",
+                "level": level,
+                "slug": slug,
+                "module": f"{level}/{slug}",
+                "errors": errors,
+                "warnings": warnings,
+                "reports": reports,
+                "chunk_id_moved": chunk_id_moved,
+                "not_checked": not_checked,
+            }
+
+        if "words" in pack_doc:
+            errors.append(f"{codes.WORDS_FIELD_FORBIDDEN}: pack contains forbidden 'words' field")
+
+        schema = load_schema("evidence-pack-v1.schema.json")
+        validator = Draft202012Validator(schema)
+        for err in validator.iter_errors(pack_doc):
+            errors.append(f"{codes.FORM_MISMATCH}: schema error: {err.message}")
+    except Exception as exc:
+        errors.append(f"{codes.INVALID_REQUEST}: failed parsing {pack_path}: {exc}")
+        return {
+            "status": "failed",
+            "level": level,
+            "slug": slug,
+            "module": f"{level}/{slug}",
+            "errors": errors,
+            "warnings": warnings,
+            "reports": reports,
+            "chunk_id_moved": chunk_id_moved,
+            "not_checked": not_checked,
+        }
+
+    owns_sources = False
+    if sources_instance is None:
+        sources_instance = sources.Sources(standard_path=standard_path, report=report)
+        owns_sources = True
+
+    try:
+        # 3. Source DB fingerprint check
+        cur_db_hash = sources_instance._fingerprint(sources_instance.sources_db)[0]
+        recorded_db_hash = pack_doc.get("built_with", {}).get("sources_db")
+        if recorded_db_hash and cur_db_hash != recorded_db_hash:
+            msg = f"{codes.SOURCE_CHANGED}: sources DB changed (recorded {recorded_db_hash[:12]}..., current {cur_db_hash[:12]}...)"
+            if strict:
+                errors.append(msg)
+            else:
+                warnings.append(msg)
+
+        # Helper to verify quotes against chunk and source_file
+        def verify_quote(
+            item_id: str,
+            quote: str,
+            recorded_sha: str,
+            source_file: str,
+            chunk_id: str | int,
+            table: str = "textbooks",
+        ) -> None:
+            actual_sha = hashlib.sha256(quote.encode("utf-8")).hexdigest()
+            if actual_sha != recorded_sha:
+                errors.append(
+                    f"{codes.LOCK_MISMATCH}: {item_id} quote sha256 mismatch: recorded {recorded_sha[:12]}..., actual {actual_sha[:12]}..."
+                )
+
+            norm_quote = " ".join(sources.normalize_spelling(quote).split())
+            if table == "textbooks":
+                chunk = sources_instance.get_textbook_chunk(chunk_id)
+            else:
+                chunk = sources_instance.get_literary_chunk(chunk_id)
+
+            found_in_chunk = False
+            if chunk is not None:
+                norm_chunk = " ".join(sources.normalize_spelling(chunk["text"]).split())
+                if norm_quote in norm_chunk:
+                    found_in_chunk = True
+
+            if not found_in_chunk:
+                # Substring search over concatenated text of source_file's chunks in section order
+                if table == "textbooks":
+                    file_chunks = sources_instance.get_textbook_file_chunks(source_file)
+                else:
+                    file_chunks = sources_instance.get_literary_file_chunks(source_file)
+                norm_file = " ".join(sources.normalize_spelling(" ".join(c["text"] for c in file_chunks)).split())
+                if norm_quote in norm_file:
+                    chunk_id_moved.append(item_id)
+                    reports.append(
+                        f"{codes.CHUNK_ID_MOVED}: {item_id} chunk_id {chunk_id} moved but quote found in file {source_file}"
+                    )
+                else:
+                    errors.append(
+                        f"{codes.QUOTE_MISMATCH}: {item_id} quote no longer found in source_file {source_file}: {quote[:40]!r}"
+                    )
+
+        # 4. Texts
+        for t in pack_doc.get("texts", []):
+            verify_quote(
+                t["id"],
+                t["quote"],
+                t["sha256"],
+                t["source"]["file"],
+                t["source"]["chunk_id"],
+                table="textbooks",
+            )
+
+        # 5. Exercises
+        for x in pack_doc.get("exercises", []):
+            verify_quote(
+                x["id"],
+                x["quote"],
+                x["sha256"],
+                x["source"]["file"],
+                x["source"]["chunk_id"],
+                table="textbooks",
+            )
+
+        # 6. Examples
+        for ex in pack_doc.get("examples", []):
+            kind = ex["source"].get("kind")
+            table = "literary_texts" if kind == "literary" else "textbooks"
+            verify_quote(
+                ex["id"],
+                ex["text"],
+                ex["sha256"],
+                ex["source"]["file"],
+                ex["source"]["chunk_id"],
+                table=table,
+            )
+
+        # 7. Errors
+        for err_rec in pack_doc.get("errors", []):
+            row_id = err_rec["source"]["id"]
+            row = sources_instance.get_ua_gec_error_by_id(row_id)
+            if row is None:
+                errors.append(f"{codes.ERROR_MISMATCH}: error {err_rec['id']} row {row_id} not found in ua_gec_errors")
+            elif row["error"] != err_rec["incorrect"] or row["correct"] != err_rec["correct"]:
+                errors.append(
+                    f"{codes.ERROR_MISMATCH}: error {err_rec['id']} content changed in source: "
+                    f"expected ({err_rec['incorrect']!r}, {err_rec['correct']!r}), "
+                    f"got ({row['error']!r}, {row['correct']!r})"
+                )
+
+        # 8. Notes
+        for note_rec in pack_doc.get("notes", []):
+            row_id = note_rec["source"]["id"]
+            row = sources_instance.get_style_guide_entry(row_id)
+            if row is None:
+                errors.append(f"{codes.ERROR_MISMATCH}: note {note_rec['id']} row {row_id} not found in style_guide")
+            elif row["word"] != note_rec["word"] or row["text"] != note_rec["text"]:
+                errors.append(
+                    f"{codes.ERROR_MISMATCH}: note {note_rec['id']} content changed in source: "
+                    f"expected word={note_rec['word']!r}, text={note_rec['text'][:40]!r}, "
+                    f"got word={row['word']!r}, text={row['text'][:40]!r}"
+                )
+
+        # 9. Standard
+        for std_rec in pack_doc.get("standard", []):
+            lines_str = std_rec["lines"]
+            start_str, end_str = lines_str.split("-")
+            cur_text, cur_sha = sources_instance.get_standard_lines(int(start_str), int(end_str))
+            if cur_sha != std_rec["file_sha256"]:
+                errors.append(
+                    f"{codes.STANDARD_MISMATCH}: standard {std_rec['id']} file_sha256 changed: "
+                    f"expected {std_rec['file_sha256'][:12]}..., got {cur_sha[:12]}..."
+                )
+            if cur_text != std_rec["text"]:
+                errors.append(
+                    f"{codes.STANDARD_MISMATCH}: standard {std_rec['id']} text for lines {lines_str} changed: "
+                    f"expected {std_rec['text'][:40]!r}, got {cur_text[:40]!r}"
+                )
+
+        # 10. Videos
+        for vid_rec in pack_doc.get("videos", []):
+            if offline:
+                not_checked.append(vid_rec["id"])
+                reports.append(f"{codes.NOT_CHECKED}: video {vid_rec['id']} not checked (offline)")
+            else:
+                try:
+                    res = sources_instance.check_url(vid_rec["url"], timeout=10.0)
+                    if res["http_status"] != 200:
+                        msg = f"video {vid_rec['id']} url {vid_rec['url']} returned status {res['http_status']}"
+                        if strict:
+                            errors.append(f"{codes.INVALID_REQUEST}: {msg}")
+                        else:
+                            warnings.append(f"{codes.NOT_CHECKED}: {msg}")
+                except Exception as exc:
+                    msg = f"video {vid_rec['id']} url check failed: {exc}"
+                    if strict:
+                        errors.append(f"{codes.INVALID_REQUEST}: {msg}")
+                    else:
+                        warnings.append(f"{codes.NOT_CHECKED}: {msg}")
+
+        # 11. Unsupported
+        open_unsupported = [
+            u["id"] for u in pack_doc.get("unsupported", []) if isinstance(u, dict) and u.get("status") == "open"
+        ]
+        resolved_unsupported = [
+            u["id"] for u in pack_doc.get("unsupported", []) if isinstance(u, dict) and u.get("status") == "resolved"
+        ]
+        if open_unsupported:
+            msg = f"{codes.OPEN_UNSUPPORTED}: {len(open_unsupported)} unsupported records open: {open_unsupported}"
+            reports.append(msg)
+            if strict:
+                errors.append(msg)
+
+        status = "failed" if errors else "ok"
+
+        return {
+            "status": status,
+            "level": level,
+            "slug": slug,
+            "module": f"{level}/{slug}",
+            "texts_count": len(pack_doc.get("texts", [])),
+            "exercises_count": len(pack_doc.get("exercises", [])),
+            "examples_count": len(pack_doc.get("examples", [])),
+            "errors_count": len(pack_doc.get("errors", [])),
+            "notes_count": len(pack_doc.get("notes", [])),
+            "videos_count": len(pack_doc.get("videos", [])),
+            "standard_count": len(pack_doc.get("standard", [])),
+            "unsupported_open_count": len(open_unsupported),
+            "unsupported_resolved_count": len(resolved_unsupported),
+            "chunk_id_moved": chunk_id_moved,
+            "not_checked": not_checked,
+            "reports": reports,
+            "warnings": warnings,
+            "errors": errors,
+        }
+    finally:
+        if owns_sources:
+            sources_instance.close()
+
+
+def main_pack(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser(
+        prog="python -m scripts.curriculum.evidence pack-verify",
+        description=(
+            "Verify integrity of a module evidence pack (<slug>.yaml) against sources, locks, and State Standard.\n"
+            "Use in CI and preflight to detect quote shifts, source edits, or open claims; read-only."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --strict\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --offline\n"
+            "  .venv/bin/python -m scripts.curriculum.evidence pack-verify a1 alphabet --json\n\n"
+            "Outputs:\n"
+            "  None (read-only verification check)\n\n"
+            "Exit codes:\n"
+            "  0: Pack verified cleanly (or source_changed/open_unsupported under non-strict)\n"
+            "  1: Lock mismatch, quote mismatch, error mismatch, standard mismatch, open unsupported under --strict, or refused --strict --offline\n\n"
+            "Outcome Codes:\n"
+            f"{codes.help_text()}\n"
+        ),
+    )
+    parser.add_argument("level", help="Target curriculum level slug (e.g. 'a1', 'a2')")
+    parser.add_argument("slug", help="Target module slug (e.g. 'alphabet', 'introductions')")
+    parser.add_argument("--strict", action="store_true", help="Fail on source_changed or open unsupported")
+    parser.add_argument("--offline", action="store_true", help="Do not check video URLs over network")
+    parser.add_argument("--json", action="store_true", help="Emit machine-readable JSON result to stdout")
+    parser.add_argument("--evidence-dir", type=Path, default=None, help="Override evidence output directory")
+    parser.add_argument("--plans-dir", type=Path, default=None, help="Override lesson plans directory")
+    parser.add_argument(
+        "--sources-db", type=Path, default=None, help="Override sources database path (default: data/sources.db)"
+    )
+    parser.add_argument("--vesum-db", type=Path, default=None, help="Override VESUM database path")
+    parser.add_argument("--standard-path", type=Path, default=None, help="Override State Standard file path")
+
+    args = parser.parse_args(argv)
+
+    report = lambda msg: print(f"progress: {msg}", file=sys.stderr)  # noqa: E731
+    explicit_sources = None
+    if args.sources_db is not None or args.vesum_db is not None or args.standard_path is not None:
+        explicit_sources = sources.Sources(
+            sources_db=args.sources_db,
+            vesum_db=args.vesum_db,
+            standard_path=args.standard_path,
+            report=report,
+        )
+
+    try:
+        result = verify_pack(
+            args.level,
+            args.slug,
+            evidence_dir=args.evidence_dir,
+            plans_dir=args.plans_dir,
+            sources_instance=explicit_sources,
+            standard_path=args.standard_path,
+            offline=args.offline,
+            strict=args.strict,
+            report=report,
+        )
+    finally:
+        if explicit_sources is not None:
+            explicit_sources.close()
+
+    if args.json:
+        print(json.dumps(result, indent=2, ensure_ascii=False))
+    else:
+        print(f"Evidence Pack Verification: module={result['module']} status={result['status'].upper()}")
+        print(
+            f"Verified: texts={result['texts_count']}, exercises={result['exercises_count']}, "
+            f"examples={result['examples_count']}, errors={result['errors_count']}, "
+            f"notes={result['notes_count']}, videos={result['videos_count']}, "
+            f"standard={result['standard_count']}"
+        )
+        print(f"Unsupported: {result['unsupported_open_count']} open, {result['unsupported_resolved_count']} resolved")
+        if result["chunk_id_moved"]:
+            print(f"Moved chunk IDs (matching text): {result['chunk_id_moved']}")
+        if result["not_checked"]:
+            print(f"Not checked: {result['not_checked']}")
+        for rep in result.get("reports", []):
+            print(f"REPORT: {rep}")
         for warn in result.get("warnings", []):
             print(f"WARNING: {warn}", file=sys.stderr)
         for err in result.get("errors", []):

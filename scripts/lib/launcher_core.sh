@@ -50,10 +50,13 @@ $driver_mode
 
 Options:
   -h, --help                 Show this help and exit.
-  --model MODEL              Provider model. Claude/Grok: omit to keep last TUI/session model.
+  --model MODEL              Provider model. Claude driver default: claude-opus-5-5[1m].
+                             Cursor driver default: grok-4.7-high (not Auto, not a fast
+                             variant). Claude interactive / Grok: omit to keep last
+                             TUI/session model.
   --effort LEVEL             Session effort when supported (Claude Code --effort; Grok
-                             --reasoning-effort). Omit to keep last session selection.
-                             Other providers ignore.
+                             --reasoning-effort). Claude driver default: high. Otherwise
+                             omit to keep last session selection. Other providers ignore.
   --harness HARNESS          Provider harness (default: ${LC_HARNESS}).
   --epic SELECTOR            Driver lane only; for example: devops or atlas.
   --force                    Driver only. Attributed operator release of a live
@@ -67,10 +70,11 @@ Options:
 
 Environment:
   LAUNCHER_DRY_RUN=1         Validate the route and print a redacted exact would-exec argv.
-  LAUNCHER_MODEL             Default model when --model is omitted (empty for Claude/Grok =
-                             last session).
-  LAUNCHER_EFFORT            Default effort when --effort is omitted (empty for Claude/Grok =
-                             last session).
+  LAUNCHER_MODEL             Default model when --model is omitted (Claude driver:
+                             claude-opus-5-5[1m]; Cursor driver: grok-4.7-high; empty
+                             for Claude interactive/Grok = last session).
+  LAUNCHER_EFFORT            Default effort when --effort is omitted (Claude driver: high;
+                             empty for Claude interactive/Grok = last session).
   LAUNCHER_HARNESS           Default harness when --harness is omitted.
 $provider_env
 
@@ -234,14 +238,18 @@ launcher_clear_foreign_route_state() {
 launcher_defaults() {
   case "$LC_PROVIDER" in
     claude)
-      # Both interactive and driver leave model/effort alone unless the caller
-      # sets --model / --effort or LAUNCHER_MODEL / LAUNCHER_EFFORT. Empty means
-      # Claude Code keeps the last TUI/session selection.
-      LC_MODEL="${LAUNCHER_MODEL:-}"
+      # Driver seats the orchestrator on Opus 5.5 with the 1M window (operator
+      # 2026-09-22); effort defaults to high below. Interactive leaves model and
+      # effort alone so Claude Code keeps the last TUI/session selection.
+      if [ "$LC_MODE" = driver ]; then
+        LC_MODEL="${LAUNCHER_MODEL:-claude-opus-5-5[1m]}"
+      else
+        LC_MODEL="${LAUNCHER_MODEL:-}"
+      fi
       LC_HARNESS="${LAUNCHER_HARNESS:-claude-code}"
       ;;
     codex)
-      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-astra}"
+      LC_MODEL="${LAUNCHER_MODEL:-gpt-6-sol}"
       LC_HARNESS="${LAUNCHER_HARNESS:-codex}"
       ;;
     gemini)
@@ -256,9 +264,13 @@ launcher_defaults() {
       LC_HARNESS="${LAUNCHER_HARNESS:-grok}"
       ;;
     cursor)
-      # Orchestrator seat defaults to Auto (catalog allowlist + attestation).
-      # Default pin grok-4.7 (#8464); composer-2.5 when Moonshot identity must be frozen.
-      LC_MODEL="${LAUNCHER_MODEL:-grok-4.7}"
+      # Pin grok-4.7-high. Omitting --model lets cursor-agent use Auto, which
+      # routes to a fast Grok variant and burns the seat. --model still overrides.
+      if [ "$LC_MODE" = driver ]; then
+        LC_MODEL="${LAUNCHER_MODEL:-grok-4.7-high}"
+      else
+        LC_MODEL="${LAUNCHER_MODEL:-}"
+      fi
       LC_HARNESS="${LAUNCHER_HARNESS:-cursor-agent}"
       ;;
     kimi)
@@ -273,7 +285,12 @@ launcher_defaults() {
   esac
   LC_EFFORT="${LAUNCHER_EFFORT:-}"
   if [ "$LC_PROVIDER" = codex ] && [ -z "$LC_EFFORT" ]; then
-    if [ "$LC_MODE" = driver ]; then LC_EFFORT=high; else LC_EFFORT=low; fi
+    # Operator 2026-09-22: Sol's seat is high, including the ordinary launcher.
+    LC_EFFORT=high
+  fi
+  if [ "$LC_PROVIDER" = claude ] && [ "$LC_MODE" = driver ] && [ -z "$LC_EFFORT" ]; then
+    # Opus 5.5 API default is medium; orchestrating seats run at high.
+    LC_EFFORT=high
   fi
   LC_ENDPOINT="${LAUNCHER_ENDPOINT:-coding}"
   LC_ISOLATE_CONFIG="${LAUNCHER_ISOLATE_CONFIG:-1}"
@@ -413,7 +430,8 @@ launcher_normalize_model() {
     claude:fable) LC_MODEL='claude-fable-5-1' ;;
     claude:fable-5|claude:claude-fable-5) LC_MODEL='claude-fable-5' ;;  # legacy alias
     claude:sonnet) LC_MODEL='claude-sonnet-5' ;;
-    claude:opus|claude:opus-5) LC_MODEL='claude-opus-5' ;;
+    claude:opus|claude:opus-5-5|claude:opus-5.5) LC_MODEL='claude-opus-5-5[1m]' ;;
+    claude:opus-5) LC_MODEL='claude-opus-5' ;;
   esac
 }
 
@@ -475,7 +493,11 @@ launcher_validate_mode() {
       launcher_selector_help >&2
       exit 2
     fi
-    LC_MODEL="gpt-6-astra"
+    if [ "$LC_MODEL" = gpt-6-luna ]; then
+      launcher_error "gpt-6-luna is a scouting model, not a governor model. Use gpt-6-sol."
+      exit 4
+    fi
+    LC_MODEL="${LC_MODEL:-gpt-6-sol}"
     unset SESSION_EPIC
     LC_GOVERNOR_PROMPT="Follow agents_extensions/shared/prompts/dynamic-area-epic-fleet-governor.md for one bounded supervision cycle. TARGET=$LC_EPIC GOAL=AUTO"
     LC_FORWARD_ARGS=("$LC_GOVERNOR_PROMPT" "${LC_FORWARD_ARGS[@]}")
@@ -502,7 +524,7 @@ launcher_validate_driver_certification() {
       return 0
     fi
     case "$LC_MODEL" in
-      grok-4.7|grok-4.7-build-fast|grok-4.6) return 0 ;;
+      grok-4.7) return 0 ;;
       *)
         launcher_error "model '$LC_MODEL' is not certified for the grok launcher (use grok-4.7, or omit --model)."
         exit 4
@@ -511,12 +533,15 @@ launcher_validate_driver_certification() {
   fi
   [ "$LC_MODE" = "driver" ] || return 0
   [ "$LC_GOVERNOR" = "0" ] || return 0
-  # Claude/Grok may omit --model so the TUI keeps the last session selection.
-  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ]; } && [ -z "${LC_MODEL:-}" ]; then
+  # Claude/Grok/Cursor may omit --model so the CLI keeps its current selection.
+  if { [ "$LC_PROVIDER" = "claude" ] || [ "$LC_PROVIDER" = "grok" ] || [ "$LC_PROVIDER" = "cursor" ]; } && [ -z "${LC_MODEL:-}" ]; then
+    return 0
+  fi
+  if [ "$LC_PROVIDER" = "cursor" ] && launcher_cursor_model_certified "$LC_MODEL"; then
     return 0
   fi
   case "$LC_PROVIDER:$LC_MODEL" in
-    claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7|grok:grok-4.7-build-fast|grok:grok-4.6|cursor:auto|cursor:grok-4.7|cursor:grok-4.6|cursor:composer-2.5)
+    claude:claude-opus-5-5|claude:claude-opus-5-5\[1m\]|claude:claude-opus-5|claude:claude-fable-5|claude:claude-fable-5-1|claude:claude-sonnet-5|codex:gpt-6-sol|codex:gpt-6-astra|gemini:gemini-3.8-flash-high|gemini:gemini-3.7-flash-high|gemini:gemini-3.6-flash-high|gemini:gemini-3.1-pro-high|grok:grok-4.7)
       return 0
       ;;
     *)
@@ -524,6 +549,20 @@ launcher_validate_driver_certification() {
       exit 4
       ;;
   esac
+}
+
+# Cursor CLI model ids: bare certified pins, effort variants such as
+# grok-4.7-high, and bracket overrides such as
+# grok-4.7[context=500k,reasoning_effort=high,fast=false].
+launcher_cursor_model_certified() {
+  local model="$1"
+  case "$model" in
+    auto|grok-4.7|grok-4.6|composer-2.5) return 0 ;;
+    grok-4.7-low|grok-4.7-medium|grok-4.7-high|grok-4.7-xhigh) return 0 ;;
+    grok-4.7-low-fast|grok-4.7-medium-fast|grok-4.7-high-fast|grok-4.7-xhigh-fast) return 0 ;;
+    composer-2.5-fast) return 0 ;;
+  esac
+  [[ "$model" =~ ^(grok-4\.7|grok-4\.6|composer-2\.5)\[[a-z0-9_]+=[A-Za-z0-9.]+(,[a-z0-9_]+=[A-Za-z0-9.]+)*\]$ ]]
 }
 
 launcher_prepare_driver_identity() {

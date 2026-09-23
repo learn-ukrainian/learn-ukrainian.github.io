@@ -40,10 +40,14 @@ def test_catalog_covers_current_preferred_frontier_and_efficient_models():
     models = load_model_catalog()["models"]
     required = {
         "gpt-6-astra",
+        "gpt-6-sol",
+        "gpt-6-luna",
         "gpt-5.6-sol",
         "gpt-5.6-terra",
         "gpt-5.6-luna",
         "claude-fable-5",
+        "claude-fable-5-1",
+        "claude-opus-5-5",
         "claude-opus-5",
         "claude-sonnet-5",
         "gemini-3.1-pro-high",
@@ -304,7 +308,7 @@ def test_gpt_and_grok_primary_formal_routes_are_native():
     candidates = load_model_catalog()["review_candidates"]
     assert candidates["openai_frontier"]["transport"] == "native_codex"
     assert "gpt-5.6-terra" not in candidates
-    assert candidates["grok-4.6"]["transport"] == "native_grok"
+    assert candidates["grok-4.7"]["transport"] == "native_grok"
     # Explicit Cursor pin when native grok is dark — never Cursor auto.
     assert candidates["grok-4.7-cursor-fallback"]["transport"] == "cursor"
     assert candidates["grok-4.7-cursor-fallback"]["model_id"] == "grok-4.7"
@@ -334,8 +338,8 @@ def test_fable_routes_native_claude_before_pinned_cursor_fallback():
 
 def test_formal_cf_defaults_pin_role_specific_efforts():
     defaults = load_model_catalog()["formal_cf_defaults"]
-    assert defaults["codex"]["model_id"] == "gpt-6-astra"
-    assert defaults["codex"]["effort"] == "medium"
+    assert defaults["codex"]["model_id"] == "gpt-6-sol"
+    assert defaults["codex"]["effort"] == "high"
     assert defaults["claude"]["model_id"] == "claude-sonnet-5"
     assert defaults["claude"]["effort"] == "high"
     assert set(defaults["claude"].get("family_models", [])) >= {
@@ -363,13 +367,15 @@ def test_orchestrator_seats_include_agy_flash_38_high():
     # overhead), then re-added 2026-07-23 as the named harness/infra/devops alternate:
     # HydrationCapsuleV1's score-from-memory + ~100ms capsule hydrate changed that
     # calculus. It remains a formal-CF review seat + coding lane too.
-    assert seats["codex"]["model_id"] == "gpt-6-astra"
+    assert seats["codex"]["model_id"] == "gpt-6-sol"
     assert seats["codex"]["effort"] == "high"
     assert seats["codex"]["escalate_model_id"] == "gpt-6-astra"
     assert seats["agy"]["model_id"] == "gemini-3.8-flash-high"
     assert seats["agy"]["effort"] == "high"
     assert seats["agy"]["escalate_model_id"] == "gemini-3.1-pro-high"
-    assert seats["claude"]["model_id"] == "claude-fable-5-1"
+    # Operator 2026-09-22: Opus 5.5 drives; Fable 5.1 stays the advisor seat.
+    assert seats["claude"]["model_id"] == "claude-opus-5-5"
+    assert seats["claude"]["effort"] == "high"
     assert seats["grok"]["fallback_model_id"] == "grok-4.7"
     assert seats["cursor"]["model_id"] == "auto"
     assert seats["cursor"]["effort"] == "high"
@@ -447,7 +453,7 @@ def test_catalog_rejects_missing_risk_ladder():
 
 def test_catalog_rejects_candidate_transport_not_supported_by_model():
     broken = deepcopy(load_model_catalog())
-    broken["review_candidates"]["grok-4.6"]["transport"] = "hermes"
+    broken["review_candidates"]["grok-4.7"]["transport"] = "hermes"
     with pytest.raises(ModelCatalogError, match="is not listed"):
         validate_catalog(broken)
 
@@ -629,6 +635,8 @@ def test_critical_ladder_anthropic_authority_is_fable_not_opus():
     flat = [model for rung in ladder for model in rung]
     assert "claude-fable-5" in flat
     assert "claude-opus-5" not in flat
+    # The Opus 5.5 orchestrator seat must not inherit approval authority either.
+    assert "claude-opus-5-5" not in flat
     assert flat.index("claude-fable-5") < flat.index("claude-sonnet-5")
 
 
@@ -637,6 +645,15 @@ def test_opus_advisory_capability_does_not_grant_orchestration() -> None:
     roles = set(load_model_catalog()["models"]["claude-opus-5"]["roles"])
     assert "advisory_consultation" in roles
     assert "orchestration" not in roles
+
+
+def test_opus_5_5_is_the_claude_orchestrator_and_formal_cf_pin() -> None:
+    catalog = load_model_catalog()
+    roles = set(catalog["models"]["claude-opus-5-5"]["roles"])
+    assert "orchestration" in roles
+    assert "advisory_consultation" not in roles
+    assert "claude-opus-5-5" in catalog["review_scheduler"]["endpoints"]["claude"]["models"]
+    assert "claude-opus-5-5" in catalog["formal_cf_defaults"]["claude"]["family_models"]
 
 
 def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
@@ -660,15 +677,15 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
     ]
 
     preferred = route["preferred_worker"]
-    assert preferred["model_id"] == "gpt-6-astra"
-    assert preferred["effort"] == "low"
+    assert preferred["model_id"] == "gpt-6-luna"
+    assert preferred["effort"] == "high"
     assert {
         "bounded_implementation",
         "bounded_investigation",
     } <= set(catalog["models"][preferred["model_id"]]["roles"])
     assert preferred["requires"] == ["complete_advisory_envelope", "objective_scope_ceiling"]
     assert preferred["task_types"] == ["bounded_implementation", "bounded_investigation"]
-    assert preferred["escalate_to"] == "gpt-6-astra"
+    assert preferred["escalate_to"] == "gpt-6-sol"
     assert set(preferred["prohibited_decisions"]) == {
         "consequential_architecture",
         "security",
@@ -684,8 +701,8 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
 
     direct = route["direct_worker"]
     assert direct == {
-        "model_id": "gpt-6-astra",
-        "effort": "low",
+        "model_id": "gpt-6-luna",
+        "effort": "high",
         "task_types": [
             "bounded_implementation",
             "bounded_investigation",
@@ -700,8 +717,8 @@ def test_sol_advised_luna_execution_route_is_bounded_and_machine_readable():
         ],
     }
     assert route["autonomous_fallback"] == {
-        "model_id": "gpt-6-astra",
-        "effort": "low",
+        "model_id": "gpt-6-sol",
+        "effort": "high",
         "when": [
             "missing_objective_scope_ceiling",
             "broader_autonomous_integration",
@@ -796,9 +813,9 @@ def test_astra_role_pins_match_runtime_and_reviewer_invocation():
     assert astra["family"] == "openai"
     assert astra["tier"] == "frontier_authority"
     assert {"implementation", "standard_review", "critical_review", "bounded_advisory_envelope"} <= set(astra["roles"])
-    assert AGENTS["codex"]["default_model"] == "gpt-6-astra"
-    assert AGENTS["codex"]["default_effort"] == "low"
-    assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6-astra --effort medium")
+    assert AGENTS["codex"]["default_model"] == "gpt-6-sol"
+    assert AGENTS["codex"]["default_effort"] == "high"
+    assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6-sol --effort high")
     assert catalog["orchestrator_seats"]["codex"]["escalate_effort"] == "high"
     for risk in ("low", "medium", "high"):
         assert catalog["review_ladders"][risk][0] == ["openai_frontier"]
@@ -806,17 +823,20 @@ def test_astra_role_pins_match_runtime_and_reviewer_invocation():
 
 def test_active_codex_routes_are_gpt6_only():
     catalog = load_model_catalog()
-    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6-astra"]
-    for model_id, model in catalog["models"].items():
-        if "native_codex" in model["transports"] and model["lifecycle"] == "active":
-            assert model_id == "gpt-6-astra"
+    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6-sol", "gpt-6-astra"]
+    native = {
+        model_id
+        for model_id, model in catalog["models"].items()
+        if "native_codex" in model["transports"] and model["lifecycle"] == "active"
+    }
+    assert native == {"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"}
     for candidate in catalog["review_candidates"].values():
         if candidate["route"] == "codex":
-            assert candidate["model_id"] == "gpt-6-astra"
+            assert candidate["model_id"] == "gpt-6-sol"
 
 
-def test_gpt5_cursor_routes_remain_available():
+def test_gpt56_routes_are_not_selected():
     models = load_model_catalog()["models"]
     for model_id in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
-        assert models[model_id]["lifecycle"] == "active"
+        assert models[model_id]["lifecycle"] == "fallback"
         assert models[model_id]["transports"] == ["cursor"]

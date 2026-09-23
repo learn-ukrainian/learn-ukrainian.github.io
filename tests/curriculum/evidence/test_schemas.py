@@ -136,3 +136,90 @@ def test_all_excluding_markers_require_nonlearner_forms(marker):
         form["learner"] = False
         checker.validate(store)
         assert len(store["words"][0]["forms"]) == 1
+
+
+def pack_validator(name: str):
+    schema = json.loads((ROOT / f"schemas/evidence-pack{name}-v1.schema.json").read_text())
+    Draft202012Validator.check_schema(schema)
+    return Draft202012Validator(schema)
+
+
+def test_evidence_pack_schema_valid_and_rejects_words():
+    checker = pack_validator("")
+    pack_doc = {
+        "evidence_schema": 1,
+        "module": "a1/test-mod",
+        "built_with": {
+            "mcp_commit": "a" * 40,
+            "sources_db": "b" * 64,
+            "vesum": "c" * 64,
+            "trie": "d" * 64,
+            "ulif_forms": "pending",
+            "standard_sha256": "e" * 64,
+        },
+        "texts": [
+            {
+                "id": "T-001",
+                "source": {
+                    "kind": "textbook",
+                    "file": "file.pdf",
+                    "grade": 1,
+                    "author": "Author",
+                    "section_id": 1,
+                    "page": 5,
+                    "chunk_id": "c1",
+                },
+                "quote": "Sample quote text",
+                "sha256": "f" * 64,
+                "supports": "Support prose",
+            }
+        ],
+    }
+    checker.validate(pack_doc)
+
+    # Rejects words field (rule 8)
+    bad_doc = deepcopy(pack_doc)
+    bad_doc["words"] = [{"id": "W-001"}]
+    assert not checker.is_valid(bad_doc)
+
+    # Rejects extra top-level field
+    bad_extra = deepcopy(pack_doc)
+    bad_extra["unexpected_field"] = "value"
+    assert not checker.is_valid(bad_extra)
+
+
+def test_evidence_pack_request_schema():
+    checker = pack_validator("-request")
+    req_doc = {
+        "request_schema": 1,
+        "module": "a1/test-mod",
+        "texts": [
+            {
+                "id": "T-001",
+                "source": {"table": "textbooks", "chunk_id": "c1"},
+                "span": {"first_words": "first", "last_words": "last"},
+                "supports": "Supports text",
+            }
+        ],
+        "errors": [
+            {
+                "id": "E-001",
+                "source": {"table": "ua_gec_errors", "error": "err", "correct": "corr"},
+                "pattern": "Pattern text",
+            }
+        ],
+        "unsupported": [
+            {
+                "id": "U-001",
+                "claim": "Claim text",
+                "searches": [{"tool": "search", "query": "q"}],
+                "resolved_by": "operator",
+            }
+        ],
+    }
+    checker.validate(req_doc)
+
+    # Reject other table in errors
+    bad_err = deepcopy(req_doc)
+    bad_err["errors"][0]["source"]["table"] = "style_guide"
+    assert not checker.is_valid(bad_err)

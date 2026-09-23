@@ -275,7 +275,7 @@ passes silently and never invents a value.
 ```yaml
 evidence_schema: 1
 module: a1/<slug>
-built_with: { mcp_commit: <sha>, sources_db: <sha256>, vesum: <sha256>, ulif_forms: <sha256|pending> }
+built_with: { mcp_commit: <sha>, sources_db: <sha256>, vesum: <sha256|null>, ulif_forms: <sha256|pending> }
 
 texts:        # T-…  verbatim quotes
   - id: T-003
@@ -327,15 +327,16 @@ words:        # W-…  one record per lemma **sense** (homonym-safe); ids are le
 Rules:
 
 - Built by a tool run (MCP batch calls), never typed from memory. The builder records the exact
-  source hashes in `built_with`.
+  source hashes in `built_with`. No pack section reads VESUM, so a pack built where the VESUM file is
+  absent records `vesum: null` (and no `russian_patterns`, which folds in the VESUM hash) rather than
+  a hash of a file it never opened.
 - Frozen by `.lock` — two separate locks (§2 rule 3). An edit to a **module pack** changes its hash
   and invalidates the plan's `evidence_ref` until the plan is re-reviewed. An edit to the **level word
   store** changes `_words.yaml.lock`; it lists the plans that cite the changed records (§7.2) and
   those are re-verified. `built_with` is recorded in both files; `ulif_forms` is meaningful for the
   word store, which since revision 8 holds full paradigms and is therefore the larger of the two.
 - **What a built lesson records (r9, #8413 Brief C).** A per-lesson lock `evidence/<level>/_state/<slug>/lessons.lock.yaml`
-  hashes the records each lesson cites; the built lesson's frontmatter carries `evidence: { lesson_entry_sha256 }` only,
-  and the gates compare that entry — so a pack fix invalidates only the lessons that cite the changed records. The plan's
+  hashes the records each lesson cites; the built lesson's frontmatter carries the exact key `evidence: { lesson_entry_sha256 }` only (`evidence.lesson_entry_sha256`) — never the whole-module lock hash, which changes whenever any lesson's citation changes and would invalidate untouched lessons — so a pack fix invalidates only the lessons that cite the changed records. The plan's
   `evidence_ref` keeps the module-pack hash the plan review bound to; plan review runs on a **provisional** lock that is
   promoted into `evidence_ref` on APPROVE (review contracts, Contract 1).
 - `stress_source: pending` is legal while the ULIF base is not ready (R-23); a build refuses a

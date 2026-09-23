@@ -10,9 +10,13 @@ Stat changes during a session fail closed rather than mixing source versions.
 import hashlib
 import json
 import sqlite3
+import time
+import urllib.error
+import urllib.request
 from collections.abc import Callable, Iterable
 from contextlib import closing
 from dataclasses import dataclass, field
+from datetime import UTC, datetime
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -90,10 +94,16 @@ class Sources:
         *,
         sources_db: Path | None = None,
         vesum_db: Path | None = None,
+        standard_path: Path | None = None,
         report: Callable[[str], None] | None = None,
     ):
         self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
         self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
+        self.standard_path = (
+            Path(standard_path)
+            if standard_path is not None
+            else REPO_ROOT / "docs/l2-uk-en/UKRAINIAN-STATE-STANDARD-2024.txt"
+        )
         self.mapper = tags.TagMapper(report=report)
         self.report = report
         self._conn: sqlite3.Connection | None = None
@@ -315,9 +325,133 @@ class Sources:
             markers = [row[0] for row in conn.execute("SELECT DISTINCT marker FROM form_markers ORDER BY marker")]
         return SourceResult({"atoms": atoms, "markers": markers}, digest, metadata)
 
+    def get_textbook_chunk(self, chunk_id: str | int) -> dict | None:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        sql = """
+            SELECT t.*, s.page_start AS page
+            FROM textbooks t
+            LEFT JOIN textbook_sections s ON t.parent_section_id = s.section_id
+            WHERE t.chunk_id = ?
+        """
+        row = conn.execute(sql, (str(chunk_id),)).fetchone()
+        if row is None:
+            return None
+        res = dict(row)
+        if res.get("page") is not None:
+            res["page"] = int(res["page"])
+        return res
+
+    def get_textbook_file_chunks(self, source_file: str) -> list[dict]:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        sql = """
+            SELECT t.*, s.page_start AS page, s.section_number
+            FROM textbooks t
+            LEFT JOIN textbook_sections s ON t.parent_section_id = s.section_id
+            WHERE t.source_file = ?
+            ORDER BY s.section_number, t.parent_section_id, t.id
+        """
+        rows = conn.execute(sql, (source_file,)).fetchall()
+        result = []
+        for r in rows:
+            d = dict(r)
+            if d.get("page") is not None:
+                d["page"] = int(d["page"])
+            result.append(d)
+        return result
+
+    def get_literary_chunk(self, chunk_id: str | int) -> dict | None:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        row = conn.execute("SELECT * FROM literary_texts WHERE chunk_id = ?", (str(chunk_id),)).fetchone()
+        return dict(row) if row is not None else None
+
+    def get_literary_file_chunks(self, source_file: str) -> list[dict]:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        rows = conn.execute("SELECT * FROM literary_texts WHERE source_file = ? ORDER BY id", (source_file,)).fetchall()
+        return [dict(r) for r in rows]
+
+    def find_ua_gec_error(self, error: str, correct: str) -> list[dict]:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        rows = conn.execute(
+            "SELECT id, error, correct, error_type, doc_id, annotator_id, partition, is_native, source_lang FROM ua_gec_errors WHERE error = ? AND correct = ? ORDER BY id",
+            (error, correct),
+        ).fetchall()
+        return [dict(r) for r in rows]
+
+    def get_ua_gec_error_by_id(self, error_id: int) -> dict | None:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        row = conn.execute("SELECT * FROM ua_gec_errors WHERE id = ?", (int(error_id),)).fetchone()
+        return dict(row) if row is not None else None
+
+    def get_style_guide_entry(self, entry_id: int) -> dict | None:
+        self._fingerprint(self.sources_db)
+        conn = self._db()
+        row = conn.execute("SELECT * FROM style_guide WHERE id = ?", (int(entry_id),)).fetchone()
+        return dict(row) if row is not None else None
+
+    def get_standard_file_hash(self) -> str:
+        if not self.standard_path.is_file():
+            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: Standard file not found at {self.standard_path}")
+        return _file_hash(self.standard_path)
+
+    def get_standard_lines(self, start_line: int, end_line: int) -> tuple[str, str]:
+        if not self.standard_path.is_file():
+            raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: Standard file not found at {self.standard_path}")
+        file_hash = _file_hash(self.standard_path)
+        content = self.standard_path.read_text(encoding="utf-8")
+        lines = content.splitlines()
+        total_lines = len(lines)
+        if start_line < 1 or end_line < start_line or end_line > total_lines:
+            raise ValueError(
+                f"{codes.INVALID_REQUEST}: line range {start_line}-{end_line} out of bounds (1..{total_lines})"
+            )
+        selected_lines = lines[start_line - 1 : end_line]
+        text = "\n".join(selected_lines)
+        return text, file_hash
+
+    def check_url(self, url: str, timeout: float = 10.0) -> dict[str, Any]:
+        return check_url(url, timeout=timeout)
+
     def _progress(self, kind: str, count: int, total: int) -> None:
         if self.report:
             self.report(f"{kind}: {count}/{total}")
+
+
+def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
+    """Check a video URL with a hard timeout and one retry; follows redirects."""
+    if timeout is None or timeout <= 0:
+        raise ValueError("check_url requires a positive timeout")
+    headers = {"User-Agent": "learn-ukrainian-evidence-pack/1.0"}
+    req = urllib.request.Request(url, headers=headers)
+    last_exc = None
+    for attempt in range(2):
+        try:
+            with urllib.request.urlopen(req, timeout=timeout) as resp:
+                date_str = datetime.now(UTC).strftime("%Y-%m-%d")
+                return {
+                    "http_status": resp.status,
+                    "final_url": resp.geturl(),
+                    "content_type": resp.headers.get_content_type() if resp.headers else None,
+                    "date": date_str,
+                }
+        except urllib.error.HTTPError as exc:
+            date_str = datetime.now(UTC).strftime("%Y-%m-%d")
+            return {
+                "http_status": exc.code,
+                "final_url": exc.geturl(),
+                "content_type": exc.headers.get_content_type() if exc.headers else None,
+                "date": date_str,
+            }
+        except (urllib.error.URLError, TimeoutError, OSError) as exc:
+            last_exc = exc
+            if attempt == 0:
+                time.sleep(0.5)
+    raise ConnectionError(f"Failed to check URL {url} after retry: {last_exc}")
 
 
 @lru_cache(maxsize=1)

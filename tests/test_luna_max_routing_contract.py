@@ -1,11 +1,8 @@
 """Contracts for fleet routing and the Codex subagent default.
 
-Focused on the machine-readable invariants of the 2026-08-01 routing change:
-The fleet catalog's bounded-worker routes are separate from Codex's native
-subagent default, which is Astra @ low. Neither selection weakens the
-independent cross-family review gate. Large structural assertions stay in
-``test_model_catalog.py`` and ``test_codex_hooks_contract.py``; this file guards
-only the routing contract.
+The fleet catalog's bounded workers are GPT-6 Luna at high. Codex's native
+subagent default matches that scouting seat. Neither selection makes Luna a
+formal reviewer. Large structural assertions stay in ``test_model_catalog.py``.
 """
 
 from __future__ import annotations
@@ -21,30 +18,30 @@ SHARED_DOCTRINE = REPO_ROOT / "docs" / "best-practices" / "fleet-shared-doctrine
 ROLE_SCORECARD = REPO_ROOT / "docs" / "best-practices" / "fleet-role-scorecard.md"
 
 
-def test_codex_source_config_defaults_subagents_to_astra_low() -> None:
+def test_codex_source_config_defaults_subagents_to_luna_high() -> None:
     config = tomllib.loads(CODEX_PROJECT_CONFIG.read_text(encoding="utf-8"))
 
     agents = config["agents"]
-    assert agents["default_subagent_model"] == "gpt-6-astra"
-    assert agents["default_subagent_reasoning_effort"] == "low"
+    assert agents["default_subagent_model"] == "gpt-6-luna"
+    assert agents["default_subagent_reasoning_effort"] == "high"
 
 
-def test_catalog_routes_bounded_codex_workers_to_astra_low() -> None:
+def test_catalog_routes_bounded_codex_workers_to_luna_high() -> None:
     route = load_model_catalog()["execution_routing"]["sol_advised_bounded"]
 
     preferred = route["preferred_worker"]
-    assert preferred["model_id"] == "gpt-6-astra"
-    assert preferred["effort"] == "low"
+    assert preferred["model_id"] == "gpt-6-luna"
+    assert preferred["effort"] == "high"
 
     direct = route["direct_worker"]
-    assert direct["model_id"] == "gpt-6-astra"
-    assert direct["effort"] == "low"
+    assert direct["model_id"] == "gpt-6-luna"
+    assert direct["effort"] == "high"
     assert "objective_scope_ceiling" in direct["constraints"]
     assert "no_final_disposition" in direct["constraints"]
 
     fallback = route["autonomous_fallback"]
-    assert fallback["model_id"] == "gpt-6-astra"
-    assert fallback["effort"] == "low"
+    assert fallback["model_id"] == "gpt-6-sol"
+    assert fallback["effort"] == "high"
     assert "missing_objective_scope_ceiling" in fallback["when"]
 
 
@@ -52,6 +49,7 @@ def test_luna_is_absent_from_formal_review_candidates_and_ladders() -> None:
     catalog = load_model_catalog()
 
     assert "gpt-5.6-luna" not in catalog["review_candidates"]
+    assert "gpt-6-luna" not in catalog["review_candidates"]
     for ladder in catalog["review_ladders"].values():
         rung_candidates = {candidate for rung in ladder for candidate in rung}
         assert "gpt-5.6-luna" not in rung_candidates

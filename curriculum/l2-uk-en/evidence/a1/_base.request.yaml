@@ -1,0 +1,308 @@
+request_schema: 1
+level: a1
+words:
+  # Personal pronouns
+  - lemma: я
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (1st pers sing); basic speaker reference"
+  - lemma: ти
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (2nd pers sing); base-layer item (position 43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)"
+  - lemma: він
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (3rd pers masc sing); taught at position 8 (things-have-gender)"
+  - lemma: вона
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (3rd pers fem sing); taught at position 8 (things-have-gender)"
+  - lemma: воно
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (3rd pers neut sing); taught at position 8 (things-have-gender)"
+  - lemma: ми
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (1st pers plur); basic plural reference"
+  - lemma: ви
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (2nd pers plur/polite); base-layer item (position 43 please-do-this teaches imperative contrast in ти/ви forms, not the pronoun)"
+  - lemma: вони
+    pos: noun
+    want: new
+    note: "closed class: personal pronoun (3rd pers plur); taught at position 13 (many-things)"
+  - lemma: себе
+    pos: noun
+    want: new
+    note: "closed class: reflexive pronoun (lemma for себе/собі/собою); basic reference"
+
+  # Possessive pronouns
+  - lemma: мій
+    pos: adj
+    want: new
+    note: "closed class: possessive pronoun (1st pers sing); taught at position 8 (things-have-gender)"
+  - lemma: твій
+    pos: adj
+    want: new
+    note: "closed class: possessive pronoun (2nd pers sing); taught at position 8 (things-have-gender)"
+  - lemma: свій
+    pos: adj
+    want: new
+    note: "closed class: reflexive possessive pronoun; basic possessive reference"
+  - lemma: наш
+    pos: adj
+    want: new
+    note: "closed class: possessive pronoun (1st pers plur); basic possessive reference"
+  - lemma: ваш
+    pos: adj
+    want: new
+    note: "closed class: possessive pronoun (2nd pers plur); basic possessive reference"
+  - lemma: їхній
+    pos: adj
+    want: new
+    note: "closed class: possessive pronoun (3rd pers plur); basic possessive reference"
+
+  # Demonstrative pronouns
+  - lemma: цей
+    pos: adj
+    want: new
+    note: "closed class: demonstrative pronoun (proximal); taught at position 12 (this-and-that)"
+  - lemma: той
+    pos: adj
+    want: new
+    note: "closed class: demonstrative pronoun (distal); taught at position 12 (this-and-that)"
+
+  # Prepositions and euphonic partners
+  # Note: безо, обо, подо, черезо are not attested as lemmas in VESUM and are omitted.
+  # ві: VESUM prep:arch, not A1.
+  - lemma: у
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 28 (euphony) and position 29 (where-is-it)"
+  - lemma: в
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of у; taught at position 28 (euphony) and position 29 (where-is-it)"
+  - lemma: уві
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of у"
+  - lemma: з
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 28 (euphony) and position 34 (where-from)"
+  - lemma: із
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of з; taught at position 28 (euphony) and position 34 (where-from)"
+  - lemma: зі
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of з; taught at position 28 (euphony) and position 34 (where-from)"
+  - lemma: зо
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of з; taught at position 28 (euphony)"
+  - lemma: на
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 29 (where-is-it)"
+  - lemma: до
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 31 (where-to)"
+  - lemma: від
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 34 (where-from)"
+  - lemma: од
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of від; taught at position 34 (where-from)"
+  - lemma: для
+    pos: prep
+    want: new
+    note: "closed class: preposition; relational preposition of purpose/beneficiary"
+  - lemma: без
+    pos: prep
+    want: new
+    note: "closed class: preposition; met at position 36 (food-and-drink) and position 38 (at-the-cafe)"
+  - lemma: за
+    pos: prep
+    want: new
+    note: "closed class: preposition; relational preposition"
+  - lemma: під
+    pos: prep
+    want: new
+    note: "closed class: preposition; spatial preposition"
+  - lemma: піді
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of під"
+  - lemma: підо
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of під"
+  - lemma: над
+    pos: prep
+    want: new
+    note: "closed class: preposition; spatial preposition"
+  - lemma: наді
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of над"
+  - lemma: надо
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of над"
+  - lemma: перед
+    pos: prep
+    want: new
+    note: "closed class: preposition; spatial and temporal preposition"
+  - lemma: переді
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of перед"
+  - lemma: передо
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of перед"
+  - lemma: після
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 23 (days-and-months) and position 25 (my-day)"
+  - lemma: між
+    pos: prep
+    want: new
+    note: "closed class: preposition; spatial relational preposition"
+  - lemma: межи
+    pos: prep
+    want: new
+    note: "closed class: preposition; older, stylistically marked variant of між, not a sound-driven alternation like з/із/зі"
+  - lemma: біля
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 29 (where-is-it) and position 30 (my-city)"
+  - lemma: через
+    pos: prep
+    want: new
+    note: "closed class: preposition; relational preposition of traversal/cause"
+  - lemma: про
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 40 (people-around-me) with accusative"
+  - lemma: при
+    pos: prep
+    want: new
+    note: "closed class: preposition; relational preposition"
+  - lemma: о
+    pos: prep
+    want: new
+    note: "closed class: preposition; taught at position 22 (what-time) for clock time"
+  - lemma: об
+    pos: prep
+    want: new
+    note: "closed class: preposition, euphonic partner of о; taught at position 22 (what-time)"
+
+  # Conjunctions
+  - lemma: і
+    pos: conj
+    want: new
+    note: "closed class: coordinating conjunction; taught at position 28 (euphony) and position 44 (linking-ideas)"
+  - lemma: й
+    pos: conj
+    want: new
+    note: "closed class: coordinating conjunction, euphonic partner of і; taught at position 28 (euphony) and position 44 (linking-ideas)"
+  - lemma: та
+    pos: conj
+    want: new
+    note: "closed class: coordinating conjunction, semantic/euphonic partner of і; taught at position 44 (linking-ideas)"
+  - lemma: а
+    pos: conj
+    want: new
+    note: "closed class: coordinating conjunction (adversative); taught at position 44 (linking-ideas)"
+  - lemma: але
+    pos: conj
+    want: new
+    note: "closed class: coordinating conjunction (adversative); taught at position 44 (linking-ideas)"
+  - lemma: бо
+    pos: conj
+    want: new
+    note: "closed class: subordinating conjunction (causal); taught at position 44 (linking-ideas)"
+  - lemma: або
+    pos: conj
+    want: new
+    note: "closed class: coordinating conjunction (disjunctive); basic clause connector"
+  - lemma: якщо
+    pos: conj
+    want: new
+    note: "closed class: subordinating conjunction (conditional); basic clause connector"
+  - lemma: щоб
+    pos: conj
+    want: new
+    note: "closed class: subordinating conjunction (purpose); basic clause connector"
+  - lemma: щоби
+    pos: conj
+    want: new
+    note: "closed class: subordinating conjunction (purpose), partner of щоб; basic clause connector"
+  - lemma: поки
+    pos: conj
+    want: new
+    note: "closed class: subordinating conjunction (temporal); basic clause connector"
+
+  # Particles and euphonic adverbs
+  - lemma: не
+    pos: part
+    want: new
+    note: "closed class: negative particle; taught at position 19 (questions: negate)"
+  - lemma: ні
+    pos: part
+    want: new
+    note: "closed class: negative/responsive particle; taught at position 19 (questions: negate)"
+  - lemma: же
+    pos: part
+    want: new
+    note: "closed class: emphatic particle"
+  - lemma: ж
+    pos: part
+    want: new
+    note: "closed class: emphatic particle, euphonic partner of же"
+  - lemma: ось
+    pos: part
+    want: new
+    note: "closed class: deictic/demonstrative particle"
+  - lemma: ще
+    pos: adv
+    want: new
+    note: "closed class: temporal/additive discourse adverb functioning as particle; met at position 38 (at-the-cafe)"
+  - lemma: іще
+    pos: adv
+    want: new
+    note: "closed class: temporal/additive discourse adverb, euphonic partner of ще"
+  - lemma: вже
+    pos: adv
+    want: new
+    note: "closed class: temporal discourse adverb functioning as particle; basic aspectual particle"
+  - lemma: уже
+    pos: adv
+    want: new
+    note: "closed class: temporal discourse adverb, euphonic partner of вже"
+  - lemma: лише
+    pos: part
+    want: new
+    note: "closed class: restrictive particle"
+  - lemma: лиш
+    pos: part
+    want: new
+    note: "closed class: restrictive particle, partner of лише"
+  - lemma: тільки
+    pos: part
+    want: new
+    note: "closed class: restrictive particle"
+  - lemma: саме
+    pos: part
+    want: new
+    note: "closed class: identifying/emphatic particle"

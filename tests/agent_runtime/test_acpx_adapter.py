@@ -973,7 +973,7 @@ def test_build_invocation_argv_is_fully_confined(tmp_path, monkeypatch):
     assert "--no-fs" in plan.cmd
     assert "--no-terminal" in plan.cmd
     assert "--json-strict" in plan.cmd
-    assert ("--model", "gpt-6-astra") in pairs
+    assert ("--model", "gpt-6-sol") in pairs
 
 
 def test_build_invocation_accepts_approved_explicit_model(tmp_path, monkeypatch):

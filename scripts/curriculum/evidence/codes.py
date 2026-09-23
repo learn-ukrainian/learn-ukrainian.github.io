@@ -18,6 +18,14 @@ OVERRIDE_PRESENT = "override_present"
 NOT_CHECKED = "not_checked"
 GLOSS_MISMATCH = "gloss_mismatch"
 CEFR_MISMATCH = "cefr_mismatch"
+SPAN_MISMATCH = "span_mismatch"
+UNSUPPORTED_DROPPED = "unsupported_dropped"
+CHUNK_ID_MOVED = "chunk_id_moved"
+QUOTE_MISMATCH = "quote_mismatch"
+ERROR_MISMATCH = "error_mismatch"
+STANDARD_MISMATCH = "standard_mismatch"
+WORDS_FIELD_FORBIDDEN = "words_field_forbidden"
+OPEN_UNSUPPORTED = "open_unsupported"
 
 DESCRIPTIONS = {
     INVALID_REQUEST: "failure: the request is invalid",
@@ -38,6 +46,14 @@ DESCRIPTIONS = {
     NOT_CHECKED: "report: a fact could not be checked",
     GLOSS_MISMATCH: "failure: stored gloss differs from the source",
     CEFR_MISMATCH: "failure: stored CEFR level differs from the source",
+    SPAN_MISMATCH: "failure: span does not match source chunk exactly once",
+    UNSUPPORTED_DROPPED: "failure: unsupported id from previous build dropped",
+    CHUNK_ID_MOVED: "report: quote text found in source file but chunk id moved",
+    QUOTE_MISMATCH: "failure: quote text no longer found in source file",
+    ERROR_MISMATCH: "failure: error row differs from source",
+    STANDARD_MISMATCH: "failure: standard text or file hash differs from source",
+    WORDS_FIELD_FORBIDDEN: "failure: pack contains forbidden words field",
+    OPEN_UNSUPPORTED: "open (failure under --strict): unsupported claim remains open",
 }
 
 EXCLUDING_MARKERS = frozenset({"alt", "arch", "bad", "dialect", "obsc", "slang", "subst", "vulg"})

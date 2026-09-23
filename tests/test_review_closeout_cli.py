@@ -99,7 +99,7 @@ def test_full_flow_target_freeze_expansion_cycle_reviewer_findings(tmp_path):
     resolution = json.loads(reviewer_proc.stdout)
     # The default OpenAI formal CF catalog seat resolves to Astra.
     assert resolution["selected"]["name"] == "openai_frontier"
-    assert resolution["selected"]["concrete_model"] == "gpt-6-astra"
+    assert resolution["selected"]["concrete_model"] == "gpt-6-sol"
     assert resolution["selected"]["route"] == "codex"
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
     assert resolution["resolved_risk"] == "medium"
@@ -150,7 +150,7 @@ def test_resolve_reviewer_persists_resolution_to_state_file(tmp_path):
     state = json.loads(state_file.read_text(encoding="utf-8"))
     resolution = state["resolved_reviewer"]
     selected = resolution["selected"]
-    assert selected["concrete_model"] == "gpt-6-astra"
+    assert selected["concrete_model"] == "gpt-6-sol"
     assert selected["family"] == "openai"
     assert selected["route"] == "codex"
     assert resolution["policy_version"] == "deterministic-formal-routing.v2"
@@ -173,7 +173,7 @@ def test_resolve_reviewer_merges_into_existing_state_file(tmp_path):
     # Prior lifecycle state survives the merge.
     assert state["baseline"]["issue_ref"] == "#5283"
     assert state["target"]["changed_paths"] == ["feature.py"]
-    assert state["resolved_reviewer"]["selected"]["concrete_model"] == "gpt-6-astra"
+    assert state["resolved_reviewer"]["selected"]["concrete_model"] == "gpt-6-sol"
 
 
 def test_resolve_reviewer_persists_fail_closed_resolution(tmp_path):

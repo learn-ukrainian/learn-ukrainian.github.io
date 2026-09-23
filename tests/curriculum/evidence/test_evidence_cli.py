@@ -37,6 +37,8 @@ def test_cli_help(capsys):
     captured = capsys.readouterr()
     assert "build-words" in captured.out
     assert "words-verify" in captured.out
+    assert "build-pack" in captured.out
+    assert "pack-verify" in captured.out
     assert "invalid_request" in captured.out
 
 
@@ -183,3 +185,143 @@ def test_cli_dry_run_committed_five_lemmas_request():
     assert data["dry_run"] is True
     assert data["words_count"] == 5
     assert data["forms_count"] == 97
+
+
+def test_cli_build_and_verify_pack_subprocess(synthetic_sources, synthetic_standard, tmp_path):
+    req_path = tmp_path / "pack_req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "module": "a1/alphabet",
+                "texts": [
+                    {
+                        "id": "T-001",
+                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
+                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
+                        "supports": "Grounds alphabet letter recognition.",
+                    }
+                ],
+                "standard": [{"id": "S-001", "lines": "1-2"}],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    ev_dir = tmp_path / "evidence" / "a1"
+    ev_dir.mkdir(parents=True, exist_ok=True)
+
+    cmd_build = [
+        PYTHON,
+        "-m",
+        "scripts.curriculum.evidence",
+        "build-pack",
+        "a1",
+        "alphabet",
+        "--request",
+        str(req_path),
+        "--evidence-dir",
+        str(ev_dir),
+        "--sources-db",
+        str(synthetic_sources),
+        "--standard-path",
+        str(synthetic_standard),
+        "--offline",
+        "--json",
+    ]
+    proc_build = subprocess.run(
+        cmd_build,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+        timeout=30,
+    )
+    assert proc_build.returncode == 0, f"build-pack failed: {proc_build.stderr}\n{proc_build.stdout}"
+    data_build = json.loads(proc_build.stdout)
+    assert data_build["status"] == "ok"
+    assert data_build["texts_count"] == 1
+    assert data_build["standard_count"] == 1
+    assert (ev_dir / "alphabet.yaml").exists()
+    assert (ev_dir / "alphabet.yaml.lock").exists()
+
+    cmd_verify = [
+        PYTHON,
+        "-m",
+        "scripts.curriculum.evidence",
+        "pack-verify",
+        "a1",
+        "alphabet",
+        "--evidence-dir",
+        str(ev_dir),
+        "--sources-db",
+        str(synthetic_sources),
+        "--standard-path",
+        str(synthetic_standard),
+        "--offline",
+        "--json",
+    ]
+    proc_verify = subprocess.run(
+        cmd_verify,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+        timeout=30,
+    )
+    assert proc_verify.returncode == 0, f"pack-verify failed: {proc_verify.stderr}\n{proc_verify.stdout}"
+    data_verify = json.loads(proc_verify.stdout)
+    assert data_verify["status"] == "ok"
+
+
+def test_cli_pack_dry_run_does_not_write_files(synthetic_sources, synthetic_standard, tmp_path):
+    req_path = tmp_path / "pack_req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "module": "a1/alphabet",
+                "texts": [
+                    {
+                        "id": "T-001",
+                        "source": {"table": "textbooks", "chunk_id": "chunk-1"},
+                        "span": {"first_words": "synthetic-first", "last_words": "synthetic-last"},
+                        "supports": "Grounds alphabet letter recognition.",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+
+    ev_dir = tmp_path / "evidence" / "a1"
+    cmd_build = [
+        PYTHON,
+        "-m",
+        "scripts.curriculum.evidence",
+        "build-pack",
+        "a1",
+        "alphabet",
+        "--request",
+        str(req_path),
+        "--evidence-dir",
+        str(ev_dir),
+        "--sources-db",
+        str(synthetic_sources),
+        "--standard-path",
+        str(synthetic_standard),
+        "--dry-run",
+        "--offline",
+        "--json",
+    ]
+    proc_build = subprocess.run(
+        cmd_build,
+        capture_output=True,
+        text=True,
+        cwd=REPO_ROOT,
+        timeout=30,
+    )
+    assert proc_build.returncode == 0, f"dry-run failed: {proc_build.stderr}\n{proc_build.stdout}"
+    data_build = json.loads(proc_build.stdout)
+    assert data_build["status"] == "ok"
+    assert data_build["dry_run"] is True
+    assert not (ev_dir / "alphabet.yaml").exists()
+    assert not (ev_dir / "alphabet.yaml.lock").exists()

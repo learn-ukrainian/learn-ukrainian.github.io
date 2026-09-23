@@ -296,7 +296,7 @@ def test_launcher_targets_canonical_main_without_creating_worktree(tmp_path: Pat
         "--model",
         "gpt-6-astra",
         "-c",
-        "model_reasoning_effort=low",
+        "model_reasoning_effort=high",
         "resume",
         "thread-id",
     ]
@@ -412,7 +412,7 @@ def test_launcher_rejects_old_native_model_before_provider_or_lease(tmp_path: Pa
         order_capture=order, expect_success=False,
     )
     assert result.returncode == (4 if driver else 2)
-    assert ("not certified" if driver else "only gpt-6-astra is approved") in result.stderr
+    assert ("not certified" if driver else "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol") in result.stderr
     assert not (tmp_path / "capture.txt").exists()
     assert not order.exists()
     assert not (linked / ".claude" / "devops-epic" / "session-lease.env").exists()

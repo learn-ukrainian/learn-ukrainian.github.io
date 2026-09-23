@@ -30,8 +30,8 @@ and cold-starts the driver, which runs the `drive-epic` skill to orchestrate its
 | **a1-upgrade** (#7995 content rollout; blocked on #7994 Phase 1 landing, selector remains mintable) | Grok driver; writers AGY/Codex; CF cross-family | `./start-grok-driver.sh --epic a1-upgrade` |
 | **folk** (curriculum track) | Grok 4.6 † | `./start-grok-driver.sh --epic folk` |
 | **bio** (curriculum track) | Grok 4.6 | `./start-grok-driver.sh --epic bio` |
-| **any epic** — incident · architecture cutover · contested review | Opus 5 @ xhigh (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
-| **any epic** — Fable alternate | Fable 5 | `./start-claude-driver.sh --epic <epic> --model claude-fable-5` |
+| **any epic** — incident · architecture cutover · contested review | Opus 5.5 @ high (default Anthropic) | `./start-claude-driver.sh --epic <epic>` |
+| **any epic** — Fable alternate (advisor seat; summon, don't seat) | Fable 5.1 | `./start-claude-driver.sh --epic <epic> --model fable` |
 | **any epic** — routine Anthropic alternate | Sonnet-5 | `./start-claude-driver.sh --epic <epic> --model claude-sonnet-5` |
 | **any epic** — Cursor TUI driver (Auto; attested after run) | Cursor Auto | `./start-cursor-driver.sh --epic <epic>` |
 
@@ -84,10 +84,11 @@ already enforces today:
 This lease↔dispatch coupling is fail-closed by default. Full charter:
 `docs/runbooks/cursor-driver.md`.
 
-**Opus 5 @ xhigh is the DEFAULT Anthropic driver seat** (operator decision 2026-08-03).
-`./start-claude-driver.sh --epic <epic>` pins Opus 5 with `--effort xhigh` by default;
-pass `--model claude-fable-5` or `--model claude-sonnet-5` for supported alternates
-(and `--effort …` after `--epic` to override effort). Keep the SUMMONED cadence —
+**Opus 5.5 @ high is the DEFAULT Anthropic driver seat** (operator decision 2026-09-22,
+superseding the 2026-08-03 Opus 5 @ xhigh pin). `./start-claude-driver.sh --epic <epic>`
+pins `claude-opus-5-5[1m]` with `--effort high` by default; pass `--model fable` or
+`--model sonnet` for supported alternates and `--effort …` to override effort
+(Opus 5.5's API default is `medium`; `xhigh` thinks much longer than it did on Opus 5). Keep the SUMMONED cadence —
 1-2 short scheduled sessions/day, dispatch-heavy, never a resident polling loop
 (see model-assignment.md § Orchestration operating pattern). Both Anthropic wrappers
 resolve to the same `claude-<lane>` handoff slot, so the stream lease still allows only one
@@ -99,10 +100,12 @@ cross-family **GPT ↔ Claude** (no DeepSeek, and Grok is never a judge seat) �
 `drive-epic` skill enforces this.
 
 **Recommended against as a driver seat (least-bite — the live `model_catalog.orchestrator_seats` policy is authoritative):**
-- **Fable 5** (Anthropic top tier) — default Anthropic driver plus hardest judgment and
-  top Anthropic advisor (with Astra). **Opus 5 is neither an advisor
-  nor an orchestrator seat** (operator 2026-07-26) — it remains a complex-coding/deep-review
-  dispatch seat only.
+- **Fable 5.1** (Anthropic top tier) — hardest judgment and top Anthropic advisor (with
+  Astra); summoned, not seated as the resident driver since Opus 5.5 took the driver seat
+  (operator 2026-09-22). **Opus 5.5 is the orchestrator seat. Opus 5 remains a
+  complex-coding/deep-review dispatch seat and the non-binding Anthropic advisory
+  consultation** (`claude-opus-5`, operator 2026-07-26). Designated advisor authority
+  stays Fable 5.1.
 - **Kimi K2.7** 256K — under the ~500K window we want for a driver. **Codex (GPT-5.6)** was
   dropped on 2026-07-22 for its 272K window, then **re-added on 2026-07-23** as the named
   harness / infra / devops alternate: HydrationCapsuleV1's score-from-memory and small capsule
@@ -120,8 +123,8 @@ Exact tables below must match `scripts/config/model_catalog.yaml` → `orchestra
 | seat | model_id | effort | escalate_model_id | escalate_effort |
 | --- | --- | --- | --- | --- |
 | agy | gemini-3.8-flash-high | high | gemini-3.1-pro-high | high |
-| claude | claude-fable-5-1 | high | gpt-6-astra | high |
-| codex | gpt-6-astra | high | gpt-6-astra | high |
+| claude | claude-opus-5-5 | high | gpt-6-astra | high |
+| codex | gpt-6-sol | high | gpt-6-astra | high |
 | cursor | auto | high | gpt-6-astra | high |
 | grok | grok-4.7 | high | grok-4.7 | high |
 <!-- fleet-roster-projection:end orchestrator_seats -->

@@ -129,7 +129,7 @@ def test_governor_pins_astra_and_is_mutation_guarded_against_lease_claim() -> No
     assert result.returncode == 0, result.stderr
     argv = _would_exec_argv(result)
     model_index = argv.index("--model")
-    assert argv[model_index + 1] == "gpt-6-astra"
+    assert argv[model_index + 1] == "gpt-6-sol"
     assert argv[model_index + 2 : model_index + 4] == ["-c", "model_reasoning_effort=high"]
     # Mutation guard: removing this seed leaves the bounded Astra invocation
     # without the operator-ordered supervision instruction.
@@ -204,7 +204,7 @@ def test_governor_execs_astra_after_healthy_transport_probe(tmp_path: Path) -> N
     assert result.returncode == 0, result.stderr
     assert '{"status":"healthy","fresh":true}' in result.stdout
     assert "CODEX_EXEC" in result.stdout
-    assert "--model gpt-6-astra" in result.stdout
+    assert "--model gpt-6-sol" in result.stdout
     assert "model_reasoning_effort=high" in result.stdout
     assert "dynamic-area-epic-fleet-governor.md" in result.stdout
 
@@ -224,7 +224,7 @@ def test_model_guard_rejects_old_codex_model_in_claude_code_harness():
         capture_output=True, text=True, check=False, timeout=30,
     )
     assert result.returncode == 2
-    assert "only gpt-6-astra is approved" in result.stderr
+    assert "approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol" in result.stderr
 
 
 @pytest.mark.parametrize("harness", ["codex", "claude-code"])
@@ -245,7 +245,7 @@ def test_forwarded_model_overrides_rejected_before_preflight(harness, forwarded)
 def test_non_model_passthrough_remains_available(harness):
     result = run_launcher("start-codex.sh", "--harness", harness, "--", "--verbose", "inspect this")
     assert result.returncode == 0, result.stderr
-    assert "--model gpt-6-astra" in result.stdout
+    assert "--model gpt-6-sol" in result.stdout
     assert "--verbose" in result.stdout
 
 
@@ -262,3 +262,15 @@ def test_claude_code_forwarded_agent_and_fallback_models_rejected_before_preflig
     assert "would exec" not in result.stdout
     assert "would probe" not in result.stdout
     assert "would require binary" not in result.stdout
+
+
+def test_luna_is_rejected_for_driver_and_governor() -> None:
+    driver = run_launcher("start-codex-driver.sh", "--epic", "devops", "--model", "gpt-6-luna")
+    assert driver.returncode == 4, driver.stderr
+    assert "not certified" in driver.stderr
+    governor = run_launcher("start-codex-driver.sh", "--governor", "AUTO", "--model", "gpt-6-luna")
+    assert governor.returncode == 4, governor.stderr
+    assert "not a governor model" in governor.stderr
+    bounded = run_launcher("start-codex.sh", "--model", "gpt-6-luna")
+    assert bounded.returncode == 0, bounded.stderr
+    assert "--model gpt-6-luna" in bounded.stdout

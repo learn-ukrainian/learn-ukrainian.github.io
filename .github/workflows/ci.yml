@@ -536,6 +536,50 @@ jobs:
           )
           PY
 
+  plan-validate:
+    name: Plan Validate (v2 plans)
+    needs: [changes]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+          # Full history: --strict compares _grammar.yaml against git merge-base HEAD origin/main.
+          fetch-depth: 0
+      - uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97 # v7.0.0
+        with:
+          python-version-file: '.python-version'
+          cache: pip
+      - name: Install plan-validate dependencies
+        run: python -m pip install PyYAML jsonschema
+      - name: Validate v2 module plans (--all --strict)
+        # Path-scoped like content-ci.yml's section7-xref (git diff inside the
+        # step): on pull_request, skip unless the validator's inputs changed.
+        # Other events (merge_group, schedule, dispatch) always run it.
+        run: |
+          set -euo pipefail
+          git fetch --no-tags --prune origin '+refs/heads/main:refs/remotes/origin/main'
+          if [ "${{ github.event_name }}" = "pull_request" ]; then
+            changed=$(git diff --name-only origin/main...HEAD -- \
+              curriculum/l2-uk-en/lesson-plans \
+              curriculum/l2-uk-en/evidence \
+              schemas/module-plan-v2.schema.json \
+              scripts/curriculum/validate)
+            if [ -z "$changed" ]; then
+              echo "No v2 plan inputs changed; skipping."
+              exit 0
+            fi
+          fi
+          for level_dir in curriculum/l2-uk-en/lesson-plans/*/; do
+            level=$(basename "$level_dir")
+            if find "$level_dir" -maxdepth 1 -name '*.yaml' ! -name '_*' | grep -q .; then
+              python -m scripts.curriculum.validate "$level" --all --strict
+            else
+              echo "level $level: no plans"
+            fi
+          done
+
   frontend:
     name: Frontend
     needs: [changes]
@@ -602,7 +646,7 @@ jobs:
   ci-gate:
     name: CI Gate
     if: always() && !cancelled()
-    needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage]
+    needs: [changes, ruff, secret-scan, pytest, contracts, frontend, typesafe-triage, plan-validate]
     runs-on: ubuntu-latest
     timeout-minutes: 2
     steps:
@@ -618,12 +662,17 @@ jobs:
           CONTRACTS: ${{ needs.contracts.result }}
           FRONTEND_JOB: ${{ needs.frontend.result }}
           TYPESAFE_TRIAGE: ${{ needs.typesafe-triage.result }}
+          PLAN_VALIDATE: ${{ needs.plan-validate.result }}
         run: |
           set -euo pipefail
           ok() { [ "$1" = success ]; }
           skip_ok() { [ "$1" = success ] || [ "$1" = skipped ]; }
           ok "$CHANGES"
           ok "$SECRET"
+          # plan-validate self-scopes to the v2 plan inputs (git diff inside the
+          # step on pull_request; always runs on merge_group/schedule), so a
+          # skip is never legitimate here — only success.
+          ok "$PLAN_VALIDATE"
           if [ "$BACKEND" = false ]; then
             skip_ok "$PYTEST"
           else

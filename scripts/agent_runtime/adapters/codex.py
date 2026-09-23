@@ -110,6 +110,25 @@ def _read_only_tmp_root(tool_config: dict, cwd: Path, mode: str) -> Path | None:
     return resolved
 
 
+# Codex treats an unannotated MCP tool as approval-required. Under
+# approval_policy=never and a read-only sandbox, exec cancels that call
+# ("MCP tool call requires approval, but approval policy is never").
+# Approving the sources server keeps the filesystem sandbox and lets the
+# read-only sources MCP run. Write modes already pass
+# --dangerously-bypass-approvals-and-sandbox.
+_SOURCES_MCP_APPROVAL = 'mcp_servers.sources.default_tools_approval_mode="approve"'
+
+
+def _prompt_names_sources_mcp(prompt: str) -> bool:
+    return "mcp__sources__" in prompt
+
+
+def _argv_can_call_sources_mcp(argv: list[str]) -> bool:
+    if "--dangerously-bypass-approvals-and-sandbox" in argv:
+        return True
+    return any(_SOURCES_MCP_APPROVAL in item for item in argv)
+
+
 def _read_only_tmp_flags(root: Path) -> list[str]:
     # Replace the entire permissions map so inherited entries cannot add
     # writable paths. The legacy mode is a fail-closed fallback for old CLIs.
@@ -128,6 +147,8 @@ def _read_only_tmp_flags(root: Path) -> list[str]:
         "features.network_proxy=true",
         "-c",
         'approval_policy="never"',
+        "-c",
+        _SOURCES_MCP_APPROVAL,
     ]
 
 
@@ -196,14 +217,18 @@ def _strip_codex_prompt_echo(stderr: str) -> str:
     return stderr[last_divider.end() :]
 
 
+# Operator 2026-09-22. Sol is the orchestrator, Luna scouts, Astra advises.
+CODEX_APPROVED_MODELS = frozenset({"gpt-6-astra", "gpt-6-luna", "gpt-6-sol"})
+
+
 class CodexAdapter:
     """Adapter for ``codex exec`` (OpenAI ChatGPT Codex CLI)."""
 
     name: str = "codex"
-    default_model: str = "gpt-6-astra"
-    # Operator 2026-09-04: omitted effort defaults to low for the Astra workhorse;
-    # an explicit --effort always wins.
-    default_effort: str = "low"
+    default_model: str = "gpt-6-sol"
+    # Omitted effort is the orchestrator setting. Scouting passes Luna and its
+    # own effort. An explicit --effort always wins.
+    default_effort: str = "high"
     supported_modes: frozenset[str] = frozenset({"read-only", "workspace-write", "danger"})
 
     # Per-invocation scoped $CODEX_HOME path. Set by ``build_invocation``
@@ -237,11 +262,14 @@ class CodexAdapter:
 
         ``effort``: appended as ``-c model_reasoning_effort=<level>`` so it
         overrides ``~/.codex/config.toml`` for this invocation only. When
-        None, the lane default ``low`` is applied.
+        None, the lane default ``high`` is applied.
         See #1396.
         """
-        if model is not None and model != self.default_model:
-            raise ValueError(f"CodexAdapter: model={model!r} rejected; only {self.default_model!r} is approved")
+        if model is not None and model not in CODEX_APPROVED_MODELS:
+            approved = ", ".join(sorted(CODEX_APPROVED_MODELS))
+            raise ValueError(
+                f"CodexAdapter: model={model!r} rejected; approved models are {approved}"
+            )
 
         tc_early = tool_config or {}
         read_only_tmp_root = _read_only_tmp_root(tc_early, cwd, mode)
@@ -384,7 +412,7 @@ class CodexAdapter:
             # ``resume`` has no -s/--sandbox flag, but accepts config
             # overrides. Reassert the requested boundary instead of inheriting
             # a broader mode if a caller changes delivery metadata mid-thread.
-            cmd.extend(["-c", 'sandbox_mode="read-only"'])
+            cmd.extend(["-c", 'sandbox_mode="read-only"', "-c", _SOURCES_MCP_APPROVAL])
         else:
             cmd.extend(self._mode_flags(mode))
         # Dispatched workers must have NO write-capable GitHub connector tools
@@ -400,6 +428,13 @@ class CodexAdapter:
         cmd.append("-")  # Read prompt from stdin.
 
         env_overrides: dict[str, str] = {}
+        if _prompt_names_sources_mcp(prompt) and not _argv_can_call_sources_mcp(cmd):
+            raise ValueError(
+                "CodexAdapter: this mode cannot call mcp__sources__* "
+                "(a read-only sandbox cancels unapproved stdio MCP). "
+                "Language reviews need sources auto-approval or "
+                "--mode workspace-write."
+            )
         if read_only_tmp_root is not None:
             env_overrides["TMPDIR"] = str(read_only_tmp_root)
         if discussion_readonly:
@@ -1195,7 +1230,7 @@ class CodexAdapter:
         dispatch.py::_codex_dispatch_flags for consistency during migration.
         """
         if mode == "read-only":
-            return ["-s", "read-only"]
+            return ["-s", "read-only", "-c", _SOURCES_MCP_APPROVAL]
         # workspace-write and danger both need the bypass flag for MCP
         # access. multi_agent is on by default to match start-codex.sh.
         return [

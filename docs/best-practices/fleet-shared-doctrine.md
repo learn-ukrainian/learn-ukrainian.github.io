@@ -90,11 +90,12 @@ Assign by **role × task family × harness × route/egress**, not marketing rank
 | Model | Effort |
 |---|---|
 | Astra | Floor **`high`**; prefer **`xhigh`/`max`** for qualifying hard decisions (live OpenAI advisor seat; historical Sol effort notes are obsolete) |
-| **Fable 5.1** | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
+| **Opus 5.5** (default Claude model + driver seat, operator 2026-09-22) | Orchestrating / epic driving **`high`** (the launcher default). Routine turns **`medium`** (the API default — and Opus 5.5 at `medium` beats Opus 5 at `high` on coding and knowledge work). See subsection below. |
+| **Fable 5.1** (advisor / authority seat) | Standing default **`high`** (API default; start here and sweep). See subsection below — do **not** port an Opus/`xhigh` habit. |
 | Fable 5 (legacy) | Prefer **`xhigh`** for ceiling work only when that SKU is seated |
 | Terra (orchestrating hard stream) | **`xhigh`** |
 | Terra (routine implement) | **`medium`–`high`**, escalate with risk |
-| Opus orchestrating | **`high`+** |
+| Opus 5 (advisory consults only) | **`high`**; `xhigh` only for a documented hard turn |
 | Luna bounded work / recon | **`max`** with exact owned paths + objective scope ceiling; never sole authority |
 | Claude Haiku recon | **`medium`** default; never sole authority |
 
@@ -116,6 +117,24 @@ Quirks that change the choice:
 - **Higher effort on routine work over-gathers.** At `high+` on a simple task it deliberates too long and may tidy/refactor unasked code — **lower effort**, do not prompt around it.
 - **`low` searches less.** Answers from memory more; bump effort when the turn needs retrieval for named products/libraries with stale knowledge.
 - **Effort ≠ response length.** Over-long replies are a prompting fix (see Concise by default), not an effort dial. Separately: for long *deliverables*, prefer `high` first; only raise to `xhigh`/`max` with a measured benefit and output-budget headroom.
+
+#### Opus 5.5 `/effort` decision topology (operator 2026-09-22)
+
+Short form of the bundled Claude API Opus 5.5 migration guidance. The level names match Fable 5.1's, but the depth behind them does not, and they do not map 1:1 from Opus 5.
+
+| Level | When |
+|---|---|
+| **`high`** | Orchestration and epic driving (`start-claude-driver.sh` default), dispatch briefs, pedagogy calls, first-pass code review of consequential PRs. |
+| **`medium`** | **API default.** Routine interactive turns, status checks, small edits, day-to-day coding. In Anthropic's testing, `medium` matched or beat Opus 5 at `high` on multistep repository coding with about half the tokens. |
+| **`low`** | Simple lookups and quick questions; latency-sensitive turns. Searches less — raise it when the turn needs retrieval. |
+| **`xhigh`** | Hard debugging, large multi-file refactors — and the curriculum/linguistic review skills that pin `effort: xhigh` (same standing exceptions as Fable 5.1). Turns run noticeably longer than on Opus 5. |
+| **`max`** | Almost never; only after measured headroom at `xhigh`. Uncapped. |
+
+Quirks that change the choice:
+
+- **Thinking is always on.** Effort is the only control; `thinking: disabled` and `budget_tokens` return a 400. To get less thinking, **lower effort before adding "think less" prompts**.
+- **More thinking per level than Opus 5**, most of all at `xhigh`/`max`. A setting carried over from Opus 5 means longer turns and more output tokens.
+- **Effort ≠ response length** (same as Fable 5.1): trim output with prompting, not the dial.
 
 ---
 
@@ -223,3 +242,4 @@ When a preferred lane is at quota/outage:
 | 2026-07-19 | Initial doctrine (research + Sol #3588/#3593 amends) | grok/fleet-doctrine-scorecard |
 | 2026-07-19 | Haiku listed with Luna for recon effort guidance / anti-patterns | grok/fleet-scorecard-haiku-recon |
 | 2026-09-09 | Fable 5.1 `/effort` decision topology: default high; medium/low routine; xhigh rare; max almost never; over-gather / low-search quirks | cursor-infra/fable-51-effort-guidance |
+| 2026-09-22 | Opus 5.5 is the default Claude model and driver seat (@ high); Fable 5.1 stays advisor; Opus 5.5 `/effort` topology (API default medium, levels not 1:1 with Opus 5) | claude/opus-5-5-default |

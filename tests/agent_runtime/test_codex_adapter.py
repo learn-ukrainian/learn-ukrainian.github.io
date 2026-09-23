@@ -120,9 +120,9 @@ def test_codex_rejects_unapproved_model_before_state_reset(tmp_path, monkeypatch
         )
 
 
-@pytest.mark.parametrize("model", [None, "gpt-6-astra"])
-@pytest.mark.parametrize("effort,expected", [(None, "low"), ("xhigh", "xhigh")])
-def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, effort, expected):
+@pytest.mark.parametrize("model,expected_model", [(None, "gpt-6-sol"), ("gpt-6-astra", "gpt-6-astra")])
+@pytest.mark.parametrize("effort,expected", [(None, "high"), ("xhigh", "xhigh")])
+def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, expected_model, effort, expected):
     monkeypatch.setattr("scripts.agent_runtime.adapters.codex.shutil.which", lambda _: "codex")
     plan = CodexAdapter().build_invocation(
         prompt="test",
@@ -134,7 +134,7 @@ def test_codex_pins_gpt6_and_preserves_effort(tmp_path, monkeypatch, model, effo
         session_id=None,
         tool_config=None,
     )
-    assert plan.cmd[plan.cmd.index("-m") + 1] == "gpt-6-astra"
+    assert plan.cmd[plan.cmd.index("-m") + 1] == expected_model
     assert any(expected in arg and "model_reasoning_effort" in arg for arg in plan.cmd)
 
 

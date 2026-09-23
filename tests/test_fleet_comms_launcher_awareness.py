@@ -83,7 +83,7 @@ def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
     for required in (
         "LU_AGENT_COMM_TRANSPORT",
         "All normal inter-agent asks",
-        "exactly two-seat discussions",
+        "discussions of 2 to 4 enabled seats",
         "never fall back to bridge/provider execution",
         "fleet-comms owns durable state",
         "legacy bridge/channel stores are read-only",
@@ -96,7 +96,7 @@ def test_shared_launcher_clause_onboards_authority_and_acp_layers() -> None:
 def test_cursor_cold_start_points_to_same_acp_contract() -> None:
     body = CURSOR_COLD_START.read_text(encoding="utf-8")
     assert "agent-seat-onboarding.md" in body
-    assert "route eligible two-seat read-only" in body
+    assert "route eligible 2-to-4-seat read-only" in body
     assert "Codex" in body and "KimiCC K3" in body and "Pool" in body
     assert "automatically" in body
     assert "never\nsilently replays" in body

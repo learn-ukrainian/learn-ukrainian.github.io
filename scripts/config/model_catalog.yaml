@@ -39,7 +39,7 @@ policy:
       (interactive, orchestrator, ask, dispatch, reviewer/judge, cursor availability fallback).
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
-      Hermes and OpenRouter grok routes remain banned. grok-4.6 stays allowed for explicit pins.
+      Hermes and OpenRouter grok routes remain banned. grok-4.6 and grok-4.7-build-fast are not admitted.
     - >-
       Kimi K3 workers (`kimi`, `kimicc`, and catalog ids `kimi-code/k3*`) use the
       native `kimi` CLI subscription path only (`catalog_transport` /
@@ -97,7 +97,7 @@ review_scheduler:
     claude:
       formal_review_eligible: true
       # Operator 2026-08-06: Opus 5 + Opus 4.8 are formal CF pins (not advisory-only).
-      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5, claude-opus-5, claude-opus-4-8]
+      models: [claude-fable-5-1, claude-fable-5, claude-sonnet-5, claude-opus-5-5, claude-opus-5, claude-opus-4-8]
       participant: claude
       adapter_transport: acp
       catalog_transport: native_claude
@@ -109,7 +109,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [gpt-6-astra]
+      models: [gpt-6-sol, gpt-6-astra]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -242,11 +242,11 @@ execution_routing:
         - acceptance_evidence
         - escalation_triggers
     preferred_worker:
-      model_id: gpt-6-astra
-      effort: low
+      model_id: gpt-6-luna
+      effort: high
       requires: [complete_advisory_envelope, objective_scope_ceiling]
       task_types: [bounded_implementation, bounded_investigation]
-      escalate_to: gpt-6-astra
+      escalate_to: gpt-6-sol
       prohibited_decisions:
         - consequential_architecture
         - security
@@ -258,13 +258,13 @@ execution_routing:
         - broader_integration
         - final_disposition
     direct_worker:
-      model_id: gpt-6-astra
-      effort: low
+      model_id: gpt-6-luna
+      effort: high
       task_types: [bounded_implementation, bounded_investigation, recon, bounded_checks, log_triage]
       constraints: [objective_scope_ceiling, no_consequential_decisions, no_final_disposition]
     autonomous_fallback:
-      model_id: gpt-6-astra
-      effort: low
+      model_id: gpt-6-sol
+      effort: high
       when: [missing_objective_scope_ceiling, broader_autonomous_integration, unresolved_consequential_ambiguity]
     review_boundary:
       advisory_family: openai
@@ -281,28 +281,60 @@ models:
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Operator GO 2026-09-04: workhorse low, reviewer medium, advisor high.
-      Native Codex CLI 0.153.3 lists low/medium/high/xhigh/max/ultra; low is
-      the lighter-reasoning default. All Codex routes require GPT-6 Astra.
+      Operator 2026-09-22: advisory seat at high. GPT-6 Sol is the orchestrator
+      and advanced seat. GPT-6 Luna is the scouting and bounded-work seat.
+      Astra remains the most capable model in the family.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
-  gpt-5.6-sol:
+      - https://openai.com/index/introducing-gpt-6-sol-and-luna/
+  gpt-6-sol:
     family: openai
     tier: frontier_authority
     lifecycle: active
+    roles: [orchestration, architecture, implementation, standard_review, critical_review, agentic_coding]
+    transports: [native_codex, cursor]
+    strengths: [agentic_coding, demanding_reasoning, lower_cost_than_astra]
+    weaknesses: [below_astra_on_the_hardest_tasks, not_independent_from_openai_authors]
+    notes: >-
+      Operator 2026-09-22: Codex orchestrator and advanced work at high.
+      API id gpt-6-sol. Standard price $2 / $10 per million input/output
+      tokens under 272K. OpenAI still ranks Astra above Sol.
+    sources:
+      - https://developers.openai.com/api/docs/models/gpt-6-sol
+      - https://openai.com/index/introducing-gpt-6-sol-and-luna/
+  gpt-6-luna:
+    family: openai
+    tier: economical
+    lifecycle: active
+    roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
+    transports: [native_codex, cursor]
+    strengths: [high_volume, repeatable_work, lowest_gpt6_token_price]
+    weaknesses: [not_a_formal_reviewer, not_the_orchestrator, not_sole_consequential_authority]
+    notes: >-
+      Operator 2026-09-22: scouting and bounded repeatable work at high.
+      Use max only for an unusually hard scouting task. API id gpt-6-luna.
+      Standard price $0.10 / $0.50 per million input/output tokens, 20x below
+      GPT-6 Sol. Routing decisions stay with the Sol orchestrator.
+    sources:
+      - https://developers.openai.com/api/docs/models/gpt-6-luna
+      - https://openai.com/index/introducing-gpt-6-sol-and-luna/
+  gpt-5.6-sol:
+    family: openai
+    tier: frontier_authority
+    lifecycle: fallback
     roles: [architecture, critical_review, bounded_advisory_envelope, difficult_debugging, final_synthesis]
     transports: [cursor]
     strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
     weaknesses: [scarce_frontier_quota, wasteful_for_routine_work, not_a_speed_winner]
     notes: >-
-      Wave 1 SCORECARD 2026-08-23 operator lock: A / hard advisory. CF #7142
-      thorough/confirmational on docs — Codex/Sol careful/small, not a speed winner.
+      Historical Wave 1 scorecard only. Operator 2026-09-22: do not select
+      GPT-5.6. Live seats are gpt-6-sol, gpt-6-luna, and gpt-6-astra.
     sources:
       - https://developers.openai.com/api/docs/guides/latest-model
   gpt-5.6-terra:
     family: openai
     tier: frontier_practical
-    lifecycle: active
+    lifecycle: fallback
     roles: [implementation, investigation, standard_review]
     transports: [cursor]
     strengths: [balanced_quality_cost, agentic_coding]
@@ -312,7 +344,7 @@ models:
   gpt-5.6-luna:
     family: openai
     tier: economical
-    lifecycle: active
+    lifecycle: fallback
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: [cursor]
     strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]
@@ -361,6 +393,29 @@ models:
       docs/best-practices/fleet-shared-doctrine.md § Effort.
     sources:
       - https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5-1
+  claude-opus-5-5:
+    family: anthropic
+    tier: frontier_authority
+    lifecycle: active
+    roles: [orchestration, architecture, agentic_coding, critical_review, security_review]
+    transports: [native_claude]
+    strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
+    weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
+    notes: >-
+      Operator 2026-09-22: default Claude model and the Claude orchestrator seat.
+      Opus 5.5 executes advanced non-linguistic work (architecture, hard coding,
+      deep code review). start-claude-driver.sh pins claude-opus-5-5[1m] @ high.
+      Fable 5.1 stays the designated Anthropic advisor / authority seat, including
+      Ukrainian-specific linguistic judgment; this seat does not confer
+      approval authority. Effort: API default is medium (not high); medium on
+      Opus 5.5 beats Opus 5 @ high on coding and knowledge work. Orchestrating runs
+      at high; medium/low for routine turns; xhigh for hard debugging and the
+      curriculum/linguistic review skills that pin effort: xhigh; max almost never.
+      Each level thinks more per turn than on Opus 5 — lower effort before prompting
+      for brevity. Thinking is always on (thinking: disabled and budget_tokens 400);
+      forced tool_choice any/tool 400s. Full prose: fleet-shared-doctrine § Effort.
+    sources:
+      - https://platform.claude.com/docs/en/about-claude/models/overview
   claude-opus-5:
     family: anthropic
     tier: frontier_authority
@@ -481,24 +536,22 @@ models:
     family: xai
     tier: frontier_practical
     lifecycle: active
-    # Rotated from grok-4.6 by operator order 2026-09-22 (#8464). Native CLI
-    # default; Cursor pin uses the same model id.
-    aliases: [grok-4.7-build-fast]
+    # Current CLI default. grok-4.7-build-fast is about 2x the price and is not
+    # an alias. grok-4.6 is not admitted.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
     weaknesses: [native_subscription_window]
     notes: >-
-      Native `grok models` default as of 2026-09-22. build-fast is an allowed
-      explicit pin (same family/tier), not a separate catalog seat.
+      Native `grok models` default. grok-4.7-build-fast is not admitted.
     sources:
       - https://docs.x.ai/docs/models
   grok-4.6:
     family: xai
     tier: frontier_practical
     lifecycle: active
-    # Prior pin (operator order 2026-08-16 / #6865). Remains allowed for explicit
-    # pins after #8464; defaults and ladders use grok-4.7.
+    # Prior pin (operator order 2026-08-16 / #6865). Not admitted by the
+    # adapter. Defaults and ladders use grok-4.7.
     roles: [coding, strong_review, adversarial_review, debugging]
     transports: [native_grok, cursor]
     strengths: [strong_coding, sharp_review, agentic_work, residual_positional_review]
@@ -833,10 +886,10 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
   openai_frontier:
-    model_id: gpt-6-astra
+    model_id: gpt-6-sol
     route: codex
     transport: native_codex
-    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-astra --effort medium
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent codex --model gpt-6-sol --effort high
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     advisory_only_for_author_families: [openai]
@@ -909,7 +962,7 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review]
   grok-4.6:
-    # Retained for explicit pin / history; not on automatic ladders after #8464.
+    # Historical row. The adapter does not admit this id.
     model_id: grok-4.6
     route: grok
     transport: native_grok
@@ -935,6 +988,13 @@ review_candidates:
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
     requires_data_egress_policy: local_interactive
+  claude-opus-5-5:
+    model_id: claude-opus-5-5
+    route: claude
+    transport: native_claude
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5-5
+    review_profiles: [code, infra]
+    capabilities: [code_review, isolation, sealed_evidence]
   claude-opus-5:
     model_id: claude-opus-5
     route: claude
@@ -1011,48 +1071,45 @@ review_candidates:
 # Same shape for every orchestrator seat — like AGY Flash → Pro.
 orchestrator_seats:
   claude:
-    model_id: claude-fable-5-1
+    model_id: claude-opus-5-5
     effort: high
     escalate_model_id: gpt-6-astra
     escalate_effort: high
     escalate_when: deep_single_shot_or_architecture
     note: >-
-      Fable 5.1 is the Anthropic orchestration and designated-authority seat
-      (claude-fable-5 remains as the legacy alias id pinned by existing callers).
-      Non-binding Anthropic advisory consultations route separately to Opus 5 under
-      the operator's 2026-07-31 directive. Fable runs in the SUMMONED cadence, not
-      as a resident daily driver: grok-4.7 owns the daily epic loops; Fable takes
-      1-2 short scheduled judgment sessions/day (verdict reads, course corrections,
-      design locks, briefs) driven dispatch-heavy, never inline-heavy — measured
-      2026-07-26 at ~2 weekly-quota points per orchestration hour in that style.
+      Operator 2026-09-22: Opus 5.5 is the Claude orchestrator seat and executes
+      advanced non-linguistic work (architecture, hard coding, deep code review).
+      start-claude-driver.sh pins claude-opus-5-5[1m] @ high unless --model /
+      --effort (or LAUNCHER_MODEL / LAUNCHER_EFFORT) override it. Fable 5.1 stays
+      the designated Anthropic advisor and authority seat, including
+      Ukrainian-specific linguistic judgment (summoned judgment, advisor panels,
+      the critical review ladder); the orchestrator seat does not confer approval
+      authority. Non-binding Anthropic advisory consultations still
+      route to Opus 5 under the 2026-07-31 directive. grok-4.7 owns the daily epic
+      loops; Claude driver sessions stay dispatch-heavy, never inline-heavy.
       Escalation stays CROSS-FAMILY to Astra @ high; Claude is an escalation TARGET,
-      not an escalator. Opus 5 is not an orchestrator and its advisory output does
-      not confer approval authority.       Driving default is `high` (step down to
-      medium/low for routine; xhigh for hard turns and pinned curriculum/linguistic
-      review skills; max almost never; long deliverables stay at high unless measured
-      gain) — see fleet-shared-doctrine Fable 5.1 effort topology.
+      not an escalator. Driving default is `high` (Opus 5.5 API default is medium;
+      step down to medium/low for routine turns; xhigh for hard turns and pinned
+      curriculum/linguistic review skills; max almost never) — see
+      fleet-shared-doctrine § Effort guidance.
   codex:
-    model_id: gpt-6-astra
+    model_id: gpt-6-sol
     effort: high
     escalate_model_id: gpt-6-astra
     escalate_effort: high
-    escalate_when: deep_single_shot_or_architecture
+    escalate_when: advisory_or_hardest_judgment
     note: >
-      Re-added as orchestrator seat 2026-07-23 (reverses the 2026-07-22 removal) specifically for
-      HydrationCapsuleV1 long-horizon support — score-from-memory + a ~100ms capsule hydrate is
-      designed to minimize the rollover-token overhead the prior removal objected to. Named
-      alternate/overflow on harness/infra (epic:4707) and the independent DevOps stream
-      (epic:5703) alongside Gemini — never a concurrent same-stream co-owner; each
-      session-stream lease already fails closed on a live foreign holder, so no new
-      exclusivity logic is needed.
+      Operator 2026-09-22: GPT-6 Sol @ high is the Codex orchestrator and advanced
+      seat. GPT-6 Astra @ high remains the advisory escalation. GPT-6 Luna @ high
+      does scouting and bounded work and is not this seat. Named alternate on
+      harness/infra and DevOps — never a concurrent same-stream co-owner.
   # 2026-07-22 removal note retained for history: "the 272K window is not worth the session-
   # start/end rollover-token overhead relative to its small context" — see the 2026-07-23 note
   # above for why that calculus changed.
   grok:
     model_id: grok-4.7
     effort: high
-    # Rotated from grok-4.6 (operator order 2026-09-22, #8464). Cursor pin is
-    # availability fallback only (same SKU).
+    # grok-4.7 only. grok-4.7-build-fast is not admitted.
     escalate_model_id: grok-4.7
     escalate_effort: high
     escalate_when: n/a_same_sku
@@ -1099,22 +1156,23 @@ orchestrator_seats:
 # routine ladder. CodexBar health probes must never collapse routing to one seat.
 formal_cf_defaults:
   codex:
-    model_id: gpt-6-astra
-    effort: medium
-    # Authority model for critical / hard CF. The one-shot Codex ACP participant
-    # does not expose reasoning effort, so review-pr pins the model only.
+    model_id: gpt-6-sol
+    effort: high
+    # Advisory escalation. The one-shot Codex ACP participant does not expose
+    # reasoning effort, so review-pr pins the model only.
     escalate_model_id: gpt-6-astra
     escalate_effort: high
   claude:
     model_id: claude-sonnet-5
     effort: high
-    # Sealed Claude ACP: Sonnet default; Fable / Opus 5 / Opus 4.8 via --model pin
+    # Sealed Claude ACP: Sonnet default; Fable / Opus 5.5 / Opus 5 / Opus 4.8 via --model pin
     # (operator 2026-08-06 formal pin). Effort fixed high on sealed participant.
     escalate_model_id: claude-fable-5
     escalate_effort: high
     family_models:
       - claude-sonnet-5
       - claude-fable-5
+      - claude-opus-5-5
       - claude-opus-5
       - claude-opus-4-8
   glm:

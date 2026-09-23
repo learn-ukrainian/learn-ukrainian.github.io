@@ -118,10 +118,10 @@ In `~/.grok/config.toml`:
 
 ```toml
 [session]
-auto_compact_threshold_percent = 95
+auto_compact_threshold_percent = 85
 ```
 
-Default `85` leaves little runway for a deliberate close after the banner.
+Operator 2026-09-21: keep the product default of 85%. Do not raise it.
 
 ## CLI (canary)
 

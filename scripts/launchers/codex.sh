@@ -6,10 +6,13 @@
 export GIT_OPTIONAL_LOCKS=0
 
 launcher_adapter_validate() {
-  if [ "$LC_MODEL" != gpt-6-astra ]; then
-    launcher_error "Codex model $LC_MODEL rejected; only gpt-6-astra is approved."
-    exit 2
-  fi
+  case "$LC_MODEL" in
+    gpt-6-sol|gpt-6-luna|gpt-6-astra) ;;
+    *)
+      launcher_error "Codex model $LC_MODEL rejected; approved models are gpt-6-astra, gpt-6-luna, gpt-6-sol."
+      exit 2
+      ;;
+  esac
   if [ "$LC_HARNESS" = hermes ]; then
     launcher_hermes_validate
     if [ "$LC_MODE" != interactive ]; then
@@ -29,7 +32,7 @@ launcher_adapter_validate() {
   for forwarded in "${LC_FORWARD_ARGS[@]}"; do
     case "$forwarded" in
       --model|--model=*|-m|-m?*)
-        launcher_error 'Forwarded model overrides are forbidden; use --model gpt-6-astra before --.'
+        launcher_error 'Forwarded model overrides are forbidden; use --model before --.'
         exit 2
         ;;
       --fallback-model|--fallback-model=*|--agents|--agents=*)

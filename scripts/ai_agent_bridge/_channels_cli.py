@@ -1538,6 +1538,7 @@ def _handle_discuss(args) -> int:
         )
         return 1
     acp_routine = True
+    from agent_runtime.acpx_discuss import MAX_PARTICIPANTS, MIN_PARTICIPANTS
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
 
     acp_participant_routes: dict[str, dict[str, str | None]] = (
@@ -1545,15 +1546,22 @@ def _handle_discuss(args) -> int:
     )
     with_agents = _parse_csv(args.with_agents)
     if not with_agents:
-        print("❌ --with requires exactly two enabled ACP seats", file=sys.stderr)
+        print(
+            f"❌ --with requires {MIN_PARTICIPANTS} to {MAX_PARTICIPANTS} "
+            "distinct enabled ACP seats",
+            file=sys.stderr,
+        )
         return 1
     allowed_acp_seats = tuple(sorted(acp_participant_routes))
-    if len(with_agents) != 2 or len(set(with_agents)) != 2 or any(
-        agent not in acp_participant_routes for agent in with_agents
+    if (
+        not MIN_PARTICIPANTS <= len(with_agents) <= MAX_PARTICIPANTS
+        or len(set(with_agents)) != len(with_agents)
+        or any(agent not in acp_participant_routes for agent in with_agents)
     ):
         print(
             "❌ unsupported ACP discussion seat list: "
-            f"{', '.join(with_agents)}; requested exactly two distinct enabled ACP seats "
+            f"{', '.join(with_agents)}; requested {MIN_PARTICIPANTS} to "
+            f"{MAX_PARTICIPANTS} distinct enabled ACP seats "
             f"(allowed: {', '.join(allowed_acp_seats)})",
             file=sys.stderr,
         )
@@ -1955,7 +1963,7 @@ def _handle_discuss(args) -> int:
                 f"context (pinned rules) makes the question trivially "
                 f"resolved before any cross-agent comparison is needed. "
                 f"Rare; default is [DISAGREE] in round 1.\n"
-                f"- Even if all three agents sign [AGREE] in round 1, the "
+                f"- Even if every participant signs [AGREE] in round 1, the "
                 f"protocol will NOT short-circuit until round 2+ — round 2 "
                 f"is where you read each other and either confirm or push back."
             )
