@@ -10,12 +10,11 @@ a single call:
 
 from __future__ import annotations
 
-import os
 import sqlite3
 from pathlib import Path
 from typing import Any
 
-from scripts.curriculum.evidence.sources import _signature, _sources_path
+from scripts.curriculum.evidence.sources import _signature
 from scripts.curriculum.resolver.codes import SKIPPED_KINDS
 from scripts.curriculum.resolver.tokenize import (
     Token,
@@ -24,6 +23,7 @@ from scripts.curriculum.resolver.tokenize import (
     tokenize,
 )
 from scripts.lexicon.calque_corrections import CURATED_CALQUES, LEXICALISED_SAFE
+from scripts.storage.topology import require_local_active_sources_db
 from scripts.verification.check_ru_morph import (
     KNOWN_SHADOW_LEMMAS,
     _morph_uk,
@@ -36,13 +36,13 @@ from scripts.verification.stress import (
     source_info,
     verify_stresses,
 )
-from scripts.verification.vesum import verify_words
+from scripts.verification.vesum import _resolve_vesum_db_path, verify_words
 
 VALID_CHECKS = frozenset({"vesum", "stress", "russian_shadow", "ua_gec"})
 DEFAULT_CHECKS = ("vesum", "stress", "russian_shadow", "ua_gec")
 VALID_UA_GEC_TAGS = frozenset({"F/Calque", "F/Collocation", "G/Case", "G/Gender"})
 DEFAULT_UA_GEC_TAGS = ("F/Calque", "F/Collocation")
-KNOWN_UA_GEC_COLLOCATIONS = frozenset({("як", "він"), ("до", "того")})
+_CLOSED_CLASS_POS = frozenset({"conj", "conjunction", "prep", "preposition", "part", "particle", "pron", "pronoun"})
 
 _VESUM_VERSION_CACHE: tuple[tuple[int, int], str] | None = None
 _UA_GEC_INDEX: dict[tuple[str, ...], list[dict[str, Any]]] | None = None
@@ -52,19 +52,23 @@ _UA_GEC_DROPPED_SKIPPED_KIND: int = 0
 
 
 def _sources_path_resolved() -> Path:
-    override = os.environ.get("LU_SOURCES_DB")
-    if override:
-        return Path(override)
-    return _sources_path()
+    path = require_local_active_sources_db()
+    if path.is_file():
+        return path
+    try:
+        from scripts.guardrails.worktree_containment import resolve_main_root
+
+        main_root = resolve_main_root(Path(__file__).resolve().parents[2])
+        main_path = require_local_active_sources_db(main_root)
+        if main_path.is_file():
+            return main_path
+    except Exception:
+        pass
+    return path
 
 
 def _vesum_path_resolved() -> Path:
-    override = os.environ.get("VESUM_DB_PATH")
-    if override:
-        return Path(override)
-    from scripts.rag.config import VESUM_DB_PATH
-
-    return Path(VESUM_DB_PATH)
+    return _resolve_vesum_db_path()
 
 
 def _vesum_version() -> str:
@@ -97,6 +101,34 @@ def _vesum_version() -> str:
 
 def _lower_first(text: str) -> str:
     return text[:1].lower() + text[1:]
+
+
+def _is_closed_class_token(
+    token_str: str,
+    vesum_map: dict[str, list[dict[str, Any]]],
+) -> bool:
+    """True if token has at least one VESUM reading in {conjunction, preposition, pronoun, particle}.
+
+    A token with no VESUM row is NOT closed-class.
+    """
+    matches = vesum_map.get(token_str) or vesum_map.get(token_str.lower()) or vesum_map.get(_lower_first(token_str))
+    if matches is None:
+        try:
+            res = verify_words([token_str, token_str.lower()], db_path=_vesum_path_resolved())
+            matches = res.get(token_str) or res.get(token_str.lower()) or []
+            vesum_map[token_str] = matches
+        except Exception:
+            matches = []
+    if not matches:
+        return False
+    for m in matches:
+        pos = m.get("pos", "")
+        if pos in _CLOSED_CLASS_POS:
+            return True
+        tags = m.get("tags", "")
+        if "pron" in tags.split(":"):
+            return True
+    return False
 
 
 def _get_ua_gec_index() -> tuple[dict[tuple[str, ...], list[dict[str, Any]]], int, int]:
@@ -331,6 +363,7 @@ def check_text(
 
     # 3. VESUM check
     vesum_verified_forms: set[str] = set()
+    vesum_map: dict[str, list[dict[str, Any]]] = {}
     vesum_path: Path | None = None
     if ("vesum" in active_checks or "russian_shadow" in active_checks) and unique_forms:
         vesum_path = _vesum_path_resolved()
@@ -533,6 +566,12 @@ def check_text(
             }
 
     if "ua_gec" in active_checks and unit_sentences and ua_gec_index:
+        if not vesum_map and unique_forms:
+            query_words = list(dict.fromkeys(unique_forms + [_lower_first(f) for f in unique_forms]))
+            try:
+                vesum_map = verify_words(query_words, db_path=_vesum_path_resolved())
+            except Exception:
+                vesum_map = {}
         ua_gec_findings: dict[tuple[str, ...], dict[str, Any]] = {}
 
         for item_idx, item_id, item_text, sentence_tokens in unit_sentences:
@@ -566,12 +605,12 @@ def check_text(
                         error_types = sorted(list({r["error_type"] for r in active_rows}))
                         all_docs = sorted(list({str(r["doc_id"]) for r in active_rows}))
                         is_single_token = len(span_key) == 1
-                        is_collocation = span_key in KNOWN_UA_GEC_COLLOCATIONS or any(
-                            r["error_type"] == "F/Collocation" for r in active_rows
-                        )
+                        is_closed_class_span = all(_is_closed_class_token(t.lookup, vesum_map) for t in span)
+                        is_collocation = any(r["error_type"] == "F/Collocation" for r in active_rows)
                         is_multi_token_calque = (
                             (not is_single_token)
                             and (not is_collocation)
+                            and (not is_closed_class_span)
                             and all(r["error_type"] == "F/Calque" for r in active_rows)
                         )
                         if is_multi_token_calque:
@@ -583,9 +622,16 @@ def check_text(
                             }
                             is_suspicion = False
                         else:
+                            if is_closed_class_span:
+                                label = (
+                                    "UA-GEC correction of function words; depends on sentence context; "
+                                    "suspicion, not a verdict"
+                                )
+                            else:
+                                label = "UA-GEC correction in one document's context; suspicion, not a verdict"
                             detail = {
                                 "status": "suspicion",
-                                "label": ("UA-GEC correction in one document's context; suspicion, not a verdict"),
+                                "label": label,
                                 "error_type": error_types[0] if len(error_types) == 1 else error_types,
                                 "doc_ids": all_docs,
                                 "corrections": corrections,
