@@ -6,7 +6,7 @@ import { describe, expect, it } from 'vitest';
 import ArcLanding from '@site/src/components/ArcLanding';
 import ArcModule from '@site/src/components/ArcModule';
 import { groupByPhase, type ArcData, type ArcPosition } from '@site/src/lib/arc';
-import { formatLessonCount } from '@site/src/lib/i18n/chrome';
+import { formatArcScopeCount, formatLessonCount } from '@site/src/lib/i18n/chrome';
 
 const here = dirname(fileURLToPath(import.meta.url));
 const src = (path: string) => resolve(here, '../../src', path);
@@ -46,6 +46,50 @@ describe('formatLessonCount (numeral agreement)', () => {
     [101, '101 урок', '101 lessons'],
   ])('n = %i', (n, uk, en) => {
     expect(formatLessonCount(n)).toEqual({ uk, en });
+  });
+});
+
+describe('formatArcScopeCount (numeral agreement)', () => {
+  it.each([
+    [0, '0 літер', '0 letters'],
+    [1, '1 літера', '1 letter'],
+    [2, '2 літери', '2 letters'],
+    [4, '4 літери', '4 letters'],
+    [5, '5 літер', '5 letters'],
+    [11, '11 літер', '11 letters'],
+    [21, '21 літера', '21 letters'],
+    [22, '22 літери', '22 letters'],
+    [25, '25 літер', '25 letters'],
+  ])('letters n = %i', (n, uk, en) => {
+    expect(formatArcScopeCount('letters', n)).toEqual({ uk, en });
+  });
+
+  it.each([
+    [0, '0 граматичних тем', '0 grammar points'],
+    [1, '1 граматична тема', '1 grammar point'],
+    [2, '2 граматичні теми', '2 grammar points'],
+    [4, '4 граматичні теми', '4 grammar points'],
+    [5, '5 граматичних тем', '5 grammar points'],
+    [11, '11 граматичних тем', '11 grammar points'],
+    [21, '21 граматична тема', '21 grammar points'],
+    [22, '22 граматичні теми', '22 grammar points'],
+    [25, '25 граматичних тем', '25 grammar points'],
+  ])('grammarPoints n = %i', (n, uk, en) => {
+    expect(formatArcScopeCount('grammarPoints', n)).toEqual({ uk, en });
+  });
+
+  it.each([
+    [0, '0 базових слів', '0 core words'],
+    [1, '1 базове слово', '1 core word'],
+    [2, '2 базові слова', '2 core words'],
+    [4, '4 базові слова', '4 core words'],
+    [5, '5 базових слів', '5 core words'],
+    [11, '11 базових слів', '11 core words'],
+    [21, '21 базове слово', '21 core words'],
+    [22, '22 базові слова', '22 core words'],
+    [25, '25 базових слів', '25 core words'],
+  ])('coreLemmas n = %i', (n, uk, en) => {
+    expect(formatArcScopeCount('coreLemmas', n)).toEqual({ uk, en });
   });
 });
 
@@ -107,7 +151,7 @@ describe('ArcModule', () => {
     expect(screen.getByRole('link', { name: /Previous A1|Попередня A1/ }).getAttribute('href')).toBe('/a1-v1/alpha/');
   });
 
-  it('links only the built lessons and shows the scope numbers', () => {
+  it('links only the built lessons and shows the scope counts', () => {
     render(
       <ArcModule
         level="a1"
@@ -124,8 +168,12 @@ describe('ArcModule', () => {
     expect(screen.getByRole('link', { name: 'Перший' }).getAttribute('href')).toBe('/a1/alpha/1/');
     expect(screen.queryByRole('link', { name: 'Другий' })).toBeNull();
     expect(screen.getByText('Другий')).toBeTruthy();
-    expect(screen.getByText('13')).toBeTruthy();
-    expect(screen.getByText('30')).toBeTruthy();
+    expect(screen.getByText('13 letters')).toBeTruthy();
+    expect(screen.getByText('13 літер')).toBeTruthy();
+    expect(screen.getByText('2 grammar points')).toBeTruthy();
+    expect(screen.getByText('2 граматичні теми')).toBeTruthy();
+    expect(screen.getByText('30 core words')).toBeTruthy();
+    expect(screen.getByText('30 базових слів')).toBeTruthy();
   });
 });
 

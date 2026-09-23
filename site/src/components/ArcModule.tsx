@@ -2,14 +2,20 @@ import React from 'react';
 import type { ReactNode } from 'react';
 import layout from './LevelLanding.module.css';
 import styles from './ArcLanding.module.css';
-import ChromeText from '../lib/i18n/ChromeText';
+import ChromeText, { ChromeDual } from '../lib/i18n/ChromeText';
 import { ArcLessonCount, ArcStateBadge } from './ArcLanding';
+import { formatArcScopeCount, type ArcScopeKind } from '../lib/i18n/chrome';
 import { lessonHref, type ArcPosition } from '../lib/arc';
 
 type ArcModuleProps = {
   level: string;
   position: ArcPosition;
 };
+
+export function ArcScopeCount({ kind, count }: { kind: ArcScopeKind; count: number }): ReactNode {
+  const both = formatArcScopeCount(kind, count);
+  return <ChromeDual en={both.en} uk={both.uk} />;
+}
 
 export default function ArcModule({ level, position }: ArcModuleProps): ReactNode {
   const { scope } = position;
@@ -30,9 +36,9 @@ export default function ArcModule({ level, position }: ArcModuleProps): ReactNod
 
       {scope && (
         <ul className={styles.scope}>
-          <li><strong>{scope.letters}</strong><ChromeText k="arc.scope.letters" /></li>
-          <li><strong>{scope.grammar_points}</strong><ChromeText k="arc.scope.grammarPoints" /></li>
-          <li><strong>{scope.core_lemmas}</strong><ChromeText k="arc.scope.coreLemmas" /></li>
+          <li><ArcScopeCount kind="letters" count={scope.letters} /></li>
+          <li><ArcScopeCount kind="grammarPoints" count={scope.grammar_points} /></li>
+          <li><ArcScopeCount kind="coreLemmas" count={scope.core_lemmas} /></li>
         </ul>
       )}
 

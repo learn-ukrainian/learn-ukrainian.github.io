@@ -405,9 +405,6 @@ const en = {
   'arc.state.plan_reviewed': 'plan reviewed',
   'arc.state.built': 'built',
   'arc.checkpoint': 'Checkpoint',
-  'arc.scope.letters': 'letters',
-  'arc.scope.grammarPoints': 'grammar points',
-  'arc.scope.coreLemmas': 'core words',
 } as const;
 
 export type ChromeKey = keyof typeof en;
@@ -772,9 +769,6 @@ const uk: Record<ChromeKey, string> = {
   'arc.state.plan_reviewed': 'план перевірено',
   'arc.state.built': 'збудовано',
   'arc.checkpoint': 'Контрольна точка',
-  'arc.scope.letters': 'літер',
-  'arc.scope.grammarPoints': 'граматичні теми',
-  'arc.scope.coreLemmas': 'базових слів',
 };
 
 export const CHROME_STRINGS = { en, uk } satisfies Record<ChromeLocale, Record<ChromeKey, string>>;
@@ -819,6 +813,40 @@ export function formatWotdWordCount(count: number): Record<ChromeLocale, string>
 export function formatLessonCount(count: number): Record<ChromeLocale, string> {
   const enNoun = count === 1 ? 'lesson' : 'lessons';
   const ukNoun = pluralizeUk(count, ['урок', 'уроки', 'уроків']);
+  return {
+    en: `${count} ${enNoun}`,
+    uk: `${count} ${ukNoun}`,
+  };
+}
+
+export type ArcScopeKind = 'letters' | 'grammarPoints' | 'coreLemmas';
+
+const ARC_SCOPE_FORMS: Record<
+  ArcScopeKind,
+  { en: [string, string]; uk: [string, string, string] }
+> = {
+  letters: {
+    en: ['letter', 'letters'],
+    uk: ['літера', 'літери', 'літер'],
+  },
+  grammarPoints: {
+    en: ['grammar point', 'grammar points'],
+    uk: ['граматична тема', 'граматичні теми', 'граматичних тем'],
+  },
+  coreLemmas: {
+    en: ['core word', 'core words'],
+    uk: ['базове слово', 'базові слова', 'базових слів'],
+  },
+};
+
+/** Pluralized scope counts for arc module chrome (#8397). */
+export function formatArcScopeCount(
+  kind: ArcScopeKind,
+  count: number,
+): Record<ChromeLocale, string> {
+  const forms = ARC_SCOPE_FORMS[kind];
+  const enNoun = count === 1 ? forms.en[0] : forms.en[1];
+  const ukNoun = pluralizeUk(count, forms.uk);
   return {
     en: `${count} ${enNoun}`,
     uk: `${count} ${ukNoun}`,
