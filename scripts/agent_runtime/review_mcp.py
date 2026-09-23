@@ -29,6 +29,7 @@ from pathlib import Path
 from typing import Any
 
 from scripts.common.repo_root import resolve_repo_root
+from scripts.review.receipts.ledger import REVIEW_TOOLS
 
 ENV_ATTEMPT_ID = "LU_REVIEW_ATTEMPT_ID"
 ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
@@ -192,6 +193,8 @@ def prepare_review_attempt(
         "strict_mcp_config": True,
         "mcp_server_names": ["sources"],
     }
+    if canonical_harness == "claude":
+        adapter_options["allowed_tools"] = ",".join(f"mcp__sources__{name}" for name in sorted(REVIEW_TOOLS))
 
     return ReviewMcpPlan(
         config_path=config_path,
