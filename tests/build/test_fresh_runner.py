@@ -235,7 +235,7 @@ def test_contract_fixture_intentional_error_item_through_check_9(tmp_path, monke
 
 def test_contract_fixture_regeneration_invalidates_receipts(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
-    draft["steps"][0]["id"] = "other"
+    draft["steps"][0]["id"] = "s2"
     validate_fixture_draft(draft)
     first, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     receipt = state / "lesson-1.resolutions.yaml"
