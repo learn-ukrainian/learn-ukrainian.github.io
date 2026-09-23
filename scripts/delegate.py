@@ -103,6 +103,7 @@ from __future__ import annotations
 
 import argparse
 import contextlib
+import fcntl
 import hashlib
 import json
 import logging
@@ -114,6 +115,7 @@ import stat
 import subprocess
 import sys
 import tempfile
+import threading
 import time
 import urllib.error
 import urllib.parse
@@ -717,6 +719,100 @@ class WorktreeStaleBase(RuntimeError):
 
 class WorktreeBranchDiverged(RuntimeError):
     """A local --branch ref contains commits absent from its fetched origin ref."""
+
+
+class WorktreeLockError(RuntimeError):
+    """A per-worktree advisory lock could not be acquired."""
+
+
+class WorktreeLockTimeout(WorktreeLockError):
+    """Another process held the worktree lock for longer than the timeout."""
+
+
+class WorktreeLockReentry(WorktreeLockError):
+    """This process already holds the worktree lock; nesting would self-deadlock."""
+
+
+# Dispatch (create-or-attach, then publish the task record) and settle
+# (ownership check, claim scan, removal) serialize on one lock per worktree,
+# so an attachment can never land between settle's scan and its removal (#8610).
+_WORKTREE_LOCK_DEFAULT_TIMEOUT_S = 30.0
+_WORKTREE_LOCK_POLL_S = 0.05
+# Test seam: overrides ``<git common dir>/lu-worktree-locks`` when set.
+_WORKTREE_LOCK_DIR: Path | None = None
+# (lock key, thread ident) pairs this process holds; see worktree_lock.
+_HELD_WORKTREE_LOCKS: set[tuple[str, int]] = set()
+
+
+def _worktree_lock_dir() -> Path:
+    """Return the lock home shared by every checkout of this repository."""
+    if _WORKTREE_LOCK_DIR is not None:
+        return _WORKTREE_LOCK_DIR
+    common_dir = _git_common_dir(_REPO_ROOT)
+    return (common_dir if common_dir is not None else _TASKS_DIR.parent) / "lu-worktree-locks"
+
+
+def _worktree_lock_path(path: Path | str) -> tuple[str, Path]:
+    """Return the canonical absolute worktree path and its lock file."""
+    raw = Path(path).expanduser()
+    if not raw.is_absolute():
+        raise WorktreeLockError(f"worktree lock path must be absolute: {raw}")
+    canonical = str(raw.resolve())
+    key = hashlib.sha256(canonical.encode("utf-8", "surrogateescape")).hexdigest()[:32]
+    return canonical, _worktree_lock_dir() / f"{key}.lock"
+
+
+@contextlib.contextmanager
+def worktree_lock(path: Path | str, timeout_s: float | None = None):
+    """Hold an exclusive ``flock`` advisory lock for one worktree path.
+
+    The lock file is ``<git common dir>/lu-worktree-locks/<key>.lock``, where
+    the key is the first 32 hex digits of the SHA-256 of the canonical absolute
+    path, so every checkout of the repository contends on the same file. Lock
+    files are never deleted: unlinking one while it is held would let a second
+    process lock a fresh inode, and a stale file is harmless. The lock is
+    polled with ``LOCK_NB`` until ``timeout_s`` elapses, then
+    :class:`WorktreeLockTimeout` is raised. Every failure raises a
+    :class:`WorktreeLockError`. ``timeout_s`` defaults to
+    ``_WORKTREE_LOCK_DEFAULT_TIMEOUT_S``. ``flock`` locks conflict between two
+    opens in one process too, so a nested acquisition on the same thread
+    raises :class:`WorktreeLockReentry` instead of waiting on itself.
+    """
+    canonical, lock_file = _worktree_lock_path(path)
+    holder = (lock_file.stem, threading.get_ident())
+    if holder in _HELD_WORKTREE_LOCKS:
+        raise WorktreeLockReentry(f"worktree lock for {canonical} is already held by this thread")
+    if timeout_s is None:
+        timeout_s = _WORKTREE_LOCK_DEFAULT_TIMEOUT_S
+    try:
+        lock_file.parent.mkdir(mode=0o700, parents=True, exist_ok=True)
+        fd = os.open(lock_file, os.O_RDWR | os.O_CREAT | os.O_CLOEXEC, 0o600)
+    except OSError as exc:
+        raise WorktreeLockError(f"worktree lock for {canonical} unavailable: {type(exc).__name__}: {exc}") from exc
+    try:
+        deadline = time.monotonic() + max(timeout_s, 0.0)
+        while True:
+            try:
+                fcntl.flock(fd, fcntl.LOCK_EX | fcntl.LOCK_NB)
+                break
+            except BlockingIOError:
+                if time.monotonic() >= deadline:
+                    raise WorktreeLockTimeout(
+                        f"worktree lock for {canonical} still held by another process after {timeout_s:g}s"
+                    ) from None
+                time.sleep(_WORKTREE_LOCK_POLL_S)
+            except OSError as exc:
+                raise WorktreeLockError(f"worktree lock for {canonical} failed: {type(exc).__name__}: {exc}") from exc
+    except BaseException:
+        os.close(fd)
+        raise
+    _HELD_WORKTREE_LOCKS.add(holder)
+    try:
+        yield
+    finally:
+        _HELD_WORKTREE_LOCKS.discard(holder)
+        # Closing the descriptor releases the flock.
+        os.close(fd)
 
 
 def _normalize_task_id(agent: str, task_id: str) -> str:
@@ -4216,9 +4312,10 @@ def _worktree_claim_needles(worktree: Path, target: Path) -> frozenset[bytes]:
     A record can spell the claim as the absolute path, its resolved form, a
     repo-relative path, or with a trailing slash. Every such spelling ends in
     the checkout's own directory name, so that name, raw and JSON-escaped, is
-    the pre-filter. Dispatch always records the resolved absolute path; only a
+    the pre-filter. Dispatch always records the resolved absolute path; a
     legacy record that names the checkout through a differently named symlink
-    escapes the filter. An empty set means every record is a candidate.
+    is caught by :func:`_record_may_claim_worktree` instead. An empty set
+    means every record is a candidate.
     """
     needles: set[bytes] = set()
     for name in {worktree.name, target.name}:
@@ -4228,6 +4325,33 @@ def _worktree_claim_needles(worktree: Path, target: Path) -> frozenset[bytes]:
     return frozenset(needles)
 
 
+# A top-level status that still claims a worktree, spelled as dispatch and the
+# worker write it. ``null`` is a missing status, which claims too.
+_CLAIMING_STATUS_TOKEN_RE = re.compile(rb'"status"\s*:\s*(?:"(?:spawning|running|needs_finalize|)"|null)')
+_STATUS_KEY_RE = re.compile(rb'"status"\s*:')
+
+
+def _record_may_claim_worktree(raw: bytes, needles: frozenset[bytes]) -> bool:
+    """Return whether a task record's bytes must be parsed by the claim scan.
+
+    A record is a candidate when it contains a spelling of the worktree's
+    directory name, a claiming status token, or no status key at all. The two
+    status tests keep an active legacy record that names the checkout through
+    a differently named symlink alias in the scan; active records are few, so
+    finished records named elsewhere stay unparsed (#8610).
+    """
+    if not needles or any(needle in raw for needle in needles):
+        return True
+    # ``bytes.find`` then an anchored match is about a third cheaper than
+    # ``re.search`` over the large finished records that dominate the scan.
+    position = raw.find(b'"status"')
+    while position != -1:
+        if _CLAIMING_STATUS_TOKEN_RE.match(raw, position):
+            return True
+        position = raw.find(b'"status"', position + 1)
+    return _STATUS_KEY_RE.search(raw) is None
+
+
 def _active_worktree_claim_refusal(worktree: Path, *, task_id: str) -> str | None:
     """Return a skip reason when another unfinished task still claims ``worktree``.
 
@@ -4235,10 +4359,9 @@ def _active_worktree_claim_refusal(worktree: Path, *, task_id: str) -> str | Non
     claims the checkout and whose ``worktree_path`` resolves to the same path
     blocks removal, even when ``worktree_reused`` was mis-recorded. Claims are
     resolved exactly as dispatch resolves ``--worktree``: relative to the
-    repository root. Only records whose raw bytes contain a claim spelling
-    (:func:`_worktree_claim_needles`) are parsed, so an unrelated corrupt
-    record never blocks removal, while a candidate that cannot be read,
-    parsed, or resolved does. Every failure is a skip reason, never an
+    repository root. Only candidate records (:func:`_record_may_claim_worktree`)
+    are parsed, so an unrelated finished corrupt record never blocks removal,
+    while a candidate that cannot be read, parsed, or resolved does. Every failure is a skip reason, never an
     exception. Returns ``None`` when removal may proceed.
     """
 
@@ -4265,7 +4388,7 @@ def _active_worktree_claim_refusal(worktree: Path, *, task_id: str) -> str | Non
             continue
         except OSError:
             return refused(state_file, "unreadable")
-        if needles and not any(needle in raw for needle in needles):
+        if not _record_may_claim_worktree(raw, needles):
             continue
         try:
             record = json.loads(raw)
@@ -4287,6 +4410,45 @@ def _active_worktree_claim_refusal(worktree: Path, *, task_id: str) -> str | Non
     return None
 
 
+def _settle_worktree_reap(
+    worktree: Path,
+    *,
+    created_by_this_dispatch: bool | None,
+    settling_task_id: str,
+    lock_timeout_s: float | None = None,
+) -> dict[str, Any]:
+    """Run settle's ownership check, claim scan, and removal under the worktree lock.
+
+    Dispatch holds the same lock from create-or-attach until it publishes the
+    task record that names the worktree, so the claim scan sees every
+    attachment that removal could strand (#8610). A lock that cannot be taken
+    fails closed as a skip record; this never raises.
+    """
+    with contextlib.ExitStack() as locks:
+        try:
+            locks.enter_context(worktree_lock(worktree, timeout_s=lock_timeout_s))
+        except WorktreeLockError as exc:
+            if isinstance(exc, WorktreeLockTimeout):
+                reason = "worktree lock busy"
+            elif isinstance(exc, WorktreeLockReentry):
+                reason = "worktree lock already held by this thread"
+            else:
+                reason = "worktree lock unavailable"
+            return {
+                "action": "skipped",
+                "path": str(worktree),
+                "branch": None,
+                "reason": reason,
+                "dirty": None,
+                "pr": None,
+                "error": str(exc),
+            }
+        return _settled_worktree_reap_refusal(
+            worktree,
+            created_by_this_dispatch=created_by_this_dispatch,
+        ) or _reap_finished_worktree(worktree, settling_task_id=settling_task_id)
+
+
 def _reap_finished_worktree(worktree: Path, *, settling_task_id: str) -> dict[str, Any]:
     """Remove a settled worktree checkout and keep its branch ref.
 
@@ -4295,9 +4457,9 @@ def _reap_finished_worktree(worktree: Path, *, settling_task_id: str) -> dict[st
     proved the tree is clean, so removal is worktree-only: ``git branch``
     is never invoked, and a missing branch ref after removal is an error.
 
-    Dispatch takes no lock when it attaches an existing worktree, so the
-    active-claim scan runs last, immediately before removal, to narrow the
-    window in which a new attachment can be missed (#8610).
+    Callers hold :func:`worktree_lock` (see :func:`_settle_worktree_reap`), so
+    no dispatch can attach the checkout between the active-claim scan and the
+    removal (#8610).
     """
     branch = _checked_out_branch(worktree)
     if str(_REPO_ROOT) not in sys.path:
@@ -6261,10 +6423,11 @@ def _run_worker(
         returncode=returncode,
         dirty_on_exit=dirty_on_exit,
     ):
-        worktree_reap = _settled_worktree_reap_refusal(
+        worktree_reap = _settle_worktree_reap(
             Path(worktree_path),
             created_by_this_dispatch=worktree_created_by_dispatch,
-        ) or _reap_finished_worktree(Path(worktree_path), settling_task_id=task_id)
+            settling_task_id=task_id,
+        )
 
     usage_record = getattr(result, "usage_record", None)
     result_substitution = getattr(result, "substitution", None)
@@ -6651,6 +6814,15 @@ def _run_preflight_triage(args: argparse.Namespace, *, worktree_arg: str | None)
 
 def cmd_dispatch(args: argparse.Namespace) -> int:
     """Spawn a detached worker and return immediately (stdout: `<task_id>\n<run_nonce>`)."""
+    # The stack owns the worktree lock taken before create-or-attach. Dispatch
+    # releases it once the task record is published; every earlier return or
+    # exception releases it here (#8610).
+    with contextlib.ExitStack() as worktree_locks:
+        return _dispatch(args, worktree_locks=worktree_locks)
+
+
+def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack) -> int:
+    """Body of :func:`cmd_dispatch`; ``worktree_locks`` holds the worktree lock."""
     from scripts.agent_runtime.attribution import resolve_invocation_attribution
     from scripts.orchestration.job_host_exec import (
         SshTransportError,
@@ -7454,6 +7626,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             else worktree_arg
         )
         try:
+            # Held from create-or-attach until the task record naming the
+            # worktree is published, so settle cannot remove a checkout this
+            # dispatch is attaching. A settle that finished first has already
+            # removed it, and _ensure_worktree then sees a missing path (#8610).
+            worktree_locks.enter_context(
+                worktree_lock(_normalize_worktree_path(resolved_raw, repo_root=target_repo_root))
+            )
             if fleet_repo.default:
                 worktree_path, worktree_branch, worktree_telemetry = _ensure_worktree(
                     agent=dispatch_agent,
@@ -7514,6 +7693,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     elif args.cwd:
         candidate_cwd = _resolve_cwd_path(args.cwd)
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
+        if resolved_wt:
+            try:
+                worktree_locks.enter_context(worktree_lock(resolved_wt))
+            except WorktreeLockError as exc:
+                stdout_fd.close()
+                stderr_fd.close()
+                print(f"❌ failed to lock worktree for {task_id!r}: {exc}", file=sys.stderr)
+                return 1
+            # A settle that held the lock may have removed the worktree; that
+            # is the same as a cwd outside any worktree (#8610).
+            if _resolve_verified_worktree_path(candidate_cwd) != resolved_wt:
+                resolved_wt = None
         if resolved_wt:
             try:
                 _refuse_review_attempt_worktree_reuse(resolved_wt)
@@ -7666,7 +7857,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         if review_plan is not None:
             initial_state["worktree_disallow_reuse"] = True
         initial_state = _with_optional_research_state(initial_state, research_state)
+        if worktree_path is not None and not worktree_path.is_dir():
+            _reap_runtime_tmp_lease(runtime_tmp_root, runtime_tmp_namespace_root)
+            print(
+                f"❌ worktree {worktree_path} for {task_id!r} disappeared before its task record was published",
+                file=sys.stderr,
+            )
+            return 1
         _write_state_atomic(state_path, initial_state)
+        # The published record now claims the worktree for settle's scan, so
+        # the lock is released before the worker, whose own settle takes it
+        # again, is spawned. The two acquisitions never nest (#8610).
+        worktree_locks.close()
 
         # Fix 5 (#1476 AC 5) — dispatch-start telemetry.
         if worktree_path:
