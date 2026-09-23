@@ -1292,3 +1292,238 @@ def _enable_formal_shielded_cf_for_unit_tests(monkeypatch: pytest.MonkeyPatch) -
     Production / drivers leave LU_FORMAL_SHIELDED_CF unset so review-pr refuses.
     """
     monkeypatch.setenv("LU_FORMAL_SHIELDED_CF", "1")
+
+
+# Real primary checkout's ``.worktrees/`` — not a ``.worktrees`` directory inside
+# the worker that happens to be running the suite. Dispatch tests that call
+# ``cmd_dispatch`` used to mkdir husks here while git itself was stubbed.
+_REAL_WORKTREES_DIR = ""
+_REAL_WORKTREES_PREFIX = ""
+_WORKTREE_ENTRIES_AT_START: set[str] = set()
+_CREATED_WORKTREE_ENTRIES: set[str] = set()
+
+
+def _init_real_worktrees_dir() -> str:
+    """Absolute realpath of the primary checkout's ``.worktrees`` directory."""
+    global _REAL_WORKTREES_DIR, _REAL_WORKTREES_PREFIX
+    if _REAL_WORKTREES_DIR:
+        return _REAL_WORKTREES_DIR
+    from scripts.common.repo_root import main_checkout_root
+
+    worktrees = main_checkout_root(_REPO_ROOT) / ".worktrees"
+    _REAL_WORKTREES_DIR = os.path.realpath(worktrees)
+    _REAL_WORKTREES_PREFIX = _REAL_WORKTREES_DIR + os.sep
+    return _REAL_WORKTREES_DIR
+
+
+def _worktree_entry_key(path: object) -> str | None:
+    """Path of a new worktree root, or None for anything nested inside one.
+
+    A dispatch entry is ``.worktrees/dispatch/<agent>/<task>``. A flat entry is
+    a direct child of ``.worktrees``. Deeper paths are files inside a checkout
+    that already exists — including this worker's own worktree — and must not
+    trip the guard. The prefix check is a string compare so ordinary ``/tmp``
+    mkdirs stay cheap.
+    """
+    root = _init_real_worktrees_dir()
+    try:
+        text = os.path.abspath(os.fspath(path))  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return None
+    if text != root and not text.startswith(_REAL_WORKTREES_PREFIX):
+        return None
+    real = os.path.realpath(text)
+    if real == root:
+        return None
+    if not real.startswith(_REAL_WORKTREES_PREFIX):
+        return None
+    parts = [part for part in real[len(_REAL_WORKTREES_PREFIX) :].split("/") if part]
+    if len(parts) == 1 or (len(parts) == 3 and parts[0] == "dispatch"):
+        return real
+    return None
+
+
+def _missing_worktree_entries(path: object) -> list[str]:
+    """Worktree-root ancestors of ``path`` that do not exist yet."""
+    root = _init_real_worktrees_dir()
+    try:
+        probe = os.path.abspath(os.fspath(path))  # type: ignore[arg-type]
+    except (TypeError, ValueError):
+        return []
+    if probe != root and not probe.startswith(_REAL_WORKTREES_PREFIX):
+        return []
+    missing: list[str] = []
+    while probe.startswith(_REAL_WORKTREES_PREFIX) or probe == root:
+        key = _worktree_entry_key(probe)
+        if key and key not in _WORKTREE_ENTRIES_AT_START and not os.path.lexists(key):
+            missing.append(key)
+        parent = os.path.dirname(probe)
+        if parent == probe:
+            break
+        probe = parent
+    return missing
+
+
+def _note_created_worktree_entry(key: str) -> None:
+    if key not in _WORKTREE_ENTRIES_AT_START and os.path.lexists(key):
+        _CREATED_WORKTREE_ENTRIES.add(key)
+
+
+def _guarded_mkdir(path: object, *args: object, **kwargs: object):
+    key = _worktree_entry_key(path)
+    already = bool(key) and (key in _WORKTREE_ENTRIES_AT_START or os.path.lexists(key))
+    result = _ORIGINAL_OS_MKDIR(path, *args, **kwargs)
+    if key and not already:
+        _note_created_worktree_entry(key)
+    return result
+
+
+def _guarded_makedirs(name: object, *args: object, **kwargs: object):
+    pending = _missing_worktree_entries(name)
+    result = _ORIGINAL_OS_MAKEDIRS(name, *args, **kwargs)
+    for key in pending:
+        _note_created_worktree_entry(key)
+    return result
+
+
+def _git_worktree_add_destination(argv: object, cwd: object) -> str | None:
+    """Destination of ``git worktree add``, when ``argv`` is that command."""
+    if not isinstance(argv, (list, tuple)) or not argv:
+        return None
+    if Path(str(argv[0])).name != "git":
+        return None
+    args = [str(arg) for arg in argv[1:]]
+    index = 0
+    while index < len(args):
+        arg = args[index]
+        if arg == "-C":
+            index += 2
+            continue
+        if arg.startswith(("-C", "--git-dir=", "--work-tree=")):
+            index += 1
+            continue
+        if arg == "worktree":
+            break
+        if arg.startswith("-"):
+            index += 1
+            continue
+        return None
+    else:
+        return None
+    if index + 1 >= len(args) or args[index + 1] != "add":
+        return None
+    index += 2
+    valued = {"-b", "-B", "--reason"}
+    while index < len(args):
+        arg = args[index]
+        if arg in valued:
+            index += 2
+            continue
+        if arg.startswith("-"):
+            index += 1
+            continue
+        dest = Path(arg)
+        if not dest.is_absolute():
+            base = Path(str(cwd)) if cwd else Path.cwd()
+            dest = base / dest
+        return _worktree_entry_key(dest)
+    return None
+
+
+def _guarded_subprocess_run(*args: object, **kwargs: object):
+    result = _ORIGINAL_SUBPROCESS_RUN(*args, **kwargs)
+    if getattr(result, "returncode", None) != 0:
+        return result
+    argv = args[0] if args else kwargs.get("args")
+    dest = _git_worktree_add_destination(argv, kwargs.get("cwd"))
+    if dest:
+        _note_created_worktree_entry(dest)
+    return result
+
+
+def _snapshot_worktree_entries() -> set[str]:
+    """Task directories plus ``git worktree list`` paths. No recursive walk."""
+    root = Path(_init_real_worktrees_dir())
+    found: set[str] = set()
+    if root.is_dir():
+        try:
+            children = list(root.iterdir())
+        except OSError:
+            children = []
+        for child in children:
+            found.add(os.path.realpath(child))
+            if child.name != "dispatch" or not child.is_dir():
+                continue
+            try:
+                agents = list(child.iterdir())
+            except OSError:
+                continue
+            for agent in agents:
+                if not agent.is_dir():
+                    continue
+                try:
+                    tasks = list(agent.iterdir())
+                except OSError:
+                    continue
+                for task in tasks:
+                    found.add(os.path.realpath(task))
+    try:
+        proc = _ORIGINAL_SUBPROCESS_RUN(
+            ["git", "-C", str(root.parent), "worktree", "list", "--porcelain"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=30,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return found
+    stdout = getattr(proc, "stdout", "") or ""
+    for line in stdout.splitlines():
+        if line.startswith("worktree "):
+            found.add(os.path.realpath(line[len("worktree ") :].strip()))
+    return found
+
+
+# Bound at fixture install time. Defaults keep import of this module side-effect free.
+_ORIGINAL_OS_MKDIR = os.mkdir
+_ORIGINAL_OS_MAKEDIRS = os.makedirs
+_ORIGINAL_SUBPROCESS_RUN = subprocess.run
+
+
+@pytest.fixture(scope="session", autouse=True)
+def _guard_real_worktree_entries() -> Generator[None, None, None]:
+    """Fail the session if this process created a worktree entry on the real tree.
+
+    Live agents add checkouts under ``.worktrees/`` for the whole time the suite
+    runs, so a before/after listing of that directory false-positives on a busy
+    host. This guard records only creations that pass through this process:
+    ``os.mkdir`` / ``os.makedirs`` of a worktree root, and a successful
+    ``git worktree add`` issued via ``subprocess.run``. Directories nested
+    inside an existing checkout (this worker included) are ignored. Paths
+    already present when the worker started are snapshotted and ignored even
+    if a test touches them.
+
+    Under xdist each worker is its own process, so the hook and the teardown
+    check run once per worker rather than once in the controller.
+    """
+    _WORKTREE_ENTRIES_AT_START.clear()
+    _CREATED_WORKTREE_ENTRIES.clear()
+    _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
+    with pytest.MonkeyPatch.context() as patcher:
+        patcher.setattr(os, "mkdir", _guarded_mkdir)
+        patcher.setattr(os, "makedirs", _guarded_makedirs)
+        patcher.setattr(subprocess, "run", _guarded_subprocess_run)
+        yield
+    listed = _snapshot_worktree_entries()
+    leftovers = sorted(
+        path
+        for path in _CREATED_WORKTREE_ENTRIES
+        if path not in _WORKTREE_ENTRIES_AT_START and (os.path.lexists(path) or path in listed)
+    )
+    if leftovers:
+        joined = "\n".join(f"  {path}" for path in leftovers)
+        pytest.fail(
+            "this pytest process created entries under the real .worktrees/ "
+            f"that are still present:\n{joined}\n"
+            "Concurrent worktrees from other processes are not listed."
+        )
