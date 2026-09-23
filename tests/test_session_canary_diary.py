@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from pathlib import Path
 
 from scripts.session_canary import diary as d
@@ -175,6 +176,49 @@ def test_resolve_handoff_path_default_order_unchanged(tmp_path: Path) -> None:
 
     resolved = d.resolve_handoff_path(tmp_path, "harness")
     assert resolved == claude
+
+
+def test_concurrent_edit_and_stamp_both_survive(tmp_path: Path) -> None:
+    """A locked editor and a stamp cannot drop each other's bytes."""
+    path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
+    path.write_text(
+        "# Handoff\n\n**Last diary stamp:** never\n\n"
+        "## Next Drive\n1. old\n\n"
+        "## 📔 Diary — reverse chrono (newest first)\n\n",
+        encoding="utf-8",
+    )
+    barrier = threading.Barrier(2)
+    errors: list[BaseException] = []
+
+    def editor() -> None:
+        try:
+            barrier.wait(timeout=5)
+            d.rewrite_handoff_locked(path, lambda text: text + "\nEDITOR_SENTINEL\n")
+        except Exception as exc:
+            errors.append(exc)
+
+    def stamper() -> None:
+        try:
+            barrier.wait(timeout=5)
+            d.append_diary_stamp(
+                path,
+                title="canary score PASS",
+                bullets=["STAMP_SENTINEL"],
+                stamp="2026-09-23T00:00Z",
+            )
+        except Exception as exc:
+            errors.append(exc)
+
+    threads = [threading.Thread(target=editor), threading.Thread(target=stamper)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=10)
+    assert errors == []
+    assert all(not thread.is_alive() for thread in threads)
+    text = path.read_text(encoding="utf-8")
+    assert "EDITOR_SENTINEL" in text
+    assert "STAMP_SENTINEL" in text
 
 
 def test_resolve_handoff_path_glm_preferred(tmp_path: Path) -> None:
