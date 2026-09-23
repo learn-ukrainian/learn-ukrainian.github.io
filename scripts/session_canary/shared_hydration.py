@@ -13,7 +13,9 @@ import json
 import os
 import re
 import signal
+import socket
 import subprocess
+import threading
 import time
 from collections.abc import Sequence
 from contextlib import suppress
@@ -270,6 +272,7 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
         return seconds
 
     connection = http.client.HTTPConnection(target.hostname, target.port, timeout=remaining())
+    watchdog: threading.Timer | None = None
     try:
         connection.request("GET", f"/api/epics/v1/{stream_id}?limit=1", headers={"Accept": "application/json"})
         # The request may consume most of the budget. Update the connected
@@ -278,6 +281,16 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
         if request_socket is None:
             raise LookupError("Monitor response socket unavailable")
         request_socket.settimeout(remaining())
+
+        def abort_at_deadline() -> None:
+            # Socket timeouts reset after every received byte. A peer that
+            # drips data can otherwise hold one buffered read indefinitely.
+            with suppress(OSError):
+                request_socket.shutdown(socket.SHUT_RDWR)
+
+        watchdog = threading.Timer(remaining(), abort_at_deadline)
+        watchdog.daemon = True
+        watchdog.start()
         response = connection.getresponse()
         remaining()
         if response.status != 200:
@@ -308,6 +321,8 @@ def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
     except (http.client.HTTPException, OSError, TimeoutError, json.JSONDecodeError) as exc:
         raise LookupError("Monitor stream unavailable") from exc
     finally:
+        if watchdog is not None:
+            watchdog.cancel()
         connection.close()
 
 

@@ -2,9 +2,11 @@
 
 from __future__ import annotations
 
+import http.client
 import http.server
 import json
 import signal
+import sqlite3
 import threading
 import time
 from contextlib import suppress
@@ -129,6 +131,11 @@ def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
 def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(monkeypatch: pytest.MonkeyPatch) -> None:
     response = _remote_stream(monkeypatch)
     monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+
+    def local_db_forbidden(*args: object, **kwargs: object) -> None:
+        raise AssertionError("hydration must not read a local stream database")
+
+    monkeypatch.setattr(sqlite3, "connect", local_db_forbidden)
 
     capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
 
@@ -425,7 +432,52 @@ def test_remote_transport_real_loopback_stalled_headers_timeout(monkeypatch: pyt
         with pytest.raises(LookupError) as error:
             hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 0.05)
         assert received.is_set()
-        assert isinstance(error.value.__cause__, TimeoutError)
+        assert isinstance(error.value.__cause__, (TimeoutError, http.client.RemoteDisconnected))
+    finally:
+        server.shutdown()
+        server.server_close()
+        thread.join(timeout=1)
+
+
+@pytest.mark.parametrize("phase", ["headers", "body"])
+def test_remote_transport_real_loopback_drip_obeys_total_deadline(
+    monkeypatch: pytest.MonkeyPatch, phase: str
+) -> None:
+    received = threading.Event()
+
+    class Handler(http.server.BaseHTTPRequestHandler):
+        def do_GET(self) -> None:
+            received.set()
+            if phase == "body":
+                self.send_response(200)
+                self.send_header("Content-Length", "50")
+                self.send_header("Connection", "close")
+                self.end_headers()
+                pieces = (b"x" for _ in range(50))
+            else:
+                raw = b"HTTP/1.1 200 OK\r\nContent-Length: 2\r\nConnection: close\r\n\r\n{}"
+                pieces = (bytes((byte,)) for byte in raw)
+            for piece in pieces:
+                try:
+                    self.wfile.write(piece)
+                    self.wfile.flush()
+                except (BrokenPipeError, ConnectionResetError):
+                    break
+                time.sleep(0.025)
+
+        def log_message(self, format: str, *args: object) -> None:
+            pass
+
+    server = http.server.ThreadingHTTPServer(("127.0.0.1", 0), Handler)
+    thread = threading.Thread(target=server.serve_forever, daemon=True)
+    thread.start()
+    monkeypatch.setenv("LU_MONITOR_LOOPBACK", f"http://127.0.0.1:{server.server_port}")
+    try:
+        started = time.monotonic()
+        with pytest.raises(LookupError):
+            hydration._fetch_remote_stream("epic:5512", deadline=started + 0.1)
+        assert received.is_set()
+        assert time.monotonic() - started < 0.5
     finally:
         server.shutdown()
         server.server_close()
