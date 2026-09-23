@@ -60,6 +60,11 @@ except ImportError:
     from scripts.agent_runtime.agent_identity import normalize_seat, seat_read_aliases
 
 from scripts.agent_runtime.acp_health import probe_acp_health
+from scripts.fleet.reset_reserve import (
+    codex_is_threatened,
+    codex_reset_reserve_eligible,
+    load_reset_reserve,
+)
 from scripts.research.registry import research_manifest_component
 
 from . import delegate_router as delegate_api
@@ -1049,6 +1054,7 @@ def _compute_dispatch_routing_budget(
     batch_state_dir: Path | None = None,
 ) -> dict[str, Any]:
     current_time = (now or datetime.now(UTC)).astimezone(UTC)
+    reset_reserve = load_reset_reserve(project_root or Path(__file__).resolve().parents[2], now=current_time)
     today = current_time.date()
     window_start = current_time - timedelta(days=7)
     budgets, warnings = _load_agent_budgets(budget_config_path=budget_config_path)
@@ -1178,6 +1184,7 @@ def _compute_dispatch_routing_budget(
         return {
             "generated_at": _isoformat_z(current_time),
             "agents": agents,
+            "reset_reserve": reset_reserve,
             "api_accounts": api_accounts,
             "in_flight": in_flight_by_agent,
             "recommendation": rec,
@@ -1666,8 +1673,28 @@ def _compute_dispatch_routing_budget(
         lane_health = health_records.get(lane, {"healthy": True, "consecutive_failures": 0, "span_minutes": 0})
         agents[lane]["health"] = lane_health
 
+    recommendation_agents = {lane: dict(info) for lane, info in agents.items()}
+    codex_info = agents.get("codex", {})
+    reserve_relaxes_codex = codex_is_threatened(codex_info) and codex_reset_reserve_eligible(
+        reset_reserve, codex_info, now=current_time, snapshot_stale=is_stale
+    )
+    if reserve_relaxes_codex:
+        # Apply the reserve only to this recommendation calculation. The
+        # projected agent telemetry continues to show the provider's actual
+        # status and deficit signal.
+        recommendation_agents["codex"]["status"] = "warm"
+        if isinstance(recommendation_agents["codex"].get("interactive"), dict):
+            recommendation_agents["codex"]["interactive"] = {
+                **recommendation_agents["codex"]["interactive"],
+                "status": "warm",
+            }
+        warnings.append(
+            f"Codex reset reserve active ({reset_reserve['remaining_resets']} confirmed reset(s) remaining); "
+            "fresh provider windows and runtime headroom checks passed"
+        )
+
     rec = _recommend_agent(
-        agents,
+        recommendation_agents,
         warnings,
         current_time=current_time,
         reset_imminent_hours=reset_hours,
@@ -1675,6 +1702,12 @@ def _compute_dispatch_routing_budget(
         records_loaded=len(records),
         authoritative_data_available=cb_sourced_any or fleet_burn_any,
     )
+    if reserve_relaxes_codex:
+        rec["primary_agent_for_code"] = "codex"
+        rec["rationale"] = (
+            "Operator-confirmed Codex reset reserve permits the GPT-6 Sol code lane; "
+            "provider windows, runtime headroom, and lane health were freshly verified."
+        )
 
     # Build ranked view: subscription by remaining headroom (low burn = high remaining first), API always unknown
     def _rank_key(lane: str) -> float:
@@ -1731,6 +1764,7 @@ def _compute_dispatch_routing_budget(
     return {
         "generated_at": _isoformat_z(current_time),
         "agents": agents,
+        "reset_reserve": reset_reserve,
         "api_accounts": api_accounts,
         "in_flight": in_flight_by_agent,
         "recommendation": rec,

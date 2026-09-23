@@ -181,7 +181,7 @@ class Result:
 AGENTS: dict[str, dict] = {
     "codex": {
         "adapter": "scripts.agent_runtime.adapters.codex:CodexAdapter",
-        "default_model": "gpt-5.6-terra",
+        "default_model": "gpt-6-sol",
         "cost_tier": "medium",
         "capabilities": {"code_writing", "code_review", "debugging", "adversarial_review"},
         "cli_available": True,

@@ -14,7 +14,21 @@ import os
 import sys
 import urllib.error
 import urllib.request
+from pathlib import Path
 from typing import Any
+
+try:
+    from scripts.fleet.reset_reserve import (
+        codex_is_threatened,
+        codex_reset_reserve_eligible,
+        load_reset_reserve,
+    )
+except ImportError:  # pragma: no cover - script path fallback
+    from reset_reserve import (  # type: ignore
+        codex_is_threatened,
+        codex_reset_reserve_eligible,
+        load_reset_reserve,
+    )
 
 try:
     from scripts.agent_runtime.agent_identity import RETIRED_AGENT_ALIASES
@@ -204,11 +218,15 @@ def build_lane_rows(
     *,
     active_in_flight: dict[str, int] | None = None,
     lanes: tuple[str, ...] = CODE_LANES,
+    reset_reserve: dict[str, Any] | None = None,
 ) -> list[dict[str, Any]]:
     """Pure formatter input: one row per lane from a routing-budget payload."""
     agents = budget.get("agents") if isinstance(budget.get("agents"), dict) else {}
     budget_flight = budget.get("in_flight") if isinstance(budget.get("in_flight"), dict) else {}
     active = active_in_flight or {}
+    reserve = reset_reserve if reset_reserve is not None else load_reset_reserve(Path(__file__).resolve().parents[2])
+    diagnostics = budget.get("diagnostics") if isinstance(budget.get("diagnostics"), dict) else {}
+    snapshot_stale = bool(diagnostics.get("stale"))
     rows: list[dict[str, Any]] = []
     for lane in lanes:
         info = agents.get(lane) if isinstance(agents.get(lane), dict) else {}
@@ -225,14 +243,21 @@ def build_lane_rows(
             info, quota_source = _mirror_retired_quota(agents, lane, info)
         if budget.get("transport") == "acp" and info.get("eligible") is not True:
             info = {**info, "eligible": False}
+        reserve_relaxes = (
+            lane == "codex"
+            and codex_is_threatened(info)
+            and codex_reset_reserve_eligible(reserve, info, snapshot_stale=snapshot_stale)
+        )
         status = lane_status(info)
         will_last = will_last_to_reset(info)
         retired_target = RETIRED_AGENT_ALIASES.get(lane)
-        avoid = is_avoid_lane(info, lane=lane)
+        avoid = is_avoid_lane(info, lane=lane) and not reserve_relaxes
         in_flight = int(active.get(lane, budget_flight.get(lane, 0) or 0) or 0)
         notes: list[str] = []
         if quota_source:
             notes.append(f"quota:{quota_source}")
+        if reserve_relaxes:
+            notes.append(f"reset reserve eligible ({reserve.get('remaining_resets')} remaining)")
         if avoid:
             notes.append("AVOID")
             if info.get("eligible") is False:
@@ -259,6 +284,7 @@ def build_lane_rows(
                 "pace": pace_summary(info),
                 "in_flight": in_flight,
                 "avoid": avoid,
+                "reset_reserve_eligible": reserve_relaxes,
                 "notes": "; ".join(notes) if notes else "",
             }
         )
@@ -284,7 +310,8 @@ def build_pick_order(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
             "hot": 8,
             "near_cap": 9,
         }.get(status, 5)
-        return (avoid, status_rank, lane_rank, in_flight, rem_key, lane_name)
+        reserve_priority = 0 if row.get("reset_reserve_eligible") else 1
+        return (avoid, reserve_priority, status_rank, lane_rank, in_flight, rem_key, lane_name)
 
     ordered = sorted(rows, key=_sort_key)
     out: list[dict[str, Any]] = []
@@ -345,15 +372,21 @@ def format_pick_order(pick_order: list[dict[str, Any]]) -> str:
 
 
 def cooler_lanes(rows: list[dict[str, Any]]) -> list[str]:
-    return [str(r["lane"]) for r in rows if not r.get("avoid") and r.get("status") in _COOL_STATUSES]
+    return [
+        str(row["lane"])
+        for row in rows
+        if not row.get("avoid")
+        and (row.get("status") in _COOL_STATUSES or row.get("reset_reserve_eligible"))
+    ]
 
 
 def build_report(
     budget: dict[str, Any],
     *,
     active_in_flight: dict[str, int] | None = None,
+    reset_reserve: dict[str, Any] | None = None,
 ) -> dict[str, Any]:
-    rows = build_lane_rows(budget, active_in_flight=active_in_flight)
+    rows = build_lane_rows(budget, active_in_flight=active_in_flight, reset_reserve=reset_reserve)
     pick_order = build_pick_order(rows)
     rec = budget.get("recommendation") if isinstance(budget.get("recommendation"), dict) else {}
     warnings = list(rec.get("warnings") or [])
@@ -419,7 +452,7 @@ def main(argv: list[str] | None = None) -> int:
             "  .venv/bin/python -m scripts.fleet.capacity_pick --json\n"
             "  .venv/bin/python -m scripts.fleet.capacity_pick --transport acp --strict\n\n"
             "Outputs: routing table or JSON; no provider prompts.\n"
-            "Exit codes: 0 success; 2 invalid arguments or no cool/warm lane with --strict.\n"
+            "Exit codes: 0 success; 2 invalid arguments or no admissible lane with --strict.\n"
             "Related: /api/state/routing-budget?transport=acp; issue #7812."
         ),
     )
@@ -438,7 +471,7 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument(
         "--strict",
         action="store_true",
-        help="Exit 2 when no cool/warm lane is available.",
+        help="Exit 2 when no cool/warm lane or admissible Codex reset reserve is available.",
     )
     args = parser.parse_args(argv)
 
@@ -455,7 +488,7 @@ def main(argv: list[str] | None = None) -> int:
 
     if args.strict and not report.get("cooler_lanes"):
         if not args.json:
-            print("❌ --strict: no cool/warm lane available", file=sys.stderr)
+            print("❌ --strict: no cool/warm lane or admissible reset reserve available", file=sys.stderr)
         return 2
     return 0
 

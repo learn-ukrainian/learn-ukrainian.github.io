@@ -80,10 +80,10 @@ def test_review_boundary_rejects_same_family_advisory_output() -> None:
     assert boundary["independent_cross_family_review_required"] is True
 
 
-def test_served_doctrine_uses_luna_max_without_overriding_other_recon_seats() -> None:
+def test_served_doctrine_uses_luna_high_without_overriding_other_recon_seats() -> None:
     doctrine = SHARED_DOCTRINE.read_text(encoding="utf-8")
     scorecard = ROLE_SCORECARD.read_text(encoding="utf-8")
 
-    assert "| Luna bounded work / recon | **`max`**" in doctrine
+    assert "| GPT-6 Luna (bounded work and scouting) | **`high`**" in doctrine
     assert "| Claude Haiku recon | **`medium`** default" in doctrine
-    assert "Luna `max` with exact owned paths + objective scope ceiling" in scorecard
+    assert "Luna `high` with exact owned paths + objective scope ceiling" in scorecard

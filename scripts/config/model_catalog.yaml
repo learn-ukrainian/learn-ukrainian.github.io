@@ -1,5 +1,5 @@
 schema_version: model-catalog.v1
-reviewed_on: 2026-09-22
+reviewed_on: 2026-09-23
 refresh_after_days: 30
 
 # This is the preferred/current fleet, not every legacy model exposed by a
@@ -35,7 +35,9 @@ policy:
     - CodexBar is a health and quota signal, not a complete model inventory.
     - Cursor auto is a harness choice, never a model identity for formal review.
     - >-
-      GPT and Claude routes are native-only. Grok is native CLI ONLY at grok-4.7 for every seat
+      GPT-6 routes are native Codex only until Cursor exposes a verified GPT-6 slug.
+      Claude Opus 5.5 may use native Claude or an explicitly verified Cursor slug.
+      Grok is native CLI ONLY at grok-4.7 for every seat
       (interactive, orchestrator, ask, dispatch, reviewer/judge, cursor availability fallback).
       Operator order 2026-09-22 (#8464) rotates from grok-4.6; #6865 previously retired opencode
       first-party xai/grok-* for orchestrator seats — opencode remains unsanctioned for grok.
@@ -109,7 +111,7 @@ review_scheduler:
       capacity_weight: 1.0
     codex:
       formal_review_eligible: true
-      models: [gpt-6-sol, gpt-6-astra]
+      models: [gpt-6-sol]
       participant: codex
       adapter_transport: acp
       catalog_transport: native_codex
@@ -276,13 +278,14 @@ models:
     family: openai
     tier: frontier_authority
     lifecycle: active
-    roles: [implementation, investigation, standard_review, critical_review, bounded_advisory_envelope, architecture, recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
-    transports: [native_codex, cursor]
+    roles: [bounded_advisory_envelope, architecture, consequential_advisory]
+    transports: [native_codex]
     strengths: [agentic_coding, frontier_technical_judgment]
     weaknesses: [not_independent_from_openai_authors]
     notes: >-
-      Operator 2026-09-22: advisory seat at high. GPT-6 Sol is the orchestrator
-      and advanced seat. GPT-6 Luna is the scouting and bounded-work seat.
+      Operator 2026-09-22: hard advisory seat at high, not an implementer or
+      routine reviewer. GPT-6 Sol is the orchestrator, coder, and reviewer.
+      GPT-6 Luna is the scouting and bounded-work seat.
       Astra remains the most capable model in the family.
     sources:
       - https://developers.openai.com/api/docs/models/gpt-6-astra
@@ -292,7 +295,7 @@ models:
     tier: frontier_authority
     lifecycle: active
     roles: [orchestration, architecture, implementation, standard_review, critical_review, agentic_coding]
-    transports: [native_codex, cursor]
+    transports: [native_codex]
     strengths: [agentic_coding, demanding_reasoning, lower_cost_than_astra]
     weaknesses: [below_astra_on_the_hardest_tasks, not_independent_from_openai_authors]
     notes: >-
@@ -307,7 +310,7 @@ models:
     tier: economical
     lifecycle: active
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
-    transports: [native_codex, cursor]
+    transports: [native_codex]
     strengths: [high_volume, repeatable_work, lowest_gpt6_token_price]
     weaknesses: [not_a_formal_reviewer, not_the_orchestrator, not_sole_consequential_authority]
     notes: >-
@@ -321,7 +324,7 @@ models:
   gpt-5.6-sol:
     family: openai
     tier: frontier_authority
-    lifecycle: fallback
+    lifecycle: retired
     roles: [architecture, critical_review, bounded_advisory_envelope, difficult_debugging, final_synthesis]
     transports: [cursor]
     strengths: [frontier_technical_judgment, long_horizon_reasoning, programmatic_tools]
@@ -334,7 +337,7 @@ models:
   gpt-5.6-terra:
     family: openai
     tier: frontier_practical
-    lifecycle: fallback
+    lifecycle: retired
     roles: [implementation, investigation, standard_review]
     transports: [cursor]
     strengths: [balanced_quality_cost, agentic_coding]
@@ -344,7 +347,7 @@ models:
   gpt-5.6-luna:
     family: openai
     tier: economical
-    lifecycle: fallback
+    lifecycle: retired
     roles: [recon, bounded_checks, log_triage, bounded_implementation, bounded_investigation]
     transports: [cursor]
     strengths: [speed, high_volume, max_effort_bounded_execution, quality_cost_frontier]
@@ -398,7 +401,7 @@ models:
     tier: frontier_authority
     lifecycle: active
     roles: [orchestration, architecture, agentic_coding, critical_review, security_review]
-    transports: [native_claude]
+    transports: [native_claude, cursor]
     strengths: [agentic_coding_at_medium_effort, code_review_precision, grounded_analysis, visual_input_reading]
     weaknesses: [thinking_cannot_be_disabled, longer_turns_at_xhigh_max, broader_refusal_classifiers]
     notes: >-
@@ -436,7 +439,7 @@ models:
       - https://platform.claude.com/docs/en/about-claude/models/overview
   # Retained alongside claude-opus-5. Opus is the non-binding Anthropic advisory-
   # consultation seat; designated approval authority remains identity-scoped and the
-  # current advisor roster still points at claude-fable-5 + gpt-5.6-sol. This legacy id
+  # current advisor roster uses claude-fable-5 + gpt-6-astra. This legacy id
   # is still referenced by scripts/context_canary.py, scripts/pipeline/dispatch.py,
   # ai_agent_bridge/openai_proxy.py and _dispatch_wrappers.py. Removing the entry
   # broke collection with KeyError: 'claude-opus-4-8'.
@@ -995,6 +998,13 @@ review_candidates:
     invocation: .venv/bin/python scripts/delegate.py dispatch --agent claude --model claude-opus-5-5
     review_profiles: [code, infra]
     capabilities: [code_review, isolation, sealed_evidence]
+  claude-opus-5-5-cursor-fallback:
+    model_id: claude-opus-5-5
+    route: cursor
+    transport: cursor
+    invocation: .venv/bin/python scripts/delegate.py dispatch --agent cursor --model claude-opus-5-5-high
+    review_profiles: [code, infra]
+    capabilities: [code_review]
   claude-opus-5:
     model_id: claude-opus-5
     route: claude
@@ -1236,9 +1246,11 @@ review_ladders:
     - [pool]
     - [pool-xs, gemini-3.5-flash]
   high: &practical_first_code_review
-    # Routine CF order: Astra medium → Sonnet → Flash / Grok / K3…
+    # Routine CF order: Sol high → Opus 5.5 high → Sonnet → Flash / Grok / K3…
     # glm stays off automatic ladders; Fable stays critical-only.
     - [openai_frontier]
+    - [claude-opus-5-5]
+    - [claude-opus-5-5-cursor-fallback]
     - [claude-sonnet-5]
     - [gemini-3.8-flash]
     - [grok-4.7]

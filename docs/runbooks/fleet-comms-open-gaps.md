@@ -141,13 +141,13 @@ Practical seats @ **high** — not Sol/Fable on routine PRs:
 ```bash
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
   --initiator codex/orchestrator \
-  --author-model gpt-5.6-sol --author-family openai \
+  --author-model gpt-6-sol --author-family openai \
   --review-profile code --risk high
 
 # Exceptional pin: still passes every hard gate and uses the same reservation ledger.
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> \
   --initiator codex/orchestrator \
-  --author-model gpt-5.6-sol --author-family openai \
+  --author-model gpt-6-sol --author-family openai \
   --reviewer claude --model claude-fable-5 --effort high \
   --override-reason "operator-requested Fable dissent"
 

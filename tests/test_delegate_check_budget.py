@@ -336,6 +336,64 @@ def test_language_lane_refuses_to_shed_onto_cursor(monkeypatch):
         delegate._resolve_agent_with_budget_guard("claude", language_lane=True)
 
 
+def _codex_reserve_budget():
+    return {
+        "recommendation": {"primary_agent_for_code": "cursor", "rationale": "fixture", "warnings": []},
+        "agents": {
+            "claude": {"status": "hot", "interactive": {"status": "hot"}},
+            "codex": {
+                "status": "hot",
+                "eligible": True,
+                "health": {"healthy": True},
+                "freshness": "fresh",
+                "age_s": 10,
+                "codexbar": {
+                    "will_last_to_reset": False,
+                    "windows": {"primary": {"remaining_pct": 15.0}},
+                },
+                "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+            },
+            "cursor": {"status": "cool"},
+        },
+        "diagnostics": {"records_loaded": 5, "stale": False, "codexbar_data_available": True},
+    }
+
+
+def test_check_budget_uses_reset_reserve_for_codex(monkeypatch, capsys):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", _codex_reserve_budget)
+    monkeypatch.setattr(
+        delegate,
+        "_load_reset_reserve",
+        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 2},
+    )
+    assert delegate._resolve_agent_with_budget_guard("codex") == "codex"
+    assert "reset reserve active (2 confirmed reset(s) remaining)" in capsys.readouterr().err
+
+
+def test_check_budget_stale_snapshot_does_not_activate_reset_reserve(monkeypatch, capsys):
+    budget = _codex_reserve_budget()
+    budget["diagnostics"]["stale"] = True
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", lambda: budget)
+    monkeypatch.setattr(
+        delegate,
+        "_load_reset_reserve",
+        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 2},
+    )
+    assert delegate._resolve_agent_with_budget_guard("codex") == "codex"
+    assert "reset reserve active" not in capsys.readouterr().err
+
+
+def test_language_fallback_can_land_on_reserve_eligible_codex(monkeypatch):
+    monkeypatch.setattr(delegate, "_fetch_routing_budget", _codex_reserve_budget)
+    monkeypatch.setattr(
+        delegate,
+        "_load_reset_reserve",
+        lambda _root: {"available": True, "provider": "codex", "remaining_resets": 1},
+    )
+    monkeypatch.setattr(delegate, "_load_dispatch_fallbacks", lambda: {"claude": "codex"})
+    assert delegate._resolve_agent_with_budget_guard("claude", language_lane=True) == "codex"
+
+
 def test_adapter_rejects_foreign_model_after_substitution():
     temp_root = Path(tempfile.gettempdir())
     before = set(temp_root.glob("codex-runtime-*.txt"))

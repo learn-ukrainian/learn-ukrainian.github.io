@@ -17,9 +17,9 @@ profiles:
   sol_lead:
     profile_id: sol_lead
     transport: claudex
-    main_model_id: gpt-5.6-sol
+    main_model_id: gpt-6-sol
     model_id_patterns:
-      - '^gpt-5\.6-sol$'
+      - '^gpt-6-sol$'
     main_context_window_tokens: 272000
     auto_compact_capacity_tokens: 258400
     cold_start_profile: compact

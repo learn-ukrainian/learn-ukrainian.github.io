@@ -30,8 +30,12 @@ breadth ≥3 agents and ≥2 tiers for 14 consecutive days.
 | Operator name | Catalog tier | Role | Examples (confirm live ids in `model_catalog.yaml`) |
 | --- | --- | --- | --- |
 | **Big brain / advisor** | `frontier_authority` | One-shot judgment, **briefs**, contested design, high-stakes CF of record | **claude-fable-5** (Fable), **gpt-6-astra** (Astra @ high), Opus-class when roster says so |
-| **Hard implement / practical** | `frontier_practical` (Astra model: `frontier_authority`) | Autonomous multi-file when scope is clear; standard CF | gpt-6-astra @ low (workhorse) / medium (reviewer), gpt-5.6-terra (fallback), claude-sonnet-5, gemini-3.6-flash-high, kimi K3, grok-4.6 (review/CF not judge) |
-| **Heap / volume** | `economical` / strong_efficient | Bounded implement after a complete advisory envelope | **gpt-5.6-luna** (max), Flash-class, other volume seats |
+| **Hard implement / practical** | `frontier_practical` | Autonomous multi-file when scope is clear; standard CF | **GPT-6 Sol @ high** (Codex coding/review), Claude Opus 5.5 for hard Claude-lane coding, Gemini 3.8 Flash for well-defined work, Kimi K3, Grok 4.7 (review/CF, not judge) |
+| **Heap / volume** | `economical` / strong_efficient | Bounded routine implementation, scouting, and recon | **GPT-6 Luna @ high**, Flash-class, other volume seats |
+
+**Codex role boundary:** Sol @ `high` is the coding and review seat; Luna @ `high`
+handles routine bounded work and scouting; Astra @ `high` is reserved for hard,
+consequential advisory judgment. Do not route ordinary implementation or review to Astra.
 
 **Standing operator preference (2026-08-06):** Fable remains the Anthropic
 authority seat even if the operator shrinks the Claude subscription. Reach Fable via:
@@ -84,7 +88,7 @@ stampede one hot lane.
 | Free / behind seat | Prefer for | Pin |
 | --- | --- | --- |
 | **Cursor, included pool** | code/infra CI, mechanical + ordinary infra/code implement | `--agent cursor --model grok-4.7-high`. Not Fast, not `grok-4.6`, not `grok-4.5`. Not CF of a Grok author |
-| **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-thinking-high`. Draws the API pool. Do not send GPT-5.6 |
+| **Cursor, Other Models** | cross-family review of a Grok author, or a named third-party model | `--agent cursor --model claude-sonnet-5-thinking-high`. Draws the API pool. |
 | **DeepSeek V4 Flash** | code/infra CF + tool-heavy implement | `deepseek-v4-flash` default; **Pro @ high = hard implement only** (complex multi-file, hard lookup — operator GO 2026-08-13, canary #6703) |
 | **Kimi k3-256k** | everyday fast coding/impl | `--agent kimi --model k3-256k` (or catalog id `kimi-code/k3-256k`) |
 | **Kimi k3** | advisory / complex / long-context only | `--model k3` @ high/max — not routine queue |
@@ -119,12 +123,14 @@ Source: [cursor.com/docs/models-and-pricing](https://cursor.com/docs/models-and-
 | --- | --- | --- | --- | --- | --- |
 | Claude Sonnet 5 | $2 | $2.50 | $0.20 | $10 | `claude-sonnet-5-thinking-high` |
 | Claude Opus 5 | $5 | $6.25 | $0.50 | $25 | `claude-opus-5-thinking-high` |
+| Claude Opus 5.5 | — | — | — | — | `claude-opus-5-5-high` |
 | Claude Fable 5.1 | $10 | $12.50 | $0.25 | $50 | `claude-fable-5-1-thinking-high` |
-| GPT-5.6 Sol | $4 | $5 | $0.40 | $20 | do not send |
-| GPT-5.6 Luna | $0.20 | $0.25 | $0.02 | $1.20 | do not send |
 | Gemini 3.8 Flash | $0.75 | — | $0.075 | $3.50 | pass only if `cursor-agent --list-models` shows it |
 
-Do not send GPT-5.6. Cursor's catalog has no GPT-6 slug; GPT-6 Sol and Luna run on the native Codex CLI. `claude-fable-5-thinking-high` is Fable 5, not 5.1.
+Cursor's catalog has no GPT-6 slug; GPT-6 Sol and Luna run on the native Codex CLI.
+Claude Opus 5.5 hard coding uses the native Claude CLI where applicable, or Cursor's
+supported `claude-opus-5-5-high` slug. `claude-fable-5-thinking-high` is Fable 5,
+not 5.1.
 
 Full table: `model-assignment.md` § *No-idle utilization + transport map*. Issue: **#6468** / stream **#6943**.
 
@@ -158,7 +164,7 @@ comment, or `batch_state/` receipt — not only inner monologue):
 ROUTING_CARD_V1
 task_id: <id>
 tier: authority | practical | heap
-model_x_harness: <e.g. codex/gpt-5.6-luna>   # both axes
+model_x_harness: <e.g. codex/gpt-6-luna>   # both axes
 why_this_tier: <one sentence>
 advisor_packet: none | astra | fable | other=<id>  # required for heap
 owned_paths: <paths>
