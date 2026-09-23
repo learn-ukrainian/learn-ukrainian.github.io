@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import json
+import logging
+import subprocess
 from pathlib import Path
 
 import pytest
 from fastapi import FastAPI
 from fastapi.testclient import TestClient
 
+from scripts.api import batch_router as batch_router_mod
+from scripts.api.batch_router import DISPATCHER_SCAN_TIMEOUT_S
 from scripts.api.batch_router import router as batch_router
 from scripts.api.monitor_context import fixture_context
 
@@ -81,6 +85,53 @@ def test_batch_checkpoints_empty_and_populated(tmp_path: Path, batch_client: Tes
     resp = batch_client.get("/api/batch/checkpoints")
     assert resp.status_code == 200
     assert resp.json() == {"a1": {"cp": 1}}
+
+
+def test_corrupt_checkpoint_json_surfaces_track_error(
+    tmp_path: Path, batch_client: TestClient, caplog: pytest.LogCaptureFixture
+) -> None:
+    state_dir = tmp_path / "batch_state"
+    state_dir.mkdir(parents=True, exist_ok=True)
+    (state_dir / "checkpoint_a1.json").write_text("{not-json", encoding="utf-8")
+    (state_dir / "checkpoint_b1.json").write_text(json.dumps({"cp": 2}), encoding="utf-8")
+
+    with caplog.at_level(logging.WARNING, logger="scripts.api.batch_router"):
+        resp = batch_client.get("/api/batch/checkpoints")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["b1"] == {"cp": 2}
+    assert any("a1" in item and "checkpoint_a1.json" in item for item in body["errors"])
+    assert any("checkpoint_a1.json" in record.message for record in caplog.records)
+
+
+def test_corrupt_usage_summary_surfaces_track_error(tmp_path: Path, batch_client: TestClient) -> None:
+    usage_dir = tmp_path / "batch_state" / "api_usage"
+    usage_dir.mkdir(parents=True, exist_ok=True)
+    (usage_dir / "summary_a1.json").write_text("{not-json", encoding="utf-8")
+    (usage_dir / "summary_b1.json").write_text(json.dumps({"tokens": 3}), encoding="utf-8")
+
+    resp = batch_client.get("/api/batch/usage")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["b1"] == {"tokens": 3}
+    assert any("a1" in item and "summary_a1.json" in item for item in body["errors"])
+
+
+def test_dispatcher_scan_timeout_returns_degraded_response(
+    batch_client: TestClient, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    def _timeout(*_args: object, **_kwargs: object) -> subprocess.CompletedProcess[str]:
+        raise subprocess.TimeoutExpired(cmd=["scan"], timeout=DISPATCHER_SCAN_TIMEOUT_S)
+
+    monkeypatch.setattr(batch_router_mod.subprocess, "run", _timeout)
+    resp = batch_client.post("/api/batch/dispatcher/scan")
+
+    assert resp.status_code == 200
+    body = resp.json()
+    assert body["status"] == "degraded"
+    assert body["errors"]
 
 
 def test_dispatcher_running(batch_client: TestClient) -> None:

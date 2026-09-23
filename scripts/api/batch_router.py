@@ -4,14 +4,54 @@ from __future__ import annotations
 
 import asyncio
 import json
+import logging
 import subprocess
 from datetime import datetime
+from pathlib import Path
+from typing import Any
 
 from fastapi import APIRouter, Depends, HTTPException, WebSocket, WebSocketDisconnect
 
 from .monitor_context import MonitorContext, get_ctx
 
+logger = logging.getLogger(__name__)
+
 router = APIRouter()
+
+# Wall-clock bound so a hung dispatcher scan cannot pin a FastAPI worker.
+DISPATCHER_SCAN_TIMEOUT_S = 120.0
+
+_JSON_LOAD_ERRORS = (OSError, json.JSONDecodeError, UnicodeDecodeError)
+
+
+def _load_track_json(path: Path, track: str) -> tuple[Any, str | None]:
+    """Return ``(payload, None)`` or ``(None, error)`` for one track file.
+
+    Malformed or unreadable files are logged and named in the error string.
+    Callers put that string on the response ``errors`` list instead of
+    omitting the track.
+    """
+    try:
+        with path.open(encoding="utf-8") as handle:
+            return json.load(handle), None
+    except _JSON_LOAD_ERRORS as exc:
+        logger.warning("failed to load %s: %s", path.name, exc)
+        return None, f"{track}: {path.name}: {type(exc).__name__}"
+
+
+def _with_load_errors(payload: dict[str, Any], errors: list[str]) -> dict[str, Any]:
+    if errors:
+        payload["errors"] = errors
+    return payload
+
+
+def _run_dispatcher_scan(cmd: list[str], cwd: Path) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        cmd,
+        cwd=cwd,
+        timeout=DISPATCHER_SCAN_TIMEOUT_S,
+        check=False,
+    )
 
 
 @router.get("/api/batch/dispatcher")
@@ -66,30 +106,32 @@ async def get_batch_usage(ctx: MonitorContext = Depends(get_ctx)):
     usage_dir = ctx.roots.batch_state_dir / "api_usage"
     if not usage_dir.exists():
         return {}
-    summaries = {}
+    summaries: dict[str, Any] = {}
+    errors: list[str] = []
     for f in sorted(usage_dir.glob("summary_*.json")):
         track = f.stem.replace("summary_", "")
-        try:
-            with open(f) as fh:
-                summaries[track] = json.load(fh)
-        except Exception:
-            pass
-    return summaries
+        payload, error = _load_track_json(f, track)
+        if error:
+            errors.append(error)
+            continue
+        summaries[track] = payload
+    return _with_load_errors(summaries, errors)
 
 
 @router.get("/api/batch/checkpoints")
 async def get_all_checkpoints(ctx: MonitorContext = Depends(get_ctx)):
-    results = {}
+    results: dict[str, Any] = {}
     if not ctx.roots.batch_state_dir.exists():
         return results
+    errors: list[str] = []
     for f in ctx.roots.batch_state_dir.glob("checkpoint_*.json"):
         track = f.stem.replace("checkpoint_", "")
-        try:
-            with open(f) as fh:
-                results[track] = json.load(fh)
-        except Exception:
-            pass
-    return results
+        payload, error = _load_track_json(f, track)
+        if error:
+            errors.append(error)
+            continue
+        results[track] = payload
+    return _with_load_errors(results, errors)
 
 
 @router.get("/api/batch/dispatcher/running")
@@ -104,8 +146,13 @@ async def run_dispatcher_scan(ctx: MonitorContext = Depends(get_ctx)):
         str(ctx.roots.live_repo_root / "scripts" / "batch_dispatcher.py"),
         "scan",
     ]
-    # Use asyncio.to_thread to avoid blocking the event loop
-    result = await asyncio.to_thread(subprocess.run, cmd, cwd=ctx.roots.live_repo_root)
+    # Use asyncio.to_thread to avoid blocking the event loop. The timeout lives
+    # on subprocess.run (see _run_dispatcher_scan), not on the thread call.
+    try:
+        result = await asyncio.to_thread(_run_dispatcher_scan, cmd, ctx.roots.live_repo_root)
+    except subprocess.TimeoutExpired:
+        logger.warning("dispatcher scan timed out after %ss", DISPATCHER_SCAN_TIMEOUT_S)
+        return {"status": "degraded", "errors": ["dispatcher scan timed out"]}
     if result.returncode != 0:
         raise HTTPException(status_code=500, detail="Dispatcher scan failed")
     return {"status": "ok"}

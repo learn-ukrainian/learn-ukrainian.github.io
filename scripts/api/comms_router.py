@@ -796,13 +796,26 @@ async def broker_health(ctx: MonitorContext = Depends(get_ctx)):
             pass
 
     if pid_dir.exists():
+        load_errors: list[str] = []
         for pf in pid_dir.glob("*.json"):
             try:
-                data = json.loads(pf.read_text())
+                data = json.loads(pf.read_text(encoding="utf-8"))
+            except (OSError, json.JSONDecodeError, UnicodeDecodeError) as exc:
+                logger.warning("comms health: failed to load pid file %s: %s", pf.name, exc)
+                load_errors.append(f"{pf.name}: {type(exc).__name__}")
+                continue
+            if not isinstance(data, dict):
+                logger.warning("comms health: pid file %s is not an object", pf.name)
+                load_errors.append(f"{pf.name}: invalid record")
+                continue
+            try:
                 os.kill(data.get("pid", 0), 0)
-                health["alive_processes"] += 1
-            except Exception:
-                pass
+            except (OSError, TypeError, ValueError):
+                # Dead or unsignalable process: not a file-load failure.
+                continue
+            health["alive_processes"] += 1
+        if load_errors:
+            health["errors"] = load_errors
 
     return health
 
@@ -921,14 +934,25 @@ def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
 
     # Count total expected from curriculum.yaml
     total_expected = 0
-    try:
-        curriculum_yaml = curriculum_root / "curriculum.yaml"
-        if curriculum_yaml.exists():
-            data = yaml.safe_load(curriculum_yaml.read_text()) or {}
+    load_errors: list[str] = []
+    curriculum_yaml = curriculum_root / "curriculum.yaml"
+    if curriculum_yaml.exists():
+        try:
+            data = yaml.safe_load(curriculum_yaml.read_text(encoding="utf-8"))
+            if data is None:
+                data = {}
+            if not isinstance(data, dict):
+                raise TypeError(f"curriculum.yaml root is {type(data).__name__}")
             modules = data.get("levels", {}).get(track, {}).get("modules", [])
             total_expected = len(modules)
-    except Exception:
-        pass
+        except (OSError, UnicodeDecodeError, yaml.YAMLError, AttributeError, TypeError) as exc:
+            logger.warning(
+                "comms batch progress: failed to load %s for track %s: %s",
+                curriculum_yaml.name,
+                track,
+                exc,
+            )
+            load_errors.append(f"{track}: {curriculum_yaml.name}: {type(exc).__name__}")
 
     # Recent files (last 30 min)
     now = time.time()
@@ -946,7 +970,7 @@ def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
             "seconds_ago": int(now - newest["mtime"]),
         }
 
-    return {
+    progress = {
         "track": track,
         "total_expected": total_expected,
         "research_done": len(research_files),
@@ -955,6 +979,9 @@ def _scan_track_progress(ctx: MonitorContext, track: str) -> dict:
         "throughput_per_hour": throughput_per_hour,
         "last_created": last_created,
     }
+    if load_errors:
+        progress["errors"] = load_errors
+    return progress
 
 
 def _check_build_processes() -> list[dict]:
