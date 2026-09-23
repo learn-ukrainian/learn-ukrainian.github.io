@@ -291,6 +291,7 @@ def test_runner_check_2_declared_gap(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture()
     draft["status"] = "evidence_gap"
     draft["gaps"] = [{"step": "s1", "need": "example", "detail": "Missing evidence"}]
+    draft["steps"][0]["blocks"] = []
     validate_fixture_draft(draft)
     report, _, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
     bad = next(row for row in report["checks"] if row["status"] == "failed")
