@@ -66,10 +66,8 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
 
     ``None`` stays ``None`` so the route resolver applies the participant's
     registered pin — a default can never drift from the registry (#6894).
-    Legacy Flash slugs aimed at the AGY seat map to that seat's current Flash pin.
-    Explicit Pro requests (e.g. gemini-3.1-pro-high, gemini-3.1-pro-preview)
-    resolve to canonical Pro (gemini-3.1-pro-high) and are never rewritten to Flash
-    (operator 2026-09-22: Pro only when explicitly requested, but explicit requests win).
+    Legacy ``gemini*`` slugs (including retired display labels) aimed at the
+    AGY seat map to that seat's current pin, the only model the seat accepts.
     Anything else passes through unchanged and is validated loudly by the
     route resolver.
     """
@@ -77,17 +75,10 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
     if not model:
         return None
     if participant == "agy":
-        normalized = model.strip()
-        lower = normalized.lower()
-        if "pro" in lower:
-            if lower.startswith("gemini"):
-                return "gemini-3.1-pro-high"
-            return model
         pin = registered_participant_model("agy")
-        if pin and model != pin and lower.startswith("gemini"):
+        if pin and model != pin and model.strip().lower().startswith("gemini"):
             return pin
     return model
-
 
 
 # Per-seat default hard timeouts for compat asks (#6877). The generic 300s

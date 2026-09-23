@@ -13,13 +13,6 @@ from scripts.audit.naturalness_check import call_agy, check_naturalness
 from scripts.batch.batch_otaman import BatchOtaman, dispatch_otaman
 
 
-def test_resolve_compat_model_explicit_pro_wins():
-    """Explicit Pro requests must never be rewritten to the Flash pin."""
-    assert resolve_compat_model("gemini", "gemini-3.1-pro-high") == "gemini-3.1-pro-high"
-    assert resolve_compat_model("gemini", "gemini-3.1-pro-preview") == "gemini-3.1-pro-high"
-    assert resolve_compat_model("gemini", "Gemini 3.1 Pro (High)") == "gemini-3.1-pro-high"
-
-
 def test_resolve_compat_model_legacy_flash_maps_to_pin():
     """Legacy Flash slugs map to the AGY live registry pin."""
     from agent_runtime.adapters.acpx import ACPX_SUPPORTED_PARTICIPANTS
