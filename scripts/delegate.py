@@ -4832,7 +4832,6 @@ def _run_worker(
     runtime_tmp_namespace_root: str | None = None,
     run_nonce: str | None = None,
     require_review_verdict: bool = False,
-    review_attempt: str | None = None,
     review_id: str | None = None,
     attempt_id: str | None = None,
     mcp_config_path: str | None = None,
@@ -4976,7 +4975,18 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
-            tool_config = tool_config or None
+            cursor_mcp_path: Path | None = None
+            cursor_mcp_backup: bytes | None = None
+            cursor_mcp_existed: bool = False
+            if strict_mcp_config and agent == "cursor":
+                cursor_mcp_path = cwd / ".cursor" / "mcp.json"
+                if cursor_mcp_path.is_file():
+                    cursor_mcp_existed = True
+                    try:
+                        cursor_mcp_backup = cursor_mcp_path.read_bytes()
+                    except OSError:
+                        cursor_mcp_backup = None
+
             result = runtime_invoke(
                 agent,
                 prompt,
@@ -5051,6 +5061,14 @@ def _run_worker(
             stderr_excerpt = f"worker unexpected: {type(exc).__name__}: {exc}"[:500]
             returncode_reason = "unexpected worker exception before a terminal subprocess returncode was available"
         finally:
+            if cursor_mcp_path is not None:
+                try:
+                    if cursor_mcp_existed and cursor_mcp_backup is not None:
+                        cursor_mcp_path.write_bytes(cursor_mcp_backup)
+                    elif not cursor_mcp_existed and cursor_mcp_path.is_file():
+                        cursor_mcp_path.unlink()
+                except OSError as exc:
+                    print(f"⚠️  failed to restore {cursor_mcp_path}: {exc}", file=sys.stderr)
             if runtime_tmp_root is not None or runtime_tmp_namespace_root is not None:
                 # This cleanup runs AFTER the worker has finished but BEFORE the
                 # guarded span below, and it catches Exception rather than the
@@ -5098,6 +5116,9 @@ def _run_worker(
             returncode_reason = f"worker subprocess terminated by {signal_name} (returncode {returncode})"
 
         final_state = _read_state(state_path) or {}
+        if strict_mcp_config:
+            final_state["worktree_disallow_reuse"] = True
+            final_state["worktree_review_attempt_only"] = True
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
@@ -5857,10 +5878,18 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             print(f"❌ review manifest file not found: {manifest_path}", file=sys.stderr)
             return 2
 
+        retired_target = resolve_retired_agent_alias(args.agent)
+        if retired_target:
+            print(
+                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+
         effective_harness = requested_harness or args.agent
-        from agent_runtime.review_mcp import (
+        from scripts.agent_runtime.review_mcp import (
+            SUPPORTED_HARNESSES,
             UNSUPPORTED_HARNESS_REASONS,
-            prepare_review_attempt,
         )
 
         if effective_harness in UNSUPPORTED_HARNESS_REASONS:
@@ -5869,15 +5898,11 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 file=sys.stderr,
             )
             return 2
-        try:
-            review_plan = prepare_review_attempt(
-                review_id=review_id,
-                attempt_id=attempt_id,
-                manifest_path=manifest_path,
-                harness=effective_harness,
+        if effective_harness not in SUPPORTED_HARNESSES:
+            print(
+                f"❌ review attempt refused for {args.agent}: unsupported harness {effective_harness!r} (#8517)",
+                file=sys.stderr,
             )
-        except ValueError as exc:
-            print(f"❌ {exc}", file=sys.stderr)
             return 2
 
     worktree_arg = getattr(args, "worktree", None)
@@ -6133,6 +6158,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     retired_target = resolve_retired_agent_alias(args.agent)
     requested_agent = args.agent
     if retired_target:
+        if review_attempt:
+            print(
+                f"❌ review attempt refused: agent substitution from {args.agent} to {retired_target} (retired CLI) is not allowed (#8517)",
+                file=sys.stderr,
+            )
+            return 2
         agent_alias_note = f"NOTE: {requested_agent}→{retired_target} retired CLI"
         print(
             f"🔄 RETIRED CLI ALIAS: --agent {requested_agent} → {retired_target} "
@@ -6145,7 +6176,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         try:
             language_lane = _dispatch_is_language_lane(args)
             dispatch_agent = (
-                _resolve_agent_with_budget_guard(requested_agent, provider="openrouter", language_lane=language_lane)
+                _resolve_agent_with_budget_guard(
+                    requested_agent, provider="openrouter", language_lane=language_lane
+                )
                 if getattr(args, "provider", None) == "openrouter"
                 else _resolve_agent_with_budget_guard(requested_agent, language_lane=language_lane)
             )
@@ -6155,6 +6188,48 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     else:
         dispatch_agent = requested_agent
 
+    if review_attempt and dispatch_agent != requested_agent:
+        print(
+            f"❌ review attempt refused: agent substitution from {requested_agent} to {dispatch_agent} (budget guard) is not allowed (#8517)",
+            file=sys.stderr,
+        )
+        return 2
+
+    if review_attempt:
+        from scripts.agent_runtime.review_mcp import (
+            SUPPORTED_HARNESSES,
+            UNSUPPORTED_HARNESS_REASONS,
+        )
+
+        final_harness = requested_harness or dispatch_agent
+        if final_harness in UNSUPPORTED_HARNESS_REASONS:
+            print(
+                f"❌ review attempt refused for {dispatch_agent}: {UNSUPPORTED_HARNESS_REASONS[final_harness]} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+        if final_harness not in SUPPORTED_HARNESSES:
+            print(
+                f"❌ review attempt refused for {dispatch_agent}: unsupported harness {final_harness!r} (#8517)",
+                file=sys.stderr,
+            )
+            return 2
+
+        if dispatch_agent == "cursor" or requested_harness == "cursor":
+            has_worktree = False
+            if worktree_arg:
+                has_worktree = True
+            elif args.cwd:
+                candidate_cwd = _resolve_cwd_path(args.cwd)
+                if _resolve_verified_worktree_path(candidate_cwd):
+                    has_worktree = True
+            if not has_worktree:
+                print(
+                    "❌ review attempt for cursor requires a dispatch worktree; refusing primary checkout (#8517)",
+                    file=sys.stderr,
+                )
+                return 2
+
     explicit_model = getattr(args, "model", None)
     if (
         explicit_model
@@ -6162,7 +6237,8 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         and _adapter_rejects_model(dispatch_agent, str(explicit_model))
     ):
         print(
-            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. Using that lane's default.",
+            f"🔄 DROPPED --model {explicit_model}: {dispatch_agent} does not approve it. "
+            "Using that lane's default.",
             file=sys.stderr,
         )
         args.model = None
@@ -6482,6 +6558,21 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         print(run_nonce)
         return 0
 
+    if review_attempt:
+        from scripts.agent_runtime.review_mcp import prepare_review_attempt
+
+        effective_harness = requested_harness or dispatch_agent
+        try:
+            review_plan = prepare_review_attempt(
+                review_id=review_id,
+                attempt_id=attempt_id,
+                manifest_path=Path(review_attempt),
+                harness=effective_harness,
+            )
+        except (ValueError, FileExistsError) as exc:
+            print(f"❌ {exc}", file=sys.stderr)
+            return 2
+
     # Set up log files before provisioning a worktree. If this cheap
     # filesystem setup fails, dispatch exits before leaving worktree/branch
     # side effects behind.
@@ -6702,6 +6793,9 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             initial_state["harness"] = requested_harness
         if lifecycle_carrier is not None:
             initial_state["task_lifecycle"] = lifecycle_carrier
+        if review_plan is not None:
+            initial_state["worktree_disallow_reuse"] = True
+            initial_state["worktree_review_attempt_only"] = True
         initial_state = _with_optional_research_state(initial_state, research_state)
         _write_state_atomic(state_path, initial_state)
 
@@ -6796,8 +6890,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         if review_plan is not None:
             cmd.extend(
                 [
-                    "--review-attempt",
-                    str(review_attempt),
                     "--review-id",
                     str(review_id),
                     "--attempt-id",
@@ -7254,11 +7346,7 @@ def _resolve_agent_with_budget_guard(
         accounts = payload.get("api_accounts") or {}
         account = accounts.get(prepaid) or {}
         status = _api_lane_status_from_account(prepaid, account)
-        if (
-            status not in {"cool", "warm"}
-            or account.get("is_available") is False
-            or account.get("status") == "near_cap"
-        ):
+        if status not in {"cool", "warm"} or account.get("is_available") is False or account.get("status") == "near_cap":
             raise BudgetGuardRefuseError(
                 f"NOTE: ROUTING REFUSED: prepaid {prepaid} status={status}; "
                 f"probe_state={account.get('probe_state', 'NEED_PROBE')}; "
@@ -7414,7 +7502,9 @@ def _language_lane_substitute(
         seen.add(nxt)
         seat = nxt
         if len(seen) > 4:
-            raise BudgetGuardRefuseError("ROUTING REFUSED: language-lane fallback chain did not reach a cool seat.")
+            raise BudgetGuardRefuseError(
+                "ROUTING REFUSED: language-lane fallback chain did not reach a cool seat."
+            )
 
 
 def _session_stream_store() -> Any:
@@ -7925,7 +8015,6 @@ def cmd_worker(args: argparse.Namespace) -> int:
         runtime_tmp_root=getattr(args, "runtime_tmp_root", None),
         runtime_tmp_namespace_root=getattr(args, "runtime_tmp_namespace_root", None),
         run_nonce=getattr(args, "run_nonce", None) or os.environ.get("LU_RUNTIME_RUN_NONCE"),
-        review_attempt=getattr(args, "review_attempt", None),
         review_id=getattr(args, "review_id", None),
         attempt_id=getattr(args, "attempt_id", None),
         mcp_config_path=getattr(args, "mcp_config_path", None),
@@ -8057,7 +8146,9 @@ def build_parser() -> argparse.ArgumentParser:
         "require a verified dispatch worktree (bare --worktree, or --cwd "
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
-    d.add_argument("--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview.")
+    d.add_argument(
+        "--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview."
+    )
     d.add_argument(
         "--provider",
         default=None,
@@ -8508,7 +8599,6 @@ def build_parser() -> argparse.ArgumentParser:
     wk.add_argument("--runtime-tmp-root", default=None)
     wk.add_argument("--runtime-tmp-namespace-root", default=None)
     wk.add_argument("--run-nonce", default=None)
-    wk.add_argument("--review-attempt", default=None)
     wk.add_argument("--review-id", default=None)
     wk.add_argument("--attempt-id", default=None)
     wk.add_argument("--mcp-config-path", default=None)

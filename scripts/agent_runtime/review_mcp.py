@@ -19,8 +19,10 @@ Note: Ledger creation and sidecar management will be consolidated once R1
 
 from __future__ import annotations
 
+import contextlib
 import hashlib
 import json
+import os
 import re
 from dataclasses import dataclass
 from pathlib import Path
@@ -33,12 +35,15 @@ ENV_MANIFEST_SHA256 = "LU_REVIEW_MANIFEST_SHA256"
 ENV_LEDGER_PATH = "LU_REVIEW_LEDGER_PATH"
 ENV_KEYS = (ENV_ATTEMPT_ID, ENV_MANIFEST_SHA256, ENV_LEDGER_PATH)
 
-SUPPORTED_HARNESSES: frozenset[str] = frozenset({"claude", "grok", "grok-build", "cursor", "kimicc"})
+SUPPORTED_HARNESSES: frozenset[str] = frozenset({"claude", "cursor"})
 
 UNSUPPORTED_HARNESS_REASONS: dict[str, str] = {
     "agy": "AGY has one global MCP config (~/.gemini/config/mcp_config.json) without per-invocation MCP config support",
     "gemini": "Gemini has one global MCP config without per-invocation MCP config support",
-    "codex": "Codex internal read-only sandbox cancels unapproved stdio MCP calls and cannot configure per-attempt stdio servers with environment variables",
+    "codex": "not yet proven",
+    "grok": "not yet proven",
+    "grok-build": "not yet proven",
+    "kimicc": "not yet supported",
     "kimi": "Native Kimi Code reads global profile config and cannot take a per-attempt stdio config",
     "grok-hermes": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
     "deepseek": "Hermes-routed agents read global ~/.hermes/config.yaml and cannot take a per-attempt stdio config",
@@ -85,7 +90,7 @@ def prepare_review_attempt(
         review_id: Identifier of the formal review job.
         attempt_id: Unique attempt identifier.
         manifest_path: Path to the review manifest YAML.
-        harness: Agent harness name (e.g. 'claude', 'grok', 'cursor').
+        harness: Agent harness name (e.g. 'claude', 'cursor').
         receipts_root: Optional override for the receipts base directory (used in tests).
 
     Returns:
@@ -93,6 +98,7 @@ def prepare_review_attempt(
 
     Raises:
         ValueError: If tokens are invalid or harness is unsupported.
+        FileExistsError: If ledger, sidecar, or config already exists.
         FileNotFoundError: If manifest_path does not exist.
     """
     if not isinstance(review_id, str) or not _TOKEN_RE.match(review_id):
@@ -126,23 +132,15 @@ def prepare_review_attempt(
 
     ledger_path = review_dir / f"{attempt_id}.jsonl"
     sidecar_path = review_dir / f"{attempt_id}.jsonl.sha256"
-    alt_sidecar_path = review_dir / f"{attempt_id}.sha256"
     config_path = review_dir / f"{attempt_id}.mcp.json"
 
-    # Create empty ledger if absent (0 bytes, 0o644)
-    if not ledger_path.exists():
-        ledger_path.write_bytes(b"")
-        ledger_path.chmod(0o644)
+    # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
+    if ledger_path.exists() or sidecar_path.exists() or config_path.exists():
+        raise FileExistsError(
+            f"review attempt {attempt_id!r} already exists for review {review_id!r}"
+        )
 
-    # Create sidecar containing empty SHA-256 + newline (0o644)
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
-    sidecar_path.write_bytes(sidecar_bytes)
-    sidecar_path.chmod(0o644)
-    # Also write alt sidecar <attempt_id>.sha256 for convention compatibility
-    alt_sidecar_path.write_bytes(sidecar_bytes)
-    alt_sidecar_path.chmod(0o644)
-
-    # Write per-attempt MCP config defining ONLY sources over stdio
     config_payload = {
         "mcpServers": {
             "sources": {
@@ -156,8 +154,38 @@ def prepare_review_attempt(
             }
         }
     }
-    config_path.write_text(json.dumps(config_payload, indent=2) + "\n", encoding="utf-8")
-    config_path.chmod(0o644)
+    config_bytes = (json.dumps(config_payload, indent=2) + "\n").encode("utf-8")
+
+    created_paths: list[Path] = []
+    try:
+        # Create empty ledger (0 bytes, 0o644) exclusively
+        fd_ledger = os.open(ledger_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        os.close(fd_ledger)
+        created_paths.append(ledger_path)
+
+        # Create sidecar containing empty SHA-256 + newline exclusively
+        fd_sidecar = os.open(sidecar_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        with os.fdopen(fd_sidecar, "wb") as handle:
+            handle.write(sidecar_bytes)
+        created_paths.append(sidecar_path)
+
+        # Create config exclusively
+        fd_config = os.open(config_path, os.O_WRONLY | os.O_CREAT | os.O_EXCL, 0o644)
+        with os.fdopen(fd_config, "wb") as handle:
+            handle.write(config_bytes)
+        created_paths.append(config_path)
+    except FileExistsError as exc:
+        for path in reversed(created_paths):
+            with contextlib.suppress(OSError):
+                path.unlink(missing_ok=True)
+        raise FileExistsError(
+            f"review attempt {attempt_id!r} already exists for review {review_id!r}"
+        ) from exc
+    except BaseException:
+        for path in reversed(created_paths):
+            with contextlib.suppress(OSError):
+                path.unlink(missing_ok=True)
+        raise
 
     adapter_options: dict[str, Any] = {
         "mcp_config_path": str(config_path),

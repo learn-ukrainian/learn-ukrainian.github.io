@@ -6,6 +6,7 @@ import hashlib
 import json
 import os
 import subprocess
+import uuid
 from pathlib import Path
 from unittest.mock import patch
 
@@ -14,7 +15,6 @@ import pytest
 import scripts.delegate as delegate_cli
 from scripts.agent_runtime.adapters.claude import ClaudeAdapter
 from scripts.agent_runtime.adapters.cursor import CursorAdapter
-from scripts.agent_runtime.adapters.grok_build import GrokBuildAdapter
 from scripts.agent_runtime.review_mcp import (
     ENV_ATTEMPT_ID,
     ENV_LEDGER_PATH,
@@ -63,14 +63,13 @@ def test_prepare_review_attempt_exact_config_json_and_ledger(harness: str, manif
     assert plan.ledger_path.stat().st_size == 0
     assert (plan.ledger_path.stat().st_mode & 0o777) == 0o644
 
-    # 3. Sidecars exist, hold <sha256>\n, and have 0o644 permissions
+    # 3. Sidecar exists, holds <sha256>\n, and has 0o644 permissions (second sidecar removed #8517)
     assert plan.sidecar_path.is_file()
     assert plan.sidecar_path.read_text(encoding="ascii") == f"{empty_sha256}\n"
     assert (plan.sidecar_path.stat().st_mode & 0o777) == 0o644
 
     alt_sidecar = plan.ledger_path.parent / f"{attempt_id}.sha256"
-    assert alt_sidecar.is_file()
-    assert alt_sidecar.read_text(encoding="ascii") == f"{empty_sha256}\n"
+    assert not alt_sidecar.exists()
 
     # 4. Exact config JSON defines ONLY sources over stdio
     config_data = json.loads(plan.config_path.read_text(encoding="utf-8"))
@@ -110,13 +109,54 @@ def test_prepare_review_attempt_refuses_agy(manifest_file: Path, tmp_path: Path)
 
 
 def test_prepare_review_attempt_refuses_codex(manifest_file: Path, tmp_path: Path) -> None:
-    with pytest.raises(ValueError, match=r"review attempt refused for codex:.*#8517"):
+    with pytest.raises(ValueError, match=r"review attempt refused for codex: not yet proven \(#8517\)"):
         prepare_review_attempt(
             review_id="rev-001",
             attempt_id="att-001",
             manifest_path=manifest_file,
             harness="codex",
             receipts_root=tmp_path,
+        )
+
+
+def test_prepare_review_attempt_refuses_grok(manifest_file: Path, tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match=r"review attempt refused for grok: not yet proven \(#8517\)"):
+        prepare_review_attempt(
+            review_id="rev-001",
+            attempt_id="att-001",
+            manifest_path=manifest_file,
+            harness="grok",
+            receipts_root=tmp_path,
+        )
+
+
+def test_prepare_review_attempt_refuses_kimicc(manifest_file: Path, tmp_path: Path) -> None:
+    with pytest.raises(ValueError, match=r"review attempt refused for kimicc: not yet supported \(#8517\)"):
+        prepare_review_attempt(
+            review_id="rev-001",
+            attempt_id="att-001",
+            manifest_path=manifest_file,
+            harness="kimicc",
+            receipts_root=tmp_path,
+        )
+
+
+def test_prepare_review_attempt_refuses_reused_attempt_id(manifest_file: Path, tmp_path: Path) -> None:
+    receipts_root = tmp_path / "receipts"
+    prepare_review_attempt(
+        review_id="rev-001",
+        attempt_id="att-unique-001",
+        manifest_path=manifest_file,
+        harness="claude",
+        receipts_root=receipts_root,
+    )
+    with pytest.raises(FileExistsError, match=r"review attempt 'att-unique-001' already exists for review 'rev-001'"):
+        prepare_review_attempt(
+            review_id="rev-001",
+            attempt_id="att-unique-001",
+            manifest_path=manifest_file,
+            harness="claude",
+            receipts_root=receipts_root,
         )
 
 
@@ -164,8 +204,55 @@ def test_delegate_dispatch_refusal_for_codex(manifest_file: Path, capsys: pytest
     )
     assert rc == 2
     captured = capsys.readouterr()
-    assert "review attempt refused for codex" in captured.err
-    assert "#8517" in captured.err
+    assert "review attempt refused for codex: not yet proven (#8517)" in captured.err
+
+
+def test_delegate_dispatch_refusal_for_grok(manifest_file: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = delegate_cli.main(
+        [
+            "dispatch",
+            "--agent",
+            "grok",
+            "--task-id",
+            "review-task-grok",
+            "--prompt",
+            "perform review",
+            "--review-attempt",
+            str(manifest_file),
+            "--review-id",
+            "rev-001",
+            "--attempt-id",
+            "att-001",
+        ]
+    )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "review attempt refused for grok: not yet proven (#8517)" in captured.err
+
+
+def test_delegate_dispatch_refusal_for_kimicc(manifest_file: Path, capsys: pytest.CaptureFixture[str]) -> None:
+    rc = delegate_cli.main(
+        [
+            "dispatch",
+            "--agent",
+            "kimi",
+            "--harness",
+            "kimicc",
+            "--task-id",
+            "review-task-kimicc",
+            "--prompt",
+            "perform review",
+            "--review-attempt",
+            str(manifest_file),
+            "--review-id",
+            "rev-001",
+            "--attempt-id",
+            "att-001",
+        ]
+    )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "review attempt refused for kimi: not yet supported (#8517)" in captured.err
 
 
 def test_delegate_dispatch_incomplete_review_attempt_flags(
@@ -217,29 +304,189 @@ def test_claude_adapter_command_line_contains_strict_flags(tmp_path: Path) -> No
     assert plan.cmd[tools_idx + 1] == "Read,Grep"
 
 
-def test_grok_adapter_command_line_contains_strict_flags(tmp_path: Path) -> None:
+def test_cursor_adapter_refuses_primary_checkout_workspace(tmp_path: Path) -> None:
+    adapter = CursorAdapter()
     config_file = tmp_path / "custom-mcp.json"
     config_file.write_text('{"mcpServers":{}}\n', encoding="utf-8")
+    primary_root = resolve_repo_root(Path(__file__), 2)
 
-    with patch("shutil.which", return_value="/usr/local/bin/grok"):
-        adapter = GrokBuildAdapter()
-        plan = adapter.build_invocation(
-            prompt="review content",
-            mode="read-only",
-            cwd=tmp_path,
-            model=None,
-            task_id="review-grok-task",
-            session_id=None,
-            tool_config={
-                "mcp_config_path": str(config_file),
-                "strict_mcp_config": True,
+    with patch("shutil.which", return_value="/usr/local/bin/cursor-agent"):
+        with pytest.raises(RuntimeError, match=r"Cursor review attempt requires a dispatch worktree"):
+            adapter.build_invocation(
+                prompt="review content",
+                mode="read-only",
+                cwd=primary_root,
+                model=None,
+                task_id="review-cursor-task-primary",
+                session_id=None,
+                tool_config={
+                    "cursor_workspace": str(primary_root),
+                    "mcp_config_path": str(config_file),
+                    "strict_mcp_config": True,
+                },
+            )
+
+
+def test_delegate_dispatch_cursor_refuses_primary_checkout(
+    manifest_file: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    rc = delegate_cli.main(
+        [
+            "dispatch",
+            "--agent",
+            "cursor",
+            "--task-id",
+            "review-task-cursor-primary",
+            "--prompt",
+            "perform review",
+            "--review-attempt",
+            str(manifest_file),
+            "--review-id",
+            "rev-001",
+            "--attempt-id",
+            "att-001",
+        ]
+    )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "review attempt for cursor requires a dispatch worktree; refusing primary checkout (#8517)" in captured.err
+
+
+def test_delegate_dispatch_refuses_budget_guard_substitution(
+    manifest_file: Path,
+    monkeypatch: pytest.MonkeyPatch,
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    monkeypatch.setenv("LU_DISPATCH_CHECK_BUDGET", "1")
+    fake_budget = {
+        "diagnostics": {"records_loaded": 10, "stale": False},
+        "recommendation": {"primary_agent_for_code": "codex"},
+        "agents": {
+            "claude": {
+                "interactive": {"status": "near_cap", "burn_pct_7d": 95.0},
+                "status": "near_cap",
+                "burn_pct_7d": 95.0,
+                "will_last_to_reset": False,
             },
-        )
+            "codex": {
+                "status": "cool",
+                "burn_pct_7d": 20.0,
+                "will_last_to_reset": True,
+            },
+        },
+    }
+    monkeypatch.setattr("scripts.delegate._fetch_routing_budget", lambda: fake_budget)
+    monkeypatch.setattr("scripts.delegate._load_dispatch_fallbacks", lambda: {"claude": "codex"})
 
-    assert "--strict-mcp-config" in plan.cmd
-    assert "--mcp-config" in plan.cmd
-    idx = plan.cmd.index("--mcp-config")
-    assert plan.cmd[idx + 1] == str(config_file)
+    rc = delegate_cli.main(
+        [
+            "dispatch",
+            "--agent",
+            "claude",
+            "--task-id",
+            "review-task-budget-sub",
+            "--prompt",
+            "perform review",
+            "--review-attempt",
+            str(manifest_file),
+            "--review-id",
+            "rev-001",
+            "--attempt-id",
+            "att-001",
+        ]
+    )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)" in captured.err
+
+
+def test_delegate_dispatch_refuses_retired_alias_substitution(
+    manifest_file: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    rc = delegate_cli.main(
+        [
+            "dispatch",
+            "--agent",
+            "gemini",
+            "--task-id",
+            "review-task-retired-alias",
+            "--prompt",
+            "perform review",
+            "--review-attempt",
+            str(manifest_file),
+            "--review-id",
+            "rev-001",
+            "--attempt-id",
+            "att-001",
+        ]
+    )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "review attempt refused: agent substitution from gemini to agy (retired CLI) is not allowed (#8517)" in captured.err
+
+
+def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
+    manifest_file: Path,
+) -> None:
+    task_id = f"review-task-dry-run-{uuid.uuid4().hex[:8]}"
+    import agent_runtime.review_mcp
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as mock_prep_scripts, \
+         patch.object(agent_runtime.review_mcp, "prepare_review_attempt") as mock_prep_agent:
+        rc = delegate_cli.main(
+            [
+                "dispatch",
+                "--agent",
+                "claude",
+                "--task-id",
+                task_id,
+                "--prompt",
+                "perform review",
+                "--review-attempt",
+                str(manifest_file),
+                "--review-id",
+                "rev-dry-001",
+                "--attempt-id",
+                "att-dry-001",
+                "--dry-run",
+            ]
+        )
+        assert rc == 0
+        mock_prep_scripts.assert_not_called()
+        mock_prep_agent.assert_not_called()
+
+
+def test_delegate_dispatch_refuses_reused_attempt_id(
+    manifest_file: Path, tmp_path: Path, capsys: pytest.CaptureFixture[str]
+) -> None:
+    receipts_root = tmp_path / "batch_state" / "review-receipts"
+    attempt_dir = receipts_root / "rev-dup-001"
+    attempt_dir.mkdir(parents=True, exist_ok=True)
+    (attempt_dir / "att-dup-001.jsonl").write_bytes(b"prior-receipts\n")
+
+    task_id = f"review-task-dup-{uuid.uuid4().hex[:8]}"
+    import agent_runtime.review_mcp
+    with patch("scripts.agent_runtime.review_mcp.resolve_repo_root", return_value=tmp_path), \
+         patch.object(agent_runtime.review_mcp, "resolve_repo_root", return_value=tmp_path):
+        rc = delegate_cli.main(
+            [
+                "dispatch",
+                "--agent",
+                "claude",
+                "--task-id",
+                task_id,
+                "--prompt",
+                "perform review",
+                "--review-attempt",
+                str(manifest_file),
+                "--review-id",
+                "rev-dup-001",
+                "--attempt-id",
+                "att-dup-001",
+            ]
+        )
+    assert rc == 2
+    captured = capsys.readouterr()
+    assert "review attempt 'att-dup-001' already exists for review 'rev-dup-001'" in captured.err
 
 
 def test_cursor_adapter_mirrors_config_and_drops_daemon_fallback(tmp_path: Path) -> None:

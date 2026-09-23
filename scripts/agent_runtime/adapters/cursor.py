@@ -266,8 +266,16 @@ class CursorAdapter:
 
     def _ensure_workspace_mcp_config(self, workspace: str, config: dict) -> None:
         """Mirror requested MCP servers into Cursor's workspace config."""
-        requested = config.get("mcp_server_names") or []
         is_strict = bool(config.get("strict_mcp_config"))
+        if is_strict:
+            workspace_path = Path(workspace).resolve()
+            if (workspace_path / ".git").is_dir():
+                raise RuntimeError(
+                    "Cursor review attempt requires a dispatch worktree; "
+                    "refusing primary checkout workspace (#8517)"
+                )
+
+        requested = config.get("mcp_server_names") or []
         if not requested and is_strict:
             source_path = Path(str(config.get("mcp_config_path") or ".mcp.json"))
             source_servers = self._read_mcp_servers(source_path)
@@ -648,7 +656,9 @@ def _extract_concrete_model_from_events(events: list[dict]) -> str | None:
 
 _CURSOR_AUTH_PATH = Path.home() / ".config" / "cursor" / "auth.json"
 _CURSOR_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetCurrentPeriodUsage"
-_CURSOR_GROK_BOT_USAGE_URL = "https://api2.cursor.sh/aiserver.v1.DashboardService/GetSandUsageStatus"
+_CURSOR_GROK_BOT_USAGE_URL = (
+    "https://api2.cursor.sh/aiserver.v1.DashboardService/GetSandUsageStatus"
+)
 
 
 def _cursor_cli_binary() -> str:
@@ -831,7 +841,9 @@ def _empty_cursor_provider_windows(*, resets_at: str | None = None) -> dict[str,
     return {
         "auto": _monthly_window_block(None, label="Cursor Models (Auto)", resets_at=resets_at),
         "api": _monthly_window_block(None, label="Other Models (API)", resets_at=resets_at),
-        "grok_bot": _usage_window_block(None, label="Grok Bot", window="weekly", resets_at=None),
+        "grok_bot": _usage_window_block(
+            None, label="Grok Bot", window="weekly", resets_at=None
+        ),
     }
 
 
@@ -959,8 +971,12 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
     total_pct = float(total_used) if isinstance(total_used, (int, float)) else None
     resets_at = _ms_to_iso_z(payload.get("billingCycleEnd"))
 
-    auto_block = _monthly_window_block(auto_pct, label="Cursor Models (Auto)", resets_at=resets_at)
-    api_block = _monthly_window_block(api_pct, label="Other Models (API)", resets_at=resets_at)
+    auto_block = _monthly_window_block(
+        auto_pct, label="Cursor Models (Auto)", resets_at=resets_at
+    )
+    api_block = _monthly_window_block(
+        api_pct, label="Other Models (API)", resets_at=resets_at
+    )
     grok_timeout = max(2.0, min(timeout_s, 5.0))
     try:
         grok_block = _probe_cursor_grok_bot_window(token=token, timeout_s=grok_timeout)
@@ -973,7 +989,9 @@ def probe_cursor_provider_windows(*, timeout_s: float = 8.0) -> dict[str, Any]:
         "grok_bot": grok_block,
     }
     if total_pct is not None:
-        provider_windows["total"] = _monthly_window_block(total_pct, label="Total (included)", resets_at=resets_at)
+        provider_windows["total"] = _monthly_window_block(
+            total_pct, label="Total (included)", resets_at=resets_at
+        )
 
     # Burn/status tracks the Auto-routing pool (operator: pin ``auto`` to spend Auto).
     burn_pct = auto_pct
