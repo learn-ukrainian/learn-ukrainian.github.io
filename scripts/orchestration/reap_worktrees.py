@@ -110,7 +110,11 @@ def _run(
     *,
     cwd: Path,
     timeout: int | None = None,
+    env_overrides: dict[str, str] | None = None,
 ) -> subprocess.CompletedProcess[str]:
+    env = sanitized_git_env()
+    if env_overrides:
+        env.update(env_overrides)
     return subprocess.run(
         args,
         cwd=cwd,
@@ -118,7 +122,7 @@ def _run(
         text=True,
         check=False,
         timeout=timeout,
-        env=sanitized_git_env(),
+        env=env,
     )
 
 

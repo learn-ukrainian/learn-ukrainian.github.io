@@ -80,6 +80,40 @@ def commit_on_branch(repo: Path, branch: str, filename: str) -> str:
     return sha
 
 
+def publish_pr_head(repo: Path, number: int, branch: str, pr_head: str) -> None:
+    """Publish a live PR ref and its branch head in the temporary bare origin."""
+    git(repo, "push", "origin", f"{pr_head}:refs/heads/{branch}")
+    git(repo, "push", "origin", f"{pr_head}:refs/pull/{number}/head")
+
+
+def make_pr_head_after(repo: Path, branch: str, filename: str) -> tuple[str, str]:
+    local_head = commit_on_branch(repo, branch, filename)
+    worktree = repo / ".worktrees" / "dispatch" / f"update-{branch.replace('/', '-')}"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), local_head)
+    git(worktree, "commit", "--allow-empty", "-m", "update-branch merge commit")
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(repo, "worktree", "remove", "--force", str(worktree))
+    return local_head, pr_head
+
+
+def make_pr_merge_head_after_main_advance(repo: Path, branch: str, filename: str) -> tuple[str, str, str]:
+    """Create a PR head that merges a new main commit into an existing branch."""
+    local_head = commit_on_branch(repo, branch, filename)
+    (repo / "main-update.txt").write_text("main update\n", encoding="utf-8")
+    git(repo, "add", "main-update.txt")
+    git(repo, "commit", "-m", "advance main")
+    main_head = git(repo, "rev-parse", "HEAD")
+
+    worktree = repo / ".worktrees" / "dispatch" / f"merge-{branch.replace('/', '-')}"
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    git(repo, "worktree", "add", "--detach", str(worktree), local_head)
+    git(worktree, "merge", "--no-ff", "main", "-m", "merge main into PR branch")
+    pr_head = git(worktree, "rev-parse", "HEAD")
+    git(repo, "worktree", "remove", "--force", str(worktree))
+    return local_head, main_head, pr_head
+
+
 def patch_gh(
     monkeypatch: pytest.MonkeyPatch,
     *,
@@ -211,6 +245,7 @@ def test_apply_matches_detached_review_sibling_by_exact_sha(
 ) -> None:
     repo = init_repo(tmp_path)
     head_sha = commit_on_branch(repo, "codex/reviewed", "notes.txt")
+    publish_pr_head(repo, 202, "codex/reviewed", head_sha)
     review_worktree = add_detached_worktree(repo, "pr-202", head_sha)
 
     patch_gh(
@@ -261,6 +296,7 @@ def test_apply_deletes_stale_remote_branch_when_no_worktree_remains(
     repo = init_repo(tmp_path)
     head_sha = commit_on_branch(repo, "codex/already-reaped", "note.txt")
     # No worktree remains for this branch, but the remote head survived merge.
+    publish_pr_head(repo, 404, "codex/already-reaped", head_sha)
 
     patch_gh(
         monkeypatch,
@@ -277,6 +313,245 @@ def test_apply_deletes_stale_remote_branch_when_no_worktree_remains(
     assert result.branch_status.remote_gone is True
     assert git(repo, "ls-remote", "--heads", "origin", "codex/already-reaped") == ""
     assert result.ok is True
+
+
+def test_apply_deletes_local_branch_when_tip_is_ancestor_of_live_pr_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    local_head, main_head, pr_head = make_pr_merge_head_after_main_advance(
+        repo, "codex/updated", "note.txt"
+    )
+    assert git(repo, "rev-parse", "refs/heads/codex/updated") == local_head
+    publish_pr_head(repo, 8560, "codex/updated", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8560,
+        state="MERGED",
+        head_ref_name="codex/updated",
+        head_sha=pr_head,
+        branch_prs={"codex/updated": [{"number": 8560, "state": "MERGED", "headRefOid": pr_head}]},
+    )
+
+    result = mc.run_merge_closeout(repo, 8560, apply=True, live_cwds=set())
+
+    assert result.matched_worktrees == []
+    assert result.branch_status is not None
+    assert result.branch_status.local_gone is True
+    assert result.branch_status.local_error is None
+    assert result.ok is True
+    assert local_head != pr_head
+    assert git(repo, "rev-parse", f"{pr_head}^1") == local_head
+    assert git(repo, "rev-parse", f"{pr_head}^2") == main_head
+    local = _REAL_RUN(
+        ["git", "show-ref", "--verify", "--quiet", "refs/heads/codex/updated"],
+        cwd=repo,
+        capture_output=True,
+        text=True,
+        env=git_env(),
+    )
+    assert local.returncode != 0
+
+
+def test_apply_exact_head_delete_does_not_fetch_live_pr_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    pr_head = commit_on_branch(repo, "codex/exact-head-no-fetch", "note.txt")
+    publish_pr_head(repo, 8565, "codex/exact-head-no-fetch", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8565,
+        state="MERGED",
+        head_ref_name="codex/exact-head-no-fetch",
+        head_sha=pr_head,
+    )
+    original_run = rw._run
+    fetch_calls: list[dict[str, Any]] = []
+
+    def record_fetch(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:3] == ["git", "fetch", "--no-tags"]:
+            fetch_calls.append(kwargs)
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", record_fetch)
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8565, "MERGED", "codex/exact-head-no-fetch", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is True
+    assert status.local_error is None
+    assert fetch_calls == []
+
+
+def test_apply_refuses_local_branch_with_commit_outside_live_pr_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    pr_head = commit_on_branch(repo, "codex/extra-local", "note.txt")
+    tree = git(repo, "rev-parse", f"{pr_head}^{{tree}}")
+    extra = git(repo, "commit-tree", tree, "-p", pr_head, "-m", "extra local commit")
+    git(repo, "update-ref", "refs/heads/codex/extra-local", extra)
+    publish_pr_head(repo, 8561, "codex/extra-local", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8561,
+        state="MERGED",
+        head_ref_name="codex/extra-local",
+        head_sha=pr_head,
+    )
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8561, "MERGED", "codex/extra-local", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is False
+    assert status.local_error == "local head does not match merged PR head; refusing to delete"
+    assert git(repo, "rev-parse", "refs/heads/codex/extra-local") == extra
+
+
+def test_apply_deletes_local_branch_when_head_equals_live_pr_head(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    pr_head = commit_on_branch(repo, "codex/equal-head", "note.txt")
+    publish_pr_head(repo, 8562, "codex/equal-head", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8562,
+        state="MERGED",
+        head_ref_name="codex/equal-head",
+        head_sha=pr_head,
+    )
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8562, "MERGED", "codex/equal-head", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is True
+    assert status.local_error is None
+
+
+def test_apply_refuses_ancestor_delete_when_fetching_live_pr_head_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    local_head, pr_head = make_pr_head_after(repo, "codex/fetch-fails", "note.txt")
+    publish_pr_head(repo, 8563, "codex/fetch-fails", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8563,
+        state="MERGED",
+        head_ref_name="codex/fetch-fails",
+        head_sha=pr_head,
+    )
+    original_run = rw._run
+
+    def fail_pr_fetch(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:3] == ["git", "fetch", "--no-tags"]:
+            return subprocess.CompletedProcess(args, 1, "", "network unavailable")
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", fail_pr_fetch)
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8563, "MERGED", "codex/fetch-fails", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is False
+    assert status.local_error is not None
+    assert "cannot fetch live PR head refs/pull/8563/head" in status.local_error
+    assert local_head != pr_head
+    assert git(repo, "rev-parse", "refs/heads/codex/fetch-fails") == local_head
+
+
+def test_apply_refuses_timed_out_live_pr_head_fetch(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    local_head, pr_head = make_pr_head_after(repo, "codex/fetch-timeout", "note.txt")
+    publish_pr_head(repo, 8566, "codex/fetch-timeout", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8566,
+        state="MERGED",
+        head_ref_name="codex/fetch-timeout",
+        head_sha=pr_head,
+    )
+    original_run = rw._run
+    fetch_kwargs: dict[str, Any] | None = None
+
+    def timeout_fetch(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        nonlocal fetch_kwargs
+        if args[:3] == ["git", "fetch", "--no-tags"]:
+            fetch_kwargs = kwargs
+            raise subprocess.TimeoutExpired(args, timeout=kwargs["timeout"])
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", timeout_fetch)
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8566, "MERGED", "codex/fetch-timeout", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is False
+    assert status.local_error == (
+        "cannot fetch live PR head refs/pull/8566/head: timed out after 30 seconds"
+    )
+    assert fetch_kwargs is not None
+    assert fetch_kwargs["timeout"] == 30
+    assert fetch_kwargs["env_overrides"] == {"GIT_TERMINAL_PROMPT": "0"}
+    assert git(repo, "rev-parse", "refs/heads/codex/fetch-timeout") == local_head
+
+
+def test_apply_refuses_local_delete_when_ancestry_check_fails(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    local_head, pr_head = make_pr_head_after(repo, "codex/ancestry-fails", "note.txt")
+    publish_pr_head(repo, 8564, "codex/ancestry-fails", pr_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8564,
+        state="MERGED",
+        head_ref_name="codex/ancestry-fails",
+        head_sha=pr_head,
+    )
+    original_run = rw._run
+
+    def fail_ancestry(args: list[str], **kwargs: Any) -> subprocess.CompletedProcess[str]:
+        if args[:4] == ["git", "merge-base", "--is-ancestor", local_head]:
+            return subprocess.CompletedProcess(args, 128, "", "repository corrupt")
+        return original_run(args, **kwargs)
+
+    monkeypatch.setattr(rw, "_run", fail_ancestry)
+
+    status = mc.verify_branch_gone(
+        repo,
+        mc.PullRequestInfo(8564, "MERGED", "codex/ancestry-fails", pr_head),
+        apply=True,
+    )
+
+    assert status is not None
+    assert status.local_gone is False
+    assert status.local_error == "cannot verify local ancestry: repository corrupt"
+    assert git(repo, "rev-parse", "refs/heads/codex/ancestry-fails") == local_head
 
 
 def test_apply_reports_residual_when_branch_head_diverges(
@@ -376,6 +651,7 @@ def test_apply_refuses_fallback_branch_delete_when_open_pr_exists(
     repo = init_repo(tmp_path)
     head_sha = commit_on_branch(repo, "codex/reused-branch", "note.txt")
     # No worktree remains for this branch.
+    publish_pr_head(repo, 42, "codex/reused-branch", head_sha)
 
     patch_gh(
         monkeypatch,
@@ -403,6 +679,36 @@ def test_apply_refuses_fallback_branch_delete_when_open_pr_exists(
     assert result.ok is False
     assert git(repo, "ls-remote", "--heads", "origin", "codex/reused-branch") != ""
     assert git(repo, "rev-parse", "--verify", "codex/reused-branch")
+
+
+def test_apply_expected_head_missing_still_refuses_branch_with_open_pr(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    repo = init_repo(tmp_path)
+    local_head = commit_on_branch(repo, "codex/open-pr-no-expected-head", "note.txt")
+    publish_pr_head(repo, 8567, "codex/open-pr-no-expected-head", local_head)
+    patch_gh(
+        monkeypatch,
+        pr_number=8567,
+        state="MERGED",
+        head_ref_name="codex/open-pr-no-expected-head",
+        head_sha=None,
+        branch_prs={
+            "codex/open-pr-no-expected-head": [
+                {"number": 8568, "state": "OPEN", "headRefOid": local_head}
+            ]
+        },
+    )
+
+    result = mc.run_merge_closeout(repo, 8567, apply=True, live_cwds=set())
+
+    assert result.branch_status is not None
+    assert result.branch_status.local_gone is False
+    assert result.branch_status.local_error == (
+        "branch has an open PR (#8568); refusing to delete"
+    )
+    assert result.ok is False
+    assert git(repo, "rev-parse", "refs/heads/codex/open-pr-no-expected-head") == local_head
 
 
 def test_main_exits_nonzero_and_prints_json_when_pr_not_merged(
