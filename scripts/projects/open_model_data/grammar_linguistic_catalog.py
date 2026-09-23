@@ -396,7 +396,143 @@ def resolve_specific_linguistic_citation(
             f"Борис Антоненко-Давидович радить замість кальки «{err}» вживати природні українські відповідники «насамперед», «передусім», «найперше».",
         )
 
-    # 2. Conjunctions (G/Conjunction)
+    # 2. General Calques (F/Calque)
+    if primary_tag == "F/Calque":
+        return (
+            "Борис Антоненко-Давидович «Як ми говоримо» / Святослав Караванський",
+            f"кальковану або невластиву мовну одиницю «{err}» замінено на питомий літературний еквівалент «{corr}»",
+            f"Борис Антоненко-Давидович («Як ми говоримо») та Святослав Караванський застерігають від буквального калькування «{err}» і радять уживати питому форму «{corr}»."
+        )
+
+    # 3. Case government and inflection (G/Case)
+    if primary_tag == "G/Case":
+        return (
+            "VESUM / Український правопис (2019) / Словник дієслівного керування",
+            f"порушення синтаксичного керування або відмінкової форми «{err}» виправлено на «{corr}»",
+            f"Згідно зі «Словником дієслівного керування» та нормами синтаксису, залежне слово «{err}» має узгоджуватися у формі «{corr}» відповідно до граматичної валентності керівного слова."
+        )
+
+    # 4. Prepositions (G/Prep)
+    if primary_tag == "G/Prep":
+        if any(p in err_lower for p in ["з під", "зпід", "з над", "знад", "з за", "зза", "із за"]):
+            return (
+                "Український правопис (2019) § 37, п. 2",
+                f"орфографічну помилку у складному прийменнику «{err}» виправлено на дефісне написання «{corr}»",
+                "«Український правопис» (2019, § 37, п. 2) встановлює, що складні прийменники з першою частиною «з-», «із-» пишуться через дефіс: з-під, з-над, з-за, із-за."
+            )
+        prep_words = {
+            "у", "в", "на", "до", "з", "із", "зі", "по", "за", "про", "через", "при",
+            "під", "над", "перед", "від", "для", "без", "біля", "проти", "серед",
+            "завдяки", "щодо", "згідно", "стосовно", "всупереч", "посеред", "внаслідок",
+            "навколо", "поруч", "поза"
+        }
+        if any(w in prep_words for w in err_lower.split()) or any(w in prep_words for w in corr_lower.split()):
+            return (
+                "Катерина Городенська «Рідне слово» / Борис Антоненко-Давидович «Як ми говоримо»",
+                f"невластиву прийменникову конструкцію «{err}» замінено на літературну «{corr}»",
+                f"Катерина Городенська («Рідне слово») та Борис Антоненко-Давидович зазначають, що прийменникові конструкції мають відповідати семантиці українського вислову: у цьому разі вживаємо «{corr}» замість «{err}»."
+            )
+        return None
+
+    # 5. Gender agreement (G/Gender)
+    if primary_tag == "G/Gender":
+        return (
+            "VESUM / Український правопис (2019)",
+            f"порушення узгодження в роді «{err}» виправлено на форму «{corr}»",
+            f"Морфологічна система української мови (VESUM) вимагає граматичного узгодження за родом: форму «{err}» виправлено на «{corr}»."
+        )
+
+    # 6. Number forms and quantifier agreement (G/Number)
+    if primary_tag == "G/Number":
+        return (
+            "Український правопис (2019) § 32 / VESUM",
+            f"помилку у формі числа «{err}» виправлено на нормативну «{corr}»",
+            f"«Український правопис» (2019, § 32) та словникова база VESUM регламентують нормативні числові закінчення іменників і прикметників: вживаємо «{corr}» замість «{err}»."
+        )
+
+    # 7. Verb Voice (G/VerbVoice): strict distinction between -ся passives and -но/-то forms
+    if primary_tag == "G/VerbVoice":
+        if err_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in err_lower.split()):
+            return (
+                "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
+                f"неприродну пасивну форму на «-ся» «{err}» замінено на питому конструкцію «{corr}»",
+                f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати невластивих пасивних форм дієслів на «-ся», віддаючи перевагу питомим активним зворотам («{corr}» замість «{err}»)."
+            )
+        if err_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in err_lower.split()):
+            return (
+                "Академічна граматика української мови / Олександр Пономарів",
+                f"безособову форму на «-но/-то» «{err}» узгоджено в реченні як «{corr}»",
+                f"Академічна граматика та Олександр Пономарів розглядають нормативне вживання предикативних форм на «-но», «-то»: у цьому контексті слід уживати «{corr}» замість «{err}»."
+            )
+        return None
+
+    # 8. Verb Aspect Form / Imperative / Adverbial Participle (G/VerbAForm)
+    if primary_tag == "G/VerbAForm":
+        if err_lower.startswith(("давай", "давайте")) or any(w.startswith(("давай", "давайте")) for w in err_lower.split()):
+            return (
+                "Борис Антоненко-Давидович «Як ми говоримо» / Олександр Пономарів",
+                f"кальковану форму наказового способу з часткою «{err}» замінено на питому форму «{corr}»",
+                f"Борис Антоненко-Давидович та Олександр Пономарів наголошують, що конструкції з «давай / давайте» є калькою з російської; в українській мові слід уживати синтетичні форми наказового способу («{corr}»)."
+            )
+        adv_sufs = ("чи", "ши", "вшись", "вшися", "ючись", "ючися")
+        if any(err_lower.endswith(s) for s in adv_sufs) or any(any(w.endswith(s) for s in adv_sufs) for w in err_lower.split()):
+            return (
+                "Український правопис (2019) / Академічна граматика української мови",
+                f"помилкове вживання або творення дієприслівникової форми «{err}» виправлено на «{corr}»",
+                f"За нормами українського синтаксису дія дієприслівника обов'язково повинна стосуватися суб'єкта основної дії (присудка): форму «{err}» виправлено на «{corr}»."
+            )
+        return None
+
+    # 9. Participle Voice (G/PartVoice): active participles
+    if primary_tag == "G/PartVoice":
+        pv_sufs = (
+            "чий", "чого", "чому", "чим", "чім", "ча", "чої", "чій", "чу", "чою", "че",
+            "чі", "чих", "чими", "ший", "шого", "шому", "шим", "шім", "ша", "шої", "шій",
+            "шу", "шою", "ше", "ші", "ших", "шими"
+        )
+        if any(err_lower.endswith(s) for s in pv_sufs) or any(any(w.endswith(s) for s in pv_sufs) for w in err_lower.split()):
+            return (
+                "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович",
+                f"невластивий активний дієприкметник «{err}» замінено на нормативну форму «{corr}»",
+                f"Олександр Пономарів («Культура слова») та Борис Антоненко-Давидович наголошують, що активні дієприкметники теперішнього часу на «-чий» невластиві українській мові й мають замінюватися описовими зворотами або питомими прикметниками («{corr}» замість «{err}»)."
+            )
+        return None
+
+    # 10. Participle (G/Participle): passive participles
+    if primary_tag == "G/Participle":
+        part_sufs = (
+            "ний", "ного", "ному", "ним", "нім", "на", "ної", "ній", "ну", "ною", "не",
+            "ні", "них", "ними", "тий", "того", "тому", "тим", "тім", "та", "тої", "тій",
+            "ту", "тою", "те", "ті", "тих", "тими"
+        )
+        if any(err_lower.endswith(s) for s in part_sufs) or any(any(w.endswith(s) for s in part_sufs) for w in err_lower.split()):
+            return (
+                "Український правопис (2019) / VESUM",
+                f"помилку у творенні або узгодженні пасивного дієприкметника «{err}» виправлено на «{corr}»",
+                f"«Український правопис» (2019) та база VESUM закріплюють нормативні суфіксальні моделі дієприкметників: форму «{err}» виправлено на «{corr}»."
+            )
+        return None
+
+    # 11. Comparison (G/Comparison)
+    if primary_tag == "G/Comparison":
+        comp_sufs = (
+            "іший", "іша", "іше", "іші", "ішим", "іших", "ішими", "ішому",
+            "ший", "ша", "ше", "ші", "шим", "ших", "шими", "шому"
+        )
+        comp_keywords = ["більш", "менш", "найбільш", "найменш", "сам", "кращ", "гірш"]
+        if (
+            any(k in err_lower for k in comp_keywords)
+            or any(err_lower.endswith(s) for s in comp_sufs)
+            or any(any(w.endswith(s) for s in comp_sufs) for w in err_lower.split())
+        ):
+            return (
+                "Український правопис (2019) § 111 / Олександр Пономарів",
+                f"помилкове утворення ступеня порівняння «{err}» виправлено на нормативну форму «{corr}»",
+                f"«Український правопис» (2019, § 111) забороняє змішувати просту та складену форми ступенів порівняння: форму «{err}» виправлено на «{corr}»."
+            )
+        return None
+
+    # 12. Conjunctions (G/Conjunction)
     if primary_tag == "G/Conjunction":
         if "так як" in err_lower:
             return (
@@ -410,78 +546,44 @@ def resolve_specific_linguistic_citation(
                 "калькований сполучник «в той час як» замінено на питомий протиставний сполучник «тоді як»",
                 "Борис Антоненко-Давидович рекомендує вживати природні сполучники «тоді як», «тим часом як» замість кальки «в той час як»."
             )
-        return (
-            "Академічна граматика української мови / Олександр Пономарів",
-            f"сполучний елемент «{err}» замінено на нормативний сполучник «{corr}»",
-            f"Академічна граматика та Олександр Пономарів регламентують нормативне вживання сполучників у складному реченні: у цьому контексті слід уживати «{corr}» замість «{err}»."
-        )
+        conj_words = {
+            "що", "щоб", "як", "якщо", "якби", "бо", "але", "а", "і", "й", "та", "хоч",
+            "хоча", "мов", "неначе", "наче", "ніби", "немов", "котрий", "котра", "котре",
+            "котрі", "який", "яка", "яке", "які", "чи", "тож", "проте", "однак", "зате",
+            "коли", "доки", "поки"
+        }
+        if any(w in conj_words for w in err_lower.split()) or any(w in conj_words for w in corr_lower.split()):
+            return (
+                "Академічна граматика української мови / Олександр Пономарів",
+                f"сполучний елемент «{err}» замінено на нормативний сполучник «{corr}»",
+                f"Академічна граматика та Олександр Пономарів регламентують нормативне вживання сполучників у складному реченні: у цьому контексті слід уживати «{corr}» замість «{err}»."
+            )
+        return None
 
-    # 3. Prepositions with hyphens (G/Prep, Pravopys 2019 § 37)
-    if any(p in err_lower for p in ["з під", "зпід", "з над", "знад", "з за", "зза", "із за"]):
-        return (
-            "Український правопис (2019) § 37, п. 2",
-            f"орфографічну помилку у складному прийменнику «{err}» виправлено на дефісне написання «{corr}»",
-            "«Український правопис» (2019, § 37, п. 2) встановлює, що складні прийменники з першою частиною «з-», «із-» пишуться через дефіс: з-під, з-над, з-за, із-за."
-        )
+    # 13. Particles (G/Particle)
+    if primary_tag == "G/Particle":
+        if (
+            any(p in corr_lower for p in ["будь-", "-небудь", "казна-", "хтозна-", "-таки", "-бо", "-но"])
+            or any(p in err_lower for p in ["будь ", " neбудь", "небудь", "казна ", "хтозна ", " таки", " бо", " но"])
+        ):
+            return (
+                "Український правопис (2019) § 40",
+                f"написання частки у сполуці «{corr}» виправлено на дефісне (замість «{err}»)",
+                "«Український правопис» (2019, § 40) визначає, що частки «будь-», «-небудь», «казна-», «хтозна-», «-бо», «-но», «-таки» пишуться через дефіс."
+            )
+        particle_words = {
+            "не", "ні", "ж", "же", "би", "б", "хай", "нехай", "таки", "навіть", "лише",
+            "тільки", "ось", "он", "ото", "онде", "мов", "ніби", "чи"
+        }
+        if any(w in particle_words for w in err_lower.split()) or any(w in particle_words for w in corr_lower.split()):
+            return (
+                "Український правопис (2019) § 40 / VESUM",
+                f"помилку у вживанні чи написанні частки «{err}» виправлено на «{corr}»",
+                f"«Український правопис» (2019, § 40) регламентує правила вживання та написання часток в українській мові: уживаємо «{corr}» замість «{err}»."
+            )
+        return None
 
-    # 4. Particles with hyphens (G/Particle, Pravopys 2019 § 40)
-    if any(p in corr_lower for p in ["будь-", "-небудь", "казна-", "хтозна-", "-таки", "-бо", "-но"]):
-        return (
-            "Український правопис (2019) § 40",
-            f"написання частки у сполуці «{corr}» виправлено на дефісне (замість «{err}»)",
-            "«Український правопис» (2019, § 40) визначає, що частки «будь-», «-небудь», «казна-», «хтозна-», «-бо», «-но», «-таки» пишуться через дефіс."
-        )
-
-    # 5. Facet-aware tagging
-    if primary_tag == "G/Case":
-        return (
-            "VESUM / Український правопис (2019) / Словник дієслівного керування",
-            f"порушення синтаксичного керування або відмінкової форми «{err}» виправлено на «{corr}»",
-            f"Згідно зі «Словником дієслівного керування» та нормами синтаксису, залежне слово «{err}» має узгоджуватися у формі «{corr}» відповідно до граматичної валентності керівного слова."
-        )
-
-    if primary_tag == "G/Prep":
-        return (
-            "Катерина Городенська «Рідне слово» / Борис Антоненко-Давидович «Як ми говоримо»",
-            f"невластиву прийменникову конструкцію «{err}» замінено на літературну «{corr}»",
-            f"Катерина Городенська («Рідне слово») та Борис Антоненко-Давидович зазначають, що прийменникові конструкції мають відповідати семантиці українського вислову: у цьому разі вживаємо «{corr}» замість «{err}»."
-        )
-
-    if primary_tag == "F/Calque":
-        return (
-            "Борис Антоненко-Давидович «Як ми говоримо» / Святослав Караванський",
-            f"кальковану або невластиву мовну одиницю «{err}» замінено на питомий літературний еквівалент «{corr}»",
-            f"Борис Антоненко-Давидович («Як ми говоримо») та Святослав Караванський застерігають від буквального калькування «{err}» і радять уживати питому форму «{corr}»."
-        )
-
-    if primary_tag == "G/Gender":
-        return (
-            "VESUM / Український правопис (2019)",
-            f"порушення узгодження в роді «{err}» виправлено на форму «{corr}»",
-            f"Морфологічна система української мови (VESUM) вимагає граматичного узгодження за родом: форму «{err}» виправлено на «{corr}»."
-        )
-
-    if primary_tag == "G/Number":
-        return (
-            "Український правопис (2019) § 32 / VESUM",
-            f"помилку у формі числа «{err}» виправлено на нормативну «{corr}»",
-            f"«Український правопис» (2019, § 32) та словникова база VESUM регламентують нормативні числові закінчення іменників і прикметників: вживаємо «{corr}» замість «{err}»."
-        )
-
-    if primary_tag == "G/VerbVoice":
-        return (
-            "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
-            f"неприродну пасивну форму на «-ся» «{err}» замінено на питому конструкцію «{corr}»",
-            f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати невластивих пасивних форм дієслів на «-ся», віддаючи перевагу питомим формам («{corr}»)."
-        )
-
-    if primary_tag == "G/PartVoice":
-        return (
-            "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович",
-            f"невластивий активний дієприкметник на «-чий» «{err}» замінено на нормативну форму «{corr}»",
-            f"Олександр Пономарів («Культура слова») наголошує, що активні дієприкметники теперішнього часу на «-чий» невластиві українській мові; замість «{err}» вжито «{corr}»."
-        )
-
+    # 14. Aspect (G/Aspect)
     if primary_tag == "G/Aspect":
         return (
             "VESUM / Академічна граматика української мови",
@@ -489,6 +591,7 @@ def resolve_specific_linguistic_citation(
             f"В українській граматиці видова семантика дієслів відображає характер протікання дії; форму «{err}» виправлено на видову пару «{corr}» (VESUM)."
         )
 
+    # 15. Tense (G/Tense)
     if primary_tag == "G/Tense":
         return (
             "Академічна граматика української мови / VESUM",
@@ -496,40 +599,9 @@ def resolve_specific_linguistic_citation(
             f"Синтаксичні норми української мови (Академічна граматика) вимагають логічного узгодження часових форм: уживаємо «{corr}» замість «{err}»."
         )
 
-    if primary_tag == "G/VerbAForm":
-        return (
-            "Український правопис (2019) / Академічна граматика української мови",
-            f"помилкове вживання дієприслівникової форми «{err}» виправлено на «{corr}»",
-            f"За нормами українського синтаксису дія дієприслівника має стосуватися суб'єкта основної дії: форму «{err}» виправлено на «{corr}»."
-        )
-
-    if primary_tag == "G/Participle":
-        return (
-            "Український правопис (2019) / VESUM",
-            f"помилку у творенні або узгодженні пасивного дієприкметника «{err}» виправлено на «{corr}»",
-            f"«Український правопис» (2019) та база VESUM закріплюють нормативні суфіксальні моделі дієприкметників: форму «{err}» виправлено на «{corr}»."
-        )
-
-    if primary_tag == "G/Comparison":
-        return (
-            "Український правопис (2019) § 111 / Олександр Пономарів",
-            f"помилкове утворення ступеня порівняння «{err}» виправлено на нормативну форму «{corr}»",
-            f"«Український правопис» (2019, § 111) забороняє змішувати просту та складену форми ступенів порівняння: форму «{err}» виправлено на «{corr}»."
-        )
-
-    if primary_tag == "G/UngrammaticalStructure":
-        return (
-            "Олександр Пономарів «Культура слова» / Академічна граматика",
-            f"синтаксичну деформацію речення «{err}» виправлено на нормативну структуру «{corr}»",
-            f"Олександр Пономарів («Культура слова») вказує на неприпустимість штучних синтаксичних деформацій: конструкцію «{err}» узгоджено як «{corr}»."
-        )
-
-    if primary_tag == "G/Other":
-        return (
-            "Український правопис (2019) / VESUM",
-            f"граматичну помилку «{err}» виправлено на нормативну літературну форму «{corr}»",
-            f"Чинні норми українського правопису (2019) та словникова база VESUM фіксують нормативну форму «{corr}» замість хибної «{err}»."
-        )
+    # 16. UngrammaticalStructure and Other -> fail closed, return None (drops to silent rewrite)
+    if primary_tag in {"G/UngrammaticalStructure", "G/Other"}:
+        return None
 
     return None
 
@@ -551,19 +623,27 @@ def build_reasoning_and_response(
         (reasoning_steps, final_response, source_metadata)
     """
     if is_erroneous:
+        err = (error_span or "").strip() or "помилковий фрагмент"
+        corr = (replacement_span or "").strip() or "виправлений варіант"
+
         citation = resolve_specific_linguistic_citation(
             primary_tag, error_span, replacement_span, original_text, corrected_text
         )
-        if citation is not None:
-            authority, desc, rule = citation
-        else:
-            prof = AUTHORITY_PROFILES.get(primary_tag) or AUTHORITY_PROFILES["G/Other"]
-            authority = prof["authority"]
-            desc = prof["description"]
-            rule = prof["rule_template"]
 
-        err = (error_span or "").strip() or "помилковий фрагмент"
-        corr = (replacement_span or "").strip() or "виправлений варіант"
+        # Fail-closed explanation drop: if not explained or citation cannot be specifically verified
+        if not is_explained or citation is None:
+            source_metadata = {
+                "authority": "Український правопис (2019) / VESUM",
+                "error_type": primary_tag,
+                "category": TAG_TO_COARSE_CATEGORY.get(primary_tag, "syntax_structure"),
+                "register": register,
+                "error_span": err,
+                "replacement_span": corr,
+                "linguistic_rule": "",
+            }
+            return [], corrected_text, source_metadata
+
+        authority, desc, rule = citation
 
         source_metadata = {
             "authority": authority,
@@ -574,10 +654,6 @@ def build_reasoning_and_response(
             "replacement_span": corr,
             "linguistic_rule": rule,
         }
-
-        # Fail-closed explanation drop
-        if not is_explained or citation is None:
-            return [], corrected_text, source_metadata
 
         # Build 3-step structured reasoning
         step1 = (
@@ -605,6 +681,16 @@ def build_reasoning_and_response(
         authority = CONTROL_PROFILE["authority"]
         rule = CONTROL_PROFILE["rule_template"]
 
+        if not is_explained:
+            source_metadata = {
+                "authority": authority,
+                "error_type": "control_clean",
+                "category": "protective_authentic_control",
+                "register": register,
+                "linguistic_rule": "",
+            }
+            return [], original_text, source_metadata
+
         source_metadata = {
             "authority": authority,
             "error_type": "control_clean",
@@ -612,9 +698,6 @@ def build_reasoning_and_response(
             "register": register,
             "linguistic_rule": rule,
         }
-
-        if not is_explained:
-            return [], original_text, source_metadata
 
         step1 = (
             f"1. Аналіз вихідного тексту ({register}): речення ретельно перевірено на наявність граматичних, "
@@ -702,19 +785,26 @@ def build_reasoning_and_response_eval(
 ) -> tuple[list[str], str, dict[str, Any]]:
     """Build evaluation-specific reasoning and response with zero 4-gram leakage to train."""
     if is_erroneous:
+        err = (error_span or "").strip() or "помилковий фрагмент"
+        corr = (replacement_span or "").strip() or "виправлений варіант"
+
         citation = resolve_specific_linguistic_citation(
             primary_tag, error_span, replacement_span, original_text, corrected_text
         )
-        if citation is not None:
-            authority, desc, rule = citation
-        else:
-            prof = AUTHORITY_PROFILES.get(primary_tag) or AUTHORITY_PROFILES["G/Other"]
-            authority = prof["authority"]
-            desc = prof["description"]
-            rule = prof["rule_template"]
 
-        err = (error_span or "").strip() or "помилковий фрагмент"
-        corr = (replacement_span or "").strip() or "виправлений варіант"
+        if not is_explained or citation is None:
+            source_metadata = {
+                "authority": "Український правопис (2019) / VESUM",
+                "error_type": primary_tag,
+                "category": TAG_TO_COARSE_CATEGORY.get(primary_tag, "syntax_structure"),
+                "register": register,
+                "error_span": err,
+                "replacement_span": corr,
+                "linguistic_rule": "",
+            }
+            return [], corrected_text, source_metadata
+
+        authority, desc, rule = citation
 
         source_metadata = {
             "authority": authority,
@@ -725,9 +815,6 @@ def build_reasoning_and_response_eval(
             "replacement_span": corr,
             "linguistic_rule": rule,
         }
-
-        if not is_explained or citation is None:
-            return [], corrected_text, source_metadata
 
         step1 = f"1. Характер дефекту ({register}): виявлено помилку ({primary_tag}), де ненормативне «{err}» замінюється на «{corr}» ({desc})."
         step2 = f"2. Нормативне обґрунтування: {rule}"
@@ -747,6 +834,16 @@ def build_reasoning_and_response_eval(
         authority = CONTROL_PROFILE["authority"]
         rule = CONTROL_PROFILE["rule_template"]
 
+        if not is_explained:
+            source_metadata = {
+                "authority": authority,
+                "error_type": "control_clean",
+                "category": "protective_authentic_control",
+                "register": register,
+                "linguistic_rule": "",
+            }
+            return [], original_text, source_metadata
+
         source_metadata = {
             "authority": authority,
             "error_type": "control_clean",
@@ -754,9 +851,6 @@ def build_reasoning_and_response_eval(
             "register": register,
             "linguistic_rule": rule,
         }
-
-        if not is_explained:
-            return [], original_text, source_metadata
 
         step1 = f"1. Перевірка структури ({register}): у наведеному реченні не виявлено граматичних відхилень."
         step2 = f"2. Нормативне підтвердження: текст відповідає стандартам сучасної української мови ({authority})."

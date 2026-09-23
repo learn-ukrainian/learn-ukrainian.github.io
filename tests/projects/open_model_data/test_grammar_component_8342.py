@@ -187,9 +187,9 @@ def test_held_out_test_set_firewall(grammar_data):
     test_sources = set(manifest_data["test_source_sentences"])
     test_targets = set(manifest_data["test_target_sentences"])
 
-    assert len(test_doc_ids) >= 160
-    assert len(test_sources) >= 2000
-    assert len(test_targets) >= 3000
+    assert len(test_doc_ids) == 168
+    assert len(test_sources) == 2634
+    assert len(test_targets) == 5240
 
     for r in grammar_data["all"]:
         assert r["doc_id"] not in test_doc_ids, f"Test doc_id leaked to component: {r['doc_id']}"
@@ -234,18 +234,45 @@ def test_parallel_annotator_retention(grammar_data):
     )
 
 
-def test_explanation_relevance(grammar_data):
-    """Verify that citations are specific and relevant, and no unrelated rules are cited."""
+def test_explanation_relevance_and_target_cleanliness(grammar_data):
+    """Verify citations are specific and verified, silent rows are clean, and target texts have full edits."""
     for r in grammar_data["all"]:
-        if r["is_erroneous"] and r["task_type"] == "explained_correction":
-            full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+        # Verify full edits applied: concurrent errors like spelling 'еффективно' are cleanly corrected
+        assert "еффективно" not in r["corrected_text"], f"Uncorrected spelling 'еффективно' in {r['record_id']}"
+
+        if r["is_erroneous"]:
+            meta = r.get("source_metadata", {})
+            err_span = meta.get("error_span", "").lower()
             orig_lower = r["original_text"].lower()
 
-            if "так як" in full_text:
-                err_span = r.get("source_metadata", {}).get("error_span", "").lower()
-                assert "так як" in orig_lower or "так як" in err_span, (
-                    f"Record {r['record_id']} mentions 'так як' but sentence does not contain it: {r['original_text']}"
-                )
+            if r["task_type"] == "explained_correction":
+                full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+
+                if "так як" in full_text:
+                    assert "так як" in orig_lower or "так як" in err_span, (
+                        f"Record {r['record_id']} mentions 'так як' but sentence does not contain it: {r['original_text']}"
+                    )
+
+                if "на «-ся»" in full_text:
+                    assert any(w.endswith(("ся", "сь")) for w in err_span.split()) or any(w.endswith(("ся", "сь")) for w in orig_lower.split()), (
+                        f"Record {r['record_id']} cites passive on -ся but err_span '{err_span}' does not end in -ся/-сь"
+                    )
+
+                if "давай / давайте" in full_text or "наказового способу з часткою" in full_text:
+                    assert "давай" in err_span or "давайте" in err_span or "давай" in orig_lower, (
+                        f"Record {r['record_id']} cites imperative 'давай' but err_span '{err_span}' lacks it"
+                    )
+
+                if "дієприслівников" in full_text:
+                    adv_sufs = ("чи", "ши", "вшись", "вшися", "ючись", "ючися")
+                    assert any(err_span.endswith(s) for s in adv_sufs) or any(any(w.endswith(s) for s in adv_sufs) for w in err_span.split()), (
+                        f"Record {r['record_id']} cites дієприслівник but err_span '{err_span}' lacks participle suffix"
+                    )
+            else:
+                # Silent rewrite: linguistic_rule must be empty and reasoning_steps must be empty
+                assert r["task_type"] == "silent_rewrite"
+                assert r.get("reasoning_steps") == []
+                assert meta.get("linguistic_rule") == ""
 
 
 def test_global_sentence_deduplication(grammar_data):

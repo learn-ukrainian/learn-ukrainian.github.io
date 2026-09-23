@@ -34,12 +34,15 @@ from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     AUTHORITY_PROFILES,
     CONTROL_PROFILE,
     IN_SCOPE_TAGS,
+    PROMPT_TEMPLATES_BY_REGISTER,
+    PROMPT_TEMPLATES_EVAL,
     TAG_TO_COARSE_CATEGORY,
     build_query,
     build_query_eval,
     build_reasoning_and_response,
     build_reasoning_and_response_eval,
     classify_sentence_register,
+    resolve_specific_linguistic_citation,
 )
 
 DEFAULT_UA_GEC_TRAIN_M2 = (
@@ -84,7 +87,7 @@ def detokenize(text: str) -> str:
 
 def load_held_out_firewall(
     manifest_path: Path = DEFAULT_FIREWALL_MANIFEST,
-    test_m2_path: Path | None = DEFAULT_UA_GEC_TEST_M2,
+    test_m2_path: Path | None = None,
 ) -> tuple[set[str], set[str], set[str]]:
     """Load complete held-out test split firewall (doc IDs, source sentences, target sentences).
 
@@ -108,20 +111,6 @@ def load_held_out_firewall(
             f"Held-out test firewall manifest at {manifest_path} is empty or invalid. "
             f"Stats: docs={len(test_doc_ids)}, sources={len(test_sources)}, targets={len(test_targets)}"
         )
-
-    # Optionally supplement from raw test M2 if available
-    if test_m2_path and test_m2_path.is_file():
-        with test_m2_path.open("r", encoding="utf-8") as f:
-            for line in f:
-                line = line.strip()
-                if line.startswith("S # "):
-                    test_doc_ids.add(line[4:].strip())
-                elif line.startswith("S ") and not line.startswith("S # "):
-                    test_sources.add(detokenize(line[2:].strip()))
-                elif line.startswith("A "):
-                    parts = line[2:].split("|||")
-                    if len(parts) > 2 and parts[2]:
-                        test_targets.add(detokenize(parts[2].strip()))
 
     return test_doc_ids, test_sources, test_targets
 
@@ -282,7 +271,7 @@ def build_grammar_dataset(
     )
 
     # 5. Extract substantive corrections and pristine zero-error controls
-    seen_corrections: set[tuple[str, str]] = set()
+    seen_corrections: set[tuple[str, int, str, str]] = set()
     seen_control_texts: set[str] = set()
 
     train_corrections = []
@@ -329,20 +318,21 @@ def build_grammar_dataset(
             if not in_scope:
                 continue
 
-            # Sort edits right-to-left
-            in_scope_sorted = sorted(in_scope, key=lambda x: (x[0], x[1]), reverse=True)
-            toks = list(orig_tokens)
+            # Apply ALL non-noop edits from this annotator so all concurrent errors (e.g. spelling) are resolved
+            all_non_noop = [e for e in edit_list if e[2] != "noop"]
+            all_sorted = sorted(all_non_noop, key=lambda x: (x[0], x[1]), reverse=True)
 
             # Check overlap
             valid = True
-            for i in range(len(in_scope_sorted) - 1):
-                if in_scope_sorted[i][0] < in_scope_sorted[i + 1][1]:
+            for i in range(len(all_sorted) - 1):
+                if all_sorted[i][0] < all_sorted[i + 1][1]:
                     valid = False
                     break
             if not valid:
                 continue
 
-            for start, end, _tag, corr in in_scope_sorted:
+            toks = list(orig_tokens)
+            for start, end, _tag, corr in all_sorted:
                 repl = corr.split() if corr else []
                 toks[start:end] = repl
 
@@ -352,17 +342,31 @@ def build_grammar_dataset(
                 and corr_text not in test_sources
                 and corr_text not in test_targets
             ):
-                pair_key = (orig_text, corr_text)
-                if pair_key in seen_corrections:
+                tuple_key = (d, ann_id, orig_text, corr_text)
+                if tuple_key in seen_corrections:
                     continue
-                seen_corrections.add(pair_key)
+                seen_corrections.add(tuple_key)
                 if len(distinct_targets_for_sentence) > 0:
                     parallel_target_retentions += 1
                 distinct_targets_for_sentence.add(corr_text)
 
-                primary_tag = in_scope[0][2]
-                err_span = " ".join(orig_tokens[in_scope[0][0] : in_scope[0][1]])
-                repl_span = in_scope[0][3]
+                sorted_in_scope = sorted(
+                    in_scope,
+                    key=lambda e: (
+                        0 if resolve_specific_linguistic_citation(
+                            e[2],
+                            " ".join(orig_tokens[e[0] : e[1]]),
+                            e[3],
+                            orig_text,
+                            corr_text,
+                        ) is not None else 1,
+                        e[0],
+                    ),
+                )
+                primary_edit = sorted_in_scope[0]
+                primary_tag = primary_edit[2]
+                err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]])
+                repl_span = primary_edit[3]
                 all_tags = [e[2] for e in in_scope]
 
                 corr_item = {
@@ -404,7 +408,7 @@ def build_grammar_dataset(
     # Partition Brown-UK controls strictly by doc_id hash (90:10)
     brown_train_available = []
     brown_eval_available = []
-    seen_corr_sources = {p[0] for p in seen_corrections}
+    seen_corr_sources = {c["original_text"] for c in train_corrections + eval_corrections}
 
     for b in brown_controls:
         txt = b["original_text"]
@@ -479,19 +483,38 @@ def build_grammar_dataset(
             key=lambda x: hashlib.sha256(f"{x[1]['doc_id']}_{x[1]['original_text']}".encode()).hexdigest()
         )
 
-        # Assign task mix: 45% silent rewrites / 55% explained corrections
+        # Assign task mix: calibrated to land ~55% explained corrections post citation drop
+        used_queries: set[str] = set()
         for idx, (is_err, item) in enumerate(all_raw_items):
             seed_idx = global_seed + idx
             orig_text = item["original_text"]
             reg = classify_sentence_register(orig_text)
 
             if split_name == "eval":
-                query = build_query_eval(orig_text, seed_idx)
+                query = ""
+                for offset in range(len(PROMPT_TEMPLATES_EVAL)):
+                    cand = PROMPT_TEMPLATES_EVAL[(seed_idx + offset) % len(PROMPT_TEMPLATES_EVAL)].format(sentence=orig_text)
+                    if cand not in used_queries:
+                        query = cand
+                        used_queries.add(cand)
+                        seed_idx = seed_idx + offset
+                        break
+                if not query:
+                    query = build_query_eval(orig_text, seed_idx)
             else:
-                query = build_query(orig_text, reg, seed_idx)
+                templates = PROMPT_TEMPLATES_BY_REGISTER.get(reg) or PROMPT_TEMPLATES_BY_REGISTER["journalistic"]
+                query = ""
+                for offset in range(len(templates)):
+                    cand = templates[(seed_idx + offset) % len(templates)].format(sentence=orig_text)
+                    if cand not in used_queries:
+                        query = cand
+                        used_queries.add(cand)
+                        seed_idx = seed_idx + offset
+                        break
+                if not query:
+                    query = build_query(orig_text, reg, seed_idx)
 
-            # 45% silent / 55% explained: idx % 100 < 55 is explained
-            is_explained = (idx % 100 < 55)
+            is_explained = (idx % 100 < 64)
 
             if is_err:
                 corr_text = item["corrected_text"]
