@@ -7768,8 +7768,65 @@ def _find_live_cursor_driver_lease() -> dict[str, Any] | None:
         ) from exc
 
 
+def _proc_parent_pid(pid: int) -> int:
+    """Return the parent pid of ``pid`` from Linux ``/proc``."""
+    stat = Path(f"/proc/{pid}/stat").read_text(encoding="utf-8", errors="replace")
+    # comm is parenthesized and may contain spaces or ')'; the fields after the
+    # final ')' are state, ppid, ...
+    return int(stat.rsplit(")", 1)[1].split()[1])
+
+
+def _process_is_self_or_ancestor(holder_pid: int) -> bool:
+    """True when ``holder_pid`` is this process or one of its ancestors."""
+    pid = os.getpid()
+    seen: set[int] = set()
+    while pid > 0 and pid not in seen:
+        if pid == holder_pid:
+            return True
+        seen.add(pid)
+        pid = _proc_parent_pid(pid)
+    return False
+
+
+def _cursor_driver_lease_is_self_dispatch(lease: dict[str, Any]) -> bool:
+    """True only when the live Cursor driver lease belongs to this process tree.
+
+    The documented rule refuses ``--agent cursor`` only from within the Cursor
+    driver session itself (the self-dispatch deadlock case). A lease held on
+    another host, or by an unrelated local process, is another lane's driver:
+    concurrent Cursor workers are allowed. An ancestry lookup failure (no
+    /proc, permission error) is treated as "not self" so dispatch never
+    crashes on the probe.
+    """
+    holder_host_id = str(lease.get("holder_host_id") or "").strip().lower()
+    if holder_host_id:
+        try:
+            try:
+                from scripts.api.occupancy_local import resolve_launcher_host_id
+            except ImportError:
+                from api.occupancy_local import resolve_launcher_host_id
+
+            local_host_id = resolve_launcher_host_id()
+        except Exception:
+            local_host_id = ""
+        if local_host_id and holder_host_id != str(local_host_id).strip().lower():
+            return False
+    holder_pid = lease.get("holder_process_id")
+    if not isinstance(holder_pid, int) or isinstance(holder_pid, bool) or holder_pid <= 0:
+        return False
+    try:
+        return _process_is_self_or_ancestor(holder_pid)
+    except Exception:
+        print(
+            "NOTE: unable to verify the Cursor driver lease holder ancestry; "
+            "treating the live lease as another session and spawning --agent cursor.",
+            file=sys.stderr,
+        )
+        return False
+
+
 def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = None) -> None:
-    """Refuse Cursor driver-lease collisions; otherwise retain the busy-lane hint."""
+    """Refuse Cursor driver-lease self-dispatch; otherwise retain the busy-lane hint."""
     target_norm = str(dispatch_agent or "").strip().lower()
     force_agent = bool(getattr(args, "force_agent", False)) if args is not None else False
 
@@ -7786,15 +7843,24 @@ def _check_capacity_hint(dispatch_agent: str, args: argparse.Namespace | None = 
             )
         else:
             if cursor_driver_lease is not None:
-                if not force_agent:
-                    raise CapacityGuardRefuseError(
-                        "CAPACITY REFUSED: --agent cursor has a live Cursor driver stream lease; "
-                        "refusing worker spawn. Use another agent or pass --force-agent to override."
+                if _cursor_driver_lease_is_self_dispatch(cursor_driver_lease):
+                    if not force_agent:
+                        raise CapacityGuardRefuseError(
+                            "CAPACITY REFUSED: --agent cursor dispatch from inside the live Cursor "
+                            "driver session (the stream lease is held by this process tree); refusing "
+                            "worker spawn. Dispatch from outside the Cursor driver session, or pass "
+                            "--force-agent to override."
+                        )
+                    print(
+                        "NOTE: --force-agent overrides the live Cursor driver stream lease; spawning --agent cursor.",
+                        file=sys.stderr,
                     )
-                print(
-                    "NOTE: --force-agent overrides the live Cursor driver stream lease; spawning --agent cursor.",
-                    file=sys.stderr,
-                )
+                else:
+                    stream_id = str(cursor_driver_lease.get("stream_id") or "").strip() or "unknown stream"
+                    print(
+                        f"NOTE: Cursor driver live on {stream_id} (other session); spawning a separate Cursor worker.",
+                        file=sys.stderr,
+                    )
 
     if args is not None and (getattr(args, "json", False) or getattr(args, "quiet", False)):
         return
