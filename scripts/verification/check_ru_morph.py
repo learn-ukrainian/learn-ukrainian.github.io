@@ -46,25 +46,25 @@ KNOWN_SHADOW_LEMMAS: frozenset[str] = frozenset({
 })
 
 
-def _is_calque_or_shadow(word: str, *, is_in_vesum: bool = False) -> tuple[bool, bool]:
+def _is_calque_or_shadow(word: str, *, is_in_vesum: bool = False) -> tuple[bool, bool, bool]:
     """Check if word is a known Russian shadow or documented calque.
 
     Returns:
-        (is_shadow_or_calque, is_documented_calque)
+        (is_shadow_or_calque, is_documented_calque, is_curated)
     """
     if word in LEXICALISED_SAFE:
-        return False, False
+        return False, False, False
 
     uk_parses = _morph_uk.parse(word)
     uk_lemma = uk_parses[0].normal_form if uk_parses else word
     if uk_lemma in LEXICALISED_SAFE:
-        return False, False
+        return False, False, False
 
     if word in CURATED_CALQUES or uk_lemma in CURATED_CALQUES:
-        return True, True
+        return True, True, True
 
     if word in KNOWN_SHADOW_LEMMAS or uk_lemma in KNOWN_SHADOW_LEMMAS:
-        return True, False
+        return True, False, True
 
     # Active present participle calques (-уч-/-юч-/-ач-/-яч- expressing active
     # participle). pymorphy3's uk dictionary tags a VESUM-attested permanent-
@@ -74,9 +74,9 @@ def _is_calque_or_shadow(word: str, *, is_in_vesum: bool = False) -> tuple[bool,
     if not is_in_vesum and any(
         "actv" in str(p.tag) or "Dist" in str(p.tag) for p in uk_parses
     ):
-        return True, True
+        return True, True, False
 
-    return False, False
+    return False, False, False
 
 
 def get_ru_confidence(word: str) -> tuple[float, str | None]:
@@ -130,6 +130,7 @@ def _analyze_word(
             "russian_lemma": None,
             "ukrainian_alternative": None,
             "confidence": 0.0,
+            "is_curated": False,
         }
 
     # Lexicalised safe words (e.g. 'квітучий', 'лежачий', 'блискучий') are always clean negative
@@ -139,6 +140,7 @@ def _analyze_word(
             "russian_lemma": None,
             "ukrainian_alternative": None,
             "confidence": 0.0,
+            "is_curated": False,
         }
 
     uk_parses = _morph_uk.parse(norm_word)
@@ -149,9 +151,10 @@ def _analyze_word(
             "russian_lemma": None,
             "ukrainian_alternative": None,
             "confidence": 0.0,
+            "is_curated": False,
         }
 
-    is_shadow, is_documented_calque = _is_calque_or_shadow(
+    is_shadow, is_documented_calque, is_curated = _is_calque_or_shadow(
         norm_word, is_in_vesum=is_in_vesum
     )
 
@@ -162,6 +165,7 @@ def _analyze_word(
             "russian_lemma": None,
             "ukrainian_alternative": None,
             "confidence": 0.0,
+            "is_curated": False,
         }
 
     conf, ru_lemma = get_ru_confidence(norm_word)
@@ -173,13 +177,16 @@ def _analyze_word(
             "russian_lemma": ru_lemma,
             "ukrainian_alternative": None,
             "confidence": max(conf, 1.0) if conf < threshold else conf,
+            "is_curated": is_curated,
         }
 
+    matches = conf >= threshold
     return {
-        "matches_russian": conf >= threshold,
+        "matches_russian": matches,
         "russian_lemma": ru_lemma,
         "ukrainian_alternative": None,
         "confidence": conf,
+        "is_curated": is_curated if matches else False,
     }
 
 
