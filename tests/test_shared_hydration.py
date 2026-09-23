@@ -3,7 +3,10 @@
 from __future__ import annotations
 
 import signal
+import time
+from copy import deepcopy
 from pathlib import Path
+from types import SimpleNamespace
 
 import pytest
 from jsonschema import Draft202012Validator, FormatChecker
@@ -21,7 +24,7 @@ def _evidence() -> dict[str, object]:
 
 
 def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.MonkeyPatch) -> None:
-    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id: _evidence())
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
     capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
 
     validator = Draft202012Validator(hydration.HYDRATION_CAPSULE_V1_SCHEMA, format_checker=FormatChecker())
@@ -34,7 +37,7 @@ def test_capsule_is_schema_and_format_checker_compliant(monkeypatch: pytest.Monk
 def test_deadline_is_monotonic_and_degrades_without_blocking(monkeypatch: pytest.MonkeyPatch) -> None:
     clock = iter((10.0, 10.02, 10.101, 10.101))
     monkeypatch.setattr(hydration.time, "monotonic", lambda: next(clock))
-    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id: _evidence())
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: _evidence())
 
     capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
 
@@ -45,7 +48,7 @@ def test_deadline_is_monotonic_and_degrades_without_blocking(monkeypatch: pytest
 
 
 def test_unavailable_critical_evidence_fails_closed(monkeypatch: pytest.MonkeyPatch) -> None:
-    def unavailable(stream_id: str) -> dict[str, object]:
+    def unavailable(stream_id: str, *, deadline: float) -> dict[str, object]:
         raise LookupError("missing")
 
     monkeypatch.setattr(hydration, "_collect_stream_evidence", unavailable)
@@ -64,12 +67,148 @@ def test_unsafe_stream_evidence_resets_driver_identity(monkeypatch: pytest.Monke
         "harness": "agy",
         "instance_id": "ghp_" + ("a" * 26),
     }
-    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id: unsafe_evidence)
+    monkeypatch.setattr(hydration, "_collect_stream_evidence", lambda stream_id, deadline: unsafe_evidence)
 
     capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
 
     for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
         assert capsule[field] == {"status": "unavailable", "reason": "unsafe-stream-evidence"}
+
+
+def _remote_stream(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
+    from agents_extensions.shared.session_streams.hooks import lease_from_environment
+    from scripts.session_supervisor.remote import RemoteEpicClient
+
+    values = {
+        "SESSION_STREAM_ID": "epic:5512",
+        "SESSION_STREAM_SESSION_ID": "session-fixture",
+        "SESSION_STREAM_LEASE_ID": "lease-fixture",
+        "SESSION_STREAM_GENERATION": "2",
+        "SESSION_STREAM_FENCING_TOKEN": "7",
+        "SESSION_STREAM_AGENT": "gemini",
+        "SESSION_STREAM_HARNESS": "agy",
+        "SESSION_STREAM_INSTANCE_ID": "agy-fixture",
+        "SESSION_STREAM_PROCESS_ID": "1234",
+        "SESSION_STREAM_TASK_ID": "launcher-fixture",
+    }
+    for key, value in values.items():
+        monkeypatch.setenv(key, value)
+    monkeypatch.delenv("LU_MONITOR_HOST_ID", raising=False)
+    lease = lease_from_environment()
+    return {
+        "stream_id": "epic:5512",
+        "lease": {
+            **RemoteEpicClient._lease_payload(lease),
+            "state": "active",
+            "session_state": "open",
+            "expires_at": "2099-01-01T00:00:00Z",
+        },
+        "digest": {
+            "stream_id": "epic:5512",
+            "limit": 1,
+            "pinned": [],
+            "recent": [],
+            "high_water_entry_id": 0,
+        },
+    }
+
+
+def test_remote_launcher_lease_hydrates_without_next_action_or_local_db(monkeypatch: pytest.MonkeyPatch) -> None:
+    response = _remote_stream(monkeypatch)
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+
+    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+
+    assert capsule["execution_allowed"] is True
+    assert capsule["next_drive_boundary"]["value"]["kind"] == "queue_orientation"
+    assert capsule["next_drive_boundary"]["value"]["entry_id"] == 0
+    assert capsule["fencing_token"]["value"] == 7
+
+
+@pytest.mark.parametrize(
+    ("field", "value"),
+    [
+        ("stream_id", "epic:5513"),
+        ("session_id", "session-other"),
+        ("lease_id", "lease-other"),
+        ("generation", 3),
+        ("fencing_token", 8),
+        ("holder.agent", "codex"),
+        ("holder.harness", "codex-cli"),
+        ("holder.instance_id", "other-instance"),
+        ("holder.process_id", 4321),
+        ("holder.task_id", "other-task"),
+        ("holder.host_id", "other-host"),
+        ("state", "closed"),
+        ("session_state", "closed"),
+        ("expires_at", "2000-01-01T00:00:00Z"),
+    ],
+)
+def test_remote_launcher_lease_mismatch_blocks(
+    monkeypatch: pytest.MonkeyPatch, field: str, value: object
+) -> None:
+    response = deepcopy(_remote_stream(monkeypatch))
+    target = response["lease"]
+    if field.startswith("holder."):
+        target = target["holder"]
+        field = field.split(".", 1)[1]
+    elif field == "stream_id":
+        target = response
+    target[field] = value
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+
+    capsule = hydration.build_hydration_capsule("epic:5512", "gemini")
+
+    assert capsule["execution_allowed"] is False
+    assert capsule["lease_state"]["reason"] == "stream-evidence-unavailable"
+
+
+def test_missing_launcher_lease_or_remote_timeout_blocks(monkeypatch: pytest.MonkeyPatch) -> None:
+    response = _remote_stream(monkeypatch)
+    monkeypatch.delenv("SESSION_STREAM_LEASE_ID")
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", lambda stream_id, deadline: response)
+    assert hydration.build_hydration_capsule("epic:5512", "gemini")["execution_allowed"] is False
+
+    monkeypatch.setenv("SESSION_STREAM_LEASE_ID", "lease-fixture")
+
+    def timed_out(stream_id: str, *, deadline: float) -> dict[str, object]:
+        raise TimeoutError("timeout")
+
+    monkeypatch.setattr(hydration, "_fetch_remote_stream", timed_out)
+    assert hydration.build_hydration_capsule("epic:5512", "gemini")["execution_allowed"] is False
+
+
+def test_remote_hydration_transport_is_read_only_bounded_and_closes(monkeypatch: pytest.MonkeyPatch) -> None:
+    calls: dict[str, object] = {}
+
+    class Socket:
+        def settimeout(self, seconds: float) -> None:
+            assert 0 < seconds <= 1
+            calls["timeout_set"] = True
+
+    class Connection:
+        sock = Socket()
+
+        def __init__(self, host: str, port: int, timeout: float) -> None:
+            calls["timeout"] = timeout
+
+        def request(self, method: str, path: str, headers: dict[str, str]) -> None:
+            calls["request"] = (method, path)
+
+        def getresponse(self) -> object:
+            pieces = iter((b'{"stream_id":"epic:5512"}', b""))
+            return SimpleNamespace(status=200, fp=SimpleNamespace(raw=SimpleNamespace(_sock=self.sock)), read=lambda size: next(pieces))
+
+        def close(self) -> None:
+            calls["closed"] = True
+
+    monkeypatch.setattr(hydration.http.client, "HTTPConnection", Connection)
+    result = hydration._fetch_remote_stream("epic:5512", deadline=time.monotonic() + 1)
+
+    assert result == {"stream_id": "epic:5512"}
+    assert calls["request"] == ("GET", "/api/epics/v1/epic:5512?limit=1")
+    assert calls["timeout_set"] is True
+    assert calls["closed"] is True
 
 
 def test_terminating_process_group_reaps_child_without_zombie(monkeypatch: pytest.MonkeyPatch) -> None:

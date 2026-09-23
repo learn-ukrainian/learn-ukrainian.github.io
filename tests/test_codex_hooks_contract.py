@@ -206,6 +206,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
             "SESSION_HANDOFF_AGENT": "codex",
         }
     )
+    environment.pop("SESSION_EPIC", None)
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
@@ -236,6 +237,15 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     fake_python = tmp_path / "fake-python"
     fake_python.write_text(
         "#!/bin/bash\n"
+        "if [[ \"${1:-}\" == */bounded_command.py ]]; then\n"
+        "  while [ \"$#\" -gt 0 ] && [ \"$1\" != '--' ]; do shift; done\n"
+        "  shift\n"
+        "  exec \"$@\"\n"
+        "fi\n"
+        "if [ \"${1:-}\" = '-c' ]; then\n"
+        "  printf '%s\\n' '.claude/devops-epic/CODEX-DRIVER-HANDOFF.md'\n"
+        "  exit 0\n"
+        "fi\n"
         "printf '%s\\n' "
         "'{\"schema_name\":\"HydrationCapsuleV1\","
         "\"execution_allowed\":true,"
@@ -291,7 +301,7 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
     assert legacy_output["additionalContext"] == context
 
 
-def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
+def test_first_codex_driver_uses_existing_shared_handoff(
     tmp_path: Path,
 ) -> None:
     compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
@@ -300,6 +310,60 @@ def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
     fallback = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
     fallback.parent.mkdir(parents=True)
     fallback.write_text("# shared driver state\n", encoding="utf-8")
+    bounded_runner = tmp_path / "bounded_command.py"
+    bounded_runner.write_text("# fixture\n", encoding="utf-8")
+    fake_python = tmp_path / "fake-python"
+    fake_python.write_text(
+        "#!/bin/bash\n"
+        "if [[ \"${1:-}\" == */bounded_command.py ]]; then\n"
+        "  while [ \"$#\" -gt 0 ] && [ \"$1\" != '--' ]; do shift; done\n"
+        "  shift\n"
+        "  exec \"$@\"\n"
+        "fi\n"
+        "if [ \"${1:-}\" = '-c' ]; then\n"
+        "  printf '%s\\n' '.claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md'\n"
+        "  exit 0\n"
+        "fi\n"
+        "printf '%s\\n' '{\"schema_name\":\"HydrationCapsuleV1\",\"execution_allowed\":true}'\n"
+        "printf '%s\\n' 'ACTION: hydration ready — continue the current driver.'\n",
+        encoding="utf-8",
+    )
+    fake_python.chmod(0o755)
+    environment = os.environ.copy()
+    environment.update(
+        {
+            "CLAUDE_PROJECT_DIR": os.fspath(tmp_path),
+            "CODEX_CANONICAL_REPO_ROOT": os.fspath(tmp_path),
+            "SESSION_HANDOFF_AGENT": "codex-devops",
+            "SESSION_EPIC": "devops",
+            "THREAD_ROLLOVER_PYTHON": os.fspath(fake_python),
+            "SESSION_BOUNDED_RUNNER": os.fspath(bounded_runner),
+        }
+    )
+
+    completed = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
+        timeout=10,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    hook_output = json.loads(completed.stdout)["hookSpecificOutput"]
+    assert hook_output["hookEventName"] == "SessionStart"
+    context = hook_output["additionalContext"]
+    assert "CODEX FLEET-DRIVER HYDRATION" in context
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" not in context
+    assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+
+
+def test_bound_codex_driver_without_any_handoff_blocks(tmp_path: Path) -> None:
+    compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
+    compact_hook.parent.mkdir(parents=True)
+    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
     environment = os.environ.copy()
     environment.update(
         {
@@ -321,12 +385,9 @@ def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
     )
 
     assert completed.returncode == 0, completed.stderr
-    hook_output = json.loads(completed.stdout)["hookSpecificOutput"]
-    assert hook_output["hookEventName"] == "SessionStart"
-    context = hook_output["additionalContext"]
+    context = json.loads(completed.stdout)["hookSpecificOutput"]["additionalContext"]
     assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" in context
-    assert "CODEX-DRIVER-HANDOFF.md" in context
-    assert "CLAUDE-DRIVER-HANDOFF.md" not in context
+    assert "No Codex/shared driver handoff selected" in context
 
 
 def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> None:

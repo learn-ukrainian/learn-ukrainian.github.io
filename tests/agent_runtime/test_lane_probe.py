@@ -103,6 +103,13 @@ def test_probe_reports_nonzero_version_exit(monkeypatch, tmp_path):
     assert result["reason"] == "version command exited 23"
 
 
+def test_unknown_executable_lane_remains_unhealthy(tmp_path):
+    result = lane_probe.probe_lane("codex-atlas", cwd=tmp_path)
+
+    assert result["status"] == "unhealthy"
+    assert result["reason"] == "agent is not registered"
+
+
 def test_probe_uses_write_mode_for_kimi_without_executing_a_prompt(monkeypatch, tmp_path):
     _registered_lane(monkeypatch, "kimi")
     adapter = _FakeAdapter(["kimi", "-p", "ignored"])
@@ -162,5 +169,7 @@ def test_session_start_wires_the_active_lane_probe() -> None:
     hook = Path("agents_extensions/shared/hooks/session-setup.sh").read_text(encoding="utf-8")
 
     assert "scripts.agent_runtime.lane_probe" in hook
-    assert '--agent "$HANDOFF_AGENT"' in hook
+    assert 'codex-*) LANE_PROBE_AGENT="codex" ;;' in hook
+    assert '--agent "$LANE_PROBE_AGENT"' in hook
+    assert 'HANDOFF_AGENT="$SESSION_HANDOFF_AGENT"' in hook
     assert "--timeout 2" in hook

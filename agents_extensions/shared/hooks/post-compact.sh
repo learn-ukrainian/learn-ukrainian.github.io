@@ -68,10 +68,22 @@ case "$POST_COMPACT_AGENT" in
       # into the shared Claude-oriented replay below.
       exit 0
     else
-      DIARY_REL=".claude/${SESSION_EPIC}-epic/CODEX-DRIVER-HANDOFF.md"
-      if [ ! -f "$PROJECT_DIR/$DIARY_REL" ]; then
+      # Reuse the canary's handoff selector. A first Codex launch may continue
+      # from the shared driver handoff; a fixed filename can select stale state.
+      DIARY_REL=""
+      DIARY_REL=$(run_bounded 2 env "PYTHONPATH=$PROJECT_DIR" "$BOUNDED_PYTHON" -c '
+import sys
+from pathlib import Path
+from scripts.session_canary.codex_lane import _handoff_candidates
+
+repo = Path(sys.argv[1]).resolve()
+selected = next((path for path in _handoff_candidates(repo, sys.argv[2]) if path.is_file()), None)
+if selected is not None:
+    print(selected.resolve().relative_to(repo))
+' "$PROJECT_DIR" "$SESSION_EPIC" 2>/dev/null) || DIARY_REL=""
+      if [ -z "$DIARY_REL" ] || [ ! -f "$PROJECT_DIR/$DIARY_REL" ]; then
         HYDRATION_RC=2
-        HYDRATION="Exact Codex driver handoff is missing: $DIARY_REL"
+        HYDRATION="No Codex/shared driver handoff selected by the Codex canary resolver. Repair the handoff before continuing."
       else
         HYDRATION_RC=0
         HYDRATION=$(run_bounded 2 "$BOUNDED_PYTHON" \
