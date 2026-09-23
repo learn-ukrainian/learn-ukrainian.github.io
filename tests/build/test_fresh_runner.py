@@ -10,9 +10,11 @@ from pathlib import Path
 
 import pytest
 
-from scripts.build.fresh import runner
+from scripts.build.fresh import assemble, runner
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
 from scripts.curriculum.evidence import lock
+from scripts.curriculum.learner_state.inventory_gate import GateReport
+from scripts.curriculum.resolver.inputs import Allowlist
 from tests.build.test_fresh_assemble import (
     make_draft,
     make_pack,
@@ -128,3 +130,41 @@ def test_clean_environment_build_cli_fails_closed_before_dispatch(tmp_path):
     )
     assert completed.returncode == 1
     assert '"layer": "driver"' in completed.stderr
+
+
+class _FixtureSources:
+    def _vesum_identity(self):
+        return "f" * 64, {}
+
+
+def test_contract_fixture_same_stress_sense_through_checks_1_to_9(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture(two_senses=True)
+    allowlist = Allowlist.from_records(words["words"], words_lock="f" * 64)
+    monkeypatch.setattr(assemble, "planned_state", lambda *a, **kw: type("State", (), {"cumulative_core_count": 10, "waiver": None})())
+    monkeypatch.setattr(assemble.lesson_lock, "check_lesson_lock", lambda *a, **kw: (True, ""))
+    monkeypatch.setattr(assemble.lesson_lock, "compute_lesson_lock", lambda *a, **kw: {"lessons": [{"n": 1, "entry_sha256": "0" * 64}]})
+    monkeypatch.setattr(assemble, "compute_lesson_immersion_band", lambda **kw: type("Band", (), {"band_key": "a1"})())
+    seen = []
+
+    def answer(batch, seat):
+        seen.extend(q["id"] for q in batch["questions"])
+        return {"answers": [{"id": q["id"], "record": "W-2" if q["unit"]["block"] == "inc_W-2" else "W-1"}
+                            for q in batch["questions"]]}
+
+    state = tmp_path / "state"
+    report = runner.run_lesson(
+        "a1", "sample-slug", 1, draft=draft, plan=plan, pack=pack, words=words,
+        state_dir=state, repo_root=tmp_path, plans_dir=tmp_path, evidence_dir=tmp_path,
+        question_seat="agy:fixture", question_dispatch=answer, sources=_FixtureSources(),
+        allowlist=allowlist, site_dir=tmp_path / "site",
+        inventory_gate=lambda *a, **kw: GateReport("a1", "sample-slug", 1, ()),
+        observed_writer=lambda *a, **kw: None,
+    )
+    assert report["passed"] is True, report
+    assert [r["status"] for r in report["checks"][:9]] == ["passed"] * 9
+    assert seen
+    assert lock.check(state / "lesson-1.gates.yaml")
+    assert lock.check(state / "lesson-1.resolutions.yaml")
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    assert "сло\u0301во" in mdx
+    assert "other sense" in mdx
