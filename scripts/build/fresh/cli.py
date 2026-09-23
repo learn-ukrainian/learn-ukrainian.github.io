@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import hashlib
+import json
 import os
 import sys
 from pathlib import Path
@@ -269,6 +270,13 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
     )
 
+    p_build = subparsers.add_parser("build", help="Run ordered fresh lesson checks 1-9 and write gates state")
+    p_build.add_argument("level", choices=LEVELS)
+    p_build.add_argument("slug")
+    p_build.add_argument("--lesson", "-n", type=int, required=True)
+    p_build.add_argument("--question-seat", help="Explicit agent:model seat for constrained questions")
+    p_build.add_argument("--repo-root", type=Path, default=None)
+
     return parser
 
 
@@ -434,6 +442,32 @@ def main(argv: list[str] | None = None) -> int:
     args = parser.parse_args(argv)
     repo_root = _resolve_repo_root(args)
     cards_dir = (repo_root / "docs" / "style-cards") if (repo_root / "docs" / "style-cards").is_dir() else None
+
+    if args.command == "build":
+        from scripts.build.fresh.runner import run_lesson
+
+        try:
+            plan, _lesson_entry, pack, words, paths = _load_lesson_data(
+                args.level, args.slug, args.lesson, repo_root=repo_root
+            )
+            state_dir = paths["state_dir"] / args.slug
+            draft_path = state_dir / f"lesson-{args.lesson}.draft.yaml"
+            draft = yaml.safe_load(draft_path.read_text(encoding="utf-8"))
+            expected = {"plan_sha256": hashlib.sha256(paths["plan"].read_bytes()).hexdigest(),
+                        "pack_lock": hashlib.sha256(paths["pack"].read_bytes()).hexdigest(),
+                        "words_lock": hashlib.sha256(paths["words"].read_bytes()).hexdigest()}
+            report = run_lesson(
+                args.level, args.slug, args.lesson, draft=draft, plan=plan, pack=pack, words=words,
+                state_dir=state_dir, repo_root=repo_root, plans_dir=paths["plan"].parent,
+                evidence_dir=paths["words"].parent, question_seat=args.question_seat,
+                site_dir=repo_root / "site" / "src" / "content" / "docs" / args.level / args.slug,
+                expected_inputs=expected,
+            )
+            print(json.dumps(report, ensure_ascii=False, sort_keys=True))
+            return 0 if report["passed"] else 1
+        except (OSError, ValueError, KeyError) as err:
+            print(json.dumps({"check": 1, "reason": str(err), "layer": "driver"}, ensure_ascii=False), file=sys.stderr)
+            return 1
 
     if args.command == "render-prompt":
         plan_dict, lesson_entry, pack_dict, words_dict, paths = _load_lesson_data(

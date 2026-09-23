@@ -479,6 +479,7 @@ def test_r11_forbidden_paths_grep():
     ]
 
     all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2")) + list(fresh_dir.glob("*.yaml"))
+    assert {"runner.py", "regeneration.py"} <= {path.name for path in all_files}
 
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")
@@ -505,6 +506,7 @@ def test_nothing_typed_no_cyrillic_in_engine_code():
     cyrillic_pattern = re.compile(r"[\u0400-\u04FF]")
 
     all_files = list(fresh_dir.glob("*.py")) + list(fresh_dir.glob("prompts/*.j2"))
+    assert {"runner.py", "regeneration.py"} <= {path.name for path in all_files}
 
     for fpath in all_files:
         text = fpath.read_text(encoding="utf-8")

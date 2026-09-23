@@ -337,6 +337,9 @@ def assemble_expanded_document(
                             span_text,
                             source="writer_prose",
                         )
+                for line_idx, line in enumerate(block.get("en", [])):
+                    add_unit("urok", step_id, None, None, f"bilingual_en_{block_idx}_{line_idx}",
+                             "vesum_exempt", str(line), source="writer_prose")
 
             elif kind in ("culture", "tip", "summary", "callout"):
                 txt = block.get("text", "")
@@ -378,6 +381,9 @@ def assemble_expanded_document(
                                 span_text,
                                 source="writer_prose",
                             )
+                for line_idx, line in enumerate(dial.get("translation_en") or []):
+                    add_unit("urok", step_id, None, None, f"dialogue_translation_{line_idx}",
+                             "vesum_exempt", str(line), source="writer_prose")
 
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")

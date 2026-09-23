@@ -1,0 +1,130 @@
+"""E3b1 ordered runner and contract edge cases."""
+
+from __future__ import annotations
+
+import copy
+import os
+import subprocess
+import sys
+from pathlib import Path
+
+import pytest
+
+from scripts.build.fresh import runner
+from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure
+from scripts.curriculum.evidence import lock
+from tests.build.test_fresh_assemble import (
+    make_draft,
+    make_pack,
+    make_plan,
+    make_plan_lesson,
+    make_word_record,
+    make_words_store,
+    validate_fixture_draft,
+    validate_fixture_pack,
+    validate_fixture_plan,
+    validate_fixture_words,
+)
+
+pytestmark = pytest.mark.reads_content
+ROOT = Path(__file__).resolve().parents[2]
+
+
+def _fixture(*, text: str = "слово " * 11, two_senses: bool = False):
+    w1 = make_word_record(1, "слово", gloss_en="word", sense_gloss="term")
+    w1["forms"][0]["stressed"] = "сло\u0301во"
+    records = [w1]
+    if two_senses:
+        w2 = make_word_record(2, "слово", gloss_en="word", sense_gloss="other sense")
+        w2["forms"][0]["stressed"] = "сло\u0301во"
+        records.append(w2)
+    words = make_words_store(words=records)
+    pack = make_pack()
+    step = {"id": "s1", "kind": "teach", "teach": "Teach",
+            "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+            "uses": {"grammar": [], "vocabulary": []}, "evidence": ["W-1"], "practice": []}
+    lesson = make_plan_lesson(1, [step], core_words=[w1], incidental_words=records[1:])
+    plan = make_plan(lessons=[lesson])
+    draft = make_draft(steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": text, "explains": ["W-1"]}]}])
+    for validate, obj in ((validate_fixture_pack, pack), (validate_fixture_words, words),
+                          (validate_fixture_plan, plan), (validate_fixture_draft, draft)):
+        validate(obj)
+    return draft, plan, pack, words
+
+
+def test_true_false_before_text_and_schema_valid_fixture():
+    draft, plan, _pack, _words = _fixture()
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "inline", "focus": "Read"}]
+    plan["lessons"][0]["steps"][0]["practice"] = ["a1"]
+    draft["steps"][0]["blocks"].insert(0, {"kind": "activity", "ref": "a1"})
+    draft["activities"] = [{"id": "a1", "instruction": "Choose", "items": [{"statement": "слово", "is_true": True,
+                                                                 "explanation": "Read"}]}]
+    row = runner.check_3_structure(draft, plan["lessons"][0])
+    assert row["reason"] == "true_false_before_text" and row["layer"] == "writer"
+
+
+def test_form_choice_store_options_valid_invented_duplicate_and_tags():
+    draft, plan, pack, words = _fixture()
+    record = words["words"][0]
+    record["forms"].append({**record["forms"][0], "form": "слова", "stressed": "слова\u0301", "tags": "noun:inanim:n:v_rod"})
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Forms"}]
+    item = {"sentence": "____", "answer": "слово", "options": ["слово", "слова"],
+            "explanation": "Choose", "mode": "form-choice", "record": "W-1", "answer_tags": record["forms"][0]["tags"]}
+    draft["activities"] = [{"id": "a1", "instruction": "Choose", "items": [item]}]
+    row, found = runner.check_4_activities(draft, plan["lessons"][0], words, pack)
+    assert row["status"] == "passed" and [f["stressed"] for f in found[("a1", 0)]] == ["сло\u0301во", "слова\u0301"]
+    for changed in ({"options": ["слово", "invented"]}, {"options": ["слово", "слово"]},
+                    {"answer_tags": "noun:missing"}):
+        bad = copy.deepcopy(draft)
+        bad["activities"][0]["items"][0].update(changed)
+        row, _ = runner.check_4_activities(bad, plan["lessons"][0], words, pack)
+        assert (row["check"], row["reason"], row["layer"]) == (4, "form_choice_options_invalid", "writer")
+
+
+def test_counting_contract_urok_only_with_quoted_term_and_english():
+    units = [{"tab": "urok", "role": "quoted_term", "text": "слово"},
+             {"tab": "urok", "role": "vesum_exempt", "text": "English line"},
+             {"tab": "urok", "role": "narration", "text": "слово"},
+             {"tab": "slovnyk", "role": "record_print", "text": "слово слово"}]
+    row = runner.check_6_count({"units": units}, 4)
+    assert row["status"] == "passed"
+    assert row["details"]["urok_tokens"] == 4
+    assert row["details"]["ukrainian_tokens"] == 2
+    assert row["details"]["ukrainian_share"] == 0.5
+    assert "word_target_not_calibrated" in row["details"]["not_checked"]
+
+
+def test_regeneration_repeated_check_uses_second_layer_and_invalidates_only_lesson(tmp_path):
+    path = tmp_path / "lesson-1.regeneration.yaml"
+    inputs = {key: "a" * 64 for key in ("plan_sha256", "pack_lock", "words_lock", "card_sha256", "prompt_sha256")}
+    first = {"check": 4, "code": "4", "reason": "bad", "layer": "writer"}
+    one = record_failure(path, "sample-slug", 1, first, inputs, at="2026-01-01T00:00:00Z")
+    assert one["regenerations"] == 0 and one["terminal_layer"] is None
+    inputs["plan_sha256"] = "b" * 64
+    two = record_failure(path, "sample-slug", 1, first, inputs, at="2026-01-02T00:00:00Z")
+    assert two["regenerations"] == 1 and two["terminal_layer"] == "plan"
+    assert load_ledger(path, "sample-slug", 1) == two
+    for n in (1, 2):
+        for suffix in ("questions.yaml", "resolutions.yaml"):
+            target = tmp_path / f"lesson-{n}.{suffix}"
+            lock.write(target, b"data")
+    invalidate_lesson_resolution(tmp_path, 1)
+    assert not (tmp_path / "lesson-1.resolutions.yaml").exists()
+    assert (tmp_path / "lesson-2.resolutions.yaml").exists()
+
+
+def test_each_check_failure_carries_layer():
+    for number in range(1, 10):
+        row = runner.failure(number, "fixture_failure", "writer")
+        assert row == {"check": number, "status": "failed", "code": str(number),
+                       "reason": "fixture_failure", "layer": "writer"}
+
+
+def test_clean_environment_build_cli_fails_closed_before_dispatch(tmp_path):
+    env = {"PATH": os.environ.get("PATH", ""), "LEARN_UKRAINIAN_REPO_ROOT": str(tmp_path)}
+    completed = subprocess.run(
+        [sys.executable, "-m", "scripts.build.fresh", "build", "a1", "sample-slug", "--lesson", "1"],
+        cwd=ROOT, env=env, capture_output=True, text=True, timeout=30, check=False,
+    )
+    assert completed.returncode == 1
+    assert '"layer": "driver"' in completed.stderr
