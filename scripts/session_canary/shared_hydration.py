@@ -8,22 +8,32 @@ does not stop a driver whose critical lease evidence remains sound.
 
 from __future__ import annotations
 
+import http.client
 import json
 import os
 import re
 import signal
+import socket
 import subprocess
+import threading
 import time
 from collections.abc import Sequence
 from contextlib import suppress
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any
+from urllib.parse import urlparse
 
 from jsonschema import Draft202012Validator, FormatChecker
 
+from agents_extensions.shared.session_streams.hooks import lease_from_environment
+from agents_extensions.shared.session_streams.model import parse_timestamp, validate_stream_id
+from scripts.session_supervisor.remote import RemoteEpicClient, monitor_url
+
 ROOT = Path(__file__).resolve().parents[2]
 HYDRATION_DEADLINE_SECONDS = 0.100
+_MAX_STREAM_RESPONSE_BYTES = 262_144
+_STREAM_READ_CHUNK_BYTES = 4_096
 CRITICAL_FIELDS = (
     "driver_identity",
     "stream_id",
@@ -251,40 +261,128 @@ def _ok(value: Any) -> dict[str, Any]:
     return {"status": "ok", "value": sanitize_hydration_value(value)}
 
 
-def _collect_stream_evidence(stream_id: str) -> dict[str, Any]:
-    """Read the smallest trusted stream snapshot required by the v1.2 fields."""
-    from agents_extensions.shared.session_streams.db import SessionStreamDatabase
-    from agents_extensions.shared.session_streams.model import validate_stream_id
-    from agents_extensions.shared.session_streams.store import SessionStreamStore
+def _same_json_value(actual: Any, expected: Any) -> bool:
+    """Compare an exact lease envelope without JSON bool/number coercion."""
+    if type(actual) is not type(expected):
+        return False
+    if isinstance(expected, dict):
+        return actual.keys() == expected.keys() and all(
+            _same_json_value(actual[key], value) for key, value in expected.items()
+        )
+    return actual == expected
 
+
+def _fetch_remote_stream(stream_id: str, *, deadline: float) -> dict[str, Any]:
+    """Read one Monitor snapshot with a total deadline and a bounded body."""
+    target = urlparse(monitor_url())
+
+    def remaining() -> float:
+        seconds = deadline - time.monotonic()
+        if seconds <= 0:
+            raise TimeoutError("hydration deadline exceeded")
+        return seconds
+
+    connection = http.client.HTTPConnection(target.hostname, target.port, timeout=remaining())
+    watchdog: threading.Timer | None = None
+    try:
+        connection.request("GET", f"/api/epics/v1/{stream_id}?limit=1", headers={"Accept": "application/json"})
+        # The request may consume most of the budget. Update the connected
+        # socket before waiting for headers rather than reusing its old timeout.
+        request_socket = connection.sock
+        if request_socket is None:
+            raise LookupError("Monitor response socket unavailable")
+        request_socket.settimeout(remaining())
+
+        def abort_at_deadline() -> None:
+            # Socket timeouts reset after every received byte. A peer that
+            # drips data can otherwise hold one buffered read indefinitely.
+            with suppress(OSError):
+                request_socket.shutdown(socket.SHUT_RDWR)
+
+        watchdog = threading.Timer(remaining(), abort_at_deadline)
+        watchdog.daemon = True
+        watchdog.start()
+        response = connection.getresponse()
+        remaining()
+        if response.status != 200:
+            raise LookupError("Monitor stream unavailable")
+        body = bytearray()
+        while True:
+            seconds = remaining()
+            # HTTPConnection detaches its socket on Connection: close; retain
+            # the socket that was connected when the request was sent.
+            request_socket.settimeout(seconds)
+            chunk = response.read(min(_STREAM_READ_CHUNK_BYTES, _MAX_STREAM_RESPONSE_BYTES + 1 - len(body)))
+            if not chunk:
+                if response.length not in (None, 0):
+                    raise LookupError("Monitor stream response incomplete")
+                break
+            body.extend(chunk)
+            if len(body) > _MAX_STREAM_RESPONSE_BYTES:
+                raise LookupError("Monitor stream response too large")
+            if response.isclosed():
+                if response.length not in (None, 0):
+                    raise LookupError("Monitor stream response incomplete")
+                break
+        remaining()
+        payload = json.loads(body)
+        if not isinstance(payload, dict):
+            raise LookupError("Monitor stream response malformed")
+        return payload
+    except (http.client.HTTPException, OSError, TimeoutError, json.JSONDecodeError) as exc:
+        raise LookupError("Monitor stream unavailable") from exc
+    finally:
+        if watchdog is not None:
+            watchdog.cancel()
+        connection.close()
+
+
+def _collect_stream_evidence(stream_id: str, *, deadline: float) -> dict[str, Any]:
+    """Read the authoritative Monitor stream and reconcile the exact launcher lease."""
     canonical_stream_id = validate_stream_id(stream_id)
-    database = SessionStreamDatabase()
-    with database.connect(read_only=True) as connection:
-        lease = connection.execute(
-            "SELECT * FROM stream_leases WHERE stream_id = ?", (canonical_stream_id,)
-        ).fetchone()
-        if lease is None:
-            raise LookupError("lease-unavailable")
-        session = connection.execute(
-            "SELECT state FROM sessions WHERE stream_id = ? AND session_id = ?",
-            (canonical_stream_id, str(lease["session_id"])),
-        ).fetchone()
-    if session is None or str(lease["state"]) != "active" or str(session["state"]) not in {"open", "rolling"}:
-        raise LookupError("lease-not-active")
+    lease = lease_from_environment()
+    if lease.stream_id != canonical_stream_id:
+        raise LookupError("launcher stream mismatch")
+    response = _fetch_remote_stream(canonical_stream_id, deadline=deadline)
+    current = response.get("lease")
+    expected = RemoteEpicClient._lease_payload(lease)
+    if (
+        response.get("stream_id") != canonical_stream_id
+        or not isinstance(current, dict)
+        or current.get("state") != "active"
+        or current.get("session_state") not in ("open", "rolling")
+        or any(not _same_json_value(current.get(key), value) for key, value in expected.items())
+    ):
+        raise LookupError("launcher lease mismatch")
+    expires_at = current.get("expires_at")
+    if not isinstance(expires_at, str) or datetime.now(UTC) >= parse_timestamp(expires_at):
+        raise LookupError("launcher lease expired")
 
-    digest = SessionStreamStore(database).load_digest(canonical_stream_id, limit=40)
+    try:
+        digest = RemoteEpicClient.digest_from_response(response)
+    except (ArithmeticError, AttributeError, KeyError, TypeError, ValueError) as exc:
+        raise LookupError("Monitor digest malformed") from exc
+    if digest.stream_id != canonical_stream_id:
+        raise LookupError("Monitor digest stream mismatch")
     boundary = next((entry for entry in reversed(digest.recent) if entry.type.value == "next_action"), None)
-    if boundary is None:
-        raise LookupError("next-drive-boundary-unavailable")
+    next_drive_boundary = (
+        {"kind": "stream_next_action", "entry_id": boundary.entry_id, "instruction": boundary.body}
+        if boundary is not None
+        else {
+            "kind": "queue_orientation",
+            "entry_id": digest.high_water_entry_id,
+            "instruction": "Reconcile stream and handoff, Work API projection and next queue, and GitHub issue/PR state before dispatch.",
+        }
+    )
     return {
         "driver_identity": {
-            "agent": str(lease["holder_agent"]),
-            "harness": str(lease["holder_harness"]),
-            "instance_id": str(lease["holder_instance_id"]),
+            "agent": lease.holder.agent,
+            "harness": lease.holder.harness,
+            "instance_id": lease.holder.instance_id,
         },
-        "lease_state": {"lease": str(lease["state"]), "session": str(session["state"])},
-        "fencing_token": int(lease["fencing_token"]),
-        "next_drive_boundary": {"entry_id": boundary.entry_id, "instruction": boundary.body},
+        "lease_state": {"lease": "active", "session": current["session_state"]},
+        "fencing_token": lease.fencing_token,
+        "next_drive_boundary": next_drive_boundary,
     }
 
 
@@ -313,15 +411,13 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
     else:
         fields["driver_identity"] = _ok({"lane": lane_name})
     try:
-        from agents_extensions.shared.session_streams.model import validate_stream_id
-
         fields["stream_id"] = _ok(validate_stream_id(stream_id))
     except (ValueError, TypeError):
         fields["stream_id"] = _unavailable("invalid-stream-id")
 
     if fields["stream_id"]["status"] == "ok":
         try:
-            evidence = _collect_stream_evidence(stream_id)
+            evidence = _collect_stream_evidence(stream_id, deadline=deadline)
             identity = evidence["driver_identity"]
             if identity["agent"] != lane_name:
                 fields["driver_identity"] = _unavailable("lane-lease-identity-mismatch")
@@ -333,7 +429,7 @@ def build_hydration_capsule(stream_id: str, lane_name: str) -> dict[str, Any]:
             degradations.append("unsafe-stream-evidence")
             for field in ("driver_identity", "lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("unsafe-stream-evidence")
-        except (LookupError, OSError, RuntimeError, ValueError):
+        except (ArithmeticError, AttributeError, LookupError, OSError, RuntimeError, TypeError, ValueError):
             for field in ("lease_state", "fencing_token", "next_drive_boundary"):
                 fields[field] = _unavailable("stream-evidence-unavailable")
 

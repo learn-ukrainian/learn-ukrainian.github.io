@@ -7,6 +7,7 @@ import os
 import shlex
 import shutil
 import subprocess
+import sys
 import tomllib
 from pathlib import Path
 
@@ -206,6 +207,7 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
             "SESSION_HANDOFF_AGENT": "codex",
         }
     )
+    environment.pop("SESSION_EPIC", None)
 
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
@@ -221,26 +223,20 @@ def test_explicit_non_driver_codex_compact_session_start_is_silent(tmp_path: Pat
     assert completed.stdout == ""
 
 
-def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
-    tmp_path: Path,
-) -> None:
-    deployed_hooks = tmp_path / ".codex" / "hooks"
-    deployed_hooks.mkdir(parents=True)
-    compact_hook = deployed_hooks / "post-compact.sh"
+def _run_bound_codex_compact(tmp_path: Path) -> str:
+    """Exercise the real bounded runner and canary handoff resolver."""
+    (tmp_path / "scripts").symlink_to(REPO_ROOT / "scripts", target_is_directory=True)
+    compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
+    compact_hook.parent.mkdir(parents=True, exist_ok=True)
     shutil.copy2(POST_COMPACT_HOOK, compact_hook)
-    diary = tmp_path / ".claude" / "devops-epic" / "CODEX-DRIVER-HANDOFF.md"
-    diary.parent.mkdir(parents=True)
-    diary.write_text("# durable driver state\n", encoding="utf-8")
-    bounded_runner = tmp_path / "bounded_command.py"
-    bounded_runner.write_text("# fixture\n", encoding="utf-8")
     fake_python = tmp_path / "fake-python"
     fake_python.write_text(
         "#!/bin/bash\n"
-        "printf '%s\\n' "
-        "'{\"schema_name\":\"HydrationCapsuleV1\","
-        "\"execution_allowed\":true,"
-        "\"next_drive_boundary\":{\"status\":\"ok\",\"value\":\"issue:1\"}}'\n"
-        "printf '%s\\n' 'ACTION: hydration ready — continue the current driver.'\n",
+        "if [ \"${1:-}\" = '-m' ]; then\n"
+        "  printf '%s\\n' '{\"schema_name\":\"HydrationCapsuleV1\",\"execution_allowed\":true}'\n"
+        "  exit 0\n"
+        "fi\n"
+        f"exec {shlex.quote(sys.executable)} \"$@\"\n",
         encoding="utf-8",
     )
     fake_python.chmod(0o755)
@@ -252,81 +248,69 @@ def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
             "SESSION_HANDOFF_AGENT": "codex-devops",
             "SESSION_EPIC": "devops",
             "THREAD_ROLLOVER_PYTHON": os.fspath(fake_python),
-            "SESSION_BOUNDED_RUNNER": os.fspath(bounded_runner),
+            "SESSION_BOUNDED_RUNNER": os.fspath(REPO_ROOT / "scripts/agent_runtime/bounded_command.py"),
+            "CODEX_COMPACT_SESSION_START": "1",
         }
     )
-
-    compacted = subprocess.run(
-        ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
-        text=True,
-        capture_output=True,
-        check=False,
-        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
-        timeout=10,
-    )
-
-    assert compacted.returncode == 0, compacted.stderr
-    hook_output = json.loads(compacted.stdout)["hookSpecificOutput"]
-    assert hook_output["hookEventName"] == "SessionStart"
-    context = hook_output["additionalContext"]
-    assert "CODEX FLEET-DRIVER HYDRATION" in context
-    assert '"schema_name":"HydrationCapsuleV1"' in context
-    assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
-    assert "continue only from the capsule's next_drive_boundary" in context
-
-    legacy = subprocess.run(
-        ["bash", os.fspath(compact_hook)],
-        input=json.dumps({"hook_event_name": "PostCompact", "model": "claude-sonnet-5"}),
-        text=True,
-        capture_output=True,
-        check=False,
-        env=environment,
-        timeout=10,
-    )
-
-    assert legacy.returncode == 0, legacy.stderr
-    legacy_output = json.loads(legacy.stdout)
-    assert "hookSpecificOutput" not in legacy_output
-    assert legacy_output["additionalContext"] == context
-
-
-def test_bound_codex_driver_without_exact_diary_is_blocked_without_fallback(
-    tmp_path: Path,
-) -> None:
-    compact_hook = tmp_path / ".codex" / "hooks" / "post-compact.sh"
-    compact_hook.parent.mkdir(parents=True)
-    shutil.copy2(POST_COMPACT_HOOK, compact_hook)
-    fallback = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
-    fallback.parent.mkdir(parents=True)
-    fallback.write_text("# shared driver state\n", encoding="utf-8")
-    environment = os.environ.copy()
-    environment.update(
-        {
-            "CLAUDE_PROJECT_DIR": os.fspath(tmp_path),
-            "CODEX_CANONICAL_REPO_ROOT": os.fspath(tmp_path),
-            "SESSION_HANDOFF_AGENT": "codex-devops",
-            "SESSION_EPIC": "devops",
-        }
-    )
-
     completed = subprocess.run(
         ["bash", os.fspath(compact_hook)],
         input=json.dumps({"source": "compact", "model": "gpt-6-astra"}),
         text=True,
         capture_output=True,
         check=False,
-        env=environment | {"CODEX_COMPACT_SESSION_START": "1"},
+        cwd=tmp_path.parent,
+        env=environment,
         timeout=10,
     )
-
     assert completed.returncode == 0, completed.stderr
-    hook_output = json.loads(completed.stdout)["hookSpecificOutput"]
-    assert hook_output["hookEventName"] == "SessionStart"
-    context = hook_output["additionalContext"]
+    output = json.loads(completed.stdout)["hookSpecificOutput"]
+    assert output["hookEventName"] == "SessionStart"
+    legacy = subprocess.run(
+        ["bash", os.fspath(compact_hook)],
+        input=json.dumps({"hook_event_name": "PostCompact", "model": "claude-sonnet-5"}),
+        text=True,
+        capture_output=True,
+        check=False,
+        cwd=tmp_path.parent,
+        env={key: value for key, value in environment.items() if key != "CODEX_COMPACT_SESSION_START"},
+        timeout=10,
+    )
+    assert legacy.returncode == 0, legacy.stderr
+    legacy_output = json.loads(legacy.stdout)
+    assert "hookSpecificOutput" not in legacy_output
+    assert legacy_output["additionalContext"] == output["additionalContext"]
+    return output["additionalContext"]
+
+
+def test_bound_codex_driver_hydrates_exact_stream_and_points_to_shadow_diary(
+    tmp_path: Path,
+) -> None:
+    diary = tmp_path / ".claude" / "devops-epic" / "CODEX-DRIVER-HANDOFF.md"
+    diary.parent.mkdir(parents=True)
+    diary.write_text("# durable driver state\n", encoding="utf-8")
+    context = _run_bound_codex_compact(tmp_path)
+    assert "CODEX FLEET-DRIVER HYDRATION" in context
+    assert '"schema_name":"HydrationCapsuleV1"' in context
+    assert ".claude/devops-epic/CODEX-DRIVER-HANDOFF.md" in context
+    assert "continue only from the capsule's next_drive_boundary" in context
+
+
+def test_first_codex_driver_uses_existing_shared_handoff(
+    tmp_path: Path,
+) -> None:
+    fallback = tmp_path / ".claude" / "devops-epic" / "CLAUDE-DRIVER-HANDOFF.md"
+    fallback.parent.mkdir(parents=True)
+    fallback.write_text("# shared driver state\n", encoding="utf-8")
+    context = _run_bound_codex_compact(tmp_path)
+    assert "CODEX FLEET-DRIVER HYDRATION" in context
+    assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" not in context
+    assert ".claude/devops-epic/CLAUDE-DRIVER-HANDOFF.md" in context
+
+
+def test_bound_codex_driver_without_any_handoff_blocks(tmp_path: Path) -> None:
+    context = _run_bound_codex_compact(tmp_path)
     assert "CODEX FLEET-DRIVER HYDRATION BLOCKED" in context
-    assert "CODEX-DRIVER-HANDOFF.md" in context
-    assert "CLAUDE-DRIVER-HANDOFF.md" not in context
+    assert "No Codex/shared driver handoff selected" in context
 
 
 def test_codex_tool_events_preserve_policy_then_run_optional_entire_hook() -> None:
