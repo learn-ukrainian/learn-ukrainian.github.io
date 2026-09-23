@@ -28,7 +28,6 @@ if str(REPO_ROOT) not in sys.path:
 
 from scripts.projects.open_model_data.audit_dataset_acceptance import (
     PROJECT_ROOT,
-    VESUM_DB_PATH,
     LinguisticNormalizer,
     _resolve_db_path,
 )
@@ -62,6 +61,42 @@ def decolonization_data():
         "eval": eval_records,
         "all": train_records + eval_records,
     }
+
+
+@pytest.fixture
+def require_vesum_db():
+    """Skip test if uncommitted vesum.db is missing in CI."""
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
+        pytest.skip(f"requires {vesum_db} (not provisioned in CI)")
+    return vesum_db
+
+
+@pytest.fixture
+def require_local_databases():
+    """Skip test if uncommitted sources.db or vesum.db is missing in CI."""
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    sources_db = _resolve_db_path("sources.db", REPO_ROOT)
+    if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
+        pytest.skip(f"requires {vesum_db} (not provisioned in CI)")
+    if not sources_db.is_file() or sources_db.stat().st_size == 0:
+        pytest.skip(f"requires {sources_db} (not provisioned in CI)")
+    return sources_db
+
+
+@pytest.fixture
+def require_all_databases():
+    """Skip test if uncommitted sources.db, vesum.db, or ulif_dump_all.db is missing in CI."""
+    vesum_db = _resolve_db_path("vesum.db", REPO_ROOT)
+    sources_db = _resolve_db_path("sources.db", REPO_ROOT)
+    ulif_db = _resolve_db_path("ulif_dump_all.db", REPO_ROOT)
+    if not vesum_db.is_file() or vesum_db.stat().st_size == 0:
+        pytest.skip(f"requires {vesum_db} (not provisioned in CI)")
+    if not sources_db.is_file() or sources_db.stat().st_size == 0:
+        pytest.skip(f"requires {sources_db} (not provisioned in CI)")
+    if not ulif_db.is_file() or ulif_db.stat().st_size == 0:
+        pytest.skip(f"requires {ulif_db} (not provisioned in CI)")
+    return sources_db
 
 
 def test_manifest_and_catalog_integrity(decolonization_data):
@@ -131,9 +166,9 @@ def test_zero_contradictions(decolonization_data):
             assert r["chosen"] == orig
 
 
-def test_zero_train_eval_leakage(decolonization_data):
+def test_zero_train_eval_leakage(decolonization_data, require_vesum_db):
     """Verify 100% disjoint train and eval partitions under aspect normalization."""
-    normalizer = LinguisticNormalizer(VESUM_DB_PATH)
+    normalizer = LinguisticNormalizer(require_vesum_db)
 
     def norm_term(t: str) -> str:
         return " ".join(normalizer.get_canonical_tokens(t))
@@ -152,7 +187,7 @@ def test_zero_train_eval_leakage(decolonization_data):
             assert nt not in train_targets, f"Target leakage in {r['record_id']}: {r['target_term']} ({nt})"
 
 
-def test_dataset_acceptance_audit_passes():
+def test_dataset_acceptance_audit_passes(require_local_databases):
     """Verify that audit_dataset_acceptance.py runs and passes with exit code 0."""
     audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
     cmd = [
@@ -207,7 +242,7 @@ def test_supporting_passages_all_non_null_and_authentic(decolonization_data):
         assert locus and isinstance(locus, str), f"Case {cid} missing locus"
 
 
-def test_adversarial_probes_and_fail_closed():
+def test_adversarial_probes_and_fail_closed(require_local_databases):
     """Verify fail-closed behavior on adversarial probes and strict UA-GEC phrase alignment (CF-R6 Finding 1 & 3)."""
     import sqlite3
 
@@ -526,7 +561,7 @@ def test_supporting_passages_and_no_manufactured_statements(decolonization_data)
     assert "у вихідний (день)" in ev_020["supporting_passage"]
 
 
-def test_dataset_acceptance_with_verified_signoff():
+def test_dataset_acceptance_with_verified_signoff(require_local_databases):
     """Verify that audit_dataset_acceptance.py passes with verified human signoff and ACCEPTED status (Finding 3)."""
     audit_script = REPO_ROOT / "scripts" / "projects" / "open_model_data" / "audit_dataset_acceptance.py"
     signoff_file = DECOLONIZATION_DIR / "acceptance_review_sample.signoff.json"
@@ -545,7 +580,7 @@ def test_dataset_acceptance_with_verified_signoff():
     assert "signoff_verified: True" in proc.stdout
 
 
-def test_cf_r9_remediations_regression(decolonization_data):
+def test_cf_r9_remediations_regression(decolonization_data, require_local_databases):
     """Verify remediation of all 3 CF-R9 blockers.
 
     1. Blocker 1: Authentic authorities and establishing passages for lexical calques (decol_lex_001/002/003).
@@ -686,7 +721,7 @@ def test_cf_r9_remediations_regression(decolonization_data):
         INDEPENDENT_LANGUAGE_REVIEWS["decol_lex_001"]["reviewer_id"] = orig_rev
 
 
-def test_cf_r10_remediations_regression():
+def test_cf_r10_remediations_regression(require_local_databases):
     """Verify remediation of all CF-R10 blockers.
 
     1. Blocker 1: EmptyCursor (0 rows / fetchone() returns None) fails closed with ValueError.
@@ -864,7 +899,7 @@ def test_cf_r10_remediations_regression():
         )
 
 
-def test_cf_r11_remediations_regression(monkeypatch):
+def test_cf_r11_remediations_regression(monkeypatch, require_local_databases):
     """Verify remediation of all CF-R11 blockers.
 
     1. Blocker 1:
@@ -1055,7 +1090,7 @@ def test_cf_r11_remediations_regression(monkeypatch):
         make_reviewer_confirmation(lex_001_item, "calque_lexical", real_v_cur, real_s_cur, [])
 
 
-def test_cf_r12_remediations_regression(monkeypatch):
+def test_cf_r12_remediations_regression(monkeypatch, require_local_databases):
     """Verify remediation of all CF-R12 findings.
 
     1. Citation binding in query_source_evidence:
@@ -1221,7 +1256,7 @@ def test_cf_r12_remediations_regression(monkeypatch):
     assert "охочий" in res["supporting_passage"].lower()
 
 
-def test_cf_r13_remediations_regression() -> None:
+def test_cf_r13_remediations_regression(require_local_databases) -> None:
     """CF-R13 regression: verify strict author citation anchors and fail-closed behavior for unrelated books.
 
     Remediates:
@@ -1365,7 +1400,7 @@ def test_cf_r13_remediations_regression() -> None:
     assert res_tlo["status"] == "source_attested"
 
 
-def test_cf_r14_dictionary_binding_regression() -> None:
+def test_cf_r14_dictionary_binding_regression(require_all_databases) -> None:
     """CF-R14 regression: dictionary lookups must strictly bind to cited entry or phrase.
 
     1. decol_prot_047 ('в першу чергу', citing 'Черга') must fail closed if СУМ-20
@@ -1470,7 +1505,7 @@ def test_cf_r14_dictionary_binding_regression() -> None:
     assert "мов" in res_048["source"].lower() or "мов" in res_048.get("article", "").lower()
 
 
-def test_cf_r15_phrase_attestation_regression() -> None:
+def test_cf_r15_phrase_attestation_regression(require_all_databases) -> None:
     """CF-R15 regression: matching headword that lacks claimed phrase must fail closed.
 
     1. decol_prot_047 ('в першу чергу', citing 'Черга') must fail closed if record
@@ -1695,7 +1730,7 @@ def test_cf_r15_phrase_attestation_regression() -> None:
     assert res_053["status"] == "source_attested"
 
 
-def test_cf_r20_remediations_regression(decolonization_data):
+def test_cf_r20_remediations_regression(decolonization_data, require_local_databases):
     """Verify CF-R20 findings remediations: ПЛИН, ЗАГАЛ, ЧАС, and sample review audit."""
     import sqlite3
 
