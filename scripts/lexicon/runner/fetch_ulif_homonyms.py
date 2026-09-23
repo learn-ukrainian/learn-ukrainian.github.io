@@ -2446,6 +2446,72 @@ def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]]
                 )
 
 
+_UKRAINIAN_REGISTER_ALPHABET = "абвгґдеєжзиіїйклмнопрстуфхцчшщьюя"
+_REGISTER_RANKS = {letter: index for index, letter in enumerate(_UKRAINIAN_REGISTER_ALPHABET)}
+
+
+def _register_order_key(spelling: str) -> tuple[int, ...]:
+    """Compare the first three register letters in Ukrainian order.
+
+    This key ignores spaces, hyphens, and apostrophes for the coarse boundary
+    comparison. The full key has three reversals in the recorded walk;
+    the three-letter key has none and still detects a reset to an earlier part
+    of the register. Acute marks and case do not affect the order.
+    """
+    letters = (letter for letter in spelling.casefold() if letter not in " \t-\u0301'’ʼ")
+    return tuple(
+        _REGISTER_RANKS.get(letter, len(_REGISTER_RANKS) + ord(letter)) for letter in itertools.islice(letters, 3)
+    )
+
+
+def _verify_register_continuity(
+    preceding: Sequence[Mapping[str, Any] | sqlite3.Row], following: Sequence[Mapping[str, Any]], page_num: int
+) -> None:
+    """Reject backwards navigation and a repeated multi-row window before row writes."""
+    if not preceding or not following:
+        raise SessionInvalid(f"page_{page_num}_missing_continuity_anchor")
+
+    def headword(row: Mapping[str, Any] | sqlite3.Row) -> str:
+        try:
+            return str(row["stressed"])
+        except (KeyError, IndexError):
+            return str(row["stressed_headword"])
+
+    if _register_order_key(headword(preceding[-1])) > _register_order_key(headword(following[0])):
+        raise SessionInvalid(f"page_{page_num}_register_regression")
+    if len(following) >= 2:
+        # Repeated homonyms can legitimately straddle a window. Two different
+        # spellings repeating together are an overlap; a uniform run needs a
+        # longer exact match to distinguish repetition from a reset.
+        overlap_size = (
+            2
+            if normalize_ulif_spelling(headword(following[0])) != normalize_ulif_spelling(headword(following[1]))
+            else 6
+        )
+        if len(following) < overlap_size:
+            return
+        first_rows = tuple(normalize_ulif_spelling(headword(row)) for row in following[:overlap_size])
+        previous = [normalize_ulif_spelling(headword(row)) for row in preceding]
+        if any(
+            tuple(previous[index : index + overlap_size]) == first_rows
+            for index in range(len(previous) - overlap_size + 1)
+        ):
+            raise SessionInvalid(f"page_{page_num}_register_overlap")
+
+
+def _verify_first_unrecorded_page(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> None:
+    """Check each new page's first row against its immediate predecessor."""
+    for index in range(len(rows)):
+        page_zero, row_index = divmod(start_global + index, REGISTER_PAGE_SIZE)
+        if page_zero < 1 or row_index != 0 or ledger.page_rows(page_zero + 1):
+            continue
+        if index:
+            preceding: Sequence[Mapping[str, Any] | sqlite3.Row] = rows[:index]
+        else:
+            preceding = ledger.page_rows(page_zero)
+        _verify_register_continuity(preceding, rows[index:], page_zero + 1)
+
+
 def _reseed_to_page(
     client: PoliteClient,
     ledger: SpellingLedger,
@@ -2468,26 +2534,25 @@ def _reseed_to_page(
     exp_start = str(p_rec["start_headword"]) if p_rec and p_rec["start_headword"] else None
     exp_end = str(p_rec["end_headword"]) if p_rec and p_rec["end_headword"] else None
 
-    # Search by the canonical first row; ULIF may place it anywhere in a window.
-    search_target = exp_start or start_headword
-    search_fields = _form_fields(
-        seed_tokens,
-        spelling=search_target,
-        extra=_image_click(SEARCH_BUTTON),
-    )
-    search_html, search_req = client.exchange("POST", search_fields)
-    _keep_walk(
-        ledger,
-        cache,
-        "",
-        f"tsearch:{marker_prefix}:{target_page}",
-        search_html,
-        search_req,
-        current_page=target_page,
-    )
-    landed = parse_register_list(search_html)
-    if not landed:
-        raise SessionInvalid(f"{marker_prefix}_missing_register")
+    # A page without a recorded start can only be anchored from the prior page.
+    search_target = exp_start or (start_headword if target_page == 1 else None)
+    landed: list[dict[str, Any]] = []
+    search_html = ""
+    if search_target is not None:
+        search_fields = _form_fields(seed_tokens, spelling=search_target, extra=_image_click(SEARCH_BUTTON))
+        search_html, search_req = client.exchange("POST", search_fields)
+        _keep_walk(
+            ledger,
+            cache,
+            "",
+            f"tsearch:{marker_prefix}:{target_page}",
+            search_html,
+            search_req,
+            current_page=target_page,
+        )
+        landed = parse_register_list(search_html)
+        if not landed:
+            raise SessionInvalid(f"{marker_prefix}_missing_register")
 
     if exp_start:
         offset = _resume_window_offset(
@@ -2735,6 +2800,7 @@ def _walk_shifted_windows(
             if not rows or tokens is None or _validation_failure(html):
                 raise SessionInvalid(f"page_{target_page}_viewstate")
             _verify_known_window_rows(ledger, rows, start_global)
+            _verify_first_unrecorded_page(ledger, rows, start_global)
 
             positions: list[tuple[int, int] | None] = []
             for i, row in enumerate(rows):
@@ -2794,11 +2860,16 @@ def _walk_shifted_windows(
                 if page_num < target_page:
                     continue
                 page_rows = ledger.page_rows(page_num)
-                if any(row["state"] != "completed" for row in page_rows):
+                recorded = ledger.get_page(page_num)
+                expected_count = (
+                    int(recorded["row_count"]) if recorded and recorded["row_count"] else REGISTER_PAGE_SIZE
+                )
+                if len(page_rows) != expected_count or any(row["state"] != "completed" for row in page_rows):
                     raise SessionInvalid(f"page_{page_num}_incomplete_rows")
                 ledger.mark_page(page_num, "completed")
                 completed += 1
                 target_page = page_num + 1
+                failures = 0
                 page_wall = clock() - page_started
                 cumulative = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0")
                 timed = int(ledger.meta("cumulative_timed_pages", "0") or "0")
@@ -2854,13 +2925,13 @@ def _walk_shifted_windows(
                 raise SessionInvalid(f"page_{target_page}_invalid_next_page")
             if next_html == html:
                 raise SessionInvalid(f"page_{target_page}_repeated_window")
+            _verify_register_continuity(rows, next_rows, target_page)
             if normalize_ulif_spelling(str(rows[-1]["unstressed"])) != normalize_ulif_spelling(
                 str(next_rows[0]["unstressed"])
             ):
                 _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
             html = next_html
             start_global += len(rows)
-            failures = 0
         except ResumeMismatchError as exc:
             ledger.mark_page(target_page, "error", error="resume_mismatch")
             print(f"stopping: resume_mismatch on page {target_page} ({exc})", file=sys.stderr)
@@ -2870,25 +2941,28 @@ def _walk_shifted_windows(
             if failures >= MAX_UNIT_RESEEDS:
                 ledger.mark_page(target_page, "retry_scheduled", error=str(exc))
                 return EXIT_RETRY_STORM, f"page {target_page} exhausted retries", completed
-            try:
-                html, _, offset = _reseed_to_page(
-                    client,
-                    ledger,
-                    cache,
-                    target_page=target_page,
-                    start_headword=start_headword,
-                    quiet=quiet,
-                    marker_prefix="reseed",
-                )
-                start_global = (target_page - 1) * REGISTER_PAGE_SIZE - offset
-            except ResumeMismatchError as mismatch:
-                ledger.mark_page(target_page, "error", error="resume_mismatch")
-                print(f"stopping: resume_mismatch on page {target_page} ({mismatch})", file=sys.stderr)
-                return EXIT_USAGE, "resume_mismatch", completed
-            except SessionInvalid as reseed_error:
-                if failures == MAX_UNIT_RESEEDS - 1:
-                    ledger.mark_page(target_page, "retry_scheduled", error=str(reseed_error))
-                    return EXIT_RETRY_STORM, f"page {target_page} exhausted retries", completed
+            while failures < MAX_UNIT_RESEEDS:
+                try:
+                    html, _, offset = _reseed_to_page(
+                        client,
+                        ledger,
+                        cache,
+                        target_page=target_page,
+                        start_headword=start_headword,
+                        quiet=quiet,
+                        marker_prefix="reseed",
+                    )
+                    start_global = (target_page - 1) * REGISTER_PAGE_SIZE - offset
+                    break
+                except ResumeMismatchError as mismatch:
+                    ledger.mark_page(target_page, "error", error="resume_mismatch")
+                    print(f"stopping: resume_mismatch on page {target_page} ({mismatch})", file=sys.stderr)
+                    return EXIT_USAGE, "resume_mismatch", completed
+                except SessionInvalid as reseed_error:
+                    failures += 1
+                    if failures >= MAX_UNIT_RESEEDS:
+                        ledger.mark_page(target_page, "retry_scheduled", error=str(reseed_error))
+                        return EXIT_RETRY_STORM, f"page {target_page} exhausted retries", completed
 
 
 def run_walk(

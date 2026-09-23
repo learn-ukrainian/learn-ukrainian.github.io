@@ -12,6 +12,7 @@ from typing import ClassVar
 
 import pytest
 
+from scripts.lexicon.runner import fetch_ulif_homonyms as ulif_walk
 from scripts.lexicon.runner.fetch_ulif_homonyms import (
     EXIT_FORBIDDEN,
     EXIT_OK,
@@ -709,6 +710,10 @@ class ShiftedWindowServer:
                 self.fail_nextpage_500_times -= 1
                 return HttpResult(500, "Injected nextpage 500", {})
             start = int(data["__VIEWSTATE"].split("-")[1]) + 25
+            if self.mode == "reset":
+                start = 0
+            elif self.mode == "overlap":
+                start -= 2
             return HttpResult(200, self._window(start), {})
         if data.get("__EVENTTARGET") == "ctl00$ContentPlaceHolder1$dgv":
             start = int(data["__VIEWSTATE"].split("-")[1])
@@ -776,6 +781,148 @@ def test_shifted_resume_completes_canonical_pages_across_windows(tmp_path: Path,
         if data and "ctl00$ContentPlaceHolder1$search.x" in data
     ]
     assert searches == ["w025"]
+
+
+@pytest.mark.parametrize("mode", ["reset", "overlap"])
+def test_shifted_resume_rejects_next_window_drift_before_writing_rows(tmp_path: Path, mode: str):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, mode=mode)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        max_pages=2,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.page_rows(3) == []
+        assert ledger.get_page(2)["state"] == "retry_scheduled"
+    finally:
+        ledger.close()
+
+
+@pytest.mark.parametrize(
+    ("before", "after"),
+    [
+        ("абазинський", "Аба́зівка"),  # live ledger page 2: и -> і
+        ("авіапатрульний", "авіапатрулюва́ння"),  # page 23: ь -> ю
+        ("ад'ютантський", "Аелі́та"),  # pages 78-79: apostrophe and capital
+    ],
+)
+def test_ulif_order_key_accepts_recorded_boundaries(before: str, after: str):
+    assert ulif_walk._register_order_key(before) <= ulif_walk._register_order_key(after)
+
+
+def test_first_unrecorded_page_uses_previous_ledger_boundary(tmp_path: Path):
+    ledger = SpellingLedger(tmp_path / "ledger.sqlite")
+    try:
+        ledger.ensure_row(
+            1, 24, select_arg="Select$24", stressed_headword="абазинський", normalized_spelling="абазинський"
+        )
+        ulif_walk._verify_first_unrecorded_page(
+            ledger,
+            [{"stressed": "Аба́зівка"}, {"stressed": "абазія"}],
+            25,
+        )
+        with pytest.raises(ulif_walk.SessionInvalid, match="register_regression"):
+            ulif_walk._verify_first_unrecorded_page(
+                ledger,
+                [{"stressed": "а"}, {"stressed": "абазія"}],
+                25,
+            )
+    finally:
+        ledger.close()
+
+
+def test_resume_without_target_start_searches_previous_end_first(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        ledger.conn.execute("UPDATE register_pages SET start_headword = '' WHERE page_num = 2")
+        ledger.conn.execute("DELETE FROM register_rows WHERE page_num = 2")
+        ledger.conn.commit()
+    finally:
+        ledger.close()
+    server = ShiftedWindowServer(4)
+    assert (
+        run_walk(
+            state_dir=state_dir,
+            db_path=tmp_path / "cache.db",
+            delay_seconds=1,
+            max_pages=1,
+            transport=server,
+            sleep=_noop_sleep,
+            scanner=lambda: False,
+        )
+        == EXIT_OK
+    )
+    searches = [
+        data["ctl00$ContentPlaceHolder1$tsearch"]
+        for _, data in server.requests
+        if data and "ctl00$ContentPlaceHolder1$search.x" in data
+    ]
+    assert searches == ["w024"]
+
+
+def test_shifted_page_requires_all_recorded_rows_before_completion(tmp_path: Path, monkeypatch):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4)
+    original = SpellingLedger.page_rows
+
+    def omit_one_row(self, page_num: int):
+        rows = original(self, page_num)
+        return [row for row in rows if page_num != 2 or row["row_index"] != 10]
+
+    monkeypatch.setattr(SpellingLedger, "page_rows", omit_one_row)
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        max_pages=1,
+        transport=server,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    ledger = SpellingLedger(state_dir / "ledger.sqlite")
+    try:
+        assert ledger.get_page(2)["state"] == "retry_scheduled"
+    finally:
+        ledger.close()
+
+
+def test_failed_reseed_never_reuses_stale_window(tmp_path: Path):
+    state_dir = tmp_path / "state"
+    state_dir.mkdir()
+    _seed_shifted_ledger(state_dir)
+    server = ShiftedWindowServer(4, fail_nextpage_500_times=1)
+
+    def failing_reseed(method: str, data: dict[str, str] | None) -> HttpResult:
+        if method == "GET" and server.requests:
+            server.requests.append((method, data))
+            return HttpResult(500, "Injected reseed GET 500", {})
+        return server(method, data)
+
+    code = run_walk(
+        state_dir=state_dir,
+        db_path=tmp_path / "cache.db",
+        delay_seconds=1,
+        transport=failing_reseed,
+        sleep=_noop_sleep,
+        scanner=lambda: False,
+    )
+    assert code == EXIT_RETRY_STORM
+    assert sum(bool(data and "ctl00$ContentPlaceHolder1$nextpage.x" in data) for _, data in server.requests) == 1
 
 
 @pytest.mark.parametrize("mode", ["absent", "duplicate", "duplicate_aligned", "fast_forward"])
