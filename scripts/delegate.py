@@ -4908,14 +4908,17 @@ _REVIEW_ATTEMPT_NO_REUSE_MARKER = "lu-review-attempt-no-reuse"
 
 
 def _review_attempt_marker_path(worktree_path: Path) -> Path:
-    proc = subprocess.run(
-        ["git", "-C", str(worktree_path), "rev-parse", "--absolute-git-dir"],
-        capture_output=True,
-        text=True,
-        check=False,
-        timeout=DEFAULT_GIT_TIMEOUT_S,
-        env=_sanitized_git_env(),
-    )
+    try:
+        proc = subprocess.run(
+            ["git", "-C", str(worktree_path), "rev-parse", "--absolute-git-dir"],
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+            env=_sanitized_git_env(),
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise RuntimeError(f"could not resolve git admin directory for {worktree_path}: {exc}") from exc
     git_dir = Path(proc.stdout.strip())
     if proc.returncode != 0 or not git_dir.is_absolute():
         raise RuntimeError(f"could not resolve git admin directory for {worktree_path}")
@@ -4929,7 +4932,10 @@ def _refuse_review_attempt_worktree_reuse(worktree_path: Path) -> None:
         return
     marker = _review_attempt_marker_path(worktree_path)
     if marker.is_file():
-        task_id = marker.read_text(encoding="utf-8").strip()
+        try:
+            task_id = marker.read_text(encoding="utf-8").strip()
+        except OSError as exc:
+            raise RuntimeError(f"could not read review attempt marker in {worktree_path}: {exc}") from exc
         raise ValueError(f"worktree {worktree_path} belongs to review attempt task {task_id!r}; reuse refused (#8517)")
 
 
