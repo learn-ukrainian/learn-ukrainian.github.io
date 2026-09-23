@@ -13,7 +13,7 @@ CLI:
     # Fire a task. Returns immediately with the task-id.
     # Write-capable modes (workspace-write / danger) require a dispatch worktree.
     delegate.py dispatch --agent codex --task-id my-task \
-        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-astra]
+        --prompt "do the thing" [--mode workspace-write --worktree] [--model gpt-6-sol]
         [--allow-merge] [--force-new]
 
     # Check status without blocking.
@@ -143,6 +143,9 @@ from scripts.common.scratch import (
     resolve_scratch_root,
     scratch_scan_roots,
 )
+from scripts.fleet.reset_reserve import codex_is_threatened as _codex_is_threatened
+from scripts.fleet.reset_reserve import codex_reset_reserve_eligible as _codex_reset_reserve_eligible
+from scripts.fleet.reset_reserve import load_reset_reserve as _load_reset_reserve
 from scripts.orchestration import reaper_lifecycle
 
 _REPO_ROOT = resolve_repo_root(Path(__file__), 1)
@@ -6471,9 +6474,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
 
     sys.path.insert(0, str(_REPO_ROOT / "scripts"))
     from agent_runtime.agent_identity import resolve_retired_agent_alias
+    from agent_runtime.routes import is_retired_gpt56_model
     from agent_runtime.telemetry import resolve_dispatch_start_telemetry
 
     task_id = args.task_id
+    if is_retired_gpt56_model(getattr(args, "model", None)):
+        print(f"❌ retired GPT-5.6 model {args.model!r} is not a dispatch route", file=sys.stderr)
+        return 2
     try:
         _validate_dispatch_effort(args.agent, getattr(args, "effort", None))
     except ValueError as exc:
@@ -8031,17 +8038,30 @@ def _resolve_agent_with_budget_guard(
     agent_info = agents.get(requested, {}) or {}
     status = _budget_lane_status(requested, agent_info if isinstance(agent_info, dict) else {})
     will_last = _budget_will_last_to_reset(agent_info if isinstance(agent_info, dict) else {})
+    reserve = _load_reset_reserve(_REPO_ROOT)
+    reserve_relaxes = (
+        requested == "codex"
+        and _codex_is_threatened(agent_info if isinstance(agent_info, dict) else {})
+        and _codex_reset_reserve_eligible(
+            reserve,
+            agent_info if isinstance(agent_info, dict) else {},
+            snapshot_stale=is_stale,
+        )
+    )
+    if reserve_relaxes:
+        print(
+            f"⚠ Codex reset reserve active ({reserve.get('remaining_resets')} confirmed reset(s) remaining); "
+            "provider and runtime headroom checks passed.",
+            file=sys.stderr,
+        )
     burn = (
         agent_info.get("burn_pct_7d")
         if requested != "claude"
         else (agent_info.get("interactive") or {}).get("burn_pct_7d") or agent_info.get("burn_pct_7d")
     )
 
-    needs_action, reason = _budget_needs_hard_capacity_action(
-        status=status,
-        will_last=will_last,
-        is_stale=is_stale,
-        records_loaded=records_loaded,
+    needs_action, reason = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
+        status=status, will_last=will_last, is_stale=is_stale, records_loaded=records_loaded,
     )
     if not needs_action:
         return requested
@@ -8065,6 +8085,7 @@ def _resolve_agent_with_budget_guard(
                 agents if isinstance(agents, dict) else {},
                 is_stale=is_stale,
                 records_loaded=records_loaded,
+                reset_reserve=reserve,
             )
         note = (
             f"🔄 HARD AUTO-SUBSTITUTE: --agent {requested} → {sub} "
@@ -8094,6 +8115,7 @@ def _language_lane_substitute(
     *,
     is_stale: bool,
     records_loaded: int,
+    reset_reserve: dict[str, Any] | None = None,
 ) -> str:
     """Walk fallbacks, staying inside claude/codex/agy/grok (#8449)."""
     seat = requested
@@ -8102,7 +8124,15 @@ def _language_lane_substitute(
         info = agents.get(seat, {}) or {}
         status = _budget_lane_status(seat, info if isinstance(info, dict) else {})
         will_last = _budget_will_last_to_reset(info if isinstance(info, dict) else {})
-        needs, why = _budget_needs_hard_capacity_action(
+        info_dict = info if isinstance(info, dict) else {}
+        reserve_relaxes = (
+            seat == "codex"
+            and _codex_is_threatened(info_dict)
+            and _codex_reset_reserve_eligible(
+                reset_reserve or {}, info_dict, snapshot_stale=is_stale
+            )
+        )
+        needs, why = (False, "") if reserve_relaxes else _budget_needs_hard_capacity_action(
             status=status,
             will_last=will_last,
             is_stale=is_stale,
@@ -8836,7 +8866,7 @@ def build_parser() -> argparse.ArgumentParser:
         "pointing at an existing added worktree); read-only may run from repo root.",
     )
     d.add_argument(
-        "--model", default=None, help="Optional model override, e.g. gpt-6-astra or gemini-3.1-pro-preview."
+        "--model", default=None, help="Optional model override, e.g. gpt-6-sol or gemini-3.1-pro-preview."
     )
     d.add_argument(
         "--provider",

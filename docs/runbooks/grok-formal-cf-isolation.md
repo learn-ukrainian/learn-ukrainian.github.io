@@ -43,7 +43,7 @@ fallback and is not an interchangeable formal-review route.
 ## Substitute formal CF
 
 ```bash
-.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-5.6-terra @ high
+.venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N>              # codex / gpt-6-sol @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer claude  # claude-sonnet-5 @ high
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer glm     # LOCAL-ONLY
 .venv/bin/python scripts/ai_agent_bridge/__main__.py review-pr <N> --reviewer grok    # grok-4.6 @ high

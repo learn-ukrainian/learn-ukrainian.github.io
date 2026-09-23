@@ -19,19 +19,19 @@
 
 ---
 
-## 1. Role → models (operator 2026-07-19 + Sol amends)
+## 1. Current role → models (updated 2026-09-23)
 
 | Role | Primary | Secondary / volume | Effort | Confidence |
 |---|---|---|---|---|
-| Ceiling advisor/designer | Astra, Fable 5 | — | Astra ≥`high` (prefer `xhigh`/`max`); Fable prefer `xhigh` | provisional |
-| Accountable orchestrator | Opus 4.8, Terra | — | Opus `high`+; Terra `xhigh` when owning hard streams | provisional |
-| General implementer | Sonnet 5, Terra, Grok 4.5 | Gemini 3.5 Flash, K3, Cursor (**pin family**) | `high` default | provisional |
-| Hard implementer | Astra, Fable 5 | Prefer Sonnet/Terra first unless known ceiling task | `xhigh` | provisional |
-| UI / visual product design | K3 | Astra (systems UX adjudication only); Kimi consult non-UA | K3 `high`; Astra `xhigh` | provisional (K3 UI primacy needs bakeoffs) |
+| Ceiling advisor/designer | GPT-6 Astra, Fable 5.1 | — | Astra `high`; Fable `high` | provisional |
+| Accountable orchestrator | GPT-6 Sol, Claude Opus 5.5 | — | `high` | provisional |
+| General implementer | GPT-6 Sol, Claude Sonnet 5, Grok 4.7 | GPT-6 Luna for bounded work; Gemini 3.8 Flash for well-defined work; K3; Cursor (**pin family**) | `high` by task fit | provisional |
+| Hard implementer | GPT-6 Sol, Claude Opus 5.5 | Escalate hard design judgment to Astra or Fable | `high` | provisional |
+| UI / visual product design | K3 | Astra for hard systems UX advice; Kimi consult non-UA | K3 `high`; Astra `high` | provisional (K3 UI primacy needs bakeoffs) |
 | Code/security CF review | **Author-family-conditional** (see §3) | — | `high`+ | provisional |
-| Critical CF review | Astra ↔ Fable/Opus **cross-family** | — | `xhigh` | provisional |
-| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: codex/claude/grok-4.6 + sources | `high` | provisional (UA primacy AGY; morphology still VESUM-gated; 3.1 Pro only on explicit request (operator 2026-09-22)) |
-| Recon / triage | Luna, Claude Haiku, Gemini 3.5 Flash | — | Luna `max` with exact owned paths + objective scope ceiling; others `medium`–`high`; never sole release | provisional |
+| Critical CF review | GPT-6 Sol ↔ Fable/Opus **cross-family** | — | `high` | provisional |
+| Ukrainian language | Gemini 3.8 Flash High (AGY) | LANGUAGE-LANES: GPT-6 Sol, Claude, Grok 4.7 + sources | `high` | provisional (morphology remains VESUM-gated) |
+| Recon / triage | GPT-6 Luna, Claude Haiku, Gemini 3.8 Flash | — | Luna `high` with exact owned paths + objective scope ceiling; others by task fit; never sole release | provisional |
 
 **One orchestrator per stream.** Advisors recommend; orchestrator owns terminal disposition.
 
@@ -41,16 +41,14 @@
 
 | Model | Strengths | Weaknesses | Route / egress notes | Project seat |
 |---|---|---|---|---|
-| **Fable 5** | Ceiling coding; long hard tasks; architecture; lead grows with difficulty | ~2× Opus price; safety reroutes possible | Anthropic | Ceiling advisor + hard code |
-| **Astra** (`gpt-6-astra`) | Live OpenAI advisor / hard implement / CF peer | OpenAI-family CF limits if author is OpenAI | OpenAI / Codex | Ceiling advisor (with Fable); replaces Sol as designated OpenAI advisor seat |
-| **Sol** (historical) | Prior OpenAI ceiling advisor evidence | Superseded as designated advisor by Astra | OpenAI / Codex | Historical only — do not route item-12 GO here |
-| **Opus 4.8** | Durable long agentic sessions; orchestration; architecture | Costly as bulk worker | Anthropic | Prefer orchestrator |
-| **Terra** | Balanced implementer/orchestrator; strong everyday agentic | Not Astra/Fable ceiling | OpenAI / Codex | Orchestrator + worker |
-| **Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / Codex | Bounded worker / recon |
+| **Fable 5.1** | Hard advisory judgment and architecture | Costly as bulk worker | Anthropic | Ceiling advisor |
+| **GPT-6 Astra** | Hard OpenAI advisory judgment | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Ceiling advisor, not routine coding or CF |
+| **GPT-6 Sol** | Accountable driving, coding, and adversarial review | Same-family review of OpenAI work is not independent | OpenAI / native Codex | Regular driver, coder, and reviewer @ high |
+| **Claude Opus 5.5** | Hard Claude-lane coding and deep code review | Costly as bulk worker | Anthropic / native Claude or verified Cursor slug | Hard coding and review @ high |
+| **GPT-6 Luna** | Fast bounded implementation, recon, and mechanical checks | Never sole architecture/security/language/release authority | OpenAI / native Codex | Bounded worker / recon @ high |
 | **Claude Haiku** | Fast cheap recon/triage on Anthropic lane; good for log/search skim | Never sole architecture/security/language/release authority | Anthropic | Recon (with Luna / 3.5 Flash) |
 | **Sonnet 5** | Near-flagship coding at better cost; daily driver agentic | Escalate systemic ambiguity | Anthropic | Default worker |
-| **Grok 4.5** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker + CF review |
-| **Gemini 3.5 Flash** | Fast agentic/coding volume | Not release authority | Google / AGY | Volume worker |
+| **Grok 4.7** | Strong coding agent; token-efficient; good CF review value | Prefer worker/reviewer not sole orchestrator | xAI; SuperGrok Heavy = capacity entitlement (re-verify) | Worker + CF review |
 | **Gemini 3.8 Flash High** | Multilingual / designated UA language seat; semantic review | Not bulk CRUD default; language outputs need sources | Google / AGY | Language lane (3.1 Pro only on explicit request (operator 2026-09-22)) |
 | **K3** | Long-horizon coding; frontend/visual ideation | Maintainability ≠ demo; Moonshot route/egress | Moonshot | UI + long implement |
 | **GLM-5.3** | Deep bug/security; large-context code coherence | Weak UA pedagogy; **LOCAL-ONLY** China-egress | Zhipu / opencode local | Local CF code only; never CI |
@@ -65,9 +63,9 @@ Never use a fixed unordered list that can pick the author’s family.
 
 | Author family | Prefer CF reviewers (code/infra) | Avoid as sole CF |
 |---|---|---|
-| Anthropic (Opus/Sonnet/Fable) | Grok, Sol/Terra (OpenAI), GLM local, DeepSeek, K3, Gemini | Sonnet/Opus/Fable self-family |
-| OpenAI (Sol/Terra/Luna) | Grok, Opus/Sonnet/Fable, GLM local, DeepSeek, K3, Gemini | Sol/Terra/Luna self-family |
-| xAI (Grok) | Opus/Sonnet/Fable, Sol/Terra, GLM local, DeepSeek, K3, Gemini | Grok self-family |
+| Anthropic (Opus/Sonnet/Fable) | Grok, GPT-6 Sol, GLM local, DeepSeek, K3, Gemini | Sonnet/Opus/Fable self-family |
+| OpenAI (GPT-6 Sol/Luna/Astra) | Grok, Opus/Sonnet/Fable, GLM local, DeepSeek, K3, Gemini | GPT-6 self-family |
+| xAI (Grok) | Opus/Sonnet/Fable, GPT-6 Sol, GLM local, DeepSeek, K3, Gemini | Grok self-family |
 | Google (Gemini via AGY) | Grok, OpenAI, Anthropic, GLM local, DeepSeek, K3 | Gemini self-family alone for CF of Gemini-authored infra |
 | Moonshot (K3) | Grok, OpenAI, Anthropic, GLM local, DeepSeek, Gemini | K3 self-family |
 | Zhipu (GLM) | Grok, OpenAI, Anthropic, DeepSeek, K3, Gemini | GLM self-family |
@@ -120,11 +118,11 @@ Store bakeoff notes under `docs/best-practices/fleet-bakeoffs/` (create when fir
 ## 5. Escalation ladder (implementation)
 
 ```
-Luna / Claude Haiku / Gemini 3.5 Flash recon
-  → Sonnet 5 / Grok 4.5 / Terra implement (worktree)
+GPT-6 Luna / Claude Haiku / Gemini 3.8 Flash recon
+  → GPT-6 Sol / Opus 5.5 / Sonnet 5 / Grok 4.7 implement (worktree)
     → escalate immediately if security / high blast radius / unclear invariants / multi-architecture
     → otherwise escalate after evidence-backed root-cause attempts fail
-      → Astra or Fable (xhigh) advisory or hard implement
+      → Astra or Fable (high) for hard advisory judgment
         → orchestrator integrates
         → CF review: other family + task-qualified
 ```
@@ -153,14 +151,14 @@ Re-verify capacity and routing when the subscription plan or API routing changes
 ## 8. Quick routing card
 
 ```text
-Routine code/fix          → Sonnet 5 | Terra | Grok 4.5
-Hard code (ceiling)         → Astra | Fable 5 (after mid-tier wall or known ceiling)
-Orchestrate stream          → Opus 4.8 | Terra xhigh  (exactly one)
-UI / visual product         → K3 explore → Sonnet/Terra/Grok implement → Astra if systems-hard
+Routine code/fix          → GPT-6 Sol high | GPT-6 Luna high when bounded | Sonnet 5 | Grok 4.7
+Hard code                 → GPT-6 Sol high | Claude Opus 5.5 high; Astra/Fable advise when needed
+Orchestrate stream        → GPT-6 Sol high | Claude Opus 5.5 high (exactly one)
+UI / visual product       → K3 explore → Sol/Opus/Grok implement → Astra if systems-hard
 UA language                 → Gemini 3.8 Flash High (AGY) + VESUM/sources (3.1 Pro only on explicit request, operator 2026-09-22)
 Security/bug CF             → author-family-conditional (Grok/GLM/DeepSeek/Opus/…)
 Architecture decision       → Astra/Fable advisory → orchestrator decides
-Recon                       → Luna | Claude Haiku | Gemini 3.5 Flash
+Recon                     → GPT-6 Luna high | Claude Haiku | Gemini 3.8 Flash
 ```
 
 ---

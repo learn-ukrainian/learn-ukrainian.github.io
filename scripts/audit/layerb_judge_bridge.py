@@ -59,7 +59,7 @@ PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-bridge-prompt.v3-flattened"
 GROK_FLAT_SCHEMA_BUILDER_VERSION = "qg-layer-b-judge-grok-flat-schema.v1"
 GROK_PROMPT_TEMPLATE_VERSION = "qg-layer-b-judge-grok-flat-prompt.v2"
 DEFAULT_MODELS = {
-    "codex": "gpt-6-astra",
+    "codex": "gpt-6-sol",
     "grok": "grok-4.7",  # operator order 2026-09-22 (#8464), rotated from grok-4.6
     "gemini": "gemini-3.8-flash-high",
 }
@@ -271,7 +271,7 @@ class BridgeConfig:
         if self.family == "codex" and (
             self.model != DEFAULT_MODELS["codex"] or self.model_version != DEFAULT_MODELS["codex"]
         ):
-            raise BridgeInputError("Codex Layer-B judges must use gpt-6-astra for model and version")
+            raise BridgeInputError("Codex Layer-B judges must use gpt-6-sol for model and version")
 
     @property
     def transport(self) -> str:

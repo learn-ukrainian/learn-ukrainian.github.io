@@ -875,14 +875,15 @@ Or use the process-escalations skill:
 
 Post on the relevant GH issue explaining what was stuck and why.
 
-## Dispatch handoff: Luna workers + fleet settle (2026-08-02)
+## Dispatch handoff: GPT-6 Luna workers + fleet settle
 
-**Luna (`gpt-5.6-luna` @ max)** is a high-volume **bounded coding worker**, not a solo epic driver.
+**Luna (`gpt-6-luna` @ high)** is a high-volume **bounded coding worker**, not a solo epic driver.
 Orchestrators keep acceptance (CF, merge, residual truth).
 
 ### Briefing Luna
 Append [`docs/dispatch-briefs/luna-max-closeout-contract.md`](../dispatch-briefs/luna-max-closeout-contract.md)
-to every Luna dispatch brief. Require the `CLOSEOUT` ledger block.
+to bounded Luna dispatch briefs. The filename is retained for existing links; its
+current content specifies GPT-6 Luna @ high. Require the `CLOSEOUT` ledger block.
 
 ### Deterministic settle (no LLM)
 When a worker leaves commits without a PR, or dies with `status=running` and a dead PID:

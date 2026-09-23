@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 from copy import deepcopy
 from datetime import date
 from pathlib import Path
@@ -30,10 +31,10 @@ from scripts.review.model_catalog import (
 def test_committed_catalog_is_structurally_valid_and_current():
     catalog = load_model_catalog()
     assert catalog["schema_version"] == "model-catalog.v1"
-    assert catalog["reviewed_on"] == "2026-09-22"
-    assert catalog_age_days(catalog, as_of=date(2026, 9, 22)) == 0
-    assert not catalog_is_stale(catalog, as_of=date(2026, 10, 21))
-    assert catalog_is_stale(catalog, as_of=date(2026, 10, 23))
+    assert catalog["reviewed_on"] == "2026-09-23"
+    assert catalog_age_days(catalog, as_of=date(2026, 9, 23)) == 0
+    assert not catalog_is_stale(catalog, as_of=date(2026, 10, 22))
+    assert catalog_is_stale(catalog, as_of=date(2026, 10, 24))
 
 
 def test_catalog_covers_current_preferred_frontier_and_efficient_models():
@@ -807,12 +808,13 @@ def test_catalog_rejects_malformed_sol_advised_route(
         validate_catalog(broken)
 
 
-def test_astra_role_pins_match_runtime_and_reviewer_invocation():
+def test_astra_advisor_and_sol_runtime_review_pins():
     catalog = load_model_catalog()
     astra = catalog["models"]["gpt-6-astra"]
     assert astra["family"] == "openai"
     assert astra["tier"] == "frontier_authority"
-    assert {"implementation", "standard_review", "critical_review", "bounded_advisory_envelope"} <= set(astra["roles"])
+    assert {"architecture", "consequential_advisory", "bounded_advisory_envelope"} <= set(astra["roles"])
+    assert not {"implementation", "standard_review", "critical_review"} & set(astra["roles"])
     assert AGENTS["codex"]["default_model"] == "gpt-6-sol"
     assert AGENTS["codex"]["default_effort"] == "high"
     assert catalog["review_candidates"]["openai_frontier"]["invocation"].endswith("--model gpt-6-sol --effort high")
@@ -823,7 +825,8 @@ def test_astra_role_pins_match_runtime_and_reviewer_invocation():
 
 def test_active_codex_routes_are_gpt6_only():
     catalog = load_model_catalog()
-    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6-sol", "gpt-6-astra"]
+    assert catalog["review_scheduler"]["endpoints"]["codex"]["models"] == ["gpt-6-sol"]
+    assert not {"implementation", "standard_review", "critical_review"} & set(catalog["models"]["gpt-6-astra"]["roles"])
     native = {
         model_id
         for model_id, model in catalog["models"].items()
@@ -836,7 +839,23 @@ def test_active_codex_routes_are_gpt6_only():
 
 
 def test_gpt56_routes_are_not_selected():
-    models = load_model_catalog()["models"]
+    catalog = load_model_catalog()
+    models = catalog["models"]
     for model_id in ("gpt-5.6-sol", "gpt-5.6-terra", "gpt-5.6-luna"):
-        assert models[model_id]["lifecycle"] == "fallback"
-        assert models[model_id]["transports"] == ["cursor"]
+        assert models[model_id]["lifecycle"] == "retired"
+        assert models[model_id]["transports"] == []
+
+    # Historical model records may remain, but no executable selector may
+    # resolve to the retired generation, including indirect review ladders.
+    for section in (
+        "execution_routing",
+        "review_candidates",
+        "review_scheduler",
+        "orchestrator_seats",
+        "formal_cf_defaults",
+        "review_ladders",
+    ):
+        assert "gpt-5.6-" not in json.dumps(catalog[section], sort_keys=True), section
+    assert not AGENTS["codex"]["default_model"].startswith("gpt-5.6-")
+    for model_id in ("gpt-6-sol", "gpt-6-luna", "gpt-6-astra"):
+        assert models[model_id]["transports"] == ["native_codex"]

@@ -1,11 +1,11 @@
 # Combined upgrade QG prompt (tunable)
 
-This is what Gemini self-review and Astra each get **once** per lesson.
+This is what Gemini self-review and Sol each get **once** per lesson.
 Artifacts are appended after this block. Sample full prompt: `upgrade-combined-qg-prompt.sample.md` (lesson 3 of things-have-gender).
 
-## Review context (Astra)
+## Review context (Sol)
 
-Independent Astra review after Gemini self-adjust. Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is better than a fluent guess; this corpus trains an LLM and tests the tools.
+Independent Sol review after Gemini self-adjust. Fail ungrounded gender/government/examples. VESUM/`sources` is how the Ukrainian is better than a fluent guess; this corpus trains an LLM and tests the tools.
 
 ## Instructions
 
@@ -26,9 +26,9 @@ Return ONLY JSON of the form:
 
 ## Size
 
-- instructions+context: 892 chars
+- instructions+context: approximately 890 chars
 - artifacts (one lesson): 19,603 chars
-- total one call: 20,499 chars
+- total one call: approximately 20,500 chars
 - old 5-dim loop (same artifacts 5 times): ~98,015 chars of artifacts alone
 
 Tune this file; the engine reads `_COMBINED_QG_INSTRUCTIONS` in `scripts/build/v7_build.py`.

@@ -10,7 +10,7 @@ import pytest
 
 from scripts.audit import layerb_collect_emissions, layerb_judge_bridge, layerb_qualify, layerb_shadow
 
-PINNED_CODEX_MODEL = "gpt-6-astra"
+PINNED_CODEX_MODEL = "gpt-6-sol"
 PINNED_GROK_MODEL = "grok-4.7"
 
 
@@ -1416,8 +1416,8 @@ def test_codex_config_rejects_old_model_or_version_before_preparation(monkeypatc
 
     monkeypatch.setattr(layerb_judge_bridge.tempfile, "TemporaryDirectory", forbidden)
     monkeypatch.setattr(layerb_judge_bridge.subprocess, "run", forbidden)
-    for model, version in (("gpt-5.6-terra", "gpt-5.6-terra"), ("gpt-6-astra", "gpt-5.6-terra")):
-        with pytest.raises(layerb_judge_bridge.BridgeInputError, match="must use gpt-6-astra"):
+    for model, version in (("gpt-5.6-terra", "gpt-5.6-terra"), ("gpt-6-astra", "gpt-6-astra")):
+        with pytest.raises(layerb_judge_bridge.BridgeInputError, match="must use gpt-6-sol"):
             layerb_judge_bridge.BridgeConfig(
                 family="codex",
                 model=model,
@@ -1437,9 +1437,9 @@ def test_codex_config_rejects_old_model_or_version_before_preparation(monkeypatc
             )
 
 
-def test_astra_config_has_new_model_bound_qualification_identity():
+def test_sol_config_has_new_model_bound_qualification_identity():
     config = layerb_judge_bridge._config_from_args(layerb_judge_bridge.parse_args([])).to_dict()
-    assert config["model"] == config["model_version"] == "gpt-6-astra"
+    assert config["model"] == config["model_version"] == "gpt-6-sol"
     assert config["config_sha256"] != "18a92b5adec75a0ea8dd72c192b7b6663dc611377d13047c569d4d68c5a66a62"
     material = {key: value for key, value in config.items() if key != "config_sha256"}
     assert config["config_sha256"] == layerb_judge_bridge._sha256_json(material)

@@ -104,7 +104,7 @@ def test_budget_agent_key_dual_reads_historical_alias():
 
 
 def test_codex_print_config_sha_unchanged_by_grok_seat_rename(capsys):
-    """Grok rename leaves the current strict Codex identity-policy fingerprint intact."""
+    """Grok rename leaves the GPT-6 Sol strict Codex fingerprint intact."""
     from audit import layerb_judge_bridge
 
     assert layerb_judge_bridge.main(["--print-config"]) == 0
@@ -113,9 +113,10 @@ def test_codex_print_config_sha_unchanged_by_grok_seat_rename(capsys):
 
     config = json.loads(out)
     assert config["family"] == "codex"
+    assert config["model"] == "gpt-6-sol"
     assert (
         config["config_sha256"]
-        == "e40e47ac45b7f488ce7e2140dc6006b57b37f187f978aad568babc40c1d5352b"
+        == "19a19dae37a262941c2f7ed3d9df47b892d712d24df9d8b46b0f6d7b5d6806aa"
     )
 
 

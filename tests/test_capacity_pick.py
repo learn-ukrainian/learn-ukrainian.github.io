@@ -71,6 +71,74 @@ def test_lane_rows_mark_avoid():
     assert "retired→cursor" in rows["glm"]["notes"]
 
 
+def test_reset_reserve_relaxes_only_eligible_threatened_codex():
+    budget = _fixture_budget()
+    budget["agents"]["codex"].update(
+        {
+            "eligible": True,
+            "health": {"healthy": True},
+            "freshness": "fresh",
+            "age_s": 10,
+            "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+            "codexbar": {
+                **budget["agents"]["codex"]["codexbar"],
+                "weekly_used_pct": 72.0,
+                "windows": {"primary": {"remaining_pct": 12.0}},
+            },
+        }
+    )
+    reserve = {"available": True, "provider": "codex", "remaining_resets": 2}
+    rows = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve)}
+    assert rows["codex"]["avoid"] is False
+    assert rows["codex"]["status"] == "hot"
+    assert rows["codex"]["will_last"] is False
+    assert rows["codex"]["reset_reserve_eligible"] is True
+    assert "reset reserve eligible (2 remaining)" in rows["codex"]["notes"]
+
+    report = capacity_pick.build_report(budget, reset_reserve=reserve)
+    assert report["pick_order"][0]["lane"] == "codex"
+    assert "codex" in report["cooler_lanes"]
+
+    budget["agents"]["codex"]["runtime"]["headroom_blocked"] = True
+    blocked = {r["lane"]: r for r in capacity_pick.build_lane_rows(budget, reset_reserve=reserve)}
+    assert blocked["codex"]["avoid"] is True
+
+
+def test_stale_capacity_snapshot_disables_reserve_and_strict_pick(monkeypatch):
+    budget = _fixture_budget()
+    budget["diagnostics"] = {"stale": True}
+    budget["agents"]["codex"].update(
+        {
+            "eligible": True,
+            "health": {"healthy": True},
+            "freshness": "fresh",
+            "age_s": 10,
+            "runtime": {"headroom_blocked": False, "rate_limited": 0, "last_rate_limited_at": None},
+            "codexbar": {
+                **budget["agents"]["codex"]["codexbar"],
+                "weekly_used_pct": 72.0,
+                "windows": {"primary": {"remaining_pct": 12.0}},
+            },
+        }
+    )
+    reserve = {"available": True, "provider": "codex", "remaining_resets": 2}
+    row = next(row for row in capacity_pick.build_lane_rows(budget, reset_reserve=reserve) if row["lane"] == "codex")
+    assert row["avoid"] is True
+    assert row["reset_reserve_eligible"] is False
+
+    only_codex = {
+        "agents": {"codex": budget["agents"]["codex"]},
+        "diagnostics": {"stale": False},
+        "recommendation": {"primary_agent_for_code": None, "warnings": []},
+    }
+    from scripts.fleet import usage
+
+    monkeypatch.setattr(usage, "read_budget", lambda **_kwargs: only_codex)
+    monkeypatch.setattr(capacity_pick, "fetch_active_in_flight", lambda **_kwargs: {})
+    monkeypatch.setattr(capacity_pick, "load_reset_reserve", lambda *_args, **_kwargs: reserve)
+    assert capacity_pick.main(["--strict"]) == 0
+
+
 def test_pick_order_cool_first():
     report = capacity_pick.build_report(_fixture_budget(), active_in_flight={"codex": 2})
     picks = report["pick_order"]

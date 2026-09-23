@@ -211,10 +211,10 @@ class CodexModelSelectionError(ValueError):
 
 def _codex_backend(model: str, messages: list[Message], **kwargs: Any) -> CompletionResponse:
     prompt = str(kwargs.get("prompt") or _flatten_messages(messages))
-    codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-6-astra")
+    codex_model = os.environ.get("BRIDGE_PROXY_CODEX_MODEL", "gpt-6-sol")
 
-    if codex_model != "gpt-6-astra":
-        raise CodexModelSelectionError("Codex backend requires gpt-6-astra")
+    if codex_model != "gpt-6-sol":
+        raise CodexModelSelectionError("Codex backend requires gpt-6-sol")
 
     with tempfile.NamedTemporaryFile(prefix="openai-proxy-codex-", suffix=".txt", delete=False) as handle:
         output_path = Path(handle.name)
@@ -519,7 +519,7 @@ def chat_completions(request: ChatCompletionRequest) -> dict[str, object] | JSON
         )
     except CodexModelSelectionError:
         return _openai_error(
-            400, "Codex backend requires gpt-6-astra", "invalid_request_error", "model_not_allowed"
+            400, "Codex backend requires gpt-6-sol", "invalid_request_error", "model_not_allowed"
         )
     except subprocess.TimeoutExpired as exc:
         return _openai_error(
