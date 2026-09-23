@@ -8,6 +8,8 @@ collectors stay byte-compatible; callers add an additive ``source`` label.
 from __future__ import annotations
 
 import json
+import os
+import re
 import sqlite3
 import subprocess
 from collections.abc import Callable, Iterator
@@ -32,6 +34,17 @@ from scripts.fleet_comms.opsec_store import batch_tasks_store, comms_plane_store
 DISPATCH_BOTTLENECK_THRESHOLD_S = 7_200
 FORMAL_CF_PUBLICATION_THRESHOLD_S = 3_600
 GATE_TO_MERGE_THRESHOLD_S = 3_600
+
+# ``mergedAt`` is immutable once GitHub sets it. The plane connection opened
+# below is read-only and must not grow a cache table, so facts live in a JSON
+# file under ``batch_state/``. A null ``mergedAt`` is not final (the PR can
+# still merge) and is never stored. Closed-unmerged PRs are left uncached
+# because this lookup does not fetch ``closedAt``.
+_MERGE_CACHE_ENV = "FLEET_COMMS_PR_MERGE_CACHE"
+_MERGE_CACHE_REL = Path("batch_state") / "fleet-comms" / "pr-merge-facts.json"
+_GRAPHQL_BATCH_SIZE = 50
+_GH_TIMEOUT_S = 30
+_REPO_RE = re.compile(r"^[A-Za-z0-9_.-]+/[A-Za-z0-9_.-]+$")
 
 MetricsSource = Literal["authority", "legacy", "legacy_forced"]
 _AUTHORITY_BACKLOG_STATES = ("queued", "running")
@@ -562,33 +575,260 @@ def _add_event(
         group[span]["backlog_ages"].append(backlog_age)
 
 
-def _github_merged_at(
-    *,
-    repo: str,
-    pr_number: int,
-    gh_bin: str = "gh",
-) -> tuple[datetime | None, str | None]:
-    """Fetch a PR merge timestamp only; no body, title, or review text."""
+def _default_merge_cache_path() -> Path | None:
+    """Shared cache on the primary checkout, or ``None`` when it cannot be anchored."""
+    override = os.environ.get(_MERGE_CACHE_ENV, "").strip()
+    if override:
+        return Path(override).expanduser()
     try:
-        proc = subprocess.run(
-            [gh_bin, "pr", "view", str(pr_number), "--repo", repo, "--json", "mergedAt"],
-            capture_output=True,
-            text=True,
-            check=False,
-            timeout=30,
+        from scripts.guardrails.worktree_containment import (
+            NotAGitRepositoryError,
+            resolve_main_root,
         )
-    except subprocess.TimeoutExpired:
-        return None, "gh pr view timed out after 30s"
-    if proc.returncode != 0:
-        return None, (proc.stderr or proc.stdout or "gh failed").strip()[:300]
+
+        base = resolve_main_root(Path.cwd())
+    except NotAGitRepositoryError:
+        return None
+    return base / _MERGE_CACHE_REL
+
+
+def _fact_key(repo: str, pr_number: int) -> str:
+    return f"{repo}#{pr_number}"
+
+
+def _load_merge_facts(path: Path | None) -> dict[str, str]:
+    """Read cached non-null merge timestamps. Missing or corrupt files are empty."""
+    if path is None or not path.is_file():
+        return {}
     try:
-        payload = json.loads(proc.stdout or "{}")
-    except json.JSONDecodeError as exc:
-        return None, f"json_decode: {exc}"
-    merged_at = _parse_timestamp(payload.get("mergedAt"))
-    if payload.get("mergedAt") and merged_at is None:
-        return None, "invalid mergedAt timestamp"
-    return merged_at, None
+        raw = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, UnicodeError, json.JSONDecodeError, ValueError):
+        return {}
+    if not isinstance(raw, dict):
+        return {}
+    facts = raw.get("facts")
+    if not isinstance(facts, dict):
+        return {}
+    loaded: dict[str, str] = {}
+    for key, value in facts.items():
+        if isinstance(key, str) and isinstance(value, str) and _parse_timestamp(value) is not None:
+            loaded[key] = value
+    return loaded
+
+
+def _store_merge_facts(path: Path, facts: dict[str, str]) -> None:
+    """Atomically replace the cache. A write failure leaves metrics fail-open."""
+    payload = json.dumps(
+        {"schema": "pr-merge-facts.v1", "facts": dict(sorted(facts.items()))},
+        separators=(",", ":"),
+    )
+    tmp = path.with_name(f".{path.name}.{os.getpid()}.tmp")
+    try:
+        path.parent.mkdir(parents=True, exist_ok=True)
+        tmp.write_text(payload + "\n", encoding="utf-8")
+        os.replace(tmp, path)
+    except OSError:
+        try:
+            tmp.unlink(missing_ok=True)
+        except OSError:
+            return
+
+
+def _gql_string(value: str) -> str:
+    return value.replace("\\", "\\\\").replace('"', '\\"')
+
+
+def _merge_fact_query(batch: list[tuple[str, int]]) -> str:
+    """One GraphQL document: repository aliases, each with ≤ the batch's PR aliases."""
+    grouped: dict[str, list[int]] = {}
+    for repo, number in batch:
+        grouped.setdefault(repo, []).append(number)
+    selections: list[str] = []
+    for index, (repo, numbers) in enumerate(grouped.items()):
+        owner, name = repo.split("/", 1)
+        fields = " ".join(
+            f"p{number}: pullRequest(number: {number}) {{ mergedAt }}" for number in numbers
+        )
+        selections.append(
+            f'r{index}: repository(owner: "{_gql_string(owner)}", name: "{_gql_string(name)}") '
+            f"{{ {fields} }}"
+        )
+    return "query { " + " ".join(selections) + " }"
+
+
+def _run_gh(
+    args: list[str], *, timeout: float = _GH_TIMEOUT_S,
+) -> subprocess.CompletedProcess[str]:
+    return subprocess.run(
+        args,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=timeout,
+    )
+
+
+def _graphql_failure_message(payload: object) -> str:
+    if isinstance(payload, dict):
+        errors = payload.get("errors")
+        if isinstance(errors, list) and errors and isinstance(errors[0], dict):
+            message = errors[0].get("message")
+            if isinstance(message, str) and message.strip():
+                return message.strip()[:300]
+    return "graphql response missing data"
+
+
+def _parse_merge_fact_payload(
+    payload: object,
+    batch: list[tuple[str, int]],
+) -> dict[tuple[str, int], tuple[datetime | None, str | None, str | None]]:
+    """Map each PR to ``(merged_at, error, cacheable_raw)``.
+
+    ``cacheable_raw`` is set only for a parsed non-null ``mergedAt``. A JSON
+    null is an open or unmerged PR: no error, and nothing to cache.
+    """
+    if not isinstance(payload, dict) or not isinstance(payload.get("data"), dict):
+        message = _graphql_failure_message(payload)
+        return {key: (None, message, None) for key in batch}
+
+    data: dict[str, Any] = payload["data"]
+    error_paths: set[tuple[str, str]] = set()
+    errors = payload.get("errors")
+    if isinstance(errors, list):
+        for item in errors:
+            if not isinstance(item, dict):
+                continue
+            path = item.get("path")
+            if isinstance(path, list) and len(path) >= 2:
+                error_paths.add((str(path[0]), str(path[1])))
+
+    grouped: dict[str, list[int]] = {}
+    for repo, number in batch:
+        grouped.setdefault(repo, []).append(number)
+
+    parsed: dict[tuple[str, int], tuple[datetime | None, str | None, str | None]] = {}
+    for index, (repo, numbers) in enumerate(grouped.items()):
+        repo_alias = f"r{index}"
+        node = data.get(repo_alias)
+        if not isinstance(node, dict):
+            for number in numbers:
+                parsed[(repo, number)] = (None, "graphql repository missing", None)
+            continue
+        for number in numbers:
+            alias = f"p{number}"
+            key = (repo, number)
+            had_error = (repo_alias, alias) in error_paths
+            if had_error or alias not in node:
+                parsed[key] = (None, "graphql pull request lookup failed", None)
+                continue
+            pr = node[alias]
+            if pr is None:
+                # Explicit null and no field error: still open, or closed without a merge.
+                parsed[key] = (None, None, None)
+                continue
+            if not isinstance(pr, dict):
+                parsed[key] = (None, "graphql pull request lookup failed", None)
+                continue
+            raw = pr.get("mergedAt")
+            if raw is None:
+                parsed[key] = (None, None, None)
+                continue
+            if not isinstance(raw, str):
+                parsed[key] = (None, "invalid mergedAt timestamp", None)
+                continue
+            merged_at = _parse_timestamp(raw)
+            if merged_at is None:
+                parsed[key] = (None, "invalid mergedAt timestamp", None)
+                continue
+            parsed[key] = (merged_at, None, raw)
+    return parsed
+
+
+def _fetch_merge_facts(
+    missing: list[tuple[str, int]],
+    *,
+    gh_runner: Callable[..., subprocess.CompletedProcess[str]],
+    gh_bin: str,
+) -> dict[tuple[str, int], tuple[datetime | None, str | None, str | None]]:
+    """One ``gh api graphql`` call per ≤50 cache misses. Failures stay unknown."""
+    fetched: dict[tuple[str, int], tuple[datetime | None, str | None, str | None]] = {}
+    valid: list[tuple[str, int]] = []
+    for repo, number in missing:
+        if number <= 0 or _REPO_RE.fullmatch(repo) is None:
+            fetched[(repo, number)] = (None, "invalid repository or pull request", None)
+        else:
+            valid.append((repo, number))
+
+    for start in range(0, len(valid), _GRAPHQL_BATCH_SIZE):
+        batch = valid[start : start + _GRAPHQL_BATCH_SIZE]
+        query = _merge_fact_query(batch)
+        try:
+            proc = gh_runner([gh_bin, "api", "graphql", "-f", f"query={query}"], timeout=_GH_TIMEOUT_S)
+            stdout = proc.stdout or ""
+            if isinstance(stdout, bytes):
+                stdout = stdout.decode("utf-8", errors="replace")
+            stderr = proc.stderr or ""
+            if isinstance(stderr, bytes):
+                stderr = stderr.decode("utf-8", errors="replace")
+            if proc.returncode != 0:
+                message = (stderr or stdout or "gh failed").strip()[:300]
+                for key in batch:
+                    fetched[key] = (None, message, None)
+                continue
+            try:
+                payload = json.loads(stdout or "{}")
+            except json.JSONDecodeError as exc:
+                for key in batch:
+                    fetched[key] = (None, f"json_decode: {exc}", None)
+                continue
+            fetched.update(_parse_merge_fact_payload(payload, batch))
+        except subprocess.TimeoutExpired:
+            for key in batch:
+                fetched[key] = (None, f"gh api graphql timed out after {_GH_TIMEOUT_S}s", None)
+        except Exception as exc:
+            message = str(exc)[:300] or "gh failed"
+            for key in batch:
+                fetched[key] = (None, message, None)
+    return fetched
+
+
+def _resolve_pr_merge_facts(
+    keys: list[tuple[str, int]],
+    *,
+    cache_path: Path | None,
+    gh_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
+    gh_bin: str = "gh",
+) -> dict[tuple[str, int], tuple[datetime | None, str | None]]:
+    """Return merge timestamps for ``keys``. Cache hits do not call ``gh``."""
+    unique: list[tuple[str, int]] = []
+    seen: set[tuple[str, int]] = set()
+    for key in keys:
+        if key not in seen:
+            seen.add(key)
+            unique.append(key)
+
+    facts = _load_merge_facts(cache_path)
+    resolved: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
+    missing: list[tuple[str, int]] = []
+    for repo, number in unique:
+        raw = facts.get(_fact_key(repo, number))
+        parsed = _parse_timestamp(raw) if raw else None
+        if parsed is not None:
+            resolved[(repo, number)] = (parsed, None)
+        else:
+            missing.append((repo, number))
+    if not missing:
+        return resolved
+
+    fetched = _fetch_merge_facts(missing, gh_runner=gh_runner or _run_gh, gh_bin=gh_bin)
+    updates: dict[str, str] = {}
+    for key, (merged_at, error, raw) in fetched.items():
+        resolved[key] = (merged_at, error)
+        if raw:
+            updates[_fact_key(*key)] = raw
+    if updates and cache_path is not None:
+        _store_merge_facts(cache_path, {**facts, **updates})
+    return resolved
 
 
 def collect_stream_bottleneck_metrics(
@@ -596,7 +836,10 @@ def collect_stream_bottleneck_metrics(
     tasks_dir: Path,
     plane_db: Path,
     now: datetime | None = None,
-    github_lookup: Callable[..., tuple[datetime | None, str | None]] = _github_merged_at,
+    github_lookup: Callable[..., tuple[datetime | None, str | None]] | None = None,
+    gh_runner: Callable[..., subprocess.CompletedProcess[str]] | None = None,
+    merge_cache_path: Path | None = None,
+    gh_bin: str = "gh",
 ) -> dict[str, Any]:
     """Collect lifecycle-only per-stream bottlenecks from independent sources.
 
@@ -692,7 +935,7 @@ def collect_stream_bottleneck_metrics(
     except OSError:
         errors.append(_dispatch_error("tasks_dir_unreadable"))
 
-    merged_cache: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
+    lookups: dict[tuple[str, int], tuple[datetime | None, str | None]] = {}
     try:
         if _authority_file_missing(plane_db):
             raise FileNotFoundError("plane_db_missing")
@@ -712,6 +955,7 @@ def collect_stream_bottleneck_metrics(
                 + "".join(f", j.{name}" for name in optional_identity)
                 + f" FROM formal_review_jobs j LEFT JOIN github_publications p ON {publication_join}"
             ).fetchall()
+            pending_merges: list[tuple[tuple[str | None, str | None], datetime, tuple[str, int]]] = []
             for row in rows:
                 record = dict(row)
                 identity = _identity(record)
@@ -744,13 +988,32 @@ def collect_stream_bottleneck_metrics(
                 if not repo:
                     errors.append(_github_error("missing_repository"))
                     continue
-                cache_key = (repo, pr_number)
-                if cache_key not in merged_cache:
+                pending_merges.append((identity, published, (repo, pr_number)))
+
+            if github_lookup is None:
+                cache_path = merge_cache_path if merge_cache_path is not None else _default_merge_cache_path()
+                try:
+                    lookups = _resolve_pr_merge_facts(
+                        [item[2] for item in pending_merges],
+                        cache_path=cache_path,
+                        gh_runner=gh_runner,
+                        gh_bin=gh_bin,
+                    )
+                except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
+                    lookups = {item[2]: (None, str(exc)[:300]) for item in pending_merges}
+            else:
+                for _row_identity, _published, cache_key in pending_merges:
+                    if cache_key in lookups:
+                        continue
+                    repo, pr_number = cache_key
                     try:
-                        merged_cache[cache_key] = github_lookup(repo=repo, pr_number=pr_number)
+                        lookups[cache_key] = github_lookup(repo=repo, pr_number=pr_number)
                     except (OSError, ValueError, TypeError, subprocess.TimeoutExpired) as exc:
-                        merged_cache[cache_key] = (None, str(exc))
-                merged, lookup_error = merged_cache[cache_key]
+                        lookups[cache_key] = (None, str(exc))
+
+            for identity, published, cache_key in pending_merges:
+                merged, lookup_error = lookups.get(cache_key, (None, "pr_lookup_missing"))
+                pr_number = cache_key[1]
                 if lookup_error:
                     errors.append(_github_error("pr_lookup_failed", pr_number=pr_number))
                     continue
