@@ -98,16 +98,16 @@ def test_schedule_state_scan_warmup_fills_default_keys(monkeypatch, tmp_path):
         },
     )
 
-    state_router.schedule_state_scan_warmup(ctx)
-    deadline = time.monotonic() + 5.0
+    # Isolate from any warmup thread started by another test or app startup in
+    # this xdist worker (#8570): the module-global guard would otherwise make
+    # this call a no-op for this test's ctx.
+    monkeypatch.setattr(state_router, "_state_scan_warm_thread", None)
+
+    warm_thread = state_router.schedule_state_scan_warmup(ctx)
+    warm_thread.join(timeout=30)
+    assert not warm_thread.is_alive(), "state scan warmup thread did not finish within 30s"
+
     pipe_key = state_router._ctx_cache_key(ctx, "pipeline_versions", "all")
     weak_key = state_router._ctx_cache_key(ctx, "weak_points", "all", 7, 20)
-    while time.monotonic() < deadline:
-        if state_helpers.cache_get(pipe_key, 60.0) and state_helpers.cache_get(weak_key, 60.0):
-            break
-        time.sleep(0.02)
-    else:
-        pytest.fail("warmup did not populate cache keys")
-
     assert state_helpers.cache_get(pipe_key, 60.0)["track"] is None
     assert state_helpers.cache_get(weak_key, 60.0)["limit"] == 20
