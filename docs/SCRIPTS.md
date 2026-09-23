@@ -261,9 +261,9 @@ Runs on every session start, new or resumed.
 Rejects bare `python` and `python3` shell calls and prints one shell-quoted,
 copyable command using the canonical checkout's `.venv/bin/python`.
 
-### `check-gemini-inbox.sh`
+### `check-agent-inbox.sh`
 
-Polls the SQLite message broker for unread Gemini messages and surfaces them as additional context. It skips during pipeline runs.
+Checks the SQLite message broker for unread cross-agent messages for the current seat (`LEARN_UK_HOOK_RECIPIENT`, default `claude`) and surfaces them as additional context. A read-only, 1 s-bounded unread count short-circuits silently when the inbox is empty; any probe error falls back to the live bridge CLI. It skips during pipeline runs.
 
 ### Gemini bridge auth modes
 
