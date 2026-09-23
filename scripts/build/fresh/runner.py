@@ -387,6 +387,10 @@ def run_lesson(level: str, slug: str, n: int, *, draft: dict[str, Any], plan: di
     except ResolverError as err:
         layer = "pack" if err.code in {codes.UNKNOWN_WORD_ID, codes.LOCK_MISMATCH} else "engine"
         return finish(failure(7, err.message, layer, code=err.code))
+    except (OSError, ValueError) as err:
+        return finish(failure(7, f"resolver_input_unavailable: {err}", "pack"))
+    except Exception as err:
+        return finish(failure(7, f"resolver_error: {err}", "engine"))
     row = check_7_deterministic(stream, lesson, draft, form_options)
     if row["status"] == "failed":
         return finish(row)

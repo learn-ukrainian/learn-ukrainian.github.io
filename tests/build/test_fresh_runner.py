@@ -348,6 +348,19 @@ def test_runner_check_6_target_is_lesson_minimum(tmp_path, monkeypatch):
     assert (bad["check"], bad["layer"], bad["details"]["urok_tokens"]) == (6, "writer", 1)
 
 
+def test_runner_check_7_source_unavailable_has_gate_report(tmp_path, monkeypatch):
+    draft, plan, pack, words = _fixture()
+
+    def unavailable(*args, **kwargs):
+        raise OSError("fixture source missing")
+
+    monkeypatch.setattr(runner, "resolve", unavailable)
+    report, state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    bad = next(row for row in report["checks"] if row["status"] == "failed")
+    assert (bad["check"], bad["layer"]) == (7, "pack")
+    assert lock.check(state / "lesson-1.gates.yaml")
+
+
 def test_runner_check_8_requires_explicit_seat(tmp_path, monkeypatch):
     draft, plan, pack, words = _fixture(two_senses=True)
     report, state, seen = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words, seat=None)
