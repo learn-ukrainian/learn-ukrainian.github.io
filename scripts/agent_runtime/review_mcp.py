@@ -136,9 +136,7 @@ def prepare_review_attempt(
 
     # Driver settlement 5: create ledger, sidecar, and config with O_EXCL; refuse if any already exists
     if ledger_path.exists() or sidecar_path.exists() or config_path.exists():
-        raise FileExistsError(
-            f"review attempt {attempt_id!r} already exists for review {review_id!r}"
-        )
+        raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}")
 
     sidecar_bytes = f"{_EMPTY_SHA256}\n".encode("ascii")
     config_payload = {
@@ -178,9 +176,7 @@ def prepare_review_attempt(
         for path in reversed(created_paths):
             with contextlib.suppress(OSError):
                 path.unlink(missing_ok=True)
-        raise FileExistsError(
-            f"review attempt {attempt_id!r} already exists for review {review_id!r}"
-        ) from exc
+        raise FileExistsError(f"review attempt {attempt_id!r} already exists for review {review_id!r}") from exc
     except BaseException:
         for path in reversed(created_paths):
             with contextlib.suppress(OSError):

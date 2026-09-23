@@ -397,7 +397,10 @@ def test_delegate_dispatch_refuses_budget_guard_substitution(
     )
     assert rc == 2
     captured = capsys.readouterr()
-    assert "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)" in captured.err
+    assert (
+        "review attempt refused: agent substitution from claude to codex (budget guard) is not allowed (#8517)"
+        in captured.err
+    )
 
 
 def test_delegate_dispatch_refuses_retired_alias_substitution(
@@ -422,7 +425,10 @@ def test_delegate_dispatch_refuses_retired_alias_substitution(
     )
     assert rc == 2
     captured = capsys.readouterr()
-    assert "review attempt refused: agent substitution from gemini to agy (retired CLI) is not allowed (#8517)" in captured.err
+    assert (
+        "review attempt refused: agent substitution from gemini to agy (retired CLI) is not allowed (#8517)"
+        in captured.err
+    )
 
 
 def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
@@ -430,8 +436,11 @@ def test_delegate_dispatch_dry_run_skips_prepare_review_attempt(
 ) -> None:
     task_id = f"review-task-dry-run-{uuid.uuid4().hex[:8]}"
     import agent_runtime.review_mcp
-    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as mock_prep_scripts, \
-         patch.object(agent_runtime.review_mcp, "prepare_review_attempt") as mock_prep_agent:
+
+    with (
+        patch("scripts.agent_runtime.review_mcp.prepare_review_attempt") as mock_prep_scripts,
+        patch.object(agent_runtime.review_mcp, "prepare_review_attempt") as mock_prep_agent,
+    ):
         rc = delegate_cli.main(
             [
                 "dispatch",
@@ -465,8 +474,11 @@ def test_delegate_dispatch_refuses_reused_attempt_id(
 
     task_id = f"review-task-dup-{uuid.uuid4().hex[:8]}"
     import agent_runtime.review_mcp
-    with patch("scripts.agent_runtime.review_mcp.resolve_repo_root", return_value=tmp_path), \
-         patch.object(agent_runtime.review_mcp, "resolve_repo_root", return_value=tmp_path):
+
+    with (
+        patch("scripts.agent_runtime.review_mcp.resolve_repo_root", return_value=tmp_path),
+        patch.object(agent_runtime.review_mcp, "resolve_repo_root", return_value=tmp_path),
+    ):
         rc = delegate_cli.main(
             [
                 "dispatch",
