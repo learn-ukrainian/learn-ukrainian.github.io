@@ -251,6 +251,7 @@ def test_orthography_reversed_options_order_passes() -> None:
             "explanation": "Soft sign at end.",
         }
     )
+    assert validate_draft(draft, "a1", activity_types=types) == []
 
 
 def test_removed_y_or_i_orthography_list_fails() -> None:
@@ -268,3 +269,74 @@ def test_removed_y_or_i_orthography_list_fails() -> None:
     )
     reasons = _reasons(draft, "a1", types)
     assert any("exactly one closed list" in reason for reason in reasons)
+
+
+def test_orthography_raw_answer_must_equal_raw_option_exactly() -> None:
+    draft, types = load_fixture("a1")
+    item = _item(draft, "a3")
+    item.clear()
+    # options: ["'", ""] with answer: "’" fails raw equality
+    item.update(
+        {
+            "sentence": "м___яч",
+            "answer": "’",
+            "mode": "orthography",
+            "options": ["'", ""],
+            "explanation": "The list names the mark.",
+        }
+    )
+    reasons = _reasons(draft, "a1", types)
+    assert any("outside its option list" in reason for reason in reasons)
+
+    # options: ["’", ""] with answer: "’" passes raw equality
+    item.update(
+        {
+            "sentence": "м___яч",
+            "answer": "’",
+            "mode": "orthography",
+            "options": ["’", ""],
+            "explanation": "The list names the mark.",
+        }
+    )
+    assert validate_draft(draft, "a1", activity_types=types) == []
+
+
+def test_orthography_malformed_item_returns_draft_error_not_type_error() -> None:
+    draft, types = load_fixture("a1")
+    item = _item(draft, "a3")
+    item.clear()
+    cases: list[tuple[object, object]] = [
+        ([{"bad": "dict"}, ""], "'"),
+        ([[1], [2]], "'"),
+        ([1, 2], "'"),
+        (["'", ""], ["not", "str"]),
+        (["'", ""], {"bad": "dict"}),
+        (["'", ""], 42),
+        (["'", ""], None),
+    ]
+    for bad_options, bad_answer in cases:
+        item.update(
+            {
+                "sentence": "м___яч",
+                "answer": bad_answer,
+                "mode": "orthography",
+                "options": bad_options,
+                "explanation": "Explanation.",
+            }
+        )
+        errors = validate_draft(draft, "a1", activity_types=types)
+        fresh_errors = [e for e in errors if e.check == "activity_fresh_constraints"]
+        assert len(fresh_errors) > 0, f"Expected DraftError for options={bad_options!r}, answer={bad_answer!r}"
+
+
+def test_draft_schema_import_does_not_import_linear_pipeline() -> None:
+    import subprocess
+    import sys
+
+    cmd = [
+        sys.executable,
+        "-c",
+        "import sys, scripts.build.fresh.draft_schema; assert 'scripts.build.linear_pipeline' not in sys.modules",
+    ]
+    result = subprocess.run(cmd, capture_output=True, text=True)
+    assert result.returncode == 0, result.stderr

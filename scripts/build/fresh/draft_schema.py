@@ -35,7 +35,6 @@ from scripts.build.fresh.gen_draft_schemas import (
     draft_schema_filename,
     level_activity_types,
 )
-from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
 
 SCHEMA_BASE_URI = "https://learn-ukrainian.github.io/schemas/"
 
@@ -331,14 +330,14 @@ def _activity_fresh_constraint_errors(
                         )
                     )
             elif spec.get("options_from") == "orthography_lists":
+                # Canonical apostrophe translation table is scripts.build.linear_pipeline._VESUM_APOSTROPHE_TRANSLATION.
+                # Imported lazily so importing draft_schema does not incur importing linear_pipeline.
+                from scripts.build.linear_pipeline import _VESUM_APOSTROPHE_TRANSLATION
+
                 options = item.get("options")
-                norm_options = (
-                    [opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt for opt in options]
-                    if isinstance(options, list)
-                    else None
-                )
                 match = None
-                if norm_options is not None:
+                if isinstance(options, list) and all(isinstance(o, str) for o in options):
+                    norm_options = [opt.translate(_VESUM_APOSTROPHE_TRANSLATION) for opt in options]
                     norm_options_set = set(norm_options)
                     for entry in lists:
                         entry_options = [
@@ -358,16 +357,7 @@ def _activity_fresh_constraint_errors(
                     )
                 else:
                     raw_answer = item.get("answer")
-                    norm_answer = (
-                        raw_answer.translate(_VESUM_APOSTROPHE_TRANSLATION)
-                        if isinstance(raw_answer, str)
-                        else raw_answer
-                    )
-                    entry_options_set = {
-                        opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt
-                        for opt in match["options"]
-                    }
-                    if norm_answer not in entry_options_set:
+                    if not isinstance(raw_answer, str):
                         errors.append(
                             DraftError(
                                 "activity_fresh_constraints",
@@ -375,6 +365,20 @@ def _activity_fresh_constraint_errors(
                                 f"{key}: orthography answer is outside its option list",
                             )
                         )
+                    else:
+                        norm_answer = raw_answer.translate(_VESUM_APOSTROPHE_TRANSLATION)
+                        entry_options_set = {
+                            opt.translate(_VESUM_APOSTROPHE_TRANSLATION) if isinstance(opt, str) else opt
+                            for opt in match["options"]
+                        }
+                        if norm_answer not in entry_options_set or raw_answer not in options:
+                            errors.append(
+                                DraftError(
+                                    "activity_fresh_constraints",
+                                    item_path + "/answer",
+                                    f"{key}: orthography answer is outside its option list",
+                                )
+                            )
     return errors
 
 
