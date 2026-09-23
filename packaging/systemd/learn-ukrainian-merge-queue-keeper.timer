@@ -1,0 +1,10 @@
+[Unit]
+Description=Learn Ukrainian merge queue keeper every five minutes
+
+[Timer]
+OnCalendar=*:0/5
+Persistent=true
+Unit=learn-ukrainian-merge-queue-keeper.service
+
+[Install]
+WantedBy=timers.target
