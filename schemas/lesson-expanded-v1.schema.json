@@ -1,0 +1,130 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "lesson-expanded-v1.schema.json",
+  "title": "Expanded Lesson Document v1",
+  "description": "Expanded document written to disk by the assembler (#8431 r3 §1, E3). Plain forms only — quote bytes with stress stripped, example text, paradigm cells as form, glosses, cards, resources. Combining accents forbidden.",
+  "type": "object",
+  "properties": {
+    "expanded_schema": {
+      "const": 1
+    },
+    "lesson": {
+      "$ref": "#/$defs/lesson"
+    },
+    "units": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/unit"
+      }
+    }
+  },
+  "required": [
+    "expanded_schema",
+    "lesson",
+    "units"
+  ],
+  "additionalProperties": false,
+  "$defs": {
+    "lesson": {
+      "type": "object",
+      "properties": {
+        "level": {
+          "type": "string",
+          "minLength": 1
+        },
+        "slug": {
+          "type": "string",
+          "minLength": 1
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "level",
+        "slug",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+    "unit": {
+      "type": "object",
+      "properties": {
+        "tab": {
+          "enum": [
+            "urok",
+            "slovnyk",
+            "vpravy",
+            "resursy"
+          ]
+        },
+        "step": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "activity": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "item": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "block": {
+          "oneOf": [
+            {
+              "type": "integer",
+              "minimum": 0
+            },
+            {
+              "type": "string",
+              "minLength": 1
+            }
+          ]
+        },
+        "role": {
+          "enum": [
+            "quoted_term",
+            "narration",
+            "dialogue_line",
+            "instruction",
+            "item_prompt",
+            "item_answer",
+            "record_print",
+            "error_text",
+            "item_option",
+            "vesum_exempt",
+            "gloss_ref",
+            "phonetics"
+          ]
+        },
+        "text": {
+          "type": "string",
+          "pattern": "^[^\\u0300\\u0301]*$"
+        }
+      },
+      "required": [
+        "tab",
+        "step",
+        "activity",
+        "item",
+        "block",
+        "role",
+        "text"
+      ],
+      "additionalProperties": false
+    }
+  }
+}

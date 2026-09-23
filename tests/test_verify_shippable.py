@@ -177,3 +177,74 @@ def test_wikipedia_url_without_title_fails_closed(monkeypatch):
     # and must NOT be probed with a bare liveness GET.
     assert vs._url_is_live("https://uk.wikipedia.org/w/index.php?oldid=12345") is False
     assert curled == []  # never fell through to a generic curl on a wikipedia host
+
+
+def test_fresh_path_resolution(tmp_path):
+    """Test path resolution for --fresh vs default legacy paths."""
+    mod_dir = vs._fresh_module_dir("a1", "my-module", repo_root=tmp_path)
+    plan_path = vs._fresh_plan_path("a1", "my-module", repo_root=tmp_path)
+
+    assert mod_dir == tmp_path / "site" / "src" / "content" / "docs" / "a1" / "my-module"
+    assert plan_path == tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "my-module.yaml"
+
+    legacy_mod = vs._default_module_dir("a1", "my-module", repo_root=tmp_path)
+    # Legacy module is in curriculum/l2-uk-en/a1/my-module
+    assert legacy_mod == tmp_path / "curriculum" / "l2-uk-en" / "a1" / "my-module"
+
+
+def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
+    """Test verify with fresh=True validates mdx files in site/src/content/docs."""
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+    site_mod.mkdir(parents=True)
+    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
+
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plan_dir.mkdir(parents=True)
+    plan_file = plan_dir / "greetings.yaml"
+    plan_file.write_text("module: greetings\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
+    )
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+    )
+    assert rep["shippable"] is True
+    assert rep["render_fully_validated"] is True
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["mdx_render"] is True
+    assert steps["plan_valid"] is True
+
+
+def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
+    """Test verify with fresh=True reports not shippable when render gate fails."""
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+    site_mod.mkdir(parents=True)
+    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
+
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plan_dir.mkdir(parents=True)
+    plan_file = plan_dir / "greetings.yaml"
+    plan_file.write_text("module: greetings\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        lp,
+        "run_mdx_render_gate",
+        lambda t: {"passed": False, "message": "fail", "failures": [{"snippet": "x", "error": "SyntaxError"}]},
+    )
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+    )
+    assert rep["shippable"] is False
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["mdx_render"] is False

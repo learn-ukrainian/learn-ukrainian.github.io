@@ -319,11 +319,21 @@ def check_lesson(
         if isinstance(plc, dict) and "evidence" in plc:
             name_ids.add(plc["evidence"])
 
+    # Map each introduced word to the step(s) that introduce it
+    rec_introducing_steps: dict[str, set[str]] = {}
+    for step in lesson.get("steps") or []:
+        if isinstance(step, dict):
+            s_id = step.get("id")
+            s_intro = step.get("introduces") or {}
+            for w_id in s_intro.get("vocabulary") or []:
+                if isinstance(w_id, str) and s_id:
+                    rec_introducing_steps.setdefault(w_id, set()).add(s_id)
+
     # Finding 5: Recycled IDs are not included in total_allowed_ids
     total_allowed_ids = base_ids | core_ids | name_ids | this_lesson_core_ids | this_lesson_incidental_ids
 
-    # Not checked reporting: introducing_step_not_locatable and missing prior waiver
-    not_checked: list[str] = [codes.INTRODUCING_STEP_NOT_LOCATABLE]
+    # Not checked reporting: missing prior waiver
+    not_checked: list[str] = []
     if allow_missing_prior and planned.waiver:
         not_checked.append(codes.WAIVER_PRIOR_PLANS_MISSING)
 
@@ -871,8 +881,10 @@ def check_lesson(
 
             if rec:
                 seen_records.add(rec)
-                # Teaching position: Settlement 1: record_print, item_prompt, item_answer
-                if role in ("record_print", "item_prompt", "item_answer"):
+                # Teaching position: record_print, item_prompt, item_answer, or introducing step
+                step_id = unit.get("step") or (unit_obj.step if unit_obj is not None else None)
+                is_intro_step = bool(step_id and step_id in rec_introducing_steps.get(rec, set()))
+                if is_intro_step or role in ("record_print", "item_prompt", "item_answer"):
                     for ftag in selected.get("forms") or []:
                         seen_teaching_forms.add((rec, ftag))
 
@@ -930,7 +942,7 @@ def check_lesson(
                                 record=c_id,
                                 message=(
                                     f"taught form {ftag!r} for core record {c_id} does not appear in a teaching position "
-                                    f"(record_print, item_prompt, or item_answer)"
+                                    f"(record_print, item_prompt, item_answer, or introducing step)"
                                 ),
                             )
                         )

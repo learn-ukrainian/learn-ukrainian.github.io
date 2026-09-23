@@ -481,6 +481,14 @@ def generate_mdx(
         extra_fm_lines += f"\npipeline: {pipeline_version}"
     if build_status:
         extra_fm_lines += f"\nbuild_status: {build_status}"
+    if fm.get("evidence") and isinstance(fm["evidence"], dict):
+        extra_fm_lines += "\nevidence:"
+        for k, v in fm["evidence"].items():
+            extra_fm_lines += f"\n  {k}: {v}"
+    if fm.get("immersion"):
+        extra_fm_lines += f"\nimmersion: {fm['immersion']}"
+    if fm.get("job"):
+        extra_fm_lines += f"\njob: \"{escape_jsx(str(fm['job']))}\""
     should_hide_draft = (
         pipeline_version
         and pipeline_version not in ("v5", "v6")

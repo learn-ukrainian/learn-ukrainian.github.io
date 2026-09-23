@@ -152,6 +152,14 @@ def _default_plan_path(level: str, slug: str) -> Path:
     return CURRICULUM / "plans" / level / f"{slug}.yaml"
 
 
+def _fresh_module_dir(level: str, slug: str) -> Path:
+    return SITE_DOCS / level / slug
+
+
+def _fresh_plan_path(level: str, slug: str) -> Path:
+    return CURRICULUM / "lesson-plans" / level / f"{slug}.yaml"
+
+
 def _site_mdx_path(level: str, slug: str) -> Path:
     return SITE_DOCS / level / f"{slug}.mdx"
 
@@ -191,6 +199,7 @@ def verify(
     module_dir: Path | None = None,
     plan_path: Path | None = None,
     astro_build: bool = False,
+    fresh: bool = False,
 ) -> dict:
     """Run the shippability predicate. Returns a structured report dict."""
     # Import lazily — linear_pipeline pulls in a heavy graph.
@@ -201,8 +210,8 @@ def verify(
     )
     from scripts.build.promote_quality_gate import verify as _promote_verify
 
-    module_dir = module_dir or _default_module_dir(level, slug)
-    plan_path = plan_path or _default_plan_path(level, slug)
+    module_dir = module_dir or (_fresh_module_dir(level, slug) if fresh else _default_module_dir(level, slug))
+    plan_path = plan_path or (_fresh_plan_path(level, slug) if fresh else _default_plan_path(level, slug))
 
     steps: list[dict] = []
 
@@ -215,6 +224,32 @@ def verify(
         return _finalize(level, slug, steps)
     if not plan_path.exists():
         add("inputs", False, f"plan not found: {plan_path}")
+        return _finalize(level, slug, steps)
+
+    if fresh:
+        mdx_files = sorted(module_dir.glob("*.mdx"))
+        if not mdx_files:
+            add("inputs", False, f"no MDX files found in {module_dir}")
+            return _finalize(level, slug, steps)
+
+        all_render_pass = True
+        for mdx_file in mdx_files:
+            mdx_text = mdx_file.read_text(encoding="utf-8")
+            render = run_mdx_render_gate(mdx_text)
+            if not render.get("passed"):
+                all_render_pass = False
+            for f in render.get("failures", []):
+                steps.append(
+                    {"step": f"mdx_render.{mdx_file.stem}", "passed": False, "detail": f"{f['snippet']} → {f['error']}"}
+                )
+
+        add("mdx_render", all_render_pass, f"verified {len(mdx_files)} fresh lesson mdx files")
+
+        if astro_build:
+            log_path = PROJECT_ROOT / "batch_state" / "verify_shippable" / f"{level}-{slug}.astro-build.log"
+            ok = _astro_build(log_path)
+            add("astro_build", ok, "astro build green" if ok else f"astro build FAILED — full log: {log_path}")
+
         return _finalize(level, slug, steps)
 
     # --- 1. python_qg (deterministic build gates) ---
@@ -382,6 +417,11 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--json", action="store_true", help="emit the raw report as JSON")
     ap.add_argument("--lesson", action="store_true", help="verify all lesson pages plus cross-lesson preservation (a1; plans/a1 and archived source a1-v1)")
     ap.add_argument("--source-dir", type=Path, help="original built module directory for --lesson")
+    ap.add_argument(
+        "--fresh",
+        action="store_true",
+        help="verify fresh-build lessons in site/src/content/docs/<level>/<slug>/ against lesson-plans/",
+    )
     args = ap.parse_args(argv)
     if args.lesson and args.astro_build:
         ap.error("--lesson does not yet support --astro-build; use the site build separately")
@@ -395,6 +435,7 @@ def main(argv: list[str] | None = None) -> int:
         module_dir=args.module_dir,
         plan_path=args.plan_path,
         astro_build=args.astro_build,
+        fresh=args.fresh,
     )
     if args.json:
         print(json.dumps(report, ensure_ascii=False, indent=2))

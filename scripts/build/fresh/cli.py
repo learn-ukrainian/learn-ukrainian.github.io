@@ -221,6 +221,51 @@ def _build_parser() -> argparse.ArgumentParser:
         help="Assert recap prompt variant (fails if it disagrees with plan)",
     )
 
+    # 4. assemble subcommand
+    p_assemble = subparsers.add_parser(
+        "assemble",
+        description=(
+            "Assemble a lesson draft into an expanded document, apply stress, build Slovnyk and Resursy tabs, and render MDX (#8431 §1, §7)."
+        ),
+        formatter_class=argparse.RawDescriptionHelpFormatter,
+        epilog=(
+            "Examples:\n"
+            "  .venv/bin/python -m scripts.build.fresh.cli assemble a1 sounds-letters-and-hello --lesson 1\n\n"
+            "Outputs:\n"
+            "  lesson-<n>.expanded.yaml, lesson-<n>.provenance.yaml, lesson-<n>.stressed.yaml, and lesson-<n>.mdx\n\n"
+            "Exit codes:\n"
+            "  0: Successful assembly\n"
+            "  1: Assembly, stress, or render check failure\n"
+        ),
+    )
+    p_assemble.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
+    p_assemble.add_argument("slug", help="Module slug, e.g. 'sounds-letters-and-hello'")
+    p_assemble.add_argument("--lesson", "-n", type=int, required=True, help="Lesson number (1-indexed), e.g. 1")
+    p_assemble.add_argument(
+        "--output-dir",
+        type=Path,
+        default=None,
+        help="Directory to save state files (default: evidence/<level>/_state/<slug>/)",
+    )
+    p_assemble.add_argument(
+        "--site-dir",
+        type=Path,
+        default=None,
+        help="Target site directory for MDX output (default: site/src/content/docs/<level>/<slug>/)",
+    )
+    p_assemble.add_argument(
+        "--astro-build",
+        action="store_true",
+        default=False,
+        help="Run astro build gate in check 11 if Astro is installed",
+    )
+    p_assemble.add_argument(
+        "--repo-root",
+        type=Path,
+        default=None,
+        help="Repository root directory (default: auto-detected, or $LEARN_UKRAINIAN_REPO_ROOT / $REPO_ROOT)",
+    )
+
     return parser
 
 
@@ -660,6 +705,27 @@ def main(argv: list[str] | None = None) -> int:
 
         print(f"Writer call succeeded for {args.level}/{args.slug} lesson {args.lesson} (seat: {args.writer}).")
         print(f"Draft saved to {res['draft_file']}")
+        return 0
+
+    elif args.command == "assemble":
+        from scripts.build.fresh.assemble import assemble_lesson
+
+        res = assemble_lesson(
+            level=args.level,
+            slug=args.slug,
+            lesson_n=args.lesson,
+            repo_root=repo_root,
+            output_dir=args.output_dir,
+            site_dir=args.site_dir,
+            astro_build=args.astro_build,
+        )
+        if not res.get("ok"):
+            print("Assembly failed:", file=sys.stderr)
+            failure = res.get("failure") or {}
+            print(f"  Check {failure.get('check')}: {failure.get('reason')}", file=sys.stderr)
+            return 1
+
+        print(f"Assembly succeeded for {args.level}/{args.slug} lesson {args.lesson}.")
         return 0
 
     return 0
