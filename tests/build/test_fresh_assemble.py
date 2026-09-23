@@ -684,7 +684,6 @@ def test_whole_sentence_rendered_with_inline_markup():
                 "kind": "bilingual",
                 "uk": ["{{uk:привіт}}"],
                 "en": ["hello"],
-                "explains": ["W-1"],
             },
         ],
     }
