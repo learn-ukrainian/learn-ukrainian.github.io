@@ -135,6 +135,8 @@ def detokenize(text: str) -> str:
     text = re.sub(r'([\?!][»\"])[\s,]*(—)', r'\1 \2', text)
     text = re.sub(r'([\?!]),', r'\1', text)
     text = re.sub(r':\s*—', ': ', text)
+    # Handle time expression spacing: e.g. "14: 00" -> "14:00"
+    text = re.sub(r"\b(\d{1,2}):\s+(\d{2})\b", r"\1:\2", text)
     # 3. Handle comma immediately before opening parenthesis: e.g. ", (" -> " ("
     text = re.sub(r",\s*\(", " (", text)
     # 4. Handle hyphenated compounds: e.g. "Санта - Круз" -> "Санта-Круз"
@@ -453,6 +455,15 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     if re.search(r"\bнаправили\b", text, re.IGNORECASE):
         return False
     if re.search(r"\bПонад\s+\d+%\s+з\s+(?:котрих|яких)\b", text):
+        return False
+    # Claude R10 control defects
+    if re.search(r"\bзапражк\w*\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\b[Пп]ід\s+цей\s+час\b", text):
+        return False
+    if re.search(r"\bінформації,\s+які\b", text, re.IGNORECASE):
+        return False
+    if re.search(r"\bне\s+зручно\b", text, re.IGNORECASE):
         return False
     # Reject spaced dashes in compounds
     if re.search(r"\b(?:контент|обер|онлайн|офлайн|інтернет|веб|аудіо|відео|кібер|смарт|еко|агро|етно|мега|гіпер|супер|ультра|екстра|темно|світло|ясно|блідо|синьо|жовто|червоно|зелено|чорно|біло|туди|плюс|врешті|караван|стейт|комікс|рок|поп|джаз|офіс|бізнес|прем'єр|віце|екс|міні|максі|міді|топ|шоу)\s+[—–-]\s+[а-яіїєґА-ЯІЇЄҐ\w'-]+", text, re.IGNORECASE):
@@ -1117,6 +1128,110 @@ def is_valid_candidate(
     if re.search(r"\bПротестантськ\w*\b", o_low):
         return False
 
+    # Claude R10: Morphology, agreement, and case government defects
+    if re.search(r"\bпри\s+сталих\s+[а-яіїєґ]+\s+та\s+[а-яіїєґ]+и\b", c_low) or re.search(r"\bпри\s+сталих\s+тиску\b", c_low):
+        return False
+    if re.search(r"\bпро\s+.*Понті\w+\s+Пілат\w*\b", c_low):
+        return False
+    if re.search(r"\bщо\s+їхн[яійєі]\s+(?:незліченна\s+)?кількість\b", c_low):
+        return False
+    if re.search(r"\bцентральн\w*\s+апсид\w*\b", c_low):
+        return False
+    if re.search(r"\bкаламутні\s+п['\’]?яні\b", c_low):
+        return False
+    if re.search(r"\bне\s+зручно\b", c_low):
+        return False
+    if re.search(r"\bрахується\s+як\b", c_low) or re.search(r"\b[Пп]ри\s+дійсному\s+твердженні\b", corr_text):
+        return False
+    if re.search(r"\bце\s+конкретне\s+про\s+майбутнє\b", c_low) or re.search(r"\bстимулює\s+використовувати\b", c_low):
+        return False
+    if re.search(r"\b[Пп]ерший,\s+що\s+ви\s+комплексуєте\b", corr_text):
+        return False
+    if re.search(r"\bє\s+що\s+ухвалювати\b", c_low):
+        return False
+    if re.search(r"\bматимуть\s+слушність\b", c_low):
+        return False
+    if re.search(r"^[Пп]онад\s+80%\s+з\s+яких\b", corr_text):
+        return False
+    if re.search(r"\bне\s+працює,\s+повністю\s+зосередилась\b", c_low):
+        return False
+    if re.search(r";\s*зневірившись\b", c_low) or (re.search(r"\bвідчаївшись\b", o_low) and re.search(r"\bзневірившись\b", c_low)):
+        return False
+    if re.search(r"\bпрошення\b", o_low) and re.search(r"\bпрохання\b", c_low):
+        return False
+    if re.search(r"\bкоротким\s+обличчям\b", o_low) and re.search(r"\bвузьким\s+обличчям\b", c_low):
+        return False
+    if re.search(r"\bне\s+надмірна\b", o_low) and re.search(r"\bне\s+довга\b", c_low):
+        return False
+    if (re.search(r"\bприкажчик\b", o_low) and re.search(r"\bпродавець\b", c_low)) or (re.search(r"\bпіднімав\b", o_low) and re.search(r"\bзводив\b", c_low)):
+        return False
+    if re.search(r"\bнавчити\b", o_low) and re.search(r"\bнавчитися\b", c_low):
+        return False
+    if re.search(r"\bкружк\w*\b", o_low) and re.search(r"\bчашк\w*\b", c_low):
+        return False
+    if re.search(r"\bхліба\w*\b", o_low) and re.search(r"\bхлебч\w*\b", c_low):
+        return False
+    if re.search(r"\bзасвічений\b", o_low) and re.search(r"\bзасвічу\b", c_low):
+        return False
+    if re.search(r"\bвказав\w*\s+.*\bдо\s+гори\b", c_low):
+        return False
+
+    # Claude R10: Category F Valid-to-valid swaps & Self-contradictions
+    if re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\s+[а-яіїєґ]+ти\b", o_low) and not re.search(r"\bбуд(?:у|еш|е|емо|ете|уть)\b", c_low) and re.search(r"\b[а-яіїєґ]+(?:тиму|тимеш|тиме|тимемо|тимете|тимуть)\b", c_low):
+        return False
+    if re.search(r"\b(?:читається\s+та\s+обговорюється|цінується|сприймалися\s+представниками|створювалась\s+різниця|вимірювався\s+струм|закладалися\s+їх|контролюється\s+комп['\’]?ютером)\b", o_low):
+        return False
+    if re.search(r"\bзвернемося\b", o_low) and re.search(r"\bзвернімося\b", c_low):
+        return False
+    if (re.search(r"\bдозволя\w*\b", o_low) and re.search(r"\bда\w+\s+змог\w*\b", c_low)) or (re.search(r"\bда\w+\s+змог\w*\b", o_low) and re.search(r"\bдозволя\w*\b", c_low)):
+        return False
+    if (re.search(r"\bдекільк\w*\b", o_low) and re.search(r"\bкільк\w*\b", c_low)) or (re.search(r"\bкільк\w*\b", o_low) and re.search(r"\bдекільк\w*\b", c_low)):
+        return False
+    if (re.search(r"\bза\s+допомогою\b", o_low) and re.search(r"\bз\s+допомогою\b", c_low)) or (re.search(r"\bз\s+допомогою\b", o_low) and re.search(r"\bза\s+допомогою\b", c_low)):
+        return False
+    if re.search(r"\bзадач\w*\b", o_low) and re.search(r"\bзавданн\w*\b", c_low):
+        return False
+    if re.search(r"\bвиключили\b", o_low) and re.search(r"\bвідрахували\b", c_low):
+        return False
+    if re.search(r"\bдовкруги\b", o_low) and re.search(r"\bдовкола\b", c_low):
+        return False
+    if re.search(r"\bпари\b", o_low) and re.search(r"\bвипари\b", c_low):
+        return False
+    if re.search(r"\bЗа\s+погані\s+вчинки\b", orig_text) and re.search(r"\bЧерез\s+погані\s+вчинки\b", corr_text):
+        return False
+    if re.search(r"\bпару\s+днів\b", o_low) and re.search(r"\bкілька\s+днів\b", c_low):
+        return False
+    if re.search(r"\bакцентує\b", o_low) and re.search(r"\bакцентував\b", c_low):
+        return False
+    if re.search(r"\bпоручик\w*\b", o_low) and re.search(r"\bпоручник\w*\b", c_low):
+        return False
+    if re.search(r"\bпочитати\b", o_low) and re.search(r"\bпрочитати\b", c_low):
+        return False
+    if re.search(r"\bМетою\s+статті\s+є\b", orig_text) and re.search(r"\bМета\s+статті\b", corr_text):
+        return False
+    if re.search(r"\bполян\w*\b", o_low) and re.search(r"\bгалявин\w*\b", c_low):
+        return False
+    if re.search(r"\bкойк\w*\b", o_low) and re.search(r"\bліжк\w*\b", c_low):
+        return False
+    if re.search(r"\bдубин\w*\b", o_low) and re.search(r"\bдубц\w*\b", c_low):
+        return False
+
+    # Claude R10 Minor items
+    if re.search(r"\bзастиглими\s+розплющеними\b", c_low):
+        return False
+    if re.search(r"\bкорзин\w*\b", c_low):
+        return False
+    if re.search(r"\bбезтолков\w*\b", c_low):
+        return False
+    if re.search(r"\bогненн\w*\b", c_low):
+        return False
+    if re.search(r"\bодеж\w*\b", c_low) or re.search(r"\bбез\s+всякої\b", c_low):
+        return False
+    if re.search(r"\bсамокатник\w*\b", c_low):
+        return False
+    if re.search(r"\bяк\s+побажаєте\b", c_low):
+        return False
+
     # Reject unpaired comma after relative pronoun
     if re.search(r"\b(?:який|яка|яке|які|якого|якій|яким|яких|яку)\s+(?:через|задля|внаслідок|попри)\s+[^,;]+,\s+[а-яіїєґА-ЯІЇЄҐ]", corr_text):
         return False
@@ -1202,7 +1317,7 @@ def is_valid_candidate(
 
         words_c = re.findall(r"\b[\w'-]+\b", corr_text)
         for w in words_c:
-            if "-" in w or w.isupper() or w[0].isupper() or len(w) <= 2:
+            if "-" in w or w.isupper() or w[0].isupper() or len(w) <= 2 or any(c.isdigit() for c in w) or w.lower() in {"поцокалася", "зеєловських", "в'язей"}:
                 continue
             row = vesum_cur.execute(
                 "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
@@ -1463,6 +1578,13 @@ def build_grammar_dataset(
     # 5. Extract substantive corrections and pristine zero-error controls
     seen_corrections: set[tuple[str, str]] = set()
     seen_control_texts: set[str] = set()
+    euphony_pairs = {
+        ("і", "й"), ("й", "і"),
+        ("у", "в"), ("в", "у"),
+        ("з", "із"), ("із", "з"),
+        ("з", "зі"), ("зі", "з"),
+        ("із", "зі"), ("зі", "із"),
+    }
 
     eval_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "eval"]
     train_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "train"]
@@ -1531,6 +1653,8 @@ def build_grammar_dataset(
             corr_text = detokenize(" ".join(toks))
             if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
                 corr_text = re.sub(r"^[—–-]\s*", "", corr_text.strip())
+            if orig_text.strip().startswith(("—", "–", "-")) and not corr_text.strip().startswith(("—", "–", "-")):
+                corr_text = "— " + corr_text.strip()
             if (
                 orig_text != corr_text
                 and corr_text not in test_sources
@@ -1564,12 +1688,20 @@ def build_grammar_dataset(
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
-                content_edits = [
-                    e for e in all_non_noop
-                    if e[2] != "noop" and (
-                        e[2] != "Punctuation" or ("," in " ".join(orig_tokens[e[0]:e[1]]) and "," not in e[3])
-                    )
-                ]
+                content_edits = []
+                for e in all_non_noop:
+                    if e[2] == "noop":
+                        continue
+                    if e[2] == "Punctuation":
+                        if "," in " ".join(orig_tokens[e[0]:e[1]]) and "," not in e[3]:
+                            content_edits.append(e)
+                    elif e[2] == "Spelling":
+                        orig_w = " ".join(orig_tokens[e[0]:e[1]]).lower().strip()
+                        repl_w = e[3].lower().strip()
+                        if (orig_w, repl_w) not in euphony_pairs:
+                            content_edits.append(e)
+                    else:
+                        content_edits.append(e)
 
                 eval_corrections.append(
                     {
@@ -1663,6 +1795,8 @@ def build_grammar_dataset(
             corr_text = detokenize(" ".join(toks))
             if not orig_text.strip().startswith(("—", "–", "-")) and corr_text.strip().startswith(("—", "–", "-")):
                 corr_text = re.sub(r"^[—–-]\s*", "", corr_text.strip())
+            if orig_text.strip().startswith(("—", "–", "-")) and not corr_text.strip().startswith(("—", "–", "-")):
+                corr_text = "— " + corr_text.strip()
             if (
                 orig_text != corr_text
                 and corr_text not in test_sources
@@ -1697,12 +1831,20 @@ def build_grammar_dataset(
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
-                content_edits = [
-                    e for e in all_non_noop
-                    if e[2] != "noop" and (
-                        e[2] != "Punctuation" or ("," in " ".join(orig_tokens[e[0]:e[1]]) and "," not in e[3])
-                    )
-                ]
+                content_edits = []
+                for e in all_non_noop:
+                    if e[2] == "noop":
+                        continue
+                    if e[2] == "Punctuation":
+                        if "," in " ".join(orig_tokens[e[0]:e[1]]) and "," not in e[3]:
+                            content_edits.append(e)
+                    elif e[2] == "Spelling":
+                        orig_w = " ".join(orig_tokens[e[0]:e[1]]).lower().strip()
+                        repl_w = e[3].lower().strip()
+                        if (orig_w, repl_w) not in euphony_pairs:
+                            content_edits.append(e)
+                    else:
+                        content_edits.append(e)
 
                 train_corrections.append(
                     {
@@ -1759,33 +1901,45 @@ def build_grammar_dataset(
             return False
         return not bool(corr_w and f"«{corr_w}»" not in desc and f"«{corr_w}»" not in rule and corr_w not in desc and corr_w not in rule)
 
-    # Overall calibration: keep all eval_corrections so eval controls take full Brown-UK quota (>=400 total Brown-UK)
-    train_expl_count = sum(1 for c in train_corrections if can_explain_candidate(c))
-    # Target 55.0% explained corrections calibrated for 401 controls (25.68% control share)
-    target_total_corrections = 1160
-    target_train_total = target_total_corrections - len(eval_corrections)
-    target_train_unexpl = target_train_total - train_expl_count
-
+    # Overall calibration: exact 55.0% explained corrections across the full dataset
+    eval_expl_count = sum(1 for c in eval_corrections if can_explain_candidate(c))
     train_explainable = [c for c in train_corrections if can_explain_candidate(c)]
     train_unexplainable = [c for c in train_corrections if not can_explain_candidate(c)]
 
+    target_total_corrections = 1160
+    total_expl_needed = round(target_total_corrections * 0.55)
+    target_train_expl = min(len(train_explainable), max(0, total_expl_needed - eval_expl_count))
+    target_train_total = target_total_corrections - len(eval_corrections)
+    target_train_unexpl = target_train_total - target_train_expl
+
     orig_counts = Counter(c["original_text"] for c in train_corrections)
-    expl_origs = {c["original_text"] for c in train_explainable}
-    base_cats = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in train_explainable + eval_corrections)
+    base_cats = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in eval_corrections)
+
+    def expl_priority(item: dict[str, Any]):
+        orig = item["original_text"]
+        is_parallel = 0 if orig_counts[orig] > 1 else 1
+        h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
+        return (is_parallel, h)
+
+    sorted_expl = sorted(train_explainable, key=expl_priority)
+    selected_expl = sorted_expl[:target_train_expl]
+
+    expl_origs = {c["original_text"] for c in selected_expl}
+    base_cats.update(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in selected_expl)
 
     def unexpl_priority(item: dict[str, Any]):
         orig = item["original_text"]
-        partner_in_expl = 0 if orig in expl_origs else 1
         is_parallel = 0 if orig_counts[orig] > 1 else 1
+        partner_in_expl = 0 if orig in expl_origs else 1
         cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
         deficit = max(0, 50 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
-        return (partner_in_expl, is_parallel, -deficit, h)
+        return (is_parallel, partner_in_expl, -deficit, h)
 
     sorted_unexpl = sorted(train_unexplainable, key=unexpl_priority)
     selected_unexpl = sorted_unexpl[:target_train_unexpl]
 
-    train_corrections = train_explainable + selected_unexpl
+    train_corrections = selected_expl + selected_unexpl
     train_corrections.sort(key=lambda x: hashlib.sha256(f"{x['doc_id']}_{x['original_text']}_{x['corrected_text']}".encode()).hexdigest())
 
     # 6. Formulate exact 75.0% corrections / 25.0% controls mixture

@@ -32,19 +32,19 @@
   },
   "statistics": {
     "total_records": 1561,
-    "train_records": 1362,
-    "eval_records": 199,
+    "train_records": 1371,
+    "eval_records": 190,
     "substantive_corrections": 1160,
     "clean_controls": 401,
     "clean_control_share": 0.2569,
     "substantive_correction_share": 0.7431,
     "category_counts": {
-      "calque_lexical_grammatical": 423,
-      "case_government": 318,
+      "calque_lexical_grammatical": 406,
+      "case_government": 339,
       "protective_authentic_control": 401,
-      "syntax_structure": 200,
-      "verb_morphology": 112,
-      "agreement_concord": 107
+      "syntax_structure": 217,
+      "verb_morphology": 89,
+      "agreement_concord": 109
     },
     "source_corpus_counts": {
       "ua_gec_2.0": 1160,
