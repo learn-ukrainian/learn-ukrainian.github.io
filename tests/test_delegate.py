@@ -1909,9 +1909,7 @@ def test_cursor_review_restores_mcp_file_after_worker(tmp_tasks_dir, tmp_path, p
         assert not mcp_path.exists()
 
 
-def test_cursor_review_backup_read_failure_stops_before_invoke(
-    tmp_tasks_dir, tmp_path, monkeypatch
-):
+def test_cursor_review_backup_read_failure_stops_before_invoke(tmp_tasks_dir, tmp_path, monkeypatch):
     mcp_path = tmp_path / ".cursor" / "mcp.json"
     mcp_path.parent.mkdir()
     original = b"original config\n"
@@ -1934,9 +1932,7 @@ def test_cursor_review_backup_read_failure_stops_before_invoke(
     assert real_read_bytes(mcp_path) == original
 
 
-def test_cursor_review_interrupt_before_backup_keeps_file(
-    tmp_tasks_dir, tmp_path
-):
+def test_cursor_review_interrupt_before_backup_keeps_file(tmp_tasks_dir, tmp_path):
     mcp_path = tmp_path / ".cursor" / "mcp.json"
     mcp_path.parent.mkdir()
     original = b"original config\n"
@@ -1951,9 +1947,15 @@ def test_cursor_review_interrupt_before_backup_keeps_file(
     delegate._write_state_atomic(state_path, {"task_id": task_id, "status": "spawning"})
     with patch("agent_runtime.runner.invoke") as runtime:
         rc = delegate._run_worker(
-            task_id=task_id, agent="cursor", prompt="review", mode="read-only",
-            cwd_str=str(tmp_path), model=None, hard_timeout=60,
-            silence_timeout=InterruptedTimeout(), strict_mcp_config=True,
+            task_id=task_id,
+            agent="cursor",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            silence_timeout=InterruptedTimeout(),
+            strict_mcp_config=True,
         )
     runtime.assert_not_called()
     assert rc != 0
@@ -9547,15 +9549,11 @@ def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(
         delegate._ensure_worktree(
             agent="codex", task_id="task-1", raw_path=str(dispatch_wt), resolved_base_sha="unused"
         )
-    assert delegate.cmd_dispatch(
-        _write_args(task_id="marked", mode="read-only", cwd=str(dispatch_wt))
-    ) == 1
+    assert delegate.cmd_dispatch(_write_args(task_id="marked", mode="read-only", cwd=str(dispatch_wt))) == 1
     assert "review-original" in capsys.readouterr().err
 
 
-def test_review_attempt_dispatch_marks_git_admin_and_audit_state(
-    tmp_tasks_dir, tmp_path, monkeypatch
-):
+def test_review_attempt_dispatch_marks_git_admin_and_audit_state(tmp_tasks_dir, tmp_path, monkeypatch):
     main, dispatch_wt = _init_repo_with_worktree(tmp_path)
     _sanitize_git_env_for_test(monkeypatch)
     monkeypatch.setattr(delegate, "_REPO_ROOT", main)
@@ -9566,8 +9564,13 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(
     with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt", return_value=plan):
         rc = delegate.cmd_dispatch(
             _write_args(
-                agent="claude", task_id="review-marked", mode="read-only", cwd=str(dispatch_wt),
-                review_attempt=str(manifest), review_id="rev-test", attempt_id="att-test",
+                agent="claude",
+                task_id="review-marked",
+                mode="read-only",
+                cwd=str(dispatch_wt),
+                review_attempt=str(manifest),
+                review_id="rev-test",
+                attempt_id="att-test",
             )
         )
     assert rc == 0
@@ -9577,21 +9580,19 @@ def test_review_attempt_dispatch_marks_git_admin_and_audit_state(
     assert "worktree_review_attempt_only" not in state
 
 
-def test_review_attempt_refuses_vps_forward_before_transport(
-    tmp_tasks_dir, tmp_path, monkeypatch, capsys
-):
+def test_review_attempt_refuses_vps_forward_before_transport(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
     manifest = tmp_path / "review.yaml"
     manifest.write_text("review: test\n", encoding="utf-8")
-    monkeypatch.setattr(
-        job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "test", "remote-host")
-    )
-    monkeypatch.setattr(
-        job_host_exec, "forward_dispatch", lambda **_kwargs: pytest.fail("must not forward")
-    )
+    monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "test", "remote-host"))
+    monkeypatch.setattr(job_host_exec, "forward_dispatch", lambda **_kwargs: pytest.fail("must not forward"))
     rc = delegate.cmd_dispatch(
         _write_args(
-            agent="claude", task_id="review-local", mode="read-only",
-            review_attempt=str(manifest), review_id="rev-test", attempt_id="att-test",
+            agent="claude",
+            task_id="review-local",
+            mode="read-only",
+            review_attempt=str(manifest),
+            review_id="rev-test",
+            attempt_id="att-test",
         )
     )
     assert rc == 2

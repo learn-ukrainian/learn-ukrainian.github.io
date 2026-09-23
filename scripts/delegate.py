@@ -4930,10 +4930,7 @@ def _refuse_review_attempt_worktree_reuse(worktree_path: Path) -> None:
     marker = _review_attempt_marker_path(worktree_path)
     if marker.is_file():
         task_id = marker.read_text(encoding="utf-8").strip()
-        raise ValueError(
-            f"worktree {worktree_path} belongs to review attempt task {task_id!r}; "
-            "reuse refused (#8517)"
-        )
+        raise ValueError(f"worktree {worktree_path} belongs to review attempt task {task_id!r}; reuse refused (#8517)")
 
 
 def _mark_review_attempt_worktree(worktree_path: Path, task_id: str) -> None:
