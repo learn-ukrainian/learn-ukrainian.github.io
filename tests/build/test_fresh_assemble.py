@@ -570,8 +570,9 @@ def test_step_ids_on_units_in_expanded_document():
     assert len(errors) == 0
 
 
-def test_build_slovnyk_and_resursy_tabs():
+def test_build_slovnyk_and_resursy_tabs(monkeypatch):
     """Verify build_slovnyk_tab and build_resursy_tab structure and content."""
+    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma: f"/lexicon/{lemma}/")
     w1_forms = [
         {
             "form": "добрий",
@@ -987,8 +988,9 @@ def test_assemble_refuses_site_write_on_open_or_failed_stream(tmp_path, monkeypa
     assert (site_dir / "1.mdx").is_file()
 
 
-def test_slovnyk_selected_sense_and_forms_and_pending_stress():
+def test_slovnyk_selected_sense_and_forms_and_pending_stress(monkeypatch):
     """Major 5: Selected sense, taught forms, lemma stress from lemma form, pending prints no stress."""
+    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma: f"/lexicon/{lemma}/")
     # Word 1 has pending stress on lemma form
     w1_forms = [
         {

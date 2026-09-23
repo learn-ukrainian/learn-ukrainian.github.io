@@ -719,7 +719,10 @@ def build_slovnyk_tab(
                 stressed_lemma = str(lemma_form["stressed"])
 
         gloss = selected_senses.get(wid) or str(w_rec.get("sense_gloss") or w_rec.get("gloss_en") or "")
-        atlas_href = atlas_href_for(lemma)
+        try:
+            atlas_href = atlas_href_for(lemma)
+        except Exception:
+            atlas_href = None
 
         # Taught forms are the stressed forms of the plan's form tags
         forms_by_tag = {f.get("tags"): f for f in w_rec.get("forms", []) if isinstance(f, dict)}
