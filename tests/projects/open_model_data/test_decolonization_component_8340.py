@@ -160,7 +160,7 @@ def test_dataset_acceptance_audit_passes():
         str(audit_script),
         str(DECOLONIZATION_DIR),
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=60)
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
     assert "OVERALL STATUS: PASSED_AUTOMATED_CHECKS" in proc.stdout
 
@@ -539,7 +539,7 @@ def test_dataset_acceptance_with_verified_signoff():
         str(signoff_file),
         str(DECOLONIZATION_DIR),
     ]
-    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT))
+    proc = subprocess.run(cmd, capture_output=True, text=True, cwd=str(REPO_ROOT), timeout=60)
     assert proc.returncode == 0, f"Acceptance audit failed (exit {proc.returncode}):\n{proc.stdout}\n{proc.stderr}"
     assert "OVERALL STATUS: ACCEPTED" in proc.stdout
     assert "signoff_verified: True" in proc.stdout
