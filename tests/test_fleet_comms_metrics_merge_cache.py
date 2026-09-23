@@ -260,3 +260,109 @@ def test_failed_fetch_is_fail_open(tmp_path: Path) -> None:
         "store": {"kind": "comms-plane", "reachable": True},
     }]
     assert not cache.exists()
+
+
+def test_partial_graphql_data_caches_successful_aliases(tmp_path: Path) -> None:
+    """A non-zero ``gh`` exit still keeps aliases whose ``mergedAt`` is present."""
+    calls: list[list[str]] = []
+
+    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
+        calls.append(list(args))
+        query = _query_from(args)
+        aliases = _pull_aliases(query)
+        data: dict[str, dict[str, dict[str, str | None] | None]] = {"r0": {}}
+        errors: list[dict[str, object]] = []
+        node = data["r0"]
+        for repo, number in aliases:
+            assert repo == REPO
+            alias = f"p{number}"
+            if number == 12:
+                node[alias] = None
+                errors.append({
+                    "message": "Could not resolve to a PullRequest with the number of 12.",
+                    "path": ["r0", alias],
+                })
+            elif number == 11:
+                node[alias] = {"mergedAt": None}
+            else:
+                node[alias] = {"mergedAt": MERGED}
+        payload = {"data": data, "errors": errors}
+        return subprocess.CompletedProcess(
+            args,
+            1,
+            stdout=json.dumps(payload),
+            stderr="gh: Could not resolve to a PullRequest with the number of 12.",
+        )
+
+    first, cache = _collect(tmp_path, [10, 11, 12], runner)
+    facts = json.loads(cache.read_text(encoding="utf-8"))["facts"]
+    assert facts == {f"{REPO}#10": MERGED}
+    assert all(value is not None for value in facts.values())
+    gate = first["by_stream_epic"]["4707"]["gate_to_merge"]
+    assert gate["n"] == 1
+    assert gate["raw"]["unfinished_count"] == 1
+    assert first["source_errors"] == [{
+        "source": "github",
+        "error_kind": "pr_lookup_failed",
+        "pr_number": 12,
+        "store": {"kind": "comms-plane", "reachable": True},
+    }]
+
+    calls.clear()
+    _collect(tmp_path, [10, 11, 12], runner)
+    assert len(calls) == 1
+    assert set(_pull_aliases(_query_from(calls[0]))) == {(REPO, 11), (REPO, 12)}
+
+
+def test_unparseable_graphql_stdout_fails_the_whole_batch(tmp_path: Path) -> None:
+    calls: list[list[str]] = []
+
+    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
+        calls.append(list(args))
+        return subprocess.CompletedProcess(args, 1, stdout="not-json", stderr="gh failed")
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    plane = tmp_path / "plane.sqlite3"
+    _plane(plane, [4, 5])
+    cache = tmp_path / "cache.json"
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks,
+        plane_db=plane,
+        now=NOW,
+        gh_runner=runner,
+        merge_cache_path=cache,
+    )
+
+    assert len(calls) == 1
+    assert {item["pr_number"] for item in payload["source_errors"]} == {4, 5}
+    assert {item["error_kind"] for item in payload["source_errors"]} == {"pr_lookup_failed"}
+    assert not cache.exists()
+
+
+def test_graphql_payload_without_data_fails_the_whole_batch(tmp_path: Path) -> None:
+    calls: list[list[str]] = []
+
+    def runner(args: list[str], timeout: float = 30) -> subprocess.CompletedProcess[str]:
+        calls.append(list(args))
+        stdout = json.dumps({"errors": [{"message": "Something went wrong"}]})
+        return subprocess.CompletedProcess(args, 1, stdout=stdout, stderr="Something went wrong")
+
+    tasks = tmp_path / "tasks"
+    tasks.mkdir()
+    plane = tmp_path / "plane.sqlite3"
+    _plane(plane, [6, 7])
+    cache = tmp_path / "cache.json"
+
+    payload = collect_stream_bottleneck_metrics(
+        tasks_dir=tasks,
+        plane_db=plane,
+        now=NOW,
+        gh_runner=runner,
+        merge_cache_path=cache,
+    )
+
+    assert len(calls) == 1
+    assert {item["pr_number"] for item in payload["source_errors"]} == {6, 7}
+    assert not cache.exists()

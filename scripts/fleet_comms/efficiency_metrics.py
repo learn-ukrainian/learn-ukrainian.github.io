@@ -750,7 +750,12 @@ def _fetch_merge_facts(
     gh_runner: Callable[..., subprocess.CompletedProcess[str]],
     gh_bin: str,
 ) -> dict[tuple[str, int], tuple[datetime | None, str | None, str | None]]:
-    """One ``gh api graphql`` call per ≤50 cache misses. Failures stay unknown."""
+    """One ``gh api graphql`` call per ≤50 cache misses.
+
+    ``gh`` exits non-zero when any alias errors, but stdout can still hold
+    partial ``data``. Those aliases are parsed. Only a missing or unparseable
+    payload fails the whole batch.
+    """
     fetched: dict[tuple[str, int], tuple[datetime | None, str | None, str | None]] = {}
     valid: list[tuple[str, int]] = []
     for repo, number in missing:
@@ -770,16 +775,20 @@ def _fetch_merge_facts(
             stderr = proc.stderr or ""
             if isinstance(stderr, bytes):
                 stderr = stderr.decode("utf-8", errors="replace")
+            try:
+                payload = json.loads(stdout) if stdout.strip() else {}
+            except json.JSONDecodeError as exc:
+                for key in batch:
+                    fetched[key] = (None, f"json_decode: {exc}", None)
+                continue
+            # Field errors make ``gh`` exit 1 while successful aliases stay in ``data``.
+            if isinstance(payload, dict) and isinstance(payload.get("data"), dict):
+                fetched.update(_parse_merge_fact_payload(payload, batch))
+                continue
             if proc.returncode != 0:
                 message = (stderr or stdout or "gh failed").strip()[:300]
                 for key in batch:
                     fetched[key] = (None, message, None)
-                continue
-            try:
-                payload = json.loads(stdout or "{}")
-            except json.JSONDecodeError as exc:
-                for key in batch:
-                    fetched[key] = (None, f"json_decode: {exc}", None)
                 continue
             fetched.update(_parse_merge_fact_payload(payload, batch))
         except subprocess.TimeoutExpired:
@@ -827,7 +836,7 @@ def _resolve_pr_merge_facts(
         if raw:
             updates[_fact_key(*key)] = raw
     if updates and cache_path is not None:
-        _store_merge_facts(cache_path, {**facts, **updates})
+        _store_merge_facts(cache_path, {**_load_merge_facts(cache_path), **updates})
     return resolved
 
 
