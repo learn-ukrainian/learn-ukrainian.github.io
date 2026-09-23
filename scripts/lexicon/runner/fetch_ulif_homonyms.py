@@ -2373,7 +2373,9 @@ def _fast_forward_to_page(
             extra=_image_click(PAGE_BUTTONS["next"]),
         )
         current_html, next_req = client.exchange("POST", next_fields)
-        _keep_walk(ledger, cache, "", f"page:ff:{ff_page + 1}:{target_page}", current_html, next_req, current_page=ff_page + 1)
+        _keep_walk(
+            ledger, cache, "", f"page:ff:{ff_page + 1}:{target_page}", current_html, next_req, current_page=ff_page + 1
+        )
         if not quiet and ((ff_page + 1) % 25 == 0 or (ff_page + 1) == target_page):
             print(
                 f"fast-forwarding: reached page {ff_page + 1}/{target_page}...",
@@ -2387,6 +2389,63 @@ def _fast_forward_to_page(
     return current_html, landed_rows
 
 
+def _resume_window_offset(
+    ledger: SpellingLedger,
+    rows: list[dict[str, Any]],
+    *,
+    target_page: int,
+    anchor_headword: str,
+    anchor_page: int,
+    anchor_index: int,
+) -> int | None:
+    """Return the distance from the window start to the target page's first row.
+
+    A unique stressed anchor fixes the window's canonical origin. All known
+    rows in the window must then agree with the ledger before any entry click.
+    """
+    matches = [i for i, row in enumerate(rows) if row["stressed"] == anchor_headword]
+    if len(matches) != 1 or len(rows) != REGISTER_PAGE_SIZE:
+        return None
+    start_global = (anchor_page - 1) * REGISTER_PAGE_SIZE + anchor_index - matches[0]
+    if start_global < 0:
+        return None
+    offset = (target_page - 1) * REGISTER_PAGE_SIZE - start_global
+    if not 0 <= offset <= REGISTER_PAGE_SIZE:
+        return None
+
+    _verify_known_window_rows(ledger, rows, start_global)
+    return offset
+
+
+def _verify_known_window_rows(ledger: SpellingLedger, rows: list[dict[str, Any]], start_global: int) -> None:
+    """Reject drift at every canonical position already recorded in the ledger."""
+    known_pages: dict[int, dict[int, sqlite3.Row]] = {}
+    page_records: dict[int, sqlite3.Row | None] = {}
+    for i, row in enumerate(rows):
+        global_index = start_global + i
+        page_num, row_index = divmod(global_index, REGISTER_PAGE_SIZE)
+        page_num += 1
+        if page_num not in known_pages:
+            known_pages[page_num] = {int(r["row_index"]): r for r in ledger.page_rows(page_num)}
+        expected = known_pages[page_num].get(row_index)
+        if expected is not None and (
+            row["stressed"] != expected["stressed_headword"]
+            or normalize_ulif_spelling(str(row["unstressed"])) != expected["normalized_spelling"]
+        ):
+            raise ResumeMismatchError(
+                f"page {page_num} row {row_index}: expected {expected['stressed_headword']}, landed {row['stressed']}"
+            )
+        if page_num not in page_records:
+            page_records[page_num] = ledger.get_page(page_num)
+        page = page_records[page_num]
+        if page is not None:
+            boundary = "start_headword" if row_index == 0 else "end_headword" if row_index == 24 else None
+            if boundary and page[boundary] and row["stressed"] != page[boundary]:
+                raise ResumeMismatchError(
+                    f"page {page_num} {boundary}: expected {page[boundary]}, landed {row['stressed']}"
+                )
+
+
 def _reseed_to_page(
     client: PoliteClient,
     ledger: SpellingLedger,
@@ -2396,7 +2455,7 @@ def _reseed_to_page(
     start_headword: str,
     quiet: bool = False,
     marker_prefix: str = "reseed",
-) -> tuple[str, list[dict[str, Any]]]:
+) -> tuple[str, list[dict[str, Any]], int]:
     """Fetch a fresh seed and navigate to target_page, raising SessionInvalid on network/validation errors
     or ResumeMismatchError if register boundaries do not match."""
     seed_html, seed_req = client.exchange("GET", None)
@@ -2409,7 +2468,7 @@ def _reseed_to_page(
     exp_start = str(p_rec["start_headword"]) if p_rec and p_rec["start_headword"] else None
     exp_end = str(p_rec["end_headword"]) if p_rec and p_rec["end_headword"] else None
 
-    # If we have expected boundaries, try direct search as a fast path
+    # Search by the canonical first row; ULIF may place it anywhere in a window.
     search_target = exp_start or start_headword
     search_fields = _form_fields(
         seed_tokens,
@@ -2430,16 +2489,74 @@ def _reseed_to_page(
     if not landed:
         raise SessionInvalid(f"{marker_prefix}_missing_register")
 
+    if exp_start:
+        offset = _resume_window_offset(
+            ledger,
+            landed,
+            target_page=target_page,
+            anchor_headword=exp_start,
+            anchor_page=target_page,
+            anchor_index=0,
+        )
+        if offset is not None:
+            if not quiet:
+                print(f"resuming: direct search page {target_page}, k={offset}", file=sys.stderr, flush=True)
+            return search_html, landed, offset
     if exp_start and exp_end:
-        if landed[0]["stressed"] == exp_start and landed[-1]["stressed"] == exp_end:
-            return search_html, landed
+        if (
+            len(landed) < REGISTER_PAGE_SIZE
+            and sum(row["stressed"] == exp_start for row in landed) == 1
+            and landed[0]["stressed"] == exp_start
+            and landed[-1]["stressed"] == exp_end
+        ):
+            _verify_known_window_rows(ledger, landed, (target_page - 1) * REGISTER_PAGE_SIZE)
+            if not quiet:
+                print(f"resuming: direct search page {target_page}, k=0", file=sys.stderr, flush=True)
+            return search_html, landed, 0
     elif target_page == 1:
-        return search_html, landed
+        return search_html, landed, 0
 
     if target_page > 1:
-        # Fallback: Real ULIF search offsets the target word by several entries.
-        # Fast-forward from page 1 using canonical nextpage pagination to preserve
-        # the exact 25-row grid alignment and server ViewState sequence.
+        previous = ledger.get_page(target_page - 1)
+        previous_end = str(previous["end_headword"]) if previous and previous["end_headword"] else ""
+        if previous_end and previous_end != search_target:
+            fields = _form_fields(seed_tokens, spelling=previous_end, extra=_image_click(SEARCH_BUTTON))
+            fallback_html, fallback_req = client.exchange("POST", fields)
+            _keep_walk(
+                ledger,
+                cache,
+                "",
+                f"tsearch:{marker_prefix}:previous:{target_page}",
+                fallback_html,
+                fallback_req,
+                current_page=target_page,
+            )
+            fallback_rows = parse_register_list(fallback_html)
+            if not fallback_rows:
+                raise SessionInvalid(f"{marker_prefix}_previous_missing_register")
+            offset = _resume_window_offset(
+                ledger,
+                fallback_rows,
+                target_page=target_page,
+                anchor_headword=previous_end,
+                anchor_page=target_page - 1,
+                anchor_index=24,
+            )
+            if offset is not None:
+                if not quiet:
+                    print(
+                        f"resuming: previous-page end search page {target_page}, k={offset}",
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                return fallback_html, fallback_rows, offset
+
+        if not quiet:
+            print(
+                f"resuming: direct searches could not locate page {target_page}; using fast-forward",
+                file=sys.stderr,
+                flush=True,
+            )
         ff_html, ff_rows = _fast_forward_to_page(
             client,
             ledger,
@@ -2453,7 +2570,8 @@ def _reseed_to_page(
             raise ResumeMismatchError(
                 f"expected {exp_start}..{exp_end}, landed {ff_rows[0]['stressed']}..{ff_rows[-1]['stressed']}"
             )
-        return ff_html, ff_rows
+        _verify_known_window_rows(ledger, ff_rows, (target_page - 1) * REGISTER_PAGE_SIZE)
+        return ff_html, ff_rows, 0
 
     if exp_start and exp_end:
         raise ResumeMismatchError(
@@ -2461,6 +2579,316 @@ def _reseed_to_page(
         )
 
     raise SessionInvalid(f"{marker_prefix}_unable_to_reach_page_{target_page}")
+
+
+def _process_walk_rows(
+    client: PoliteClient,
+    ledger: SpellingLedger,
+    cache: sqlite3.Connection,
+    rows: list[dict[str, Any]],
+    page_tokens: Mapping[str, str],
+    positions: list[tuple[int, int] | None],
+) -> None:
+    """Fetch entries using server row controls and record canonical positions."""
+    pages = {page for position in positions if position is not None for page in [position[0]]}
+    existing_rows = {(page, int(row["row_index"])): row for page in pages for row in ledger.page_rows(page)}
+    for i, r in enumerate(rows):
+        position = positions[i]
+        if position is None:
+            continue
+        row_page, r_idx = position
+        r_norm = normalize_ulif_spelling(str(r["unstressed"]))
+        ex = existing_rows.get((row_page, r_idx))
+        if ex is not None and str(ex["state"]) == "completed":
+            if i < len(rows) - 1 and normalize_ulif_spelling(str(rows[i + 1]["unstressed"])) != r_norm:
+                _commit_spelling_group(ledger, cache, r_norm)
+            continue
+
+        entry_fields = _form_fields(
+            page_tokens,
+            spelling=str(r["unstressed"]),
+            event_target=GRID_TARGET,
+            event_argument=str(r["select"]),
+        )
+        entry_html, entry_req = client.exchange("POST", entry_fields)
+        entry_sha = _sha256(entry_html.encode("utf-8"))
+        _keep_walk(
+            ledger,
+            cache,
+            r_norm,
+            "entry",
+            entry_html,
+            entry_req,
+            register_position=f"{row_page}:{r_idx}",
+            current_page=row_page,
+        )
+
+        unknowns = find_unknown_controls(entry_html)
+        unknown_str = ",".join(unknowns) if unknowns else ""
+
+        paradigm = parse_ulif_paradigm(entry_html)
+        if paradigm is not None:
+            paradigm_source = "entry"
+            ledger.record_response(
+                spelling=r_norm,
+                role="tab",
+                response_sha256=entry_sha,
+                request_sha256=_sha256(entry_req),
+                tab_kind="paradigm",
+                register_position=f"{row_page}:{r_idx}",
+            )
+        else:
+            if _has_control(entry_html, "ctl00$ContentPlaceHolder1$par"):
+                paradigm_source = "tab"
+                par_tokens = _tokens(entry_html)
+                if par_tokens is None:
+                    raise SessionInvalid("entry_tokens_missing")
+                tab_fields = _form_fields(
+                    par_tokens,
+                    spelling=str(r["unstressed"]),
+                    extra=_image_click("ctl00$ContentPlaceHolder1$par"),
+                )
+                tab_html, tab_req = client.exchange("POST", tab_fields)
+                _keep_walk(
+                    ledger,
+                    cache,
+                    r_norm,
+                    "tab",
+                    tab_html,
+                    tab_req,
+                    tab_kind="paradigm",
+                    register_position=f"{row_page}:{r_idx}",
+                    current_page=row_page,
+                )
+            else:
+                paradigm_source = ""
+
+        entry_tokens = _tokens(entry_html)
+        if entry_tokens is not None:
+            for kind, control in (
+                ("synonyms", "ctl00$ContentPlaceHolder1$syn"),
+                ("phraseology", "ctl00$ContentPlaceHolder1$phras"),
+                ("antonyms", "ctl00$ContentPlaceHolder1$ant"),
+            ):
+                if _has_control(entry_html, control):
+                    tab_fields = _form_fields(
+                        entry_tokens,
+                        spelling=str(r["unstressed"]),
+                        extra=_image_click(control),
+                    )
+                    tab_html, tab_req = client.exchange("POST", tab_fields)
+                    _keep_walk(
+                        ledger,
+                        cache,
+                        r_norm,
+                        "tab",
+                        tab_html,
+                        tab_req,
+                        tab_kind=kind,
+                        register_position=f"{row_page}:{r_idx}",
+                        current_page=row_page,
+                    )
+
+        ledger.mark_row(
+            row_page,
+            r_idx,
+            "completed",
+            entry_sha256=entry_sha,
+            unknown_controls=unknown_str,
+            paradigm_source=paradigm_source,
+        )
+
+        if i < len(rows) - 1 and normalize_ulif_spelling(str(rows[i + 1]["unstressed"])) != r_norm:
+            _commit_spelling_group(ledger, cache, r_norm)
+
+
+def _walk_shifted_windows(
+    client: PoliteClient,
+    ledger: SpellingLedger,
+    cache: sqlite3.Connection,
+    *,
+    first_page: int,
+    first_html: str,
+    offset: int,
+    start_headword: str,
+    max_pages: int | None,
+    quiet: bool,
+    base_requests: int,
+    started_at: float,
+    clock: ClockFn,
+) -> tuple[int, str, int]:
+    """Walk canonical pages through search windows offset from the 25-row grid."""
+    html = first_html
+    start_global = (first_page - 1) * REGISTER_PAGE_SIZE - offset
+    completed = 0
+    target_page = first_page
+    failures = 0
+    page_started = clock()
+    page_reqs = client.requests_made
+
+    while True:
+        if max_pages is not None and completed >= max_pages:
+            return EXIT_OK, "max pages", completed
+        try:
+            rows = parse_register_list(html)
+            tokens = _tokens(html)
+            if not rows or tokens is None or _validation_failure(html):
+                raise SessionInvalid(f"page_{target_page}_viewstate")
+            _verify_known_window_rows(ledger, rows, start_global)
+
+            positions: list[tuple[int, int] | None] = []
+            for i, row in enumerate(rows):
+                page_zero, row_index = divmod(start_global + i, REGISTER_PAGE_SIZE)
+                page_num = page_zero + 1
+                if page_num < target_page or (max_pages is not None and page_num >= first_page + max_pages):
+                    positions.append(None)
+                    continue
+                positions.append((page_num, row_index))
+                ledger.ensure_page(
+                    page_num,
+                    start_headword=str(row["stressed"]) if row_index == 0 else "",
+                    end_headword=str(row["stressed"]) if row_index == REGISTER_PAGE_SIZE - 1 else "",
+                    row_count=REGISTER_PAGE_SIZE if row_index == REGISTER_PAGE_SIZE - 1 else 0,
+                    register_size=_register_size(html),
+                )
+                ledger.ensure_row(
+                    page_num,
+                    row_index,
+                    select_arg=str(row["select"]),
+                    stressed_headword=str(row["stressed"]),
+                    normalized_spelling=normalize_ulif_spelling(str(row["unstressed"])),
+                )
+
+            _process_walk_rows(client, ledger, cache, rows, tokens, positions)
+
+            completed_here = sorted(
+                {
+                    page
+                    for position in positions
+                    if position is not None
+                    for page, index in [position]
+                    if index == REGISTER_PAGE_SIZE - 1
+                }
+            )
+            has_next = _has_control(html, PAGE_BUTTONS["next"])
+            if not has_next and not any(position is not None for position in positions):
+                raise ResumeMismatchError(f"page {target_page} absent from terminal window")
+            if not has_next and positions:
+                final = next((position for position in reversed(positions) if position is not None), None)
+                if final and final[0] not in completed_here:
+                    last_row = rows[positions.index(final)]
+                    recorded = ledger.get_page(final[0])
+                    if recorded and recorded["row_count"] and final[1] + 1 < recorded["row_count"]:
+                        raise ResumeMismatchError(
+                            f"page {final[0]} ended at row {final[1]} before recorded row {recorded['row_count'] - 1}"
+                        )
+                    ledger.ensure_page(
+                        final[0],
+                        end_headword=str(last_row["stressed"]),
+                        row_count=final[1] + 1,
+                        register_size=_register_size(html),
+                    )
+                    completed_here.append(final[0])
+
+            for page_num in completed_here:
+                if page_num < target_page:
+                    continue
+                page_rows = ledger.page_rows(page_num)
+                if any(row["state"] != "completed" for row in page_rows):
+                    raise SessionInvalid(f"page_{page_num}_incomplete_rows")
+                ledger.mark_page(page_num, "completed")
+                completed += 1
+                target_page = page_num + 1
+                page_wall = clock() - page_started
+                cumulative = float(ledger.meta("cumulative_page_wall_seconds", "0.0") or "0.0")
+                timed = int(ledger.meta("cumulative_timed_pages", "0") or "0")
+                ledger.set_meta("cumulative_page_wall_seconds", str(cumulative + page_wall))
+                ledger.set_meta("cumulative_timed_pages", str(timed + 1))
+                if not quiet:
+                    counts = ledger.walk_counts()
+                    print(
+                        _format_walk_progress_line(
+                            pages_done=counts["pages_done"],
+                            pages_total=counts["pages_total"],
+                            entries_stored=counts["entries_stored"],
+                            page_req=client.requests_made - page_reqs,
+                            total_req=base_requests + client.requests_made,
+                            err_count=0,
+                            retry_count=0,
+                            elapsed_seconds=clock() - started_at,
+                            eta_str="?",
+                            page_num=page_num,
+                        ),
+                        file=sys.stderr,
+                        flush=True,
+                    )
+                page_started = clock()
+                page_reqs = client.requests_made
+
+            if max_pages is not None and completed >= max_pages:
+                return EXIT_OK, "max pages", completed
+            if not has_next:
+                if rows:
+                    _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
+                return EXIT_OK, "finished", completed
+            if len(rows) != REGISTER_PAGE_SIZE:
+                raise SessionInvalid(f"page_{target_page}_short_nonterminal_window")
+
+            next_fields = _form_fields(
+                tokens,
+                spelling=str(rows[-1]["unstressed"]),
+                extra=_image_click(PAGE_BUTTONS["next"]),
+            )
+            next_html, request = client.exchange("POST", next_fields)
+            _keep_walk(
+                ledger,
+                cache,
+                "",
+                f"page:next:{target_page}",
+                next_html,
+                request,
+                current_page=target_page,
+            )
+            next_rows = parse_register_list(next_html)
+            if not next_rows or _tokens(next_html) is None or _validation_failure(next_html):
+                raise SessionInvalid(f"page_{target_page}_invalid_next_page")
+            if next_html == html:
+                raise SessionInvalid(f"page_{target_page}_repeated_window")
+            if normalize_ulif_spelling(str(rows[-1]["unstressed"])) != normalize_ulif_spelling(
+                str(next_rows[0]["unstressed"])
+            ):
+                _commit_spelling_group(ledger, cache, normalize_ulif_spelling(str(rows[-1]["unstressed"])))
+            html = next_html
+            start_global += len(rows)
+            failures = 0
+        except ResumeMismatchError as exc:
+            ledger.mark_page(target_page, "error", error="resume_mismatch")
+            print(f"stopping: resume_mismatch on page {target_page} ({exc})", file=sys.stderr)
+            return EXIT_USAGE, "resume_mismatch", completed
+        except SessionInvalid as exc:
+            failures += 1
+            if failures >= MAX_UNIT_RESEEDS:
+                ledger.mark_page(target_page, "retry_scheduled", error=str(exc))
+                return EXIT_RETRY_STORM, f"page {target_page} exhausted retries", completed
+            try:
+                html, _, offset = _reseed_to_page(
+                    client,
+                    ledger,
+                    cache,
+                    target_page=target_page,
+                    start_headword=start_headword,
+                    quiet=quiet,
+                    marker_prefix="reseed",
+                )
+                start_global = (target_page - 1) * REGISTER_PAGE_SIZE - offset
+            except ResumeMismatchError as mismatch:
+                ledger.mark_page(target_page, "error", error="resume_mismatch")
+                print(f"stopping: resume_mismatch on page {target_page} ({mismatch})", file=sys.stderr)
+                return EXIT_USAGE, "resume_mismatch", completed
+            except SessionInvalid as reseed_error:
+                if failures == MAX_UNIT_RESEEDS - 1:
+                    ledger.mark_page(target_page, "retry_scheduled", error=str(reseed_error))
+                    return EXIT_RETRY_STORM, f"page {target_page} exhausted retries", completed
 
 
 def run_walk(
@@ -2587,10 +3015,7 @@ def run_walk(
                 if first_unfinished is not None:
                     p_rec = ledger.get_page(first_unfinished)
                     has_boundaries = bool(
-                        p_rec
-                        and p_rec["start_headword"]
-                        and p_rec["end_headword"]
-                        and (p_rec["row_count"] or 0) > 0
+                        p_rec and p_rec["start_headword"] and p_rec["end_headword"] and (p_rec["row_count"] or 0) > 0
                     )
                     if first_unfinished == 1 and not has_boundaries:
                         is_resume = False
@@ -2624,10 +3049,11 @@ def run_walk(
                     start_page = 1
 
                 current_page_html = ""
+                resume_offset = 0
                 if is_resume:
                     for resume_attempt in range(MAX_UNIT_RESEEDS):
                         try:
-                            current_page_html, landed_rows = _reseed_to_page(
+                            current_page_html, landed_rows, resume_offset = _reseed_to_page(
                                 client,
                                 ledger,
                                 cache,
@@ -2729,7 +3155,23 @@ def run_walk(
                     current_page = start_page
                     consecutive_retries = 0
 
-                    while True:
+                    if resume_offset:
+                        return_code, stop_reason, process_pages_finished = _walk_shifted_windows(
+                            client,
+                            ledger,
+                            cache,
+                            first_page=start_page,
+                            first_html=current_page_html,
+                            offset=resume_offset,
+                            start_headword=start_headword,
+                            max_pages=max_pages,
+                            quiet=quiet,
+                            base_requests=base_requests,
+                            started_at=start_time,
+                            clock=clock,
+                        )
+
+                    while not resume_offset:
                         if max_pages is not None and process_pages_finished >= max_pages:
                             stop_reason = "max pages"
                             break
@@ -2741,7 +3183,7 @@ def run_walk(
                         for page_attempt in range(MAX_UNIT_RESEEDS):
                             try:
                                 if page_attempt > 0:
-                                    current_page_html, rows = _reseed_to_page(
+                                    current_page_html, rows, reseed_offset = _reseed_to_page(
                                         client,
                                         ledger,
                                         cache,
@@ -2750,6 +3192,24 @@ def run_walk(
                                         quiet=quiet,
                                         marker_prefix="reseed",
                                     )
+                                    if reseed_offset:
+                                        return_code, stop_reason, shifted_pages = _walk_shifted_windows(
+                                            client,
+                                            ledger,
+                                            cache,
+                                            first_page=current_page,
+                                            first_html=current_page_html,
+                                            offset=reseed_offset,
+                                            start_headword=start_headword,
+                                            max_pages=None if max_pages is None else max_pages - process_pages_finished,
+                                            quiet=quiet,
+                                            base_requests=base_requests,
+                                            started_at=start_time,
+                                            clock=clock,
+                                        )
+                                        process_pages_finished += shifted_pages
+                                        resume_offset = reseed_offset
+                                        break
                                 else:
                                     rows = parse_register_list(current_page_html)
                                     if not rows:
@@ -2775,119 +3235,14 @@ def run_walk(
                                         normalized_spelling=normalize_ulif_spelling(str(r["unstressed"])),
                                     )
 
-                                existing_rows = {r["row_index"]: r for r in ledger.page_rows(current_page)}
-
-                                for i, r in enumerate(rows):
-                                    r_idx = int(r["row_index"])
-                                    r_norm = normalize_ulif_spelling(str(r["unstressed"]))
-                                    ex = existing_rows.get(r_idx)
-                                    if ex is not None and str(ex["state"]) == "completed":
-                                        if (
-                                            i < len(rows) - 1
-                                            and normalize_ulif_spelling(str(rows[i + 1]["unstressed"])) != r_norm
-                                        ):
-                                            _commit_spelling_group(ledger, cache, r_norm)
-                                        continue
-
-                                    entry_fields = _form_fields(
-                                        page_tokens,
-                                        spelling=str(r["unstressed"]),
-                                        event_target=GRID_TARGET,
-                                        event_argument=str(r["select"]),
-                                    )
-                                    entry_html, entry_req = client.exchange("POST", entry_fields)
-                                    entry_sha = _sha256(entry_html.encode("utf-8"))
-                                    _keep_walk(
-                                        ledger,
-                                        cache,
-                                        r_norm,
-                                        "entry",
-                                        entry_html,
-                                        entry_req,
-                                        register_position=f"{current_page}:{r_idx}",
-                                        current_page=current_page,
-                                    )
-
-                                    unknowns = find_unknown_controls(entry_html)
-                                    unknown_str = ",".join(unknowns) if unknowns else ""
-
-                                    paradigm = parse_ulif_paradigm(entry_html)
-                                    if paradigm is not None:
-                                        paradigm_source = "entry"
-                                        ledger.record_response(
-                                            spelling=r_norm,
-                                            role="tab",
-                                            response_sha256=entry_sha,
-                                            request_sha256=_sha256(entry_req),
-                                            tab_kind="paradigm",
-                                            register_position=f"{current_page}:{r_idx}",
-                                        )
-                                    else:
-                                        if _has_control(entry_html, "ctl00$ContentPlaceHolder1$par"):
-                                            paradigm_source = "tab"
-                                            par_tokens = _tokens(entry_html)
-                                            if par_tokens is None:
-                                                raise SessionInvalid("entry_tokens_missing")
-                                            tab_fields = _form_fields(
-                                                par_tokens,
-                                                spelling=str(r["unstressed"]),
-                                                extra=_image_click("ctl00$ContentPlaceHolder1$par"),
-                                            )
-                                            tab_html, tab_req = client.exchange("POST", tab_fields)
-                                            _keep_walk(
-                                                ledger,
-                                                cache,
-                                                r_norm,
-                                                "tab",
-                                                tab_html,
-                                                tab_req,
-                                                tab_kind="paradigm",
-                                                register_position=f"{current_page}:{r_idx}",
-                                                current_page=current_page,
-                                            )
-                                        else:
-                                            paradigm_source = ""
-
-                                    entry_tokens = _tokens(entry_html)
-                                    if entry_tokens is not None:
-                                        for kind, control in (
-                                            ("synonyms", "ctl00$ContentPlaceHolder1$syn"),
-                                            ("phraseology", "ctl00$ContentPlaceHolder1$phras"),
-                                            ("antonyms", "ctl00$ContentPlaceHolder1$ant"),
-                                        ):
-                                            if _has_control(entry_html, control):
-                                                tab_fields = _form_fields(
-                                                    entry_tokens,
-                                                    spelling=str(r["unstressed"]),
-                                                    extra=_image_click(control),
-                                                )
-                                                tab_html, tab_req = client.exchange("POST", tab_fields)
-                                                _keep_walk(
-                                                    ledger,
-                                                    cache,
-                                                    r_norm,
-                                                    "tab",
-                                                    tab_html,
-                                                    tab_req,
-                                                    tab_kind=kind,
-                                                    register_position=f"{current_page}:{r_idx}",
-                                                    current_page=current_page,
-                                                )
-
-                                    ledger.mark_row(
-                                        current_page,
-                                        r_idx,
-                                        "completed",
-                                        entry_sha256=entry_sha,
-                                        unknown_controls=unknown_str,
-                                        paradigm_source=paradigm_source,
-                                    )
-
-                                    if (
-                                        i < len(rows) - 1
-                                        and normalize_ulif_spelling(str(rows[i + 1]["unstressed"])) != r_norm
-                                    ):
-                                        _commit_spelling_group(ledger, cache, r_norm)
+                                _process_walk_rows(
+                                    client,
+                                    ledger,
+                                    cache,
+                                    rows,
+                                    page_tokens,
+                                    [(current_page, int(r["row_index"])) for r in rows],
+                                )
 
                                 page_success = True
                                 break
@@ -2907,7 +3262,7 @@ def run_walk(
                                     break
                                 continue
 
-                        if return_code != EXIT_OK or stop_reason == "resume_mismatch":
+                        if resume_offset or return_code != EXIT_OK or stop_reason == "resume_mismatch":
                             break
 
                         if not page_success:
