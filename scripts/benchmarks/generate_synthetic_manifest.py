@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import os
 import random
 import sys
@@ -24,8 +25,9 @@ DEFAULT_SOURCE = ROOT / "site" / "src" / "data" / "lexicon-manifest.json"
 DEFAULT_OUT = Path("/tmp/synthetic-lexicon-manifest.json")
 DEFAULT_COUNT = 410_000
 DEFAULT_SEED = 42
-DEFAULT_MIN_DISK_GB = 25.0
-MIN_CLI_DISK_GB = 25.0
+MIN_DISK_GB = 25.0
+DEFAULT_MIN_DISK_GB = MIN_DISK_GB
+MIN_CLI_DISK_GB = MIN_DISK_GB
 SYNTHETIC_SLUG_SUFFIX = "--syn{index:07d}"
 SYNTHETIC_TIMESTAMP = "2026-09-23T00:00:00+00:00"
 
@@ -54,6 +56,13 @@ def assert_different_paths(source_path: Path, output_path: Path) -> None:
 
 def check_free_disk_space(target_path: Path, min_gb: float = DEFAULT_MIN_DISK_GB) -> float:
     """Ensure sufficient free disk space exists before heavy fixture generation."""
+    if (
+        isinstance(min_gb, bool)
+        or not isinstance(min_gb, (int, float))
+        or not math.isfinite(min_gb)
+        or min_gb < MIN_DISK_GB
+    ):
+        raise ValueError(f"min_disk_gb cannot be set below {MIN_DISK_GB:.1f} GB floor (got {min_gb})")
     dest_dir = target_path.parent
     dest_dir.mkdir(parents=True, exist_ok=True)
     stat = os.statvfs(dest_dir)
@@ -167,6 +176,14 @@ def generate_synthetic_manifest(
     if count < 1:
         raise ValueError(f"count must be at least 1, got {count}")
 
+    if (
+        isinstance(min_disk_gb, bool)
+        or not isinstance(min_disk_gb, (int, float))
+        or not math.isfinite(min_disk_gb)
+        or min_disk_gb < MIN_DISK_GB
+    ):
+        raise ValueError(f"min_disk_gb cannot be set below {MIN_DISK_GB:.1f} GB floor (got {min_disk_gb})")
+
     assert_different_paths(source_path, output_path)
     free_gb = check_free_disk_space(output_path, min_gb=min_disk_gb)
     t0 = time.monotonic()
@@ -274,10 +291,8 @@ def _parse_min_disk_gb(val: str) -> float:
         gb = float(val)
     except ValueError:
         raise argparse.ArgumentTypeError(f"Invalid float value: {val!r}") from None
-    if gb < MIN_CLI_DISK_GB:
-        raise argparse.ArgumentTypeError(
-            f"--min-disk-gb cannot be set below {MIN_CLI_DISK_GB:.1f} GB floor (got {gb})"
-        )
+    if not math.isfinite(gb) or gb < MIN_CLI_DISK_GB:
+        raise argparse.ArgumentTypeError(f"--min-disk-gb cannot be set below {MIN_CLI_DISK_GB:.1f} GB floor (got {gb})")
     return gb
 
 
@@ -355,7 +370,7 @@ def parse_args(argv: list[str] | None = None) -> argparse.Namespace:
 
 def main(argv: list[str] | None = None) -> int:
     args = parse_args(argv)
-    if args.min_disk_gb < MIN_CLI_DISK_GB:
+    if not math.isfinite(args.min_disk_gb) or args.min_disk_gb < MIN_CLI_DISK_GB:
         print(
             f"generate_synthetic_manifest error: --min-disk-gb cannot be set below {MIN_CLI_DISK_GB:.1f} GB floor (got {args.min_disk_gb})",
             file=sys.stderr,

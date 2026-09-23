@@ -14,6 +14,7 @@ from scripts.benchmarks.generate_synthetic_manifest import (
     DEFAULT_MIN_DISK_GB,
     DEFAULT_SOURCE,
     MIN_CLI_DISK_GB,
+    MIN_DISK_GB,
     SYNTHETIC_SLUG_SUFFIX,
     check_free_disk_space,
     generate_synthetic_manifest,
@@ -210,8 +211,9 @@ def test_free_disk_space_guard(tmp_path: Path) -> None:
         f_bavail = 10 * (1024**3) // 4096
         f_frsize = 4096
 
-    with patch("os.statvfs", return_value=FakeStat()), pytest.raises(
-        RuntimeError, match="Insufficient free disk space"
+    with (
+        patch("os.statvfs", return_value=FakeStat()),
+        pytest.raises(RuntimeError, match="Insufficient free disk space"),
     ):
         check_free_disk_space(tmp_path / "test.json", min_gb=25.0)
 
@@ -294,10 +296,13 @@ def test_midstream_failure_preserves_existing_output_and_cleans_temp(
         yield {"lemma": "test", "url_slug": "test"}
         raise RuntimeError("Simulated failure mid-stream")
 
-    with patch(
-        "scripts.benchmarks.generate_synthetic_manifest.generate_entry_stream",
-        side_effect=_exploding_stream,
-    ), pytest.raises(RuntimeError, match="Simulated failure mid-stream"):
+    with (
+        patch(
+            "scripts.benchmarks.generate_synthetic_manifest.generate_entry_stream",
+            side_effect=_exploding_stream,
+        ),
+        pytest.raises(RuntimeError, match="Simulated failure mid-stream"),
+    ):
         generate_synthetic_manifest(
             source_path=sample_source_manifest,
             output_path=out_file,
@@ -314,15 +319,26 @@ def test_midstream_failure_preserves_existing_output_and_cleans_temp(
     assert leftover_temps == []
 
 
+@pytest.mark.parametrize(
+    ("cli_args", "expected_fragment"),
+    [
+        (["--min-disk-gb", "0"], "(got 0.0)"),
+        (["--min-disk-gb", "24.9"], "(got 24.9)"),
+        (["--min-disk-gb", "nan"], "(got nan)"),
+        (["--min-disk-gb", "inf"], "(got inf)"),
+        (["--min-disk-gb=-inf"], "(got -inf)"),
+    ],
+)
 def test_cli_min_disk_floor_enforced(
     sample_source_manifest: Path,
     tmp_path: Path,
     capsys: pytest.CaptureFixture[str],
+    cli_args: list[str],
+    expected_fragment: str,
 ) -> None:
-    """Verify CLI strictly enforces 25 GB minimum disk floor and refuses lower values (#8307)."""
+    """Verify CLI strictly enforces 25 GB minimum disk floor and refuses non-finite or low values (#8307)."""
     out = tmp_path / "test-floor.json"
 
-    # --min-disk-gb 0 must be rejected by argparse
     with pytest.raises(SystemExit) as exc_info:
         main(
             [
@@ -330,44 +346,85 @@ def test_cli_min_disk_floor_enforced(
                 str(sample_source_manifest),
                 "--output",
                 str(out),
-                "--min-disk-gb",
-                "0",
-            ]
-        )
-    assert exc_info.value.code == 2
-    captured = capsys.readouterr()
-    assert "--min-disk-gb cannot be set below 25.0 GB floor (got 0.0)" in captured.err
-
-    # --min-disk-gb 24.9 must also be rejected
-    with pytest.raises(SystemExit) as exc_info:
-        main(
-            [
-                "--source",
-                str(sample_source_manifest),
-                "--output",
-                str(out),
-                "--min-disk-gb",
-                "24.9",
+                *cli_args,
             ]
         )
     assert exc_info.value.code == 2
     captured = capsys.readouterr()
     assert "--min-disk-gb cannot be set below 25.0 GB floor" in captured.err
+    assert expected_fragment in captured.err
+    assert not out.exists()
+    assert list(tmp_path.glob(".*.tmp")) == []
 
-    # Internal parameter remains available for internal test callers
+
+@pytest.mark.parametrize(
+    "invalid_gb",
+    [
+        1.0,
+        0.0,
+        24.9,
+        float("nan"),
+        float("inf"),
+        float("-inf"),
+    ],
+)
+def test_programmatic_min_disk_floor_enforced(
+    sample_source_manifest: Path,
+    tmp_path: Path,
+    invalid_gb: float,
+) -> None:
+    """Verify generate_synthetic_manifest rejects <25 GB or non-finite min_disk_gb without writing output."""
+    out = tmp_path / "out-invalid-floor.json"
+
+    with pytest.raises(ValueError, match=r"min_disk_gb cannot be set below 25\.0 GB floor"):
+        generate_synthetic_manifest(
+            source_path=sample_source_manifest,
+            output_path=out,
+            count=2,
+            min_disk_gb=invalid_gb,
+            quiet=True,
+        )
+    assert not out.exists()
+    assert list(tmp_path.glob(".*.tmp")) == []
+
+
+def test_programmatic_valid_min_disk_floor_accepted(
+    sample_source_manifest: Path,
+    tmp_path: Path,
+) -> None:
+    """Verify valid 25.0 GB floor is accepted and generates output (mocking disk sensor at boundary)."""
+    out = tmp_path / "out-valid-floor.json"
+
+    class FakeStatSufficient:
+        f_bavail = 50 * (1024**3) // 4096
+        f_frsize = 4096
+
+    assert MIN_DISK_GB == 25.0
     assert MIN_CLI_DISK_GB == 25.0
     assert DEFAULT_MIN_DISK_GB == 25.0
 
-    # Programmatic call with lower min_disk_gb succeeds without CLI rejection
-    res = generate_synthetic_manifest(
-        source_path=sample_source_manifest,
-        output_path=out,
-        count=2,
-        min_disk_gb=1.0,
-        quiet=True,
-    )
+    with patch("os.statvfs", return_value=FakeStatSufficient()):
+        res = generate_synthetic_manifest(
+            source_path=sample_source_manifest,
+            output_path=out,
+            count=2,
+            min_disk_gb=25.0,
+            quiet=True,
+        )
     assert res["outcome"] == "success"
     assert out.exists()
+
+
+@pytest.mark.parametrize(
+    "invalid_gb",
+    [1.0, 0.0, 24.9, float("nan"), float("inf"), float("-inf")],
+)
+def test_check_free_disk_space_floor_enforced(tmp_path: Path, invalid_gb: float) -> None:
+    """Verify check_free_disk_space rejects non-finite or <25 GB thresholds before directory creation."""
+    target = tmp_path / "never_created_dir" / "target.json"
+    with pytest.raises(ValueError, match=r"min_disk_gb cannot be set below 25\.0 GB floor"):
+        check_free_disk_space(target, min_gb=invalid_gb)
+    assert not target.parent.exists()
 
 
 def test_real_manifest_integration_small_scale(tmp_path: Path) -> None:
