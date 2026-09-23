@@ -33,6 +33,7 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
     _resolve_db_path,
 )
 from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
 
 
 @pytest.fixture(scope="module")
@@ -1401,6 +1402,7 @@ def test_cf_r14_dictionary_binding_regression() -> None:
     u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
     v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
+    ensure_reproducible_sum20_table(real_s_conn)
     real_s_conn.execute(f"ATTACH DATABASE 'file:{u_path}?mode=ro' AS ulif_all")
     real_s_cur = real_s_conn.cursor()
 
@@ -1527,6 +1529,7 @@ def test_cf_r15_phrase_attestation_regression() -> None:
     u_path = _resolve_db_path("ulif_dump_all.db", PROJECT_ROOT)
     v_path = _resolve_db_path("vesum.db", PROJECT_ROOT)
     real_s_conn = sqlite3.connect(f"file:{s_path}?mode=ro", uri=True)
+    ensure_reproducible_sum20_table(real_s_conn)
     real_s_conn.execute(f"ATTACH DATABASE 'file:{u_path}?mode=ro' AS ulif_all")
     real_s_cur = real_s_conn.cursor()
 
@@ -1613,8 +1616,12 @@ def test_cf_r15_phrase_attestation_regression() -> None:
             pass
 
         def fetchone(self) -> tuple | None:
-            # Returns headword 'ТОЧКА' with checked-in catalog passage containing 'з точки зору'
-            return (137, "ТОЧКА", "ТОЧКА, -и, ж. Точка зору (з точки зору) — погляд на що-небудь, позиція; допустимий варіант поряд із висловом «з погляду».")
+            # Returns headword 'ТОЧКА' with published СУМ-20 passage containing 'з точки зору'
+            return (
+                137,
+                "ТОЧКА",
+                "ТОЧКА, -и, ж. Точка зору кого, чия — певний погляд на що-небудь, розуміння чогось: Дельфіни — надзвичайно цікавий об'єкт з точки зору біоніки, біохімії, гідромеханіки, акустики (із журн.).",
+            )
 
         def fetchall(self) -> list:
             return []

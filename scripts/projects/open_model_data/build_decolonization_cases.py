@@ -45,6 +45,7 @@ from scripts.projects.open_model_data.decolonization_language_reviews import (
     compute_case_content_sha256,
 )
 from scripts.projects.open_model_data.paths import DECOLONIZATION_DIR
+from scripts.projects.open_model_data.sum20_codification_records import ensure_reproducible_sum20_table
 
 
 @dataclass
@@ -440,6 +441,10 @@ def query_source_evidence(
                 f"Retrieved style_guide record {rec_id_val} ('{rec_head}') is unrelated to case '{case_id}' (term '{term}')"
             )
     elif "СУМ-20" in auth:
+        conn = getattr(s_cur, "connection", None)
+        if conn is not None and isinstance(conn, sqlite3.Connection):
+            ensure_reproducible_sum20_table(conn)
+
         art = (ev.get("article") or term).strip()
         art_head = art.split()[0] if " " in art else art
         is_phrase = len(term.split()) > 1
@@ -447,19 +452,32 @@ def query_source_evidence(
         # 1. Query modern academic dictionary СУМ-20 by exact cited headword
         sum20_keys = list(dict.fromkeys([art, art.upper(), art.lower(), art_head, art_head.upper(), art_head.lower()]))
         placeholders = ",".join(["?"] * len(sum20_keys))
-        s_cur.execute(
-            f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM sum20_articles WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) LIMIT 1",
-            (*sum20_keys, *sum20_keys),
-        )
-        source_record = s_cur.fetchone()
+        source_record = None
+        for tbl in ("reproducible_sum20_articles", "sum20_articles"):
+            try:
+                s_cur.execute(
+                    f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE headword IN ({placeholders}) OR normalized_lookup_key IN ({placeholders}) LIMIT 1",
+                    (*sum20_keys, *sum20_keys),
+                )
+                source_record = s_cur.fetchone()
+                if source_record:
+                    break
+            except sqlite3.OperationalError:
+                continue
 
         # If not found by headword, search by exact phrase in article_text
         if not source_record and is_phrase:
-            s_cur.execute(
-                "SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM sum20_articles WHERE article_text LIKE ? OR definition_text LIKE ? LIMIT 1",
-                (f"%{t_clean}%", f"%{t_clean}%"),
-            )
-            source_record = s_cur.fetchone()
+            for tbl in ("reproducible_sum20_articles", "sum20_articles"):
+                try:
+                    s_cur.execute(
+                        f"SELECT id, headword, COALESCE(NULLIF(article_text, ''), definition_text) FROM {tbl} WHERE article_text LIKE ? OR definition_text LIKE ? LIMIT 1",
+                        (f"%{t_clean}%", f"%{t_clean}%"),
+                    )
+                    source_record = s_cur.fetchone()
+                    if source_record:
+                        break
+                except sqlite3.OperationalError:
+                    continue
 
         # 2. Modern normative fallback: ULIF (data/ulif_dump_all.db or sources.db:ulif_dictua_entries), NEVER Soviet СУМ-11
         if not source_record:
@@ -989,6 +1007,7 @@ def build_all_cases() -> list[DecolonizationCase]:
 
     v_conn = sqlite3.connect(f"file:{vesum_path}?mode=ro", uri=True)
     s_conn = sqlite3.connect(f"file:{sources_path}?mode=ro", uri=True)
+    ensure_reproducible_sum20_table(s_conn)
 
     v_cur = v_conn.cursor()
     s_cur = s_conn.cursor()
