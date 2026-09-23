@@ -174,6 +174,27 @@ def test_clean_environment_build_cli_fails_closed_before_dispatch(tmp_path):
     assert '"layer": "driver"' in completed.stderr
 
 
+def test_production_question_callable_awaits_task_and_reads_answers(tmp_path, monkeypatch):
+    answer_file = tmp_path / "answers.yaml"
+    answer_file.write_text("```yaml\nanswers:\n- id: Q-001\n  record: W-1\n```\n", encoding="utf-8")
+    calls = []
+
+    def fake_run(cmd, **kwargs):
+        calls.append((cmd, kwargs))
+        output = "" if len(calls) == 1 else json.dumps({"status": "done", "result_file": str(answer_file)})
+        return subprocess.CompletedProcess(cmd, 0, stdout=output, stderr="")
+
+    monkeypatch.setattr(runner.subprocess, "run", fake_run)
+    batch = {"lesson": {"level": "a1", "slug": "sample-slug", "n": 1}, "questions": []}
+    answers = runner.dispatch_questions(batch, "agy:fixture", repo_root=tmp_path)
+    assert answers == {"answers": [{"id": "Q-001", "record": "W-1"}]}
+    assert len(calls) == 2
+    assert calls[0][0][0] == calls[1][0][0] == sys.executable
+    assert "--model" in calls[0][0] and "fixture" in calls[0][0]
+    assert "wait" in calls[1][0]
+    assert all(call[1]["timeout"] for call in calls)
+
+
 class _FixtureSources:
     def _vesum_identity(self):
         return "f" * 64, {}

@@ -8,6 +8,7 @@ import json
 import re
 import subprocess
 import sys
+import uuid
 from collections.abc import Callable
 from pathlib import Path
 from typing import Any
@@ -18,6 +19,7 @@ from jsonschema import Draft202012Validator
 from scripts.build.fresh.assemble import check_5_assembly, check_9_stress_and_render
 from scripts.build.fresh.draft_schema import validate_draft
 from scripts.build.fresh.regeneration import invalidate_lesson_resolution, load_ledger, record_failure, record_success
+from scripts.build.fresh.writer import strip_markdown_fence
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state import codes as learner_codes
 from scripts.curriculum.learner_state.inventory_gate import check_lesson
@@ -236,7 +238,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
         raise ValueError("question seat must be agent:model")
     state = repo_root / "batch_state" / "tasks"
     state.mkdir(parents=True, exist_ok=True)
-    task_id = f"questions-{batch['lesson']['level']}-{batch['lesson']['slug']}-{batch['lesson']['n']}"
+    task_id = f"questions-{batch['lesson']['level']}-{batch['lesson']['slug']}-{batch['lesson']['n']}-{uuid.uuid4().hex[:8]}"
     prompt = state / f"{task_id}.prompt.md"
     instruction = (
         "Choose exactly one offered candidate for every question using its sentence. "
@@ -261,7 +263,7 @@ def dispatch_questions(batch: dict[str, Any], seat: str, *, repo_root: Path) -> 
     result = json.loads(done.stdout)
     if result.get("status") != "done" or not result.get("result_file"):
         raise RuntimeError("question dispatch did not finish with an answer file")
-    return yaml.safe_load(Path(result["result_file"]).read_text(encoding="utf-8"))
+    return yaml.safe_load(strip_markdown_fence(Path(result["result_file"]).read_text(encoding="utf-8")))
 
 
 def _printable_form_draft(draft: dict[str, Any], choices: dict[tuple[str, int], list[dict[str, Any]]]) -> dict[str, Any]:
