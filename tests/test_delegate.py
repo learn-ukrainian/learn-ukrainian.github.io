@@ -4504,9 +4504,11 @@ def test_run_worker_codex_review_refuses_extra_effective_server(tmp_tasks_dir, t
 def test_run_worker_ordinary_codex_dispatch_is_unchanged(tmp_tasks_dir, tmp_path, monkeypatch):
     fake_bin = tmp_path / "fake-bin"
     fake_bin.mkdir()
-    called = tmp_path / "gate-called"
+    calls = tmp_path / "codex-calls"
     fake = fake_bin / "codex"
-    fake.write_text(f"#!/bin/sh\ntouch {called}\n", encoding="utf-8")
+    # Record every invocation's argv: the dispatch-telemetry version probe
+    # legitimately runs `codex --version`, so only the MCP gate is forbidden.
+    fake.write_text(f'#!/bin/sh\necho "$*" >> {calls}\n', encoding="utf-8")
     fake.chmod(0o755)
     monkeypatch.setenv("PATH", f"{fake_bin}:{os.environ['PATH']}")
     task_id = "worker-codex-ordinary"
@@ -4525,7 +4527,8 @@ def test_run_worker_ordinary_codex_dispatch_is_unchanged(tmp_tasks_dir, tmp_path
 
     assert rc == 0
     assert mock_invoke.call_args.kwargs["tool_config"] == {}
-    assert not called.exists()
+    recorded = calls.read_text(encoding="utf-8").splitlines() if calls.exists() else []
+    assert not any("mcp" in line for line in recorded), recorded
 
 
 def test_run_worker_selects_kimicc_harness_without_changing_kimi_agent(tmp_tasks_dir, tmp_path):
