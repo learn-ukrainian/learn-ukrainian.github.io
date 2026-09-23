@@ -1351,6 +1351,21 @@ _WRITE_SHAPED_PROMPT_RE = re.compile(
 _FENCED_BLOCK_RE = re.compile(r"^(`{3,}|~{3,}).*?^\1", re.DOTALL | re.MULTILINE)
 _BLOCKQUOTE_LINE_RE = re.compile(r"^\s*>.*$", re.MULTILINE)
 _NO_DELIVERABLE_STATUS = "no_deliverable"
+# A clean read-only checkout holds no uncommitted deliverable. Every terminal
+# status the worker can persist is enough to drop it (#8536). Write-capable
+# modes stay on the danger rule: only a clean successful ``done``.
+_READ_ONLY_SETTLE_REAP_STATUSES = frozenset(
+    {
+        "done",
+        "failed",
+        _NO_DELIVERABLE_STATUS,
+        "timeout",
+        "rate_limited",
+        "cancelled",
+        "crashed",
+        "needs_finalize",
+    }
+)
 # Explicit unattested classification for Cursor Auto when no concrete model was
 # extracted (#6964 / #6953). Never record a bare ``"unknown"`` here.
 _CURSOR_UNKNOWN_MODEL = "unattested-harness"
@@ -3722,8 +3737,80 @@ def _auto_finalize_dirty_worktree(
     )
 
 
+def _checked_out_branch(worktree: Path) -> str | None:
+    """Return the branch checked out at ``worktree``, or None when detached."""
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
+            cwd=worktree,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return None
+    if proc.returncode != 0:
+        return None
+    name = (proc.stdout or "").strip()
+    if not name or name == "HEAD":
+        return None
+    return name
+
+
+def _branch_ref_exists(repo_root: Path, branch: str) -> bool:
+    try:
+        proc = subprocess.run(
+            ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}"],
+            cwd=repo_root,
+            capture_output=True,
+            text=True,
+            check=False,
+            env=_sanitized_git_env(),
+            timeout=DEFAULT_GIT_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return False
+    return proc.returncode == 0
+
+
+def _should_reap_settled_worktree(
+    *,
+    mode: str,
+    keep_worktree: bool,
+    final_status: str,
+    returncode: int | None,
+    dirty_on_exit: bool | None,
+) -> bool:
+    """Return whether settle may remove this dispatch checkout.
+
+    ``ask-* --review`` reaches this path through ``delegate.py dispatch
+    --mode read-only --worktree``. The sealed snapshot helper tears its own
+    temp root down and is not a second worktree owner.
+
+    Dirty or unknown trees stay mounted. ``--keep-worktree`` stays mounted.
+    Read-only reaps on any terminal status. ``workspace-write`` uses the same
+    rule as ``danger``: status ``done`` and return code 0.
+    """
+    if keep_worktree or dirty_on_exit is not False:
+        return False
+    if mode == "read-only":
+        return final_status in _READ_ONLY_SETTLE_REAP_STATUSES
+    if mode in _WRITE_CAPABLE_MODES:
+        return final_status == "done" and returncode == 0
+    return False
+
+
 def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
-    """Try to reap a clean successful delegate worktree, returning state metadata."""
+    """Remove a settled worktree checkout and keep its branch ref.
+
+    The scheduled reaper's PR, rollover, and GraphQL gates skip the clean
+    read-only review checkouts this path exists to drop. Settle has already
+    proved the tree is clean, so removal is worktree-only: ``git branch``
+    is never invoked, and a missing branch ref after removal is an error.
+    """
+    branch = _checked_out_branch(worktree)
     if str(_REPO_ROOT) not in sys.path:
         sys.path.insert(0, str(_REPO_ROOT))
 
@@ -3732,36 +3819,72 @@ def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
         # failure like any other, not a reason to take down the caller.
         from scripts.orchestration import reap_worktrees
 
-        results = reap_worktrees.reap_worktrees(
-            repo_root=_REPO_ROOT,
-            apply=True,
-            preserve_then_reap=False,
-            target_paths=[worktree],
+        dirty = _worktree_is_dirty(worktree)
+        if dirty is not False:
+            return {
+                "action": "skipped",
+                "path": str(worktree),
+                "branch": branch,
+                "reason": "dirty or unknown; refusing worktree removal",
+                "dirty": dirty,
+                "pr": None,
+                "error": None,
+            }
+
+        # ``_remove_worktree`` is ``git worktree remove --force`` after the
+        # delete-target guard. It does not prune the branch. Force is required
+        # because a clean porcelain tree can still hold ignored residue such
+        # as a worker ``.venv``, which makes a non-force remove refuse.
+        error = reap_worktrees._remove_worktree(
+            _REPO_ROOT,
+            reap_worktrees.WorktreeInfo(
+                path=worktree,
+                branch=branch,
+                head=None,
+                detached=branch is None,
+            ),
         )
     except Exception as exc:
         return {
             "action": "error",
             "path": str(worktree),
+            "branch": branch,
             "reason": "reaper raised",
+            "dirty": None,
+            "pr": None,
             "error": f"{type(exc).__name__}: {exc}",
         }
 
-    if not results:
+    if error is not None:
         return {
-            "action": "skipped",
+            "action": "error",
             "path": str(worktree),
-            "reason": "target path was not evaluated",
-            "error": None,
+            "branch": branch,
+            "reason": "worktree removal failed",
+            "dirty": False,
+            "pr": None,
+            "error": error,
         }
-    result = results[0]
+
+    if branch is not None and not _branch_ref_exists(_REPO_ROOT, branch):
+        return {
+            "action": "error",
+            "path": str(worktree),
+            "branch": branch,
+            "reason": "branch ref missing after worktree removal",
+            "dirty": False,
+            "pr": None,
+            "error": f"refs/heads/{branch} was deleted",
+        }
+
     return {
-        "action": result.action,
-        "path": result.path,
-        "branch": result.branch,
-        "reason": result.reason,
-        "dirty": result.dirty,
-        "pr": result.pr,
-        "error": result.error,
+        "action": "removed",
+        "path": str(worktree),
+        "branch": branch,
+        "reason": "settled clean worktree; branch ref kept",
+        "dirty": False,
+        "pr": None,
+        "error": None,
     }
 
 
@@ -5389,14 +5512,15 @@ def _run_worker(
         # instant CLI failure is visible in both task state and its stderr log.
         print(stderr_excerpt, file=sys.stderr, flush=True)
 
+    # Read-only checkout snapshots (read_only_checkout_pre/post) already ran
+    # above. Reap only after that comparison.
     worktree_reap: dict[str, Any] | None = None
-    if (
-        worktree_path
-        and mode == "danger"
-        and not keep_worktree
-        and final_status == "done"
-        and returncode == 0
-        and dirty_on_exit is False
+    if worktree_path and _should_reap_settled_worktree(
+        mode=mode,
+        keep_worktree=keep_worktree,
+        final_status=final_status,
+        returncode=returncode,
+        dirty_on_exit=dirty_on_exit,
     ):
         worktree_reap = _reap_finished_worktree(Path(worktree_path))
 

@@ -8036,6 +8036,254 @@ def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkey
     assert out.get("ok") is not True
 
 
+def _settle_reap_checkout(tmp_path, monkeypatch, *, task_id: str):
+    """Primary plus one linked dispatch worktree on its own branch."""
+    primary = tmp_path / "primary"
+    primary.mkdir()
+    _init_git_repo_for_test(primary, monkeypatch)
+    subprocess.run(
+        ["git", "config", "commit.gpgsign", "false"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    (primary / "README").write_text("base\n", encoding="utf-8")
+    subprocess.run(["git", "add", "README"], cwd=primary, check=True, capture_output=True, timeout=30)
+    subprocess.run(
+        ["git", "commit", "-m", "base"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    branch = f"cursor/{task_id}"
+    worktree = primary / ".worktrees" / "dispatch" / "cursor" / task_id
+    worktree.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "worktree", "add", "-b", branch, str(worktree), "HEAD"],
+        cwd=primary,
+        check=True,
+        capture_output=True,
+        timeout=30,
+    )
+    monkeypatch.setattr(delegate, "_REPO_ROOT", primary.resolve())
+    return primary.resolve(), worktree.resolve(), branch
+
+
+def _branch_ref_present(primary: Path, branch: str) -> bool:
+    proc = subprocess.run(
+        ["git", "rev-parse", "--verify", "--quiet", f"refs/heads/{branch}"],
+        cwd=primary,
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=30,
+    )
+    return proc.returncode == 0
+
+
+def _run_settle_reap_worker(
+    *,
+    tmp_tasks_dir,
+    tmp_path,
+    monkeypatch,
+    task_id: str,
+    mode: str,
+    ok: bool = True,
+    response: str = "reviewed the change",
+    returncode: int = 0,
+    dirty: bool = False,
+    keep_worktree: bool = False,
+    require_review_verdict: bool = False,
+    commits_ahead: int | None = None,
+):
+    primary, worktree, branch = _settle_reap_checkout(tmp_path, monkeypatch, task_id=task_id)
+    if dirty:
+        (worktree / "leak.txt").write_text("uncommitted\n", encoding="utf-8")
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(
+        state_path,
+        {
+            "task_id": task_id,
+            "status": "running",
+            "worktree_path": str(worktree),
+            "worktree_base": "main",
+            "worktree_branch": branch,
+        },
+    )
+    mock_result = type(
+        "_Result",
+        (),
+        {
+            "ok": ok,
+            "response": response,
+            "stderr_excerpt": None if ok else "worker failed",
+            "returncode": returncode,
+            "rate_limited": False,
+            "model": "gpt-5.6-terra",
+            "effort": "medium",
+            "cli_version": "fixture",
+        },
+    )()
+    with contextlib.ExitStack() as stack:
+        stack.enter_context(patch("agent_runtime.runner.invoke", return_value=mock_result))
+        if commits_ahead is not None:
+            stack.enter_context(patch.object(delegate, "_count_commits_ahead", return_value=commits_ahead))
+        delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="review the diff",
+            mode=mode,
+            cwd_str=str(worktree),
+            model=None,
+            hard_timeout=60,
+            effort="medium",
+            keep_worktree=keep_worktree,
+            require_review_verdict=require_review_verdict,
+        )
+    state = delegate._read_state(state_path)
+    assert state is not None
+    return primary, worktree, branch, state
+
+
+def test_read_only_clean_settle_removes_worktree_and_keeps_branch(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A clean read-only checkout is removed on done; the branch ref stays."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-clean",
+        mode="read-only",
+    )
+
+    assert state["status"] == "done"
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["read_only_mutation_paths"] == []
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["error"] is None
+    assert state["worktree_reap"]["branch"] == branch
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_dirty_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Uncommitted files in a read-only checkout are kept and reported."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-dirty",
+        mode="read-only",
+        dirty=True,
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_dirty_on_exit"] is True
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+    assert (worktree / "leak.txt").is_file()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_failed_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A failed read-only run still drops a clean checkout."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-failed",
+        mode="read-only",
+        ok=False,
+        response="could not finish",
+        returncode=1,
+    )
+
+    assert state["status"] == "failed"
+    assert state["read_only_checkout_snapshot_error"] is None
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["branch"] == branch
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_read_only_no_deliverable_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A clean read-only review with no verdict is still removed."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-noverdict",
+        mode="read-only",
+        response="I will keep looking and report later.",
+        require_review_verdict=True,
+    )
+
+    assert state["status"] == "no_deliverable"
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_workspace_write_done_clean_settle_removes_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """A clean successful workspace-write checkout is removed, same as danger."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ww-done",
+        mode="workspace-write",
+        response='DELIVERABLE: {"outcome":"no_change","reason":"already correct"}',
+        commits_ahead=0,
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_dirty_on_exit"] is False
+    assert state["worktree_reap"]["action"] == "removed"
+    assert state["worktree_reap"]["error"] is None
+    assert state["worktree_reap"]["branch"] == branch
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_keep_worktree_flag_keeps_clean_read_only_checkout(tmp_tasks_dir, tmp_path, monkeypatch):
+    """``--keep-worktree`` leaves a clean read-only checkout mounted."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-keep",
+        mode="read-only",
+        keep_worktree=True,
+    )
+
+    assert state["status"] == "done"
+    assert state["keep_worktree"] is True
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
+    """Danger still reaps only a clean successful done, not a failed run."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-danger-failed",
+        mode="danger",
+        ok=False,
+        response="could not finish",
+        returncode=1,
+        commits_ahead=0,
+    )
+
+    assert state["status"] == "failed"
+    assert state["worktree_reap"] is None
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
 def test_run_worker_records_completion_even_when_cancelled_during_finalize(
     tmp_tasks_dir,
     tmp_path,
