@@ -20,9 +20,10 @@ from __future__ import annotations
 import argparse
 import hashlib
 import json
+import math
 import re
 import sys
-from collections import Counter
+from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
 
@@ -115,7 +116,57 @@ def load_held_out_firewall(
     return test_doc_ids, test_sources, test_targets
 
 
-def load_brown_uk_controls(brown_path: Path) -> list[dict[str, Any]]:
+def build_jaccard_firewall_matcher(
+    test_sentences: set[str],
+    threshold: float = 0.80,
+) -> Any:
+    """Build an inverted index matcher to detect token Jaccard similarity >= threshold against held-out test."""
+    def tokenize(text: str) -> frozenset[str]:
+        return frozenset(re.findall(r"\w+", text.lower()))
+
+    test_token_list = [tokenize(s) for s in test_sentences if s]
+    test_lens = [len(t) for t in test_token_list]
+
+    word_to_test_ids: dict[str, list[int]] = defaultdict(list)
+    for idx, tset in enumerate(test_token_list):
+        for w in tset:
+            word_to_test_ids[w].append(idx)
+
+    req_factor = threshold / (1.0 + threshold)
+
+    def is_near_duplicate(cand_text: str) -> bool:
+        cand_tokens = tokenize(cand_text)
+        k = len(cand_tokens)
+        if k == 0:
+            return False
+        min_len = math.ceil(k * threshold)
+        max_len = int(k / threshold)
+
+        id_counts: dict[int, int] = defaultdict(int)
+        for w in cand_tokens:
+            tids = word_to_test_ids.get(w)
+            if not tids:
+                continue
+            for tid in tids:
+                if min_len <= test_lens[tid] <= max_len:
+                    id_counts[tid] += 1
+
+        for tid, inter in id_counts.items():
+            L = test_lens[tid]
+            req_intersection = math.ceil(req_factor * (k + L))
+            if inter >= req_intersection:
+                union = k + L - inter
+                if union > 0 and (inter / union) >= threshold:
+                    return True
+        return False
+
+    return is_near_duplicate
+
+
+def load_brown_uk_controls(
+    brown_path: Path,
+    is_near_dup_fn: Any = None,
+) -> list[dict[str, Any]]:
     """Load pristine control sentences with authentic attribution from Brown-UK corpus."""
     if not brown_path.is_file():
         raise RuntimeError(f"Required Brown-UK control file missing at {brown_path}")
@@ -126,24 +177,25 @@ def load_brown_uk_controls(brown_path: Path) -> list[dict[str, Any]]:
             if line.strip():
                 data = json.loads(line)
                 sent = data.get("sentence_text", "").strip()
+                if not sent or (is_near_dup_fn and is_near_dup_fn(sent)):
+                    continue
                 doc_id = data.get("document_id") or "brown_uk"
                 doc_name = data.get("source_metadata", {}).get("doc_name") or f"{doc_id}.txt"
                 eval_id = data.get("eval_id")
                 sent_idx = brown_doc_counters[doc_id]
                 brown_doc_counters[doc_id] += 1
-                if sent:
-                    controls.append(
-                        {
-                            "doc_id": doc_id,
-                            "doc_name": doc_name,
-                            "eval_id": eval_id,
-                            "sent_idx": sent_idx,
-                            "original_text": sent,
-                            "source_type": "brown_uk_good",
-                            "source_corpus": "brown_uk",
-                            "license": "CC BY-NC-SA 4.0",
-                        }
-                    )
+                controls.append(
+                    {
+                        "doc_id": doc_id,
+                        "doc_name": doc_name,
+                        "eval_id": eval_id,
+                        "sent_idx": sent_idx,
+                        "original_text": sent,
+                        "source_type": "brown_uk_good",
+                        "source_corpus": "brown_uk",
+                        "license": "CC BY-NC-SA 4.0",
+                    }
+                )
     return controls
 
 
@@ -239,13 +291,15 @@ def build_grammar_dataset(
         manifest_path=firewall_manifest_path,
         test_m2_path=test_m2_path,
     )
+    all_test_sentences = test_sources | test_targets
+    is_test_near_duplicate = build_jaccard_firewall_matcher(all_test_sentences, threshold=0.80)
     print(
         f"🔒 Held-out test firewall active: {len(test_doc_ids)} docs, "
-        f"{len(test_sources)} source sents, {len(test_targets)} target sents."
+        f"{len(test_sources)} source sents, {len(test_targets)} target sents, Jaccard < 0.80 enforced."
     )
 
     # 2. Load Brown-UK pristine controls
-    brown_controls = load_brown_uk_controls(brown_path)
+    brown_controls = load_brown_uk_controls(brown_path, is_near_dup_fn=is_test_near_duplicate)
     print(f"📖 Loaded {len(brown_controls)} pristine Brown-UK control sentences.")
 
     # 3. Parse UA-GEC train sentences
@@ -288,12 +342,17 @@ def build_grammar_dataset(
         orig_tokens = item["sent_tokens"]
         orig_text = detokenize(" ".join(orig_tokens))
 
-        if not orig_text or orig_text in test_sources or orig_text in test_targets:
+        if (
+            not orig_text
+            or orig_text in test_sources
+            or orig_text in test_targets
+            or is_test_near_duplicate(orig_text)
+        ):
             continue
 
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
-            if orig_text not in seen_control_texts:
+            if orig_text not in seen_control_texts and not is_test_near_duplicate(orig_text):
                 seen_control_texts.add(orig_text)
                 eval_clean_candidates.append(
                     {
@@ -335,6 +394,7 @@ def build_grammar_dataset(
                 orig_text != corr_text
                 and corr_text not in test_sources
                 and corr_text not in test_targets
+                and not is_test_near_duplicate(corr_text)
             ):
                 pair_key = (orig_text, corr_text)
                 if pair_key in seen_corrections:
@@ -402,12 +462,13 @@ def build_grammar_dataset(
             or orig_text in test_sources
             or orig_text in test_targets
             or orig_text in eval_forbidden_sentences
+            or is_test_near_duplicate(orig_text)
         ):
             continue
 
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
-            if orig_text not in seen_control_texts:
+            if orig_text not in seen_control_texts and not is_test_near_duplicate(orig_text):
                 seen_control_texts.add(orig_text)
                 train_clean_candidates.append(
                     {
@@ -450,6 +511,7 @@ def build_grammar_dataset(
                 and corr_text not in test_sources
                 and corr_text not in test_targets
                 and corr_text not in eval_forbidden_sentences
+                and not is_test_near_duplicate(corr_text)
             ):
                 pair_key = (orig_text, corr_text)
                 if pair_key in seen_corrections:

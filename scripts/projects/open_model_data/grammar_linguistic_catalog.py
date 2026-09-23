@@ -11,8 +11,46 @@ Provides:
 
 from __future__ import annotations
 
+import functools
 import re
+import sqlite3
+from pathlib import Path
 from typing import Any
+
+_VESUM_CONN: sqlite3.Connection | None = None
+
+
+def _get_vesum_connection() -> sqlite3.Connection | None:
+    global _VESUM_CONN
+    if _VESUM_CONN is None:
+        db_path = Path(__file__).resolve().parents[3] / "data" / "vesum.db"
+        if db_path.is_file():
+            try:
+                _VESUM_CONN = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
+            except Exception:
+                _VESUM_CONN = None
+    return _VESUM_CONN
+
+
+@functools.lru_cache(maxsize=100000)
+def is_vocative_form(word: str) -> bool:
+    """Check if word has a vocative form tag (v_kly) in VESUM."""
+    clean_word = word.strip().strip("«»\"'.,!?-–—;:()").lower()
+    if not clean_word:
+        return False
+    conn = _get_vesum_connection()
+    if conn is None:
+        return False
+    try:
+        cur = conn.cursor()
+        res = cur.execute(
+            "SELECT tags FROM forms_all WHERE word_form IN (?, ?, ?)",
+            (clean_word, clean_word.capitalize(), clean_word.upper()),
+        ).fetchall()
+        return any("v_kly" in row[0] for row in res)
+    except Exception:
+        return False
+
 
 # ── 1. In-Scope Tag Mapping & Coarse Categories ─────────────────────────────
 
@@ -501,10 +539,18 @@ def resolve_specific_linguistic_citation(
 
     # 3. Case government and inflection (G/Case)
     if primary_tag == "G/Case":
+        corr_voc = any(is_vocative_form(w) for w in corr.split())
+        err_voc = any(is_vocative_form(w) for w in err.split())
+        if corr_voc and not err_voc:
+            return (
+                "Український правопис (2019) § 87 / Олександр Пономарів «Культура слова»",
+                f"помилкове вживання називного відмінка замість кличного у звертанні «{err}» виправлено на «{corr}»",
+                f"«Український правопис» (2019, § 87) та норми культури мови (Олександр Пономарів) вимагають уживати у звертаннях кличний відмінок, а не називний: вживаємо «{corr}» замість «{err}»."
+            )
         return (
-            "VESUM / Український правопис (2019) / Словник дієслівного керування",
-            f"порушення синтаксичного керування або відмінкової форми «{err}» виправлено на «{corr}»",
-            f"Згідно зі «Словником дієслівного керування» та нормами синтаксису, залежне слово «{err}» має узгоджуватися у формі «{corr}» відповідно до граматичної валентності керівного слова."
+            "VESUM / Український правопис (2019)",
+            f"помилку у відмінковій формі «{err}» виправлено на нормативну форму «{corr}»",
+            f"Словникова база VESUM та граматичні норми української мови («Український правопис», 2019) визначають нормативні відмінкові форми слів у реченні: форму «{err}» виправлено на «{corr}»."
         )
 
     # 4. Prepositions (G/Prep)
@@ -547,19 +593,33 @@ def resolve_specific_linguistic_citation(
 
     # 7. Verb Voice (G/VerbVoice): strict distinction between -ся passives and -но/-то forms
     if primary_tag == "G/VerbVoice":
-        if err_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in err_lower.split()):
-            if corr_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in corr_lower.split()):
-                return (
-                    "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
-                    f"неприродну пасивну форму дієслова на «-ся» «{err}» замінено на безособову предикативну форму на «-но/-то» «{corr}»",
-                    f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати штучних пасивних форм на «-ся», віддаючи перевагу питомим безособовим предикативним формам на «-но/-то» («{corr}» замість «{err}»)."
-                )
+        err_has_sya = err_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in err_lower.split())
+        corr_has_sya = corr_lower.endswith(("ся", "сь")) or any(w.endswith(("ся", "сь")) for w in corr_lower.split())
+        err_has_noto = err_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in err_lower.split())
+        corr_has_noto = corr_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in corr_lower.split())
+
+        # If both words retain -ся (e.g. зупинялася -> зупинилася), it is aspect/lexical, NOT voice! Fail closed.
+        if err_has_sya and corr_has_sya:
+            return None
+
+        # -ся passive replaced by impersonal -но/-то
+        if err_has_sya and corr_has_noto:
+            return (
+                "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
+                f"неприродну пасивну форму дієслова на «-ся» «{err}» замінено на безособову предикативну форму на «-но/-то» «{corr}»",
+                f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати штучних пасивних форм на «-ся», віддаючи перевагу питомим безособовим предикативним формам на «-но/-то» («{corr}» замість «{err}»)."
+            )
+
+        # -ся passive replaced by active verb construction (replacement lacks -ся and lacks -но/-то)
+        if err_has_sya and not corr_has_sya and not corr_has_noto:
             return (
                 "Олександр Пономарів «Культура слова» / Борис Антоненко-Давидович «Як ми говоримо»",
                 f"неприродну пасивну форму на «-ся» «{err}» замінено на питому конструкцію активного стану «{corr}»",
                 f"Олександр Пономарів та Борис Антоненко-Давидович радять уникати невластивих пасивних форм дієслів на «-ся», віддаючи перевагу питомим активним зворотам («{corr}» замість «{err}»)."
             )
-        if err_lower.endswith(("но", "то")) or any(w.endswith(("но", "то")) for w in err_lower.split()):
+
+        # -но/-то replaced by other form
+        if err_has_noto and not corr_has_noto:
             return (
                 "Академічна граматика української мови / Олександр Пономарів",
                 f"безособову форму на «-но/-то» «{err}» узгоджено в реченні як «{corr}»",

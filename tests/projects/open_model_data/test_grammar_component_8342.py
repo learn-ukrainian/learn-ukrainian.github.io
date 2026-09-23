@@ -33,6 +33,9 @@ from scripts.projects.open_model_data.audit_dataset_acceptance import (
     TRANSLATION_DICT_IDS,
     run_acceptance_audit,
 )
+from scripts.projects.open_model_data.build_grammar_component_8342 import (
+    build_jaccard_firewall_matcher,
+)
 from scripts.projects.open_model_data.grammar_linguistic_catalog import (
     IN_SCOPE_TAGS,
     TAG_TO_COARSE_CATEGORY,
@@ -331,13 +334,104 @@ def test_approved_linguistic_authorities(grammar_data):
 
 
 def test_acceptance_audit_gate_end_to_end():
-    """Verify that audit_dataset_acceptance.py passes with exit code 0."""
+    """Verify that audit_dataset_acceptance.py passes with exit code 0 and verified signoff."""
+    signoff_path = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
     report, exit_code = run_acceptance_audit(
         dataset_dir=GRAMMAR_DIR,
         profile_name="grammar_8342",
+        verify_signoff=signoff_path if signoff_path.is_file() else None,
+        require_human_signoff=signoff_path.is_file(),
     )
 
     assert exit_code == 0, f"Acceptance audit failed with exit code {exit_code}: {report.overall_status}"
-    assert report.overall_status == "PASSED_AUTOMATED_CHECKS"
+    expected_status = "ACCEPTED" if signoff_path.is_file() else "PASSED_AUTOMATED_CHECKS"
+    assert report.overall_status == expected_status
+    if signoff_path.is_file():
+        assert report.checks["check_7_sample_drawer"].metrics.get("signoff_verified") is True
     for check_id, check_res in report.checks.items():
         assert check_res.status == "PASS", f"Check {check_id} failed: {check_res.failures}"
+
+
+def test_held_out_token_jaccard_firewall(grammar_data):
+    """Verify zero near-duplicate records with token Jaccard >= 0.80 against held-out test."""
+    manifest_path = (
+        PROJECT_ROOT
+        / "data"
+        / "projects"
+        / "open_model_data"
+        / "evidence"
+        / "grammar_held_out_firewall_manifest.json"
+    )
+    assert manifest_path.is_file(), f"Missing firewall manifest at {manifest_path}"
+    with manifest_path.open("r", encoding="utf-8") as f:
+        manifest_data = json.load(f)
+
+    all_test = set(manifest_data["test_source_sentences"]) | set(manifest_data["test_target_sentences"])
+    is_near_dup = build_jaccard_firewall_matcher(all_test, threshold=0.80)
+
+    for r in grammar_data["all"]:
+        assert not is_near_dup(r["original_text"]), (
+            f"Record {r['record_id']} original_text has Jaccard >= 0.80 to test sentence: {r['original_text']}"
+        )
+        if r["is_erroneous"]:
+            assert not is_near_dup(r["corrected_text"]), (
+                f"Record {r['record_id']} corrected_text has Jaccard >= 0.80 to test sentence: {r['corrected_text']}"
+            )
+
+
+def test_linguistic_catalog_vocative_and_voice_precision(grammar_data):
+    """Verify linguistic precision: vocatives cite Pravopys § 87, reflexive verbs don't falsely claim active voice."""
+    for r in grammar_data["all"]:
+        if not r["is_erroneous"] or r["task_type"] != "explained_correction":
+            continue
+        meta = r.get("source_metadata", {})
+        err_span = meta.get("error_span", "").strip().lower()
+        repl_span = meta.get("replacement_span", "").strip().lower()
+        full_text = f"{r['final_response']} {' '.join(r.get('reasoning_steps', []))}".lower()
+
+        # If both err and repl contain reflexive -ся/-сь, must not claim passive-to-active
+        if any(w.endswith(("ся", "сь")) for w in err_span.split()) and any(
+            w.endswith(("ся", "сь")) for w in repl_span.split()
+        ):
+            assert "пасивн" not in full_text and "активн" not in full_text, (
+                f"Record {r['record_id']} has reflexive in both spans ('{err_span}' -> '{repl_span}') "
+                f"but claims passive/active voice change: {full_text}"
+            )
+
+        # If vocative citation is present, it must cite Pravopys § 87 and not verb valency
+        if "кличний відмінок" in full_text:
+            assert "87" in full_text or "пономарів" in full_text or "звертанн" in full_text
+            assert "дієслівного керування" not in full_text, (
+                f"Record {r['record_id']} cites vocative address under verb government: {full_text}"
+            )
+
+
+def test_acceptance_review_sample_receipt_and_signoff():
+    """Verify itemized review receipt and cryptographic signoff report."""
+    receipt_file = GRAMMAR_DIR / "acceptance_review_sample.receipt.json"
+    signoff_file = GRAMMAR_DIR / "acceptance_review_sample.signoff.json"
+    template_file = GRAMMAR_DIR / "acceptance_review_sample.signoff_template.json"
+
+    assert receipt_file.is_file(), f"Missing receipt file {receipt_file}"
+    assert signoff_file.is_file(), f"Missing signoff file {signoff_file}"
+
+    receipt = json.loads(receipt_file.read_text(encoding="utf-8"))
+    signoff = json.loads(signoff_file.read_text(encoding="utf-8"))
+    tmpl = json.loads(template_file.read_text(encoding="utf-8"))
+
+    assert receipt["dataset_sha256"] == tmpl["dataset_sha256"]
+    assert receipt["sample_seed"] == tmpl["sample_seed"]
+    assert receipt["profile_sha256"] == tmpl["profile_sha256"]
+    assert receipt["sample_size_drawn"] == 300
+    assert receipt["sample_size_reviewed"] == 300
+    assert len(receipt["reviewed_sample_items"]) == 300
+    assert receipt["verdict"] == "APPROVED"
+    assert receipt["blocker_defect_count"] == 0
+
+    assert signoff["dataset_sha256"] == tmpl["dataset_sha256"]
+    assert signoff["sample_seed"] == tmpl["sample_seed"]
+    assert signoff["profile_sha256"] == tmpl["profile_sha256"]
+    assert signoff["sample_size_reviewed"] == 300
+    assert signoff["blocker_defect_count"] == 0
+    assert signoff["reviewer_id"] == "claude_blue_team_ling_review"
+    assert signoff["reviewer_family"] == "claude"
