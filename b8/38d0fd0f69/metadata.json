@@ -1,0 +1,27 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b838d0fd0f69",
+  "strategy": "manual-commit",
+  "branch": "codex/8565-gpt6-routing",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_api_session_telemetry.py",
+    "tests/test_session_record.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/b8/38d0fd0f69/0/metadata.json",
+      "transcript": "/b8/38d0fd0f69/0/full.jsonl",
+      "compact_transcript": "/b8/38d0fd0f69/0/transcript.jsonl",
+      "content_hash": "/b8/38d0fd0f69/0/content_hash.txt",
+      "prompt": "/b8/38d0fd0f69/0/prompt.txt"
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 52721,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 415616,
+    "output_tokens": 4636,
+    "api_call_count": 10
+  }
+}

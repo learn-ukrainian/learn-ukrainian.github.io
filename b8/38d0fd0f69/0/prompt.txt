@@ -1,0 +1,9 @@
+[delegate worktree]
+Run all file edits, tests, and git commands inside this worktree: /home/ops/learn-ukrainian/.worktrees/dispatch/codex/8565-gpt6-routing
+Do not switch branches in the main checkout.
+If you need a fresh base, run `git fetch origin main` INSIDE this worktree — `origin` here points at the canonical GitHub remote and fetch works from any linked worktree. NEVER use the primary checkout as a source of freshness (no `git -C <primary> pull/fetch/checkout`); it is the human's interactive home.
+
+[shared project interpreter]
+Never create, copy, symlink, activate, or use a `.venv` inside this worktree. Run every project Python command with `/home/ops/learn-ukrainian/.venv/bin/python` (the absolute primary interpreter), never `python`, `.venv/bin/python`, or `python -m venv .venv`. Do not change `PYTHONPATH` merely because the worker cwd is a worktree.
+
+Review the exact local commit bb7cd576f4 on branch codex/8565-gpt6-routing in /home/ops/learn-ukrainian/.worktrees/dispatch/codex/8565-gpt6-routing. This is a CI follow-up delta after full GPT-6 Sol and Claude Opus 5.5 approvals at earlier heads. Read-only review only. Review diff 755b4dd76e44caac82d399ba1c8ad4eb992f97ce..bb7cd576f4, focusing on whether the changed Layer-B Codex config SHA assertion accurately represents the intentional GPT-6 Sol route and whether it masks any behavior regression. The previous CI shard 1 failed only test_codex_print_config_sha_unchanged_by_grok_seat_rename, because expected old hash e40e... while actual GPT-6 Sol config hash is 19a19... . All 8 tests in tests/test_grok_seat_identity.py pass locally after the update. Inspect directly; do not rely on this description as proof. Return material findings with file/line and VERDICT: APPROVE or CHANGES_REQUESTED. Do not modify files or merge.

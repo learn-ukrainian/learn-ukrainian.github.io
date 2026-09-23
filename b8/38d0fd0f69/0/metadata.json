@@ -1,0 +1,49 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "b838d0fd0f69",
+  "session_id": "01a0ce40-bd65-7f00-a2b3-83976d527f14",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-23T12:35:52.212180583Z",
+  "branch": "codex/8565-gpt6-routing",
+  "checkpoints_count": 1,
+  "save_step_count": 1,
+  "files_touched": [
+    "tests/test_api_session_telemetry.py",
+    "tests/test_session_record.py"
+  ],
+  "agent": "Codex",
+  "model": "gpt-6-sol",
+  "turn_id": "56172127a50b",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 52721,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 415616,
+    "output_tokens": 4636,
+    "api_call_count": 10
+  },
+  "session_metrics": {
+    "turn_count": 1
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-23T12:35:52.157535015Z",
+    "agent_lines": 5,
+    "agent_removed": 7,
+    "human_added": 5,
+    "human_modified": 2,
+    "human_removed": 0,
+    "total_committed": 12,
+    "total_lines_changed": 23,
+    "agent_percentage": 52.17391304347826,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}
