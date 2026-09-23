@@ -54,6 +54,14 @@ result is empty, the envelope may include:
 }
 ```
 
+### Optional `receipt` (review-recording mode only)
+
+When the dispatch sets the `LU_REVIEW_*` recording environment and the call was
+recorded, the envelope carries a top-level `"receipt": "<receipt id>"` — the same
+id as the `receipt: <id>` line ending the MCP text content. Clients present
+`structuredContent` to the model, so the id must be in both channels. With the
+environment unset the key is absent and the output is unchanged.
+
 ### V4 verify tools (additive)
 
 `verify_word`, `verify_words`, `verify_lemma`, `verify_stress`, and

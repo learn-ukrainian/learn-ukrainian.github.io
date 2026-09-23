@@ -1380,3 +1380,68 @@ def test_server_recording_off_preserves_typed_structured_content(
     assert res.is_error is False
     assert not any("receipt:" in t.text for t in res.content)
     assert res.structured_content == {"disposition": "found", "hits": 1}
+
+
+def test_review_mode_receipt_in_both_wire_channels(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import CallToolRequestParams, TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    original = {"disposition": "found", "hits": 1, "evidence_identifiers": []}
+
+    async def fake_verify_words(_arguments):
+        content = [TextContent(type="text", text="Batch verification: 1 words\nFound: 1/1")]
+        return content, dict(original)
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
+
+    params = CallToolRequestParams(name="verify_words", arguments={"words": ["слово"]})
+    res = _run(server_module._on_call_tool(None, params))
+    assert res.is_error is False
+    receipt = records(ledger)[-1]["receipt_id"]
+    assert res.structured_content == {**original, "receipt": receipt}
+    assert res.content[-1].text.endswith("\nreceipt: " + receipt)
+    assert lookup(ledger, receipt)["tool"] == "verify_words"
+
+
+def test_review_mode_without_typed_outcome_keeps_structured_content_empty(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import CallToolRequestParams, TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+
+    async def fake(_arguments):
+        return [TextContent(type="text", text="plain-result")]
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake)
+    params = CallToolRequestParams(name="verify_words", arguments={"words": ["слово"]})
+    res = _run(server_module._on_call_tool(None, params))
+    receipt = records(ledger)[-1]["receipt_id"]
+    assert res.structured_content is None
+    assert res.content[-1].text == "plain-result\nreceipt: " + receipt
+
+
+def test_review_receipt_does_not_leak_into_recorded_result_or_v4(
+    server_module, tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    from mcp.types import TextContent
+
+    ledger = tmp_path / "review-1" / "attempt-1.jsonl"
+    _arm(monkeypatch, ledger)
+    seen: list[dict] = []
+    monkeypatch.setattr(
+        server_module, "_record_v4_typed_invocation", lambda *, name, typed_outcome: seen.append(typed_outcome)
+    )
+
+    async def fake_verify_words(_arguments):
+        return [TextContent(type="text", text="body")], {"disposition": "found", "hits": 1}
+
+    monkeypatch.setattr(server_module, "handle_verify_words", fake_verify_words)
+    _content, _is_error, typed = _run(server_module._dispatch_tool_call("verify_words", {"words": ["слово"]}))
+    assert typed["receipt"] == records(ledger)[-1]["receipt_id"]
+    assert seen == [{"disposition": "found", "hits": 1}]
+    assert records(ledger)[-1]["result"] == "body"
