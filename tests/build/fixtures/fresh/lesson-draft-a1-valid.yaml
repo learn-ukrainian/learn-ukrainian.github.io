@@ -113,6 +113,9 @@ activities:
   items:
   - sentence: 1. ____ Які каталоги містяться на диску Б?
     answer: Які
+    mode: form-choice
+    record: W-1
+    answer_tags: tag-a
     options:
     - Які
     - підкаталоги

@@ -52,8 +52,17 @@ Cross-family independence checks evaluate either the **attested concrete model f
   - `scripts/delegate.py` `_check_capacity_hint` keeps a non-blocking stderr
     note for ordinary busy lanes, but reads the session-stream store for Cursor
     admission. A live Cursor process-driver lease refuses `--agent cursor`
-    before spawn; `--force-agent` overrides with an explicit NOTE. Cursor
-    worker-only in-flight state does not satisfy this lease check.
+    before spawn **only for self-dispatch**: when the lease's
+    `holder_process_id` is the dispatching process or one of its ancestors
+    (walked via `/proc/<pid>/stat`) on the same `holder_host_id` — exactly the
+    case that deadlocks the single-concurrency lane. A live lease from any
+    other lane, session, or host prints a stderr NOTE naming the lease stream
+    and spawns a separate Cursor worker: concurrent Cursor workers are
+    supported. An ancestry lookup failure (no `/proc`, permission error) is
+    treated as "not self" with a NOTE; an unreadable or malformed store stays
+    fail-closed. `--force-agent` overrides the self-dispatch refusal with an
+    explicit NOTE. Cursor worker-only in-flight state does not satisfy this
+    lease check.
   - `scripts/config/fleet_communications.yaml` `cursor.concurrency_limit: 1` is
     endpoint metadata (surfaced by the fleet API), not a general dispatch worker
     cap; the session-stream lease is the Cursor driver admission signal.

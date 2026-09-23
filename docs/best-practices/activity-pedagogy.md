@@ -126,9 +126,15 @@ These survive because Ukrainian school materials and ZNO exams use them at every
 | Type | Purpose | Where |
 |---|---|---|
 | `quiz` | Multiple-choice question with 2–5 options | All tracks, all levels |
-| `true-false` | Judge a statement against the text | A1–B2, all seminars except C1/C2-core |
-| `fill-in` | Short-answer blank in a single sentence | All tracks, all levels |
+| `true-false` | Post-text check only. The statement is judged against the dialogue or a quote. The explanation is required and cites that text. At most 4 items per activity at A1–B1 (the B2 cap is decided with the first B2 plans). A lesson has no more of these activities than it has text-hosting steps, and two are never consecutive in consolidation | A1–B2, all seminars except C1/C2-core |
+| `fill-in` | One blank, tapped from a closed list. `form-choice`: 2–4 forms of one word-store record (exactly 4 at B2). `orthography` (A1 only): one of five closed two-way lists (и|і deferred: no Правопис/primer contrast record at A1). No free typing inline at A1–A2; workbook `cloze` at B1+ keeps typing. The explanation is required, in the level's register | All tracks, all levels |
 | `mark-the-words` | Click every word matching a criterion in a passage | A2 onward, all tracks |
+
+Fresh-build lessons bind `fill-in` and `true-false` through `schemas/fresh-activity-constraints-v1.json` (the `activity_fresh_constraints` check) and through the plan-validate placement rule. Existing modules are unchanged. The level→type matrix in §3 is unchanged.
+
+Explanation register, by level: A1 uses scaffolded patterns with English support where the immersion rule allows, and no grammatical terminology. A2 uses scaffolded patterns, with English support only where the immersion rule allows, and no grammatical terminology. B1+ uses Ukrainian with Ukrainian grammatical terms.
+
+A true-false statement is not checked against a bilingual passage or against a video or culture aside.
 
 ### Production (short → long)
 

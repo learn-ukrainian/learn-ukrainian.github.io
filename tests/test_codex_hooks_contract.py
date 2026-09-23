@@ -32,7 +32,7 @@ HOOKS_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "hooks.json"
 PROJECT_CONFIG = REPO_ROOT / "agents_extensions" / "codex" / "config.toml"
 ENTRY = REPO_ROOT / "scripts" / "agent_runtime" / "codex_hook_entry.sh"
 VENV_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "enforce-venv.sh"
-INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-gemini-inbox.sh"
+INBOX_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "check-agent-inbox.sh"
 SESSION_SETUP_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "session-setup.sh"
 POST_COMPACT_HOOK = REPO_ROOT / "agents_extensions" / "shared" / "hooks" / "post-compact.sh"
 
@@ -602,6 +602,7 @@ def test_inbox_hook_targets_requested_provider(tmp_path: Path) -> None:
     _write_inbox_fixture(fixtures, "codex", "codex-only message")
     _write_inbox_fixture(fixtures, "claude", "claude-only message")
     environment = os.environ.copy()
+    environment.pop("AB_DB_PATH", None)
     environment.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -636,6 +637,7 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
     _write_inbox_fixture(fixtures, "codex", "codex-only message")
     _write_inbox_fixture(fixtures, "claude", "claude-only message")
     environment = os.environ.copy()
+    environment.pop("AB_DB_PATH", None)
     environment.update(
         {
             "CLAUDE_PROJECT_DIR": str(tmp_path),
@@ -705,3 +707,90 @@ def test_inbox_dedupes_by_recipient_and_native_session_and_reemits_new_ids(
         "-m scripts.ai_agent_bridge inbox --for claude",
         "-m scripts.ai_agent_bridge inbox --for codex",
     ]
+
+
+def _load_pytest_stamp_module():
+    """Import the stamp helper by path; it has no package context of its own."""
+    import importlib.machinery
+    import importlib.util
+    import sys
+
+    helper = REPO_ROOT / ".githooks" / "pytest_stamp.py"
+    spec = importlib.util.spec_from_loader(
+        "pytest_stamp",
+        importlib.machinery.SourceFileLoader("pytest_stamp", str(helper)),
+    )
+    assert spec is not None and spec.loader is not None
+    module = importlib.util.module_from_spec(spec)
+    sys.modules[spec.name] = module
+    spec.loader.exec_module(module)
+    return module
+
+
+def _post_tool_use_pytest_payload(worktree: Path, tool_name: str) -> dict:
+    return {
+        "hook_event_name": "PostToolUse",
+        "cwd": str(worktree),
+        "tool_name": tool_name,
+        "tool_input": {
+            "command": ".venv/bin/python -m pytest tests/test_example.py -q",
+            "workdir": str(worktree),
+        },
+        "duration_ms": 120,
+        "tool_response": {"stdout": "1 passed in 0.10s\n"},
+    }
+
+
+def _stamp_environment(stamps: Path) -> dict[str, str]:
+    environment = {key: value for key, value in os.environ.items() if not key.startswith("GIT_")}
+    environment["TMPDIR"] = str(stamps)
+    return environment
+
+
+def test_codex_entry_post_tool_use_stamps_bash_pytest_payload(tmp_path: Path) -> None:
+    _, worktree = _make_linked_worktree(tmp_path)
+    stamps = tmp_path / "stamps"
+    stamps.mkdir()
+    stamp_module = _load_pytest_stamp_module()
+    identity = stamp_module.stamp_identity(worktree)
+    assert identity is not None
+    marker = stamp_module.marker_path(identity, {"TMPDIR": str(stamps)})
+
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "post-tool-use"],
+        cwd=worktree,
+        input=json.dumps(_post_tool_use_pytest_payload(worktree, "Bash")),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=_stamp_environment(stamps),
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert marker.read_text(encoding="utf-8").strip() == identity.key
+
+
+def test_codex_entry_post_tool_use_skips_stamp_for_non_bash_payload(tmp_path: Path) -> None:
+    """pytest_stamp only inspects a Bash command; other tools never invoke it (#8529)."""
+    _, worktree = _make_linked_worktree(tmp_path)
+    stamps = tmp_path / "stamps"
+    stamps.mkdir()
+    stamp_module = _load_pytest_stamp_module()
+    identity = stamp_module.stamp_identity(worktree)
+    assert identity is not None
+    marker = stamp_module.marker_path(identity, {"TMPDIR": str(stamps)})
+
+    completed = subprocess.run(
+        ["bash", str(ENTRY), "post-tool-use"],
+        cwd=worktree,
+        input=json.dumps(_post_tool_use_pytest_payload(worktree, "Edit")),
+        text=True,
+        capture_output=True,
+        check=False,
+        env=_stamp_environment(stamps),
+        timeout=30,
+    )
+
+    assert completed.returncode == 0, completed.stderr
+    assert not marker.exists()
