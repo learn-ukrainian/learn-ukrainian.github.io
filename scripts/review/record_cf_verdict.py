@@ -93,7 +93,11 @@ def author_families(repository: str, pr_number: int, task_root: Path) -> set[str
         harness, model = trailers[0].split("/", 1)
         if not harness or not model:
             raise RecordError("author model unknown")
-        family = resolve_author_family(f"{harness}:{model}" if harness == "cursor" else model)
+        family = resolve_author_family(model)
+        # Cursor has historically required harness-aware resolution. For all
+        # other harnesses, use that form when the bare model is unresolved.
+        if harness == "cursor" or family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
+            family = resolve_author_family(f"{harness}:{model}")
         if family in UNRESOLVED_AUTHOR_FAMILIES or family == "unknown":
             # The common X-Agent trailer names a task, not a model. Resolve
             # that task's recorded model; the trailer alone is insufficient.

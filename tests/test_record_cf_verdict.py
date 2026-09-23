@@ -218,6 +218,54 @@ def test_mixed_or_unknown_author_family_refused(monkeypatch, tmp_path):
         recorder.author_families(REPOSITORY, 42, tasks)
 
 
+@pytest.mark.parametrize(
+    "trailer,expected",
+    [
+        ("kimi/k2", {"moonshot"}),
+        ("codex/gpt-6-luna", {"openai"}),
+        ("cursor/grok-4.7", {"xai"}),
+    ],
+)
+def test_author_family_resolves_model_with_harness_fallback(monkeypatch, tmp_path, trailer, expected):
+    def commit(value):
+        return {"commit": {"message": f"work\n\nX-Agent: {value}"}}
+
+    monkeypatch.setattr(recorder, "_pages", lambda args: [commit(trailer)])
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == expected
+
+
+def test_unknown_harness_model_is_refused(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "work\n\nX-Agent: unknownharness/x"}}],
+    )
+    with pytest.raises(recorder.RecordError):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_cursor_auto_union_family_is_refused(monkeypatch, tmp_path):
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [{"commit": {"message": "work\n\nX-Agent: cursor/auto"}}],
+    )
+    with pytest.raises(recorder.RecordError, match="mixed or unknown"):
+        recorder.author_families(REPOSITORY, 42, tmp_path)
+
+
+def test_mixed_xai_and_moonshot_author_families_are_returned(monkeypatch, tmp_path):
+    def commit(trailer):
+        return {"commit": {"message": f"work\n\nX-Agent: {trailer}"}}
+
+    monkeypatch.setattr(
+        recorder,
+        "_pages",
+        lambda args: [commit("grok/grok-4.7"), commit("kimi/k2")],
+    )
+    assert recorder.author_families(REPOSITORY, 42, tmp_path) == {"xai", "moonshot"}
+
+
 def test_author_task_record_resolves_task_id_trailer(monkeypatch, tmp_path):
     tasks = tmp_path / "tasks"
     write_task(tasks, task_id="author-task", model="gemini-3.8-flash-high", agent="agy")
