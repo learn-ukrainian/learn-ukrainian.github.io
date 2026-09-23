@@ -1867,6 +1867,100 @@ def test_run_worker_persists_runtime_telemetry(tmp_tasks_dir, tmp_path):
     assert state["returncode_reason"] is None
 
 
+def _run_cursor_review_worker(tmp_tasks_dir, tmp_path, invoke):
+    task_id = "cursor-review-restore"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "status": "spawning"})
+    with patch("agent_runtime.runner.invoke", side_effect=invoke) as runtime:
+        rc = delegate._run_worker(
+            task_id=task_id,
+            agent="cursor",
+            prompt="review",
+            mode="read-only",
+            cwd_str=str(tmp_path),
+            model=None,
+            hard_timeout=60,
+            strict_mcp_config=True,
+            mcp_config_path=str(tmp_path / "attempt.json"),
+        )
+    return rc, delegate._read_state(state_path), runtime
+
+
+@pytest.mark.parametrize("preexisting", [True, False])
+def test_cursor_review_restores_mcp_file_after_worker(tmp_tasks_dir, tmp_path, preexisting):
+    mcp_path = tmp_path / ".cursor" / "mcp.json"
+    mcp_path.parent.mkdir()
+    original = b' {"mcpServers": {"other": {}}}\r\n\xff'
+    if preexisting:
+        mcp_path.write_bytes(original)
+
+    def invoke(*_args, **_kwargs):
+        mcp_path.write_bytes(b"attempt ledger config\n")
+        return _finalize_mock_result()
+
+    rc, state, runtime = _run_cursor_review_worker(tmp_tasks_dir, tmp_path, invoke)
+    runtime.assert_called_once()
+    assert rc == 0
+    assert state["worktree_disallow_reuse"] is True
+    assert "worktree_review_attempt_only" not in state
+    if preexisting:
+        assert mcp_path.read_bytes() == original
+    else:
+        assert not mcp_path.exists()
+
+
+def test_cursor_review_backup_read_failure_stops_before_invoke(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    mcp_path = tmp_path / ".cursor" / "mcp.json"
+    mcp_path.parent.mkdir()
+    original = b"original config\n"
+    mcp_path.write_bytes(original)
+    real_read_bytes = Path.read_bytes
+
+    def fail_backup(path):
+        if path == mcp_path:
+            raise OSError("backup denied")
+        return real_read_bytes(path)
+
+    monkeypatch.setattr(Path, "read_bytes", fail_backup)
+    rc, state, runtime = _run_cursor_review_worker(
+        tmp_tasks_dir, tmp_path, lambda *_args, **_kwargs: pytest.fail("must not invoke")
+    )
+    runtime.assert_not_called()
+    assert rc != 0
+    assert "failed to back up" in state["stderr_excerpt"]
+    assert "backup denied" in state["stderr_excerpt"]
+    assert real_read_bytes(mcp_path) == original
+
+
+def test_cursor_review_interrupt_before_backup_keeps_file(
+    tmp_tasks_dir, tmp_path
+):
+    mcp_path = tmp_path / ".cursor" / "mcp.json"
+    mcp_path.parent.mkdir()
+    original = b"original config\n"
+    mcp_path.write_bytes(original)
+
+    class InterruptedTimeout:
+        def __gt__(self, _other):
+            raise KeyboardInterrupt("before backup")
+
+    task_id = "cursor-review-early-interrupt"
+    state_path = delegate._state_path(task_id)
+    delegate._write_state_atomic(state_path, {"task_id": task_id, "status": "spawning"})
+    with patch("agent_runtime.runner.invoke") as runtime:
+        rc = delegate._run_worker(
+            task_id=task_id, agent="cursor", prompt="review", mode="read-only",
+            cwd_str=str(tmp_path), model=None, hard_timeout=60,
+            silence_timeout=InterruptedTimeout(), strict_mcp_config=True,
+        )
+    runtime.assert_not_called()
+    assert rc != 0
+    assert "UnboundLocalError" not in str(delegate._read_state(state_path))
+    assert mcp_path.read_bytes() == original
+
+
 def test_run_worker_persists_cursor_resolved_model_companion(tmp_tasks_dir, tmp_path):
     state_path = delegate._state_path("cursor-resolved-model")
     delegate._write_state_atomic(
@@ -9429,6 +9523,79 @@ def test_dispatch_populates_worktree_metadata_on_cwd_reuse(
     assert state["worktree_path"] == str(dispatch_wt)
     assert state["worktree_reused"] is True
     assert state["worktree_branch"] is not None
+
+
+def test_review_attempt_marker_blocks_reuse_but_unmarked_worktree_reuses(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    marker = delegate._review_attempt_marker_path(dispatch_wt)
+    assert not marker.exists()
+
+    # An ordinary attach still works before the review attempt marks the tree.
+    assert delegate.cmd_dispatch(
+        _write_args(task_id="unmarked", mode="read-only", cwd=str(dispatch_wt))
+    ) == 0
+    assert delegate._read_state(delegate._state_path("unmarked"))["worktree_reused"] is True
+
+    delegate._mark_review_attempt_worktree(dispatch_wt, "review-original")
+    assert marker.read_text(encoding="utf-8") == "review-original\n"
+    with pytest.raises(ValueError, match=r"review-original.*#8517"):
+        delegate._ensure_worktree(
+            agent="codex", task_id="task-1", raw_path=str(dispatch_wt), resolved_base_sha="unused"
+        )
+    assert delegate.cmd_dispatch(
+        _write_args(task_id="marked", mode="read-only", cwd=str(dispatch_wt))
+    ) == 1
+    assert "review-original" in capsys.readouterr().err
+
+
+def test_review_attempt_dispatch_marks_git_admin_and_audit_state(
+    tmp_tasks_dir, tmp_path, monkeypatch
+):
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    _patch_worker_popen(monkeypatch)
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    plan = type("Plan", (), {"config_path": tmp_path / "attempt.json"})()
+    with patch("scripts.agent_runtime.review_mcp.prepare_review_attempt", return_value=plan):
+        rc = delegate.cmd_dispatch(
+            _write_args(
+                agent="claude", task_id="review-marked", mode="read-only", cwd=str(dispatch_wt),
+                review_attempt=str(manifest), review_id="rev-test", attempt_id="att-test",
+            )
+        )
+    assert rc == 0
+    assert delegate._review_attempt_marker_path(dispatch_wt).read_text(encoding="utf-8") == "review-marked\n"
+    state = delegate._read_state(delegate._state_path("review-marked"))
+    assert state["worktree_disallow_reuse"] is True
+    assert "worktree_review_attempt_only" not in state
+
+
+def test_review_attempt_refuses_vps_forward_before_transport(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys
+):
+    manifest = tmp_path / "review.yaml"
+    manifest.write_text("review: test\n", encoding="utf-8")
+    monkeypatch.setattr(
+        job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "test", "remote-host")
+    )
+    monkeypatch.setattr(
+        job_host_exec, "forward_dispatch", lambda **_kwargs: pytest.fail("must not forward")
+    )
+    rc = delegate.cmd_dispatch(
+        _write_args(
+            agent="claude", task_id="review-local", mode="read-only",
+            review_attempt=str(manifest), review_id="rev-test", attempt_id="att-test",
+        )
+    )
+    assert rc == 2
+    assert "cannot forward to remote-host" in capsys.readouterr().err
 
 
 def test_finalize_cwd_reuse_with_pushed_commits_counts_deliverable(

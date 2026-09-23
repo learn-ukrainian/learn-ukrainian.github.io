@@ -1233,7 +1233,9 @@ def _ensure_sibling_repo_worktree(
     try:
         worktree_path.relative_to(root)
     except ValueError as exc:
-        raise ValueError(f"sibling worktree path {worktree_path} is outside target repo {root}") from exc
+        raise ValueError(
+            f"sibling worktree path {worktree_path} is outside target repo {root}"
+        ) from exc
     worktree_branch = _derive_worktree_branch(agent, task_id)
     telemetry: dict[str, Any] = {
         "base_sha": None,
@@ -1247,6 +1249,7 @@ def _ensure_sibling_repo_worktree(
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
+        _refuse_review_attempt_worktree_reuse(worktree_path)
         telemetry["reused"] = True
         actual_sha = _resolve_sha(worktree_path)
         if actual_sha is None:
@@ -1255,7 +1258,8 @@ def _ensure_sibling_repo_worktree(
         return worktree_path, worktree_branch, telemetry
     if dry_run:
         raise ValueError(
-            f"sibling --repo dry-run found no worktree at {worktree_path}; rerun without --dry-run to create one"
+            f"sibling --repo dry-run found no worktree at {worktree_path}; "
+            "rerun without --dry-run to create one"
         )
     branch_name = _base_branch_name(base)
     origin_ref = f"origin/{branch_name}"
@@ -1275,7 +1279,9 @@ def _ensure_sibling_repo_worktree(
             env=_sanitized_git_env(),
         )
     except subprocess.TimeoutExpired as exc:
-        raise RuntimeError(f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}") from exc
+        raise RuntimeError(
+            f"git fetch timed out after {DEFAULT_GIT_TIMEOUT_S}s for sibling repo {root}"
+        ) from exc
     if fetch_proc.returncode != 0:
         detail = (fetch_proc.stderr or fetch_proc.stdout or "git fetch failed").strip()
         raise RuntimeError(f"could not fetch {origin_ref} in sibling repo {root}: {detail}")
@@ -4898,6 +4904,43 @@ def _resolve_worktree_base_sha(
     )
 
 
+_REVIEW_ATTEMPT_NO_REUSE_MARKER = "lu-review-attempt-no-reuse"
+
+
+def _review_attempt_marker_path(worktree_path: Path) -> Path:
+    proc = subprocess.run(
+        ["git", "-C", str(worktree_path), "rev-parse", "--absolute-git-dir"],
+        capture_output=True,
+        text=True,
+        check=False,
+        timeout=DEFAULT_GIT_TIMEOUT_S,
+        env=_sanitized_git_env(),
+    )
+    git_dir = Path(proc.stdout.strip())
+    if proc.returncode != 0 or not git_dir.is_absolute():
+        raise RuntimeError(f"could not resolve git admin directory for {worktree_path}")
+    return git_dir / _REVIEW_ATTEMPT_NO_REUSE_MARKER
+
+
+def _refuse_review_attempt_worktree_reuse(worktree_path: Path) -> None:
+    # A real linked worktree has a .git pointer. Test stubs may model only the
+    # directory; the existing validation still handles those paths.
+    if not (worktree_path / ".git").exists():
+        return
+    marker = _review_attempt_marker_path(worktree_path)
+    if marker.is_file():
+        task_id = marker.read_text(encoding="utf-8").strip()
+        raise ValueError(
+            f"worktree {worktree_path} belongs to review attempt task {task_id!r}; "
+            "reuse refused (#8517)"
+        )
+
+
+def _mark_review_attempt_worktree(worktree_path: Path, task_id: str) -> None:
+    marker = _review_attempt_marker_path(worktree_path)
+    marker.write_text(f"{task_id}\n", encoding="utf-8")
+
+
 def _ensure_worktree(
     *,
     agent: str,
@@ -4969,6 +5012,7 @@ def _ensure_worktree(
     if worktree_path.exists():
         if not worktree_path.is_dir():
             raise ValueError(f"worktree path exists but is not a directory: {worktree_path}")
+        _refuse_review_attempt_worktree_reuse(worktree_path)
         telemetry["reused"] = True
         if resolved_base_sha is None:
             telemetry["rebased"] = _validate_existing_worktree(
@@ -5574,6 +5618,9 @@ def _run_worker(
     delivery_declaration: dict[str, Any] | None = None
     auto_finalize: AutoFinalizeResult | None = None
     telemetry_settled = False
+    cursor_mcp_path: Path | None = None
+    cursor_mcp_backup: bytes | None = None
+    cursor_mcp_existed = False
 
     try:
         try:
@@ -5600,17 +5647,14 @@ def _run_worker(
                 tool_config["review_id"] = review_id
             if attempt_id is not None:
                 tool_config["attempt_id"] = attempt_id
-            cursor_mcp_path: Path | None = None
-            cursor_mcp_backup: bytes | None = None
-            cursor_mcp_existed: bool = False
             if strict_mcp_config and agent == "cursor":
                 cursor_mcp_path = cwd / ".cursor" / "mcp.json"
                 if cursor_mcp_path.is_file():
                     cursor_mcp_existed = True
                     try:
                         cursor_mcp_backup = cursor_mcp_path.read_bytes()
-                    except OSError:
-                        cursor_mcp_backup = None
+                    except OSError as exc:
+                        raise RuntimeError(f"failed to back up {cursor_mcp_path}: {exc}") from exc
 
             result = runtime_invoke(
                 agent,
@@ -5743,7 +5787,6 @@ def _run_worker(
         final_state = _read_state(state_path) or {}
         if strict_mcp_config:
             final_state["worktree_disallow_reuse"] = True
-            final_state["worktree_review_attempt_only"] = True
 
         if mode == "read-only":
             read_only_checkout_post, post_snapshot_error = _read_only_checkout_snapshot(cwd)
@@ -5841,8 +5884,9 @@ def _run_worker(
                     if normalized_branch.startswith("origin/"):
                         normalized_branch = normalized_branch.removeprefix("origin/")
                     containment = _load_worktree_containment()
-                    if normalized_branch not in containment.PROTECTED_BRANCHES and not (
-                        commits_ahead == 0 and dirty_on_exit is False
+                    if (
+                        normalized_branch not in containment.PROTECTED_BRANCHES
+                        and not (commits_ahead == 0 and dirty_on_exit is False)
                     ):
                         unpushed_commits = _count_unpushed_commits(
                             Path(worktree_path),
@@ -6899,6 +6943,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
     if not bool(getattr(args, "dry_run", False)):
         placement, reason, host_id = decide_dispatch_placement(repo_root=_REPO_ROOT)
         if placement == "vps" and host_id:
+            if review_attempt:
+                print(
+                    f"❌ review attempt refused: cannot forward to {host_id}; "
+                    "the attempt ledger must stay on this host (#8517)",
+                    file=sys.stderr,
+                )
+                return 2
             print(f"→ forwarding dispatch to {host_id} (run_nonce={run_nonce})", file=sys.stderr)
             forward_error: BaseException | None = None
             forward_rc: int | None = None
@@ -7291,6 +7342,13 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         candidate_cwd = _resolve_cwd_path(args.cwd)
         resolved_wt = _resolve_verified_worktree_path(candidate_cwd)
         if resolved_wt:
+            try:
+                _refuse_review_attempt_worktree_reuse(resolved_wt)
+            except (OSError, ValueError, RuntimeError) as exc:
+                stdout_fd.close()
+                stderr_fd.close()
+                print(f"❌ failed to reuse worktree for {task_id!r}: {exc}", file=sys.stderr)
+                return 1
             worktree_path = resolved_wt
             worktree_branch = _current_branch(resolved_wt)
             worktree_telemetry["reused"] = True
@@ -7302,6 +7360,15 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 sparse_include=sparse_include,
             )
             _record_worktree_local_venv_warning(resolved_wt, worktree_telemetry)
+
+    if review_plan is not None and worktree_path is not None:
+        try:
+            _mark_review_attempt_worktree(worktree_path, task_id)
+        except (OSError, RuntimeError) as exc:
+            stdout_fd.close()
+            stderr_fd.close()
+            print(f"❌ failed to mark review worktree for {task_id!r}: {exc}", file=sys.stderr)
+            return 1
 
     try:
         runtime_tmp_root, runtime_tmp_namespace_root = _create_runtime_tmp_lease(task_id)
@@ -7425,7 +7492,6 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
             initial_state["task_lifecycle"] = lifecycle_carrier
         if review_plan is not None:
             initial_state["worktree_disallow_reuse"] = True
-            initial_state["worktree_review_attempt_only"] = True
         initial_state = _with_optional_research_state(initial_state, research_state)
         _write_state_atomic(state_path, initial_state)
 
