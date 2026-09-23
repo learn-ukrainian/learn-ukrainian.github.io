@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import os
 import sys
 import tempfile
 import types
@@ -184,7 +185,7 @@ def _session_stream_store(tmp_path: Path) -> SessionStreamStore:
     return SessionStreamStore(database)
 
 
-def _cursor_driver_store(tmp_path: Path) -> SessionStreamStore:
+def _cursor_driver_store(tmp_path: Path, *, process_id: int = 99999, host_id: str | None = None) -> SessionStreamStore:
     store = _session_stream_store(tmp_path)
     store.open_session(
         stream_id="epic:4707",
@@ -193,13 +194,19 @@ def _cursor_driver_store(tmp_path: Path) -> SessionStreamStore:
             harness="cursor-agent",
             instance_id="cursor-driver-fixture",
             task_id="cursor-driver-fixture",
-            process_id=99999,
+            process_id=process_id,
+            host_id=host_id,
         ),
         lineage_id="cursor-driver-lineage",
         ttl_seconds=600,
         now=datetime.now(UTC),
     )
     return store
+
+
+def _self_cursor_driver_store(tmp_path: Path) -> SessionStreamStore:
+    """A live Cursor driver lease held by this process (the self-dispatch case)."""
+    return _cursor_driver_store(tmp_path, process_id=os.getpid())
 
 
 def test_check_budget_warns_when_agent_mismatch(monkeypatch, tmp_path, capsys):
@@ -708,21 +715,44 @@ def test_dispatch_capacity_hint_printed_when_target_lane_busy(monkeypatch, tmp_p
     assert captured.err == ""
 
 
-def test_dispatch_cursor_refuses_when_driver_lease_is_live(monkeypatch, tmp_path, capsys):
-    """A live Cursor driver lease is a hard admission refusal before Popen."""
+def _refusing_cursor_dispatch_setup(monkeypatch, tmp_path, store):
+    """Common mocks for Cursor dispatches that must be refused before Popen."""
     from scripts.orchestration import job_host_exec
 
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
-    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: store)
     monkeypatch.setattr(job_host_exec, "decide_dispatch_placement", lambda **_kwargs: ("vps", "available", "host-job"))
     monkeypatch.setattr(
         job_host_exec,
         "forward_dispatch",
         lambda **_kwargs: pytest.fail("a refused Cursor dispatch must not forward to a worker host"),
     )
+    return _track_worker_spawns(monkeypatch)
+
+
+def test_dispatch_cursor_allows_worker_when_driver_lease_is_other_session(monkeypatch, tmp_path, capsys):
+    """A live Cursor driver lease from another lane/session is a NOTE, not a refusal."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
     spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 0
+    assert len(spawned) == 1
+    err = capsys.readouterr().err
+    assert "NOTE: Cursor driver live on epic:4707 (other session); spawning a separate Cursor worker." in err
+    assert "CAPACITY REFUSED" not in err
+
+
+def test_dispatch_cursor_refuses_when_lease_holder_is_an_ancestor(monkeypatch, tmp_path, capsys):
+    """Self-dispatch: the lease holder is an ancestor of the dispatching process."""
+    store = _cursor_driver_store(tmp_path, process_id=os.getppid())
+    spawned = _refusing_cursor_dispatch_setup(monkeypatch, tmp_path, store)
 
     rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
 
@@ -730,16 +760,88 @@ def test_dispatch_cursor_refuses_when_driver_lease_is_live(monkeypatch, tmp_path
     assert spawned == []
     err = capsys.readouterr().err
     assert "CAPACITY REFUSED" in err
-    assert "live Cursor driver stream lease" in err
+    assert "inside the live Cursor driver session" in err
 
 
-@pytest.mark.parametrize("suppression", ("json", "quiet"))
-def test_dispatch_cursor_lease_refusal_is_not_suppressed_by_json_or_quiet(monkeypatch, tmp_path, capsys, suppression):
-    """Machine-output modes hide hints, not the hard Cursor admission refusal."""
+def test_dispatch_cursor_refuses_when_lease_holder_is_current_process(monkeypatch, tmp_path, capsys):
+    """Self-dispatch: the lease holder is the dispatching process itself."""
+    store = _cursor_driver_store(tmp_path, process_id=os.getpid())
+    spawned = _refusing_cursor_dispatch_setup(monkeypatch, tmp_path, store)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 2
+    assert spawned == []
+    assert "CAPACITY REFUSED" in capsys.readouterr().err
+
+
+def test_dispatch_cursor_allows_worker_when_lease_is_on_another_host(monkeypatch, tmp_path, capsys):
+    """A lease with a different holder_host_id belongs to another host's driver."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(
+        delegate,
+        "_session_stream_store",
+        lambda: _cursor_driver_store(tmp_path, process_id=os.getpid(), host_id="host-other"),
+    )
+    monkeypatch.setattr("scripts.api.occupancy_local.resolve_launcher_host_id", lambda: "host-self")
+    spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 0
+    assert len(spawned) == 1
+    err = capsys.readouterr().err
+    assert "NOTE: Cursor driver live on epic:4707 (other session); spawning a separate Cursor worker." in err
+    assert "CAPACITY REFUSED" not in err
+
+
+def test_dispatch_cursor_ancestry_lookup_failure_allows_with_note(monkeypatch, tmp_path, capsys):
+    """A /proc ancestry lookup failure is 'not self': spawn with a NOTE, never crash."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
     monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
+
+    def fail_parent_pid(_pid):
+        raise PermissionError("no /proc access")
+
+    monkeypatch.setattr(delegate, "_proc_parent_pid", fail_parent_pid)
+    spawned = _track_worker_spawns(monkeypatch)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 0
+    assert len(spawned) == 1
+    err = capsys.readouterr().err
+    assert "NOTE: unable to verify the Cursor driver lease holder ancestry" in err
+    assert "CAPACITY REFUSED" not in err
+
+
+def test_dispatch_cursor_malformed_session_stream_store_still_refuses(monkeypatch, tmp_path, capsys):
+    """An unreadable/malformed existing store stays fail-closed."""
+    _session_stream_store(tmp_path)  # create the database file, then corrupt it
+    (tmp_path / "session-streams.sqlite3").write_bytes(b"not a sqlite database")
+    store = SessionStreamStore(SessionStreamDatabase(tmp_path / "session-streams.sqlite3"))
+    spawned = _refusing_cursor_dispatch_setup(monkeypatch, tmp_path, store)
+
+    rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor"))
+
+    assert rc == 2
+    assert spawned == []
+    err = capsys.readouterr().err
+    assert "CAPACITY REFUSED" in err
+    assert "unable to verify the session-stream store" in err
+
+
+@pytest.mark.parametrize("suppression", ("json", "quiet"))
+def test_dispatch_cursor_lease_refusal_is_not_suppressed_by_json_or_quiet(monkeypatch, tmp_path, capsys, suppression):
+    """Machine-output modes hide hints, not the hard Cursor self-dispatch refusal."""
+    _patch_spawn(monkeypatch, tmp_path)
+    monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
+    monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _self_cursor_driver_store(tmp_path))
     spawned = _track_worker_spawns(monkeypatch)
     args = _dispatch_args("--agent", "cursor")
     setattr(args, suppression, True)
@@ -754,11 +856,11 @@ def test_dispatch_cursor_lease_refusal_is_not_suppressed_by_json_or_quiet(monkey
 
 
 def test_dispatch_cursor_force_agent_overrides_live_driver_lease(monkeypatch, tmp_path, capsys):
-    """--force-agent permits the explicit collision and records a NOTE."""
+    """--force-agent permits the explicit self-dispatch collision and records a NOTE."""
     _patch_spawn(monkeypatch, tmp_path)
     monkeypatch.setattr(delegate.time, "sleep", lambda _seconds: None)
     monkeypatch.setattr(delegate.urllib.request, "urlopen", _urlopen_routing(_FakeBudgetResponse()))
-    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _cursor_driver_store(tmp_path))
+    monkeypatch.setattr(delegate, "_session_stream_store", lambda: _self_cursor_driver_store(tmp_path))
     spawned = _track_worker_spawns(monkeypatch)
 
     rc = delegate.cmd_dispatch(_dispatch_args("--agent", "cursor", "--force-agent"))
