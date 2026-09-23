@@ -193,7 +193,7 @@ def test_synthetic_stress_chunk_501_forms():
     words = [f"балачка{i:03d}а" for i in range(501)]
     text = " ".join(words)
 
-    with patch("scripts.verification.stress.verify_stresses", wraps=__import__("scripts.verification.stress", fromlist=["verify_stresses"]).verify_stresses) as mock_stresses:
+    with patch("scripts.verification.check_text.verify_stresses", wraps=__import__("scripts.verification.stress", fromlist=["verify_stresses"]).verify_stresses) as mock_stresses:
         res = check_text(text=text, checks=["stress"])
         assert res.get("status") != "error"
         # STRESS_BATCH_CAP is 500, so verify_stresses should be called twice (500 + 1)
