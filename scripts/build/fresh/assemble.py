@@ -1357,6 +1357,9 @@ def assemble_lesson(
     *,
     repo_root: Path | None = None,
     draft_dict: dict[str, Any] | None = None,
+    plan_dict: dict[str, Any] | None = None,
+    pack_dict: dict[str, Any] | None = None,
+    words_dict: dict[str, Any] | None = None,
     output_dir: Path | None = None,
     site_dir: Path | None = None,
     astro_build: bool = False,
@@ -1373,9 +1376,9 @@ def assemble_lesson(
     state_dir = output_dir or (paths["evidence_dir"] / "_state" / slug)
     target_site_dir = site_dir or (root / "site" / "src" / "content" / "docs" / level / slug)
 
-    plan = yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
-    pack = yaml.safe_load(paths["pack"].read_text(encoding="utf-8"))
-    words_store = yaml.safe_load(paths["words"].read_text(encoding="utf-8"))
+    plan = plan_dict if plan_dict is not None else yaml.safe_load(paths["plan"].read_text(encoding="utf-8"))
+    pack = pack_dict if pack_dict is not None else yaml.safe_load(paths["pack"].read_text(encoding="utf-8"))
+    words_store = words_dict if words_dict is not None else yaml.safe_load(paths["words"].read_text(encoding="utf-8"))
 
     if draft_dict is None:
         draft_file = state_dir / f"lesson-{lesson_n}.draft.yaml"
