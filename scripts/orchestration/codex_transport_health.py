@@ -11,6 +11,7 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import sys
 import tempfile
 import tomllib
 import uuid
@@ -50,6 +51,12 @@ NativeInvoker = Callable[..., Result]
 
 def _invoke_native(*args: Any, **kwargs: Any) -> Result:
     # Keep read-only receipt queries independent of the execution machinery.
+    # runner.py imports the top-level ``ai_llm`` package (``scripts/ai_llm``).
+    # ``python -m`` from the repo root does not put ``scripts/`` on ``sys.path``;
+    # delegate's worker and ``acpx_discuss`` insert it before this import.
+    scripts_dir = str(Path(__file__).resolve().parents[1])
+    if scripts_dir not in sys.path:
+        sys.path.insert(0, scripts_dir)
     from scripts.agent_runtime.runner import invoke
 
     return invoke(*args, **kwargs)

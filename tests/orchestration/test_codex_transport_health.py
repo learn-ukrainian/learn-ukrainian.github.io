@@ -3,6 +3,9 @@
 from __future__ import annotations
 
 import json
+import os
+import subprocess
+import sys
 from dataclasses import replace
 from datetime import UTC, datetime, timedelta
 from pathlib import Path
@@ -220,6 +223,63 @@ def test_stale_receipt_is_unknown(probe_args):
     assert result["status"] == UNKNOWN
     assert result["fresh"] is False
     assert result["failure_class"] == "stale_probe_receipt"
+
+
+def test_invoke_native_imports_runner_without_pythonpath():
+    """The probe's lazy runner import must work with only the repo root on sys.path.
+
+    pytest puts ``scripts/`` on ``sys.path`` via ``pythonpath``, so an in-process
+    test cannot see the ``python -m`` failure. This subprocess drops
+    ``PYTHONPATH``, starts at the repo root, loads the real runner (and therefore
+    ``ai_llm``), then replaces ``invoke`` so the call cannot launch Codex.
+    """
+    repo = Path(__file__).resolve().parents[2]
+    code = """
+import builtins
+import scripts.orchestration.codex_transport_health as health
+
+real_import = builtins.__import__
+loaded = []
+depth = {"runner": 0}
+
+def guarded_import(name, globals=None, locals=None, fromlist=(), level=0):
+    if name != "scripts.agent_runtime.runner":
+        return real_import(name, globals, locals, fromlist, level)
+    # A nested import of this module happens while its body is still running.
+    # Stub only after the outermost import returns, when ``invoke`` exists.
+    depth["runner"] += 1
+    try:
+        module = real_import(name, globals, locals, fromlist, level)
+    finally:
+        depth["runner"] -= 1
+    if depth["runner"] == 0:
+        loaded.append(module.invoke)
+        module.invoke = lambda *args, **kwargs: ("stubbed", args[:1])
+    return module
+
+builtins.__import__ = guarded_import
+result = health._invoke_native("codex", "do-not-run")
+if not loaded:
+    raise SystemExit("runner import was not exercised")
+if getattr(loaded[0], "__module__", "") != "scripts.agent_runtime.runner":
+    raise SystemExit(f"loaded invoke is not the real runner: {loaded[0]!r}")
+if result != ("stubbed", ("codex",)):
+    raise SystemExit(f"invoke was not stubbed: {result!r}")
+print("runner-import-ok")
+"""
+    env = os.environ.copy()
+    env.pop("PYTHONPATH", None)
+    proc = subprocess.run(
+        [sys.executable, "-c", code],
+        cwd=repo,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=90,
+        check=False,
+    )
+    assert proc.returncode == 0, f"STDOUT:\n{proc.stdout}\nSTDERR:\n{proc.stderr}"
+    assert "runner-import-ok" in proc.stdout
 
 
 def test_invalid_namespace_refuses_before_invocation(probe_args):
