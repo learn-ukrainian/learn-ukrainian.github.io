@@ -4,18 +4,14 @@
   "task_type": "correction",
   "has_evaluation_split": true,
   "splits": {
-    "grammar_train_shard_01_of_12.jsonl": "train",
-    "grammar_train_shard_02_of_12.jsonl": "train",
-    "grammar_train_shard_03_of_12.jsonl": "train",
-    "grammar_train_shard_04_of_12.jsonl": "train",
-    "grammar_train_shard_05_of_12.jsonl": "train",
-    "grammar_train_shard_06_of_12.jsonl": "train",
-    "grammar_train_shard_07_of_12.jsonl": "train",
-    "grammar_train_shard_08_of_12.jsonl": "train",
-    "grammar_train_shard_09_of_12.jsonl": "train",
-    "grammar_train_shard_10_of_12.jsonl": "train",
-    "grammar_train_shard_11_of_12.jsonl": "train",
-    "grammar_train_shard_12_of_12.jsonl": "train",
+    "grammar_train_shard_01_of_08.jsonl": "train",
+    "grammar_train_shard_02_of_08.jsonl": "train",
+    "grammar_train_shard_03_of_08.jsonl": "train",
+    "grammar_train_shard_04_of_08.jsonl": "train",
+    "grammar_train_shard_05_of_08.jsonl": "train",
+    "grammar_train_shard_06_of_08.jsonl": "train",
+    "grammar_train_shard_07_of_08.jsonl": "train",
+    "grammar_train_shard_08_of_08.jsonl": "train",
     "grammar_eval_shard_01_of_02.jsonl": "eval",
     "grammar_eval_shard_02_of_02.jsonl": "eval"
   },
@@ -35,27 +31,27 @@
     }
   },
   "statistics": {
-    "total_records": 5867,
-    "train_records": 5348,
-    "eval_records": 519,
-    "substantive_corrections": 4400,
-    "clean_controls": 1467,
+    "total_records": 3504,
+    "train_records": 3197,
+    "eval_records": 307,
+    "substantive_corrections": 2628,
+    "clean_controls": 876,
     "clean_control_share": 0.25,
     "substantive_correction_share": 0.75,
     "category_counts": {
-      "calque_lexical_grammatical": 1443,
-      "case_government": 1309,
-      "protective_authentic_control": 1467,
-      "syntax_structure": 920,
-      "agreement_concord": 415,
-      "verb_morphology": 313
+      "calque_lexical_grammatical": 881,
+      "protective_authentic_control": 876,
+      "case_government": 714,
+      "syntax_structure": 590,
+      "verb_morphology": 197,
+      "agreement_concord": 246
     },
     "source_corpus_counts": {
-      "ua_gec_2.0": 5467,
+      "ua_gec_2.0": 3104,
       "brown_uk": 400
     },
     "license_counts": {
-      "CC BY 4.0": 5467,
+      "CC BY 4.0": 3104,
       "CC BY-NC-SA 4.0": 400
     }
   }

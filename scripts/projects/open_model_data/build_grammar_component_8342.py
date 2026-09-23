@@ -94,15 +94,78 @@ def detokenize(text: str) -> str:
     return text.strip()
 
 
-def is_clean_control(text: str) -> bool:
-    """Check that control sentence does not contain annotator typos or malformed punctuation."""
+RUSSIANISM_PATTERNS = [
+    r"\bпо\s+[а-яіїєґ]+(?:ам|ям|ах|ях|у|ові|еві)\b",
+    r"\bприступа(?:ти|ємо|ють|є|в|ла|ли)\s+до\b",
+    r"\bприйняти\s+за\b",
+    r"\bперед\s+чим\b",
+    r"\bв\s+якості\b",
+    r"\bв\s+силу\b",
+    r"\bтим\s+не\s+менше\b",
+    r"\bна\s+самому\s+ділі\b",
+    r"\bв\s+кінці\s+кінців\b",
+    r"\bмова\s+йде\b",
+    r"\bслідуюч\w*\b",
+    r"\bоточуюч\w*\b",
+    r"\bбажаюч\w*\b",
+    r"\bвпадл\w*\b",
+    r"\bгаплик\b",
+    r"\bшо\b",
+    r"\bбухло\b",
+    r"\bчувак\w*\b",
+    r"\bуткнув\b",
+]
+
+
+def has_russianism(text: str) -> bool:
+    """Check for obvious Russianisms, Sovietisms, or vulgar slang."""
+    return any(re.search(pat, text, re.IGNORECASE) for pat in RUSSIANISM_PATTERNS)
+
+
+def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool:
+    """Check that control sentence is a clean, authentic, complete Ukrainian sentence."""
     if not text:
+        return False
+    words = text.split()
+    # Reject short fragments, isolated words, or titles
+    if len(words) < 5 or len(text) < 25:
+        return False
+    # Reject URLs
+    if re.search(r"https?://", text):
+        return False
+    # Reject high Latin character ratio (English quotes/titles)
+    cyr = len(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]", text))
+    lat = len(re.findall(r"[a-zA-Z]", text))
+    if lat > 0 and (lat / max(1, cyr + lat)) > 0.05:
+        return False
+    # Must end with terminal sentence punctuation: . ! ? ... » ” "
+    if not re.search(r"[.!?…»”\"]$", text.strip()):
+        return False
+    # Disallow colons, semicolons, or dashes at the end (incomplete sentences / headings)
+    if text.strip().endswith((";", ":", ",", "-", "–", "—")):
         return False
     # Reject triple repeated letters
     if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", text, re.IGNORECASE):
         return False
     # Reject comma before parenthesis
-    return not bool(re.search(r",\s*\(", text))
+    if re.search(r",\s*\(", text):
+        return False
+    # Reject Russianisms / slang
+    if has_russianism(text):
+        return False
+    # Verify lowercase words in VESUM
+    if vesum_cur is not None:
+        w_list = re.findall(r"\b[\w'-]+\b", text)
+        for w in w_list:
+            if "-" in w or w[0].isupper() or len(w) <= 2:
+                continue
+            row = vesum_cur.execute(
+                "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
+                (w.lower(),),
+            ).fetchone()
+            if not row:
+                return False
+    return True
 
 
 def is_valid_candidate(
@@ -114,7 +177,23 @@ def is_valid_candidate(
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
     if not orig_text or not corr_text or orig_text == corr_text:
         return False
-    # Reject triple repeated letters (annotator typos like "олеографіїї")
+    # Must have >= 5 words
+    if len(orig_text.split()) < 5 or len(corr_text.split()) < 5:
+        return False
+    # Terminal punctuation: must end with . ! ? ... » ” "
+    if not re.search(r"[.!?…»”\"]$", corr_text.strip()):
+        return False
+    if corr_text.strip().endswith((";", ":", ",", "-", "–", "—")):
+        return False
+    # No URLs
+    if re.search(r"https?://", orig_text) or re.search(r"https?://", corr_text):
+        return False
+    # Latin character share <= 5%
+    cyr = len(re.findall(r"[а-яіїєґА-ЯІЇЄҐ]", corr_text))
+    lat = len(re.findall(r"[a-zA-Z]", corr_text))
+    if lat > 0 and (lat / max(1, cyr + lat)) > 0.05:
+        return False
+    # Reject triple repeated letters
     if re.search(r"([а-яіїєґА-ЯІЇЄҐ])\1\1", orig_text, re.IGNORECASE) or re.search(
         r"([а-яіїєґА-ЯІЇЄҐ])\1\1", corr_text, re.IGNORECASE
     ):
@@ -135,20 +214,36 @@ def is_valid_candidate(
         matched = sum(block.size for block in sm.get_matching_blocks())
         if (len(w1) - matched) > 2:
             return False
+    # Reject adjacent doubled words
+    if re.search(r"\b([а-яіїєґА-ЯІЇЄҐ]{2,})\s+\1\b", corr_text, re.IGNORECASE):
+        return False
+    # Reject adjacent stem repetition (e.g. з'явилася з'явила)
+    words = re.findall(r"\b[\w'-]+\b", corr_text.lower())
+    for i in range(len(words) - 1):
+        a, b = words[i], words[i + 1]
+        if len(a) >= 5 and len(b) >= 5 and (a.startswith(b[:4]) or b.startswith(a[:4])):
+            return False
+    # Reject missing sentence punctuation before capitalized pronoun/conjunction
+    if re.search(
+        r"[а-яіїєґ]\s+(Так|Він|Вона|Вони|Ми|Ви|Це|Але|Проте|Тоді|Якщо|Однак|Тому)\b",
+        corr_text,
+    ):
+        return False
+    # Reject Russianisms in corr_text
+    if has_russianism(corr_text):
+        return False
 
-    # Check replacement span tokens in VESUM
+    # Check ALL lowercase words in corr_text against VESUM
     if vesum_cur is not None:
-        for _s, _e, _t, corr_span in in_scope:
-            words = [re.sub(r"[^а-яіїєґА-ЯІЇЄҐ'-]", "", w) for w in corr_span.split()]
-            for w in words:
-                if not w or "-" in w or w[0].isupper() or len(w) <= 2:
-                    continue
-                row = vesum_cur.execute(
-                    "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
-                    (w.lower(),),
-                ).fetchone()
-                if not row:
-                    return False
+        for w in words:
+            if "-" in w or w[0].isupper() or len(w) <= 2:
+                continue
+            row = vesum_cur.execute(
+                "SELECT 1 FROM forms_all WHERE word_form = ? LIMIT 1",
+                (w.lower(),),
+            ).fetchone()
+            if not row:
+                return False
 
     return True
 
@@ -233,6 +328,7 @@ def build_jaccard_firewall_matcher(
 def load_brown_uk_controls(
     brown_path: Path,
     is_near_dup_fn: Any = None,
+    vesum_cur: sqlite3.Cursor | None = None,
 ) -> list[dict[str, Any]]:
     """Load pristine control sentences with authentic attribution from Brown-UK corpus."""
     if not brown_path.is_file():
@@ -244,7 +340,7 @@ def load_brown_uk_controls(
             if line.strip():
                 data = json.loads(line)
                 sent = data.get("sentence_text", "").strip()
-                if not sent or not is_clean_control(sent) or (is_near_dup_fn and is_near_dup_fn(sent)):
+                if not sent or not is_clean_control(sent, vesum_cur=vesum_cur) or (is_near_dup_fn and is_near_dup_fn(sent)):
                     continue
                 doc_id = data.get("document_id") or "brown_uk"
                 doc_name = data.get("source_metadata", {}).get("doc_name") or f"{doc_id}.txt"
@@ -365,8 +461,14 @@ def build_grammar_dataset(
         f"{len(test_sources)} source sents, {len(test_targets)} target sents, Jaccard < 0.80 enforced."
     )
 
+    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
+    vesum_conn = sqlite3.connect(f"file:{vesum_db_path}?mode=ro", uri=True)
+    vesum_cur = vesum_conn.cursor()
+
     # 2. Load Brown-UK pristine controls
-    brown_controls = load_brown_uk_controls(brown_path, is_near_dup_fn=is_test_near_duplicate)
+    brown_controls = load_brown_uk_controls(
+        brown_path, is_near_dup_fn=is_test_near_duplicate, vesum_cur=vesum_cur
+    )
     print(f"📖 Loaded {len(brown_controls)} pristine Brown-UK control sentences.")
 
     # 3. Parse UA-GEC train sentences
@@ -396,10 +498,6 @@ def build_grammar_dataset(
     seen_corrections: set[tuple[str, str]] = set()
     seen_control_texts: set[str] = set()
 
-    vesum_db_path = PROJECT_ROOT / "data" / "vesum.db"
-    vesum_conn = sqlite3.connect(f"file:{vesum_db_path}?mode=ro", uri=True)
-    vesum_cur = vesum_conn.cursor()
-
     eval_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "eval"]
     train_items_raw = [item for item in raw_sentences if doc_splits.get(item["doc_id"]) == "train"]
 
@@ -424,7 +522,7 @@ def build_grammar_dataset(
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
             if (
-                is_clean_control(orig_text)
+                is_clean_control(orig_text, vesum_cur=vesum_cur)
                 and orig_text not in seen_control_texts
                 and not is_test_near_duplicate(orig_text)
             ):
@@ -545,7 +643,7 @@ def build_grammar_dataset(
         all_edits = [e for elist in item["edits_by_ann"].values() for e in elist if e[2] != "noop"]
         if not all_edits:
             if (
-                is_clean_control(orig_text)
+                is_clean_control(orig_text, vesum_cur=vesum_cur)
                 and orig_text not in seen_control_texts
                 and not is_test_near_duplicate(orig_text)
             ):
