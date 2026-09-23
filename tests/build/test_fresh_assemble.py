@@ -911,8 +911,7 @@ def test_assemble_refuses_site_write_on_open_or_failed_stream(tmp_path, monkeypa
         },
     )()
 
-    monkeypatch.setattr("scripts.curriculum.resolver.inputs.Allowlist.load", lambda *args, **kwargs: None)
-    monkeypatch.setattr("scripts.curriculum.resolver.sources.Sources", lambda *args, **kwargs: None)
+    monkeypatch.setattr("scripts.build.fresh.assemble.atlas_href_for", lambda lemma: f"/lexicon/{lemma}/")
     monkeypatch.setattr("scripts.build.fresh.assemble.resolve", lambda *args, **kwargs: stream_with_open)
 
     rep = assemble_lesson(

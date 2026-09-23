@@ -1393,9 +1393,17 @@ def assemble_lesson(
     expanded_doc = c5.artifacts["expanded_doc"]
 
     # Resolver resolution
-    allowlist_dir = evidence_dir or (root / f"curriculum/l2-uk-en/evidence/{level}")
-    allowlist = Allowlist.load(allowlist_dir)
-    sources = Sources()
+    try:
+        from scripts.curriculum.resolver.stream import allowlist_for_lesson
+
+        allowlist = allowlist_for_lesson(level, slug, lesson_n, evidence_dir=evidence_dir, plans_dir=plans_dir)
+    except Exception:
+        allowlist = Allowlist.from_records(words_store.get("words", []))
+
+    try:
+        sources = Sources()
+    except Exception:
+        sources = None
     stream = resolve(ExpandedDocument.from_data(expanded_doc), allowlist, sources)
 
     # Major 4: Check if stream has any failures or open tokens
