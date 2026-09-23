@@ -44,8 +44,20 @@ def record(number: int, lemma: str, pos: str, forms: list[dict], gloss: str | No
     return out
 
 
-def unit(text: str, role: str = "narration", *, tab: str = "urok", activity=None, item=None, block=0) -> dict:
-    return {"tab": tab, "activity": activity, "item": item, "block": block, "role": role, "text": text}
+def unit(
+    text: str,
+    role: str = "narration",
+    *,
+    tab: str = "urok",
+    activity=None,
+    item=None,
+    block=0,
+    step=None,
+) -> dict:
+    d = {"tab": tab, "activity": activity, "item": item, "block": block, "role": role, "text": text}
+    if step is not None:
+        d["step"] = step
+    return d
 
 
 def document(*units: dict, slug: str = "synthetic-module", n: int = 1) -> ExpandedDocument:

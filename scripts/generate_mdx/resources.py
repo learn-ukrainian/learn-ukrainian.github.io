@@ -528,11 +528,12 @@ def vocab_items_to_components(items: list[dict], header_text: str = "Vocabulary"
             "translation": translation,
             "pos": item.get('pos', ''),
             "gender": item.get('gender', ''),
+            "forms": item.get('forms'),
             "example": example,
             "examples": [example] if example else [],
             # Render-time, integrity-gated link to the Word Atlas page (None when
             # the lemma has no Atlas page → dropped by the empty-value filter below).
-            "atlas_href": atlas_href_for(lemma),
+            "atlas_href": item.get('atlas_href') if 'atlas_href' in item else atlas_href_for(lemma),
         }
         words.append({key: value for key, value in entry.items() if value not in (None, "", [])})
 

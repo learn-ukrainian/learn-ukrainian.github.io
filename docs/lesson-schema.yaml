@@ -2,7 +2,7 @@ schema_version: "1.0"
 generator_version: "1.0.0"
 generated_from:
   components_dir: site/src/components/{*.tsx, *.astro}
-  components_sha256: 8cec4775e5cbc9f39f30ffead7e36392a7cf7d6c6a4e7b5047244706ac637cbc
+  components_sha256: 43cc34af25a9b84d9b92ab725d7fea2cf8c7c13021494ef534396eea4155c7c0
   config_tables_sha256: 0d7e418b23903bcd90862ec9e22bb3c0b7f7a41427172cd23d9843f5c198ce2f
   lesson_contract_sha256: 1dbc34313d5e2fef4582ec435e853a4d8b52ecafc18e4a0661a8ca8afb0f99c8
 components:
@@ -2926,6 +2926,10 @@ components:
 
           derived at MDX-generation time. Empty/absent when the lemma has no Atlas page.'
         ukrainian_text: 'false'
+      - name: forms
+        type: string[]
+        description: Taught forms of the lemma.
+        ukrainian_text: 'true'
     example:
       words:
       - <VocabEntry>

@@ -7,9 +7,13 @@ deterministically without data/, MCP, or Node.
 
 from __future__ import annotations
 
+import pytest
+
 import scripts.build.linear_pipeline as lp
 import scripts.build.verify_shippable as vs
 from scripts.build import promote_quality_gate as pqg
+
+pytestmark = pytest.mark.reads_content
 
 
 def _mk(tmp_path):
@@ -24,9 +28,7 @@ def test_shippable_when_all_green(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
     monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
     monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
-    monkeypatch.setattr(
-        lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
-    )
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
     monkeypatch.setattr(
         pqg,
         "verify",
@@ -177,3 +179,130 @@ def test_wikipedia_url_without_title_fails_closed(monkeypatch):
     # and must NOT be probed with a bare liveness GET.
     assert vs._url_is_live("https://uk.wikipedia.org/w/index.php?oldid=12345") is False
     assert curled == []  # never fell through to a generic curl on a wikipedia host
+
+
+def test_fresh_path_resolution(tmp_path):
+    """Test path resolution for --fresh vs default legacy paths."""
+    mod_dir = vs._fresh_module_dir("a1", "my-module", repo_root=tmp_path)
+    plan_path = vs._fresh_plan_path("a1", "my-module", repo_root=tmp_path)
+
+    assert mod_dir == tmp_path / "site" / "src" / "content" / "docs" / "a1" / "my-module"
+    assert plan_path == tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1" / "my-module.yaml"
+
+    legacy_mod = vs._default_module_dir("a1", "my-module", repo_root=tmp_path)
+    # Legacy module is in curriculum/l2-uk-en/a1/my-module
+    assert legacy_mod == tmp_path / "curriculum" / "l2-uk-en" / "a1" / "my-module"
+
+
+def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
+    """Test verify with fresh=True validates mdx files in site/src/content/docs."""
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+    site_mod.mkdir(parents=True)
+    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
+
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plan_dir.mkdir(parents=True)
+    plan_file = plan_dir / "greetings.yaml"
+    plan_file.write_text("module: greetings\n", encoding="utf-8")
+
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+    )
+    assert rep["shippable"] is True
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["mdx_render"] is True
+
+
+def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
+    """Test verify with fresh=True and astro_build=True sets render_fully_validated."""
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+    site_mod.mkdir(parents=True)
+    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
+
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plan_dir.mkdir(parents=True)
+    plan_file = plan_dir / "greetings.yaml"
+    plan_file.write_text("module: greetings\n", encoding="utf-8")
+
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
+    monkeypatch.setattr(vs, "_astro_build", lambda log_path: True)
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+        astro_build=True,
+    )
+    assert rep["shippable"] is True
+    assert rep["render_fully_validated"] is True
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["astro_build"] is True
+
+
+def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
+    """Test verify with fresh=True reports not shippable when render gate fails."""
+    site_mod = tmp_path / "site" / "src" / "content" / "docs" / "a1" / "greetings"
+    site_mod.mkdir(parents=True)
+    (site_mod / "lesson-1.mdx").write_text("# Lesson 1\n", encoding="utf-8")
+
+    plan_dir = tmp_path / "curriculum" / "l2-uk-en" / "lesson-plans" / "a1"
+    plan_dir.mkdir(parents=True)
+    plan_file = plan_dir / "greetings.yaml"
+    plan_file.write_text("module: greetings\n", encoding="utf-8")
+
+    monkeypatch.setattr(
+        lp,
+        "run_mdx_render_gate",
+        lambda t: {"passed": False, "message": "fail", "failures": [{"snippet": "x", "error": "SyntaxError"}]},
+    )
+
+    rep = vs.verify(
+        "a1",
+        "greetings",
+        module_dir=site_mod,
+        plan_path=plan_file,
+        fresh=True,
+    )
+    assert rep["shippable"] is False
+    steps = {s["step"]: s["passed"] for s in rep["steps"]}
+    assert steps["mdx_render"] is False
+
+
+def test_verify_shippable_no_flag_default_paths(monkeypatch):
+    """Pin the no-flag verify_shippable path (uses default legacy paths, fresh=False)."""
+    seen = {}
+
+    def fake_verify(level, slug, *, module_dir=None, plan_path=None, astro_build=False, fresh=False):
+        seen["level"] = level
+        seen["slug"] = slug
+        seen["module_dir"] = module_dir
+        seen["plan_path"] = plan_path
+        seen["astro_build"] = astro_build
+        seen["fresh"] = fresh
+        return {"level": level, "slug": slug, "shippable": True, "steps": []}
+
+    monkeypatch.setattr(vs, "verify", fake_verify)
+    ret = vs.main(["a1", "greetings"])
+    assert ret == 0
+    assert seen["level"] == "a1"
+    assert seen["slug"] == "greetings"
+    assert seen["fresh"] is False
+    assert seen["module_dir"] is None
+    assert seen["plan_path"] is None
+
+
+def test_verify_shippable_fresh_and_lesson_is_ap_error():
+    """--fresh cannot be combined with --lesson (ap.error -> exit code 2)."""
+    import pytest
+
+    with pytest.raises(SystemExit) as exc_info:
+        vs.main(["a1", "greetings", "--fresh", "--lesson"])
+    assert exc_info.value.code == 2

@@ -574,6 +574,66 @@ def test_gate_taught_form_in_teaching_positions_pass(tmp_path: Path) -> None:
         assert report.ok is True, f"failed for role {role}"
 
 
+def test_gate_taught_form_in_introducing_step_passes(tmp_path: Path) -> None:
+    """A taught form appearing in narration passes if unit.step is the introducing step."""
+    paths = _setup_fixture(tmp_path)
+    # W-10 is introduced in step 's1' of lesson 2. Here role is 'narration' (not record_print),
+    # but unit carries step='s1', so it counts as a teaching position.
+    tokens = [
+        {
+            "unit": {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": 0},
+            "role": "narration",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        },
+        {
+            "unit": {"tab": "urok", "step": "s1", "activity": None, "item": None, "block": 1},
+            "role": "narration",
+            "offset": 5,
+            "token": "tok2",
+            "sentence": "tok2 sent",
+            "class": "resolved",
+            "selected": {"record": "W-20", "forms": ["tag:nom"], "stressed": "tok2"},
+        },
+    ]
+    report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
+    assert report.ok is True
+    assert len(report.failures) == 0
+
+
+def test_gate_taught_form_in_non_introducing_step_fails(tmp_path: Path) -> None:
+    """A taught form in narration fails if unit.step is NOT the introducing step."""
+    paths = _setup_fixture(tmp_path)
+    # W-10 is introduced in step 's1', but here unit carries step='s2' (not s1)
+    tokens = [
+        {
+            "unit": {"tab": "urok", "step": "s2", "activity": None, "item": None, "block": 0},
+            "role": "narration",
+            "offset": 0,
+            "token": "tok1",
+            "sentence": "tok1 sent",
+            "class": "resolved",
+            "selected": {"record": "W-10", "forms": ["tag:acc"], "stressed": "tok1"},
+        },
+        {
+            "unit": {"tab": "urok", "step": "s2", "activity": None, "item": None, "block": 1},
+            "role": "narration",
+            "offset": 5,
+            "token": "tok2",
+            "sentence": "tok2 sent",
+            "class": "resolved",
+            "selected": {"record": "W-20", "forms": ["tag:nom"], "stressed": "tok2"},
+        },
+    ]
+    report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
+    assert report.ok is False
+    codes_set = {f.code for f in report.failures}
+    assert codes.TAUGHT_FORM_ABSENT in codes_set
+
+
 def test_gate_gloss_token_passes(tmp_path: Path) -> None:
     paths = _setup_fixture(tmp_path)
     # Gloss reference with stressed: null passes because record W-10 has non-pending stress in _words.yaml

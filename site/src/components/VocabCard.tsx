@@ -43,6 +43,11 @@ interface VocabEntry {
    * @ukrainianText false
    */
   atlas_href?: string | null;
+  /**
+   * @schemaDescription Taught forms of the lemma.
+   * @ukrainianText true
+   */
+  forms?: string[];
 }
 
 interface VocabCardProps {
@@ -99,6 +104,12 @@ function SingleVocabCard({
 
       <div className={directStyles.vocabCardContent}>
         <div className={directStyles.vocabCardWord}>{entry.word}</div>
+
+        {entry.forms && entry.forms.length > 0 && (
+          <div className={directStyles.vocabCardForms}>
+            {entry.forms.join(', ')}
+          </div>
+        )}
 
         {entry.question && (
           <span className={directStyles.vocabCardQuestion}>
