@@ -196,6 +196,8 @@ def resolve_profile(
             reason = "model-mismatch"
         else:
             effective = dict(expected)
+            if expected["transport"] == "native_codex" and match is True:
+                effective["main_model_id"] = requested_model_id
             reason = "explicit-profile"
 
     result = dict(effective)

@@ -16,9 +16,9 @@ def source(tmp_path):
     (root / "agents").mkdir(parents=True)
     (root / "AGENTS.md").write_text("Reusable instructions.\n")
     (root / "config.toml").write_text(
-        'model = "gpt-6-astra"\nmodel_reasoning_effort = "medium"\n[agents]\n'
-        'default_subagent_model = "gpt-6-astra"\n'
-        'default_subagent_reasoning_effort = "low"\n'
+        'model = "gpt-6-sol"\nmodel_reasoning_effort = "high"\n[agents]\n'
+        'default_subagent_model = "gpt-6-luna"\n'
+        'default_subagent_reasoning_effort = "high"\n'
     )
     for name, (model, effort, sandbox) in deployer.PROFILE_ROLES.items():
         (root / f"agents/{name}.toml").write_text(
@@ -36,6 +36,23 @@ def snapshot(root):
         str(p.relative_to(root)): (p.read_bytes(), p.stat().st_mode, p.stat().st_mtime_ns)
         for p in root.rglob("*")
         if p.is_file()
+    }
+
+
+def test_canonical_source_matches_gpt6_role_matrix():
+    root = Path(deployer.__file__).resolve().parents[1] / "agents_extensions/codex-home"
+    assets = deployer.source_assets(root)
+
+    assert tomllib.loads(assets["config.toml"].decode()) == deployer.EXPECTED
+    assert {
+        name.removeprefix("agents/").removesuffix(".toml")
+        for name in assets
+        if name.startswith("agents/")
+    } == set(deployer.PROFILE_ROLES)
+    assert {model for model, _, _ in deployer.PROFILE_ROLES.values()} == {
+        "gpt-6-astra",
+        "gpt-6-sol",
+        "gpt-6-luna",
     }
 
 
@@ -57,7 +74,7 @@ def test_preservation_idempotence_backups(source):
     legacy.write_text("Retired locally only after manual review.\n")
     assert deployer.deploy(source, home) == 0
     result = tomllib.loads(config.read_text())
-    assert result["model_reasoning_effort"] == "medium"
+    assert result["model_reasoning_effort"] == "high"
     assert result["future"] == {"enabled": True, "values": [1, 2]}
     assert result["agents"]["max_threads"] == 9
     assert result["mcp_servers"]["private"]["url"] == "private-sentinel"
@@ -124,9 +141,9 @@ def test_bad_or_unsupported_config_writes_nothing(source, config):
 @pytest.mark.parametrize(
     "relative,content",
     [
-        ("config.toml", 'model = "gpt-6-astra"\n'),
+        ("config.toml", 'model = "gpt-6-sol"\n'),
         ("config.toml", "[bad"),
-        ("agents/astra_worker_low.toml", "model = [broken"),
+        ("agents/sol_coder_high.toml", "model = [broken"),
         ("AGENTS.md", ""),
     ],
 )
@@ -154,7 +171,7 @@ def test_target_symlinks_refused(source, location):
 
 
 def test_source_symlink_refused(source):
-    (source / "agents/alias.toml").symlink_to(source / "agents/astra_worker_low.toml")
+    (source / "agents/alias.toml").symlink_to(source / "agents/sol_coder_high.toml")
     home = source.parent / "home"
     with pytest.raises(deployer.DeployError, match="symlink"):
         deployer.deploy(source, home)
@@ -179,7 +196,7 @@ def test_source_symlink_refused(source):
     ],
 )
 def test_invalid_profile_cannot_write(source, field, value):
-    profile = source / "agents/astra_worker_low.toml"
+    profile = source / "agents/sol_coder_high.toml"
     data = tomllib.loads(profile.read_text())
     if value is None:
         del data[field]
@@ -237,7 +254,7 @@ def test_role_matrix_cannot_be_swapped(source, name, field):
     profile = source / f"agents/{name}.toml"
     data = tomllib.loads(profile.read_text())
     alternatives = {
-        "model": ["gpt-6-astra", "gpt-5.6-luna"],
+        "model": ["gpt-6-astra", "gpt-6-luna", "gpt-6-sol"],
         "model_reasoning_effort": ["low", "medium", "high"],
         "sandbox_mode": ["read-only", "workspace-write"],
     }
@@ -250,17 +267,17 @@ def test_role_matrix_cannot_be_swapped(source, name, field):
 
 
 def test_unapproved_source_role_rejected(source):
-    profile = source / "agents/astra_worker_low.toml"
-    (source / "agents/unknown.toml").write_text(profile.read_text().replace("astra_worker_low", "unknown"))
+    profile = source / "agents/sol_coder_high.toml"
+    (source / "agents/unknown.toml").write_text(profile.read_text().replace("sol_coder_high", "unknown"))
     with pytest.raises(deployer.DeployError, match="approved role name"):
         deployer.source_assets(source)
 
 
 def test_root_effort_does_not_replace_nested_effort():
-    original = b'[profiles.custom]\nmodel_reasoning_effort = "high" # custom\n'
+    original = b'[profiles.custom]\nmodel_reasoning_effort = "medium" # custom\n'
     merged = deployer.merge_config(original)
     data = tomllib.loads(merged.decode())
-    assert data["model_reasoning_effort"] == "medium"
-    assert data["profiles"]["custom"]["model_reasoning_effort"] == "high"
+    assert data["model_reasoning_effort"] == "high"
+    assert data["profiles"]["custom"]["model_reasoning_effort"] == "medium"
     assert original in merged
     assert deployer.merge_config(merged) == merged
