@@ -643,11 +643,15 @@ def _pid_alive(pid: int) -> bool:
     return True
 
 
-def _normalize_worktree_path(raw_path: str) -> Path:
-    """Resolve a worktree path relative to the repo root."""
+def _normalize_worktree_path(raw_path: str, *, repo_root: Path | None = None) -> Path:
+    """Resolve a worktree path relative to the repo root.
+
+    Every task record stores ``worktree_path`` in this resolved absolute form,
+    which is what settle's active-claim scan compares against (#8610).
+    """
     path = Path(raw_path).expanduser()
     if not path.is_absolute():
-        path = _REPO_ROOT / path
+        path = (repo_root if repo_root is not None else _REPO_ROOT) / path
     return path.resolve()
 
 
@@ -4174,73 +4178,126 @@ _SETTLE_REAP_RELEASED_CLAIM_STATUSES = frozenset(
 def _settled_worktree_reap_refusal(
     worktree: Path,
     *,
-    task_id: str,
     created_by_this_dispatch: bool | None,
 ) -> dict[str, Any] | None:
     """Return a ``worktree_reap`` skip record when settle must not remove ``worktree``.
 
     Settle removes only a checkout this dispatch created. An attached or
     reused checkout belongs to another task, and that owner reaps it (#8610).
-    Ownership that cannot be established fails closed.
+    Ownership that cannot be established fails closed; the default reaper
+    does not collect that legacy case, so the skip reason names the explicit
+    operator cleanup. Returns ``None`` when removal may proceed to the
+    active-claim check in :func:`_reap_finished_worktree`.
+    """
+    if created_by_this_dispatch is None:
+        reason = (
+            "worktree ownership unknown; refusing worktree removal; operator cleanup: "
+            "scripts/orchestration/reap_worktrees.py --terminal-dispatches "
+            f"--worktree {worktree} --apply"
+        )
+    elif not created_by_this_dispatch:
+        reason = "reused worktree; owner reaps"
+    else:
+        return None
+    return {
+        "action": "skipped",
+        "path": str(worktree),
+        "branch": None,
+        "reason": reason,
+        "dirty": None,
+        "pr": None,
+        "error": None,
+    }
 
-    As defence in depth, a sibling task record whose status still claims
-    the worktree and whose ``worktree_path`` resolves to the same path also
-    blocks removal, even when ``worktree_reused`` was mis-recorded. A
-    sibling record that cannot be read or parsed blocks removal too, since
-    its claim cannot be ruled out. Returns ``None`` when removal may proceed.
+
+def _worktree_claim_needles(worktree: Path, target: Path) -> frozenset[bytes]:
+    """Byte strings one of which every task record naming ``worktree`` contains.
+
+    A record can spell the claim as the absolute path, its resolved form, a
+    repo-relative path, or with a trailing slash. Every such spelling ends in
+    the checkout's own directory name, so that name, raw and JSON-escaped, is
+    the pre-filter. Dispatch always records the resolved absolute path; only a
+    legacy record that names the checkout through a differently named symlink
+    escapes the filter. An empty set means every record is a candidate.
+    """
+    needles: set[bytes] = set()
+    for name in {worktree.name, target.name}:
+        if name:
+            needles.add(name.encode("utf-8", "surrogateescape"))
+            needles.add(json.dumps(name)[1:-1].encode("ascii"))
+    return frozenset(needles)
+
+
+def _active_worktree_claim_refusal(worktree: Path, *, task_id: str) -> str | None:
+    """Return a skip reason when another unfinished task still claims ``worktree``.
+
+    Defence in depth for #8610: a sibling task record whose status still
+    claims the checkout and whose ``worktree_path`` resolves to the same path
+    blocks removal, even when ``worktree_reused`` was mis-recorded. Claims are
+    resolved exactly as dispatch resolves ``--worktree``: relative to the
+    repository root. Only records whose raw bytes contain a claim spelling
+    (:func:`_worktree_claim_needles`) are parsed, so an unrelated corrupt
+    record never blocks removal, while a candidate that cannot be read,
+    parsed, or resolved does. Every failure is a skip reason, never an
+    exception. Returns ``None`` when removal may proceed.
     """
 
-    def skipped(reason: str) -> dict[str, Any]:
-        return {
-            "action": "skipped",
-            "path": str(worktree),
-            "branch": None,
-            "reason": reason,
-            "dirty": None,
-            "pr": None,
-            "error": None,
-        }
+    def refused(state_file: Path, problem: str) -> str:
+        return f"task record {state_file.name} {problem}; refusing worktree removal"
 
-    if created_by_this_dispatch is None:
-        return skipped("worktree ownership unknown; refusing worktree removal")
-    if not created_by_this_dispatch:
-        return skipped("reused worktree; owner reaps")
-
-    target = worktree.resolve()
+    try:
+        target = _normalize_worktree_path(str(worktree))
+    except (OSError, RuntimeError, ValueError) as exc:
+        return f"worktree path unresolvable ({type(exc).__name__}); refusing worktree removal"
+    needles = _worktree_claim_needles(worktree, target)
     own_state = _state_path(task_id)
     try:
         state_files = sorted(_TASKS_DIR.glob("*.json"))
     except OSError as exc:
-        return skipped(f"task claims unreadable ({type(exc).__name__}); refusing worktree removal")
+        return f"task claims unreadable ({type(exc).__name__}); refusing worktree removal"
     for state_file in state_files:
         if state_file == own_state:
             continue
         try:
-            record = json.loads(state_file.read_text(encoding="utf-8"))
+            raw = state_file.read_bytes()
         except FileNotFoundError:
             # Removed between glob and read: it no longer claims anything.
             continue
-        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        except OSError:
+            return refused(state_file, "unreadable")
+        if needles and not any(needle in raw for needle in needles):
+            continue
+        try:
+            record = json.loads(raw)
+        except (ValueError, RecursionError):
             record = None
         claimed_path = record.get("worktree_path") if isinstance(record, dict) else None
         if not isinstance(record, dict) or not isinstance(claimed_path, str | None):
-            return skipped(f"task record {state_file.name} unreadable; refusing worktree removal")
+            return refused(state_file, "unreadable")
         if record.get("task_id") == task_id or not claimed_path:
             continue
         if record.get("status") in _SETTLE_REAP_RELEASED_CLAIM_STATUSES:
             continue
-        if Path(claimed_path).resolve() == target:
-            return skipped(f"worktree claimed by active task {record.get('task_id') or state_file.stem}")
+        try:
+            claimed = _normalize_worktree_path(claimed_path)
+        except (OSError, RuntimeError, ValueError):
+            return refused(state_file, "worktree_path unresolvable")
+        if claimed == target:
+            return f"worktree claimed by active task {record.get('task_id') or state_file.stem}"
     return None
 
 
-def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
+def _reap_finished_worktree(worktree: Path, *, settling_task_id: str) -> dict[str, Any]:
     """Remove a settled worktree checkout and keep its branch ref.
 
     The scheduled reaper's PR, rollover, and GraphQL gates skip the clean
     read-only review checkouts this path exists to drop. Settle has already
     proved the tree is clean, so removal is worktree-only: ``git branch``
     is never invoked, and a missing branch ref after removal is an error.
+
+    Dispatch takes no lock when it attaches an existing worktree, so the
+    active-claim scan runs last, immediately before removal, to narrow the
+    window in which a new attachment can be missed (#8610).
     """
     branch = _checked_out_branch(worktree)
     if str(_REPO_ROOT) not in sys.path:
@@ -4259,6 +4316,18 @@ def _reap_finished_worktree(worktree: Path) -> dict[str, Any]:
                 "branch": branch,
                 "reason": "dirty or unknown; refusing worktree removal",
                 "dirty": dirty,
+                "pr": None,
+                "error": None,
+            }
+
+        claim_refusal = _active_worktree_claim_refusal(worktree, task_id=settling_task_id)
+        if claim_refusal is not None:
+            return {
+                "action": "skipped",
+                "path": str(worktree),
+                "branch": branch,
+                "reason": claim_refusal,
+                "dirty": False,
                 "pr": None,
                 "error": None,
             }
@@ -6194,9 +6263,8 @@ def _run_worker(
     ):
         worktree_reap = _settled_worktree_reap_refusal(
             Path(worktree_path),
-            task_id=task_id,
             created_by_this_dispatch=worktree_created_by_dispatch,
-        ) or _reap_finished_worktree(Path(worktree_path))
+        ) or _reap_finished_worktree(Path(worktree_path), settling_task_id=task_id)
 
     usage_record = getattr(result, "usage_record", None)
     result_substitution = getattr(result, "substitution", None)
@@ -7410,6 +7478,12 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
         except (ValueError, RuntimeError) as exc:
             stdout_fd.close()
             stderr_fd.close()
+            # Record the resolved absolute path like every other writer (#8610);
+            # a path that cannot even be resolved is kept verbatim.
+            try:
+                failed_worktree_path = str(_normalize_worktree_path(resolved_raw, repo_root=target_repo_root))
+            except (OSError, RuntimeError, ValueError):
+                failed_worktree_path = resolved_raw
             _record_worktree_prep_failure(
                 task_id=task_id,
                 run_nonce=run_nonce,
@@ -7422,7 +7496,7 @@ def cmd_dispatch(args: argparse.Namespace) -> int:
                 requested_effort=getattr(args, "effort", None),
                 requested_harness=requested_harness,
                 lifecycle_carrier=lifecycle_carrier,
-                worktree_path=resolved_raw,
+                worktree_path=failed_worktree_path,
                 worktree_branch=requested_branch or _derive_worktree_branch(dispatch_agent, task_id),
                 worktree_base_sha=resolved_worktree_base_sha,
                 worktree_base=getattr(args, "base", None) or "main",

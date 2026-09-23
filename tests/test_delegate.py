@@ -8276,7 +8276,7 @@ def test_reap_finished_worktree_survives_an_unimportable_reaper(tmp_path, monkey
         return real_import(name, *args, **kwargs)
 
     monkeypatch.setattr(builtins, "__import__", fake_import)
-    out = delegate._reap_finished_worktree(tmp_path)
+    out = delegate._reap_finished_worktree(tmp_path, settling_task_id="reap-unimportable")
     assert isinstance(out, dict)
     assert out.get("ok") is not True
 
@@ -8360,11 +8360,12 @@ def _run_settle_reap_worker(
         own_state["worktree_reused"] = worktree_reused
     delegate._write_state_atomic(state_path, own_state)
     # Sibling task records share the tmp tasks dir. A dict names this
-    # worktree via ``worktree_path``; a str is written raw (corrupt record).
+    # worktree via ``worktree_path``; a str is written raw (corrupt record)
+    # with ``{worktree}`` replaced by the worktree path.
     for sibling_id, record in (sibling_records or {}).items():
         sibling_path = delegate._state_path(sibling_id)
         if isinstance(record, str):
-            sibling_path.write_text(record, encoding="utf-8")
+            sibling_path.write_text(record.replace("{worktree}", str(worktree)), encoding="utf-8")
         else:
             delegate._write_state_atomic(
                 sibling_path,
@@ -8585,9 +8586,16 @@ def test_active_sibling_claim_blocks_reap_when_reused_flag_is_mis_set(
     assert _branch_ref_present(primary, branch)
 
 
-@pytest.mark.parametrize("corrupt", ['{"task_id": "half', "[1, 2]", '{"worktree_path": 7}'])
+@pytest.mark.parametrize(
+    "corrupt",
+    [
+        '{"task_id": "half", "worktree_path": "{worktree}',
+        '["{worktree}"]',
+        '{"worktree_path": 7, "note": "{worktree}"}',
+    ],
+)
 def test_unreadable_sibling_task_record_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch, corrupt):
-    """#8610: a sibling record whose claim cannot be read fails closed."""
+    """#8610: a sibling record that names the worktree but cannot be read fails closed."""
     primary, worktree, branch, state = _run_settle_reap_worker(
         tmp_tasks_dir=tmp_tasks_dir,
         tmp_path=tmp_path,
@@ -8615,8 +8623,140 @@ def test_unknown_worktree_ownership_blocks_reap(tmp_tasks_dir, tmp_path, monkeyp
     )
 
     assert state["worktree_reap"]["action"] == "skipped"
-    assert state["worktree_reap"]["reason"] == "worktree ownership unknown; refusing worktree removal"
+    assert state["worktree_reap"]["reason"] == (
+        "worktree ownership unknown; refusing worktree removal; operator cleanup: "
+        f"scripts/orchestration/reap_worktrees.py --terminal-dispatches --worktree {worktree} --apply"
+    )
     assert worktree.exists()
+
+
+@pytest.mark.parametrize("corrupt", ['{"task_id": "half', "[1, 2]", '{"worktree_path": 7}'])
+def test_unrelated_corrupt_task_record_does_not_block_reap(tmp_tasks_dir, tmp_path, monkeypatch, corrupt):
+    """#8610: a corrupt record that never names the worktree is not a candidate claim."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-unrelated-corrupt",
+        mode="read-only",
+        sibling_records={"broken": corrupt},
+    )
+
+    assert state["worktree_reap"]["action"] == "removed"
+    assert not worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_repo_relative_sibling_claim_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: a claim is resolved against the repo root, as dispatch does, not the process cwd."""
+    task_id = "reap-ro-relative-claim"
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+        sibling_records={
+            "impl-relative": {
+                "status": "running",
+                "worktree_path": f".worktrees/dispatch/cursor/{task_id}/",
+            }
+        },
+    )
+
+    assert Path.cwd() != primary
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-relative"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_unresolvable_sibling_claim_is_recorded_skip_not_settle_crash(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: a NUL in a candidate claim fails closed as a skip; settle still writes the terminal state."""
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id="reap-ro-nul-claim",
+        mode="read-only",
+        sibling_records={"nul": '{"task_id": "nul", "status": "running", "worktree_path": "{worktree}\\u0000x"}'},
+    )
+
+    assert state["status"] == "done"
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == (
+        "task record nul.json worktree_path unresolvable; refusing worktree removal"
+    )
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_claim_attached_after_ownership_check_blocks_reap(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: the active-claim scan runs at removal time, after the ownership decision."""
+    task_id = "reap-ro-late-attach"
+    original = delegate._settled_worktree_reap_refusal
+
+    def ownership_then_attach(worktree, **kwargs):
+        refusal = original(worktree, **kwargs)
+        delegate._write_state_atomic(
+            delegate._state_path("impl-late"),
+            {"task_id": "impl-late", "status": "spawning", "worktree_path": str(worktree)},
+        )
+        return refusal
+
+    monkeypatch.setattr(delegate, "_settled_worktree_reap_refusal", ownership_then_attach)
+    primary, worktree, branch, state = _run_settle_reap_worker(
+        tmp_tasks_dir=tmp_tasks_dir,
+        tmp_path=tmp_path,
+        monkeypatch=monkeypatch,
+        task_id=task_id,
+        mode="read-only",
+    )
+
+    assert state["worktree_reap"]["action"] == "skipped"
+    assert state["worktree_reap"]["reason"] == "worktree claimed by active task impl-late"
+    assert worktree.exists()
+    assert _branch_ref_present(primary, branch)
+
+
+def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_tasks_dir, tmp_path, monkeypatch):
+    """#8610: the byte pre-filter also matches the ``\\uXXXX`` spelling ``json.dumps`` writes."""
+    monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
+    worktree = tmp_path / ".worktrees" / "dispatch" / "cursor" / "огляд-8610"
+    worktree.mkdir(parents=True)
+    delegate._write_state_atomic(
+        delegate._state_path("impl-uk"),
+        {"task_id": "impl-uk", "status": "running", "worktree_path": str(worktree)},
+    )
+    assert "огляд".encode() not in delegate._state_path("impl-uk").read_bytes()
+
+    reason = delegate._active_worktree_claim_refusal(worktree, task_id="review-uk")
+
+    assert reason == "worktree claimed by active task impl-uk"
+
+
+def test_worktree_prep_failure_records_resolved_absolute_worktree_path(tmp_path, monkeypatch, tmp_tasks_dir):
+    """#8610: a relative ``--worktree`` is recorded as the resolved absolute path on prep failure too."""
+    monkeypatch.setattr(delegate, "_resolve_worktree_base_sha", lambda *a, **k: "a" * 40)
+
+    def fail_ensure(**_kwargs):
+        raise ValueError("simulated worktree preparation failure")
+
+    monkeypatch.setattr(delegate, "_ensure_worktree", fail_ensure)
+    args = _write_args(
+        agent="agy",
+        task_id="task-8610-relative",
+        branch=None,
+        worktree=".worktrees/dispatch/agy/task-8610-relative/",
+        mode="workspace-write",
+    )
+
+    assert delegate.cmd_dispatch(args) == 1
+
+    state = json.loads(delegate._state_path("task-8610-relative").read_text(encoding="utf-8"))
+    assert state["status"] == "failed"
+    expected = (Path(delegate._REPO_ROOT) / ".worktrees/dispatch/agy/task-8610-relative").resolve()
+    assert state["worktree_path"] == str(expected)
 
 
 def test_danger_failed_clean_settle_keeps_worktree(tmp_tasks_dir, tmp_path, monkeypatch):
