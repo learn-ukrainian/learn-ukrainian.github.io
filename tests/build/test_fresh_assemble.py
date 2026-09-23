@@ -222,6 +222,7 @@ def make_plan_lesson(
     core_words: list[dict[str, Any]] | None = None,
     incidental_words: list[dict[str, Any]] | None = None,
     videos: list[dict[str, Any]] | None = None,
+    activities: list[dict[str, Any]] | None = None,
     job: str = "Greet people",
     rationale: str = "Introductory lesson",
 ) -> dict[str, Any]:
@@ -249,6 +250,7 @@ def make_plan_lesson(
             }
         },
         "steps": steps,
+        "activities": activities or [],
         "videos": videos or [],
     }
 
@@ -484,12 +486,14 @@ def test_step_ids_on_units_in_expanded_document():
         },
     ]
     plan_videos = [{"evidence": "V-1", "use": "Watch the alphabet song"}]
+    plan_activities = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
     lesson = make_plan_lesson(
         1,
         plan_steps,
         core_words=[w1],
         incidental_words=[w2],
         videos=plan_videos,
+        activities=plan_activities,
     )
     plan = make_plan(lessons=[lesson])
 
@@ -519,7 +523,6 @@ def test_step_ids_on_units_in_expanded_document():
     draft_activities = [
         {
             "id": "a1",
-            "type": "quiz",
             "instruction": "Answer question",
             "items": [
                 {
@@ -748,11 +751,11 @@ def test_activities_stress_applied_from_stream():
         "evidence": [],
         "practice": ["a1"],
     }
-    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1])])
+    plan_activities = [{"id": "a1", "type": "quiz", "placement": "inline", "focus": "Quiz"}]
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
 
     act_quiz = {
         "id": "a1",
-        "type": "quiz",
         "instruction": "Say {{uk:слово}} please",
         "items": [
             {
