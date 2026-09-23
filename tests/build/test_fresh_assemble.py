@@ -1760,7 +1760,7 @@ def test_cli_blocked_report_prints_tokens_and_failures(capsys, monkeypatch):
     }
     monkeypatch.setattr("scripts.build.fresh.assemble.assemble_lesson", lambda *args, **kwargs: blocked_rep)
 
-    rc = cli.main(["assemble", "--level", "a1", "--slug", "sample-slug", "--lesson", "1"])
+    rc = cli.main(["assemble", "a1", "sample-slug", "--lesson", "1"])
     assert rc == 1
 
     captured = capsys.readouterr()
