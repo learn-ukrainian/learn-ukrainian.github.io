@@ -512,12 +512,15 @@ def _collect_issues_orient_data(ctx: MonitorContext | None = None) -> dict:
     TTL window (reviewer BLOCKER, GH #1309). Timeouts surface as
     ``RuntimeError`` the same way a failed ``gh`` subprocess did.
     """
+    issue_limit = 10
     try:
-        payload = github_rest.list_open_issues(IDLE_PR_REPOSITORY, limit=10, timeout=5.0)
+        payload = github_rest.list_open_issues(IDLE_PR_REPOSITORY, limit=issue_limit, timeout=5.0)
     except github_rest.GitHubRestTimeout as exc:
         raise RuntimeError(str(exc)) from exc
     except github_rest.GitHubRestError as exc:
         raise RuntimeError(str(exc)) from exc
+    if getattr(payload, "truncated", False) and len(payload) < issue_limit:
+        raise RuntimeError("GitHub issue list truncated")
 
     now = datetime.now(UTC)
     issues = []
@@ -584,21 +587,17 @@ def _idle_pr_checks_green(pr: dict[str, Any]) -> bool:
 
 
 def _idle_pr_has_review_gate(pr: dict[str, Any]) -> bool:
-    """Return whether GitHub or a review comment proves a passed review gate."""
+    """Return whether a proven review decision or a review comment clears the gate.
+
+    One GitHub ``APPROVED`` review is not enough. REST cannot see how many
+    approvals branch protection requires, so eligibility needs ``reviewDecision``
+    ``APPROVED`` (only when that state is known) or an explicit cross-family
+    comment. A missing decision fails closed.
+    """
     if str(pr.get("reviewDecision") or "").upper() == "APPROVED":
         return True
 
     head_sha = pr.get("headRefOid")
-    reviews = pr.get("reviews")
-    if isinstance(reviews, list):
-        for review in reviews:
-            if not isinstance(review, dict) or str(review.get("state") or "").upper() != "APPROVED":
-                continue
-            commit = review.get("commit")
-            commit_sha = commit.get("oid") if isinstance(commit, dict) else commit
-            if not isinstance(head_sha, str) or not commit_sha or commit_sha == head_sha:
-                return True
-
     comments = pr.get("comments")
     if not isinstance(comments, list):
         return False
@@ -680,6 +679,8 @@ def _collect_idle_prs_orient_data(ctx: MonitorContext | None = None) -> dict[str
         raise RuntimeError(str(exc)) from exc
     if not isinstance(payload, list):
         raise RuntimeError("gh pr list returned a non-list payload")
+    if getattr(payload, "truncated", False):
+        raise RuntimeError("GitHub pull list truncated")
 
     now = datetime.now(UTC)
     rows = [row for item in payload if isinstance(item, dict) if (row := _eligible_idle_pr(item, now=now)) is not None]

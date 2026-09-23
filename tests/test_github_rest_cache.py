@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import threading
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -13,7 +14,7 @@ import scripts.api.state_helpers as state_helpers
 import scripts.github_rest_cache as github_rest
 from scripts.api.main import app
 from scripts.api.state_helpers import cache_invalidate
-from scripts.work.attention import _pr_check_state
+from scripts.work.attention import _pr_check_state, derive_health
 from scripts.work.normalize import _assignee_logins, _label_names
 from scripts.work.sources_public import (
     SectionResult,
@@ -42,7 +43,7 @@ def test_etag_is_stored_and_sent_on_the_next_request():
             (200, {"etag": '"v1"'}, b'[{"number": 1}]') if n == 1 else (304, {"etag": '"v1"'}, b"")
         )
     )
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
 
     first = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
     second = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
@@ -64,7 +65,7 @@ def test_304_serves_cached_body_and_ignores_a_replacement_payload():
             else (304, {"etag": '"two"'}, b"[999]")
         )
     )
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
 
     first = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
     second = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
@@ -87,7 +88,7 @@ def test_non_304_replaces_the_cached_body_and_etag():
         return 200, {"etag": etags[index]}, payloads[index]
 
     calls, transport = _transport_from(script)
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
 
     first = cache.get_json("repos/o/r/pulls?state=open", timeout=1.0)
     second = cache.get_json("repos/o/r/pulls?state=open", timeout=1.0)
@@ -108,7 +109,7 @@ def test_error_is_not_cached_and_the_previous_etag_is_replayed():
         return 304, {"etag": '"v1"'}, b'[{"ok": 999}]'
 
     calls, transport = _transport_from(script)
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
 
     first = cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
     with pytest.raises(github_rest.GitHubRestError):
@@ -201,6 +202,7 @@ def test_pull_projection_matches_work_and_idle_consumers():
         "updatedAt",
         "createdAt",
         "reviewDecision",
+        "reviewFacts",
         "reviews",
         "comments",
         "statusCheckRollup",
@@ -210,13 +212,27 @@ def test_pull_projection_matches_work_and_idle_consumers():
         "url",
     }
     assert "body" not in projected
-    assert projected["reviewDecision"] == "APPROVED"
+    assert projected["reviewDecision"] is None
+    assert projected["reviewFacts"]["latest_by_reviewer"] == {"reviewer": "APPROVED"}
+    assert projected["reviewFacts"]["counts"] == {"APPROVED": 1}
     assert projected["reviews"] == [{"state": "APPROVED", "commit": {"oid": SHA}}]
     assert projected["comments"] == [{"body": "note", "createdAt": updated}]
     assert projected["mergeStateStatus"] == "CLEAN"
     assert _pr_check_state(projected) == "passing"
-    eligible = api_main._eligible_idle_pr(projected, now=now)
-    assert eligible == {"number": 77, "branch": "cursor/example", "minutes_idle": 240}
+    assert api_main._eligible_idle_pr(projected, now=now) is None
+    health = derive_health(
+        {
+            "resource_kind": "pr",
+            "lifecycle": "open",
+            "flags": {},
+            "projections": {
+                "review": {"review_decision": projected["reviewDecision"]},
+                "verification": {"ci_state": "passing"},
+            },
+        },
+        source_ok=True,
+    )
+    assert health != "ON_TRACK"
 
 
 def test_changes_requested_beats_a_later_approval_from_someone_else():
@@ -317,14 +333,14 @@ def test_open_pr_detail_is_conditional_and_bounded_to_open_pulls():
             return 304, {"etag": etag}, b""
         return 200, {"etag": etag}, json.dumps(body).encode()
 
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
     first = github_rest.list_open_prs(REPO, limit=1000, timeout=2.0, cache=cache, include_comments=True)
     second = github_rest.list_open_prs(REPO, limit=1000, timeout=2.0, cache=cache, include_comments=True)
 
     assert not any("/pulls/78" in path or "/issues/9" in path for path, _ in calls)
     assert first == second
     assert first[0]["number"] == 77
-    assert first[0]["reviewDecision"] == "APPROVED"
+    assert first[0]["reviewDecision"] is None
     assert _pr_check_state(first[0]) == "passing"
     assert len(calls) == 12
     assert calls[0][1] is None
@@ -340,7 +356,7 @@ def test_check_run_error_is_not_cached_as_a_successful_pr_list():
         etag, body = resources[path]
         return 200, {"etag": etag}, json.dumps(body).encode()
 
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
     with pytest.raises(github_rest.GitHubRestError):
         github_rest.list_open_prs(REPO, limit=10, timeout=2.0, cache=cache)
     check_path = f"repos/{REPO}/commits/{SHA}/check-runs?per_page=100&page=1"
@@ -371,7 +387,7 @@ def test_issue_state_rest_omits_404_and_does_not_cache_it():
             return 304, {"etag": etag}, b""
         return 200, {"etag": etag}, json.dumps(body).encode()
 
-    cache = github_rest.GitHubRestCache(transport=transport)
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
     found = github_rest.issue_states(REPO, [9, 1, 404, 500], timeout=1.0, cache=cache)
     assert found == {9: "open", 1: "closed"}
     assert cache.cached_body(f"repos/{REPO}/issues/404") is None
@@ -387,7 +403,8 @@ def test_fetch_issue_states_rest_contract(monkeypatch):
             200,
             {"etag": resources[path][0]},
             json.dumps(resources[path][1]).encode(),
-        )
+        ),
+        identity="octocat",
     )
     monkeypatch.setattr(github_rest, "shared_cache", lambda: cache)
 
@@ -571,4 +588,307 @@ def test_work_projection_endpoint_contract(monkeypatch):
     assert pull["projections"]["verification"]["ci_state"] == "passing"
     assert pull["projections"]["verification"]["merge_state_status"] == "CLEAN"
     assert pull["projections"]["verification"]["head_sha"] == SHA
-    assert pull["projections"]["review"]["review_decision"] == "APPROVED"
+    assert pull["projections"]["review"]["review_decision"] is None
+    assert pull["health"] != "ON_TRACK"
+
+
+def test_one_approval_is_not_approved_and_fails_closed():
+    """REST cannot see the required approval count, so one approval stays unknown."""
+    reviews = [{"user": {"login": "reviewer"}, "state": "APPROVED", "commit_id": SHA}]
+    assert github_rest.derive_review_decision(reviews, []) is None
+    facts = github_rest.review_facts(reviews)
+    assert facts["latest_by_reviewer"] == {"reviewer": "APPROVED"}
+    assert facts["counts"]["APPROVED"] == 1
+
+    projected = github_rest.project_pull_request(
+        {
+            "number": 77,
+            "title": "Ship it",
+            "state": "open",
+            "draft": False,
+            "head": {"ref": "cursor/example", "sha": SHA},
+            "updated_at": "2026-08-13T08:00:00Z",
+            "html_url": f"https://github.com/{REPO}/pull/77",
+        },
+        pull={"mergeable_state": "clean", "requested_reviewers": []},
+        check_runs=[
+            {
+                "name": "CI Gate",
+                "status": "completed",
+                "conclusion": "success",
+                "started_at": "2026-08-13T08:00:00Z",
+                "completed_at": "2026-08-13T08:10:00Z",
+            }
+        ],
+        statuses=[],
+        reviews=reviews,
+        comments=[],
+    )
+    assert projected["reviewDecision"] is None
+    assert api_main._eligible_idle_pr(projected, now=datetime(2026, 8, 13, 12, tzinfo=UTC)) is None
+    assert (
+        derive_health(
+            {
+                "resource_kind": "pr",
+                "lifecycle": "open",
+                "flags": {},
+                "projections": {
+                    "review": {"review_decision": projected["reviewDecision"]},
+                    "verification": {"ci_state": _pr_check_state(projected)},
+                },
+            },
+            source_ok=True,
+        )
+        != "ON_TRACK"
+    )
+
+
+def test_pagination_follows_next_and_a_page_cap_is_truncated(monkeypatch):
+    """Issues drop pull requests without shrinking the issue count, and a page cap is truncated."""
+    issues_path = f"repos/{REPO}/issues?state=open&per_page=100&sort=created&direction=desc"
+    page_two = "https://api.github.com/repos/o/r/issues?page=2"
+
+    def issue(number: int) -> dict:
+        return {
+            "number": number,
+            "title": f"Issue {number}",
+            "state": "open",
+            "created_at": "2026-08-01T00:00:00Z",
+            "updated_at": "2026-08-02T00:00:00Z",
+            "html_url": f"https://github.com/{REPO}/issues/{number}",
+            "labels": [],
+            "assignees": [],
+        }
+
+    def pull_row(number: int) -> dict:
+        return {**issue(number), "pull_request": {"url": f"https://api.github.com/pulls/{number}"}}
+
+    pages = {
+        issues_path: (
+            '"p1"',
+            [pull_row(1), pull_row(2)],
+            f'<{page_two}>; rel="next"',
+        ),
+        page_two: ('"p2"', [issue(9)], None),
+    }
+
+    def transport(path, headers, timeout):
+        etag, body, link = pages[path]
+        headers_out = {"etag": etag}
+        if link:
+            headers_out["link"] = link
+        return 200, headers_out, json.dumps(body).encode()
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
+    found = github_rest.list_open_issues(REPO, limit=1000, timeout=2.0, cache=cache)
+    assert [item["number"] for item in found] == [9]
+    assert found.truncated is False
+
+    monkeypatch.setattr(github_rest, "_MAX_PAGES", 1)
+    capped = github_rest.GitHubRestCache(transport=transport, identity="octocat")
+    short = github_rest.list_open_issues(REPO, limit=1000, timeout=2.0, cache=capped)
+    assert short.truncated is True
+    assert [item["number"] for item in short] == []
+    monkeypatch.setattr(github_rest, "shared_cache", lambda: capped)
+    section = fetch_open_issues(REPO)
+    assert section.status == "truncated"
+    assert section.truncated is True
+    assert section.count == 0
+
+    pulls_path = f"repos/{REPO}/pulls?state=open&per_page=100&sort=created&direction=desc"
+    checks_next = f"https://api.github.com/repos/{REPO}/commits/{SHA}/check-runs?page=2"
+    reviews_next = f"https://api.github.com/repos/{REPO}/pulls/77/reviews?page=2"
+    detail = {
+        pulls_path: (
+            '"pulls"',
+            [
+                {
+                    "number": 77,
+                    "title": "Ship it",
+                    "state": "open",
+                    "draft": False,
+                    "head": {"ref": "cursor/example", "sha": SHA},
+                    "updated_at": "2026-08-13T08:00:00Z",
+                    "created_at": "2026-08-01T00:00:00Z",
+                    "html_url": f"https://github.com/{REPO}/pull/77",
+                    "labels": [],
+                    "assignees": [],
+                }
+            ],
+            None,
+        ),
+        f"repos/{REPO}/pulls/77": ('"pull"', {"mergeable_state": "clean", "requested_reviewers": []}, None),
+        f"repos/{REPO}/commits/{SHA}/check-runs?per_page=100&page=1": (
+            '"checks"',
+            {
+                "total_count": 2,
+                "check_runs": [
+                    {
+                        "name": "CI Gate",
+                        "status": "completed",
+                        "conclusion": "success",
+                        "started_at": "2026-08-13T08:00:00Z",
+                        "completed_at": "2026-08-13T08:10:00Z",
+                    }
+                ],
+            },
+            f'<{checks_next}>; rel="next"',
+        ),
+        checks_next: (
+            '"checks2"',
+            {
+                "total_count": 2,
+                "check_runs": [
+                    {
+                        "name": "lint",
+                        "status": "completed",
+                        "conclusion": "failure",
+                        "started_at": "2026-08-13T08:00:00Z",
+                        "completed_at": "2026-08-13T08:10:00Z",
+                    }
+                ],
+            },
+            None,
+        ),
+        f"repos/{REPO}/commits/{SHA}/status": ('"status"', {"statuses": [], "total_count": 0}, None),
+        f"repos/{REPO}/pulls/77/reviews?per_page=100": (
+            '"reviews"',
+            [{"user": {"login": "a"}, "state": "APPROVED", "commit_id": SHA}],
+            f'<{reviews_next}>; rel="next"',
+        ),
+        reviews_next: (
+            '"reviews2"',
+            [{"user": {"login": "b"}, "state": "CHANGES_REQUESTED", "commit_id": SHA}],
+            None,
+        ),
+    }
+
+    def detail_transport(path, headers, timeout):
+        etag, body, link = detail[path]
+        headers_out = {"etag": etag}
+        if link:
+            headers_out["link"] = link
+        return 200, headers_out, json.dumps(body).encode()
+
+    monkeypatch.setattr(github_rest, "_MAX_PAGES", 20)
+    full = github_rest.GitHubRestCache(transport=detail_transport, identity="octocat")
+    projected = github_rest.list_open_prs(REPO, limit=10, timeout=2.0, cache=full)
+    assert projected[0]["reviewFacts"]["latest_by_reviewer"] == {
+        "a": "APPROVED",
+        "b": "CHANGES_REQUESTED",
+    }
+    assert projected[0]["reviewDecision"] == "CHANGES_REQUESTED"
+    assert _pr_check_state(projected[0]) == "failing"
+
+    monkeypatch.setattr(github_rest, "_MAX_PAGES", 1)
+    partial = github_rest.GitHubRestCache(transport=detail_transport, identity="octocat")
+    unknown = github_rest.list_open_prs(REPO, limit=10, timeout=2.0, cache=partial)
+    assert unknown.truncated is False
+    assert unknown[0]["reviewDecision"] is None
+    assert unknown[0]["statusCheckRollup"] is None
+    assert _pr_check_state(unknown[0]) == "unknown"
+
+
+def test_cache_is_keyed_by_login_and_bounds_detail_urls(monkeypatch):
+    user_calls: list[dict[str, str]] = []
+    bodies = {"repos/o/r/pulls/1": {"n": 1}, "repos/o/r/issues?state=open": [{"n": 2}]}
+
+    def transport(path, headers, timeout):
+        if path == "user":
+            user_calls.append(dict(headers))
+            return 200, {"etag": '"user"'}, b'{"login": "octocat"}'
+        body = bodies.get(path, {"n": path})
+        return 200, {"etag": f'"{path}"'}, json.dumps(body).encode()
+
+    cache = github_rest.GitHubRestCache(transport=transport)
+    cache.get_json("repos/o/r/pulls/1", timeout=1.0)
+    cache.get_json("repos/o/r/issues?state=open", timeout=1.0)
+    cache.get_json("repos/o/r/pulls/1", timeout=1.0)
+    assert len(user_calls) == 1
+    assert "authorization" not in {key.lower() for key in user_calls[0]}
+    assert list(cache._entries) == [
+        ("octocat", "repos/o/r/issues?state=open"),
+        ("octocat", "repos/o/r/pulls/1"),
+    ]
+    assert "ghp_" not in repr(list(cache._entries))
+
+    cache._identity = "other"
+    assert cache.cached_body("repos/o/r/pulls/1") is None
+    sent: list[str | None] = []
+
+    def other_transport(path, headers, timeout):
+        sent.append(headers.get("If-None-Match"))
+        return 200, {"etag": '"other"'}, b'{"n": 9}'
+
+    cache._transport = other_transport
+    fresh = cache.get_json("repos/o/r/pulls/1", timeout=1.0)
+    assert sent == [None]
+    assert fresh.body == {"n": 9}
+    assert ("octocat", "repos/o/r/pulls/1") in cache._entries
+    assert ("other", "repos/o/r/pulls/1") in cache._entries
+
+    monkeypatch.setattr(github_rest, "_CACHE_MAX_ENTRIES", 2)
+    bounded = github_rest.GitHubRestCache(
+        transport=lambda path, headers, timeout: (200, {"etag": '"e"'}, b'{"ok": 1}'),
+        identity="octocat",
+    )
+    for number in range(4):
+        bounded.get_json(f"repos/o/r/pulls/{number}", timeout=1.0)
+    assert len(bounded._entries) == 2
+    assert ("octocat", "repos/o/r/pulls/0") not in bounded._entries
+    assert ("octocat", "repos/o/r/pulls/3") in bounded._entries
+
+    timed = github_rest.GitHubRestCache(transport=transport, identity="octocat")
+    timed.get_json("repos/o/r/pulls/1", timeout=1.0)
+    timed.get_json("repos/o/r/issues?state=open", timeout=1.0)
+    detail_key = ("octocat", "repos/o/r/pulls/1")
+    list_key = ("octocat", "repos/o/r/issues?state=open")
+    timed._entries[detail_key].stored_at -= github_rest._DETAIL_TTL_S + 1
+    timed._entries[list_key].stored_at -= github_rest._DETAIL_TTL_S + 1
+    conditional: list[tuple[str, str | None]] = []
+
+    def replay(path, headers, timeout):
+        conditional.append((path, headers.get("If-None-Match")))
+        return 200, {"etag": '"again"'}, b'{"fresh": 1}'
+
+    timed._transport = replay
+    timed.get_json("repos/o/r/pulls/1", timeout=1.0)
+    timed.get_json("repos/o/r/issues?state=open", timeout=1.0)
+    assert conditional[0] == ("repos/o/r/pulls/1", None)
+    assert conditional[1][0] == "repos/o/r/issues?state=open"
+    assert conditional[1][1] == '"repos/o/r/issues?state=open"'
+
+
+def test_older_response_does_not_overwrite_a_newer_cached_body():
+    older_entered = threading.Event()
+    release_older = threading.Event()
+
+    def transport(path, headers, timeout):
+        seq = github_rest.current_request_seq()
+        if seq == 1:
+            older_entered.set()
+            assert release_older.wait(timeout=2)
+            return 200, {"etag": '"old"', "date": "Tue, 01 Jan 2020 00:00:00 GMT"}, b'{"v": "old"}'
+        assert seq == 2
+        return 200, {"etag": '"new"', "date": "Wed, 02 Jan 2020 00:00:00 GMT"}, b'{"v": "new"}'
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
+    path = "repos/o/r/pulls/1"
+    errors: list[BaseException] = []
+
+    def run_old():
+        try:
+            cache.get_json(path, timeout=2.0)
+        except BaseException as exc:
+            errors.append(exc)
+
+    older = threading.Thread(target=run_old)
+    older.start()
+    assert older_entered.wait(timeout=2)
+    newer = cache.get_json(path, timeout=2.0)
+    assert newer.body == {"v": "new"}
+    assert cache.cached_body(path) == {"v": "new"}
+    release_older.set()
+    older.join(timeout=2)
+    assert not errors
+    assert cache.cached_body(path) == {"v": "new"}

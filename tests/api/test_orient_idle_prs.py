@@ -93,6 +93,19 @@ def test_idle_pr_collector_excludes_fresh_red_and_unreviewed_prs(monkeypatch):
     assert all(row["minutes_idle"] > 60 for row in result["idle_prs"])
 
 
+def test_one_head_approval_without_review_decision_is_not_eligible():
+    head = f"{109:040x}"
+    pr = _pr(
+        109,
+        updated_at=NOW - timedelta(hours=2),
+        reviewDecision=None,
+        reviews=[{"state": "APPROVED", "commit": {"oid": head}}],
+    )
+    pr["headRefOid"] = head
+
+    assert api_main._eligible_idle_pr(pr, now=NOW) is None
+
+
 def test_latest_red_check_blocks_an_old_green_run():
     pr = _pr(
         106,

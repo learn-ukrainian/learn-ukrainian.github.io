@@ -8,25 +8,42 @@ Both ``scripts.api.main`` and ``scripts.work.sources_public`` use
 Projected dicts keep only the fields those consumers read. The shapes match
 the ``gh --json`` objects the collectors already understood: ``createdAt``,
 ``isDraft``, ``headRefOid``, ``statusCheckRollup``, and ``reviewDecision``.
+``reviewDecision`` is set only when REST proves it. A lone approval is not
+``APPROVED``: branch protection's required count is not visible here.
 """
 
 from __future__ import annotations
 
+import contextvars
 import json
+import re
 import subprocess
 import threading
 import time
+from collections import OrderedDict
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
+from datetime import UTC, datetime
+from email.utils import parsedate_to_datetime
 from typing import Any
 
 # (path, request headers, timeout seconds) -> (status, response headers, body)
 RestTransport = Callable[[str, dict[str, str], float], tuple[int, dict[str, str], bytes]]
 
-_MAX_PAGES = 15
-_CHECK_RUN_PAGES = 5
+# Safety ceiling. Hitting it while ``Link: rel="next"`` remains is truncated,
+# never a silent complete list.
+_MAX_PAGES = 20
 _DETAIL_WORKERS = 8
+_CACHE_MAX_ENTRIES = 512
+_DETAIL_TTL_S = 900.0
+_DETAIL_URL = re.compile(
+    r"(?:^|https://api\.github\.com/)repos/[^/]+/[^/]+/"
+    r"(?:pulls/\d+(?:/reviews)?|issues/\d+(?:/comments)?|"
+    r"commits/[^/?]+(?:/(?:check-runs|status))?)"
+    r"(?:\?|$)"
+)
+_REQUEST_SEQ: contextvars.ContextVar[int] = contextvars.ContextVar("github_rest_request_seq", default=0)
 
 
 class GitHubRestError(RuntimeError):
@@ -54,11 +71,57 @@ class RestResult:
     not_modified: bool
 
 
+class RestPage(list):
+    """A REST collection. ``truncated`` means a later page was not read."""
+
+    def __init__(self, items: list[Any], *, truncated: bool) -> None:
+        super().__init__(items)
+        self.truncated = truncated
+
+
 @dataclass
 class _CacheEntry:
     etag: str
     body: Any
     link_next: str | None
+    seq: int
+    stored_at: float
+    observed_at: datetime | None
+    detail: bool
+
+
+def current_request_seq() -> int:
+    """Monotonic sequence of the ``get_json`` in flight on this thread."""
+    return _REQUEST_SEQ.get()
+
+
+def _is_detail_url(path: str) -> bool:
+    """Per-PR and per-commit URLs expire. List URLs stay until the LRU evicts them."""
+    return _DETAIL_URL.search(path) is not None
+
+
+def _http_time(headers: dict[str, str]) -> datetime | None:
+    raw = headers.get("last-modified") or headers.get("date")
+    if not raw:
+        return None
+    try:
+        parsed = parsedate_to_datetime(raw)
+    except (TypeError, ValueError, IndexError, OverflowError):
+        return None
+    if parsed.tzinfo is None:
+        return parsed.replace(tzinfo=UTC)
+    return parsed.astimezone(UTC)
+
+
+def _may_replace(existing: _CacheEntry | None, *, seq: int, observed_at: datetime | None) -> bool:
+    """False when ``existing`` was stored from a newer request or a later response time."""
+    if existing is None:
+        return True
+    if seq < existing.seq:
+        return False
+    if observed_at is None or existing.observed_at is None:
+        return True
+    return observed_at >= existing.observed_at
 
 
 def _link_next(header: str | None) -> str | None:
@@ -115,52 +178,175 @@ def _gh_api_transport(path: str, headers: dict[str, str], timeout: float) -> tup
 
 
 class GitHubRestCache:
-    """Process-local ETag cache. Errors leave the previous entry in place."""
+    """Process-local ETag cache. Errors leave the previous entry in place.
 
-    def __init__(self, transport: RestTransport | None = None) -> None:
+    Keys are ``(login, url)``. The login comes from one ``GET /user`` and is
+    never the token. Detail URLs expire; the map is an LRU with a hard cap.
+    A response from an earlier request cannot replace a newer cached body.
+    """
+
+    def __init__(self, transport: RestTransport | None = None, *, identity: str | None = None) -> None:
         self._transport = transport or _gh_api_transport
-        self._entries: dict[str, _CacheEntry] = {}
+        self._entries: OrderedDict[tuple[str, str], _CacheEntry] = OrderedDict()
         self._lock = threading.Lock()
+        self._identity_lock = threading.Lock()
+        self._identity = identity
+        self._identity_error: BaseException | None = None
+        self._identity_ready = threading.Event()
+        if identity:
+            self._identity_ready.set()
+        self._identity_thread: threading.Thread | None = None
+        self._seq = 0
 
     def clear(self) -> None:
         with self._lock:
             self._entries.clear()
 
+    def _kick_identity(self, timeout: float) -> None:
+        """Start the one login lookup without blocking the data read."""
+        if self._identity_ready.is_set() or self._identity:
+            return
+        with self._identity_lock:
+            if self._identity_thread is not None or self._identity:
+                return
+
+            def _run() -> None:
+                try:
+                    self._auth_identity(timeout)
+                except Exception as exc:
+                    self._identity_error = exc
+                finally:
+                    self._identity_ready.set()
+
+            self._identity_thread = threading.Thread(target=_run, name="gh-rest-identity", daemon=True)
+            self._identity_thread.start()
+
+    def _wait_identity(self, timeout: float) -> str:
+        if self._identity:
+            return self._identity
+        self._kick_identity(timeout)
+        if not self._identity_ready.wait(timeout):
+            raise GitHubRestTimeout(timeout)
+        if self._identity:
+            return self._identity
+        error = self._identity_error
+        with self._identity_lock:
+            self._identity_error = None
+            self._identity_thread = None
+            self._identity_ready.clear()
+        if isinstance(error, Exception):
+            raise error
+        raise GitHubRestError("GitHub login lookup failed")
+
+    def _auth_identity(self, timeout: float) -> str:
+        if self._identity:
+            return self._identity
+        with self._identity_lock:
+            if self._identity:
+                return self._identity
+            status, _headers, body = self._transport("user", {}, timeout)
+            if status != 200:
+                raise GitHubRestError("GitHub login lookup failed", status=status)
+            try:
+                payload = json.loads(body.decode("utf-8"))
+            except (UnicodeDecodeError, json.JSONDecodeError) as exc:
+                raise GitHubRestError("GitHub login lookup returned invalid JSON") from exc
+            login = payload.get("login") if isinstance(payload, dict) else None
+            if (
+                not isinstance(login, str)
+                or not login
+                or login.strip() != login
+                or "/" in login
+                or any(c.isspace() for c in login)
+            ):
+                raise GitHubRestError("GitHub login lookup returned no login")
+            self._identity = login
+            return login
+
+    def _expired(self, entry: _CacheEntry, now: float) -> bool:
+        return entry.detail and (now - entry.stored_at) >= _DETAIL_TTL_S
+
+    def _live_locked(self, key: tuple[str, str], now: float) -> _CacheEntry | None:
+        entry = self._entries.get(key)
+        if entry is None:
+            return None
+        if self._expired(entry, now):
+            del self._entries[key]
+            return None
+        self._entries.move_to_end(key)
+        return entry
+
+    def _store_locked(self, key: tuple[str, str], entry: _CacheEntry, now: float) -> None:
+        stale = [cached_key for cached_key, cached in self._entries.items() if self._expired(cached, now)]
+        for cached_key in stale:
+            del self._entries[cached_key]
+        self._entries[key] = entry
+        self._entries.move_to_end(key)
+        while len(self._entries) > _CACHE_MAX_ENTRIES:
+            self._entries.popitem(last=False)
+
     def cached_body(self, path: str) -> Any:
         with self._lock:
-            entry = self._entries.get(path)
+            if not self._identity:
+                return None
+            entry = self._live_locked((self._identity, path), time.monotonic())
             return None if entry is None else entry.body
 
     def get_json(self, path: str, *, timeout: float) -> RestResult:
         """Conditional GET.
 
-        200 replaces the cache. 304 returns the cached body and does not replace
-        it. 404 is returned and not cached. Any other failure raises and is not
-        cached.
+        200 stores the body when this request is not older than the cached
+        one. 304 returns the cached body and does not replace it. 404 is
+        returned and not cached. Any other failure raises and is not cached.
         """
         if timeout <= 0:
             raise GitHubRestTimeout(timeout)
+        known = self._identity
+        if known is None:
+            # Overlap the one login lookup with this read. A cold cache has no
+            # validator to send, so the data request does not wait for /user.
+            self._kick_identity(timeout)
         with self._lock:
-            current = self._entries.get(path)
-            etag = None if current is None else current.etag
+            self._seq += 1
+            seq = self._seq
+            etag = None
+            if known:
+                current = self._live_locked((known, path), time.monotonic())
+                etag = None if current is None else current.etag
         headers: dict[str, str] = {}
         if etag:
             headers["If-None-Match"] = etag
 
-        status, resp_headers, body = self._transport(path, headers, timeout)
-        resp_headers = {key.lower(): value for key, value in resp_headers.items()}
+        token = _REQUEST_SEQ.set(seq)
+        try:
+            status, resp_headers, body = self._transport(path, headers, timeout)
+        finally:
+            _REQUEST_SEQ.reset(token)
+        identity = known or self._wait_identity(timeout)
+        key = (identity, path)
+        resp_headers = {key_name.lower(): value for key_name, value in resp_headers.items()}
         new_etag = resp_headers.get("etag")
         link_next = _link_next(resp_headers.get("link"))
+        observed_at = _http_time(resp_headers)
 
         if status == 304:
             with self._lock:
-                cached = self._entries.get(path)
+                cached = self._live_locked(key, time.monotonic())
                 if cached is None:
                     raise GitHubRestError("304 without a cached body", status=304)
                 # A rotated validator must be replayed next time; the body stays.
-                if new_etag and new_etag != cached.etag:
-                    cached = _CacheEntry(etag=new_etag, body=cached.body, link_next=cached.link_next)
-                    self._entries[path] = cached
+                # An older in-flight 304 must not roll the validator backward.
+                if new_etag and new_etag != cached.etag and _may_replace(cached, seq=seq, observed_at=observed_at):
+                    cached = _CacheEntry(
+                        etag=new_etag,
+                        body=cached.body,
+                        link_next=cached.link_next,
+                        seq=seq,
+                        stored_at=cached.stored_at,
+                        observed_at=cached.observed_at,
+                        detail=cached.detail,
+                    )
+                    self._store_locked(key, cached, time.monotonic())
                 return RestResult(
                     status=304,
                     body=cached.body,
@@ -178,11 +364,26 @@ class GitHubRestCache:
         try:
             parsed = json.loads(body.decode("utf-8"))
         except (UnicodeDecodeError, json.JSONDecodeError) as exc:
-            raise GitHubRestError(f"invalid GitHub JSON: {exc}") from exc
+            raise GitHubRestError("invalid GitHub JSON") from exc
 
         if new_etag:
             with self._lock:
-                self._entries[path] = _CacheEntry(etag=new_etag, body=parsed, link_next=link_next)
+                existing = self._entries.get(key)
+                if _may_replace(existing, seq=seq, observed_at=observed_at):
+                    now = time.monotonic()
+                    self._store_locked(
+                        key,
+                        _CacheEntry(
+                            etag=new_etag,
+                            body=parsed,
+                            link_next=link_next,
+                            seq=seq,
+                            stored_at=now,
+                            observed_at=observed_at,
+                            detail=_is_detail_url(path),
+                        ),
+                        now,
+                    )
         return RestResult(
             status=200,
             body=parsed,
@@ -207,18 +408,51 @@ def _time_left(deadline: float, timeout: float) -> float:
     return left
 
 
-def _iter_list_pages(cache: GitHubRestCache, path: str, *, deadline: float, timeout: float):
+def _collect_pages(
+    cache: GitHubRestCache,
+    path: str,
+    *,
+    deadline: float,
+    timeout: float,
+    limit: int | None,
+    keep: Callable[[dict[str, Any]], bool] | None = None,
+) -> tuple[list[dict[str, Any]], bool]:
+    """Follow ``Link: rel="next"`` until the list ends or ``limit`` items are kept.
+
+    A page ceiling that still has a next link returns ``truncated=True``.
+    Items rejected by ``keep`` (pull requests on the issues API) do not count
+    toward ``limit`` and do not end the walk.
+    """
+    rows: list[dict[str, Any]] = []
     url: str | None = path
-    for _ in range(_MAX_PAGES):
-        if not url:
-            return
+    pages = 0
+    while url:
+        pages += 1
+        if pages > _MAX_PAGES:
+            return rows, True
         result = cache.get_json(url, timeout=_time_left(deadline, timeout))
         if result.status == 404:
             raise GitHubRestError(f"GitHub REST 404 for {url}", status=404)
         if not isinstance(result.body, list):
             raise GitHubRestError(f"expected a JSON list from {url}")
-        yield result.body
+        page = result.body
+        for index, item in enumerate(page):
+            if not isinstance(item, dict):
+                continue
+            if keep is not None and not keep(item):
+                continue
+            rows.append(item)
+            if limit is not None and len(rows) >= limit:
+                more_on_page = False
+                for later in page[index + 1 :]:
+                    if isinstance(later, dict) and (keep is None or keep(later)):
+                        more_on_page = True
+                        break
+                return rows, more_on_page or bool(result.link_next)
+        if not result.link_next:
+            return rows, False
         url = result.link_next
+    return rows, False
 
 
 def _names(raw: Any, key: str) -> list[dict[str, str]]:
@@ -247,31 +481,38 @@ def project_issue(raw: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def derive_review_decision(reviews: list[dict[str, Any]], requested_reviewers: Any) -> str:
-    """REST has no ``reviewDecision``. Latest review per author, then pending requests.
-
-    ``CHANGES_REQUESTED`` wins. An outstanding requested reviewer keeps the PR at
-    ``REVIEW_REQUIRED`` even when someone else has approved. Otherwise one
-    ``APPROVED`` review is ``APPROVED``.
-    """
+def review_facts(reviews: list[dict[str, Any]]) -> dict[str, Any]:
+    """Latest review state per reviewer, plus a count of each raw review state."""
     latest: dict[str, str] = {}
+    counts: dict[str, int] = {}
     for review in reviews:
+        state = str(review.get("state") or "").upper()
+        if not state:
+            continue
+        counts[state] = counts.get(state, 0) + 1
         user = review.get("user")
         login = user.get("login") if isinstance(user, dict) else None
-        state = str(review.get("state") or "").upper()
-        if isinstance(login, str) and login and state:
+        if isinstance(login, str) and login:
             latest[login] = state
+    return {"latest_by_reviewer": latest, "counts": counts}
+
+
+def derive_review_decision(reviews: list[dict[str, Any]], requested_reviewers: Any) -> str | None:
+    """REST cannot see the required approval count, so it never emits ``APPROVED``.
+
+    ``CHANGES_REQUESTED`` is provable from a current changes-request review.
+    An outstanding requested reviewer is ``REVIEW_REQUIRED``. Anything else,
+    including one or more approvals, is unknown (``None``).
+    """
+    latest = review_facts(reviews)["latest_by_reviewer"]
     deciding = {state for state in latest.values() if state in {"APPROVED", "CHANGES_REQUESTED"}}
     if "CHANGES_REQUESTED" in deciding:
         return "CHANGES_REQUESTED"
-    pending = False
-    if isinstance(requested_reviewers, list):
-        pending = any(isinstance(entry, dict) and entry.get("login") for entry in requested_reviewers)
-    if pending:
+    if isinstance(requested_reviewers, list) and any(
+        isinstance(entry, dict) and entry.get("login") for entry in requested_reviewers
+    ):
         return "REVIEW_REQUIRED"
-    if "APPROVED" in deciding:
-        return "APPROVED"
-    return "REVIEW_REQUIRED"
+    return None
 
 
 def _project_check_run(run: dict[str, Any]) -> dict[str, Any]:
@@ -317,8 +558,16 @@ def project_pull_request(
     statuses: list[dict[str, Any]],
     reviews: list[dict[str, Any]],
     comments: list[dict[str, Any]] | None,
+    reviews_complete: bool = True,
+    checks_complete: bool = True,
+    comments_complete: bool = True,
 ) -> dict[str, Any]:
-    """REST pull + conditional detail → the fields Work and idle-PR orient read."""
+    """REST pull + conditional detail → the fields Work and idle-PR orient read.
+
+    An incomplete review or check list is unknown: ``reviewDecision`` stays
+    ``None`` and ``statusCheckRollup`` stays ``None``, so Work is not
+    ``ON_TRACK`` and the idle-PR gate is not eligible.
+    """
     detail = pull if isinstance(pull, dict) else {}
     head = raw.get("head") if isinstance(raw.get("head"), dict) else {}
     state = raw.get("state")
@@ -326,10 +575,19 @@ def project_pull_request(
     requested = detail.get("requested_reviewers")
     if requested is None:
         requested = raw.get("requested_reviewers")
-    rollup: list[dict[str, Any]] = [_project_check_run(run) for run in check_runs if isinstance(run, dict)]
-    rollup.extend(_project_status(status) for status in statuses if isinstance(status, dict))
-    projected_reviews = [_project_review(review) for review in reviews if isinstance(review, dict)]
-    projected_comments = [_project_comment(comment) for comment in comments or [] if isinstance(comment, dict)]
+    review_rows = [review for review in reviews if isinstance(review, dict)]
+    facts = review_facts(review_rows)
+    facts["complete"] = reviews_complete
+    if checks_complete:
+        rollup: list[dict[str, Any]] | None = [_project_check_run(run) for run in check_runs if isinstance(run, dict)]
+        rollup.extend(_project_status(status) for status in statuses if isinstance(status, dict))
+    else:
+        rollup = None
+    projected_reviews = [_project_review(review) for review in review_rows]
+    if comments is None or not comments_complete:
+        projected_comments = None
+    else:
+        projected_comments = [_project_comment(comment) for comment in comments if isinstance(comment, dict)]
     return {
         "number": raw.get("number"),
         "title": raw.get("title"),
@@ -339,10 +597,8 @@ def project_pull_request(
         "headRefOid": head.get("sha"),
         "updatedAt": raw.get("updated_at"),
         "createdAt": raw.get("created_at"),
-        "reviewDecision": derive_review_decision(
-            [review for review in reviews if isinstance(review, dict)],
-            requested,
-        ),
+        "reviewDecision": (derive_review_decision(review_rows, requested) if reviews_complete else None),
+        "reviewFacts": facts,
         "reviews": projected_reviews,
         "comments": projected_comments,
         "statusCheckRollup": rollup,
@@ -353,28 +609,30 @@ def project_pull_request(
     }
 
 
+def _is_issue(item: dict[str, Any]) -> bool:
+    return "pull_request" not in item
+
+
 def list_open_issues(
     repo: str,
     *,
     limit: int,
     timeout: float,
     cache: GitHubRestCache | None = None,
-) -> list[dict[str, Any]]:
-    """Open issues only (the REST issues list also returns pull requests)."""
+) -> RestPage:
+    """Open issues only (the REST issues list also returns pull requests).
+
+    Pull requests are dropped and are not counted toward ``limit``. The
+    returned page is ``truncated`` when the caller cap or the page ceiling
+    leaves further issues unread.
+    """
     store = cache or shared_cache()
     if limit <= 0:
-        return []
+        return RestPage([], truncated=False)
     path = f"repos/{repo}/issues?state=open&per_page=100&sort=created&direction=desc"
     deadline = time.monotonic() + timeout
-    projected: list[dict[str, Any]] = []
-    for page in _iter_list_pages(store, path, deadline=deadline, timeout=timeout):
-        for item in page:
-            if not isinstance(item, dict) or "pull_request" in item:
-                continue
-            projected.append(project_issue(item))
-            if len(projected) >= limit:
-                return projected
-    return projected
+    rows, truncated = _collect_pages(store, path, deadline=deadline, timeout=timeout, limit=limit, keep=_is_issue)
+    return RestPage([project_issue(item) for item in rows], truncated=truncated)
 
 
 def _list_body(
@@ -383,16 +641,10 @@ def _list_body(
     *,
     deadline: float,
     timeout: float,
-    limit: int,
-) -> list[dict[str, Any]]:
-    rows: list[dict[str, Any]] = []
-    for page in _iter_list_pages(cache, path, deadline=deadline, timeout=timeout):
-        for item in page:
-            if isinstance(item, dict):
-                rows.append(item)
-            if len(rows) >= limit:
-                return rows
-    return rows
+) -> tuple[list[dict[str, Any]], bool]:
+    """Follow next links. The bool is completeness (False when the page cap hits)."""
+    rows, truncated = _collect_pages(cache, path, deadline=deadline, timeout=timeout, limit=None)
+    return rows, not truncated
 
 
 def _check_runs(
@@ -402,13 +654,16 @@ def _check_runs(
     *,
     deadline: float,
     timeout: float,
-) -> list[dict[str, Any]]:
+) -> tuple[list[dict[str, Any]], bool]:
+    """Check runs followed via ``Link: rel="next"``. Incomplete → ``(rows, False)``."""
     runs: list[dict[str, Any]] = []
-    for page in range(1, _CHECK_RUN_PAGES + 1):
-        result = cache.get_json(
-            f"repos/{repo}/commits/{sha}/check-runs?per_page=100&page={page}",
-            timeout=_time_left(deadline, timeout),
-        )
+    url: str | None = f"repos/{repo}/commits/{sha}/check-runs?per_page=100&page=1"
+    pages = 0
+    while url:
+        pages += 1
+        if pages > _MAX_PAGES:
+            return runs, False
+        result = cache.get_json(url, timeout=_time_left(deadline, timeout))
         if result.status == 404 or not isinstance(result.body, dict):
             raise GitHubRestError(f"check runs unavailable for {sha}", status=result.status)
         chunk = result.body.get("check_runs") or []
@@ -416,9 +671,14 @@ def _check_runs(
             raise GitHubRestError(f"check runs payload was not a list for {sha}")
         runs.extend(item for item in chunk if isinstance(item, dict))
         total = result.body.get("total_count")
-        if not isinstance(total, int) or len(runs) >= total or not chunk:
-            break
-    return runs
+        if not chunk or (isinstance(total, int) and len(runs) >= total):
+            return runs, True
+        if not result.link_next:
+            if isinstance(total, int) and len(runs) < total:
+                return runs, False
+            return runs, True
+        url = result.link_next
+    return runs, True
 
 
 def _detail_one(
@@ -438,28 +698,31 @@ def _detail_one(
     pull = cache.get_json(f"repos/{repo}/pulls/{number}", timeout=_time_left(deadline, timeout))
     if pull.status not in {200, 304} or not isinstance(pull.body, dict):
         raise GitHubRestError(f"pull request {number} detail unavailable", status=pull.status)
-    runs = _check_runs(cache, repo, sha, deadline=deadline, timeout=timeout)
+    runs, checks_complete = _check_runs(cache, repo, sha, deadline=deadline, timeout=timeout)
     status = cache.get_json(f"repos/{repo}/commits/{sha}/status", timeout=_time_left(deadline, timeout))
     if status.status not in {200, 304} or not isinstance(status.body, dict):
         raise GitHubRestError(f"commit status unavailable for {sha}", status=status.status)
     statuses = status.body.get("statuses") or []
     if not isinstance(statuses, list):
         raise GitHubRestError(f"commit status payload was not a list for {sha}")
-    reviews = _list_body(
+    # Combined status ``total_count`` is the full set. A short payload is unknown.
+    status_total = status.body.get("total_count")
+    if isinstance(status_total, int) and status_total > len(statuses):
+        checks_complete = False
+    reviews, reviews_complete = _list_body(
         cache,
         f"repos/{repo}/pulls/{number}/reviews?per_page=100",
         deadline=deadline,
         timeout=timeout,
-        limit=100,
     )
     comments: list[dict[str, Any]] | None = None
+    comments_complete = True
     if include_comments:
-        comments = _list_body(
+        comments, comments_complete = _list_body(
             cache,
             f"repos/{repo}/issues/{number}/comments?per_page=100",
             deadline=deadline,
             timeout=timeout,
-            limit=100,
         )
     return project_pull_request(
         raw,
@@ -468,6 +731,9 @@ def _detail_one(
         statuses=[item for item in statuses if isinstance(item, dict)],
         reviews=reviews,
         comments=comments,
+        reviews_complete=reviews_complete,
+        checks_complete=checks_complete,
+        comments_complete=comments_complete,
     )
 
 
@@ -478,16 +744,21 @@ def list_open_prs(
     timeout: float,
     cache: GitHubRestCache | None = None,
     include_comments: bool = False,
-) -> list[dict[str, Any]]:
-    """Open pulls. Check runs, reviews, and mergeability are one conditional read per open PR."""
+) -> RestPage:
+    """Open pulls. Check runs, reviews, and mergeability are one conditional read per open PR.
+
+    ``truncated`` is set when the pull list itself stopped early. An incomplete
+    check or review list on one pull is unknown on that pull, not a silent
+    green or approval.
+    """
     store = cache or shared_cache()
     if limit <= 0:
-        return []
+        return RestPage([], truncated=False)
     path = f"repos/{repo}/pulls?state=open&per_page=100&sort=created&direction=desc"
     deadline = time.monotonic() + timeout
-    raw = _list_body(store, path, deadline=deadline, timeout=timeout, limit=limit)
+    raw, truncated = _collect_pages(store, path, deadline=deadline, timeout=timeout, limit=limit)
     if not raw:
-        return []
+        return RestPage([], truncated=truncated)
     workers = max(1, min(_DETAIL_WORKERS, len(raw)))
 
     def _one(item: dict[str, Any]) -> dict[str, Any]:
@@ -501,7 +772,7 @@ def list_open_prs(
         )
 
     with ThreadPoolExecutor(max_workers=workers) as pool:
-        return list(pool.map(_one, raw))
+        return RestPage(list(pool.map(_one, raw)), truncated=truncated)
 
 
 def issue_states(
@@ -518,20 +789,28 @@ def issue_states(
     store = cache or shared_cache()
     found: dict[int, str] = {}
     deadline = time.monotonic() + timeout
-    for number in numbers:
+
+    def _one(number: int) -> tuple[int, str] | None:
         try:
             left = _time_left(deadline, timeout)
         except GitHubRestTimeout:
-            break
+            return None
         try:
             result = store.get_json(f"repos/{repo}/issues/{number}", timeout=left)
-        except GitHubRestTimeout:
-            break
-        except GitHubRestError:
-            continue
+        except (GitHubRestTimeout, GitHubRestError):
+            return None
         if result.status == 404 or not isinstance(result.body, dict):
-            continue
+            return None
         state = str(result.body.get("state") or "").lower()
         if state in {"open", "closed"}:
-            found[number] = state
+            return number, state
+        return None
+
+    if not numbers:
+        return found
+    workers = max(1, min(_DETAIL_WORKERS, len(numbers)))
+    with ThreadPoolExecutor(max_workers=workers) as pool:
+        for item in pool.map(_one, numbers):
+            if item is not None:
+                found[item[0]] = item[1]
     return found

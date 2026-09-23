@@ -247,7 +247,7 @@ def _fetch_open_issues_rest(repo: str, limit: int) -> SectionResult:
         return SectionResult("issues", "unavailable", reason=str(exc)[:200])
     if not isinstance(payload, list):
         return SectionResult("issues", "degraded", reason="gh_issue_list_not_list")
-    truncated = len(payload) >= limit
+    truncated = bool(getattr(payload, "truncated", False))
     return SectionResult(
         "issues",
         "truncated" if truncated else "ok",
@@ -267,7 +267,7 @@ def _fetch_open_prs_rest(repo: str, limit: int) -> SectionResult:
         return SectionResult("prs", "unavailable", reason=str(exc)[:200])
     if not isinstance(payload, list):
         return SectionResult("prs", "degraded", reason="gh_pr_list_not_list")
-    truncated = len(payload) >= limit
+    truncated = bool(getattr(payload, "truncated", False))
     return SectionResult(
         "prs",
         "truncated" if truncated else "ok",
