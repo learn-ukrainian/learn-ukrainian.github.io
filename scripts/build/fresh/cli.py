@@ -225,7 +225,8 @@ def _build_parser() -> argparse.ArgumentParser:
     p_assemble = subparsers.add_parser(
         "assemble",
         description=(
-            "Assemble a lesson draft into an expanded document, apply stress, build Slovnyk and Resursy tabs, and render MDX (#8431 §1, §7)."
+            "Assemble a lesson draft into an expanded document, apply stress, build Slovnyk and Resursy tabs, and render MDX (#8431 §1, §7).\n"
+            "Use to run deterministic assembly (check 5), stress and frontmatter (check 9), and verify shippability (check 11)."
         ),
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog=(
@@ -235,7 +236,9 @@ def _build_parser() -> argparse.ArgumentParser:
             "  lesson-<n>.expanded.yaml, lesson-<n>.provenance.yaml, lesson-<n>.stressed.yaml, and lesson-<n>.mdx\n\n"
             "Exit codes:\n"
             "  0: Successful assembly\n"
-            "  1: Assembly, stress, or render check failure\n"
+            "  1: Assembly, stress, or render check failure\n\n"
+            "Related:\n"
+            "  scripts/build/fresh/assemble.py, writer contract #8431 §1, §7"
         ),
     )
     p_assemble.add_argument("level", choices=LEVELS, help="Curriculum level, e.g. 'a1', 'a2', 'b1', 'b2'")
