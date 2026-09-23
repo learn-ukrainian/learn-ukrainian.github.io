@@ -578,6 +578,37 @@ class ClassifierTests(unittest.TestCase):
         full = self.classify(["unknown.bin"])
         self.assertEqual(len(json.loads(full["shards"])), int(full["shard_count"]))
 
+    def test_inbox_watch_with_current_tree_classifies_full(self):
+        # Regression for PR #8501: stem widening under-selects (_inbox_watch.py
+        # skipped tests/test_remote_supervisor.py). With leading-underscore stem
+        # widening removed, unmapped script changes fall back to FULL.
+        tree = scope.git_tree_paths()
+        result = self.classify(["scripts/ai_agent_bridge/_inbox_watch.py"], tree_paths=tree)
+        self.assert_full(result, frontend="false")
+
+        # Even when paired with its namesake test (PR #8496 diff), it falls back to FULL.
+        result_with_test = self.classify(
+            ["scripts/ai_agent_bridge/_inbox_watch.py", "tests/ai_agent_bridge/test_inbox_watch.py"],
+            tree_paths=tree,
+        )
+        self.assert_full(result_with_test, frontend="false")
+
+    def test_new_fail_closed_triggers_force_full(self):
+        triggers = (
+            "pytest.ini",
+            "setup.cfg",
+            "tox.ini",
+            "tests/conftest.py",
+            "tests/sub/conftest.py",
+            "tests/helpers.py",
+            "tests/fixtures/data.json",
+        )
+        for path in triggers:
+            with self.subTest(path=path):
+                tree = _tree(path, "tests/test_x.py", "tests/test_ci_shard_partition.py")
+                self.assertTrue(scope.hits_shared_root_denylist(path))
+                self.assert_full(self.classify([path], tree_paths=tree), frontend="false")
+
 
 if __name__ == "__main__":
     unittest.main()
