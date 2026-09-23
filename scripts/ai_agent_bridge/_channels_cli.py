@@ -909,8 +909,15 @@ def _pending_backlog_rows() -> list[dict[str, Any]]:
     ]
 
 
-def _maybe_print_backlog_warnings() -> None:
-    """Emit one stderr warning per *live* agent with stale pending deliveries.
+def _maybe_print_backlog_warnings(agent: str | None = None) -> None:
+    """Emit one stderr warning when *agent*'s own queue has stale pending deliveries.
+
+    Only the owning seat can drain its queue, so the banner is scoped to the
+    invoking seat's identity (the ``--for`` / positional agent on ``inbox``
+    commands, else ``SESSION_HANDOFF_AGENT``); with no identity there is no
+    warning. The fleet-wide view remains available on demand via
+    ``python -m scripts.fleet_comms backlog`` (drive-epic §1) — it is just no
+    longer pushed at every seat on every CLI call.
 
     Intentionally read-only — see ``run_delivery_expiry_cleanup``
     (``cleanup --expire``) and the Monitor API server's periodic sweep
@@ -928,9 +935,14 @@ def _maybe_print_backlog_warnings() -> None:
     Dead-lane queues are never warned here (#5113); run
     ``cleanup --expire`` (or the Monitor sweep) to bulk-expire them.
     """
+    if not agent:
+        return
+    agent = _channels.resolve_recipient_alias(agent.strip().lower())
     threshold = timedelta(hours=_parse_backlog_warn_hours())
     now = _now_utc()
     for row in _pending_backlog_rows():
+        if row["agent"] != agent:
+            continue
         if now - _parse_iso(row["oldest_created_at"]) < threshold:
             continue
         age = _format_age(row["oldest_created_at"], now=now)
