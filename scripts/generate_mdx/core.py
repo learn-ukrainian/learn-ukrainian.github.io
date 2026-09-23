@@ -486,15 +486,15 @@ def generate_mdx(
         if fm.get("evidence") and isinstance(fm["evidence"], dict):
             extra_fm_lines += "\nevidence:"
             for k, v in fm["evidence"].items():
-                extra_fm_lines += f"\n  {k}: \"{escape_jsx(str(v))}\""
+                extra_fm_lines += f"\n  {k}: {json.dumps(str(v), ensure_ascii=False)}"
         if fm.get("immersion"):
-            extra_fm_lines += f"\nimmersion: \"{escape_jsx(str(fm['immersion']))}\""
+            extra_fm_lines += f"\nimmersion: {json.dumps(str(fm['immersion']), ensure_ascii=False)}"
         if fm.get("job"):
-            extra_fm_lines += f"\njob: \"{escape_jsx(str(fm['job']))}\""
+            extra_fm_lines += f"\njob: {json.dumps(str(fm['job']), ensure_ascii=False)}"
         if "prev" in fm:
-            extra_fm_lines += f"\nprev: \"{escape_jsx(str(fm['prev']))}\"" if fm["prev"] else "\nprev: false"
+            extra_fm_lines += f"\nprev: {json.dumps(str(fm['prev']), ensure_ascii=False)}" if fm["prev"] else "\nprev: false"
         if "next" in fm:
-            extra_fm_lines += f"\nnext: \"{escape_jsx(str(fm['next']))}\"" if fm["next"] else "\nnext: false"
+            extra_fm_lines += f"\nnext: {json.dumps(str(fm['next']), ensure_ascii=False)}" if fm["next"] else "\nnext: false"
     else:
         try:
             from build.prev_next import get_prev_next_links

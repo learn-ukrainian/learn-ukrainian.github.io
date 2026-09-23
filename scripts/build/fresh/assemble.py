@@ -26,7 +26,7 @@ from jsonschema import Draft202012Validator
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
-from scripts.curriculum.learner_state.planned import planned_state
+from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver.classify import GLOSS_ID_RE
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
@@ -46,6 +46,9 @@ PARADIGM_NOT_FOUND = "paradigm_not_found"
 WORD_NOT_FOUND = "word_not_found"
 FORM_NOT_FOUND = "form_not_found"
 VIDEO_NOT_FOUND = "video_not_found"
+ACTIVITY_NOT_FOUND = "activity_not_found"
+DRAFT_STATUS_NOT_OK = "draft_status_not_ok"
+PRIOR_PLANS_MISSING = "prior_plans_missing"
 LOCK_CHECK_FAILED = "lock_check_failed"
 LESSON_LOCK_ENTRY_MISSING = "lesson_lock_entry_missing"
 LESSON_LOCK_MISMATCH = "lesson_lock_mismatch"
@@ -147,6 +150,10 @@ def assemble_expanded_document(
     Plain forms only: quotes, examples, paradigms, glosses have accents stripped.
     Fails closed with named AssemblerError codes on missing records.
     """
+    status = draft.get("status")
+    if status != "ok":
+        raise AssemblerError(DRAFT_STATUS_NOT_OK, f"draft status is {status!r}, expected 'ok'")
+
     lesson_entry: dict[str, Any] = {}
     for entry in plan.get("lessons", []):
         if isinstance(entry, dict) and entry.get("n") == lesson_n:
@@ -398,10 +405,18 @@ def assemble_expanded_document(
                         if isinstance(act_ref, str):
                             act_to_step[act_ref] = st_id
 
+    plan_acts_by_id = {
+        act["id"]: act
+        for act in lesson_entry.get("activities", [])
+        if isinstance(act, dict) and "id" in act
+    }
+
     for act in draft.get("activities", []):
         if not isinstance(act, dict):
             continue
         act_id = act.get("id")
+        if not act_id or act_id not in plan_acts_by_id:
+            raise AssemblerError(ACTIVITY_NOT_FOUND, f"draft activity {act_id} not found in plan")
         act_step = act_to_step.get(act_id) if act_id else None
         instr = act.get("instruction")
         if instr:
@@ -1040,6 +1055,12 @@ def _render_urok_markdown(
                         lines.append(f"> **{spk}:** {l_txt}")
                 lines.append("")
 
+            elif kind == "activity":
+                ref_id = block.get("ref", "")
+                if ref_id:
+                    lines.append(f"<!-- INJECT_ACTIVITY: {ref_id} -->")
+                    lines.append("")
+
     consol_lead = draft.get("consolidation", {}).get("lead_in")
     if consol_lead:
         lines.append(format_block_text(None, "consolidation_lead_in", consol_lead))
@@ -1234,11 +1255,21 @@ def check_9_stress_and_render(
             level,
             arc_position,
             lesson_n,
-            allow_missing_prior=True,
+            allow_missing_prior=False,
             plans_dir=p_root,
             evidence_dir=e_root,
         )
+        if getattr(p_state, "waiver", None):
+            return CheckResult(
+                check=9,
+                passed=False,
+                reason=f"{PRIOR_PLANS_MISSING}: {p_state.waiver}",
+                layer="plan",
+            )
         cumulative_core_count = p_state.cumulative_core_count
+    except PlannedStateError as exc:
+        code = getattr(exc, "code", PRIOR_PLANS_MISSING)
+        return CheckResult(check=9, passed=False, reason=f"{code}: {exc}", layer="plan")
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"planned state computation failed: {exc}", layer="plan")
 
@@ -1289,13 +1320,64 @@ def check_9_stress_and_render(
             return f"{lem} ({gl})" if gl else lem
         return wid
 
+    plan_acts_by_id = {
+        act["id"]: act
+        for act in lesson_entry.get("activities", [])
+        if isinstance(act, dict) and "id" in act
+    }
+
+    for draft_act in draft.get("activities", []):
+        if isinstance(draft_act, dict):
+            act_id = draft_act.get("id")
+            if not act_id or act_id not in plan_acts_by_id:
+                return CheckResult(
+                    check=9,
+                    passed=False,
+                    reason=f"{ACTIVITY_NOT_FOUND}: draft activity {act_id} not found in plan",
+                    layer="plan",
+                )
+
     stressed_activities = apply_stress_to_activities(draft.get("activities", []), stressed_doc, replace_gloss)
+
+    from scripts.yaml_activities import ActivityParser
+
+    activity_parser = ActivityParser()
+    converted_activities = []
+    for act_dict in stressed_activities:
+        if not isinstance(act_dict, dict):
+            continue
+        act_id = act_dict.get("id")
+        plan_act = plan_acts_by_id.get(act_id)
+        if not plan_act:
+            return CheckResult(
+                check=9,
+                passed=False,
+                reason=f"{ACTIVITY_NOT_FOUND}: draft activity {act_id} not found in plan",
+                layer="plan",
+            )
+        act_payload = copy.deepcopy(act_dict)
+        act_payload["type"] = plan_act.get("type")
+        act_payload["placement"] = plan_act.get("placement")
+        if not act_payload.get("title") and plan_act.get("focus"):
+            act_payload["title"] = plan_act.get("focus")
+
+        try:
+            act_obj = activity_parser._parse_activity(act_payload)
+            act_obj.placement = plan_act.get("placement")
+            converted_activities.append(act_obj)
+        except Exception as exc:
+            return CheckResult(
+                check=9,
+                passed=False,
+                reason=f"activity parsing failed for {act_id}: {exc}",
+                layer="writer",
+            )
 
     try:
         mdx_content = generate_mdx(
             md_content=urok_md,
             module_num=lesson_n,
-            yaml_activities=stressed_activities,
+            yaml_activities=converted_activities,
             meta_data=meta_data,
             vocab_items=vocab_items,
             external_resources=external_resources,
@@ -1388,6 +1470,17 @@ def assemble_lesson(
     else:
         draft = draft_dict
 
+    if draft.get("status") != "ok":
+        return {
+            "ok": False,
+            "failure": {
+                "check": 5,
+                "passed": False,
+                "reason": f"{DRAFT_STATUS_NOT_OK}: draft status is {draft.get('status')!r}, expected 'ok'",
+                "layer": "writer",
+            },
+        }
+
     # Check 5: Assembly
     c5 = check_5_assembly(draft, plan, pack, words_store, level, slug, lesson_n, output_dir=state_dir)
     if not c5.passed:
@@ -1435,6 +1528,12 @@ def assemble_lesson(
         write_stressed_document(stressed_doc, state_dir, lesson_n)
         return {
             "ok": False,
+            "failure": {
+                "check": 9,
+                "passed": False,
+                "reason": f"stream has {len(blocking_tokens)} blocking token(s) and {len(stream_failures)} failure(s); refusing site write",
+                "layer": "stream",
+            },
             "check_5": c5.to_dict(),
             "blocking_tokens": [str(t.get("token", "")) for t in blocking_tokens],
             "stream_failures": [str(f) for f in stream_failures],

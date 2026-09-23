@@ -8,8 +8,12 @@ from typing import Any
 
 import jsonschema
 import pytest
+import yaml
 
 from scripts.build.fresh.assemble import (
+    ACTIVITY_NOT_FOUND,
+    DRAFT_STATUS_NOT_OK,
+    PRIOR_PLANS_MISSING,
     AssemblerError,
     _render_urok_markdown,
     apply_stress,
@@ -282,10 +286,14 @@ def make_draft(
     *,
     steps: list[dict[str, Any]] | None = None,
     activities: list[dict[str, Any]] | None = None,
+    consolidation: dict[str, Any] | None = None,
     dialogue: dict[str, Any] | None = None,
     module: str = "a1/sample-slug",
     n: int = 1,
     lesson_lock_entry_sha256: str = "0" * 64,
+    status: str = "ok",
+    gaps: list[dict[str, Any]] | None = None,
+    validate: bool = True,
 ) -> dict[str, Any]:
     draft: dict[str, Any] = {
         "draft_schema": 1,
@@ -298,15 +306,16 @@ def make_draft(
             "learner_state_sha256": "0" * 64,
             "style_card_sha256": "0" * 64,
         },
-        "status": "ok",
+        "status": status,
         "steps": steps or [],
-        "consolidation": {"activities": []},
+        "consolidation": consolidation or {"activities": []},
         "activities": activities or [],
-        "gaps": [],
+        "gaps": gaps or [],
     }
     if dialogue is not None:
         draft["dialogue"] = dialogue
-    validate_fixture_draft(draft)
+    if validate:
+        validate_fixture_draft(draft)
     return draft
 
 
@@ -1319,3 +1328,445 @@ def test_output_page_path_and_navigation(tmp_path, monkeypatch):
     # Navigation uses lesson order
     assert meta["prev"] == "/a1/sample-slug/"
     assert meta["next"] == "/a1/sample-slug/2/"
+
+
+def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
+    """Blocker 1: Activities render as real components (<FillIn, <TrueFalse) in MDX."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": ["act-1"],
+    }
+    plan_activities = [
+        {"id": "act-1", "type": "fill-in", "placement": "inline", "focus": "Fill-in focus"},
+        {"id": "act-2", "type": "true-false", "placement": "workbook", "focus": "True-false focus"},
+    ]
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
+
+    act_fill = {
+        "id": "act-1",
+        "instruction": "Заповніть пропуск.",
+        "items": [
+            {
+                "sentence": "Це ____.",
+                "answer": "слово",
+                "options": ["слово", "мова"],
+                "explanation": "Це правильне слово.",
+            }
+        ],
+    }
+    act_tf = {
+        "id": "act-2",
+        "instruction": "Правда чи ні?",
+        "items": [
+            {
+                "statement": "Слово це одиниця мови.",
+                "correct": True,
+                "explanation": "Так, це одиниця мови.",
+            }
+        ],
+    }
+    draft = make_draft(
+        steps=[
+            {
+                "id": "s1",
+                "blocks": [
+                    {"kind": "prose", "text": "слово", "explains": ["W-1"]},
+                    {"kind": "activity", "ref": "act-1"},
+                ],
+            }
+        ],
+        activities=[act_fill, act_tf],
+        consolidation={"activities": ["act-2"]},
+        lesson_lock_entry_sha256="abc" * 21 + "a",
+    )
+
+    exp_doc, _ = assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+    mock_stream = type(
+        "MockStream",
+        (),
+        {
+            "tokens": [{"unit_index": 0, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}}],
+            "failures": [],
+        },
+    )()
+
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.planned_state",
+        lambda *args, **kwargs: type("State", (), {"cumulative_core_count": 10, "waiver": None})(),
+    )
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *args, **kwargs: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock,
+        "compute_lesson_lock",
+        lambda *args, **kwargs: {"lessons": [{"n": 1, "entry_sha256": "abc" * 21 + "a"}]},
+    )
+
+    state_dir = tmp_path / "state"
+    site_dir = tmp_path / "site"
+
+    res = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        output_dir=state_dir,
+        site_dir=site_dir,
+    )
+    assert res.passed is True
+    mdx = res.artifacts["mdx"]
+    assert "<FillIn client:only='react'" in mdx
+    assert "<TrueFalse client:only='react'" in mdx
+    assert "Це правильне слово." in mdx
+    assert "Так, це одиниця мови." in mdx
+
+
+def test_draft_activity_not_in_plan_fails_assembly():
+    """Blocker 1: A draft activity not in plan fails assembly with named code."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": [],
+    }
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=[])])
+
+    orphan_act = {
+        "id": "orphan-act",
+        "instruction": "Orphan instruction",
+        "items": [],
+    }
+    draft = make_draft(
+        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "слово", "explains": ["W-1"]}]}],
+        activities=[orphan_act],
+        validate=False,
+    )
+
+    with pytest.raises(AssemblerError) as exc:
+        assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+    assert exc.value.code == ACTIVITY_NOT_FOUND
+
+    c5 = check_5_assembly(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+    assert c5.passed is False
+    assert ACTIVITY_NOT_FOUND in (c5.reason or "")
+
+
+def test_non_ok_draft_fails_closed_without_site_write(tmp_path):
+    """Blocker 2: Refuse any draft whose status is not ok (e.g. evidence_gap)."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": [],
+    }
+    plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1])])
+
+    gap_draft = make_draft(
+        steps=[{"id": "s1", "blocks": []}],
+        status="evidence_gap",
+        gaps=[{"step": "s1", "need": "example", "detail": "Missing example"}],
+        validate=True,
+    )
+
+    state_dir = tmp_path / "state"
+    site_dir = tmp_path / "site"
+
+    rep = assemble_lesson(
+        "a1",
+        "sample-slug",
+        1,
+        draft_dict=gap_draft,
+        plan_dict=plan,
+        pack_dict=pack,
+        words_dict=words_store,
+        output_dir=state_dir,
+        site_dir=site_dir,
+    )
+    assert rep["ok"] is False
+    assert DRAFT_STATUS_NOT_OK in rep["failure"]["reason"]
+    assert not site_dir.exists() or not list(site_dir.iterdir())
+
+
+def test_expanded_schema_min_items_on_units():
+    """Blocker 2: Expanded schema requires minItems: 1 on units."""
+    valid_doc = {
+        "expanded_schema": 1,
+        "lesson": {"level": "a1", "slug": "test", "n": 1},
+        "units": [
+            {
+                "tab": "urok",
+                "step": "s1",
+                "activity": None,
+                "item": None,
+                "block": "prose_0",
+                "role": "instruction",
+                "text": "test",
+                "source": "writer_prose",
+            }
+        ],
+    }
+    _EXPANDED_VALIDATOR.validate(valid_doc)
+
+    empty_doc = {
+        "expanded_schema": 1,
+        "lesson": {"level": "a1", "slug": "test", "n": 1},
+        "units": [],
+    }
+    with pytest.raises(jsonschema.ValidationError):
+        _EXPANDED_VALIDATOR.validate(empty_doc)
+
+
+def test_taught_forms_reach_component_data(tmp_path, monkeypatch):
+    """Major 1: Taught forms reach vocab_items and VocabCard component data."""
+    w1 = {
+        "id": "W-1",
+        "lemma": "брат",
+        "pos": "noun",
+        "entry": {"source": "vesum", "entry_id": 10},
+        "ulif": "pending",
+        "forms": [
+            {
+                "form": "брата",
+                "tags": "noun:anim:m:v_rod",
+                "stress_source": "ulif",
+                "markers": [],
+                "learner": True,
+                "stressed": "бра́та",
+            },
+            {
+                "form": "братові",
+                "tags": "noun:anim:m:v_dav",
+                "stress_source": "ulif",
+                "markers": [],
+                "learner": True,
+                "stressed": "бра́тові",
+            },
+        ],
+    }
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": [],
+    }
+    lesson = make_plan_lesson(
+        1,
+        [step],
+        core_words=[{"evidence": "W-1", "forms": ["noun:anim:m:v_rod", "noun:anim:m:v_dav"]}],
+    )
+    plan = make_plan(lessons=[lesson])
+
+    draft = make_draft(
+        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "слово", "explains": ["W-1"]}]}],
+        lesson_lock_entry_sha256="abc" * 21 + "a",
+    )
+
+    exp_doc, _ = assemble_expanded_document(draft, plan, pack, words_store, "a1", "sample-slug", 1)
+    mock_stream = type(
+        "MockStream",
+        (),
+        {
+            "tokens": [{"unit_index": 0, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}}],
+            "failures": [],
+        },
+    )()
+
+    monkeypatch.setattr(
+        "scripts.build.fresh.assemble.planned_state",
+        lambda *args, **kwargs: type("State", (), {"cumulative_core_count": 5, "waiver": None})(),
+    )
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *args, **kwargs: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock,
+        "compute_lesson_lock",
+        lambda *args, **kwargs: {"lessons": [{"n": 1, "entry_sha256": "abc" * 21 + "a"}]},
+    )
+
+    res = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        output_dir=tmp_path / "state",
+        site_dir=tmp_path / "site",
+    )
+    assert res.passed is True
+    vocab = res.artifacts["vocab_items"]
+    assert len(vocab) == 1
+    assert vocab[0]["forms"] == ["бра́та", "бра́тові"]
+    mdx = res.artifacts["mdx"]
+    assert '"forms":["бра́та","бра́тові"]' in mdx or '"forms": ["бра́та", "бра́тові"]' in mdx
+
+
+def test_missing_prior_plans_fails_assembly(monkeypatch, tmp_path):
+    """Major 2: planned_state called without waiver; missing prior plans fail assembly."""
+    w1 = make_word_record(1, "слово")
+    words_store = make_words_store(words=[w1])
+    pack = make_pack()
+
+    step = {
+        "id": "s1",
+        "kind": "teach",
+        "teach": "Teach",
+        "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
+        "uses": {"grammar": [], "vocabulary": []},
+        "evidence": [],
+        "practice": [],
+    }
+
+    # 1. Lesson 1 of position 1 has no prior plans and passes
+    plan_pos1 = make_plan(arc_position=1, lessons=[make_plan_lesson(1, [step], core_words=[w1])])
+    draft = make_draft(
+        steps=[{"id": "s1", "blocks": [{"kind": "prose", "text": "слово", "explains": ["W-1"]}]}],
+        lesson_lock_entry_sha256="abc" * 21 + "a",
+    )
+    exp_doc, _ = assemble_expanded_document(draft, plan_pos1, pack, words_store, "a1", "sample-slug", 1)
+    mock_stream = type(
+        "MockStream",
+        (),
+        {
+            "tokens": [{"unit_index": 0, "token": "слово", "class": "resolved", "selected": {"stressed": "сло́во"}}],
+            "failures": [],
+        },
+    )()
+
+    monkeypatch.setattr(lesson_lock, "check_lesson_lock", lambda *args, **kwargs: (True, ""))
+    monkeypatch.setattr(
+        lesson_lock,
+        "compute_lesson_lock",
+        lambda *args, **kwargs: {"lessons": [{"n": 1, "entry_sha256": "abc" * 21 + "a"}]},
+    )
+    monkeypatch.setattr("scripts.curriculum.learner_state.planned.resolve_base_ids", lambda *a, **kw: [])
+
+    p_dir = tmp_path / "plans"
+    p_dir.mkdir(parents=True, exist_ok=True)
+    plan_path = p_dir / "01-sample-slug.yaml"
+    plan_path.write_text(yaml.safe_dump(plan_pos1), encoding="utf-8")
+
+    res_pos1 = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan_pos1,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        plans_dir=p_dir,
+    )
+    assert res_pos1.passed is True
+
+    # 2. Position 2 with missing position 1 plan fails with PRIOR_PLANS_MISSING
+    p_dir2 = tmp_path / "plans2"
+    p_dir2.mkdir(parents=True, exist_ok=True)
+    plan_pos2 = make_plan(arc_position=2, lessons=[make_plan_lesson(1, [step], core_words=[w1])])
+    (p_dir2 / "02-sample-slug.yaml").write_text(yaml.safe_dump(plan_pos2), encoding="utf-8")
+
+    res_pos2 = check_9_stress_and_render(
+        exp_doc,
+        draft,
+        plan_pos2,
+        pack,
+        words_store,
+        mock_stream,
+        "a1",
+        "sample-slug",
+        1,
+        plans_dir=p_dir2,
+    )
+    assert res_pos2.passed is False
+    assert PRIOR_PLANS_MISSING in (res_pos2.reason or "")
+
+
+def test_frontmatter_job_quotes_and_colons_roundtrip():
+    """Minor 1: job with quotes and colons round-trips cleanly through YAML parser."""
+    from scripts.generate_mdx.core import generate_mdx
+
+    job_text = 'Learn Ukrainian: the "gold" standard for A1'
+    meta = {
+        "title": "Title",
+        "subtitle": "Subtitle",
+        "job": job_text,
+        "immersion": "low_scaffold",
+        "evidence": {"plan_sha256": "0" * 64},
+        "prev": "/a1/prev/",
+        "next": "/a1/next/",
+        "lesson": 1,
+        "module_slug": "slug",
+    }
+
+    mdx = generate_mdx(
+        md_content="## Heading\n\nContent",
+        module_num=1,
+        meta_data=meta,
+        fresh=True,
+    )
+
+    parts = mdx.split("---")
+    assert len(parts) >= 3
+    fm_raw = parts[1]
+    parsed = yaml.safe_load(fm_raw)
+    assert parsed["job"] == job_text
+    assert "&quot;" not in fm_raw
+
+
+def test_cli_blocked_report_prints_tokens_and_failures(capsys, monkeypatch):
+    """Minor 2: CLI prints blocking tokens and failures, not 'Check None: None'."""
+    from scripts.build.fresh import cli
+
+    blocked_rep = {
+        "ok": False,
+        "blocking_tokens": ["слово", "мова"],
+        "stream_failures": ["unresolved token at unit 2"],
+        "message": "stream has 2 blocking token(s) and 1 failure(s); refusing site write",
+    }
+    monkeypatch.setattr("scripts.build.fresh.cli.assemble_lesson", lambda *args, **kwargs: blocked_rep)
+
+    rc = cli.main(["assemble", "--level", "a1", "--slug", "sample-slug", "--lesson", "1"])
+    assert rc == 1
+
+    captured = capsys.readouterr()
+    err = captured.err
+    assert "Check None: None" not in err
+    assert "Blocking token: слово" in err
+    assert "Blocking token: мова" in err
+    assert "Stream failure: unresolved token at unit 2" in err

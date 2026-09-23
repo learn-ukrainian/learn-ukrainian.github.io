@@ -724,8 +724,20 @@ def main(argv: list[str] | None = None) -> int:
         )
         if not res.get("ok"):
             print("Assembly failed:", file=sys.stderr)
-            failure = res.get("failure") or {}
-            print(f"  Check {failure.get('check')}: {failure.get('reason')}", file=sys.stderr)
+            blocking = res.get("blocking_tokens")
+            failures = res.get("stream_failures")
+            if blocking or failures:
+                if res.get("message"):
+                    print(f"  {res['message']}", file=sys.stderr)
+                for tok in blocking or []:
+                    print(f"  Blocking token: {tok}", file=sys.stderr)
+                for f in failures or []:
+                    print(f"  Stream failure: {f}", file=sys.stderr)
+            elif "failure" in res:
+                failure = res.get("failure") or {}
+                print(f"  Check {failure.get('check')}: {failure.get('reason')}", file=sys.stderr)
+            elif "message" in res:
+                print(f"  {res['message']}", file=sys.stderr)
             return 1
 
         print(f"Assembly succeeded for {args.level}/{args.slug} lesson {args.lesson}.")
