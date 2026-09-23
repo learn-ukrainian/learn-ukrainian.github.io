@@ -25,6 +25,7 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Any
 
+import jinja2
 from jinja2 import Environment, FileSystemLoader, StrictUndefined
 
 from scripts.build.fresh.draft_schema import (
@@ -220,7 +221,9 @@ def render_lesson_prompt(
     env = Environment(
         loader=FileSystemLoader(str(p_dir)),
         undefined=StrictUndefined,
-        autoescape=False,
+        autoescape=jinja2.select_autoescape(
+            enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
+        ),
     )
     template = env.get_template("lesson-writer.md.j2")
 
@@ -293,7 +296,9 @@ def render_recap_prompt(
     env = Environment(
         loader=FileSystemLoader(str(p_dir)),
         undefined=StrictUndefined,
-        autoescape=False,
+        autoescape=jinja2.select_autoescape(
+            enabled_extensions=("html", "htm", "xml"), default_for_string=False, default=False
+        ),
     )
     template = env.get_template("lesson-recap-writer.md.j2")
 

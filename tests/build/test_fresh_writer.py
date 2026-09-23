@@ -20,6 +20,8 @@ from scripts.build.fresh.writer import (
     strip_markdown_fence,
 )
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 FIXTURES = Path(__file__).parent / "fixtures" / "fresh"
 

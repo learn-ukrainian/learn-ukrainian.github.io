@@ -18,6 +18,8 @@ from scripts.build.fresh.prompt import (
 )
 from scripts.curriculum.learner_state.planned import PlannedState
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
@@ -333,3 +335,46 @@ def test_check_fails_style_card_mismatch(sample_plan_entry):
     res = check_rendered_prompt(prompt, sample_plan_entry, card_path)
     assert res.passed is False
     assert any("card_hash_mismatch" in e for e in res.errors)
+
+
+def test_render_prompt_does_not_html_escape(sample_plan_entry, sample_learner_state):
+    """Rendered prompt preserves literal <, >, and & characters without HTML entity escaping."""
+    cited_records = {
+        "W-001": {
+            "lemma": "mama",
+            "pos": "noun",
+            "forms": [{"form": "mama", "tags": "tag-nom", "stressed": "mama", "stress_source": "vesum"}],
+        },
+        "EX-001": {
+            "example": "Це <приклад> & тест",
+            "translation": "This is an <example> & test",
+            "source": "textbook-1",
+        },
+        "T-001": {
+            "text": "Rule: <a> & <b>",
+            "source": "textbook-1",
+        },
+    }
+    imm_payload = compute_immersion_payload("a1", arc_position=1, lesson_n=1, cumulative_core_count=0)
+    card_path = CARDS_DIR / "a1.md"
+
+    rendered = render_lesson_prompt(
+        plan_entry=sample_plan_entry,
+        cited_records=cited_records,
+        learner_state=sample_learner_state,
+        immersion=imm_payload,
+        level="a1",
+        slug="sounds-intro",
+        lesson_n=1,
+        style_card_path=card_path,
+    )
+
+    assert "Це <приклад> & тест" in rendered
+    assert "This is an <example> & test" in rendered
+    assert "Rule: <a> & <b>" in rendered
+    assert "&lt;" not in rendered
+    assert "&gt;" not in rendered
+    assert "&amp;" not in rendered
+
+    res = check_rendered_prompt(rendered, sample_plan_entry, card_path)
+    assert res.passed is True

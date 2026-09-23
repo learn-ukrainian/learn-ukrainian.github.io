@@ -17,6 +17,8 @@ import yaml
 from scripts.build.fresh.cli import _build_parser, main
 from scripts.curriculum.evidence import lesson_lock, lock
 
+pytestmark = pytest.mark.reads_content
+
 REPO_ROOT = Path(__file__).resolve().parents[2]
 
 
