@@ -407,6 +407,27 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
     # Reject mixed dashes (both en-dash and em-dash in same text)
     if "–" in text and "—" in text:
         return False
+    # Reject double dots (not ellipsis)
+    if re.search(r"(?<!\.)\.\.(?!\.)", text):
+        return False
+    # Reject quote without comma before dash
+    if re.search(r'(?<![,.!?…])["»”]\s*—', text):
+        return False
+    # Reject stray comma after initial words like Пізніше
+    if re.search(r'^[«"“]?Пізніше,', text):
+        return False
+    # Reject missing comma before conjunction 'що'
+    if re.search(r'\b(?:знали|знав|знала|знаю|думаю|бачу|чую|розумію|видно|помітно|вважає)\s+що\b', text, re.IGNORECASE):
+        return False
+    if re.search(r'\b[а-яіїєґА-ЯІЇЄҐ]+\s+що,\b', text):
+        return False
+    # Reject calque 'невірно' in controls
+    if re.search(r'\bневірно\b', text, re.IGNORECASE):
+        return False
+    if re.search(r'\bу\s+наслідок\b', text, re.IGNORECASE):
+        return False
+    if re.search(r'\b[Уу]\s+загальному\b', text):
+        return False
     # Reject decimal dot (must use comma in standard Ukrainian)
     if re.search(r"\b\d+\.\d+\b", text):
         return False
@@ -422,6 +443,9 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     # Reject garbled syntax
     if re.search(r"\bЛюбов\s+до\s+волі\b", text):
+        return False
+    # Safety: reject graphic / violent / forensic / morbid content
+    if re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*)\b", text, re.IGNORECASE):
         return False
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
@@ -539,10 +563,12 @@ def is_valid_candidate(
     vesum_cur: sqlite3.Cursor | None = None,
 ) -> bool:
     """Validate candidate correction against annotator typos, comma-parens, and wholesale rewrites."""
-    if not orig_text or not corr_text or orig_text == corr_text:
+    # Safety: reject graphic / violent / forensic / morbid content
+    if re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*)\b", orig_text, re.IGNORECASE) or \
+       re.search(r"\b(?:розтин\w*|самогуб\w*|труп\w*|померш\w*|померл\w*|вбивств\w*|згвалт\w*)\b", corr_text, re.IGNORECASE):
         return False
     # Reject pure word insertions where start == end
-    if any(e[0] == e[1] for e in in_scope):
+    if any(e[0] == e[1] and re.search(r"[а-яіїєґА-ЯІЇЄҐ\w]", e[3]) for e in in_scope):
         return False
     # Real word counts
     w1_words = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", orig_text)
@@ -840,6 +866,33 @@ def is_valid_candidate(
         return False
     if re.search(r"\bяк\s+[^,]+,\s+так\s+і\b", o_low) and re.search(r"\bі\s+[^,]+,\s+і\b", c_low):
         return False
+    # Claude R8 Section F valid -> valid swaps
+    if re.search(r"\bбуло\s+(?:дуже\s+)?легко\b", o_low) and re.search(r"\bбули\s+(?:дуже\s+)?легкими\b", c_low):
+        return False
+    if re.search(r"\bна\s+вітру\b", o_low) and re.search(r"\bна\s+вітрі\b", c_low):
+        return False
+    if re.search(r"\bтишиною\b", o_low) and re.search(r"\bтишею\b", c_low):
+        return False
+    if re.search(r"\bспостерігається\b", o_low) and re.search(r"\bспостерігають\b", c_low):
+        return False
+    if re.search(r"\bяк\s+би\s+він\s+не\s+запізнився\b", o_low):
+        return False
+    if re.search(r"\bзимою\b", o_low) and re.search(r"\bвзимку\b", c_low):
+        return False
+    if re.search(r"\bдавайте\s+[а-яіїєґ]+мо\b", o_low) and re.search(r"\b[а-яіїєґ]+мо\b", c_low):
+        return False
+    if re.search(r"\bне\s+стільки\b", o_low) and re.search(r"\bне\s+так\b", c_low):
+        return False
+    if re.search(r"\bбезкрайнім\b", o_low) and re.search(r"\bбезкраїм\b", c_low):
+        return False
+    if re.search(r"\bбарабанщик\w*\b", o_low) and re.search(r"\bбарабанник\w*\b", c_low):
+        return False
+    if re.search(r"\bблагообразн\w*\b", o_low) and re.search(r"\bмиловид\w*\b", c_low):
+        return False
+    if re.search(r"\bхустка\b", o_low) and re.search(r"\bхустинка\b", c_low):
+        return False
+    if re.search(r"\bСуді\b", orig_text) and re.search(r"\bСьюді\b", corr_text):
+        return False
     # Contextless gender and number flips
     if (re.search(r"\bвиросла\b", o_low) and re.search(r"\bвиріс\b", c_low)) or (
         re.search(r"\bвиріс\b", o_low) and re.search(r"\bвиросла\b", c_low)
@@ -848,6 +901,26 @@ def is_valid_candidate(
     if (re.search(r"\bлюбий\b", o_low) and re.search(r"\bлюба\b", c_low)) or (
         re.search(r"\bлюба\b", o_low) and re.search(r"\bлюбий\b", c_low)
     ):
+        return False
+
+    # Punctuation and formatting gates from Claude R8
+    if re.search(r"(?<!\.)\.\.(?!\.)", corr_text):
+        return False
+    if re.search(r'"\.', corr_text):
+        return False
+    if re.search(r'(?<![,.!?…])["»”]\s*—', corr_text):
+        return False
+    if re.search(r'^[«"“]?Пізніше,', corr_text):
+        return False
+    if re.search(r'\b(?:знали|знав|знала|знаю|думаю|бачу|чую|розумію|видно|помітно|вважає)\s+що\b', corr_text, re.IGNORECASE):
+        return False
+    if re.search(r'\b[а-яіїєґА-ЯІЇЄҐ]+\s+що,\b', corr_text):
+        return False
+    if re.search(r'\bзгідно\s+(?!з\b|із\b|зі\b)[а-яіїєґ]+(?:ом|ем|ям|ою|ею|ами|ями|ах|ях|у|і|а)\b', c_low):
+        return False
+    if re.search(r'\bу\s+наслідок\b', c_low):
+        return False
+    if re.search(r'\b[Уу]\s+загальному\b', corr_text):
         return False
 
     # B6 Broken/incoherent repairs
@@ -878,6 +951,44 @@ def is_valid_candidate(
     if re.search(r"\bрічка\s+бігла\s+швидко\b", o_low) and re.search(r"\bвода\s+у\s+річці\b", c_low):
         return False
     if re.search(r"\bБідл\s+сказав\b", c_low) or "Бідл" in orig_text:
+        return False
+    if re.search(r"\bінкрустован\w*\s+дрібними\s+діамантами\b", c_low) or re.search(r"\bгодинник\w*,\s*інкрустован\w*\b", c_low):
+        return False
+    if re.search(r"\bВ\s+одні\s+з\s+них\b", corr_text) or re.search(r"\bтемним\s+Шкапа\b", corr_text):
+        return False
+    if re.search(r"\bз\s+протягнутою\b", c_low) or re.search(r"\bгодинник\s+Римського\b", c_low):
+        return False
+    if re.search(r"\bіз\s+винятком,\s+для\b", c_low) or re.search(r"\bце\s+візуалізація\s+має\s+бути\b", c_low):
+        return False
+    if re.search(r"\b[Уу]їздн\w*\b", o_low) or re.search(r"\b[Зз]аїждж\w*\s+лікар\b", c_low) or re.search(r"\bвесняний\s+обід\s+на\s+все\s+пиття\b", c_low):
+        return False
+    if re.search(r"\bзастукал\w*\b", c_low):
+        return False
+    if re.search(r"\bнайлегковажніш\w*\b", c_low) or re.search(r"\bлегковажніш\w*\b", c_low):
+        return False
+    if re.search(r"\bударин\w*\b", o_low) or re.search(r"\bкінський\s+біг\b", c_low):
+        return False
+    if re.search(r"\bстрав\w*\s+вареної\s+собаки\b", c_low) or re.search(r"\bзбираючи\s+вантажівку\b", c_low):
+        return False
+    if re.search(r"\bдо\s+одного\s+колеса\b", c_low) or re.search(r"\bсамому\s+задньому\s+колесі\b", c_low):
+        return False
+    if re.search(r"\bриси\s+догляду\s+і\s+скупості\b", c_low):
+        return False
+    if re.search(r"\bмужики,\s+прозаїки\b", c_low):
+        return False
+    if re.search(r"\bкаже\s+бай-бай\b", c_low):
+        return False
+    if re.search(r"\bКоролівсьво\w*\b", c_low):
+        return False
+    if re.search(r"\bПигарев\b", corr_text):
+        return False
+    if re.search(r"\bособистий\s+секретар\s+[^,.]+\s+лежала\b", c_low):
+        return False
+    if re.search(r"\bчелендж\b", c_low):
+        return False
+    if re.search(r"\bнавіть,\s+можна\s+сказати\b", c_low):
+        return False
+    if re.search(r"\bу\s+сторону\b", c_low):
         return False
 
     # Minor items
@@ -1341,7 +1452,12 @@ def build_grammar_dataset(
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
-                content_edits = [e for e in all_non_noop if e[2] not in ("Punctuation", "Spelling", "noop")]
+                content_edits = [
+                    e for e in all_non_noop
+                    if e[2] != "noop" and (
+                        e[2] != "Punctuation" or ("," in " ".join(orig_tokens[e[0]:e[1]]) and "," not in e[3])
+                    )
+                ]
 
                 eval_corrections.append(
                     {
@@ -1356,6 +1472,7 @@ def build_grammar_dataset(
                         "err_span": err_span,
                         "repl_span": repl_span,
                         "num_content_edits": len(content_edits),
+                        "num_total_edits": len(all_non_noop),
                         "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in content_edits),
                         "source_type": "ua_gec_human_annotated",
                         "source_corpus": "ua_gec_2.0",
@@ -1466,7 +1583,12 @@ def build_grammar_dataset(
                 err_span = " ".join(orig_tokens[primary_edit[0] : primary_edit[1]]).strip(" ,.-–—;:?!\"'«»")
                 repl_span = primary_edit[3].strip(" ,.-–—;:?!\"'«»")
                 all_tags = [e[2] for e in in_scope]
-                content_edits = [e for e in all_non_noop if e[2] not in ("Punctuation", "Spelling", "noop")]
+                content_edits = [
+                    e for e in all_non_noop
+                    if e[2] != "noop" and (
+                        e[2] != "Punctuation" or ("," in " ".join(orig_tokens[e[0]:e[1]]) and "," not in e[3])
+                    )
+                ]
 
                 train_corrections.append(
                     {
@@ -1481,6 +1603,7 @@ def build_grammar_dataset(
                         "err_span": err_span,
                         "repl_span": repl_span,
                         "num_content_edits": len(content_edits),
+                        "num_total_edits": len(all_non_noop),
                         "has_other_content": any(e[2] not in IN_SCOPE_TAGS for e in content_edits),
                         "source_type": "ua_gec_human_annotated",
                         "source_corpus": "ua_gec_2.0",
@@ -1496,7 +1619,7 @@ def build_grammar_dataset(
 
     # Determine explainable candidates: strictly single edit, single category, verified token match
     def can_explain_candidate(cand_item: dict[str, Any]) -> bool:
-        # Multi-edit sentences MUST fail closed to silent_rewrite per Claude R7 B5
+        # Multi-edit sentences MUST fail closed to silent_rewrite per Claude R7 B5 and Claude R8 D
         if cand_item.get("num_content_edits", 1) > 1:
             return False
         tags = cand_item.get("all_tags", [])
@@ -1534,15 +1657,15 @@ def build_grammar_dataset(
     train_unexplainable = [c for c in train_corrections if not can_explain_candidate(c)]
 
     orig_counts = Counter(c["original_text"] for c in train_corrections)
-    cat_counts = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in train_explainable)
+    base_cats = Counter(TAG_TO_COARSE_CATEGORY.get(c["primary_tag"], c["primary_tag"]) for c in train_explainable + eval_corrections)
 
     def unexpl_priority(item: dict[str, Any]):
         orig = item["original_text"]
         is_parallel = 0 if orig_counts[orig] > 1 else 1
         cat = TAG_TO_COARSE_CATEGORY.get(item["primary_tag"], item["primary_tag"])
-        cat_rank = cat_counts[cat]
+        deficit = max(0, 50 - base_cats.get(cat, 0))
         h = hashlib.sha256(f"{item['doc_id']}_{orig}_{item['corrected_text']}".encode()).hexdigest()
-        return (is_parallel, cat_rank, h)
+        return (is_parallel, -deficit, h)
 
     sorted_unexpl = sorted(train_unexplainable, key=unexpl_priority)
     selected_unexpl = sorted_unexpl[:target_train_unexpl]
@@ -1551,14 +1674,6 @@ def build_grammar_dataset(
     train_corrections.sort(key=lambda x: hashlib.sha256(f"{x['doc_id']}_{x['original_text']}_{x['corrected_text']}".encode()).hexdigest())
 
     # 6. Formulate exact 75.0% corrections / 25.0% controls mixture
-    num_train_corrections = len(train_corrections)
-    target_train_controls = round(num_train_corrections * (0.25 / 0.75))
-
-    num_eval_corrections = len(eval_corrections)
-    target_eval_controls = round(num_eval_corrections * (0.25 / 0.75))
-
-    print(f"🎯 Target controls for 25.0% share: {target_train_controls} train, {target_eval_controls} eval.")
-
     # Partition Brown-UK controls strictly by doc_id hash (90:10)
     brown_train_available = []
     brown_eval_available = []
@@ -1579,9 +1694,17 @@ def build_grammar_dataset(
         else:
             brown_train_available.append(b)
 
-    # Populate train controls: prioritize Brown-UK (up to 400), then gold UA-GEC train clean
+    num_train_corrections = len(train_corrections)
+    target_train_controls = max(len(brown_train_available), round(num_train_corrections * (0.25 / 0.75)))
+
+    num_eval_corrections = len(eval_corrections)
+    target_eval_controls = max(len(brown_eval_available), round(num_eval_corrections * (0.25 / 0.75)))
+
+    print(f"🎯 Target controls for 25.0% share: {target_train_controls} train, {target_eval_controls} eval.")
+
+    # Populate train controls: prioritize Brown-UK, then gold UA-GEC train clean
     train_controls = []
-    brown_train_allocation = min(400, len(brown_train_available))
+    brown_train_allocation = min(target_train_controls, len(brown_train_available))
 
     for b in brown_train_available[:brown_train_allocation]:
         seen_control_texts.add(b["original_text"])
