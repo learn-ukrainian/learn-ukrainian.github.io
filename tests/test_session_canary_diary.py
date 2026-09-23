@@ -355,7 +355,7 @@ def test_stamp_through_symlink_updates_target_and_keeps_the_link(tmp_path: Path)
     assert link.read_text(encoding="utf-8") == text
 
 
-@pytest.mark.parametrize("mode", [0o2750, 0o600])
+@pytest.mark.parametrize("mode", [0o2750, 0o644, 0o600])
 def test_existing_handoff_keeps_full_mode(tmp_path: Path, mode: int) -> None:
     """setuid/setgid/sticky survive; the mode is not masked down to 0o777."""
     path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
@@ -375,7 +375,7 @@ def test_existing_handoff_keeps_full_mode(tmp_path: Path, mode: int) -> None:
 
 
 def test_absent_handoff_follows_umask(tmp_path: Path) -> None:
-    """A new handoff takes the process umask instead of a forced 0o644."""
+    """A restrictive umask cannot widen an owner-only new handoff."""
     path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
     previous = os.umask(0o077)
     try:
@@ -392,8 +392,8 @@ def test_absent_handoff_follows_umask(tmp_path: Path) -> None:
     assert "STAMP_SENTINEL" in path.read_text(encoding="utf-8")
 
 
-def test_absent_handoff_is_not_world_writable_under_umask_zero(tmp_path: Path) -> None:
-    """A new handoff (no existing file, mode None) stays non-world-writable at umask 0."""
+def test_absent_handoff_is_owner_only_under_umask_zero(tmp_path: Path) -> None:
+    """A new handoff (no existing file, mode None) is owner-only at umask 0."""
     path = tmp_path / "CLAUDE-DRIVER-HANDOFF.md"
     previous = os.umask(0)
     try:
@@ -407,8 +407,7 @@ def test_absent_handoff_is_not_world_writable_under_umask_zero(tmp_path: Path) -
         os.umask(previous)
 
     mode = stat.S_IMODE(path.stat().st_mode)
-    assert mode & stat.S_IWOTH == 0
-    assert mode == 0o644
+    assert mode == 0o600
     assert "STAMP_SENTINEL" in path.read_text(encoding="utf-8")
 
 

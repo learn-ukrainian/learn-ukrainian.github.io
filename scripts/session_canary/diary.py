@@ -165,8 +165,8 @@ def _snapshot_path(path: Path) -> tuple[bytes | None, int | None]:
     """Fresh open of ``path``. Content ``None`` means the path is absent.
 
     The mode is :func:`stat.S_IMODE` (permission bits plus setuid, setgid, and
-    sticky). An absent path returns mode ``None`` so creation keeps the
-    process umask instead of forcing one.
+    sticky). An absent path returns mode ``None`` so creation uses owner-only
+    ``0o600``; the process umask can only remove bits.
     """
     try:
         fd = os.open(path, os.O_RDONLY)
@@ -184,7 +184,8 @@ def _write_temp_file(directory: Path, data: bytes, mode: int | None) -> Path:
 
     ``mode`` is the full :func:`stat.S_IMODE` of an existing target, applied
     with ``os.fchmod`` and not reduced to owner/group/other permission bits.
-    ``None`` creates the file at ``0o644`` so the process umask applies.
+    ``None`` creates the file at owner-only ``0o600``. The process umask can
+    only remove bits from that mask.
     """
     flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
     if hasattr(os, "O_CLOEXEC"):
@@ -198,7 +199,7 @@ def _write_temp_file(directory: Path, data: bytes, mode: int | None) -> Path:
         for _ in range(128):
             candidate = directory / f".handoff-{os.urandom(8).hex()}.tmp"
             try:
-                fd = os.open(candidate, flags, 0o644)
+                fd = os.open(candidate, flags, 0o600)
             except FileExistsError:
                 continue
             tmp = candidate
@@ -251,8 +252,8 @@ def rewrite_handoff_locked(
     :class:`HandoffRewriteConflictError` and does not write.
 
     An existing target keeps its full mode, including setuid, setgid, and
-    sticky. An absent target is created at ``0o644`` so the process umask
-    applies.
+    sticky. An absent target is created owner-only (``0o600``); the process
+    umask can only remove bits.
 
     An exclusive flock on the parent directory serializes cooperating callers
     of this helper across ``os.replace``. The lock is not the safety property:
