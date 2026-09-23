@@ -1301,6 +1301,10 @@ _REAL_WORKTREES_DIR = ""
 _REAL_WORKTREES_PREFIX = ""
 _WORKTREE_ENTRIES_AT_START: set[str] = set()
 _CREATED_WORKTREE_ENTRIES: set[str] = set()
+# Bookkeeping bugs are reported once at teardown. They must not raise out of
+# os.mkdir / Popen and change the call the test actually made.
+_GUARD_CLASSIFY_FAILURES: list[str] = []
+_GUARD_CLASSIFY_FAILURE_LIMIT = 8
 
 
 def _init_real_worktrees_dir() -> str:
@@ -1316,6 +1320,27 @@ def _init_real_worktrees_dir() -> str:
     return _REAL_WORKTREES_DIR
 
 
+def _record_classify_failure(exc: BaseException) -> None:
+    if len(_GUARD_CLASSIFY_FAILURES) >= _GUARD_CLASSIFY_FAILURE_LIMIT:
+        return
+    _GUARD_CLASSIFY_FAILURES.append(f"{type(exc).__name__}: {exc}")
+
+
+def _decode_guard_path(path: object) -> str:
+    """Filesystem text for ``path``.
+
+    ``os.fsdecode(os.fspath(...))`` accepts ``str``, ``bytes``, and path-like
+    objects. A bytes path used to reach ``str.startswith`` and raise
+    ``TypeError`` before the real mkdir ran.
+    """
+    return os.fsdecode(os.fspath(path))  # type: ignore[arg-type]
+
+
+def _worktree_guard_enabled() -> bool:
+    """``LU_WORKTREE_GUARD=0`` turns the hooks off for an overhead measurement."""
+    return os.environ.get("LU_WORKTREE_GUARD", "1") != "0"
+
+
 def _worktree_entry_key(path: object) -> str | None:
     """Path of a new worktree root, or None for anything nested inside one.
 
@@ -1324,22 +1349,29 @@ def _worktree_entry_key(path: object) -> str | None:
     that already exists — including this worker's own worktree — and must not
     trip the guard. The prefix check is a string compare so ordinary ``/tmp``
     mkdirs stay cheap.
+
+    The final path component is not resolved. A symlink created as the entry
+    is keyed by the link path, not by the directory it points at.
     """
     root = _init_real_worktrees_dir()
     try:
-        text = os.path.abspath(os.fspath(path))  # type: ignore[arg-type]
+        text = os.path.abspath(_decode_guard_path(path))
     except (TypeError, ValueError):
         return None
     if text != root and not text.startswith(_REAL_WORKTREES_PREFIX):
         return None
-    real = os.path.realpath(text)
-    if real == root:
+    parent = os.path.realpath(os.path.dirname(text))
+    if parent != root and not parent.startswith(_REAL_WORKTREES_PREFIX):
         return None
-    if not real.startswith(_REAL_WORKTREES_PREFIX):
+    name = os.path.basename(text)
+    if not name or name in {".", ".."}:
         return None
-    parts = [part for part in real[len(_REAL_WORKTREES_PREFIX) :].split("/") if part]
+    candidate = os.path.join(parent, name)
+    if candidate == root:
+        return None
+    parts = [part for part in candidate[len(_REAL_WORKTREES_PREFIX) :].split(os.sep) if part]
     if len(parts) == 1 or (len(parts) == 3 and parts[0] == "dispatch"):
-        return real
+        return candidate
     return None
 
 
@@ -1347,7 +1379,7 @@ def _missing_worktree_entries(path: object) -> list[str]:
     """Worktree-root ancestors of ``path`` that do not exist yet."""
     root = _init_real_worktrees_dir()
     try:
-        probe = os.path.abspath(os.fspath(path))  # type: ignore[arg-type]
+        probe = os.path.abspath(_decode_guard_path(path))
     except (TypeError, ValueError):
         return []
     if probe != root and not probe.startswith(_REAL_WORKTREES_PREFIX):
@@ -1364,81 +1396,241 @@ def _missing_worktree_entries(path: object) -> list[str]:
     return missing
 
 
-def _note_created_worktree_entry(key: str) -> None:
-    if key not in _WORKTREE_ENTRIES_AT_START and os.path.lexists(key):
+def _classify_created_path(path: object) -> list[tuple[str, bool]]:
+    """``(entry, existed immediately before the call)`` for one path."""
+    key = _worktree_entry_key(path)
+    if key is None:
+        return []
+    existed = key in _WORKTREE_ENTRIES_AT_START or os.path.lexists(key)
+    return [(key, existed)]
+
+
+def _classify_makedirs_path(path: object) -> list[tuple[str, bool]]:
+    return [(key, False) for key in _missing_worktree_entries(path)]
+
+
+def _classify_quietly(classify, path: object) -> list[tuple[str, bool]] | None:
+    try:
+        return classify(path)
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+        return None
+
+
+def _remember_if_created(key: str, existed_before: bool) -> None:
+    """Record ``key`` only when this call is what created it.
+
+    Callers observe ``os.path.lexists`` immediately before the original call
+    (``existed_before``). This checks again afterwards. A path that already
+    existed — including ``os.makedirs(..., exist_ok=True)`` on a directory
+    another process owns — is not recorded.
+
+    A tiny race remains: another process can create the path between those
+    two checks, and ``exist_ok=True`` then returns success. We accept that
+    window. Locking the real ``.worktrees`` tree would stall every other
+    agent on the host.
+    """
+    if existed_before or key in _WORKTREE_ENTRIES_AT_START:
+        return
+    if os.path.lexists(key):
         _CREATED_WORKTREE_ENTRIES.add(key)
 
 
+def _remember_quietly(classified: list[tuple[str, bool]] | None) -> None:
+    if not classified:
+        return
+    try:
+        for key, existed_before in classified:
+            _remember_if_created(key, existed_before)
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+
+
 def _guarded_mkdir(path: object, *args: object, **kwargs: object):
-    key = _worktree_entry_key(path)
-    already = bool(key) and (key in _WORKTREE_ENTRIES_AT_START or os.path.lexists(key))
+    classified = _classify_quietly(_classify_created_path, path)
     result = _ORIGINAL_OS_MKDIR(path, *args, **kwargs)
-    if key and not already:
-        _note_created_worktree_entry(key)
+    _remember_quietly(classified)
     return result
 
 
 def _guarded_makedirs(name: object, *args: object, **kwargs: object):
-    pending = _missing_worktree_entries(name)
+    classified = _classify_quietly(_classify_makedirs_path, name)
     result = _ORIGINAL_OS_MAKEDIRS(name, *args, **kwargs)
-    for key in pending:
-        _note_created_worktree_entry(key)
+    _remember_quietly(classified)
     return result
+
+
+def _guarded_symlink(src: object, dst: object, *args: object, **kwargs: object):
+    # The link path is the second argument. The target may live anywhere.
+    classified = _classify_quietly(_classify_created_path, dst)
+    result = _ORIGINAL_OS_SYMLINK(src, dst, *args, **kwargs)
+    _remember_quietly(classified)
+    return result
+
+
+def _decode_argv(argv: list | tuple) -> list[str] | None:
+    try:
+        return [_decode_guard_path(arg) for arg in argv]
+    except (TypeError, ValueError):
+        return None
+
+
+def _resolve_against(base: str, raw: str) -> str:
+    if os.path.isabs(raw):
+        return os.path.abspath(raw)
+    return os.path.abspath(os.path.join(base, raw))
+
+
+def _git_global_option_end(args: list[str], cwd: object) -> tuple[int, str] | None:
+    """Index of the subcommand, and the cwd after any ``-C`` options.
+
+    Git globals that take a value (``-c k=v``, ``-C dir``, ``--git-dir``,
+    ``--work-tree``) are skipped. Anything else that is not an option is the
+    subcommand. Returns None when argv is not a git command.
+    """
+    if os.path.basename(args[0]) != "git":
+        return None
+    if cwd is None:
+        base = os.getcwd()
+    else:
+        try:
+            base = os.path.abspath(_decode_guard_path(cwd))
+        except (TypeError, ValueError):
+            return None
+    index = 1
+    while index < len(args):
+        arg = args[index]
+        if arg == "-C":
+            if index + 1 >= len(args):
+                return None
+            base = _resolve_against(base, args[index + 1])
+            index += 2
+            continue
+        if arg.startswith("-C") and arg != "-C":
+            base = _resolve_against(base, arg[2:])
+            index += 1
+            continue
+        if arg == "-c":
+            if index + 1 >= len(args):
+                return None
+            index += 2
+            continue
+        if arg.startswith("-c") and len(arg) > 2:
+            index += 1
+            continue
+        if arg in {"--git-dir", "--work-tree"}:
+            if index + 1 >= len(args):
+                return None
+            index += 2
+            continue
+        if arg.startswith("--git-dir=") or arg.startswith("--work-tree="):
+            index += 1
+            continue
+        if arg == "worktree" or not arg.startswith("-"):
+            return index, base
+        index += 1
+    return None
 
 
 def _git_worktree_add_destination(argv: object, cwd: object) -> str | None:
     """Destination of ``git worktree add``, when ``argv`` is that command."""
-    if not isinstance(argv, (list, tuple)) or not argv:
+    if isinstance(argv, (str, bytes)) or not isinstance(argv, (list, tuple)) or not argv:
         return None
-    if Path(str(argv[0])).name != "git":
+    args = _decode_argv(argv)
+    if not args:
         return None
-    args = [str(arg) for arg in argv[1:]]
-    index = 0
-    while index < len(args):
-        arg = args[index]
-        if arg == "-C":
-            index += 2
-            continue
-        if arg.startswith(("-C", "--git-dir=", "--work-tree=")):
-            index += 1
-            continue
-        if arg == "worktree":
-            break
-        if arg.startswith("-"):
-            index += 1
-            continue
+    parsed = _git_global_option_end(args, cwd)
+    if parsed is None:
         return None
-    else:
-        return None
-    if index + 1 >= len(args) or args[index + 1] != "add":
+    index, base = parsed
+    if index + 1 >= len(args) or args[index] != "worktree" or args[index + 1] != "add":
         return None
     index += 2
     valued = {"-b", "-B", "--reason"}
     while index < len(args):
         arg = args[index]
+        if arg == "--":
+            index += 1
+            if index >= len(args):
+                return None
+            dest = args[index]
+            break
         if arg in valued:
+            if index + 1 >= len(args):
+                return None
             index += 2
             continue
         if arg.startswith("-"):
             index += 1
             continue
-        dest = Path(arg)
-        if not dest.is_absolute():
-            base = Path(str(cwd)) if cwd else Path.cwd()
-            dest = base / dest
-        return _worktree_entry_key(dest)
+        dest = arg
+        break
+    else:
+        return None
+    if not os.path.isabs(dest):
+        dest = os.path.join(base, dest)
+    return _worktree_entry_key(dest)
+
+
+def _popen_cwd(pos: tuple[object, ...], kwargs: dict[str, object]) -> object:
+    if "cwd" in kwargs:
+        return kwargs["cwd"]
+    # Popen positional order after args: bufsize, executable, stdin, stdout,
+    # stderr, preexec_fn, close_fds, shell, cwd.
+    if len(pos) >= 9:
+        return pos[8]
     return None
 
 
-def _guarded_subprocess_run(*args: object, **kwargs: object):
-    result = _ORIGINAL_SUBPROCESS_RUN(*args, **kwargs)
-    if getattr(result, "returncode", None) != 0:
-        return result
-    argv = args[0] if args else kwargs.get("args")
-    dest = _git_worktree_add_destination(argv, kwargs.get("cwd"))
-    if dest:
-        _note_created_worktree_entry(dest)
-    return result
+def _guarded_popen_init(self, args, *pos, **kwargs):
+    dest: str | None = None
+    existed = True
+    try:
+        found = _git_worktree_add_destination(args, _popen_cwd(pos, kwargs))
+        if found is not None:
+            dest = found
+            existed = found in _WORKTREE_ENTRIES_AT_START or os.path.lexists(found)
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+        dest = None
+    _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
+    # Recorded from wait/poll only after the process exits 0. __init__
+    # succeeding means the process started, not that git created the worktree.
+    self._wt_guard_dest = dest
+    self._wt_guard_existed = existed
+    self._wt_guard_noted = False
+
+
+def _note_popen_success(self, returncode: int | None) -> None:
+    if getattr(self, "_wt_guard_noted", True):
+        return
+    self._wt_guard_noted = True
+    if returncode != 0:
+        return
+    dest = getattr(self, "_wt_guard_dest", None)
+    if not dest:
+        return
+    try:
+        _remember_if_created(dest, getattr(self, "_wt_guard_existed", True))
+    except Exception as exc:
+        # A guard bug must not replace the original call.
+        _record_classify_failure(exc)
+
+
+def _guarded_popen_wait(self, timeout=None):
+    returncode = _ORIGINAL_POPEN_WAIT(self, timeout)
+    _note_popen_success(self, returncode)
+    return returncode
+
+
+def _guarded_popen_poll(self):
+    returncode = _ORIGINAL_POPEN_POLL(self)
+    if returncode is not None:
+        _note_popen_success(self, returncode)
+    return returncode
 
 
 def _snapshot_worktree_entries() -> set[str]:
@@ -1484,10 +1676,38 @@ def _snapshot_worktree_entries() -> set[str]:
     return found
 
 
-# Bound at fixture install time. Defaults keep import of this module side-effect free.
+# Bound at import time, before the session fixture installs the hooks.
 _ORIGINAL_OS_MKDIR = os.mkdir
 _ORIGINAL_OS_MAKEDIRS = os.makedirs
+_ORIGINAL_OS_SYMLINK = os.symlink
 _ORIGINAL_SUBPROCESS_RUN = subprocess.run
+_ORIGINAL_POPEN_INIT = subprocess.Popen.__init__
+_ORIGINAL_POPEN_WAIT = subprocess.Popen.wait
+_ORIGINAL_POPEN_POLL = subprocess.Popen.poll
+
+
+def _worktree_guard_teardown_message() -> str | None:
+    """Leftovers and classify failures for this process, or None when clean."""
+    lines: list[str] = []
+    if _GUARD_CLASSIFY_FAILURES:
+        detail = "; ".join(_GUARD_CLASSIFY_FAILURES)
+        lines.append(f"guard could not classify: {detail}")
+    listed = _snapshot_worktree_entries()
+    leftovers = sorted(
+        path
+        for path in _CREATED_WORKTREE_ENTRIES
+        if path not in _WORKTREE_ENTRIES_AT_START and (os.path.lexists(path) or path in listed)
+    )
+    if leftovers:
+        joined = "\n".join(f"  {path}" for path in leftovers)
+        lines.append(
+            "this pytest process created entries under the real .worktrees/ "
+            f"that are still present:\n{joined}\n"
+            "Concurrent worktrees from other processes are not listed."
+        )
+    if not lines:
+        return None
+    return "\n".join(lines)
 
 
 @pytest.fixture(scope="session", autouse=True)
@@ -1497,33 +1717,37 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     Live agents add checkouts under ``.worktrees/`` for the whole time the suite
     runs, so a before/after listing of that directory false-positives on a busy
     host. This guard records only creations that pass through this process:
-    ``os.mkdir`` / ``os.makedirs`` of a worktree root, and a successful
-    ``git worktree add`` issued via ``subprocess.run``. Directories nested
-    inside an existing checkout (this worker included) are ignored. Paths
-    already present when the worker started are snapshotted and ignored even
-    if a test touches them.
+    ``os.mkdir`` / ``os.makedirs`` / ``os.symlink`` of a worktree root, and a
+    successful ``git worktree add``. ``subprocess.run``, ``call``,
+    ``check_call``, and ``check_output`` all construct ``subprocess.Popen``,
+    so the git hook sits on ``Popen`` rather than on ``run`` alone. Directories
+    nested inside an existing checkout (this worker included) are ignored.
+    Paths already present when the worker started are snapshotted and ignored
+    even if a test touches them.
 
+    A path is recorded only when it did not exist immediately before the call
+    and does exist after the call succeeds. Bookkeeping errors are not raised
+    from the hooked call; teardown reports them as "guard could not classify".
+
+    Set ``LU_WORKTREE_GUARD=0`` to skip the hooks for an overhead measurement.
     Under xdist each worker is its own process, so the hook and the teardown
     check run once per worker rather than once in the controller.
     """
+    if not _worktree_guard_enabled():
+        yield
+        return
     _WORKTREE_ENTRIES_AT_START.clear()
     _CREATED_WORKTREE_ENTRIES.clear()
+    _GUARD_CLASSIFY_FAILURES.clear()
     _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
     with pytest.MonkeyPatch.context() as patcher:
         patcher.setattr(os, "mkdir", _guarded_mkdir)
         patcher.setattr(os, "makedirs", _guarded_makedirs)
-        patcher.setattr(subprocess, "run", _guarded_subprocess_run)
+        patcher.setattr(os, "symlink", _guarded_symlink)
+        patcher.setattr(subprocess.Popen, "__init__", _guarded_popen_init)
+        patcher.setattr(subprocess.Popen, "wait", _guarded_popen_wait)
+        patcher.setattr(subprocess.Popen, "poll", _guarded_popen_poll)
         yield
-    listed = _snapshot_worktree_entries()
-    leftovers = sorted(
-        path
-        for path in _CREATED_WORKTREE_ENTRIES
-        if path not in _WORKTREE_ENTRIES_AT_START and (os.path.lexists(path) or path in listed)
-    )
-    if leftovers:
-        joined = "\n".join(f"  {path}" for path in leftovers)
-        pytest.fail(
-            "this pytest process created entries under the real .worktrees/ "
-            f"that are still present:\n{joined}\n"
-            "Concurrent worktrees from other processes are not listed."
-        )
+    message = _worktree_guard_teardown_message()
+    if message:
+        pytest.fail(message)
