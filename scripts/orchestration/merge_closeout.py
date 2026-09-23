@@ -31,6 +31,7 @@ from scripts.orchestration import reap_worktrees as rw
 from scripts.orchestration import scheduled_worktree_cleanup as swc
 
 DEFAULT_TIMEOUT = 30
+LIVE_PR_FETCH_TIMEOUT = 30
 
 
 class MergeCloseoutError(RuntimeError):
@@ -162,7 +163,15 @@ def _fetch_live_pr_head(repo_root: Path, pr_number: int) -> tuple[str | None, st
     refs. A failed fetch or unreadable fetched commit is never deletion proof.
     """
     ref = f"refs/pull/{pr_number}/head"
-    fetch = rw._run(["git", "fetch", "--no-tags", "origin", ref], cwd=repo_root)
+    try:
+        fetch = rw._run(
+            ["git", "fetch", "--no-tags", "origin", ref],
+            cwd=repo_root,
+            timeout=LIVE_PR_FETCH_TIMEOUT,
+            env_overrides={"GIT_TERMINAL_PROMPT": "0"},
+        )
+    except subprocess.TimeoutExpired:
+        return None, f"cannot fetch live PR head {ref}: timed out after {LIVE_PR_FETCH_TIMEOUT} seconds"
     if fetch.returncode != 0:
         detail = (fetch.stderr or fetch.stdout or "git fetch failed").strip()
         return None, f"cannot fetch live PR head {ref}: {detail}"
@@ -283,7 +292,7 @@ def verify_branch_gone(
     expected_head = pr.head_sha
 
     guard_error: str | None = None
-    if apply and expected_head is not None:
+    if apply:
         guard_error = _guard_branch_not_open(repo_root, branch)
 
     remote_error: str | None = None
@@ -309,21 +318,26 @@ def verify_branch_gone(
     if local_lookup_error is not None:
         local_error = f"cannot verify local branch: {local_lookup_error}"
     elif apply and local_head is not None:
-        live_pr_head, fetch_error = _fetch_live_pr_head(repo_root, pr.number)
-        if fetch_error is not None:
-            local_error = fetch_error
-        elif live_pr_head is not None:
-            on_pr, ancestry_error = _head_is_ancestor_of_pr(repo_root, local_head, live_pr_head)
-            if ancestry_error is not None:
-                local_error = ancestry_error
-            elif on_pr:
-                local_error = guard_error or rw._prune_branch(
-                    repo_root, branch, force=True, expected_head=local_head
-                )
+        if expected_head is not None and local_head == expected_head:
+            local_error = guard_error or rw._prune_branch(
+                repo_root, branch, force=True, expected_head=local_head
+            )
+        else:
+            live_pr_head, fetch_error = _fetch_live_pr_head(repo_root, pr.number)
+            if fetch_error is not None:
+                local_error = fetch_error
+            elif live_pr_head is not None:
+                on_pr, ancestry_error = _head_is_ancestor_of_pr(repo_root, local_head, live_pr_head)
+                if ancestry_error is not None:
+                    local_error = ancestry_error
+                elif on_pr:
+                    local_error = guard_error or rw._prune_branch(
+                        repo_root, branch, force=True, expected_head=local_head
+                    )
+                else:
+                    local_error = "local head does not match merged PR head; refusing to delete"
             else:
                 local_error = "local head does not match merged PR head; refusing to delete"
-        else:
-            local_error = "local head does not match merged PR head; refusing to delete"
     local_after, local_after_error = _local_branch_head(repo_root, branch)
     if local_after_error is not None:
         local_gone = False
