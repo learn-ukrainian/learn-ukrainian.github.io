@@ -1,0 +1,46 @@
+{
+  "dataset_name": "grammar_v1",
+  "version": "1.0.0",
+  "task_type": "correction",
+  "has_evaluation_split": true,
+  "splits": {
+    "grammar_train_shard_01_of_14.jsonl": "train",
+    "grammar_train_shard_02_of_14.jsonl": "train",
+    "grammar_train_shard_03_of_14.jsonl": "train",
+    "grammar_train_shard_04_of_14.jsonl": "train",
+    "grammar_train_shard_05_of_14.jsonl": "train",
+    "grammar_train_shard_06_of_14.jsonl": "train",
+    "grammar_train_shard_07_of_14.jsonl": "train",
+    "grammar_train_shard_08_of_14.jsonl": "train",
+    "grammar_train_shard_09_of_14.jsonl": "train",
+    "grammar_train_shard_10_of_14.jsonl": "train",
+    "grammar_train_shard_11_of_14.jsonl": "train",
+    "grammar_train_shard_12_of_14.jsonl": "train",
+    "grammar_train_shard_13_of_14.jsonl": "train",
+    "grammar_train_shard_14_of_14.jsonl": "train",
+    "grammar_eval_shard_01_of_02.jsonl": "eval",
+    "grammar_eval_shard_02_of_02.jsonl": "eval"
+  },
+  "description": "Verified Ukrainian grammar, valency, and morphosyntactic corrections rebuilt from authentic human-annotated sentences in UA-GEC (#8342).",
+  "governing_issues": [
+    "#8342",
+    "#6321"
+  ],
+  "statistics": {
+    "total_records": 6724,
+    "train_records": 6147,
+    "eval_records": 577,
+    "substantive_corrections": 5043,
+    "clean_controls": 1681,
+    "clean_control_share": 0.25,
+    "substantive_correction_share": 0.75,
+    "category_counts": {
+      "syntax_structure": 1092,
+      "calque_lexical_grammatical": 1595,
+      "protective_authentic_control": 1681,
+      "case_government": 1501,
+      "agreement_concord": 466,
+      "verb_morphology": 389
+    }
+  }
+}
