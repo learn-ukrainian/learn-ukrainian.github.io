@@ -17,6 +17,8 @@ from fastapi.testclient import TestClient
 from scripts.api.comms_router import router as comms_router
 from scripts.api.monitor_context import fixture_context
 
+pytestmark = pytest.mark.reads_content
+
 
 @pytest.fixture()
 def comms_client(tmp_path: Path) -> TestClient:
