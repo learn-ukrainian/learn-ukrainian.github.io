@@ -561,12 +561,17 @@ def build_slovnyk_tab(
                 break
 
         gloss = selected_senses.get(wid) or str(w_rec.get("gloss", ""))
+        try:
+            atlas_href = atlas_href_for(lemma)
+        except Exception:
+            atlas_href = None
+
         item_entry: dict[str, Any] = {
             "lemma": stressed_lemma,
             "translation": gloss,
             "pos": str(w_rec.get("pos", "")),
             "gender": str(w_rec.get("gender", "")),
-            "atlas_href": atlas_href_for(lemma),
+            "atlas_href": atlas_href,
         }
         if forms_list:
             item_entry["forms"] = forms_list
