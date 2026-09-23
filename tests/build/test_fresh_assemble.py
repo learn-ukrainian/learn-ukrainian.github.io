@@ -1343,16 +1343,16 @@ def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
         "introduces": {"letters": [], "grammar": [], "vocabulary": ["W-1"]},
         "uses": {"grammar": [], "vocabulary": []},
         "evidence": [],
-        "practice": ["act-1"],
+        "practice": ["a1"],
     }
     plan_activities = [
-        {"id": "act-1", "type": "fill-in", "placement": "inline", "focus": "Fill-in focus"},
-        {"id": "act-2", "type": "true-false", "placement": "workbook", "focus": "True-false focus"},
+        {"id": "a1", "type": "fill-in", "placement": "inline", "focus": "Fill-in focus"},
+        {"id": "a2", "type": "true-false", "placement": "workbook", "focus": "True-false focus"},
     ]
     plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=plan_activities)])
 
     act_fill = {
-        "id": "act-1",
+        "id": "a1",
         "instruction": "Заповніть пропуск.",
         "items": [
             {
@@ -1364,7 +1364,7 @@ def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
         ],
     }
     act_tf = {
-        "id": "act-2",
+        "id": "a2",
         "instruction": "Правда чи ні?",
         "items": [
             {
@@ -1380,12 +1380,12 @@ def test_activities_render_real_components_in_mdx(tmp_path, monkeypatch):
                 "id": "s1",
                 "blocks": [
                     {"kind": "prose", "text": "слово", "explains": ["W-1"]},
-                    {"kind": "activity", "ref": "act-1"},
+                    {"kind": "activity", "ref": "a1"},
                 ],
             }
         ],
         activities=[act_fill, act_tf],
-        consolidation={"activities": ["act-2"]},
+        consolidation={"activities": ["a2"]},
         lesson_lock_entry_sha256="abc" * 21 + "a",
     )
 
@@ -1452,7 +1452,7 @@ def test_draft_activity_not_in_plan_fails_assembly():
     plan = make_plan(lessons=[make_plan_lesson(1, [step], core_words=[w1], activities=[])])
 
     orphan_act = {
-        "id": "orphan-act",
+        "id": "a99",
         "instruction": "Orphan instruction",
         "items": [],
     }
