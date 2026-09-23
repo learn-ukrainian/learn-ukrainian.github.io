@@ -24,8 +24,6 @@ from collections import OrderedDict
 from collections.abc import Callable
 from concurrent.futures import ThreadPoolExecutor
 from dataclasses import dataclass
-from datetime import UTC, datetime
-from email.utils import parsedate_to_datetime
 from typing import Any
 
 # (path, request headers, timeout seconds) -> (status, response headers, body)
@@ -86,8 +84,16 @@ class _CacheEntry:
     link_next: str | None
     seq: int
     stored_at: float
-    observed_at: datetime | None
     detail: bool
+
+
+class _IdentityAttempt:
+    """One login lookup. Every waiter of this attempt re-raises its error."""
+
+    def __init__(self) -> None:
+        self.ready = threading.Event()
+        self.error: BaseException | None = None
+        self.waiters = 0
 
 
 def current_request_seq() -> int:
@@ -100,28 +106,11 @@ def _is_detail_url(path: str) -> bool:
     return _DETAIL_URL.search(path) is not None
 
 
-def _http_time(headers: dict[str, str]) -> datetime | None:
-    raw = headers.get("last-modified") or headers.get("date")
-    if not raw:
-        return None
-    try:
-        parsed = parsedate_to_datetime(raw)
-    except (TypeError, ValueError, IndexError, OverflowError):
-        return None
-    if parsed.tzinfo is None:
-        return parsed.replace(tzinfo=UTC)
-    return parsed.astimezone(UTC)
-
-
-def _may_replace(existing: _CacheEntry | None, *, seq: int, observed_at: datetime | None) -> bool:
-    """False when ``existing`` was stored from a newer request or a later response time."""
+def _may_replace(existing: _CacheEntry | None, *, seq: int) -> bool:
+    """A later-issued request wins. Response header times are not an order."""
     if existing is None:
         return True
-    if seq < existing.seq:
-        return False
-    if observed_at is None or existing.observed_at is None:
-        return True
-    return observed_at >= existing.observed_at
+    return seq >= existing.seq
 
 
 def _link_next(header: str | None) -> str | None:
@@ -191,52 +180,67 @@ class GitHubRestCache:
         self._lock = threading.Lock()
         self._identity_lock = threading.Lock()
         self._identity = identity
-        self._identity_error: BaseException | None = None
-        self._identity_ready = threading.Event()
-        if identity:
-            self._identity_ready.set()
-        self._identity_thread: threading.Thread | None = None
+        self._identity_attempt: _IdentityAttempt | None = None
         self._seq = 0
 
     def clear(self) -> None:
         with self._lock:
             self._entries.clear()
 
+    def _start_identity_attempt(self, timeout: float) -> _IdentityAttempt:
+        """Start one login lookup. Caller holds ``_identity_lock``."""
+        attempt = _IdentityAttempt()
+        self._identity_attempt = attempt
+
+        def _run() -> None:
+            try:
+                self._auth_identity(timeout)
+            except Exception as exc:
+                attempt.error = exc
+            finally:
+                attempt.ready.set()
+
+        threading.Thread(target=_run, name="gh-rest-identity", daemon=True).start()
+        return attempt
+
     def _kick_identity(self, timeout: float) -> None:
         """Start the one login lookup without blocking the data read."""
-        if self._identity_ready.is_set() or self._identity:
+        if self._identity:
             return
         with self._identity_lock:
-            if self._identity_thread is not None or self._identity:
+            if self._identity or self._identity_attempt is not None:
                 return
-
-            def _run() -> None:
-                try:
-                    self._auth_identity(timeout)
-                except Exception as exc:
-                    self._identity_error = exc
-                finally:
-                    self._identity_ready.set()
-
-            self._identity_thread = threading.Thread(target=_run, name="gh-rest-identity", daemon=True)
-            self._identity_thread.start()
+            self._start_identity_attempt(timeout)
 
     def _wait_identity(self, timeout: float) -> str:
         if self._identity:
             return self._identity
-        self._kick_identity(timeout)
-        if not self._identity_ready.wait(timeout):
-            raise GitHubRestTimeout(timeout)
-        if self._identity:
-            return self._identity
-        error = self._identity_error
         with self._identity_lock:
-            self._identity_error = None
-            self._identity_thread = None
-            self._identity_ready.clear()
-        if isinstance(error, Exception):
-            raise error
-        raise GitHubRestError("GitHub login lookup failed")
+            if self._identity:
+                return self._identity
+            attempt = self._identity_attempt
+            if attempt is None:
+                attempt = self._start_identity_attempt(timeout)
+            attempt.waiters += 1
+        try:
+            if not attempt.ready.wait(timeout):
+                raise GitHubRestTimeout(timeout)
+            if self._identity:
+                return self._identity
+            error = attempt.error
+            if isinstance(error, Exception):
+                raise error
+            raise GitHubRestError("GitHub login lookup failed")
+        finally:
+            with self._identity_lock:
+                attempt.waiters -= 1
+                if (
+                    attempt.waiters == 0
+                    and attempt.ready.is_set()
+                    and attempt.error is not None
+                    and self._identity_attempt is attempt
+                ):
+                    self._identity_attempt = None
 
     def _auth_identity(self, timeout: float) -> str:
         if self._identity:
@@ -327,7 +331,6 @@ class GitHubRestCache:
         resp_headers = {key_name.lower(): value for key_name, value in resp_headers.items()}
         new_etag = resp_headers.get("etag")
         link_next = _link_next(resp_headers.get("link"))
-        observed_at = _http_time(resp_headers)
 
         if status == 304:
             with self._lock:
@@ -336,14 +339,13 @@ class GitHubRestCache:
                     raise GitHubRestError("304 without a cached body", status=304)
                 # A rotated validator must be replayed next time; the body stays.
                 # An older in-flight 304 must not roll the validator backward.
-                if new_etag and new_etag != cached.etag and _may_replace(cached, seq=seq, observed_at=observed_at):
+                if new_etag and new_etag != cached.etag and _may_replace(cached, seq=seq):
                     cached = _CacheEntry(
                         etag=new_etag,
                         body=cached.body,
                         link_next=cached.link_next,
                         seq=seq,
                         stored_at=cached.stored_at,
-                        observed_at=cached.observed_at,
                         detail=cached.detail,
                     )
                     self._store_locked(key, cached, time.monotonic())
@@ -369,7 +371,7 @@ class GitHubRestCache:
         if new_etag:
             with self._lock:
                 existing = self._entries.get(key)
-                if _may_replace(existing, seq=seq, observed_at=observed_at):
+                if _may_replace(existing, seq=seq):
                     now = time.monotonic()
                     self._store_locked(
                         key,
@@ -379,7 +381,6 @@ class GitHubRestCache:
                             link_next=link_next,
                             seq=seq,
                             stored_at=now,
-                            observed_at=observed_at,
                             detail=_is_detail_url(path),
                         ),
                         now,
@@ -655,10 +656,15 @@ def _check_runs(
     deadline: float,
     timeout: float,
 ) -> tuple[list[dict[str, Any]], bool]:
-    """Check runs followed via ``Link: rel="next"``. Incomplete → ``(rows, False)``."""
+    """Check runs followed via ``Link: rel="next"``.
+
+    Complete only when no next link remains and the collected count equals
+    ``total_count``. An empty page is not complete on its own.
+    """
     runs: list[dict[str, Any]] = []
     url: str | None = f"repos/{repo}/commits/{sha}/check-runs?per_page=100&page=1"
     pages = 0
+    total: int | None = None
     while url:
         pages += 1
         if pages > _MAX_PAGES:
@@ -670,15 +676,13 @@ def _check_runs(
         if not isinstance(chunk, list):
             raise GitHubRestError(f"check runs payload was not a list for {sha}")
         runs.extend(item for item in chunk if isinstance(item, dict))
-        total = result.body.get("total_count")
-        if not chunk or (isinstance(total, int) and len(runs) >= total):
-            return runs, True
+        page_total = result.body.get("total_count")
+        if isinstance(page_total, int) and not isinstance(page_total, bool):
+            total = page_total
         if not result.link_next:
-            if isinstance(total, int) and len(runs) < total:
-                return runs, False
-            return runs, True
+            return runs, total is not None and len(runs) == total
         url = result.link_next
-    return runs, True
+    return runs, False
 
 
 def _detail_one(

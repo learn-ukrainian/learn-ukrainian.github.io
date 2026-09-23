@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import json
 import threading
+import time
 from datetime import UTC, datetime, timedelta
 
 import pytest
@@ -892,3 +893,86 @@ def test_older_response_does_not_overwrite_a_newer_cached_body():
     older.join(timeout=2)
     assert not errors
     assert cache.cached_body(path) == {"v": "new"}
+
+
+def _check_run_page(body: dict, link: str | None = None) -> tuple[list[dict], bool]:
+    page = f"repos/{REPO}/commits/{SHA}/check-runs?per_page=100&page=1"
+    pages = {page: (body, link)}
+    if link:
+        next_url = link[link.find("<") + 1 : link.find(">")]
+        pages[next_url] = ({"total_count": body.get("total_count"), "check_runs": []}, None)
+
+    def transport(path, headers, timeout):
+        payload, next_link = pages[path]
+        headers_out = {"etag": '"checks"'}
+        if next_link:
+            headers_out["link"] = next_link
+        return 200, headers_out, json.dumps(payload).encode()
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
+    return github_rest._check_runs(
+        cache,
+        REPO,
+        SHA,
+        deadline=time.monotonic() + 2,
+        timeout=2.0,
+    )
+
+
+def test_empty_check_run_page_is_incomplete_when_total_or_next_remains():
+    """Completeness is no next link and len(runs) == total_count."""
+    assert _check_run_page({"total_count": 2, "check_runs": []}) == ([], False)
+    next_link = f'<https://api.github.com/repos/{REPO}/commits/{SHA}/check-runs?page=2>; rel="next"'
+    assert _check_run_page({"total_count": 2, "check_runs": []}, next_link) == ([], False)
+    assert _check_run_page({"total_count": 0, "check_runs": []}) == ([], True)
+
+
+def test_later_request_wins_when_last_modified_predates_the_cached_date():
+    path = "repos/o/r/pulls/1"
+    responses = [
+        (200, {"etag": '"old"', "date": "Wed, 02 Jan 2020 00:00:00 GMT"}, b'{"v": "old"}'),
+        (
+            200,
+            {"etag": '"new"', "last-modified": "Tue, 01 Jan 2020 00:00:00 GMT"},
+            b'{"v": "new"}',
+        ),
+    ]
+
+    def transport(ignored_path, headers, timeout):
+        return responses.pop(0)
+
+    cache = github_rest.GitHubRestCache(transport=transport, identity="octocat")
+    assert cache.get_json(path, timeout=1.0).body == {"v": "old"}
+    assert cache.get_json(path, timeout=1.0).body == {"v": "new"}
+    assert cache.cached_body(path) == {"v": "new"}
+
+
+def test_concurrent_login_failures_keep_the_http_status():
+    workers = 64
+
+    def transport(path, headers, timeout):
+        if path == "user":
+            return 403, {}, b"forbidden"
+        return 200, {"etag": '"body"'}, b'{"ok": 1}'
+
+    cache = github_rest.GitHubRestCache(transport=transport)
+    start = threading.Barrier(workers)
+    errors: list[BaseException] = []
+    errors_lock = threading.Lock()
+
+    def worker():
+        start.wait(timeout=5)
+        try:
+            cache.get_json("repos/o/r/pulls/1", timeout=2.0)
+        except BaseException as exc:
+            with errors_lock:
+                errors.append(exc)
+
+    threads = [threading.Thread(target=worker) for _ in range(workers)]
+    for thread in threads:
+        thread.start()
+    for thread in threads:
+        thread.join(timeout=5)
+    assert all(not thread.is_alive() for thread in threads)
+    assert len(errors) == workers
+    assert all(isinstance(exc, github_rest.GitHubRestError) and exc.status == 403 for exc in errors)
