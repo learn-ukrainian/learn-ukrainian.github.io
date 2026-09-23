@@ -66,6 +66,16 @@ def test_true_false_before_text_and_schema_valid_fixture():
     assert row["reason"] == "true_false_before_text" and row["layer"] == "writer"
 
 
+def test_structure_uses_plan_consolidation_list():
+    draft, plan, _pack, _words = _fixture()
+    plan["lessons"][0]["consolidation"] = ["a1"]
+    plan["lessons"][0]["activities"] = [{"id": "a1", "type": "true-false", "placement": "workbook", "focus": "Read"}]
+    draft["activities"] = [{"id": "a1", "instruction": "Read", "items": [
+        {"statement": "слово", "correct": True, "explanation": "Read"}]}]
+    draft["consolidation"]["activities"] = ["a1"]
+    assert runner.check_3_structure(draft, plan["lessons"][0])["status"] == "passed"
+
+
 def test_form_choice_store_options_valid_invented_duplicate_and_tags():
     draft, plan, pack, words = _fixture()
     record = words["words"][0]

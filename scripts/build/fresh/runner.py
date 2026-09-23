@@ -74,7 +74,7 @@ def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str
     plan_acts = {a["id"]: a for a in lesson.get("activities") or []}
     if [a["id"] for a in draft.get("activities") or []] != list(plan_acts):
         return failure(3, "activity_ids_or_order", "writer")
-    expected_consolidation = [a["id"] for a in lesson.get("activities") or [] if a.get("placement") == "consolidation"]
+    expected_consolidation = lesson.get("consolidation") or []
     if draft["consolidation"]["activities"] != expected_consolidation:
         return failure(3, "consolidation_activities", "writer")
     used: set[str] = set()
@@ -106,7 +106,7 @@ def check_3_structure(draft: dict[str, Any], lesson: dict[str, Any]) -> dict[str
             return failure(3, f"evidence_missing: {sorted(expected - cited)}", "writer", step=sid)
         used |= cited
     allowed = {e for s in steps for e in s.get("evidence") or []}
-    allowed.update(v["id"] for v in lesson.get("videos") or [] if isinstance(v, dict) and "id" in v)
+    allowed.update(v["evidence"] for v in lesson.get("videos") or [] if isinstance(v, dict) and "evidence" in v)
     if used - allowed:
         return failure(3, f"evidence_not_in_plan: {sorted(used - allowed)}", "writer")
     return _pass(3)
@@ -200,7 +200,8 @@ def check_7_deterministic(stream: Any, lesson: dict[str, Any], draft: dict[str, 
                 return failure(7, "pending_stress", "pack", token=form.get("form"))
     if stream.failures:
         first = stream.failures[0]
-        layer = "pack" if first["code"] in {codes.LEMMA_OUTSIDE_STATE, codes.UNKNOWN_WORD_ID} else "writer"
+        layer = "pack" if first["code"] in {codes.LEMMA_OUTSIDE_STATE, codes.UNKNOWN_WORD_ID,
+                                              codes.PENDING_STRESS} else "writer"
         return failure(7, first.get("message") or first["code"], layer, code=first["code"],
                        step=first["unit"].get("step"), activity=first["unit"].get("activity"), token=first["token"])
     vocab = (lesson.get("inventory") or {}).get("vocabulary") or {}
@@ -213,7 +214,8 @@ def check_7_deterministic(stream: Any, lesson: dict[str, Any], draft: dict[str, 
     for group in ("core", "recycled"):
         for item in vocab.get(group) or []:
             rid = item["evidence"] if isinstance(item, dict) else item
-            if not any(rid in t.get("candidates", []) for t in stream.tokens):
+            if not any(t["unit"].get("tab") in {"urok", "vpravy"} and rid in t.get("candidates", [])
+                       for t in stream.tokens):
                 return failure(7, f"{group}_record_absent", "writer", token=rid)
     for item in vocab.get("core") or []:
         for tag in item.get("forms") or []:
