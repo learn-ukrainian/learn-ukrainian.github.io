@@ -211,7 +211,9 @@ def assemble_expanded_document(
                 quote_text = ""
                 if chunk_rec:
                     quote_text = str(chunk_rec.get("text") or chunk_rec.get("content") or "")
-                add_unit("urok", step_id, None, None, block_idx, "record_print", quote_text, source="record", ref=ref_id)
+                add_unit(
+                    "urok", step_id, None, None, block_idx, "record_print", quote_text, source="record", ref=ref_id
+                )
 
             elif kind == "paradigm":
                 ref_id = block.get("ref", "")
@@ -250,7 +252,16 @@ def assemble_expanded_document(
                 for line_idx, line in enumerate(uk_lines):
                     l_str = str(line)
                     for role, span_text in _split_inline_spans(l_str, "narration"):
-                        add_unit("urok", step_id, None, None, f"bilingual_{block_idx}_{line_idx}", role, span_text, source="writer_prose")
+                        add_unit(
+                            "urok",
+                            step_id,
+                            None,
+                            None,
+                            f"bilingual_{block_idx}_{line_idx}",
+                            role,
+                            span_text,
+                            source="writer_prose",
+                        )
 
             elif kind in ("culture", "tip", "summary", "callout"):
                 txt = block.get("text", "")
@@ -312,7 +323,9 @@ def assemble_expanded_document(
 
             opts = item.get("options") or item.get("choices") or item.get("distractors") or []
             for opt_idx, opt in enumerate(opts):
-                add_unit("vpravy", None, act_id, item_idx, f"opt_{opt_idx}", "item_option", str(opt), source="writer_prose")
+                add_unit(
+                    "vpravy", None, act_id, item_idx, f"opt_{opt_idx}", "item_option", str(opt), source="writer_prose"
+                )
 
             err_txt = item.get("error") or item.get("incorrect")
             if err_txt:
@@ -324,9 +337,27 @@ def assemble_expanded_document(
                     left = pair.get("left") or pair.get("prompt")
                     right = pair.get("right") or pair.get("answer")
                     if left:
-                        add_unit("vpravy", None, act_id, item_idx, f"pair_l_{p_idx}", "item_prompt", str(left), source="writer_prose")
+                        add_unit(
+                            "vpravy",
+                            None,
+                            act_id,
+                            item_idx,
+                            f"pair_l_{p_idx}",
+                            "item_prompt",
+                            str(left),
+                            source="writer_prose",
+                        )
                     if right:
-                        add_unit("vpravy", None, act_id, item_idx, f"pair_r_{p_idx}", "item_answer", str(right), source="writer_prose")
+                        add_unit(
+                            "vpravy",
+                            None,
+                            act_id,
+                            item_idx,
+                            f"pair_r_{p_idx}",
+                            "item_answer",
+                            str(right),
+                            source="writer_prose",
+                        )
 
     # 3. Tab: slovnyk (Vocabulary)
     vocab_inv = lesson_entry.get("inventory", {}).get("vocabulary", {})
@@ -366,7 +397,9 @@ def assemble_expanded_document(
             vid_id = vid.get("id")
             v_title = str(vid.get("title") or "")
             if vid_id and v_title:
-                add_unit("resursy", None, None, None, f"res_{vid_id}", "record_print", v_title, source="record", ref=vid_id)
+                add_unit(
+                    "resursy", None, None, None, f"res_{vid_id}", "record_print", v_title, source="record", ref=vid_id
+                )
 
     expanded_doc = {
         "expanded_schema": 1,
@@ -424,9 +457,7 @@ def check_5_assembly(
 ) -> CheckResult:
     """Check 5: Assemble draft to expanded document, validate schema and accent ban."""
     try:
-        expanded_doc, provenance_doc = assemble_expanded_document(
-            draft, plan, pack, words_store, level, slug, lesson_n
-        )
+        expanded_doc, provenance_doc = assemble_expanded_document(draft, plan, pack, words_store, level, slug, lesson_n)
     except Exception as exc:
         return CheckResult(check=5, passed=False, reason=f"assembly raised: {exc}", layer="writer")
 
@@ -498,7 +529,7 @@ def apply_stress(expanded_doc: dict[str, Any], stream: Any) -> dict[str, Any]:
         txt = unit["text"]
         for start, length, stressed_val in reps:
             if start + length <= len(txt):
-                txt = txt[:start] + stressed_val + txt[start + length:]
+                txt = txt[:start] + stressed_val + txt[start + length :]
         unit["text"] = txt
 
     return {
@@ -552,11 +583,7 @@ def build_slovnyk_tab(
         lemma = str(w_rec.get("lemma", ""))
         stressed_lemma = lemma
         for f in w_rec.get("forms", []):
-            if (
-                isinstance(f, dict)
-                and f.get("stressed")
-                and (f.get("form") == lemma or f.get("learner") is True)
-            ):
+            if isinstance(f, dict) and f.get("stressed") and (f.get("form") == lemma or f.get("learner") is True):
                 stressed_lemma = str(f["stressed"])
                 break
 
@@ -717,7 +744,9 @@ def _render_urok_markdown(
                         chunk_rec = chk
                         break
                 if chunk_rec:
-                    q_text = format_text(str(chunk_rec.get("text") or chunk_rec.get("content") or ""), step_id, block_idx)
+                    q_text = format_text(
+                        str(chunk_rec.get("text") or chunk_rec.get("content") or ""), step_id, block_idx
+                    )
                     attr = str(chunk_rec.get("attribution") or chunk_rec.get("author") or "")
                     lines.append(f"> {q_text}")
                     if attr:

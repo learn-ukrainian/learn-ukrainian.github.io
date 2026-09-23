@@ -37,11 +37,7 @@ def test_no_cyrillic_string_literals_in_assembler():
     found_literals: list[tuple[int, str]] = []
 
     for node in ast.walk(tree):
-        if (
-            isinstance(node, ast.Constant)
-            and isinstance(node.value, str)
-            and cyrillic_pattern.search(node.value)
-        ):
+        if isinstance(node, ast.Constant) and isinstance(node.value, str) and cyrillic_pattern.search(node.value):
             found_literals.append((getattr(node, "lineno", 0), node.value))
 
     assert len(found_literals) == 0, f"Found Cyrillic string literals in assemble.py: {found_literals}"
@@ -152,9 +148,7 @@ def test_combining_accent_fails_expanded_schema_and_check_5():
         "steps": [
             {
                 "id": "s1",
-                "blocks": [
-                    {"kind": "prose", "text": "Украї\u0301на with accent"}
-                ],
+                "blocks": [{"kind": "prose", "text": "Украї\u0301на with accent"}],
             }
         ],
         "activities": [],
@@ -276,9 +270,7 @@ def test_step_ids_on_units_in_expanded_document():
 def test_build_slovnyk_and_resursy_tabs():
     """Verify build_slovnyk_tab and build_resursy_tab structure and content."""
     lesson_plan = {
-        "steps": [
-            {"id": "s1", "needs": ["V-001"], "use": "Watch the alphabet song"}
-        ],
+        "steps": [{"id": "s1", "needs": ["V-001"], "use": "Watch the alphabet song"}],
         "inventory": {
             "vocabulary": {
                 "core": [{"evidence": "W-001", "forms": ["добрий", "доброго"]}],
