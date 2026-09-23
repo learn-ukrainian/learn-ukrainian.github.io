@@ -427,6 +427,8 @@ def main(argv: list[str] | None = None) -> int:
         help="verify fresh-build lessons in site/src/content/docs/<level>/<slug>/ against lesson-plans/",
     )
     args = ap.parse_args(argv)
+    if args.fresh and args.lesson:
+        ap.error("--fresh cannot be combined with --lesson")
     if args.lesson and args.astro_build:
         ap.error("--lesson does not yet support --astro-build; use the site build separately")
 

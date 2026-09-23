@@ -693,6 +693,18 @@ def check_lesson(
         for u in getattr(expanded_doc, "units", ()):
             units_by_locator[(u.tab, u.activity, u.item, u.block)] = u
 
+    # Keep introducing_step_not_locatable when no unit has a step
+    has_any_step = False
+    if expanded_doc is not None:
+        has_any_step = any(getattr(u, "step", None) is not None for u in getattr(expanded_doc, "units", ()))
+    if not has_any_step and tokens:
+        has_any_step = any(
+            isinstance(tok, dict) and isinstance(tok.get("unit"), dict) and tok["unit"].get("step") is not None
+            for tok in tokens
+        )
+    if not has_any_step:
+        not_checked.append(codes.INTRODUCING_STEP_NOT_LOCATABLE)
+
     # 5. Check tokens
     failures: list[GateFailure] = []
     reports: list[dict[str, Any]] = []

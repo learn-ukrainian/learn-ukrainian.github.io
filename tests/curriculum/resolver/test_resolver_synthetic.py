@@ -353,3 +353,33 @@ def test_every_subprocess_call_has_a_timeout():
             ):
                 missing.append(f"{path.name}:{node.lineno}")
     assert missing == []
+
+
+def test_unit_step_parsing():
+    """Unit.step accepts string or None; non-string raises INVALID_INPUT."""
+    doc_none = document(unit("бзюк"))
+    assert doc_none.units[0].step is None
+    assert "step" not in doc_none.units[0].locator()
+
+    doc_step = document(unit("бзюк", step="step-intro"))
+    assert doc_step.units[0].step == "step-intro"
+    assert doc_step.units[0].locator()["step"] == "step-intro"
+
+    with pytest.raises(ResolverError) as exc:
+        document(unit("бзюк", step=123))
+    assert exc.value.code == codes.INVALID_INPUT
+
+    with pytest.raises(ResolverError) as exc:
+        document(unit("бзюк", step=["invalid"]))
+    assert exc.value.code == codes.INVALID_INPUT
+
+
+def test_receipts_carry_unit_step(sources):
+    """Receipt tokens include unit.step when the originating unit defines step."""
+    doc = document(unit("бзюк", step="step-intro"))
+    allowed = allowlist([BZYUK])
+    stream = resolve(doc, allowed, sources)
+    questions = build_questions(stream, doc, allowed)
+    receipts = build_receipts(stream, questions, {}, "test-seat")
+    by_token = {t["token"]: t for t in receipts["tokens"]}
+    assert by_token["бзюк"]["unit"]["step"] == "step-intro"

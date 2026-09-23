@@ -345,7 +345,7 @@ def test_gate_all_pass_synthetic(tmp_path: Path) -> None:
     report = check_lesson("a1", "mod-01", 2, _make_stream(tokens, lesson_n=2), **paths)
     assert report.ok is True
     assert len(report.failures) == 0
-    assert codes.INTRODUCING_STEP_NOT_LOCATABLE not in report.not_checked
+    assert codes.INTRODUCING_STEP_NOT_LOCATABLE in report.not_checked
 
 
 def test_gate_lemma_outside_state_fails(tmp_path: Path) -> None:

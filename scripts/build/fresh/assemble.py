@@ -26,6 +26,8 @@ from jsonschema import Draft202012Validator
 from scripts.curriculum.evidence import lesson_lock, lock
 from scripts.curriculum.evidence.sources import Sources
 from scripts.curriculum.learner_state.immersion import compute_lesson_immersion_band
+from scripts.curriculum.learner_state.planned import planned_state
+from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver.classify import GLOSS_ID_RE
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
@@ -36,6 +38,28 @@ REPO_ROOT = Path(__file__).resolve().parents[3]
 EXPANDED_SCHEMA_PATH = REPO_ROOT / "schemas" / "lesson-expanded-v1.schema.json"
 
 _CACHED_EXPANDED_VALIDATOR: Draft202012Validator | None = None
+
+# Failure codes
+EXAMPLE_NOT_FOUND = "example_not_found"
+TEXT_NOT_FOUND = "text_not_found"
+PARADIGM_NOT_FOUND = "paradigm_not_found"
+WORD_NOT_FOUND = "word_not_found"
+FORM_NOT_FOUND = "form_not_found"
+VIDEO_NOT_FOUND = "video_not_found"
+LOCK_CHECK_FAILED = "lock_check_failed"
+LESSON_LOCK_ENTRY_MISSING = "lesson_lock_entry_missing"
+LESSON_LOCK_MISMATCH = "lesson_lock_mismatch"
+IMMERSION_BAND_FAILED = "immersion_band_failed"
+STREAM_BLOCKED = "stream_blocked"
+
+
+class AssemblerError(Exception):
+    """Failure during lesson assembly."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(f"{code}: {message}")
+        self.code = code
+        self.message = message
 
 
 def get_expanded_validator(schema_path: Path | None = None) -> Draft202012Validator:
@@ -121,12 +145,42 @@ def assemble_expanded_document(
     Returns (expanded_doc_dict, provenance_dict).
     Every unit carries 'step' (plan step id, or None for tabs without steps).
     Plain forms only: quotes, examples, paradigms, glosses have accents stripped.
+    Fails closed with named AssemblerError codes on missing records.
     """
     lesson_entry: dict[str, Any] = {}
     for entry in plan.get("lessons", []):
         if isinstance(entry, dict) and entry.get("n") == lesson_n:
             lesson_entry = entry
             break
+    if not lesson_entry:
+        raise AssemblerError("lesson_not_found", f"lesson {lesson_n} not found in plan")
+
+    words_by_id: dict[str, dict[str, Any]] = {}
+    for w in words_store.get("words", []):
+        if isinstance(w, dict) and "id" in w:
+            words_by_id[w["id"]] = w
+
+    texts_by_id: dict[str, dict[str, Any]] = {}
+    for t in pack.get("texts", []):
+        if isinstance(t, dict) and "id" in t:
+            texts_by_id[t["id"]] = t
+
+    examples_by_id: dict[str, dict[str, Any]] = {}
+    for ex in pack.get("examples", []):
+        if isinstance(ex, dict) and "id" in ex:
+            examples_by_id[ex["id"]] = ex
+
+    videos_by_id: dict[str, dict[str, Any]] = {}
+    for v in pack.get("videos", []):
+        if isinstance(v, dict) and "id" in v:
+            videos_by_id[v["id"]] = v
+
+    paradigms_by_id: dict[str, dict[str, Any]] = {}
+    for st in lesson_entry.get("steps", []):
+        if isinstance(st, dict) and "paradigm" in st and isinstance(st["paradigm"], dict):
+            pid = st["paradigm"].get("id")
+            if pid:
+                paradigms_by_id[pid] = st["paradigm"]
 
     units: list[dict[str, Any]] = []
     spans: list[dict[str, Any]] = []
@@ -191,38 +245,52 @@ def assemble_expanded_document(
 
             elif kind == "example":
                 ref_id = block.get("ref", "")
-                ex_rec = None
-                for ex in pack.get("examples", []):
-                    if isinstance(ex, dict) and ex.get("id") == ref_id:
-                        ex_rec = ex
-                        break
-                ex_text = ""
-                if ex_rec:
-                    ex_text = str(ex_rec.get("uk") or ex_rec.get("text") or "")
+                ex_rec = examples_by_id.get(ref_id)
+                if ex_rec is None:
+                    raise AssemblerError(EXAMPLE_NOT_FOUND, f"example record {ref_id} not found in pack")
+                ex_text = str(ex_rec.get("text", ""))
                 add_unit("urok", step_id, None, None, block_idx, "record_print", ex_text, source="record", ref=ref_id)
 
             elif kind == "quote":
                 ref_id = block.get("ref", "")
-                chunk_rec = None
-                for chk in pack.get("textbook_chunks", []):
-                    if isinstance(chk, dict) and chk.get("id") == ref_id:
-                        chunk_rec = chk
-                        break
-                quote_text = ""
-                if chunk_rec:
-                    quote_text = str(chunk_rec.get("text") or chunk_rec.get("content") or "")
+                t_rec = texts_by_id.get(ref_id)
+                if t_rec is None:
+                    raise AssemblerError(TEXT_NOT_FOUND, f"quote record {ref_id} not found in pack")
+                quote_text = str(t_rec.get("quote", ""))
                 add_unit(
                     "urok", step_id, None, None, block_idx, "record_print", quote_text, source="record", ref=ref_id
                 )
 
             elif kind == "paradigm":
                 ref_id = block.get("ref", "")
-                p_text = ""
-                for p_item in pack.get("paradigms", []):
-                    if isinstance(p_item, dict) and p_item.get("id") == ref_id:
-                        p_text = str(p_item.get("text") or p_item.get("form") or "")
-                        break
-                add_unit("urok", step_id, None, None, block_idx, "record_print", p_text, source="record", ref=ref_id)
+                p_info = paradigms_by_id.get(ref_id)
+                if p_info is None:
+                    raise AssemblerError(PARADIGM_NOT_FOUND, f"paradigm {ref_id} not found in lesson steps")
+                wid = p_info.get("word", "")
+                w_rec = words_by_id.get(wid)
+                if w_rec is None:
+                    raise AssemblerError(
+                        WORD_NOT_FOUND, f"word record {wid} for paradigm {ref_id} not found in words store"
+                    )
+                forms_by_tag = {f.get("tags"): f for f in w_rec.get("forms", []) if isinstance(f, dict)}
+                for f_idx, ftag in enumerate(p_info.get("forms", [])):
+                    form_entry = forms_by_tag.get(ftag)
+                    if form_entry is None:
+                        raise AssemblerError(
+                            FORM_NOT_FOUND, f"form tag {ftag} not found for word {wid} in paradigm {ref_id}"
+                        )
+                    p_form_text = str(form_entry.get("form") or form_entry.get("stressed") or "")
+                    add_unit(
+                        "urok",
+                        step_id,
+                        None,
+                        None,
+                        f"paradigm_{block_idx}_{f_idx}",
+                        "record_print",
+                        p_form_text,
+                        source="record",
+                        ref=wid,
+                    )
 
             elif kind == "table":
                 rows = block.get("rows", [])
@@ -269,10 +337,23 @@ def assemble_expanded_document(
                     add_unit("urok", step_id, None, None, block_idx, role, span_text, source="writer_prose")
 
             elif kind == "video":
+                ref_id = block.get("ref", "")
+                vid_rec = videos_by_id.get(ref_id)
+                if vid_rec is None:
+                    raise AssemblerError(VIDEO_NOT_FOUND, f"video record {ref_id} not found in pack")
                 v_lead = block.get("lead_in")
                 if v_lead:
                     for role, span_text in _split_inline_spans(v_lead, "narration"):
-                        add_unit("urok", step_id, None, None, block_idx, role, span_text, source="writer_prose")
+                        add_unit(
+                            "urok",
+                            step_id,
+                            None,
+                            None,
+                            f"video_lead_{block_idx}",
+                            role,
+                            span_text,
+                            source="writer_prose",
+                        )
 
             elif kind == "dialogue":
                 dial = draft.get("dialogue") or {}
@@ -302,12 +383,10 @@ def assemble_expanded_document(
         if not isinstance(act, dict):
             continue
         act_id = act.get("id")
-        title = act.get("title")
-        if title:
-            add_unit("vpravy", None, act_id, None, "title", "instruction", str(title), source="writer_prose")
         instr = act.get("instruction")
         if instr:
-            add_unit("vpravy", None, act_id, None, "instruction", "instruction", str(instr), source="writer_prose")
+            for role, span_text in _split_inline_spans(str(instr), "instruction"):
+                add_unit("vpravy", None, act_id, None, "instruction", role, span_text, source="writer_prose")
 
         for item_idx, item in enumerate(act.get("items", [])):
             if not isinstance(item, dict):
@@ -315,21 +394,24 @@ def assemble_expanded_document(
 
             prompt = item.get("prompt") or item.get("sentence") or item.get("question") or item.get("cue")
             if prompt:
-                add_unit("vpravy", None, act_id, item_idx, "prompt", "item_prompt", str(prompt), source="writer_prose")
+                for role, span_text in _split_inline_spans(str(prompt), "item_prompt"):
+                    add_unit("vpravy", None, act_id, item_idx, "prompt", role, span_text, source="writer_prose")
 
             answer = item.get("answer") or item.get("correct") or item.get("target")
             if answer:
-                add_unit("vpravy", None, act_id, item_idx, "answer", "item_answer", str(answer), source="writer_prose")
+                for role, span_text in _split_inline_spans(str(answer), "item_answer"):
+                    add_unit("vpravy", None, act_id, item_idx, "answer", role, span_text, source="writer_prose")
 
             opts = item.get("options") or item.get("choices") or item.get("distractors") or []
             for opt_idx, opt in enumerate(opts):
-                add_unit(
-                    "vpravy", None, act_id, item_idx, f"opt_{opt_idx}", "item_option", str(opt), source="writer_prose"
-                )
+                opt_str = str(opt.get("text") if isinstance(opt, dict) else opt)
+                for role, span_text in _split_inline_spans(opt_str, "item_option"):
+                    add_unit("vpravy", None, act_id, item_idx, f"opt_{opt_idx}", role, span_text, source="writer_prose")
 
             err_txt = item.get("error") or item.get("incorrect")
             if err_txt:
-                add_unit("vpravy", None, act_id, item_idx, "error", "error_text", str(err_txt), source="writer_prose")
+                for role, span_text in _split_inline_spans(str(err_txt), "error_text"):
+                    add_unit("vpravy", None, act_id, item_idx, "error", role, span_text, source="writer_prose")
 
             pairs = item.get("pairs") or []
             for p_idx, pair in enumerate(pairs):
@@ -337,69 +419,85 @@ def assemble_expanded_document(
                     left = pair.get("left") or pair.get("prompt")
                     right = pair.get("right") or pair.get("answer")
                     if left:
-                        add_unit(
-                            "vpravy",
-                            None,
-                            act_id,
-                            item_idx,
-                            f"pair_l_{p_idx}",
-                            "item_prompt",
-                            str(left),
-                            source="writer_prose",
-                        )
+                        for role, span_text in _split_inline_spans(str(left), "item_prompt"):
+                            add_unit(
+                                "vpravy",
+                                None,
+                                act_id,
+                                item_idx,
+                                f"pair_l_{p_idx}",
+                                role,
+                                span_text,
+                                source="writer_prose",
+                            )
                     if right:
-                        add_unit(
-                            "vpravy",
-                            None,
-                            act_id,
-                            item_idx,
-                            f"pair_r_{p_idx}",
-                            "item_answer",
-                            str(right),
-                            source="writer_prose",
-                        )
+                        for role, span_text in _split_inline_spans(str(right), "item_answer"):
+                            add_unit(
+                                "vpravy",
+                                None,
+                                act_id,
+                                item_idx,
+                                f"pair_r_{p_idx}",
+                                role,
+                                span_text,
+                                source="writer_prose",
+                            )
 
     # 3. Tab: slovnyk (Vocabulary)
     vocab_inv = lesson_entry.get("inventory", {}).get("vocabulary", {})
     core_items = vocab_inv.get("core", [])
     incidental_items = vocab_inv.get("incidental", [])
 
-    words_by_id: dict[str, dict[str, Any]] = {}
-    for w in words_store.get("words", []):
-        if isinstance(w, dict) and "id" in w:
-            words_by_id[w["id"]] = w
-
     for c in core_items:
         if isinstance(c, dict):
             wid = c.get("evidence")
-            if wid and wid in words_by_id:
-                w_rec = words_by_id[wid]
+            if wid:
+                w_rec = words_by_id.get(wid)
+                if not w_rec:
+                    raise AssemblerError(WORD_NOT_FOUND, f"core word {wid} not found in words store")
                 lemma = str(w_rec.get("lemma", ""))
                 add_unit("slovnyk", None, None, None, f"core_{wid}", "record_print", lemma, source="record", ref=wid)
 
     for inc in incidental_items:
         wid = inc.get("evidence") if isinstance(inc, dict) else inc
-        if isinstance(wid, str) and wid in words_by_id:
-            w_rec = words_by_id[wid]
+        if isinstance(wid, str):
+            w_rec = words_by_id.get(wid)
+            if not w_rec:
+                raise AssemblerError(WORD_NOT_FOUND, f"incidental word {wid} not found in words store")
             lemma = str(w_rec.get("lemma", ""))
             add_unit("slovnyk", None, None, None, f"inc_{wid}", "record_print", lemma, source="record", ref=wid)
 
-    # 4. Tab: resursy (Resources)
-    for chk in pack.get("textbook_chunks", []):
-        if isinstance(chk, dict):
-            cid = chk.get("id")
-            title = str(chk.get("title") or "")
-            if cid and title:
-                add_unit("resursy", None, None, None, f"res_{cid}", "record_print", title, source="record", ref=cid)
+    # 4. Tab: resursy (Resources) - CITED ids only
+    cited_text_ids: list[str] = []
+    cited_video_ids: list[str] = []
+    for st in lesson_entry.get("steps", []):
+        if isinstance(st, dict):
+            for ev in st.get("evidence", []):
+                if isinstance(ev, str):
+                    if ev.startswith("T-") and ev not in cited_text_ids:
+                        cited_text_ids.append(ev)
+                    elif ev.startswith("V-") and ev not in cited_video_ids:
+                        cited_video_ids.append(ev)
+    for v_entry in lesson_entry.get("videos", []):
+        if isinstance(v_entry, dict):
+            ev = v_entry.get("evidence")
+            if isinstance(ev, str) and ev not in cited_video_ids:
+                cited_video_ids.append(ev)
 
-    for vid in pack.get("videos", []):
-        if isinstance(vid, dict):
-            vid_id = vid.get("id")
-            v_title = str(vid.get("title") or "")
-            if vid_id and v_title:
-                add_unit(
-                    "resursy", None, None, None, f"res_{vid_id}", "record_print", v_title, source="record", ref=vid_id
-                )
+    for cid in cited_text_ids:
+        t_rec = texts_by_id.get(cid)
+        if t_rec is None:
+            raise AssemblerError(TEXT_NOT_FOUND, f"cited text record {cid} not found in pack")
+        src = t_rec.get("source", {})
+        title = str(src.get("work") or src.get("file") or src.get("author") or cid)
+        add_unit("resursy", None, None, None, f"res_{cid}", "record_print", title, source="record", ref=cid)
+
+    for vid in cited_video_ids:
+        v_rec = videos_by_id.get(vid)
+        if v_rec is None:
+            raise AssemblerError(VIDEO_NOT_FOUND, f"cited video record {vid} not found in pack")
+        chan = str(v_rec.get("channel") or vid)
+        add_unit("resursy", None, None, None, f"res_{vid}", "record_print", chan, source="record", ref=vid)
 
     expanded_doc = {
         "expanded_schema": 1,
@@ -430,7 +528,7 @@ def write_expanded_document(
     output_dir: Path,
     lesson_n: int,
 ) -> tuple[Path, Path]:
-    """Write expanded document with lock sidecar, and provenance document."""
+    """Write expanded document with lock sidecar, and provenance document atomically."""
     output_dir.mkdir(parents=True, exist_ok=True)
     exp_path = output_dir / f"lesson-{lesson_n}.expanded.yaml"
     prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
@@ -439,7 +537,7 @@ def write_expanded_document(
     lock.write(exp_path, content_bytes)
 
     prov_bytes = yaml.safe_dump(provenance_doc, allow_unicode=True, sort_keys=False).encode("utf-8")
-    prov_path.write_bytes(prov_bytes)
+    lock.atomic_write(prov_path, prov_bytes)
 
     return exp_path, prov_path
 
@@ -458,6 +556,8 @@ def check_5_assembly(
     """Check 5: Assemble draft to expanded document, validate schema and accent ban."""
     try:
         expanded_doc, provenance_doc = assemble_expanded_document(draft, plan, pack, words_store, level, slug, lesson_n)
+    except AssemblerError as exc:
+        return CheckResult(check=5, passed=False, reason=f"{exc.code}: {exc.message}", layer="pack")
     except Exception as exc:
         return CheckResult(check=5, passed=False, reason=f"assembly raised: {exc}", layer="writer")
 
@@ -501,7 +601,7 @@ def check_5_assembly(
 
 
 def apply_stress(expanded_doc: dict[str, Any], stream: Any) -> dict[str, Any]:
-    """Apply stress from stream tokens to expanded document units."""
+    """Apply stress from stream tokens to expanded document units by unit index."""
     tokens = getattr(stream, "tokens", None) or (stream.get("tokens") if isinstance(stream, dict) else [])
 
     replacements_by_unit: dict[int, list[tuple[int, int, str]]] = {}
@@ -570,9 +670,11 @@ def build_slovnyk_tab(
             sel = tok.get("selected")
             if isinstance(sel, dict):
                 rec = sel.get("record")
-                sense = sel.get("gloss") or sel.get("sense")
-                if rec and sense:
-                    selected_senses[rec] = str(sense)
+                if rec and rec in words_by_id:
+                    w_rec = words_by_id[rec]
+                    gloss = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+                    if gloss:
+                        selected_senses[rec] = str(gloss)
 
     vocab_items: list[dict[str, Any]] = []
 
@@ -581,27 +683,43 @@ def build_slovnyk_tab(
             return
         w_rec = words_by_id[wid]
         lemma = str(w_rec.get("lemma", ""))
+
+        # Lemma stress comes from the record's lemma form, never first learner form
         stressed_lemma = lemma
+        lemma_form = None
         for f in w_rec.get("forms", []):
-            if isinstance(f, dict) and f.get("stressed") and (f.get("form") == lemma or f.get("learner") is True):
-                stressed_lemma = str(f["stressed"])
+            if isinstance(f, dict) and f.get("form") == lemma:
+                lemma_form = f
                 break
 
-        gloss = selected_senses.get(wid) or str(w_rec.get("gloss", ""))
-        try:
-            atlas_href = atlas_href_for(lemma)
-        except Exception:
-            atlas_href = None
+        if lemma_form is not None:
+            if lemma_form.get("stress_source") == "pending":
+                stressed_lemma = lemma
+            elif lemma_form.get("stressed"):
+                stressed_lemma = str(lemma_form["stressed"])
+
+        gloss = selected_senses.get(wid) or str(w_rec.get("sense_gloss") or w_rec.get("gloss_en") or "")
+        atlas_href = atlas_href_for(lemma)
+
+        # Taught forms are the stressed forms of the plan's form tags
+        forms_by_tag = {f.get("tags"): f for f in w_rec.get("forms", []) if isinstance(f, dict)}
+        taught_forms: list[str] = []
+        for ftag in forms_list:
+            f_entry = forms_by_tag.get(ftag)
+            if f_entry:
+                if f_entry.get("stress_source") == "pending" or not f_entry.get("stressed"):
+                    taught_forms.append(str(f_entry.get("form", "")))
+                else:
+                    taught_forms.append(str(f_entry["stressed"]))
 
         item_entry: dict[str, Any] = {
             "lemma": stressed_lemma,
             "translation": gloss,
             "pos": str(w_rec.get("pos", "")),
-            "gender": str(w_rec.get("gender", "")),
             "atlas_href": atlas_href,
         }
-        if forms_list:
-            item_entry["forms"] = forms_list
+        if taught_forms:
+            item_entry["forms"] = taught_forms
         vocab_items.append(item_entry)
 
     for c in core_items:
@@ -622,39 +740,71 @@ def build_resursy_tab(
     lesson_plan: dict[str, Any],
     pack: dict[str, Any],
 ) -> dict[str, list[dict[str, Any]]]:
-    """Build Resursy external resources dictionary from pack and plan."""
+    """Build Resursy external resources dictionary from cited pack records only."""
     books: list[dict[str, Any]] = []
     youtube: list[dict[str, Any]] = []
 
-    for chk in pack.get("textbook_chunks", []):
-        if isinstance(chk, dict):
+    texts_by_id: dict[str, dict[str, Any]] = {}
+    for t in pack.get("texts", []):
+        if isinstance(t, dict) and "id" in t:
+            texts_by_id[t["id"]] = t
+
+    videos_by_id: dict[str, dict[str, Any]] = {}
+    for v in pack.get("videos", []):
+        if isinstance(v, dict) and "id" in v:
+            videos_by_id[v["id"]] = v
+
+    cited_text_ids: list[str] = []
+    cited_video_ids: list[str] = []
+    for st in lesson_plan.get("steps", []):
+        if isinstance(st, dict):
+            for ev in st.get("evidence", []):
+                if isinstance(ev, str):
+                    if ev.startswith("T-") and ev not in cited_text_ids:
+                        cited_text_ids.append(ev)
+                    elif ev.startswith("V-") and ev not in cited_video_ids:
+                        cited_video_ids.append(ev)
+    for v_entry in lesson_plan.get("videos", []):
+        if isinstance(v_entry, dict):
+            ev = v_entry.get("evidence")
+            if isinstance(ev, str) and ev not in cited_video_ids:
+                cited_video_ids.append(ev)
+
+    for cid in cited_text_ids:
+        t_rec = texts_by_id.get(cid)
+        if t_rec:
+            src = t_rec.get("source", {})
+            title = str(src.get("work") or src.get("file") or src.get("author") or cid)
+            author = str(src.get("author") or "")
+            page = str(src.get("page") or "")
             books.append(
                 {
-                    "title": str(chk.get("title") or "Textbook"),
-                    "author": str(chk.get("author") or ""),
-                    "pages": chk.get("pages") or chk.get("page") or "",
-                    "url": str(chk.get("url") or ""),
-                    "source": str(chk.get("id") or ""),
-                    "description": str(chk.get("attribution") or ""),
+                    "title": title,
+                    "author": author,
+                    "pages": page,
+                    "url": "",
+                    "source": cid,
+                    "description": str(t_rec.get("supports") or ""),
                 }
             )
 
     plan_video_uses: dict[str, str] = {}
-    for st in lesson_plan.get("steps", []):
-        if isinstance(st, dict):
-            for v_need in st.get("needs", []):
-                if isinstance(v_need, str) and v_need.startswith("V-"):
-                    plan_video_uses[v_need] = str(st.get("use") or st.get("teach") or "")
+    for v_entry in lesson_plan.get("videos", []):
+        if isinstance(v_entry, dict):
+            ev = v_entry.get("evidence")
+            if isinstance(ev, str):
+                plan_video_uses[ev] = str(v_entry.get("use") or "")
 
-    for vid in pack.get("videos", []):
-        if isinstance(vid, dict):
-            vid_id = str(vid.get("id") or "")
+    for vid_id in cited_video_ids:
+        vid = videos_by_id.get(vid_id)
+        if vid:
+            chan = str(vid.get("channel") or vid_id)
             youtube.append(
                 {
-                    "title": str(vid.get("title") or "Video"),
+                    "title": chan,
                     "url": str(vid.get("url") or ""),
-                    "channel": str(vid.get("channel") or ""),
-                    "description": plan_video_uses.get(vid_id) or str(vid.get("description") or ""),
+                    "channel": chan,
+                    "description": plan_video_uses.get(vid_id) or str(vid.get("use") or ""),
                 }
             )
 
@@ -672,29 +822,50 @@ def _render_urok_markdown(
     pack: dict[str, Any],
     words_store: dict[str, Any],
 ) -> str:
-    """Render Tab 1 (Urok) markdown from draft and stressed units."""
-    stressed_units_by_key: dict[tuple[str, str | None, int | str], str] = {}
-    for u in stressed_doc.get("units", []):
-        if u.get("tab") == "urok":
-            key = (u["tab"], u.get("step"), u.get("block"))
-            stressed_units_by_key[key] = u.get("text", "")
+    """Render Tab 1 (Urok) markdown from draft and stressed units.
+
+    Keys stressed text by unit index and reassembles every block from all its spans in order.
+    """
+    stressed_units = stressed_doc.get("units", [])
+    stressed_text_by_unit_idx: dict[int, str] = {i: u["text"] for i, u in enumerate(stressed_units)}
+
+    unit_indices_by_block: dict[tuple[str | None, str | None, int | str], list[int]] = {}
+    for i, u in enumerate(stressed_units):
+        key = (u.get("tab"), u.get("step"), u.get("block"))
+        unit_indices_by_block.setdefault(key, []).append(i)
 
     words_by_id: dict[str, dict[str, Any]] = {}
     for w in words_store.get("words", []):
         if isinstance(w, dict) and "id" in w:
             words_by_id[w["id"]] = w
 
+    texts_by_id: dict[str, dict[str, Any]] = {}
+    for t in pack.get("texts", []):
+        if isinstance(t, dict) and "id" in t:
+            texts_by_id[t["id"]] = t
+
+    examples_by_id: dict[str, dict[str, Any]] = {}
+    for ex in pack.get("examples", []):
+        if isinstance(ex, dict) and "id" in ex:
+            examples_by_id[ex["id"]] = ex
+
+    videos_by_id: dict[str, dict[str, Any]] = {}
+    for v in pack.get("videos", []):
+        if isinstance(v, dict) and "id" in v:
+            videos_by_id[v["id"]] = v
+
     def replace_gloss(match: re.Match[str]) -> str:
         wid = match.group(1)
         w_rec = words_by_id.get(wid)
         if w_rec:
             lem = w_rec.get("lemma", "")
-            gl = w_rec.get("gloss", "")
+            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
             return f"{lem} ({gl})" if gl else lem
         return wid
 
-    def format_text(raw: str, step_id: str | None, block_key: int | str) -> str:
-        val = stressed_units_by_key.get(("urok", step_id, block_key), raw)
+    def format_block_text(step_id: str | None, block_key: int | str, fallback: str = "") -> str:
+        indices = unit_indices_by_block.get(("urok", step_id, block_key))
+        val = "".join(stressed_text_by_unit_idx[i] for i in indices) if indices else fallback
         val = re.sub(r"\{\{uk:([^{}\u0300\u0301]+)\}\}", r"\1", val)
         val = GLOSS_ID_RE.sub(replace_gloss, val)
         return val
@@ -708,7 +879,7 @@ def _render_urok_markdown(
 
         lead_in = step.get("lead_in")
         if lead_in:
-            lines.append(format_text(lead_in, step_id, "lead_in"))
+            lines.append(format_block_text(step_id, "lead_in", lead_in))
             lines.append("")
 
         for block_idx, block in enumerate(step.get("blocks", [])):
@@ -718,19 +889,15 @@ def _render_urok_markdown(
 
             if kind == "prose":
                 txt = block.get("text", "")
-                lines.append(format_text(txt, step_id, block_idx))
+                lines.append(format_block_text(step_id, block_idx, txt))
                 lines.append("")
 
             elif kind == "example":
                 ref_id = block.get("ref", "")
-                ex_rec = None
-                for ex in pack.get("examples", []):
-                    if isinstance(ex, dict) and ex.get("id") == ref_id:
-                        ex_rec = ex
-                        break
+                ex_rec = examples_by_id.get(ref_id)
                 if ex_rec:
-                    uk = format_text(str(ex_rec.get("uk") or ex_rec.get("text") or ""), step_id, block_idx)
-                    en = str(ex_rec.get("en") or ex_rec.get("translation") or "")
+                    uk = format_block_text(step_id, block_idx, str(ex_rec.get("text", "")))
+                    en = str(ex_rec.get("translation_en") or "")
                     lines.append(f"> {uk}")
                     if en:
                         lines.append(f">\n> *{en}*")
@@ -738,16 +905,16 @@ def _render_urok_markdown(
 
             elif kind == "quote":
                 ref_id = block.get("ref", "")
-                chunk_rec = None
-                for chk in pack.get("textbook_chunks", []):
-                    if isinstance(chk, dict) and chk.get("id") == ref_id:
-                        chunk_rec = chk
-                        break
-                if chunk_rec:
-                    q_text = format_text(
-                        str(chunk_rec.get("text") or chunk_rec.get("content") or ""), step_id, block_idx
-                    )
-                    attr = str(chunk_rec.get("attribution") or chunk_rec.get("author") or "")
+                t_rec = texts_by_id.get(ref_id)
+                if t_rec:
+                    q_text = format_block_text(step_id, block_idx, str(t_rec.get("quote", "")))
+                    src = t_rec.get("source", {})
+                    author = str(src.get("author") or "")
+                    work = str(src.get("work") or "")
+                    year = src.get("year")
+                    page = src.get("page")
+                    attr_parts = [p for p in [author, work, str(year) if year else "", str(page) if page else ""] if p]
+                    attr = ", ".join(attr_parts) if attr_parts else str(src.get("file", ""))
                     lines.append(f"> {q_text}")
                     if attr:
                         lines.append(f">\n> — *{attr}*")
@@ -755,82 +922,166 @@ def _render_urok_markdown(
 
             elif kind == "paradigm":
                 ref_id = block.get("ref", "")
-                lines.append(f"<!-- paradigm: {ref_id} -->")
+                indices = [
+                    i
+                    for i, u in enumerate(stressed_units)
+                    if u.get("tab") == "urok"
+                    and u.get("step") == step_id
+                    and str(u.get("block", "")).startswith(f"paradigm_{block_idx}_")
+                ]
+                lines.append("| | |")
+                lines.append("| --- | --- |")
+                for u_idx in indices:
+                    u_text = stressed_text_by_unit_idx[u_idx]
+                    u_text = re.sub(r"\{\{uk:([^{}\u0300\u0301]+)\}\}", r"\1", u_text)
+                    lines.append(f"| {u_text} |")
                 lines.append("")
 
             elif kind == "table":
                 rows = block.get("rows", [])
                 if rows:
-                    header = rows[0]
-                    lines.append("| " + " | ".join(str(c) for c in header) + " |")
+                    header = [
+                        format_block_text(step_id, f"table_{block_idx}_0_{c_idx}", str(c))
+                        for c_idx, c in enumerate(rows[0])
+                    ]
+                    lines.append("| " + " | ".join(header) + " |")
                     lines.append("| " + " | ".join("---" for _ in header) + " |")
-                    for row in rows[1:]:
-                        lines.append("| " + " | ".join(str(c) for c in row) + " |")
+                    for r_idx, row in enumerate(rows[1:], start=1):
+                        cells = [
+                            format_block_text(step_id, f"table_{block_idx}_{r_idx}_{c_idx}", str(c))
+                            for c_idx, c in enumerate(row)
+                        ]
+                        lines.append("| " + " | ".join(cells) + " |")
                     lines.append("")
 
             elif kind == "pronunciation":
                 txt = block.get("text", "")
-                lines.append(format_text(txt, step_id, block_idx))
+                lines.append(format_block_text(step_id, block_idx, txt))
                 lines.append("")
 
             elif kind == "bilingual":
                 uk_lines = block.get("uk", [])
                 en_lines = block.get("en", [])
-                lines.append("| Ukrainian | English |")
+                lines.append("| | |")
                 lines.append("| --- | --- |")
-                for u_line, e_line in zip(uk_lines, en_lines, strict=False):
+                for line_idx, (u_raw, e_raw) in enumerate(zip(uk_lines, en_lines, strict=False)):
+                    u_line = format_block_text(step_id, f"bilingual_{block_idx}_{line_idx}", str(u_raw))
+                    e_line = str(e_raw)
                     lines.append(f"| {u_line} | {e_line} |")
                 lines.append("")
 
             elif kind == "culture":
                 txt = block.get("text", "")
-                lines.append(f"> [!note]\n> {format_text(txt, step_id, block_idx)}")
+                lines.append(f"> [!note]\n> {format_block_text(step_id, block_idx, txt)}")
                 lines.append("")
 
             elif kind == "tip":
                 txt = block.get("text", "")
-                lines.append(f"> [!tip]\n> {format_text(txt, step_id, block_idx)}")
+                lines.append(f"> [!tip]\n> {format_block_text(step_id, block_idx, txt)}")
                 lines.append("")
 
             elif kind == "summary":
                 txt = block.get("text", "")
-                lines.append(f"> [!summary]\n> {format_text(txt, step_id, block_idx)}")
+                lines.append(f"> [!summary]\n> {format_block_text(step_id, block_idx, txt)}")
                 lines.append("")
 
             elif kind == "callout":
                 txt = block.get("text", "")
-                lines.append(f"> [!note]\n> {format_text(txt, step_id, block_idx)}")
+                lines.append(f"> [!note]\n> {format_block_text(step_id, block_idx, txt)}")
                 lines.append("")
 
             elif kind == "video":
                 v_lead = block.get("lead_in")
                 if v_lead:
-                    lines.append(format_text(v_lead, step_id, block_idx))
+                    lines.append(format_block_text(step_id, f"video_lead_{block_idx}", v_lead))
                     lines.append("")
                 ref_id = block.get("ref", "")
-                lines.append(f"<!-- video: {ref_id} -->")
-                lines.append("")
+                vid_rec = videos_by_id.get(ref_id)
+                if vid_rec:
+                    chan = str(vid_rec.get("channel") or "")
+                    url = str(vid_rec.get("url") or "")
+                    lines.append(f"> [{chan}]({url})")
+                    lines.append("")
 
             elif kind == "dialogue":
                 dial = draft.get("dialogue") or {}
                 for line_idx, line in enumerate(dial.get("lines", [])):
                     if isinstance(line, dict):
                         spk = line.get("speaker", "")
-                        l_txt = format_text(line.get("text", ""), step_id, f"dialogue_{line_idx}")
+                        l_txt = format_block_text(step_id, f"dialogue_{line_idx}", line.get("text", ""))
                         lines.append(f"> **{spk}:** {l_txt}")
-                lines.append("")
-
-            elif kind == "activity":
-                ref_id = block.get("ref", "")
-                lines.append(f"<!-- activity: {ref_id} -->")
                 lines.append("")
 
     consol_lead = draft.get("consolidation", {}).get("lead_in")
     if consol_lead:
-        lines.append(format_text(consol_lead, None, "consolidation_lead_in"))
+        lines.append(format_block_text(None, "consolidation_lead_in", consol_lead))
         lines.append("")
 
     return "\n".join(lines).strip()
+
+
+def apply_stress_to_activities(
+    draft_activities: list[dict[str, Any]],
+    stressed_doc: dict[str, Any],
+    replace_gloss_fn: Any,
+) -> list[dict[str, Any]]:
+    """Apply stress from stream/stressed units to draft activity fields."""
+    stressed_units = stressed_doc.get("units", [])
+    vpravy_indices: dict[tuple[str | None, int | None, int | str], list[int]] = {}
+    for i, u in enumerate(stressed_units):
+        if u.get("tab") == "vpravy":
+            key = (u.get("activity"), u.get("item"), u.get("block"))
+            vpravy_indices.setdefault(key, []).append(i)
+
+    def format_act_text(act_id: str | None, item_idx: int | None, block_key: int | str, fallback: str) -> str:
+        indices = vpravy_indices.get((act_id, item_idx, block_key))
+        val = "".join(stressed_units[i]["text"] for i in indices) if indices else fallback
+        val = re.sub(r"\{\{uk:([^{}\u0300\u0301]+)\}\}", r"\1", val)
+        val = GLOSS_ID_RE.sub(replace_gloss_fn, val)
+        return val
+
+    stressed_activities = copy.deepcopy(draft_activities)
+    for act in stressed_activities:
+        if not isinstance(act, dict):
+            continue
+        act_id = act.get("id")
+        if "instruction" in act:
+            act["instruction"] = format_act_text(act_id, None, "instruction", act["instruction"])
+        for item_idx, item in enumerate(act.get("items", [])):
+            if not isinstance(item, dict):
+                continue
+            for prompt_key in ("prompt", "sentence", "question", "cue"):
+                if prompt_key in item:
+                    item[prompt_key] = format_act_text(act_id, item_idx, "prompt", item[prompt_key])
+            for ans_key in ("answer", "correct", "target"):
+                if ans_key in item:
+                    item[ans_key] = format_act_text(act_id, item_idx, "answer", item[ans_key])
+            for err_key in ("error", "incorrect"):
+                if err_key in item:
+                    item[err_key] = format_act_text(act_id, item_idx, "error", item[err_key])
+            for opt_key in ("options", "choices", "distractors"):
+                if opt_key in item and isinstance(item[opt_key], list):
+                    new_opts = []
+                    for opt_idx, opt in enumerate(item[opt_key]):
+                        if isinstance(opt, dict) and "text" in opt:
+                            opt_copy = dict(opt)
+                            opt_copy["text"] = format_act_text(act_id, item_idx, f"opt_{opt_idx}", opt["text"])
+                            new_opts.append(opt_copy)
+                        elif isinstance(opt, str):
+                            new_opts.append(format_act_text(act_id, item_idx, f"opt_{opt_idx}", opt))
+                        else:
+                            new_opts.append(opt)
+                    item[opt_key] = new_opts
+            if "pairs" in item and isinstance(item["pairs"], list):
+                for p_idx, pair in enumerate(item["pairs"]):
+                    if isinstance(pair, dict):
+                        for left_key in ("left", "prompt"):
+                            if left_key in pair:
+                                pair[left_key] = format_act_text(act_id, item_idx, f"pair_l_{p_idx}", pair[left_key])
+                        for right_key in ("right", "answer"):
+                            if right_key in pair:
+                                pair[right_key] = format_act_text(act_id, item_idx, f"pair_r_{p_idx}", pair[right_key])
+    return stressed_activities
 
 
 def check_9_stress_and_render(
@@ -847,6 +1098,8 @@ def check_9_stress_and_render(
     repo_root: Path = REPO_ROOT,
     output_dir: Path | None = None,
     site_dir: Path | None = None,
+    plans_dir: Path | None = None,
+    evidence_dir: Path | None = None,
 ) -> CheckResult:
     """Check 9: Apply stress, build Slovnyk and Resursy, verify locks, render MDX."""
     try:
@@ -857,8 +1110,13 @@ def check_9_stress_and_render(
     tokens = getattr(stream, "tokens", None) or (stream.get("tokens") if isinstance(stream, dict) else [])
     for tok in tokens:
         if isinstance(tok, dict):
+            klass = str(tok.get("class", ""))
             sel = tok.get("selected")
-            if isinstance(sel, dict) and sel.get("stressed") == "pending":
+            if klass == "pending_stress" or (
+                isinstance(sel, dict)
+                and (sel.get("stressed") is None or sel.get("stressed") == "pending")
+                and not klass.startswith("skipped")
+            ):
                 return CheckResult(
                     check=9,
                     passed=False,
@@ -872,10 +1130,29 @@ def check_9_stress_and_render(
         if isinstance(entry, dict) and entry.get("n") == lesson_n:
             lesson_entry = entry
             break
+    if not lesson_entry:
+        return CheckResult(check=9, passed=False, reason=f"lesson {lesson_n} not found in plan", layer="plan")
 
     vocab_items = build_slovnyk_tab(lesson_entry, words_store, stream)
     external_resources = build_resursy_tab(lesson_entry, pack)
 
+    # Check on-disk lesson lock
+    lock_ok, lock_diff = lesson_lock.check_lesson_lock(
+        level,
+        slug,
+        evidence_dir=evidence_dir,
+        plans_dir=plans_dir,
+        repo_root=repo_root,
+    )
+    if not lock_ok:
+        return CheckResult(
+            check=9,
+            passed=False,
+            reason=f"lessons.lock.yaml check failed: {lock_diff}",
+            layer="pack",
+        )
+
+    # Compute lesson lock
     try:
         lock_doc = lesson_lock.compute_lesson_lock(
             level,
@@ -884,55 +1161,118 @@ def check_9_stress_and_render(
             pack_dict=pack,
             words_dict=words_store,
             repo_root=repo_root,
+            evidence_dir=evidence_dir,
+            plans_dir=plans_dir,
         )
         lessons_lock_sha256 = hashlib.sha256(lock.yaml_bytes(lock_doc)).hexdigest()
-        lesson_entry_sha256 = ""
+        lesson_entry_sha256 = None
         for l_item in lock_doc.get("lessons", []):
             if l_item.get("n") == lesson_n:
-                lesson_entry_sha256 = l_item.get("entry_sha256", "")
+                lesson_entry_sha256 = l_item.get("entry_sha256")
                 break
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"lesson lock calculation failed: {exc}", layer="pack")
 
+    if not lesson_entry_sha256:
+        return CheckResult(
+            check=9, passed=False, reason=f"lesson {lesson_n} lock entry not found in computed lock", layer="plan"
+        )
+
+    draft_lock_entry = draft.get("inputs", {}).get("lesson_lock_entry_sha256")
+    if not draft_lock_entry:
+        return CheckResult(
+            check=9, passed=False, reason="draft inputs missing lesson_lock_entry_sha256", layer="writer"
+        )
+    if draft_lock_entry != lesson_entry_sha256:
+        return CheckResult(
+            check=9,
+            passed=False,
+            reason=f"draft lesson_lock_entry_sha256 {draft_lock_entry!r} != computed {lesson_entry_sha256!r}",
+            layer="writer",
+        )
+
+    # Immersion band computation
+    arc_ref = plan.get("arc_ref")
+    if not isinstance(arc_ref, dict) or "position" not in arc_ref:
+        return CheckResult(check=9, passed=False, reason="plan missing arc_ref.position", layer="plan")
+    arc_position = int(arc_ref["position"])
+
+    p_root = plans_dir or (repo_root / f"curriculum/l2-uk-en/lesson-plans/{level}")
+    e_root = evidence_dir or (repo_root / f"curriculum/l2-uk-en/evidence/{level}")
+    try:
+        p_state = planned_state(
+            level,
+            arc_position,
+            lesson_n,
+            allow_missing_prior=True,
+            plans_dir=p_root,
+            evidence_dir=e_root,
+        )
+        cumulative_core_count = p_state.cumulative_core_count
+    except Exception as exc:
+        return CheckResult(check=9, passed=False, reason=f"planned state computation failed: {exc}", layer="plan")
+
     try:
         band = compute_lesson_immersion_band(
-            track="standard",
-            level=level,
-            module_slug=slug,
+            track=level,
+            arc_position=arc_position,
             lesson_n=lesson_n,
-            cumulative_core_count=10,
-            repo_root=repo_root,
+            cumulative_core_count=cumulative_core_count,
         )
         immersion_band_key = band.band_key
-    except Exception:
-        immersion_band_key = f"{level}_start"
+    except Exception as exc:
+        return CheckResult(check=9, passed=False, reason=f"immersion band computation failed: {exc}", layer="plan")
 
-    lesson_job = str(lesson_entry.get("job") or "")
+    plan_lessons = plan.get("lessons", [])
+    offset = next(
+        (i for i, l in enumerate(plan_lessons) if isinstance(l, dict) and l.get("n") == lesson_n), lesson_n - 1
+    )
+    base = f"/{level}/{slug}/"
+    previous = base if offset == 0 else f"{base}{lesson_n - 1}/"
+    following = f"{base}{lesson_n + 1}/" if offset + 1 < len(plan_lessons) else base
 
     meta_data = {
-        "title": str(lesson_entry.get("title") or "Lesson"),
+        "title": str(lesson_entry.get("title", "")),
         "subtitle": str(lesson_entry.get("rationale") or ""),
         "evidence": {
             "lessons_lock_sha256": lessons_lock_sha256,
             "lesson_entry_sha256": lesson_entry_sha256,
         },
         "immersion": immersion_band_key,
-        "job": lesson_job,
+        "job": str(lesson_entry.get("job") or ""),
+        "prev": previous,
+        "next": following,
+        "lesson": lesson_n,
+        "module_slug": slug,
     }
 
     urok_md = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+
+    words_by_id = {w["id"]: w for w in words_store.get("words", []) if isinstance(w, dict) and "id" in w}
+
+    def replace_gloss(match: re.Match[str]) -> str:
+        wid = match.group(1)
+        w_rec = words_by_id.get(wid)
+        if w_rec:
+            lem = w_rec.get("lemma", "")
+            gl = w_rec.get("sense_gloss") or w_rec.get("gloss_en") or ""
+            return f"{lem} ({gl})" if gl else lem
+        return wid
+
+    stressed_activities = apply_stress_to_activities(draft.get("activities", []), stressed_doc, replace_gloss)
 
     try:
         mdx_content = generate_mdx(
             md_content=urok_md,
             module_num=lesson_n,
-            yaml_activities=draft.get("activities", []),
+            yaml_activities=stressed_activities,
             meta_data=meta_data,
             vocab_items=vocab_items,
             external_resources=external_resources,
             level=level,
             pipeline_version="v7",
             build_status="draft",
+            fresh=True,
         )
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"MDX rendering failed: {exc}", layer="writer")
@@ -942,8 +1282,8 @@ def check_9_stress_and_render(
 
     if site_dir is not None:
         site_dir.mkdir(parents=True, exist_ok=True)
-        mdx_file = site_dir / f"lesson-{lesson_n}.mdx"
-        mdx_file.write_text(mdx_content, encoding="utf-8")
+        mdx_file = site_dir / f"{lesson_n}.mdx"
+        lock.atomic_write(mdx_file, mdx_content.encode("utf-8"))
 
     return CheckResult(
         check=9,
@@ -990,11 +1330,16 @@ def assemble_lesson(
     output_dir: Path | None = None,
     site_dir: Path | None = None,
     astro_build: bool = False,
+    plans_dir: Path | None = None,
+    evidence_dir: Path | None = None,
 ) -> dict[str, Any]:
-    """End-to-end assembly pipeline for one lesson (checks 5, 9, 11)."""
+    """End-to-end assembly pipeline for one lesson (checks 5, 9, 11).
+
+    Refuses site write on failures or open tokens, writing only state files.
+    """
     root = repo_root or REPO_ROOT
 
-    paths = lesson_lock.resolve_paths(level, slug, repo_root=root)
+    paths = lesson_lock.resolve_paths(level, slug, evidence_dir=evidence_dir, plans_dir=plans_dir, repo_root=root)
     state_dir = output_dir or (paths["evidence_dir"] / "_state" / slug)
     target_site_dir = site_dir or (root / "site" / "src" / "content" / "docs" / level / slug)
 
@@ -1018,11 +1363,44 @@ def assemble_lesson(
     expanded_doc = c5.artifacts["expanded_doc"]
 
     # Resolver resolution
-    allowlist = Allowlist.load(root / f"curriculum/l2-uk-en/evidence/{level}")
+    allowlist_dir = evidence_dir or (root / f"curriculum/l2-uk-en/evidence/{level}")
+    allowlist = Allowlist.load(allowlist_dir)
     sources = Sources()
     stream = resolve(ExpandedDocument.from_data(expanded_doc), allowlist, sources)
 
-    # Check 9: Stress and render
+    # Major 4: Check if stream has any failures or open tokens
+    stream_failures = list(getattr(stream, "failures", []) or [])
+    tokens = getattr(stream, "tokens", None) or (stream.get("tokens") if isinstance(stream, dict) else [])
+    blocking_tokens: list[dict[str, Any]] = []
+    for tok in tokens:
+        if isinstance(tok, dict):
+            klass = str(tok.get("class", ""))
+            if (
+                klass in resolver_codes.FAILURE_CLASSES
+                or klass in ("stress_open", "stress_certain_identity_open")
+                or klass in resolver_codes.OPEN_CLASSES
+                or klass == "pending_stress"
+                or (
+                    tok.get("selected") is None
+                    and not klass.startswith("skipped")
+                    and klass != resolver_codes.LETTER_OR_SYLLABLE
+                )
+            ):
+                blocking_tokens.append(tok)
+
+    if stream_failures or blocking_tokens:
+        # Refuse site write: write only state files and return report naming blocking tokens
+        stressed_doc = apply_stress(expanded_doc, stream)
+        write_stressed_document(stressed_doc, state_dir, lesson_n)
+        return {
+            "ok": False,
+            "check_5": c5.to_dict(),
+            "blocking_tokens": [str(t.get("token", "")) for t in blocking_tokens],
+            "stream_failures": [str(f) for f in stream_failures],
+            "message": f"stream has {len(blocking_tokens)} blocking token(s) and {len(stream_failures)} failure(s); refusing site write",
+        }
+
+    # Check 9: Stress and render (clean stream only writes site)
     c9 = check_9_stress_and_render(
         expanded_doc,
         draft,
@@ -1036,6 +1414,8 @@ def assemble_lesson(
         repo_root=root,
         output_dir=state_dir,
         site_dir=target_site_dir,
+        plans_dir=plans_dir,
+        evidence_dir=evidence_dir,
     )
     if not c9.passed:
         return {"ok": False, "failure": c9.to_dict()}

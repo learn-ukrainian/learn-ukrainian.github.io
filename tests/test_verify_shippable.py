@@ -24,9 +24,7 @@ def test_shippable_when_all_green(tmp_path, monkeypatch):
     md, plan = _mk(tmp_path)
     monkeypatch.setattr(lp, "run_python_qg", lambda m, p, **kw: {"gates": {"passed": True}})
     monkeypatch.setattr(lp, "assemble_mdx", lambda m, o, p: "MDXBODY")
-    monkeypatch.setattr(
-        lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
-    )
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
     monkeypatch.setattr(
         pqg,
         "verify",
@@ -203,9 +201,7 @@ def test_verify_fresh_shippable_when_green(tmp_path, monkeypatch):
     plan_file = plan_dir / "greetings.yaml"
     plan_file.write_text("module: greetings\n", encoding="utf-8")
 
-    monkeypatch.setattr(
-        lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
-    )
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
 
     rep = vs.verify(
         "a1",
@@ -230,9 +226,7 @@ def test_verify_fresh_with_astro_build(tmp_path, monkeypatch):
     plan_file = plan_dir / "greetings.yaml"
     plan_file.write_text("module: greetings\n", encoding="utf-8")
 
-    monkeypatch.setattr(
-        lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []}
-    )
+    monkeypatch.setattr(lp, "run_mdx_render_gate", lambda t: {"passed": True, "message": "ok", "failures": []})
     monkeypatch.setattr(vs, "_astro_build", lambda log_path: True)
 
     rep = vs.verify(
@@ -276,3 +270,35 @@ def test_verify_fresh_fails_when_mdx_render_red(tmp_path, monkeypatch):
     assert rep["shippable"] is False
     steps = {s["step"]: s["passed"] for s in rep["steps"]}
     assert steps["mdx_render"] is False
+
+
+def test_verify_shippable_no_flag_default_paths(monkeypatch):
+    """Pin the no-flag verify_shippable path (uses default legacy paths, fresh=False)."""
+    seen = {}
+
+    def fake_verify(level, slug, *, module_dir=None, plan_path=None, astro_build=False, fresh=False):
+        seen["level"] = level
+        seen["slug"] = slug
+        seen["module_dir"] = module_dir
+        seen["plan_path"] = plan_path
+        seen["astro_build"] = astro_build
+        seen["fresh"] = fresh
+        return {"level": level, "slug": slug, "shippable": True, "steps": []}
+
+    monkeypatch.setattr(vs, "verify", fake_verify)
+    ret = vs.main(["a1", "greetings"])
+    assert ret == 0
+    assert seen["level"] == "a1"
+    assert seen["slug"] == "greetings"
+    assert seen["fresh"] is False
+    assert seen["module_dir"] is None
+    assert seen["plan_path"] is None
+
+
+def test_verify_shippable_fresh_and_lesson_is_ap_error():
+    """--fresh cannot be combined with --lesson (ap.error -> exit code 2)."""
+    import pytest
+
+    with pytest.raises(SystemExit) as exc_info:
+        vs.main(["a1", "greetings", "--fresh", "--lesson"])
+    assert exc_info.value.code == 2
