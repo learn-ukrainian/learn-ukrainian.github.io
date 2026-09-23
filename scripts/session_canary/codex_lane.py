@@ -154,7 +154,6 @@ def cmd_bootstrap(args: argparse.Namespace) -> int:
         repo,
         epic,
         lambda: _gl.select_board_handoff(repo, epic, stream_id, _handoff_candidates(repo, epic)),
-        fallback_name="CODEX-DRIVER-HANDOFF.md",
     )
     board_path = epic_path / "CODEX-COLD-START.md"
     lease_summary = (

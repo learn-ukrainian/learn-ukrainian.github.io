@@ -12,6 +12,8 @@ from collections.abc import Sequence
 from datetime import UTC, datetime
 from pathlib import Path
 
+from scripts.session_canary import handoff_select
+
 DIARY_MARKER = "## 📔 Diary — reverse chrono (newest first)"
 NEXT_DRIVE_MARKER = "## Next Drive"
 WORKING_SET_MARKER = "## Active Working Set"
@@ -35,19 +37,22 @@ def resolve_handoff_path(
     preferred: list[str] | None = None,
     *,
     out_dir: Path | None = None,
-) -> Path:
+) -> Path | handoff_select.NoHandoff:
     """Same selection as mint: explicit path, else the recorded mint file, else freshness.
 
     Own-lane (``preferred``) ties an equal freshness date. It does not outrank
     a newer handoff. A recorded mint path is returned without ranking again.
+    A recorded null is :data:`handoff_select.NO_HANDOFF` and is not re-selected.
+    Absent ``mint_meta.json`` still ranks by freshness.
     """
     if override:
         p = Path(override)
         return p if p.is_absolute() else (repo / p)
-    from scripts.session_canary import handoff_select
 
     recorded = handoff_select.recorded_mint_handoff(repo, epic, out_dir)
-    if recorded is not None:
+    if isinstance(recorded, handoff_select.NoHandoff):
+        return recorded
+    if isinstance(recorded, Path):
         return recorded
     ranked = handoff_select.lane_handoff_candidates(
         repo,
