@@ -16,6 +16,7 @@ import sys
 import threading
 from collections.abc import Collection, Generator
 from pathlib import Path
+from urllib.parse import parse_qs, unquote, urlsplit
 
 import pytest
 
@@ -25,6 +26,62 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 from tests import sparse_trees
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _bridge_db_path() -> Path:
+    """Return the bridge database selected before tests begin."""
+    from scripts.ai_agent_bridge import _config
+
+    return Path(_config.DB_PATH).resolve()
+
+
+_REAL_BRIDGE_DB_PATH = _bridge_db_path()
+
+
+def _sqlite_database_path(database: object) -> tuple[Path | None, bool]:
+    """Return a SQLite path and whether a URI explicitly opens it read-only."""
+    raw_path = os.fspath(database) if isinstance(database, (str, os.PathLike)) else None
+    if raw_path is None:
+        return None, False
+    if raw_path.startswith("file:"):
+        parsed = urlsplit(raw_path)
+        query = parse_qs(parsed.query)
+        return Path(unquote(parsed.path)).resolve(), query.get("mode") == ["ro"]
+    return Path(raw_path).resolve(), False
+
+
+@pytest.fixture
+def isolated_bridge_db(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
+    """Point every already-imported bridge DB binding at a per-test database."""
+    from scripts.ai_agent_bridge import _config
+
+    isolated_path = tmp_path / "messages.db"
+    monkeypatch.setattr(_config, "DB_PATH", isolated_path)
+    for name, module in tuple(sys.modules.items()):
+        if not (name.startswith("scripts.ai_agent_bridge") or name.startswith("ai_agent_bridge")):
+            continue
+        captured_path = getattr(module, "DB_PATH", None)
+        if isinstance(captured_path, (str, os.PathLike)) and Path(captured_path).resolve() == _REAL_BRIDGE_DB_PATH:
+            monkeypatch.setattr(module, "DB_PATH", isolated_path)
+    return isolated_path
+
+
+@pytest.fixture(autouse=True)
+def _guard_real_bridge_db_writes(monkeypatch: pytest.MonkeyPatch, request: pytest.FixtureRequest):
+    """Fail the test that tries to open the live bridge DB with write access."""
+    original_connect = sqlite3.connect
+
+    def guarded_connect(database, *args, **kwargs):
+        path, read_only = _sqlite_database_path(database)
+        if path == _REAL_BRIDGE_DB_PATH and not read_only:
+            pytest.fail(
+                f"{request.node.nodeid} attempted a writable connection to the real bridge DB "
+                f"at {_REAL_BRIDGE_DB_PATH}; isolate it with AB_DB_PATH or a DB_PATH fixture",
+                pytrace=False,
+            )
+        return original_connect(database, *args, **kwargs)
+
+    monkeypatch.setattr(sqlite3, "connect", guarded_connect)
 
 
 def _pytest_tmp_size(root: Path, stop_after_bytes: int | None = None) -> tuple[int, bool]:

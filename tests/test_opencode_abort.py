@@ -99,7 +99,9 @@ def test_run_opencode_attaches_standing_notice_when_agent_chat():
             assert STANDING_TOOLLESS_NOTICE in argv[-1]
 
 
-def test_opencode_permission_abort_fails_ask_loud_and_writes_sidecar(tmp_path, monkeypatch):
+def test_opencode_permission_abort_fails_ask_loud_and_writes_sidecar(
+    tmp_path, monkeypatch, isolated_bridge_db
+):
     monkeypatch.setenv("HOME", str(tmp_path))
     monkeypatch.setenv("OPENCODE_HOME", str(tmp_path / ".local" / "share"))
 
@@ -150,7 +152,7 @@ def test_glm_adapter_parse_response_incomplete_turn():
     assert "opencode turn aborted (permission_rejected" in res.stderr_excerpt
 
 
-def test_opencode_abort_mutation_check(tmp_path, monkeypatch):
+def test_opencode_abort_mutation_check(tmp_path, monkeypatch, isolated_bridge_db):
     """Mutation check: verify that without turn status classification, permission-aborts ship as replies."""
     monkeypatch.setenv("HOME", str(tmp_path))
 
