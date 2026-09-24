@@ -279,7 +279,8 @@ dependency/critical-path → utilization. Later items never override earlier one
 2. **Authorized idle is not a utilization failure.** A settle-hold must name one code:
    `dependency_blocked | authoring_wip_cap | review_wip_cap | ci_capacity |
    worktree_wip_cap | disk_capacity | integration_wip_cap | human_decision |
-   no_ready_work`. Silence is not a disposition.
+   no_ready_work`. Silence is not a disposition. A free lane with nothing compatible
+   is `no_ready_work`; `dependency_blocked` names a real blocker, never a mismatch.
 3. **Pipeline with a depth limit.** While CF/CI runs on unit N, author N+1 only up to
    the WIP/resource cap. Unit N **regains priority** the moment review feedback returns.
    Never serialize implement → review → delta with idle gaps.
@@ -434,6 +435,11 @@ run `.venv/bin/python -m scripts.fleet.post_task_reap --task-id <id>` (dry-run b
 pass `--apply` to reap the bound dispatch worktree). `post_task_reap` delegates removal to
 the P0 reaper; do not substitute a direct Git removal path.
 
+**Wait-loop hygiene (2026-09-24).** Before arming a wait on a tool's output, grep the
+tool's source or one real output for the exact string — a loop on text the tool never
+prints (`would ADMIT` vs `would admit now`) waits forever. Never `pkill -f` a pattern
+that also appears in your own command line; it kills your shell.
+
 ### 5a. Required live-driver inbox drain — after settle
 
 Once the settle-loop reaches its decision point, drain again before choosing the next
@@ -479,6 +485,12 @@ This command line is unchanged, but the transport underneath it is not ACP
 route to a headless native CLI with tools (`delegate.py dispatch --agent <lane>
 --worktree`, `gh`/pytest available), never the tool-less `--deny-all --no-fs
 --no-terminal` chat transport. ACP stays for ordinary, non-review `ask-*`.
+
+**Read-only review asks fail silently on brief wording (#8703).** The write-shape check
+reads a wrapped brief line that starts with an imperative verb (`fix report…`, `remove a
+worktree…`) as a write directive and refuses the ask; one review was lost for ~25 min.
+Keep every line of a review brief from starting with a verb. After launching any
+`ask-*`, confirm `batch_state/tasks/<id>.json` exists before moving on.
 
 Read the review CONTENT (not just pass/fail), apply deltas,
 re-probe gate-driving data yourself. If the head moves after APPROVE, the CF is
@@ -548,6 +560,24 @@ exact-head CF review if the head moved, then re-queue — same hour, never left
 overnight. Do not stand up a bot or recovery workflow for this; it is driver work
 like any other red CI.
 
+**Before enqueue: cover the whole repo (#8692, fix #8707).** If the PR's own CI ran only
+the selected tier and the PR touches `tests/`, lint config, or anything repo-wide, add
+the `full-ci` label first so the queue run covers every shard. #8692 merged on shard 1
+alone; a repo-wide lint test in shard 3 then failed every full-tier run for ~2.5 h and
+dequeued unrelated PRs (#8691 ×3, #8693 ×2).
+
+**Diagnose CI failures from the junit artifact, never the log view (#8701, #8705).**
+`gh run view --log-failed` and the live log truncate or stall — that read as a "silent
+shard death", cost a closed PR and 3 review rounds, and was wrong. Use
+`gh run download <run> --pattern 'pytest-junit-*'` and parse `<failure>`. Before naming
+a new failure mode, confirm it in the artifact; a FAILED test in it is a test failure.
+
+**Main red: fix main first.** Find the breaking commit (`git log` of the failing test's
+inputs) and fix main before re-enqueueing anything. Refresh blocked PRs with
+`gh pr update-branch` — never close/reopen, which reuses stale merge refs and fails
+again. Verify parent1 == the approved head and the PR patch-id is unchanged, then get
+one batched exact-head re-CF per reviewer family.
+
 ### 7-rollout. Local / production proof (when the epic requires it)
 
 Do **not** make every epic driver a standing release owner. Gate rollout by charter:
@@ -608,6 +638,9 @@ file handoff current — it stays authoritative through every plane mode (below)
 On a Hramatka epic (#4542) drive, before declaring the handoff verified-clean run
 `.venv/bin/python -m scripts.fleet.hramatka_hygiene_check` — only exit 0 is a pass;
 exit 2 (`unknown`, GitHub unreachable) is never a clean handoff either (`docs/runbooks/hramatka-driver-queue.md`).
+
+**Evidence hygiene.** Every timestamp in a handoff comes from `date -u`, never from
+memory or a clock guess (a handoff once said "18:0xZ" at 17:55Z).
 
 **Skill source of truth is git, not deploy trees.** Edit only
 `agents_extensions/shared/skills/drive-epic/SKILL.md` (this file). Never implement or
