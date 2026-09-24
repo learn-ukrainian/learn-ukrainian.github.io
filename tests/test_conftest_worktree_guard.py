@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import time
 from collections.abc import Callable
 from pathlib import Path
 
@@ -29,6 +30,7 @@ def guarded_root(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> Path:
     monkeypatch.setattr(worktree_guard, "_WORKTREE_ENTRIES_AT_START", set())
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ENTRIES", set())
     monkeypatch.setattr(worktree_guard, "_CREATED_WORKTREE_ATTRIBUTION", {})
+    monkeypatch.setattr(worktree_guard, "_POPEN_WORKTREE_CANDIDATES", {})
     monkeypatch.setattr(worktree_guard, "_GUARD_CLASSIFY_FAILURES", [])
     return Path(real)
 
@@ -132,14 +134,15 @@ def test_popen_git_worktree_add_with_config_and_cd_is_recorded_after_success(
         env=_git_env(dest),
     )
     try:
-        # __init__ must not record. The process can already have exited.
-        assert key not in worktree_guard._CREATED_WORKTREE_ENTRIES
+        assert key in worktree_guard._POPEN_WORKTREE_CANDIDATES
         assert proc.wait(timeout=30) == 0
     finally:
         if proc.poll() is None:
             proc.wait(timeout=30)
     assert dest.is_dir()
-    assert key in worktree_guard._CREATED_WORKTREE_ENTRIES
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert key in message
 
 
 @pytest.mark.parametrize("invoke", ["run", "check_call", "check_output"])
@@ -155,10 +158,39 @@ def test_popen_helpers_record_git_worktree_add(tmp_path: Path, guarded_root: Pat
     }
     runners[invoke](argv, **kwargs)
     assert dest.is_dir()
-    assert worktree_guard._worktree_entry_key(dest) in worktree_guard._CREATED_WORKTREE_ENTRIES
+    key = worktree_guard._worktree_entry_key(dest)
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert key in message
 
 
-def test_failed_check_call_does_not_record_even_if_the_directory_appeared(
+def test_popen_never_waited_is_reported_when_the_destination_appears(
+    tmp_path: Path, guarded_root: Path
+) -> None:
+    """A short-lived ``git worktree add`` is reported without wait or poll."""
+    dest = _scaffold(guarded_root, "unwaited")
+    git = _fake_git(tmp_path / "bin", status=0)
+    key = worktree_guard._worktree_entry_key(dest)
+    proc = subprocess.Popen(
+        [str(git), "worktree", "add", str(dest)],
+        cwd=tmp_path,
+        env=_git_env(dest),
+    )
+    try:
+        deadline = time.monotonic() + 30
+        while not dest.is_dir():
+            if time.monotonic() > deadline:
+                raise AssertionError(f"{dest} was not created")
+            time.sleep(0.01)
+        assert proc.returncode is None
+        message = worktree_guard._worktree_guard_teardown_message()
+        assert message is not None
+        assert key in message
+    finally:
+        os.waitpid(proc.pid, 0)
+
+
+def test_failed_git_worktree_add_is_reported_when_the_directory_remains(
     tmp_path: Path, guarded_root: Path
 ) -> None:
     dest = _scaffold(guarded_root, "failed-add")
@@ -171,7 +203,10 @@ def test_failed_check_call_does_not_record_even_if_the_directory_appeared(
             timeout=30,
         )
     assert dest.is_dir()
-    assert worktree_guard._worktree_entry_key(dest) not in worktree_guard._CREATED_WORKTREE_ENTRIES
+    key = worktree_guard._worktree_entry_key(dest)
+    message = worktree_guard._worktree_guard_teardown_message()
+    assert message is not None
+    assert key in message
 
 
 def test_symlink_records_the_link_path_not_the_target(tmp_path: Path, guarded_root: Path) -> None:
@@ -198,6 +233,29 @@ def test_makedirs_records_a_new_entry_and_skips_exist_ok(guarded_root: Path) -> 
     os.makedirs(existing, exist_ok=True)
     os.makedirs(created, exist_ok=True)
     assert not worktree_guard._CREATED_WORKTREE_ENTRIES
+
+
+def test_acp_redirect_is_only_the_primary_checkout_itself() -> None:
+    """Primary cwd is redirected. A dispatch worktree uses the real helper.
+
+    ``resolve_main_root`` maps that worktree to the primary, which used to
+    redirect both branches.
+    """
+    from scripts.ai_agent_bridge import _acp_execution
+    from scripts.common.repo_root import main_checkout_root
+    from scripts.guardrails.worktree_containment import resolve_main_root
+
+    primary = main_checkout_root(worktree_guard._REPO_ROOT).resolve()
+    dispatch = primary / ".worktrees" / "dispatch" / "cursor" / "acp-branch-8523"
+    assert resolve_main_root(dispatch) == primary
+    assert dispatch.resolve() != primary
+
+    with _acp_execution.acp_execution_cwd(primary, task_id="guard-8523-primary") as workspace:
+        assert Path(workspace).resolve() != primary
+        assert Path(workspace).resolve().is_relative_to(primary / ".worktrees") is False
+
+    with _acp_execution.acp_execution_cwd(dispatch, task_id="guard-8523-dispatch") as workspace:
+        assert Path(workspace).resolve() == dispatch.resolve()
 
 
 def test_real_checkout_acp_execution_does_not_mkdir_dispatch() -> None:

@@ -1303,6 +1303,11 @@ _WORKTREE_ENTRIES_AT_START: set[str] = set()
 _CREATED_WORKTREE_ENTRIES: set[str] = set()
 # path -> "PYTEST_CURRENT_TEST=... caller=file:line" for each recorded creation.
 _CREATED_WORKTREE_ATTRIBUTION: dict[str, str] = {}
+# git worktree add destinations seen at Popen construction:
+# path -> (existed immediately before, attribution). Teardown reports a
+# candidate that was absent then and present now, whether or not the
+# process was waited or polled.
+_POPEN_WORKTREE_CANDIDATES: dict[str, tuple[bool, str]] = {}
 # Bookkeeping bugs are reported once at teardown. They must not raise out of
 # os.mkdir / Popen and change the call the test actually made.
 _GUARD_CLASSIFY_FAILURES: list[str] = []
@@ -1635,40 +1640,14 @@ def _guarded_popen_init(self, args, *pos, **kwargs):
         _record_classify_failure(exc)
         dest = None
     _ORIGINAL_POPEN_INIT(self, args, *pos, **kwargs)
-    # Recorded from wait/poll only after the process exits 0. __init__
-    # succeeding means the process started, not that git created the worktree.
-    self._wt_guard_dest = dest
-    self._wt_guard_existed = existed
-    self._wt_guard_noted = False
-
-
-def _note_popen_success(self, returncode: int | None) -> None:
-    if getattr(self, "_wt_guard_noted", True):
-        return
-    self._wt_guard_noted = True
-    if returncode != 0:
-        return
-    dest = getattr(self, "_wt_guard_dest", None)
-    if not dest:
+    # The process may exit without wait or poll. Remember the candidate now;
+    # teardown reports it if it was absent before and is present then.
+    if dest is None:
         return
     try:
-        _remember_if_created(dest, getattr(self, "_wt_guard_existed", True))
+        _POPEN_WORKTREE_CANDIDATES.setdefault(dest, (existed, _creation_attribution()))
     except Exception as exc:
-        # A guard bug must not replace the original call.
         _record_classify_failure(exc)
-
-
-def _guarded_popen_wait(self, timeout=None):
-    returncode = _ORIGINAL_POPEN_WAIT(self, timeout)
-    _note_popen_success(self, returncode)
-    return returncode
-
-
-def _guarded_popen_poll(self):
-    returncode = _ORIGINAL_POPEN_POLL(self)
-    if returncode is not None:
-        _note_popen_success(self, returncode)
-    return returncode
 
 
 def _snapshot_worktree_entries() -> set[str]:
@@ -1720,8 +1699,6 @@ _ORIGINAL_OS_MAKEDIRS = os.makedirs
 _ORIGINAL_OS_SYMLINK = os.symlink
 _ORIGINAL_SUBPROCESS_RUN = subprocess.run
 _ORIGINAL_POPEN_INIT = subprocess.Popen.__init__
-_ORIGINAL_POPEN_WAIT = subprocess.Popen.wait
-_ORIGINAL_POPEN_POLL = subprocess.Popen.poll
 
 
 def _worktree_guard_teardown_message() -> str | None:
@@ -1731,9 +1708,16 @@ def _worktree_guard_teardown_message() -> str | None:
         detail = "; ".join(_GUARD_CLASSIFY_FAILURES)
         lines.append(f"guard could not classify: {detail}")
     listed = _snapshot_worktree_entries()
+    suspected = set(_CREATED_WORKTREE_ENTRIES)
+    for path, (existed_before, attribution) in _POPEN_WORKTREE_CANDIDATES.items():
+        if existed_before or path in _WORKTREE_ENTRIES_AT_START:
+            continue
+        if os.path.lexists(path) or path in listed:
+            suspected.add(path)
+            _CREATED_WORKTREE_ATTRIBUTION.setdefault(path, attribution)
     leftovers = sorted(
         path
-        for path in _CREATED_WORKTREE_ENTRIES
+        for path in suspected
         if path not in _WORKTREE_ENTRIES_AT_START and (os.path.lexists(path) or path in listed)
     )
     if leftovers:
@@ -1766,18 +1750,22 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     runs, so a before/after listing of that directory false-positives on a busy
     host. This guard records only creations that pass through this process:
     ``os.mkdir`` / ``os.makedirs`` / ``os.symlink`` of a worktree root, and a
-    successful ``git worktree add``. ``subprocess.run``, ``call``,
-    ``check_call``, and ``check_output`` all construct ``subprocess.Popen``,
-    so the git hook sits on ``Popen`` rather than on ``run`` alone. Directories
-    nested inside an existing checkout (this worker included) are ignored.
-    Paths already present when the worker started are snapshotted and ignored
-    even if a test touches them.
+    ``git worktree add`` whose destination appears. ``subprocess.run``,
+    ``call``, ``check_call``, and ``check_output`` all construct
+    ``subprocess.Popen``, so the git hook sits on ``Popen`` rather than on
+    ``run`` alone. Directories nested inside an existing checkout (this
+    worker included) are ignored. Paths already present when the worker
+    started are snapshotted and ignored even if a test touches them.
 
-    A path is recorded only when it did not exist immediately before the call
-    and does exist after the call succeeds. Each record stores
-    ``PYTEST_CURRENT_TEST`` and the first calling frame outside this file
-    (``file:line`` under the repo). Bookkeeping errors are not raised from the
-    hooked call; teardown reports them as "guard could not classify".
+    mkdir and symlink record a path only when it did not exist immediately
+    before the call and does exist after the call returns. ``Popen`` of
+    ``git worktree add`` records the destination as a candidate at
+    construction, including whether it existed beforehand. Teardown reports
+    a candidate that was absent then and is present now, whether or not the
+    process was waited or polled. Each record stores ``PYTEST_CURRENT_TEST``
+    and the first calling frame outside this file (``file:line`` under the
+    repo). Bookkeeping errors are not raised from the hooked call; teardown
+    reports them as "guard could not classify".
 
     Set ``LU_WORKTREE_GUARD=0`` to skip the hooks for an overhead measurement.
     Under xdist each worker is its own process, so the hook and the teardown
@@ -1789,6 +1777,7 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
     _WORKTREE_ENTRIES_AT_START.clear()
     _CREATED_WORKTREE_ENTRIES.clear()
     _CREATED_WORKTREE_ATTRIBUTION.clear()
+    _POPEN_WORKTREE_CANDIDATES.clear()
     _GUARD_CLASSIFY_FAILURES.clear()
     _WORKTREE_ENTRIES_AT_START.update(_snapshot_worktree_entries())
     with pytest.MonkeyPatch.context() as patcher:
@@ -1796,8 +1785,6 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
         patcher.setattr(os, "makedirs", _guarded_makedirs)
         patcher.setattr(os, "symlink", _guarded_symlink)
         patcher.setattr(subprocess.Popen, "__init__", _guarded_popen_init)
-        patcher.setattr(subprocess.Popen, "wait", _guarded_popen_wait)
-        patcher.setattr(subprocess.Popen, "poll", _guarded_popen_poll)
         yield
     message = _worktree_guard_teardown_message()
     if message:
@@ -1806,31 +1793,31 @@ def _guard_real_worktree_entries() -> Generator[None, None, None]:
 
 @pytest.fixture(autouse=True)
 def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pytest.MonkeyPatch) -> None:
-    """Keep ACP execution off the real checkout's ``.worktrees/dispatch``.
+    """Keep ACP execution off the real primary checkout.
 
-    ``acp_execution_cwd`` on a primary checkout mkdirs
-    ``.worktrees/dispatch/acp`` before ``git worktree add``. Discuss and ask
-    tests invoke that helper on this process's checkout. A dispatch worktree
-    already contains ``.worktrees/dispatch``, so the mkdir is a no-op there;
-    a primary checkout that has no ``.worktrees`` yet (CI) keeps the empty
-    parent after the runtime worktree is removed. Calls aimed at that real
-    checkout yield a tmp directory instead. Calls aimed at any other repo,
-    including a test's own ``git init`` primary, still run the real helper.
+    ``acp_execution_cwd`` on the primary checkout mkdirs
+    ``.worktrees/dispatch/acp`` before ``git worktree add``. That parent
+    stays behind on a CI checkout that had no ``.worktrees`` yet. Redirect
+    only when the resolved cwd is that primary checkout itself.
+
+    ``resolve_main_root`` maps every worktree of this checkout back to the
+    primary, so it must not decide the redirect. A dispatch worktree uses
+    the real helper, which yields that worktree and does not mkdir. Calls
+    aimed at any other repo, including a test's own ``git init`` primary,
+    still run the real helper.
     """
     from scripts.ai_agent_bridge import _acp_execution as acp_mod
 
-    real_checkout = Path(_init_real_worktrees_dir()).parent
+    real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
     original = acp_mod.acp_execution_cwd
 
     @contextlib.contextmanager
     def scoped(repo_root, *, task_id):
         try:
-            from scripts.guardrails.worktree_containment import resolve_main_root
-
-            main = Path(resolve_main_root(repo_root)).resolve()
-        except Exception:
-            main = Path(repo_root).resolve()
-        if main == real_checkout:
+            resolved = Path(repo_root).resolve()
+        except (OSError, RuntimeError, ValueError):
+            resolved = None
+        if resolved == real_checkout:
             yield tmp_path_factory.mktemp("acp-execution")
             return
         with original(repo_root, task_id=task_id) as workspace:
