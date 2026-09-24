@@ -10,7 +10,7 @@ the stale in-flight run for the previous SHA (previously a body edit or label
 could restart CI on an unchanged SHA, and a push queued behind its own stale
 run). The required "CI Gate" uses ``if: always()`` and fails when a required
 dependency was cancelled or skipped unexpectedly, so a skipped Gate cannot
-count as success. ci.yml's no-op label runs add a ``-label-noop`` suffix.
+count as success.
 """
 
 from __future__ import annotations
@@ -30,10 +30,7 @@ _PR_NUMBER_ONLY_GROUP = "${{ github.workflow }}-${{ github.event.pull_request.nu
 _EVENT_SHA_GROUP = "${{ github.workflow }}-${{ github.event_name }}-${{ github.sha }}"
 _WORKFLOW_EXPECTATIONS = {
     ".github/workflows/ci.yml": {
-        # A non-full-ci label is a no-op run in its own group so it never
-        # cancels a real in-flight run (tests/test_ci_pr_triggers.py).
-        "group": _EVENT_PR_NUMBER_GROUP
-        + "${{ (github.event.action == 'labeled' && github.event.label.name != 'full-ci') && '-label-noop' || '' }}",
+        "group": _EVENT_PR_NUMBER_GROUP,
         "cancel-in-progress": "${{ github.event_name == 'pull_request' }}",
     },
     ".github/workflows/content-ci.yml": {

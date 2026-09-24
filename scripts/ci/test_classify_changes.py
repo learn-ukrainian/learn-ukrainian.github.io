@@ -13,6 +13,12 @@ from unittest.mock import patch
 from scripts.ci import classify_changes as scope
 from scripts.ci.frontend_change_scope import load_denominator
 
+_MAIN_SHA = "0" * 39 + "a"
+
+
+def _queue_ref(number: int, parent: str, base: str = "main") -> str:
+    return f"refs/heads/gh-readonly-queue/{base}/pr-{number}-{parent}"
+
 
 def _tree(*paths: str) -> frozenset[str]:
     return frozenset(paths)
@@ -256,20 +262,11 @@ class ClassifierTests(unittest.TestCase):
         )
 
     def test_merge_group_compare_failure_fails_closed(self):
-        env = {
-            "PYTEST_SHARD_COUNT": "4",
-            "EVENT_NAME": "merge_group",
-            "BASE": "base",
-            "HEAD": "head",
-            "REPO": "owner/repo",
-        }
-        with tempfile.TemporaryDirectory() as directory:
-            output = Path(directory) / "output"
-            env["GITHUB_OUTPUT"] = str(output)
-            with patch.dict(os.environ, env, clear=True), \
-                 patch.object(scope, "compare_paths", side_effect=OSError()), \
-                 contextlib.redirect_stdout(io.StringIO()) as stdout:
-                scope.main()
+        # Labels resolve cleanly, so the compare API is really reached.
+        stdout, compare, _ = self._run_main_merge_group(
+            _queue_ref(7, _MAIN_SHA), api_labels={7: []}, compare_error=OSError(),
+        )
+        compare.assert_called_once()
         self.assertIn("files=0", stdout.getvalue())
         self.assertIn("pytest_mode=full", stdout.getvalue())
         self.assertIn("docs_only=false", stdout.getvalue())
@@ -364,6 +361,15 @@ class ClassifierTests(unittest.TestCase):
                 self.assert_full(self.classify(["docs/guide.md"], event=event), frontend="true")
         self.assert_full(self.classify(["docs/guide.md"], labels=["full-ci"]), frontend="true")
         self.assert_docs(self.classify(["docs/guide.md"], labels=["unrelated"]))
+        # GitHub label names are case-insensitive (#8505).
+        for label in ("Full-CI", "FULL-CI"):
+            with self.subTest(label=label):
+                self.assert_full(self.classify(["docs/guide.md"], labels=[label]), frontend="true")
+                self.assert_full(
+                    self.classify(["docs/guide.md"], event="merge_group", labels=[label]),
+                    frontend="true",
+                )
+        self.assert_docs(self.classify(["docs/guide.md"], labels=["full-ci-later"]))
         # #8437: a docs merge stays on the docs lane.
         self.assert_docs(self.classify(["docs/guide.md"], event="merge_group"))
 
@@ -468,11 +474,9 @@ class ClassifierTests(unittest.TestCase):
                 scope.main()
             return stdout.getvalue(), compare, labels_api
 
-    def test_pull_request_stale_payload_labels_refresh_from_api(self):
-        # #8505: the full-ci label workflow reruns the latest ci.yml run, and a
-        # rerun reuses the ORIGINAL event payload — whose labels predate the
-        # label. The API lookup must see full-ci and force the full tier
-        # without ever calling the compare API.
+    def test_pull_request_reads_current_labels_not_the_payload(self):
+        # #8505: a rerun replays the original payload, so labels always come
+        # from the API. full-ci there forces full without the compare API.
         stdout, compare, labels_api = self._run_main_pull_request(
             {"pull_request": {"labels": [], "number": 7}},
             api_labels=["full-ci"],
@@ -481,37 +485,36 @@ class ClassifierTests(unittest.TestCase):
         compare.assert_not_called()
         self.assertIn("pytest_mode=full", stdout)
         self.assertIn("frontend=true", stdout)
-
-    def test_pull_request_label_lookup_failure_fails_closed(self):
-        # S3 (#8505): a label-lookup error must fail closed to the full tier.
-        stdout, compare, _ = self._run_main_pull_request(
-            {"pull_request": {"labels": [], "number": 7}},
-            api_error=subprocess.CalledProcessError(1, "gh"),
-        )
-        compare.assert_not_called()
-        self.assertIn("files=0", stdout)
-        self.assertIn("pytest_mode=full", stdout)
-        self.assertIn("docs_only=false", stdout)
-
-    def test_pull_request_payload_full_ci_skips_api_lookup(self):
-        # A payload that already carries full-ci needs no API call.
+        # A stale payload full-ci that is no longer on the PR does not count.
         stdout, compare, labels_api = self._run_main_pull_request(
             {"pull_request": {"labels": [{"name": "full-ci"}], "number": 7}},
-        )
-        labels_api.assert_not_called()
-        compare.assert_not_called()
-        self.assertIn("pytest_mode=full", stdout)
-
-    def test_pull_request_api_labels_without_full_ci_keep_docs_lane(self):
-        # Current labels without full-ci keep the classified (docs) tier.
-        stdout, compare, labels_api = self._run_main_pull_request(
-            {"pull_request": {"labels": [], "number": 7}},
             api_labels=["unrelated"],
             paths=["docs/guide.md"],
         )
         labels_api.assert_called_once_with("owner/repo", 7)
         compare.assert_called_once()
         self.assertIn("pytest_mode=docs", stdout)
+
+    def test_pull_request_mixed_case_full_ci_forces_full(self):
+        stdout, compare, _ = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            api_labels=["Full-CI"],
+            paths=["docs/guide.md"],
+        )
+        compare.assert_not_called()
+        self.assertIn("pytest_mode=full", stdout)
+
+    def test_pull_request_label_lookup_failure_fails_closed(self):
+        # S3 (#8505): a label-lookup error must fail closed to the full tier.
+        stdout, compare, _ = self._run_main_pull_request(
+            {"pull_request": {"labels": [], "number": 7}},
+            api_error=subprocess.CalledProcessError(1, "gh"),
+            paths=["docs/guide.md"],
+        )
+        compare.assert_not_called()
+        self.assertIn("files=0", stdout)
+        self.assertIn("pytest_mode=full", stdout)
+        self.assertIn("docs_only=false", stdout)
 
     def test_current_pr_labels_parses_api_output(self):
         with patch.object(scope.subprocess, "check_output", return_value="bug\nfull-ci\n") as command:
@@ -522,6 +525,124 @@ class ClassifierTests(unittest.TestCase):
              patch.object(scope.subprocess, "check_output") as no_call:
             scope.current_pr_labels("owner/repo", 0)
         no_call.assert_not_called()
+
+    def _run_main_merge_group(
+        self, head_ref, *, api_labels, queue_refs=None, paths=None, compare_error=None,
+    ):
+        """Run main() for a merge_group event with every API call mocked."""
+        env = {
+            "PYTEST_SHARD_COUNT": "4",
+            "EVENT_NAME": "merge_group",
+            "BASE": _MAIN_SHA,
+            "HEAD": "f" * 40,
+            "HEAD_REF": head_ref,
+            "REPO": "owner/repo",
+        }
+
+        def labels(repo, number):
+            self.assertEqual(repo, "owner/repo")
+            found = api_labels[number]
+            if isinstance(found, Exception):
+                raise found
+            return found
+
+        compare_kwargs = (
+            {"side_effect": compare_error} if compare_error else {"return_value": paths or []}
+        )
+        with patch.dict(os.environ, env, clear=True), \
+             patch.object(scope, "compare_paths", **compare_kwargs) as compare, \
+             patch.object(scope, "current_pr_labels", side_effect=labels) as labels_api, \
+             patch.object(scope, "queue_refs_by_sha", return_value=queue_refs or {}) as refs_api, \
+             patch.object(scope, "git_tree_paths", return_value=set()), \
+             contextlib.redirect_stdout(io.StringIO()) as stdout:
+            scope.main()
+        called = [call.args[1] for call in labels_api.call_args_list]
+        return stdout, compare, (called, refs_api)
+
+    def test_merge_group_single_pr_reads_its_labels(self):
+        # First group in the queue: the ref's parent SHA is the base branch head.
+        stdout, compare, (called, refs_api) = self._run_main_merge_group(
+            _queue_ref(8656, _MAIN_SHA), api_labels={8656: ["full-ci"]}, paths=["docs/guide.md"],
+        )
+        self.assertEqual(called, [8656])
+        refs_api.assert_not_called()
+        compare.assert_not_called()
+        self.assertIn("pytest_mode=full", stdout.getvalue())
+        # Without the label the group keeps its path-classified tier.
+        stdout, compare, (called, _) = self._run_main_merge_group(
+            _queue_ref(8656, _MAIN_SHA), api_labels={8656: ["bug"]}, paths=["docs/guide.md"],
+        )
+        self.assertEqual(called, [8656])
+        compare.assert_called_once()
+        self.assertIn("pytest_mode=docs", stdout.getvalue())
+
+    def test_merge_group_with_several_prs_checks_every_pr(self):
+        # Live shape (2026-09-24): pr-8656's parent is pr-8655's group head,
+        # whose parent is pr-8644's group head, whose parent is main.
+        head_8644, head_8655 = "1" * 40, "2" * 40
+        refs = {
+            head_8644: _queue_ref(8644, _MAIN_SHA),
+            head_8655: _queue_ref(8655, head_8644),
+            "3" * 40: _queue_ref(8656, head_8655),
+        }
+        ref = _queue_ref(8656, head_8655)
+        stdout, compare, (called, refs_api) = self._run_main_merge_group(
+            ref,
+            api_labels={8656: [], 8655: [], 8644: ["Full-CI"]},
+            queue_refs=refs,
+            paths=["docs/guide.md"],
+        )
+        self.assertEqual(called, [8656, 8655, 8644])
+        refs_api.assert_called_once_with("owner/repo", "main")
+        compare.assert_not_called()
+        self.assertIn("pytest_mode=full", stdout.getvalue())
+        # No PR in the group carries full-ci: path classification applies.
+        stdout, compare, (called, _) = self._run_main_merge_group(
+            ref, api_labels={8656: [], 8655: [], 8644: []}, queue_refs=refs, paths=["docs/guide.md"],
+        )
+        self.assertEqual(called, [8656, 8655, 8644])
+        self.assertIn("pytest_mode=docs", stdout.getvalue())
+
+    def test_merge_group_lookup_failures_fail_closed(self):
+        broken_chain = _queue_ref(8656, "2" * 40)
+        cases = {
+            "label api error": (
+                _queue_ref(8656, _MAIN_SHA),
+                {8656: subprocess.CalledProcessError(1, "gh")},
+                {},
+            ),
+            "missing ref": ("", {}, {}),
+            "not a queue ref": ("refs/heads/main", {}, {}),
+            "short sha": ("refs/heads/gh-readonly-queue/main/pr-7-abc", {}, {}),
+            "group ahead already gone": (broken_chain, {8656: []}, {}),
+            "group ahead on another base": (
+                broken_chain,
+                {8656: []},
+                {"2" * 40: "refs/heads/gh-readonly-queue/release/pr-9-" + _MAIN_SHA},
+            ),
+            "chain cycle": (broken_chain, {8656: [], 8655: []}, {"2" * 40: broken_chain.replace("8656", "8655")}),
+        }
+        for name, (ref, labels, refs) in cases.items():
+            with self.subTest(case=name):
+                stdout, compare, _ = self._run_main_merge_group(
+                    ref, api_labels=labels, queue_refs=refs, paths=["docs/guide.md"],
+                )
+                compare.assert_not_called()
+                self.assertIn("files=0", stdout.getvalue())
+                self.assertIn("pytest_mode=full", stdout.getvalue())
+
+    def test_queue_refs_by_sha_parses_matching_refs(self):
+        line = f"{'1' * 40} {_queue_ref(8644, _MAIN_SHA)}\n"
+        with patch.object(scope.subprocess, "check_output", return_value=line) as command:
+            self.assertEqual(
+                scope.queue_refs_by_sha("owner/repo", "main"), {"1" * 40: _queue_ref(8644, _MAIN_SHA)},
+            )
+        self.assertIn(
+            "repos/owner/repo/git/matching-refs/heads/gh-readonly-queue/main/", command.call_args.args[0],
+        )
+        with patch.object(scope.subprocess, "check_output", return_value="garbage\n"), \
+             self.assertRaises(ValueError):
+            scope.queue_refs_by_sha("owner/repo", "main")
 
     def test_forced_events_do_not_need_compare_api(self):
         # schedule stays force-full without touching the compare API.

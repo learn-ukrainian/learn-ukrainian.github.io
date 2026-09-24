@@ -1,23 +1,19 @@
-"""Pin the #8505 trigger split: body edits and labels must not rerun full CI.
+"""Pin the #8505 trigger split: body edits and labels must not start CI.
 
 Safety invariant under test: no event path may make the required "CI Gate"
-check green or skipped without the classified tier running, and a label may
-never leave an earlier, lighter-tier green Gate standing.
+check green or skipped without the classified tier running.
 
-- ci.yml fires on opened/synchronize/reopened/labeled, never `edited`. The
-  negated-closing-reference body guard lives in pr-body-guard.yml, which is
-  the only workflow subscribed to `edited` (S2).
-- A `full-ci` label is an ordinary full-tier run (S3). Its full-ci-pending job
-  reports a failing "CI Gate" at once; the run's real Gate supersedes it.
-- Any other label is a no-op run: every job skips, the gate job is renamed so
-  no "CI Gate" check is reported, and the run has its own concurrency group.
-- The Gate uses `if: always()` and fails when a required dependency was
-  cancelled or skipped unexpectedly (S1). GitHub treats a skipped required job
-  as success. On pull_request it re-reads labels and fails if `full-ci` is set
-  but the tier was not full.
+- ci.yml fires on opened/synchronize/reopened only, never `edited` or
+  `labeled`. The negated-closing-reference body guard lives in
+  pr-body-guard.yml, the only workflow subscribed to `edited` (S2).
+- `full-ci` is read from the API by the Changes job (see
+  scripts/ci/test_classify_changes.py), for pull_request and merge_group (S3).
+- Exactly one job in any workflow is named "CI Gate". It uses `if: always()`
+  and fails when a required dependency was cancelled or skipped unexpectedly
+  (S1); GitHub treats a skipped required job as success.
 
-The job conditions, job names, and concurrency group are GitHub expressions.
-The evaluator below implements the subset ci.yml uses, with GitHub semantics
+Job conditions, names and the concurrency group are GitHub expressions. The
+evaluator below implements the subset ci.yml uses, with GitHub semantics
 (case-insensitive string equality, `&&`/`||` return an operand), so the tests
 evaluate the real YAML against every event shape instead of grepping it.
 """
@@ -28,7 +24,6 @@ import math
 import os
 import re
 import subprocess
-import textwrap
 from pathlib import Path
 from typing import Any
 
@@ -206,10 +201,10 @@ def _condition(raw: Any, context: dict[str, Any]) -> bool:
 
 
 def test_expression_evaluator_follows_github_semantics() -> None:
-    ctx = {"github": {"event": {"action": "labeled", "label": {"name": "Full-CI"}}}}
+    ctx = {"github": {"event": {"action": "opened", "label": {"name": "Full-CI"}}}}
     assert _evaluate("github.event.label.name == 'full-ci'", ctx) is True  # case-insensitive
-    assert _evaluate("github.event.missing == 'labeled'", ctx) is False
-    assert _evaluate("github.event.missing != 'labeled'", ctx) is True
+    assert _evaluate("github.event.missing == 'opened'", ctx) is False
+    assert _evaluate("github.event.missing != 'opened'", ctx) is True
     assert _evaluate("false && 'x' || ''", ctx) == ""
     assert _evaluate("true && 'x' || ''", ctx) == "x"
     assert _evaluate("!(true && false)", ctx) is True
@@ -227,33 +222,24 @@ def _github(event_name: str, event: dict[str, Any], ref: str = "refs/pull/7/merg
     return {"workflow": "CI", "event_name": event_name, "event": event, "ref": ref}
 
 
-def _pr_event(action: str, label: str | None = None) -> dict[str, Any]:
-    event: dict[str, Any] = {
-        "action": action,
-        "pull_request": {"number": 7, "head": {"sha": "a" * 40}, "labels": []},
-    }
-    if label is not None:
-        event["label"] = {"name": label}
-    return _github("pull_request", event)
+def _pr_event(action: str) -> dict[str, Any]:
+    return _github(
+        "pull_request",
+        {"action": action, "pull_request": {"number": 7, "head": {"sha": "a" * 40}, "labels": []}},
+    )
 
 
-_REAL_EVENTS = {
+_EVENTS = {
     "opened": _pr_event("opened"),
     "synchronize": _pr_event("synchronize"),
     "reopened": _pr_event("reopened"),
-    "labeled-full-ci": _pr_event("labeled", "full-ci"),
     "merge_group": _github(
         "merge_group",
         {"action": "checks_requested", "merge_group": {"head_sha": "b" * 40}},
-        ref="refs/heads/gh-readonly-queue/main/pr-7-" + "b" * 40,
+        ref="refs/heads/gh-readonly-queue/main/pr-7-" + "c" * 40,
     ),
     "schedule": _github("schedule", {"schedule": "30 3 * * *"}, ref="refs/heads/main"),
     "workflow_dispatch": _github("workflow_dispatch", {}, ref="refs/heads/main"),
-}
-_NOOP_EVENTS = {
-    "labeled-area": _pr_event("labeled", "area:infra"),
-    "labeled-near-miss": _pr_event("labeled", "full-ci-later"),
-    "labeled-quote": _pr_event("labeled", "it's"),
 }
 
 
@@ -295,73 +281,34 @@ def _concurrency_group(github: dict[str, Any]) -> str:
     return _interpolate(_load("ci.yml")["concurrency"]["group"], {"github": github})
 
 
-def test_ci_triggers_on_labeled_but_not_edited() -> None:
-    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened", "labeled"}
+def test_ci_triggers_on_code_events_only() -> None:
+    # AC-01: neither `edited` nor `labeled` may start CI on an unchanged SHA.
+    assert _pr_types(_load("ci.yml")) == {"opened", "synchronize", "reopened"}
 
 
-def test_full_ci_label_rerun_workflow_is_gone() -> None:
-    # The labeled run replaces the API rerun side-workflow (#8505 round 4).
+def test_no_workflow_reruns_ci_on_a_label() -> None:
     assert not (_WORKFLOWS / "full-ci-label.yml").exists()
     for path in _WORKFLOWS.glob("*.yml"):
-        assert "gh run rerun" not in path.read_text(encoding="utf-8"), path.name
+        text = path.read_text(encoding="utf-8")
+        assert "gh run rerun" not in text, path.name
+        assert "label-noop" not in text, path.name
 
 
-@pytest.mark.parametrize("event", sorted(_REAL_EVENTS))
-def test_real_events_run_every_tier_job_and_report_ci_gate(event: str) -> None:
-    results, names = _simulate(_REAL_EVENTS[event])
-    real_jobs = {job for job in results if job != "full-ci-pending"}
-    assert {job for job in real_jobs if results[job] != "ran"} == set()
+@pytest.mark.parametrize("event", sorted(_EVENTS))
+def test_every_event_runs_every_tier_job_and_reports_ci_gate(event: str) -> None:
+    results, names = _simulate(_EVENTS[event])
+    assert {job for job, result in results.items() if result != "ran"} == set()
     assert names["ci-gate"] == "CI Gate"
     assert names["changes"] == "Changes"
 
 
-@pytest.mark.parametrize("event", sorted(set(_REAL_EVENTS) - {"labeled-full-ci"}))
-def test_pending_marker_is_skipped_and_never_named_ci_gate_outside_full_ci(event: str) -> None:
-    # A skipped job reports success; a skipped "CI Gate" would be green.
-    results, names = _simulate(_REAL_EVENTS[event])
-    assert results["full-ci-pending"] == "skipped"
-    assert names["full-ci-pending"] != "CI Gate"
-
-
-def test_full_ci_label_marks_ci_gate_failed_immediately() -> None:
-    results, names = _simulate(_REAL_EVENTS["labeled-full-ci"])
-    marker = _load("ci.yml")["jobs"]["full-ci-pending"]
-    # No needs: it reports before the 15-minute tier, superseding an older
-    # lighter-tier green Gate; the real Gate reports later and supersedes it.
-    assert "needs" not in marker
-    assert results["full-ci-pending"] == "ran" and names["full-ci-pending"] == "CI Gate"
-    steps = marker["steps"]
-    assert len(steps) == 1
-    completed = subprocess.run(
-        ["bash", "-c", steps[0]["run"]], check=False, capture_output=True, text=True
+def test_pr_runs_share_one_group_per_pr_number() -> None:
+    # AC-05: a push cancels the in-flight run for the previous SHA of the PR.
+    groups = {_concurrency_group(_EVENTS[name]) for name in ("opened", "synchronize", "reopened")}
+    assert groups == {"CI-pull_request-7"}
+    assert _concurrency_group(_EVENTS["merge_group"]).startswith(
+        "CI-merge_group-refs/heads/gh-readonly-queue/"
     )
-    assert completed.returncode != 0
-    assert "full-ci" in completed.stdout
-
-
-@pytest.mark.parametrize("event", sorted(_NOOP_EVENTS))
-def test_other_labels_are_noop_runs_that_report_no_ci_gate(event: str) -> None:
-    github = _NOOP_EVENTS[event]
-    results, names = _simulate(github)
-    assert set(results.values()) == {"skipped"}
-    # Skipped or not, no job in a no-op run may carry the required name:
-    # it would report success and mask a red Gate on the same SHA.
-    assert "CI Gate" not in names.values()
-
-
-@pytest.mark.parametrize("event", sorted(_NOOP_EVENTS))
-def test_noop_runs_cannot_cancel_a_real_run(event: str) -> None:
-    noop_group = _concurrency_group(_NOOP_EVENTS[event])
-    real_groups = {_concurrency_group(_REAL_EVENTS[name]) for name in ("synchronize", "labeled-full-ci")}
-    assert real_groups == {"CI-pull_request-7"}
-    assert noop_group == "CI-pull_request-7-label-noop"
-
-
-def test_full_ci_label_run_shares_the_pr_group_to_cancel_a_lighter_run() -> None:
-    assert _concurrency_group(_REAL_EVENTS["labeled-full-ci"]) == _concurrency_group(
-        _REAL_EVENTS["synchronize"]
-    )
-    assert _concurrency_group(_REAL_EVENTS["merge_group"]).startswith("CI-merge_group-refs/heads/")
 
 
 def test_body_guard_moved_out_of_ci_into_pr_body_guard() -> None:
@@ -377,20 +324,24 @@ def test_body_guard_moved_out_of_ci_into_pr_body_guard() -> None:
     assert guard.get("permissions") == {"contents": "read"}
 
 
-def test_ci_changes_job_can_read_pr_labels() -> None:
-    # S3 wiring: the API label lookup in classify_changes.py needs
-    # pull-requests: read on the Changes job (manual rerun payloads are stale).
+def test_changes_job_reads_labels_for_pull_request_and_merge_group() -> None:
+    # S3 wiring: classify_changes.py reads PR labels via the API (needs
+    # pull-requests: read) and resolves merge-group PRs from the queue ref.
     changes = _load("ci.yml")["jobs"]["changes"]
     assert changes["permissions"]["pull-requests"] == "read"
+    env = changes["steps"][-1]["env"]
+    assert env["HEAD_REF"] == "${{ github.event.merge_group.head_ref }}"
+    assert "github.event.merge_group.base_sha" in env["BASE"]
 
 
-def test_only_ci_yml_can_report_ci_gate() -> None:
+def test_exactly_one_ci_gate_job_across_workflows() -> None:
     carriers = []
     for path in sorted(_WORKFLOWS.glob("*.yml")):
         for job_id, job in (_load(path.name).get("jobs") or {}).items():
-            if "CI Gate" in str(job.get("name", "")):
+            if "ci gate" in str(job.get("name", "")).casefold():
                 carriers.append((path.name, job_id))
-    assert carriers == [("ci.yml", "full-ci-pending"), ("ci.yml", "ci-gate")]
+    assert carriers == [("ci.yml", "ci-gate")]
+    assert _load("ci.yml")["jobs"]["ci-gate"]["name"] == "CI Gate"
 
 
 def _ci_gate_job() -> dict:
@@ -407,29 +358,21 @@ def _gate_script() -> str:
 
 def test_ci_gate_runs_after_cancel() -> None:
     # S1: a skipped required check is success on GitHub. The Gate must run
-    # after a concurrency cancel (`always()`) and fail in the step. The
-    # simulation shows it still runs when every dependency was skipped.
+    # after a concurrency cancel (`always()`) and fail in the step.
     condition = str(_ci_gate_job()["if"])
-    assert condition.startswith("always()")
-    assert "cancelled()" not in condition
-    github = _REAL_EVENTS["synchronize"]
-    context = {"github": github, "needs": {}}
-    assert _condition(condition, context) is True
-    script = _gate_script()
-    assert "required job was cancelled" in script
-    assert "full-ci" in script and "PYTEST_MODE" in script
+    assert condition == "always()"
+    assert _condition(condition, {"github": _EVENTS["synchronize"], "needs": {}}) is True
+    assert "required job was cancelled" in _gate_script()
 
 
-def _run_gate(env: dict[str, str], *, gh: str | None = None) -> subprocess.CompletedProcess[str]:
-    extra = {**os.environ, **env}
-    if gh is not None:
-        extra["PATH"] = gh + os.pathsep + os.environ.get("PATH", "")
+def _run_gate(env: dict[str, str]) -> subprocess.CompletedProcess[str]:
     return subprocess.run(
         ["bash", "-c", _gate_script()],
         check=False,
         capture_output=True,
         text=True,
-        env=extra,
+        env={**os.environ, **env},
+        timeout=30,
     )
 
 
@@ -437,7 +380,6 @@ _GREEN = {
     "DOCS_ONLY": "false",
     "FRONTEND": "false",
     "BACKEND": "true",
-    "PYTEST_MODE": "full",
     "CHANGES": "success",
     "RUFF": "success",
     "SECRET": "success",
@@ -446,10 +388,13 @@ _GREEN = {
     "FRONTEND_JOB": "skipped",
     "TYPESAFE_TRIAGE": "success",
     "PLAN_VALIDATE": "success",
-    "EVENT_NAME": "merge_group",
-    "REPO": "owner/repo",
-    "PR_NUMBER": "",
 }
+
+
+def test_ci_gate_passes_a_green_full_tier() -> None:
+    result = _run_gate(_GREEN)
+    assert result.returncode == 0, result.stdout + result.stderr
+    assert "CI Gate green" in result.stdout
 
 
 def test_ci_gate_fails_when_a_required_job_was_cancelled() -> None:
@@ -464,73 +409,15 @@ def test_ci_gate_fails_when_a_required_job_was_skipped() -> None:
     assert "CI Gate green" not in result.stdout
 
 
-def test_ci_gate_allows_a_tier_skip_and_rejects_cancelled_tier_skip(tmp_path: Path) -> None:
-    docs = {
-        **_GREEN,
-        "DOCS_ONLY": "true",
-        "PYTEST_MODE": "docs",
-        "RUFF": "skipped",
-        "CONTRACTS": "skipped",
-        "EVENT_NAME": "schedule",
-    }
+def test_ci_gate_fails_when_changes_was_cancelled() -> None:
+    result = _run_gate({**_GREEN, "CHANGES": "cancelled"})
+    assert result.returncode != 0
+    assert "CI Gate green" not in result.stdout
+
+
+def test_ci_gate_allows_a_tier_skip_and_rejects_cancelled_tier_skip() -> None:
+    docs = {**_GREEN, "DOCS_ONLY": "true", "RUFF": "skipped", "CONTRACTS": "skipped"}
     assert _run_gate(docs).returncode == 0
     cancelled = _run_gate({**docs, "RUFF": "cancelled"})
     assert cancelled.returncode != 0
     assert "cancelled" in cancelled.stdout
-
-
-def test_ci_gate_fails_when_full_ci_label_does_not_match_tier(tmp_path: Path) -> None:
-    bin_dir = tmp_path / "bin"
-    bin_dir.mkdir()
-    (bin_dir / "gh").write_text(
-        textwrap.dedent(
-            """\
-            #!/bin/sh
-            printf '%s\\n' full-ci
-            """
-        ),
-        encoding="utf-8",
-    )
-    (bin_dir / "gh").chmod(0o755)
-    result = _run_gate(
-        {
-            **_GREEN,
-            "PYTEST_MODE": "docs",
-            "DOCS_ONLY": "true",
-            "RUFF": "skipped",
-            "CONTRACTS": "skipped",
-            "EVENT_NAME": "pull_request",
-            "PR_NUMBER": "7",
-        },
-        gh=str(bin_dir),
-    )
-    assert result.returncode != 0
-    assert "full-ci" in result.stdout
-    assert "CI Gate green" not in result.stdout
-
-
-def test_ci_gate_passes_when_full_ci_label_matches_full_tier(tmp_path: Path) -> None:
-    bin_dir = tmp_path / "bin"
-    bin_dir.mkdir()
-    (bin_dir / "gh").write_text("#!/bin/sh\nprintf '%s\\n' full-ci\n", encoding="utf-8")
-    (bin_dir / "gh").chmod(0o755)
-    result = _run_gate(
-        {**_GREEN, "EVENT_NAME": "pull_request", "PR_NUMBER": "7"},
-        gh=str(bin_dir),
-    )
-    assert result.returncode == 0, result.stderr
-    assert "CI Gate green" in result.stdout
-
-
-def test_ci_gate_fails_closed_when_the_label_lookup_errors(tmp_path: Path) -> None:
-    bin_dir = tmp_path / "bin"
-    bin_dir.mkdir()
-    (bin_dir / "gh").write_text("#!/bin/sh\nexit 1\n", encoding="utf-8")
-    (bin_dir / "gh").chmod(0o755)
-    result = _run_gate(
-        {**_GREEN, "EVENT_NAME": "pull_request", "PR_NUMBER": "7"},
-        gh=str(bin_dir),
-    )
-    assert result.returncode != 0
-    assert "label lookup failed" in result.stdout
-    assert "CI Gate green" not in result.stdout
