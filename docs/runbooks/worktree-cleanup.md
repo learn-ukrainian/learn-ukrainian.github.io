@@ -97,26 +97,45 @@ to this same P0 reaper rather than maintaining a second deletion path.
 
 ## Deletion ownership
 
-`reap_worktrees._remove_worktree` is the single deletion hand for regular
-dispatch worktrees. `post_task_reap`'s main path and `delegate`'s completed
-worktree cleanup must call the P0 reaper; they must not invoke Git removal
-directly.
+Every worktree removal goes through one guarded chokepoint (#8610): Python
+callers use `worktree_claims.remove_unclaimed_worktree`, and shell and YAML
+callers use `python -m scripts.orchestration.worktree_claims remove PATH`
+(`scripts/wt.sh clean`, the RB2 trail's `cleanup_failed_worktree`). Holding
+the per-worktree lock dispatch holds from attach until its task record is
+published, it runs the caller's ownership proof, proves a forced target clean,
+refuses while another task's unfinished record names the checkout, and only
+then calls `worktree_claims.git_worktree_remove`, the repository's one raw
+`git worktree remove`. The P0 reaper's `_reap_qualified_worktree` calls that
+raw remover directly, under the same lock and claim scan.
+`tests/orchestration/test_worktree_removal_invariant.py` fails on any other
+removal call site under `scripts/`.
 
-The following narrowly bounded dual paths are allowed because they do not
-represent ordinary merged-PR dispatch cleanup:
+Callers and their ownership proofs:
 
-- `post_task_reap._remove_worktree` removes only task-state-bound ACP runtime
-  paths below `.worktrees/dispatch/acp/`, after its own terminal, clean, and
-  liveness checks; it always uses `--force` for ignored runtime residue.
+- Regular dispatch worktrees: the P0 reaper. `post_task_reap`'s main path and
+  `delegate`'s completed-worktree cleanup call it rather than removing
+  anything themselves.
+- `delegate` settle and superseded-review cleanup remove only a checkout the
+  dispatch created. `delegate._release_stale_branch_holders` performs a
+  non-force release after clean, synced, terminal-owner checks so a blocked
+  dispatch may reattach its branch.
+- `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
+  ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
+  clean, and liveness checks; it forces for ignored runtime residue.
 - `_acp_execution.acp_execution_cwd` force-removes only the detached,
-  no-checkout ACP workspace it created below `.worktrees/dispatch/acp/` during
-  setup failure or context teardown.
-- `_acp_execution.sweep_dead_acp_runtime_worktrees` removes no ACP runtime
-  path itself: it proves the recorded lock owner dead (pid absent, or pid
-  recycled with a different `/proc/<pid>/stat` start time), verifies the
-  no-checkout directory holds only its `.git` pointer, unlocks, and delegates
-  deletion to `reap_worktrees._remove_worktree`. Alive or unknown owners are
-  never touched; a sweep failure is logged and never blocks the ask.
+  no-checkout ACP workspace it created, on setup failure or context teardown.
+- `_acp_execution.sweep_dead_acp_runtime_worktrees` proves the recorded lock
+  owner dead (pid absent, or pid recycled with a different `/proc/<pid>/stat`
+  start time) and removes the runtime only while it holds just its `.git`
+  pointer, re-checked under the lock. Alive or unknown owners are never
+  touched; a sweep failure is logged and never blocks the ask.
+- `task_family.git_safety.remove_unclaimed_worktree` is the task-family bundle
+  path: its executor repeats frozen-plan, merged-PR, bundle, and candidate
+  checks immediately before deletion.
+
+`delegate.py dispatch` refuses a `--cwd` or `--worktree` inside
+`.worktrees/dispatch/acp/`: those runtimes belong to the ACP bridge and are
+never a dispatch target.
 
 ### ACP runtime worktree ownership and abandoned-runtime reaping (#8344)
 
@@ -156,12 +175,6 @@ mtime anywhere in its subtree — a directory a concurrent `delegate.py` is
 still provisioning (created before `git worktree add` registers it) is never
 "old". Husk removals, dry-run observations, and skips are recorded through
 the same `reaper_lifecycle` journal as every other reaper action.
-- `delegate._release_stale_branch_holders` performs a non-force release after
-  clean, synced, terminal-owner checks so a blocked dispatch may reattach its
-  branch. Its normal completed-worktree cleanup still uses the P0 reaper.
-- `task_family.git_safety.remove_worktree` remains the task-family bundle path:
-  its executor repeats frozen-plan, merged-PR, bundle, and candidate checks
-  immediately before deletion. Do not replace or remove that path here.
 
 ## Before re-firing a task id
 

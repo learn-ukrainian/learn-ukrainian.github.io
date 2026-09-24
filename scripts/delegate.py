@@ -1916,6 +1916,49 @@ def _resolve_cross_repo_binding_error(
     )
 
 
+# Runtime worktrees the ACP bridge creates, git-locks, and removes on its own
+# schedule (scripts/ai_agent_bridge/_acp_execution.py). They are never a
+# dispatch attach target (#8610).
+_ACP_RUNTIME_SUBTREE = (".worktrees", "dispatch", "acp")
+
+
+def _is_acp_runtime_path(path: Path) -> bool:
+    """True when ``path`` lies in a repository's ``.worktrees/dispatch/acp/`` subtree."""
+    parts = path.parts
+    width = len(_ACP_RUNTIME_SUBTREE)
+    return any(parts[index : index + width] == _ACP_RUNTIME_SUBTREE for index in range(len(parts) - width + 1))
+
+
+def _resolve_acp_runtime_target_error(
+    *,
+    worktree_arg: str | None,
+    cwd_arg: str | None,
+    target_repo_root: Path,
+) -> str | None:
+    """Refuse a dispatch whose ``--cwd`` or explicit ``--worktree`` is an ACP runtime.
+
+    The ACP bridge removes its runtime worktrees without consulting dispatch
+    task records, so a worker attached to one could lose its cwd (#8610).
+    Checked for every mode, before any side effect.
+    """
+    candidates: list[tuple[str, str, Path]] = []
+    if cwd_arg:
+        candidates.append(("--cwd", cwd_arg, _resolve_cwd_path(cwd_arg)))
+    if worktree_arg and worktree_arg != "auto":
+        candidates.append(
+            ("--worktree", worktree_arg, _normalize_worktree_path(worktree_arg, repo_root=target_repo_root))
+        )
+    for flag, raw, candidate in candidates:
+        if _is_acp_runtime_path(candidate):
+            return (
+                f"❌ {flag} {raw!r} resolves inside an ACP runtime worktree ({candidate}); "
+                ".worktrees/dispatch/acp/ belongs to the ACP bridge and is never a dispatch target.\n"
+                "   Pass bare `--worktree` to auto-create .worktrees/dispatch/<agent>/<task>/, "
+                "or point `--cwd` at an existing dispatch worktree."
+            )
+    return None
+
+
 def _resolve_verified_worktree_path(path: Path) -> Path | None:
     """Return canonical Path of the containing registered worktree if ``path`` resolves
     inside a git-registered worktree that is not the primary checkout, else None.
@@ -1923,7 +1966,8 @@ def _resolve_verified_worktree_path(path: Path) -> Path | None:
     "Verified" means the containing worktree appears in ``git worktree list``. A
     bare directory that only *looks* like ``.worktrees/**`` but was never
     ``git worktree add``-ed does NOT qualify — the worker would otherwise run
-    outside any real worktree while believing it was isolated.
+    outside any real worktree while believing it was isolated. An ACP runtime
+    worktree does not qualify either (:func:`_is_acp_runtime_path`).
     """
     wc = _load_worktree_containment()
     target = wc.canonicalize(path)
@@ -1936,7 +1980,7 @@ def _resolve_verified_worktree_path(path: Path) -> Path | None:
         if worktree == main_root:
             continue
         if target == worktree or target.is_relative_to(worktree):
-            return worktree
+            return None if _is_acp_runtime_path(worktree) else worktree
     return None
 
 
@@ -4101,28 +4145,6 @@ def _auto_finalize_dirty_worktree(
     )
 
 
-def _checked_out_branch(worktree: Path) -> str | None:
-    """Return the branch checked out at ``worktree``, or None when detached."""
-    try:
-        proc = subprocess.run(
-            ["git", "rev-parse", "--abbrev-ref", "HEAD"],
-            cwd=worktree,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired):
-        return None
-    if proc.returncode != 0:
-        return None
-    name = (proc.stdout or "").strip()
-    if not name or name == "HEAD":
-        return None
-    return name
-
-
 def _branch_ref_exists(repo_root: Path, branch: str) -> bool:
     try:
         proc = subprocess.run(
@@ -4191,60 +4213,6 @@ _worktree_claim_needles = worktree_claims.worktree_claim_needles
 _record_may_claim_worktree = worktree_claims.record_may_claim_worktree
 
 
-def _active_worktree_claim_refusal(worktree: Path, *, task_id: str | None) -> str | None:
-    """Return a skip reason when an unfinished task record still claims ``worktree``.
-
-    Scans this repository's task records with
-    :func:`scripts.orchestration.worktree_claims.active_worktree_claim_refusal`.
-    Only ``task_id``'s own record, the task settling its own checkout, is
-    exempt; ``None`` exempts nothing. Returns ``None`` when removal may proceed.
-    """
-    return worktree_claims.active_worktree_claim_refusal(
-        worktree,
-        tasks_dir=_TASKS_DIR,
-        repo_root=_REPO_ROOT,
-        owner_task_id=task_id,
-        owner_state_file=_state_path(task_id) if task_id is not None else None,
-    )
-
-
-def _git_worktree_remove(worktree: Path, *, branch: str | None, force: bool) -> str | None:
-    """Run the low-level ``git worktree remove``; return an error or ``None``.
-
-    Only :func:`_remove_dispatch_worktree` may call this (#8610); a test pins
-    that no other code in this module removes a worktree. ``force`` goes
-    through the scheduled reaper's ``_remove_worktree``: the delete-target
-    guard, then ``git worktree remove --force``, which a clean porcelain tree
-    still needs when it holds ignored residue such as a worker ``.venv``.
-    Without ``force`` git itself refuses a checkout with modified or untracked
-    files.
-    """
-    if force:
-        # Imported here: an unimportable reaper is a removal failure that the
-        # caller records, not a reason for delegate itself to fail to import.
-        from scripts.orchestration import reap_worktrees
-
-        return reap_worktrees._remove_worktree(
-            _REPO_ROOT,
-            reap_worktrees.WorktreeInfo(path=worktree, branch=branch, head=None, detached=branch is None),
-        )
-    try:
-        proc = subprocess.run(
-            ["git", "worktree", "remove", str(worktree)],
-            cwd=_REPO_ROOT,
-            capture_output=True,
-            text=True,
-            check=False,
-            env=_sanitized_git_env(),
-            timeout=DEFAULT_GIT_TIMEOUT_S,
-        )
-    except (OSError, subprocess.TimeoutExpired) as exc:
-        return f"{type(exc).__name__}: {exc}"
-    if proc.returncode != 0:
-        return _format_process_failure(proc)
-    return None
-
-
 def _remove_dispatch_worktree(
     worktree: Path,
     *,
@@ -4256,54 +4224,29 @@ def _remove_dispatch_worktree(
 ) -> dict[str, Any]:
     """Remove one dispatch worktree. Every removal in this module comes here (#8610).
 
-    Holding :func:`worktree_lock`, it runs ``releasable``, the caller's
-    ownership proof returning ``(ok, detail)``; for ``force``, a clean-tree
-    proof; the active-claim scan (:func:`_active_worktree_claim_refusal`),
-    which exempts only ``owner_task_id``'s own record; and only then
-    :func:`_git_worktree_remove`. Dispatch holds the same lock from before it
-    touches a checkout until it publishes the record that names it, so every
-    attachment is either visible to the scan or waits and then finds the
-    checkout gone. ``reason`` is the caller's purpose, recorded on success.
+    An adapter over
+    :func:`scripts.orchestration.worktree_claims.remove_unclaimed_worktree`,
+    the chokepoint every remover in the repository shares, bound to this
+    repository's task records and lock home. Holding :func:`worktree_lock`,
+    it runs ``releasable``, the caller's ownership proof returning
+    ``(ok, detail)``; for ``force``, a clean-tree proof; the active-claim
+    scan, which exempts only ``owner_task_id``'s own record; and only then
+    the removal. ``reason`` is the caller's purpose, recorded on success.
     Returns a ``worktree_reap`` record whose ``action`` is ``removed``,
     ``skipped``, or ``error``; this never raises.
     """
-    branch: str | None = None
-    dirty: bool | None = None
-
-    def outcome(action: str, why: str, *, error: str | None = None) -> dict[str, Any]:
-        return {
-            "action": action,
-            "path": str(worktree),
-            "branch": branch,
-            "reason": why,
-            "dirty": dirty,
-            "pr": None,
-            "error": error,
-        }
-
-    with contextlib.ExitStack() as locks:
-        try:
-            locks.enter_context(worktree_lock(worktree, timeout_s=lock_timeout_s))
-        except WorktreeLockError as exc:
-            return outcome("skipped", worktree_claims.lock_refusal(exc), error=str(exc))
-        try:
-            ok, detail = releasable()
-            if not ok:
-                return outcome("skipped", detail)
-            branch = _checked_out_branch(worktree)
-            if force:
-                dirty = _worktree_is_dirty(worktree)
-                if dirty is not False:
-                    return outcome("skipped", "dirty or unknown; refusing worktree removal")
-            claim_refusal = _active_worktree_claim_refusal(worktree, task_id=owner_task_id)
-            if claim_refusal is not None:
-                return outcome("skipped", claim_refusal)
-            error = _git_worktree_remove(worktree, branch=branch, force=force)
-        except Exception as exc:
-            return outcome("error", "worktree removal raised", error=f"{type(exc).__name__}: {exc}")
-        if error is not None:
-            return outcome("error", "worktree removal failed", error=error)
-        return outcome("removed", f"{reason} ({detail})" if detail else reason)
+    removal = worktree_claims.remove_unclaimed_worktree(
+        worktree,
+        repo_root=_REPO_ROOT,
+        reason=reason,
+        owner_task_id=owner_task_id,
+        releasable=releasable,
+        force=force,
+        tasks_dir=_TASKS_DIR,
+        lock_dir=_worktree_lock_dir(),
+        lock_timeout_s=_WORKTREE_LOCK_DEFAULT_TIMEOUT_S if lock_timeout_s is None else lock_timeout_s,
+    )
+    return {**removal.as_record(), "pr": None}
 
 
 def _settle_worktree_reap(
@@ -6800,6 +6743,15 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
     )
     if cross_repo_error:
         print(cross_repo_error, file=sys.stderr)
+        return 2
+
+    acp_runtime_error = _resolve_acp_runtime_target_error(
+        worktree_arg=worktree_arg,
+        cwd_arg=args.cwd,
+        target_repo_root=target_repo_root,
+    )
+    if acp_runtime_error:
+        print(acp_runtime_error, file=sys.stderr)
         return 2
 
     # Write-capable modes (workspace-write / danger) must resolve to a verified

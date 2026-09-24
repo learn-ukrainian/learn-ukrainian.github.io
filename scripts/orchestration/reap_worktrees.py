@@ -1982,34 +1982,6 @@ def _preserve_dirty_worktree(info: WorktreeInfo) -> str | None:
     return None
 
 
-def _remove_worktree(repo_root: Path, info: WorktreeInfo) -> str | None:
-    """Remove a worktree only after the caller has completed every P0 guard.
-
-    ``_worktree_clean`` deliberately accepts disposable ignored residue such as
-    a worker's ``.venv``. Git still considers that residue when removing a
-    worktree, so force is required at this final, guarded deletion boundary.
-    """
-    try:
-        target = assert_delete_target(info.path, repo_root=repo_root)
-    except ValueError as exc:
-        return f"delete guard refused worktree target: {exc}"
-    try:
-        proc = _run(
-            ["git", "worktree", "remove", "--force", str(target)],
-            cwd=repo_root,
-        )
-    except PermissionError as exc:
-        return f"permission denied removing worktree: {exc}"
-    except OSError as exc:
-        return f"OS error removing worktree: {exc}"
-    if proc.returncode != 0:
-        failure_msg = _format_failure(proc)
-        if "permission" in failure_msg.lower() or "denied" in failure_msg.lower():
-            return f"permission denied removing worktree: {failure_msg}"
-        return failure_msg
-    return None
-
-
 def _prune_branch(
     repo_root: Path,
     branch: str | None,
@@ -2433,7 +2405,10 @@ def _reap_qualified_worktree(
                 info, pr_state
             ) or _tip_is_ancestor_of_origin_main(info)
 
-        remove_error = _remove_worktree(repo_root, info)
+        # ``_worktree_clean`` deliberately accepts disposable ignored residue
+        # such as a worker's ``.venv``; git still counts it, so force is
+        # required at this final, guarded deletion boundary.
+        remove_error = worktree_claims.git_worktree_remove(repo_root, info.path, force=True)
         if remove_error is not None:
             return ReapResult(
                 path=str(info.path),

@@ -256,14 +256,19 @@ pruning. Dirty trees remain untouched unless a human explicitly adds
 `--preserve-then-reap`. Open PRs are never reaped just because HEAD matches
 `origin/<branch>`.
 
-Every remover of a checkout that dispatch can attach (settle, dispatch's
-superseded-review and stale-branch-holder release, this reaper, and task-family
-cleanup) takes the per-worktree lock in `<git common dir>/lu-worktree-locks/`
-that dispatch holds from attach until its task record is published. Under that
-lock it refuses while another task's unfinished record names the checkout
-(`scripts/orchestration/worktree_claims.py`, #8610). The skip reasons are
-`worktree lock busy` and `worktree claimed by active task <id>`. Finish or
-cancel that task, then rerun the cleanup.
+Every worktree remover (settle, dispatch's superseded-review and
+stale-branch-holder release, this reaper, task-family cleanup, ACP runtime
+cleanup, `scripts/wt.sh clean`, and the RB2 trail's cleanup step) goes through
+one chokepoint in `scripts/orchestration/worktree_claims.py` (#8610). It takes
+the per-worktree lock in `<git common dir>/lu-worktree-locks/` that dispatch
+holds from attach until its task record is published, and under that lock it
+refuses while another task's unfinished record names the checkout. The skip
+reasons are `worktree lock busy` and `worktree claimed by active task <id>`.
+Finish or cancel that task, then rerun the cleanup. From a shell, remove a
+worktree with `.venv/bin/python -m scripts.orchestration.worktree_claims
+remove PATH`, never raw `git worktree remove`; a repo-wide test rejects any
+other removal call site under `scripts/`. Dispatch never attaches to
+`.worktrees/dispatch/acp/`, where the ACP bridge's runtimes live.
 
 ### Hermes / DeepSeek isolation (Sol #213 class)
 

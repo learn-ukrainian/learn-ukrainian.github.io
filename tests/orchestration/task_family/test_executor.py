@@ -413,7 +413,7 @@ def test_eligible_runtime_is_truthfully_preserved_when_native_retirement_is_unav
     assert saved["actual"]["preserved"] is True
 
 
-def test_remove_worktree_refuses_while_a_dispatch_task_claims_it(tmp_path: Path) -> None:
+def test_remove_unclaimed_worktree_refuses_while_a_dispatch_task_claims_it(tmp_path: Path) -> None:
     """#8610: family cleanup takes delegate's worktree lock and honours an unfinished task claim."""
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/claimed")
@@ -426,12 +426,12 @@ def test_remove_worktree_refuses_while_a_dispatch_task_claims_it(tmp_path: Path)
     )
 
     with pytest.raises(git_safety.GitSafetyError, match="worktree claimed by active task review-attached"):
-        git_safety.remove_worktree(repo, worktree)
+        git_safety.remove_unclaimed_worktree(repo, worktree)
     assert worktree.exists()
 
     claim.write_text(
         json.dumps({"task_id": "review-attached", "status": "done", "worktree_path": str(worktree)}),
         encoding="utf-8",
     )
-    git_safety.remove_worktree(repo, worktree)
+    git_safety.remove_unclaimed_worktree(repo, worktree)
     assert not worktree.exists()

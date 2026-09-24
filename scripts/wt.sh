@@ -46,6 +46,14 @@ check_active_builds() {
     return 0
 }
 
+# The project interpreter lives only in the primary checkout, even when this
+# script runs from a linked worktree.
+project_python() {
+    local common_dir
+    common_dir=$(git -C "$REPO_ROOT" rev-parse --path-format=absolute --git-common-dir)
+    echo "$(dirname "$common_dir")/.venv/bin/python"
+}
+
 # Capture build check result — avoids duplicating set +e/set -e pattern
 # Sets BUILD_INFO and BUILD_RC in caller's scope
 run_build_check() {
@@ -158,7 +166,15 @@ cmd_clean() {
         local branch
         branch=$(git -C "$wt_dir" rev-parse --abbrev-ref HEAD)
         cd "$REPO_ROOT"
-        git worktree remove "$wt_dir"
+        # The guarded remover refuses (exit 3) while an unfinished dispatch
+        # task claims the checkout, and waits for any dispatch attaching it (#8610).
+        local interpreter rc=0
+        interpreter=$(project_python)
+        "$interpreter" -m scripts.orchestration.worktree_claims remove "$wt_dir" --reason "wt.sh clean $issue" || rc=$?
+        if [ $rc -ne 0 ]; then
+            red "Worktree not removed: $wt_dir"
+            exit $rc
+        fi
         git branch -d "$branch" 2>/dev/null || yellow "Branch $branch not deleted (may not be merged)"
         green "Worktree removed: $wt_dir"
     fi

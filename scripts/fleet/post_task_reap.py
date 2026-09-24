@@ -26,8 +26,7 @@ from typing import Any
 
 from scripts.common.repo_root import main_checkout_root
 from scripts.fleet import pr_identity
-from scripts.orchestration import reap_worktrees, reaper_lifecycle
-from scripts.path_safety import assert_delete_target
+from scripts.orchestration import reap_worktrees, reaper_lifecycle, worktree_claims
 
 ROOT = main_checkout_root(Path(__file__).resolve().parents[2])
 _TASKS_DIR = ROOT / "batch_state" / "tasks"
@@ -244,32 +243,51 @@ def _probe_path_liveness(path: Path) -> bool | None:
     return any(line and not line.startswith("COMMAND") for line in (proc.stdout or "").splitlines())
 
 
-def _unlock_worktree(path: Path, repo_root: Path) -> None:
-    """Best-effort unlock of a git worktree before removal."""
-    _run_git(["worktree", "unlock", str(path)], cwd=repo_root)
-
-
-def _remove_worktree(path: Path, repo_root: Path) -> tuple[bool, str | None]:
-    """Force-remove one state-bound ACP runtime beneath its dedicated subtree.
+def _remove_acp_runtime_worktree(
+    path: Path,
+    *,
+    task_id: str,
+    tasks_dir: Path,
+    repo_root: Path,
+) -> dict[str, Any]:
+    """Force-remove one state-bound ACP runtime through the guarded chokepoint (#8610).
 
     This is deliberately not the regular dispatch deletion path: callers must
     first establish terminal task ownership, cleanliness, and no live process.
     Regular dispatch worktrees always go through ``reap_worktrees`` instead.
+    Under the per-worktree lock dispatch attaches under, the chokepoint
+    re-proves the runtime lies beneath ``.worktrees/dispatch/acp/`` and is
+    clean, refuses while another task's unfinished record names it, and only
+    then lifts the runtime's git lock and removes it.
     """
-    if not _is_under_acp_runtime_root(path, repo_root):
-        return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
-    try:
-        target = assert_delete_target(path, repo_root=repo_root)
-    except ValueError as exc:
-        return False, f"delete guard refused ACP runtime target: {exc}"
-    cmd = ["worktree", "remove", "--force", str(target)]
-    proc = _run_git(cmd, cwd=repo_root)
-    if proc.returncode != 0:
-        detail = (proc.stderr or proc.stdout or "git worktree remove failed").strip()
-        return False, detail
-    if path.exists():
-        return False, f"worktree path still exists after remove: {path}"
-    return True, None
+    reason = "task terminal, path clean, and process gone"
+
+    def releasable() -> tuple[bool, str]:
+        if not _is_under_acp_runtime_root(path, repo_root):
+            return False, "ACP runtime path is outside .worktrees/dispatch/acp/"
+        return True, ""
+
+    removal = worktree_claims.remove_unclaimed_worktree(
+        path,
+        repo_root=repo_root,
+        reason=reason,
+        owner_task_id=task_id,
+        releasable=releasable,
+        force=True,
+        dirty_probe=lambda runtime: _worktree_is_dirty(runtime, ignore_deleted_tracked=True),
+        unlock=True,
+        tasks_dir=tasks_dir,
+    )
+    if removal.action == "skipped":
+        return {"path": str(path), "action": "retained", "reason": removal.reason, "error": None}
+    if removal.action == "removed" and path.exists():
+        return {
+            "path": str(path),
+            "action": "error",
+            "reason": reason,
+            "error": f"worktree path still exists after remove: {path}",
+        }
+    return {"path": str(path), "action": removal.action, "reason": reason, "error": removal.error}
 
 
 def _parse_state_pid(state: dict[str, Any]) -> int | None:
@@ -611,6 +629,7 @@ def _reap_acp_runtime_worktrees(
     *,
     task_id: str,
     state: dict[str, Any],
+    tasks_dir: Path,
     repo_root: Path,
     apply: bool,
 ) -> list[dict[str, Any]]:
@@ -713,16 +732,7 @@ def _reap_acp_runtime_worktrees(
             )
             continue
 
-        _unlock_worktree(path, repo_root)
-        ok, error = _remove_worktree(path, repo_root)
-        results.append(
-            {
-                "path": str(path),
-                "action": "removed" if ok else "error",
-                "reason": "task terminal, path clean, and process gone",
-                "error": error,
-            }
-        )
+        results.append(_remove_acp_runtime_worktree(path, task_id=task_id, tasks_dir=tasks_dir, repo_root=repo_root))
     return results
 
 
@@ -762,6 +772,7 @@ def post_task_reap(
         acp_results = _reap_acp_runtime_worktrees(
             task_id=task_id,
             state=state,
+            tasks_dir=tasks_dir,
             repo_root=repo_root,
             apply=apply,
         )

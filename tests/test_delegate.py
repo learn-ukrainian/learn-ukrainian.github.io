@@ -10,7 +10,6 @@ Issue: #1184.
 
 from __future__ import annotations
 
-import ast
 import contextlib
 import errno
 import fcntl
@@ -7193,6 +7192,56 @@ def test_write_guard_rejects_explicit_worktree_pointing_at_primary(tmp_path):
     assert "primary checkout" in err
 
 
+def _add_acp_runtime(main: Path) -> Path:
+    """Register a no-checkout ACP runtime worktree the way the ACP bridge does."""
+    runtime = main / ".worktrees" / "dispatch" / "acp" / "runtime-ask-8610-0123456789"
+    runtime.parent.mkdir(parents=True, exist_ok=True)
+    subprocess.run(
+        ["git", "-C", str(main), "worktree", "add", "--detach", "--no-checkout", str(runtime), "HEAD"],
+        check=True,
+        capture_output=True,
+        text=True,
+        env=delegate._sanitized_git_env(),
+        timeout=30,
+    )
+    return runtime.resolve()
+
+
+def test_acp_runtime_worktree_is_never_a_verified_attach_target(tmp_path):
+    """#8610 r5: the ACP bridge removes its runtimes on its own schedule, so none is an attach target."""
+    main, dispatch_wt = _init_repo_with_worktree(tmp_path)
+    runtime = _add_acp_runtime(main)
+
+    assert delegate._resolve_verified_worktree_path(dispatch_wt) == dispatch_wt
+    assert delegate._resolve_verified_worktree_path(runtime) is None
+    assert delegate._is_acp_runtime_path(runtime / "nested")
+    assert not delegate._is_acp_runtime_path(main / ".worktrees" / "dispatch" / "codex" / "acp")
+
+
+@pytest.mark.parametrize("mode", ["read-only", "workspace-write"])
+@pytest.mark.parametrize("flag", ["cwd", "worktree"])
+def test_dispatch_refuses_an_acp_runtime_cwd_or_worktree_before_side_effects(
+    tmp_tasks_dir, tmp_path, monkeypatch, capsys, mode, flag
+):
+    """#8610 r5: ``--cwd``/``--worktree`` inside ``.worktrees/dispatch/acp/`` fails with a clear error."""
+    main, _dispatch_wt = _init_repo_with_worktree(tmp_path)
+    runtime = _add_acp_runtime(main)
+    _sanitize_git_env_for_test(monkeypatch)
+    monkeypatch.setattr(delegate, "_REPO_ROOT", main)
+    monkeypatch.chdir(main)
+    spawned: list[object] = []
+    monkeypatch.setattr(delegate.subprocess, "Popen", lambda *a, **k: spawned.append(a))
+
+    rc = delegate.cmd_dispatch(_write_args(task_id="acp-attach", mode=mode, **{flag: str(runtime)}))
+
+    assert rc == 2
+    err = capsys.readouterr().err
+    assert f"--{flag} {str(runtime)!r} resolves inside an ACP runtime worktree" in err
+    assert "never a dispatch target" in err
+    assert not delegate._state_path("acp-attach").exists()
+    assert spawned == []
+
+
 # --- #6900 cross-repo binding (sibling git root vs _REPO_ROOT) --------------
 
 
@@ -8275,24 +8324,20 @@ def test_run_worker_records_terminal_status_before_best_effort_reaping(
     assert state["status"] in delegate._TERMINAL_STATUSES, state["status"]
 
 
-def test_settle_reap_survives_an_unimportable_reaper(tmp_path, tmp_tasks_dir, monkeypatch):
-    """The reaper's own import belongs inside the removal chokepoint's error handling."""
-    import builtins
+def test_settle_reap_records_a_raising_removal_instead_of_raising(tmp_path, tmp_tasks_dir, monkeypatch):
+    """A step that raises inside the shared chokepoint is an ``error`` record, never an exception."""
 
-    real_import = builtins.__import__
+    def raising_remove(_repo_root, _worktree, *, force):
+        raise RuntimeError("simulated removal crash")
 
-    def fake_import(name, *args, **kwargs):
-        if name == "scripts.orchestration" or name.endswith("reap_worktrees"):
-            raise ImportError(f"simulated missing module: {name}")
-        return real_import(name, *args, **kwargs)
-
-    monkeypatch.setattr(delegate, "_worktree_is_dirty", lambda _path: False)
-    monkeypatch.setattr(builtins, "__import__", fake_import)
-    out = delegate._settle_worktree_reap(tmp_path, created_by_this_dispatch=True, settling_task_id="reap-unimportable")
+    monkeypatch.setattr(worktree_claims, "worktree_is_dirty", lambda _path: False)
+    monkeypatch.setattr(worktree_claims, "git_worktree_remove", raising_remove)
+    out = delegate._settle_worktree_reap(tmp_path, created_by_this_dispatch=True, settling_task_id="reap-raises")
 
     assert out["action"] == "error"
     assert out["reason"] == "worktree removal raised"
-    assert "ImportError" in out["error"]
+    assert out["error"] == "RuntimeError: simulated removal crash"
+    assert out["pr"] is None
     assert tmp_path.exists()
 
 
@@ -8754,6 +8799,17 @@ def test_claim_attached_after_ownership_check_blocks_reap(tmp_tasks_dir, tmp_pat
     assert _branch_ref_present(primary, branch)
 
 
+def _delegate_claim_refusal(worktree, *, task_id):
+    """Run the shared claim scan over delegate's task records, exempting ``task_id``."""
+    return worktree_claims.active_worktree_claim_refusal(
+        worktree,
+        tasks_dir=delegate._TASKS_DIR,
+        repo_root=delegate._REPO_ROOT,
+        owner_task_id=task_id,
+        owner_state_file=worktree_claims.task_record_path(delegate._TASKS_DIR, task_id),
+    )
+
+
 def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_tasks_dir, tmp_path, monkeypatch):
     """#8610: the byte pre-filter also matches the ``\\uXXXX`` spelling ``json.dumps`` writes."""
     monkeypatch.setattr(delegate, "_REPO_ROOT", tmp_path)
@@ -8765,7 +8821,7 @@ def test_active_claim_scan_matches_json_escaped_non_ascii_worktree_name(tmp_task
     )
     assert "огляд".encode() not in delegate._state_path("impl-uk").read_bytes()
 
-    reason = delegate._active_worktree_claim_refusal(worktree, task_id="review-uk")
+    reason = _delegate_claim_refusal(worktree, task_id="review-uk")
 
     assert reason == "worktree claimed by active task impl-uk"
 
@@ -8976,7 +9032,7 @@ def test_settle_skips_when_an_attacher_holds_the_worktree_lock(tmp_tasks_dir, tm
 def test_attach_between_claim_scan_and_removal_is_impossible(tmp_tasks_dir, tmp_path, monkeypatch):
     """#8610 r2 (a): the reviewer's interleaving, an attach right after settle's claim scan, cannot happen."""
     task_id = "reap-ro-scan-then-attach"
-    original_scan = delegate._active_worktree_claim_refusal
+    original_scan = worktree_claims.active_worktree_claim_refusal
     attach_outcomes: list[str] = []
 
     def scan_then_attach(worktree, **kwargs):
@@ -8994,7 +9050,7 @@ def test_attach_between_claim_scan_and_removal_is_impossible(tmp_tasks_dir, tmp_
         attacher.join(timeout=30)
         return refusal
 
-    monkeypatch.setattr(delegate, "_active_worktree_claim_refusal", scan_then_attach)
+    monkeypatch.setattr(worktree_claims, "active_worktree_claim_refusal", scan_then_attach)
     primary, worktree, branch, state = _run_settle_reap_worker(
         tmp_tasks_dir=tmp_tasks_dir,
         tmp_path=tmp_path,
@@ -9030,14 +9086,14 @@ def test_dispatch_waits_for_settle_then_follows_missing_worktree_path(tmp_tasks_
             raise
 
     monkeypatch.setattr(fcntl, "flock", spy_flock)
-    original_scan = delegate._active_worktree_claim_refusal
+    original_scan = worktree_claims.active_worktree_claim_refusal
 
     def scan_while_dispatch_waits(path, **kwargs):
         settle_holds_lock.set()
         assert dispatch_blocked.wait(timeout=30), "dispatch never contended for the settle lock"
         return original_scan(path, **kwargs)
 
-    monkeypatch.setattr(delegate, "_active_worktree_claim_refusal", scan_while_dispatch_waits)
+    monkeypatch.setattr(worktree_claims, "active_worktree_claim_refusal", scan_while_dispatch_waits)
     ensure_calls: list[dict[str, bool]] = []
 
     def spy_ensure(**kwargs):
@@ -9138,42 +9194,6 @@ def test_worktree_lock_never_nests_on_one_thread(tmp_path):
     assert _worktree_lock_is_free(worktree)
 
 
-def _enclosing_function_names(tree: ast.AST) -> dict[ast.AST, str | None]:
-    """Map every AST node to the name of its innermost enclosing function."""
-    owners: dict[ast.AST, str | None] = {}
-
-    def visit(node: ast.AST, owner: str | None) -> None:
-        for child in ast.iter_child_nodes(node):
-            child_owner = child.name if isinstance(child, ast.FunctionDef | ast.AsyncFunctionDef) else owner
-            owners[child] = child_owner
-            visit(child, child_owner)
-
-    visit(tree, None)
-    return owners
-
-
-def test_every_delegate_worktree_removal_goes_through_the_chokepoint():
-    """#8610 r4: one low-level remover exists, and only the guarded chokepoint calls it."""
-    tree = ast.parse(Path(delegate.__file__).read_text(encoding="utf-8"))
-    owners = _enclosing_function_names(tree)
-    removers: set[str | None] = set()
-    remover_callers: set[str | None] = set()
-    for node in ast.walk(tree):
-        if isinstance(node, ast.List | ast.Tuple):
-            words = [elt.value for elt in node.elts if isinstance(elt, ast.Constant) and isinstance(elt.value, str)]
-            if any(words[index : index + 2] == ["worktree", "remove"] for index in range(len(words))):
-                removers.add(owners[node])
-        elif (isinstance(node, ast.Attribute) and node.attr == "_remove_worktree") or (
-            isinstance(node, ast.Name) and node.id == "_remove_worktree"
-        ):
-            removers.add(owners[node])
-        elif isinstance(node, ast.Name) and node.id == "_git_worktree_remove":
-            remover_callers.add(owners[node])
-
-    assert removers == {"_git_worktree_remove"}
-    assert remover_callers == {"_remove_dispatch_worktree"}
-
-
 def test_released_statuses_are_one_set_shared_by_claims_prefilter_and_holders():
     """#8610 r4: the claim policy, its byte pre-filter, and branch-holder release share one status set."""
     assert delegate._RELEASED_TASK_STATUSES is worktree_claims.RELEASED_TASK_STATUSES
@@ -9215,9 +9235,7 @@ def test_non_string_status_claims_instead_of_crashing_the_scan(tmp_tasks_dir, tm
         {"task_id": "impl-odd", "status": ["done"], "worktree_path": str(worktree)},
     )
 
-    assert delegate._active_worktree_claim_refusal(worktree, task_id="review-odd") == (
-        "worktree claimed by active task impl-odd"
-    )
+    assert _delegate_claim_refusal(worktree, task_id="review-odd") == "worktree claimed by active task impl-odd"
 
 
 def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_tasks_dir, tmp_path, monkeypatch, capsys):
@@ -9239,14 +9257,14 @@ def test_cwd_dispatch_fails_when_the_worktree_is_removed_while_it_waits(tmp_task
             raise
 
     monkeypatch.setattr(fcntl, "flock", spy_flock)
-    original_scan = delegate._active_worktree_claim_refusal
+    original_scan = worktree_claims.active_worktree_claim_refusal
 
     def scan_while_dispatch_waits(path, **kwargs):
         settle_holds_lock.set()
         assert dispatch_blocked.wait(timeout=30), "dispatch never contended for the settle lock"
         return original_scan(path, **kwargs)
 
-    monkeypatch.setattr(delegate, "_active_worktree_claim_refusal", scan_while_dispatch_waits)
+    monkeypatch.setattr(worktree_claims, "active_worktree_claim_refusal", scan_while_dispatch_waits)
     worker_spawns: list[list[str]] = []
     _spawn_passthrough_popen(monkeypatch, worker_spawns.append)
     settle_result: dict[str, Any] = {}
