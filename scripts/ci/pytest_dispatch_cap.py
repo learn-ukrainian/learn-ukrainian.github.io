@@ -11,6 +11,12 @@ than two xdist processes, and a full-suite run takes one host-wide lock.
 loads when a worker copies CI's ``--override-ini addopts=-v`` and drops the
 ``addopts`` ``-p`` registration. Operator shells and CI leave the dispatch
 variable unset, so they are unchanged.
+
+When pytest-xdist is not importable (a minimal venv with only pytest and
+pyyaml, as the rules-deployment-check lane builds), the fan-out cap is a no-op:
+xdist is the only thing that fans a run out, so it also owns the ``-n``/``--tx``
+options this plugin clamps. The full-suite lock does not depend on xdist and
+still applies.
 """
 
 from __future__ import annotations
@@ -40,6 +46,21 @@ _lock_fd: int | None = None
 def dispatch_marker_set(environ: Mapping[str, str] | None = None) -> bool:
     env = os.environ if environ is None else environ
     return bool(env.get(DISPATCH_TASK_ENV, "").strip())
+
+
+def xdist_available() -> bool:
+    """Whether pytest-xdist is importable in this interpreter.
+
+    xdist is the only plugin that fans a run out, so when it is absent the cap
+    has nothing to constrain and every fan-out hook no-ops. A run that loads
+    xdist only partially (for example ``-p no:xdist``) is handled by the
+    option guards, which treat a missing ``numprocesses``/``tx`` as no fan-out.
+    """
+    try:
+        import xdist  # noqa: F401
+    except ImportError:
+        return False
+    return True
 
 
 def _is_xdist_worker(config: pytest.Config) -> bool:
@@ -202,10 +223,10 @@ atexit.register(release_full_suite_lock)
 
 def _arm_maxprocesses(config: pytest.Config) -> None:
     """Set the cap before xdist turns ``-n`` into a ``tx`` list."""
-    numprocesses = config.option.numprocesses
+    numprocesses = getattr(config.option, "numprocesses", None)
     if not numprocesses:
         return
-    current = config.option.maxprocesses
+    current = getattr(config.option, "maxprocesses", None)
     # xdist treats a missing or non-positive maxprocesses as unlimited.
     value = MAX_PROCESSES if current is None else int(current)
     if value < 1 or value > MAX_PROCESSES:
@@ -221,8 +242,8 @@ def _shrink_tx(config: pytest.Config) -> None:
     first. A wrapper that runs after that hook still has to shrink ``tx`` when
     this plugin was registered earlier than xdist.
     """
-    tx = list(config.option.tx or [])
-    numprocesses = config.option.numprocesses
+    tx = list(getattr(config.option, "tx", None) or [])
+    numprocesses = getattr(config.option, "numprocesses", None)
     if not tx and not numprocesses:
         return
     if len(tx) > MAX_PROCESSES or (isinstance(numprocesses, int) and numprocesses > MAX_PROCESSES):
@@ -238,7 +259,7 @@ def _reject_oversized_tx(early_config: pytest.Config) -> None:
     ``N*popen`` is one option value and expands only after configuration, and
     it does not set ``-n``. Count the expanded workers and fail before then.
     """
-    if _is_xdist_worker(early_config) or not dispatch_marker_set():
+    if _is_xdist_worker(early_config) or not dispatch_marker_set() or not xdist_available():
         return
     specs = list(getattr(early_config.known_args_namespace, "tx", None) or [])
     count = tx_spec_worker_count(specs)
@@ -261,13 +282,14 @@ def pytest_cmdline_main(config: pytest.Config) -> object:
     and must not take the host lock.
     """
     armed = not _is_xdist_worker(config) and dispatch_marker_set()
-    if armed:
+    cap_armed = armed and xdist_available()
+    if cap_armed:
         _arm_maxprocesses(config)
-        if is_full_suite(config):
-            _acquire_for_config(config)
+    if armed and is_full_suite(config):
+        _acquire_for_config(config)
     outcome = yield
     outcome.get_result()
-    if not armed:
+    if not cap_armed:
         return
     _shrink_tx(config)
 
