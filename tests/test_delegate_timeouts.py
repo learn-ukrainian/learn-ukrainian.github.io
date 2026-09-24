@@ -34,6 +34,7 @@ from scripts.delegate import (
     _worktree_is_clean,
     _worktree_is_dirty,
 )
+from scripts.orchestration.worktree_claims import GIT_WORKTREE_REMOVE_TIMEOUT_S
 
 
 def _completed(args: list[str] | None = None, returncode: int = 0, stdout: str = "", stderr: str = ""):
@@ -169,8 +170,8 @@ def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.Ca
         assert released == []
 
     err = capsys.readouterr().err
-    assert "failed to release stale branch holder" in err
-    assert "TimeoutExpired" in err
+    assert f"failed to release stale branch holder {tmp_path}: git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s" in err
+    assert "🌲 released stale branch holder" not in err
 
 
 def test_resolve_sha_timeouts(tmp_path: Path) -> None:
