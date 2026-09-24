@@ -104,8 +104,11 @@ When `LEARN_UKRAINIAN_DISPATCH_TASK_ID` is set, `scripts/ci/pytest_dispatch_cap.
 clamps xdist to two workers. `pyproject.toml` `addopts` still passes
 `-p ci.pytest_dispatch_cap`, and `scripts/delegate.py` also sets
 `PYTEST_PLUGINS=ci.pytest_dispatch_cap` (appended when the variable is already
-set) so a worker that copies CI's `--override-ini addopts=-v` does not drop
-the plugin. The `pythonpath` ini key is separate from `addopts` and still
+set). `build_agent_env` forwards that variable into the agent CLI only while
+the dispatch marker is set, and only as the single entry
+`ci.pytest_dispatch_cap` — any other comma-separated plugin name is dropped.
+A worker that copies CI's `--override-ini addopts=-v` therefore still loads
+the cap. The `pythonpath` ini key is separate from `addopts` and still
 makes `ci.pytest_dispatch_cap` importable. The plugin is idempotent when both
 registrations load it. `-n auto`, `-n logical`, and an explicit `-n` use
 `--maxprocesses=2`. A `--tx` spec whose expanded worker count is greater than

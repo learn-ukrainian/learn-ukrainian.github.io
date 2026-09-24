@@ -6,10 +6,11 @@ A (memory admission) and C (per-worker cgroup) are the hard limits.
 
 When ``LEARN_UKRAINIAN_DISPATCH_TASK_ID`` is set, a worker never starts more
 than two xdist processes, and a full-suite run takes one host-wide lock.
-``delegate.py`` also sets ``PYTEST_PLUGINS`` so the cap still loads when a
-worker copies CI's ``--override-ini addopts=-v`` and drops the ``addopts``
-``-p`` registration. Operator shells and CI leave the dispatch variable unset,
-so they are unchanged.
+``delegate.py`` sets ``PYTEST_PLUGINS``, and ``build_agent_env`` forwards only
+``ci.pytest_dispatch_cap`` while the dispatch marker is set, so the cap still
+loads when a worker copies CI's ``--override-ini addopts=-v`` and drops the
+``addopts`` ``-p`` registration. Operator shells and CI leave the dispatch
+variable unset, so they are unchanged.
 """
 
 from __future__ import annotations
