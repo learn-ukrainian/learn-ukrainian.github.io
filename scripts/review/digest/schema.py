@@ -23,8 +23,9 @@ def _resolve_schema_path(schema_name: str, repo_root: Path | None = None) -> Pat
 
     if repo_root is not None:
         cand_rel = f"schemas/{schema_name}"
+        schemas_dir = repo_root / "schemas"
         cand = repo_root / cand_rel
-        if cand.exists(follow_symlinks=False):
+        if schemas_dir.exists(follow_symlinks=False) or cand.exists(follow_symlinks=False):
             return _checked_path(repo_root, cand_rel, "schemas")
     return _checked_path(REPO_ROOT, f"schemas/{schema_name}", "schemas")
 
@@ -56,7 +57,7 @@ def get_validator(schema_path: Path | None = None, repo_root: Path | None = None
 def get_cached_validator(schema_name: str, repo_root: Path | None = None) -> Draft202012Validator:
     """Return a cached Draft202012Validator for any schema under schemas/."""
     path = _resolve_schema_path(schema_name, repo_root)
-    cache_key = str(path.resolve())
+    cache_key = str(path)
     if cache_key in _VALIDATORS:
         return _VALIDATORS[cache_key]
     if not path.is_file():

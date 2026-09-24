@@ -7,7 +7,9 @@ Infers nothing; copies and counts from observed, resolutions, provenance, plan v
 from __future__ import annotations
 
 import hashlib
+import os
 import re
+import stat
 from pathlib import Path
 from typing import Any
 
@@ -52,8 +54,8 @@ def validate_slug(slug: str) -> None:
 
 
 def is_forbidden_path(path: Path) -> bool:
-    """Check if resolved path violates R-11 boundaries (curriculum/l2-uk-en/plans/, *-v1, wiki/)."""
-    parts = path.resolve().parts
+    """Check if literal path violates R-11 boundaries (curriculum/l2-uk-en/plans/, *-v1, wiki/)."""
+    parts = path.parts
     for i in range(len(parts) - 2):
         if parts[i : i + 3] == ("curriculum", "l2-uk-en", "plans"):
             return True
@@ -62,65 +64,111 @@ def is_forbidden_path(path: Path) -> bool:
     return any(part == "wiki" for part in parts)
 
 
+def _is_allowed_repo_rel_path(rel: Path) -> bool:
+    """Check if literal repo-relative path starts with one of the allowed roots."""
+    parts = rel.parts
+    # 1. curriculum/l2-uk-en/evidence/<level>/_state/<slug>/...
+    if (
+        len(parts) >= 7
+        and parts[0:3] == ("curriculum", "l2-uk-en", "evidence")
+        and parts[3] in ALLOWED_LEVELS
+        and parts[4] == "_state"
+        and bool(SLUG_PATTERN.fullmatch(parts[5]))
+    ):
+        return True
+
+    # 2. curriculum/l2-uk-en/lesson-plans/<level>/...
+    if (
+        len(parts) >= 5
+        and parts[0:3] == ("curriculum", "l2-uk-en", "lesson-plans")
+        and parts[3] in ALLOWED_LEVELS
+    ):
+        return True
+
+    # 3. site/src/content/docs/<level>/<slug>/...
+    if (
+        len(parts) >= 7
+        and parts[0:4] == ("site", "src", "content", "docs")
+        and parts[4] in ALLOWED_LEVELS
+        and bool(SLUG_PATTERN.fullmatch(parts[5]))
+    ):
+        return True
+
+    # 4. schemas/...
+    return bool(len(parts) >= 2 and parts[0] == "schemas")
+
+
 def _checked_path(
     repo_root: Path,
     rel_path: Path | str,
-    allowed_root_rel: Path | str,
+    allowed_root_rel: Path | str | None = None,
 ) -> Path:
-    """Validate and resolve a path under an allowed root according to R-11 containment.
+    """Validate a path under an allowed root according to R-11 containment.
 
-    Builds the path from the resolved repo root plus the literal repo-relative path;
-    resolves it (Path.resolve(strict=False));
-    requires the resolved path to be inside repo_root.resolve() / allowed_root_rel
-    (the literal allowed root, itself not resolved through symlinks);
-    and refuses anything that resolves under curriculum/l2-uk-en/plans/, a *-v1 directory or wiki/.
+    Walks every component from the repo root down to the file with os.lstat,
+    and refuses the path if any component is a symlink.
+    Requires the literal repo-relative path to start with one of the allowed roots
+    and not with a forbidden one. Returns the literal, symlink-free path.
     """
-    resolved_root = repo_root.resolve()
-
     rel = Path(rel_path)
     if rel.is_absolute():
         try:
-            rel = rel.relative_to(resolved_root)
+            rel = rel.relative_to(repo_root)
         except ValueError:
             try:
-                rel = rel.relative_to(repo_root)
+                rel = rel.relative_to(repo_root.resolve())
             except ValueError as exc:
                 raise DigestError(
                     codes.PATH_FORBIDDEN,
-                    f"path {rel_path} is absolute and outside repo root {resolved_root}",
+                    f"path {rel_path} is absolute and outside repo root {repo_root}",
                 ) from exc
 
-    raw_path = resolved_root / rel
-    resolved = raw_path.resolve(strict=False)
-
-    allowed_rel_clean = str(allowed_root_rel).strip("/")
-    literal_allowed_root = resolved_root / allowed_rel_clean
-
-    try:
-        if not resolved.is_relative_to(literal_allowed_root) or resolved == literal_allowed_root:
-            raise DigestError(
-                codes.PATH_FORBIDDEN,
-                f"path {rel_path} resolves outside expected root {literal_allowed_root}: {resolved}",
-            )
-    except (ValueError, TypeError) as exc:
+    if ".." in rel.parts:
         raise DigestError(
             codes.PATH_FORBIDDEN,
-            f"path {rel_path} is invalid: {exc}",
-        ) from exc
-
-    if is_forbidden_path(resolved):
-        raise DigestError(
-            codes.PATH_FORBIDDEN,
-            f"path {resolved} is forbidden under R-11",
+            f"path {rel_path} contains traversal component '..'",
         )
 
-    return resolved
+    if not _is_allowed_repo_rel_path(rel):
+        raise DigestError(
+            codes.PATH_FORBIDDEN,
+            f"path {rel} does not start with an allowed root",
+        )
 
+    if allowed_root_rel is not None:
+        expected = Path(str(allowed_root_rel).strip("/"))
+        if not rel.is_relative_to(expected) or rel == expected:
+            raise DigestError(
+                codes.PATH_FORBIDDEN,
+                f"path {rel} is outside expected root {expected}",
+            )
 
-def validate_input_path(path: Path, expected_root: Path, repo_root: Path | None = None) -> Path:
-    """Deprecated compatibility wrapper around _checked_path."""
-    root = repo_root or REPO_ROOT
-    return _checked_path(root, path, expected_root)
+    if is_forbidden_path(rel):
+        raise DigestError(
+            codes.PATH_FORBIDDEN,
+            f"path {rel} is forbidden under R-11",
+        )
+
+    current = repo_root
+    for part in rel.parts:
+        current = current / part
+        try:
+            st = os.lstat(current)
+        except FileNotFoundError:
+            # Component does not exist on disk yet; cannot be a symlink or have descendants.
+            break
+        except OSError as exc:
+            raise DigestError(
+                codes.PATH_FORBIDDEN,
+                f"cannot stat path component {current}: {exc}",
+            ) from exc
+        if stat.S_ISLNK(st.st_mode):
+            raise DigestError(
+                codes.PATH_FORBIDDEN,
+                f"path component is a symlink: {current}",
+            )
+
+    return repo_root / rel
 
 
 def _sort_val(v: Any) -> tuple[int, Any]:
@@ -194,21 +242,21 @@ def build_digest(
     mdx_root_rel = f"site/src/content/docs/{level}/{slug}"
 
     plan_path_rel = f"curriculum/l2-uk-en/lesson-plans/{level}/{slug}.yaml"
-    resolved_plan_path = _checked_path(root, plan_path_rel, plan_root_rel)
+    plan_path = _checked_path(root, plan_path_rel, plan_root_rel)
 
-    if not resolved_plan_path.is_file():
-        raise DigestError(codes.PLAN_MISSING, f"module plan {resolved_plan_path} not found")
+    if not plan_path.is_file():
+        raise DigestError(codes.PLAN_MISSING, f"module plan {plan_path} not found")
 
-    plan_sha256 = compute_file_sha256(resolved_plan_path)
+    plan_sha256 = compute_file_sha256(plan_path)
     try:
-        plan_doc = yaml.safe_load(resolved_plan_path.read_text(encoding="utf-8"))
+        plan_doc = yaml.safe_load(plan_path.read_text(encoding="utf-8"))
     except Exception as exc:
-        raise DigestError(codes.PLAN_INVALID, f"module plan {resolved_plan_path} unreadable YAML: {exc}") from exc
+        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} unreadable YAML: {exc}") from exc
 
     if not isinstance(plan_doc, dict):
-        raise DigestError(codes.PLAN_INVALID, f"module plan {resolved_plan_path} is not a YAML mapping")
+        raise DigestError(codes.PLAN_INVALID, f"module plan {plan_path} is not a YAML mapping")
 
-    validate_plan_schema(plan_doc, resolved_plan_path, repo_root=root)
+    validate_plan_schema(plan_doc, plan_path, repo_root=root)
 
     plan_lessons_by_n: dict[int, dict[str, Any]] = {
         l["n"]: l for l in plan_doc["lessons"]
@@ -219,71 +267,71 @@ def build_digest(
 
     for k in range(1, up_to):
         if k not in plan_lessons_by_n:
-            raise DigestError(codes.LESSON_NOT_IN_PLAN, f"lesson {k} not found in module plan {resolved_plan_path}")
+            raise DigestError(codes.LESSON_NOT_IN_PLAN, f"lesson {k} not found in module plan {plan_path}")
 
         mdx_path_rel = f"site/src/content/docs/{level}/{slug}/{k}.mdx"
-        resolved_mdx = _checked_path(root, mdx_path_rel, mdx_root_rel)
-        if not resolved_mdx.is_file():
-            raise DigestError(codes.MDX_MISSING, f"lesson {k} MDX file {resolved_mdx} not found")
-        mdx_sha256 = compute_file_sha256(resolved_mdx)
+        mdx_path = _checked_path(root, mdx_path_rel, mdx_root_rel)
+        if not mdx_path.is_file():
+            raise DigestError(codes.MDX_MISSING, f"lesson {k} MDX file {mdx_path} not found")
+        mdx_sha256 = compute_file_sha256(mdx_path)
 
         obs_path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.observed.yaml"
         obs_lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.observed.yaml.lock"
-        resolved_obs = _checked_path(root, obs_path_rel, state_root_rel)
+        obs_path = _checked_path(root, obs_path_rel, state_root_rel)
         _checked_path(root, obs_lock_rel, state_root_rel)
-        if not resolved_obs.is_file():
-            raise DigestError(codes.OBSERVED_MISSING, f"observed state file {resolved_obs} not found")
+        if not obs_path.is_file():
+            raise DigestError(codes.OBSERVED_MISSING, f"observed state file {obs_path} not found")
         try:
-            lock.require(resolved_obs)
+            lock.require(obs_path)
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
                 msg = msg[len(codes.LOCK_MISMATCH) + 2:]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
-        obs_sha256 = compute_file_sha256(resolved_obs)
+        obs_sha256 = compute_file_sha256(obs_path)
         try:
-            obs_doc = yaml.safe_load(resolved_obs.read_text(encoding="utf-8"))
+            obs_doc = yaml.safe_load(obs_path.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise DigestError(codes.OBSERVED_INVALID, f"observed file {resolved_obs} unreadable: {exc}") from exc
+            raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} unreadable: {exc}") from exc
         if not isinstance(obs_doc, dict):
-            raise DigestError(codes.OBSERVED_INVALID, f"observed file {resolved_obs} is not a YAML mapping")
-        validate_observed_schema(obs_doc, resolved_obs, repo_root=root)
+            raise DigestError(codes.OBSERVED_INVALID, f"observed file {obs_path} is not a YAML mapping")
+        validate_observed_schema(obs_doc, obs_path, repo_root=root)
 
         res_path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.resolutions.yaml"
         res_lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.resolutions.yaml.lock"
-        resolved_res = _checked_path(root, res_path_rel, state_root_rel)
+        res_path = _checked_path(root, res_path_rel, state_root_rel)
         _checked_path(root, res_lock_rel, state_root_rel)
-        if not resolved_res.is_file():
-            raise DigestError(codes.RESOLUTIONS_MISSING, f"resolutions file {resolved_res} not found")
+        if not res_path.is_file():
+            raise DigestError(codes.RESOLUTIONS_MISSING, f"resolutions file {res_path} not found")
         try:
-            lock.require(resolved_res)
+            lock.require(res_path)
         except ValueError as exc:
             msg = str(exc)
             if msg.startswith(f"{codes.LOCK_MISMATCH}: "):
                 msg = msg[len(codes.LOCK_MISMATCH) + 2:]
             raise DigestError(codes.LOCK_MISMATCH, msg) from exc
-        res_sha256 = compute_file_sha256(resolved_res)
+        res_sha256 = compute_file_sha256(res_path)
         try:
-            res_doc = yaml.safe_load(resolved_res.read_text(encoding="utf-8"))
+            res_doc = yaml.safe_load(res_path.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {resolved_res} unreadable: {exc}") from exc
+            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} unreadable: {exc}") from exc
         if not isinstance(res_doc, dict):
-            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {resolved_res} is not a YAML mapping")
-        validate_resolutions_schema(res_doc, resolved_res, repo_root=root)
+            raise DigestError(codes.RESOLUTIONS_INVALID, f"resolutions file {res_path} is not a YAML mapping")
+        validate_resolutions_schema(res_doc, res_path, repo_root=root)
 
         prov_path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/lesson-{k}.provenance.yaml"
-        resolved_prov = _checked_path(root, prov_path_rel, state_root_rel)
-        if not resolved_prov.is_file():
-            raise DigestError(codes.PROVENANCE_MISSING, f"provenance file {resolved_prov} not found")
-        prov_sha256 = compute_file_sha256(resolved_prov)
+        prov_path = _checked_path(root, prov_path_rel, state_root_rel)
+        if not prov_path.is_file():
+            raise DigestError(codes.PROVENANCE_MISSING, f"provenance file {prov_path} not found")
+        prov_sha256 = compute_file_sha256(prov_path)
         try:
-            prov_doc = yaml.safe_load(resolved_prov.read_text(encoding="utf-8"))
+            prov_doc = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
         except Exception as exc:
-            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {resolved_prov} unreadable: {exc}") from exc
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} unreadable: {exc}") from exc
         if not isinstance(prov_doc, dict):
-            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {resolved_prov} is not a YAML mapping")
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} is not a YAML mapping")
         if "spans" not in prov_doc or not isinstance(prov_doc["spans"], list):
-            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {resolved_prov} missing 'spans' list")
+            raise DigestError(codes.PROVENANCE_INVALID, f"provenance file {prov_path} missing 'spans' list")
 
         sources.append(
             {
@@ -331,7 +379,7 @@ def build_digest(
             if rec_id not in observed_roles:
                 raise DigestError(
                     codes.RECORD_NOT_IN_OBSERVED,
-                    f"token record {rec_id} not found in observed index {resolved_obs}",
+                    f"token record {rec_id} not found in observed index {obs_path}",
                 )
             role = observed_roles[rec_id]
 
@@ -362,7 +410,7 @@ def build_digest(
             if tok_key not in prov_map:
                 raise DigestError(
                     codes.UNIT_NOT_IN_PROVENANCE,
-                    f"token unit {locator} not found in provenance spans of {resolved_prov}",
+                    f"token unit {locator} not found in provenance spans of {prov_path}",
                 )
             span_info = prov_map[tok_key]
             span_source = span_info.get("source")
@@ -455,7 +503,7 @@ def build_digest(
             if not isinstance(step, str) or not step:
                 raise DigestError(
                     codes.PLAN_INVALID,
-                    f"lesson {k} dialogue missing required 'step' in module plan {resolved_plan_path}",
+                    f"lesson {k} dialogue missing required 'step' in module plan {plan_path}",
                 )
             places = [
                 p["name"]
