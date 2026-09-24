@@ -137,6 +137,7 @@ class TestApiEndpoints:
         "/api/state/weak-points",
     }
 
+    @pytest.mark.repo_wide
     def test_endpoints_defined_in_router(self):
         """Check that API endpoints are defined in router files."""
         api_dir = ROOT / "scripts" / "api"

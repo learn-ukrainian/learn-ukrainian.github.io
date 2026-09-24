@@ -614,7 +614,13 @@ def test_ci_yml_fails_on_worker_crash() -> None:
     assert "--max-worker-restart=0" in ci_text
 
 
-def test_ci_yml_docs_only_lane_untouched() -> None:
+def test_ci_yml_docs_only_lane_runs_skills_and_repo_wide() -> None:
+    """The docs lane runs docs_skills plus the repo_wide set (#8707).
+
+    Docs-only PRs reach no other pytest leg, but repo-wide scanners read docs/,
+    so the lane also runs `-m repo_wide` once under the narrow allowlist. It
+    still owns no JUnit report and never partitions via plan-files.
+    """
     ci_text = _ci_text()
     match = re.search(
         r'if \[ "\$DOCS_ONLY" = "true" \]; then\n(.*?)\n\s*exit 0\n\s*fi',
@@ -624,6 +630,7 @@ def test_ci_yml_docs_only_lane_untouched() -> None:
     assert match is not None
     docs_branch = match.group(1)
     assert "pytest tests -m docs_skills --strict-markers --timeout=120" in docs_branch
+    assert re.search(r"-m [^\n]*repo_wide", docs_branch)
     assert "--durations" not in docs_branch
     assert "--junitxml" not in docs_branch
     assert "plan-files" not in docs_branch

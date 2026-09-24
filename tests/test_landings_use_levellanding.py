@@ -99,6 +99,7 @@ def test_dynamic_route_uses_every_track_index_mdx_as_landing_doc() -> None:
     assert "showHero={props.kind !== 'landingDoc' && props.kind !== 'track' && !arcFrontmatter}" in text
 
 
+@pytest.mark.repo_wide
 def test_arc_landings_are_generated_pages_the_router_mounts_from_frontmatter() -> None:
     text = ROUTER_PATH.read_text(encoding="utf-8")
     config = CONTENT_CONFIG_PATH.read_text(encoding="utf-8")

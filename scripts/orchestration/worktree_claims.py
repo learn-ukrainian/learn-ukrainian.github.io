@@ -44,7 +44,9 @@ from scripts.path_safety import assert_delete_target
 LOCK_DIR_NAME = "lu-worktree-locks"
 DEFAULT_LOCK_TIMEOUT_S = 30.0
 _LOCK_POLL_S = 0.05
-# (lock key, thread ident) pairs this process holds; see worktree_lock.
+# (lock file, thread ident) pairs this process holds; see worktree_lock. The
+# lock file is the resolved ``<lock_dir>/<key>.lock``, so holding a path's lock
+# in one lock directory never counts as holding it in another (#8663).
 _HELD_LOCKS: set[tuple[str, int]] = set()
 
 # Every status a finished task persists. Any other value, including
@@ -90,6 +92,11 @@ def lock_path(path: Path | str, *, lock_dir: Path) -> tuple[str, Path]:
     return canonical, lock_dir / f"{key}.lock"
 
 
+def _held_lock_key(lock_file: Path) -> tuple[str, int]:
+    """Return this thread's :data:`_HELD_LOCKS` entry for ``lock_file``."""
+    return str(lock_file.parent.resolve() / lock_file.name), threading.get_ident()
+
+
 @contextlib.contextmanager
 def worktree_lock(path: Path | str, *, lock_dir: Path, timeout_s: float | None = None) -> Iterator[None]:
     """Hold an exclusive ``flock`` advisory lock for one worktree path.
@@ -105,7 +112,10 @@ def worktree_lock(path: Path | str, *, lock_dir: Path, timeout_s: float | None =
     :class:`WorktreeLockReentry` instead of waiting on itself.
     """
     canonical, lock_file = lock_path(path, lock_dir=lock_dir)
-    holder = (lock_file.stem, threading.get_ident())
+    try:
+        holder = _held_lock_key(lock_file)
+    except (OSError, RuntimeError) as exc:
+        raise WorktreeLockError(f"worktree lock dir {lock_dir} unresolvable: {type(exc).__name__}: {exc}") from exc
     if holder in _HELD_LOCKS:
         raise WorktreeLockReentry(f"worktree lock for {canonical} is already held by this thread")
     if timeout_s is None:

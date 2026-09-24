@@ -23,7 +23,7 @@ from typing import Any
 
 from jsonschema import Draft202012Validator, FormatChecker
 
-from scripts.github_check_rollup import collapse_status_rollup
+from scripts.github_check_rollup import group_collapsed_by_name
 from scripts.orchestration import issue_stream_audit, task_identity
 
 SCHEMA_VERSION = "task-lifecycle.v1"
@@ -1002,20 +1002,22 @@ def _review_passed(ledger: Mapping[str, Any], valid_evidence: Mapping[str, set[s
 
 
 def _checks_status(required: list[str], checks: list[Mapping[str, Any]]) -> tuple[bool, bool, list[str]]:
-    collapsed = collapse_status_rollup([dict(check) for check in checks if isinstance(check, Mapping)])
-    by_name: dict[str, Mapping[str, Any]] = {}
-    for check in collapsed:
-        if not isinstance(check, Mapping):
-            continue
-        by_name[str(check.get("name") or "")] = check
-    missing = [name for name in required if name not in by_name]
-    pending = [name for name in required if name in by_name and by_name[name].get("status") != "COMPLETED"]
+    """A required name fails when any row that survives the shared collapse is red or pending."""
+    named, _other = group_collapsed_by_name([dict(check) for check in checks if isinstance(check, Mapping)])
+    missing = [name for name in required if name not in named]
+    pending = [
+        name
+        for name in required
+        if name in named and any(row.get("status") != "COMPLETED" for row in named[name])
+    ]
     failed = [
         name
         for name in required
-        if name in by_name
-        and by_name[name].get("status") == "COMPLETED"
-        and by_name[name].get("conclusion") not in {"SUCCESS", "NEUTRAL", "SKIPPED"}
+        if name in named
+        and any(
+            row.get("status") == "COMPLETED" and row.get("conclusion") not in {"SUCCESS", "NEUTRAL", "SKIPPED"}
+            for row in named[name]
+        )
     ]
     return not (missing or pending or failed), bool(pending or missing), failed
 

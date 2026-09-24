@@ -146,6 +146,10 @@ Callers and their ownership proofs:
   dispatch created. `delegate._release_stale_branch_holders` performs a
   non-force release after clean, synced, terminal-owner checks so a blocked
   dispatch may reattach its branch.
+- `delegate._settle_failed_worktree_add` removes nothing. After its own
+  failed or timed-out `git worktree add`, dispatch leaves the directory it
+  reserved with `mkdir` as it is, empty or not, and reports it (see
+  "Interrupted `git worktree add`" below).
 - `post_task_reap._remove_acp_runtime_worktree` removes only task-state-bound
   ACP runtime paths below `.worktrees/dispatch/acp/`, after its own terminal,
   clean, and liveness checks; it forces for ignored runtime residue.
@@ -190,6 +194,87 @@ the same dead-owner sweep on entry, before creating its own workspace, so a
 killed ask's stub is gone by the next ACP call at the latest. As defence in
 depth, the ask entry path converts SIGTERM into an orderly unwind
 (`SystemExit(143)`) so the context `finally` cleans up when it can.
+
+### Interrupted `git worktree add` (#8663)
+
+`delegate.py` bounds `git worktree add` by `DELEGATE_WORKTREE_ADD_*` in
+`scripts/config.py`: a base window, then more time only while the checkout is
+still gaining files, up to a hard ceiling. The add runs in the C locale (so
+git's lock reason is the literal `initializing`) in its own process group.
+
+Stopping a slow add:
+
+1. SIGTERM goes to the add's process group. Git's signal handler deletes the
+   worktree directory and admin directory it was building; the branch ref is
+   kept. Tests prove this on the host git (2.53.0) with SIGTERM before the
+   checkout starts, at its first file, mid-checkout and at its last file.
+2. Dispatch waits up to `_WORKTREE_ADD_STOP_GRACE_S` (30 s) for git to exit.
+   SIGKILL follows only after that grace.
+3. Dispatch worktree preparation removes nothing, not even the empty
+   directory it reserved with `mkdir`. Git 2.53 can write another add's
+   admin registration while that directory is still empty and before its
+   `.git` exists, so an `rmdir` could disrupt that add. The directory stays
+   as it is; `worktree_prep.reserved_dir_left: true` and the failure output
+   record that it was left. An empty, unregistered one is later swept by the
+   reaper's existing zero-file dispatch-husk rule
+   (`reap_worktrees._reap_dispatch_husks`, described at the end of this
+   section, with its one-hour age floor).
+
+Before git starts, dispatch reserves the path with `mkdir`: a path that
+already exists is never passed to git and never removed. Dispatch also
+records the reservation as `worktree_prep` in the task record. The record
+holds the path, `dir_dev`/`dir_ino`, `base_sha`, the dispatcher's
+`owner_pid`/`owner_start`, and git's `git_pid`/`git_start` (start time from
+`/proc/<pid>/stat` field 22). The failed task record keeps `worktree_prep`
+and stores the outcome as `worktree_prep_cleanup`.
+
+**Nothing removes, unlocks or prunes a registered worktree automatically.**
+Dispatch and the reapers both follow this rule. Three review rounds tried to
+prove ownership well enough for automatic removal, and each proof left a race
+in which a foreign or completed worktree could qualify. A leftover can happen
+when git was SIGKILLed, when its cleanup failed, or when the dispatcher died
+mid-add. It stays registered and locked `initializing`, and it is reported as
+`needs_attention: initializing_leftover`:
+
+- dispatch's `worktree_prep_cleanup` and its stderr carry `needs_attention`
+  and the command;
+- `reap_worktrees` reports a dispatch worktree locked `initializing` whose
+  task record carries `worktree_prep` for that path. The row is `skipped`,
+  its reason starts with `needs_attention: initializing_leftover`, and
+  `needs_attention` holds the evidence. The aggregate output lists it under
+  "Needs attention", the Monitor GC sweep summary under `needs_attention`,
+  and every pass appends a `needs_attention` journal event. No other class
+  sees the worktree. While the reserving dispatch may still be running its
+  add, the row says so instead;
+- `post_task_reap` routes such a task's worktree to that report. Its JSON
+  carries a top-level `needs_attention` list.
+
+The evidence (`worktree_prep.leftover_evidence`) covers:
+
+- the `worktree_prep` facts;
+- whether the directory is still the reserved inode;
+- whether the recorded git add (and its process group) and the dispatcher
+  are proven gone;
+- HEAD against `base_sha`;
+- a `git status` summary.
+
+To act on a leftover:
+
+1. Check the evidence. Git and the dispatcher should be gone and nothing
+   should be running inside the worktree. HEAD should be the base commit,
+   and the status should show only a partial checkout (deleted and untracked
+   files).
+2. Only then run the reported command, which starts with `verify first:`:
+   `git -C <repo> worktree unlock <path> && git -C <repo> worktree remove --force <path>`.
+   The branch ref is not touched.
+
+The dispatcher's `owner_pid`/`owner_start` serve one more purpose. While
+`git worktree add` runs, the task record says `spawning` with `pid: null`. If
+the dispatcher dies before writing a terminal record, two paths mark it
+`crashed` with `returncode_reason: dispatch_died_during_worktree_prep` once
+the owner is proven gone (`worktree_prep.is_orphaned_prep_record`): the lazy
+heal in `delegate.py status|wait|list`, and `reconcile_sweep --apply`. The
+ownership ledger stops counting such a record immediately.
 
 Unregistered directories under `.worktrees/dispatch/<agent>/` that contain
 zero files (empty placeholder trees, e.g. only `site/ node_modules/ data/`

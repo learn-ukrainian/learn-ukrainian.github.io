@@ -25,6 +25,7 @@ import pytest
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from scripts.fleet import post_task_reap
+from tests.worktree_prep_helpers import half_built_prep, leave_half_built
 
 
 def _safe_label(task_id: str) -> str:
@@ -705,3 +706,78 @@ def test_cli_no_acp_runtime(hermetic_reap, capsys):
     assert report["main_worktree"]["action"] == "removed"
     assert report["acp_runtimes"] == []
     assert acp_path.exists()
+
+
+def _half_built_dispatch(
+    repo_root: Path,
+    tasks_dir: Path,
+    task_id: str,
+    *,
+    status: str,
+    pid: Any,
+    reserved: bool = True,
+) -> Path:
+    """A dispatch worktree a killed ``git worktree add`` left: locked ``initializing``, partial (#8663)."""
+    worktree = _add_dispatch_worktree(repo_root, "claude", task_id)
+    leave_half_built(worktree, drop=("README.md",))
+    state = {
+        "task_id": task_id,
+        "agent": "claude",
+        "status": status,
+        "pid": pid,
+        "run_nonce": "nonce-8663",
+        "worktree_path": str(worktree),
+    }
+    if reserved:
+        state["worktree_prep"] = half_built_prep(worktree, run_nonce="nonce-8663")
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / f"{task_id}.json").write_text(json.dumps(state), encoding="utf-8")
+    return worktree
+
+
+def test_initializing_leftover_is_reported_through_p0_reaper_and_kept(hermetic_reap):
+    repo_root, _ = hermetic_reap
+    # The canonical reaper reads records from the control plane's batch_state.
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-r3", status="failed", pid=None)
+    head = _run(["git", "rev-parse", "refs/heads/claude/impl-8663-r3"], cwd=repo_root).stdout.strip()
+
+    report = post_task_reap.post_task_reap("impl-8663-r3", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    main = report["main_worktree"]
+    assert main["action"] == "skipped"
+    assert main["reason"].startswith("needs_attention: initializing_leftover; task-id=impl-8663-r3")
+    assert main["needs_attention"]["kind"] == "initializing_leftover"
+    [finding] = report["needs_attention"]
+    assert finding["path"] == str(worktree)
+    assert finding["command"].startswith("verify first: ")
+    assert finding["evidence"]["head"] == head
+    assert report["errors"] == []
+    assert worktree.is_dir()
+    listing = _run(["git", "worktree", "list", "--porcelain"], cwd=repo_root).stdout
+    assert "locked initializing" in listing
+    assert _run(["git", "rev-parse", "refs/heads/claude/impl-8663-r3"], cwd=repo_root).stdout.strip() == head
+
+
+def test_initializing_lock_with_recorded_pid_stays_retained(hermetic_reap):
+    repo_root, _ = hermetic_reap
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-pid", status="failed", pid=424242)
+
+    report = post_task_reap.post_task_reap("impl-8663-pid", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained"
+    assert report["main_worktree"]["reason"] == "registered worktree is locked"
+    assert worktree.exists()
+
+
+def test_initializing_lock_without_a_reservation_stays_retained(hermetic_reap):
+    repo_root, _ = hermetic_reap
+    tasks_dir = repo_root / "batch_state" / "tasks"
+    worktree = _half_built_dispatch(repo_root, tasks_dir, "impl-8663-reuse", status="failed", pid=None, reserved=False)
+
+    report = post_task_reap.post_task_reap("impl-8663-reuse", tasks_dir=tasks_dir, repo_root=repo_root, apply=True)
+
+    assert report["main_worktree"]["action"] == "retained"
+    assert report["main_worktree"]["reason"] == "registered worktree is locked"
+    assert worktree.exists()

@@ -132,6 +132,7 @@ class TestPlanYamlSchemaCheck:
         error_violations = [v for v in violations if v["severity"] == "error"]
         assert len(error_violations) > 0
 
+    @pytest.mark.repo_wide
     def test_a2_plans_match_module_schema(self):
         plans_dir = (
             Path(__file__).parent.parent

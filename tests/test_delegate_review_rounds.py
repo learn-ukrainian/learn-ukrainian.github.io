@@ -198,7 +198,7 @@ def test_later_round_keeps_an_earlier_round_another_task_still_claims(monkeypatc
 
     def releasable(path: Path) -> tuple[bool, str]:
         _canonical, lock_file = delegate._worktree_lock_path(path)
-        proofs_under_lock.append(lock_file.stem in {key for key, _thread in worktree_claims._HELD_LOCKS})
+        proofs_under_lock.append(worktree_claims._held_lock_key(lock_file) in worktree_claims._HELD_LOCKS)
         return True, "clean; task status=done"
 
     monkeypatch.setattr(delegate, "_superseded_review_releasable", releasable)
