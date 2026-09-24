@@ -728,7 +728,8 @@ def test_whole_sentence_rendered_with_inline_markup():
     )()
 
     stressed_doc = apply_stress(exp_doc, mock_stream)
-    urok_md, rendered_by_unit = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+    urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+    rendered_by_unit = unit_map.texts()
 
     # Assert whole sentence is rendered, NOT truncated to ' when you greet a friend.'
     assert "Say приві́т when you greet a friend." in urok_md

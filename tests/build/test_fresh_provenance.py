@@ -1414,14 +1414,18 @@ def test_image_to_letter_options_reach_the_page() -> None:
 
 def test_urok_renderer_emits_mapped_bytes_without_final_strip() -> None:
     # Reviewer reproduction (r3 BLOCKER b): the renderer's final `.strip()` removed whitespace the
-    # mapped piece kept. The mapping now describes exactly the bytes emitted.
+    # mapped piece kept. The mapping now describes exactly the bytes emitted. (Assembly drops
+    # end-of-line whitespace from draft text, see page_text; the stressed unit carries it here
+    # to pin the renderer's own contract.)
     draft, plan, pack, words = _fixture()
-    draft["consolidation"]["lead_in"] = "слово "
+    draft["consolidation"]["lead_in"] = "слово"
     validate_fixture_draft(draft)
     expanded, prov = assemble.assemble_expanded_document(draft, plan, pack, words, "a1", "sample-slug", 1)
     stressed = {"stressed_schema": 1, "lesson": expanded["lesson"], "units": copy.deepcopy(expanded["units"])}
-    urok_md, pieces = assemble._render_urok_markdown(draft, stressed, pack, words)
     lead_idx = next(i for i, u in enumerate(stressed["units"]) if u["block"] == "consolidation_lead_in")
+    stressed["units"][lead_idx]["text"] = "слово "
+    urok_md, unit_map = assemble._render_urok_markdown(draft, stressed, pack, words)
+    pieces = unit_map.texts()
     assert pieces[lead_idx] == "слово "
     assert urok_md.endswith("слово ")
     assert not urok_md.endswith("\n")  # the renderer's own trailing separators are still dropped
@@ -1433,3 +1437,248 @@ def test_urok_renderer_emits_mapped_bytes_without_final_strip() -> None:
 
 def _record_tab_pieces(stressed: dict) -> dict[int, str]:
     return {i: u["text"] for i, u in enumerate(stressed["units"]) if u["tab"] in ("slovnyk", "resursy")}
+
+
+# ---------------------------------------------------------------------------
+# Round 5 (reviewer BLOCKER r4): every Urok unit is verified at its own location in the final
+# Lesson tab, after every `generate_mdx` transform; a transform that removes or rewrites a unit
+# fails check 9 closed (engine layer).
+# ---------------------------------------------------------------------------
+
+
+def _page_and_provenance(tmp_path: Path) -> tuple[str, dict]:
+    mdx = (tmp_path / "site" / "1.mdx").read_text(encoding="utf-8")
+    prov = yaml.safe_load((tmp_path / "state" / "lesson-1.provenance.yaml").read_text(encoding="utf-8"))
+    return mdx, prov
+
+
+def _lesson_tab(mdx: str) -> str:
+    return mdx.split('<TabItem label="Урок — Lesson">')[1].split("</TabItem>")[0]
+
+
+def _check_9_row(report: dict) -> dict:
+    return next(c for c in report["checks"] if c["check"] == 9)
+
+
+def test_live_runner_prose_heading_removed_by_generate_mdx_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Reviewer reproduction (r4 BLOCKER): a prose unit `# слово` produced a provenance span with
+    # the heading while generate_mdx removed the duplicate H1 from the Lesson tab. The unit is
+    # now read back at its location in the final MDX: the transform removed it -> fail closed.
+    draft, plan, pack, words = _fixture()
+    draft["steps"][0]["blocks"].insert(0, {"kind": "prose", "text": "# слово", "explains": ["W-1"]})
+    validate_fixture_draft(draft)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = _check_9_row(report)
+    assert c9["status"] == "failed" and c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_location_unrendered: unit 0 at ('urok', 's1', None, None, 0): ")
+    assert "transform 'remove_duplicate_h1' removed the bytes of unit 0 ('# сло́во')" in c9["reason"]
+    assert not (tmp_path / "site" / "1.mdx").exists()
+
+
+def test_live_runner_heading_inside_prose_unit_rewritten_by_generate_mdx_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The same heading as the first line of a longer prose unit: the page keeps the rest of the
+    # unit, so the unit is rewritten (not removed) and the reason names the transform.
+    draft, plan, pack, words = _fixture(text="# слово\n\n" + "слово " * 10)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = _check_9_row(report)
+    assert c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_text_not_in_rendered_output: unit 0 at ('urok', 's1', None, None, 0): ")
+    assert "transform 'remove_duplicate_h1' rewrote the bytes of unit 0" in c9["reason"]
+    assert not (tmp_path / "site" / "1.mdx").exists()
+
+
+def _video_fixture() -> tuple[dict, dict, dict, dict]:
+    from tests.build.test_fresh_assemble import make_video_record
+
+    draft, plan, pack, words = _fixture()
+    pack["videos"] = [make_video_record(1, "https://www.youtube.com/watch?v=dQw4w9WgXcQ", "LearnUA", use="Listen")]
+    plan["lessons"][0]["videos"] = [{"evidence": "V-1", "use": "Listen once"}]
+    draft["steps"][0]["blocks"].append({"kind": "video", "ref": "V-1", "lead_in": "Watch: {{uk:слово}}"})
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    return draft, plan, pack, words
+
+
+def test_live_runner_youtube_link_becomes_component_and_lead_in_unit_keeps_its_location(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The video block's link line (a pack record, no unit) is replaced by the YouTubeVideo
+    # component; the lead-in units before it are verified at their (unchanged) location.
+    draft, plan, pack, words = _video_fixture()
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    lesson = _lesson_tab(mdx)
+    component = '<YouTubeVideo client:only="react" url="https://www.youtube.com/watch?v=dQw4w9WgXcQ" label="LearnUA" />'
+    assert component in lesson
+    assert "[LearnUA](" not in lesson
+    lead = _spans_by_unit(prov)[("urok", "s1", None, None, "video_lead_1")]
+    assert [(s["role"], s["text"]) for s in lead] == [("narration", "Watch: "), ("quoted_term", "сло́во")]
+    lead_text = "".join(s["text"] for s in lead)
+    assert lesson.count(lead_text) == 1
+    assert lesson.index(lead_text) < lesson.index(component)
+    _assert_spans_partition_units(prov)
+
+
+def test_live_runner_youtube_link_inside_prose_unit_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # A prose unit that contains a YouTube markdown link is rewritten into a component by
+    # generate_mdx: the unit's bytes no longer stand together on the page -> fail closed.
+    draft, plan, pack, words = _fixture(text="слово " * 10 + "[слово](https://youtu.be/dQw4w9WgXcQ) слово")
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = _check_9_row(report)
+    assert c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_text_not_in_rendered_output: unit 0 at ('urok', 's1', None, None, 0): ")
+    assert "transform 'embed_youtube_video_links' rewrote the bytes of unit 0" in c9["reason"]
+
+
+def test_live_runner_readings_block_insertion_keeps_unit_locations(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # generate_mdx inserts the reading list in front of the Lesson content; every unit after
+    # it is verified at its shifted location.
+    from scripts.generate_mdx.reading_links import reading_href_for
+
+    href = reading_href_for("duma-marusia-bohuslavka")
+    assert href, "hosted reading fixture missing"
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["reading_passages"] = [
+        {"title": "Маруся Богуславка", "reading_slug": "duma-marusia-bohuslavka", "genre": "дума"}
+    ]
+    validate_fixture_plan(plan)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    lesson = _lesson_tab(mdx)
+    block = f"**Тексти для читання**\n\n- [Маруся Богуславка]({href}) — дума"
+    assert block in lesson
+    prose = _spans_by_unit(prov)[("urok", "s1", None, None, 0)]
+    assert [s["text"] for s in prose] == [("сло́во " * 11).rstrip()]
+    assert lesson.index(block) < lesson.index(prose[0]["text"])
+    _assert_spans_partition_units(prov)
+
+
+def test_live_runner_dialogue_units_live_in_the_dialogue_box_payload(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Dialogue lines reach the page as the DialogueBox `exchanges` prop. The renderer emits
+    # that component itself and maps each line's units into the payload bytes (escaped for
+    # JSON and for the JS string literal); check 9 decodes them back at their location.
+    import re
+
+    from scripts.generate_mdx.unit_map import decode_js_json_string
+
+    draft, plan, pack, words = _fixture()
+    plan["lessons"][0]["dialogue"] = {
+        "step": "s1",
+        "situation": "Meeting",
+        "setting": "Street",
+        "speakers": [{"name": "Оксана", "role": "student", "gender": "f"}],
+        "register": "informal",
+        "target_grammar": "greeting",
+        "evidence": [],
+    }
+    draft["steps"][0]["blocks"].append({"kind": "dialogue"})
+    draft["dialogue"] = {
+        "lines": [
+            {"speaker": "Оксана", "text": "слово {{uk:слово}} 'слово'"},
+            {"speaker": "Оксана", "text": 'слово "слово" \\ слово'},
+        ]
+    }
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    lesson = _lesson_tab(mdx)
+    assert lesson.count("<DialogueBox") == 1
+    payload = re.search(r"^  exchanges=\{JSON\.parse\('(.*)'\)\}$", lesson, flags=re.MULTILINE).group(1)
+    exchanges = json.loads(re.sub(r"\\([\\'])", r"\1", payload))
+    by_unit = _spans_by_unit(prov)
+    line_texts = ["".join(s["text"] for s in by_unit[("urok", "s1", None, None, f"dialogue_{i}")]) for i in range(2)]
+    assert line_texts == ["сло́во сло́во 'сло́во'", 'сло́во "сло́во" \\ сло́во']
+    assert [(e["speaker"], e["text"]) for e in exchanges] == [("Оксана", line_texts[0]), ("Оксана", line_texts[1])]
+    assert decode_js_json_string(payload.split('"text":"')[2].split('"}')[0]) == line_texts[1]
+    _assert_spans_partition_units(prov)
+
+
+def test_live_runner_end_of_line_whitespace_is_dropped_at_assembly(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # The page's normalizer strips whitespace at the end of a line; unit text is taken from the
+    # draft the same way (page_text), so the spans and the page agree byte for byte.
+    draft, plan, pack, words = _fixture(text="слово " * 6 + "\t\n" + "слово " * 5)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    prose = _spans_by_unit(prov)[("urok", "s1", None, None, 0)]
+    expected = ("сло́во " * 6).rstrip() + "\n" + ("сло́во " * 5).rstrip()
+    assert [(s["text"], s["start"], s["end"]) for s in prose] == [(expected, 0, len(expected))]
+    assert expected in _lesson_tab(mdx)
+
+
+def test_live_runner_callout_and_table_units_keep_locations_through_generate_mdx(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Block kinds whose markdown generate_mdx rewrites around the unit (callouts -> admonitions,
+    # tables, bilingual rows, quotes, examples): the unit's own bytes stay, so it is located.
+    from tests.build.test_fresh_assemble import make_example_record, make_text_record
+
+    draft, plan, pack, words = _fixture()
+    pack["texts"] = [make_text_record(1, "слово слово")]
+    pack["examples"] = [make_example_record(1, "слово", "word", words=["W-1"])]
+    plan["lessons"][0]["steps"][0]["evidence"] = ["W-1", "T-1", "EX-1"]
+    draft["steps"][0]["blocks"].extend(
+        [
+            {"kind": "example", "ref": "EX-1"},
+            {"kind": "quote", "ref": "T-1"},
+            {"kind": "table", "rows": [["слово", "слово"], ["слово", "слово"]], "explains": ["W-1"]},
+            {"kind": "pronunciation", "text": "слово", "explains": ["W-1"]},
+            {"kind": "culture", "text": "слово слово", "explains": ["T-1"]},
+            {"kind": "tip", "text": "слово"},
+            {"kind": "summary", "text": "слово"},
+            {"kind": "callout", "text": "слово"},
+            {"kind": "bilingual", "uk": ["слово"], "en": ["word"]},
+        ]
+    )
+    validate_fixture_pack(pack)
+    validate_fixture_plan(plan)
+    validate_fixture_draft(draft)
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is True, report
+    mdx, prov = _page_and_provenance(tmp_path)
+    lesson = _lesson_tab(mdx)
+    assert ":::note[" in lesson and ":::tip[" in lesson and "> [!" not in lesson
+    urok_blocks = {loc[4] for loc in _spans_by_unit(prov) if loc[0] == "urok"}
+    assert {1, 2, "table_3_0_0", "table_3_1_1", 4, 5, 6, 7, 8, "bilingual_9_0"} <= urok_blocks
+    for loc, spans in _spans_by_unit(prov).items():
+        if loc[0] == "urok":
+            assert "".join(s["text"] for s in spans) in lesson, loc
+    _assert_spans_partition_units(prov)
+
+
+def test_live_runner_activity_jsx_rewritten_by_generate_mdx_fails_closed(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    # Vpravy units are located in the component JSX as it stands in the final MDX. A shared
+    # transform that rewrites the payload (here fix_html_for_jsx on a `<br>` in an
+    # explanation) fails closed for the activity instead of passing on the pre-transform JSX.
+    draft, plan, pack, words = _quiz_fixture(
+        [{"question": "слово", "options": ["слово", "слова"], "correct": 0, "explanation": "E<br>F"}]
+    )
+    report, _state, _ = _run_contract(tmp_path, monkeypatch, draft, plan, pack, words)
+    assert report["passed"] is False
+    c9 = _check_9_row(report)
+    assert c9["layer"] == "engine"
+    assert c9["reason"].startswith("span_text_not_in_rendered_output: activity 'a1' component: ")
+    assert "transform 'fix_html_for_jsx' rewrote the bytes of unit ('activity', 'a1', 0)" in c9["reason"]
+    assert not (tmp_path / "site" / "1.mdx").exists()

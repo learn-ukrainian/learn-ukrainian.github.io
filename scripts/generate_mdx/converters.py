@@ -88,6 +88,29 @@ def yaml_activities_to_jsx(
     matched list position; structural fingerprints still suppress duplicate
     idless copies so they do not render in full.
     """
+    return '\n\n'.join(
+        mdx
+        for _activity_id_or_none, mdx in yaml_activity_mdx_parts(
+            activities,
+            is_ukrainian_forced,
+            inline_cross_ref_ids=inline_cross_ref_ids,
+            inline_cross_ref_positions=inline_cross_ref_positions,
+            inline_cross_ref_fingerprints=inline_cross_ref_fingerprints,
+            inline_cross_ref_section_titles=inline_cross_ref_section_titles,
+        )
+    )
+
+
+def yaml_activity_mdx_parts(
+    activities: list[Activity],
+    is_ukrainian_forced: bool = False,
+    inline_cross_ref_ids: set[str] | None = None,
+    inline_cross_ref_positions: set[int] | None = None,
+    inline_cross_ref_fingerprints: set[str] | None = None,
+    inline_cross_ref_section_titles: dict[str, str] | None = None,
+) -> list[tuple[str | None, str]]:
+    """The workbook tab's parts in order: `(activity id, component JSX)` for a full activity,
+    `(None, mdx)` for an inline cross-reference. `yaml_activities_to_jsx` joins them."""
     parser = ActivityParser()
     inline_ids = {
         str(activity_id).strip()
@@ -97,28 +120,30 @@ def yaml_activities_to_jsx(
     inline_positions = set(inline_cross_ref_positions or set())
     inline_fingerprints = set(inline_cross_ref_fingerprints or set())
     section_titles = inline_cross_ref_section_titles or {}
-    if not (inline_ids or inline_positions or inline_fingerprints):
-        return parser.to_mdx(activities, is_ukrainian_forced)
+    cross_referencing = bool(inline_ids or inline_positions or inline_fingerprints)
 
-    mdx_parts = []
+    parts: list[tuple[str | None, str]] = []
     for index, activity in enumerate(activities):
         activity_id = _activity_id(activity)
-        if index in inline_positions or activity_id in inline_ids:
-            mdx_parts.append(
-                _inline_activity_cross_ref_to_mdx(
-                    activity,
-                    section_titles.get(activity_id, ""),
-                    is_ukrainian_forced,
+        if cross_referencing and (index in inline_positions or activity_id in inline_ids):
+            parts.append(
+                (
+                    None,
+                    _inline_activity_cross_ref_to_mdx(
+                        activity,
+                        section_titles.get(activity_id, ""),
+                        is_ukrainian_forced,
+                    ),
                 )
             )
             continue
-        if activity_identity_key(activity) in inline_fingerprints:
+        if cross_referencing and activity_identity_key(activity) in inline_fingerprints:
             continue
         mdx = parser._activity_to_mdx(activity, is_ukrainian_forced)
         if not mdx:
             continue
-        mdx_parts.append(mdx)
-    return '\n\n'.join(mdx_parts)
+        parts.append((activity_id or None, mdx))
+    return parts
 
 
 def _inline_activity_cross_ref_to_mdx(
@@ -677,6 +702,13 @@ def _parse_dialogue_line(stripped_line: str) -> dict[str, str] | None:
     return {"speaker": match.group('speaker').strip(), "text": text}
 
 
+DIALOGUE_BOX_DEFAULT_TITLE = "Діалог"
+# The DialogueBox component line that carries the exchanges: a JSON payload (`json.dumps`,
+# compact separators) escaped for a single-quoted JS string literal and parsed by the page.
+DIALOGUE_BOX_PAYLOAD_PREFIX = "  exchanges={JSON.parse('"
+DIALOGUE_BOX_PAYLOAD_SUFFIX = "')}"
+
+
 def _dialogue_title(previous_lines: list[str]) -> tuple[str, int | None]:
     start = max(0, len(previous_lines) - 3)
     for index in range(len(previous_lines) - 1, start - 1, -1):
@@ -685,20 +717,31 @@ def _dialogue_title(previous_lines: list[str]) -> tuple[str, int | None]:
         match = re.match(r'^\*\*(Діалог\s+\d+\s+[\u2014-]\s+.+?)\*\*$', stripped)
         if match:
             return match.group(1), index
-    return "Діалог", None
+    return DIALOGUE_BOX_DEFAULT_TITLE, None
+
+
+DIALOGUE_BOX_CLOSING_LINE = "/>"
+
+
+def dialogue_box_header_lines(title: str) -> list[str]:
+    """The DialogueBox component's opening lines, before the exchanges payload line."""
+    safe_title = title.replace('"', '&quot;')
+    return ['<DialogueBox', '  client:only="react"', f'  title="{safe_title}"']
+
+
+def dialogue_box_jsx_lines(escaped_payload: str, title: str) -> list[str]:
+    """The DialogueBox component, line by line, around an already escaped exchanges payload."""
+    return [
+        *dialogue_box_header_lines(title),
+        f"{DIALOGUE_BOX_PAYLOAD_PREFIX}{escaped_payload}{DIALOGUE_BOX_PAYLOAD_SUFFIX}",
+        DIALOGUE_BOX_CLOSING_LINE,
+    ]
 
 
 def _dialogue_box_mdx(exchanges: list[dict[str, str]], title: str) -> str:
     payload = json.dumps(exchanges, ensure_ascii=False, separators=(',', ':'))
     payload = payload.replace('\\', '\\\\').replace("'", "\\'")
-    safe_title = title.replace('"', '&quot;')
-    return (
-        '<DialogueBox\n'
-        '  client:only="react"\n'
-        f'  title="{safe_title}"\n'
-        f"  exchanges={{JSON.parse('{payload}')}}\n"
-        '/>'
-    )
+    return '\n'.join(dialogue_box_jsx_lines(payload, title))
 
 
 def resolve_slug_links(content: str) -> str:

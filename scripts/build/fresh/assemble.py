@@ -31,18 +31,35 @@ Units and spans (r3 invariant):
   fails check 9 closed (`span_location_unrendered`); a rendered piece whose letters differ
   from the stressed unit text fails closed (`span_text_not_in_rendered_output`). No global
   search of the page string is used anywhere.
-- Verification runs against what the page receives. Urok pieces are the bytes the Urok
-  renderer emits (nothing is trimmed after the mapping is taken). Vpravy units are located
-  in the component props the page's React components consume: the activity payload is
-  parsed by `ActivityParser`, serialized by its `_activity_to_mdx` (the same call
-  `generate_mdx` makes for every `INJECT_ACTIVITY` marker and for the Vpravy tab), and the
-  `JSON.parse(...)`/string props are read back (`component_props_from_jsx`). Each unit group
-  (activity, item, block) must equal, byte for byte, the prop field that corresponds to its
-  role (`page_field_text`: prompt, option n, answer, error text, explanation, instruction).
-  A field the parser or serializer dropped or changed fails closed with
-  `span_location_unrendered` (engine layer). For every choice span with `is_key` the page's
-  own key (the option flagged `correct`, `answer`/`correctForm` equality, `correct` index,
-  `correctIndices`) must agree, else `span_key_not_on_page`.
+- Verification runs against what the page receives, i.e. the final MDX after every
+  `generate_mdx` transform. The Urok renderer records the byte range of every unit it emits
+  (`_UrokWriter` -> `LessonUnitMap`, scripts/generate_mdx/unit_map.py); `generate_mdx`
+  carries that map through each transform of the Lesson tab and of the document (frontmatter
+  parsing, section clean-up, readings insertion, YouTube embedding, inline activity
+  injection, folk blocks, callouts, slug links, bad-form markers, HTML fixes, comment
+  removal, story sections, dialogues, duplicate-H1 removal, heading emojis, tab strip and
+  wrap, `normalize_mdx`): a unit whose bytes survive unchanged keeps its shifted location, a
+  unit a transform removed or rewrote is marked lost with the transform's name. Check 9 then
+  reads every unit back at its own location in the final MDX and fails closed: removed ->
+  `span_location_unrendered`, rewritten -> `span_text_not_in_rendered_output` (engine layer,
+  reason names the transform). Dialogue lines are emitted by the renderer as the page's
+  DialogueBox component; their units are the escaped bytes inside the `exchanges` payload,
+  decoded back at verification (`CODEC_JS_JSON_STRING`). Urok block text is taken from the
+  draft with end-of-line whitespace dropped (`page_text`), the one normalization the page
+  applies to prose, so a unit never claims bytes the page has no place for.
+- Vpravy units are located in the component props the page's React components consume: the
+  activity payload is parsed by `ActivityParser` and serialized by its `_activity_to_mdx`
+  (the same call `generate_mdx` makes for every `INJECT_ACTIVITY` marker and for the Vpravy
+  tab); the JSX block of every activity is tracked in the same map through the transforms,
+  and the `JSON.parse(...)`/string props are read back (`component_props_from_jsx`) from the
+  block as it stands in the final MDX. Each unit group (activity, item, block) must equal,
+  byte for byte, the prop field that corresponds to its role (`page_field_text`: prompt,
+  option n, answer, error text, explanation, instruction). A field the parser or serializer
+  dropped or changed fails closed with `span_location_unrendered` (engine layer); a
+  transform that rewrote the block fails closed with `span_text_not_in_rendered_output`.
+  For every choice span with `is_key` the page's own key (the option flagged `correct`,
+  `answer`/`correctForm` equality, `correct` index, `correctIndices`) must agree, else
+  `span_key_not_on_page`.
 - A string `answer` on quiz / multiple-choice / select / translate / odd-one-out that names
   one of the item's choices (check 4) is a key like the integer `correct`: it is no provenance
   unit, and the payload key is rewritten to the rendered text of the option it names (options
@@ -164,7 +181,22 @@ from scripts.curriculum.resolver import codes as resolver_codes
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
 from scripts.generate_mdx.atlas_links import atlas_href_for
+from scripts.generate_mdx.converters import (
+    DIALOGUE_BOX_CLOSING_LINE,
+    DIALOGUE_BOX_DEFAULT_TITLE,
+    DIALOGUE_BOX_PAYLOAD_PREFIX,
+    DIALOGUE_BOX_PAYLOAD_SUFFIX,
+    dialogue_box_header_lines,
+)
 from scripts.generate_mdx.core import generate_mdx
+from scripts.generate_mdx.unit_map import (
+    CODEC_JS_JSON_STRING,
+    CODEC_PLAIN,
+    LOST_REMOVED,
+    LessonUnitMap,
+    UnitMapError,
+    encode_js_json_string,
+)
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
 EXPANDED_SCHEMA_PATH = REPO_ROOT / "schemas" / "lesson-expanded-v1.schema.json"
@@ -526,6 +558,7 @@ def locate_units_in_component_props(
     stressed_doc: dict[str, Any],
     engine_pieces: dict[int, str],
     parsed_activities: dict[str, Any],
+    page_jsx: dict[str, list[str]],
     *,
     spans: list[dict[str, Any]] | None = None,
 ) -> dict[int, str]:
@@ -533,15 +566,14 @@ def locate_units_in_component_props(
 
     `engine_pieces` is the engine's own unit->text mapping for the activity payload it handed
     to the parser (`apply_stress_to_activities`); `parsed_activities` maps activity id to the
-    `ActivityParser` object `generate_mdx` serializes. For each unit group (activity, item,
-    block) the concatenation of its pieces must equal the corresponding prop field, byte for
-    byte; otherwise the group's first unit fails closed with `span_location_unrendered`.
-    Returns the located pieces keyed by unit index.
+    parsed `ActivityParser` object (its type); `page_jsx` maps activity id to the component
+    JSX block(s) of that activity as they stand in the final MDX (tracked by `generate_mdx`
+    through its transforms, see `scripts/generate_mdx/unit_map.py`). For each unit group
+    (activity, item, block) the concatenation of its pieces must equal the corresponding prop
+    field of every block, byte for byte; otherwise the group's first unit fails closed with
+    `span_location_unrendered`. Returns the located pieces keyed by unit index.
     """
-    from scripts.yaml_activities import ActivityParser
-
-    serializer = ActivityParser()
-    props_by_activity: dict[str, dict[str, Any]] = {}
+    props_by_activity: dict[str, list[dict[str, Any]]] = {}
     groups: dict[tuple[Any, ...], list[int]] = {}
     for idx, unit in enumerate(stressed_doc.get("units", [])):
         if unit.get("tab") == "vpravy":
@@ -573,7 +605,15 @@ def locate_units_in_component_props(
             )
         act_type = str(getattr(act_obj, "type", ""))
         if act_id not in props_by_activity:
-            props_by_activity[act_id] = component_props_from_jsx(serializer._activity_to_mdx(act_obj))
+            blocks = page_jsx.get(str(act_id)) or []
+            if not blocks:
+                raise AssemblerError(
+                    SPAN_LOCATION_UNRENDERED,
+                    f"the renderer emitted nothing for unit {first} at {loc_key}: no {act_type} component for "
+                    f"activity {act_id!r} is on the page",
+                    layer="engine",
+                )
+            props_by_activity[act_id] = [component_props_from_jsx(block) for block in blocks]
         pieces = []
         for idx in indices:
             if idx not in engine_pieces:
@@ -585,33 +625,35 @@ def locate_units_in_component_props(
             pieces.append(engine_pieces[idx])
         expected = "".join(pieces)
         key_index = key_index_by_item.get((act_id, item_idx))
-        props = props_by_activity[act_id]
-        field = page_field_text(act_type, props, item_idx, block, key_index=key_index)
-        if field is None:
-            raise AssemblerError(
-                SPAN_LOCATION_UNRENDERED,
-                f"unit {first} at {loc_key}: the {act_type} component receives no {block!r} field for item "
-                f"{item_idx} (expected {expected!r})",
-                layer="engine",
-            )
-        if field != expected:
-            raise AssemblerError(
-                SPAN_LOCATION_UNRENDERED,
-                f"unit {first} at {loc_key}: the {act_type} component receives {field!r} in its {block!r} field, "
-                f"not the unit text {expected!r}",
-                layer="engine",
-            )
-        opt_match = _OPT_BLOCK_RE.match(str(block))
-        span_is_key = spans[first].get("is_key") if spans is not None and first < len(spans) else None
-        if opt_match and isinstance(span_is_key, bool):
-            page_is_key = page_option_is_key(act_type, props, item_idx, int(opt_match.group(1)), key_index=key_index)
-            if page_is_key is not None and page_is_key != span_is_key:
+        for props in props_by_activity[act_id]:
+            field = page_field_text(act_type, props, item_idx, block, key_index=key_index)
+            if field is None:
                 raise AssemblerError(
-                    SPAN_KEY_NOT_ON_PAGE,
-                    f"unit {first} at {loc_key}: provenance marks is_key={span_is_key} but the {act_type} "
-                    f"component flags this choice {'correct' if page_is_key else 'not correct'}",
+                    SPAN_LOCATION_UNRENDERED,
+                    f"unit {first} at {loc_key}: the {act_type} component receives no {block!r} field for item "
+                    f"{item_idx} (expected {expected!r})",
                     layer="engine",
                 )
+            if field != expected:
+                raise AssemblerError(
+                    SPAN_LOCATION_UNRENDERED,
+                    f"unit {first} at {loc_key}: the {act_type} component receives {field!r} in its {block!r} "
+                    f"field, not the unit text {expected!r}",
+                    layer="engine",
+                )
+            opt_match = _OPT_BLOCK_RE.match(str(block))
+            span_is_key = spans[first].get("is_key") if spans is not None and first < len(spans) else None
+            if opt_match and isinstance(span_is_key, bool):
+                page_is_key = page_option_is_key(
+                    act_type, props, item_idx, int(opt_match.group(1)), key_index=key_index
+                )
+                if page_is_key is not None and page_is_key != span_is_key:
+                    raise AssemblerError(
+                        SPAN_KEY_NOT_ON_PAGE,
+                        f"unit {first} at {loc_key}: provenance marks is_key={span_is_key} but the {act_type} "
+                        f"component flags this choice {'correct' if page_is_key else 'not correct'}",
+                        layer="engine",
+                    )
         for idx, piece in zip(indices, pieces, strict=True):
             located[idx] = piece
     return located
@@ -641,6 +683,20 @@ class CheckResult:
         if self.layer is not None:
             result["layer"] = self.layer
         return result
+
+
+_TRAILING_LINE_WHITESPACE_RE = re.compile(r"[ \t]+$", re.MULTILINE)
+
+
+def page_text(text: str) -> str:
+    """Draft or record text as the page can carry it.
+
+    Whitespace at the end of a line is dropped (the site's markdown normalizer strips it,
+    MD009); nothing else changes. Urok block text is taken this way at assembly so a unit
+    never claims bytes the page has no place for. Vpravy text is not normalized: it reaches
+    the page inside component props, where every byte is kept.
+    """
+    return _TRAILING_LINE_WHITESPACE_RE.sub("", text)
 
 
 def _split_inline_spans(text: str, default_role: str) -> list[tuple[str, str]]:
@@ -807,7 +863,7 @@ def assemble_expanded_document(
         step_id = step.get("id")
         lead_in = step.get("lead_in")
         if lead_in:
-            for role, span_text in _split_inline_spans(lead_in, "narration"):
+            for role, span_text in _split_inline_spans(page_text(lead_in), "narration"):
                 add_unit("urok", step_id, None, None, "lead_in", role, span_text, source="writer_prose")
 
         blocks = step.get("blocks", [])
@@ -818,7 +874,7 @@ def assemble_expanded_document(
 
             if kind == "prose":
                 prose_text = block.get("text", "")
-                for role, span_text in _split_inline_spans(prose_text, "narration"):
+                for role, span_text in _split_inline_spans(page_text(prose_text), "narration"):
                     add_unit("urok", step_id, None, None, block_idx, role, span_text, source="writer_prose")
 
             elif kind == "example":
@@ -826,7 +882,7 @@ def assemble_expanded_document(
                 ex_rec = examples_by_id.get(ref_id)
                 if ex_rec is None:
                     raise AssemblerError(EXAMPLE_NOT_FOUND, f"example record {ref_id} not found in pack")
-                ex_text = str(ex_rec.get("text", ""))
+                ex_text = page_text(str(ex_rec.get("text", "")))
                 add_unit("urok", step_id, None, None, block_idx, "record_print", ex_text, source="record", ref=ref_id)
 
             elif kind == "quote":
@@ -834,7 +890,7 @@ def assemble_expanded_document(
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec is None:
                     raise AssemblerError(TEXT_NOT_FOUND, f"quote record {ref_id} not found in pack")
-                quote_text = str(t_rec.get("quote", ""))
+                quote_text = page_text(str(t_rec.get("quote", "")))
                 add_unit(
                     "urok", step_id, None, None, block_idx, "record_print", quote_text, source="record", ref=ref_id
                 )
@@ -876,7 +932,7 @@ def assemble_expanded_document(
                     if isinstance(row, list):
                         for c_idx, cell in enumerate(row):
                             c_str = str(cell)
-                            for role, span_text in _split_inline_spans(c_str, "narration"):
+                            for role, span_text in _split_inline_spans(page_text(c_str), "narration"):
                                 add_unit(
                                     "urok",
                                     step_id,
@@ -890,14 +946,14 @@ def assemble_expanded_document(
 
             elif kind == "pronunciation":
                 pron_text = block.get("text", "")
-                for role, span_text in _split_inline_spans(pron_text, "narration"):
+                for role, span_text in _split_inline_spans(page_text(pron_text), "narration"):
                     add_unit("urok", step_id, None, None, block_idx, role, span_text, source="writer_prose")
 
             elif kind == "bilingual":
                 uk_lines = block.get("uk", [])
                 for line_idx, line in enumerate(uk_lines):
                     l_str = str(line)
-                    for role, span_text in _split_inline_spans(l_str, "narration"):
+                    for role, span_text in _split_inline_spans(page_text(l_str), "narration"):
                         add_unit(
                             "urok",
                             step_id,
@@ -922,7 +978,7 @@ def assemble_expanded_document(
 
             elif kind in ("culture", "tip", "summary", "callout"):
                 txt = block.get("text", "")
-                for role, span_text in _split_inline_spans(txt, "narration"):
+                for role, span_text in _split_inline_spans(page_text(txt), "narration"):
                     add_unit("urok", step_id, None, None, block_idx, role, span_text, source="writer_prose")
 
             elif kind == "video":
@@ -932,7 +988,7 @@ def assemble_expanded_document(
                     raise AssemblerError(VIDEO_NOT_FOUND, f"video record {ref_id} not found in pack")
                 v_lead = block.get("lead_in")
                 if v_lead:
-                    for role, span_text in _split_inline_spans(v_lead, "narration"):
+                    for role, span_text in _split_inline_spans(page_text(v_lead), "narration"):
                         add_unit(
                             "urok",
                             step_id,
@@ -949,7 +1005,7 @@ def assemble_expanded_document(
                 for line_idx, line in enumerate(dial.get("lines", [])):
                     if isinstance(line, dict):
                         l_text = str(line.get("text", ""))
-                        for role, span_text in _split_inline_spans(l_text, "dialogue_line"):
+                        for role, span_text in _split_inline_spans(page_text(l_text), "dialogue_line"):
                             add_unit(
                                 "urok",
                                 step_id,
@@ -975,7 +1031,7 @@ def assemble_expanded_document(
     # Consolidation lead-in
     consol_lead = draft.get("consolidation", {}).get("lead_in")
     if consol_lead:
-        for role, span_text in _split_inline_spans(consol_lead, "narration"):
+        for role, span_text in _split_inline_spans(page_text(consol_lead), "narration"):
             add_unit("urok", None, None, None, "consolidation_lead_in", role, span_text, source="writer_prose")
 
     # 2. Tab: vpravy (Activities)
@@ -1826,21 +1882,73 @@ def build_resursy_tab(
     return result
 
 
+@dataclass(frozen=True)
+class _UnitFragment:
+    """One expanded unit's contribution to a rendered line: its index and rendered piece."""
+
+    index: int
+    piece: str
+    codec: str = CODEC_PLAIN
+
+
+class _UrokWriter:
+    """Builds the Urok markdown line by line and records every unit's byte range in it.
+
+    Lines are joined with a newline; the renderer's own trailing blank lines are dropped at
+    the end. A unit fragment is emitted exactly as mapped (encoded per its codec), so the
+    resulting `LessonUnitMap` is the renderer's own unit->output mapping, not a search.
+    """
+
+    def __init__(self) -> None:
+        self._lines: list[str] = []
+        self._length = 0
+        self._ranges: list[tuple[int, int, int, str, str]] = []
+
+    def line(self, *fragments: str | _UnitFragment) -> None:
+        position = self._length + (1 if self._lines else 0)
+        parts: list[str] = []
+        for fragment in fragments:
+            if isinstance(fragment, _UnitFragment):
+                encoded = (
+                    encode_js_json_string(fragment.piece) if fragment.codec == CODEC_JS_JSON_STRING else fragment.piece
+                )
+                self._ranges.append((fragment.index, position, position + len(encoded), fragment.piece, fragment.codec))
+                parts.append(encoded)
+                position += len(encoded)
+            else:
+                parts.append(fragment)
+                position += len(fragment)
+        self._lines.append("".join(parts))
+        self._length = position
+
+    def blank(self) -> None:
+        self.line()
+
+    def finish(self) -> tuple[str, LessonUnitMap]:
+        while self._lines and self._lines[-1] == "":
+            self._lines.pop()
+        text = "\n".join(self._lines)
+        unit_map = LessonUnitMap(text)
+        for index, start, end, piece, codec in self._ranges:
+            unit_map.track(index, start, end, piece, codec)
+        return text, unit_map
+
+
 def _render_urok_markdown(
     draft: dict[str, Any],
     stressed_doc: dict[str, Any],
     pack: dict[str, Any],
     words_store: dict[str, Any],
-) -> tuple[str, dict[int, str]]:
+) -> tuple[str, LessonUnitMap]:
     """Render Tab 1 (Urok) markdown from draft and stressed units.
 
-    Returns the markdown and the renderer's unit->output mapping: the rendered piece of every
-    expanded unit it consumed, keyed by unit index. Every block is the concatenation of its
-    units' pieces in order.
+    Returns the markdown and the renderer's unit->output mapping: the byte range and rendered
+    piece of every expanded unit it consumed, keyed by unit index. Every block is the
+    concatenation of its units' pieces in order. Dialogue lines are emitted as the page's
+    DialogueBox component; their units live in the `exchanges` payload (`CODEC_JS_JSON_STRING`).
     """
     stressed_units = stressed_doc.get("units", [])
     replace_gloss = gloss_replacer(words_store)
-    rendered_by_unit: dict[int, str] = {}
 
     unit_indices_by_block: dict[tuple[str | None, str | None, int | str], list[int]] = {}
     for i, u in enumerate(stressed_units):
@@ -1862,21 +1970,27 @@ def _render_urok_markdown(
         if isinstance(v, dict) and "id" in v:
             videos_by_id[v["id"]] = v
 
-    def render_units(indices: list[int]) -> str:
-        pieces = []
-        for i in indices:
-            piece = render_unit_piece(stressed_units[i]["text"], replace_gloss)
-            rendered_by_unit[i] = piece
-            pieces.append(piece)
-        return "".join(pieces)
+    def unit_fragments(indices: list[int], codec: str = CODEC_PLAIN) -> list[str | _UnitFragment]:
+        return [_UnitFragment(i, render_unit_piece(stressed_units[i]["text"], replace_gloss), codec) for i in indices]
 
-    def format_block_text(step_id: str | None, block_key: int | str, fallback: str = "") -> str:
+    def block_fragments(
+        step_id: str | None, block_key: int | str, fallback: str = "", codec: str = CODEC_PLAIN
+    ) -> list[str | _UnitFragment]:
         indices = unit_indices_by_block.get(("urok", step_id, block_key))
         if indices:
-            return render_units(indices)
-        return render_unit_piece(fallback, replace_gloss)
+            return unit_fragments(indices, codec)
+        piece = render_unit_piece(fallback, replace_gloss)
+        return [encode_js_json_string(piece) if codec == CODEC_JS_JSON_STRING else piece]
 
-    lines: list[str] = []
+    def joined(cells: list[list[str | _UnitFragment]], separator: str) -> list[str | _UnitFragment]:
+        out: list[str | _UnitFragment] = []
+        for c_idx, cell in enumerate(cells):
+            if c_idx:
+                out.append(separator)
+            out.extend(cell)
+        return out
+
+    w = _UrokWriter()
 
     for step in draft.get("steps", []):
         if not isinstance(step, dict):
@@ -1885,8 +1999,8 @@ def _render_urok_markdown(
 
         lead_in = step.get("lead_in")
         if lead_in:
-            lines.append(format_block_text(step_id, "lead_in", lead_in))
-            lines.append("")
+            w.line(*block_fragments(step_id, "lead_in", lead_in))
+            w.blank()
 
         for block_idx, block in enumerate(step.get("blocks", [])):
             if not isinstance(block, dict):
@@ -1894,26 +2008,24 @@ def _render_urok_markdown(
             kind = block.get("kind")
 
             if kind == "prose":
-                txt = block.get("text", "")
-                lines.append(format_block_text(step_id, block_idx, txt))
-                lines.append("")
+                w.line(*block_fragments(step_id, block_idx, block.get("text", "")))
+                w.blank()
 
             elif kind == "example":
                 ref_id = block.get("ref", "")
                 ex_rec = examples_by_id.get(ref_id)
                 if ex_rec:
-                    uk = format_block_text(step_id, block_idx, str(ex_rec.get("text", "")))
                     en = str(ex_rec.get("translation_en") or "")
-                    lines.append(f"> {uk}")
+                    w.line("> ", *block_fragments(step_id, block_idx, str(ex_rec.get("text", ""))))
                     if en:
-                        lines.append(f">\n> *{en}*")
-                    lines.append("")
+                        w.line(">")
+                        w.line("> *", en, "*")
+                    w.blank()
 
             elif kind == "quote":
                 ref_id = block.get("ref", "")
                 t_rec = texts_by_id.get(ref_id)
                 if t_rec:
-                    q_text = format_block_text(step_id, block_idx, str(t_rec.get("quote", "")))
                     src = t_rec.get("source", {})
                     author = str(src.get("author") or "")
                     work = str(src.get("work") or "")
@@ -1921,10 +2033,11 @@ def _render_urok_markdown(
                     page = src.get("page")
                     attr_parts = [p for p in [author, work, str(year) if year else "", str(page) if page else ""] if p]
                     attr = ", ".join(attr_parts) if attr_parts else str(src.get("file", ""))
-                    lines.append(f"> {q_text}")
+                    w.line("> ", *block_fragments(step_id, block_idx, str(t_rec.get("quote", ""))))
                     if attr:
-                        lines.append(f">\n> — *{attr}*")
-                    lines.append("")
+                        w.line(">")
+                        w.line("> — *", attr, "*")
+                    w.blank()
 
             elif kind == "paradigm":
                 indices = [
@@ -1934,103 +2047,114 @@ def _render_urok_markdown(
                     and u.get("step") == step_id
                     and str(u.get("block", "")).startswith(f"paradigm_{block_idx}_")
                 ]
-                lines.append("| | |")
-                lines.append("| --- | --- |")
+                w.line("| | |")
+                w.line("| --- | --- |")
                 for u_idx in indices:
-                    lines.append(f"| {render_units([u_idx])} |")
-                lines.append("")
+                    w.line("| ", *unit_fragments([u_idx]), " |")
+                w.blank()
 
             elif kind == "table":
                 rows = block.get("rows", [])
                 if rows:
                     header = [
-                        format_block_text(step_id, f"table_{block_idx}_0_{c_idx}", str(c))
+                        block_fragments(step_id, f"table_{block_idx}_0_{c_idx}", str(c))
                         for c_idx, c in enumerate(rows[0])
                     ]
-                    lines.append("| " + " | ".join(header) + " |")
-                    lines.append("| " + " | ".join("---" for _ in header) + " |")
+                    w.line("| ", *joined(header, " | "), " |")
+                    w.line("| " + " | ".join("---" for _ in header) + " |")
                     for r_idx, row in enumerate(rows[1:], start=1):
                         cells = [
-                            format_block_text(step_id, f"table_{block_idx}_{r_idx}_{c_idx}", str(c))
+                            block_fragments(step_id, f"table_{block_idx}_{r_idx}_{c_idx}", str(c))
                             for c_idx, c in enumerate(row)
                         ]
-                        lines.append("| " + " | ".join(cells) + " |")
-                    lines.append("")
+                        w.line("| ", *joined(cells, " | "), " |")
+                    w.blank()
 
             elif kind == "pronunciation":
-                txt = block.get("text", "")
-                lines.append(format_block_text(step_id, block_idx, txt))
-                lines.append("")
+                w.line(*block_fragments(step_id, block_idx, block.get("text", "")))
+                w.blank()
 
             elif kind == "bilingual":
                 uk_lines = block.get("uk", [])
                 en_lines = block.get("en", [])
-                lines.append("| | |")
-                lines.append("| --- | --- |")
+                w.line("| | |")
+                w.line("| --- | --- |")
                 for line_idx, (u_raw, e_raw) in enumerate(zip(uk_lines, en_lines, strict=False)):
-                    u_line = format_block_text(step_id, f"bilingual_{block_idx}_{line_idx}", str(u_raw))
-                    e_line = str(e_raw)
-                    lines.append(f"| {u_line} | {e_line} |")
-                lines.append("")
+                    w.line(
+                        "| ",
+                        *block_fragments(step_id, f"bilingual_{block_idx}_{line_idx}", str(u_raw)),
+                        " | ",
+                        *block_fragments(step_id, f"bilingual_en_{block_idx}_{line_idx}", str(e_raw)),
+                        " |",
+                    )
+                w.blank()
 
-            elif kind == "culture":
-                txt = block.get("text", "")
-                lines.append(f"> [!note]\n> {format_block_text(step_id, block_idx, txt)}")
-                lines.append("")
+            elif kind in ("culture", "callout"):
+                w.line("> [!note]")
+                w.line("> ", *block_fragments(step_id, block_idx, block.get("text", "")))
+                w.blank()
 
             elif kind == "tip":
-                txt = block.get("text", "")
-                lines.append(f"> [!tip]\n> {format_block_text(step_id, block_idx, txt)}")
-                lines.append("")
+                w.line("> [!tip]")
+                w.line("> ", *block_fragments(step_id, block_idx, block.get("text", "")))
+                w.blank()
 
             elif kind == "summary":
-                txt = block.get("text", "")
-                lines.append(f"> [!summary]\n> {format_block_text(step_id, block_idx, txt)}")
-                lines.append("")
-
-            elif kind == "callout":
-                txt = block.get("text", "")
-                lines.append(f"> [!note]\n> {format_block_text(step_id, block_idx, txt)}")
-                lines.append("")
+                w.line("> [!summary]")
+                w.line("> ", *block_fragments(step_id, block_idx, block.get("text", "")))
+                w.blank()
 
             elif kind == "video":
                 v_lead = block.get("lead_in")
                 if v_lead:
-                    lines.append(format_block_text(step_id, f"video_lead_{block_idx}", v_lead))
-                    lines.append("")
+                    w.line(*block_fragments(step_id, f"video_lead_{block_idx}", v_lead))
+                    w.blank()
                 ref_id = block.get("ref", "")
                 vid_rec = videos_by_id.get(ref_id)
                 if vid_rec:
                     chan = str(vid_rec.get("channel") or "")
                     url = str(vid_rec.get("url") or "")
-                    lines.append(f"> [{chan}]({url})")
-                    lines.append("")
+                    w.line("> [", chan, "](", url, ")")
+                    w.blank()
 
             elif kind == "dialogue":
+                # The page's DialogueBox component, with each line's units inside its
+                # `exchanges` payload (the same JSX `generate_mdx` builds for legacy dialogues).
                 dial = draft.get("dialogue") or {}
+                payload: list[str | _UnitFragment] = [DIALOGUE_BOX_PAYLOAD_PREFIX, "["]
                 for line_idx, line in enumerate(dial.get("lines", [])):
-                    if isinstance(line, dict):
-                        spk = line.get("speaker", "")
-                        l_txt = format_block_text(step_id, f"dialogue_{line_idx}", line.get("text", ""))
-                        lines.append(f"> **{spk}:** {l_txt}")
-                lines.append("")
+                    if not isinstance(line, dict):
+                        continue
+                    if len(payload) > 2:
+                        payload.append(",")
+                    payload.append('{"speaker":"' + encode_js_json_string(str(line.get("speaker", ""))) + '","text":"')
+                    payload.extend(
+                        block_fragments(
+                            step_id, f"dialogue_{line_idx}", line.get("text", ""), codec=CODEC_JS_JSON_STRING
+                        )
+                    )
+                    payload.append('"}')
+                payload.extend(("]", DIALOGUE_BOX_PAYLOAD_SUFFIX))
+                for header_line in dialogue_box_header_lines(DIALOGUE_BOX_DEFAULT_TITLE):
+                    w.line(header_line)
+                w.line(*payload)
+                w.line(DIALOGUE_BOX_CLOSING_LINE)
+                w.blank()
 
             elif kind == "activity":
                 ref_id = block.get("ref", "")
                 if ref_id:
-                    lines.append(f"<!-- INJECT_ACTIVITY: {ref_id} -->")
-                    lines.append("")
+                    w.line(f"<!-- INJECT_ACTIVITY: {ref_id} -->")
+                    w.blank()
 
     consol_lead = draft.get("consolidation", {}).get("lead_in")
     if consol_lead:
-        lines.append(format_block_text(None, "consolidation_lead_in", consol_lead))
-        lines.append("")
+        w.line(*block_fragments(None, "consolidation_lead_in", consol_lead))
+        w.blank()
 
     # Only the renderer's own trailing block separators are dropped; a unit's bytes (including
     # edge whitespace) are emitted exactly as mapped, so the mapping describes the output.
-    while lines and lines[-1] == "":
-        lines.pop()
-    return "\n".join(lines), rendered_by_unit
+    return w.finish()
 
 
 def apply_stress_to_activities(
@@ -2155,6 +2279,20 @@ def apply_stress_to_activities(
                             if right_key in pair:
                                 pair[right_key] = format_act_text(act_id, item_idx, f"pair_r_{p_idx}", pair[right_key])
     return stressed_activities, rendered_by_unit
+
+
+def _page_unit_label(key: Any, stressed_doc: dict[str, Any]) -> str:
+    """Name a tracked page unit in a check 9 reason: the stressed unit's location or the activity."""
+    if isinstance(key, int):
+        units = stressed_doc.get("units", [])
+        if 0 <= key < len(units):
+            unit = units[key]
+            loc_key = (unit.get("tab"), unit.get("step"), unit.get("activity"), unit.get("item"), unit.get("block"))
+            return f"unit {key} at {loc_key}"
+        return f"unit {key}"
+    if isinstance(key, tuple) and key and key[0] == "activity":
+        return f"activity {key[1]!r} component"
+    return repr(key)
 
 
 def check_9_stress_and_render(
@@ -2335,9 +2473,12 @@ def check_9_stress_and_render(
         "next": following,
         "lesson": lesson_n,
         "module_slug": slug,
+        # Plan reading passages that name a hosted reading (`title` + `reading_slug`) print as
+        # the Lesson tab's reading list, the contract `generate_mdx` already has for `readings`.
+        "readings": [entry for entry in lesson_entry.get("reading_passages") or [] if isinstance(entry, dict)],
     }
 
-    urok_md, rendered_by_unit = _render_urok_markdown(draft, stressed_doc, pack, words_store)
+    urok_md, unit_map = _render_urok_markdown(draft, stressed_doc, pack, words_store)
     replace_gloss = gloss_replacer(words_store)
 
     plan_acts_by_id = {
@@ -2361,10 +2502,6 @@ def check_9_stress_and_render(
         replace_gloss,
         activity_types={aid: str(act.get("type") or "") for aid, act in plan_acts_by_id.items()},
     )
-    rendered_by_unit.update(
-        rendered_units_for_tabs(stressed_doc, slovnyk_entries=slovnyk_entries, resursy_entries=resursy_entries)
-    )
-
     from scripts.yaml_activities import ActivityParser
 
     activity_parser = ActivityParser()
@@ -2401,24 +2538,11 @@ def check_9_stress_and_render(
                 layer="writer",
             )
 
-    # Provenance is verified against what the page receives: the engine's activity pieces
-    # count only where the parsed, serialized component props carry them in the unit's field.
     source_prov = provenance_doc
     if source_prov is None and output_dir is not None:
         prov_path = output_dir / f"lesson-{lesson_n}.provenance.yaml"
         if prov_path.is_file():
             source_prov = yaml.safe_load(prov_path.read_text(encoding="utf-8"))
-    try:
-        rendered_by_unit.update(
-            locate_units_in_component_props(
-                stressed_doc,
-                activity_pieces,
-                parsed_by_id,
-                spans=source_prov.get("spans") if isinstance(source_prov, dict) else None,
-            )
-        )
-    except AssemblerError as exc:
-        return CheckResult(check=9, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
 
     try:
         mdx_content = generate_mdx(
@@ -2432,9 +2556,45 @@ def check_9_stress_and_render(
             pipeline_version="v7",
             build_status="draft",
             fresh=True,
+            unit_map=unit_map,
         )
     except Exception as exc:
         return CheckResult(check=9, passed=False, reason=f"MDX rendering failed: {exc}", layer="writer")
+
+    # Provenance is verified against what the page receives. Every urok unit is read back at
+    # its own location in the final MDX (the renderer's mapping carried through every
+    # `generate_mdx` transform); vpravy units are located in the props of the component JSX
+    # as it stands in the final MDX.
+    try:
+        page_units = unit_map.verify(mdx_content)
+    except UnitMapError as exc:
+        code = SPAN_LOCATION_UNRENDERED if exc.kind == LOST_REMOVED else SPAN_TEXT_NOT_IN_RENDERED_OUTPUT
+        return CheckResult(
+            check=9,
+            passed=False,
+            reason=f"{code}: {_page_unit_label(exc.key, stressed_doc)}: {exc.message}",
+            layer="engine",
+        )
+    rendered_by_unit: dict[int, str] = {key: text for key, text in page_units.items() if isinstance(key, int)}
+    page_jsx: dict[str, list[str]] = {}
+    for key, text in page_units.items():
+        if isinstance(key, tuple) and key[0] == "activity":
+            page_jsx.setdefault(str(key[1]), []).append(text)
+    rendered_by_unit.update(
+        rendered_units_for_tabs(stressed_doc, slovnyk_entries=slovnyk_entries, resursy_entries=resursy_entries)
+    )
+    try:
+        rendered_by_unit.update(
+            locate_units_in_component_props(
+                stressed_doc,
+                activity_pieces,
+                parsed_by_id,
+                page_jsx,
+                spans=source_prov.get("spans") if isinstance(source_prov, dict) else None,
+            )
+        )
+    except AssemblerError as exc:
+        return CheckResult(check=9, passed=False, reason=f"{exc.code}: {exc.message}", layer=exc.layer)
 
     if output_dir is not None:
         write_stressed_document(stressed_doc, output_dir, lesson_n)
