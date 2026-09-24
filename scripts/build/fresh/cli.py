@@ -370,6 +370,7 @@ def _load_lesson_data(
         paths[name] = checked_existing_path(root, paths[name], allowed)
     for name in ("pack", "words", "registry"):
         checked_existing_path(root, Path(f"{paths[name]}.lock"), evidence_root)
+    checked_existing_path(root, Path(f"{paths['lock']}.lock"), evidence_root)
 
     # 1. Load plan via scripts.curriculum.validate.loader (Finding 1)
     if not paths["plan"].is_file():
@@ -535,6 +536,7 @@ def main(argv: list[str] | None = None) -> int:
             (evidence, evidence_root), (pack, evidence_root), (words, evidence_root),
             (registry, evidence_root), (state, evidence_root),
             (state / "lessons.lock.yaml", evidence_root),
+            (state / "lessons.lock.yaml.lock", evidence_root),
             *[(Path(f"{item}.lock"), evidence_root) for item in (pack, words, registry)],
         ):
             checked_path(repo_root, rel, allowed)

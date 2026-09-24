@@ -657,13 +657,15 @@ def test_path_guard_rejects_symlinked_sidecar_and_schema(tmp_path):
         checked_path(tmp_path, "schemas/fresh-lesson-gates-v1.schema.json", "schemas")
 
 
-def test_cli_rejects_symlinked_pack_sidecar_before_read(tmp_path, capsys):
+@pytest.mark.parametrize("sidecar_name", ["pack", "lesson_lock"])
+def test_cli_rejects_symlinked_sidecar_before_read(tmp_path, capsys, sidecar_name):
     tree = _build_synthetic_tree(tmp_path)
     forbidden = tmp_path / "curriculum/l2-uk-en/plans"
     forbidden.mkdir(parents=True)
     secret = forbidden / "private.lock"
     secret.write_text("private", encoding="utf-8")
-    sidecar = Path(f"{tree['pack']}.lock")
+    source = tree["pack"] if sidecar_name == "pack" else tree["state_dir"] / "synthetic-mod/lessons.lock.yaml"
+    sidecar = Path(f"{source}.lock")
     sidecar.unlink()
     sidecar.symlink_to(secret)
     with patch("scripts.build.fresh.cli._load_lesson_data", side_effect=AssertionError("read attempted")):
