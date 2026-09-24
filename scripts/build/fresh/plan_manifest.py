@@ -28,7 +28,7 @@ from jsonschema import Draft202012Validator
 
 from scripts.build.fresh.manifest import _input, learner_state_sha256
 from scripts.build.fresh.manifest import sha256 as file_sha256
-from scripts.build.fresh.path_guard import checked_path
+from scripts.build.fresh.path_guard import checked_path, validate_module
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import PlannedStateError, planned_state
 from scripts.curriculum.validate.loader import PlanError, load_plan
@@ -290,6 +290,14 @@ def validate_manifest_document(manifest: Any) -> None:
     errors = sorted(_manifest_schema_validator().iter_errors(manifest), key=lambda error: error.json_path)
     if errors:
         raise PlanReviewError(MANIFEST_INVALID, "; ".join(f"{e.json_path}: {e.message}" for e in errors))
+    try:
+        validate_module(manifest["level"], manifest["slug"])
+    except ValueError as error:
+        raise PlanReviewError(MANIFEST_INVALID, str(error)) from error
+    for name, entry in manifest["inputs"].items():
+        relative = Path(entry["path"])
+        if relative.is_absolute() or ".." in relative.parts:
+            raise PlanReviewError(MANIFEST_INVALID, f"inputs.{name}.path {entry['path']!r} is not repo-relative")
 
 
 def manifest_paths(root: Path, level: str, slug: str) -> tuple[Path, Path]:

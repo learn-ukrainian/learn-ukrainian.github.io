@@ -600,3 +600,13 @@ def test_a_receipt_rewritten_to_match_an_edited_plan_proves_nothing(approved, ca
     code, document = status(env, capsys)
     assert code == 1 and f"{PLANS}/{SLUG}.yaml" in document["stale"]
     assert "more than evidence_ref.sha256" in document["stale"][f"{PLANS}/{SLUG}.yaml"]
+
+
+@pytest.mark.parametrize("path", ["/etc/passwd", "../outside.yaml"])
+def test_a_manifest_naming_a_path_outside_the_repository_is_invalid(approved, path: str) -> None:
+    env, _digest = approved
+    manifest = yaml.safe_load((env.state_dir / "plan-review.manifest.yaml").read_bytes())
+    manifest["inputs"]["arc"]["path"] = path
+    with pytest.raises(plan_manifest.PlanReviewError) as excinfo:
+        plan_manifest.validate_manifest_document(manifest)
+    assert excinfo.value.code == plan_manifest.MANIFEST_INVALID
