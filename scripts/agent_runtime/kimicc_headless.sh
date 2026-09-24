@@ -94,6 +94,20 @@ CLAUDE_BIN="${KIMICC_CLAUDE_BIN:-claude}"
 CMD=("$CLAUDE_BIN" -p --bare --model "$LEAD_MODEL" --output-format stream-json --verbose)
 if [ "$MODE" = "danger" ]; then
   CMD+=(--dangerously-skip-permissions)
+elif [ "$MODE" = "read-only" ]; then
+  # Claude Code plan mode is the CLI's read-only permission mode. An explicit
+  # --tools profile from the adapter (trail isolation) wins over the default
+  # read/search set so a caller allowlist is not doubled.
+  CMD+=(--permission-mode plan)
+  has_tools=0
+  for arg in "${FORWARD_ARGS[@]}"; do
+    if [ "$arg" = "--tools" ]; then
+      has_tools=1
+    fi
+  done
+  if [ "$has_tools" -eq 0 ]; then
+    CMD+=(--tools "Read,Grep,Glob,LS")
+  fi
 fi
 CMD+=("${FORWARD_ARGS[@]}" -- "$PROMPT")
 exec "${CMD[@]}"
