@@ -16,7 +16,7 @@ import signal
 import subprocess
 import threading
 import uuid
-from collections.abc import Iterator
+from collections.abc import Callable, Iterator
 from pathlib import Path
 from types import FrameType
 from typing import Any
@@ -32,6 +32,7 @@ from scripts.guardrails.worktree_containment import (
     classify_repo_path,
     resolve_main_root,
 )
+from scripts.orchestration.worktree_claims import WorktreeRemoval, remove_unclaimed_worktree
 
 logger = logging.getLogger(__name__)
 
@@ -76,6 +77,41 @@ def _acp_runtime_root(main_root: Path) -> Path:
     return (main_root / ".worktrees" / "dispatch" / "acp").resolve()
 
 
+def _holds_more_than_git_pointer(path: Path) -> bool:
+    """Dirty probe for a no-checkout runtime: anything beyond ``.git`` counts."""
+    return not holds_only_git_pointer(path)
+
+
+def _own_runtime_is_scratch(_path: Path) -> bool:
+    """Dirty probe for the runtime this ask created: its contents are the ask's scratch."""
+    return False
+
+
+def _remove_runtime_worktree(
+    main_root: Path,
+    workspace: Path,
+    *,
+    owner_task_id: str | None,
+    reason: str,
+    dirty_probe: Callable[[Path], bool],
+) -> WorktreeRemoval:
+    """Force-remove one ACP runtime through the shared guarded chokepoint (#8610).
+
+    The chokepoint holds the per-worktree lock dispatch attaches under,
+    refuses while another task's unfinished record names the runtime, and
+    only then lifts this bridge's own git worktree lock and removes it.
+    """
+    return remove_unclaimed_worktree(
+        workspace,
+        repo_root=main_root,
+        reason=reason,
+        owner_task_id=owner_task_id,
+        force=True,
+        dirty_probe=dirty_probe,
+        unlock=True,
+    )
+
+
 def sweep_dead_acp_runtime_worktrees(main_root: Path) -> list[Path]:
     """Remove locked ACP runtime worktrees whose owner is provably dead.
 
@@ -115,33 +151,28 @@ def sweep_dead_acp_runtime_worktrees(main_root: Path) -> list[Path]:
                 return
             if owner_alive(pid, start_time) is not False:
                 return
-            if not holds_only_git_pointer(resolved):
-                logger.warning(
-                    "ACP runtime sweep: %s holds unexpected files; left for the reaper",
-                    resolved,
-                )
-                return
-            _run_git(main_root, "worktree", "unlock", str(resolved))
-            # Deferred import: the reaper module must stay importable without
-            # the bridge package. Removal goes through the reaper's single
-            # allowlisted deletion hand; this sweep adds no new raw
-            # ``worktree remove`` call site.
-            from scripts.orchestration.reap_worktrees import (
-                WorktreeInfo,
-                _remove_worktree,
-            )
-
-            error = _remove_worktree(
+            # The dead owner's task id is not recoverable from its lock, so
+            # no record is exempt from the claim scan.
+            removal = _remove_runtime_worktree(
                 main_root,
-                WorktreeInfo(path=resolved, branch=None, head=None, detached=True),
+                resolved,
+                owner_task_id=None,
+                reason="dead-owner ACP runtime sweep",
+                dirty_probe=_holds_more_than_git_pointer,
             )
-            if error is None:
+            if removal.action == "removed":
                 swept.append(resolved)
+            elif removal.action == "skipped":
+                logger.warning(
+                    "ACP runtime sweep left %s for the reaper: %s",
+                    resolved,
+                    removal.reason,
+                )
             else:
                 logger.warning(
                     "ACP runtime sweep could not remove dead-owner worktree %s: %s",
                     resolved,
-                    error,
+                    removal.error,
                 )
 
         for line in (listing.stdout or "").splitlines():
@@ -236,7 +267,13 @@ def acp_execution_cwd(repo_root: Path, *, task_id: str) -> Iterator[Path]:
             str(workspace),
         )
         if lock.returncode != 0:
-            _run_git(main_root, "worktree", "remove", "--force", str(workspace))
+            _remove_runtime_worktree(
+                main_root,
+                workspace,
+                owner_task_id=task_id,
+                reason="ACP runtime lock failed",
+                dirty_probe=_own_runtime_is_scratch,
+            )
             detail = " ".join((lock.stderr or lock.stdout).split())[:240]
             raise AcpExecutionWorkspaceError(
                 f"acp_execution_worktree_lock_failed: {detail or 'git worktree lock failed'}"
@@ -250,19 +287,18 @@ def acp_execution_cwd(repo_root: Path, *, task_id: str) -> Iterator[Path]:
             yield workspace
         finally:
             if created:
-                unlock = _run_git(main_root, "worktree", "unlock", str(workspace))
-                remove = _run_git(main_root, "worktree", "remove", "--force", str(workspace))
-                if remove.returncode != 0 and workspace.exists():
+                removal = _remove_runtime_worktree(
+                    main_root,
+                    workspace,
+                    owner_task_id=task_id,
+                    reason="ACP execution finished",
+                    dirty_probe=_own_runtime_is_scratch,
+                )
+                if removal.action != "removed" and workspace.exists():
                     logger.error(
                         "ACP execution worktree cleanup failed for %s: %s",
                         workspace,
-                        " ".join((remove.stderr or remove.stdout).split())[:240],
-                    )
-                elif unlock.returncode != 0 and workspace.exists():
-                    logger.error(
-                        "ACP execution worktree unlock failed for %s: %s",
-                        workspace,
-                        " ".join((unlock.stderr or unlock.stdout).split())[:240],
+                        " ".join(f"{removal.reason}: {removal.error or ''}".split())[:240],
                     )
     finally:
         _restore_sigterm(previous_sigterm)

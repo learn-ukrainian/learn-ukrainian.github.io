@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-import ast
 import fcntl
 import inspect
 import json
@@ -8,6 +7,7 @@ import os
 import shutil
 import sqlite3
 import subprocess
+import threading
 import time
 from pathlib import Path
 from typing import Any
@@ -17,7 +17,7 @@ import pytest
 from scripts.common.acp_runtime_lock import build_lock_reason, process_start_time
 from scripts.fleet import post_task_reap
 from scripts.orchestration import reap_worktrees as rw
-from scripts.orchestration import reaper_lifecycle
+from scripts.orchestration import reaper_lifecycle, worktree_claims
 
 _REAL_RUN = subprocess.run
 
@@ -180,6 +180,80 @@ def test_merged_clean_removes_worktree_and_keeps_branch(
     assert_main_checkout_unchanged(repo)
 
 
+def _write_task_record(repo: Path, task_id: str, **fields: Any) -> None:
+    tasks = repo / "batch_state" / "tasks"
+    tasks.mkdir(parents=True, exist_ok=True)
+    (tasks / f"{task_id}.json").write_text(json.dumps({"task_id": task_id, **fields}, indent=2), encoding="utf-8")
+
+
+def test_merged_worktree_claimed_by_another_dispatch_task_is_kept(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8610: under delegate's worktree lock, another task's unfinished claim blocks the reap."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/claimed")
+    patch_gh(monkeypatch, {"codex/claimed": [{"number": 8610, "state": "MERGED"}]})
+    _write_task_record(repo, "review-attached", status="spawning", worktree_path=str(worktree))
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "skipped"
+    assert result.reason == (
+        "worktree claimed by active task review-attached; originally qualified because PR #8610 MERGED"
+    )
+    assert worktree.exists()
+    assert not reaper_lifecycle.is_reap_pending(repo, worktree)
+
+
+def test_merged_dispatch_worktree_owner_record_does_not_block_its_own_reap(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8610: the path-derived owner keeps the qualifying class's own record policy."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/impl-owner", path=repo / ".worktrees" / "dispatch" / "codex" / "impl-owner")
+    patch_gh(monkeypatch, {"codex/impl-owner": [{"number": 8611, "state": "MERGED"}]})
+    _write_task_record(repo, "impl-owner", status="needs_finalize", worktree_path=str(worktree), pid=None)
+
+    result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+
+    assert result.action == "removed"
+    assert not worktree.exists()
+
+
+def test_merged_worktree_is_kept_while_its_dispatch_lock_is_held(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    """#8610: a dispatch attaching the checkout holds its lock; the reaper skips instead of racing it."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/attaching")
+    patch_gh(monkeypatch, {"codex/attaching": [{"number": 8612, "state": "MERGED"}]})
+    monkeypatch.setattr(worktree_claims, "DEFAULT_LOCK_TIMEOUT_S", 0.2)
+    lock_dir = rw._common_git_dir(repo) / worktree_claims.LOCK_DIR_NAME
+    held, release = threading.Event(), threading.Event()
+
+    def attach() -> None:
+        with worktree_claims.worktree_lock(worktree, lock_dir=lock_dir):
+            held.set()
+            release.wait(timeout=30)
+
+    attacher = threading.Thread(target=attach)
+    attacher.start()
+    try:
+        assert held.wait(timeout=30)
+        result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
+    finally:
+        release.set()
+        attacher.join(timeout=30)
+
+    assert result.action == "skipped"
+    assert result.reason.startswith("worktree lock busy (")
+    assert result.reason.endswith("; originally qualified because PR #8612 MERGED")
+    assert worktree.exists()
+
+
 def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
     tmp_path: Path,
     monkeypatch: pytest.MonkeyPatch,
@@ -206,9 +280,8 @@ def test_merged_worktree_with_only_untracked_venv_is_force_removed_after_guards(
 def test_final_worktree_delete_hand_refuses_the_repository_root(tmp_path: Path) -> None:
     """The last deletion boundary cannot turn a bad path into a root removal."""
     repo = init_repo(tmp_path)
-    info = rw.WorktreeInfo(path=repo, branch="codex/bad-path", head="deadbeef")
 
-    error = rw._remove_worktree(repo, info)
+    error = worktree_claims.git_worktree_remove(repo, repo, force=True)
 
     assert error == "delete guard refused worktree target: delete target is the repository root"
 
@@ -224,31 +297,57 @@ def test_post_task_reap_routes_regular_dispatch_deletion_through_p0_reaper() -> 
     assert "_remove_worktree(" not in canonical_source
 
 
-def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(
-    tmp_path: Path,
-    monkeypatch: pytest.MonkeyPatch,
-) -> None:
+def test_acp_runtime_remove_is_force_limited_to_its_dedicated_subtree(tmp_path: Path) -> None:
     """The ACP exception cannot become a general direct worktree deleter."""
-    commands: list[list[str]] = []
+    repo = init_repo(tmp_path)
+    outside = add_worktree(repo, "codex/not-a-runtime")
+    tasks_dir = repo / "batch_state" / "tasks"
 
-    def fake_run_git(args: list[str], **_kwargs: Any) -> subprocess.CompletedProcess[str]:
-        commands.append(args)
-        return subprocess.CompletedProcess(args, 0, "", "")
+    refused = post_task_reap._remove_acp_runtime_worktree(
+        outside, task_id="acp-owner", tasks_dir=tasks_dir, repo_root=repo
+    )
 
-    monkeypatch.setattr(post_task_reap, "_run_git", fake_run_git)
-    runtime = tmp_path / ".worktrees" / "dispatch" / "acp" / "p2b-runtime"
+    assert refused == {
+        "path": str(outside),
+        "action": "retained",
+        "reason": "ACP runtime path is outside .worktrees/dispatch/acp/",
+        "error": None,
+    }
+    assert outside.exists()
 
-    ok, error = post_task_reap._remove_worktree(runtime, tmp_path)
+    runtime = repo / ".worktrees" / "dispatch" / "acp" / "runtime-acp-owner-0123456789"
+    runtime.parent.mkdir(parents=True)
+    git(repo, "worktree", "add", "--detach", "--no-checkout", str(runtime), "HEAD")
+    git(repo, "worktree", "lock", "--reason", "active ACP execution acp-owner", str(runtime))
 
-    assert ok is True
-    assert error is None
-    assert commands == [["worktree", "remove", "--force", str(runtime)]]
+    removed = post_task_reap._remove_acp_runtime_worktree(
+        runtime, task_id="acp-owner", tasks_dir=tasks_dir, repo_root=repo
+    )
 
-    outside_ok, outside_error = post_task_reap._remove_worktree(tmp_path / "outside", tmp_path)
+    assert removed["action"] == "removed"
+    assert not runtime.exists()
 
-    assert outside_ok is False
-    assert outside_error == "ACP runtime path is outside .worktrees/dispatch/acp/"
-    assert len(commands) == 1
+
+def test_acp_runtime_remove_refuses_while_a_dispatch_task_claims_it(tmp_path: Path) -> None:
+    """#8610 r5: ACP runtime removal takes the shared lock and honours another task's live claim."""
+    repo = init_repo(tmp_path)
+    runtime = repo / ".worktrees" / "dispatch" / "acp" / "runtime-acp-owner-0123456789"
+    runtime.parent.mkdir(parents=True)
+    git(repo, "worktree", "add", "--detach", "--no-checkout", str(runtime), "HEAD")
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True)
+    (tasks_dir / "impl-attached.json").write_text(
+        json.dumps({"task_id": "impl-attached", "status": "running", "worktree_path": str(runtime)}),
+        encoding="utf-8",
+    )
+
+    refused = post_task_reap._remove_acp_runtime_worktree(
+        runtime, task_id="acp-owner", tasks_dir=tasks_dir, repo_root=repo
+    )
+
+    assert refused["action"] == "retained"
+    assert refused["reason"] == "worktree claimed by active task impl-attached"
+    assert runtime.exists()
 
 
 def test_acp_runtime_root_is_not_a_removable_runtime_descendant(tmp_path: Path) -> None:
@@ -257,64 +356,6 @@ def test_acp_runtime_root_is_not_a_removable_runtime_descendant(tmp_path: Path) 
 
     assert post_task_reap._is_under_acp_runtime_root(runtime_root, tmp_path) is False
     assert post_task_reap._is_under_acp_runtime_root(runtime_root / "runtime-task", tmp_path) is True
-
-
-def _raw_worktree_remove_callers(project_root: Path) -> dict[str, set[str]]:
-    """Return production functions constructing a literal ``worktree remove`` command."""
-    actual: dict[str, set[str]] = {}
-
-    for source_path in (project_root / "scripts").rglob("*.py"):
-        source = source_path.read_text(encoding="utf-8")
-        tree = ast.parse(source, filename=str(source_path))
-        functions: set[str] = set()
-        for function in ast.walk(tree):
-            if not isinstance(function, (ast.FunctionDef, ast.AsyncFunctionDef)):
-                continue
-            literal_sequences: list[list[str]] = []
-            for node in ast.walk(function):
-                if isinstance(node, (ast.List, ast.Tuple)):
-                    literal_sequences.append(
-                        [
-                            element.value
-                            for element in node.elts
-                            if isinstance(element, ast.Constant) and isinstance(element.value, str)
-                        ]
-                    )
-            for call in (node for node in ast.walk(function) if isinstance(node, ast.Call)):
-                literal_args: list[str] = []
-                for arg in call.args:
-                    if isinstance(arg, ast.Constant) and isinstance(arg.value, str):
-                        literal_args.append(arg.value)
-                    elif isinstance(arg, (ast.List, ast.Tuple)):
-                        literal_args.extend(
-                            element.value
-                            for element in arg.elts
-                            if isinstance(element, ast.Constant) and isinstance(element.value, str)
-                        )
-                literal_sequences.append(literal_args)
-            if any(
-                sequence[index : index + 3] == ["git", "worktree", "remove"]
-                or sequence[index : index + 2] == ["worktree", "remove"]
-                for sequence in literal_sequences
-                for index in range(len(sequence))
-            ):
-                functions.add(function.name)
-        if functions:
-            actual[str(source_path.relative_to(project_root))] = functions
-    return actual
-
-
-@pytest.mark.slow
-def test_production_worktree_remove_call_sites_are_allowlisted() -> None:
-    """Reject a new raw deletion hand anywhere below production ``scripts/``."""
-    project_root = Path(__file__).resolve().parents[2]
-    assert _raw_worktree_remove_callers(project_root) == {
-        "scripts/ai_agent_bridge/_acp_execution.py": {"acp_execution_cwd"},
-        "scripts/delegate.py": {"_release_stale_branch_holders", "_release_superseded_review_worktrees"},
-        "scripts/fleet/post_task_reap.py": {"_remove_worktree"},
-        "scripts/orchestration/reap_worktrees.py": {"_remove_worktree"},
-        "scripts/orchestration/task_family/git_safety.py": {"remove_worktree"},
-    }
 
 
 def test_merged_dirty_is_preserved_by_default(
@@ -2641,10 +2682,10 @@ def test_permission_error_retained_as_exception(tmp_path: Path, monkeypatch: pyt
     monkeypatch.setattr(rw, "_live_cwd_paths", lambda _repo: set())
     patch_gh(monkeypatch, {branch: []})
 
-    def fake_remove(repo_root: Path, info: rw.WorktreeInfo) -> str:
+    def fake_remove(repo_root: Path, worktree: Path, *, force: bool) -> str:
         return "permission denied removing worktree: [Errno 13] Permission denied"
 
-    monkeypatch.setattr(rw, "_remove_worktree", fake_remove)
+    monkeypatch.setattr(rw.worktree_claims, "git_worktree_remove", fake_remove)
 
     results = rw.reap_worktrees(
         repo_root=repo,

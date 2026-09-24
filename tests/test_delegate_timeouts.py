@@ -34,6 +34,7 @@ from scripts.delegate import (
     _worktree_is_clean,
     _worktree_is_dirty,
 )
+from scripts.orchestration.worktree_claims import GIT_WORKTREE_REMOVE_TIMEOUT_S
 
 
 def _completed(args: list[str] | None = None, returncode: int = 0, stdout: str = "", stderr: str = ""):
@@ -160,6 +161,8 @@ def test_worktree_is_clean_timeouts(tmp_path: Path) -> None:
 
 def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.CaptureFixture[str]) -> None:
     with (
+        patch("scripts.delegate._WORKTREE_LOCK_DIR", tmp_path / "lu-worktree-locks"),
+        patch("scripts.delegate._TASKS_DIR", tmp_path / "tasks"),
         patch("scripts.delegate._stale_branch_holder_releasable", return_value=(True, "clean")),
         patch("subprocess.run", side_effect=subprocess.TimeoutExpired(["git", "worktree", "remove"], DEFAULT_GIT_TIMEOUT_S)) as run_mock,
     ):
@@ -167,8 +170,8 @@ def test_release_stale_branch_holders_timeouts(tmp_path: Path, capsys: pytest.Ca
         assert released == []
 
     err = capsys.readouterr().err
-    assert "failed to release stale branch holder" in err
-    assert "TimeoutExpired" in err
+    assert f"failed to release stale branch holder {tmp_path}: git worktree remove timed out after {GIT_WORKTREE_REMOVE_TIMEOUT_S:g}s" in err
+    assert "🌲 released stale branch holder" not in err
 
 
 def test_resolve_sha_timeouts(tmp_path: Path) -> None:
@@ -463,4 +466,3 @@ def test_ensure_worktree_timeouts(tmp_path: Path) -> None:
                 branch="feature-branch",
                 resolved_base_sha="sha123",
             )
-

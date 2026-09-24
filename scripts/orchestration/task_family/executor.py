@@ -1004,7 +1004,7 @@ class CleanupExecutor:
                     explicit_family=target.explicit_family,
                     planned_family=self.plan.family_id,
                 )
-                safety.remove_worktree(self.repo_root, target.worktree)
+                safety.remove_unclaimed_worktree(self.repo_root, target.worktree)
                 _record_resource(payload, "worktree", target.id, "actual", evidence={"removed": True})
                 recorded[target.id] = {"status": "removed"}
             else:
