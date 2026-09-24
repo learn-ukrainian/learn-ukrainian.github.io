@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import subprocess
+import sys
 import textwrap
 from pathlib import Path
 
@@ -19,7 +20,7 @@ from tests.dispatch_xdist_cap import (
 )
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
-_PYTEST = "/home/ops/learn-ukrainian/.venv/bin/python"
+_PYTEST = sys.executable
 
 
 def _write_probe(directory: Path) -> None:
@@ -84,15 +85,27 @@ def test_marker_and_n8_clamps_to_two_workers(tmp_path: Path) -> None:
     assert CAP_LINE in completed.stdout
 
 
+def _assert_clamped(completed: subprocess.CompletedProcess[str]) -> None:
+    assert completed.returncode == 0, completed.stderr
+    observed = next(line for line in completed.stdout.splitlines() if line.startswith("OBSERVED_WORKERS="))
+    assert int(observed.removeprefix("OBSERVED_WORKERS=")) <= 2
+    assert CAP_LINE in completed.stdout
+
+
 def test_marker_and_nauto_clamps_to_at_most_two_workers(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     completed = _run_pytest(
         tmp_path, ["-n", "auto", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
     )
-    assert completed.returncode == 0, completed.stderr
-    observed = next(line for line in completed.stdout.splitlines() if line.startswith("OBSERVED_WORKERS="))
-    assert int(observed.removeprefix("OBSERVED_WORKERS=")) <= 2
-    assert CAP_LINE in completed.stdout
+    _assert_clamped(completed)
+
+
+def test_marker_and_nlogical_clamps_to_at_most_two_workers(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    completed = _run_pytest(
+        tmp_path, ["-n", "logical", "-q", "tests/test_sample.py"], _child_env(tmp_path, marker="impl-8645-b")
+    )
+    _assert_clamped(completed)
 
 
 def test_without_marker_explicit_n_is_unchanged(tmp_path: Path) -> None:
@@ -105,16 +118,29 @@ def test_without_marker_explicit_n_is_unchanged(tmp_path: Path) -> None:
 
 def test_full_suite_lock_fails_fast_and_targeted_paths_do_not(tmp_path: Path) -> None:
     _write_probe(tmp_path)
+    ran = tmp_path / "suite_ran"
+    (tmp_path / "tests" / "test_sample.py").write_text(
+        textwrap.dedent(
+            f"""\
+            def test_ok():
+                open({str(ran)!r}, "w", encoding="utf-8").write("ran")
+                assert True
+            """
+        ),
+        encoding="utf-8",
+    )
     env = _child_env(tmp_path, marker="impl-8645-b")
     acquire_full_suite_lock()
     try:
         blocked = _run_pytest(tmp_path, ["-q"], env)
+        assert not ran.is_file()
         targeted = _run_pytest(tmp_path, ["-q", "tests/test_sample.py"], env)
     finally:
         release_full_suite_lock()
     assert blocked.returncode != 0
     assert FULL_SUITE_BUSY in blocked.stderr + blocked.stdout
     assert targeted.returncode == 0, targeted.stderr
+    assert ran.is_file()
     assert FULL_SUITE_BUSY not in targeted.stderr + targeted.stdout
 
 

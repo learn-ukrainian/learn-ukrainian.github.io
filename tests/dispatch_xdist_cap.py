@@ -137,17 +137,23 @@ def _shrink_tx(config: pytest.Config) -> None:
 
 @pytest.hookimpl(hookwrapper=True)
 def pytest_cmdline_main(config: pytest.Config) -> object:
-    """Clamp before and after xdist, then lock a full-suite run."""
+    """Clamp before xdist, and take the full-suite lock before the session runs.
+
+    ``pytest_cmdline_main`` runs the session and ``pytest_unconfigure`` before
+    it returns, so a lock taken after ``yield`` does not cover execution.
+    xdist workers already have ``workerinput`` and ``PYTEST_XDIST_WORKER`` set
+    and must not take the host lock.
+    """
     armed = not _is_xdist_worker(config) and dispatch_marker_set()
     if armed:
         _arm_maxprocesses(config)
+        if is_full_suite(config):
+            acquire_full_suite_lock()
     outcome = yield
     outcome.get_result()
     if not armed:
         return
     _shrink_tx(config)
-    if is_full_suite(config):
-        acquire_full_suite_lock()
 
 
 def pytest_sessionstart(session: pytest.Session) -> None:
