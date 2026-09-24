@@ -109,19 +109,20 @@ _RATE_LIMIT_RE = re.compile("|".join(_RATE_LIMIT_PATTERNS), re.IGNORECASE)
 # THIS invocation's slice of its conversation transcript: the events appended
 # after the transcript size recorded at build time (0 for a fresh
 # conversation), so a resumed conversation never credits an earlier run's
-# finish or reply (#8502 r5). In that slice the run's own USER_INPUT must
-# appear, every background task started after it must have a finish event, and
-# the last model turn must be a final text reply after the last finish that
-# does not say work is still pending. Ambiguous evidence is unconfirmed (#8502
-# r7): a slice line that does not parse fails the run, it is never skipped. The
-# evidence is read from the transcript bound to this invocation (see
-# ``_transcript_path_from_plan``) and never from stderr alone: agy prints its
-# idle-wait diagnostic only on some paths, so its absence proves nothing (#8502
-# r3). A run whose transcript cannot be bound has no evidence and fails as
-# unconfirmed. Failures lead
-# ``stderr_excerpt`` with a reason code (the dispatch's machine-readable
-# ``last_error``); ``delegate.py`` keys on these codes to refuse auto-finalizing
-# the run as ``done``.
+# finish or reply (#8502 r5). The guarantee is STRUCTURAL (#8502 r8): the slice
+# is read in one order — file position — and every piece of work it started
+# (a background command, a timer, a tool step still RUNNING, a subagent) needs
+# its own finish event positioned before the final reply, which must be the
+# last model event (see ``_slice_completion_gap``). What the reply SAYS is only
+# a best-effort backstop on top of that. Ambiguous evidence is unconfirmed
+# (#8502 r7): a slice line that does not parse fails the run, it is never
+# skipped. The evidence is read from the transcript bound to this invocation
+# (see ``_transcript_path_from_plan``) and never from stderr alone: agy prints
+# its idle-wait diagnostic only on some paths, so its absence proves nothing
+# (#8502 r3). A run whose transcript cannot be bound has no evidence and fails
+# as unconfirmed. Failures lead ``stderr_excerpt`` with a reason code (the
+# dispatch's machine-readable ``last_error``); ``delegate.py`` keys on these
+# codes to refuse auto-finalizing the run as ``done``.
 AGY_BACKGROUND_TASK_ABANDONED = "agy_background_task_abandoned"
 AGY_BACKGROUND_TASK_UNCONFIRMED = "agy_background_task_unconfirmed"
 AGY_PRINT_TIMEOUT_PARTIAL = "agy_print_timeout_partial"
@@ -140,12 +141,34 @@ _AGY_VERSION_PROBE_TIMEOUT_S = 15
 _BACKGROUND_TERMINATED_RE = re.compile(r"terminating (?P<count>\d+) background task\(s\)")
 _PRINT_TIMEOUT_PARTIAL_RE = re.compile(r"print timeout after \S+ with turn in progress")
 _IDLE_BACKGROUND_WAIT_RE = re.compile(r"root agent idle; waiting up to \S+ for (?P<count>\d+) background task\(s\)")
+# Structural transcript evidence (#8502 r8). Surveyed on every AGY transcript
+# on the operator host (560 conversations; 87 with events from agy >= 1.2.9,
+# 11,543 tool calls): every tool result is either DONE/ERROR/INVALID
+# (synchronous) or RUNNING, and every RUNNING result either carries the
+# background-task start line (748) or is an interim "Step is still running"
+# event followed by a start for the same step (2). Every per-task system
+# message came from a task whose start is in the same conversation. A command
+# task ends with a ``Task id "<id>" finished`` or ``was canceled`` message from
+# ``sender=<id>``; a ``schedule`` timer (``Task Description: Timer:``) ends
+# when it fires, as a message from its sender carrying its prompt. A subagent
+# (``invoke_subagent``) has no structured finish: its messages to the parent
+# are free text, so a slice that invokes one is never confirmed.
 _BACKGROUND_STARTED_RE = re.compile(r"Tool is running as a background task with task id: (?P<id>\S+)")
-_BACKGROUND_FINISHED_RE = re.compile(r'Task id "(?P<id>[^"]+)" finished')
-# Ambiguous evidence is unconfirmed (#8502 r7): a final reply that says work is
-# still pending ANYWHERE in it is a status, never a result, whatever else it
-# says. Each alternative is one way agy's models phrase pending work; every one
-# is pinned by a test. Past-tense reports ("the background job finished", "I
+# Outside a RUNNING result the start line counts only on a line of its own: a
+# viewed task log or transcript quotes it inside escaped JSON, not as a line.
+_BACKGROUND_START_LINE_RE = re.compile(r"^Tool is running as a background task with task id: (?P<id>\S+)", re.MULTILINE)
+_TIMER_TASK_RE = re.compile(r"^Task Description: Timer:", re.MULTILINE)
+_TASK_MESSAGE_RE = re.compile(r"\bsender=(?P<sender>\S+) priority=\S+ content=(?P<body>[^\n]*)")
+_TASK_ENDED_RE = re.compile(r'^Task id "(?P<id>[^"]+)" (?:finished|was canceled)\b')
+_SUBAGENT_TOOL = "invoke_subagent"
+_MODEL_EVENT_TYPES = frozenset({"PLANNER_RESPONSE", "GENERIC", "MCP_TOOL"})
+# BEST-EFFORT BACKSTOP, NOT THE GUARANTEE (#8502 r7/r8). Natural language is
+# unbounded, so no vocabulary can prove a run finished; the structural check
+# in ``_slice_completion_gap`` is what does. On top of it, a final reply that
+# says work is still pending ANYWHERE in it is treated as a status, never a
+# result, whatever else it says — this only ever adds failures (fail closed).
+# Each alternative is one way agy's models phrase pending work; every one is
+# pinned by a test. Past-tense reports ("the background job finished", "I
 # waited for it") do not match.
 _APOSTROPHE = "['\u2019]"
 _PENDING_WORK_RE = re.compile(
@@ -161,6 +184,10 @@ _PENDING_WORK_RE = re.compile(
             r"|build|process))\s+(?:finish(?:es)?|complete[sd]?|ends?|exits?|(?:is|are)\s+(?:done|finished|complete))\b",
             rf"\b(?:has|have|is|are)(?:n{_APOSTROPHE}t|\s+not)\s+(?:yet\s+)?(?:finished|completed|complete|done)\b",
             rf"(?:\bwill|{_APOSTROPHE}ll)\s+(?:report back|check back|follow up|let you know|update you)\b",
+            r"\basynchronously\b",  # "I started pytest asynchronously" (#8502 r8)
+            r"\bawaiting\b",  # "awaiting results"
+            r"\bin progress\b",  # "the run is in progress"
+            r"\bpending\b",  # "results pending"
         )
     ),
     re.IGNORECASE,
@@ -612,68 +639,115 @@ def _completion_gap(stderr_text: str, plan: InvocationPlan | None) -> str | None
 
     Only the events this invocation appended count (``_invocation_transcript``):
     a resumed conversation already holds earlier runs' finishes and replies,
-    which prove nothing about this one (#8502 r5). The slice must hold exactly
-    one USER_INPUT — this invocation's prompt; none means the run never reached
-    the model, several mean the slice reaches into an earlier run. After it,
-    every background task started must have a "Task id … finished" system
-    message, and the last model turn must be a text reply that follows the last
-    finish and is not an interim status (``_is_interim_reply``) — an exit-0 run
-    whose final word is "Waiting for task-220 to complete." has none of that.
-    Ambiguous evidence is unconfirmed: a slice line that does not parse may be
-    the very finish or reply in question, so it fails the run as unreadable
-    rather than being skipped. stderr cannot stand in for the transcript: agy's
-    "root agent idle; waiting up to … for N background task(s)" line is absent
-    on some paths, so it can only add doubt (a claimed wait with no task in the
-    slice), never remove it.
+    which prove nothing about this one (#8502 r5). Ambiguous evidence is
+    unconfirmed: a slice line that does not parse may be the very finish or
+    reply in question, so it fails the run as unreadable rather than being
+    skipped. The readable slice is judged by ``_slice_completion_gap``.
     """
     bound = _invocation_transcript(plan)
     if bound is None:
         return AGY_TRANSCRIPT_UNBOUND
     if bound.unreadable_lines:
         return AGY_TRANSCRIPT_UNREADABLE
-    events = bound.events
+    return _slice_completion_gap(bound.events, stderr_text)
+
+
+def _slice_completion_gap(events: list[dict[str, Any]], stderr_text: str) -> str | None:
+    """Return a reason code unless the slice structurally proves its work finished (#8502 r8).
+
+    The slice is read in ONE order, its file position; ``step_index`` never
+    orders anything (it only names the tool step an interim RUNNING event
+    belongs to). It must hold exactly one USER_INPUT — this invocation's
+    prompt; none means the run never reached the model, several mean the slice
+    reaches into an earlier run. The last model event after it must be a
+    PLANNER_RESPONSE: the final reply. Everything the run started before that
+    reply must be closed by its own finish event, also positioned before it
+    (``_open_work``); a finish written after the reply means the reply was
+    written while the work still ran. Only then does the best-effort backstop
+    look at what the reply says (``_is_interim_reply``). stderr cannot stand
+    in for the transcript: agy's "root agent idle; waiting up to … for N
+    background task(s)" line is absent on some paths, so it can only add doubt
+    (a claimed wait with no task in the slice), never remove it.
+    """
     prompts = [position for position, event in enumerate(events) if event.get("type") == "USER_INPUT"]
     if len(prompts) != 1:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
-    started: set[str] = set()
-    finished: set[str] = set()
-    last_finish = -1
-    final_reply: tuple[int, Mapping[str, Any]] | None = None
-    for position, event in enumerate(events[prompts[0] + 1 :]):
-        content = str(event.get("content") or "")
-        step = _event_step_index(event)
-        order = step if step is not None else position
-        started.update(match.group("id") for match in _BACKGROUND_STARTED_RE.finditer(content))
-        if event.get("type") == "SYSTEM_MESSAGE":
-            ids = {match.group("id") for match in _BACKGROUND_FINISHED_RE.finditer(content)}
-            if ids:
-                finished |= ids
-                last_finish = max(last_finish, order)
-        elif event.get("type") == "PLANNER_RESPONSE" and (final_reply is None or order >= final_reply[0]):
-            final_reply = (order, event)
-    idle_wait_claimed = any(
-        int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text)
-    )
+    work = events[prompts[0] + 1 :]
+    model_events = [position for position, event in enumerate(work) if _is_model_event(event)]
+    if not model_events or work[model_events[-1]].get("type") != "PLANNER_RESPONSE":
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    final_reply = work[model_events[-1]]
+    started, finished, still_open = _open_work(work[: model_events[-1]])
+    if still_open:
+        return AGY_BACKGROUND_TASK_UNCONFIRMED
+    idle_wait_claimed = any(int(match.group("count")) > 0 for match in _IDLE_BACKGROUND_WAIT_RE.finditer(stderr_text))
     if idle_wait_claimed and not started:
         return AGY_BACKGROUND_TASK_UNCONFIRMED
-    if not started <= finished:
-        return AGY_BACKGROUND_TASK_UNCONFIRMED
-    if final_reply is None or final_reply[0] <= last_finish:
-        return AGY_BACKGROUND_TASK_UNCONFIRMED
-    if _is_interim_reply(final_reply[1], started, finished):
+    if _is_interim_reply(final_reply, started, finished):
         return AGY_BACKGROUND_TASK_UNCONFIRMED
     return None
+
+
+def _is_model_event(event: Mapping[str, Any]) -> bool:
+    return event.get("type") in _MODEL_EVENT_TYPES or event.get("source") == "MODEL"
+
+
+def _open_work(events: list[dict[str, Any]]) -> tuple[set[str], set[str], set[str]]:
+    """Walk ``events`` in file order; return (tasks started, tasks ended, work still open).
+
+    Work opens with a background-task start (a command, or a ``schedule``
+    timer), a RUNNING tool result that names no task (agy's interim "Step is
+    still running"), or an ``invoke_subagent`` call. It closes only with its
+    own finish event: a command with a ``Task id "<id>" finished`` or ``was
+    canceled`` message from ``sender=<id>``; a timer with any message from its
+    sender (it fires once); an interim step with a later event of the same
+    tool step. A subagent never closes — agy writes no structured subagent
+    finish — and neither does an interim step that names no step.
+    """
+    started: set[str] = set()
+    ended: set[str] = set()
+    open_work: dict[str, str] = {}
+    for position, event in enumerate(events):
+        content = str(event.get("content") or "")
+        if event.get("type") == "SYSTEM_MESSAGE":
+            for message in _TASK_MESSAGE_RE.finditer(content):
+                sender = message.group("sender")
+                kind = open_work.get(sender)
+                ended_match = _TASK_ENDED_RE.match(message.group("body"))
+                if kind == "timer" or (kind == "command" and ended_match and ended_match.group("id") == sender):
+                    del open_work[sender]
+                    ended.add(sender)
+            continue
+        raw_calls = event.get("tool_calls")
+        if isinstance(raw_calls, list) and any(
+            isinstance(call, Mapping) and call.get("name") == _SUBAGENT_TOOL for call in raw_calls
+        ):
+            open_work[f"subagent@{position}"] = "subagent"
+        step = _event_step_index(event)
+        if step is not None:
+            open_work.pop(f"step:{step}", None)
+        running = event.get("status") == "RUNNING"
+        pattern = _BACKGROUND_STARTED_RE if running else _BACKGROUND_START_LINE_RE
+        task_ids = {match.group("id") for match in pattern.finditer(content)}
+        for task_id in task_ids:
+            started.add(task_id)
+            open_work[task_id] = "timer" if _TIMER_TASK_RE.search(content) else "command"
+        if running and not task_ids:
+            open_work[f"step:{step}" if step is not None else f"step@{position}"] = "step"
+    return started, ended, set(open_work)
 
 
 def _is_interim_reply(event: Mapping[str, Any], started: set[str], finished: set[str]) -> bool:
     """True when the model's last turn is not a final answer.
 
-    A turn that still calls tools, says nothing, says anywhere that work is
-    still pending (``_PENDING_WORK_RE``), speaks of background work although
-    the slice recorded no task start (the task events were not captured), or
-    names a task this invocation did not see finish (``task-2`` of an earlier
-    run of a resumed conversation) is a status, not a result. Being the LAST
-    turn, a pending reply has no later reply to settle it.
+    A turn that still calls tools or says nothing is structurally not a reply.
+    The rest is the best-effort backstop that runs after the structural check
+    passed, so it can only add failures: a turn that says anywhere that work
+    is still pending (``_PENDING_WORK_RE``), speaks of background work
+    although the slice recorded no task start, or names a task this invocation
+    did not see finish (``task-2`` of an earlier run of a resumed
+    conversation) is a status, not a result. Being the LAST turn, a pending
+    reply has no later reply to settle it.
     """
     content = str(event.get("content") or "").strip()
     if event.get("tool_calls") or not content:
@@ -1076,7 +1150,7 @@ def _invocation_transcript(plan: InvocationPlan | None) -> _TranscriptSlice | No
 
     A resumed conversation starts at the size recorded in the plan when the
     invocation was built; any other conversation the log names was not resumed
-    on purpose, so it is read from the start and ``_completion_gap``'s single
+    on purpose, so it is read from the start and ``_slice_completion_gap``'s single
     USER_INPUT rule rejects it if it holds an earlier run. An unknown or no
     longer valid baseline (unreadable at build time, or a transcript shorter
     than it now) binds nothing.

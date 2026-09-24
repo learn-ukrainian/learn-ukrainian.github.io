@@ -1257,6 +1257,11 @@ def test_waiting_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path
         "Everything is committed, but the suite hasn't finished yet.",
         "Everything is committed, but the suite has not completed.",
         "Everything is committed; I'll report back with the results.",
+        "I started pytest asynchronously; awaiting results",
+        "PROBE_DONE_7731 printed; the suite runs asynchronously.",
+        "PROBE_DONE_7731 printed; awaiting the remaining checks.",
+        "PROBE_DONE_7731 printed; the integration run is in progress.",
+        "PROBE_DONE_7731 printed; integration results pending.",
     ],
     ids=[
         "leading-wait",
@@ -1274,6 +1279,11 @@ def test_waiting_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path
         "hasnt-finished-yet",
         "has-not-completed",
         "will-report-back",
+        "reviewer-r8-asynchronously-awaiting",
+        "asynchronously",
+        "awaiting",
+        "in-progress",
+        "pending",
     ],
 )
 def test_final_reply_expressing_pending_work_is_unconfirmed(tmp_path: Path, reply: str) -> None:
@@ -1355,5 +1365,226 @@ def test_unreadable_line_before_a_resumed_runs_baseline_is_not_its_evidence(
     result = _parse_resumed_run(
         tmp_path, monkeypatch, earlier=earlier, appended=_resumed_run_lines(), stdout="PROBE_DONE_8812"
     )
+
+    assert result.ok is True
+
+
+# The structural guarantee (#8502 r8): the slice is read in ONE order, file
+# position. Every piece of work started before the final reply needs its own
+# finish event positioned before that reply, and the reply must be the last
+# model event. ``step_index`` never orders anything. The vocabulary above is
+# only a backstop on top of this.
+_TASK_2 = f"{_FINISHED_CONVERSATION_ID}/task-2"
+_TASK_3 = f"{_FINISHED_CONVERSATION_ID}/task-3"
+
+
+def _event(event_type: str, content: str, *, step_index: int | None = None, **extra: object) -> str:
+    event: dict[str, object] = {"type": event_type, "status": "DONE", "content": content, **extra}
+    if step_index is not None:
+        event["step_index"] = step_index
+    return json.dumps(event)
+
+
+def _start(task_id: str, *, step_index: int | None = None, description: str = "pytest -q") -> str:
+    return _event(
+        "GENERIC",
+        f"Created At: 2026-09-24T10:10:12Z\nTool is running as a background task with task id: {task_id}\n"
+        f"Task Description: {description}\nTask logs are available at: file:///agy-app-data/tasks/x.log",
+        step_index=step_index,
+        status="RUNNING",
+        source="MODEL",
+    )
+
+
+def _task_message(sender: str, body: str, *, step_index: int | None = None) -> str:
+    return _event(
+        "SYSTEM_MESSAGE",
+        "<SYSTEM_MESSAGE>\n[Message] timestamp=2026-09-24T10:10:57Z "
+        f"sender={sender} priority=MESSAGE_PRIORITY_HIGH content={body}\n</SYSTEM_MESSAGE>",
+        step_index=step_index,
+        source="SYSTEM",
+    )
+
+
+def _finish(task_id: str, *, step_index: int | None = None) -> str:
+    return _task_message(task_id, f'Task id "{task_id}" finished with result:', step_index=step_index)
+
+
+def _reply(content: str, *, step_index: int | None = None) -> str:
+    return _event("PLANNER_RESPONSE", content, step_index=step_index, source="MODEL")
+
+
+def _prompt() -> str:
+    return _fixture_lines("background_task_finished_transcript.jsonl")[0]
+
+
+def _judge(tmp_path: Path, lines: list[str], stdout: str = "PROBE_DONE_7731") -> object:
+    return _parse_fresh(tmp_path, lines, stdout)
+
+
+def _assert_unconfirmed(result: object) -> None:
+    assert result.ok is False
+    assert result.response == ""
+    assert result.stderr_excerpt.splitlines()[0] == agy_module.AGY_BACKGROUND_TASK_UNCONFIRMED
+
+
+def test_finish_without_step_index_after_the_final_reply_is_unconfirmed(tmp_path: Path) -> None:
+    # Reviewer probe (#8502 r8, finding 1): a task start, the final reply, then
+    # a finish carrying no step_index. The reply's step number was compared
+    # with the finish's LIST POSITION, so the run was accepted.
+    lines = [
+        _prompt(),
+        _start(_TASK_2, step_index=2),
+        _reply("PROBE_DONE_7731", step_index=3),
+        _finish(_TASK_2),
+    ]
+
+    _assert_unconfirmed(_judge(tmp_path, lines))
+
+
+def test_async_reply_with_no_captured_task_start_is_unconfirmed(tmp_path: Path) -> None:
+    # Reviewer probe (#8502 r8, finding 2): no task start, empty stderr, and a
+    # reply that says the work runs asynchronously. Structurally nothing is
+    # open, so only the best-effort backstop can catch it — and does.
+    reply = "I started pytest asynchronously; awaiting results"
+
+    _assert_unconfirmed(_judge(tmp_path, [_prompt(), _reply(reply, step_index=1)], reply))
+
+
+def test_finish_after_the_final_reply_is_unconfirmed_whatever_its_step_index(tmp_path: Path) -> None:
+    # The finish is written after the reply, though its step_index claims it
+    # came first: file position is the only order.
+    lines = [
+        _prompt(),
+        _start(_TASK_2, step_index=2),
+        _reply("PROBE_DONE_7731", step_index=9),
+        _finish(_TASK_2, step_index=3),
+    ]
+
+    _assert_unconfirmed(_judge(tmp_path, lines))
+
+
+def test_finish_before_the_final_reply_is_accepted_whatever_its_step_index(tmp_path: Path) -> None:
+    lines = [
+        _prompt(),
+        _start(_TASK_2, step_index=2),
+        _reply("Waiting for task-2 to finish.", step_index=3),
+        _finish(_TASK_2, step_index=40),
+        _reply("PROBE_DONE_7731", step_index=5),
+    ]
+
+    result = _judge(tmp_path, lines)
+
+    assert result.ok is True
+    assert result.response == "PROBE_DONE_7731"
+
+
+def test_interleaved_tasks_that_both_finish_before_the_reply_are_accepted(tmp_path: Path) -> None:
+    lines = [
+        _prompt(),
+        _start(_TASK_2, step_index=2),
+        _start(_TASK_3, step_index=4),
+        _finish(_TASK_3, step_index=5),
+        _reply("task-3 is done; waiting for task-2.", step_index=6),
+        _finish(_TASK_2, step_index=7),
+        _reply("PROBE_DONE_7731 and PROBE_DONE_7732", step_index=8),
+    ]
+
+    result = _judge(tmp_path, lines, "PROBE_DONE_7731 and PROBE_DONE_7732")
+
+    assert result.ok is True
+
+
+def test_interleaved_task_whose_finish_follows_the_reply_is_unconfirmed(tmp_path: Path) -> None:
+    lines = [
+        _prompt(),
+        _start(_TASK_2, step_index=2),
+        _start(_TASK_3, step_index=4),
+        _finish(_TASK_3, step_index=5),
+        _reply("PROBE_DONE_7731 and PROBE_DONE_7732", step_index=6),
+        _finish(_TASK_2, step_index=7),
+    ]
+
+    _assert_unconfirmed(_judge(tmp_path, lines, "PROBE_DONE_7731 and PROBE_DONE_7732"))
+
+
+def test_a_finish_closes_only_the_task_that_sent_it(tmp_path: Path) -> None:
+    # task-3 finishing twice, or a message that merely quotes task-2's finish,
+    # never closes task-2.
+    quoted = _task_message(_TASK_3, f'Task id "{_TASK_2}" finished with result:')
+    lines = [_prompt(), _start(_TASK_2), _start(_TASK_3), _finish(_TASK_3), quoted, _reply("PROBE_DONE_7731")]
+
+    _assert_unconfirmed(_judge(tmp_path, lines))
+
+
+def test_a_canceled_command_task_is_closed(tmp_path: Path) -> None:
+    canceled = _task_message(_TASK_2, f'Task id "{_TASK_2}" was canceled with result:')
+
+    result = _judge(tmp_path, [_prompt(), _start(_TASK_2), canceled, _reply("PROBE_DONE_7731")])
+
+    assert result.ok is True
+
+
+def test_a_progress_message_does_not_close_a_command_task(tmp_path: Path) -> None:
+    progress = _task_message(_TASK_2, "The command output has stabilized for 30s.")
+
+    _assert_unconfirmed(_judge(tmp_path, [_prompt(), _start(_TASK_2), progress, _reply("PROBE_DONE_7731")]))
+
+
+@pytest.mark.parametrize("fired", [True, False], ids=["fired", "never-fired"])
+def test_a_timer_task_closes_only_when_it_fires(tmp_path: Path, fired: bool) -> None:
+    timer = _start(_TASK_3, description="Timer: 30s, Prompt: Check task-2")
+    lines = [_prompt(), _start(_TASK_2), timer, _finish(_TASK_2)]
+    if fired:
+        lines.append(_task_message(_TASK_3, "Check task-2"))
+    lines.append(_reply("PROBE_DONE_7731"))
+
+    result = _judge(tmp_path, lines)
+
+    assert result.ok is fired
+
+
+@pytest.mark.parametrize("resolved", [True, False], ids=["same-step-start-then-finish", "unresolved"])
+def test_a_running_step_without_a_task_id_needs_a_later_event_of_its_step(tmp_path: Path, resolved: bool) -> None:
+    # agy's interim "Step is still running" result names no task; the start
+    # it is followed by carries the same step.
+    interim = _event(
+        "GENERIC", "Created At: 2026-09-24T01:15:01Z\nStep is still running", step_index=2, status="RUNNING"
+    )
+    lines = [_prompt(), interim]
+    if resolved:
+        lines += [_start(_TASK_2, step_index=2), _finish(_TASK_2, step_index=3)]
+    lines.append(_reply("PROBE_DONE_7731", step_index=4))
+
+    result = _judge(tmp_path, lines)
+
+    assert result.ok is resolved
+
+
+def test_a_subagent_invocation_is_never_confirmed(tmp_path: Path) -> None:
+    # agy writes no structured subagent finish; its messages are free text.
+    call = _event(
+        "PLANNER_RESPONSE", "", source="MODEL", tool_calls=[{"name": "invoke_subagent", "args": {"Subagents": "[]"}}]
+    )
+    created = _event("GENERIC", 'Created the following subagents:\n{"conversationId": "e0ea70ab"}', source="MODEL")
+    message = _task_message("e0ea70ab-d843-46df-858c-90931bead851", "Verification report: all words valid.")
+
+    _assert_unconfirmed(_judge(tmp_path, [_prompt(), call, created, message, _reply("PROBE_DONE_7731")]))
+
+
+def test_a_model_event_after_the_final_reply_is_unconfirmed(tmp_path: Path) -> None:
+    late_result = _event("GENERIC", "Created At: 2026-09-24T10:11:00Z\nThe command exited with code 0.", source="MODEL")
+
+    _assert_unconfirmed(_judge(tmp_path, [_prompt(), _reply("PROBE_DONE_7731"), late_result]))
+
+
+def test_a_quoted_start_line_in_viewed_file_contents_opens_no_work(tmp_path: Path) -> None:
+    # A viewed task log or transcript quotes the start line inside escaped
+    # JSON (a literal backslash-n, not a line break); only agy's own RUNNING
+    # result or a start on a line of its own opens work.
+    quoted = json.dumps({"content": f"Created At: X\nTool is running as a background task with task id: {_TASK_3}"})
+    viewed = _event("GENERIC", f"File Path: `file:///agy-app-data/transcript.jsonl`\n1: {quoted}", source="MODEL")
+
+    result = _judge(tmp_path, [_prompt(), viewed, _reply("PROBE_DONE_7731")])
 
     assert result.ok is True
