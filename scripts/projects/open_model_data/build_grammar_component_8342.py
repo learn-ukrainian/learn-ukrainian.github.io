@@ -548,6 +548,20 @@ def is_clean_control(text: str, vesum_cur: sqlite3.Cursor | None = None) -> bool
         return False
     if re.search(r"\bбаньк\w*\b", text, re.IGNORECASE):
         return False
+    # Claude R18 control defects
+    # #267: не інформативною -> повинно бути неінформативною
+    if re.search(r"\bне\s+інформативн\w*\b", text, re.IGNORECASE):
+        return False
+    # #90: чотири мудрих томи -> чотири мудрі томи
+    if re.search(r"\b(?:два|дві|три|чотири)\s+[а-яіїєґ]+их\s+[а-яіїєґ]+и\b", text, re.IGNORECASE):
+        return False
+    # #124: по середині -> посередині
+    if re.search(r"\bпо\s+середині\b", text, re.IGNORECASE):
+        return False
+    # #30: зі перед одинарним свистячим/шиплячим + голосна
+    if re.search(r"\bзі\s+загроз\w*\b", text, re.IGNORECASE) or re.search(r"\bзі\s+[зсшщ][аеєиіїоуюя][а-яіїєґ]*\b", text, re.IGNORECASE):
+        return False
+
     # Reject 'їх' before nouns as possessive
     if re.search(r"\bїх\s+[а-яіїєґ]+(?:ів|ей|ам|ям|ами|ями|ах|ях|ом|ем|ою|ею|и|і|ї|а|я|у|ю|е|є)\b", text, re.IGNORECASE):
         return False
@@ -1992,6 +2006,64 @@ def is_valid_candidate(
         return False
     # #207: замількало -> заблимало
     if re.search(r"\bзамількало\b", o_low) or re.search(r"\bзаблимало\s+вмите\b", c_low):
+        return False
+
+    # 18. Claude R18 Blockers (corrected text is wrong or changes meaning)
+    # #120: угону літака -> крадіжки літака (should be викрадення/захоплення)
+    if re.search(r"\bугон\w*\b", o_low) or re.search(r"\bкрадіжк\w*\s+літак\w*\b", c_low):
+        return False
+    # #138: відібрати … потрібний напрямок -> потрібного напрямку (accusative was correct)
+    if re.search(r"\bвідібрати\s+[^,;]+потрібно\w+\s+напрямк\w*\b", c_low) or re.search(r"\bвідібрати\s+(?:для\s+себе\s+)?потрібного\s+напрямку\b", c_low):
+        return False
+    # #124: По середині другої смуги (must be Посередині)
+    if re.search(r"\bпо\s+середині\b", c_low):
+        return False
+    # #271: ій почав (typo ій)
+    if re.search(r"\bій\b", c_low) or re.search(r"\bій\s+почав\b", c_low):
+        return False
+    # #30: зі загрозами (зі before single sibilant + vowel is non-normative)
+    if re.search(r"\bзі\s+загроз\w*\b", c_low) or re.search(r"\bзі\s+[зсшщ][аеєиіїоуюя][а-яіїєґ]*\b", c_low):
+        return False
+
+    # 19. Claude R18 Unneeded swaps and leftover awkwardness
+    # #297: приземистої -> присадкуватої
+    if re.search(r"\bприземист\w*\b", o_low) or re.search(r"\bприсадкуват\w*\b", c_low):
+        return False
+    # #258: до коляски -> у візок
+    if re.search(r"\bдо\s+коляски\b", o_low) and re.search(r"\bу\s+візок\b", c_low):
+        return False
+    # #11: справа в мені -> річ у мені
+    if re.search(r"\bсправа\s+в\s+мені\b", o_low) and re.search(r"\bріч\s+у\s+мені\b", c_low):
+        return False
+    # #40: один на одного -> одне на одного
+    if re.search(r"\bодин\s+на\s+одного\b", o_low) and re.search(r"\bодне\s+на\s+одного\b", c_low):
+        return False
+    # #97: оглянутись -> озирнись
+    if re.search(r"\bоглянутись\b", o_low) and re.search(r"\bозирнись\b", c_low):
+        return False
+    # #25 / #230: підкладкам -> підкладкою / людина -> чоловік
+    if re.search(r"\bпідкладкам\b", o_low) or re.search(r"\bз\s+кривавою\s+підкладкою\b", c_low):
+        return False
+    # #188: можуть використовуватися -> можна використовувати
+    if re.search(r"\bможуть\s+використовуватися\b", o_low) and re.search(r"\bможна\s+використовувати\b", c_low):
+        return False
+    # #5: участь у команді… займався
+    if re.search(r"\bучасть\s+[ву]\s+команді\b", c_low) and re.search(r"\bзаймався\b", c_low):
+        return False
+    # #29: вказав ложкою… до гори
+    if re.search(r"\bвказав\s+своєю\s+ложкою\b", c_low) or re.search(r"\bложкою\s+через\s+річку\b", c_low):
+        return False
+    # #64: була не такою добродушною, а радше — сценаріями
+    if re.search(r"\bне\s+такою\s+добродушною\b", c_low) or re.search(r"\bне\s+настільки\s+добродушними\b", o_low):
+        return False
+    # #191: пекли у руку
+    if re.search(r"\bпекл\w*\s+у\s+руку\b", c_low):
+        return False
+    # #135: heading that gains a full stop
+    if re.search(r"\bТоп[- ]\d+\b", orig_text) or re.search(r"^[Тт]ри\s+найголовніші\s+навички", corr_text):
+        return False
+    # #23: більшість авторів… втрачає
+    if re.search(r"\bбільшість\s+авторів\s+реформ\b", c_low):
         return False
 
     # Reject unpaired comma after relative pronoun
