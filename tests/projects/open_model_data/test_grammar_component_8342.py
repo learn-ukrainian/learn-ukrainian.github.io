@@ -810,9 +810,24 @@ def test_signoff_generator_strict_criteria_and_index_validation(tmp_path):
     no_cite_findings["3"]["reviewer_assessment"] = "Автентичне контрольне речення без помилок."
     f_path20 = tmp_path / "no_cite.json"
     f_path20.write_text(json.dumps(no_cite_findings), encoding="utf-8")
-    with pytest.raises(ValueError, match="lacks sentence-specific citation"):
+    with pytest.raises(ValueError, match="lacks full sentence-specific citation"):
         generate_signoff_and_receipt(
             findings_file=f_path20,
+            write_signoff=True,
+            reviewer_id="claude_blue_team_ling_review",
+            reviewer_family="claude",
+        )
+
+    # 17. Clean control assessment with only four-word partial citation rejected
+    partial_cite_findings = copy.deepcopy(raw_findings)
+    partial_cite_findings["3"]["reviewer_assessment"] = (
+        "Унікальна оцінка: «її вдалось створити одразу» — слововжиток нормативний."
+    )
+    f_path21 = tmp_path / "partial_cite.json"
+    f_path21.write_text(json.dumps(partial_cite_findings), encoding="utf-8")
+    with pytest.raises(ValueError, match="lacks full sentence-specific citation"):
+        generate_signoff_and_receipt(
+            findings_file=f_path21,
             write_signoff=True,
             reviewer_id="claude_blue_team_ling_review",
             reviewer_family="claude",

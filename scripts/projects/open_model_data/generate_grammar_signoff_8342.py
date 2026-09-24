@@ -353,14 +353,13 @@ def generate_signoff_and_receipt(
                     raise ValueError(
                         f"Provenance violation: clean control item {s_idx} is misdescribed as an edit in assessment: {assessment!r}"
                     )
-                # Ensure control assessment provides sentence-specific evidence
-                orig_tokens = re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", item["original_text"].lower())
-                prefix_check = " ".join(orig_tokens[:min(4, len(orig_tokens))])
+                # Ensure control assessment provides full sentence-specific citation evidence
+                orig_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", item["original_text"].lower()))
                 ass_tokens = " ".join(re.findall(r"[а-яіїєґА-ЯІЇЄҐ\w]+", lowered_assessment))
-                if prefix_check and prefix_check not in ass_tokens:
+                if orig_tokens and orig_tokens not in ass_tokens:
                     raise ValueError(
-                        f"Provenance violation: clean control item {s_idx} assessment lacks sentence-specific citation "
-                        f"(expected to cite text containing {prefix_check!r}): {assessment!r}"
+                        f"Provenance violation: clean control item {s_idx} assessment lacks full sentence-specific citation "
+                        f"(expected to cite text containing full normalized sentence {orig_tokens!r}): {assessment!r}"
                     )
 
             crit = f_entry.get("criteria")
