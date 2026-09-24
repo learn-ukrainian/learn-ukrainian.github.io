@@ -16,11 +16,15 @@ Verifies:
 
 from __future__ import annotations
 
+import builtins
+import contextlib
 import hashlib
+import io
 import json
 import os
 import subprocess
 import sys
+from collections.abc import Generator
 from pathlib import Path
 from typing import Any
 
@@ -51,6 +55,54 @@ PLAN_SCHEMA_PATH = REPO_ROOT / "schemas/module-plan-v2.schema.json"
 RECEIPTS_SCHEMA_PATH = REPO_ROOT / "schemas/resolution-receipts-v1.schema.json"
 OBSERVED_SCHEMA_PATH = REPO_ROOT / "schemas/learner-observed-v1.schema.json"
 DIGEST_SCHEMA_PATH = REPO_ROOT / "schemas/module-digest-v1.schema.json"
+
+
+@contextlib.contextmanager
+def record_file_reads(monkeypatch: pytest.MonkeyPatch) -> Generator[list[str], None, None]:
+    """Record every file open/read operation made during the context."""
+    opened: list[str] = []
+
+    real_builtin_open = builtins.open
+    real_io_open = io.open
+    real_os_open = os.open
+    real_read_bytes = Path.read_bytes
+    real_read_text = Path.read_text
+
+    def _record_path(file: Any) -> None:
+        if isinstance(file, (str, Path)):
+            opened.append(str(file))
+        elif isinstance(file, bytes):
+            opened.append(file.decode(errors="replace"))
+        elif isinstance(file, int):
+            opened.append(f"<fd:{file}>")
+
+    def mock_builtin_open(file: Any, *args: Any, **kwargs: Any) -> Any:
+        _record_path(file)
+        return real_builtin_open(file, *args, **kwargs)
+
+    def mock_io_open(file: Any, *args: Any, **kwargs: Any) -> Any:
+        _record_path(file)
+        return real_io_open(file, *args, **kwargs)
+
+    def mock_os_open(path: Any, *args: Any, **kwargs: Any) -> int:
+        _record_path(path)
+        return real_os_open(path, *args, **kwargs)
+
+    def mock_read_bytes(self: Path) -> bytes:
+        _record_path(self)
+        return real_read_bytes(self)
+
+    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
+        _record_path(self)
+        return real_read_text(self, *args, **kwargs)
+
+    monkeypatch.setattr(builtins, "open", mock_builtin_open)
+    monkeypatch.setattr(io, "open", mock_io_open)
+    monkeypatch.setattr(os, "open", mock_os_open)
+    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
+    monkeypatch.setattr(Path, "read_text", mock_read_text)
+
+    yield opened
 
 
 def _load_linguistic_seeds() -> tuple[str, str, str, str, str, str, str]:
@@ -94,10 +146,20 @@ def _setup_two_lesson_fixture(root: Path, level: str = "a1", slug: str = "mod-fi
     plans_dir = root / f"curriculum/l2-uk-en/lesson-plans/{level}"
     state_dir = root / f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
     mdx_dir = root / f"site/src/content/docs/{level}/{slug}"
+    schemas_dir = root / "schemas"
 
     plans_dir.mkdir(parents=True, exist_ok=True)
     state_dir.mkdir(parents=True, exist_ok=True)
     mdx_dir.mkdir(parents=True, exist_ok=True)
+    schemas_dir.mkdir(parents=True, exist_ok=True)
+
+    for s_name in (
+        "module-plan-v2.schema.json",
+        "resolution-receipts-v1.schema.json",
+        "learner-observed-v1.schema.json",
+        "module-digest-v1.schema.json",
+    ):
+        (schemas_dir / s_name).write_bytes((REPO_ROOT / "schemas" / s_name).read_bytes())
 
     # 1. Module plan v2
     plan_doc: dict[str, Any] = {
@@ -724,100 +786,21 @@ def test_cli_subprocess_invocation(tmp_path: Path) -> None:
         "/etc/passwd",
     ],
 )
-def test_path_traversal_slug_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_slug: str) -> None:
+def test_path_traversal_slug_fails_and_reads_nothing(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, bad_slug: str
+) -> None:
     """R-11: Traversal slugs, slashes, and absolute paths fail with path_forbidden and read nothing."""
     _setup_two_lesson_fixture(tmp_path)
     forbidden_file = tmp_path / "curriculum/l2-uk-en/plans/lit-humor.yaml"
     forbidden_file.parent.mkdir(parents=True, exist_ok=True)
     forbidden_file.write_text("plan_schema: 1\n", encoding="utf-8")
 
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", bad_slug, 1, repo_root=tmp_path)
 
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "lit-humor" in str(self) or "passwd" in str(self):
-            raise AssertionError(f"Forbidden file read_bytes called: {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "lit-humor" in str(self) or "passwd" in str(self):
-            raise AssertionError(f"Forbidden file read_text called: {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", bad_slug, 1, repo_root=tmp_path)
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("lit-humor" in str(p) or "passwd" in str(p) for p in opened_files)
-
-
-def test_symlink_pointing_outside_root_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """R-11: A symlinked input pointing outside its root fails with path_forbidden and reads nothing."""
-    _setup_two_lesson_fixture(tmp_path)
-    outside_dir = tmp_path / "outside_dir"
-    outside_dir.mkdir(parents=True, exist_ok=True)
-    secret_file = outside_dir / "secret.yaml"
-    secret_file.write_text("secret_content: 1\n", encoding="utf-8")
-
-    symlink_plan = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/mod-symlink.yaml"
-    symlink_plan.symlink_to(secret_file)
-
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "secret" in str(self):
-            raise AssertionError(f"Forbidden secret file read_bytes called: {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "secret" in str(self):
-            raise AssertionError(f"Forbidden secret file read_text called: {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-symlink", 1, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("secret" in str(p) for p in opened_files)
-
-
-def test_symlink_pointing_to_forbidden_dir_fails_and_reads_nothing(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
-    """R-11: A symlinked input pointing under curriculum/l2-uk-en/plans/ fails with path_forbidden."""
-    _setup_two_lesson_fixture(tmp_path)
-    forbidden_dir = tmp_path / "curriculum/l2-uk-en/plans"
-    forbidden_dir.mkdir(parents=True, exist_ok=True)
-    forbidden_plan = forbidden_dir / "lit-humor.yaml"
-    forbidden_plan.write_text("plan_schema: 1\n", encoding="utf-8")
-
-    symlink_plan = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1/mod-symlink-forbidden.yaml"
-    symlink_plan.symlink_to(forbidden_plan)
-
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "lit-humor" in str(self):
-            raise AssertionError(f"Forbidden file read_bytes called: {self}")
-        return real_read_bytes(self)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-symlink-forbidden", 1, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("lit-humor" in str(p) for p in opened_files)
+    assert opened_files == []
 
 
 def test_invalid_level_fails(tmp_path: Path) -> None:
@@ -904,177 +887,31 @@ def test_optional_places_defaults_to_empty_list(tmp_path: Path) -> None:
     assert doc["lessons"][0]["dialogue"]["places"] == []
 
 
-@pytest.mark.parametrize("dir_kind", ["plan", "state", "mdx"])
-def test_input_directory_symlink_to_forbidden_fails_and_reads_nothing(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch, dir_kind: str
-) -> None:
-    """Each of the three input directories replaced by a symlink under curriculum/l2-uk-en/plans/ fails and reads nothing."""
-    import shutil
-
-    paths = _setup_two_lesson_fixture(tmp_path)
-    forbidden_base = tmp_path / "curriculum/l2-uk-en/plans/forbidden_sub"
-    forbidden_base.mkdir(parents=True, exist_ok=True)
-
-    if dir_kind == "plan":
-        target_dir = tmp_path / "curriculum/l2-uk-en/lesson-plans/a1"
-        for f in target_dir.iterdir():
-            (forbidden_base / f.name).write_bytes(f.read_bytes())
-        shutil.rmtree(target_dir)
-        target_dir.symlink_to(forbidden_base)
-    elif dir_kind == "state":
-        target_dir = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/mod-fixture"
-        for f in target_dir.iterdir():
-            (forbidden_base / f.name).write_bytes(f.read_bytes())
-        shutil.rmtree(target_dir)
-        target_dir.symlink_to(forbidden_base)
-    elif dir_kind == "mdx":
-        target_dir = tmp_path / "site/src/content/docs/a1/mod-fixture"
-        for f in target_dir.iterdir():
-            (forbidden_base / f.name).write_bytes(f.read_bytes())
-        shutil.rmtree(target_dir)
-        target_dir.symlink_to(forbidden_base)
-
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "forbidden_sub" in str(self) or "curriculum/l2-uk-en/plans" in str(self):
-            raise AssertionError(f"Forbidden file read_bytes called: {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "forbidden_sub" in str(self) or "curriculum/l2-uk-en/plans" in str(self):
-            raise AssertionError(f"Forbidden file read_text called: {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("forbidden_sub" in str(p) or "curriculum/l2-uk-en/plans" in str(p) for p in opened_files)
-
-
-def test_output_directory_symlink_to_forbidden_fails_and_writes_nothing(
-    tmp_path: Path,
-) -> None:
-    """Output directory replaced by a symlink under curriculum/l2-uk-en/plans/ fails with path_forbidden and writes nothing."""
-    import shutil
-
-    _setup_two_lesson_fixture(tmp_path)
-    doc = build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
-
-    forbidden_out = tmp_path / "curriculum/l2-uk-en/plans/forbidden_out"
-    forbidden_out.mkdir(parents=True, exist_ok=True)
-
-    state_dir = tmp_path / "curriculum/l2-uk-en/evidence/a1/_state/mod-fixture"
-    shutil.rmtree(state_dir)
-    state_dir.symlink_to(forbidden_out)
-
-    with pytest.raises(DigestError) as exc_info:
-        write_digest(doc, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert list(forbidden_out.iterdir()) == []
-
-    with pytest.raises(DigestError) as exc_info2:
-        digest_output_path("a1", "mod-fixture", 3, repo_root=tmp_path)
-    assert exc_info2.value.code == codes.PATH_FORBIDDEN
-
-
-def test_lock_sidecar_symlink_to_forbidden_fails_before_read(
+def test_symlinked_lock_sidecar_refused_before_read(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:
-    """A .lock sidecar that is a symlink to a forbidden file fails before any read."""
+    """A .lock sidecar that is a symlink is refused before any read of that sidecar."""
     paths = _setup_two_lesson_fixture(tmp_path)
-
-    forbidden_dir = tmp_path / "curriculum/l2-uk-en/plans"
-    forbidden_dir.mkdir(parents=True, exist_ok=True)
-    forbidden_secret = forbidden_dir / "secret.txt"
-    forbidden_secret.write_text("classified_lock_data\n", encoding="utf-8")
 
     obs_lock = Path(f"{paths['obs_1']}.lock")
+    target_lock = obs_lock.parent / "target.lock"
+    target_lock.write_text(obs_lock.read_text(encoding="utf-8"), encoding="utf-8")
     obs_lock.unlink()
-    obs_lock.symlink_to(forbidden_secret)
+    obs_lock.symlink_to(target_lock)
 
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "secret.txt" in str(self) or "curriculum/l2-uk-en/plans" in str(self):
-            raise AssertionError(f"Forbidden file read_bytes called: {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "secret.txt" in str(self) or "curriculum/l2-uk-en/plans" in str(self):
-            raise AssertionError(f"Forbidden file read_text called: {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 3, repo_root=tmp_path)
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("secret.txt" in str(p) or "curriculum/l2-uk-en/plans" in str(p) for p in opened_files)
-
-
-def test_schema_symlink_out_of_schemas_fails(
-    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
-) -> None:
-    """A schema file that is a symlink pointing outside schemas/ fails with path_forbidden."""
-    _setup_two_lesson_fixture(tmp_path)
-
-    outside_dir = tmp_path / "outside_schemas"
-    outside_dir.mkdir(parents=True, exist_ok=True)
-    secret_schema = outside_dir / "secret_schema.json"
-    secret_schema.write_text("{}", encoding="utf-8")
-
-    schemas_dir = tmp_path / "schemas"
-    schemas_dir.mkdir(parents=True, exist_ok=True)
-    symlink_schema = schemas_dir / "module-digest-v1.schema.json"
-    symlink_schema.symlink_to(secret_schema)
-
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "secret_schema" in str(self):
-            raise AssertionError(f"Secret schema read_bytes called: {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "secret_schema" in str(self):
-            raise AssertionError(f"Secret schema read_text called: {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    doc = {
-        "digest_schema": DIGEST_SCHEMA,
-        "generator_version": GENERATOR_VERSION,
-        "level": "a1",
-        "slug": "mod-fixture",
-        "up_to": 1,
-        "plan_sha256": "0" * 64,
-        "sources": [],
-        "lessons": [],
+    assert not any("obs_1" in p and "lock" in p for p in opened_files)
+    assert not any("target.lock" in p for p in opened_files)
+    expected_allowed = {
+        str(paths["plan"]),
+        str(paths["mdx_1"]),
+        str(tmp_path / "schemas/module-plan-v2.schema.json"),
     }
-
-    with pytest.raises(DigestError) as exc_info:
-        validate_digest(doc, repo_root=tmp_path)
-    assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("secret_schema" in str(p) for p in opened_files)
+    assert set(opened_files).issubset(expected_allowed)
 
 
 def test_dialogue_missing_step_fails(tmp_path: Path) -> None:
@@ -1127,30 +964,23 @@ def test_in_root_data_symlink_with_escaping_lock_refused_before_read(
     paths["obs_1"].unlink()
     paths["obs_1"].symlink_to(target_data)
 
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "target.observed" in str(self) or "secret_lock" in str(self):
-            raise AssertionError(f"Forbidden read_bytes called on {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "target.observed" in str(self) or "secret_lock" in str(self):
-            raise AssertionError(f"Forbidden read_text called on {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("target.observed" in str(p) or "secret_lock" in str(p) for p in opened_files)
+    assert not any(
+        "target.observed" in p
+        or "secret_lock" in p
+        or "lesson-1.observed" in p
+        for p in opened_files
+    )
+    expected_allowed = {
+        str(paths["plan"]),
+        str(paths["mdx_1"]),
+        str(tmp_path / "schemas/module-plan-v2.schema.json"),
+    }
+    assert set(opened_files).issubset(expected_allowed)
 
 
 def test_symlinked_parent_directory_refused_before_read(
@@ -1165,30 +995,12 @@ def test_symlinked_parent_directory_refused_before_read(
     (plans_parent / "a1").rename(real_plans_dir)
     (plans_parent / "a1").symlink_to(real_plans_dir)
 
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "a1_real" in str(self):
-            raise AssertionError(f"Forbidden read_bytes called on {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "a1_real" in str(self):
-            raise AssertionError(f"Forbidden read_text called on {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
-
-    with pytest.raises(DigestError) as exc_info:
-        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("a1_real" in str(p) for p in opened_files)
+    assert opened_files == []
 
 
 def test_symlinked_schema_refused_before_read(
@@ -1198,31 +1010,12 @@ def test_symlinked_schema_refused_before_read(
     _setup_two_lesson_fixture(tmp_path)
 
     schemas_dir = tmp_path / "schemas"
-    schemas_dir.mkdir(parents=True, exist_ok=True)
     real_schema = schemas_dir / "target.schema.json"
     real_schema.write_text("{}", encoding="utf-8")
 
     symlink_schema = schemas_dir / "module-digest-v1.schema.json"
+    symlink_schema.unlink(missing_ok=True)
     symlink_schema.symlink_to(real_schema)
-
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-    real_read_text = Path.read_text
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "target.schema.json" in str(self):
-            raise AssertionError(f"Forbidden read_bytes called on {self}")
-        return real_read_bytes(self)
-
-    def mock_read_text(self: Path, *args: Any, **kwargs: Any) -> str:
-        opened_files.append(self)
-        if "target.schema.json" in str(self):
-            raise AssertionError(f"Forbidden read_text called on {self}")
-        return real_read_text(self, *args, **kwargs)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-    monkeypatch.setattr(Path, "read_text", mock_read_text)
 
     doc = {
         "digest_schema": DIGEST_SCHEMA,
@@ -1235,11 +1028,12 @@ def test_symlinked_schema_refused_before_read(
         "lessons": [],
     }
 
-    with pytest.raises(DigestError) as exc_info:
-        validate_digest(doc, repo_root=tmp_path)
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            validate_digest(doc, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("target.schema.json" in str(p) for p in opened_files)
+    assert opened_files == []
 
 
 def test_symlinked_output_directory_refused_before_write(
@@ -1285,19 +1079,94 @@ def test_check_digest_refuses_symlink_before_read(
     path.unlink()
     path.symlink_to(target_data)
 
-    opened_files: list[Path] = []
-    real_read_bytes = Path.read_bytes
-
-    def mock_read_bytes(self: Path) -> bytes:
-        opened_files.append(self)
-        if "target.digest.yaml" in str(self):
-            raise AssertionError(f"Forbidden read_bytes called on {self}")
-        return real_read_bytes(self)
-
-    monkeypatch.setattr(Path, "read_bytes", mock_read_bytes)
-
-    with pytest.raises(DigestError) as exc_info:
-        check_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            check_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
 
     assert exc_info.value.code == codes.PATH_FORBIDDEN
-    assert not any("target.digest.yaml" in str(p) for p in opened_files)
+    assert opened_files == []
+
+
+def test_symlinked_repo_root_resolved_once_and_refuses_symlink_below_it(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    """A symlinked --repo-root is resolved once at entry and still refuses a symlink below it."""
+    real_root = tmp_path / "real_repo"
+    real_root.mkdir(parents=True, exist_ok=True)
+    paths = _setup_two_lesson_fixture(real_root)
+
+    symlink_root = tmp_path / "symlink_repo"
+    symlink_root.symlink_to(real_root)
+
+    # 1. Resolves once at entry and succeeds when no symlinks below it
+    doc = build_digest("a1", "mod-fixture", 2, repo_root=symlink_root)
+    assert doc["level"] == "a1"
+    assert doc["up_to"] == 2
+
+    # 2. CLI also succeeds with symlinked --repo-root
+    cmd_write = [
+        PYTHON_BIN,
+        "-m",
+        "scripts.review.digest",
+        "a1",
+        "mod-fixture",
+        "--up-to",
+        "2",
+        "--repo-root",
+        str(symlink_root),
+    ]
+    proc = subprocess.run(cmd_write, capture_output=True, text=True, timeout=30)
+    assert proc.returncode == 0
+    assert "ok: wrote" in proc.stdout
+
+    # 3. Refuses a symlink below the resolved root before reading it
+    state_dir = real_root / "curriculum/l2-uk-en/evidence/a1/_state/mod-fixture"
+    target_data = state_dir / "target.observed.yaml"
+    target_data.write_text(paths["obs_1"].read_text(encoding="utf-8"), encoding="utf-8")
+    paths["obs_1"].unlink()
+    paths["obs_1"].symlink_to(target_data)
+
+    with record_file_reads(monkeypatch) as opened_files:
+        with pytest.raises(DigestError) as exc_info:
+            build_digest("a1", "mod-fixture", 2, repo_root=symlink_root)
+
+    assert exc_info.value.code == codes.PATH_FORBIDDEN
+    assert not any(
+        "target.observed" in p or "lesson-1.observed" in p for p in opened_files
+    )
+
+    proc_fail = subprocess.run(cmd_write, capture_output=True, text=True, timeout=30)
+    assert proc_fail.returncode == 1
+    assert "path_forbidden" in proc_fail.stderr
+
+
+def test_missing_schema_in_supplied_root_fails_without_fallback(
+    tmp_path: Path,
+) -> None:
+    """Schemas come from supplied root only; missing schema fails with DIGEST_SCHEMA_INVALID without fallback."""
+    import shutil
+
+    _setup_two_lesson_fixture(tmp_path)
+    shutil.rmtree(tmp_path / "schemas")
+
+    with pytest.raises(DigestError) as exc_info:
+        build_digest("a1", "mod-fixture", 2, repo_root=tmp_path)
+
+    assert exc_info.value.code == codes.DIGEST_SCHEMA_INVALID
+    assert "schema file not found" in exc_info.value.message
+
+    doc = {
+        "digest_schema": DIGEST_SCHEMA,
+        "generator_version": GENERATOR_VERSION,
+        "level": "a1",
+        "slug": "mod-fixture",
+        "up_to": 1,
+        "plan_sha256": "0" * 64,
+        "sources": [],
+        "lessons": [],
+    }
+    with pytest.raises(DigestError) as exc_info2:
+        validate_digest(doc, repo_root=tmp_path)
+
+    assert exc_info2.value.code == codes.DIGEST_SCHEMA_INVALID
+    assert "schema file not found" in exc_info2.value.message

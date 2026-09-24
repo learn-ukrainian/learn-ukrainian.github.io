@@ -19,27 +19,23 @@ _VALIDATORS: dict[str, Draft202012Validator] = {}
 
 
 def _resolve_schema_path(schema_name: str, repo_root: Path | None = None) -> Path:
-    from .generator import _checked_path
+    from .generator import _checked_path, resolve_repo_root
 
-    if repo_root is not None:
-        cand_rel = f"schemas/{schema_name}"
-        schemas_dir = repo_root / "schemas"
-        cand = repo_root / cand_rel
-        if schemas_dir.exists(follow_symlinks=False) or cand.exists(follow_symlinks=False):
-            return _checked_path(repo_root, cand_rel, "schemas")
-    return _checked_path(REPO_ROOT, f"schemas/{schema_name}", "schemas")
+    root = resolve_repo_root(repo_root)
+    cand_rel = f"schemas/{schema_name}"
+    return _checked_path(root, cand_rel, "schemas")
 
 
 def get_validator(schema_path: Path | None = None, repo_root: Path | None = None) -> Draft202012Validator:
     """Return a cached Draft202012Validator for module-digest-v1.schema.json."""
-    from .generator import _checked_path
+    from .generator import _checked_path, resolve_repo_root
 
     global _VALIDATOR
-    root = repo_root or REPO_ROOT
+    root = resolve_repo_root(repo_root)
     if schema_path is not None:
         path = _checked_path(root, schema_path, "schemas")
     else:
-        path = _resolve_schema_path("module-digest-v1.schema.json", repo_root)
+        path = _resolve_schema_path("module-digest-v1.schema.json", repo_root=root)
         if repo_root is None and _VALIDATOR is not None:
             return _VALIDATOR
     if not path.is_file():
@@ -56,7 +52,10 @@ def get_validator(schema_path: Path | None = None, repo_root: Path | None = None
 
 def get_cached_validator(schema_name: str, repo_root: Path | None = None) -> Draft202012Validator:
     """Return a cached Draft202012Validator for any schema under schemas/."""
-    path = _resolve_schema_path(schema_name, repo_root)
+    from .generator import resolve_repo_root
+
+    root = resolve_repo_root(repo_root)
+    path = _resolve_schema_path(schema_name, repo_root=root)
     cache_key = str(path)
     if cache_key in _VALIDATORS:
         return _VALIDATORS[cache_key]

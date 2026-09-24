@@ -2,6 +2,7 @@
 
 Aggregates recorded decisions across lessons 1...n-1 of a module.
 Infers nothing; copies and counts from observed, resolutions, provenance, plan v2, and MDX.
+The repository root is caller-selected and resolved once at entry (strict=True); symlink-free containment is enforced on all path components below it.
 """
 
 from __future__ import annotations
@@ -27,6 +28,13 @@ from .schema import (
 )
 
 REPO_ROOT = Path(__file__).resolve().parents[3]
+
+
+def resolve_repo_root(repo_root: Path | str | None = None) -> Path:
+    """Resolve caller-supplied or default repository root once at entry."""
+    root = repo_root if repo_root is not None else REPO_ROOT
+    return Path(root).resolve(strict=True)
+
 
 GENERATOR_VERSION: str = "1"
 DIGEST_SCHEMA: int = 1
@@ -236,7 +244,7 @@ def build_digest(
     if up_to < 1:
         raise DigestError(codes.INVALID_ARGUMENT, f"--up-to must be >= 1, got {up_to}")
 
-    root = repo_root or REPO_ROOT
+    root = resolve_repo_root(repo_root)
     plan_root_rel = f"curriculum/l2-uk-en/lesson-plans/{level}"
     state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
     mdx_root_rel = f"site/src/content/docs/{level}/{slug}"
@@ -566,7 +574,7 @@ def digest_output_path(
     """Return path to digest-upto-<n>.yaml."""
     validate_level(level)
     validate_slug(slug)
-    root = repo_root or REPO_ROOT
+    root = resolve_repo_root(repo_root)
     state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
     path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
     return _checked_path(root, path_rel, state_root_rel)
@@ -578,10 +586,10 @@ def write_digest(
     repo_root: Path | None = None,
 ) -> tuple[Path, str]:
     """Write digest and lock sidecar to disk, returning path and sha256."""
-    validate_digest(digest_doc, repo_root=repo_root)
+    root = resolve_repo_root(repo_root)
+    validate_digest(digest_doc, repo_root=root)
     validate_level(digest_doc["level"])
     validate_slug(digest_doc["slug"])
-    root = repo_root or REPO_ROOT
     level = digest_doc["level"]
     slug = digest_doc["slug"]
     up_to = digest_doc["up_to"]
@@ -608,7 +616,7 @@ def check_digest(
     """Verify digest on disk against recomputed content without byte drift."""
     validate_level(level)
     validate_slug(slug)
-    root = repo_root or REPO_ROOT
+    root = resolve_repo_root(repo_root)
     state_root_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}"
     path_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml"
     lock_rel = f"curriculum/l2-uk-en/evidence/{level}/_state/{slug}/digest-upto-{up_to}.yaml.lock"
@@ -623,7 +631,7 @@ def check_digest(
     if not lock.check(path):
         raise DigestError(codes.LOCK_MISMATCH, f"digest lock check failed for {path}")
 
-    computed_doc = build_digest(level, slug, up_to, repo_root=repo_root)
+    computed_doc = build_digest(level, slug, up_to, repo_root=root)
     expected_bytes = lock.yaml_bytes(computed_doc)
     actual_bytes = path.read_bytes()
 
