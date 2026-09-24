@@ -70,6 +70,7 @@ from scripts.curriculum.resolver import codes, questions, receipts
 from scripts.curriculum.resolver.inputs import Allowlist, ExpandedDocument, ResolverError
 from scripts.curriculum.resolver.stream import resolve
 from scripts.curriculum.resolver.tokenize import tokenize
+from scripts.review.digest.error import DigestError
 
 SCHEMA = Path(__file__).resolve().parents[3] / "schemas" / "fresh-lesson-gates-v1.schema.json"
 QuestionDispatch = Callable[[dict[str, Any], str], dict[str, Any]]
@@ -714,9 +715,7 @@ def run_lesson(
     if row["status"] == "failed":
         return finish(row)
     rows.append(row)
-    # The current question/receipt schemas predate E3a's step locator field.
-    # Keep the step on the stream used by the inventory gate; serialize the
-    # schema-compatible occurrence locator for questions and receipts.
+    # Questions omit step, while receipts retain it for digest provenance.
     token_steps = [token["unit"].pop("step", None) for token in stream.tokens]
     batch = questions.build_questions(stream, expanded_obj, selected_allowlist)
     try:
@@ -742,6 +741,9 @@ def run_lesson(
         receipt_doc = receipts.build_receipts(
             stream, batch, selections, question_seat.replace(":", "@") if question_seat else None
         )
+        for receipt, step in zip(receipt_doc["tokens"], token_steps, strict=True):
+            if step is not None:
+                receipt["unit"]["step"] = step
         receipt_path = state_dir / f"lesson-{n}.resolutions.yaml"
         receipt_sha = receipts.write_receipts(receipt_path, receipt_doc)
         for token, receipt in zip(stream.tokens, receipt_doc["tokens"], strict=True):
@@ -854,7 +856,7 @@ def run_lesson(
             site_dir=site_dir,
         )
     except Exception as err:
-        reason = str(err)
+        reason = f"digest_error:{err.code}: {err.message}" if isinstance(err, DigestError) else str(err)
         path = getattr(err, "path", None) or (err.filename if isinstance(err, OSError) and err.filename else reason)
         write_manifest_error(state_dir, n, reason, str(path), datetime.now(UTC).isoformat().replace("+00:00", "Z"))
         bad = failure(12, reason, "engine")
