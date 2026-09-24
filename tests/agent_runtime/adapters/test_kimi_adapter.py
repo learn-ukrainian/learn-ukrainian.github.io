@@ -19,7 +19,7 @@ from scripts.agent_runtime.adapters.kimi import (
     KIMI_PROJECT_SKILLS_RELATIVE,
     KimiAdapter,
 )
-from scripts.agent_runtime.adapters.kimicc import KimiccHarness
+from scripts.agent_runtime.adapters.kimicc import KimiccHarness, effective_kimicc_model
 from scripts.agent_runtime.telemetry import resolve_invocation_telemetry
 from scripts.agent_runtime.tool_config import build_mcp_tool_config
 from scripts.audit.lint_agent_trailer import _TRAILER_RE
@@ -145,15 +145,40 @@ def test_kimicc_harness_is_opt_in_and_native_kimi_remains_default(tmp_path, monk
     )
 
     assert native.cmd[0] == str(tmp_path / "kimi")
+    assert native.cmd[native.cmd.index("-m") + 1] == "kimi-code/k3-256k"
     assert kimicc.cmd[0].endswith("scripts/agent_runtime/kimicc_headless.sh")
-    # Operator 2026-08-13: the kimicc default model is k3-256k; only full k3
-    # gets the default --effort high injection.
-    assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3-256k"
-    assert "--effort" not in kimicc.cmd
+    # kimicc's omitted model is the review-pr pin (kimi-code/k3 → alias k3),
+    # which is the id Claude Code accepts. Full k3 injects --effort high.
+    assert KimiccHarness.default_model == "kimi-code/k3"
+    assert kimicc.cmd[kimicc.cmd.index("--model") + 1] == "k3"
+    assert kimicc.cmd[kimicc.cmd.index("--effort") + 1] == "high"
     assert kimicc.metadata["harness"] == "kimicc"
     assert kimicc.env_overrides["KIMICC_CLAUDE_BIN"] == str(claude)
-    assert "KIMICC_EFFORT_LEVEL" not in kimicc.env_overrides
+    assert kimicc.env_overrides["KIMICC_EFFORT_LEVEL"] == "high"
     assert "CLAUDE_CONFIG_DIR" in kimicc.env_unsets
+
+
+def test_kimicc_omitted_model_resolves_to_runtime_id_not_native_default():
+    assert effective_kimicc_model(None, adapter_default="k3-256k") == "kimi-code/k3"
+    assert effective_kimicc_model("k2.7", adapter_default="k3-256k") == "k2.7"
+    assert KimiccHarness.default_model == "kimi-code/k3"
+
+
+def test_kimicc_refuses_catalog_alias_claude_code_rejects(tmp_path, monkeypatch):
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    with pytest.raises(ValueError, match="unrecognized_model"):
+        KimiccHarness().build_invocation(
+            prompt="Inspect the target.",
+            mode="read-only",
+            cwd=tmp_path,
+            model="k3-256k",
+            task_id="kimicc-reject-256k",
+            session_id=None,
+            tool_config={"harness": "kimicc"},
+        )
 
 
 def test_kimicc_harness_default_and_override_effort_are_concrete_child_argv(tmp_path, monkeypatch):

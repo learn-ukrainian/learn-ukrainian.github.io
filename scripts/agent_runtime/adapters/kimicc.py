@@ -13,6 +13,7 @@ import shutil
 from pathlib import Path
 from typing import Any
 
+from scripts.ai_agent_bridge._review_pr import FORMAL_CF_MODEL
 from scripts.review.model_catalog import ModelCatalogError, resolve_kimi_model
 
 from ..result import ParseResult
@@ -72,11 +73,29 @@ _TRAIL_ISOLATION_TOOL_CONFIG_KEYS = (
 )
 
 
+# Claude Code's Kimi route rejects this catalog alias with
+# [claude-code:unrecognized_model]. The headless wrapper forwards
+# coding_model_id as --model, so the check is the string that would be spawned.
+_CLAUDE_CODE_REJECTED_MODELS = frozenset({"k3-256k"})
+
+
+def effective_kimicc_model(model: str | None, *, adapter_default: str) -> str:
+    """Model id for a kimi dispatch once the harness is known to be kimicc.
+
+    An omitted ``--model`` must not inherit the native adapter default. That
+    default is the catalog alias ``k3-256k``, which Claude Code rejects.
+    """
+    if model is None:
+        return FORMAL_CF_MODEL["kimicc"]
+    return model or adapter_default
+
+
 class KimiccHarness:
     """Build a stateless Claude Code invocation routed through KimiCC."""
 
     name = "kimicc"
-    default_model = "k3-256k"
+    # Same pin as review-pr's kimicc row. Do not add a second literal.
+    default_model = FORMAL_CF_MODEL["kimicc"]
     supported_modes = frozenset({"read-only", "workspace-write", "danger"})
 
     def build_invocation(
@@ -103,6 +122,13 @@ class KimiccHarness:
             _, route = resolve_kimi_model(requested_model)
         except ModelCatalogError as exc:
             raise ValueError(f"KimiccHarness: {exc}") from exc
+        claude_model = route["coding_model_id"]
+        if claude_model in _CLAUDE_CODE_REJECTED_MODELS or route["kimicc_alias"] in _CLAUDE_CODE_REJECTED_MODELS:
+            raise ValueError(
+                "KimiccHarness: Claude Code does not accept model "
+                f"{claude_model!r} (unrecognized_model). "
+                f"Use {self.default_model!r} for --harness kimicc."
+            )
 
         tc: dict[str, Any] = tool_config or {}
         if tc.get("review_isolation"):

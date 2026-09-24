@@ -2859,7 +2859,16 @@ def _invoke_impl(
     _enforce_resume_policy(agent_name, session_id, entrypoint)
 
     # ---------- 5. Pre-call rate-limit check ----------
-    effective_model = model or adapter.default_model
+    # Native Kimi's registry default (k3-256k) is not a Claude Code model id.
+    # An omitted --model on --harness kimicc must use the kimicc pin instead
+    # of that native default, or the child is spawned with unrecognized_model.
+    requested_harness = tool_config.get("harness") if isinstance(tool_config, dict) else None
+    if agent_name == "kimi" and requested_harness == "kimicc":
+        from .adapters.kimicc import effective_kimicc_model
+
+        effective_model = effective_kimicc_model(model, adapter_default=adapter.default_model)
+    else:
+        effective_model = model or adapter.default_model
     failover_chain = (
         load_failover_chain(agent_name, effective_model=effective_model)
         if allow_runner_failover

@@ -259,6 +259,32 @@ def test_run_dispatch_timeout_returns_1(monkeypatch, tmp_path, capsys):
     assert f"dispatch command timed out after {wrappers.DISPATCH_COMMAND_TIMEOUT_SECONDS}s" in err
 
 
+def test_ask_kimi_review_argv_selects_kimicc_harness():
+    command = wrappers.build_ask_review_dispatch_command(
+        "kimi",
+        "review-8703",
+        Path("prompt.md"),
+        model=None,
+        effort=None,
+    )
+    assert command[command.index("--agent") + 1] == "kimi"
+    assert command[command.index("--harness") + 1] == "kimicc"
+    assert "--mode" in command and command[command.index("--mode") + 1] == "read-only"
+
+
+def test_ask_non_kimi_review_argv_omits_kimicc_harness():
+    command = wrappers.build_ask_review_dispatch_command(
+        "claude",
+        "review-1",
+        Path("prompt.md"),
+        model=None,
+        effort=None,
+    )
+    assert "--harness" not in command
+    assert command[command.index("--agent") + 1] == "claude"
+    assert command[command.index("--mode") + 1] == "read-only"
+
+
 def test_run_ask_review_dispatch_dispatch_timeout_raises_runtime_error(monkeypatch):
     import pytest
 
