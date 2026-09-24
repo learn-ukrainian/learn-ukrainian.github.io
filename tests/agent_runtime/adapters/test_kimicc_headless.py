@@ -96,6 +96,10 @@ def test_headless_wrapper_composes_kimicc_env_without_writing_claude_config(tmp_
     assert "arg=-p" in result.stdout
     assert "arg=--bare" in result.stdout
     assert "arg=stream-json" in result.stdout
+    assert "arg=--permission-mode" in result.stdout
+    assert "arg=plan" in result.stdout
+    assert "arg=--tools" in result.stdout
+    assert "arg=Read,Grep,Glob,LS" in result.stdout
     assert "arg=say hi" in result.stdout
     assert "test-route-token" not in result.stdout
     assert not (home / ".claude" / "settings.json").exists()
@@ -170,3 +174,53 @@ def test_headless_wrapper_refuses_missing_credentials_before_claude_runs(tmp_pat
     assert result.returncode == 1
     assert "no Kimi API credential" in result.stderr
     assert result.stdout == ""
+
+
+def test_headless_wrapper_workspace_write_does_not_force_plan_mode(tmp_path: Path, monkeypatch) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    plan = _adapter_plan(tmp_path, monkeypatch, model="k2.7")
+    plan.cmd[plan.cmd.index("--mode") + 1] = "workspace-write"
+    env = _clean_kimicc_env(home)
+    env.update({**plan.env_overrides, "KIMICC_AUTH_TOKEN": "test-route-token"})
+
+    result = subprocess.run(plan.cmd, cwd=_REPO_ROOT, env=env, capture_output=True, text=True, timeout=20)
+
+    assert result.returncode == 0, result.stderr
+    assert "arg=--permission-mode" not in result.stdout
+    assert "arg=Read,Grep,Glob,LS" not in result.stdout
+
+
+def test_headless_wrapper_keeps_explicit_tools_profile(tmp_path: Path) -> None:
+    home = tmp_path / "home"
+    home.mkdir()
+    claude = tmp_path / "claude"
+    _fake_claude(claude)
+    env = _clean_kimicc_env(home)
+    env.update({"KIMICC_CLAUDE_BIN": str(claude), "KIMICC_AUTH_TOKEN": "test-route-token"})
+
+    result = subprocess.run(
+        [
+            str(_WRAPPER),
+            "--model",
+            "k2.7",
+            "--mode",
+            "read-only",
+            "--prompt",
+            "say hi",
+            "--tools",
+            "mcp__trail__trail_status",
+        ],
+        cwd=_REPO_ROOT,
+        env=env,
+        capture_output=True,
+        text=True,
+        timeout=20,
+    )
+
+    assert result.returncode == 0, result.stderr
+    assert "arg=--permission-mode" in result.stdout
+    assert "arg=plan" in result.stdout
+    assert result.stdout.count("arg=--tools") == 1
+    assert "arg=mcp__trail__trail_status" in result.stdout
+    assert "arg=Read,Grep,Glob,LS" not in result.stdout

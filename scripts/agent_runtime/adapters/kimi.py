@@ -53,9 +53,9 @@ def resolve_kimi_model(model: str | None) -> str:
         return KIMI_MODEL_ALIASES[requested]
     except KeyError as exc:
         raise ValueError(
-            f"KimiAdapter: unsupported Kimi model {requested!r}; "
-            f"allowed: {sorted(KIMI_ALLOWED_MODELS)}"
+            f"KimiAdapter: unsupported Kimi model {requested!r}; allowed: {sorted(KIMI_ALLOWED_MODELS)}"
         ) from exc
+
 
 _RATE_LIMIT_RE = re.compile(
     r"rate limit|rate_limit|usage limit|quota exceeded|too many requests|\b429\b",
@@ -68,8 +68,7 @@ _MODE_FLAGS: dict[str, tuple[str, ...]] = {
 }
 
 _READ_ONLY_REFUSAL = (
-    "kimi headless auto-approves mutations; read-only cannot be guaranteed "
-    "in native prompt mode — use another agent"
+    "kimi headless auto-approves mutations; read-only cannot be guaranteed in native prompt mode — use --harness kimicc"
 )
 
 
@@ -116,10 +115,7 @@ class KimiAdapter:
         # design: it exists only so dispatch can record an explicit
         # harness=native attribution in task state (#5938 F2).
         if mode not in self.supported_modes:
-            raise ValueError(
-                f"KimiAdapter: unsupported mode {mode!r} "
-                f"(supported: {sorted(self.supported_modes)})"
-            )
+            raise ValueError(f"KimiAdapter: unsupported mode {mode!r} (supported: {sorted(self.supported_modes)})")
         if mode == "read-only":
             raise ValueError(_READ_ONLY_REFUSAL)
 
@@ -218,11 +214,7 @@ class KimiAdapter:
         # unrelated text in the same output trip the generic rate-limit
         # patterns.
         gh_auth_failure = bool(GH_AUTH_FAILURE_RE.search(combined))
-        rate_limited = (
-            call_failed
-            and not gh_auth_failure
-            and bool(_RATE_LIMIT_RE.search(combined))
-        )
+        rate_limited = call_failed and not gh_auth_failure and bool(_RATE_LIMIT_RE.search(combined))
         ok = returncode == 0 and bool(response) and not rate_limited
 
         stderr_excerpt: str | None = None
@@ -260,8 +252,7 @@ def _resolve_kimi_binary() -> str:
         if candidate and Path(candidate).is_file() and os.access(candidate, os.X_OK):
             return str(Path(candidate))
     raise RuntimeError(
-        "Kimi Code CLI not found. Install it so `kimi` is on PATH or set "
-        "LEARN_UK_KIMI_BIN to the executable path."
+        "Kimi Code CLI not found. Install it so `kimi` is on PATH or set LEARN_UK_KIMI_BIN to the executable path."
     )
 
 
@@ -291,11 +282,7 @@ def _resolve_kimi_skills_dirs(*, cwd: Path, config: dict[str, Any]) -> list[str]
         if not project_skills.is_dir():
             return []
         kimi_home_value = os.environ.get("KIMI_CODE_HOME")
-        kimi_home = (
-            Path(kimi_home_value).expanduser()
-            if kimi_home_value
-            else Path.home() / ".kimi-code"
-        )
+        kimi_home = Path(kimi_home_value).expanduser() if kimi_home_value else Path.home() / ".kimi-code"
         candidates = [
             str(cwd / ".kimi-code" / "skills"),
             str(cwd / ".kimi" / "skills"),

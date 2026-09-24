@@ -94,11 +94,7 @@ def test_native_kimi_preserves_existing_project_and_user_skill_roots(tmp_path, m
     monkeypatch.setattr(kimi_adapter.Path, "home", lambda: fake_home)
 
     plan = _build(tmp_path, monkeypatch)
-    configured_roots = [
-        plan.cmd[index + 1]
-        for index, value in enumerate(plan.cmd)
-        if value == "--skills-dir"
-    ]
+    configured_roots = [plan.cmd[index + 1] for index, value in enumerate(plan.cmd) if value == "--skills-dir"]
 
     assert configured_roots == [
         str(project_kimi),
@@ -243,11 +239,82 @@ def test_mode_flag_mapping_is_empty_for_all_headless_modes():
     }
 
 
+def _kimicc_ready(tmp_path, monkeypatch):
+    claude = tmp_path / "claude"
+    claude.write_text("#!/bin/sh\n", encoding="utf-8")
+    claude.chmod(0o755)
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._default_claude_bin", lambda: str(claude))
+    monkeypatch.setattr("scripts.agent_runtime.adapters.kimicc._ensure_supported_claude_cli_version", lambda _: None)
+
+
+def test_kimicc_accepts_delegate_read_only_and_review_keys(tmp_path, monkeypatch):
+    _kimicc_ready(tmp_path, monkeypatch)
+    lease = tmp_path / "lease"
+    lease.mkdir()
+    checkout = tmp_path / "checkout"
+    checkout.mkdir()
+    plan = KimiccHarness().build_invocation(
+        prompt="critique",
+        mode="read-only",
+        cwd=checkout,
+        model="k3",
+        task_id="kimicc-readonly",
+        session_id=None,
+        tool_config={
+            "harness": "kimicc",
+            "read_only_tmp_root": str(lease),
+            "mcp_config_path": str(tmp_path / "review.mcp.json"),
+            "strict_mcp_config": True,
+            "mcp_server_names": ["sources"],
+            "review_id": "rev-1",
+            "attempt_id": "att-1",
+            "codex_home_override": str(tmp_path / "codex-home"),
+            "agy_home_override": str(tmp_path / "agy-home"),
+        },
+    )
+
+    assert plan.cmd[plan.cmd.index("--mode") + 1] == "read-only"
+    assert plan.cmd[plan.cmd.index("--mcp-config") + 1] == str(tmp_path / "review.mcp.json")
+    assert "--strict-mcp-config" in plan.cmd
+    assert plan.env_overrides["TMPDIR"] == str(lease)
+    assert "codex_home_override" not in plan.cmd
+    assert "agy_home_override" not in plan.cmd
+
+
+def test_kimicc_rejects_read_only_tmp_root_that_is_cwd(tmp_path, monkeypatch):
+    _kimicc_ready(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="read_only_tmp_root"):
+        KimiccHarness().build_invocation(
+            prompt="critique",
+            mode="read-only",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimicc-bad-lease",
+            session_id=None,
+            tool_config={"read_only_tmp_root": str(tmp_path)},
+        )
+
+
+def test_kimicc_still_rejects_unknown_tool_config_keys(tmp_path, monkeypatch):
+    _kimicc_ready(tmp_path, monkeypatch)
+    with pytest.raises(ValueError, match="unsupported tool_config keys"):
+        KimiccHarness().build_invocation(
+            prompt="critique",
+            mode="read-only",
+            cwd=tmp_path,
+            model="k3",
+            task_id="kimicc-unknown",
+            session_id=None,
+            tool_config={"some_future_field": "no"},
+        )
+
+
 def test_read_only_refuses_before_kimi_binary_resolution(tmp_path, monkeypatch):
     with patch("scripts.agent_runtime.adapters.kimi._resolve_kimi_binary") as resolve_binary:
         with pytest.raises(ValueError, match=re.escape(_READ_ONLY_REFUSAL)):
             _build(tmp_path, monkeypatch, mode="read-only")
     resolve_binary.assert_not_called()
+    assert "kimicc" in _READ_ONLY_REFUSAL
 
 
 def test_short_names_and_full_aliases_resolve_and_unknown_models_reject(tmp_path, monkeypatch):
