@@ -17,7 +17,11 @@
 
 set -euo pipefail
 
-REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+# Resolve the shared repository root even when this script is run from a linked
+# worktree. The common Git directory belongs to the primary checkout.
+SCRIPT_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
+GIT_COMMON_DIR="$(git -C "$SCRIPT_ROOT" rev-parse --path-format=absolute --git-common-dir)"
+REPO_ROOT="$(dirname "$GIT_COMMON_DIR")"
 WT_BASE="$(dirname "$REPO_ROOT")"
 API_BASE="http://localhost:8765"
 

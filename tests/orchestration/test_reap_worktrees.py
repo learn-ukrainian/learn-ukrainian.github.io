@@ -214,12 +214,56 @@ def test_merged_dispatch_worktree_owner_record_does_not_block_its_own_reap(
     repo = init_repo(tmp_path)
     worktree = add_worktree(repo, "codex/impl-owner", path=repo / ".worktrees" / "dispatch" / "codex" / "impl-owner")
     patch_gh(monkeypatch, {"codex/impl-owner": [{"number": 8611, "state": "MERGED"}]})
-    _write_task_record(repo, "impl-owner", status="needs_finalize", worktree_path=str(worktree), pid=None)
+    _write_task_record(repo, "impl-owner", status="done", worktree_path=str(worktree), pid=None)
 
     result = result_for(rw.reap_worktrees(repo_root=repo, apply=True), worktree)
 
     assert result.action == "removed"
     assert not worktree.exists()
+
+
+@pytest.mark.parametrize("record_task_id", ["owner", "different-task"])
+def test_unfinished_owner_record_without_proven_identity_still_claims_worktree(
+    tmp_path: Path,
+    record_task_id: str,
+) -> None:
+    """An unfinished owner or mislabelled record still claims without a valid nonce."""
+    repo = init_repo(tmp_path)
+    worktree = add_worktree(repo, "codex/mislabelled")
+    tasks_dir = repo / "batch_state" / "tasks"
+    tasks_dir.mkdir(parents=True, exist_ok=True)
+    (tasks_dir / "owner.json").write_text(
+        json.dumps({"task_id": record_task_id, "status": "running", "worktree_path": str(worktree)}),
+        encoding="utf-8",
+    )
+
+    refusal = worktree_claims.active_worktree_claim_refusal(
+        worktree,
+        tasks_dir=tasks_dir,
+        repo_root=repo,
+        owner_task_id="owner",
+    )
+
+    assert refusal == f"worktree claimed by active task {record_task_id}"
+
+
+def test_acp_runtime_releases_when_owner_has_no_task_record(tmp_path: Path) -> None:
+    """ACP runtime owners have no batch-state record, so their cleanup still proceeds."""
+    repo = init_repo(tmp_path)
+    runtime = repo / ".worktrees" / "dispatch" / "acp" / "runtime-no-record-0123456789"
+    runtime.parent.mkdir(parents=True)
+    git(repo, "worktree", "add", "--detach", "--no-checkout", str(runtime), "HEAD")
+    git(repo, "worktree", "lock", "--reason", "active ACP execution no-record", str(runtime))
+
+    removed = post_task_reap._remove_acp_runtime_worktree(
+        runtime,
+        task_id="no-record",
+        tasks_dir=repo / "batch_state" / "tasks",
+        repo_root=repo,
+    )
+
+    assert removed["action"] == "removed"
+    assert not runtime.exists()
 
 
 def test_merged_worktree_is_kept_while_its_dispatch_lock_is_held(

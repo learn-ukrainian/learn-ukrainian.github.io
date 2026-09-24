@@ -8,12 +8,13 @@ sites and fails on any outside :data:`ALLOWLIST`.
 
 A removal call site is any of:
 
-* Python: a literal ``"worktree", "remove"`` pair in an argv list or tuple or
-  in call arguments; a ``worktree remove`` script handed to a shell
+* Python: a literal ``"worktree", "remove"`` pair or a dynamic action after
+  ``"worktree"`` in a Git argv list or helper call; a ``worktree remove`` script handed to a shell
   (``shell=True``, ``os.system``/``os.popen``, or an argv ``-c`` script); a
   reference to, or import of, a low-level remover (:data:`LOW_LEVEL_REMOVERS`).
 * YAML: a sequence holding adjacent ``worktree`` and ``remove`` scalars (a
-  trail argv), or a scalar containing ``worktree remove`` (a shell script).
+  trail argv), a dynamic action after ``worktree``, or a scalar containing a
+  removal command (a shell script).
 * Shell and other code: a non-comment line containing ``worktree remove`` or
   a quoted ``"worktree", "remove"`` pair; backslash continuations are joined.
 
@@ -51,7 +52,8 @@ ALLOWLIST: dict[tuple[str, str | None], str] = {
 # historical. A reference outside the allowlist is a bypass.
 LOW_LEVEL_REMOVERS = frozenset({"git_worktree_remove", "_git_worktree_remove", "remove_worktree", "_remove_worktree"})
 
-_SHELL_PHRASE = re.compile(r"\bworktree\s+remove\b")
+_SHELL_PHRASE = re.compile(r'''(?:\bworktree\b|["']worktree["'])\s+(?:\bremove\b|["']remove["'])''')
+_DYNAMIC_ACTION = re.compile(r"(?:\$[A-Za-z_{]|\{\{.*\}\}|\*\w+)")
 _QUOTED_ARGV_PAIR = re.compile(r"""["']worktree["']\s*,\s*["']remove["']""")
 _SHELL_SCRIPT_FLAG = re.compile(r"^-[A-Za-z]*c$")
 _SHELL_CALLS = frozenset({"system", "popen", "getoutput", "getstatusoutput"})
@@ -60,6 +62,7 @@ _LINE_COMMENT = {
     ".sh": "#",
     ".bash": "#",
     ".ps1": "#",
+    ".zsh": "#",
     ".js": "//",
     ".mjs": "//",
     ".ts": "//",
@@ -88,6 +91,20 @@ def _has_argv_pair(words: list[str | None]) -> bool:
     return any(words[index : index + 2] == ["worktree", "remove"] for index in range(len(words) - 1))
 
 
+def _has_dynamic_git_worktree_action(words: list[str | None], *, allow_bare: bool = False) -> bool:
+    """Catch a worktree argv whose action is supplied by a variable or template."""
+    dynamic_pair = any(
+        words[index] == "worktree"
+        and (
+            words[index + 1] is None
+            or _DYNAMIC_ACTION.search(words[index + 1]) is not None
+        )
+        for index in range(len(words) - 1)
+    )
+    has_git_prefix = words[:1] == ["git"]
+    return dynamic_pair and (has_git_prefix or allow_bare)
+
+
 def _nested_literals(nodes: list[ast.expr]) -> list[str]:
     texts: list[str] = []
     for node in nodes:
@@ -102,6 +119,7 @@ def python_sites(source: str, relpath: str) -> list[Site]:
     """Return the removal call sites in one Python source."""
     tree = ast.parse(source, filename=relpath)
     owners: dict[ast.AST, str | None] = {}
+    parents = {child: node for node in ast.walk(tree) for child in ast.iter_child_nodes(node)}
 
     def assign_owners(node: ast.AST, owner: str | None) -> None:
         for child in ast.iter_child_nodes(node):
@@ -118,7 +136,18 @@ def python_sites(source: str, relpath: str) -> list[Site]:
     for node in ast.walk(tree):
         if isinstance(node, ast.List | ast.Tuple):
             words = [_literal_text(element) for element in node.elts]
-            if _has_argv_pair(words):
+            parent = parents.get(node)
+            parent_func = (
+                parent.func.attr if isinstance(parent, ast.Call) and isinstance(parent.func, ast.Attribute)
+                else parent.func.id if isinstance(parent, ast.Call) and isinstance(parent.func, ast.Name)
+                else None
+            )
+            git_variable_prefix = bool(node.elts) and isinstance(node.elts[0], ast.Name) and node.elts[0].id == "git"
+            nested_git_runner = parent_func in {"run_git", "_run_git"}
+            if _has_argv_pair(words) or _has_dynamic_git_worktree_action(
+                words,
+                allow_bare=git_variable_prefix or nested_git_runner,
+            ):
                 add(node, "argv")
             flag_seen = False
             for word in words:
@@ -127,10 +156,14 @@ def python_sites(source: str, relpath: str) -> list[Site]:
                 elif flag_seen and word is not None and _SHELL_PHRASE.search(word):
                     add(node, "shell -c script")
         elif isinstance(node, ast.Call):
-            if _has_argv_pair([_literal_text(arg) for arg in node.args]):
+            call_words = [_literal_text(arg) for arg in node.args]
+            func_name = node.func.attr if isinstance(node.func, ast.Attribute) else node.func.id if isinstance(node.func, ast.Name) else None
+            if _has_argv_pair(call_words) or _has_dynamic_git_worktree_action(
+                call_words,
+                allow_bare=func_name in {"run_git", "_run_git"},
+            ):
                 add(node, "argv")
-            func = node.func
-            name = func.attr if isinstance(func, ast.Attribute) else func.id if isinstance(func, ast.Name) else None
+            name = func_name
             shell = name in _SHELL_CALLS or any(
                 keyword.arg == "shell" and isinstance(keyword.value, ast.Constant) and keyword.value.value is True
                 for keyword in node.keywords
@@ -154,7 +187,7 @@ def yaml_sites(source: str, relpath: str) -> list[Site]:
     def walk(node: yaml.Node) -> None:
         if isinstance(node, yaml.SequenceNode):
             words = [child.value if isinstance(child, yaml.ScalarNode) else None for child in node.value]
-            if _has_argv_pair(words):
+            if _has_argv_pair(words) or _has_dynamic_git_worktree_action(words, allow_bare=True):
                 sites.append(Site(relpath, None, node.start_mark.line + 1, "argv"))
             for child in node.value:
                 walk(child)
@@ -162,7 +195,10 @@ def yaml_sites(source: str, relpath: str) -> list[Site]:
             for key, value in node.value:
                 walk(key)
                 walk(value)
-        elif isinstance(node, yaml.ScalarNode) and _SHELL_PHRASE.search(node.value):
+        elif isinstance(node, yaml.ScalarNode) and (
+            _SHELL_PHRASE.search(node.value)
+            or re.search(r"\bworktree\b\s+(?:\$[A-Za-z_{]|\{\{)", node.value)
+        ):
             sites.append(Site(relpath, None, node.start_mark.line + 1, "command string"))
 
     for document in yaml.compose_all(source, Loader=yaml.SafeLoader):
@@ -171,7 +207,7 @@ def yaml_sites(source: str, relpath: str) -> list[Site]:
     return sites
 
 
-def text_sites(source: str, relpath: str, comment: str) -> list[Site]:
+def text_sites(source: str, relpath: str, comment: str | None) -> list[Site]:
     """Return the removal call sites in one shell or other code source."""
     sites: list[Site] = []
     lines = source.splitlines()
@@ -182,7 +218,7 @@ def text_sites(source: str, relpath: str, comment: str) -> list[Site]:
         while logical.endswith("\\") and following < len(lines):
             logical = logical[:-1] + " " + lines[following]
             following += 1
-        if logical.lstrip().startswith(comment):
+        if comment is not None and logical.lstrip().startswith(comment):
             continue
         if _SHELL_PHRASE.search(logical) or _QUOTED_ARGV_PAIR.search(logical):
             sites.append(Site(relpath, None, number, "command line"))
@@ -193,27 +229,31 @@ def production_sites(project_root: Path = PROJECT_ROOT) -> list[Site]:
     """Scan every production source under ``scripts/``.
 
     Every call-site shape contains both ``worktree`` and ``remove``: the argv
-    pair, the shell phrase, and each low-level remover name. A source lacking
-    either word is skipped unparsed, which keeps the scan to a few seconds.
+    pair, the shell phrase, and each low-level remover name. All UTF-8 source
+    files are scanned regardless of suffix; documentation, bytecode, and
+    notebooks are excluded. A source lacking ``worktree`` is skipped unparsed,
+    which keeps the scan to a few seconds. Dynamic worktree actions may not
+    contain the word ``remove``, so ``worktree`` alone is the pre-filter.
     """
     sites: list[Site] = []
     for source_path in sorted((project_root / "scripts").rglob("*")):
         suffix = source_path.suffix
-        if not source_path.is_file() or (
-            suffix != ".py" and suffix not in _YAML_SUFFIXES and suffix not in _LINE_COMMENT
-        ):
+        if not source_path.is_file() or suffix in {".md", ".txt", ".pyc", ".ipynb"}:
             continue
         raw = source_path.read_bytes()
-        if b"worktree" not in raw or b"remove" not in raw:
+        if b"worktree" not in raw:
             continue
         relpath = source_path.relative_to(project_root).as_posix()
-        source = raw.decode("utf-8", errors="replace")
-        if suffix == ".py":
+        try:
+            source = raw.decode("utf-8")
+        except UnicodeDecodeError:
+            continue
+        if suffix in {".py", ".pyi"}:
             sites.extend(python_sites(source, relpath))
         elif suffix in _YAML_SUFFIXES:
             sites.extend(yaml_sites(source, relpath))
         else:
-            sites.extend(text_sites(source, relpath, _LINE_COMMENT[suffix]))
+            sites.extend(text_sites(source, relpath, _LINE_COMMENT.get(suffix)))
     return sites
 
 
@@ -236,7 +276,12 @@ def test_every_worktree_removal_goes_through_the_guarded_chokepoint() -> None:
         ('run_git(["worktree", "remove", "--force", str(path)], cwd=root)', "argv"),
         ('_run_git(root, "worktree", "remove", str(path))', "argv"),
         ('subprocess.run([git, "-C", str(root), "worktree", "remove", p])', "argv"),
+        ('subprocess.run(["git", "worktree", action, path])', "argv"),
+        ('_run_git(root, "worktree", action, path)', "argv"),
+        ('run_git(["worktree", action])', "argv"),
+        ('subprocess.run([git, "worktree", action, path])', "argv"),
         ('subprocess.run(f"git worktree remove {path}", shell=True)', "shell string"),
+        ('subprocess.run("git \\"worktree\\" \\"remove\\" x", shell=True)', "shell string"),
         ('os.system("git -C repo worktree remove x")', "shell string"),
         ('subprocess.run(["sh", "-c", f"git worktree remove {path}"])', "shell -c script"),
         ('subprocess.run(["bash", "-lc", "git worktree remove x && echo ok"])', "shell -c script"),
@@ -273,6 +318,19 @@ def test_scanner_ignores_hints_and_the_guarded_entry_points(source: str) -> None
 
 
 @pytest.mark.parametrize(
+    "source",
+    [
+        '_run_git(root, "worktree", "list")',
+        'run_git(["worktree", "list"])',
+        'subprocess.run([git, "worktree", "list"])',
+    ],
+)
+def test_scanner_ignores_static_non_removal_worktree_actions(source: str) -> None:
+    """A known non-removal action is not treated as a dynamic removal bypass."""
+    assert python_sites(f"def helper():\n    {source}\n", "scripts/example.py") == []
+
+
+@pytest.mark.parametrize(
     ("source", "suffix", "flagged"),
     [
         ('git worktree remove "$wt_dir"', ".sh", True),
@@ -291,17 +349,42 @@ def test_scanner_flags_shell_and_code_command_lines(source: str, suffix: str, fl
     assert bool(sites) is flagged
 
 
+def test_scanner_checks_source_files_with_unknown_suffixes(tmp_path: Path) -> None:
+    """The inventory scans source files even when their suffix is unfamiliar."""
+    path = tmp_path / "scripts" / "cleanup.unknown"
+    path.parent.mkdir()
+    path.write_text('git "worktree" "remove" "$target"\n', encoding="utf-8")
+
+    sites = production_sites(tmp_path)
+
+    assert [(site.path, site.kind) for site in sites] == [("scripts/cleanup.unknown", "command line")]
+
+
 @pytest.mark.parametrize(
     ("source", "flagged"),
     [
         ("argv: [sh, -c, 'git worktree remove \".worktrees/dispatch/$LANE/$TASK_ID\"']", True),
         ("argv: [git, worktree, remove, x]", True),
+        ("argv: [git, worktree, $ACTION, x]", True),
+        ("argv: [worktree, '{{ action }}', x]", True),
         ("argv:\n  - git\n  - -C\n  - repo\n  - worktree\n  - remove\n  - x\n", True),
         ("run: |\n  cd repo\n  git worktree remove x\n", True),
         ("# git worktree remove x\nargv: [git, worktree, list]", False),
+        ("argv: [git, worktree, list, x]", False),
         ("argv: [sh, -c, '.venv/bin/python -m scripts.orchestration.worktree_claims remove x >&2']", False),
     ],
 )
 def test_scanner_flags_yaml_argv_and_shell_scripts(source: str, flagged: bool) -> None:
     """A trail argv or shell script that removes a worktree is a call site, in flow or block style."""
     assert bool(yaml_sites(source, "scripts/example.yaml")) is flagged
+
+
+def test_production_prefilter_parses_dynamic_action_without_remove_word(tmp_path: Path) -> None:
+    """The production byte pre-filter must let dynamic worktree actions reach the parser."""
+    path = tmp_path / "scripts" / "cleanup.py"
+    path.parent.mkdir()
+    path.write_text('def cleanup():\n    run_git(["worktree", action])\n', encoding="utf-8")
+
+    sites = production_sites(tmp_path)
+
+    assert [(site.path, site.kind) for site in sites] == [("scripts/cleanup.py", "argv")]
