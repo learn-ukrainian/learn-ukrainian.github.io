@@ -117,8 +117,11 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
     assert len(manifest["learner_state"]["sha256"]) == 64
     assert {name: entry["path"] for name, entry in manifest["inputs"].items()} == {
         "plan": f"{PLANS}/{SLUG}.yaml",
+        "pack": f"{EVIDENCE}/{SLUG}.yaml",
         "pack_lock": f"{EVIDENCE}/{SLUG}.yaml.lock",
+        "words": f"{EVIDENCE}/_words.yaml",
         "words_lock": f"{EVIDENCE}/_words.yaml.lock",
+        "learner_state": f"{STATE}/plan-review.learner-state.yaml",
         "arc": f"{PLANS}/_arc.yaml",
         "decisions": f"{PLANS}/_decisions.yaml",
         "scope": f"{PLANS}/_scope/{SLUG}.yaml",
@@ -128,6 +131,7 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
     }
     for entry in manifest["inputs"].values():
         assert entry["sha256"] == sha(env.root / entry["path"])
+    assert lock.check(env.pack_path) and lock.check(env.words_path)
     assert (env.state_dir / "plan-review.manifest.sha256").read_text(encoding="ascii") == f"{digest}\n"
     assert lock.yaml_bytes(manifest) == current.read_bytes()
     assert (env.state_dir / "manifests" / "plan" / f"{digest}.yaml").read_bytes() == current.read_bytes()
@@ -137,6 +141,36 @@ def test_manifest_is_schema_valid_and_rerun_is_byte_identical(env: Env, capsys) 
     code, out, _err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
     assert code == 0 and json.loads(out)["manifest_sha256"] == digest
     assert snapshot(env) == first
+
+
+def test_materialized_prior_state_is_the_state_the_identity_hashes(env: Env, capsys) -> None:
+    from scripts.build.fresh.manifest import learner_state_sha256
+    from scripts.curriculum.learner_state.planned import planned_state
+
+    make_manifest(env, capsys)
+    manifest = yaml.safe_load((env.state_dir / "plan-review.manifest.yaml").read_bytes())
+    state_path = env.state_dir / "plan-review.learner-state.yaml"
+    state = planned_state(LEVEL, 2, 1, plans_dir=env.plans_dir, evidence_dir=env.evidence_dir)
+    document = yaml.safe_load(state_path.read_bytes())
+    assert document == {"learner_state": state.to_dict()}
+    assert state_path.read_bytes() == lock.yaml_bytes({"learner_state": state.to_dict()})
+    assert lock.check(state_path)  # its lock sidecar
+    assert manifest["learner_state"]["sha256"] == learner_state_sha256(state)
+    assert manifest["inputs"]["learner_state"] == {
+        "path": f"{STATE}/plan-review.learner-state.yaml",
+        "sha256": sha(state_path),
+    }
+
+
+def test_a_words_file_that_disagrees_with_its_lock_is_refused_naming_it(env: Env, capsys, monkeypatch) -> None:
+    make_manifest(env, capsys)
+    append_comment(env.words_path)  # bytes no longer match the lock sidecar
+    monkeypatch.setattr(plan_manifest, "validate_report_problems", lambda *a, **kw: {})
+    code, _out, err = run(env, capsys, "plan-manifest", LEVEL, SLUG)
+    assert code == 1
+    refusal = error(err)
+    assert refusal["code"] == plan_manifest.LOCK_MISMATCH and f"{EVIDENCE}/_words.yaml" in refusal["paths"]
+    assert not (env.state_dir / "plan-review.manifest.yaml").exists()
 
 
 def test_manifest_runs_pack_verify_strictly_on_the_exact_pack_and_stores_its_report(
@@ -355,7 +389,9 @@ def edit_learner_state(env: Env) -> None:
 #: the words lock and the arc included, plus the planned learner state.
 INPUT_CHANGES = {
     "plan": (lambda env: append_comment(env.plan_path), f"{PLANS}/{SLUG}.yaml"),
+    "pack": (edit_pack, f"{EVIDENCE}/{SLUG}.yaml"),
     "pack_lock": (edit_pack, f"{EVIDENCE}/{SLUG}.yaml.lock"),
+    "words": (edit_words, f"{EVIDENCE}/_words.yaml"),
     "words_lock": (edit_words, f"{EVIDENCE}/_words.yaml.lock"),
     "arc": (lambda env: append_comment(env.plans_dir / "_arc.yaml"), f"{PLANS}/_arc.yaml"),
     "decisions": (lambda env: append_comment(env.plans_dir / "_decisions.yaml"), f"{PLANS}/_decisions.yaml"),
@@ -370,6 +406,10 @@ INPUT_CHANGES = {
         f"{STATE}/pack-verify.report.json",
     ),
     "learner_state": (edit_learner_state, "learner_state"),
+    "learner_state_file": (
+        lambda env: append_comment(env.state_dir / "plan-review.learner-state.yaml"),
+        f"{STATE}/plan-review.learner-state.yaml",
+    ),
 }
 
 

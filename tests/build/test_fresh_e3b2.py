@@ -98,11 +98,107 @@ def _fixture(root: Path):
     return level, slug, plan_dir, evidence_dir, state_dir, page_dir
 
 
+def _fake_state(data: dict | None = None, *, cumulative_core_count: int = 0):
+    """A planned-state stand-in exposing what the manifest reads: to_dict, the count and the waiver."""
+    return type(
+        "State",
+        (),
+        {"to_dict": lambda self: dict(data or {}), "cumulative_core_count": cumulative_core_count, "waiver": None},
+    )()
+
+
+def _write(level, slug, n, state_dir, plan_dir, evidence_dir, page_dir, root):
+    return manifest.write_manifest(
+        level,
+        slug,
+        n,
+        lesson_kind="recap" if n == 3 else "lesson",
+        state_dir=state_dir,
+        repo_root=root,
+        plans_dir=plan_dir,
+        evidence_dir=evidence_dir,
+        position=1,
+        site_dir=page_dir,
+    )
+
+
+def test_manifest_names_every_file_a_reviewer_receives(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    calls = []
+    state = _fake_state({"level": "a1", "core_ids": {"W-1": {"position": 1, "lesson": 1}}}, cumulative_core_count=12)
+
+    def planned(*args, **kwargs):
+        calls.append(args)
+        return state
+
+    monkeypatch.setattr(manifest, "planned_state", planned)
+    from scripts.build.fresh.immersion import compute_immersion_payload
+
+    payloads = {}
+    for n in (1, 2, 3):
+        calls.clear()
+        doc, _ = _write(level, slug, n, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+        assert len(calls) == 1  # one planned_state result feeds the identity hash and the materialized file
+        Draft202012Validator(json.loads(manifest.SCHEMA.read_text(encoding="utf-8"))).validate(doc)
+        inputs = doc["inputs"]
+        for name in ("plan", "pack", "pack_lock", "words", "words_lock", "learner_state", "lesson"):
+            assert inputs[name]["sha256"] == hashlib.sha256((tmp_path / inputs[name]["path"]).read_bytes()).hexdigest()
+        assert inputs["pack"]["path"] == f"curriculum/l2-uk-en/evidence/a1/{slug}.yaml"
+        assert inputs["words"]["path"] == "curriculum/l2-uk-en/evidence/a1/_words.yaml"
+        assert lock.check(tmp_path / inputs["pack"]["path"]) and lock.check(tmp_path / inputs["words"]["path"])
+        state_path = tmp_path / inputs["learner_state"]["path"]
+        assert inputs["learner_state"]["path"].endswith(f"/_state/{slug}/lesson-{n}.learner-state.yaml")
+        assert lock.check(state_path)  # the sidecar
+        document = yaml.safe_load(state_path.read_bytes())
+        assert document["learner_state"] == state.to_dict()
+        assert document["immersion"] == compute_immersion_payload("a1", 1, n, cumulative_core_count=12).to_dict()
+        assert set(document["immersion"]["permitted_languages"]) >= {"narration", "activity_instruction", "gloss"}
+        assert state_path.read_bytes() == lock.yaml_bytes(document)
+        assert doc["learner_state"] == {"sha256": manifest.learner_state_sha256(state), "source": "planned_state"}
+        assert [row["n"] for row in doc["upstream_lessons"]] == list(range(1, n))
+        for row in doc["upstream_lessons"]:
+            assert row["path"] == f"site/src/content/docs/a1/{slug}/{row['n']}.mdx"
+            assert row["sha256"] == hashlib.sha256((tmp_path / row["path"]).read_bytes()).hexdigest()
+        payloads[n] = state_path.read_bytes()
+    assert doc["recap"] is True and len(doc["upstream_lessons"]) == 2  # the recap reviewer receives lessons 1..2
+    # a byte-stable rerun: same manifest, same materialized state
+    first = (state_dir / "lesson-3.manifest.yaml").read_bytes()
+    _write(level, slug, 3, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    assert (state_dir / "lesson-3.manifest.yaml").read_bytes() == first
+    assert (state_dir / "lesson-3.learner-state.yaml").read_bytes() == payloads[3]
+
+
+def test_a_pack_or_word_store_that_disagrees_with_its_lock_fails_naming_it(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
+    for target in (evidence_dir / f"{slug}.yaml", evidence_dir / "_words.yaml"):
+        original = target.read_bytes()
+        target.write_bytes(original + b"# edited without rewriting the lock\n")
+        with pytest.raises(manifest.ManifestInputError, match="lock mismatch") as exc:
+            _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+        assert exc.value.path == target.relative_to(tmp_path).as_posix()
+        assert target.name in str(exc.value)
+        target.write_bytes(original)
+    _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+
+
+def test_a_changed_pack_or_state_gives_a_different_manifest(tmp_path, monkeypatch):
+    level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
+    current = {"state": _fake_state({"a": 1})}
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: current["state"])
+    _, first = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    lock.write(evidence_dir / f"{slug}.yaml", b"records: [changed]\n")  # lock rewritten: still a different pack
+    _, second = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    assert second != first
+    current["state"] = _fake_state({"a": 2})
+    doc, third = _write(level, slug, 1, state_dir, plan_dir, evidence_dir, page_dir, tmp_path)
+    assert third not in {first, second}
+    assert yaml.safe_load((tmp_path / doc["inputs"]["learner_state"]["path"]).read_bytes())["learner_state"] == {"a": 2}
+
+
 def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(
-        manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {"b": 2, "a": 1}})()
-    )
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state({"b": 2, "a": 1}))
     assert manifest.learner_state_sha256(type("State", (), {"to_dict": lambda self: {"a": 1, "b": 2}})()) == (
         hashlib.sha256(b'{"a":1,"b":2}').hexdigest()
     )
@@ -164,7 +260,7 @@ def test_manifest_history_and_closure_preserve_stale_attempts(tmp_path, monkeypa
 
 def test_style_card_sidecar_mismatch_fails_manifest(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {}})())
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
     (tmp_path / "docs/style-cards/a1.sha256").write_text("0" * 64 + "\n", encoding="ascii")
     with pytest.raises(ValueError, match="style card sidecar mismatch"):
         manifest.write_manifest(
@@ -205,7 +301,7 @@ def test_digest_path_guard_rejects_override_and_outside_path(tmp_path):
 
 def test_successful_manifest_clears_stale_check_12_error(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {}})())
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
     manifest.write_manifest_error(state_dir, 1, "old failure", "docs/style-cards/a1.sha256", "2026-01-01T00:00:00Z")
     manifest.write_manifest(
         level,
@@ -224,7 +320,7 @@ def test_successful_manifest_clears_stale_check_12_error(tmp_path, monkeypatch):
 
 def test_manifest_hashes_all_imported_activity_data_sorted(tmp_path, monkeypatch):
     level, slug, plan_dir, evidence_dir, state_dir, page_dir = _fixture(tmp_path)
-    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: type("State", (), {"to_dict": lambda self: {}})())
+    monkeypatch.setattr(manifest, "planned_state", lambda *a, **kw: _fake_state())
     data_dir = tmp_path / "site/src/data"
     data_dir.mkdir(parents=True)
     for name in ("activity-z.json", "activity-a.json"):
@@ -488,6 +584,16 @@ def test_module_build_three_lessons_and_rebuild_closure(tmp_path, monkeypatch, c
         assert gates["passed"] is True
     recap = yaml.safe_load((state_dir / "lesson-3.manifest.yaml").read_text(encoding="utf-8"))
     assert recap["recap"] is True and [item["n"] for item in recap["upstream_lessons"]] == [1, 2]
+    # the live runner (check 12) wrote the materialized state and named the pack and word store
+    for n in (1, 2, 3):
+        inputs = yaml.safe_load((state_dir / f"lesson-{n}.manifest.yaml").read_text(encoding="utf-8"))["inputs"]
+        assert (tmp_path / inputs["learner_state"]["path"]).is_file()
+        assert lock.check(tmp_path / inputs["learner_state"]["path"])
+        assert inputs["pack"]["path"].endswith(f"/{slug}.yaml") and inputs["words"]["path"].endswith("/_words.yaml")
+    assert [(item["n"], item["path"].rsplit("/", 1)[-1]) for item in recap["upstream_lessons"]] == [
+        (1, "1.mdx"),
+        (2, "2.mdx"),
+    ]
     assert yaml.safe_load((state_dir / "module.closure.yaml").read_text(encoding="utf-8"))["stale"] == []
     stable_before = {
         name: (state_dir / name).read_bytes()

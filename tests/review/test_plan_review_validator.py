@@ -14,6 +14,7 @@ from pathlib import Path
 import pytest
 import yaml
 
+from scripts.curriculum.evidence import lock
 from scripts.review.receipts.ledger import create_empty_ledger
 from scripts.review.validate import codes
 from scripts.review.validate.validate import build_parser, main, validate_review
@@ -224,6 +225,19 @@ def test_a_changed_manifest_input_makes_the_review_stale(case: Case) -> None:
     code, payload = case.validate()
     assert code == 1 and rejected(payload) == {codes.PLAN_INPUTS_STALE}
     assert "_arc.yaml" in payload["rejections"][0]["message"]
+
+
+@pytest.mark.parametrize("name", ["pack", "words", "learner_state"])
+def test_a_changed_pack_word_store_or_state_file_makes_the_review_stale(case: Case, name: str) -> None:
+    """A rewritten lock does not excuse a changed pack or word store: the manifest names the file itself."""
+    case.write_review([case.finding()])
+    path = case.env.root / yaml.safe_load(case.manifest.read_bytes())["inputs"][name]["path"]
+    append_comment(path)
+    if name != "learner_state":
+        lock.write(path)
+    code, payload = case.validate()
+    assert code == 1 and codes.PLAN_INPUTS_STALE in rejected(payload)
+    assert path.name in " ".join(row["message"] for row in payload["rejections"])
 
 
 def test_a_kind_mismatch_is_rejected_both_ways(case: Case, tmp_path: Path) -> None:

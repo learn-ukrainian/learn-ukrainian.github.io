@@ -10,10 +10,12 @@
     "recap": {"type": "boolean"}, "review_eligible": {"const": true},
     "blocked_by": {"type": "array", "maxItems": 0},
     "inputs": {"type": "object", "additionalProperties": false,
-      "required": ["plan", "pack_lock", "words_lock", "lessons_lock", "lesson", "activity_data", "gate_report", "style_card", "decisions"],
+      "required": ["plan", "pack", "pack_lock", "words", "words_lock", "learner_state", "lessons_lock", "lesson", "activity_data", "gate_report", "style_card", "decisions"],
       "properties": {
-        "plan": {"$ref": "#/$defs/file"}, "pack_lock": {"$ref": "#/$defs/file"},
-        "words_lock": {"$ref": "#/$defs/file"}, "lessons_lock": {"$ref": "#/$defs/file"},
+        "plan": {"$ref": "#/$defs/file"}, "pack": {"$ref": "#/$defs/file"},
+        "pack_lock": {"$ref": "#/$defs/file"}, "words": {"$ref": "#/$defs/file"},
+        "words_lock": {"$ref": "#/$defs/file"}, "learner_state": {"$ref": "#/$defs/file"},
+        "lessons_lock": {"$ref": "#/$defs/file"},
         "lesson": {"$ref": "#/$defs/file"},
         "activity_data": {"type": "array", "items": {"$ref": "#/$defs/file"}},
         "gate_report": {"$ref": "#/$defs/file"}, "style_card": {"$ref": "#/$defs/file"},
@@ -28,7 +30,8 @@
       "properties": {"sha256": {"$ref": "#/$defs/sha"}, "source": {"const": "planned_state"}}},
     "module_digest": {"$ref": "#/$defs/file"}, "digest_generator_version": {"type": "string", "minLength": 1},
     "upstream_lessons": {"type": "array", "items": {"type": "object", "additionalProperties": false,
-      "required": ["n", "sha256"], "properties": {"n": {"type": "integer", "minimum": 1}, "sha256": {"$ref": "#/$defs/sha"}}}},
+      "required": ["n", "path", "sha256"], "properties": {"n": {"type": "integer", "minimum": 1},
+        "path": {"type": "string", "minLength": 1}, "sha256": {"$ref": "#/$defs/sha"}}}},
     "previous_attempt": {"type": "null"}, "diff_sha256": {"type": "null"}
   },
   "$defs": {

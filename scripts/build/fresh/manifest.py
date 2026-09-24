@@ -1,4 +1,19 @@
-"""Content-addressed, review-eligible fresh lesson attempt manifests."""
+"""Content-addressed, review-eligible fresh lesson attempt manifests.
+
+The manifest names every file a reviewer receives, each with its sha256: the
+plan, the evidence pack and word store (verified against their locks before they
+are recorded), the built lesson and its activity data, the gate report, the style
+card, the decisions record, the module digest, the materialized planned learner
+state and the built lessons 1..N-1 (``upstream_lessons``).
+
+The learner state has two forms. ``learner_state.sha256`` is its identity: the
+canonical-JSON hash of ``planned_state(...).to_dict()``, independent of YAML
+formatting. ``inputs.learner_state`` is the readable form the reviewer opens: a
+deterministic YAML document written next to the manifest holding that same
+``to_dict()`` under ``learner_state`` and the lesson's immersion rule (the
+``compute_immersion_payload`` result the writer received) under ``immersion``.
+Both derive from one ``planned_state`` result.
+"""
 
 from __future__ import annotations
 
@@ -11,7 +26,8 @@ from typing import Any
 import yaml
 from jsonschema import Draft202012Validator
 
-from scripts.build.fresh.path_guard import checked_existing_path
+from scripts.build.fresh.immersion import compute_immersion_payload
+from scripts.build.fresh.path_guard import checked_existing_path, checked_path
 from scripts.curriculum.evidence import lock
 from scripts.curriculum.learner_state.planned import planned_state
 from scripts.review.digest.generator import GENERATOR_VERSION, build_digest, write_digest
@@ -57,6 +73,30 @@ def _input(path: Path, repo_root: Path) -> dict[str, str]:
         raise FileNotFoundError(str(path))
     relative = path.resolve().relative_to(repo_root.resolve()).as_posix()
     return {"path": relative, "sha256": sha256(path)}
+
+
+def _locked_input(path: Path, repo_root: Path) -> dict[str, str]:
+    """A file input whose bytes must agree with its lock sidecar; fails naming the path."""
+    entry = _input(path, repo_root)
+    if not lock.check(path):
+        raise ManifestInputError(path, "lock mismatch", repo_root)
+    return entry
+
+
+def learner_state_document(state: Any, immersion: Any | None = None) -> dict[str, Any]:
+    """The readable learner-state document; the identity hash covers only ``learner_state``."""
+    document: dict[str, Any] = {"learner_state": state.to_dict()}
+    if immersion is not None:
+        document["immersion"] = immersion.to_dict()
+    return document
+
+
+def materialize_learner_state(path: Path, document: dict[str, Any], repo_root: Path) -> dict[str, str]:
+    """Write the document as deterministic YAML with its lock sidecar; return the manifest input entry."""
+    root = repo_root.resolve()
+    target = checked_path(root, path.resolve().relative_to(root), "curriculum/l2-uk-en/evidence")
+    lock.write(target, lock.yaml_bytes(document))
+    return _input(target, root)
 
 
 def _activity_imports(mdx_path: Path, repo_root: Path) -> list[Path]:
@@ -125,9 +165,16 @@ def write_manifest(
     entry = next((item for item in lock_doc["lessons"] if item["n"] == n), None)
     if not entry or not entry.get("entry_sha256"):
         raise ValueError(f"missing lesson lock entry {n}: {lock_path}")
-    upstream = []
-    for k in range(1, n):
-        upstream.append({"n": k, "sha256": _input(page.parent / f"{k}.mdx", root)["sha256"]})
+    upstream = [{"n": k, **_input(page.parent / f"{k}.mdx", root)} for k in range(1, n)]
+    state = planned_state(level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir)
+    state_path = state_dir / f"lesson-{n}.learner-state.yaml"
+    try:
+        immersion = compute_immersion_payload(
+            level, position, n, cumulative_core_count=state.cumulative_core_count, waiver=state.waiver
+        )
+    except Exception as err:
+        raise ManifestInputError(state_path, f"immersion rule unavailable ({err})", root) from err
+    state_input = materialize_learner_state(state_path, learner_state_document(state, immersion), root)
     doc = {
         "manifest_schema": 1,
         "kind": "lesson",
@@ -140,8 +187,11 @@ def write_manifest(
         "blocked_by": [],
         "inputs": {
             "plan": _input(plan_path, root),
+            "pack": _locked_input(pack_path, root),
             "pack_lock": _input(Path(f"{pack_path}.lock"), root),
+            "words": _locked_input(words_path, root),
             "words_lock": _input(Path(f"{words_path}.lock"), root),
+            "learner_state": state_input,
             "lessons_lock": _input(lock_path, root),
             "lesson": _input(page, root),
             "activity_data": [_input(path, root) for path in _activity_imports(page, root)],
@@ -154,14 +204,7 @@ def write_manifest(
             "lesson": n,
             "entry_sha256": entry["entry_sha256"],
         },
-        "learner_state": {
-            "sha256": learner_state_sha256(
-                planned_state(
-                    level, position, n, allow_missing_prior=True, plans_dir=plans_dir, evidence_dir=evidence_dir
-                )
-            ),
-            "source": "planned_state",
-        },
+        "learner_state": {"sha256": learner_state_sha256(state), "source": "planned_state"},
         "module_digest": _input(digest_path, root),
         "digest_generator_version": GENERATOR_VERSION,
         "upstream_lessons": upstream,
