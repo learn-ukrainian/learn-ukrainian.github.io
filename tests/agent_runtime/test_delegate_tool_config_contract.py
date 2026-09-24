@@ -12,6 +12,7 @@ from pathlib import Path
 
 import pytest
 
+from scripts.agent_runtime.adapters.glm import _CI_ENV_VARS
 from scripts.agent_runtime.registry import AGENTS
 
 _REPO_ROOT = Path(__file__).resolve().parents[2]
@@ -115,6 +116,33 @@ _EXPECTED_PRECONDITIONS: dict[str, tuple[str, str]] = {
 }
 
 
+# Dispatch adapters that resolve a CLI via PATH. Stubs keep the contract
+# independent of whichever binaries the host happens to have installed.
+_CLI_STUBS = (
+    "agy",
+    "agent",
+    "claude",
+    "codex",
+    "cursor-agent",
+    "gemini",
+    "grok",
+    "hermes",
+    "kimi",
+    "npx",
+    "opencode",
+)
+
+
+def _install_cli_stubs(tmp_path: Path, monkeypatch: pytest.MonkeyPatch) -> None:
+    bin_dir = tmp_path / "cli-stubs"
+    bin_dir.mkdir()
+    for name in _CLI_STUBS:
+        stub = bin_dir / name
+        stub.write_text("#!/bin/sh\nexit 0\n", encoding="utf-8")
+        stub.chmod(0o755)
+    monkeypatch.setenv("PATH", str(bin_dir))
+
+
 def _tool_config_from_parsed_keys(keys: frozenset[str], tmp_path: Path, lease: Path) -> dict[str, object]:
     """Build the adapter payload from the parsed delegate set."""
     path_for = {
@@ -139,6 +167,13 @@ def test_every_dispatch_adapter_accepts_delegate_tool_config_keys(adapter_cls, t
     checkout = tmp_path / "checkout"
     checkout.mkdir()
     monkeypatch.setenv("LU_RUNTIME_TMP_BASE_ROOT", str(tmp_path))
+    _install_cli_stubs(tmp_path, monkeypatch)
+    # GLM's egress guard itself stays tested in
+    # tests/test_agent_runtime_glm_adapter.py::test_glm_adapter_ci_refusal_guard.
+    # This contract only checks tool_config keys, so drop the CI markers that
+    # guard reads (CI, GITHUB_ACTIONS, GITLAB_CI, BUILDKITE, JENKINS_URL).
+    for var in _CI_ENV_VARS:
+        monkeypatch.delenv(var, raising=False)
     claude = tmp_path / "claude"
     claude.write_text("#!/bin/sh\n", encoding="utf-8")
     claude.chmod(0o755)
