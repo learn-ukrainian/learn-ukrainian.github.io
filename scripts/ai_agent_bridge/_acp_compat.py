@@ -76,7 +76,7 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
     if participant == "agy":
         pin = registered_participant_model("agy")
         if model.strip().lower().startswith("gemini"):
-            from agent_runtime.adapters.agy import AgyAdapter
+            from agent_runtime.adapters.agy import AgyAdapter, unknown_model_suggestion
 
             accepted_model = AgyAdapter.resolve_model_slug(model)
             if not pin:
@@ -91,11 +91,14 @@ def resolve_compat_model(command_target: str, model: str | None) -> str | None:
                 and AgyAdapter.is_legacy_model_alias(model)
             ):
                 return pin
-            suggested_model = accepted_model or AgyAdapter.default_model
+            if accepted_model is None:
+                message = f"Unknown AGY model {model!r}; cannot honor the explicit request."
+                message += f" {unknown_model_suggestion(model)}"
+                raise ValueError(message)
             raise ValueError(
                 f"AGY ACP supports only its registered model pin {pin!r}; "
                 f"cannot honor explicit model {model!r}. Use "
-                f"`delegate.py dispatch --agent agy --model {suggested_model}` "
+                f"`delegate.py dispatch --agent agy --model {accepted_model}` "
                 "to run a model accepted by AGY."
             )
     return model

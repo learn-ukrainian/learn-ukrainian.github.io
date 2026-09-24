@@ -11,7 +11,7 @@ sys.path.insert(0, str(Path(__file__).resolve().parent.parent / "scripts"))
 
 from agent_runtime.errors import RateLimitedError
 from agent_runtime.result import Result
-from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
+from batch_gemini_config import PRO_MODEL
 
 from scripts.ai_agent_bridge._acp_compat import registered_participant_model
 from scripts.ai_agent_bridge._cli import _handle_ask_gemini
@@ -48,7 +48,7 @@ def _message_to_model(message_id: int) -> str | None:
 @patch("scripts.ai_agent_bridge._gemini._route_gemini_response")
 @patch("scripts.ai_agent_bridge._gemini.acknowledge")
 @patch("scripts.ai_agent_bridge._gemini.runtime_invoke")
-def test_run_gemini_sync_429_retries_same_model_then_falls_back_to_auto(
+def test_run_gemini_sync_429_retries_same_model_then_fails_loudly(
     mock_invoke,
     mock_acknowledge,
     mock_route_response,
@@ -76,20 +76,6 @@ def test_run_gemini_sync_429_retries_same_model_then_falls_back_to_auto(
     mock_invoke.side_effect = [
         RateLimitedError("gemini", PRO_MODEL, "HTTP 429 No capacity available"),
         RateLimitedError("gemini", PRO_MODEL, "HTTP 429 No capacity available"),
-        Result(
-            ok=True,
-            agent="gemini",
-            model=FALLBACK_MODEL,
-            mode="workspace-write",
-            response="bridge reply",
-            stderr_excerpt=None,
-            duration_s=0.1,
-            session_id=None,
-            rate_limited=False,
-            stalled=False,
-            returncode=0,
-            usage_record={},
-        ),
     ]
 
     with (
@@ -98,26 +84,26 @@ def test_run_gemini_sync_429_retries_same_model_then_falls_back_to_auto(
         patch("scripts.ai_agent_bridge._gemini._remove_pid_file"),
         patch("scripts.ai_agent_bridge._gemini.atexit.register"),
     ):
-        response = _run_gemini_sync(
-            msg,
-            message_id,
-            PRO_MODEL,
-            "bridge prompt",
-            no_timeout=False,
-            stdout_only=True,
-            output_path=None,
-            allow_write=False,
-            skip_github=True,
-            auth_mode=None,
-        )
+        with pytest.raises(RateLimitedError) as error:
+            _run_gemini_sync(
+                msg,
+                message_id,
+                PRO_MODEL,
+                "bridge prompt",
+                no_timeout=False,
+                stdout_only=True,
+                output_path=None,
+                allow_write=False,
+                skip_github=True,
+                auth_mode=None,
+            )
 
     invoked_models = [call.kwargs["model"] for call in mock_invoke.call_args_list]
-    assert invoked_models == [PRO_MODEL, PRO_MODEL, FALLBACK_MODEL]
-    assert _message_to_model(message_id) == FALLBACK_MODEL
-    assert response == "[model=auto, pro-capacity-unavailable]\n\nbridge reply"
-    mock_route_response.assert_called_once()
-    assert mock_route_response.call_args.args[2] == FALLBACK_MODEL
-    mock_acknowledge.assert_called_once_with(message_id, quiet=True)
+    assert invoked_models == [PRO_MODEL, PRO_MODEL]
+    assert _message_to_model(message_id) == PRO_MODEL
+    assert "HTTP 429 No capacity available" in error.value.reason
+    mock_route_response.assert_not_called()
+    mock_acknowledge.assert_not_called()
 
 
 @patch("scripts.ai_agent_bridge._gemini._route_gemini_response")

@@ -211,6 +211,14 @@ def _build_agy_model_map() -> dict[str, str]:
 _AGY_MODEL_BY_NORMALIZED: dict[str, str] = _build_agy_model_map()
 
 
+def unknown_model_suggestion(model: str) -> str:
+    """Return safe guidance for an unknown AGY model identifier."""
+    if "pro" in model.casefold():
+        return "For Gemini Pro, use `--model gemini-3.1-pro-high`."
+    accepted_ids = ", ".join(f"`{slug}`" for slug in _AGY_MODEL_SLUGS)
+    return f"Accepted AGY model ids: {accepted_ids}."
+
+
 class AgyAdapter:
     """Adapter for the ``agy`` Antigravity CLI."""
 
@@ -396,8 +404,7 @@ class AgyAdapter:
         if resolved:
             return resolved
         raise ValueError(
-            f"Unsupported AGY model {model!r}. Use a model accepted by AGY, "
-            f"such as {self.default_model!r}."
+            f"Unsupported AGY model {model!r}. {unknown_model_suggestion(model)}"
         )
 
     def parse_response(
