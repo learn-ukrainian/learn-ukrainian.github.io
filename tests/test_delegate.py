@@ -5997,6 +5997,31 @@ def test_dispatch_gemini_resolves_to_agy_before_popen_and_never_execs_gemini(
     assert state["agent_alias_note"] == "NOTE: gemini→agy retired CLI"
 
 
+def test_dispatch_gemini_alias_rejects_unknown_model_before_spawn(tmp_tasks_dir, monkeypatch, capsys):
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--agent",
+            "gemini",
+            "--model",
+            "gemini-9.9-pro-preview",
+            "--task-id",
+            "gemini-alias-unknown-model",
+            "--prompt",
+            "test",
+        ]
+    )
+
+    def _unexpected_spawn(*_args, **_kwargs):
+        raise AssertionError("unknown model must fail before spawning a worker")
+
+    monkeypatch.setattr(delegate.subprocess, "Popen", _unexpected_spawn)
+
+    assert delegate.cmd_dispatch(args) == 2
+    assert delegate._read_state(delegate._state_path("gemini-alias-unknown-model")) is None
+    assert "Unsupported AGY model 'gemini-9.9-pro-preview'" in capsys.readouterr().err
+
+
 def test_dispatch_uses_existing_worktree_without_git_add(tmp_tasks_dir, tmp_path, monkeypatch):
     import argparse
 

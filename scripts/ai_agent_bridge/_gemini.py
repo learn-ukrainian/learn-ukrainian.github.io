@@ -9,7 +9,6 @@ usage logging uniformly across agents.
 """
 
 import atexit
-import json
 import subprocess
 import sys
 import time
@@ -22,7 +21,7 @@ from agent_runtime.errors import (
     RateLimitedError,
 )
 from agent_runtime.runner import invoke as runtime_invoke
-from batch_gemini_config import FALLBACK_MODEL, PRO_MODEL
+from batch_gemini_config import PRO_MODEL
 from secret_redactor import redact_text
 
 from ._ask_lifecycle import record_ask_failure, register_ask
@@ -40,7 +39,6 @@ from ._config import (
     REPO_ROOT,
     default_gemini_model,
 )
-from ._db import get_db
 from ._github import _post_review_to_github
 from ._messaging import (
     _extract_issue_number,
@@ -394,7 +392,6 @@ def _run_gemini_sync(
     current_model = model
     rate_limit_state = {
         "retried_same_model_429": False,
-        "used_fallback_429": model == FALLBACK_MODEL,
     }
 
     try:
@@ -516,7 +513,7 @@ def _run_gemini_attempt(
     except RateLimitedError as exc:
         detail = exc.reason or str(exc)
         if _is_gemini_429_error(detail):
-            return _handle_gemini_429(message_id, model, detail, rate_limit_state)
+            return _handle_gemini_429(model, detail, rate_limit_state)
         # Rate-limited: treat as retryable per legacy behavior
         print(f"\n⏳ Gemini rate limited: {exc}")
         if attempt < max_retries - 1:
@@ -540,7 +537,7 @@ def _run_gemini_attempt(
         # on stderr signal (legacy _handle_gemini_error).
         stderr_text = result.stderr_excerpt or ""
         if _is_gemini_429_error(stderr_text):
-            return _handle_gemini_429(message_id, model, stderr_text, rate_limit_state)
+            return _handle_gemini_429(model, stderr_text, rate_limit_state)
         retry_result = _handle_gemini_error(stderr_text, model, attempt, max_retries, base_delay)
         if retry_result == "retry":
             return None
@@ -605,65 +602,26 @@ def _handle_gemini_error(stderr, model, attempt, max_retries, base_delay):
     return "continue"
 
 
-def _record_gemini_delivery_model(message_id: int, model: str) -> None:
-    """Persist the currently targeted Gemini model on the legacy message row."""
-    conn = get_db()
-    try:
-        row = conn.execute(
-            "SELECT data FROM messages WHERE id = ?",
-            (message_id,),
-        ).fetchone()
-        if row is None:
-            return
-
-        raw_data = row[0]
-        metadata: dict[str, object]
-        if raw_data:
-            try:
-                parsed = json.loads(raw_data)
-                metadata = parsed if isinstance(parsed, dict) else {"raw": raw_data}
-            except (TypeError, ValueError, json.JSONDecodeError):
-                metadata = {"raw": raw_data}
-        else:
-            metadata = {}
-
-        metadata["to_model"] = model
-        conn.execute(
-            "UPDATE messages SET data = ? WHERE id = ?",
-            (json.dumps(metadata), message_id),
-        )
-        conn.commit()
-    finally:
-        conn.close()
-
-
 def _handle_gemini_429(
-    message_id: int,
     model: str,
     detail: str,
     rate_limit_state: dict[str, bool],
 ) -> dict[str, str]:
-    """Apply bridge-specific 429 policy: one retry, then one hop to ``auto``."""
+    """Retry the requested model once, then fail with the original 429 detail."""
     safe_detail = redact_text(detail) or ""
     print(f"\n⏳ Gemini 429 on {model}: {safe_detail}")
 
-    if model != FALLBACK_MODEL and not rate_limit_state["retried_same_model_429"]:
+    if not rate_limit_state["retried_same_model_429"]:
         rate_limit_state["retried_same_model_429"] = True
-        print(f"↪️  Retrying {model} once before fallback...")
+        print(f"↪️  Retrying {model} once...")
         return {"action": "retry_same_model", "model": model}
 
-    if model != FALLBACK_MODEL and not rate_limit_state["used_fallback_429"]:
-        rate_limit_state["used_fallback_429"] = True
-        print(f"[bridge] 429 on {model}, falling back to {FALLBACK_MODEL}")
-        _record_gemini_delivery_model(message_id, FALLBACK_MODEL)
-        return {"action": "fallback", "model": FALLBACK_MODEL}
-
-    print(f"\n❌ Gemini 429 on {model} with no fallback remaining.")
+    print(f"\n❌ Gemini 429 on {model}; refusing to change the requested model.")
     raise RateLimitedError("gemini", model, safe_detail)
 
 
 def _is_gemini_429_error(stderr: str) -> bool:
-    """Detect Gemini 429/capacity errors that should trigger bridge fallback."""
+    """Detect Gemini 429/capacity errors that must fail without model remapping."""
     lowered = stderr.lower()
     return (
         "429" in stderr

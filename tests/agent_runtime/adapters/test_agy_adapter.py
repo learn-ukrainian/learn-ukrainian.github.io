@@ -392,15 +392,30 @@ def test_build_invocation_unknown_explicit_model_is_rejected(tmp_path: Path) -> 
 
 
 def test_delegate_dispatch_rejects_unknown_agy_model_before_launch(monkeypatch, capsys) -> None:
-    from argparse import Namespace
-
     from scripts import delegate
 
+    real_popen = delegate.subprocess.Popen
+
     def unexpected_dispatch(*args, **kwargs):
-        pytest.fail("unknown AGY model reached worker dispatch")
+        command = args[0]
+        if isinstance(command, list) and "_worker" in command:
+            pytest.fail("unknown AGY model reached worker dispatch")
+        return real_popen(*args, **kwargs)
 
     monkeypatch.setattr(delegate.subprocess, "Popen", unexpected_dispatch)
-    args = Namespace(task_id="unknown-agy-model", agent="agy", model="gemini-9.9-pro-preview")
+    args = delegate.build_parser().parse_args(
+        [
+            "dispatch",
+            "--task-id",
+            "unknown-agy-model",
+            "--agent",
+            "agy",
+            "--model",
+            "gemini-9.9-pro-preview",
+            "--prompt",
+            "test",
+        ]
+    )
 
     result = delegate.cmd_dispatch(args)
 

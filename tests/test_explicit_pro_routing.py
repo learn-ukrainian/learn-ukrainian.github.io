@@ -40,7 +40,9 @@ def test_resolve_compat_model_unknown_explicit_model_does_not_echo_as_fix():
     with pytest.raises(ValueError) as error:
         resolve_compat_model("agy", "gemini-9.9-pro-preview")
     message = str(error.value)
-    assert "--model gemini-3.8-flash-high" in message
+    assert "Unknown AGY model 'gemini-9.9-pro-preview'" in message
+    assert "--model gemini-3.1-pro-high" in message
+    assert "--model gemini-3.8-flash-high" not in message
     assert "--model gemini-9.9-pro-preview" not in message
 
 
