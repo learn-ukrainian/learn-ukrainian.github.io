@@ -11,9 +11,55 @@ while the same review via headless dispatch with tools approved. `ask-*
 
 from __future__ import annotations
 
+import json
+import os
+import stat
+
 import pytest
 
 from scripts.ai_agent_bridge import _acp_compat, _cli, _dispatch_wrappers
+
+_HEAD_SHA = "a" * 40
+_MOVED_SHA = "b" * 40
+_HEAD_BRANCH = "cursor/impl-8706"
+
+
+def _install_fake_gh(
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+    *,
+    stdout: str = "",
+    stderr: str = "",
+    code: int = 0,
+) -> None:
+    """Put a no-network ``gh`` first on PATH."""
+    bin_dir = tmp_path / "bin"
+    bin_dir.mkdir()
+    script = bin_dir / "gh"
+    script.write_text(
+        "#!/bin/sh\n"
+        f"printf '%s' {json.dumps(stdout)}\n"
+        f"printf '%s' {json.dumps(stderr)} >&2\n"
+        f"exit {int(code)}\n",
+        encoding="utf-8",
+    )
+    script.chmod(script.stat().st_mode | stat.S_IEXEC)
+    monkeypatch.setenv("PATH", f"{bin_dir}{os.pathsep}{os.environ.get('PATH', '')}")
+
+
+def _same_repo_payload(*, head_sha: str = _HEAD_SHA, branch: str = _HEAD_BRANCH) -> str:
+    return json.dumps(
+        {
+            "headRefName": branch,
+            "headRefOid": head_sha,
+            "isCrossRepository": False,
+        }
+    )
+
+
+@pytest.fixture()
+def same_repo_pr_gh(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_fake_gh(tmp_path, monkeypatch, stdout=_same_repo_payload())
 
 
 @pytest.fixture()
@@ -48,7 +94,9 @@ def captured_dispatch(monkeypatch: pytest.MonkeyPatch) -> dict[str, object]:
 
 
 def test_ask_pr_routes_to_headless_dispatch_not_acp(
-    acp_guard: dict[str, int], captured_dispatch: dict[str, object]
+    acp_guard: dict[str, int],
+    captured_dispatch: dict[str, object],
+    same_repo_pr_gh: None,
 ) -> None:
     args = _cli._build_parser().parse_args(
         ["ask-claude", "review this change", "--task-id", "review-7010", "--pr", "7010", "--from", "test"]
@@ -62,6 +110,8 @@ def test_ask_pr_routes_to_headless_dispatch_not_acp(
     # Target folded into the prompt.
     assert "PR #7010" in captured_dispatch["content"]
     assert "gh pr diff 7010" in captured_dispatch["content"]
+    assert f"exact head {_HEAD_SHA}" in captured_dispatch["content"]
+    assert captured_dispatch["branch"] == _HEAD_BRANCH
 
 
 def test_ask_branch_routes_to_headless_dispatch_not_acp(
@@ -85,7 +135,9 @@ def test_ask_pr_and_branch_remain_mutually_exclusive() -> None:
 
 
 def test_ask_pr_no_longer_refuses_with_review_pr_circle(
-    acp_guard: dict[str, int], captured_dispatch: dict[str, object]
+    acp_guard: dict[str, int],
+    captured_dispatch: dict[str, object],
+    same_repo_pr_gh: None,
 ) -> None:
     """The old refusal named the retired review-pr command as the next step."""
     args = _cli._build_parser().parse_args(
@@ -99,7 +151,9 @@ def test_ask_pr_no_longer_refuses_with_review_pr_circle(
 
 
 def test_ask_pr_type_review_does_not_reach_acp(
-    acp_guard: dict[str, int], captured_dispatch: dict[str, object]
+    acp_guard: dict[str, int],
+    captured_dispatch: dict[str, object],
+    same_repo_pr_gh: None,
 ) -> None:
     """Exact #7155 acceptance scenario: ask-codex --pr <N> --type review."""
     args = _cli._build_parser().parse_args(
@@ -155,3 +209,97 @@ def test_ask_help_no_longer_requires_review_pr() -> None:
             help_text += "\n" + action.format_help()
     assert "formal review targets require the review-pr command" not in help_text
     assert "substitute: review-pr" not in help_text
+
+
+def test_ask_pr_dispatches_the_pr_head_branch_and_sha(
+    acp_guard: dict[str, int],
+    captured_dispatch: dict[str, object],
+    same_repo_pr_gh: None,
+) -> None:
+    args = _cli._build_parser().parse_args(
+        ["ask-claude", "review this change", "--task-id", "review-8706", "--pr", "8706", "--from", "test"]
+    )
+
+    _cli._handle_ask_claude(args)
+
+    assert acp_guard["count"] == 0
+    assert captured_dispatch["branch"] == _HEAD_BRANCH
+    assert f"exact head {_HEAD_SHA}" in str(captured_dispatch["content"])
+
+
+def test_ask_pr_refuses_cross_repository(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_fake_gh(
+        tmp_path,
+        monkeypatch,
+        stdout=json.dumps(
+            {
+                "headRefName": "fork/feature",
+                "headRefOid": _HEAD_SHA,
+                "isCrossRepository": True,
+            }
+        ),
+    )
+    args = _cli._build_parser().parse_args(
+        ["ask-claude", "review this change", "--task-id", "review-cross", "--pr", "12", "--from", "test"]
+    )
+
+    with pytest.raises(SystemExit, match="cross-repository"):
+        _cli._handle_ask_claude(args)
+
+
+def test_ask_pr_refuses_when_gh_fails(tmp_path, monkeypatch: pytest.MonkeyPatch) -> None:
+    _install_fake_gh(tmp_path, monkeypatch, stderr="no such pull request", code=1)
+    args = _cli._build_parser().parse_args(
+        ["ask-claude", "review this change", "--task-id", "review-missing", "--pr", "99", "--from", "test"]
+    )
+
+    with pytest.raises(SystemExit, match="refusing to review main"):
+        _cli._handle_ask_claude(args)
+
+
+def test_ask_branch_does_not_consult_gh(
+    acp_guard: dict[str, int],
+    captured_dispatch: dict[str, object],
+    tmp_path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    _install_fake_gh(tmp_path, monkeypatch, stderr="gh must not be called", code=1)
+    args = _cli._build_parser().parse_args(
+        ["ask-kimi", "review this change", "--task-id", "review-branch", "--branch", "feat-x", "--from", "test"]
+    )
+
+    _cli._handle_ask_kimi(args)
+
+    assert acp_guard["count"] == 0
+    assert captured_dispatch["branch"] == "feat-x"
+    assert "origin/feat-x" in captured_dispatch["content"]
+    assert "exact head" not in str(captured_dispatch["content"])
+
+
+def test_ask_pr_reports_when_dispatch_base_sha_moved(
+    same_repo_pr_gh: None,
+    captured_dispatch: dict[str, object],
+    capsys: pytest.CaptureFixture[str],
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    def moved_dispatch(agent, content, **kwargs):
+        captured_dispatch["agent"] = agent
+        captured_dispatch["content"] = content
+        captured_dispatch.update(kwargs)
+        return {
+            "ok": True,
+            "status": "done",
+            "response": "VERDICT: APPROVED\nEvidence: reviewed the diff at scripts/foo.py:1.",
+            "worktree_base_sha": _MOVED_SHA,
+        }
+
+    monkeypatch.setattr(_dispatch_wrappers, "run_ask_review_dispatch", moved_dispatch)
+    args = _cli._build_parser().parse_args(
+        ["ask-claude", "review this change", "--task-id", "review-moved", "--pr", "8706", "--from", "test"]
+    )
+
+    _cli._handle_ask_claude(args)
+
+    err = capsys.readouterr().err
+    assert f"resolved {_HEAD_SHA}" in err
+    assert f"dispatch record base {_MOVED_SHA}" in err

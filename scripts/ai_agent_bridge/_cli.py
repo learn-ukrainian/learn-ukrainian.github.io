@@ -3,6 +3,7 @@
 import argparse
 import json
 import os
+import subprocess
 import sys
 from datetime import UTC, datetime
 from pathlib import Path
@@ -23,6 +24,7 @@ from ._cursor import CURSOR_DEFAULT_MODEL
 from ._db import get_db
 from ._dispatch_wrappers import (
     MANDATORY_COMMIT_PUSH_PR_CHECKLIST,
+    REPO_ROOT,
     REVIEW_DEEP_INSTRUCTIONS,
     handle_dispatch_fix,
     handle_review_deep,
@@ -1466,6 +1468,97 @@ def _dispatch_command(args):
     return True
 
 
+_GH_PR_VIEW_TIMEOUT_S = 60.0
+
+
+def _is_full_git_sha(value: object) -> bool:
+    return isinstance(value, str) and len(value) == 40 and all(c in "0123456789abcdef" for c in value)
+
+
+def _resolve_same_repo_pr_head(pr_number: int) -> tuple[str, str]:
+    """Return ``(headRefName, headRefOid)`` for one same-repo PR.
+
+    One ``gh pr view`` call. A cross-repository PR, or any failure to resolve
+    a branch and a full head SHA, exits non-zero. Never falls back to main.
+    """
+    cmd = [
+        "gh",
+        "pr",
+        "view",
+        str(pr_number),
+        "--json",
+        "headRefName,headRefOid,isCrossRepository",
+    ]
+    try:
+        proc = subprocess.run(
+            cmd,
+            cwd=REPO_ROOT,
+            capture_output=True,
+            text=True,
+            check=False,
+            timeout=_GH_PR_VIEW_TIMEOUT_S,
+        )
+    except (OSError, subprocess.TimeoutExpired) as exc:
+        raise SystemExit(
+            f"ask --pr {pr_number}: could not resolve the PR head ({exc}); refusing to review main"
+        ) from exc
+    if proc.returncode != 0:
+        detail = (proc.stderr or proc.stdout or "").strip().replace("\n", " ")
+        if len(detail) > 200:
+            detail = detail[:200] + "…"
+        suffix = f": {detail}" if detail else ""
+        raise SystemExit(
+            f"ask --pr {pr_number}: gh pr view failed (exit {proc.returncode}){suffix}; "
+            "refusing to review main"
+        )
+    try:
+        payload = json.loads(proc.stdout or "")
+    except json.JSONDecodeError as exc:
+        raise SystemExit(
+            f"ask --pr {pr_number}: gh pr view returned invalid JSON; refusing to review main"
+        ) from exc
+    if not isinstance(payload, dict):
+        raise SystemExit(
+            f"ask --pr {pr_number}: gh pr view returned a non-object payload; refusing to review main"
+        )
+    if payload.get("isCrossRepository") is not False:
+        raise SystemExit(
+            f"ask --pr {pr_number}: cross-repository PR; refusing to review main"
+        )
+    branch = payload.get("headRefName")
+    head_sha = payload.get("headRefOid")
+    if not isinstance(branch, str) or not branch.strip():
+        raise SystemExit(
+            f"ask --pr {pr_number}: PR payload has no head branch; refusing to review main"
+        )
+    branch = branch.strip()
+    if branch.startswith(("-", "origin/", "refs/", "github/")):
+        raise SystemExit(
+            f"ask --pr {pr_number}: PR head branch {branch!r} is not a local branch name; "
+            "refusing to review main"
+        )
+    if not _is_full_git_sha(head_sha):
+        raise SystemExit(
+            f"ask --pr {pr_number}: PR payload has no full head SHA; refusing to review main"
+        )
+    return branch, str(head_sha)
+
+
+def _note_pr_head_movement(result: dict, *, pr_number: int, resolved_sha: str) -> None:
+    """Say when the dispatch checkout is not the SHA ``gh`` just resolved."""
+    recorded = result.get("worktree_base_sha")
+    if not isinstance(recorded, str) or not recorded.strip():
+        return
+    recorded = recorded.strip().lower()
+    if recorded == resolved_sha:
+        return
+    print(
+        f"ask --pr {pr_number}: branch head moved between resolution and dispatch: "
+        f"resolved {resolved_sha}, dispatch record base {recorded}",
+        file=sys.stderr,
+    )
+
+
 def _review_target_kwargs(args) -> dict[str, str | int | None]:
     """Pass an explicit branch target only to a review ask."""
     branch = getattr(args, "branch", None)
@@ -1495,15 +1588,18 @@ def _handle_acp_compat(args, target: str) -> None:
     )
     pr_number = getattr(args, "pr", None)
     branch = getattr(args, "branch", None)
+    resolved_head_sha: str | None = None
     if pr_number is not None or branch is not None:
         # #7010: sealed review-pr is retired (operator 2026-08-07). Route
         # --pr/--branch to the same lightweight direct path as
         # `ask-LANE - --type review`: the target is folded into the prompt and
         # review mode is forced so the reply still needs a grounded verdict.
+        # #8706: --pr must check out that PR's head, not the default base.
         if pr_number is not None:
+            branch, resolved_head_sha = _resolve_same_repo_pr_head(int(pr_number))
             target_desc = (
-                f"PR #{pr_number} — resolve the exact head and diff with "
-                f"`gh pr view {pr_number} --json headRefOid` / `gh pr diff {pr_number}`"
+                f"PR #{pr_number} — exact head {resolved_head_sha} "
+                f"(`gh pr diff {pr_number}`)"
             )
         else:
             target_desc = f"remote branch origin/{branch}"
@@ -1533,6 +1629,8 @@ def _handle_acp_compat(args, target: str) -> None:
             # --no-timeout bypasses it with a generous ceiling.
             hard_timeout=86400 if bool(getattr(args, "no_timeout", False)) else None,
             branch=branch,
+            resolved_head_sha=resolved_head_sha,
+            pr_number=int(pr_number) if pr_number is not None else None,
         )
         return
 
@@ -1595,6 +1693,8 @@ def _dispatch_headless_review(
     stdout_only: bool,
     hard_timeout: int | None,
     branch: str | None = None,
+    resolved_head_sha: str | None = None,
+    pr_number: int | None = None,
 ) -> None:
     """Run a review-intent ask-* through the headless native-CLI dispatch path.
 
@@ -1629,6 +1729,9 @@ def _dispatch_headless_review(
         )
     except RuntimeError as exc:
         raise SystemExit(str(exc)) from exc
+
+    if resolved_head_sha is not None and pr_number is not None:
+        _note_pr_head_movement(result, pr_number=pr_number, resolved_sha=resolved_head_sha)
 
     response = str(result.get("response") or "")
     if output_path:
