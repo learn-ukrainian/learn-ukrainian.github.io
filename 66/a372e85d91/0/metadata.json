@@ -1,0 +1,48 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "66a372e85d91",
+  "session_id": "ses_f2b2cf005ffe1aPsDyxJm2rM3F",
+  "strategy": "manual-commit",
+  "created_at": "2026-09-24T19:28:18.91267237Z",
+  "branch": "deepseek/impl-8707",
+  "checkpoints_count": 1,
+  "files_touched": [
+    "tests/test_launcher_contract.py",
+    "tests/test_repo_wide_marker_invariant.py",
+    ".github/workflows/ci.yml",
+    "tests/test_ci_shard_partition.py",
+    "docs/runbooks/ci-gate.md"
+  ],
+  "agent": "OpenCode",
+  "model": "",
+  "turn_id": "a210d22e7c38",
+  "compact_transcript_start": 0,
+  "token_usage": {
+    "input_tokens": 111859,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8319872,
+    "output_tokens": 25986,
+    "api_call_count": 75
+  },
+  "initial_attribution": {
+    "calculated_at": "2026-09-24T19:28:16.730368496Z",
+    "agent_lines": 506,
+    "agent_removed": 81,
+    "human_added": 0,
+    "human_modified": 0,
+    "human_removed": 0,
+    "total_committed": 506,
+    "total_lines_changed": 587,
+    "agent_percentage": 100,
+    "metric_version": 2
+  },
+  "prompt_attributions": [
+    {
+      "checkpoint_number": 1,
+      "user_lines_added": 0,
+      "user_lines_removed": 0,
+      "agent_lines_added": 0,
+      "agent_lines_removed": 0
+    }
+  ]
+}

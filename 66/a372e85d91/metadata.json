@@ -1,0 +1,30 @@
+{
+  "cli_version": "0.8.42",
+  "checkpoint_id": "66a372e85d91",
+  "strategy": "manual-commit",
+  "branch": "deepseek/impl-8707",
+  "checkpoints_count": 1,
+  "files_touched": [
+    ".github/workflows/ci.yml",
+    "docs/runbooks/ci-gate.md",
+    "tests/test_ci_shard_partition.py",
+    "tests/test_launcher_contract.py",
+    "tests/test_repo_wide_marker_invariant.py"
+  ],
+  "sessions": [
+    {
+      "metadata": "/66/a372e85d91/0/metadata.json",
+      "transcript": "/66/a372e85d91/0/full.jsonl",
+      "compact_transcript": "/66/a372e85d91/0/transcript.jsonl",
+      "content_hash": "/66/a372e85d91/0/content_hash.txt",
+      "prompt": ""
+    }
+  ],
+  "token_usage": {
+    "input_tokens": 111859,
+    "cache_creation_tokens": 0,
+    "cache_read_tokens": 8319872,
+    "output_tokens": 25986,
+    "api_call_count": 75
+  }
+}
