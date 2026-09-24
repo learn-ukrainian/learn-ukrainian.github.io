@@ -65,7 +65,7 @@ def test_resolve_area_canonical_ids() -> None:
 
     harness = resolve_area("harness")
     assert harness.id == "harness"
-    assert "corpus-channels" in harness.aliases
+    assert "eval-harness" in harness.aliases
 
     devops = resolve_area("devops")
     assert devops.id == "devops"
@@ -84,8 +84,8 @@ def test_resolve_area_aliases() -> None:
     area1 = resolve_area("infra-harness")
     assert area1.id == "infra"
 
-    # corpus-channels -> harness
-    area2 = resolve_area("corpus-channels")
+    # eval-harness -> harness
+    area2 = resolve_area("eval-harness")
     assert area2.id == "harness"
 
     # atlas-practice -> atlas
@@ -109,7 +109,7 @@ def test_resolve_area_by_epic_number() -> None:
     devops = resolve_area(5703)
     assert devops.id == "devops"
 
-    harness = resolve_area(4706)
+    harness = resolve_area(4913)
     assert harness.id == "harness"
 
     # string epic lookup
@@ -121,8 +121,11 @@ def test_resolve_area_by_epic_number() -> None:
     assert resolve_area(6321).id == "open-model-data"
 
 
-def test_curriculum_upgrade_shares_core_area_but_isolates_handoff() -> None:
-    stream, epic = "curriculum-upgrade", 7994
+@pytest.mark.parametrize(
+    ("stream", "epic"),
+    [("curriculum-upgrade", 7994), ("a1-upgrade", 7995)],
+)
+def test_upgrade_streams_share_core_area_but_isolate_handoffs(stream: str, epic: int) -> None:
     assert resolve_area(stream).id == "core"
     assert resolve_area(epic).id == "core"
     candidates = _handoff_candidates_for(stream, epic)
@@ -157,19 +160,11 @@ def test_list_valid_names() -> None:
     assert "infra" in names
     assert "infra-harness" in names
     assert "harness" in names
-    assert "corpus-channels" in names
-    assert "eval-harness" not in names
-    assert "a1-upgrade" not in names
+    assert "eval-harness" in names
     assert "devops" in names
     assert "monitor" in names
     assert "open-model-data" in names
     assert names == tuple(sorted(names))
-
-
-@pytest.mark.parametrize("retired", ["eval-harness", "a1-upgrade", 4913, 7995])
-def test_retired_streams_and_epics_do_not_resolve(retired: str | int) -> None:
-    with pytest.raises(UnknownAreaError):
-        resolve_area(retired)
 
 
 # ---------------------------------------------------------------------------
