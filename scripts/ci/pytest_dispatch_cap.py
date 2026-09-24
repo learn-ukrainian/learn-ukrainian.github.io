@@ -206,7 +206,11 @@ def _arm_maxprocesses(config: pytest.Config) -> None:
     if not numprocesses:
         return
     current = config.option.maxprocesses
-    config.option.maxprocesses = MAX_PROCESSES if current is None else min(int(current), MAX_PROCESSES)
+    # xdist treats a missing or non-positive maxprocesses as unlimited.
+    value = MAX_PROCESSES if current is None else int(current)
+    if value < 1 or value > MAX_PROCESSES:
+        value = MAX_PROCESSES
+    config.option.maxprocesses = value
     setattr(config, _CLAMP_ATTR, True)
 
 

@@ -123,6 +123,20 @@ def test_marker_and_nlogical_clamps_to_two_workers(tmp_path: Path) -> None:
     _assert_workers(completed, 2)
 
 
+@pytest.mark.parametrize(
+    ("maxprocesses", "expected"),
+    [("0", 2), ("-1", 2), ("5", 2), ("1", 1)],
+)
+def test_explicit_maxprocesses_is_clamped(tmp_path: Path, maxprocesses: str, expected: int) -> None:
+    _write_probe(tmp_path)
+    completed = _run_pytest(
+        tmp_path,
+        ["-n", "8", f"--maxprocesses={maxprocesses}", "-q", "tests/test_sample.py"],
+        _child_env(tmp_path, marker="impl-8645-b"),
+    )
+    _assert_workers(completed, expected)
+
+
 def test_marker_and_n1_stays_one_worker(tmp_path: Path) -> None:
     _write_probe(tmp_path)
     completed = _run_pytest(
