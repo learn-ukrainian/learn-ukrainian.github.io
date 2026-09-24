@@ -502,3 +502,197 @@ def test_verify_checked_ulif_stress_passes_and_mismatch_fails(tmp_path, syntheti
         res_fail = verify.verify_words_store("a1", evidence_dir=tmp_path, sources_instance=api, strict=True)
     assert res_fail["status"] == "failed"
     assert any(codes.STRESS_MISMATCH in err for err in res_fail["errors"])
+
+
+def _oracle(monkeypatch, suffix="-stressed"):
+    monkeypatch.setattr(
+        sources.stress,
+        "verify_stress",
+        lambda w, **kw: {
+            "status": "ok",
+            "matches": [
+                {
+                    "stressed_form": f"{w}{suffix}",
+                    "unstressed_form": w,
+                    "vowel_index": 0,
+                    "vowel_indices": [0],
+                    "vesum": None,
+                    "required_tags": [],
+                    "override_applied": False,
+                }
+            ],
+            "source": {"digest": "t" * 64},
+        },
+    )
+
+
+def _verify(synthetic_sources, synthetic_vesum, evidence_dir, *, strict):
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        return verify.verify_words_store("a1", evidence_dir=evidence_dir, sources_instance=api, strict=strict)
+
+
+def _checked_ulif_store(tmp_path, synthetic_vesum, synthetic_sources):
+    import json
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(
+            "INSERT INTO ulif_dictua_sections VALUES (10, 2, 'paradigm', 0, '', ?)",
+            (json.dumps({"synthetic-a": "synthetic-a-ulif-stressed"}),),
+        )
+    with sqlite3.connect(synthetic_vesum) as conn:
+        conn.execute("DELETE FROM forms_all")
+        conn.execute(
+            "INSERT INTO forms_all VALUES (1, 10, 'synthetic-a', 'synthetic-checked', 'noun', 'noun:f:v_naz', '', '')"
+        )
+    req_path = tmp_path / "req.yaml"
+    req_path.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {
+                        "lemma": "synthetic-checked",
+                        "pos": "noun",
+                        "want": "new",
+                        "entry": {"source": "vesum", "entry_id": 10},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = words.build_words("a1", req_path, evidence_dir=tmp_path, sources_instance=api)
+    return res["store"]
+
+
+def test_verify_ulif_row_drift_is_source_changed_not_stress_mismatch(tmp_path, synthetic_vesum, synthetic_sources):
+    """ULIF stress provenance: the paradigm payload the stress was copied from is part of ulif.row_sha256."""
+    import json
+
+    store = _checked_ulif_store(tmp_path, synthetic_vesum, synthetic_sources)
+    word = store["words"][0]
+    assert word["forms"][0]["stress_source"] == "ulif"
+    assert ("ulif_dictua_entries:synthetic-checked:1", word["ulif"]["row_sha256"]) in words.cited_rows(word)
+    assert _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=True)["status"] == "ok"
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute(
+            "UPDATE ulif_dictua_sections SET payload_json = ? WHERE id = 10",
+            (json.dumps({"synthetic-a": "synthetic-A-restressed"}),),
+        )
+
+    res = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []
+    assert any(codes.SOURCE_CHANGED in w and "ulif of W-001" in w for w in res["warnings"])
+    assert any(codes.SOURCE_CHANGED in w and "synthetic-a-ulif-stressed" in w for w in res["warnings"])
+    assert res["cited_rows_drifted_words"] == 1
+    assert res["source_version_changed"] is False  # VESUM and the trie did not move; the cited row did
+
+    res = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=True)
+    assert res["status"] == "failed"
+    assert all(codes.STRESS_MISMATCH not in e for e in res["errors"])
+    assert any(codes.SOURCE_CHANGED in e for e in res["errors"])
+
+
+def test_verify_gloss_row_metadata_drift_is_never_silent(clean_store, synthetic_vesum, synthetic_sources, monkeypatch):
+    _oracle(monkeypatch)
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE dmklinger_uk_en SET source = 'reingested' WHERE id = 1")  # copied value untouched
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []
+    assert any(codes.SOURCE_CHANGED in w and "gloss_source of W-001" in w for w in res["warnings"])
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=True)
+    assert res["status"] == "failed"
+    assert not any(codes.GLOSS_MISMATCH in e for e in res["errors"])
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE puls_cefr SET level = 'B2' WHERE id = 1")  # copied value changes: error in every mode
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
+    assert res["status"] == "failed"
+    assert any(codes.CEFR_MISMATCH in e for e in res["errors"])
+    assert any(codes.SOURCE_CHANGED in w and "cefr of W-001" in w for w in res["warnings"])
+
+
+def test_verify_legacy_store_and_tampered_identities(clean_store, synthetic_vesum, synthetic_sources, monkeypatch):
+    _oracle(monkeypatch)
+    store_path = clean_store / "_words.yaml"
+    built = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+
+    legacy = yaml.safe_load(lock.yaml_bytes(built))
+    legacy["built_with"].pop("sources_db_scheme")
+    legacy["built_with"]["sources_db"] = "b" * 64
+    legacy["words"][0]["gloss_source"].pop("row_sha256")
+    legacy["words"][0]["cefr"] = {"level": "A1", "source": "puls"}
+    lock.write(store_path, lock.yaml_bytes(legacy))
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
+    assert (res["status"], res["errors"], res["sources_db_scheme"]) == ("warning", [], "file-v1")
+    assert any(codes.LEGACY_IDENTITY in w for w in res["warnings"])
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=True)
+    assert res["status"] == "failed"
+    assert any(codes.LEGACY_IDENTITY in e for e in res["errors"])
+
+    missing = yaml.safe_load(lock.yaml_bytes(built))
+    missing["words"][0]["gloss_source"].pop("row_sha256")
+    lock.write(store_path, lock.yaml_bytes(missing))
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
+    assert res["status"] == "failed"
+    assert any(codes.FORM_MISMATCH in e and "no row_sha256" in e for e in res["errors"])
+    assert any(codes.LOCK_MISMATCH in e and "aggregate" in e for e in res["errors"])
+
+    edited = yaml.safe_load(lock.yaml_bytes(built))
+    edited["words"][0]["cefr"]["row_sha256"] = "0" * 64
+    lock.write(store_path, lock.yaml_bytes(edited))
+    res = _verify(synthetic_sources, synthetic_vesum, clean_store, strict=False)
+    assert res["status"] == "failed"
+    assert any(codes.LOCK_MISMATCH in e and "aggregate" in e for e in res["errors"])
+
+
+def test_verify_heritage_source_change(tmp_path, synthetic_vesum, synthetic_sources, monkeypatch):
+    from scripts.verification import check_ru_morph
+
+    _oracle(monkeypatch)
+    monkeypatch.setattr(
+        check_ru_morph,
+        "check_russian_patterns_batch",
+        lambda requested, *, verified_words: {w: {"matches_russian": True, "confidence": 0.9} for w in requested},
+    )
+    req = tmp_path / "req.yaml"
+    req.write_text(
+        yaml.safe_dump(
+            {
+                "request_schema": 1,
+                "level": "a1",
+                "words": [
+                    {"lemma": "synthetic", "pos": "noun", "want": "new", "entry": {"source": "vesum", "entry_id": 10}}
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    with sources.Sources(sources_db=synthetic_sources, vesum_db=synthetic_vesum) as api:
+        res = words.build_words("a1", req, evidence_dir=tmp_path, sources_instance=api)
+    assert res["store"]["words"][0]["heritage"][0]["source_family"] == "style_guide"
+    assert _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=True)["status"] == "ok"
+
+    with sqlite3.connect(synthetic_sources) as conn:
+        conn.execute("UPDATE style_guide SET text = 'rewritten heritage explanation' WHERE id = 1")
+    res = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=False)
+    assert res["status"] == "warning"
+    assert res["errors"] == []
+    assert any(codes.SOURCE_CHANGED in w and "heritage of W-001" in w for w in res["warnings"])
+    res = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=True)
+    assert res["status"] == "failed"
+    assert any(codes.SOURCE_CHANGED in e and "heritage of W-001" in e for e in res["errors"])
+
+    # A hand-edited hit no longer matches its own recorded identity.
+    store_path = tmp_path / "_words.yaml"
+    doc = yaml.safe_load(store_path.read_text(encoding="utf-8"))
+    doc["words"][0]["heritage"][0]["text"] = "typed by hand"
+    lock.write(store_path, lock.yaml_bytes(doc))
+    res = _verify(synthetic_sources, synthetic_vesum, tmp_path, strict=False)
+    assert res["status"] == "failed"
+    assert any(codes.LOCK_MISMATCH in e and "heritage[0]" in e for e in res["errors"])

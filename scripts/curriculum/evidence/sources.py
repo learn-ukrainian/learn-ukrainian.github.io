@@ -1,20 +1,24 @@
 """The word store's sole boundary to dictionaries and morphology tools.
 
 Use one Sources instance per build (and close it). Results preserve source
-bytes; normalization applies only to lookup inputs. Database wrappers share a
-read-only connection, and content hashes are cached only for that instance.
-The DB fingerprint includes a nonempty WAL, which is part of SQLite's content.
-Stat changes during a session fail closed rather than mixing source versions.
+bytes; normalization applies only to lookup inputs. Database wrappers share one
+read-only connection that pins a single SQLite snapshot for the whole session
+(a deferred read transaction; in WAL mode a concurrent writer keeps committing
+and the session keeps seeing the rows it started with). The identity of a
+sources.db read is the digest of the rows returned, never a digest of the file:
+that is what an evidence lock cites and what verification recomputes (rows-v2).
+VESUM is a static file and keeps its metadata/file identity.
 """
 
 import hashlib
 import json
+import shutil
 import sqlite3
 import time
 import urllib.error
 import urllib.request
-from collections.abc import Callable, Iterable
-from contextlib import closing
+from collections.abc import Callable, Iterable, Mapping
+from contextlib import closing, suppress
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from functools import lru_cache
@@ -24,9 +28,11 @@ from typing import Any
 from scripts.rag.config import VESUM_DB_PATH
 from scripts.verification import stress, vesum
 
-from . import codes, tags
+from . import codes, config, tags
 
 BATCH_SIZE = 500
+SOURCES_DB_SCHEME = "rows-v2"
+LEGACY_SOURCES_DB_SCHEME = "file-v1"
 REPO_ROOT = Path(__file__).resolve().parents[3]
 APOSTROPHES = str.maketrans({"’": "'", "ʼ": "'", "`": "'", "\u2018": "'"})
 # Exact POS equivalences only, never text/translation matching.
@@ -80,10 +86,69 @@ def _sources_path() -> Path:
     return resolve_main_root(REPO_ROOT) / "data/sources.db"
 
 
+def _canonical(value: Any) -> bytes:
+    # ensure_ascii=False keeps Ukrainian bytes readable; bytes values raise (no cited table has a BLOB).
+    return json.dumps(value, sort_keys=True, separators=(",", ":"), ensure_ascii=False).encode("utf-8")
+
+
+def row_digest(row: Mapping[str, Any]) -> str:
+    """Identity of one source row exactly as the accessor returned it (no column excluded)."""
+    if not isinstance(row, Mapping):
+        raise TypeError(f"row_digest expects a row mapping, got {type(row).__name__}")
+    return hashlib.sha256(_canonical(dict(row))).hexdigest()
+
+
+def batch_digest(batch: Mapping[Any, Any]) -> str:
+    """Identity of a keyed batch read: canonical sorted list of [key-as-list, value] pairs."""
+    pairs = []
+    for key, value in batch.items():
+        key_list = [*key] if isinstance(key, tuple) else [key]
+        pairs.append([key_list, value])
+    pairs.sort(key=lambda pair: pair[0])
+    return hashlib.sha256(_canonical(pairs)).hexdigest()
+
+
+def aggregate_digest(cited: Iterable[tuple[str, str]]) -> str:
+    """built_with.sources_db under rows-v2: sorted unique [locator, row_sha256] pairs; no rows → sha256("[]")."""
+    pairs = sorted({(str(locator), str(digest)) for locator, digest in cited})
+    return hashlib.sha256(_canonical([list(pair) for pair in pairs])).hexdigest()
+
+
 def open_readonly(path: Path) -> sqlite3.Connection:
     conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def open_snapshot(path: Path) -> sqlite3.Connection:
+    """Read-only connection pinned to one snapshot for its lifetime.
+
+    isolation_level=None keeps Python's sqlite3 module from issuing its own
+    BEGIN/COMMIT; the explicit deferred BEGIN plus the probe read is what fixes
+    the read mark (a bare BEGIN pins nothing until the first read).
+    """
+    conn = sqlite3.connect(Path(path).resolve().as_uri() + "?mode=ro", uri=True, isolation_level=None)
+    conn.row_factory = sqlite3.Row
+    conn.execute("PRAGMA busy_timeout=30000")
+    conn.execute("BEGIN")
+    conn.execute("SELECT 1 FROM sqlite_master LIMIT 1").fetchone()
+    return conn
+
+
+def journal_mode_from_header(path: Path) -> str | None:
+    """SQLite header bytes 18-19: 2,2 means WAL; 1,1 legacy (rollback) journal. None when unreadable."""
+    try:
+        with Path(path).open("rb") as stream:
+            header = stream.read(20)
+    except OSError:
+        return None
+    if len(header) < 20 or header[:16] != b"SQLite format 3\x00":
+        return None
+    if header[18] == 2 and header[19] == 2:
+        return "wal"
+    if header[18] == 1 and header[19] == 1:
+        return "delete"
+    return "unknown"
 
 
 class Sources:
@@ -96,6 +161,8 @@ class Sources:
         vesum_db: Path | None = None,
         standard_path: Path | None = None,
         report: Callable[[str], None] | None = None,
+        wal_ceiling_bytes: int | None = None,
+        free_disk_floor_bytes: int | None = None,
     ):
         self.sources_db = Path(sources_db) if sources_db is not None else _sources_path()
         self.vesum_db = Path(vesum_db) if vesum_db is not None else VESUM_DB_PATH
@@ -106,9 +173,16 @@ class Sources:
         )
         self.mapper = tags.TagMapper(report=report)
         self.report = report
+        self.wal_ceiling_bytes = int(wal_ceiling_bytes) if wal_ceiling_bytes is not None else config.wal_ceiling_bytes()
+        self.free_disk_floor_bytes = (
+            int(free_disk_floor_bytes) if free_disk_floor_bytes is not None else config.free_disk_floor_bytes()
+        )
         self._conn: sqlite3.Connection | None = None
         self._fingerprints: dict[Path, tuple[tuple, str, dict]] = {}
         self._vesum_snapshot: tuple[tuple, str, dict] | None = None
+        self.journal_mode: str | None = None
+        self._snapshot_started: float | None = None
+        self._wal_bytes_start: int | None = None
 
     def __enter__(self):
         return self
@@ -117,11 +191,66 @@ class Sources:
         self.close()
 
     def close(self) -> None:
-        if self._conn is not None:
-            self._conn.close()
-            self._conn = None
+        """Release the pinned snapshot (rollback, never commit) and report its lifetime."""
+        if self._conn is None:
+            return
+        conn, self._conn = self._conn, None
+        try:
+            with closing(conn), suppress(sqlite3.Error):
+                conn.execute("ROLLBACK")
+        finally:
+            age = self.snapshot_age()
+            self._progress_line(
+                f"snapshot: released after {age:.1f}s; journal_mode: {self.journal_mode}; "
+                f"wal_bytes: {self._wal_bytes_start} -> {self.wal_bytes()}"
+            )
+            self._snapshot_started = None
 
-    def _fingerprint(self, path: Path) -> tuple[str, dict]:
+    # -- snapshot observability -------------------------------------------------
+
+    def snapshot_age(self) -> float:
+        """Seconds since the sources.db snapshot was pinned; 0.0 when none is open."""
+        if self._snapshot_started is None:
+            return 0.0
+        return time.monotonic() - self._snapshot_started
+
+    def wal_bytes(self) -> int:
+        """Current size of the sources.db WAL sidecar (0 when absent)."""
+        wal = Path(f"{self.sources_db}-wal")
+        try:
+            return wal.stat().st_size
+        except OSError:
+            return 0
+
+    def free_disk_bytes(self) -> int:
+        """Free bytes on the volume holding sources.db."""
+        return shutil.disk_usage(self.sources_db.parent if self.sources_db.parent.exists() else Path.cwd()).free
+
+    def snapshot_report(self) -> dict[str, Any]:
+        return {
+            "journal_mode": self.journal_mode,
+            "wal_bytes": self.wal_bytes(),
+            "wal_bytes_start": self._wal_bytes_start,
+            "snapshot_seconds": round(self.snapshot_age(), 3),
+            "free_disk_bytes": self.free_disk_bytes(),
+        }
+
+    def _guard(self) -> None:
+        """Stop before the next read when the pinned snapshot exceeds its WAL or free-disk budget."""
+        wal = self.wal_bytes()
+        free = self.free_disk_bytes()
+        reason = None
+        if wal > self.wal_ceiling_bytes:
+            reason = f"WAL {wal} bytes exceeds ceiling {self.wal_ceiling_bytes} bytes"
+        elif free < self.free_disk_floor_bytes:
+            reason = f"free disk {free} bytes below floor {self.free_disk_floor_bytes} bytes"
+        if reason is None:
+            return
+        age = self.snapshot_age()
+        self.close()
+        raise RuntimeError(f"{codes.SNAPSHOT_LIMIT}: {reason}; snapshot released after {age:.1f}s")
+
+    def _file_fingerprint(self, path: Path) -> tuple[str, dict]:
         wal = Path(f"{path}-wal")
         signature = (_signature(path), _signature(wal))
         if signature[0] is None:
@@ -144,12 +273,22 @@ class Sources:
 
     def _db(self) -> sqlite3.Connection:
         if self._conn is None:
-            self._conn = open_readonly(self.sources_db)
+            if not self.sources_db.is_file():
+                raise FileNotFoundError(f"{codes.SOURCE_UNAVAILABLE}: {str(self.sources_db)!r}")
+            self._conn = open_snapshot(self.sources_db)
+            self._snapshot_started = time.monotonic()
+            self.journal_mode = str(self._conn.execute("PRAGMA journal_mode").fetchone()[0]).lower()
+            self._wal_bytes_start = self.wal_bytes()
+            self._progress_line(
+                f"snapshot: pinned; journal_mode: {self.journal_mode}; wal_bytes: {self._wal_bytes_start}; "
+                f"free_disk_bytes: {self.free_disk_bytes()}"
+            )
+        self._guard()
         return self._conn
 
     def _db_result[T](self, raw: T) -> SourceResult[T]:
-        digest, metadata = self._fingerprint(self.sources_db)
-        return SourceResult(raw, digest, dict(metadata))
+        """rows-v2: the identity of a DB read is the digest of the rows it returned."""
+        return SourceResult(raw, batch_digest(raw), {"scheme": SOURCES_DB_SCHEME})
 
     def _vesum_identity(self) -> tuple[str, dict]:
         # Metadata is the canonical content identity, not an incidental DB file hash.
@@ -164,7 +303,7 @@ class Sources:
             metadata = dict(conn.execute("SELECT key, value FROM vesum_build_metadata")) if exists else {}
         digest = metadata.get("canonical_jsonl_sha256")
         if not isinstance(digest, str) or len(digest) != 64 or any(ch not in "0123456789abcdef" for ch in digest):
-            digest, file_metadata = self._fingerprint(self.vesum_db)
+            digest, file_metadata = self._file_fingerprint(self.vesum_db)
             metadata.update(file_metadata)
         if signature != (_signature(self.vesum_db), _signature(Path(f"{self.vesum_db}-wal"))):
             raise ValueError(f"{codes.SOURCE_CHANGED}: VESUM while reading metadata")
@@ -222,7 +361,6 @@ class Sources:
 
     def ulif_entries(self, lemmas: Iterable[str]) -> SourceResult[dict[str, list[dict]]]:
         """Raw entry rows + ordered raw sections. No unchecked group can be eligible."""
-        self._fingerprint(self.sources_db)
         conn = self._db()
         requested = list(dict.fromkeys(map(normalize_spelling, lemmas)))
         result: dict[str, list[dict]] = {lemma: [] for lemma in requested}
@@ -258,7 +396,6 @@ class Sources:
         No accent stripping or prefix/fuzzy fallback: a stressed-only headword
         that differs from the requested spelling is absent under brief rule 6.
         """
-        self._fingerprint(self.sources_db)
         conn = self._db()
         requested = list(dict.fromkeys((normalize_spelling(lemma), pos) for lemma, pos in requests))
         result = {key: [] for key in requested}
@@ -280,7 +417,6 @@ class Sources:
         """Raw PULS hits; consumers must reject the upstream helper's prefix fallback."""
         from scripts.wiki import sources_db
 
-        self._fingerprint(self.sources_db)
         with sources_db.using_connection(self._db()):
             raw = sources_db.query_cefr_levels(list(dict.fromkeys(map(normalize_spelling, lemmas))))
         return self._db_result(raw)
@@ -288,12 +424,16 @@ class Sources:
     def heritage(self, words: Iterable[str]) -> SourceResult[dict]:
         from scripts.wiki import sources_db
 
-        self._fingerprint(self.sources_db)
         with sources_db.using_connection(self._db()):
             raw = {}
             requested = list(dict.fromkeys(map(normalize_spelling, words)))
             for index, word in enumerate(requested, 1):
-                raw[word] = sources_db.search_heritage(word, include_live_slovnyk=False)
+                hits = sources_db.search_heritage(word, include_live_slovnyk=False)
+                # Each hit is a deterministic projection of the dictionary rows it was
+                # read from on this snapshot; its digest is the identity the word record cites.
+                for hit in hits:
+                    hit["row_sha256"] = heritage_hit_digest(hit)
+                raw[word] = hits
                 if index % BATCH_SIZE == 0 or index == len(requested):
                     self._progress("heritage", index, len(requested))
         return self._db_result(raw)
@@ -326,7 +466,6 @@ class Sources:
         return SourceResult({"atoms": atoms, "markers": markers}, digest, metadata)
 
     def get_textbook_chunk(self, chunk_id: str | int) -> dict | None:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         sql = """
             SELECT t.*, s.page_start AS page
@@ -343,7 +482,6 @@ class Sources:
         return res
 
     def get_textbook_file_chunks(self, source_file: str) -> list[dict]:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         sql = """
             SELECT t.*, s.page_start AS page, s.section_number
@@ -362,19 +500,16 @@ class Sources:
         return result
 
     def get_literary_chunk(self, chunk_id: str | int) -> dict | None:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         row = conn.execute("SELECT * FROM literary_texts WHERE chunk_id = ?", (str(chunk_id),)).fetchone()
         return dict(row) if row is not None else None
 
     def get_literary_file_chunks(self, source_file: str) -> list[dict]:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         rows = conn.execute("SELECT * FROM literary_texts WHERE source_file = ? ORDER BY id", (source_file,)).fetchall()
         return [dict(r) for r in rows]
 
     def find_ua_gec_error(self, error: str, correct: str) -> list[dict]:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         rows = conn.execute(
             "SELECT id, error, correct, error_type, doc_id, annotator_id, partition, is_native, source_lang FROM ua_gec_errors WHERE error = ? AND correct = ? ORDER BY id",
@@ -383,13 +518,11 @@ class Sources:
         return [dict(r) for r in rows]
 
     def get_ua_gec_error_by_id(self, error_id: int) -> dict | None:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         row = conn.execute("SELECT * FROM ua_gec_errors WHERE id = ?", (int(error_id),)).fetchone()
         return dict(row) if row is not None else None
 
     def get_style_guide_entry(self, entry_id: int) -> dict | None:
-        self._fingerprint(self.sources_db)
         conn = self._db()
         row = conn.execute("SELECT * FROM style_guide WHERE id = ?", (int(entry_id),)).fetchone()
         return dict(row) if row is not None else None
@@ -418,8 +551,16 @@ class Sources:
         return check_url(url, timeout=timeout)
 
     def _progress(self, kind: str, count: int, total: int) -> None:
+        self._progress_line(f"{kind}: {count}/{total}")
+
+    def _progress_line(self, line: str) -> None:
         if self.report:
-            self.report(f"{kind}: {count}/{total}")
+            self.report(line)
+
+
+def heritage_hit_digest(hit: Mapping[str, Any]) -> str:
+    """Identity of one heritage hit as copied into a word record (its own row_sha256 excluded)."""
+    return row_digest({key: value for key, value in hit.items() if key != "row_sha256"})
 
 
 def check_url(url: str, timeout: float = 10.0) -> dict[str, Any]:
