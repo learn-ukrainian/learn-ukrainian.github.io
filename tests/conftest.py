@@ -25,6 +25,8 @@ import pytest
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
+from scripts.common.bridge_paths import configured_bridge_db_path, default_bridge_db_path
+from scripts.common.repo_root import resolve_repo_root
 from tests import sparse_trees
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -95,14 +97,15 @@ def _fake_github_bin(tmp_path_factory: pytest.TempPathFactory) -> Path:
 
 def _bridge_db_paths() -> tuple[Path, Path]:
     """Return the primary bridge DB and any configured path before tests begin."""
-    from scripts.ai_agent_bridge import _config
-
-    primary = _config.PRIMARY_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db"
-    return primary.resolve(), Path(_config.DB_PATH).resolve()
+    primary_repo_root = resolve_repo_root(Path(__file__), 1)
+    return (
+        default_bridge_db_path(primary_repo_root).resolve(),
+        configured_bridge_db_path(primary_repo_root).resolve(),
+    )
 
 
 _REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH = _bridge_db_paths()
-_API_BRIDGE_DB_PATH = (_REPO_ROOT / ".mcp" / "servers" / "message-broker" / "messages.db").resolve()
+_API_BRIDGE_DB_PATH = default_bridge_db_path(_REPO_ROOT).resolve()
 _UNISOLATED_BRIDGE_DB_PATHS = frozenset(
     {_REAL_BRIDGE_DB_PATH, _CONFIGURED_BRIDGE_DB_PATH, _API_BRIDGE_DB_PATH}
 )
@@ -2072,7 +2075,14 @@ def _scope_real_checkout_acp_execution_to_tmp(tmp_path_factory, monkeypatch: pyt
     aimed at any other repo, including a test's own ``git init`` primary,
     still run the real helper.
     """
-    from scripts.ai_agent_bridge import _acp_execution as acp_mod
+    # Import eagerly: production imports this module function-locally, so it
+    # may not be loaded yet, and skipping would run the real helper against the
+    # primary checkout. Only a missing bridge runtime (the rules workflow venv
+    # has just pytest + PyYAML) may skip the redirect.
+    try:
+        from scripts.ai_agent_bridge import _acp_execution as acp_mod
+    except ImportError:
+        return
 
     real_checkout = Path(_init_real_worktrees_dir()).parent.resolve()
     original = acp_mod.acp_execution_cwd

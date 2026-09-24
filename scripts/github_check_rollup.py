@@ -34,8 +34,17 @@ def rollup_identity(entry: dict[str, Any]) -> tuple[str, ...] | None:
 
 
 def rollup_timestamp(entry: dict[str, Any]) -> datetime | None:
-    """Latest-run key: ``startedAt``, then ``completedAt`` when start is absent."""
-    for field in ("startedAt", "completedAt"):
+    """Latest-run key.
+
+    Check runs use ``startedAt``, then ``completedAt``. Status contexts projected
+    from commit statuses carry ``updatedAt`` and ``createdAt`` instead, so those
+    fields are the fallback only for a status identity.
+    """
+    fields = ["startedAt", "completedAt"]
+    identity = rollup_identity(entry)
+    if identity is not None and identity[0] == "status":
+        fields.extend(("updatedAt", "createdAt"))
+    for field in fields:
         raw = entry.get(field)
         if not isinstance(raw, str) or not raw.strip():
             continue

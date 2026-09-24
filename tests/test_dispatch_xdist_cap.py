@@ -24,6 +24,7 @@ from scripts.ci.pytest_dispatch_cap import (
     path_covers_full_suite,
     release_full_suite_lock,
     repository_root,
+    xdist_available,
 )
 
 _REPO_ROOT = Path(__file__).resolve().parents[1]
@@ -179,9 +180,7 @@ def test_oversized_tx_is_rejected_before_workers_start(tmp_path: Path) -> None:
         assert completed.returncode != 0, combined
         assert "dispatch xdist cap: --tx specifies 3 workers" in combined
         assert "OBSERVED_WORKERS" not in completed.stdout
-    allowed = _run_pytest(
-        tmp_path, ["--tx", "2*popen", "--dist=load", "-q", "tests/test_sample.py"], env
-    )
+    allowed = _run_pytest(tmp_path, ["--tx", "2*popen", "--dist=load", "-q", "tests/test_sample.py"], env)
     assert allowed.returncode == 0, allowed.stderr
     assert _observed_workers(allowed) == 2
 
@@ -415,3 +414,54 @@ def test_lock_path_env_override(monkeypatch: pytest.MonkeyPatch, tmp_path: Path)
         assert override.is_file()
     finally:
         release_full_suite_lock()
+
+
+def test_xdist_available_false_when_import_blocked(monkeypatch: pytest.MonkeyPatch) -> None:
+    monkeypatch.setitem(sys.modules, "xdist", None)
+    assert xdist_available() is False
+
+
+def _block_xdist(env: dict[str, str], directory: Path) -> None:
+    """Make a child see no xdist, like a minimal pytest+pyyaml venv.
+
+    ``PYTEST_DISABLE_PLUGIN_AUTOLOAD`` keeps the installed xdist entry point
+    from registering, and a shadow ``xdist`` package whose import raises makes
+    ``import xdist`` fail even though the real distribution is installed.
+    """
+    pkg = directory / "_no_xdist" / "xdist"
+    pkg.mkdir(parents=True, exist_ok=True)
+    (pkg / "__init__.py").write_text(
+        'raise ImportError("pytest-xdist is not installed in this environment")\n',
+        encoding="utf-8",
+    )
+    env["PYTEST_DISABLE_PLUGIN_AUTOLOAD"] = "1"
+    env["PYTHONPATH"] = os.pathsep.join([str(directory / "_no_xdist"), env["PYTHONPATH"]])
+
+
+def test_marked_run_without_xdist_caps_nothing_and_passes(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    _block_xdist(env, tmp_path)
+    completed = _run_pytest(tmp_path, ["-q", "tests/test_sample.py"], env)
+    combined = completed.stdout + completed.stderr
+    assert completed.returncode == 0, combined
+    assert "1 passed" in completed.stdout
+    assert CAP_LINE not in combined
+    assert FULL_SUITE_BUSY not in combined
+
+
+def test_marked_no_xdist_still_takes_the_full_suite_lock(tmp_path: Path) -> None:
+    _write_probe(tmp_path)
+    ran = _arm_suite_sentinel(tmp_path)
+    env = _child_env(tmp_path, marker="impl-8645-b")
+    _block_xdist(env, tmp_path)
+    _hold_tmp_lock(tmp_path, env)
+    try:
+        blocked = _run_pytest(tmp_path, ["-q"], env)
+        _assert_refused_before_tests(blocked, ran)
+        targeted = _run_pytest(tmp_path, ["-q", "tests/test_sample.py"], env)
+    finally:
+        release_full_suite_lock()
+    assert targeted.returncode == 0, targeted.stderr
+    assert ran.is_file()
+    assert FULL_SUITE_BUSY not in targeted.stderr + targeted.stdout

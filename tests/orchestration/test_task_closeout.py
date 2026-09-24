@@ -782,3 +782,46 @@ def test_github_read_failure_becomes_a_blocked_receipt(tmp_path: Path, monkeypat
     assert receipt["state"] == "BLOCKED_WITH_RECEIPT"
     assert "GitHub observation failed" in " ".join(receipt["hard_blockers"])
     assert updated["current_state"] == "BLOCKED_WITH_RECEIPT"
+
+
+def _rollup_8264() -> list[dict]:
+    fixture = Path(__file__).resolve().parents[1] / "fixtures" / "work" / "pr_8264_status_check_rollup.json"
+    return json.loads(fixture.read_text(encoding="utf-8"))
+
+
+def test_8264_rollup_is_green_when_superseded_cancelled_follows_success():
+    """A later SUCCESS must win even when the older CANCELLED row is last in the list."""
+    rollup = list(reversed(_rollup_8264()))
+    checks = task_closeout.project_closeout_checks(rollup)
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate", "Ruff", "Changes"], checks)
+    assert ok is True
+    assert waiting is False
+    assert failed == []
+    by_name = {check["name"]: check for check in checks}
+    assert by_name["CI Gate"]["conclusion"] == "SUCCESS"
+    assert by_name["CI Gate"]["workflowName"] == "CI"
+    assert by_name["CI Gate"]["startedAt"] == "2026-09-19T03:05:20Z"
+
+
+def test_latest_cancelled_required_check_still_fails():
+    rollup = [
+        {
+            "name": "CI Gate",
+            "conclusion": "SUCCESS",
+            "status": "COMPLETED",
+            "workflowName": "CI",
+            "startedAt": "2026-09-19T02:49:59Z",
+        },
+        {
+            "name": "CI Gate",
+            "conclusion": "CANCELLED",
+            "status": "COMPLETED",
+            "workflowName": "CI",
+            "startedAt": "2026-09-19T03:05:20Z",
+        },
+    ]
+    checks = task_closeout.project_closeout_checks(rollup)
+    ok, waiting, failed = task_lifecycle._checks_status(["CI Gate"], checks)
+    assert ok is False
+    assert waiting is False
+    assert failed == ["CI Gate"]

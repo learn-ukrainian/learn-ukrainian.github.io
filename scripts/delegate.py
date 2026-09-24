@@ -120,7 +120,7 @@ import urllib.error
 import urllib.parse
 import urllib.request
 import uuid
-from collections.abc import Callable, Collection, Sequence
+from collections.abc import Callable, Collection, Mapping, Sequence
 from dataclasses import dataclass
 from datetime import UTC, datetime
 from pathlib import Path
@@ -1497,9 +1497,7 @@ def _cursor_model_state(
     return state
 
 
-def _deepseek_model_state(
-    *, agent: str, model: str | None, cache_path: Path | None = None
-) -> dict[str, Any]:
+def _deepseek_model_state(*, agent: str, model: str | None, cache_path: Path | None = None) -> dict[str, Any]:
     """Attest a DeepSeek route from its versioned pin or cached alias name."""
     if agent != "deepseek":
         return {}
@@ -4006,6 +4004,68 @@ def _x_agent_task_id(agent: str, task_id: str) -> str:
     return safe or "task"
 
 
+def _x_agent_trailer(agent: str, task_id: str) -> str:
+    return f"X-Agent: {agent}/{_x_agent_task_id(agent, task_id)}"
+
+
+def _build_worker_env(
+    *,
+    task_id: str,
+    dispatch_agent: str,
+    attribution: Any | None = None,
+    run_nonce: str = "",
+    runtime_tmp_root: Path | str | None = None,
+    runtime_tmp_namespace_root: Path | str | None = None,
+    worktree_path: Path | None = None,
+    allow_merge: bool = False,
+    base_env: Mapping[str, str] | None = None,
+) -> dict[str, str]:
+    """Construct the execution environment for a dispatched worker process."""
+    source = dict(os.environ if base_env is None else base_env)
+    worker_env = _pinned_worker_venv_env(source)
+    if attribution is not None:
+        worker_env["LU_RUNTIME_INITIATOR"] = getattr(attribution, "initiator", str(attribution))
+        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = getattr(attribution, "source", "")
+    if run_nonce:
+        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
+    # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
+    # this marker to skip the per-agent thread lease, which belongs to the
+    # orchestrator of the agent family, never to a headless worker. Both
+    # names are allowlisted in agent_runtime/env_sanitize.py (name and
+    # value lists — a task id containing "sk-" must survive the secret
+    # redactor), so the marker reaches the harness CLI's SessionStart hook.
+    # The marker is the primary signal: a read-only dispatch without
+    # --worktree runs from the primary checkout, so the
+    # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
+    worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
+    worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
+    worker_env["LU_X_AGENT_TRAILER"] = _x_agent_trailer(dispatch_agent, task_id)
+    # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
+    # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
+    _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
+    _pytest_plugins = [part.strip() for part in worker_env.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
+    if _dispatch_cap_plugin not in _pytest_plugins:
+        _pytest_plugins.append(_dispatch_cap_plugin)
+    worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
+    _inject_gh_token_for_agent(worker_env, dispatch_agent)
+    _scrub_unusable_gh_config_dir(worker_env)
+    worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
+    if runtime_tmp_root is not None:
+        worker_env["TMPDIR"] = str(runtime_tmp_root)
+        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
+    if runtime_tmp_namespace_root is not None:
+        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(Path(runtime_tmp_namespace_root).parent)
+    if worktree_path is not None:
+        _apply_worktree_git_ceiling(worker_env, worktree_path)
+    if allow_merge:
+        worker_env.pop("AGENT_NO_MERGE", None)
+        worker_env["AGENT_ALLOW_MERGE"] = "1"
+    else:
+        worker_env["AGENT_NO_MERGE"] = "1"
+        worker_env.pop("AGENT_ALLOW_MERGE", None)
+    return worker_env
+
+
 def _push_auto_finalize_branch(worktree: Path, branch: str) -> None:
     try:
         proc = subprocess.run(
@@ -4149,7 +4209,7 @@ def _auto_finalize_dirty_worktree(
                 "-m",
                 body,
                 "--trailer",
-                f"X-Agent: {agent}/{safe_task}",
+                _x_agent_trailer(agent, task_id),
             ],
             cwd=worktree,
             capture_output=True,
@@ -5584,7 +5644,7 @@ def _augment_prompt_with_worktree(
     if mode in _WRITE_CAPABLE_MODES:
         delivery_note = (
             "\n[write-mode closeout]\n"
-            "Commit your work.\n"
+            "Commit your work (use the literal trailer in `$LU_X_AGENT_TRAILER`).\n"
             "`git push -u origin HEAD`\n"
             "Leave `git status --porcelain` empty (commit or delete scratch files).\n"
             "Do not open or merge PRs unless the brief says so; "
@@ -5794,6 +5854,20 @@ def _classify_final_status(
     if ok_outcome:
         return "done"
     return "failed"
+
+
+def _worker_run_incomplete(stderr_excerpt: str | None) -> bool:
+    """True when the adapter could not prove the worker's run finished its work.
+
+    AGY print mode can exit 0 while the agent's backgrounded commands are still
+    running or were killed (#8502/#8503); the adapter then leads
+    ``stderr_excerpt`` with a reason code — including when no transcript bound
+    to this run exists to prove completion. Whatever that worker left in its
+    worktree is unconfirmed, so it must never be auto-finalized as ``done``.
+    """
+    from agent_runtime.adapters.agy import AGY_INCOMPLETE_RUN_REASONS
+
+    return _first_error_line(stderr_excerpt) in AGY_INCOMPLETE_RUN_REASONS
 
 
 def _first_error_line(stderr_excerpt: str | None) -> str | None:
@@ -6339,7 +6413,10 @@ def _run_worker(
                 #
                 # Neither unknown can prove the work was committed, so either one surfaces
                 # the task for finalization rather than letting it settle as ``done``.
-                if dirty_on_exit in (True, None) and commits_ahead in (0, None):
+                # A worker cut off mid-work (#8502) leaves unfinished edits even
+                # when it had pushed earlier commits: surface them, never ``done``.
+                run_incomplete = _worker_run_incomplete(stderr_excerpt)
+                if dirty_on_exit in (True, None) and (commits_ahead in (0, None) or run_incomplete):
                     needs_finalize = True
 
                 # Catch committed-but-unpushed write dispatches (#7311):
@@ -6370,7 +6447,13 @@ def _run_worker(
                             if rescue_status:
                                 finalize_error = rescue_status
 
-                if needs_finalize and rescue_status is None and returncode == 0 and mode == "danger":
+                if (
+                    needs_finalize
+                    and rescue_status is None
+                    and returncode == 0
+                    and mode == "danger"
+                    and not run_incomplete
+                ):
                     auto_finalize = _auto_finalize_dirty_worktree(
                         worktree=Path(worktree_path),
                         task_id=task_id,
@@ -8180,45 +8263,16 @@ def _dispatch(args: argparse.Namespace, *, worktree_locks: contextlib.ExitStack)
         # Pipe the prompt via stdin so it doesn't hit argv length limits.
         # start_new_session=True detaches from our process group — the
         # worker survives our exit, which is what we want.
-        # Pin the worker to this checkout's venv before it can invoke a CLI.  Do
-        # not retain a parent process's activated venv: pip can otherwise rewrite
-        # console scripts in that foreign checkout (#5134).
-        worker_env = _pinned_worker_venv_env(os.environ)
-        worker_env["LU_RUNTIME_INITIATOR"] = attribution.initiator
-        worker_env["LU_RUNTIME_INITIATOR_SOURCE"] = attribution.source
-        worker_env["LU_RUNTIME_RUN_NONCE"] = run_nonce
-        # Explicit dispatch-worker identity (#7827): the SessionStart gate uses
-        # this marker to skip the per-agent thread lease, which belongs to the
-        # orchestrator of the agent family, never to a headless worker. Both
-        # names are allowlisted in agent_runtime/env_sanitize.py (name and
-        # value lists — a task id containing "sk-" must survive the secret
-        # redactor), so the marker reaches the harness CLI's SessionStart hook.
-        # The marker is the primary signal: a read-only dispatch without
-        # --worktree runs from the primary checkout, so the
-        # .worktrees/dispatch/<agent>/<task>/ path is only the fallback.
-        worker_env["LEARN_UKRAINIAN_DISPATCH_TASK_ID"] = task_id
-        worker_env["LEARN_UKRAINIAN_DISPATCH_AGENT"] = dispatch_agent
-        # #8645 part B: CI's `--override-ini addopts=-v` drops the pyproject
-        # `-p ci.pytest_dispatch_cap`. Load it from the environment instead.
-        _dispatch_cap_plugin = "ci.pytest_dispatch_cap"
-        _pytest_plugins = [part.strip() for part in worker_env.get("PYTEST_PLUGINS", "").split(",") if part.strip()]
-        if _dispatch_cap_plugin not in _pytest_plugins:
-            _pytest_plugins.append(_dispatch_cap_plugin)
-        worker_env["PYTEST_PLUGINS"] = ",".join(_pytest_plugins)
-        _inject_gh_token_for_agent(worker_env, dispatch_agent)
-        _scrub_unusable_gh_config_dir(worker_env)
-        worker_env["AGENT_NO_TELEMETRY_FOOTER"] = "1"
-        worker_env["TMPDIR"] = str(runtime_tmp_root)
-        worker_env["LU_RUNTIME_TMP_ROOT"] = str(runtime_tmp_root)
-        worker_env["LU_RUNTIME_TMP_BASE_ROOT"] = str(runtime_tmp_namespace_root.parent)
-        if worktree_path is not None:
-            _apply_worktree_git_ceiling(worker_env, worktree_path)
-        if getattr(args, "allow_merge", False):
-            worker_env.pop("AGENT_NO_MERGE", None)
-            worker_env["AGENT_ALLOW_MERGE"] = "1"
-        else:
-            worker_env["AGENT_NO_MERGE"] = "1"
-            worker_env.pop("AGENT_ALLOW_MERGE", None)
+        worker_env = _build_worker_env(
+            task_id=task_id,
+            dispatch_agent=dispatch_agent,
+            attribution=attribution,
+            run_nonce=run_nonce,
+            runtime_tmp_root=runtime_tmp_root,
+            runtime_tmp_namespace_root=runtime_tmp_namespace_root,
+            worktree_path=worktree_path,
+            allow_merge=bool(getattr(args, "allow_merge", False)),
+        )
         try:
             proc = subprocess.Popen(
                 cmd,
