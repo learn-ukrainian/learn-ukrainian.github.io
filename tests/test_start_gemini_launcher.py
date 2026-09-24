@@ -98,3 +98,23 @@ def test_gemini_driver_forwards_provider_args_without_duplicating_prompt() -> No
     exec_line = _would_exec_line(result.stdout)
     assert "--sandbox read-only" in exec_line
     _assert_drive_epic_uses_agy_interactive_flag(exec_line)
+
+
+def test_gemini_driver_seed_names_accountability_and_compaction_recovery() -> None:
+    driver = run_launcher("start-gemini-driver.sh", "--epic", "devops")
+    assert driver.returncode == 0, driver.stderr
+    exec_line = _would_exec_line(driver.stdout)
+    _assert_drive_epic_uses_agy_interactive_flag(exec_line)
+    assert "accountable\\ driver" in exec_line
+    assert "After\\ context\\ compaction" in exec_line
+    assert "hydration\\ permission" in exec_line
+
+    interactive = run_launcher("start-gemini.sh")
+    assert interactive.returncode == 0, interactive.stderr
+    assert "After\\ context\\ compaction" not in _would_exec_line(interactive.stdout)
+
+    claude_driver = run_launcher("start-claude-driver.sh", "--epic", "devops")
+    assert claude_driver.returncode == 0, claude_driver.stderr
+    claude_exec_line = _would_exec_line(claude_driver.stdout)
+    assert "After\\ context\\ compaction" not in claude_exec_line
+    assert "hydration\\ permission" not in claude_exec_line

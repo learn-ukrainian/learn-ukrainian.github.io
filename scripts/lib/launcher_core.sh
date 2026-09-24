@@ -1039,6 +1039,9 @@ launcher_bind_drive_epic() {
     fleet_clause='Fleet-comms: run plane-status; cross-family review is direct ask-<lane> per the skill (§6) — verdict posted on the PR, merge when CI green, sealed formal CF is retired; authority mode is durable state and ACP is provider transport.'
   fi
   LC_DRIVER_PROMPT="Load agents_extensions/shared/skills/drive-epic/SKILL.md before acting. The launcher already claimed the ${LC_EPIC} lease and ran its provider canary; do not claim, renew, or reopen the lease. ${fleet_clause} Consult the Work API projection (http://127.0.0.1:8765/api/work/v1/projection) for orientation and treat grok-bot QA-observer issues as a queue input — the skill covers both. Obtain independent cross-family review."
+  if [ "$LC_PROVIDER" = gemini ] && [ "$LC_HARNESS" = agy ]; then
+    LC_DRIVER_PROMPT+=" You are the accountable driver for the verified ${LC_EPIC} stream lease, including issue disposition, worker coordination, exact-head cross-family review, CI, merge, and cleanup. The Gemini provider canary is agent-run; verify hydration permission before taking consequential actions. After context compaction, use GEMINI.md's driver-recovery checklist and drive-epic to recheck the launcher-owned lease, stream issue/PR queue, and live fleet state before continuing. Never infer authority or completion from a compacted summary."
+  fi
   launcher_inject_driver_agent
   LC_FORWARD_ARGS+=("$LC_DRIVER_PROMPT")
   if [ "$LC_DRY_RUN" = "1" ]; then
